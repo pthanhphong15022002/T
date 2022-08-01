@@ -11,6 +11,7 @@ import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
 import { CopyComponent } from '../../copy/copy.component';
+import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
 @Component({
   selector: 'card',
@@ -22,7 +23,7 @@ export class CardComponent implements OnInit {
   @Input() listFolders: any;
   @Input() listFiles: any;
   @Input() formModel: any;
-  @Input() type: any;  
+  @Input() type: any;
   html: string;
   count: number;
   tenant: string;
@@ -34,17 +35,17 @@ export class CardComponent implements OnInit {
   user: any;
   item: FolderInfo;
   totalRating: number;
-  totalViews: number;  
+  totalViews: number;
   loaded: boolean;
   loadedFile: boolean;
   loadedFolder: boolean;
   setting: any;
-  
-//   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
-  @ViewChild('view') view!: ViewsComponent; 
-  
+  titleAccessDenied = "Bạn không có quyền truy cập thư mục này";
+  //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+  @ViewChild('view') view!: ViewsComponent;
+
   @Output() eventShow = new EventEmitter<boolean>();
-  constructor(  
+  constructor(
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
     private folderService: FolderService,
@@ -55,21 +56,21 @@ export class CardComponent implements OnInit {
     private auth: AuthStore,
     private notificationsService: NotificationsService,
     private callfc: CallFuncService,
-   // private confirmationDialogService: ConfirmationDialogService,
+    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
-    ) {
-   // this.dmSV.confirmationDialogService = confirmationDialogService;
+  ) {
+    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
 
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.user = this.auth.get();
     //this.loaded = false;
-   // this.loadedFile = false;
-   // this.loadedFolder = true;
+    // this.loadedFile = false;
+    // this.loadedFolder = true;
     //this.listFolders = this.dataFolders;
-   // this.listFiles = this.dataFolders;
+    // this.listFiles = this.dataFolders;
     // this.changeDetectorRef.detectChanges();
     // this.dmSV.isSortDirecttion.subscribe(res => {
     //   if (res == null || res != "1") {
@@ -84,15 +85,19 @@ export class CardComponent implements OnInit {
     //   this.folderService.options.srtColumns = this.dmSV.sortColumn.getValue();
     // });
 
-    // this.dmSV.isListFolder.subscribe(res => {     
-    //   this.refresh();
-    //   this.loadedFolder = true;
-    // });
+    this.dmSV.isListFolder.subscribe(res => {
+      //this.refresh();
+      this.listFolders = res;
+      this.loadedFolder = true;
+      this.changeDetectorRef.detectChanges();
+    });
 
-    // this.dmSV.islistFiles.subscribe(res => {    
-    //   this.refresh();      
-    //   this.loadedFile = true;
-    // });
+    this.dmSV.islistFiles.subscribe(res => {
+      // this.refresh();    
+      this.listFiles = res;
+      this.loadedFile = true;
+      this.changeDetectorRef.detectChanges();
+    });
 
     // this.dmSV.isAdd.subscribe(res => {
     //   if (res) {        
@@ -145,8 +150,8 @@ export class CardComponent implements OnInit {
 
   onRightClick(event, data, type) {
     console.log(event);
-   // this.data = data;
-   // this.type = type;    
+    // this.data = data;
+    // this.type = type;    
     event.preventDefault();
   }
 
@@ -183,10 +188,14 @@ export class CardComponent implements OnInit {
   //   this.changeDetectorRef.detectChanges();
   // }
 
-  viewFile(file) {
-   // alert(file.folderName);
+  viewFile(item) {
+    // alert(file.folderName);
+    this.fileService.getFile(item.recID).subscribe(data => {
+      this.callfc.openForm(ViewFileDialogComponent, item.fileName, 1000, 800, "", item, "");
+    });
   }
 
+ 
   // clickMF($event, data, type) {
   //   switch($event.functionID) {
   //     case "copy": // copy file hay thu muc
@@ -283,7 +292,7 @@ export class CardComponent implements OnInit {
   onDbclick(item, permissions, id, level, parentid, fullName) {
     //if (!this.checkView(permissions)) {
     if (!item.read) {
-      this.notificationsService.notify("Bạn không có quyền truy cập thư mục này");
+      this.notificationsService.notify(this.titleAccessDenied);
       return;
     }
 
@@ -323,7 +332,7 @@ export class CardComponent implements OnInit {
       //  this.dmSV.changeData(res, null, id); 
       this.dmSV.isTree = true;
       //  console.log(res);
-      this.dmSV.listFolder.next(res);
+      this.dmSV.listFolder.next(res[0]);
       this.dmSV.listFiles.next(null);
       this.loadedFolder = true;
       this.changeDetectorRef.detectChanges();
@@ -452,31 +461,31 @@ export class CardComponent implements OnInit {
     // }
   }
 
-  viewfile(item, permissions, content, fileName, id, ext) {
-    // if (!item.read || this.dmSV.idMenuActive == '2') {7
-    //   this.notificationsService.notify("Bạn không có quyền truy cập file này");
-    //   return;
-    // }
+  // viewfile(item, permissions, content, fileName, id, ext) {
+  // if (!item.read || this.dmSV.idMenuActive == '2') {7
+  //   this.notificationsService.notify("Bạn không có quyền truy cập file này");
+  //   return;
+  // }
 
-    // var obj = new objectPara();
-    // obj.fileID = id;
-    // obj.fileName = fileName;
-    // obj.extension = ext;
-    // obj.data = item;
+  // var obj = new objectPara();
+  // obj.fileID = id;
+  // obj.fileName = fileName;
+  // obj.extension = ext;
+  // obj.data = item;
 
-    // this.fileService.getFile(id, true).subscribe(item => {
-    //   if (item) {
-    //     var files = this.dmSV.listFiles.getValue();
-    //     let index = files.findIndex(d => d.recID.toString() === id);
-    //     if (index != -1) {
-    //       files[index] = item;
-    //     }
-    //     this.dmSV.listFiles.next(files);
-    //     this.changeDetectorRef.detectChanges();
-    //     this.systemDialogService.onOpenViewFileDialog.next(obj);
-    //   }
-    // })   
-  }
+  // this.fileService.getFile(id, true).subscribe(item => {
+  //   if (item) {
+  //     var files = this.dmSV.listFiles.getValue();
+  //     let index = files.findIndex(d => d.recID.toString() === id);
+  //     if (index != -1) {
+  //       files[index] = item;
+  //     }
+  //     this.dmSV.listFiles.next(files);
+  //     this.changeDetectorRef.detectChanges();
+  //     this.systemDialogService.onOpenViewFileDialog.next(obj);
+  //   }
+  // })   
+  // }
 
   print() {
     //this.view.print();

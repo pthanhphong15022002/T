@@ -163,7 +163,10 @@
             <ng-container *ngTemplateOutlet="containTemplate;context: { $implicit: item }"></ng-container>
         </ng-template>
 
-        <treeview-comment [rootData]="item.listComment" [dataComment]="item" (pushComment)="pushComment($event)">
+        <treeview-comment 
+        [rootData]="item.listComment" 
+        [dataComment]="item" 
+        (pushComment)="pushComment($event)">
         </treeview-comment>
     </div>
 </ng-template>

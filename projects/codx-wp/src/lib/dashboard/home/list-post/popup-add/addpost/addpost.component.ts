@@ -23,8 +23,9 @@ import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import * as mime from 'mime-types'
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
-import {  Observable, of, Subscriber } from 'rxjs';
+import { Observable, of, Subscriber } from 'rxjs';
 import { Observer } from '@syncfusion/ej2-base';
+import { A } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-addpost',
@@ -41,13 +42,15 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   headerText: string = "";
   title: string = "";
   lstRecevier = [];
+  isClick: boolean = false;
+
   // default owner
-  shareIcon:string = ""; 
-  shareText:string = "";
+  shareIcon: string = "";
+  shareText: string = "";
   shareControl: string = "";
   objectType: string = "";
   shareWith: string = "";
-  permissions:any[] = [];
+  permissions: any[] = [];
   @ViewChild('atmCreate') atmCreate: AttachmentComponent;
   @ViewChild('atmEdit') atmEdit: AttachmentComponent;
   @ViewChild('codxFileCreated') codxFileCreated: ImageGridComponent;
@@ -92,8 +95,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   dataShare: Post = null;
   dataEdit: Post = null;
   myPermission: Permission = null;
-  adminPermission:Permission = null;
-  userPermision:Permission = null;
+  adminPermission: Permission = null;
+  userPermision: Permission = null;
   sets = [
     'native',
     'google',
@@ -123,7 +126,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
 
   ) {
-    
+
     this.user = authStore.userValue;
     this.dialogData = dd.data;
     this.dialogRef = dialog;
@@ -166,15 +169,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.adminPermission.isActive = true;
     this.adminPermission.createdBy = this.user.userID;
     this.adminPermission.createdOn = new Date();
-    // everyone
-    this.userPermision = new Permission();
-    this.userPermision.objectType = this.SHARECONTROLS.EVERYONE;
-    this.userPermision.memberType = this.MEMBERTYPE.SHARE;
-    this.userPermision.share = true;
-    this.userPermision.read = true;
-    this.userPermision.isActive = true;
-    this.userPermision.createdBy = this.user.userID;
-    this.userPermision.createdOn = new Date();
     if (this.dialogData.status == this.STATUS.EDIT) {
       this.dataEdit = this.dialogData.post;
       this.message = this.dataEdit.content;
@@ -184,28 +178,25 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.shareText = this.dataEdit.shareText;
       this.shareWith = this.dataEdit.shareName;
     }
-    else 
-    {
+    else {
       if (this.dialogData.status == this.STATUS.SHARE) {
         this.dataShare = this.dialogData.post;
       }
-      this.cache.valueList('L1901').subscribe((vll:any) => {
-        let modShare = vll.datas.find((x:any) => x.value == this.SHARECONTROLS.EVERYONE);
+      this.cache.valueList('L1901').subscribe((vll: any) => {
+        let modShare = vll.datas.find((x: any) => x.value == this.SHARECONTROLS.EVERYONE);
         this.shareIcon = modShare.icon;
         this.shareText = modShare.text;
         this.shareControl = this.SHARECONTROLS.EVERYONE;
       });
-      // EVERYONE
+      // OWNER
       this.permissions.push(this.myPermission);
       this.permissions.push(this.adminPermission);
-      this.permissions.push(this.userPermision)
     }
     this.dt.detectChanges();
   }
-
-
-
   Submit() {
+    if (this.isClick) return;
+    this.isClick = true;
     switch (this.dialogData.status) {
       case this.STATUS.EDIT:
         this.editPost();
@@ -237,15 +228,24 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.shareControl = data.objectType;
     this.shareIcon = data.icon;
     this.shareText = data.objectName;
-    this.permissions.push(this.myPermission);
-    this.permissions.push(this.adminPermission);
     var countPermission = 0;
-    if(data.dataSelected){
+    if (data.dataSelected) {
       countPermission = data.dataSelected.length;
     }
-    switch(this.shareControl){
+    switch (this.shareControl) {
       case this.SHARECONTROLS.OWNER:
+        break;
       case this.SHARECONTROLS.EVERYONE:
+        let evrPermission = new Permission();
+        evrPermission.objectType = this.shareControl;
+        evrPermission.memberType = this.MEMBERTYPE.SHARE;
+        evrPermission.read = true;
+        evrPermission.share = true;
+        evrPermission.isActive = true;
+        evrPermission.createdBy = this.user.userID;
+        evrPermission.createdOn = new Date();
+        this.shareWith = "";
+        this.permissions.push(evrPermission);
         break;
       case this.SHARECONTROLS.MYGROUP:
       case this.SHARECONTROLS.MYTEAM:
@@ -265,7 +265,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         break;
       case this.SHARECONTROLS.OGRHIERACHY:
       case this.SHARECONTROLS.DEPARMENTS:
-        data.dataSelected.forEach((x:any) => {
+        data.dataSelected.forEach((x: any) => {
           let p = new Permission();
           p.objectType = this.shareControl;
           p.objectID = x.OrgUnitID;
@@ -278,23 +278,21 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           p.createdOn = new Date();
           this.permissions.push(p);
         });
-        if(countPermission > 1){
-          this.cache.message('WP002').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].OrgUnitName+'</b>',countPermission - 1,this.shareText);
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].OrgUnitName + '</b>', countPermission - 1, this.shareText);
           });
         }
         else {
-          this.cache.message('WP001').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].OrgUnitName+'</b>');
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].OrgUnitName + '</b>');
           });
         }
         break;
       case this.SHARECONTROLS.POSITIONS:
-        data.dataSelected.forEach((x:any) => {
+        data.dataSelected.forEach((x: any) => {
           let p = new Permission();
           p.objectType = this.shareControl;
           p.objectID = x.PositionID;
@@ -308,23 +306,21 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           this.permissions.push(p);
 
         });
-        if(countPermission > 1){
-          this.cache.message('WP002').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].PositionName+'</b>',countPermission - 1,this.shareText);
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].PositionName + '</b>', countPermission - 1, this.shareText);
           });
         }
         else {
-          this.cache.message('WP001').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].PositionName+'</b>');
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].PositionName + '</b>');
           });
         }
         break;
       case this.SHARECONTROLS.ROLES:
-        data.dataSelected.forEach((x:any) => {
+        data.dataSelected.forEach((x: any) => {
           let p = new Permission();
           p.objectType = this.shareControl;
           p.objectID = x.RoleID;
@@ -337,23 +333,21 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           p.createdOn = new Date();
           this.permissions.push(p);
         });
-        if(countPermission > 1){
-          this.cache.message('WP002').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].RoleName+'</b>',countPermission - 1,this.shareText);
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].RoleName + '</b>', countPermission - 1, this.shareText);
           });
         }
         else {
-          this.cache.message('WP001').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].RoleName+'</b>');
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].RoleName + '</b>');
           });
         }
         break;
       case this.SHARECONTROLS.GROUPS:
-        data.dataSelected.forEach((x:any) => {
+        data.dataSelected.forEach((x: any) => {
           let p = new Permission();
           p.objectType = this.shareControl;
           p.objectID = x.UserID;
@@ -367,23 +361,21 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           this.permissions.push(p);
 
         });
-        if(countPermission > 1){
-          this.cache.message('WP002').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].UserName+'</b>',countPermission - 1,this.shareText);
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>', countPermission - 1, this.shareText);
           });
         }
         else {
-          this.cache.message('WP001').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].UserName+'</b>');
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>');
           });
         }
         break;
       default:
-        data.dataSelected.forEach((x:any) => {
+        data.dataSelected.forEach((x: any) => {
           let p = new Permission();
           p.objectType = this.shareControl;
           p.objectID = x.UserID;
@@ -396,18 +388,16 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           p.createdOn = new Date();
           this.permissions.push(p);
         });
-        if(countPermission > 1){
-          this.cache.message('WP002').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].UserName+'</b>',countPermission - 1,this.shareText);
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>', countPermission - 1, this.shareText);
           });
         }
         else {
-          this.cache.message('WP001').subscribe((mssg:any) => 
-          { 
-            if(mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName,'<b>'+data.dataSelected[0].UserName+'</b>');
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>');
           });
         }
         break;
@@ -435,30 +425,11 @@ export class AddPostComponent implements OnInit, AfterViewInit {
             this.atmCreate.objectId = result.recID;
             this.dmSV.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
-            this.atmCreate.saveFilesObservable().subscribe((res:any)=>{
-              if(res){
-                (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
-                this.notifySvr.notifyCode('WP014');
-                this.dialogRef.close();
-              }
-              else
-              {
-                this.notifySvr.notifyCode('WP013');
-                return;
-              }
-            });
+            this.atmCreate.saveFilesObservable().subscribe();
           }
-          else
-          {
-            (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
-            this.notifySvr.notifyCode('WP014');
-            this.dialogRef.close();
-          }
-        }
-        else
-        {
-          this.notifySvr.notifyCode('WP013');
-          return;
+          (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+          this.notifySvr.notifyCode('SYS006');
+          this.dialogRef.close();
         }
       });
   }
@@ -477,45 +448,30 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     if (this.listFileUpload.length > 0) {
       this.atmEdit.objectId = this.dataEdit.recID;
       this.dmSV.fileUploadList = this.listFileUpload;
-      this.atmEdit.saveFilesObservable().subscribe((res:any) => {
-        if(!res)
-        {
-          this.notifySvr.notifyCode('WP013');
-          return;
-        }
-      });
+      this.atmEdit.saveFilesObservable().subscribe();
     }
     if (this.codxFileEdit.filesDelete.length > 0) {
       let filesDeleted = this.codxFileEdit.filesDelete;
       filesDeleted.forEach((f: any) => {
         this.deleteFile(f.recID, true);
       });
-      // this.deleteFiles(filesDeleted).subscribe((res) => {
-      //   if(res){
-      //     isSuccess++;
-      //   }
-      // })
     }
     this.api.execSv<any>(
-        'WP',
-        'ERM.Business.WP',
-        'CommentsBusiness',
-        'EditPostAsync',
-        [this.dataEdit]
-      ).subscribe((res: any) => {
-        if (res) {
-          this.dataEdit = res;
-          this.dataEdit.files = this.codxFileEdit.getFiles();
-          (this.dialogRef.dataService as CRUDService).update(this.dataEdit).subscribe();
-          this.dialogRef.close();
-          this.notifySvr.notifyCode('WP016');
-        }
-        else {
-          this.notifySvr.notifyCode('WP013');
-          return;
-        }
-      });
-        
+      'WP',
+      'ERM.Business.WP',
+      'CommentsBusiness',
+      'EditPostAsync',
+      [this.dataEdit]
+    ).subscribe((res: any) => {
+      if (res) {
+        this.dataEdit = res;
+        this.dataEdit.files = this.codxFileEdit.getFiles();
+        (this.dialogRef.dataService as CRUDService).update(this.dataEdit).subscribe();
+        this.notifySvr.notifyCode('SYS007');
+        this.dialogRef.close();
+      }
+    });
+
   }
 
 
@@ -538,18 +494,11 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         if (res) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = res.recID;
-            this.atmCreate.saveFilesObservable().subscribe((res2:any) => {
-              if(res2) {
-                this.notifySvr.notifyCode('WP014');
-              }
-              else this.notifySvr.notifyCode('WP013');
-            });
+            this.atmCreate.saveFilesObservable().subscribe()
           }
-          else{
-            (this.dialogRef.dataService as CRUDService).add(res, 0).subscribe();
-            this.dialogRef.close();
-            this.notifySvr.notifyCode("WP014");
-          }
+          this.notifySvr.notifyCode('SYS006');
+          (this.dialogRef.dataService as CRUDService).add(res, 0).subscribe();
+          this.dialogRef.close();
         }
       });
   }
@@ -610,17 +559,17 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         [fileID, deleted]).subscribe();
     }
   }
-  deleteFiles(files: any[]) :  Observable<Boolean> {
+  deleteFiles(files: any[]): Observable<Boolean> {
     let isSuccess = true;
-    files.forEach((f:any) => {
+    files.forEach((f: any) => {
       if (f) {
         this.api.execSv(
           "DM",
           "ERM.Business.DM",
           "FileBussiness",
           "DeleteFileAsync",
-          [f.recID, true]).subscribe((res:boolean) => {
-            if(!res){
+          [f.recID, true]).subscribe((res: boolean) => {
+            if (!res) {
               isSuccess = false;
             }
           });
