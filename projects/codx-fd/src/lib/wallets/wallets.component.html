@@ -246,7 +246,7 @@
 </ng-template>
 
 <ng-template #TemplateList let-item>
-    <div class="d-flex align-items-center user-card list-item mb-4" (click)="codxService.navigate('FDR021')">
+    <div class="d-flex align-items-center user-card list-item mb-4" (click)="openViewDetailCoins(item?.userID)">
         <div class="symbol symbol-40 symbol-circle with-number me-4">
             <codx-img class="symbol symbol-40 symbol-circle me-2" [objectId]="item?.userID"
                 [objectName]="item?.employeeName" objectType="AD_Users">
