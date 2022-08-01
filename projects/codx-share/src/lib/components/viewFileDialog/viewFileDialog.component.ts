@@ -44,22 +44,22 @@ export class ViewFileDialogComponent implements OnInit {
     //private modalService: NgbModal,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
-    ) {
-      if (data.data != null)
-        this.data = data.data;
-      else
-        this.data = data;
+  ) {
+    if (data.data != null)
+      this.data = data.data;
+    else
+      this.data = data;
 
-      this.id = this.data.recID;
-      this.dialog = dialog;
-  //  var data: any = this.auth.user$;
-   // this.user = data.source.value;
+    this.id = this.data.recID;
+    this.dialog = dialog;
+    //  var data: any = this.auth.user$;
+    // this.user = data.source.value;
   }
 
 
   setShare() {
     if (this.checkShareRight()) {
-      var data = new DataItem();     
+      var data = new DataItem();
       data.recID = this.id;
       data.type = 'file';
       data.fullName = this.fullName;
@@ -195,7 +195,7 @@ export class ViewFileDialogComponent implements OnInit {
       });
     }
     else {
-      this.notificationsService.notify("Bạn không có quyền download file này");
+      this.notificationsService.notifyCode("SYS018");
     }
   }
 
@@ -245,9 +245,9 @@ export class ViewFileDialogComponent implements OnInit {
 
   ngOnInit(): void {
     //if (this.systemDialogService.onOpenViewFileDialog.observers.length == 0) {
-    var o = this.data;  
+    var o = this.data;
     //this.systemDialogService.onOpenViewFileDialog.subscribe((o) => {
-   //   if (o == null) return;
+    //   if (o == null) return;
     this.id = o.recID;
     this.ext = (o.extension || "").toLocaleLowerCase();
     this.fullName = o.fileName;
@@ -277,7 +277,7 @@ export class ViewFileDialogComponent implements OnInit {
     //   this.viewFile(this.iD);
     //   return this.closeOpenForm(res);
     // });
-  //  })
+    //  })
     // }
     if (!window["librOfficeMessage"]) {
       window.removeEventListener("message", window["librOfficeMessage"], false);

@@ -1,7 +1,25 @@
 import { CodxTMService } from './../codx-tm.service';
-import { Component, Injector, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogRef,
+  RequestOption,
+  ResourceModel,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
 import { Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
@@ -9,10 +27,9 @@ import { MeetingDetailComponent } from './meeting-detail/meeting-detail.componen
 @Component({
   selector: 'lib-tmmeetings',
   templateUrl: './tmmeetings.component.html',
-  styleUrls: ['./tmmeetings.component.css']
+  styleUrls: ['./tmmeetings.component.css'],
 })
 export class TMMeetingsComponent extends UIComponent {
-
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
@@ -45,14 +62,28 @@ export class TMMeetingsComponent extends UIComponent {
   param: any;
   resources: Resources[] = [];
   resourceID: any;
-  constructor(inject: Injector,
+  urlView = '';
+  urlDetail = '';
+  dataValue = '';
+  formName = '';
+  gridViewName = '';
+  constructor(
+    inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private tmService: CodxTMService) {
+    private tmService: CodxTMService
+  ) {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
+      if (res) {
+        this.urlDetail = res[0].url;
+      }
+    });
+
+    this.dataValue = this.user?.userID;
   }
 
   onInit(): void {
@@ -90,22 +121,24 @@ export class TMMeetingsComponent extends UIComponent {
         model: {
           // panelLeftRef: this.panelLeftRef,
           template: this.cardKanban,
-        }
+        },
       },
-    ]
+    ];
 
     this.view.dataService.methodSave = 'AddMeetingsAsync';
     this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
 
     this.dt.detectChanges();
-
   }
 
   convertHtmlAgency(resourceID: any) {
     var desc = '<div class="d-flex">';
     if (resourceID)
-      desc += '<codx-imgs [objectId]="getResourceID('+resourceID+')" objectType="AD_Users" [numberImages]="4"></codx-imgs>';
+      desc +=
+        '<codx-imgs [objectId]="getResourceID(' +
+        resourceID +
+        ')" objectType="AD_Users" [numberImages]="4"></codx-imgs>';
 
     return desc + '</div>';
   }
@@ -113,12 +146,14 @@ export class TMMeetingsComponent extends UIComponent {
   getResourceID(data) {
     var resources = [];
     resources = data.resources;
-    var id= '';
+    var id = '';
+    if(resources!=null){
+      resources.forEach((e) => {
+        id += e.resourceID + ';';
+      });
+    }
 
-    resources.forEach((e)=>{
-      id += e.resourceID + ';';
-    });
-    if(id!=''){
+    if (id != '') {
       this.resourceID = id.substring(0, id.length - 1);
     }
     return this.resourceID;
@@ -130,15 +165,19 @@ export class TMMeetingsComponent extends UIComponent {
       this.month = this.addZero(date.getMonth() + 1);
       this.day = this.addZero(date.getDate());
       var endDate = new Date(data.endDate);
-      let start = this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
-      let end = this.addZero(endDate.getHours()) + ':' + this.addZero(endDate.getMinutes());
+      let start =
+        this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
+      let end =
+        this.addZero(endDate.getHours()) +
+        ':' +
+        this.addZero(endDate.getMinutes());
       this.startTime = start + ' - ' + end;
     }
     return this.startTime;
   }
 
-  addZero(i){
-    if(i<10){
+  addZero(i) {
+    if (i < 10) {
       i = '0' + i;
     }
     return i;
@@ -179,8 +218,11 @@ export class TMMeetingsComponent extends UIComponent {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
-      this.dialog = this.callfc.openSide(PopupAddMeetingComponent, 'add', option);
-
+      this.dialog = this.callfc.openSide(
+        PopupAddMeetingComponent,
+        'add',
+        option
+      );
     });
   }
   edit(data) {
@@ -215,18 +257,18 @@ export class TMMeetingsComponent extends UIComponent {
         });
       });
   }
-  copy(data) {
-
-  }
+  copy(data) {}
   delete(data) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
-      this.beforeDel(opt)).subscribe((res) => {
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
         if (res[0]) {
           this.itemSelected = this.view.dataService.data[0];
         }
-      }
-      );
+      });
   }
 
   beforeDel(opt: RequestOption) {
@@ -237,42 +279,7 @@ export class TMMeetingsComponent extends UIComponent {
     return true;
   }
 
-  viewDetail(data){
-    this.view.dataService.dataSelected = data;
-    var vllControlShare = 'TM003';
-    var vllRose = 'TM001';
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '800px';
-    this.dialog = this.callfc.openSide(
-      MeetingDetailComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose],
-      option
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event == null)
-        this.view.dataService.delete(
-          [this.view.dataService.dataSelected],
-          false
-        );
-      if (e?.event && e?.event != null) {
-        let listTask = e?.event;
-        let newTasks = [];
-        for (var i = 0; i < listTask.length; i++) {
-          if (listTask[i].taskID == data.taskID) {
-            this.view.dataService.update(listTask[i]).subscribe();
-            this.view.dataService.setDataSelected(e?.event[0]);
-          } else newTasks.push(listTask[i]);
-        }
-        if (newTasks.length > 0) {
-          this.view.dataService.data = newTasks.concat(
-            this.dialog.dataService.data
-          );
-          this.view.dataService.afterSave.next(newTasks);
-        }
-        this.detectorRef.detectChanges();
-      }
-    });
+  viewDetail(data) {
+    this.codxService.navigate('', this.urlDetail, {meetingID: data.meetingID});
   }
 }

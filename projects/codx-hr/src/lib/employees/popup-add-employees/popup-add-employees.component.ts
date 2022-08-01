@@ -45,13 +45,13 @@ export class PopupAddEmployeesComponent implements OnInit {
       ...this.employee,
       ...dt?.data,
     };
-     this.action = dt.data;
+    this.action = dt.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
     this.data = dialog.dataService!.dataSelected;
     this.employee = this.data;
-   }
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -59,10 +59,10 @@ export class PopupAddEmployeesComponent implements OnInit {
       if (res)
         this.gridViewSetup = res
     });
-    if(this.action==='edit'){
+    if (this.action === 'edit') {
       this.title = 'Chỉnh sửa';
     }
-    if(this.action==='copy'){
+    if (this.action === 'copy') {
       this.title = 'Sao chép';
     }
   }
@@ -142,34 +142,32 @@ export class PopupAddEmployeesComponent implements OnInit {
     op.data = data;
     return true;
   }
-  
-  OnSaveForm(){
-    for (var key in this.data) {  
-      if(Array.isArray(this.data[key]))
-      this.data[key] = this.data[key].join(';');
+
+  OnSaveForm() {
+    for (var key in this.data) {
+      if (Array.isArray(this.data[key]))
+        this.data[key] = this.data[key].join(';');
     }
     this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm thành công'); 
-      }
-    });
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+        }
+      });
   }
 
   addEmployee() {
     var t = this;
-    this.dialog.dataService.save((opt:any)=>{
+    this.dialog.dataService.save((opt: any) => {
       opt.data = [this.employee];
       return true;
     })
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm mới thành công');
-      }
-    });
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+        }
+      });
   }
 
   closePanel() {
@@ -189,7 +187,7 @@ export class PopupAddEmployeesComponent implements OnInit {
       }
     }
   }
-  changeTime(data){
+  changeTime(data) {
     if (!data.field || !data.data) return;
     this.employee[data.field] = data.data?.fromDate;
   }

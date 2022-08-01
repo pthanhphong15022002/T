@@ -136,19 +136,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   copy(data) {
-    // this.view.dataService.copy().subscribe((res: any) => {
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view?.currentView?.dataService;
-    //   option.FormModel = this.view?.currentView?.formModel;
-    //   option.Width = '800px';
-    //   this.view.dataService.dataSelected = data;
-    //   this.dialog = this.callfunc.openSide(
-    //     PopupAddEmployeesComponent,
-    //     [this.view.dataService.dataSelected, 'copy'],
-    //     option
-    //   );
-    // });
-
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -236,12 +223,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   updateStatus(data) {
-    // let obj = {
-    //   fieldValue: fieldValue,
-    //   moreFunc: moreFunc,
-    //   taskAction: taskAction,
-    //   funcID: this.funcID
-    // };
     this.dialog = this.callfunc.openForm(
       UpdateStatusComponent,
       'Cập nhật tình trạng',
@@ -271,16 +252,13 @@ export class EmployeesComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      // case 'add':
-      //   this.add();
-      //   break;
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'copy':
+      case 'SYS04':
         this.copy(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
       case 'HR0031':   /// cần biến cố định để truyền vào đây !!!!

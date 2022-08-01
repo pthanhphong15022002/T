@@ -255,11 +255,13 @@ export class CalendarNotesComponent
 
           this.WP_Notes = dt[0];
           this.TM_Tasks = dt[1];
-          this.WP_Notes.forEach((res) => {
-            if (res.isPin == true || res.isPin == '1') {
-              this.countNotePin++;
-            }
-          });
+          if (this.WP_Notes) {
+            this.WP_Notes.forEach((res) => {
+              if (res.isPin == true || res.isPin == '1') {
+                this.countNotePin++;
+              }
+            });
+          }
         }
       });
     // this.getNumberNotePin(this.WP_Notes);
@@ -534,14 +536,7 @@ export class CalendarNotesComponent
     var obj = {
       itemUpdate: item,
     };
-    this.callfc.openForm(
-      SaveNoteComponent,
-      'Cập nhật ghi chú',
-      900,
-      650,
-      '',
-      obj
-    );
+    this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj);
   }
 
   getMoreF(item) {

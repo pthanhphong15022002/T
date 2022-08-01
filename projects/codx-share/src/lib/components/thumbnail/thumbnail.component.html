@@ -13,7 +13,7 @@
           </ng-template>
           <ng-template #full>
             <codx-temp-full imageSrc="{{getExtension(item.data.thumbnail, item.data.extension)}}"
-              imgCss="w-24px me-3 cursor-pointer" title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
+              imgCss="w-25px me-3 cursor-pointer" title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
               subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.userName}}"
               [desc]="getSubTitle(item.data.recID)" [descLine]="1">
             </codx-temp-full>
@@ -40,7 +40,7 @@
                 (click)="editfile(item.data, true)">
                 <div class="d-flex align-items-center">
                   <span class="icon-edit icon-18"></span>
-                  <span class="ml-3">{{titleUpdateFile}}</span>
+                  <span class="ms-3">{{titleUpdateFile}}</span>
                 </div>
               </a>
               <a ngbDropdownItem
@@ -48,7 +48,7 @@
                 (click)="openPermission(item.data)">
                 <div class="d-flex align-items-center">
                   <span class="icon-playlist_add_check icon-18"></span>
-                  <span class="ml-3">{{titlePermission}}</span>
+                  <span class="ms-3">{{titlePermission}}</span>
                 </div>
               </a>
               <a ngbDropdownItem
@@ -56,13 +56,13 @@
                 (click)="setShare()">
                 <div class="d-flex align-items-center">
                   <span class="icon-share icon-18"></span>
-                  <span class="ml-3">{{titleUpdateShare}}</span>
+                  <span class="ms-3">{{titleUpdateShare}}</span>
                 </div>
               </a>
               <a ngbDropdownItem class="dropdown-item  cursor-pointer" (click)="setBookmark()">
                 <div class="d-flex align-items-center">
                   <span class="icon-star_border icon-18"></span>
-                  <span class="ml-3">
+                  <span class="ms-3">
                     <div *ngIf="!checkBookmark(); then thenBlockBM else elseBlockBM"></div>
                     <ng-template #thenBlockBM>{{titleUpdateBookmark}}</ng-template>
                     <ng-template #elseBlockBM>{{titleUpdateUnBookmark}}</ng-template>
@@ -74,7 +74,7 @@
                 (click)="properties()">
                 <div class="d-flex align-items-center">
                   <span class="icon-list_alt icon-18"></span>
-                  <span class="ml-3">{{titleUpdateProperties}}</span>
+                  <span class="ms-3">{{titleUpdateProperties}}</span>
                 </div>
               </a>
             </div>
@@ -120,7 +120,7 @@
                 (click)="editfile(item, true)">
                 <div class="d-flex align-items-center">
                   <span class="icon-edit icon-18"></span>
-                  <span class="ml-3">{{titleUpdateFile}}</span>
+                  <span class="ms-3">{{titleUpdateFile}}</span>
                 </div>
               </a>
               <a ngbDropdownItem
@@ -128,7 +128,7 @@
                 (click)="openPermission(item)">
                 <div class="d-flex align-items-center">
                   <span class="icon-playlist_add_check icon-18"></span>
-                  <span class="ml-3">{{titlePermission}}</span>
+                  <span class="ms-3">{{titlePermission}}</span>
                 </div>
               </a>
               <a ngbDropdownItem
@@ -136,13 +136,13 @@
                 (click)="setShare()">
                 <div class="d-flex align-items-center">
                   <span class="icon-share icon-18"></span>
-                  <span class="ml-3">{{titleUpdateShare}}</span>
+                  <span class="ms-3">{{titleUpdateShare}}</span>
                 </div>
               </a>
               <a ngbDropdownItem class="dropdown-item  cursor-pointer" (click)="setBookmark()">
                 <div class="d-flex align-items-center">
                   <span class="icon-star_border icon-18"></span>
-                  <span class="ml-3">
+                  <span class="ms-3">
                     <div *ngIf="!checkBookmark(); then thenBlockBM else elseBlockBM"></div>
                     <ng-template #thenBlockBM>{{titleUpdateBookmark}}</ng-template>
                     <ng-template #elseBlockBM>{{titleUpdateUnBookmark}}</ng-template>
@@ -154,7 +154,7 @@
                 (click)="properties()">
                 <div class="d-flex align-items-center">
                   <span class="icon-list_alt icon-18"></span>
-                  <span class="ml-3">{{titleUpdateProperties}}</span>
+                  <span class="ms-3">{{titleUpdateProperties}}</span>
                 </div>
               </a>
             </div>

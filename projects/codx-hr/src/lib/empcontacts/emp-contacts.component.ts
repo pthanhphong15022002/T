@@ -30,7 +30,8 @@ export class EmpContactsComponent implements OnInit {
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
-
+  @ViewChild('view') codxView!: any;
+  
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
   constructor(

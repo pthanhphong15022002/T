@@ -7,7 +7,7 @@ import { CodxTMService } from '../../codx-tm.service';
   templateUrl: './popup-confirm.component.html',
   styleUrls: ['./popup-confirm.component.css']
 })
-export class PopupConfirmComponent implements OnInit,AfterViewInit {
+export class PopupConfirmComponent implements OnInit, AfterViewInit {
 
   data: any;
   dialog: any;
@@ -15,9 +15,9 @@ export class PopupConfirmComponent implements OnInit,AfterViewInit {
   url: string;
   status: string;
   title: string = 'Xác nhận ';
-  funcID:any
+  funcID: any
   moreFunc: any
-  vllConfirm ='TM009'
+  vllConfirm = 'TM009'
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -32,7 +32,7 @@ export class PopupConfirmComponent implements OnInit,AfterViewInit {
   }
 
   ngOnInit(): void {
-   
+
   }
   ngAfterViewInit(): void {
     this.task = this.data.data;
@@ -41,20 +41,21 @@ export class PopupConfirmComponent implements OnInit,AfterViewInit {
     this.status = UrlUtil.getUrl('defaultValue', this.url);
   }
 
-  valueChange(data){
+  valueChange(data) {
 
   }
 
-  valueSelected(data){
+  valueSelected(data) {
 
   }
-  
-  saveData(){
-   if(this.task.confirmStatus =="3" &&  (this.task.confirmComment || this.task.confirmComment.trim()=="")){
-    this.notiService.notifyCode("TM019") ;
-    return ;
-   }
-   ///xu ly save
+
+  saveData() {
+    if (this.task.confirmStatus == "3" && (this.task.confirmComment || this.task.confirmComment.trim() == "")) {
+      this.notiService.notifyCode("TM019");
+
+      return;
+    }
+    ///xu ly save
   }
 
 }

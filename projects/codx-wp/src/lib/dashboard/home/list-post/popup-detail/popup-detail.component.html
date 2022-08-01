@@ -1,0 +1,32 @@
+<div class="row border">
+    <div class="col-8  px-6 py-4 bg-secondary">
+        <ng-container [ngSwitch]="file.referType">
+            <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
+                <div class="w-100 h-100">
+                    <img [src]="file.thumbnail" alt="" class="w-100 ">
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
+                <div class="w-100 h-100">
+                    <video class="w-100 h-100" controls>
+                        <source [src]="file.thumbnail" type="video/mp4">
+                    </video>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <div class="mt-2 d-flex">
+                    <div class="me-2">
+                        <codx-temp-full 
+                        imageSrc="{{file.extension | avtFile}}" 
+                        imgCss="w-20px me-3 cursor-pointer"
+                        title="{{file.fileName}}" [descLine]="1">
+                        </codx-temp-full>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+    <div class="col-4">
+
+    </div>
+</div>

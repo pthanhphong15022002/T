@@ -33,7 +33,7 @@ import { PopupDeviceStationeryComponent } from './settings/stationery/popup-add-
 import { PopupColorStationeryComponent } from './settings/stationery/popup-add-stationery/popup-color-stationery/popup-color-stationery.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
-
+import { ReportComponent } from './booking-room/report-view/report.component';
 const routes: Route[] = [
   {
     path: '',
@@ -97,6 +97,7 @@ const Components: Type<any>[] = [
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,
+  ReportComponent
 ];
 
 @NgModule({

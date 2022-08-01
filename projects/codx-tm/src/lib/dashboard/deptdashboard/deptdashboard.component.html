@@ -1,11 +1,12 @@
-<div
+<!-- <div
   _ngcontent-kef-c310=""
   class="toolbar"
   _nghost-kef-c295=""
   ng-reflect-views="[object Object],[object Object"
   ng-reflect-button="[object Object]"
   ng-reflect-more-funcs="[object Object],[object Object"
-  ><div
+>
+  <div
     _ngcontent-kef-c295=""
     class="d-flex flex-stack container-fluid"
     ng-reflect-ng-class="container-fluid"
@@ -22,7 +23,8 @@
         class="ms-1"
         _nghost-kef-c292=""
         ng-reflect-button="[object Object]"
-        ><span _ngcontent-kef-c292="" type="button" class="btn btn-primary"
+      >
+        <span _ngcontent-kef-c292="" type="button" class="btn btn-primary"
           ><i _ngcontent-kef-c292="" class="icon-add"></i
           ><span
             _ngcontent-kef-c292=""
@@ -34,11 +36,11 @@
             ng-reflect-default="Thêm"
             >Thêm
           </span></span
-        ></div
-      >
+        >
+      </div>
     </div>
-  </div></div
->
+  </div>
+</div> -->
 
 <div class="page-content d-flex flex-row">
   <div class="w-100 me-4">
@@ -496,27 +498,27 @@
         ></codx-img>
       </div>
       <span>{{ item?.qtyTasks }}</span>
-      <div class="progress">
+      <div class="progress w-100">
         <div
           class="progress-bar progress-bar-done"
           role="progressbar"
-          [style.width.%]="item?.status.done"
+          [style.width.%]="item?.status?.done"
         ></div>
         <div
           class="progress-bar progress-bar-processing"
           role="progressbar"
           [style.backgroundColor]=""
-          [style.width.%]="item?.status.processing"
+          [style.width.%]="item?.status?.processing"
         ></div>
         <div
           class="progress-bar progress-bar-postpone"
           role="progressbar"
-          [style.width.%]="item?.status.postpone"
+          [style.width.%]="item?.status?.postpone"
         ></div>
         <div
           class="progress-bar progress-bar-cancel"
           role="progressbar"
-          [style.width.%]="item?.status.cancel"
+          [style.width.%]="item?.status?.cancel"
         ></div>
       </div>
     </div>

@@ -296,14 +296,14 @@ ngb-popover-window[role="tooltip"] {
 }
 
 
-.card-item {
-    position: relative;
-}
-.card-item {
-    width: 180px;
-    margin-right: 20px;
-    float: left;
-}
+// .card-item {
+//     position: relative;
+// }
+// .card-item {
+//     width: 180px;
+//     margin-right: 20px;
+//     float: left;
+// }
 
 .mt-2, .my-2 {
     margin-top: 0.5rem!important;
@@ -364,4 +364,45 @@ textarea.e-input,
     font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI", "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     font-size: 13px;
     font-weight: 400;
+}
+.w-228px{
+    width: 228px!important;
+}
+.h-140px{
+    height: 140px!important;
+}
+/***note-drawer**/
+.note-content {
+    background-color: #fff7df;
+    border-left: 3px #ffd075 solid;
+}
+
+.task-content {
+    background-color: #F08080;
+    border-left: 3px red solid;
+}
+
+.pd-left-10 {
+    padding-left: 10px;
+}
+
+.moreFunc {
+    width: 0px;
+    margin-left: 100%;
+}
+
+.icon-add {
+    color: darkgray;
+}
+
+.active [class*="icon-"] {
+    color: #0078FF;
+}
+
+.note-content .active {
+    margin-top: 3px;
+}
+
+.note-list {
+    // margin-left: -8px;
 }

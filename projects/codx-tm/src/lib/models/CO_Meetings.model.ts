@@ -35,6 +35,7 @@ export class CO_Meetings{
     startTime: any = null;
     endTime: any = null;
     isFullDay = false;
+    avataResource: string;
 }
 
 export class Resources{

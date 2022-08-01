@@ -8,6 +8,7 @@ import {
 import { FormGroup } from '@angular/forms';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { CacheService, CodxService, DialogData, DialogRef } from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -20,7 +21,7 @@ export class PopupSignatureComponent implements OnInit {
   @ViewChild('attSignature2') attSignature2: AttachmentComponent;
   @ViewChild('attStamp') attStamp: AttachmentComponent;
 
-  currentTab: number = 1;
+  currentTab: number = 3;
   dataFile: any = null;
   Signature1: any = null;
   Signature2: any = null;
@@ -38,6 +39,8 @@ export class PopupSignatureComponent implements OnInit {
   constructor(
     private codxService: CodxService,
     private cr: ChangeDetectorRef,
+    public dmSV: CodxDMService,
+
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -95,32 +98,38 @@ export class PopupSignatureComponent implements OnInit {
       this.dialogSignature.patchValue({ stamp: this.Stamp });
     }
 
-    this.attSignature1.saveFiles();
-    this.attSignature2.saveFiles();
-    this.attStamp.saveFiles();
-    this.dialog.close();
+    if (this.dmSV.fileUploadList.length > 0) {
+      console.log(this.dmSV.fileUploadList);
+      // this.dmSV.fileUploadList == files1
+      this.attSignature1.saveFiles();
+      this.attSignature1.objectId;
+      this.attSignature2.saveFiles();
+      this.attStamp.saveFiles();
+      this.dialog.close();
+    }
   }
 
   onSavePopup() {}
 
   fileAdded(event, currentTab) {
-    switch (currentTab) {
-      case 3:
-        if (event.data) {
-          this.isAddSignature1 = true;
-        }
-        break;
-      case 4:
-        if (event.data) {
-          this.isAddSignature2 = true;
-        }
-        break;
-      case 5:
-        if (event.data) {
-          this.isAddStamp = true;
-        }
-        break;
-    }
+    debugger;
+    // switch (currentTab) {
+    //   case 3:
+    //     if (event.data) {
+    //       this.isAddSignature1 = true;
+    //     }
+    //     break;
+    //   case 4:
+    //     if (event.data) {
+    //       this.isAddSignature2 = true;
+    //     }
+    //     break;
+    //   case 5:
+    //     if (event.data) {
+    //       this.isAddStamp = true;
+    //     }
+    //     break;
+    // }
   }
 
   fileCount(event, currentTab) {}
