@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewEncapsulation } from '@angular/core';
 import { Post } from '@shared/models/post';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
@@ -6,7 +6,8 @@ import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
 @Component({
   selector: 'lib-popup-detail',
   templateUrl: './popup-detail.component.html',
-  styleUrls: ['./popup-detail.component.css']
+  styleUrls: ['./popup-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PopupDetailComponent implements OnInit {
 
@@ -14,7 +15,8 @@ export class PopupDetailComponent implements OnInit {
   assemplyName:string = "ERM.Business.WP";
   className:string = "CommentsBusiness";
   methodName:string = "GetPostByIDAsync";
-  data:Post = null;
+  parentPost:Post = null;
+  childPost:Post = new Post();
   dialogRef:any;
   recID:string = "";
   file:any = null;
@@ -31,12 +33,12 @@ export class PopupDetailComponent implements OnInit {
   ) 
   {
     this.dialogRef = dialogRef;
-    this.recID = dd.data.objectID;
     this.file = dd.data;
+    console.log(this.file);
   }
 
   ngOnInit(): void {
-    this.getPostByID(this.recID);
+    this.getPostByID(this.file.objectID);
   }
 
   getPostByID(recID:string){
@@ -44,8 +46,17 @@ export class PopupDetailComponent implements OnInit {
     .subscribe((res:any) => {
       if(res)
       {
-        this.data = res;
+        this.parentPost = res;
+        this.dt.detectChanges();
       }
     });
+  }
+
+  clickClosePopup(){
+    this.dialogRef.close();
+  }
+
+  pushComment(data: any) {
+    this.childPost.listComment.push(data)
   }
 }

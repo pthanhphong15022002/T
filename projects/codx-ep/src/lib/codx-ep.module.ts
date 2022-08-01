@@ -60,6 +60,10 @@ const routes: Route[] = [
         component: CarsComponent,
       },
       {
+        path: 'drivers/:funcID',
+        component: null
+      },
+      {
         path: 'stationery/:funcID',
         component: StationeryComponent,
       },

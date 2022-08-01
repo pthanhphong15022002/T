@@ -64,53 +64,7 @@ export class AddUserComponent implements OnInit {
       }
     })
   }
-  // initForm()
-  // {
-  // this.view.entityName = 'AD_Users';
-  // this.view.formName = 'Users';
-  // this.view.gridViewName = 'grvUsers';
-  // }
 
-  // openPopup(item: any) {
-  //   this.view.dataService.addNew().subscribe((res: any) => {
-  //     let option = new SidebarModel();
-  //     option.DataService = this.view.dataService;
-  //     option.FormModel = this.view.formModel;
-  //     this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
-  //     this.dialogRole.closed.subscribe((x) => {
-  //       if (x.event == null && this.view.dataService.hasSaved) {
-  //         this.view.dataService
-  //           .delete([this.view.dataService.dataSelected])
-  //           .subscribe(x => {
-  //             this.changDetec.detectChanges();
-  //           });
-  //       }
-  //       // if (x.event) {
-  //       //   this.viewChooseRole = x?.event;
-  //       //   this.countListViewChooseRoleApp = this.viewChooseRole.filter(obj => obj.isPortal == false).length;
-  //       //   this.countListViewChooseRoleService = this.viewChooseRole.filter(obj => obj.isPortal == true).length;
-  //       //   this.changDetec.detectChanges()
-  //       // }
-  //     });
-  //   });
-  // }
-  // add() {
-  //   this.view.dataService.addNew().subscribe((res: any) => {
-  //     let option = new SidebarModel();
-  //     option.DataService = this.view.dataService;
-  //     option.FormModel = this.view.formModel;
-  //     option.Width = '550px';
-  //     this.dialog = this.callfunc.openSide(AddEditComponent, null, option);
-  //     this.dialog.closed.subscribe((x) => {
-  //       if (x.event == null && this.view.dataService.hasSaved)
-  //         this.view.dataService
-  //           .delete([this.view.dataService.dataSelected])
-  //           .subscribe(x => {
-  //             this.dt.detectChanges();
-  //           });
-  //     });
-  //   });
-  // }
   beforeSave(op: any) {
     var data = [];
     if (this.data1 == 'add') {
@@ -147,11 +101,6 @@ export class AddUserComponent implements OnInit {
             });
           this.dialog.dataService.setDataSelected(res.save);
           this.dialog.dataService.afterSave.next(res);
-          // this.dialog.closed.subscribe(e => {
-          //   if (e?.event) {
-          //     this.viewChooseRole = e?.event
-          //   }
-          // })
           this.changDetec.detectChanges();
         }
       });
