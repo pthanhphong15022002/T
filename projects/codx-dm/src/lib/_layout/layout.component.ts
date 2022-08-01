@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { FileUpload } from '@shared/models/file.model';
-import { AuthService, CacheService, CallFuncService, CodxService, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
+import { AuthService, CacheService, CallFuncService, CodxService, DialogRef, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
+import { NoteDrawerComponent } from 'projects/codx-share/src/lib/components/note-drawer/note-drawer.component';
 import { Observable, of } from 'rxjs';
 import { CodxDMService } from '../codx-dm.service';
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
@@ -21,6 +22,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   asideCSSClasses?: string;
   disableInput = true;
   module = 'DM';
+  dialog: DialogRef;
+
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
   public titleHddUsed = 'Đã sử dụng 203.63MB trong tổng số 50.00 GB';
@@ -122,6 +125,13 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     // if(size){
     //   console.log(JSON.stringify(size));
     // }
+  }
+
+  openFormNoteDrawer() {
+    let option = new SidebarModel();
+    option.Width = '550px';
+    this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
+    this.dialog.closed.subscribe()
   }
 
   /* public funcs$: Observable<any> = of([
