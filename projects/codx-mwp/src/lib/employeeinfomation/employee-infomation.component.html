@@ -3,7 +3,7 @@
 </codx-views>
 
 <ng-template #panelRightRef>
-  <div class="page-pw">
+  <div class="page-pw h-100">
 
     <div class="pw-profile"
       style="background-image:url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');">
@@ -19,11 +19,11 @@
       </div>
     </div>
 
-    <div class="d-flex w-100">
-      <div class="w-300px min-w-300px">
+    <div class="d-flex w-100  h-employee">
+      <div class="w-300px min-w-300px h-100">
         <lib-info-left [formModel]="view.formModel"></lib-info-left>
       </div>
-      <div class="employee-container w-100 ms-3 ps-9 pe-3 pb-6">
+      <div class="employee-container w-100 ms-3 ps-9 pe-3 pb-6 h-100">
         <div class="pw-menu d-flex">
           <div ngbDropdown class="d-inline-block">
             <codx-button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
@@ -38,12 +38,10 @@
           </div>
         </div>
 
-        <div class="pw-content w-100 pw-lg hover-scroll-overlay-y" data-kt-scroll="true"
-          data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
-          style="overflow: auto !important; height: 100vh; display: block;"
-          data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".pw-content"
-          data-kt-scroll-offset="'0px'">
-          <div class="user-content flex-row-fluid" (sectionChange)="onSectionChange($event)">
+        <div class="pw-content w-100 pw-lg scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+          data-kt-scroll-wrappers=".pw-content" data-kt-scroll-offset="'0px'">
+          <div class="user-content flex-row-fluid " (sectionChange)="onSectionChange($event)">
             <ng-container>
               <!-- thong tin chung -->
               <div class="user-profile overview d-block mb-3" id="MWP00201">
