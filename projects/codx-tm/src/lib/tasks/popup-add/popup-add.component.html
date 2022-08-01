@@ -148,7 +148,7 @@
   </ng-container>
   <div class="d-flex align-items-center justify-content-between mt-6" *ngIf="isHaveFile">
     <div class="d-flex align-items-center mb-3">
-      <span class="icon-attach icon-24 me-2 text-primary"></span>
+      <span class="icon-attach_file icon-24 me-2 text-primary"></span>
       <div class="fw-bold fs-6 text-primary">
         <codx-label fiedName="Attachments" [formModel]="form.formModel" default="Tài liệu đính kèm">
         </codx-label>
@@ -303,11 +303,11 @@
         </div>
       </div>
     </ng-container>
-    <div class="d-flex justify-content-between align-items-center checkbox-item ">
+    <div class="d-flex justify-content-between align-items-center checkbox-item "  *ngIf="!viewTask">
       <div class="checkbox-list">
         <div class="d-flex flex-column flex-grow-1 w-100">
           <div class="row">
-            <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1
+            <input #txtTodoAdd name="txtTodoAdd" matInput [(ngModel)]="todoAddText" #checkShareRight1 
               (blur)="onAddToDo(txtTodoAdd)" placeholder={{planholderTaskGoal}} (keydown.enter)="onAddToDo(txtTodoAdd)"
               type="text" style="
               border-width: thin;

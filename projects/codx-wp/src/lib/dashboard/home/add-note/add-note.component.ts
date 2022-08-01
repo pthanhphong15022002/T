@@ -310,7 +310,7 @@ export class AddNoteComponent implements OnInit {
           }
         });
     } else {
-      this.notificationsService.notify('Vui lòng nhập ghi chú', 'error', 2000);
+      this.notificationsService.notifyCode('TM037');
 
       this.listNote[0] = {
         status: this.type == 'check' ? 0 : null,
@@ -473,11 +473,7 @@ export class AddNoteComponent implements OnInit {
         obj
       );
     } else {
-      this.notificationsService.notify(
-        'Vui lòng thêm mới ghi chú',
-        'error',
-        2000
-      );
+      this.notificationsService.notifyCode('TM037');
     }
   }
 

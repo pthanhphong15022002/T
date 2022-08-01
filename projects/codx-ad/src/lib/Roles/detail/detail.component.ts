@@ -300,7 +300,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
             "far fa-check-square"
           );
           this.RolesService._dataChanged = false;
-          this.notificationsService.notify("Hệ thống thực thi thành công!");
+          this.notificationsService.notifyCode("SYS019");
         }
       });
   }
@@ -322,7 +322,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
           $('.check-per[data-id="' + funcID + '"]').removeClass(
             "far fa-check-square"
           );
-          this.notificationsService.notify("Hệ thống thực thi thành công!");
+          this.notificationsService.notifyCode("SYS019");
           this.RolesService._dataChanged = false;
 
           this.api
