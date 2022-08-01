@@ -30,6 +30,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { SearchingComponent } from './incomming/searching/searching.component';
+import { TabsComponent } from './incomming/tab/tabs.component';
 
 const routes: Routes = [
   {
@@ -81,7 +82,8 @@ const routes: Routes = [
     ViewDetailComponent,
     IncommingAddComponent,
     FolderComponent,
-    SearchingComponent
+    SearchingComponent,
+    TabsComponent
   ],
   imports: [RouterModule.forChild(routes),
   CodxCoreModule.forRoot({ environment }),

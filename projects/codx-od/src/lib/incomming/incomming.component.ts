@@ -166,7 +166,7 @@ export class IncommingComponent
         if (x.event) {
           delete x.event._uuid;
           this.view.dataService.add(x.event, 0).subscribe();
-          this.getDtDis(x.event?.recID)
+          //this.getDtDis(x.event?.recID)
         }
       });
     });

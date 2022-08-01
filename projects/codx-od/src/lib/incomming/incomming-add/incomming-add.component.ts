@@ -227,10 +227,16 @@ export class IncommingAddComponent implements OnInit {
               if (item.status == 0) {
                 this.data = item;
                 this.attachment.objectId = item.data.recID;
-                this.attachment.saveFiles();
-                this.dialog.close(item.data);
+                this.attachment.saveFilesObservable().subscribe((item2:any)=>{
+                  if(item2?.status == 0)
+                  {
+                    this.dialog.close(item.data);
+                    this.notifySvr.notify(item.message);
+                  }
+                  else this.notifySvr.notify(item2.message);
+                });
               }
-              this.notifySvr.notify(item.message);
+              else this.notifySvr.notify(item.message);
             });
       } else this.notifySvr.notifyCode('DM001');
     } else if (this.type == 'edit') {

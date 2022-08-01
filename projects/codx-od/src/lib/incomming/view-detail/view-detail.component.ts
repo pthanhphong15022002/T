@@ -415,16 +415,16 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT103":
       case "ODT202":
         {
-          if(this.checkOpenForm(funcID))
-            var option = new DialogModel();
-            option.FormModel = this.formModel;
-            this.callfunc.openForm(UpdateExtendComponent, null, 600, 400,null,{data: this.data},"",option).closed.subscribe(x=>{
-              if(x.event) 
-              {
-                this.data.updates = x.event.updates;
-                this.data.percentage = x.event.percentage;
-              }
-            });
+          //if(this.checkOpenForm(funcID))
+          var option = new DialogModel();
+          option.FormModel = this.formModel;
+          this.callfunc.openForm(UpdateExtendComponent, null, 600, 400,null,{data: this.data},"",option).closed.subscribe(x=>{
+            if(x.event) 
+            {
+              this.data.updates = x.event.updates;
+              this.data.percentage = x.event.percentage;
+            }
+          });
           break;
         }
       //Chia sẻ
