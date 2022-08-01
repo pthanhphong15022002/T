@@ -8,6 +8,9 @@ import { Observable } from 'rxjs';
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'HR';
+  override aside = true;
+  override asideFixed = true;
+  override toolbar = false;
   constructor(inject: Injector) {
     super(inject);
   }

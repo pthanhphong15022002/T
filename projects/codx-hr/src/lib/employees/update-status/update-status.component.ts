@@ -47,12 +47,16 @@ export class UpdateStatusComponent implements OnInit {
         status: this.employStatus.status,
       })
       .subscribe((res) => { });
-    if (this.employStatus.status == "90") {
-      this.view.removeHandler(this.employStatus, "employeeID");
-    } else {
-      this.view.addHandler(this.employStatus, false, "employeeID");
-    }
+    // if (this.employStatus.status == "90") {
+    //   this.view.removeHandler(this.employStatus, "employeeID");
+    // } else {
+    //   this.view.addHandler(this.employStatus, false, "employeeID");
+    // }
     this.dialog.close();
   }
 
+  valueChange(e) {
+    this.employStatus[e.field] = e.data.value;
+    this.employStatus.statusName = e.data.text;
+  }
 }
