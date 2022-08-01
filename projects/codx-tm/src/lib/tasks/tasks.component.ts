@@ -798,10 +798,16 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM026')
       return;
     }
+    if(data.confirmControl =='0' || data.status > '10'){
+       this.notiService.notifyCode('TM039')
+      return;
+    }
+   
     var obj = {
       moreFunc: moreFunc,
       data: data,
-      funcID: this.funcID
+      funcID: this.funcID,
+      vll : "TM009",
     }
     this.dialogConFirmTask = this.callfc.openForm(
       PopupConfirmComponent,
@@ -811,12 +817,22 @@ export class TasksComponent extends UIComponent {
       '',
       obj
     );
+    this.dialogConFirmTask.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
+      }
+      this.detectorRef.detectChanges();
+    });
   }
 
   //#region event
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
+   // if(data.taskGroupID)this.getTaskGroup(data.taskGroupID)
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -835,6 +851,10 @@ export class TasksComponent extends UIComponent {
         break;
       case 'TMT02015': // cái này phải xem lại , nên có biến gì đó để xét
         this.assignTask(data);
+        break;
+        case 'TMT02016':
+        case 'TMT02017': // cái này phải xem lại , nên có biến gì đó để xét
+        this.openConfirmPopup(e.data,data);
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
