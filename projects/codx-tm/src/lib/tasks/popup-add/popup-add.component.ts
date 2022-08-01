@@ -84,6 +84,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   listUserDetailSearch: any[] = [];
   idUserSelected: any;
   viewTask = false;
+  taskType ='1' ;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -244,6 +245,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         if (res) {
           var param = JSON.parse(res.dataValue);
           this.param = param;
+          this.taskType = param?.TaskType ;
           //  this.paramModule = param;
         }
       });
@@ -470,7 +472,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   actionSave(id) {
-    // this.task.taskType = this.dialog.formModel?.entityName;
+    this.task.taskType = this.taskType;
     if (this.isHaveFile) this.attachment.saveFiles();
     if (this.action == 'edit') this.updateTask();
     else this.addTask();
