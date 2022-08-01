@@ -114,52 +114,6 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-<<<<<<< HEAD
-=======
-  clickMF(e: any, data?: any) {
-    this.itemSelected = data;
-    if (data.idTaskGroup) this.getTaskGroup(data.idTaskGroup)
-    switch (e.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'sendemail':
-        this.sendemail(data);
-        break;
-      case 'TMT02015': // cái này phải xem lại , nên có biến gì đó để xét
-        this.assignTask(data);
-        break;
-      case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
-        //Chung làm
-        break;
-      case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
-        //Chung làm
-        break;
-      case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
-        //???? chắc làm sau ??
-        break;
-      default:
-        this.changeStatusTask(e.data, data);
-        break;
-    }
-  }
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
-  }
->>>>>>> c510c4f7b9d11a11a50659eef95748943182bb52
 
   onInit(): void {
     this.modelResource = new ResourceModel();
@@ -840,13 +794,8 @@ export class TasksComponent extends UIComponent {
     this.popoverDataSelected = p;
   }
 
-<<<<<<< HEAD
-  //#region ConfirmControl
-  openConfirmControl(moreFunc, data) {
-=======
   //#region Confirm
   openConfirmPopup(moreFunc, data) {
->>>>>>> c510c4f7b9d11a11a50659eef95748943182bb52
     if (data.owner != this.user.userID) {
       this.notiService.notify(
         'Bạn không thể xác nhận công việc của người khác !'
@@ -867,7 +816,6 @@ export class TasksComponent extends UIComponent {
       obj
     );
   }
-<<<<<<< HEAD
 
   //#region event
 
@@ -928,34 +876,6 @@ export class TasksComponent extends UIComponent {
       );
     }
 
-=======
-  //#endregion
-
-  //#region Extend
-  openExtendPopup(moreFunc, data) {
-    if (data.isOverdue == "1") {
-      this.notiService.notifyCode("TM023");
-      return;
-    }
-    // if (this.param?.ExtendControl) {
-      this.notiService.notifyCode("TM021");
-      return;
-    //}
-  
-  //  var obj = {
-  //   moreFunc: moreFunc,
-  //   data: data,
-  //   funcID: this.funcID
-  // }
-  // var dialog = this.callfc.openForm(
-  //   PopupConfirmComponent,
-  //   '',
-  //   500,
-  //   350,
-  //   '',
-  //   obj
-  // );
->>>>>>> c510c4f7b9d11a11a50659eef95748943182bb52
   }
   //#endregion
 }
