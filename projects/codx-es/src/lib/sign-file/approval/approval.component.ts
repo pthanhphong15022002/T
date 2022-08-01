@@ -36,6 +36,7 @@ import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
 import { M, T } from '@angular/cdk/keycodes';
 import { DatePipe } from '@angular/common';
+import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 @Component({
   selector: 'lib-approval',
   templateUrl: './approval.component.html',
@@ -43,7 +44,7 @@ import { DatePipe } from '@angular/common';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = '8a001e01-0d9f-11ed-977b-509a4c39550b';
+  @Input() recID = '2f6589a9-1179-11ed-9440-00155d035517';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
 
@@ -93,6 +94,7 @@ export class ApprovalComponent extends UIComponent {
   @ViewChild('pdfviewer') pdfviewerControl!: PdfViewerComponent;
   @ViewChild('inputAuthor') inputAuthor!: ElementRef | any;
   @ViewChild('thumbnailTab') thumbnailTab!: ElementRef;
+  @ViewChild('qrCode') qrCode!: ElementRef;
   thumbnailEle!: Element;
 
   signerInfo: any;
@@ -174,6 +176,8 @@ export class ApprovalComponent extends UIComponent {
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
       .subscribe((res: any) => {
+        console.log(res);
+
         let sf = res?.signFile;
 
         if (sf) {
@@ -196,10 +200,12 @@ export class ApprovalComponent extends UIComponent {
     this.cache.valueList('ES015').subscribe((res) => {
       this.vllActions = res.datas;
     });
+
     // this.esService.getSignFormat().subscribe((res) => {
     //   console.log('format', res);
     // });
   }
+
   ngDoCheck() {
     let addToDBQueueChange = this.saveToDBQueueChange.diff(
       this.saveAnnoQueue.keys()
@@ -243,8 +249,6 @@ export class ApprovalComponent extends UIComponent {
         if (res) {
           this.lstRenderAnnotation = res;
           this.lstRenderAnnotation.forEach((item: any) => {
-            console.log(item);
-
             let anno = {
               annotationId: item.recID,
               annotationSelectorSettings: {
@@ -252,6 +256,7 @@ export class ApprovalComponent extends UIComponent {
                 resizerBorderColor: 'black',
                 resizerFillColor: '#FF4081',
                 resizerSize: 8,
+                isLock: true,
                 selectionBorderThickness: 1,
               },
               annotationSettings: {
@@ -320,15 +325,44 @@ export class ApprovalComponent extends UIComponent {
                   break;
                 }
                 case '8': {
-                  anno.stampAnnotationPath = curSignerInfo?.fileQRCode;
+                  anno.stampAnnotationPath = '';
                   break;
                 }
               }
+            }
+            if (
+              this.lstRenderAnnotation.indexOf(item) ==
+              this.lstRenderAnnotation.length - 1
+            ) {
+              anno.annotationSelectorSettings.isLock = false;
             }
             this.pdfviewerControl.addAnnotation(anno);
           });
         }
       });
+  }
+
+  async genFileQR(fileName, fileRefNo, companyID) {
+    let barcode = new QRCodeGenerator({
+      width: '100px',
+      height: '100px',
+      mode: 'SVG',
+      displayText: { visibility: false },
+      value: JSON.stringify({
+        FileName: fileName,
+        FileRefNo: fileRefNo,
+        Company: companyID,
+        CreatedOn: this.datePipe.transform(new Date(), 'M/d/yy, h:mm a'),
+        Pages: this.pdfviewerControl.pageCount,
+      }),
+    });
+    barcode.appendTo('#qrCode');
+    let barCodeUrl = '';
+    await barcode.exportAsBase64Image('PNG').then((value) => {
+      barCodeUrl = value;
+      this.qrCode.nativeElement.firstChild.remove();
+    });
+    return barCodeUrl;
   }
 
   changeSignFile(e: any) {
@@ -481,7 +515,7 @@ export class ApprovalComponent extends UIComponent {
           break;
 
         case 8:
-          this.url = this.signerInfo.fileQRCode;
+          this.url = qr;
           break;
 
         default:
@@ -845,8 +879,6 @@ export class ApprovalComponent extends UIComponent {
       });
 
     if (!signed) {
-      console.log(this.vllActions);
-
       if ([1, 2, 8].includes(type) && this.url != '') {
         let stamp = {
           customStampName: type.toString(),
@@ -1077,6 +1109,11 @@ export class ApprovalComponent extends UIComponent {
 
   show(e: any) {
     console.log('collections', this.pdfviewerControl.annotationCollection);
+    this.genFileQR('Test file', '13032001', 'CIC3032001').then(
+      (value: string) => {
+        console.log('value ', value);
+      }
+    );
   }
   testFunc(e: any) {}
 

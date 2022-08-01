@@ -47,7 +47,7 @@ export class PopupAddSignFileComponent implements OnInit {
   cbxName;
   dialogSignFile: FormGroup;
   lstDataFile = [];
-  isAdd: boolean = true;
+  isAddNew: boolean = true;
   processID: String = '';
   transID: String = '';
 
@@ -71,7 +71,8 @@ export class PopupAddSignFileComponent implements OnInit {
     this.formModel = data?.data.formModel;
     console.log(this.formModel);
 
-    this.data = data;
+    this.data = data?.data.dataSelected;
+    this.isAddNew = data?.data.isAddNew;
   }
 
   ngOnInit(): void {
@@ -86,6 +87,7 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   initForm() {
+    debugger;
     const user = this.auth.get();
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -94,30 +96,42 @@ export class PopupAddSignFileComponent implements OnInit {
           this.dialogSignFile = res;
 
           this.isAfterRender = true;
-          this.isAdd = true;
-          this.dialogSignFile.patchValue({
-            approveControl: '1',
-            approveStatus: '1',
-            employeeID: user.userID,
-          });
+          if (this.isAddNew) {
+            this.dialogSignFile.patchValue({
+              approveStatus: '1',
+              // employeeID: user.employee?.employeeID,
+              // orgUnitID: user.employee?.orgUnitID,
+            });
+            this.dialogSignFile.addControl(
+              'approveControl',
+              new FormControl('3')
+            );
+
+            this.codxService
+              .getAutoNumber(
+                this.formModel.funcID,
+                this.formModel.entityName,
+                'CategoryID'
+              )
+              .subscribe((dt: any) => {
+                this.autoNo = dt;
+                this.objectIDFile = dt;
+                this.dialogSignFile.patchValue({
+                  refNo: dt,
+                });
+              });
+          } else {
+            this.dialogSignFile.patchValue(this.data);
+          }
+
           this.dialogSignFile.addControl(
             'approveControl',
-            new FormControl('3')
+            new FormControl(this.data?.approveControl ?? '3')
           );
-
-          this.codxService
-            .getAutoNumber(
-              this.formModel.funcID,
-              this.formModel.entityName,
-              'CategoryID'
-            )
-            .subscribe((dt: any) => {
-              this.autoNo = dt;
-              this.objectIDFile = dt;
-              this.dialogSignFile.patchValue({
-                refNo: dt,
-              });
-            });
+          this.dialogSignFile.addControl(
+            'recID',
+            new FormControl(this.data?.recID ?? null)
+          );
         }
       });
   }
@@ -152,9 +166,9 @@ export class PopupAddSignFileComponent implements OnInit {
     });
   }
 
-  getfileCount(event) { }
+  getfileCount(event) {}
 
-  onSaveForm() { }
+  onSaveForm() {}
 
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
@@ -313,7 +327,10 @@ export class PopupAddSignFileComponent implements OnInit {
 
     switch (currentTab) {
       case 0:
-        if (this.dmSV.fileUploadList.length > 0) {
+        if (
+          this.dmSV.fileUploadList.length > 0 ||
+          this.dialogSignFile.value.files?.length > 0
+        ) {
           this.currentTab++;
           this.processTab++;
         } else {
@@ -324,8 +341,14 @@ export class PopupAddSignFileComponent implements OnInit {
         if (this.dialogSignFile.invalid) {
           break;
         }
-        this.onSaveSignFile();
+        if (this.isAddNew) {
+          this.onSaveSignFile();
+        } else {
+          this.processTab == this.currentTab && this.processTab++;
+          this.currentTab++;
+        }
         break;
+
       case 2:
         this.currentTab++;
         if (this.processTab == 1) this.processTab++;
