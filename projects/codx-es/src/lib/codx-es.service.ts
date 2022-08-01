@@ -666,13 +666,13 @@ export class CodxEsService {
     );
   }
 
-  deleteSignFile(data: any): Observable<any> {
+  deleteSignFile(recID: any): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'DeleteSignFileAsync',
-      [data]
+      [recID]
     );
   }
 

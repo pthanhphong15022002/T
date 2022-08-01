@@ -54,9 +54,9 @@
 
 <ng-template #templateListCard let-item>
     <div (click)="openStorageDetail(item)">
-        <codx-card-img cardCss="border rounded-4 w-150px" [imageId]="item.recID" imgCss="h-100px"
+        <codx-card-img cardCss="border rounded-4 w-230px  h-100" [imageId]="item.recID" imgCss="w-228px h-140px "
             icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo" [imgOn]="item?.modifiedOn"
-            [imageObjType]="'WP_Storages'" imageWidth="150" [formModel]="listView.formModel"
+            [imageObjType]="'WP_Storages'" imageWidth="230" [formModel]="listView.formModel"
             (clickMF)="clickMF($event, item)" [dataItem]="item">
         </codx-card-img>
     </div>

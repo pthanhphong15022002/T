@@ -49,6 +49,7 @@ import {
   PdfViewerModule,
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
+import { SettingComponent } from './setting/setting.component';
 
 const routes: Routes = [
   {
@@ -76,6 +77,10 @@ const routes: Routes = [
       {
         path: 'home/:funcID',
         component: DashboardComponent,
+      },
+      {
+        path: 'setting/:funcID',
+        component: SettingComponent,
       },
       {
         path: 'setting',
@@ -112,6 +117,7 @@ const routes: Routes = [
     PopupSignatureComponent,
     ApprovalComponent,
     SignatureComponent,
+    SettingComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

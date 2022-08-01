@@ -13,7 +13,6 @@ import {
   NotificationsService,
   CodxScheduleComponent,
   DataRequest,
-  DialogRef,
   UIComponent,
 } from 'codx-core';
 
@@ -30,8 +29,7 @@ import { CodxTMService } from '../../codx-tm.service';
 })
 export class CalendarComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @Input() viewPreset: string = 'weekAndDay';
   @Input() calendarID: string;
   @ViewChild(SelectweekComponent) selectweekComponent: SelectweekComponent;
@@ -62,9 +60,7 @@ export class CalendarComponent
   constructor(
     private injector: Injector,
     private tmService: CodxTMService,
-    private authService: AuthStore,
-    private notiService: NotificationsService
-  ) {
+    private authService: AuthStore) {
     super(injector);
     this.user = this.authService.get();
     this.funcID = this.router.snapshot.params['funcID'];
@@ -77,7 +73,7 @@ export class CalendarComponent
     this.tmService.getFormModel(this.funcID).then((res) => {
       this.formModel = res;
       const { formName, gridViewName } = this.formModel;
-      this.tmService.getComboboxName(formName, gridViewName).then((res) => {});
+      this.tmService.getComboboxName(formName, gridViewName).then((res) => { });
     });
     this.getParams();
   }
