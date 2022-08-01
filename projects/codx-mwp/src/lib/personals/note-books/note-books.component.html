@@ -22,7 +22,10 @@
             </div>
         </div>
     </div>
-    <div class="scroll-y">
+    <div class="scroll-y" class="d-flex flex-column-fluid home hover-scroll-overlay-y"
+        style="overflow: auto !important; height: 100vh; display: block" data-kt-scroll="true"
+        data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=""
+        attr.data-kt-scroll-wrappers=".dms-viewcard" attr.data-kt-scroll-offset="'0px'">
         <codx-listview #listView entityName="WP_NoteBooks" gridViewName="grvNoteBooks" [predicate]="predicate"
             [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="NoteBooks"
             funcId="MWP0094" service="WP">
@@ -32,7 +35,7 @@
 
 <ng-template #templateListCard let-item>
     <div (click)="openDetailPage(item)">
-        <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event,item)" [imageId]="item.recID"
+        <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event, item)" [imageId]="item.recID"
             imgCss="h-100px" icoTitleCss="icon-assignment icon-16" [title]="item.title" [imgOn]="item?.modifiedOn"
             [desc2]="item.memo" imageWidth="150" [imageObjType]="'WP_NoteBooks'" [formModel]="listView.formModel"
             [dataItem]="item">
