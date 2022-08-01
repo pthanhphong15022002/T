@@ -34,7 +34,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'contactbook',
+        path: 'contactbook/:funcID',
         component: EmpContactsComponent
       },
       {
