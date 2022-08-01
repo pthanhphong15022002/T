@@ -42,6 +42,9 @@ export class TreeviewCommentComponent implements OnInit {
   repComment = "";
   dicDatas = {};
   user: any;
+  votes: any;
+  lstUserVote: any;
+  dataSelected: any[];
   constructor(
     private dt: ChangeDetectorRef,
     private signalRApi: WPService,
@@ -51,6 +54,11 @@ export class TreeviewCommentComponent implements OnInit {
     private notifySvr: NotificationsService,
     private callFuc: CallFuncService,
   ) {
+    
+  }
+
+
+  ngOnInit(): void {
     this.user = this.auth.userValue;
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
@@ -60,13 +68,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
-    console.log('post: ', this.dataComment)
-  }
-
-  votes: any;
-  lstUserVote: any;
-  dataSelected: any[];
 
   showVotes(data: any) {
     this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);

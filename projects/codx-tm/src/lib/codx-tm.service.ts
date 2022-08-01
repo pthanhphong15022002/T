@@ -36,6 +36,7 @@ export class CodxTMService {
   ) {
     this.user = this.authStore.get();
   }
+  hideAside = new BehaviorSubject<any>(null);
 
   lowerFirstLetter(character) {
     return character.charAt(0).toLowerCase() + character.slice(1);

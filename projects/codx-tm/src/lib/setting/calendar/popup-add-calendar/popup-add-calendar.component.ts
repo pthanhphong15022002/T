@@ -86,6 +86,5 @@ export class PopupAddCalendarComponent extends UIComponent implements OnInit {
           this.dialog.close();
         }
       });
-    console.log(this.dialogAddCalendar.value);
   }
 }

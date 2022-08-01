@@ -4,7 +4,7 @@
   <div class="codx-stepper stepper stepper-pills">
     <div class="stepper-header d-flex flex-wrap flex-stack px-6">
       <div class="d-flex align-items-center">
-        <i class="icon-arrow_back icon-24 me-2 text-dark"></i>
+        <!-- <i class="icon-arrow_back icon-24 me-2 text-dark"></i> -->
         <h2 class="h2-title">
           <codx-label name="lblTitleSignFile" default="Thêm mới tài liệu" [formModel]="formModel"></codx-label>
         </h2>
@@ -151,7 +151,8 @@
                   <codx-label fiedName="EmployeeID" [formModel]="formModel" default="Người yêu cầu">
                   </codx-label>
                   <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['EmployeeID']"
-                    field="employeeID" (valueChange)="valueChange($event)">
+                    field="employeeID" (valueChange)="valueChange($event)"
+                    [crrValue]="dialogSignFile.value?.employeeID">
                   </codx-input>
                 </div>
                 <div class="form-group">
@@ -181,7 +182,8 @@
             </codx-label>
           </button>
           <div *ngIf="currentTab == 0"></div>
-          <button type="button" class="btn btn-primary" (click)="continue(currentTab)">
+          <button type="button" class="btn btn-primary" (click)="continue(currentTab)"
+            [ngClass]="dmSV.fileUploadList.length <= 0 && currentTab == 0 ? 'disabled' : ''">
             <codx-label name="lblContinue" [formModel]="formModel" default="Tiếp tục"></codx-label>
           </button>
         </div>

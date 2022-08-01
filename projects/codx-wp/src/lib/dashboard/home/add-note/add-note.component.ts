@@ -413,7 +413,6 @@ export class AddNoteComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     var ele = document.getElementsByClassName('test-textbox');
     if (ele) {
-
       let htmlEle = ele[0] as HTMLElement;
       htmlEle.focus();
     }
