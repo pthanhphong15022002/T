@@ -158,7 +158,7 @@ export class HomeComponent extends UIComponent {
     this.attachment.saveFilesObservable().subscribe(item => {
       console.log(item);
     })
-  //  this.attachment.saveFiles();
+    //  this.attachment.saveFiles();
   }
 
   openFile() {
@@ -186,13 +186,13 @@ export class HomeComponent extends UIComponent {
 
     if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
       item1 =
-        '<img class="max-h-18px" src="../../../assets/codx/dms/folder.svg">';
+        '<img class="max-h-18px me-2" src="../../../assets/codx/dms/folder.svg">';
     else {
       if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
       else {
         var path = `${this.path}/${folder.icon}`;
-        item1 = `<img class="max-h-18px" src="${path}">`;
+        item1 = `<img class="max-h-18px me-2" src="${path}">`;
       }
     }
 
