@@ -158,7 +158,7 @@ export class HomeComponent extends UIComponent {
     this.attachment.saveFilesObservable().subscribe(item => {
       console.log(item);
     })
-  //  this.attachment.saveFiles();
+    //  this.attachment.saveFiles();
   }
 
   openFile() {
@@ -192,15 +192,15 @@ export class HomeComponent extends UIComponent {
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
       else {
         var path = `${this.path}/${folder.icon}`;
-        item1 = `<img class="max-h-18px" src="${path}">`;
+        item1 = `<img class="max-h-18px " src="${path}">`;
       }
     }
 
     if (!folder.read)
-      item2 = `<i class="icon-per no-permission" role="presentation"></i>`;
+      item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
     var fullText = `${item1}
                     ${item2}
-                    <span class="mytree_node"></span>
+                    <span class="mytree_node  me-2"></span>
                     ${text}`;
 
     return fullText;

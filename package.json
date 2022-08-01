@@ -38,6 +38,7 @@
     "@syncfusion/ej2-angular-dropdowns": "^19.4.56",
     "@syncfusion/ej2-angular-gantt": "^19.4.56",
     "@syncfusion/ej2-angular-grids": "^19.4.56",
+    "@syncfusion/ej2-angular-inplace-editor": "^19.4.52",
     "@syncfusion/ej2-angular-inputs": "^19.4.52",
     "@syncfusion/ej2-angular-kanban": "^19.4.52",
     "@syncfusion/ej2-angular-layouts": "^19.4.52",
