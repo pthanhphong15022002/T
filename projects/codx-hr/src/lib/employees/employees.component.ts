@@ -45,7 +45,7 @@ export class EmployeesComponent implements OnInit {
     private df: ChangeDetectorRef,
     private codxService: CodxService,
   ) {
-    
+
   }
 
   ngOnInit(): void {
@@ -258,17 +258,17 @@ export class EmployeesComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      // case 'add':
-      //   this.add();
-      //   break;
-      case 'edit':
+      case 'SYS01':
+        this.add();
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'copy':
+      case 'SYS04':
         this.copy(data);
-        break;
-      case 'delete':
-        this.delete(data);
         break;
       case 'HR0031':   /// cần biến cố định để truyền vào đây !!!!
         this.updateStatus(data);

@@ -184,15 +184,15 @@ export class TasksComponent extends UIComponent {
           template3: this.cellTemplate,
         },
       },
-      {
-        type: ViewType.treedetail,
-        active: false,
-        sameData: true,
-        // request2: this.resourceTree,
-        model: {
-          template: this.treeView,
-        },
-      },
+      // {
+      //   type: ViewType.treedetail,
+      //   active: false,
+      //   sameData: true,
+      //   // request2: this.resourceTree,
+      //   model: {
+      //     template: this.treeView,
+      //   },
+      // },
     ];
 
     this.view.dataService.methodSave = 'AddTaskAsync';
@@ -540,7 +540,7 @@ export class TasksComponent extends UIComponent {
         for (var i = 0; i < listTask.length; i++) {
           if (listTask[i].taskID == data.taskID) {
             this.view.dataService.update(listTask[i]).subscribe();
-            this.view.dataService.setDataSelected(e?.event[0], i);
+            this.view.dataService.setDataSelected(e?.event[0]);
           } else newTasks.push(listTask[i]);
         }
         if (newTasks.length > 0) {
