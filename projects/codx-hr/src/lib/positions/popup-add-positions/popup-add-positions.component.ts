@@ -30,14 +30,14 @@ export class PopupAddPositionsComponent implements OnInit {
     this.functionID = this.dialog.formModel.funcID;
     this.data = dialog.dataService!.dataSelected;
     this.position = this.data;
-   }
+  }
 
   ngOnInit(): void {
 
-    if(this.action==='edit'){
+    if (this.action === 'edit') {
       this.title = 'Chỉnh sửa';
     }
-    if(this.action==='copy'){
+    if (this.action === 'copy') {
       this.title = 'Sao chép';
     }
   }
@@ -97,29 +97,27 @@ export class PopupAddPositionsComponent implements OnInit {
     return true;
   }
 
-  OnSaveForm(){
+  OnSaveForm() {
     this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm thành công');
-      }
-    });
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+        }
+      });
   }
 
   addPosition() {
     var t = this;
-    this.dialog.dataService.save((opt:any)=>{
+    this.dialog.dataService.save((opt: any) => {
       opt.data = [this.position];
       return true;
     })
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm mới thành công');
-      }
-    });
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+        }
+      });
   }
 
   closePanel() {

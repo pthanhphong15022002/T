@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators , FormBuilder, AbstractControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
 import { ApiHttpService, CodxService, DataRequest, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { type } from 'os';
@@ -21,16 +21,15 @@ import { AttachmentComponent } from '../../attachment/attachment.component';
   templateUrl: './codx-export-add.component.html',
   styleUrls: ['./codx-export-add.component.scss'],
 })
-export class CodxExportAddComponent implements OnInit, OnChanges
-{
+export class CodxExportAddComponent implements OnInit, OnChanges {
   idCrrFile: any;
-  type:any;
-  action:any;
+  type: any;
+  action: any;
   data: any;
   dialog: any;
   lblExtend: string = '';
   headerText: any;
-  exportAddForm : FormGroup;
+  exportAddForm: FormGroup;
   submitted = false;
   fileCount = 0;
   module: any;
@@ -40,20 +39,17 @@ export class CodxExportAddComponent implements OnInit, OnChanges
     private formBuilder: FormBuilder,
     private api: ApiHttpService,
     private notifySvr: NotificationsService,
-    private file : FileService,
+    private file: FileService,
     private codxService: CodxService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) 
-  {
+  ) {
     this.action = dt.data?.action;
     this.type = dt.data?.type;
-    if(this.action == "add")
-    {
-      this.headerText = "Thêm " + this.type +" Template";
+    if (this.action == "add") {
+      this.headerText = "Thêm " + this.type + " Template";
     }
-    else if(this.action == "edit")
-    {
+    else if (this.action == "edit") {
       this.headerText = "Chỉnh sửa " + this.type + " Template";
     }
     this.data = dialog.dataService;
@@ -61,11 +57,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges
     //this.data = dt.data;
   }
   ngOnInit(): void {
-    this.module = this.type == "excel" ? "AD_ExcelTemplates" : "AD_WordTemplates" 
+    this.module = this.type == "excel" ? "AD_ExcelTemplates" : "AD_WordTemplates"
     this.exportAddForm = this.formBuilder.group(
       {
-        templateName: [this.data?.templateName , Validators.required],
-        description: [this.data?.description , Validators.required],
+        templateName: [this.data?.templateName, Validators.required],
+        description: [this.data?.description, Validators.required],
         pWControl: this.data?.pWControl,
         pWDefault: this.data?.pWDefault,
         isDefault: this.data?.isDefault != null ? this.data?.isDefault : false,
@@ -89,76 +85,66 @@ export class CodxExportAddComponent implements OnInit, OnChanges
   get f(): { [key: string]: AbstractControl } {
     return this.exportAddForm.controls;
   }
-  ngOnChanges(changes: SimpleChanges) {}
-  openFormUploadFile()
-  {
+  ngOnChanges(changes: SimpleChanges) { }
+  openFormUploadFile() {
     this.attachment.uploadFile();
   }
-  onSave()
-  {
+  onSave() {
     this.submitted = true;
-    if(this.exportAddForm.invalid) return;
+    if (this.exportAddForm.invalid) return;
     this.exportAddForm.value.owner = "a";
     this.exportAddForm.value.buid = "a";
     //Thêm mới
-    if(this.action == "add")
-    {
-      if(this.fileCount>0)
-      {
-      
+    if (this.action == "add") {
+      if (this.fileCount > 0) {
+
         this.api
-        .execActionData<any>(
-          this.module,
-          [this.exportAddForm.value],
-          'SaveAsync'
-        ).subscribe(item=>{
-          if(item[0] == true)
-          {
-            this.notifySvr.notifyCode("RS002");
-            this.attachment.objectId = item[1][0].recID;
-            this.attachment.saveFiles();
-            this.dialog.close([item[1],this.type]);
-          }
-          else this.notifySvr.notify("Thêm không thành công");
-        })
+          .execActionData<any>(
+            this.module,
+            [this.exportAddForm.value],
+            'SaveAsync'
+          ).subscribe(item => {
+            if (item[0] == true) {
+              this.notifySvr.notifyCode("RS002");
+              this.attachment.objectId = item[1][0].recID;
+              this.attachment.saveFiles();
+              this.dialog.close([item[1], this.type]);
+            }
+            else this.notifySvr.notifyCode("SYS023");
+          })
       }
       else this.notifySvr.notifyCode("DM001");
     }
     //Chỉnh sửa
-    else if(this.action == "edit")
-    {
+    else if (this.action == "edit") {
       this.exportAddForm.value.recID = this.data.recID
       this.api
         .execActionData<any>(
           'AD_ExcelTemplates',
           [this.exportAddForm.value],
           'UpdateAsync'
-        ).subscribe(item=>{
-          if(item[0] == true)
-          {
+        ).subscribe(item => {
+          if (item[0] == true) {
             this.notifySvr.notifyCode("RS002");
             this.attachment.objectId = item[1][0].recID;
-            if(this.fileCount >= 0)
-            {
+            if (this.fileCount >= 0) {
               /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
                 console.log(item);
               }); */
-              this.file.deleteFileToTrash(this.idCrrFile,"",true).subscribe();
+              this.file.deleteFileToTrash(this.idCrrFile, "", true).subscribe();
               this.attachment.objectId = item[1][0].recID;
               this.attachment.saveFiles();
             }
-            this.dialog.close([item[1],this.type]);
+            this.dialog.close([item[1], this.type]);
           }
-          else this.notifySvr.notify("Chỉnh sửa không thành công");
+          else this.notifySvr.notify("SYS021");
         })
     }
   }
-  getfileCount(e:any)
-  {
+  getfileCount(e: any) {
     this.fileCount = e.data.length;
   }
-  getFile(e:any)
-  {
+  getFile(e: any) {
     this.idCrrFile = e[0].recID
   }
 }

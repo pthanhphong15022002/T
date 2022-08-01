@@ -25,28 +25,25 @@ export class DashboardComponent implements OnInit {
   docsByDays;
 
   ngOnInit(): void {
-    this.esService.getTotalGByApproveStatus().subscribe((res) => {
-      this.docsApproveStatus = res;
-      this.df.detectChanges();
-    });
-
-    this.esService.getTotalGByCategory().subscribe((res) => {
-      this.categoriesDocs = res;
-      this.df.detectChanges();
-    });
-
-    this.esService.getDocsGByDays().subscribe((res) => {
-      this.docsByDays = res;
-
-      this.df.detectChanges();
-    });
-    if (!this.docsByDays) {
-      let result: Object[] = [];
-      for (let i = 1; i < 30; i++) {
-        result.push({ day: i, docs: 0 });
-      }
-      this.docsByDays = result;
-    }
+    // this.esService.getTotalGByApproveStatus().subscribe((res) => {
+    //   this.docsApproveStatus = res;
+    //   this.df.detectChanges();
+    // });
+    // this.esService.getTotalGByCategory().subscribe((res) => {
+    //   this.categoriesDocs = res;
+    //   this.df.detectChanges();
+    // });
+    // this.esService.getDocsGByDays().subscribe((res) => {
+    //   this.docsByDays = res;
+    //   this.df.detectChanges();
+    // });
+    // if (!this.docsByDays) {
+    //   let result: Object[] = [];
+    //   for (let i = 1; i < 30; i++) {
+    //     result.push({ day: i, docs: 0 });
+    //   }
+    //   this.docsByDays = result;
+    // }
   }
 
   public data: Object[] = [

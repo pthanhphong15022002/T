@@ -59,7 +59,7 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
       this.urlDetailRoles = res[0]?.url;
     })
     this.cache.gridViewSetup(this.dialog.formModel.formName, this.dialog.formModel.gridViewName).subscribe(res => {
-      if(res) this.gridViewSetup = res;
+      if (res) this.gridViewSetup = res;
     })
     this.roles = dt.data[0]?.data;
     this.formType = dt.data[0]?.formType;
@@ -122,7 +122,7 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
     //   this.SaveRole(true, false);
     // }
 
-      this.redirectPagePermissions();
+    this.redirectPagePermissions();
 
   }
   //TEMP
@@ -140,7 +140,7 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
     //   this.SaveRole(true, false, false);
     // }
 
-    if(this.formType == 'edit' || this.formType == 'add') 
+    if (this.formType == 'edit' || this.formType == 'add')
       this.SaveRole(true, false, false);
     else {
 
@@ -190,7 +190,7 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
           // this.notificationsService.notify("Hệ thống thực thi thành công!");
           // alert("Hệ thống thực thi thành công!");
         } else {
-          this.notificationsService.notify("Số tự động chưa được thiết lập!");
+          this.notificationsService.notifyCode("SYS020");
         }
       });
   }

@@ -42,6 +42,9 @@ export class TreeviewCommentComponent implements OnInit {
   repComment = "";
   dicDatas = {};
   user: any;
+  votes: any;
+  lstUserVote: any;
+  dataSelected: any[];
   constructor(
     private dt: ChangeDetectorRef,
     private signalRApi: WPService,
@@ -51,6 +54,11 @@ export class TreeviewCommentComponent implements OnInit {
     private notifySvr: NotificationsService,
     private callFuc: CallFuncService,
   ) {
+    
+  }
+
+
+  ngOnInit(): void {
     this.user = this.auth.userValue;
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
@@ -60,13 +68,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
-    console.log('post: ', this.dataComment)
-  }
-
-  votes: any;
-  lstUserVote: any;
-  dataSelected: any[];
 
   showVotes(data: any) {
     this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
@@ -334,7 +335,7 @@ export class TreeviewCommentComponent implements OnInit {
               if (res) {
                 this.removeNodeTree(comment.recID);
                 this.dataComment.totalComment = this.dataComment.totalComment - res;
-                this.notifySvr.notify('Xóa bình luận thành công!');
+                this.notifySvr.notifyCode('SYS008');
               }
             });
         }
@@ -361,11 +362,11 @@ export class TreeviewCommentComponent implements OnInit {
       .subscribe((res: boolean) => {
         if (res) {
           comment.isEditComment = false;
-          this.notifySvr.notify("Chỉnh sửa thành công");
+          this.notifySvr.notifyCode("SYS007");
           this.dt.detectChanges();
         }
         else {
-          this.notifySvr.notify("Xảy ra lỗi");
+          this.notifySvr.notifyCode("SYS021");
         }
       })
   }

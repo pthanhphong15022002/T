@@ -1,7 +1,32 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+  Injector,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiHttpService, ButtonModel, CacheService, DataRequest, TenantStore, ViewModel, ViewsComponent, ViewType, CodxListviewComponent, CodxService } from 'codx-core';
-import { AccumulationChart, AccumulationChartComponent, MarkerSettingsModel } from '@syncfusion/ej2-angular-charts';
+import {
+  ApiHttpService,
+  ButtonModel,
+  CacheService,
+  DataRequest,
+  TenantStore,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+  CodxListviewComponent,
+  CodxService,
+  UIComponent,
+} from 'codx-core';
+import {
+  AccumulationChart,
+  AccumulationChartComponent,
+  MarkerSettingsModel,
+} from '@syncfusion/ej2-angular-charts';
 import { Browser } from '@syncfusion/ej2-base';
 declare var _;
 
@@ -13,16 +38,13 @@ export class Data_Line {
   selector: 'app-wallets',
   templateUrl: './wallets.component.html',
   styleUrls: ['./wallets.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
-
-
-export class WalletsComponent implements OnInit {
-
+export class WalletsComponent extends UIComponent implements OnInit {
   public chartArea: Object = {
     border: {
-      width: 0
-    }
+      width: 0,
+    },
   };
   public width: string = Browser.isDevice ? '100%' : '90%';
   public marker: MarkerSettingsModel = { visible: true };
@@ -37,7 +59,7 @@ export class WalletsComponent implements OnInit {
   endAngle: number = 360;
 
   public tooltip: Object = {
-    enable: true
+    enable: true,
   };
   public legendSettings: Object = {
     visible: true,
@@ -54,23 +76,23 @@ export class WalletsComponent implements OnInit {
   showHeader: boolean = true;
   userPermission: any;
   reloadTop = true;
-  labels_empty: string[] = ["Không có dữ liệu"];
-  colors_empty: string[] = ["#A9A9A9"];
+  labels_empty: string[] = ['Không có dữ liệu'];
+  colors_empty: string[] = ['#A9A9A9'];
   options_empty = {
     tooltips: {
       enabled: false,
     },
     legend: {
-      position: "right",
+      position: 'right',
       labels: {
         fontSize: 13,
       },
     },
     cutoutPercentage: 90,
     title: {
-      align: "start",
+      align: 'start',
       fontSize: 18,
-      text: "",
+      text: '',
       display: true,
     },
   };
@@ -81,16 +103,16 @@ export class WalletsComponent implements OnInit {
       bodyFontSize: 18,
     },
     legend: {
-      position: "right",
+      position: 'right',
       labels: {
         fontSize: 12,
       },
     },
     cutoutPercentage: 90,
     title: {
-      align: "start",
+      align: 'start',
       fontSize: 18,
-      text: "Xu nhận",
+      text: 'Xu nhận',
       display: true,
     },
   };
@@ -100,7 +122,7 @@ export class WalletsComponent implements OnInit {
       bodyFontSize: 18,
     },
     legend: {
-      position: "right",
+      position: 'right',
       labels: {
         fontSize: 18,
       },
@@ -108,9 +130,9 @@ export class WalletsComponent implements OnInit {
 
     cutoutPercentage: 90,
     title: {
-      align: "start",
+      align: 'start',
       fontSize: 18,
-      text: "Xu trừ",
+      text: 'Xu trừ',
       display: true,
     },
   };
@@ -126,7 +148,6 @@ export class WalletsComponent implements OnInit {
   check_ChartDatas_Line = false;
   label_line_chart = [];
 
-
   // chartType: ChartType = "doughnut";
   colors = [
     {
@@ -140,15 +161,15 @@ export class WalletsComponent implements OnInit {
   ];
   options = new DataRequest();
   lstRate = [];
-  heightList = "200";
+  heightList = '200';
   toDate = new Date();
   firstDay: any = new Date(this.toDate.getUTCFullYear().toString());
   firstDate: any = new Date(this.toDate.getUTCFullYear().toString());
   yearCurrent: any;
-  orgUnit = "";
-  emloyeeID = "";
-  predicate = "";
-  dataValue = "";
+  orgUnit = '';
+  emloyeeID = '';
+  predicate = '';
+  dataValue = '';
   comboboxName = '';
   lstDataChart = [];
   ishide = true;
@@ -158,10 +179,12 @@ export class WalletsComponent implements OnInit {
   dicEmployeeByOrg: any;
   dataListTemp = [];
   L1422 = [];
-  dataLine: any = [{
-    label: 'empty',
-    data: [],
-  }];
+  dataLine: any = [
+    {
+      label: 'empty',
+      data: [],
+    },
+  ];
   L1483 = [];
   vllOrganize_value: any;
   predicateCombobox: any;
@@ -169,61 +192,76 @@ export class WalletsComponent implements OnInit {
 
   optionsDoughnut = {
     legend: {
-      display: false
+      display: false,
     },
-    cutoutPercentage: 80
+    cutoutPercentage: 80,
   };
   tenant: string;
+  functionListHistory = {
+    url: '',
+  };
+  functionListWallet = {
+    url: '',
+  };
 
-  @ViewChild("listview") listview;
-  @ViewChild("listview") listView: CodxListviewComponent;
-  @ViewChild("subheader") subheader;
+  @ViewChild('listview') listview;
+  @ViewChild('listview') listView: CodxListviewComponent;
+  @ViewChild('subheader') subheader;
   @ViewChild('iTemplateLeft') iTemplateLeft: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
-  @ViewChild('viewbase') viewbase: ViewsComponent;
-  @ViewChild('view') view!: ViewsComponent;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
 
-
   constructor(
+    private injector: Injector,
     private dt: ChangeDetectorRef,
-    private api: ApiHttpService,
-    private router: Router,
     private route: ActivatedRoute,
     private tenantStore: TenantStore,
-    private changedr: ChangeDetectorRef,
-    private cache: CacheService,
-    public codxService: CodxService,
+    private changedr: ChangeDetectorRef
   ) {
+    super(injector);
     this.tenant = this.tenantStore.get()?.tenant;
 
     this.cache.valueList('L1483').subscribe((res) => {
       if (res) {
         this.L1483 = res.datas;
       }
-    })
+    });
+
+    this.cache.functionList('FDR02').subscribe((res) => {
+      if (res) {
+        this.functionListWallet.url = res.url;
+      }
+    });
+
+    this.cache.functionList('FDR021').subscribe((res) => {
+      if (res) {
+        this.functionListHistory.url = res.url;
+      }
+    });
   }
 
-  button: Array<ButtonModel> = [{
-    id: '1',
-  }]
+  button: Array<ButtonModel> = [
+    {
+      id: '1',
+    },
+  ];
 
   setOption(text): any {
     this.options_empty.title.text = text;
     return this.options_empty;
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.options.pageLoading = false;
-    this.options.entityName = "FD_KudosTrans";
-    this.options.entityPermission = "FD_KudosTrans";
-    this.options.gridViewName = "grvKudosTrans";
-    this.options.formName = "KudosTrans";
+    this.options.entityName = 'FD_KudosTrans';
+    this.options.entityPermission = 'FD_KudosTrans';
+    this.options.gridViewName = 'grvKudosTrans';
+    this.options.formName = 'KudosTrans';
     this.options.funcID = this.funcID;
-    this.options.dataObj = "Coins";
+    this.options.dataObj = 'Coins';
 
-    this.route.params.subscribe(param => {
-      this.funcID = param["funcID"]
+    this.route.params.subscribe((param) => {
+      this.funcID = param['funcID'];
       this.changedr.detectChanges();
     });
     this.setPredicate();
@@ -239,19 +277,20 @@ export class WalletsComponent implements OnInit {
           panelLeftRef: this.templateLeft,
         },
       },
-    ]
-    this.userPermission = this.viewbase.userPermission;
-    this.listView.dataService.dataObj = 'Coins';
+    ];
+    this.userPermission = this.view.userPermission;
+    if (this.listView) this.listView.dataService.dataObj = 'Coins';
     this.changedr.detectChanges();
   }
 
   LoadData() {
     this.api
-      .execSv<any>("FD", "FD", "KudosTransBusiness", "LoadDataWalletAsync", [
-        this.options
+      .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataWalletAsync', [
+        this.options,
       ])
       .subscribe((res) => {
         if (res) {
+          console.log("check KudosTransBusiness", res)
           this.lstRate = res[0];
           this.L1422 = res[1]?.datas;
           this.data_Receiver = res[2];
@@ -278,7 +317,7 @@ export class WalletsComponent implements OnInit {
     minorTickLines: { width: 0 },
     interval: 1,
     lineStyle: { width: 0 },
-    valueType: 'Category'
+    valueType: 'Category',
   };
 
   //Initializing Primary Y Axis
@@ -310,11 +349,11 @@ export class WalletsComponent implements OnInit {
       } else {
         if (this.maxTotal % 50 == 0) {
           if (this.maxTotal < 200) {
-            this.interval = 10
+            this.interval = 10;
           } else if (this.maxTotal >= 200 && this.maxTotal <= 400) {
-            this.interval = 50
+            this.interval = 50;
           } else {
-            this.interval = 100
+            this.interval = 100;
           }
         } else {
           for (let i = 1; i <= 100; i++) {
@@ -338,11 +377,11 @@ export class WalletsComponent implements OnInit {
       }
       if (this.maxTotal % 50 == 0) {
         if (this.maxTotal > -200) {
-          this.interval = -10
+          this.interval = -10;
         } else if (this.maxTotal <= -200 && this.maxTotal >= -400) {
-          this.interval = -50
+          this.interval = -50;
         } else {
-          this.interval = -100
+          this.interval = -100;
         }
       } else {
         for (let i = 1; i <= 100; i++) {
@@ -361,33 +400,33 @@ export class WalletsComponent implements OnInit {
       this.emloyeeID = e?.data[0];
     }
     switch (e.field) {
-      case "toDate":
+      case 'toDate':
         if (e.data?.toDate != undefined) {
           var value = new Date(e.data?.toDate);
           this.toDate = value;
         }
         break;
-      case "firstDay":
+      case 'firstDay':
         if (e.data?.fromDate != undefined) {
           var value = new Date(e.data?.fromDate);
           value.setDate(value.getDate());
           this.firstDay = value;
         }
         break;
-      case "vllOrganize":
+      case 'vllOrganize':
         this.vllOrganize_value = e.data;
         this.getComboboxName();
         break;
-      case "Organize":
+      case 'Organize':
         this.orgUnit = e?.data[0];
         break;
-      case "Employee":
+      case 'Employee':
         this.emloyeeID = e?.data[0];
         break;
       default:
         break;
     }
-    if (e.field != "vllOrganize" || f != "vllOrganize") {
+    if (e.field != 'vllOrganize' || f != 'vllOrganize') {
       if (f == 'Employee' || f == 'Organize') {
         if (e?.data.length != 0) {
           this.setPredicate();
@@ -402,45 +441,49 @@ export class WalletsComponent implements OnInit {
 
   getComboboxName() {
     this.comboboxName = '';
-    var a = this.L1483.find(x => x.value == this.vllOrganize_value);
+    var a = this.L1483.find((x) => x.value == this.vllOrganize_value);
     this.comboboxName = a.text;
     this.changedr.detectChanges();
   }
 
   setPredicate() {
-    this.options.predicate = "(TransType=@0 or TransType=@1 or TransType=@2 or TransType=@3)";
-    this.options.dataValue = "1;2;4;5";
-    var predicate = "",
-      dataValue = "",
+    this.options.predicate =
+      '(TransType=@0 or TransType=@1 or TransType=@2 or TransType=@3)';
+    this.options.dataValue = '1;2;4;5';
+    var predicate = '',
+      dataValue = '',
       arrTemp = [];
     if (this.firstDay)
-      arrTemp.push({ field: "TransDateFrom", value: this.firstDay.toISOString() });
+      arrTemp.push({
+        field: 'TransDateFrom',
+        value: this.firstDay.toISOString(),
+      });
     if (this.toDate)
-      arrTemp.push({ field: "TransDateTo", value: this.toDate.toISOString() });
-    if (this.orgUnit) arrTemp.push({ field: "OrgUnitID", value: this.orgUnit });
+      arrTemp.push({ field: 'TransDateTo', value: this.toDate.toISOString() });
+    if (this.orgUnit) arrTemp.push({ field: 'OrgUnitID', value: this.orgUnit });
     if (this.emloyeeID)
-      arrTemp.push({ field: "EmployeeID", value: this.emloyeeID });
-    var opartor = "=@";
-    var opartorDateFrom = "=@";
-    var opartorDateTo = "=@";
+      arrTemp.push({ field: 'EmployeeID', value: this.emloyeeID });
+    var opartor = '=@';
+    var opartorDateFrom = '=@';
+    var opartorDateTo = '=@';
     arrTemp.forEach(function (element, index) {
       if (!element) return;
 
-      if (element.field == "TransDateFrom") opartorDateFrom = ">=@";
-      if (element.field == "TransDateTo") opartorDateTo = "<=@";
+      if (element.field == 'TransDateFrom') opartorDateFrom = '>=@';
+      if (element.field == 'TransDateTo') opartorDateTo = '<=@';
       // if (predicate) {
-      if (element.field == "TransDateTo") {
-        predicate += " && " + "TransDate" + opartorDateTo + (index + 4) + ")";
-      } else if (element.field == "TransDateFrom") {
-        predicate += " && (" + "TransDate" + opartorDateFrom + (index + 4);
-      } else predicate += " && " + element.field + opartor + (index + 4);
+      if (element.field == 'TransDateTo') {
+        predicate += ' && ' + 'TransDate' + opartorDateTo + (index + 4) + ')';
+      } else if (element.field == 'TransDateFrom') {
+        predicate += ' && (' + 'TransDate' + opartorDateFrom + (index + 4);
+      } else predicate += ' && ' + element.field + opartor + (index + 4);
       // }
       // else predicate = element.field + opartor + (index + 4);
-      if (dataValue) dataValue += ";" + element.value;
+      if (dataValue) dataValue += ';' + element.value;
       else dataValue = element.value;
     });
     this.options.predicate += predicate;
-    this.options.dataValue += ";" + dataValue;
+    this.options.dataValue += ';' + dataValue;
     this.loadList = true;
     if (this.listview) {
       this.listview.predicate = this.options.predicate;
@@ -456,12 +499,12 @@ export class WalletsComponent implements OnInit {
       beforeDraw(chart) {
         const ctx = chart.ctx;
         const txt = value;
-        ctx.textAlign = "center";
+        ctx.textAlign = 'center';
         ctx.fontSize = 16;
-        ctx.textBaseline = "middle";
+        ctx.textBaseline = 'middle';
         const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
         const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
-        ctx.fillText(txt + " xu", centerX, centerY);
+        ctx.fillText(txt + ' xu', centerX, centerY);
       },
     };
     if (type == 1) {
@@ -493,16 +536,21 @@ export class WalletsComponent implements OnInit {
     this.totalDataReceived = total;
 
     for (y; y < this.data_Receiver.length; y++) {
-      arr = [{ key: this.getLabelName(this.data_Receiver[y]?.key), value: this.data_Receiver[y]?.value }];
+      arr = [
+        {
+          key: this.getLabelName(this.data_Receiver[y]?.key),
+          value: this.data_Receiver[y]?.value,
+        },
+      ];
       this.chartDatas_Received.push(arr[0]);
     }
     this.data_Receiver.forEach((e) => {
       this.colors[0]?.backgroundColor.push(
-        "#" + (this.L1422.length > 0 ? this.L1422[z].color : null)
+        '#' + (this.L1422.length > 0 ? this.L1422[z].color : null)
       );
       z++;
     });
-    this.colorReceived = this.colors[0]?.backgroundColor
+    this.colorReceived = this.colors[0]?.backgroundColor;
     this.dt.detectChanges();
   }
   getDataSet_Send() {
@@ -514,7 +562,7 @@ export class WalletsComponent implements OnInit {
     var total = 0;
     this.data_Send.forEach((e) => {
       this.chartLabels_Send.push(this.getLabelName(e.key));
-      this.colors_Send[0].backgroundColor.push("#" + this.L1422[i].color);
+      this.colors_Send[0].backgroundColor.push('#' + this.L1422[i].color);
       total += e.value;
       i++;
     });
@@ -523,11 +571,16 @@ export class WalletsComponent implements OnInit {
     var arr = [];
 
     for (y; y < this.data_Send.length; y++) {
-      arr = [{ key: this.getLabelName(this.data_Send[y]?.key), value: this.data_Send[y]?.value }];
+      arr = [
+        {
+          key: this.getLabelName(this.data_Send[y]?.key),
+          value: this.data_Send[y]?.value,
+        },
+      ];
       this.chartDatas_Send.push(arr[0]);
     }
     this.totalDataSended = total;
-    this.colorSend = this.colors_Send[0]?.backgroundColor
+    this.colorSend = this.colors_Send[0]?.backgroundColor;
     this.dt.detectChanges();
   }
 
@@ -535,12 +588,18 @@ export class WalletsComponent implements OnInit {
     this.chartDatas_Line = [];
     this.data_Line.forEach((e) => {
       var data = [
-        { month: 1, value: 0 }, { month: 2, value: 0 },
-        { month: 3, value: 0 }, { month: 4, value: 0 },
-        { month: 5, value: 0 }, { month: 6, value: 0 },
-        { month: 7, value: 0 }, { month: 8, value: 0 },
-        { month: 9, value: 0 }, { month: 10, value: 0 },
-        { month: 11, value: 0 }, { month: 12, value: 0 },
+        { month: 1, value: 0 },
+        { month: 2, value: 0 },
+        { month: 3, value: 0 },
+        { month: 4, value: 0 },
+        { month: 5, value: 0 },
+        { month: 6, value: 0 },
+        { month: 7, value: 0 },
+        { month: 8, value: 0 },
+        { month: 9, value: 0 },
+        { month: 10, value: 0 },
+        { month: 11, value: 0 },
+        { month: 12, value: 0 },
       ];
       var label = e.key;
       e.value.forEach((res) => {
@@ -560,12 +619,11 @@ export class WalletsComponent implements OnInit {
         }
 
         data.filter(function (dt) {
-          if (dt.month == month)
-            dt.value = total;
+          if (dt.month == month) dt.value = total;
           return dt;
-        })
-      })
-      this.chartDatas_Line.push({ data, label })
+        });
+      });
+      this.chartDatas_Line.push({ data, label });
     });
     this.caculateY();
     this.primaryYAxis = {
@@ -591,19 +649,22 @@ export class WalletsComponent implements OnInit {
   }
 
   LoadByUser(userID) {
-    this.router.navigate([`${this.tenant}/fed/walletEmployee/${userID}`], { queryParams: { funcID: "FED201" } });
+    // this.router.navigate([`${this.tenant}/fed/walletEmployee/${userID}`], { queryParams: { funcID: "FED201" } });
+    //this.codxService.navigate('', this.functionListWallet.url, { recID: item.recID })
   }
 
   setHeightList() {
     let wh = window.innerHeight;
-    var top = document.getElementsByClassName("top-champion");
-    var process = document.getElementsByClassName("process-performance");
+    var top = document.getElementsByClassName('top-champion');
+    var process = document.getElementsByClassName('process-performance');
     if (top.length > 0) wh = wh - top[0].clientHeight;
     if (process.length > 0) wh = wh - process[0].clientHeight;
-    this.heightList = wh - 60 + "";
+    this.heightList = wh - 60 + '';
   }
 
   openViewDetailCoins(userID) {
-    this.codxService.navigate('FDR021', '', { userID: userID });
+    this.codxService.navigate('', this.functionListHistory.url, {
+      userID: userID,
+    });
   }
 }

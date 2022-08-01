@@ -1,12 +1,9 @@
 <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-    class="d-flex flex-column-fluid position-relative main-2zone cancelEvent" style="overflow: auto !important; height: 82vh; display: block;"
-    data-kt-scroll="true" 
-    data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-max-height="auto"
-    attr.data-kt-scroll-dependencies=''
-    attr.data-kt-scroll-wrappers='.dms-viewcard'
-    attr.data-kt-scroll-offset="'0px'">
-    <div class="dms dms-viewdetail w-100">            
+    class="d-flex flex-column-fluid position-relative main-2zone cancelEvent"
+    style="overflow: auto !important; height: 82vh; display: block;" data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
+    attr.data-kt-scroll-wrappers='.dms-viewcard' attr.data-kt-scroll-offset="'0px'">
+    <div class="dms dms-viewdetail w-100">
         <div
             *ngIf="(!dmSV.loadedFile && !dmSV.loadedFolder) || ((dmSV.loadedFolder && (listFolders == null || listFolders.length <= 0)) && (this.loadedFile && (listFiles == null || listFiles.length <= 0))); then elseBlockEmpty else thenBlockList">
         </div>
@@ -15,15 +12,16 @@
                 <div class="nondata-container w-100 mb-2">
                     <div class="d-flex justify-content-between page-heading align-items-center">
                         <div>{{dmSV.titleEmptyTrash30}}</div>
-                        <button (click)="this.dmSV.emptyTrash()" class="btn btn-sm btn-secondary">{{dmSV.titleEmptyAction}}</button>
+                        <button (click)="this.dmSV.emptyTrash()"
+                            class="btn btn-sm btn-secondary">{{dmSV.titleEmptyAction}}</button>
                     </div>
                 </div>
             </ng-container>
             <div class="erm-list">
                 <table class="table">
                     <thead>
-                        <tr>         
-                            <th class="px-0" scope="col"></th>                     
+                        <tr>
+                            <th class="px-0" scope="col"></th>
                             <th scope="col">
                                 <div>{{titleFileName}}</div>
                             </th>
@@ -35,7 +33,7 @@
                             </th>
                             <th scope="col">
                                 <div>{{titleLength}}</div>
-                            </th>                              
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,7 +42,7 @@
                         </div>
                         <ng-template #thenBlockAsc>
                             <ng-container *ngFor="let folder of listFolders;  trackBy:identifyFolder">
-                                <tr title="{{folder.folderName}}">  
+                                <tr title="{{folder.folderName}}">
                                     <td class="w-25px text-center px-0"><span
                                         [className]="getBookmarksClass(folder)"></span>
                                      </td>                                     
@@ -55,8 +53,10 @@
                                         </codx-temp-full> 
                                     </td>
                                     <td>
-                                        <codx-temp-full [imageId]="folder.createdBy" imageObjType="AD_Users" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="folder.userName">
-                                        </codx-temp-full>                                            
+                                        <codx-temp-full [imageId]="folder.createdBy" imageObjType="AD_Users"
+                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+                                            [imageWidth]="25" [title]="folder.userName">
+                                        </codx-temp-full>
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
@@ -69,22 +69,24 @@
                                             cardCss="w-150px">
                                          </codx-temp-full> 
                                         <!-- <div class="erm-date"></div>                                           -->
-                                    </td>                                        
+                                    </td>
                                 </tr>
                             </ng-container>
                             <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
-                                <tr title="{{file.folderName}}">   
+                                <tr title="{{file.folderName}}">
                                     <td class="w-25px text-center px-0"><span
-                                        [className]="getBookmarksClass(file)"></span>
-                                    </td>                                   
+                                            [className]="getBookmarksClass(file)"></span>
+                                    </td>
                                     <td>
                                         <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [title]="file.fileName"                                                                          
                                         cardCss="w-225px">
                                         </codx-temp-full>                                             
                                     </td>
                                     <td>
-                                        <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="file.userName">
-                                        </codx-temp-full>                                            
+                                        <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users"
+                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+                                            [imageWidth]="25" [title]="file.userName">
+                                        </codx-temp-full>
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
@@ -97,24 +99,26 @@
                                         cardCss="w-150px">
                                         </codx-temp-full>                                                   
                                         <!-- <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div> -->
-                                    </td>                                       
+                                    </td>
                                 </tr>
                             </ng-container>
                         </ng-template>
                         <ng-template #elseBlockDesc>
                             <ng-container *ngFor="let file of listFiles; index as i;  trackBy:identifyFile">
-                                <tr title="{{file.folderName}}">    
+                                <tr title="{{file.folderName}}">
                                     <td class="w-25px text-center px-0"><span
-                                        [className]="getBookmarksClass(file)"></span>
-                                    <td>                                                                     
+                                            [className]="getBookmarksClass(file)"></span>
+                                    <td>
                                     <td>
                                         <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, file, 'file')" [title]="file.fileName"                                                                      
                                         cardCss="w-225px">
                                         </codx-temp-full>                                             
                                     </td>
                                     <td>
-                                        <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="file.userName">
-                                        </codx-temp-full>                                            
+                                        <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users"
+                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+                                            [imageWidth]="25" [title]="file.userName">
+                                        </codx-temp-full>
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
@@ -127,22 +131,24 @@
                                         cardCss="w-150px">
                                         </codx-temp-full>                                           
                                         <!-- <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div> -->
-                                    </td>                                       
+                                    </td>
                                 </tr>
                             </ng-container>
                             <ng-container *ngFor="let folder of listFolders;  trackBy:identifyFolder">
-                                <tr title="{{folder.folderName}}">    
+                                <tr title="{{folder.folderName}}">
                                     <td class="w-25px text-center px-0"><span
-                                        [className]="getBookmarksClass(folder)"></span>
-                                </td>                                   
+                                            [className]="getBookmarksClass(folder)"></span>
+                                    </td>
                                     <td>
                                         <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [title]="folder.folderName"
                                             cardCss="w-225px">
-                                        </codx-temp-full> 
+                                        </codx-temp-full>
                                     </td>
                                     <td>
-                                        <codx-temp-full [imageId]="folder.createdBy" imageObjType="AD_Users" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25" [title]="folder.userName">
-                                        </codx-temp-full>                                            
+                                        <codx-temp-full [imageId]="folder.createdBy" imageObjType="AD_Users"
+                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+                                            [imageWidth]="25" [title]="folder.userName">
+                                        </codx-temp-full>
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
@@ -155,7 +161,7 @@
                                         cardCss="w-150px">
                                          </codx-temp-full> 
                                         <!-- <div class="erm-date"></div>                                           -->
-                                    </td>                                        
+                                    </td>
                                 </tr>
                             </ng-container>
                         </ng-template>
@@ -170,7 +176,7 @@
             <ng-template #thenElseNoData>
                 <div class="w-100 align-items-center mt-20">
                     <div class="text-center">
-                        <img class="max-h-200px" src="../../../assets/codx/dms/data-empty.png" />
+                        <img class="mh-200px" src="../../../assets/codx/dms/data-empty.png" />
                     </div>
                     <div class="text-center">
                         <h5 class="text-dark mt-6">{{dmSV.titleNodaTa}}</h5>
@@ -181,7 +187,7 @@
             <ng-template #elseLoading>
                 <div class="w-100 align-items-center mt-20">
                     <div class="text-center">
-                        <img class="max-h-200px" src="../../../assets/img/loader.gif" />
+                        <img class="mh-200px" src="../../../assets/img/loader.gif" />
                     </div>
                     <!-- <div class="text-center">
                         <h5 class="text-dark mt-6">Đang tải dữ liệu</h5>

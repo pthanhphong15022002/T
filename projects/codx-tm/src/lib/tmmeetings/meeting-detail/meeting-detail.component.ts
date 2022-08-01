@@ -1,7 +1,8 @@
+import { CO_Meetings } from './../../models/CO_Meetings.model';
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, ViewType } from 'codx-core';
+import { UIComponent, ViewType, AuthStore, DialogData } from 'codx-core';
 
 @Component({
   selector: 'lib-meeting-detail',
@@ -12,31 +13,32 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
 
   funcID = '';
   views = [];
-  recID: any;
+  meetingID: any;
   functionList = {
     formName: '',
     gridViewName: '',
     entityName: '',
   }
   dataValue = '';
-
+  user: any;
+  iterationID= '';
+  data: any ;
+  meeting= new CO_Meetings()
   constructor(
     private injector: Injector,
     private TMService: CodxTMService,
     private route: ActivatedRoute,
+    private authStore: AuthStore,
+    private activedRouter: ActivatedRoute,
+    @Optional() dt?: DialogData,
+
   ) {
     super(injector);
     this.route.params.subscribe(params => {
       if (params)
         this.funcID = params['funcID'];
     })
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if (res) {
-        this.functionList.formName = res.formName;
-        this.functionList.gridViewName = res.gridViewName;
-        this.functionList.entityName = res.entityName;
-      }
-    })
+
     this.TMService.hideAside.next(false);
 
   }
@@ -47,25 +49,28 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
 
   onInit(): void {
     this.getQueryParams();
+    this.loadMeeting();
+
   }
 
 
   getQueryParams() {
     this.route.queryParams.subscribe(params => {
       if (params) {
-        this.recID = params.recID;
-        this.dataValue = this.recID;
+        this.meetingID = params.meetingID;
+        this.dataValue = this.meetingID;
       }
     });
   }
 
-  ngAfterViewInit(): void {
-    this.views = [{
-      type: ViewType.grid,
-      sameData: true,
-      active: true,
-      model: {
-      }
-    }];
+  loadMeeting(){
+    if(this.meetingID!=null){
+      this.TMService.getMeetingID(this.meetingID).subscribe(res=>{
+        if(res){
+          this.data = res;
+          this.meeting = this.data;
+        }
+      });
+    }
   }
 }

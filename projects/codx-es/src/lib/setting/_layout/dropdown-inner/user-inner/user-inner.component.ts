@@ -14,7 +14,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   tenant?: string;
   language: LanguageFlag = langDefault;
   theme: ThemeFlag = themeDefault;
-  user$: Observable<UserModel|null> = of(null);
+  user$: Observable<UserModel | null> = of(null);
   langs = languages;
   themes = themeDatas;
   private unsubscribe: Subscription[] = [];
@@ -80,7 +80,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       .pipe()
       .subscribe((data) => {
         if (data) {
-          if (!data.isError) this.notifyService.notify("clear success");
+          if (!data.isError) this.notifyService.notifyCode("SYS017");
           else this.notifyService.notify(data.error);
         }
       });
@@ -124,7 +124,7 @@ interface ThemeFlag {
   active?: boolean;
 }
 
-const themeDatas:ThemeFlag[] = [
+const themeDatas: ThemeFlag[] = [
   {
     id: 'default',
     name: 'Default',

@@ -24,8 +24,9 @@
     </div>
     <div class="d-flex flex-column-fluid home hover-scroll-overlay-y"
         style="overflow: auto !important; height: 100vh; display: block" data-kt-scroll="true"
-        data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=".pw-profile,.pw-header"
-        attr.data-kt-scroll-wrappers=".pw-content" attr.data-kt-scroll-offset="'0px'">
+        data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
+        attr.data-kt-scroll-dependencies=".pw-profile,.pw-header" attr.data-kt-scroll-wrappers=".pw-content"
+        attr.data-kt-scroll-offset="'0px'">
         <codx-listview #listView entityName="WP_NoteBooks" gridViewName="grvNoteBooks" [predicate]="predicate"
             [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="NoteBooks"
             funcId="MWP0094" service="WP">
@@ -35,10 +36,11 @@
 
 <ng-template #templateListCard let-item>
     <div (click)="openDetailPage(item)">
-        <codx-card-img cardCss="border rounded-4 w-200px" (clickMF)="clickMF($event, item)" [imageId]="item.recID"
-            imgCss="h-150px" icoTitleCss="icon-assignment icon-16" [title]="item.title" [imgOn]="item?.modifiedOn"
-            [desc2]="item.memo" imageWidth="200" [imageObjType]="'WP_NoteBooks'" [formModel]="listView.formModel"
-            [dataItem]="item">
+        <codx-card-img cardCss="border card-img-mwp rounded-4 w-230px mw-100 h-100" (clickMF)="clickMF($event, item)"
+            [imageId]="item.recID" imgCss="w-228px h-140px w-xxl-200px h-xxl-200px"
+            icoTitleCss="icon-assignment icon-16" [title]="item.title" cssTitle="line-clamp line-clamp-1"
+            [imgOn]="item?.modifiedOn" [desc2]="item.memo" cssDes2="line-clamp line-clamp-2" imageWidth="230"
+            [imageObjType]="'WP_NoteBooks'" [formModel]="listView.formModel" [dataItem]="item">
         </codx-card-img>
     </div>
 </ng-template>

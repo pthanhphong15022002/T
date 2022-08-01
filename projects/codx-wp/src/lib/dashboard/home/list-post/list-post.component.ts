@@ -36,6 +36,7 @@ import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AddPostComponent } from './popup-add/addpost/addpost.component';
+import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 
 @Component({
   selector: 'app-list-post',
@@ -82,6 +83,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     private notifySvr: NotificationsService,
     private codxService: CodxService
   ) {
+    
+  }
+
+  ngOnInit() {
     this.user = this.authStore.get();
     this.cache.valueList('L1901').subscribe((res: any) => {
       if (res) {
@@ -94,8 +99,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       this.dt.detectChanges();
     });
   }
-
-  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.views = [
@@ -111,7 +114,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.getGridViewSetUp();
   }
 
-  ngOnDestroy() {}
   getGridViewSetUp() {
     this.cache
       .functionList(this.codxViews.formModel.funcID)
@@ -278,13 +280,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  clickClose() {
-    var modal = this.callfc.openForm(AddPostComponent, '');
-  }
-  clickShowItem(data: any) {
-    console.log('clickShowItem: ', data);
-  }
-
   naviagte(data: any) {
     this.api
       .execSv(
@@ -303,4 +298,13 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   getFiles(event: any, data: any) {
     data.files = event;
   }
+
+  clickViewDetail(file:any){
+    let option = new DialogModel();
+    option.DataService = this.listview.dataService as CRUDService;
+    option.FormModel = this.listview.formModel;
+    option.IsFull = true;
+    this.callfc.openForm(PopupDetailComponent,'',0,0,'',file,'',option);
+  }
+
 }
