@@ -55,7 +55,9 @@ export class AssignInfoComponent implements OnInit {
   vllRole = 'TM001';
   listRoles = [];
   isHaveFile = false;
-  taskParent: any
+  taskParent : any;
+  refID = "";
+  refType= "" ;
 
   constructor(
     private authStore: AuthStore,
@@ -71,7 +73,9 @@ export class AssignInfoComponent implements OnInit {
       ...this.task,
       ...dt?.data[0],
     };
-    if (this.task?.taskID) this.taskParent = this.task;
+    this.refID = this.task?.refID;
+    this.refType= this.task?.refType;
+    if(this.task?.taskID) this.taskParent = this.task ;
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
     this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
     this.dialog = dialog;
@@ -122,9 +126,11 @@ export class AssignInfoComponent implements OnInit {
     this.listUser = [];
     this.listTaskResources = [];
     this.task.category = "3"
-    this.task.status = "10"
-    if (this.taskParent) {
-      this.task.taskName = this.taskParent.taskName;
+    this.task.status = "10" ;
+    this.task.refID = this.refID
+    this.task.refType = this.refType;
+    if(this.taskParent){
+      this.task.taskName = this.taskParent.taskName ;
       this.task.refID = this.taskParent.recID;
       this.task.memo = this.taskParent.memo;
       this.task.memo2 = this.taskParent.memo2;
@@ -187,15 +193,20 @@ export class AssignInfoComponent implements OnInit {
 
 
   saveAssign(id, isContinue) {
+    if (this.task.taskName == null || this.task.taskName.trim() == '') {
+      // this.notiService.notifyCode('???code');
+      this.notiService.notify('Tên công việc không được để trống !');
+      return;
+    }
     if (this.task.assignTo == null || this.task.assignTo == '') {
       this.notiService.notifyCode('TM011');
       return;
     }
     if (this.isHaveFile)
       this.attachment.saveFiles();
-
+    var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID:null ;
     this.tmSv
-      .saveAssign([this.task, this.functionID, this.listTaskResources, null, this.taskParent.taskID])
+      .saveAssign([this.task, this.functionID, this.listTaskResources, null,taskIDParent])
       .subscribe((res) => {
         if (res && res.length) {
           // this.dialog.dataService.data = res.concat(this.dialog.dataService.data);

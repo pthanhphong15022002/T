@@ -285,3 +285,7 @@ lib-employee-infomation {
     border: 8px solid transparent;
     border-top: 8px solid #252d42;
 }
+/***fix 1:56 8.1.2022***/
+.employee-container{
+    /* height: calc(100% - 192px);    */
+}

@@ -846,7 +846,7 @@ export class TasksComponent extends UIComponent {
         //???? chắc làm sau ??
         break;
       default:
-        this.changeStatusTask(e, data);
+        this.changeStatusTask(e.data, data);
         break;
     }
   }
