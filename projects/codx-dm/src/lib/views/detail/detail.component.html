@@ -1,5 +1,11 @@
 <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-    class="d-flex flex-column-fluid position-relative main-2zone cancelEvent">
+    class="d-flex flex-column-fluid position-relative main-2zone cancelEvent" style="overflow: auto !important; height: 82vh; display: block;"
+    data-kt-scroll="true" 
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-max-height="auto"
+    attr.data-kt-scroll-dependencies=''
+    attr.data-kt-scroll-wrappers='.dms-viewcard'
+    attr.data-kt-scroll-offset="'0px'">
     <div class="dms dms-viewdetail w-100">            
         <div
             *ngIf="(!dmSV.loadedFile && !dmSV.loadedFolder) || ((dmSV.loadedFolder && (listFolders == null || listFolders.length <= 0)) && (this.loadedFile && (listFiles == null || listFiles.length <= 0))); then elseBlockEmpty else thenBlockList">
