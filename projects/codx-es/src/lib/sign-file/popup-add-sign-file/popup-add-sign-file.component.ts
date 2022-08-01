@@ -7,9 +7,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
+  AuthStore,
   CallFuncService,
   CodxService,
   DialogData,
@@ -57,12 +57,12 @@ export class PopupAddSignFileComponent implements OnInit {
 
   showPlan: boolean = true;
   constructor(
+    private auth: AuthStore,
     private esService: CodxEsService,
     private codxService: CodxService,
     private cr: ChangeDetectorRef,
     private callfuncService: CallFuncService,
-    private api: ApiHttpService,
-    private dmSV: CodxDMService,
+    public dmSV: CodxDMService,
     private notify: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
@@ -86,6 +86,7 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   initForm() {
+    const user = this.auth.get();
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
@@ -97,6 +98,7 @@ export class PopupAddSignFileComponent implements OnInit {
           this.dialogSignFile.patchValue({
             approveControl: '1',
             approveStatus: '1',
+            employeeID: user.userID,
           });
           this.dialogSignFile.addControl(
             'approveControl',
@@ -270,29 +272,40 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   continue(currentTab) {
-    let currentNode = 0;
-    if (currentTab > 0) {
-      currentNode = currentTab * 2;
-    }
-    console.log((this.status.nativeElement as HTMLElement).childNodes);
+    if (this.currentTab > 3) return;
+
+    let currentNode = currentTab * 2;
+
     let nodes = Array.from(
       (this.status.nativeElement as HTMLElement).childNodes
     );
 
     if (currentTab < nodes.length - 1) {
-      if (
-        (nodes[currentNode] as HTMLElement).classList.contains(
-          'approve-disabled'
-        )
-      ) {
-        (nodes[currentNode] as HTMLElement).classList.remove(
-          'approve-disabled'
-        );
-        (nodes[currentNode] as HTMLElement).classList.add('approve');
+      let newNode = currentNode + 2;
+      let className = (nodes[newNode] as HTMLElement).className.toString();
+      switch (className) {
+        case 'stepper-item':
+          (nodes[newNode] as HTMLElement).classList.add('active');
+
+          break;
+        case 'stepper-item approve-disabled':
+          (nodes[newNode] as HTMLElement).classList.remove('approve-disabled');
+          (nodes[newNode] as HTMLElement).classList.add('approve');
+          break;
+      }
+
+      let oldClassName = (
+        nodes[currentNode] as HTMLElement
+      ).className.toString();
+      switch (oldClassName) {
+        case 'stepper-item approve':
+          (nodes[currentNode] as HTMLElement).classList.remove('approve');
+          break;
+        case 'stepper-item active':
+          (nodes[currentNode] as HTMLElement).classList.remove('active');
+          break;
       }
       (nodes[currentNode] as HTMLElement).classList.add('approve-disabled');
-      (nodes[currentNode] as HTMLElement).classList.remove('active');
-      (nodes[currentNode + 2] as HTMLElement).classList.add('active');
     }
 
     switch (currentTab) {
