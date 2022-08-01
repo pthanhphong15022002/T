@@ -114,49 +114,6 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  clickMF(e: any, data?: any) {
-    this.itemSelected = data;
-    if (data.idTaskGroup) this.getTaskGroup(data.idTaskGroup)
-    switch (e.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'sendemail':
-        this.sendemail(data);
-        break;
-      case 'TMT02015': // cái này phải xem lại , nên có biến gì đó để xét
-        this.assignTask(data);
-        break;
-      case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
-        //Chung làm
-        break;
-      case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
-        //Chung làm
-        break;
-      case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
-        //???? chắc làm sau ??
-        break;
-      default:
-        this.changeStatusTask(e.data, data);
-        break;
-    }
-  }
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
-  }
 
   onInit(): void {
     this.modelResource = new ResourceModel();
@@ -166,9 +123,9 @@ export class TasksComponent extends UIComponent {
     this.modelResource.method = 'GetUserByTasksAsync';
 
     this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'TM';
-    this.resourceKanban.assemblyName = 'TM';
-    this.resourceKanban.className = 'TaskBusiness';
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
 
     // this.resourceTree = new ResourceModel();
@@ -859,32 +816,66 @@ export class TasksComponent extends UIComponent {
       obj
     );
   }
-  //#endregion
 
-  //#region Extend
-  openExtendPopup(moreFunc, data) {
-    if (data.isOverdue == "1") {
-      this.notiService.notifyCode("TM023");
-      return;
+  //#region event
+
+  clickMF(e: any, data?: any) {
+    this.itemSelected = data;
+    switch (e.functionID) {
+      case 'SYS01':
+        this.add();
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'sendemail':
+        this.sendemail(data);
+        break;
+      case 'TMT02015': // cái này phải xem lại , nên có biến gì đó để xét
+        this.assignTask(data);
+        break;
+      case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
+        //Chung làm
+        break;
+      case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
+        //Chung làm
+        break;
+      case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
+        //???? chắc làm sau ??
+        break;
+      default:
+        this.changeStatusTask(e, data);
+        break;
     }
-    // if (this.param?.ExtendControl) {
-      this.notiService.notifyCode("TM021");
-      return;
-    //}
-  
-  //  var obj = {
-  //   moreFunc: moreFunc,
-  //   data: data,
-  //   funcID: this.funcID
-  // }
-  // var dialog = this.callfc.openForm(
-  //   PopupConfirmComponent,
-  //   '',
-  //   500,
-  //   350,
-  //   '',
-  //   obj
-  // );
+  }
+
+  click(evt: ButtonModel) {
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+
+  onActions(e: any) {
+    if (e.type === "dbClick") {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '800px';
+      this.callfc.openSide(
+        PopupAddComponent,
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, e.data],
+        option
+      );
+    }
+
   }
   //#endregion
 }
