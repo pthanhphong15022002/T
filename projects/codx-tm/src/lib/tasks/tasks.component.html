@@ -115,10 +115,10 @@
       <codx-imgs [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3" [openDelay]="500">
       </codx-imgs>
     </div>
-    <div *ngIf="data.category == '1' || data.category == '2'" class="">
+    <!-- <div *ngIf="(data.category == '1' || data.category == '2') && data.owner != user.userID" class="">
       <codx-imgs [objectId]="data?.owner" objectType="AD_Users" [numberImages]="3">
       </codx-imgs>
-    </div>
+    </div> -->
     <!-- <div *ngIf="data.category=='1'||data.category=='2'">
         <codx-img [width]="30" [objectId]="data.owner" objectType="AD_Users">
         </codx-img>
@@ -174,10 +174,10 @@
         {{item?.memo}}
       </div>
       <!-- || item?.roleType == 'A'  trước đó có A mà giờ ko A vì a ko thực hiện => ko status ? ?? thương-->
-      <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' "> 
+      <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' ">
         <div class="d-flex align-items-end me-2 codx-badge">
           <span>
-            <div class="d-status" >
+            <div class="d-status">
               <div class="badge badge-danger me-2 label-status" [style.border-color]="
                   (item?.status | vll: vllStatus:'textColor' | async) +
                   '30'
@@ -205,6 +205,6 @@
 <codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
   (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
-  [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" [selectedFirst]="true"
-  [autoLoad]="true">
+  [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
+  (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>

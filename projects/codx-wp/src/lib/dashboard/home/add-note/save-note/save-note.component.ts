@@ -1,5 +1,5 @@
-import { DialogData, AuthStore, ApiHttpService, DialogRef, UIComponent, NotificationsService } from 'codx-core';
-import { ChangeDetectorRef, Component, OnInit, Optional, Injector } from '@angular/core';
+import { DialogData, AuthStore, ApiHttpService, DialogRef, UIComponent, NotificationsService, CodxFormComponent } from 'codx-core';
+import { ChangeDetectorRef, Component, OnInit, Optional, Injector, ViewChild } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 
 @Component({
@@ -16,6 +16,8 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   header = 'Sổ tay cá nhân';
   dialog: any;
 
+  @ViewChild('form') form: CodxFormComponent; 
+
   constructor(private injector: Injector,
     private authStore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
@@ -31,6 +33,10 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+  }
+
+  ngAfterViewInit() {
+    console.log("check ssss", this.form)
   }
 
   onEditNote(recID) {

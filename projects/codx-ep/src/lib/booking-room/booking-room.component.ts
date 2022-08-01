@@ -279,7 +279,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   onSaveForm() {
     if (this.editform.status == 'INVALID') {
       console.log('result', this.editform.value);
-      this.notificationsService.notify('"area" and "capacity" is not null!');
+      this.notificationsService.notifyCode('EP004');
       return;
     }
 

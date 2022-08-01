@@ -25,7 +25,6 @@ export class PopAddProjectComponent implements OnInit {
   gridViewSetup: any;
   readOnly = false;
 
-  // BaoLV 1.TM - Danh muc du an
   formName = 'Projects';
   gridViewName = 'grvProjects';
   isAddMode = true;
@@ -74,11 +73,6 @@ export class PopAddProjectComponent implements OnInit {
 
   cbxChangeProjectGroup(data) {
     if (data.data && data.data[0]) {
-      // this.projects.projectGroupID = data.data;
-      // if (data.field === 'projectGroupID' && this.action == 'add')
-      //   this.loadTodoByGroup(this.projects.projectGroupID);
-
-      // BaoLV 1.TM - Danh mục dự án - Lấy giá trị trong mảng của nhóm dự án
       this.project.projectGroupID = data.data.join(';');
 
     }
@@ -86,9 +80,6 @@ export class PopAddProjectComponent implements OnInit {
 
   cbxChangeProjects(data) {
     if (data.data) {
-      // this.projects.projectManeger = data.data;
-
-      // BaoLV 1.TM - Danh mục dự án - Lấy giá trị trong mảng của dự án
       this.project.projectManeger = data.data.join(';');
     }
   }
@@ -99,7 +90,6 @@ export class PopAddProjectComponent implements OnInit {
     this.project.memo = dt?.value ? dt.value : dt;
   }
 
-  // BaoLV 1.TM - Danh mục dự án
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv) => {
@@ -147,12 +137,11 @@ export class PopAddProjectComponent implements OnInit {
     });
 
   }
-  // BaoLV 1.TM - Danh mục dự án - Chức năng thêm và chỉnh sửa thông tin dự án
+
   onSaveOrEdit() {
     this.addOrUpdateData();
   }
 
-  // BaoLV 1.TM - Danh mục dự án - Chức năng thêm và chỉnh sửa thông tin dự án
   beforeSaveOrEdit(op: any) {
     var data = [];
     op.method = 'AddEditProjectsAsync';
@@ -161,19 +150,12 @@ export class PopAddProjectComponent implements OnInit {
     return true;
   }
 
-  // BaoLV 1.TM - Danh mục dự án - Chức năng thêm và chỉnh sửa thông tin dự án
   addOrUpdateData() {
     this.dialog.dataService
       .save((option: any) => this.beforeSaveOrEdit(option))
       .subscribe((res) => {
-        // if (res.save) {
-        //   this.notiService.notify('Thêm mới công việc thành công');
-        // }
-        // this.dialog.dataService.setDataSelected(res);
-        // this.dialog.dataService.closed();
         if (res.save) {
           this.dialog.dataService.setDataSelected(res.save[0]);
-          //   this.notiService.notifyCode('E0528');
         }
 
       });

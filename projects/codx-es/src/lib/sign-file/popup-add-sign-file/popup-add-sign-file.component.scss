@@ -34,4 +34,104 @@
       transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
   }
   }
+
+  .codx-card-custom {
+        .stepper-body {
+            background: rgba(229, 229, 229, 0.67);
+            box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
+            height: calc(100% - 60px);
+        }
+    
+        .codx-stepper {
+            .stepper-item {
+                .stepper-default {
+                    display: block;
+                }
+    
+                .stepper-active {
+                    display: none;
+                }
+    
+                .stepper-approve {
+                    display: none;
+                }
+    
+                .stepper-approve-disabled {
+                    display: none;
+                }
+            }
+    
+            .stepper-item.active {
+                .stepper-default {
+                    display: none;
+                }
+    
+                .stepper-active {
+                    display: block;
+                }
+    
+                .stepper-approve {
+                    display: none; 
+                }
+    
+                .stepper-approve-disabled {
+                    display: none;
+                }
+            }
+    
+            .stepper-item.approve-disabled {
+                .stepper-default {
+                    display: none;
+                }
+    
+                .stepper-active {
+                    display: none;
+                }
+    
+                .stepper-approve {
+                    display: none;
+                }
+    
+                .stepper-approve-disabled {
+                    display: block;
+                }
+            }
+    
+            .stepper-item.approve {
+                .stepper-default {
+                    display: none;
+                }
+    
+                .stepper-active {
+                    display: none;
+                }
+    
+                .stepper-approve {
+                    display: block;
+                }
+    
+                .stepper-approve-disabled {
+                    display: none;
+                }
+            }
+    
+            .stepper-item .stepper-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: color 0.2s ease, background-color 0.2s ease;
+                margin: 0;
+                border-radius: 0;
+                width: auto;
+                height: auto;
+                background-color: transparent;
+            }
+    
+            .stepper-line {
+                border: 0.5px dashed #ccc;
+            }
+        }
+    }
+    
+    
 }

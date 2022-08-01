@@ -45,6 +45,10 @@ export class TMMeetingsComponent extends UIComponent {
   param: any;
   resources: Resources[] = [];
   resourceID: any;
+  urlView = '';
+  urlDetail= '';
+  dataValue = "";
+
   constructor(inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
@@ -53,6 +57,11 @@ export class TMMeetingsComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList('TMT05011').subscribe(res => {
+      this.urlDetail = res?.url;
+    });
+    this.dataValue = this.user?.userID;
+
   }
 
   onInit(): void {
@@ -238,41 +247,6 @@ export class TMMeetingsComponent extends UIComponent {
   }
 
   viewDetail(data){
-    this.view.dataService.dataSelected = data;
-    var vllControlShare = 'TM003';
-    var vllRose = 'TM001';
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '800px';
-    this.dialog = this.callfc.openSide(
-      MeetingDetailComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose],
-      option
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event == null)
-        this.view.dataService.delete(
-          [this.view.dataService.dataSelected],
-          false
-        );
-      if (e?.event && e?.event != null) {
-        let listTask = e?.event;
-        let newTasks = [];
-        for (var i = 0; i < listTask.length; i++) {
-          if (listTask[i].taskID == data.taskID) {
-            this.view.dataService.update(listTask[i]).subscribe();
-            this.view.dataService.setDataSelected(e?.event[0]);
-          } else newTasks.push(listTask[i]);
-        }
-        if (newTasks.length > 0) {
-          this.view.dataService.data = newTasks.concat(
-            this.dialog.dataService.data
-          );
-          this.view.dataService.afterSave.next(newTasks);
-        }
-        this.detectorRef.detectChanges();
-      }
-    });
+    this.codxService.navigate('', this.urlDetail, { recID: data.recID })
   }
 }
