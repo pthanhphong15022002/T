@@ -115,7 +115,7 @@
       <codx-imgs [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3" [openDelay]="500">
       </codx-imgs>
     </div>
-    <!-- <div *ngIf="data.category == '1' || data.category == '2'" class="">
+    <!-- <div *ngIf="(data.category == '1' || data.category == '2') && data.owner != user.userID" class="">
       <codx-imgs [objectId]="data?.owner" objectType="AD_Users" [numberImages]="3">
       </codx-imgs>
     </div> -->

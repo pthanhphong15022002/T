@@ -24,10 +24,10 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   titleUpdateBookmark = "Bookmark";
   titleUpdateUnBookmark = "UnBookmark";
   titlePermission = "Permission";
- // files: any;  
+  // files: any;
   title = 'Thông báo';
   titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
-  constructor(    
+  constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     private callfc: CallFuncService,
@@ -37,34 +37,34 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   ) {
 
   }
-  ngOnInit(): void {    
-   // this.files = JSON.parse(this.data);
+  ngOnInit(): void {
+    // this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
     this.dmSV.isFileEditing.subscribe(item => {
       if (item != undefined) {
         if (this.files.length > 0) {
           var index = -1;
-          if (this.files[0].data != null) {            
+          if (this.files[0].data != null) {
             index = this.files.findIndex(d => d.data.recID == item.recID);
             if (index > -1) {
-              this.files[index].data = item; 
+              this.files[index].data = item;
             }
           }
-          else  {
+          else {
             index = this.files.findIndex(d => d.recID == item.recID);
             if (index > -1) {
-              this.files[index] = item; 
+              this.files[index] = item;
             }
-          }          
-          this.changeDetectorRef.detectChanges();          
-        }        
-      }          
+          }
+          this.changeDetectorRef.detectChanges();
+        }
+      }
     });
   }
 
-  openPermission(data) {    
+  openPermission(data) {
     this.dmSV.dataFileEditing = data;
-  //  this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "");
+    //  this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "");
     this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [""], "");
   }
 
@@ -91,41 +91,39 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     var config = new AlertConfirmInputConfig();
     config.type = "YesNo";
 
-    // this.notificationsService.alertCode('TM005', config).subscribe((res) => { 
-    //   if (res?.event && res?.event?.status == 'Y') { 
-    //     console.log(res); 
-    //   }      
-    // }); 
+    // this.notificationsService.alertCode('TM005', config).subscribe((res) => {
+    //   if (res?.event && res?.event?.status == 'Y') {
+    //     console.log(res);
+    //   }
+    // });
 
-    this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x=>{
-      if(x.event.status == "Y")
-      {        
+    this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x => {
+      if (x.event.status == "Y") {
         this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
           if (item) {
             let list = this.files;
             var index = -1;
             if (list.length > 0) {
-              if (list[0].data != null)
-              {
-                index = list.findIndex(d => d.data.recID.toString() === id); 
+              if (list[0].data != null) {
+                index = list.findIndex(d => d.data.recID.toString() === id);
               }
               else {
-                index = list.findIndex(d => d.recID.toString() === id); 
+                index = list.findIndex(d => d.recID.toString() === id);
               }
               if (index > -1) {
                 list.splice(index, 1);//remove element from array
                 this.files = list;
                 this.changeDetectorRef.detectChanges();
               }
-            }            
+            }
           }
-        })  
+        })
       }
     })
   }
 
   async download(id): Promise<void> {
-    this.fileService.getFile(id).subscribe(file => {      
+    this.fileService.getFile(id).subscribe(file => {
       var id = file.recID;
       var that = this;
       if (this.checkDownloadRight(file)) {
@@ -146,7 +144,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
         });
       }
       else {
-        this.notificationsService.notify("Bạn không có quyền download file này");
+        this.notificationsService.notifyCode("DM060");
       }
     });
   }
@@ -156,7 +154,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     this.fileService.getFile(id).subscribe(data => {
       this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
     });
- 
+
     //if (this.checkReadRight() ) {
     // var obj = new objectPara();
     // obj.fileID = data.recID;
@@ -175,7 +173,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     // changes.prop contains the old and the new value...
- //   this.files = JSON.parse(this.data);
+    //   this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -204,7 +202,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     return true;
   }
 
-  editfile(file, multi = false, index = 0) {    
+  editfile(file, multi = false, index = 0) {
     this.callfc.openForm(EditFileComponent, this.titleEditFileDialog, 800, 800, "", ["", file], "");
   }
 
@@ -227,20 +225,19 @@ export class ThumbnailComponent implements OnInit, OnChanges {
       ext = ext.substring(1);
       ext = ext.toLocaleLowerCase();
       return `../../../assets/demos/dms/${ext}.svg`;
-    }    
+    }
   }
 
-  getSubTitle(id)
-  {    
-     var html = `<div class='action-menu d-flex align-items-center cursor-pointer'>
+  getSubTitle(id) {
+    var html = `<div class='action-menu d-flex align-items-center cursor-pointer'>
                   <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='openFile("${id}")'>
-                    <i class='icon-preview text-primary icon-18'></i> 
-                  </div> 
+                    <i class='icon-preview text-primary icon-18'></i>
+                  </div>
                   <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='download("${id}")'>
-                    <i class='icon-cloud_download text-primary icon-18'></i> 
-                  </div> 
+                    <i class='icon-cloud_download text-primary icon-18'></i>
+                  </div>
                 </div> `;
-     return html;   
+    return html;
   }
 
 }

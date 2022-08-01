@@ -252,7 +252,7 @@ export class PopupAddMeetingComponent implements OnInit {
       }
       if (this.beginHour >= this.endHour) {
         if (this.beginMinute >= this.endMinute)
-          this.notiService.notify('Thời gian không hợp lệ!', 'error');
+          this.notiService.notifyCode('TM036');
       }
     }
   }

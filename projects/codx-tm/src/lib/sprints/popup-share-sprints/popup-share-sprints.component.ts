@@ -16,7 +16,7 @@ import { count } from 'console';
   styleUrls: ['./popup-share-sprints.component.scss'],
 })
 export class PopupShareSprintsComponent implements OnInit {
-  title="Chia sẻ view board"
+  title = "Chia sẻ view board"
   data: any;
   dialog: any;
   searchField = '';
@@ -44,7 +44,7 @@ export class PopupShareSprintsComponent implements OnInit {
     }
     this.listIdUserOld = this.listIdUser;
   }
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onDeleteUser(userID) {
     var listUserDetail = [];
@@ -74,11 +74,9 @@ export class PopupShareSprintsComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
-          // this.notiService.notifyCode('E0680')
-          this.notiService.notify('Chia sẽ thành công !')
+          this.notiService.notifyCode('SYS015')
         } else {
-          // this.notiService.notifyCode('code chưa có')
-          this.notiService.notify('Chia sẽ thất bại !')
+          this.notiService.notifyCode('SYS016')
         }
         this.dialog.close();
       });
@@ -89,16 +87,16 @@ export class PopupShareSprintsComponent implements OnInit {
     var resources = '';
     e?.data?.forEach((obj) => {
       // if (obj?.data && obj?.data != '') {
-         switch (obj.objectType) {
-           case 'U':
-            resources += obj.id+';';
-             break;
-          //  case 'D':
-          //   resources += obj.id+";";
-          //    break;
-         }
-     //  }
-     });
+      switch (obj.objectType) {
+        case 'U':
+          resources += obj.id + ';';
+          break;
+        //  case 'D':
+        //   resources += obj.id+";";
+        //    break;
+      }
+      //  }
+    });
   }
 
   valueSelectUser(resources) {
@@ -108,12 +106,12 @@ export class PopupShareSprintsComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
   }
-  
+
   getListUser(listUser) {
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }
-    this.listIdUser =this.listIdUser.concat(listUser.split(";")) ;
+    this.listIdUser = this.listIdUser.concat(listUser.split(";"));
     this.api
       .execSv<any>(
         'TM',
