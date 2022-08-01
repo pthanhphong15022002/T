@@ -86,6 +86,8 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   dialog!: DialogRef;
   editform: FormGroup;
   isAdd = true;
+  isCollapsed =true;
+  parameters: any = [];
   constructor(
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
@@ -192,7 +194,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
         id: '3',
         type: ViewType.content,
         active: false,
-        text: 'Chart nè',
+        text: 'Chart',
         icon: 'icon-bar_chart',
         model: {
           panelLeftRef: this.chart,
@@ -203,7 +205,7 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
         id: '4',
         type: ViewType.content,
         active: false,
-        text: 'report nè',
+        text: 'Report',
         icon: 'icon-assignment',
         model: {
           panelLeftRef: this.report,
@@ -316,6 +318,18 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
     console.log(event);
   }
 
+  changeValueText(evt:any){
+    console.log(evt);
+
+  }
+  changeValueDate(evt:any){
+    console.log(evt);
+
+  }
+  changeValueCbb(evt:any){
+    console.log(evt);
+
+  }
   icon: any;
   valueChangeIcon(icon: any) {
     this.icon = icon;
