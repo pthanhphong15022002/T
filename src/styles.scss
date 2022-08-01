@@ -1,344 +1,147 @@
-// /* You can add global styles to this file, and also import other style files */
-// @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700");
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700");
 
-// // Primary (để tạm ở đây do css từ module không nhận biến đặt trong core - đợi dev thiết lập lại dùm - css không biết làm đừng la tội nghiệp) 
-// :root {
-//     --primary: #3699ff;
-//     --primary-dark: #0078ff;
-//     --primary-darker: #005dc7;
-//     --primary-darkest: #063163;
-//     --primary-light: #D3E8FF;
-//     --primary-lighter: #EAF0FF;
-//     --primary-lightest: #F4F7FF;
+// Primary (để tạm ở đây do css từ module không nhận biến đặt trong core - đợi dev thiết lập lại dùm - css không biết làm đừng la tội nghiệp) 
+:root {
+    --primary: #3699ff;
+    --primary-dark: #0078ff;
+    --primary-darker: #005dc7;
+    --primary-darkest: #063163;
+    --primary-light: #D3E8FF;
+    --primary-lighter: #EAF0FF;
+    --primary-lightest: #F4F7FF;
 
-//     ///
-//     --primary-active: #187DE4;
-//     --primary-inverse: #FFFFFF;
-
-
-
-// }
-
-// /// codx custom
-// // [data-theme=light] {
-// //     :root {
-// //         --codx-text-primary: #005DC7;
-// //     }
-// // }
-// :root {
-//     --codx-text-primary: #005DC7;
-// }
-
-// .text-primary {
-//     color: var(--codx-text-primary) !important;
-// }
-
-// //// 
+    ///
+    --primary-active: #187DE4;
+    --primary-inverse: #FFFFFF;
 
 
-// .max-h-18px {
-//     width: 16px !important;
-//     height: 16px !important;
-// }
 
-// .rotate-180 {
-//     transform: rotateZ(180deg);
-//     transition: transform 0.3s ease;
-// }
+}
 
-
-// //////////////tbchung custom css///////////////////
-// .is-invalid-a,
-// .is-invalid .e-date-wrapper,
-// .is-invalid .ng-invalid {
-//     border: solid 1px #F3416C !important;
-//     border-radius: 5px;
-// }
-
-// .is-invalid .ng-invalid+label::before {
-//     border: solid 1px #F3416C !important;
-// }
-
-// .div-active {
-//     border-bottom: solid 2px #187DE4;
-//     //border-radius: 5px;
-// }
-
-// .div-active i {
-//     color: #187DE4 !important;
-// }
-
-// /////////////////////////////////////////////
-// /// 
-// /// 
-// /// chỉnh tam ///
-
-// .e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
-//     padding: 0;
-// }
-
-// .btn.btn-outline-primary {
-//     color: #3699ff;
-//     background-color: transparent;
-//     border-color: #3699ff;
-//     border-width: 1px !important;
-// }
-
-// .error {
-//     border: 1px solid red !important;
-// }
-
-// .file-item input.form-control {
-//     height: 18px;
-//     padding: 0 !important;
-//     background-color: transparent !important;
-//     border: 0;
-//     color: #818689 !important;
-// }
-
-// .text-error,
-// codx-input.text-error,
-// .file-item input.text-error {
-//     border: 1px solid red !important;
-//     height: 32px !important;
-// }
-
-// .action-menu {
-//     padding: 0px 6px 0 10px !important;
-//     height: 32px;
-// }
-
-// ngb-popover-window[role="tooltip"] {
-//     z-index: 10000;
-// }
-
-// // role="tooltip"
-// ngb-popover-window[role="tooltip"] {
-//     z-index: 10000;
-// }
-
-// .user-mini-group {
-//     padding-bottom: 0;
-// }
-
-// .user-mini-group {
-//     border: 1px solid #e0e0e0;
-//     border-radius: 4px;
-//     padding: 4px;
-//     min-height: 30px;
-//     margin-top: 3px;
-// }
-
-// .user-mini-item {
-//     border-radius: 20px;
-//     background-color: #f0f1f2;
-//     padding: 2px 10px 2px 2px;
-//     margin: 0 4px 0 0;
-//     white-space: nowrap;
-//     display: inline-block;
-//     max-width: 260px;
-//     overflow: hidden;
-//     height: 30px;
-// }
-
-// // .align-items-center {
-// //     align-items: center!important;
-// // }
-
-// // .d-flex {
-// //     display: flex!important;
-// // }
-
-// .user-mini-item div.text-dark-75 {
-//     max-width: 165px;
-//     text-overflow: ellipsis;
-//     overflow: hidden;
-// }
-
-// .text-dark-75 {
-//     color: #3e4347 !important;
-// }
-
-// .symbol.symbol-circle,
-// .symbol.symbol-circle .symbol-label,
-// .symbol.symbol-circle>img {
-//     border-radius: 50%;
-// }
-
-// .symbol.symbol-circle,
-// .symbol.symbol-circle .symbol-label,
-// .symbol.symbol-circle>img {
-//     border-radius: 50%;
-// }
-
-// .me-3 {
-//     margin-right: 0.75rem !important;
-// }
-
-// .mg-5,
-// .mg-5 img {
-//     margin-right: 5px !important;
-// }
-
-// .card {
-//     box-shadow: none;
-// }
-
-// // css trễ hạn công việc - chưa có vll nên tạm dùng vậy
-// .unexpired {
-//     color: #C9C9D4;
-// }
-
-// .expired {
-//     color: #F64E60;
-// }
-
-// .max-h-25px {
-//     max-height: 18px !important;
-// }
-
-// .codx-card-custom {
-//     .stepper-body {
-//         background: rgba(229, 229, 229, 0.67);
-//         box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
-//         height: calc(100% - 60px);
-//     }
-
-//     .codx-stepper {
-//         .stepper-item {
-//             .stepper-default {
-//                 display: block;
-//             }
-
-//             .stepper-active {
-//                 display: none;
-//             }
-
-//             .stepper-approve {
-//                 display: none;
-//             }
-
-//             .stepper-approve-disabled {
-//                 display: none;
-//             }
-//         }
-
-//         .stepper-item.active {
-//             .stepper-default {
-//                 display: none;
-//             }
-
-//             .stepper-active {
-//                 display: block;
-//             }
-
-//             .stepper-approve {
-//                 display: none;
-//             }
-
-//             .stepper-approve-disabled {
-//                 display: none;
-//             }
-//         }
-
-//         .stepper-item.approve-disabled {
-//             .stepper-default {
-//                 display: none;
-//             }
-
-//             .stepper-active {
-//                 display: none;
-//             }
-
-//             .stepper-approve {
-//                 display: none;
-//             }
-
-//             .stepper-approve-disabled {
-//                 display: block;
-//             }
-//         }
-
-//         .stepper-item.approve {
-//             .stepper-default {
-//                 display: none;
-//             }
-
-//             .stepper-active {
-//                 display: none;
-//             }
-
-//             .stepper-approve {
-//                 display: block;
-//             }
-
-//             .stepper-approve-disabled {
-//                 display: none;
-//             }
-//         }
-
-//         .stepper-item .stepper-icon {
-//             display: flex;
-//             align-items: center;
-//             justify-content: center;
-//             transition: color 0.2s ease, background-color 0.2s ease;
-//             margin: 0;
-//             border-radius: 0;
-//             width: auto;
-//             height: auto;
-//             background-color: transparent;
-//         }
-
-//         .stepper-line {
-//             border: 0.5px dashed #ccc;
-//         }
+/// codx custom
+// [data-theme=light] {
+//     :root {
+//         --codx-text-primary: #005DC7;
 //     }
 // }
+:root {
+    --codx-text-primary: #005DC7;
+}
+
+.text-primary {
+    color: var(--codx-text-primary) !important;
+}
+
+//// 
 
 
-// .card-item {
-//     position: relative;
-// }
-// .card-item {
-//     width: 180px;
-//     margin-right: 20px;
-//     float: left;
-// }
+.max-h-18px {
+    width: 16px !important;
+    height: 16px !important;
+}
 
-// .mt-2, .my-2 {
-//     margin-top: 0.5rem!important;
-// }
+.rotate-180 {
+    transform: rotateZ(180deg);
+    transition: transform 0.3s ease;
+}
+
+
+//////////////tbchung custom css///////////////////
+.is-invalid-a,
+.is-invalid .e-date-wrapper,
+.is-invalid .ng-invalid {
+    border: solid 1px #F3416C !important;
+    border-radius: 5px;
+}
+
+.is-invalid .ng-invalid+label::before {
+    border: solid 1px #F3416C !important;
+}
+
+.div-active {
+    border-bottom: solid 2px #187DE4;
+    //border-radius: 5px;
+}
+
+.div-active i {
+    color: #187DE4 !important;
+}
+
+/////////////////////////////////////////////
+/// 
+/// 
+/// chỉnh tam ///
+
+.e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
+    padding: 0;
+}
+
+.btn.btn-outline-primary {
+    color: #3699ff;
+    background-color: transparent;
+    border-color: #3699ff;
+    border-width: 1px !important;
+}
+
+.error {
+    border: 1px solid red !important;
+}
+
+.file-item input.form-control {
+    height: 18px;
+    padding: 0 !important;
+    background-color: transparent !important;
+    border: 0;
+    color: #818689 !important;
+}
+
+.text-error,
+codx-input.text-error,
+.file-item input.text-error {
+    border: 1px solid red !important;
+    height: 32px !important;
+}
+
+.action-menu {
+    padding: 0px 6px 0 10px !important;
+    height: 32px;
+}
+
+ngb-popover-window[role="tooltip"] {
+    z-index: 10000;
+}
+
+// role="tooltip"
+ngb-popover-window[role="tooltip"] {
+    z-index: 10000;
+}
+
+.user-mini-group {
+    padding-bottom: 0;
+}
+
+.user-mini-group {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 4px;
+    min-height: 30px;
+    margin-top: 3px;
+}
+
+.user-mini-item {
+    border-radius: 20px;
+    background-color: #f0f1f2;
+    padding: 2px 10px 2px 2px;
+    margin: 0 4px 0 0;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 260px;
+    overflow: hidden;
+    height: 30px;
+}
+
 // .align-items-center {
-//     align-items: center!important;
-// }
-
-// .dms-card-footer {
-//     padding: 8px;
-// }
-// .dms-card-footer {
-//     height: 60px;
-// }
-
-// .dms-card-footer .text-dark-75 {
-//     font-weight: 400!important;
-// }
-// .text-dark-75 {
-//     color: #3e4347!important;
-// }
-
-// .mr-1, .mx-1 {
-//     margin-right: 0.25rem!important;
-// }
-
-// .mr-3, .mx-3 {
-//     margin-right: 0.75rem!important;
-// }
-
-// .font-weight-bold {
-//     font-weight: 500!important;
-// }
-
-// .dms-card-footer .d-flex.mr-3 {
 //     align-items: center!important;
 // }
 
@@ -346,22 +149,219 @@
 //     display: flex!important;
 // }
 
-// .icon-16 {
-//     font-size: 16px!important;
-//     line-height: 16px!important;
-//     height: 16px!important;
-//     width: 16px!important;
-// }
+.user-mini-item div.text-dark-75 {
+    max-width: 165px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 
-// .text-warning {
-//     color: #ffa800!important;
-// }
+.text-dark-75 {
+    color: #3e4347 !important;
+}
 
-// input.e-input,
-// textarea.e-input,
-// .e-input-group,
-// .e-input-group.e-control-wrapper {
-//     font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI", "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-//     font-size: 13px;
-//     font-weight: 400;
-// }
+.symbol.symbol-circle,
+.symbol.symbol-circle .symbol-label,
+.symbol.symbol-circle>img {
+    border-radius: 50%;
+}
+
+.symbol.symbol-circle,
+.symbol.symbol-circle .symbol-label,
+.symbol.symbol-circle>img {
+    border-radius: 50%;
+}
+
+.me-3 {
+    margin-right: 0.75rem !important;
+}
+
+.mg-5,
+.mg-5 img {
+    margin-right: 5px !important;
+}
+
+.card {
+    box-shadow: none;
+}
+
+// css trễ hạn công việc - chưa có vll nên tạm dùng vậy
+.unexpired {
+    color: #C9C9D4;
+}
+
+.expired {
+    color: #F64E60;
+}
+
+.max-h-25px {
+    max-height: 18px !important;
+}
+
+.codx-card-custom {
+    .stepper-body {
+        background: rgba(229, 229, 229, 0.67);
+        box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
+        height: calc(100% - 60px);
+    }
+
+    .codx-stepper {
+        .stepper-item {
+            .stepper-default {
+                display: block;
+            }
+
+            .stepper-active {
+                display: none;
+            }
+
+            .stepper-approve {
+                display: none;
+            }
+
+            .stepper-approve-disabled {
+                display: none;
+            }
+        }
+
+        .stepper-item.active {
+            .stepper-default {
+                display: none;
+            }
+
+            .stepper-active {
+                display: block;
+            }
+
+            .stepper-approve {
+                display: none;
+            }
+
+            .stepper-approve-disabled {
+                display: none;
+            }
+        }
+
+        .stepper-item.approve-disabled {
+            .stepper-default {
+                display: none;
+            }
+
+            .stepper-active {
+                display: none;
+            }
+
+            .stepper-approve {
+                display: none;
+            }
+
+            .stepper-approve-disabled {
+                display: block;
+            }
+        }
+
+        .stepper-item.approve {
+            .stepper-default {
+                display: none;
+            }
+
+            .stepper-active {
+                display: none;
+            }
+
+            .stepper-approve {
+                display: block;
+            }
+
+            .stepper-approve-disabled {
+                display: none;
+            }
+        }
+
+        .stepper-item .stepper-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease, background-color 0.2s ease;
+            margin: 0;
+            border-radius: 0;
+            width: auto;
+            height: auto;
+            background-color: transparent;
+        }
+
+        .stepper-line {
+            border: 0.5px dashed #ccc;
+        }
+    }
+}
+
+
+.card-item {
+    position: relative;
+}
+.card-item {
+    width: 180px;
+    margin-right: 20px;
+    float: left;
+}
+
+.mt-2, .my-2 {
+    margin-top: 0.5rem!important;
+}
+.align-items-center {
+    align-items: center!important;
+}
+
+.dms-card-footer {
+    padding: 8px;
+}
+.dms-card-footer {
+    height: 60px;
+}
+
+.dms-card-footer .text-dark-75 {
+    font-weight: 400!important;
+}
+.text-dark-75 {
+    color: #3e4347!important;
+}
+
+.mr-1, .mx-1 {
+    margin-right: 0.25rem!important;
+}
+
+.mr-3, .mx-3 {
+    margin-right: 0.75rem!important;
+}
+
+.font-weight-bold {
+    font-weight: 500!important;
+}
+
+.dms-card-footer .d-flex.mr-3 {
+    align-items: center!important;
+}
+
+.d-flex {
+    display: flex!important;
+}
+
+.icon-16 {
+    font-size: 16px!important;
+    line-height: 16px!important;
+    height: 16px!important;
+    width: 16px!important;
+}
+
+.text-warning {
+    color: #ffa800!important;
+}
+
+input.e-input,
+textarea.e-input,
+.e-input-group,
+.e-input-group.e-control-wrapper {
+    font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI", "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 13px;
+    font-weight: 400;
+}

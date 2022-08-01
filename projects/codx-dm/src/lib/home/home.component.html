@@ -25,7 +25,7 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
       <div [innerHTML]="setFullHtmlNode(data, '')">
       </div>
       <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-        (clickMF)="dmSV.clickMF($event, data, 'folder')" [title]="data.folderName" [formModel]="view.formModel"
+        (clickMF)="dmSV.clickMF($event, data, 'folder')"  (changeDataMF)="dmSV.filterMoreFunction($event, 'DM_FolderInfo')" [title]="data.folderName" [formModel]="view.formModel"
         [typeMF]="'hover'" cardCss="w-150px">
       </codx-temp-full>
     </div>
@@ -89,10 +89,10 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
 </codx-attachment> -->
 </ng-template>
 <ng-template #templateSmallCard>
-  <card type="smallcard" [listFiles]="listFiles" [listFolders]="listFolders" [formModel]="view.formModel"></card>
+  <card type="smallcard" [formModel]="view.formModel"></card>
 </ng-template>
 <ng-template #templateList>
-  <detail type="list" [listFiles]="listFiles" [listFolders]="listFolders" [formModel]="view.formModel"></detail>
+  <detail type="list"  [formModel]="view.formModel"></detail>
 </ng-template> 
 
 <!-- <ng-template #templateRight>  

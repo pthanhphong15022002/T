@@ -240,7 +240,7 @@ export class HomeComponent extends UIComponent {
       // this.dmSV.breadcumb.next(breadcumb);
       // this.dmSV.currentNode = id;
       // this.dmSV.currentNode = id;
-      // this.dmSV.folderId.next(id);
+      this.dmSV.folderId.next(id);
       //this.view.dataService.addDatas(id, )
       var items = item.items;
       if (items == undefined || items.length <= 0) {
@@ -276,10 +276,10 @@ export class HomeComponent extends UIComponent {
         //this.dmSV.isTree = false;
       }
 
-      // this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
-      //   this.dmSV.listFiles.next(res);
-      //   this.changeDetectorRef.detectChanges();
-      // });
+      this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
+        this.dmSV.listFiles.next(res);
+        this.changeDetectorRef.detectChanges();
+      });
     } else {
       this.dmSV.disableInput.next(true);
       this.notificationsService.notify(this.titleAccessDenied);
@@ -358,11 +358,15 @@ export class HomeComponent extends UIComponent {
     // this.views[2].type = ViewType.content;
 
     this.folderService.options.funcID = this.view.funcID;
-    if (this.dmSV.folderType != this.view.funcID)
+    if (this.dmSV.folderType != this.view.funcID) {
       this.listFolders = this.view.dataService.data;
+      this.dmSV.listFolder.next(this.listFolders);
+    }
+      
     this.dmSV.folderType = this.view.funcID;
     this.dmSV.idMenuActive = this.view.funcID;
     this.dmSV.loadedFile = false;
+    this.dmSV.folderId.next("");
 
     // this.dmSV.loadedFolder = false;
     // if (this.listFolders == null)
@@ -383,6 +387,7 @@ export class HomeComponent extends UIComponent {
       .subscribe(async (res) => {
         if (res != null) {
           this.listFiles = res;
+          this.dmSV.listFiles.next(res);
           this.dmSV.loadedFile = true;
           this.changeDetectorRef.detectChanges();
         }
