@@ -1,34 +1,17 @@
-<codx-views #codxViews [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
+<codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
   [entityName]="entity" [views]="views" [button]="button" [moreFuncs]="moreFunc" idField="recID" [className]="className"
   [method]="method" [selectedFirst]="true" (selectedChange)="changeItemDetail($event)" [autoLoad]="autoLoad"
   [button]="button" (buttonClick)="click($event)" (requestEnded)="closeAddForm($event)">
 </codx-views>
 
-<!-- <codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [entityName]="entity"
-  [method]="method" [assemblyName]="assemblyName" [service]="service" [className]="className"
-  (selectedChange)="changeItemDetail($event)" [selectedFirst]="true" idField="recID"
-  (requestEnded)="closeAddForm($event)" (viewChanged)="viewChange($event)">
-</codx-views> -->
-
 <ng-template #itemTemplate let-data>
-  <!-- <div class="w-100 d-flex p-1">
-    <div [class]="
-        'icon-60 icon align-self-start rounded-circle p-3 m-1 ' + data?.icon
-      " [style.background-color]="'lightgreen'"></div>
-    <codx-temp-full class="w-100 position-relative" iconCss="icon-flag" [icoStatusVll]="'ES002'" imgCss="ml-6"
-      imageObjType="" [title]="data.title" [desc]="data.abstract" icoSubTitleCss="icon-assignment"
-      [subTitle]="data.positionName" [content]="data.memo" [status]="data.approveStatus" [statusVll]="'ES003'"
-      cardCss="card-template border-bottom px-2 py-3" [date]="data.createdOn" [icoDesc2Fld]="data.createdBy"
-      [resources]="data.createdBy != undefined ? data.createdBy : ''" [resourceObjType]="'AD_Users'">
-    </codx-temp-full>
-  </div> -->
-
-  <codx-temp-full (click)="click(data)" [typeMF]="'hover'" [content]="data.title" [desc]="data.abstract"
+  <codx-temp-full (click)="click(data)" [typeMF]="'hover'" [content]="data.categoryName" [desc]="data.title"
     [icoCss]="'icon-26 icon align-self-start rounded-circle p-3 m-1 ' + data?.icon" [status]="data.status"
     [statusVll]="'ES003'" [date]="data.createdOn" cardCss="card-template border-bottom px-2 py-3"
     [resources]="data.createdBy != undefined ? data.createdBy : ''" [resourceObjType]="'AD_Users'"
     [icoStatus]="data?.urgency" [icoStatusVll]="'ES002'" [icoStatus2]="data?.security" [modeImgs]="false"
-    [bookmark]="data.isBookmark" [titleLine]="2" [icoDateCss]="'icon-access_alarm'" [dataItem]="data">
+    [bookmark]="data.isBookmark" [titleLine]="2" [icoDateCss]="'icon-access_alarm'" [dataItem]="data"
+    [formModel]="view.formModel" (clickMF)="clickMF($event, data)" typeMF="hover" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 
@@ -40,7 +23,7 @@
           [class.text-primary]="taskViewStt=='1'" (click)="clickChangeTaskViewStatus('1')">
           <i class="icon-format_list_numbered icon-16 text-warning"></i>
           <span class="ms-2 fw-bold fs-7">
-            <codx-label name="lblTitleNew" [formModel]="codxViews.formModel" default="Mới tạo" class="ms-2 fw-bold">
+            <codx-label name="lblTitleNew" [formModel]="view.formModel" default="Mới tạo" class="ms-2 fw-bold">
             </codx-label>
           </span>
         </div>
@@ -48,8 +31,7 @@
           [class.text-primary]="taskViewStt=='2'" (click)="clickChangeTaskViewStatus('2')">
           <i class="icon-spellcheck icon-16"></i>
           <span class="ms-2 fw-bold fs-7">
-            <codx-label name="lblTitlePending" [formModel]="codxViews.formModel" default="Chờ duyệt"
-              class="ms-2 fw-bold">
+            <codx-label name="lblTitlePending" [formModel]="view.formModel" default="Chờ duyệt" class="ms-2 fw-bold">
             </codx-label>
           </span>
         </div>
@@ -57,7 +39,7 @@
           [class.text-primary]="taskViewStt=='3'" (click)="clickChangeTaskViewStatus('3')">
           <i class="icon-download_done icon-16 text-success"></i>
           <span class="ms-2 fw-bold fs-7">
-            <codx-label name="lblTitleDone" [formModel]="codxViews.formModel" default="Hoàn tất" class="ms-2 fw-bold">
+            <codx-label name="lblTitleDone" [formModel]="view.formModel" default="Hoàn tất" class="ms-2 fw-bold">
             </codx-label>
           </span>
         </div>
@@ -67,8 +49,8 @@
 </ng-template>
 
 <ng-template #paneRight>
-  <lib-view-detail #viewdetail [itemDetail]="itemDetail" [funcID]="funcID"
-    [formModel]="codxViews?.currentView?.formModel">
+  <lib-view-detail #viewdetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.currentView?.formModel"
+    [view]="view">
   </lib-view-detail>
 
 </ng-template>

@@ -142,6 +142,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   private getGeneralData() {
     this.tmService.getMyDBData(this.model).subscribe((res) => {
       this.data = res;
+      console.log(this.data)
       this.detectorRef.detectChanges();
     });
   }
@@ -161,6 +162,5 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     this.month = data?.month + 1;
     this.beginMonth = data?.beginMonth;
     this.endMonth = data?.endMonth;
-    this.getGeneralData();
   }
 }
