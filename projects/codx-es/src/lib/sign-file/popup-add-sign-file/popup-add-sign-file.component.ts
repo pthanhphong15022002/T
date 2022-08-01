@@ -166,9 +166,9 @@ export class PopupAddSignFileComponent implements OnInit {
     });
   }
 
-  getfileCount(event) { }
+  getfileCount(event) {}
 
-  onSaveForm() { }
+  onSaveForm() {}
 
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
