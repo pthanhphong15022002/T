@@ -16,7 +16,7 @@
         <div class="col-12">
              <codx-label fiedName="ConfirmComment" formName="Tasks"  default="Comment"></codx-label>
             <!-- <textarea  [(ngModel)]="comment" class="form-control" rows="2"></textarea> -->
-            <codx-input type="textarea" (valueChange)="valueChange($event)" field="confirmComment" [crrValue]="task.confirmComment" format="ed2"></codx-input>
+            <codx-input type="textarea" (valueChange)="valueChange($event)" field="confirmComment" [crrValue]="task?.confirmComment" format="ed2"></codx-input>
         </div>
     </div>
   </ng-template>

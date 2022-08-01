@@ -3,22 +3,22 @@
   <ng-template  #body>
     <div class="form-group row">
         <div class="col-12">
-            <codx-label name ="lblStatus" formName="Tasks"  default="Tình trạng"></codx-label>
+            <codx-label name ="lblStatus" formName="Tasks" gridViewName="grvTasks" default="Tình trạng"></codx-label>
             <codx-input class="form-control" type="text"  [crrValue]="moreFunc.customName" [disabled]="true"></codx-input>
         </div>
         <div class="col-6" *ngIf="status =='90'">
-            <codx-label fiedName ="CompletedOn" formName="Tasks"  default="Ngày cập nhật"></codx-label>
+            <codx-label fiedName ="CompletedOn" formName="Tasks" gridViewName="grvTasks"  default="Ngày cập nhật"></codx-label>
             <codx-input type="datetime" class="test-datetime" field="completedOn" placeholder="datetime"
                 [crrValue]="completedOn" format="F" (valueChange)="changeTime($event)">
             </codx-input>
         </div>
         <div class="col-6" *ngIf="status =='90'">
-            <codx-label fiedName="Estimated" formName="Tasks"  default="Thời gian hoàn tất"></codx-label>
+            <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTask"  default="Thời gian hoàn tất"></codx-label>
             <codx-input class="form-control" type="number" field="estimated" [crrValue]="completed"  (valueChange)="changeEstimated($event)" ></codx-input> 
           
         </div>
         <div class="col-12">
-             <codx-label fiedName="Comment" formName="Tasks"  default="Comment"></codx-label>
+             <codx-label fiedName="Comment" formName="Tasks" gridViewName="grvTasks" default="Comment"></codx-label>
             <textarea [(ngModel)]="comment" class="form-control" rows="2"></textarea>
         </div>
     </div>
