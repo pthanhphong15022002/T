@@ -167,16 +167,16 @@
 </ng-template>
 
 <ng-template #popMoreFunc let-modal>
-    <div class="flex align-items-center mb-1" (click)="checkNumberNotePin(dataUpdate)">
-        <span [class]="pinMF?.largeIcon" [style.color]="pinMF?.color"></span>
+    <a class="flex align-items-center  text-hover-primary cursor-pointer" (click)="checkNumberNotePin(dataUpdate)">
+        <span class="text-hover-primary icon-push_pin" [style.color]="pinMF?.color"></span>
         <div class="show-customName ms-2">
             <span>{{pinMF?.customName}}</span>
         </div>
-    </div>
-    <div class="flex align-items-center" (click)="openFormNoteBooks(dataUpdate)">
-        <span [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
+    </a>
+    <a class="flex align-items-center text-hover-primary cursor-pointer" (click)="openFormNoteBooks(dataUpdate)">
+        <span class="text-hover-primary" [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
         <div class="show-customName ms-2">
             <span>{{saveMF?.customName}}</span>
         </div>
-    </div>
+    </a>
 </ng-template>
