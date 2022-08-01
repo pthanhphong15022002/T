@@ -406,8 +406,8 @@ export class CodxDMService {
             {
                 if (this.checkDeleteRight(data)) { 
                 var id = data.recID;                
-               // this.isDelete = true;
-                if (this.type == 'file') {
+                // this.isDelete = true;
+                if (type == 'file') {
                   this.fileService.deleteFileToTrash(id, this.folderId.getValue(), false).subscribe(async res => {
                     let list = this.listFiles.getValue();
                     //list = list.filter(item => item.recID != id);
@@ -501,6 +501,17 @@ export class CodxDMService {
           });
         }
       }
+
+    filterMoreFunction(e: any, type: string) {    
+      if (e) {          
+        for(var i=0; i<e.length; i++) {       
+          if (e[i].data != null && e[i].data.entityName == type)
+            e[i].disabled = false;     
+          else
+            e[i].disabled = true;     
+        }      
+      }
+    }
 
     clickMF($event, item: any, type) {
         var data: any;

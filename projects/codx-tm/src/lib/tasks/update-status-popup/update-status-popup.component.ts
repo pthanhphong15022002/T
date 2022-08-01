@@ -114,7 +114,11 @@ export class UpdateStatusPopupComponent implements OnInit {
   saveData() {
     this.comment = this.comment.trim();
     if (this.data.fieldValue == '2') {
-      if (this.comment == '') return;
+      if (this.comment == ''){
+        // this.notiService.notifyCode("????")
+        this.notiService.notify("Phải nhập nội dung comment đầy đủ !")
+        return;
+      } 
     }
     this.tmSv
       .setStatusTask(
@@ -137,6 +141,7 @@ export class UpdateStatusPopupComponent implements OnInit {
           this.dialog.close(res)
           this.notiService.notifyCode('TM009');
         } else {
+          this.dialog.close()
           this.notiService.notifyCode('TM008');
         }
       });
