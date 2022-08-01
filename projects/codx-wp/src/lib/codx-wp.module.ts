@@ -22,6 +22,7 @@ import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note
 import { HomeComponent } from './dashboard/home/home.component';
 import { ListPostComponent } from './dashboard/home/list-post/list-post.component';
 import { AddPostComponent } from './dashboard/home/list-post/popup-add/addpost/addpost.component';
+import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
 import { MyTeamComponent } from './dashboard/home/my-team/my-team.component';
 import { UpdateNotePinComponent } from './dashboard/home/update-note-pin/update-note-pin.component';
 import { NewsComponent } from './news/news.component';
@@ -112,7 +113,8 @@ const Component: Type<any>[] =
     AddPostComponent,
     MyTeamComponent,
     UpdateNotePinComponent,
-    ViewVideoComponent
+    ViewVideoComponent,
+    PopupDetailComponent
 
   ];
 
