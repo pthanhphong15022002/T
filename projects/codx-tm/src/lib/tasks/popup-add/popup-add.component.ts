@@ -79,6 +79,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   listEmpInfo = [];
   listUserDetailSearch: any[] = [];
   idUserSelected: any;
+  countReload = 0;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -675,10 +676,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   cbxChange(data) {
-    
     if (data.data && data.data != "") {
       this.task[data.field] = data.data;
-      if (data.field === 'taskGroupID' && this.action == 'add')
+      if (data.field === 'taskGroupID')
         this.loadTodoByGroup(this.task.taskGroupID);
       return;
     }else{
@@ -737,7 +737,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.param = res;
+          this.convertParameterByTaskGroup(res) ;
         }
       });
   }
