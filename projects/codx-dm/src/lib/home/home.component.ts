@@ -197,10 +197,10 @@ export class HomeComponent extends UIComponent {
     }
 
     if (!folder.read)
-      item2 = `<i class="icon-per no-permission" role="presentation"></i>`;
+      item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
     var fullText = `${item1}
                     ${item2}
-                    <span class="mytree_node"></span>
+                    <span class="mytree_node me-2"></span>
                     ${text}`;
 
     return fullText;

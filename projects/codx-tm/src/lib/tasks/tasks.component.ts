@@ -540,7 +540,7 @@ export class TasksComponent extends UIComponent {
         for (var i = 0; i < listTask.length; i++) {
           if (listTask[i].taskID == data.taskID) {
             this.view.dataService.update(listTask[i]).subscribe();
-            this.view.dataService.setDataSelected(e?.event[0], i);
+            this.view.dataService.setDataSelected(e?.event[0]);
           } else newTasks.push(listTask[i]);
         }
         if (newTasks.length > 0) {
