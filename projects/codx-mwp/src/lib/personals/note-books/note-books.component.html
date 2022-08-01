@@ -22,20 +22,23 @@
             </div>
         </div>
     </div>
-    <codx-listview #listView entityName="WP_NoteBooks" gridViewName="grvNoteBooks" [predicate]="predicate"
-        [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="NoteBooks" funcId="MWP0094"
-        service="WP">
-    </codx-listview>
+    <div class="d-flex flex-column-fluid home hover-scroll-overlay-y"
+        style="overflow: auto !important; height: 100vh; display: block" data-kt-scroll="true"
+        data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=".pw-profile,.pw-header"
+        attr.data-kt-scroll-wrappers=".pw-content" attr.data-kt-scroll-offset="'0px'">
+        <codx-listview #listView entityName="WP_NoteBooks" gridViewName="grvNoteBooks" [predicate]="predicate"
+            [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="NoteBooks"
+            funcId="MWP0094" service="WP">
+        </codx-listview>
+    </div>
 </div>
 
 <ng-template #templateListCard let-item>
-    <div class="pw-listcard">
-        <div class="pw-card delay-500" (click)="openDetailPage(item)">
-            <codx-card-img cardCss="border rounded-4" (clickMF)="clickMF($event,item)" [imageId]="item.recID"
-                imgCss="h-150px w-100" icoTitleCss="icon-assignment icon-16" [title]="item.title"
-                [imgOn]="item?.modifiedOn" [desc2]="item.memo" [imageObjType]="'WP_NoteBooks'"
-                [formModel]="listView.formModel" [dataItem]="item">
-            </codx-card-img>
-        </div>
+    <div (click)="openDetailPage(item)">
+        <codx-card-img cardCss="border rounded-4 w-200px" (clickMF)="clickMF($event, item)" [imageId]="item.recID"
+            imgCss="h-150px" icoTitleCss="icon-assignment icon-16" [title]="item.title" [imgOn]="item?.modifiedOn"
+            [desc2]="item.memo" imageWidth="200" [imageObjType]="'WP_NoteBooks'" [formModel]="listView.formModel"
+            [dataItem]="item">
+        </codx-card-img>
     </div>
 </ng-template>

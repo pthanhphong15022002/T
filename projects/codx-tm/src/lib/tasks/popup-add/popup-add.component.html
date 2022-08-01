@@ -32,7 +32,7 @@
         <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
         </codx-label>
       </div>
-      <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" placeholder="datetime"
+      <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" 
         [crrValue]="task?.dueDate" (valueChange)="changeTime($event)" [disabled]="disableDueDate">
       </codx-input>
     </div>
@@ -65,7 +65,7 @@
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
           </codx-label>
         </div>
-        <codx-input type="datetime" class="test-datetime" field="startDate" placeholder="datetime"
+        <codx-input type="datetime" class="test-datetime" field="startDate" 
           [crrValue]="task?.startDate" format="F" (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
@@ -74,7 +74,7 @@
           <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày kết thúc">
           </codx-label>
         </div>
-        <codx-input type="datetime" class="test-datetime" field="endDate" placeholder="datetime"
+        <codx-input type="datetime" class="test-datetime" field="endDate" 
           [crrValue]="task?.endDate" format="F" (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>

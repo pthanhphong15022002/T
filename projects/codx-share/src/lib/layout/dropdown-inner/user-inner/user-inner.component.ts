@@ -13,6 +13,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class') class = 'd-flex align-items-center';
   @Output() onAvatarChanged = new EventEmitter<any>();
   @Input() user: any;
+  @Input() buttonMarginClass: any;
 
   tenant?: string;
   language: LanguageFlag = langDefault;

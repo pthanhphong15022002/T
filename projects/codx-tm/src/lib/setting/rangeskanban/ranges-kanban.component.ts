@@ -145,11 +145,14 @@ export class RangesKanbanComponent implements OnInit {
 
   moreFuncClick(e: any, data?: any) {
     switch (e.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
+        break;
+      case 'SYS04':
+        //sao chep
         break;
     }
   }
