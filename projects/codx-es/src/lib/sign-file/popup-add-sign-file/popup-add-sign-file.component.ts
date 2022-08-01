@@ -152,9 +152,9 @@ export class PopupAddSignFileComponent implements OnInit {
     });
   }
 
-  getfileCount(event) {}
+  getfileCount(event) { }
 
-  onSaveForm() {}
+  onSaveForm() { }
 
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
@@ -317,7 +317,7 @@ export class PopupAddSignFileComponent implements OnInit {
           this.currentTab++;
           this.processTab++;
         } else {
-          this.notify.notify('Yêu cầu thêm file');
+          this.notify.notifyCode('ES006');
         }
         break;
       case 1:

@@ -17,7 +17,7 @@ export class AsideroledetailComponent implements OnInit {
     private api: ApiHttpService,
     private notificationsService: NotificationsService,
     private at: ActivatedRoute,
-    private tempService:TempService) { }
+    private tempService: TempService) { }
   @Input() treeData: [];
   @Output() onChangeSelected = new EventEmitter();
   ngOnInit(): void {
@@ -25,21 +25,21 @@ export class AsideroledetailComponent implements OnInit {
     if (rid) {
       this.recid = rid;
     }
-    
+
   }
 
   ngAfterViewInit() {
 
   }
-  onChangeSelectedFunction(data){
+  onChangeSelectedFunction(data) {
     this.onChangeSelected.emit(data);
   }
-  itemClick(elm, item, event,customName) {
-    if(this.RolesService._dataChanged){
-      this.notificationsService.notify("Dữ liệu thay đổi, bạn cần lưu lại trước.");
+  itemClick(elm, item, event, customName) {
+    if (this.RolesService._dataChanged) {
+      this.notificationsService.notifyCode("Dữ liệu thay đổi, bạn cần lưu lại trước.");
       return;
     }
-    this.onChangeSelected.emit({nameFunction:customName});
+    this.onChangeSelected.emit({ nameFunction: customName });
     var formName = item.formName;
     var gridViewName = item.gridViewName;
     var functionID = item.functionType == 'M' ? '' : item.functionID;
@@ -51,8 +51,8 @@ export class AsideroledetailComponent implements OnInit {
     this.RolesService.funcID = functionID;
     this.RolesService._activeSysFuction = item.activeSysFuction;
     this.RolesService._activeMoreFuction = item.activeMoreFuction;
-    this.api.call("ERM.Business.AD", "RolesBusiness", "GetPermissionAsync", [functionID,formName, gridViewName,this.recid]).subscribe(res => {
-      
+    this.api.call("ERM.Business.AD", "RolesBusiness", "GetPermissionAsync", [functionID, formName, gridViewName, this.recid]).subscribe(res => {
+
       if (res) {
         var data = res.msgBodyData;
         this.RolesService.appendPesmission(data);

@@ -392,8 +392,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   saveData(id) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
-      // this.notiService.notifyCode('???code');
-      this.notiService.notify('Tên công việc không được để trống !');
+      this.notiService.notifyCode('TM027');
       return;
     }
     if (
@@ -404,47 +403,29 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.param?.ProjectControl == '2' && !this.task.projectID) {
-      this.notiService.notify('Tên dự án không được để trống !');
-      // this.notiService.notifyCode('TM012');
+      this.notiService.notifyCode('TM028');
       return;
     }
     if (
       this.param?.LocationCotrol == '2' &&
       (!this.task.location || this.task.location.trim() != '')
     ) {
-      this.notiService.notify('Địa điểm không được để trống !');
-      // this.notiService.notifyCode('TM012');
+      this.notiService.notifyCode('TM029');
       return;
     }
-    if (
-      this.param?.PlanControl == '2' &&
-      (!this.task.startDate || !this.task.endDate)
-    ) {
-      this.notiService.notify(
-        'Thời gian thực hiện không được để trống không được để trống !'
-      );
-      // this.notiService.notifyCode('TM012');
+    if (this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)) {
+      this.notiService.notifyCode('TM030');
       return;
     }
     if (this.param?.DueDateControl == '1' && this.task.dueDate <= new Date()) {
-      // this.notiService.notifyCode('TM012');
-      this.notiService.notify(
-        'Ngày hết hạn không được phép nhỏ hơn ngày hiện hành !'
-      );
+      this.notiService.notifyCode('TM031');
       return;
     }
     if (this.task.taskGroupID) {
-      if (
-        this.taskGroup?.checkListControl != '0' &&
-        this.listTodo.length == 0
-      ) {
-        this.notiService.notify('Danh sách việc cần làm không được để trống');
+      if (this.taskGroup?.checkListControl != '0' && this.listTodo.length == 0) {
+        this.notiService.notifyCode('TM032');
         return;
       }
-      // if (this.taskGroup?.cttachmentControl == '1' && this.countFile == 0) {
-      //   this.notiService.notify('File tài liệu không được để trống');
-      //   return;
-      // }
     }
 
     this.checkLogicTime();
@@ -502,14 +483,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    // this.dialog.dataService
-    //   .save((option: any) => this.beforeSave(option))
-    //   .subscribe((res) => {
-    //     if (res.save) {
-    //       this.dialog.close();
-    //       this.notiService.notifyCode('TM005');
-    //     }
-    //   });
     this.tmSv
       .addTask([
         this.task,
@@ -631,9 +604,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     // }
     if (num < 0) {
       //  this.notiService.notifyCode("can cai code o day đang gan tam")
-      this.notiService.notify(
-        'Số giờ thực hiện vào phải lớn hơn hoặc bằng 0 !'
-      );
+      this.notiService.notifyCode('TM033');
       this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       this.changeDetectorRef.detectChanges();
       return;
@@ -719,9 +690,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     //   return;
     // }
     if (this.task.startDate > this.task.endDate) {
-      var message = 'Ngày bắt đầu không lớn hơn hơn ngày kết thúc ';
       this.isCheckTime = false;
-      this.notiService.notify(message);
+      this.notiService.notifyCode('TM034');
     } else {
       this.isCheckTime = true;
     }

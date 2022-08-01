@@ -78,7 +78,7 @@ export class PopupAddSprintsComponent implements OnInit {
       this.master.iterationName == null ||
       this.master.iterationName.trim() == ''
     )
-      return this.notiService.notify('Tên Task Board không được để trống !');
+      return this.notiService.notifyCode('TM035');
     if (this.master.projectID && Array.isArray(this.master.projectID))
       this.master.projectID = this.master.projectID[0];
     if (!this.master.isShared)
