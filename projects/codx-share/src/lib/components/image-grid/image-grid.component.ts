@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Subscription } from 'rxjs';
@@ -15,6 +15,8 @@ import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/li
   selector: 'codx-file',
   templateUrl: './image-grid.component.html',
   styleUrls: ['./image-grid.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  
 })
 export class ImageGridComponent extends ErmComponent implements OnInit {
 
@@ -23,6 +25,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Input() objectType:string = "";
   @Input() edit: boolean = false;
   @Input() lstFile:any[] = [];
+  @Input() isNew:boolean = false;
   @Output() evtGetFiles = new EventEmitter();
   @Output() removeFile = new EventEmitter();
   @Output() addFile = new EventEmitter();
@@ -39,8 +42,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   filesDelete: any[] = [];
   content:string = "";
   user:any = null;
-  showEmojiPicker
-
   constructor(
     private injector: Injector,
     private auth:AuthService,
@@ -64,29 +65,55 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     return this.lstFile =this.file_img_video.concat(this.file_application);
   }
   getFileByObjectID() {
+    // this.api.execSv(
+    //   "DM","ERM.Business.DM",
+    //   "FileBussiness",
+    //   "GetFilesByObjectIDImageAsync",
+    //   this.objectID)
+    // .subscribe((files:any[]) => {
+    //   if(files.length > 0){
+    //     files.forEach((f:any) => {
+    //       if(f.referType == this.FILE_REFERTYPE.IMAGE){
+    //         this.file_img_video.push(f);
+    //       }
+    //       else if(f.referType == this.FILE_REFERTYPE.VIDEO){
+    //         f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
+    //         this.file_img_video.push(f);
+    //       }
+    //       else{
+    //         this.file_application.push(f);
+    //       }
+    //     });
+    //     this.dt.detectChanges();
+    //     this.evtGetFiles.emit(files);
+    //   }
+    // })
+
+
     this.api.execSv(
-      "DM","ERM.Business.DM",
-      "FileBussiness",
-      "GetFilesByObjectIDImageAsync",
-      this.objectID)
-    .subscribe((files:any[]) => {
-      if(files.length > 0){
-        files.forEach((f:any) => {
-          if(f.referType == this.FILE_REFERTYPE.IMAGE){
-            this.file_img_video.push(f);
-          }
-          else if(f.referType == this.FILE_REFERTYPE.VIDEO){
-            f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
-            this.file_img_video.push(f);
-          }
-          else{
-            this.file_application.push(f);
-          }
-        });
+        "DM","ERM.Business.DM",
+        "FileBussiness",
+        "GetFilesByIbjectIDAsync",
+        this.objectID)
+      .subscribe((files:any[]) => {
+        if(files.length > 0){
+          console.log('GetFilesByIbjectIDAsync: ',files)
+          files.forEach((f:any) => {
+            if(f.referType == this.FILE_REFERTYPE.IMAGE){
+              this.file_img_video.push(f);
+            }
+            else if(f.referType == this.FILE_REFERTYPE.VIDEO){
+              f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
+              this.file_img_video.push(f);
+            }
+            else{
+              this.file_application.push(f);
+            }
+          }); 
         this.dt.detectChanges();
         this.evtGetFiles.emit(files);
-      }
-    })
+        }
+      })
   }
 
   converFile(){

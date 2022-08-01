@@ -60,7 +60,10 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
   @ViewChild('sidebarLeft') sidebarLeft: TemplateRef<any>;
   @ViewChild('cardTemplate') eventTemplate?: TemplateRef<any>;
   @ViewChild('Devices') Devices: TemplateRef<any>;
-
+  @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
+  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('editRoomBookingForm')
   editRoomBookingForm: PopupAddBookingRoomComponent;
   devices: any;
@@ -187,6 +190,10 @@ export class BookingRoomComponent implements OnInit, AfterViewInit {
           eventModel: this.fields,
           resourceModel: this.resourceField,
           template: this.eventTemplate,
+          template4: this.resourceHeader,
+          template5: this.resourceTootip,
+          template6: this.footerTemplate,
+          template7: this.footerButton
         },
       },
       {
