@@ -3,9 +3,11 @@
         <div class="pw-listcard mt-6">
             <div class="mx-3 mb-6" *ngFor="let item of view.dataService.data">
                 <div class="pw-card delay-500" (click)="onEditNote(item.recID)">
-                    <codx-card-img cardCss="border rounded-4" [imageId]="item.recID" imgCss="h-150px w-100"
-                        icoTitleCss="icon-assignment icon-16" [title]="item.title" [desc2]="item.memo"
-                        [imageObjType]="'WP_NoteBooks'">
+                    <codx-card-img cardCss="border card-img-mwp rounded-4 w-230px mw-100 h-100" [imageId]="item.recID"
+                        imgCss="w-228px h-140px w-xxl-200px h-xxl-200px" icoTitleCss="icon-assignment icon-16"
+                        [title]="item.title" cssTitle="line-clamp line-clamp-1" [imgOn]="item?.modifiedOn"
+                        [desc2]="item.memo" cssDes2="line-clamp line-clamp-2" imageWidth="230"
+                        [imageObjType]="'WP_NoteBooks'" [formModel]="view.formModel" [dataItem]="item">
                     </codx-card-img>
                 </div>
             </div>
@@ -17,4 +19,3 @@
 <codx-views #view [funcID]="'MWP0094'" service="WP" entityName="WP_NoteBooks" [predicate]="predicate"
     [dataValue]="dataValue" idField="recID">
 </codx-views>
-
