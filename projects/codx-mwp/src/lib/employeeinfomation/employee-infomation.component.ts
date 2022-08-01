@@ -365,10 +365,10 @@ export class EmployeeInfomationComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.editExperences(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.deleteExperences(data);
         break;
     }
@@ -376,10 +376,10 @@ export class EmployeeInfomationComponent implements OnInit {
 
   clickMFS(e: any, data?: any) {
     switch (e.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.editRelation(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.deleteRelation(data);
         break;
     }
