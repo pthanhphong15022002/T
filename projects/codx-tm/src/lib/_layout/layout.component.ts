@@ -1,8 +1,11 @@
 import { Observable } from 'rxjs';
 import { Component, ViewChild, ElementRef, Injector, ViewEncapsulation } from '@angular/core';
 import {
-  LayoutBaseComponent
+  CallFuncService,
+  DialogRef,
+  LayoutBaseComponent, SidebarModel
 } from 'codx-core';
+import { NoteDrawerComponent } from 'projects/codx-share/src/lib/components/note-drawer/note-drawer.component';
 
 @Component({
   selector: 'codx-layout',
@@ -12,7 +15,10 @@ import {
 })
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'TM';
-  constructor(inject: Injector,) {
+  dialog!: DialogRef;
+
+  constructor(inject: Injector,
+    private callfc: CallFuncService) {
     super(inject);
   }
 
@@ -25,5 +31,12 @@ export class LayoutComponent extends LayoutBaseComponent {
 
   onAfterViewInit(): void {
 
+  }
+
+  openFormNoteDrawer() {
+    let option = new SidebarModel();
+    option.Width = '550px';
+    this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
+    this.dialog.closed.subscribe()
   }
 }

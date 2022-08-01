@@ -71,7 +71,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   ];
 
   isAdd = false;
-  range:any;
+  range: any;
   data: any = {};
   dialog: any;
   isSaveSuccess = false;
@@ -168,7 +168,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
       this.addEditForm.value.endDate - this.addEditForm.value.startDate <=
       0
     ) {
-      this.notification.notify('Ngày, thời gian không hợp lệ!', 'error');
+      this.notification.notifyCode('EP003');
     }
     if (this.startTime && this.endTime) {
       let hours = parseInt(
@@ -315,7 +315,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
         console.log(this.endDate);
       }
       if (this.beginHour > this.endHour || this.beginMinute > this.endMinute) {
-        this.notification.notify('Thời gian không hợp lệ!', 'error');
+        this.notification.notifyCode('EP003');
       }
     }
   }

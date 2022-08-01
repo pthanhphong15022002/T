@@ -17,13 +17,13 @@ export class EditInfoComponent implements OnInit {
   employee: HR_Employees = new HR_Employees();
   isDisable = false;
   isNew: false;
-  
+
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
-  ) { 
+  ) {
     this.data = dialog.dataService!.dataSelected;
     this.employee = this.data;
     this.dialog = dialog;
@@ -31,10 +31,10 @@ export class EditInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+
   }
 
-  changeTime(data){
+  changeTime(data) {
     if (!data.field || !data.data) return;
     this.employee[data.field] = data.data?.fromDate;
   }
@@ -60,15 +60,14 @@ export class EditInfoComponent implements OnInit {
     return true;
   }
 
-  OnSaveForm(){
+  OnSaveForm() {
     this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.save) {
-        this.dialog.close();
-        this.notiService.notify('Thêm thành công'); 
-      }
-    });
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close();
+        }
+      });
   }
 
   scrollTo(session) {

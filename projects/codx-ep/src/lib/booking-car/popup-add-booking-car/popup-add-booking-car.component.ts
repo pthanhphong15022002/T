@@ -116,7 +116,7 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngOnChange(): void {}
+  ngOnChange(): void { }
 
   closeFormEdit() {
     this.closeEdit.emit();
@@ -128,13 +128,10 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
     }
     if (
       this.dialogCarBooking.value.endDate -
-        this.dialogCarBooking.value.startDate <=
+      this.dialogCarBooking.value.startDate <=
       0
     ) {
-      this.notificationsService.notify(
-        'Ngày, thời gian không hợp lệ!',
-        'error'
-      );
+      this.notificationsService.notifyCode('EP003');
     }
     if (
       this.dialogCarBooking.value.startDate &&
@@ -207,14 +204,14 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isExist(deviceName) {}
+  isExist(deviceName) { }
 
   openPopupDevice(template: any) {
     var dialog = this.cfService.openForm(template, '', 550, 430);
     this.cr.detectChanges();
   }
 
-  close() {}
+  close() { }
 
   public setdata(data: any) {
     if (this.isAdd) {

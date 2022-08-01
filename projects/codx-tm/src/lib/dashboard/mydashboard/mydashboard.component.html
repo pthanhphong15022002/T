@@ -1,6 +1,5 @@
 <div class="page-content d-flex flex-row">
   <div class="w-100 me-4">
-    <codx-input type="switch"></codx-input>
     <div class="row m-0 bg-body rounded-2 mb-3 p-3">
       <div class="col-4 px-2">
         <div
@@ -534,19 +533,39 @@
         (onChangeValue)="onChangeValueSelectedWeek($event)"
       ></selectweek>
       <div class="taskbox-list">
-        <!-- <codx-listview
-          #listview
-          service="TM"
-          assemblyName="ERM.Business.TM"
-          className="TaskBusiness"
-          method="GetTasksOfDayAsync"
-          entityName="TM_Tasks"
-          predicate="DueDate=@0"
-          [dataValue]='daySelected'
-          [itemTemplate]="TemplateList"
-          [height]="200"
+        <div
+          class="d-flex p-3 flex-grow-1 task-item"
+          *ngFor="let task of data?.tasksOfDay"
         >
-        </codx-listview> -->
+          <codx-img
+            class="symbol symbol-40px symbol-circle me-3"
+            objectType="AD_Users"
+            [objectId]="task?.id"
+            [objectName]="task?.name"
+          ></codx-img>
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="text-dark fw-bold">
+              {{ task?.name }}
+            </div>
+            <div class="text-gray-600 fs-7">{{ task?.positionName }}</div>
+            <div class="task-name text-gray-600 fs-7">
+              {{ task?.taskName }}
+            </div>
+            <div class="d-flex justify-content-start">
+              <div
+                class="bagde bagde-light-primary me-2"
+                [style.border-color]="
+                  task.status | vll: 'L0614':'color' | async
+                "
+                [style.background-color]="task.status | vll: 'L0614':'color' | async"
+                style="border: none"
+              >
+                {{ task.status | vll: "L0614":"text" | async }}
+              </div>
+              <div>{{ task.dueDate | date }}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -649,38 +668,6 @@
         Availability (%) * Performance (%) * Quality (%)
       </p>
       <p style="text-align: center">1000</p>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #TemplateList let-task>
-  <div class="d-flex p-3 flex-grow-1 task-item" *ngFor="let task of taskOfDay">
-    <codx-img
-      class="symbol symbol-40px symbol-circle me-3"
-      objectType="AD_Users"
-      [objectId]="task?.createdBy"
-      [objectName]="task?.userName"
-    ></codx-img>
-    <div class="d-flex flex-column flex-grow-1">
-      <div class="text-dark fw-bold">
-        {{ task?.userName }}
-      </div>
-      <div class="text-gray-600 fs-7">{{ task?.positionName }}</div>
-      <div class="task-name text-gray-600 fs-7">
-        {{ task?.taskName }}
-      </div>
-      <div class="d-flex justify-content-start">
-        <div
-          class="bagde bagde-light-primary me-2"
-          [style.border-color]="task.status | vll: 'L0614':'color' | async"
-          [style.background-color]=""
-          [style.color]="task.status | vll: 'L0614':'color' | async"
-          style="border: none"
-        >
-          {{ task.status | vll: "L0614":"text" | async }}
-        </div>
-        <div>{{ task.dueDate | date }}</div>
-      </div>
     </div>
   </div>
 </ng-template>

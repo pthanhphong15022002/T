@@ -223,12 +223,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   updateStatus(data) {
-    // let obj = {
-    //   fieldValue: fieldValue,
-    //   moreFunc: moreFunc,
-    //   taskAction: taskAction,
-    //   funcID: this.funcID
-    // };
     this.dialog = this.callfunc.openForm(
       UpdateStatusComponent,
       'Cập nhật tình trạng',
@@ -258,16 +252,13 @@ export class EmployeesComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      // case 'add':
-      //   this.add();
-      //   break;
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'copy':
+      case 'SYS04':
         this.copy(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
       case 'HR0031':   /// cần biến cố định để truyền vào đây !!!!
