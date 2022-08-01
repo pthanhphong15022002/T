@@ -2,7 +2,6 @@ import {
   Component,
   Input,
   OnInit,
-  OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
   ViewChild,
