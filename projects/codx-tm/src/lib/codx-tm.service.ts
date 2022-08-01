@@ -122,6 +122,16 @@ export class CodxTMService {
     );
   }
 
+  getMeetingID(id) {
+    return this.api.execSv<any>(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'GetMeetingByIDAsync',
+      id
+    );
+  }
+
   addTaskGroup(data) {
     return this.api.execSv<any>(
       'TM',
@@ -439,26 +449,24 @@ export class CodxTMService {
     });
   }
 
-  convertParameterByTaskGroup( param : TM_Parameter ,taskGroup : TM_TaskGroups){
-    param.ApproveBy = taskGroup.approveBy ;
-    param.ApproveControl = taskGroup.approveControl ;
-    param.AutoCompleted = taskGroup.autoCompleted ;
-    param.ConfirmControl = taskGroup.confirmControl ;
-    param.EditControl = taskGroup.editControl ;
-    param.LocationControl = taskGroup.locationControl ;
-    param.MaxHours = taskGroup.maxHours ;
-    param.MaxHoursControl = taskGroup.maxHoursControl ;
-    param.PlanControl = taskGroup.planControl ;
-    param.ProjectControl = taskGroup.projectControl ;
-    param.UpdateControl = taskGroup.updateControl ;
-    param.VerifyBy = taskGroup.verifyBy ;
-    param.VerifyByType = taskGroup.verifyByType ;
+  convertParameterByTaskGroup(param: TM_Parameter, taskGroup: TM_TaskGroups) {
+    param.ApproveBy = taskGroup.approveBy;
+    param.ApproveControl = taskGroup.approveControl;
+    param.AutoCompleted = taskGroup.autoCompleted;
+    param.ConfirmControl = taskGroup.confirmControl;
+    param.EditControl = taskGroup.editControl;
+    param.LocationControl = taskGroup.locationControl;
+    param.MaxHours = taskGroup.maxHours;
+    param.MaxHoursControl = taskGroup.maxHoursControl;
+    param.PlanControl = taskGroup.planControl;
+    param.ProjectControl = taskGroup.projectControl;
+    param.UpdateControl = taskGroup.updateControl;
+    param.VerifyBy = taskGroup.verifyBy;
+    param.VerifyByType = taskGroup.verifyByType;
     param.VerifyControl = taskGroup.verifyControl;
-    param.DueDateControl = taskGroup.dueDateControl ;
+    param.DueDateControl = taskGroup.dueDateControl;
   }
 }
-
-
 
 export class LayoutModel {
   isChange: boolean = false;
