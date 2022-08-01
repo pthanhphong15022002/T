@@ -868,10 +868,10 @@ export class TasksComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, e.data],
+        [this.view.dataService.dataSelected, 'view', this.isAssignTask],
         option
       );
     }
