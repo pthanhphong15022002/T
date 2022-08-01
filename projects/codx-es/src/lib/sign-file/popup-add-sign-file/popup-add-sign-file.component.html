@@ -169,8 +169,7 @@
               </div>
             </div>
             <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''">
-              <app-approval-steps *ngIf="currentTab == 2" #viewApprovalStep
-                [transId]="dialogSignFile?.value.approveControl != '1' ? dialogSignFile.value.processID : dialogSignFile.value.recID"
+              <app-approval-steps *ngIf="currentTab == 2" #viewApprovalStep [transId]="dialogSignFile.value.processID"
                 (addEditItem)="openFormAdd($event)">
               </app-approval-steps>
             </div>
