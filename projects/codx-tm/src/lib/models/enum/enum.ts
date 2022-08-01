@@ -1,5 +1,5 @@
 export enum StatusTask {
-    //1;Chưa thực hiện;2;Đang thực hiện;5;Hoãn lại;8;Bị huỷ;9;Hoàn tất
+    //10;Chưa thực hiện;20;Đang thực hiện;50;Hoãn lại;80;Bị huỷ;90;Hoàn tất
     New = '10',
     Processing = '20',
     Postpone = '50',
