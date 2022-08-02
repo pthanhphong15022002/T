@@ -1,9 +1,9 @@
+import { UIComponent } from 'codx-core';
 import {
   ChangeDetectorRef,
   Component,
-  Input,
+  Injector,
   OnInit,
-  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -20,8 +20,6 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { EventEmitter } from 'stream';
-import { isBuffer } from 'util';
 import { PopupListStationeryComponent } from './popup-list-stationery/popup-list-stationery.component';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
 
@@ -30,7 +28,7 @@ import { PopupRequestStationeryComponent } from './popup-request-stationery/popu
   templateUrl: './booking-stationery.component.html',
   styleUrls: ['./booking-stationery.component.scss'],
 })
-export class BookingStationeryComponent implements OnInit {
+export class BookingStationeryComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('cardItem') cardItem: TemplateRef<any>;
@@ -58,15 +56,14 @@ export class BookingStationeryComponent implements OnInit {
   method = 'GetListAsync';
 
   constructor(
-    private callfunc: CallFuncService,
-    private cf: ChangeDetectorRef,
+    private injector: Injector,
     private notification: NotificationsService,
-    private activedRouter: ActivatedRoute
   ) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
@@ -148,16 +145,16 @@ export class BookingStationeryComponent implements OnInit {
         },
       },
     ];
-    this.cf.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   add(evt: any) {
     switch (evt.id) {
       case 'btnAdd':
-        this.addNew();
+        this.addNewRequestList();
         break;
       case 'btnAddNew':
-        this.addNewStationery();
+        this.openRequestList();
         break;
       case 'btnEdit':
         this.edit();
@@ -167,7 +164,7 @@ export class BookingStationeryComponent implements OnInit {
         break;
     }
   }
-  addNewStationery(evt?) {
+  openRequestList(evt?) {
     let dataItem = this.viewBase.dataService.dataSelected;
     if (evt) {
       dataItem = evt;
@@ -177,14 +174,14 @@ export class BookingStationeryComponent implements OnInit {
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase.currentView.formModel;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopupListStationeryComponent,
         dataItem,
         option
       );
     });
   }
-  addNew(evt?) {
+  addNewRequestList(evt?) {
     let dataItem = this.viewBase.dataService.dataSelected;
     if (evt) {
       dataItem = evt;
@@ -194,7 +191,7 @@ export class BookingStationeryComponent implements OnInit {
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase.currentView.formModel;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopupRequestStationeryComponent,
         [dataItem, this.listData, this.count],
         option
@@ -203,19 +200,7 @@ export class BookingStationeryComponent implements OnInit {
   }
 
   edit(evt?) {
-    // this.viewBase.dataService
-    //   .edit(this.viewBase.dataService.dataSelected)
-    //   .subscribe((res) => {
-    //     this.dataSelected = this.viewBase.dataService.dataSelected;
-    //     let option = new SidebarModel();
-    //     option.Width = '800px';
-    //     option.DataService = this.viewBase?.currentView?.dataService;
-    //     this.dialog = this.callfunc.openSide(
-    //       PopupAddStationeryComponent,
-    //       this.viewBase.dataService.dataSelected,
-    //       option
-    //     );
-    //   });
+
   }
   delete(evt?) {
     this.viewBase.dataService
@@ -249,8 +234,6 @@ export class BookingStationeryComponent implements OnInit {
         this.notification.notifyCode('EP001');
       }
     }
-    console.log('ListData:', this.listData);
-    console.log('COunt: ', this.count);
   }
 
   clickMF(evt, data) { }
