@@ -170,15 +170,14 @@
     </div>
     <div class="row ">
       <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task.taskID" hideFolder="1"
-        hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1" [formModel]="dialog.formModel"
-        [functionID]="functionID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
-        displayThumb="full">
+        hideImageUpload="0" hideImageThumb="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
+        [formModel]="dialog.formModel" [functionID]="functionID" (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)" displayThumb="full">
       </codx-attachment>
     </div>
     <!-- </div> -->
   </ng-template>
   <ng-template #footer>
-    <!-- <div class="card-footer pt-4"> -->
     <div class="d-flex justify-content-between">
       <div class="d-flex flex-stack">
         <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
@@ -194,7 +193,6 @@
         <button type="button" class="btn btn-primary" (click)="saveAssign(task.taskID,false)">Lưu</button>
       </div>
     </div>
-    <!-- </div> -->
   </ng-template>
 </codx-form>
 
@@ -236,13 +234,14 @@
 
 <ng-template #popContent>
   <div class="d-flex">
-  <ng-container *ngFor="let item of listRoles">
-    <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4" (click)="selectRoseType(idUserSelected,item.value)" style="cursor: pointer;">
-      <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
-      <div class="fs-8 text-gray-500">{{item.text}}</div>
-    </div>
-  </ng-container>
-</div>
+    <ng-container *ngFor="let item of listRoles">
+      <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4"
+        (click)="selectRoseType(idUserSelected,item.value)" style="cursor: pointer;">
+        <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
+        <div class="fs-8 text-gray-500">{{item.text}}</div>
+      </div>
+    </ng-container>
+  </div>
 </ng-template>
 
 
@@ -296,4 +295,3 @@
  
 
 </ng-template> -->
-

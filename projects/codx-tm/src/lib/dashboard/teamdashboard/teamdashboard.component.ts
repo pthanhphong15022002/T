@@ -4,6 +4,7 @@ import {
   ViewChild,
   TemplateRef,
   Injector,
+  ViewEncapsulation,
 } from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
@@ -16,6 +17,7 @@ import { StatusTask } from '../../models/enum/enum';
   templateUrl: './teamdashboard.component.html',
   styleUrls: ['./teamdashboard.component.scss'],
   providers: [GradientService],
+  encapsulation: ViewEncapsulation.None
 })
 export class TeamDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
