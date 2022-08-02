@@ -262,7 +262,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
 
     this.route.params.subscribe((param) => {
       this.funcID = param['funcID'];
-      this.changedr.detectChanges();
     });
     this.setPredicate();
   }
@@ -280,7 +279,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
     ];
     this.userPermission = this.view.userPermission;
     if (this.listView) this.listView.dataService.dataObj = 'Coins';
-    this.changedr.detectChanges();
   }
 
   LoadData() {
