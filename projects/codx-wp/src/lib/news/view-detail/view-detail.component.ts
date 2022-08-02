@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel, AuthService } from 'codx-core';
 import { environment } from 'src/environments/environment';
@@ -7,7 +7,8 @@ import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 @Component({
   selector: 'lib-view-detail',
   templateUrl: './view-detail.component.html',
-  styleUrls: ['./view-detail.component.scss']
+  styleUrls: ['./view-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ViewDetailComponent implements OnInit {
 
@@ -15,26 +16,26 @@ export class ViewDetailComponent implements OnInit {
     POST: "1",
     VIDEO: "2"
   }
-  entityName:string = "WP_News";
-  category:string ="";
-  recID:string = "";
-  funcID:string = "";
-  dataItem:any;
+  entityName: string = "WP_News";
+  category: string = "";
+  recID: string = "";
+  funcID: string = "";
+  dataItem: any;
   listViews = [];
   listTag = [];
-  listNews=[];
+  listNews = [];
   views: Array<ViewModel> = [];
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('codxViews') codxViews: ViewsComponent;
-  constructor(private api:ApiHttpService,
-    private codxService:CodxService,
-    private auth:AuthService,
-    private route:ActivatedRoute,
-    private callfc:CallFuncService,
+  constructor(private api: ApiHttpService,
+    private codxService: CodxService,
+    private auth: AuthService,
+    private route: ActivatedRoute,
+    private callfc: CallFuncService,
     private changedt: ChangeDetectorRef) { }
   ngOnInit(): void {
-    this.route.params.subscribe((p:any) => {
-      this.recID =  p["recID"];
+    this.route.params.subscribe((p: any) => {
+      this.recID = p["recID"];
       this.category = p["category"];
       this.funcID = p["funcID"];
       this.loadData(this.recID);
@@ -47,7 +48,7 @@ export class ViewDetailComponent implements OnInit {
           this.changedt.detectChanges();
         }
       });
-    
+
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -62,10 +63,10 @@ export class ViewDetailComponent implements OnInit {
     ];
     this.changedt.detectChanges();
   }
-  loadData(recID:string){
-    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","GetNewsInforAsync",recID).subscribe(
+  loadData(recID: string) {
+    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewsInforAsync", recID).subscribe(
       (res) => {
-        if(res){
+        if (res) {
           this.dataItem = res[0];
           this.listViews = res[1];
           this.listNews = res[2];
@@ -73,29 +74,29 @@ export class ViewDetailComponent implements OnInit {
       }
     );
   }
-  clickViewDeital(data:any){
-    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","UpdateViewNewsAsync",data.recID).subscribe(
+  clickViewDeital(data: any) {
+    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID).subscribe(
       (res) => {
-        if(res){
-          this.codxService.navigate('','/wp/'+data.category+'/view-detail/'+ data.recID +'/'+this.funcID);
+        if (res) {
+          this.codxService.navigate('', '/wp/' + data.category + '/view-detail/' + data.recID + '/' + this.funcID);
           this.loadData(data.recID);
         }
-    });
+      });
   }
-  clickTag(data:any){
-    let funcID =  this.route.snapshot.params["funcID"];
-    this.codxService.navigate('','/wp/tag/'+funcID+'/tagID/'+data.value);
+  clickTag(data: any) {
+    let funcID = this.route.snapshot.params["funcID"];
+    this.codxService.navigate('', '/wp/tag/' + funcID + '/tagID/' + data.value);
   }
 
-  clickShowPopupCreate(newsType:string){
+  clickShowPopupCreate(newsType: string) {
     let option = new DialogModel();
     option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent,'',0,0,'',newsType,'',option);
+    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
   }
 
-  searchField:string ="";
+  searchField: string = "";
   tagUsers: any;
   show() {
     if (this.searchField == '' || this.searchField == null) return true;
