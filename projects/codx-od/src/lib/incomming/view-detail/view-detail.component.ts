@@ -307,9 +307,10 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 
                   //this.view.dataService.update(x.event).subscribe();
                   this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
-                    debugger;
                     this.data = item;
                     this.data.lstUserID = getListImg(item.relations);
+                   /*  var foundIndex = this.view.dataService.data.findIndex((a: { recID: string }) => a.recID == x.event.recID);
+                    this.view.dataService.setDataSelected(x.event); */
                   });
                  /*  if(x.event.recID == this.view.dataService.dataSelected.recID)
                     this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
@@ -566,8 +567,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             {
               this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
                 if (item.status == 0) {
-                  //this.data = item.data[0];
-                  debugger;
+                  this.data.relations = item.data[0].relations;
                   this.data.lstUserID = getListImg(item.data[0].relations);
                   this.data.listInformationRel = item.data[1]
                 }

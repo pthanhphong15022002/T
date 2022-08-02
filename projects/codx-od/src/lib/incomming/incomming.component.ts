@@ -380,11 +380,12 @@ export class IncommingComponent
   }
   viewChange(e:any)
   {
-    //var funcID = e?.component?.instance?.funcID;
+    var funcID = e?.component?.instance?.funcID;
+    this.getGridViewSetup(funcID);
    /*  this.view.dataService.predicates = "Status=@0";
     this.view.dataService.dataValues = "1"; */
     //this.view.dataService.setPredicates(['Status=@0'],['1']).subscribe();
     //this.activeDiv = "1";
-    //this.getGridViewSetup(funcID);
+   
   }
 }
