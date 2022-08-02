@@ -1,13 +1,10 @@
 import { UIComponent } from 'codx-core';
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
-  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CallFuncService,
@@ -20,8 +17,9 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { PopupListStationeryComponent } from './popup-list-stationery/popup-list-stationery.component';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
+import { PopupListStationeryComponent } from './popup-list-stationery/popup-list-stationery.component';
+
 
 @Component({
   selector: 'codx-stationery',
@@ -151,7 +149,7 @@ export class BookingStationeryComponent extends UIComponent {
   add(evt: any) {
     switch (evt.id) {
       case 'btnAdd':
-        this.addNewRequestList();
+        this.addNewRequest();
         break;
       case 'btnAddNew':
         this.openRequestList();
@@ -181,7 +179,7 @@ export class BookingStationeryComponent extends UIComponent {
       );
     });
   }
-  addNewRequestList(evt?) {
+  addNewRequest(evt?) {
     let dataItem = this.viewBase.dataService.dataSelected;
     if (evt) {
       dataItem = evt;
