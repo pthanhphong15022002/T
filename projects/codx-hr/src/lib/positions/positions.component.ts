@@ -75,13 +75,13 @@ export class PositionsComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'copy':
+      case 'SYS04':
         this.copy(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }

@@ -120,7 +120,7 @@ export class IncommingComponent
         sameData: true,
         model: {
           template: this.template,
-          panelLeftRef: this.panelLeft,
+          //panelLeftRef: this.panelLeft,
           panelRightRef: this.panelRight,
           contextMenu: '',
         },
@@ -128,10 +128,7 @@ export class IncommingComponent
     ];
     this.view.dataService.methodSave = 'SaveDispatchAsync';
     this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
-    if (this.view) {
-      this.view.dataService.predicates = "Status=@0"
-      this.view.dataService.dataValues = "1"
-    }
+   
     this.getGridViewSetup(this.view.formModel.funcID);
     this.button = {
       id: 'btnAdd',
@@ -166,13 +163,21 @@ export class IncommingComponent
         if (x.event) {
           delete x.event._uuid;
           this.view.dataService.add(x.event, 0).subscribe();
-          this.getDtDis(x.event?.recID)
+          //this.getDtDis(x.event?.recID)
         }
       });
     });
   }
 
-
+  aaaa(e:any)
+  {
+    if(e)
+    {
+    debugger;
+      var foundIndex = e.findIndex((x: { functionID: string }) => x.functionID == 'SYS001');
+      e[foundIndex].disabled = true;
+    }
+  }
   beforeDel(opt: RequestOption) {
     opt.service = 'TM';
     opt.assemblyName = 'TM';
@@ -317,7 +322,16 @@ export class IncommingComponent
   //hàm render lại list view theo status công văn
   clickChangeStatus(status: any) {
     this.view.dataService.page = 0;
-    this.view.dataService.setPredicates(['Status=@0'],[status]).subscribe(item=>{
+    var predicates ; var dataValues;
+
+    if(status == "")
+      predicates = dataValues = [""];
+    else
+    {
+      predicates = ['Status=@0'] ;
+      dataValues = [status];
+    }
+    this.view.dataService.setPredicates(predicates,dataValues).subscribe(item=>{
       this.lstDtDis = item[0];
     });
     this.activeDiv = status;
@@ -366,11 +380,11 @@ export class IncommingComponent
   }
   viewChange(e:any)
   {
-    var funcID = e?.component?.instance?.funcID;
-    this.view.dataService.predicates = "Status=@0";
-    this.view.dataService.dataValues = "1";
+    //var funcID = e?.component?.instance?.funcID;
+   /*  this.view.dataService.predicates = "Status=@0";
+    this.view.dataService.dataValues = "1"; */
     //this.view.dataService.setPredicates(['Status=@0'],['1']).subscribe();
-    this.activeDiv = "1";
-    this.getGridViewSetup(funcID);
+    //this.activeDiv = "1";
+    //this.getGridViewSetup(funcID);
   }
 }

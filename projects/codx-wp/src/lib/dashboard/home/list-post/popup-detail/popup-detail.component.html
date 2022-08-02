@@ -1,9 +1,17 @@
-<div class="row border">
-    <div class="col-8  px-6 py-4 bg-secondary">
+<div class="row border p-4">
+    <div class="col-8  px-6 py-4 bg-secondary position-relative">
         <ng-container [ngSwitch]="file.referType">
             <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
-                <div class="w-100 h-100">
-                    <img [src]="file.thumbnail" alt="" class="w-100 ">
+                <div class="w-100 vh-100">
+                    <!-- <img [src]="file.thumbnail" alt="" class="w-100 image"> -->
+                    <codx-img  
+                    [recId]="file.recID" 
+                    [objectId]="file.objectID" 
+                    objectType="WP_Comments"
+                    imageType="square"
+                    [width]="600"
+                    cssClass="w-100 vh-100 image"
+                    ></codx-img>
                 </div>
             </ng-container>
             <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
@@ -25,8 +33,67 @@
                 </div>
             </ng-container>
         </ng-container>
+        <div class="position-absolute top-0 w-100 p-6">
+            <div class="d-flex justify-content-between">
+                <div class="close rounded-circle bg-secondary">
+                    <a href="javascript:void(0);" (click)="clickClosePopup()">
+                        <i class="icon-close"></i>
+                    </a>
+                </div>
+                <div class="">
+                    <span class="rounded-circle bg-secondary">
+                        <a href="javascript:void(0)" >
+                            <i class="icon-zoom_in"></i>
+                        </a>
+                    </span>
+                    <span class="rounded-circle bg-secondary">
+                        <a href="javascript:void(0)">
+                            <i class="icon-zoom_out"></i>
+                        </a>
+                    </span>
+                    <span class="rounded-circle bg-secondary">
+                        <a href="javascript:void(0)">
+                            <i class="icon-fullscreen"></i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-4">
-
+    <div class="col-4" *ngIf="parentPost">
+        <div class="d-flex">
+            <div class="me-2">
+                <codx-img [objectId]="parentPost.createdBy" objectType="AD_Users" [width]="40">
+                </codx-img>
+            </div>
+            <div class="text-info-date ms-2">
+                <div class="">
+                    <span class="fw-bolder fs-7 me-2">{{parentPost.createdName}}</span>
+                    <ng-container *ngIf="parentPost.shareName">
+                        <span [innerHTML]="parentPost.shareName" ></span>
+                    </ng-container>
+                </div>
+                <div  class="mt-2">
+                    <span class="text-gray-600 fs-7 me-2">{{parentPost.createdOn | timefrom}}</span>
+                    <span class="rounded-1 py-1 px-2 bg-gray-200">
+                        <span class="symbol symbol-circle ">
+                            <img class="h-13px w-13px"
+                                src="assets/themes/sys/default/img/{{(parentPost.shareControl | vll:'L1901' : 'icon' | async)}}" />
+                        </span>
+                        <span class="fs-7">
+                            {{parentPost.shareControl | vll:'L1901' : 'text' | async}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- child post -->
+        <div *ngIf="childPost">
+            <treeview-comment 
+                [rootData]="childPost.listComment" 
+                [dataComment]="childPost" 
+                (pushComment)="pushComment($event)">
+            </treeview-comment>
+        </div>
     </div>
 </div>

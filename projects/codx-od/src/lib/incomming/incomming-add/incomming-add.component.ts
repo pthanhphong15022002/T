@@ -73,7 +73,7 @@ export class IncommingAddComponent implements OnInit {
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
 
-    this.dispatch.status = '1';
+    
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
     this.subHeaderText = this.data?.subHeaderText;
@@ -211,10 +211,17 @@ export class IncommingAddComponent implements OnInit {
     /////////////////////////////////////////////////////////
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
     if (this.type == 'add' || this.type == 'copy') {
+      this.dispatch.status = '1';
       if (this.type == 'copy') {
         delete this.dispatch.id;
         this.dispatch.relations = null;
+        this.dispatch.updates = null;
         this.dispatch.permissions = null;
+        this.dispatch.links = null;
+        this.dispatch.extends = null;
+        this.dispatch.bookmarks = null;
+        this.dispatch.views = null;
+        this.dispatch.percentage = 0;
       }
       if (this.fileCount > 0) {
         if (this.type == 'add')
@@ -227,10 +234,16 @@ export class IncommingAddComponent implements OnInit {
               if (item.status == 0) {
                 this.data = item;
                 this.attachment.objectId = item.data.recID;
-                this.attachment.saveFiles();
-                this.dialog.close(item.data);
+                this.attachment.saveFilesObservable().subscribe((item2:any)=>{
+                  if(item2?.status == 0)
+                  {
+                    this.dialog.close(item.data);
+                    this.notifySvr.notify(item.message);
+                  }
+                  else this.notifySvr.notify(item2.message);
+                });
               }
-              this.notifySvr.notify(item.message);
+              else this.notifySvr.notify(item.message);
             });
       } else this.notifySvr.notifyCode('DM001');
     } else if (this.type == 'edit') {
@@ -238,11 +251,25 @@ export class IncommingAddComponent implements OnInit {
       if (this.fileCount == 0) dltDis = false;
       this.odService.updateDispatch(this.dispatch, dltDis).subscribe((item) => {
         if (item.status == 0) {
-          this.attachment.objectId = item.data.recID;
-          if (dltDis) this.attachment.saveFiles();
-          this.dialog.close(item.data);
+          if (dltDis)
+          {
+            this.attachment.objectId = item.data.recID;
+            this.attachment.saveFilesObservable().subscribe((item2:any)=>{
+              if(item2?.status == 0)
+              {
+                this.dialog.close(item.data);
+                this.notifySvr.notify(item.message);
+              }
+              else this.notifySvr.notify(item2.message);
+            });
+          }
+          else
+          {
+            this.dialog.close(item.data);
+            this.notifySvr.notify(item.message);
+          } 
         }
-        this.notifySvr.notify(item.message);
+        else this.notifySvr.notify(item.message);
       });
     }
   }

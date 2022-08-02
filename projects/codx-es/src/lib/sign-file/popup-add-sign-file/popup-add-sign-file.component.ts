@@ -99,8 +99,8 @@ export class PopupAddSignFileComponent implements OnInit {
           if (this.isAddNew) {
             this.dialogSignFile.patchValue({
               approveStatus: '1',
-              employeeID: user.employee?.employeeID,
-              orgUnitID: user.employee?.orgUnitID,
+              // employeeID: user.employee?.employeeID,
+              // orgUnitID: user.employee?.orgUnitID, -- coment lai do loi
             });
             this.dialogSignFile.addControl(
               'approveControl',
@@ -166,9 +166,9 @@ export class PopupAddSignFileComponent implements OnInit {
     });
   }
 
-  getfileCount(event) { }
+  getfileCount(event) {}
 
-  onSaveForm() { }
+  onSaveForm() {}
 
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
