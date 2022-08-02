@@ -280,15 +280,15 @@
                                 <table class="table mb-0">
                                     <tbody>
                                         <tr>
-                                            <td class="w-40 font-weight-bold font-weight-600">
+                                            <td class="w-40 fw-bold font-weight-600">
                                                 <codx-label name="lblTotal" formName="FED_TagObjects"
                                                     default="Tổng cộng"></codx-label>
                                             </td>
-                                            <td class="w-20 text-right font-weight-bold font-weight-600">
+                                            <td class="w-20 text-right fw-bold font-weight-600">
                                                 +{{caculateTotalRow('totalCoinReceiver')}}</td>
-                                            <td class="w-20 text-right font-weight-bold font-weight-600">
+                                            <td class="w-20 text-right fw-bold font-weight-600">
                                                 -{{caculateTotalRow('totalCoinSend')}}</td>
-                                            <td class="w-20 text-right font-weight-bold font-weight-600">
+                                            <td class="w-20 text-right fw-bold font-weight-600">
                                                 {{caculateTotalRow('totalCoinReceiver')-caculateTotalRow('totalCoinSend')}}
                                             </td>
                                         </tr>
@@ -303,7 +303,7 @@
                                         <codx-label name="lblStatistical" formName="FED_TagObjects"
                                             default="Thống kê danh sách TOP hành vi ứng xử"></codx-label>
                                     </h6>
-                                    <span class="icon-open_in_new icon-20 ml-2" (click)="open(content)"></span>
+                                    <span class="icon-open_in_new icon-20 ms-2" (click)="open(content)"></span>
                                 </div>
                                 <div *ngFor=" let item of lstBehavior.slice(0,selectTopBehaviors)">
                                     <ng-container *ngTemplateOutlet="templateProgress ;context: {item:item  }">
@@ -328,7 +328,7 @@
                 </td>
                 <td class="w-20 text-right">{{item.totalCoinReceiver > 0 ? "+":""}}{{item.totalCoinReceiver}}</td>
                 <td class="w-20 text-right">{{item.totalCoinReceiver > 0 ? "-":""}}{{item.totalCoinSend}}</td>
-                <td class="w-20 text-right font-weight-bold"
+                <td class="w-20 text-right fw-bold"
                     [ngClass]="getClassTextCoin(item.totalCoinReceiver,item.totalCoinSend)">
                     {{item.totalCoinReceiver - item.totalCoinSend}}</td>
             </tr>
@@ -346,7 +346,7 @@
                     [animation]="animation" trackColor="#ADD8E6" progressColor="#1E90FF" cornerRadius="Round">
                 </ejs-progressbar>
             </div>
-            <div class="w-50px ml-6">{{item.count}}</div>
+            <div class="w-50px ms-6">{{item.count}}</div>
         </div>
     </div>
 </ng-template>
@@ -361,7 +361,7 @@
                     [animation]="animation" trackColor="#ADD8E6" progressColor="#1E90FF" cornerRadius="Round">
                 </ejs-progressbar>
             </div>
-            <div class="w-10px ml-6">{{item.count}}</div>
+            <div class="w-10px ms-6">{{item.count}}</div>
         </div>
     </div>
 </ng-template>

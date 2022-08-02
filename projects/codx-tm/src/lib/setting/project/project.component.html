@@ -82,14 +82,14 @@
 
 <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
-    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
+    <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
     </codx-img>
     <div class="text-dark font-size-lg">{{dataItem.createName}}</div>
   </div>
 </ng-template>
 <ng-template #itemManager let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
-    <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.projectManeger" objectType="AD_Users">
+    <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.projectManeger" objectType="AD_Users">
     </codx-img>
     <div class="text-dark font-size-lg">{{dataItem.projectManegerName}}</div>
   </div>
