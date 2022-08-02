@@ -1,5 +1,31 @@
-.more-function{
+.more-function {
+    position: fixed;
+    right: 30px;
+    bottom: 20px;
+}
+
+.postnews {
+    position: relative;
+}
+
+.btn-postnews {
+    visibility: hidden;
     position: absolute;
-    right: 10px;
-    bottom: 0px;
+    right: 0px;
+    bottom: 0;
+}
+
+.postnews:hover .btn-postnews {
+    visibility: visible;
+}
+
+/***/
+codx-wrapper {
+    background-color: #fff;
+}
+
+.fix-container {
+    max-width: 1100px;
+    margin: 0 auto;
+
 }
