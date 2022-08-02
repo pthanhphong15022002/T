@@ -448,6 +448,7 @@ export class CardComponent implements OnInit {
   }
 
   fileUploadDropped($event) {
+    alert(1);
     // if (this.dmSV.idMenuActive == "3" || this.dmSV.idMenuActive == "4") {
     //   var data = new DataItem();
     //   data.recID = "";
