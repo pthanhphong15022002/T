@@ -30,10 +30,9 @@
 </ng-template>
 
 <ng-template #cardTemp let-data>
-  <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
+  <codx-card-center cardCss="border w-250px h-100" [imageId]="data.employeeID"
     [title]="data.employeeName" [subTitle]="(data.positionName || 'Bộ phận')" [dataItem]="data"
-    [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'" [footer]="footer" [typeMF]="'hover'"
-    (clickMF)="clickMF($event, data)">
+    [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'" [footer]="footer">
   </codx-card-center>
 </ng-template>
 
@@ -61,7 +60,7 @@
     </codx-img>
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex align-items-center">
-        <div class="text-dark font-weight-bold me-2">{{data.employeeName}}</div>
+        <div class="text-dark fw-bold me-2">{{data.employeeName}}</div>
       </div>
       <div>
         <!-- <div class="text-dark-50 font-size-sm mt-1" *ngIf="data.positionName != '---'">

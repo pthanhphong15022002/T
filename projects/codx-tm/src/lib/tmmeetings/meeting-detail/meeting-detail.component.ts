@@ -23,6 +23,9 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
   user: any;
   iterationID= '';
   data: any ;
+  month: any;
+  day: any;
+  startTime: any;
   meeting= new CO_Meetings()
   constructor(
     private injector: Injector,
@@ -49,10 +52,20 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
 
   onInit(): void {
     this.getQueryParams();
-    this.loadMeeting();
+    if(this.meetingID!=null){
+      this.TMService.getMeetingID(this.meetingID).subscribe(res=>{
+        if(res){
+          this.data = res;
+          this.meeting = this.data;
+        }
+      });
+    }
 
   }
 
+  ngAfterViewInit(): void {
+    this.getDate();
+  }
 
   getQueryParams() {
     this.route.queryParams.subscribe(params => {
@@ -63,14 +76,24 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
     });
   }
 
-  loadMeeting(){
-    if(this.meetingID!=null){
-      this.TMService.getMeetingID(this.meetingID).subscribe(res=>{
-        if(res){
-          this.data = res;
-          this.meeting = this.data;
-        }
-      });
+
+  getDate() {
+    if (this.meeting.startDate) {
+      var date = new Date(this.meeting.startDate);
+      this.month = this.addZero(date.getMonth() + 1);
+      this.day = this.addZero(date.getDate());
+      var endDate = new Date(this.meeting.endDate);
+      let start = this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
+      let end = this.addZero(endDate.getHours()) + ':' + this.addZero(endDate.getMinutes());
+
+      this.startTime = start + ' - ' + end;
     }
+  }
+
+  addZero(i) {
+    if (i < 10) {
+      i = '0' + i;
+    }
+    return i;
   }
 }

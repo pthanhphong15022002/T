@@ -30,7 +30,7 @@
                             default="Phân quyền chi tiết">
                         </codx-label>
                     </a>
-                    <i class="icon-keyboard_arrow_right icon-18 mr-1 text-primary"></i>
+                    <i class="icon-keyboard_arrow_right icon-18 me-1 text-primary"></i>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
                         [class]="'d-flex align-items-center' + (data.roleType == '1' || data.roleType == '2' || data.roleID=='ADMIN' || data.roleID=='FUNCTIONADMIN' ? ' click-disabled' : '')">
                         <a (click)="viewRoleDetail()" class="text-primary disabled">{{'Phân quyền chi tiết' | lang:
                             'Roles':'lblRolesDetail' | async}}</a>
-                        <i class="icon-keyboard_arrow_right icon-18 mr-1 text-primary"></i>
+                        <i class="icon-keyboard_arrow_right icon-18 me-1 text-primary"></i>
                     </div>
                 </div>
             </div>

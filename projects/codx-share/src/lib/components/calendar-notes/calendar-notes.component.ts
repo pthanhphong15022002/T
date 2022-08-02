@@ -43,7 +43,6 @@ export class CalendarNotesComponent
   implements OnInit, AfterViewInit
 {
   message: any;
-  messageParam: any;
   listNote: any[] = [];
   type: any;
   typeCalendar = 'week';
@@ -84,7 +83,6 @@ export class CalendarNotesComponent
   ) {
     super(injector);
     this.userID = this.auth.get().userID;
-    this.messageParam = this.cache.message('WP003');
     this.getParam();
     this.cache
       .moreFunction('PersonalNotes', 'grvPersonalNotes')
