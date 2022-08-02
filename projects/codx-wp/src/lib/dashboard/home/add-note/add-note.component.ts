@@ -228,6 +228,46 @@ export class AddNoteComponent implements OnInit {
       var field = e.field;
       var dt = e.data;
       this.note[field] = dt?.value ? dt?.value : dt;
+      if (field == 'listNote') {
+        if (dt == '' && index !== this.listNote.length - 1) {
+          for (var i = 0; i < this.listNote.length; i++) {
+            if (i === index) {
+              this.listNote.splice(i, 1);
+              return;
+            }
+          }
+        }
+        this.countUpdateTodo++;
+        if (this.countUpdateTodo == 1 && this.formType == 'add') {
+          this.listNote[this.listNote.length - 1] = {
+            status: this.type == 'check' ? 0 : null,
+            listNote: '',
+          };
+        } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
+          this.listNote.pop();
+        }
+        this.keyUpEnter(e);
+        var dt: any = {
+          status: this.tempNote.status,
+          listNote: this.tempNote.listNote,
+        };
+        if (this.countUpdateTodo == 1 && this.formType == 'add') {
+          this.listNote.unshift(Object.assign({}, dt));
+        } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
+          this.listNote.push(dt);
+          var dtt = {
+            status: this.type == 'check' ? 0 : null,
+            listNote: '',
+          };
+          this.listNote.push(dtt);
+        }
+        this.changeDetectorRef.detectChanges();
+        var ele = document.getElementsByClassName('test-textbox');
+        if (ele) {
+          let htmlEle = ele[ele.length - 1] as HTMLElement;
+          htmlEle.focus();
+        }
+      }
       if (
         this.type == 'check' ||
         this.type == 'list' ||
@@ -236,22 +276,13 @@ export class AddNoteComponent implements OnInit {
       ) {
         if (item?.lisNote != '') {
           if (this.formType == 'edit') this.listNote = this.note.checkList;
+          let i = 0;
           this.listNote.forEach((data) => {
-            if (item?.listNote == data.listNote) {
+            if (i == index) {
               if (field == 'status') data.status = dt;
             }
+            i++;
           });
-        }
-      }
-      if (field == 'listNote') {
-        if (dt == '') {
-          for (var i = 0; i < this.listNote.length; i++) {
-            if (index !== this.listNote.length - 1) {
-              if (i === index) {
-                this.listNote.splice(i, 1);
-              }
-            }
-          }
         }
       }
       if (field == 'showCalendar') {
@@ -419,38 +450,7 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
-  onUpdateNote(e: any) {
-    this.countUpdateTodo++;
-    if (this.countUpdateTodo == 1 && this.formType == 'add') {
-      this.listNote[this.listNote.length - 1] = {
-        status: this.type == 'check' ? 0 : null,
-        listNote: '',
-      };
-    } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
-      this.listNote.pop();
-    }
-    this.keyUpEnter(e);
-    var dt: any = {
-      status: this.tempNote.status,
-      listNote: this.tempNote.listNote,
-    };
-    if (this.countUpdateTodo == 1 && this.formType == 'add') {
-      this.listNote.unshift(Object.assign({}, dt));
-    } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
-      this.listNote.push(dt);
-      var dtt = {
-        status: this.type == 'check' ? 0 : null,
-        listNote: '',
-      };
-      this.listNote.push(dtt);
-    }
-    this.changeDetectorRef.detectChanges();
-    var ele = document.getElementsByClassName('test-textbox');
-    if (ele) {
-      let htmlEle = ele[ele.length - 1] as HTMLElement;
-      htmlEle.focus();
-    }
-  }
+  onUpdateNote(e: any) {}
 
   isPin() {
     this.checkPin = true;
