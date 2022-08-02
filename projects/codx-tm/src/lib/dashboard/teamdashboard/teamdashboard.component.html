@@ -132,10 +132,11 @@
     <div class="row m-0 bg-body rounded-2 mb-3">
       <div class="fs-4 fw-bold mt-4">Thống kê theo nhóm công việc</div>
       <div class="col-lg-6" style="height: 250px">
-        <ejs-accumulationchart id="chart-group-task" width="100" height="250" [legendSettings]="legendRateDoneSettings">
+        <ejs-accumulationchart id="chart-group-task" width="100%" height="250"
+          [legendSettings]="legendRateDoneSettings">
           <e-accumulation-series-collection>
             <e-accumulation-series [dataSource]="tasksByGroup ? tasksByGroup : {}" xName="taskGroupName"
-              yName="percentage" innerRadius="85%">
+              yName="percentage" innerRadius="82%">
             </e-accumulation-series>
           </e-accumulation-series-collection>
         </ejs-accumulationchart>

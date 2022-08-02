@@ -30,7 +30,6 @@ export class PopupAddCalendarComponent extends UIComponent {
   funcID: string;
   calendarID: string;
   data: any;
-  cbxName: object;
 
   constructor(
     private injector: Injector,
