@@ -117,7 +117,14 @@ ngb-popover-window[role="tooltip"] {
     color: #F64E60;
 }
 
+<<<<<<< HEAD
 
+=======
+.max-h-25px {
+    max-height: 18px !important;
+}
+//ES - css cac buoc quy trinh 
+>>>>>>> a47e0e7a02fd8353004f29698f4ac56390b2ae5b
 .codx-card-custom {
     .stepper-body {
         background: rgba(229, 229, 229, 0.67);
@@ -229,6 +236,43 @@ ngb-popover-window[role="tooltip"] {
     font-weight: 400 !important;
 }
 
+<<<<<<< HEAD
+=======
+.text-dark-75 {
+    color: #3e4347 !important;
+}
+
+.mr-1,
+.mx-1 {
+    margin-right: 0.25rem !important;
+}
+
+.mr-3,
+.mx-3 {
+    margin-right: 0.75rem !important;
+}
+
+.font-weight-bold {
+    font-weight: 500 !important;
+}
+
+.dms-card-footer .d-flex.mr-3 {
+    align-items: center !important;
+}
+
+
+.icon-16 {
+    font-size: 16px !important;
+    line-height: 16px !important;
+    height: 16px !important;
+    width: 16px !important;
+}
+
+.text-warning {
+    color: #ffa800 !important;
+}
+
+>>>>>>> a47e0e7a02fd8353004f29698f4ac56390b2ae5b
 input.e-input,
 textarea.e-input,
 .e-input-group,

@@ -170,14 +170,14 @@
 // .div-active {
 //   border-bottom: solid 2px #187DE4;
 // }
-/****CSS 2.8.2022 *****/
+
 ::ng-deep {
-    .e-device .e-dlg-content, .e-device .e-dlg-content * {
-      font-size: inherit; 
-  }
-  .main-content {
-    width: 100% !important;
-    height: 100% !important;
-    position: relative !important;
-  }
+  .e-device .e-dlg-content, .e-device .e-dlg-content * {
+    font-size: inherit; 
+}
+.main-content {
+      width: 100% !important;
+      height: 100% !important;
+      position: relative !important;
+    }
 }

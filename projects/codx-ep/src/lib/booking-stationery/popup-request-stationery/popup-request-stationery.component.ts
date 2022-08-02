@@ -25,9 +25,8 @@ import { BookingStationeryComponent } from '../booking-stationery.component';
   styleUrls: ['./popup-request-stationery.component.scss'],
 })
 export class PopupRequestStationeryComponent extends UIComponent {
-  @Input() data = {};
-  @Input() isAdd = true;
-  @ViewChild(BookingStationeryComponent) list: BookingStationeryComponent;
+  data = {};
+  isAdd = true
   dialog: any;
   selectDate = null;
   CbxName: any;
@@ -40,8 +39,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private epService: CodxEpService,
-    private callFuncService: CallFuncService,
-    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -65,8 +62,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 550, 430);
-    this.changeDetectorRef.detectChanges();
+    var dialog = this.callfc.openForm(template, '', 550, 430);
+    this.detectorRef.detectChanges();
   }
 
   initForm() {
@@ -117,7 +114,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.dialogRequest.patchValue({ bookingOn: this.selectDate });
     }
   }
-  
+
   valueChange(evt) { }
   valueCbxChange(evt) { }
 

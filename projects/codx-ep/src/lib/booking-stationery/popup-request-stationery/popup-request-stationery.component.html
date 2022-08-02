@@ -1,5 +1,13 @@
-<codx-form [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer" [dialog]="dialog"
-  #form [formControl]="dialogRequest" *ngIf="isAfterRender">
+<codx-form
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  #form
+  [formControl]="dialogRequest"
+  *ngIf="isAfterRender"
+>
   <ng-template #body>
     <div class="d-flex justify-content-between">
       <codx-temp-full
@@ -15,14 +23,24 @@
       </codx-temp-full>
       <div>
         <span class="badge badge-secondary">
-          <codx-label name="lblPerson" default="Cá nhân" [formModel]="form.formModel"></codx-label>
+          <codx-label
+            name="lblPerson"
+            default="Cá nhân"
+            [formModel]="form.formModel"
+          ></codx-label>
         </span>
         <span class="badge badge-primary">
-          <codx-label name="lblRoom" default="Phòng" [formModel]="form.formModel"></codx-label>
+          <codx-label
+            name="lblRoom"
+            default="Phòng"
+            [formModel]="form.formModel"
+          ></codx-label>
         </span>
       </div>
     </div>
-    <div class="d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2">
+    <div
+      class="d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2"
+    >
       <div class="title">
         <span class="icon-apartment1"></span>
         <codx-label
@@ -34,20 +52,41 @@
       </div>
       <!--begin: btn-icon-->
       <span class="text-end align-items-end">
-        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
-          (click)="openPopupDevice(popupDevice)">
-          <i class="icon-connection-point text-primary text-hover-primary-dark icon-24"></i>
+        <button
+          type="button"
+          class="btn btn-clean btn-sm btn-icon btn-icon-md"
+          data-dismiss="modal"
+          (click)="openPopupDevice(popupDevice)"
+        >
+          <i
+            class="icon-connection-point text-primary text-hover-primary-dark icon-24"
+          ></i>
         </button>
       </span>
       <!--end: btn-icon-->
     </div>
-    <div class="d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2">
+    <div
+      class="d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2"
+    >
       <div class="title">
-        <codx-label name="lblAgent" default="Số lượng nhân viên của phòng: " [formModel]="form.formModel"></codx-label>
+        <codx-label
+          name="lblAgent"
+          default="Số lượng nhân viên của phòng: "
+          [formModel]="form.formModel"
+        ></codx-label>
       </div>
       <!--begin: btn-icon-->
-      <codx-input type="number" class="test-number min-w-50px" field="number" placeholder="number" [crrValue]="1"
-        [cusButton]="true" [min]="0" [max]="50" (valueChange)="valueChange($event)"></codx-input>
+      <codx-input
+        type="number"
+        class="test-number min-w-50px"
+        field="number"
+        placeholder="number"
+        [crrValue]="1"
+        [cusButton]="true"
+        [min]="0"
+        [max]="50"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
       <!--end: btn-icon-->
     </div>
     <table class="table table-striped" *ngIf="listItem.length > 0">
@@ -56,25 +95,43 @@
           <div class="d-flex justify-content-between">
             <td class="d-flex flex-row">
               <div class="w-100px h-100px m-4">
-                <codx-img [objectId]="" imageType="square" width="100"></codx-img>
+                <codx-img
+                  [objectId]=""
+                  imageType="square"
+                  width="100"
+                ></codx-img>
               </div>
               <div class="">
                 <div class="text-dark fw-bold font-size-h6">
                   {{ item.resourceName }}
                 </div>
                 <codx-label name="lblUnit" default="Đơn vị tính: "></codx-label>
-                <div class="d-flex justify-content-between align-items-end mt-2">
+                <div
+                  class="d-flex justify-content-between align-items-end mt-2"
+                >
                   <div class="d-flex align-items-end me-2 codx-badge">
-                    <div class="d-flex align-items-center position-relative me-4">
-                      <span class="icon-view_agenda icon-20 text-gray-400"></span>
+                    <div
+                      class="d-flex align-items-center position-relative me-4"
+                    >
+                      <span
+                        class="icon-view_agenda icon-20 text-gray-400"
+                      ></span>
                       <span>{{ item.currentQty }}</span>
                     </div>
-                    <div class="d-flex align-items-center position-relative me-4">
-                      <span class="icon-shopping_cart icon-20 text-gray-400"></span>
+                    <div
+                      class="d-flex align-items-center position-relative me-4"
+                    >
+                      <span
+                        class="icon-shopping_cart icon-20 text-gray-400"
+                      ></span>
                       <span>{{ item.reservedQty }}</span>
                     </div>
-                    <div class="d-flex align-items-center position-relative me-4">
-                      <span class="icon-brightness_auto icon-20 text-gray-400"></span>
+                    <div
+                      class="d-flex align-items-center position-relative me-4"
+                    >
+                      <span
+                        class="icon-brightness_auto icon-20 text-gray-400"
+                      ></span>
                       <span>{{ item.availableQty }}</span>
                     </div>
                   </div>
@@ -82,8 +139,17 @@
               </div>
             </td>
             <td>
-              <codx-input type="number" class="test-number min-w-50px" field="number" placeholder="number"
-                [crrValue]="1" [cusButton]="true" [min]="0" [max]="50" (valueChange)="valueChange($event)">
+              <codx-input
+                type="number"
+                class="test-number min-w-50px"
+                field="number"
+                placeholder="number"
+                [crrValue]="1"
+                [cusButton]="true"
+                [min]="0"
+                [max]="50"
+                (valueChange)="valueChange($event)"
+              >
               </codx-input>
             </td>
           </div>
@@ -94,21 +160,40 @@
   <ng-template #footer>
     <div class="d-flex justify-content-between">
       <div class="d-flex justify-content-center">
-        <codx-label name="lblItems" default="Tổng số mặt hàng yêu cầu:" [formModel]="form.formModel"></codx-label>
+        <codx-label
+          name="lblItems"
+          default="Tổng số mặt hàng yêu cầu:"
+          [formModel]="form.formModel"
+        ></codx-label>
         <div class="numberCircle">{{ count }}</div>
       </div>
       <div class="d-flex">
-        <codx-label name="lblDay" default="Ngày yêu cầu" [formModel]="form.formModel"></codx-label>
-        <codx-input type="datetime" class="form-control test-datetime" field="datetime"
-          [crrValue]="dialogRequest.value.startDate" ControlName="startDate" placeholder="datetime" format="d"
-          (valueChange)="valueDateChange($event)">
+        <codx-label
+          name="lblDay"
+          default="Ngày yêu cầu"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          type="datetime"
+          class="form-control test-datetime"
+          field="datetime"
+          [crrValue]="dialogRequest.value.startDate"
+          ControlName="startDate"
+          placeholder="datetime"
+          format="d"
+          (valueChange)="valueDateChange($event)"
+        >
         </codx-input>
       </div>
     </div>
     <div class="">
       <div class="d-flex justify-content-between">
         <div class="">
-          <codx-label fieldname="ReasonID" default="Lý do" [formModel]="form.formModel"></codx-label>
+          <codx-label
+            fieldname="ReasonID"
+            default="Lý do"
+            [formModel]="form.formModel"
+          ></codx-label>
         </div>
         <div class="col-10">
           <codx-input
@@ -124,10 +209,18 @@
     </div>
     <div class="d-flex justify-content-end">
       <button class="btn btn-outline-primary" (click)="onSaveForm()">
-        <codx-label name="lblSend" default="Gởi duyệt" [formModel]="form.formModel"></codx-label>
+        <codx-label
+          name="lblSend"
+          default="Gởi duyệt"
+          [formModel]="form.formModel"
+        ></codx-label>
       </button>
       <button class="btn btn-light-primary" (click)="onSaveForm()">
-        <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="form.formModel"
+        ></codx-label>
       </button>
     </div>
   </ng-template>
