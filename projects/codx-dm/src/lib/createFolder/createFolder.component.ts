@@ -175,7 +175,8 @@ export class CreateFolderComponent implements OnInit {
   postblog: boolean;
   historyFileNameExt: string;
   clipboard: any;
-  titleDialogPHysical = 'Physical Control';
+  titleOK = 'OK';
+  titleDialogPHysical = 'Physical Control'; 
   titleRolesDialog = 'Cập nhật quyền';
   titleShare = 'Chia sẻ';
   titleExpand = 'Mở rộng';
@@ -195,9 +196,11 @@ export class CreateFolderComponent implements OnInit {
   titleStoreControl = 'Kiểm soát vị trí kho';
   titleVersionControl = 'Kiểm soát phiên bản';
   titleApprovar = 'Xét duyệt tài liệu';
-  titleFolderName = 'Tên thư mục';
-  titleFolderRequired = 'Tên thư mục bắt buộc..';
-  width = '720';
+  titleFolderName = 'Tên thư mục';  
+  titleFolderRequired = 'Tên thư mục bắt buộc..';  
+  titleAccessDenied = '';
+  titleApprovalName = "Bạn chưa nhập thông tin người xét duyệt";
+  width = '720'; 
   height = window.innerHeight;
   //objectType="";
   indexSub: number;
@@ -507,7 +510,7 @@ export class CreateFolderComponent implements OnInit {
   onFolderSave() {
 
     if (this.approval && (this.approvers == "" || this.approvers == undefined)) {
-      this.notificationsService.notifyCode("DM058");
+      this.notificationsService.notify(this.titleApprovalName);
       return;
     }
 

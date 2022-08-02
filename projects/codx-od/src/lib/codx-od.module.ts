@@ -30,6 +30,8 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { SearchingComponent } from './incomming/searching/searching.component';
+import { TabsComponent } from './incomming/tab/tabs.component';
+import { ApprovalComponent } from './approval/approval.component';
 
 const routes: Routes = [
   {
@@ -47,7 +49,11 @@ const routes: Routes = [
       {
         path: 'searching/:funcID',
         component: SearchingComponent
-      },     
+      },   
+      {
+        path: 'approvalfiles/:funcID',
+        component: ApprovalComponent
+      }, 
       {
         path: '',
         redirectTo: 'home',
@@ -81,7 +87,9 @@ const routes: Routes = [
     ViewDetailComponent,
     IncommingAddComponent,
     FolderComponent,
-    SearchingComponent
+    SearchingComponent,
+    TabsComponent,
+    ApprovalComponent
   ],
   imports: [RouterModule.forChild(routes),
   CodxCoreModule.forRoot({ environment }),

@@ -184,15 +184,15 @@ export class TasksComponent extends UIComponent {
           template3: this.cellTemplate,
         },
       },
-      {
-        type: ViewType.treedetail,
-        active: false,
-        sameData: true,
-        // request2: this.resourceTree,
-        model: {
-          template: this.treeView,
-        },
-      },
+      // {
+      //   type: ViewType.treedetail,
+      //   active: false,
+      //   sameData: true,
+      //   // request2: this.resourceTree,
+      //   model: {
+      //     template: this.treeView,
+      //   },
+      // },
     ];
 
     this.view.dataService.methodSave = 'AddTaskAsync';

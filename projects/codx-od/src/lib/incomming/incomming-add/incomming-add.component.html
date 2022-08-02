@@ -12,19 +12,19 @@
 </ng-template>
 <ng-template popup adde #body>
   <div>
-    <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+    <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
       hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
       [objectId]="dispatch?.recID" [allowMultiFile]="0" [idBrowse]="'add'">
     </codx-attachment>
   </div>
   <div class="tab-horizone">
     <div class="d-flex align-items-center mb-1">
-      <codx-label class="me-2 cursor-pointer" default="Đơn vị" [class.text-primary]="activeDiv == 'dv'"
+      <codx-label class="me-2 cursor-pointer fw-bold" default="Đơn vị" [class.text-primary]="activeDiv == 'dv'"
         (click)="hideDept('dv')">
       </codx-label>
       <ng-container *ngIf="!hidepb">
         <codx-label class="me-2 " default="|"></codx-label>
-        <codx-label class="cursor-pointer text-primary" [class.text-primary]="activeDiv == 'pb'" default="Phòng ban"
+        <codx-label class="cursor-pointer text-primary fw-bold" [class.text-primary]="activeDiv == 'pb'" default="Phòng ban"
           (click)="hideDept('pb')"></codx-label>
       </ng-container>
     </div>

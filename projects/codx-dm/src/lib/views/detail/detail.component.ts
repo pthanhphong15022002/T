@@ -92,16 +92,19 @@ export class DetailComponent implements OnInit {
     //   this.folderService.options.srtColumns = this.dmSV.sortColumn.getValue();
     // });
 
-    // this.dmSV.isListFolder.subscribe(res => {
-    //   this.refresh();
-    //   this.loadedFolder = true;
-    // });
+    this.dmSV.isListFolder.subscribe(res => {     
+      //this.refresh();
+      this.listFolders = res;
+      this.loadedFolder = true;
+      this.changeDetectorRef.detectChanges();
+    });
 
-    // this.dmSV.islistFiles.subscribe(res => {
-    //   this.refresh();
-    //   this.loadedFile = true;
-    // });
-
+    this.dmSV.islistFiles.subscribe(res => {    
+     // this.refresh();    
+      this.listFiles = res;  
+      this.loadedFile = true;
+      this.changeDetectorRef.detectChanges();
+    });
     // this.dmSV.isAdd.subscribe(res => {
     //   if (res) {
     //     this.refresh();
