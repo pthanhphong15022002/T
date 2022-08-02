@@ -100,7 +100,7 @@ export class PopupAddSignFileComponent implements OnInit {
             this.dialogSignFile.patchValue({
               approveStatus: '1',
               // employeeID: user.employee?.employeeID,
-              // orgUnitID: user.employee?.orgUnitID,
+              // orgUnitID: user.employee?.orgUnitID, -- coment lai do loi
             });
             this.dialogSignFile.addControl(
               'approveControl',

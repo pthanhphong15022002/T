@@ -18,7 +18,7 @@
   <room-dashboard></room-dashboard>
 </ng-template>
 <ng-template #report>
-<report></report>
+  <report></report>
 </ng-template>
 <ng-template #gridTemplate>
   <codx-gridview #gridView [columnsGrid]="columnsGrid" [allowSorting]="" [sortSettings]="" [allowGrouping]=""
@@ -46,7 +46,7 @@
   <div class="d-flex align-items-center">
     <a class="action-item d-flex align-items-center" (click)="edit(dataItem)">
       <div class="d-flex align-items-center btn-tooltip">
-        <span class="icon-edit icon-18 ml-2 me-2"></span>
+        <span class="icon-edit icon-18 ms-2 me-2"></span>
         <span class="tooltiptext">
           <codx-label name="lblEdit" default="Edit" [formModel]="dialog.formModel"></codx-label>
         </span>
@@ -67,7 +67,7 @@
         <div class="d-flex align-items-center">
           <a class="action-item d-flex align-items-center">
             <div class="d-flex align-items-center btn-tooltip" (click)="openForm(dataItem)">
-              <span class="icon-edit icon-18 ml-2 me-2"></span>
+              <span class="icon-edit icon-18 ms-2 me-2"></span>
               <span class="tooltiptext">Edit</span>
             </div>
           </a>
@@ -144,15 +144,10 @@
   <div class="container my-3 p-3">
     <div class="row">
       <div style="width:90%">
-        <span
-          style="font-weight: 600; text-transform: uppercase"
-          >{{ data.title }}</span>
+        <span style="font-weight: 600; text-transform: uppercase">{{ data.title }}</span>
       </div>
       <div style="width:10%">
-        <codx-temp-full
-
-          [formModel]="viewBase.formModel"
-        >
+        <codx-temp-full [formModel]="viewBase.formModel">
         </codx-temp-full>
       </div>
     </div>

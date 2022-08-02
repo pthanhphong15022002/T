@@ -1,6 +1,6 @@
-<div class="d-row justify-content-between main-pane stepper-body p-4 w-100">
-  <div class="row main-content">
-    <div class="col-2 bg-white" [class.hideCol]="hideThumbnail">
+<div class="justify-content-between main-pane stepper-body p-4 w-100">
+  <div class="main-content d-flex flex-column h-100 flex-lg-row">
+    <div class="flex-column flex-lg-row-auto w-100 w-lg-275px mb-10 mb-lg-0 main-left" [class.hideCol]="hideThumbnail">
       <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
         <e-tabitems>
           <e-tabitem>
@@ -22,7 +22,7 @@
       <div class="showArrow" [class.icon-arrow_back]="!hideThumbnail" [class.icon-arrow_forward]="hideThumbnail"
         (click)="changeShowThumbnailState()"></div>
     </div>
-    <div class="col-7 flex-grow-1">
+    <div class="flex-lg-row-fluid ms-lg-7 ms-xl-10 main-center">
 
       <div class="d-flex justify-content-between w-100  bg-white">
         <div class="left_Toolbar w-100 d-flex justify-content-start">
@@ -82,7 +82,8 @@
         </ejs-pdfviewer>
       </div>
     </div>
-    <div class="actions col-3 bg-white" [class.hideCol]="hideActions">
+    <div class="actions flex-column flex-lg-row-auto w-100 w-lg-275px mb-10 mb-lg-0 main-right"
+      [class.hideCol]="hideActions">
       <ejs-tab #rightToolbar [class.d-none]="hideActions">
         <e-tabitems>
           <e-tabitem>

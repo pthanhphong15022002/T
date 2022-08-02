@@ -1,20 +1,7 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
-  [views]="views"
-  [button]="button"
-  (buttonClick)="add($event)"
-  [moreFuncs]="moreFunc"
-  [idField]="idField"
-  [className]="className"
-  [method]="method"
-  (requestEnded)="closeEditForm($event)"
->
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="add($event)"
+  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
+  (requestEnded)="closeEditForm($event)">
 </codx-views>
 
 <!-- begin::Dashboard -->
@@ -28,20 +15,12 @@
 <!-- begin::View card -->
 
 <ng-template #cardItem let-data>
-  <codx-card-img
-    cardCss="border w-250px h-100"
-    [imageSrc]="
+  <codx-card-img cardCss="border w-250px h-100" [imageSrc]="
       data.icon
         ? data.icon
         : '../assets/media/img/codx/default/card-default.svg'
-    "
-    [content]="'content'"
-    [subTitle]="data.resourceName"
-    [title]="data.resourceName"
-    [desc]="data.costPrice | currency: 'VND':'symbol':'3.0'"
-    [rootData]="data"
-    [footer]="cardItemFooter"
-  >
+    " [content]="'content'" [subTitle]="data.resourceName" [title]="data.resourceName"
+    [desc]="data.costPrice | currency: 'VND':'symbol':'3.0'" [rootData]="data" [footer]="cardItemFooter">
   </codx-card-img>
 </ng-template>
 
@@ -63,10 +42,7 @@
           <span>{{ data.availableQty }}</span>
         </div>
       </div>
-      <div
-        class="symbol-group symbol-hover justify-content-end"
-        (click)="addCart($event, data)"
-      >
+      <div class="symbol-group symbol-hover justify-content-end" (click)="addCart($event, data)">
         <span class="icon-shopping_cart icon-20 text-gray-400"></span>
       </div>
     </div>
@@ -80,7 +56,7 @@
       <codx-img [objectId]="" imageType="square" width="100"></codx-img>
     </div>
     <div class="">
-      <div class="text-dark font-weight-bold font-size-h6">
+      <div class="text-dark fw-bold font-size-h6">
         {{ data.resourceName }}
       </div>
       <div>
@@ -112,17 +88,9 @@
 
 <ng-template #usageRateCol let-data>
   <div class="has-action-menu">
-    <codx-label
-      name="lblOnePerson"
-      default="1 Chai / Người / Lần "
-      [formModel]="dialog.formModel"
-    ></codx-label>
+    <codx-label name="lblOnePerson" default="1 Chai / Người / Lần " [formModel]="dialog.formModel"></codx-label>
     <div class="action-menu">
-      <codx-mfunc
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-      ></codx-mfunc>
+      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
     </div>
   </div>
 </ng-template>

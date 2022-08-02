@@ -6,7 +6,7 @@
                 <div class="text-gray-400 fs-7"></div>
             </div>
         </div>
-        <div class="card-toolbar">         
+        <div class="card-toolbar">
             <button type="button" class="btn btn-sm btn-icon btn-active-color-primary h-40px w-40px me-n6"
                 id="kt_engage_demos_close" (click)="close()">
                 <span class="icon-close icon-18"></span>
@@ -40,8 +40,8 @@
             </div>
             <div class="d-flex justify-content-between p-2">
                 <div class="d-flex align-items-center justify-content-start flex-grow-1">
-                    <div class="w-100px fw-bold">Giao cho:</div>                        
-                    <div class="d-flex align-items-center w-100" >
+                    <div class="w-100px fw-bold">Giao cho:</div>
+                    <div class="d-flex align-items-center w-100">
                         <!-- <div ngbDropdown class="dropdown u-list-item" *ngFor="let item of lstUser">
                             <div class="d-flex align-items-center flex-grow-1">                            
                                 <div class="d-flex align-items-center me-2">
@@ -69,16 +69,12 @@
                             </div>
                             <od-assignSubMenu></od-assignSubMenu>  
                         </div>  -->
-                        <codx-input
-                            [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"
-                            placeholder="Chọn tài khoản"
-                            type="combobox"
-                            style="width:100%"
-                            (valueChange)="changeValueChangeTo($event)"
-                            >
-                    </codx-input> 
-                    </div>  
-                   
+                        <codx-input [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"
+                            placeholder="Chọn tài khoản" type="combobox" style="width:100%"
+                            (valueChange)="changeValueChangeTo($event)">
+                        </codx-input>
+                    </div>
+
                     <!-- <div class="d-flex justify-content-between border-bottom" >
                         <div ngbDropdown class="dropdown">
                             <div ngbDropdownToggle id="dropdownMenuButton1"
@@ -99,23 +95,24 @@
                         </div> 
                     </div>                                   -->
                 </div>
-               
+
                 <span class="btn btn-sm btn-icon btn-light-primary">
                     <span class="icon-connection-point icon-18"></span>
-                </span>   
-            </div>             
-        </div>        
+                </span>
+            </div>
+        </div>
         <div class="d-flex justify-content-end me-2">
             <!-- <codx-input type="valuelist" refValue="TM001"           
                 placeholder="" style="width:100%">  
-            </codx-input> -->	       
+            </codx-input> -->
             <ng-container *ngIf="this.roles != null">
-                <div  *ngFor="let item of this.roles">
+                <div *ngFor="let item of this.roles">
                     <div class="d-flex align-items-center ms-4" [style.backgroundColor]="item.color">
-                        <span class="symbol  badge badge-circle-20px badge-light  me-1 fs-9" [style.color]="item.textColor">{{item.value}}</span>
+                        <span class="symbol  badge badge-circle-20px badge-light  me-1 fs-9"
+                            [style.color]="item.textColor">{{item.value}}</span>
                         <div class="fs-8 text-gray-500">{{item.text}}</div>
                     </div>
-                </div>               
+                </div>
             </ng-container>
             <!-- <div class="d-flex align-items-center ms-4">
                 <codx-img #image objectId="ADMIN" class="w-15px h-15px r-5px"></codx-img>
@@ -138,11 +135,7 @@
             <div class="d-flex align-items-center flex-grow-1">
                 <div class="w-100px">Công việc:</div>
                 <div class="d-flex align-items-center w-100">
-                    <codx-input 
-                        type="text"
-                        style="width:100%"
-                        (valueChange)="changeValueSubject($event)"
-                    ></codx-input>
+                    <codx-input type="text" style="width:100%" (valueChange)="changeValueSubject($event)"></codx-input>
                 </div>
             </div>
 
@@ -176,7 +169,7 @@
                             <i class="tex font-size-sm mt-1">Xin cấp quyền full xem tài liệu</i>
                         </div>
                     </a>
-                    <div class="subheader-separator subheader-separator-ver mt-1 ml-1 bg-gray-400"></div>
+                    <div class="subheader-separator subheader-separator-ver mt-1 ms-1 bg-gray-400"></div>
                     <a class="dropdown-item">
                         <span class="text-primary">Thêm mẫu mail</span>
                     </a>
@@ -184,15 +177,16 @@
             </div> -->
         </div>
         <div class="p-2">
-            <codx-attachment #attachment type="center" objectType="WP_Notes" objectId="628c326c590addf224627f42" hideBtnSave="1" popup="0" hideFolder="1" hideUploadBtn="1"  functionID="WPT03941" (fileAdded)="fileAdded($event)"></codx-attachment>
-            <codx-thumbnail [files]="data.files"></codx-thumbnail>        
+            <codx-attachment #attachment type="center" objectType="WP_Notes" objectId="628c326c590addf224627f42"
+                hideBtnSave="1" popup="0" hideFolder="1" hideUploadBtn="1" functionID="WPT03941"
+                (fileAdded)="fileAdded($event)"></codx-attachment>
+            <codx-thumbnail [files]="data.files"></codx-thumbnail>
         </div>
         <div class="form-group mt-3 p-2">
             <div class="d-flex align-items-center justify-content-between">
                 <label>Nội dung chi tiết</label>
                 <div class="dropdown">
-                    <button
-                        class="btn btn-xs btn-secondary d-flex align-items-center border-0 dropdown-toggle"
+                    <button class="btn btn-xs btn-secondary d-flex align-items-center border-0 dropdown-toggle"
                         type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
                         <span>Chon trường dữ liệu</span>
@@ -204,7 +198,7 @@
                                 <i class="tex font-size-sm mt-1">Xin cấp quyền full xem tài liệu</i>
                             </div>
                         </a>
-                        <div class="subheader-separator subheader-separator-ver mt-1 ml-1 bg-gray-400">
+                        <div class="subheader-separator subheader-separator-ver mt-1 ms-1 bg-gray-400">
                         </div>
                         <a class="dropdown-item">
                             <span class="text-primary">Thêm mẫu mail</span>
@@ -212,29 +206,32 @@
                     </div>
                 </div>
             </div>
-            <codx-input type="textarea" field="textarea" placeholder="" [crrValue]="''" (valueChange)="changeValueDescription($event)" >
+            <codx-input type="textarea" field="textarea" placeholder="" [crrValue]="''"
+                (valueChange)="changeValueDescription($event)">
             </codx-input>
         </div>
-        <div class="row p-4">            
+        <div class="row p-4">
             <div class="d-flex align-items-center flex-grow-1">
                 <div class="w-100px">Thời hạn xử lý</div>
-                <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime"
-                    dataformat="d" (valueChange)="changeValueFormDate($event)">
+                <codx-input type="datetime" class="test-datetime" field="datetime" placeholder="datetime" dataformat="d"
+                    (valueChange)="changeValueFormDate($event)">
                 </codx-input>
 
-                <div class="col-6 d-flex align-items-center">    
+                <div class="col-6 d-flex align-items-center">
                     <div class="d-flex flex-stack l-30px ms-3">
                         <codx-input #report type="switch" id="switch" [checked]="false" labelPosition="Before"
-                        [disabled]="false" class="test-switch" (valueChange)="changeValueReport($event)"></codx-input>   
+                            [disabled]="false" class="test-switch" (valueChange)="changeValueReport($event)">
+                        </codx-input>
                         <div class="ms-2">Yên cầu báo cáo</div>
-                    </div>   
-                    
+                    </div>
+
                     <div class="d-flex flex-stack l-30px ms-3">
                         <codx-input #email type="switch" id="switch" [checked]="false" labelPosition="Before"
-                        [disabled]="false" class="test-switch" (valueChange)="changeValueEmail($event)"></codx-input>                               
+                            [disabled]="false" class="test-switch" (valueChange)="changeValueEmail($event)">
+                        </codx-input>
                         <div class="ms-2">Gởi email thông báo</div>
-                    </div> 
-                </div>  
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -244,15 +241,16 @@
                 <button type="button" class="btn btn-light-primary me-3" (click)="addFile()">
                     <i class="icon-cloud_upload fs-5"></i>Upload file
                 </button>
-                <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false" labelPosition="Before"  (valueChange)="changeValueSaveTemplate($event)"></codx-input>
+                <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false"
+                    labelPosition="Before" (valueChange)="changeValueSaveTemplate($event)"></codx-input>
                 <div class="ms-2">Lưu làm template</div>
-            </div>                        
-            <div class="d-flex">                                          
+            </div>
+            <div class="d-flex">
                 <button type="button" class="btn btn-primary" (click)="saveAssignTask()">Lưu</button>
             </div>
         </div>
     </div>
 </div>
 
-<codx-attachment #attachment type="center" objectType="TM_Tasks" objectId="628c326c590addf224627f42" functionID="WPT03941" (fileAdded)="fileAdded($event)"></codx-attachment>
-
+<codx-attachment #attachment type="center" objectType="TM_Tasks" objectId="628c326c590addf224627f42"
+    functionID="WPT03941" (fileAdded)="fileAdded($event)"></codx-attachment>

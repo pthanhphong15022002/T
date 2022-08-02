@@ -194,8 +194,7 @@ export class AssignInfoComponent implements OnInit {
 
   saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
-      // this.notiService.notifyCode('???code');
-      this.notiService.notify('Tên công việc không được để trống !');
+      this.notiService.notifyCode('TM027');
       return;
     }
     if (this.task.assignTo == null || this.task.assignTo == '') {
