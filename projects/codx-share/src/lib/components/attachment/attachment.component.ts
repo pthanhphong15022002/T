@@ -10,7 +10,7 @@ import {
   Optional,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FileUpload, Permission } from '@shared/models/file.model';
+import { FileUpload, ItemInterval, Permission } from '@shared/models/file.model';
 import { NodeTreeAdd } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
@@ -54,6 +54,8 @@ export class AttachmentComponent implements OnInit {
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
   titleUpload = 'Upload';
+  interval: ItemInterval[];
+  intervalCount = 0;
   //fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
@@ -288,6 +290,11 @@ export class AttachmentComponent implements OnInit {
 
   ngOnDestroy() {
     //   this.atSV.openForm.unsubscribe();
+    if (this.interval?.length > 0) {
+      this.interval.forEach(element => {
+        clearInterval(element.instant);
+      });
+    }
   }
 
   onSelectionAddChanged($data, tree) {
@@ -727,20 +734,60 @@ export class AttachmentComponent implements OnInit {
     );   
   }
 
+  displayThumbnail(id, pathDisk) {
+    var that = this;
+    if (this.interval == null)
+      this.interval = [];
+    var files = this.dmSV.listFiles.getValue();
+    var index = setInterval(() => {
+      that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
+        if (item != null && item != "") {
+          let index = files.findIndex(d => d.recID.toString() === id);
+          if (index != -1) {
+            files[index].thumbnail = item;
+            that.dmSV.listFiles.next(files);
+            that.changeDetectorRef.detectChanges();
+          }
+          let indexInterval = this.interval.findIndex(d => d.id === id);
+          if (indexInterval > -1) {
+            clearInterval(this.interval[indexInterval].instant);
+            this.interval.splice(indexInterval, 1);
+          }
+        }
+      })
+    }, 3000);
+
+    var interval = new ItemInterval();
+    interval.id = id;
+    interval.instant = index;
+    this.interval.push(Object.assign({}, interval));
+  }
+  
   addFile(fileItem: any) {
     var that = this;
     var done = this.fileService.addFile(fileItem).toPromise();
     if (done) {
       done.then(item => {
         if (item.status == 0) {
-          this.notificationsService.notify(item.message);
+          var files = this.dmSV.listFiles.getValue();
+          if (files == null) files = [];
+          var res = item.data;
+          res.thumbnail = "../../../assets/img/loader.gif";
+          files.push(Object.assign({}, res));
+          this.dmSV.listFiles.next(files);
+          that.changeDetectorRef.detectChanges();
+          //this.fileUploadList = [];
+          that.displayThumbnail(res.recID, res.pathDisk);
+         // this.notificationsService.notify(item.message);
           this.dmSV.fileUploadList[0].recID = item.data.recID;
           // list.push(Object.assign({}, res));
           this.atSV.fileListAdded.push(Object.assign({}, item));
           // for(var i=0; i<addList.length; i++) {
           this.data.push(Object.assign({}, item));
-          //}     
-          this.closePopup();
+          this.closePopup();          
+          this.displayThumbnail(item.data.recID, item.data.pathDisk);          
+          this.dmSV.updateHDD.next(item.messageHddUsed);
+          this.notificationsService.notify(item.message);
         }
         else if (item.status == 6) {
           // ghi đè
@@ -749,12 +796,27 @@ export class AttachmentComponent implements OnInit {
         }
         else
           this.notificationsService.notify(item.message);
-
       }).catch((error) => {
         console.log("Promise rejected with " + JSON.stringify(error));
       });
     }
   }
+
+  // ngOnDestroy(): void {
+  //   var data = new DataItem();
+  //   data.recID = "";
+  //   data.type = "folder";
+  //   data.fullName = "";
+  //   data.copy = false;
+  //   data.dialog = "closeAll";
+  //   data.id_to = "";
+  //   this.dmSV.setOpenDialog.next(data);
+  //   if (this.interval?.length > 0) {
+  //     this.interval.forEach(element => {
+  //       clearInterval(element.instant);
+  //     });
+  //   }
+  // }
 
   rewriteFile(title: any, message: any, item: FileUpload) {
     var config = new AlertConfirmInputConfig();
@@ -1725,7 +1787,8 @@ export class AttachmentComponent implements OnInit {
         fileUpload.reWrite = false;
         fileUpload.data = data.toString();
         fileUpload.item = files[i];
-        fileUpload.folderId = this.folderId;
+        //fileUpload.folderId = this.folderId;
+        fileUpload.folderId = this.dmSV.folderId.getValue();
         //fileUpload.permissions = this.remotePermission;
         //  if (this.parentFolder != null && this.parentFolder.permissions != null)
         //    fileUpload.permissions = JSON.parse(JSON.stringify(this.parentFolder.permissions));//Object.assign({}, this.parentFolder.permissions);

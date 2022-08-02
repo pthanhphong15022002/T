@@ -13,7 +13,6 @@ import { HR_Employees } from '../../model/HR_Employees.model';
 })
 export class PopupAddEmployeesComponent implements OnInit {
   title = '';
-  // tabInfo: any[] = [];
   tabInfo: any[] = [
     { 
       icon: 'icon-info', 
