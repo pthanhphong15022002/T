@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
-import { Notes, NoteType } from '@shared/models/notes.model';
+import { Notes, NoteType, TempNote } from '@shared/models/notes.model';
 import { falseLine } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
 
 @Component({
@@ -47,8 +47,9 @@ export class PopupAddUpdate implements OnInit {
   empty = '';
   type = 'text';
   noteType: NoteType = new NoteType();
+  tempNote: TempNote = new TempNote();
   listNote: any = [];
-
+  countUpdateTodo = 0;
   note: Notes = new Notes();
 
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -122,6 +123,43 @@ export class PopupAddUpdate implements OnInit {
       var field = e.field;
       var dt = e.data;
       this.note[field] = dt?.value ? dt?.value : dt;
+      if (field == 'listNote') {
+        if (dt == '' && index !== this.listNote.length - 1) {
+          for (var i = 0; i < this.listNote.length; i++) {
+            if (i === index) this.listNote.splice(i, 1);
+          }
+        }
+        this.countUpdateTodo++;
+        if (this.countUpdateTodo == 1 && this.formType == 'add') {
+          this.listNote[this.listNote.length - 1] = {
+            status: this.type == 'check' ? 0 : null,
+            listNote: '',
+          };
+        } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
+          this.listNote.pop();
+        }
+        this.keyUpEnter(e);
+        var dt: any = {
+          status: this.tempNote.status,
+          listNote: this.tempNote.listNote,
+        };
+        if (this.countUpdateTodo == 1 && this.formType == 'add') {
+          this.listNote.unshift(Object.assign({}, dt));
+        } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
+          this.listNote.push(dt);
+          var dtt = {
+            status: this.type == 'check' ? 0 : null,
+            listNote: '',
+          };
+          this.listNote.push(dtt);
+        }
+        this.changeDetectorRef.detectChanges();
+        var ele = document.getElementsByClassName('test-textbox');
+        if (ele) {
+          let htmlEle = ele[ele.length - 1] as HTMLElement;
+          htmlEle.focus();
+        }
+      }
     }
   }
 
@@ -132,20 +170,22 @@ export class PopupAddUpdate implements OnInit {
   }
 
   addNoteBookDetails() {
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
-        if (res.save) {
-          var dt = res.save;
-          this.dataAdd = dt;
-          if (this.checkFile == true) {
-            this.attachment.objectId = dt.recID;
-            this.attachment.saveFiles();
-            this.checkUpload = true;
-          }
-          this.dialog.close();
-        }
-      });
+    this.listNote;
+    debugger;
+    // this.dialog.dataService
+    //   .save((opt: any) => this.beforeSave(opt))
+    //   .subscribe((res) => {
+    //     if (res.save) {
+    //       var dt = res.save;
+    //       this.dataAdd = dt;
+    //       if (this.checkFile == true) {
+    //         this.attachment.objectId = dt.recID;
+    //         this.attachment.saveFiles();
+    //         this.checkUpload = true;
+    //       }
+    //       this.dialog.close();
+    //     }
+    //   });
   }
 
   updateNote() {
@@ -163,7 +203,25 @@ export class PopupAddUpdate implements OnInit {
       });
   }
 
-  onUpdateNote(e) {}
+  onUpdateNote(e: any) {}
+
+  keyUpEnter(e: any) {
+    if (e) {
+      var field = e.field;
+      var dt = e.data;
+      if (dt) {
+        if (this.type == 'check') {
+          if (field == 'listNote') {
+            this.tempNote['listNote'] = dt;
+            this.tempNote['status'] = 0;
+          }
+        } else {
+          this.tempNote['listNote'] = dt;
+          this.tempNote['status'] = null;
+        }
+      }
+    }
+  }
 
   beforeSave(option: any) {
     this.note.transID = this.transID;

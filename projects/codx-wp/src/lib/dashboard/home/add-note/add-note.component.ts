@@ -113,8 +113,7 @@ export class AddNoteComponent implements OnInit {
         status: this.type == 'check' ? 0 : null,
         listNote: '',
       };
-      if(this.note.noteType != 'text')
-        this.note.checkList.push(dtt);
+      if (this.note.noteType != 'text') this.note.checkList.push(dtt);
       this.listFileUploadEdit = this.note.images;
       // if (this.note.noteType != 'text') this.addFirstObjectInArray();
     }
@@ -247,13 +246,15 @@ export class AddNoteComponent implements OnInit {
       if (field == 'listNote') {
         if (dt == '') {
           for (var i = 0; i < this.listNote.length; i++) {
-            if (i === index) {
-              this.listNote.splice(i, 1);
+            if (index !== this.listNote.length - 1) {
+              if (i === index) {
+                this.listNote.splice(i, 1);
+              }
             }
           }
         }
       }
-      if(field == 'showCalendar') {
+      if (field == 'showCalendar') {
         this.checkSwitch == true;
       }
     }
@@ -263,8 +264,7 @@ export class AddNoteComponent implements OnInit {
     this.note.createdOn = this.currentDate;
     this.note.noteType = this.type;
     this.note.isPin = this.pin;
-    if(this.checkSwitch == false)
-      this.note.showCalendar = true;
+    if (this.checkSwitch == false) this.note.showCalendar = true;
     if (this.type == 'check' || this.type == 'list') {
       this.listNote.pop();
       this.note.checkList = this.listNote;
