@@ -1,8 +1,7 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel, CacheService, CodxListviewComponent, CRUDService } from 'codx-core';
+import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel, CacheService, CodxListviewComponent, CRUDService, ScrollComponent } from 'codx-core';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input, ViewEncapsulation } from '@angular/core';
-import { isNullOrUndefined } from '@syncfusion/ej2-base';
 import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-note-book.component';
 import { AddUpdateStorageComponent } from '../storage/add-update-storage/add-update-storage.component';
@@ -62,6 +61,7 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   ngAfterViewInit() {
+    ScrollComponent.reinitialization();
   }
 
   clickMF(e: any, data?: any) {
@@ -84,18 +84,6 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   openFormMoreFunc(data: any) {
     this.data = data;
     this.onUpdate = true;
-  }
-
-  closePopover(p: any) {
-    this.hidePopOver(p);
-  }
-
-  hidePopOver(popover: any) {
-    setTimeout(() => {
-      if (!isNullOrUndefined(popover)) {
-        popover.close();
-      }
-    }, 5000);
   }
 
   delete(data: any) {
