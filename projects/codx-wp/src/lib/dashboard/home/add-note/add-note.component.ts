@@ -1,6 +1,5 @@
 import { CodxFormComponent, NotificationsService } from 'codx-core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { SaveNoteComponent } from './save-note/save-note.component';
 import {
   ApiHttpService,
