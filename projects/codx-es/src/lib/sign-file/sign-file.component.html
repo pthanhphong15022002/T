@@ -6,11 +6,11 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full (click)="click(data)" [typeMF]="'hover'" [content]="data.categoryName" [desc]="data.title"
-    [icoCss]="'icon-26 icon align-self-start rounded-circle p-3 m-1 ' + data?.icon" [status]="data.status"
-    [statusVll]="'ES003'" [date]="data.createdOn" cardCss="card-template border-bottom px-2 py-3"
-    [resources]="data.createdBy != undefined ? data.createdBy : ''" [resourceObjType]="'AD_Users'"
-    [icoStatus]="data?.urgency" [icoStatusVll]="'ES002'" [icoStatus2]="data?.security" [modeImgs]="false"
-    [bookmark]="data.isBookmark" [titleLine]="2" [icoDateCss]="'icon-access_alarm'" [dataItem]="data"
+    [icoCss]="'fs-4 w-40px d-flex h-40px justify-content-center align-items-center rounded-circle ' + data?.icon"
+    [status]="data.status" [icoStyle]="setStyles(data.color)" [statusVll]="'ES003'" [date]="data.createdOn"
+    cardCss="card-template border-bottom px-2 py-3" [resources]="data.createdBy != undefined ? data.createdBy : ''"
+    [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency" [icoStatusVll]="'ES002'" [icoStatus2]="data?.security"
+    [modeImgs]="false" [bookmark]="data.isBookmark" [titleLine]="2" [icoDateCss]="'icon-access_alarm'" [dataItem]="data"
     [formModel]="view.formModel" (clickMF)="clickMF($event, data)" typeMF="hover" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
