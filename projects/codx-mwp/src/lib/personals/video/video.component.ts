@@ -51,6 +51,7 @@ export class VideoComponent implements OnInit {
   ngAfterViewInit() {
     this.listview.dataService.requestEnd = (t, d) => {
       if (t == 'loaded') {
+        debugger;
         if (d) this.getFile(d);
       }
     };

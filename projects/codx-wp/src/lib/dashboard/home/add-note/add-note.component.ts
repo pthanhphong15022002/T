@@ -1,4 +1,9 @@
-import { CodxFormComponent, NotificationsService } from 'codx-core';
+import {
+  CodxFormComponent,
+  CRUDService,
+  DialogModel,
+  NotificationsService,
+} from 'codx-core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { SaveNoteComponent } from './save-note/save-note.component';
 import {
@@ -115,15 +120,10 @@ export class AddNoteComponent implements OnInit {
       };
       if (this.note.noteType != 'text') this.note.checkList.push(dtt);
       this.listFileUploadEdit = this.note.images;
-      // if (this.note.noteType != 'text') this.addFirstObjectInArray();
     }
     this.getNumberNotePin();
     this.noteType.text = true;
-    this.cache
-      .gridViewSetup('PersonalNotes', 'grvPersonalNotes')
-      .subscribe((res) => {
-        console.log('check gridViewSetup', res);
-      });
+    this.cache.gridViewSetup('Notes', 'grvNotes').subscribe((res) => {});
   }
 
   getNumberNotePin() {
@@ -228,6 +228,23 @@ export class AddNoteComponent implements OnInit {
       var field = e.field;
       var dt = e.data;
       this.note[field] = dt?.value ? dt?.value : dt;
+      if (
+        this.type == 'check' ||
+        this.type == 'list' ||
+        this.note?.noteType == 'check' ||
+        this.note?.noteType == 'list'
+      ) {
+        if (item?.lisNote != '') {
+          if (this.formType == 'edit') this.listNote = this.note.checkList;
+          let i = 0;
+          this.listNote.forEach((data) => {
+            if (i == index) {
+              if (field == 'status') data.status = dt;
+            }
+            i++;
+          });
+        }
+      }
       if (field == 'listNote') {
         if (dt == '' && index !== this.listNote.length - 1) {
           for (var i = 0; i < this.listNote.length; i++) {
@@ -266,23 +283,6 @@ export class AddNoteComponent implements OnInit {
         if (ele) {
           let htmlEle = ele[ele.length - 1] as HTMLElement;
           htmlEle.focus();
-        }
-      }
-      if (
-        this.type == 'check' ||
-        this.type == 'list' ||
-        this.note?.noteType == 'check' ||
-        this.note?.noteType == 'list'
-      ) {
-        if (item?.lisNote != '') {
-          if (this.formType == 'edit') this.listNote = this.note.checkList;
-          let i = 0;
-          this.listNote.forEach((data) => {
-            if (i == index) {
-              if (field == 'status') data.status = dt;
-            }
-            i++;
-          });
         }
       }
       if (field == 'showCalendar') {
@@ -464,14 +464,7 @@ export class AddNoteComponent implements OnInit {
         itemUpdate: this.note,
         dialogRef: this.dialog,
       };
-      this.callfc.openForm(
-        SaveNoteComponent,
-        '',
-        900,
-        650,
-        '',
-        obj
-      );
+      this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj, '');
     } else {
       this.notificationsService.notifyCode('TM037');
     }

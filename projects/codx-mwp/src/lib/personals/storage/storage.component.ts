@@ -71,7 +71,7 @@ export class StorageComponent
     inject: Injector,
     private authStore: AuthStore,
     private route: ActivatedRoute,
-    private modalService: NgbModal,
+    private modalService: NgbModal
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -94,8 +94,7 @@ export class StorageComponent
     // })
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   testdate(dr) {}
 
@@ -125,17 +124,19 @@ export class StorageComponent
 
   formAddNoteBook() {
     this.dataSort = [];
-    (this.listView.dataService as CRUDService).addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.listView.dataService as CRUDService;
-      option.FormModel = this.listView?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfc.openSide(
-        AddUpdateStorageComponent,
-        [this.listView.dataService.data, 'add'],
-        option
-      );
-    });
+    (this.listView.dataService as CRUDService)
+      .addNew()
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.listView.dataService as CRUDService;
+        option.FormModel = this.listView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          AddUpdateStorageComponent,
+          [this.listView.dataService.data, 'add'],
+          option
+        );
+      });
   }
 
   edit(data: any) {
@@ -178,6 +179,15 @@ export class StorageComponent
       .subscribe((res) => {
         if (res) {
           (this.listView.dataService as CRUDService).remove(data).subscribe();
+          this.api
+            .execSv(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'DeleteByObjectIDAsync',
+              [res.recID, 'WP_Storages', true]
+            )
+            .subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -208,14 +218,13 @@ export class StorageComponent
   }
 
   sortStorage() {
-    this.listView.dataService.data = this.listView.dataService.data.sort(function (
-      a,
-      b
-    ) {
-      var dateA = new Date(a.createdOn).toLocaleDateString();
-      var dateB = new Date(b.createdOn).toLocaleDateString();
-      return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
-    });
+    this.listView.dataService.data = this.listView.dataService.data.sort(
+      function (a, b) {
+        var dateA = new Date(a.createdOn).toLocaleDateString();
+        var dateB = new Date(b.createdOn).toLocaleDateString();
+        return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+      }
+    );
     this.detectorRef.detectChanges();
   }
 }

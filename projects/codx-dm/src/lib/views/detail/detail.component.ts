@@ -381,11 +381,7 @@ export class DetailComponent implements OnInit {
         document.body.removeChild(link);
       }
     });
-  }
-
-  openDialogFile() {
-    this.dmSV.openDialog(new FolderInfo())
-  }
+  }  
 
   fileFolderDropped($event) {
     if ($event.source.recID != $event.target.recID) {

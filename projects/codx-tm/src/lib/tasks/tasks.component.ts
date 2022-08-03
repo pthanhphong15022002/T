@@ -58,7 +58,10 @@ export class TasksComponent extends UIComponent {
   modelResource: ResourceModel;
   resourceTree: ResourceModel;
   dialog!: DialogRef;
-  dialogConFirmTask!: DialogRef;
+  dialogConfirmStatus!: DialogRef;
+  dialogExtendsStatus!: DialogRef;
+  dialogApproveStatus!: DialogRef;
+  dialogVerifyStatus!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
   endDate: Date;
@@ -816,8 +819,9 @@ export class TasksComponent extends UIComponent {
         data: data,
         funcID: this.funcID,
         vll: 'TM009',
+        action :"confirm"
       };
-      this.dialogConFirmTask = this.callfc.openForm(
+     var dialogConfirmTask = this.callfc.openForm(
         PopupConfirmComponent,
         '',
         500,
@@ -825,7 +829,7 @@ export class TasksComponent extends UIComponent {
         '',
         obj
       );
-      this.dialogConFirmTask.closed.subscribe((e) => {
+      dialogConfirmTask.closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
           e?.event.forEach((obj) => {
             this.view.dataService.update(obj).subscribe();
@@ -851,6 +855,7 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM010',
+      action :"extend"
     };
     var dialogExtends = this.callfc.openForm(
       PopupConfirmComponent,
@@ -879,6 +884,7 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM011',
+      action :"approve"
     };
     var dialogApprove = this.callfc.openForm(
       PopupConfirmComponent,
@@ -906,6 +912,7 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM008',
+      action :"verrify"
     };
     var dialogVerify = this.callfc.openForm(
       PopupConfirmComponent,
@@ -968,11 +975,11 @@ export class TasksComponent extends UIComponent {
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT02015': // cái này phải xem lại , nên có biến gì đó để xét
+      case 'TMT02015':
         this.assignTask(data);
         break;
       case 'TMT02016':
-      case 'TMT02017': // cái này phải xem lại , nên có biến gì đó để xét
+      case 'TMT02017': 
         this.openConfirmStatusPopup(e.data, data);
         break;
       case 'TMT04011':

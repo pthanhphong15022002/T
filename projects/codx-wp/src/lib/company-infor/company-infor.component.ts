@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CallFuncService, DataRequest, DialogModel, DialogRef, NotificationsService, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { PopupEditComponent } from './popup-edit/popup-edit/popup-edit.component';
+import { CompanyEditComponent } from './popup-edit/company-edit/company-edit.component';
 
 @Component({
   selector: 'app-company-infor',
@@ -65,7 +65,7 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
     option.IsFull = true;
-    let popup = this.callc.openForm(PopupEditComponent,"",0,0,"",this.data,"",option);
+    let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
     popup.closed.subscribe((res:any)=>{
       if(res.event && res.closedBy != "escape"){
         this.data = res.event;

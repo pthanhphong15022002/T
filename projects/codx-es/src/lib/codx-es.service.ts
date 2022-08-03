@@ -732,6 +732,16 @@ export class CodxEsService {
       httpOptions
     );
   }
+
+  toPDF(data) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'ToPDFAsync',
+      data
+    );
+  }
   //#endregion
 }
 export class LayoutModel {
