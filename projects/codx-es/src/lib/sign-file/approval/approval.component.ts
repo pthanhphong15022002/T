@@ -5,36 +5,19 @@ import {
   Injector,
   Input,
   IterableDiffers,
-  OnInit,
   ViewChild,
-  ViewChildren,
-  DoCheck,
   Output,
   EventEmitter,
 } from '@angular/core';
-import {
-  note,
-  pdfContent,
-  position,
-  qr,
-  refNumber,
-  signature,
-  signature2,
-  signature3,
-  stamp,
-  time,
-} from './model/mode';
+import { qr } from './model/mode';
 import {
   AnnotationAddEventArgs,
-  AnnotationRemoveEventArgs,
   PdfViewerComponent,
-  ContextMenuItem,
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { AuthStore, CacheService, LangPipe, UIComponent } from 'codx-core';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
-import { M, T } from '@angular/cdk/keycodes';
 import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 @Component({
@@ -44,7 +27,7 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = 'bfc9215e-12d7-11ed-9783-509a4c39550b';
+  @Input() recID = '9ac0d301-1300-11ed-9783-509a4c39550b';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
 
@@ -151,15 +134,15 @@ export class ApprovalComponent extends UIComponent {
       ],
     };
 
-    this.tmpLstSigners.push({
-      authorSignature: signature,
-      authorStamp: stamp,
-      authorName: 'Buu',
-      type: '1',
-      authorID: 'ADMIN',
-      authorPosition: 'Giám đốc',
-      fileQRCode: qr,
-    });
+    // this.tmpLstSigners.push({
+    //   authorSignature: signature,
+    //   authorStamp: stamp,
+    //   authorName: 'Buu',
+    //   type: '1',
+    //   authorID: 'ADMIN',
+    //   authorPosition: 'Giám đốc',
+    //   fileQRCode: qr,
+    // });
 
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
@@ -174,8 +157,8 @@ export class ApprovalComponent extends UIComponent {
               fileName: file.fileName,
               fileRefNum: sf.refNo,
               fileID: file.fileID,
-              // signers: res?.approvers,
-              signers: this.tmpLstSigners,
+              signers: res?.approvers,
+              // signers: this.tmpLstSigners,
             });
           });
           if (this.isApprover) {
@@ -445,7 +428,7 @@ export class ApprovalComponent extends UIComponent {
             this.fileInfo.fileID,
             annot.annotationId,
           ])
-          .subscribe((res) => { });
+          .subscribe((res) => {});
         clearTimeout(this.saveAnnoQueue.get(annot.annotationId));
         this.saveAnnoQueue.delete(annot.annotationId);
       });
@@ -654,17 +637,17 @@ export class ApprovalComponent extends UIComponent {
               //duoi
               (anno.bounds.top >= suggestLocation.top &&
                 anno.bounds.top <=
-                suggestLocation.top + suggestLocation.height))) ||
+                  suggestLocation.top + suggestLocation.height))) ||
             //conflit ben phai
             (anno.bounds.left >= suggestLocation.left &&
               anno.bounds.left <=
-              suggestLocation.left + suggestLocation.width &&
+                suggestLocation.left + suggestLocation.width &&
               //tren
               ((suggestLocation.top >= anno.bounds.top &&
                 suggestLocation.top <= anno.bounds.top + anno.bounds.height) ||
                 (anno.bounds.top >= suggestLocation.top &&
                   anno.bounds.top <=
-                  suggestLocation.top + suggestLocation.height))))
+                    suggestLocation.top + suggestLocation.height))))
         );
       }
     );
@@ -1034,7 +1017,7 @@ export class ApprovalComponent extends UIComponent {
 
     this.esService
       .deleteAreaById([this.recID, this.fileInfo.fileID, e.annotationId])
-      .subscribe((res) => { });
+      .subscribe((res) => {});
 
     this.pdfviewerControl.annotationCollection =
       this.pdfviewerControl.annotationCollection.filter((annot) => {
@@ -1110,7 +1093,13 @@ export class ApprovalComponent extends UIComponent {
       }
     );
   }
-  testFunc(e: any) { }
+  testFunc(e: any) {
+    this.esService
+      .toPDF(['62ea2856d263513fc83fcfc1', '.xls'])
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
 
   selectedAnnotation(e: any) {
     console.log(e);
@@ -1144,7 +1133,7 @@ export class ApprovalComponent extends UIComponent {
     this.pdfviewerControl.download();
   }
 
-  clickDownload() { }
+  clickDownload() {}
 }
 
 class Guid {
