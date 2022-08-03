@@ -77,6 +77,9 @@ export class CodxDMService {
     itemRight: ItemRight;
     // public confirmationDialogService: ConfirmationDialogService;
     
+    public EmptyTrashData = new BehaviorSubject<boolean>(null);
+    isEmptyTrashData = this.EmptyTrashData.asObservable();
+
     public Location = new BehaviorSubject<string>(null);
     isLocation = this.Location.asObservable();
 
@@ -248,14 +251,7 @@ export class CodxDMService {
 
     ngOnInit(): void {
 
-    }
-
-    openFile(id, folder, type) {
-        this.fileID = id;
-        this.folderID = folder;
-        this.type = type;
-        this.openFileDialog.next(true);
-    }   
+    }  
 
     getRight(folder: FolderInfo) {
         this.parentCreate = folder.create;
@@ -514,22 +510,50 @@ export class CodxDMService {
       }
     }
 
+    getImage(data) {
+      if (data.folderName != undefined)
+        return '../../../assets/codx/dms/folder.svg';
+      else
+        return this.getThumbnail(data.thumbnail, data.extension);
+    }
+
+    getSvg(icon) {
+      var path = window.location.origin;
+      return `${path}/${icon}`;
+    }
+
+    checkIconFolder(folder) {
+      if (folder.icon.indexOf('.') == -1)
+        return false;
+      else
+        return true;
+    }
+
+    getBookmarksClass(item) {
+      if (this.showBookmark(item))
+        return "icon-bookmark text-warning icon-20";
+      else
+        return "text-warning icon-20";
+    }
+
+    getFolderClass(name) {
+      // name.indexOf
+      return name;
+    }
+
+    showBookmark(item) {
+      if (item.bookmarks != null) {
+        var list = item.bookmarks.filter(x => x.objectID == this.user.userID.toString());
+        if (list.length > 0)
+          return true;
+        else
+          return false;
+      }
+      return false;
+    }
+
     checkView(read: boolean) {      
-      return read;
-      // let ret = false;
-      // permissions.forEach(item => {
-      //   if ((item.objectID == this.user.userID || item.objectID == this.user.groupID) && item.isActive) {          
-      //     if (item.read) ret = true;        
-      //   }
-  
-      //   if (item.objectID == this.user.userID && item.objectType == "1" && item.approvers != "" && item.approvers != this.user.userID && !item.isActive) {          
-      //     if (item.approvalStatus == "1")
-      //       ret = false;
-      //     else 
-      //       ret = true;       
-      //   }
-      // });
-      // return ret;
+      return read;     
     }
 
     getRating(data: View[]) {
@@ -739,23 +763,22 @@ export class CodxDMService {
       this.listFiles.next(files);        
     }
 
-    // open folder    
-    openDialog(value) {
-      this.data.next(value);
-    }
-
-    // getTemplate() {
-    //     return [
-    //         new DMItem(DetailComponent),
-    //         new DMItem(ListComponent),
-    //         new DMItem(HomeComponent),
-    //         new DMItem(SearchComponent),
-    //         new DMItem(PendingComponent),
-    //         new DMItem(AcceptComponent)
-    //     ];
-    // }
-
     emptyTrash() {
+      var config = new AlertConfirmInputConfig();
+      config.type = "YesNo";
+      this.notificationsService.alert(this.title, this.titleDeleteeMessage, config).closed.subscribe(x=>{
+          if(x.event.status == "Y") {
+            this.folderService.emptyTrash("").subscribe(async res => {
+            //  this.listFiles.next(null);
+            //  this.listFolder.next(null);
+              this.fileService.getTotalHdd().subscribe(i => {
+                  this.updateHDD.next(i.messageHddUsed);
+              })
+              this.EmptyTrashData.next(true);
+          });
+          }
+      });
+
       // this.confirmationDialogService.confirm(this.titlemessage, "Bạn co muốn xóa tất cả trong thùng rác ?")
       //     .then((confirmed) => {
       //         if (confirmed) {
@@ -765,8 +788,7 @@ export class CodxDMService {
       //                 this.fileService.getTotalHdd().subscribe(i => {
       //                     this.updateHDD.next(i.messageHddUsed);
       //                 })
-      //             });
-      //             // this.notificationsService.notify("res.message");   
+      //             });                  
       //         }
       //     })
       //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));       

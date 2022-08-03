@@ -69,6 +69,13 @@ export class PopupAddUpdate implements OnInit {
       this.header = 'Cập nhật chi tiết sổ tay';
       this.note = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+      if(this.note.noteType !== 'text') {
+        var dtt = {
+          status: this.type == 'check' ? 0 : null,
+          listNote: '',
+        };
+        this.note.checkList.push(dtt);
+      }
     }
     this.cache.functionList('MWP00941').subscribe((res) => {
       if (res) {
@@ -123,6 +130,23 @@ export class PopupAddUpdate implements OnInit {
       var field = e.field;
       var dt = e.data;
       this.note[field] = dt?.value ? dt?.value : dt;
+      if (
+        this.type == 'check' ||
+        this.type == 'list' ||
+        this.note?.noteType == 'check' ||
+        this.note?.noteType == 'list'
+      ) {
+        if (item?.lisNote != '') {
+          if (this.formType == 'edit') this.listNote = this.note.checkList;
+          let i = 0;
+          this.listNote.forEach((data) => {
+            if (i == index) {
+              if (field == 'status') data.status = dt;
+            }
+            i++;
+          });
+        }
+      }
       if (field == 'listNote') {
         if (dt == '' && index !== this.listNote.length - 1) {
           for (var i = 0; i < this.listNote.length; i++) {
@@ -163,23 +187,6 @@ export class PopupAddUpdate implements OnInit {
           htmlEle.focus();
         }
       }
-      if (
-        this.type == 'check' ||
-        this.type == 'list' ||
-        this.note?.noteType == 'check' ||
-        this.note?.noteType == 'list'
-      ) {
-        if (item?.lisNote != '') {
-          if (this.formType == 'edit') this.listNote = this.note.checkList;
-          let i = 0;
-          this.listNote.forEach((data) => {
-            if (i == index) {
-              if (field == 'status') data.status = dt;
-            }
-            i++;
-          });
-        }
-      }
     }
   }
 
@@ -190,7 +197,6 @@ export class PopupAddUpdate implements OnInit {
   }
 
   addNoteBookDetails() {
-    this.listNote;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -245,7 +251,11 @@ export class PopupAddUpdate implements OnInit {
   beforeSave(option: any) {
     this.note.transID = this.transID;
     this.note.checkList = this.listNote;
-    this.note.checkList.pop();
+    if (this.formType == 'edit') {
+      if (this.note.noteType !== 'text') this.note.checkList.pop();
+    } else {
+      if (this.type !== 'text') this.note.checkList.pop();
+    }
     this.note.noteType = this.type;
     if (this.formType == 'add') {
       option.method = 'CreateNoteBookDetailsAsync';
