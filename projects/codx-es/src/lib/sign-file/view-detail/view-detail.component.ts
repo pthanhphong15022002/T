@@ -58,6 +58,7 @@ export class ViewDetailComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            this.df.detectChanges();
           }
         });
 

@@ -51,7 +51,7 @@
       <div class="d-flex" *ngIf="data.fromDate && data.toDate">
         <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">Thời gian review dữ liệu:</div>
         <div class="d-flex align-items-center me-2">
-           {{data.fromDate | date: "dd/MM/yyyy"}} - {{data.toDate | date: "dd/MM/yyyy"}}
+          {{data.fromDate | date: "dd/MM/yyyy"}} - {{data.toDate | date: "dd/MM/yyyy"}}
         </div>
       </div>
     </div>
@@ -65,6 +65,47 @@
       <codx-temp-full cardCss="card-template" [titleTmp]="titleTmp"
         [desc]="convertHtmlAgency(data.startDate, startTime, data.userName)" [dataItem]="data" [footer]="footer">
       </codx-temp-full>
+      <div>
+        <ejs-tab headerPlacement="Top">
+          <e-tabitems>
+            <e-tabitem>
+              <ng-template #headerText class="">
+                <div class="nav-item">
+                  <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
+                    <span class="d-flex flex-column align-items-start">
+                      <span class="fw-bolder">
+                        <codx-label name="Contents" formName="TMMeetings" default="Nội dung họp">
+                        </codx-label>
+                      </span>
+                    </span>
+                  </a>
+                </div>
+              </ng-template>
+              <ng-template #content>
+                Nội dung họp
+              </ng-template>
+            </e-tabitem>
+            <e-tabitem>
+              <ng-template #headerText class="">
+                <div class="nav-item">
+                  <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
+                    <span class="d-flex flex-column align-items-start">
+                      <span class="fw-bolder">
+                        <codx-label name="Comments" formName="TMMeetings" default="Thảo luận">
+                        </codx-label>
+                      </span>
+                    </span>
+                  </a>
+                </div>
+              </ng-template>
+              <ng-template #content>
+                Thảo luận
+              </ng-template>
+            </e-tabitem>
+          </e-tabitems>
+        </ejs-tab>
+      </div>
+
     </div>
     <div class="d-flex flex-wrap">
       <div class="flex">
@@ -72,6 +113,7 @@
           objectType="AD_Users" [numberImages]="6">
         </codx-imgs>
       </div>
+
     </div>
     <div class="separator"></div>
   </div>

@@ -87,26 +87,25 @@ export class PopupSignatureComponent implements OnInit {
   }
 
   onSaveForm() {
-    console.log(this.dialogSignature.value);
-    if (this.isAddSignature1) {
-      this.dialogSignature.patchValue({ signature1: this.Signature1 });
-    }
-    if (this.isAddSignature1) {
-      this.dialogSignature.patchValue({ signature2: this.Signature2 });
-    }
-    if (this.isAddStamp) {
-      this.dialogSignature.patchValue({ stamp: this.Stamp });
+    if (this.attSignature1.fileUploadList.length == 1) {
+      this.attSignature1.saveFilesObservable().subscribe((res) => {
+        this.dialogSignature.patchValue({ signature1: this.Signature1 });
+      });
     }
 
-    if (this.dmSV.fileUploadList.length > 0) {
-      console.log(this.dmSV.fileUploadList);
-      // this.dmSV.fileUploadList == files1
-      this.attSignature1.saveFiles();
-      this.attSignature1.objectId;
-      this.attSignature2.saveFiles();
-      this.attStamp.saveFiles();
-      this.dialog.close();
+    if (this.attSignature2.fileUploadList.length == 1) {
+      this.attSignature2.saveFilesObservable().subscribe((res) => {
+        this.dialogSignature.patchValue({ signature2: this.Signature2 });
+      });
     }
+
+    if (this.attStamp.fileUploadList.length == 1) {
+      this.attStamp.saveFilesObservable().subscribe((res) => {
+        this.dialogSignature.patchValue({ stamp: this.Signature1 });
+      });
+    }
+
+    this.dialog.close();
   }
 
   onSavePopup() {}
