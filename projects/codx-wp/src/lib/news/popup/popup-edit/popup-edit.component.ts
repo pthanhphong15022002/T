@@ -1,26 +1,23 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, Output, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
-import { preRender } from '@syncfusion/ej2-angular-buttons';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService, Util, CacheService } from 'codx-core';
+import { VALUECELL } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
+import { DialogRef, ViewsComponent, ApiHttpService, AuthService, NotificationsService, CallFuncService, CacheService, DialogData, Util } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { environment } from 'src/environments/environment';
 import { WP_Comments } from '../../../models/WP_Comments.model';
 import { WP_News } from '../../../models/WP_News.model';
 
 @Component({
-  selector: 'lib-popup-add',
-  templateUrl: './popup-add.component.html',
-  styleUrls: ['./popup-add.component.css']
+  selector: 'lib-popup-edit',
+  templateUrl: './popup-edit.component.html',
+  styleUrls: ['./popup-edit.component.scss']
 })
-export class PopupAddComponent implements OnInit {
+export class PopupEditComponent implements OnInit {
+
   dateStart: Date;
   dateEnd: Date;
   subContent: string;
-  isVideo = true;
-  newsType: any;
   formGroup: FormGroup;
   user: any;
   
@@ -38,6 +35,8 @@ export class PopupAddComponent implements OnInit {
   recevierID = "";
   recevierName = "";
 
+  data:any;
+  isUpload:boolean = false;
   fileUpload:any[] = [];
   fileImage:any[] = [];
   fileVideo:any[] = [];
@@ -96,10 +95,7 @@ export class PopupAddComponent implements OnInit {
 
   ) {
 
-    this.newsType = dd.data.type;
-    if (this.newsType != "1") {
-      this.isVideo = false;
-    }
+    this.data = dd.data.dataEdit;
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
@@ -109,54 +105,13 @@ export class PopupAddComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.setDataDefault();
-  }
-
-
-  setDataDefault(){
-    this.cache.valueList('L1901').subscribe((vll: any) => {
-      let modShare = vll.datas.find((x: any) => x.value == this.SHARECONTROLS.EVERYONE);
-      this.shareIcon = modShare.icon;
-      this.shareText = modShare.text;
-      this.shareControl = this.SHARECONTROLS.EVERYONE;
+    this.cache.valueList('L1491').subscribe((vll:any) => {
+      if(vll)
+      {
+        // let value = vll.datas.find()
+      }
     });
-    this.tagName = "";
-    this.shareControl = this.SHARECONTROLS.EVERYONE;
-    this.myPermission = new Permission();
-    this.myPermission.objectType = this.SHARECONTROLS.OWNER;
-    this.myPermission.memberType = this.MEMBERTYPE.CREATED;
-    this.myPermission.objectID = this.user.userID;
-    this.myPermission.objectName = this.user.userName;
-    this.myPermission.create = true;
-    this.myPermission.update = true;
-    this.myPermission.delete = true;
-    this.myPermission.upload = true;
-    this.myPermission.download = true;
-    this.myPermission.assign = true;
-    this.myPermission.share = true;
-    this.myPermission.read = true;
-    this.myPermission.isActive = true;
-    this.myPermission.createdBy = this.user.userID;
-    this.myPermission.createdOn = new Date();
-    // appover 
-    this.apprPermission = new Permission();
-    this.apprPermission.objectType = this.SHARECONTROLS.ADMINISTRATOR;
-    this.apprPermission.read = true;
-    this.apprPermission.isActive = true;
-    this.apprPermission.createdBy = this.user.userID;
-    this.apprPermission.createdOn = new Date();
-    let evrPermission = new Permission();
-    evrPermission.objectType = this.shareControl;
-    evrPermission.memberType = this.MEMBERTYPE.SHARE;
-    evrPermission.read = true;
-    evrPermission.isActive = true;
-    evrPermission.createdBy = this.user.userID;
-    evrPermission.createdOn = new Date();
-    this.shareWith = "";
-    this.permissions.push(this.myPermission);
-    this.permissions.push(this.apprPermission);
-    this.permissions.push(evrPermission);
-    this.initForm();
+    this.setDataForm();
   }
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
@@ -164,7 +119,6 @@ export class PopupAddComponent implements OnInit {
   clickInsertNews() {
     let objNews = new WP_News();
     objNews = this.formGroup.value;
-    objNews.newsType = this.newsType;
     objNews.status = '2';
     objNews.approveControl = "0";
     objNews.shareControl = this.shareControl;
@@ -441,6 +395,22 @@ export class PopupAddComponent implements OnInit {
     }
     this.changedt.detectChanges();
   }
+  setDataForm(){
+    this.tagName = this.data.tags;
+    this.formGroup = new FormGroup({
+      Tags: new FormControl(this.data.tags),
+      Category: new FormControl(this.data.category),
+      StartDate: new FormControl(this.data.startDate),
+      EndDate: new FormControl(this.data.endDate),
+      Subject: new FormControl(this.data.subject),
+      SubContent: new FormControl(this.data.subContent),
+      Contents: new FormControl(this.data.contents),
+      Image: new FormControl(this.data.image),
+      AllowShare: new FormControl(this.data.allowShare),
+      CreatePost: new FormControl(this.data.createPost),
+    });
+    this.changedt.detectChanges();
+  }
   initForm() {
     this.formGroup = new FormGroup({
       Tags: new FormControl(''),
@@ -532,4 +502,5 @@ export class PopupAddComponent implements OnInit {
   clickClosePopup(){
     this.dialogRef.close();
   }
+
 }

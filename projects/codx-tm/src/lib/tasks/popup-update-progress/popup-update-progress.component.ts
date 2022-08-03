@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { CodxTMService } from '../../codx-tm.service';
+import * as moment from 'moment';
 @Component({
   selector: 'lib-popup-update-progress',
   templateUrl: './popup-update-progress.component.html',
@@ -7,9 +10,73 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PopupUpdateProgressComponent implements OnInit {
 
-  constructor() { }
+  comment: string = '';
+  data: any;
+  dialog: any;
+  task: any;
+  statusDisplay = '';
+  timeStart: any;
+  completed: any;
+  completedOn: any;
+  moreFunc: any;
+  url: string;
+  status: string;
+  title: string = 'Cập nhật tiến độ thực hiện';
+  funcID: any
+  updateForm :FormGroup;
+  percentage100 = false;
+  preValue: any;
+  submitted = false
+  crrpercentage = 0;
+
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private api: ApiHttpService,
+    private tmSv: CodxTMService,
+    private notiService: NotificationsService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    this.data = dt?.data;
+    this.dialog = dialog;
+    this.funcID = this.data.funcID
+    this.task = this.data?.data
+    this.moreFunc = this.data?.moreFunc ;
+    this.title = this.moreFunc.customName ;
+    this.crrpercentage = this.task.percentage ;
+  }
 
   ngOnInit(): void {
+    this.task.modifiedOn = moment(new Date()).toDate();
+    if(this.task?.percentage == 100) this.percentage100 = true;
+    this.changeDetectorRef.detectChanges() ;
+  }
+  changePercentage(data){
+     if(data?.data){
+      this.task.percentage = data?.data;
+      if(this.task.percentage == 100)this.percentage100 = true;
+     }
+     this.changeDetectorRef.detectChanges() ;
+     
+  }
+  valueChangePercentage100(e:any)
+  {
+    if(e?.data) {this.task.percentage = 100; this.percentage100 =true} else {this.percentage100 =false ; this.task.percentage = this.crrpercentage};
+  }
+
+ 
+  saveData(){
+    this.submitted = true;
+    if(this.task.percentage < this.crrpercentage){
+      this.notiService.alertCode('TM056').subscribe((res) => {
+        if (res?.event && res?.event?.status == 'Y') {
+          this.actionUpdatePercentage();
+        }else this.dialog.close() ;
+      });
+    }
+  }
+  actionUpdatePercentage(){
+
   }
 
 }
