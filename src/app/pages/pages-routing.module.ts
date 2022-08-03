@@ -25,10 +25,6 @@ const routes: Routes = [
       },
     ],
   },
-  {
-    path: 'sos',
-    component: SosComponent
-  },
 ];
 
 @NgModule({
