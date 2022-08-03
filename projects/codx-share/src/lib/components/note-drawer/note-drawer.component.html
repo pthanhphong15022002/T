@@ -30,17 +30,19 @@
                                     </a>
                                     <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                         <li>
-                                            <a (click)="checkNumberNotePin(item)" ngbDropdownItem
-                                                href="javascript:void(0)">
-                                                <span [class]="'icon-push_pin'" [style.color]="pinMF?.color"></span>
-                                                <span class="show-customName">{{pinMF?.customName}}</span>
+                                            <a class="d-flex align-items-center" (click)="checkNumberNotePin(item)"
+                                                ngbDropdownItem href="javascript:void(0)">
+                                                <span [class]="'icon-push_pin me-2'"
+                                                    [style.color]="pinMF?.color"></span>
+                                                <span>{{pinMF?.customName}}</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a (click)="openFormNoteBooks(item)" ngbDropdownItem
-                                                href="javascript:void(0)">
-                                                <span [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
-                                                <span class="show-customName">{{pinMF?.customName}}</span>
+                                            <a class="d-flex align-items-center" (click)="openFormNoteBooks(item)"
+                                                ngbDropdownItem href="javascript:void(0)">
+                                                <span [class]="saveMF?.largeIcon" class="me-2"
+                                                    [style.color]="saveMF?.color"></span>
+                                                <span>{{pinMF?.customName}}</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -81,17 +83,19 @@
                                     </a>
                                     <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                         <li>
-                                            <a (click)="checkNumberNotePin(item)" ngbDropdownItem
-                                                href="javascript:void(0)">
-                                                <span [class]="'icon-push_pin'" [style.color]="pinMF?.color"></span>
-                                                <span class="show-customName">{{pinMF?.customName}}</span>
+                                            <a class="d-flex align-items-center" (click)="checkNumberNotePin(item)"
+                                                ngbDropdownItem href="javascript:void(0)">
+                                                <span [class]="'icon-push_pin me-2'"
+                                                    [style.color]="pinMF?.color"></span>
+                                                <span>{{pinMF?.customName}}</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a (click)="openFormNoteBooks(item)" ngbDropdownItem
-                                                href="javascript:void(0)">
-                                                <span [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
-                                                <span class="show-customName">{{pinMF?.customName}}</span>
+                                            <a class="d-flex align-items-center" (click)="openFormNoteBooks(item)"
+                                                ngbDropdownItem href="javascript:void(0)">
+                                                <span [class]="saveMF?.largeIcon" class="me-2"
+                                                    [style.color]="saveMF?.color"></span>
+                                                <span>{{pinMF?.customName}}</span>
                                             </a>
                                         </li>
                                     </ul>
