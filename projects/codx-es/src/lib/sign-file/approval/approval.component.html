@@ -30,7 +30,7 @@
       ></div>
     </div>
     <div class="col-7 flex-grow-1">
-      <div class="d-flex justify-content-between bg-white">
+      <div class="d-flex justify-content-between w-100 bg-white">
         <div class="left_Toolbar d-flex justify-content-start">
           <ejs-toolbar>
             <e-items>
@@ -78,7 +78,7 @@
             </e-items>
           </ejs-toolbar>
           <ejs-dropdownlist
-            style="width: 100%"
+            style="width: 100%; position: relative"
             id="zoomValuesDropdownList"
             [dataSource]="lstZoomValue"
             [placeholder]="zoomValue"
@@ -161,7 +161,27 @@
                   [dataSource]="lstSigners"
                   [fields]="person"
                   (change)="changeSigner($event)"
-                ></ejs-dropdownlist>
+                >
+                  <ng-template #item let-approver>
+                    <codx-temp-full
+                      [typeMF]="'hover'"
+                      [content]="approver.fullName"
+                      [desc]="approver.position"
+                      [icoCss]="
+                        'icon-26 icon align-self-start rounded-circle p-3 m-1 '
+                      "
+                      [statusVll]="'ES003'"
+                      [date]="approver.signType"
+                      cardCss="card-template border-bottom px-2 py-3"
+                      [resourceObjType]="'AD_Users'"
+                      [icoStatusVll]="'ES002'"
+                      [modeImgs]="false"
+                      [titleLine]="2"
+                      [icoDateCss]="'icon-access_alarm'"
+                    >
+                    </codx-temp-full>
+                  </ng-template>
+                </ejs-dropdownlist>
                 <!-- <codx-input
                   class="form-control me-2"
                   type="valuelist"
@@ -229,6 +249,7 @@
                   (valueChange)="changeAutoSignState($event, 0)"
                 ></codx-input>
               </div>
+              <button (click)="testFunc($event)">Test Function</button>
             </ng-template>
           </e-tabitem>
 

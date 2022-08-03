@@ -34,7 +34,6 @@ import { AuthStore, CacheService, LangPipe, UIComponent } from 'codx-core';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
-import { M, T } from '@angular/cdk/keycodes';
 import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 @Component({
@@ -44,7 +43,7 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = '9874814f-117f-11ed-9440-00155d035517';
+  @Input() recID = '9ac0d301-1300-11ed-9783-509a4c39550b';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
 
@@ -151,15 +150,15 @@ export class ApprovalComponent extends UIComponent {
       ],
     };
 
-    this.tmpLstSigners.push({
-      authorSignature: signature,
-      authorStamp: stamp,
-      authorName: 'Buu',
-      type: '1',
-      authorID: 'ADMIN',
-      authorPosition: 'Giám đốc',
-      fileQRCode: qr,
-    });
+    // this.tmpLstSigners.push({
+    //   authorSignature: signature,
+    //   authorStamp: stamp,
+    //   authorName: 'Buu',
+    //   type: '1',
+    //   authorID: 'ADMIN',
+    //   authorPosition: 'Giám đốc',
+    //   fileQRCode: qr,
+    // });
 
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
@@ -174,8 +173,8 @@ export class ApprovalComponent extends UIComponent {
               fileName: file.fileName,
               fileRefNum: sf.refNo,
               fileID: file.fileID,
-              // signers: res?.approvers,
-              signers: this.tmpLstSigners,
+              signers: res?.approvers,
+              // signers: this.tmpLstSigners,
             });
           });
           if (this.isApprover) {
@@ -1110,7 +1109,13 @@ export class ApprovalComponent extends UIComponent {
       }
     );
   }
-  testFunc(e: any) {}
+  testFunc(e: any) {
+    this.esService
+      .toPDF(['62ea2856d263513fc83fcfc1', '.xls'])
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
 
   selectedAnnotation(e: any) {
     console.log(e);
