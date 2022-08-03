@@ -3,10 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { CacheService, LayoutBaseComponent } from 'codx-core';
 @Component({
   selector: 'lib-layout',
-  templateUrl: './layout2.component.html',
-  styleUrls: ['./layout2.component.scss'],
+  templateUrl: './layout3.component.html',
+  styleUrls: ['./layout3.component.scss'],
 })
-export class Layout2Component extends LayoutBaseComponent {
+export class Layout3Component extends LayoutBaseComponent {
   module = 'WP';
   override toolbar = false;
   override aside = false;
@@ -23,9 +23,6 @@ export class Layout2Component extends LayoutBaseComponent {
     inject: Injector
   ) {
     super(inject);
-    this.cache.valueList('L1492').subscribe((value) => {
-      this.valueList = value.datas;
-    });
   }
 
   onInit(): void {
@@ -33,16 +30,4 @@ export class Layout2Component extends LayoutBaseComponent {
   }
 
   onAfterViewInit(): void {}
-
-  navigate(category, funcID = null) {
-    this.category = category;
-    if(funcID){
-      this.codxService.navigate(funcID);
-    }
-    else
-    {
-      this.funcID = this.route.firstChild.snapshot.params["funcID"];
-      this.codxService.navigate('','wp/news/'+this.funcID+'/'+this.category);
-    }
-  }
 }

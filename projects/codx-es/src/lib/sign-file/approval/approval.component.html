@@ -95,11 +95,17 @@
             </ng-template>
 
             <ng-template #content>
-              <div class="row position-relative" style="margin-top: 10px" *ngIf="!isApprover">
-                <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
-                  class="ms-2 fw-bold"></codx-label>
-                <ejs-dropdownlist #inputAuthor id="signatureDropdownList" [dataSource]="lstSigners" [fields]="person"
-                  (change)="changeSigner($event)"></ejs-dropdownlist>
+              <div class="position-relative" *ngIf="!isApprover">
+                <div class=" mt-3 mb-3">
+                  <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
+                    class="fw-bold fs-4 text-primary"></codx-label>
+                </div>
+                <div class="form-floating border border-gray-300 rounded mb-7">
+
+                  <ejs-dropdownlist #inputAuthor id="signatureDropdownList" [dataSource]="lstSigners" [fields]="person"
+                    (change)="changeSigner($event)"></ejs-dropdownlist>
+                </div>
+
                 <!-- <codx-input
                   class="form-control me-2"
                   type="valuelist"
@@ -108,12 +114,12 @@
                   (valueChange)="changeSigner($event)"
                 ></codx-input> -->
               </div>
+              <div class=" mt-3 mb-3">
+                <codx-label name="lblDragAction" [formModel]="" default="Kéo thả" class="fw-bold fs-4 text-primary">
+                </codx-label>
+              </div>
 
-              <codx-label name="lblDragAction" [formModel]="" default="Kéo thả"
-                class="fw-bold fs-4 text-primary mt-3 mb-3"></codx-label>
-
-
-              <div class="d-flex flex-wrap d-grid justify-content-between">
+              <div class="d-flex flex-wrap d-grid align-items-center">
                 <div class="card-item me-3 mb-3" *ngFor="let action of actionsButton; let index = index"
                   [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
                   <codx-card-center cardCss="border h-100 w-125px" icoCss="icon-30 mb-1 {{
@@ -123,17 +129,34 @@
                 </div>
               </div>
 
-              <div class="autoSign_Space d-flex d-flex align-items-center justify-content-between" style="width: 160px">
-                <codx-label name="lblSuggestSignArea" default="Gợi ý vị trí ký" class="ms-1 fw-bold"></codx-label>
-                <codx-input type="switch" field="" [crrValue]="needSuggest" (valueChange)="changeSuggestState($event)">
-                </codx-input>
-              </div>
 
-              <div class="autoSign_Space d-flex align-items-center justify-content-between" style="width: 160px">
-                <codx-label name="lblSignLastLine" default="Ký dòng cuối cùng" class="ms-1 fw-bold"></codx-label>
-                <codx-input type="switch" field="autoSignLastLine" [crrValue]="autoSignState"
-                  (valueChange)="changeAutoSignState($event, 0)"></codx-input>
+              <!--begin::Item-->
+              <div class="d-flex align-items-center my-2">
+                <div class="d-flex justify-content-start me-2">
+                  <!--begin::Switch-->
+                  <codx-input type="switch" labelPosition="After" field="" [crrValue]="needSuggest"
+                    (valueChange)="changeSuggestState($event)">
+                  </codx-input>
+                  <!--end::Switch-->
+                </div>
+                <div class="text-gray-800 text-nowrap">
+                  <codx-label name="lblSuggestSignArea" default="Gợi ý vị trí ký" class="fw-bold"></codx-label>
+                </div>
               </div>
+              <!--end::Item-->
+              <!--begin::Item-->
+              <div class="autoSign_Space d-flex align-items-center my-2">
+                <div class="d-flex justify-content-start me-2">
+                  <!--begin::Switch-->
+                  <codx-input type="switch" field="autoSignLastLine" [crrValue]="autoSignState"
+                    (valueChange)="changeAutoSignState($event, 0)"></codx-input>
+                  <!--end::Switch-->
+                </div>
+                <div class="text-gray-800 text-nowrap">
+                  <codx-label name="lblSignLastLine" default="Ký dòng cuối cùng" class=" fw-bold"></codx-label>
+                </div>
+              </div>
+              <!--end::Item-->
             </ng-template>
           </e-tabitem>
 
@@ -152,7 +175,8 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
-      <div class="showArrow reverse" [class.icon-arrow_back]="hideActions" [class.icon-arrow_forward]="!hideActions"
+      <div class="showArrow reverse btn btn-icon btn-light-primary btn-active-primary "
+        [class.icon-arrow_back]="hideActions" [class.icon-arrow_forward]="!hideActions"
         (click)="changeShowActionsState()"></div>
     </div>
   </div>

@@ -19,6 +19,7 @@
               [field]="'Category'"
               [value]="data?.category"
               [showText]="true"
+              [showBgColor]="true"
               class="text-gray-600"
             >
             </codx-vll>
@@ -76,6 +77,7 @@
         <div class="d-flex justify-content-end">
           <codx-vll 
             [showText]="true" 
+            [showBgColor]="true"
             [formModel]="formModel" 
             [field]="'Status'" 
             [value]="data?.status" 
@@ -98,9 +100,10 @@
   </ng-template>
   <ng-template #body>
     <div class="tab-horizone h-od-tab  ">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active"  class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink>Nơi nhận</a>
+          <a ngbNavLink>
+            Nơi nhận</a>
           <ng-template ngbNavContent>
             <ng-container *ngFor="let item of data?.listInformationRel">
               <div class="list-item has-action-menu-1 mb-6">
@@ -147,6 +150,13 @@
                     class="badge badge-light"
                   >
                   </codx-vll> -->
+                  <codx-vll 
+                    [showText]="true"
+                    [showBgColor]="true" 
+                    [name]="this.gridViewSetup['Status']['referedValue']"
+                    [value]="4" 
+                    class="badge badge-light badge-square badge-md fs-7">
+                  </codx-vll>
                     <span class="badge badge-light-primary" [style.color]="getTextColor(item.status,'4')" [style.backgroundColor]="getBgColor(item.status,'4')">{{fmTextValuelist(item.status,"5")}}</span>
                     <span class="badge badge-light" [style.color]="getTextColor(item.reCall,'6')" [style.backgroundColor]="getBgColor(item.reCall,'5')" *ngIf="item.reCall">Đã thu hồi</span>
                   </div>
@@ -164,9 +174,9 @@
         <li [ngbNavItem]="2">
           <a ngbNavLink>Công việc</a>
           <ng-template ngbNavContent>
-         <!--    <ng-container *ngIf="data?.tasks[0].length>0">
+            <ng-container *ngIf="data?.tasks[0].length>0">
               <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
-            </ng-container> -->
+            </ng-container> 
           </ng-template>
         </li>
         <li [ngbNavItem]="3">
@@ -213,9 +223,9 @@
           </div>
       </div>
       <div class="mt-5 ms-5 justify-content-end w-120px text-center" *ngIf="data?.items.length == 0">
-        <span class="fs-8" [style.color]="getTextColor(data?.status,'5')" >{{fmTextValuelist(data?.status,"7")}}</span>
+        <codx-vll [name]="'L0614'" [value]="data?.status" [showText]="true" [showBgColor]="false"></codx-vll>
         <div class="progress h-6px w-100 mt-2">
-          <div class="progress-bar bg-primary" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="data?.percentage" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div class="d-flex mt-2">
           <span class="icon-schedule icon-16 text-gray-600"></span>

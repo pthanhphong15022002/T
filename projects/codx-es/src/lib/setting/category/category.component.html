@@ -32,7 +32,8 @@
 
 <ng-template #icon let-data>
   <div class="">
-    <i [ngClass]="data.icon" [style.color]="data.color" class="icon-24"></i>
+    <i [ngClass]="data.icon" [style.background]="data.color" [style.color]="'white'"
+      class="fs-3 align-self-start rounded-circle p-3 m-1"></i>
   </div>
 </ng-template>
 
