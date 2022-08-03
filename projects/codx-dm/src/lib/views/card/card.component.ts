@@ -19,9 +19,7 @@ import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/
   styleUrls: ['./card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardComponent implements OnInit {
-  // @Input() listFolders: any;
-  // @Input() listFiles: any;
+export class CardComponent implements OnInit {  
   @Input() formModel: any;
   // @Input() type: any;
   // html: string;
@@ -34,8 +32,8 @@ export class CardComponent implements OnInit {
   // ext: string = "";
   user: any;
   // item: FolderInfo;
-  // totalRating: number;
-  // totalViews: number;
+  totalRating: number;
+  totalViews: number;
   // loaded: boolean;
   // loadedFile: boolean;
   // loadedFolder: boolean;
@@ -67,6 +65,7 @@ export class CardComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.get();
+    
     //this.loaded = false;
     // this.loadedFile = false;
     // this.loadedFolder = true;
@@ -107,6 +106,13 @@ export class CardComponent implements OnInit {
     //     this.refresh();
     //   }
     // });
+  }
+
+  getImage(data) {
+    if (data.folderName != undefined)
+      return '../../../assets/codx/dms/folder.svg';
+    else
+      return this.dmSV.getThumbnail(data.thumbnail, data.extension);
   }
 
   getSvg(icon) {
@@ -213,37 +219,36 @@ export class CardComponent implements OnInit {
   //   }  
   // }
 
-  getViews(data: HistoryFile[]) {
-    if (data != null) {
-      // var list = data.filter(x => x.rating == 0);
-      return data.filter(x => (x.type != null && x.type == 'view') || (x.note != null && x.note.indexOf("read file") > -1)).length;
-    }
-    else
-      return 0;
-  }
-
-  // getRating(data: View[]) {
-  //   let _sum = 0;
-  //   this.totalViews = 0;
+  // getViews(data: HistoryFile[]) {
   //   if (data != null) {
-  //     var list = data.filter(x => x.rating > 0);
-  //     this.totalViews = list.length;
-  //     //res.views.forEach(item => {
-  //     for (var i = 0; i < list.length; i++) {
-  //       _sum = _sum + list[i].rating;
-  //     }
+  //     // var list = data.filter(x => x.rating == 0);
+  //     return data.filter(x => (x.type != null && x.type == 'view') || (x.note != null && x.note.indexOf("read file") > -1)).length;
   //   }
-
-  //   if (this.totalViews != 0) {
-  //     this.totalRating = _sum / this.totalViews;
-  //   }
-  //   else {
-  //     this.totalRating = 0;
-  //   }
-  //   this.totalRating = parseFloat(this.totalRating.toFixed(2));
-  //   return this.totalRating;
-  //   //alert(this.styleRating);
+  //   else
+  //     return 0;
   // }
+
+  getRating(data: View[]) {
+    let _sum = 0;
+    this.totalViews = 0;
+    if (data != null) {
+      var list = data.filter(x => x.rating > 0);
+      this.totalViews = list.length;
+      //res.views.forEach(item => {
+      for (var i = 0; i < list.length; i++) {
+        _sum = _sum + list[i].rating;
+      }
+    }
+
+    if (this.totalViews != 0) {
+      this.totalRating = _sum / this.totalViews;
+    }
+    else {
+      this.totalRating = 0;
+    }
+    this.totalRating = parseFloat(this.totalRating.toFixed(2));
+    return this.totalRating;    
+  }
 
   // getSizeByte(size: any) {
   //   return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -351,8 +356,7 @@ export class CardComponent implements OnInit {
 
   // }
 
-  // showDownloadCount(download) {
-  //   console.log(download);
+  // showDownloadCount(download) {   
   //   if (download === null || download === undefined)
   //     return 0;
   //   else
@@ -415,23 +419,8 @@ export class CardComponent implements OnInit {
   //   return JSON.stringify(data);
   // }
 
-  checkView(read: boolean) {
-    //console.log(read);
+  checkView(read) {   
     return read;
-    // let ret = false;
-    // permissions.forEach(item => {
-    //   if ((item.objectID == this.user.userID || item.objectID == this.user.groupID) && item.isActive) {          
-    //     if (item.read) ret = true;        
-    //   }
-
-    //   if (item.objectID == this.user.userID && item.objectType == "1" && item.approvers != "" && item.approvers != this.user.userID && !item.isActive) {          
-    //     if (item.approvalStatus == "1")
-    //       ret = false;
-    //     else 
-    //       ret = true;       
-    //   }
-    // });
-    // return ret;
   }
   
   checkDownload(download) {

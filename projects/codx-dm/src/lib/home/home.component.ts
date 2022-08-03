@@ -268,7 +268,8 @@ export class HomeComponent extends UIComponent {
       }
 
       this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
-        this.dmSV.listFiles.next(res);
+        ///this.dmSV.listFiles.next(res);
+        this.data = [...this.data, ...res];
         this.changeDetectorRef.detectChanges();
       });
     } else {
@@ -375,7 +376,7 @@ export class HomeComponent extends UIComponent {
           if (res != null) {
             //this.listFiles = res;
            // this.dmSV.listFiles.next(res);
-            //this.data = [...this.data, ...res];
+            this.data = [...this.data, ...res];
             this.dmSV.loadedFile = true;
             this.changeDetectorRef.detectChanges();
           }

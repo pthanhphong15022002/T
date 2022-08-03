@@ -5,7 +5,7 @@ import { DataItem, FolderInfo, ItemRight, NodeTree } from "@shared/models/folder
 import { FolderService } from "@shared/services/folder.service";
 import { FileService } from "@shared/services/file.service";
 import { AlertConfirmInputConfig, AuthService, CallFuncService, FormModel, NotificationsService, SidebarModel } from "codx-core";
-import { FileInfo, FileUpload, Permission, SubFolder } from "@shared/models/file.model";
+import { FileInfo, FileUpload, HistoryFile, Permission, SubFolder, View } from "@shared/models/file.model";
 import { CopyComponent } from "./copy/copy.component";
 import { EditFileComponent } from "./editFile/editFile.component";
 import { RolesComponent } from "./roles/roles.component";
@@ -514,6 +514,61 @@ export class CodxDMService {
       }
     }
 
+    checkView(read: boolean) {      
+      return read;
+      // let ret = false;
+      // permissions.forEach(item => {
+      //   if ((item.objectID == this.user.userID || item.objectID == this.user.groupID) && item.isActive) {          
+      //     if (item.read) ret = true;        
+      //   }
+  
+      //   if (item.objectID == this.user.userID && item.objectType == "1" && item.approvers != "" && item.approvers != this.user.userID && !item.isActive) {          
+      //     if (item.approvalStatus == "1")
+      //       ret = false;
+      //     else 
+      //       ret = true;       
+      //   }
+      // });
+      // return ret;
+    }
+
+    getRating(data: View[]) {
+      let _sum = 0;
+      var totalViews = 0;
+      if (data != null) {
+        var list = data.filter(x => x.rating > 0);
+        totalViews = list.length;
+        //res.views.forEach(item => {
+        for (var i = 0; i < list.length; i++) {
+          _sum = _sum + list[i].rating;
+        }
+      }
+  
+      var totalRating = 0;
+      if (totalViews != 0) {
+        totalRating = _sum / totalViews;
+      }
+     
+      totalRating = parseFloat(totalRating.toFixed(2));
+      return totalRating;    
+    }
+
+    showDownloadCount(download) {   
+      if (download === null || download === undefined)
+        return 0;
+      else
+        return download;
+    }
+    
+    getViews(data: HistoryFile[]) {
+      if (data != null) {
+        // var list = data.filter(x => x.rating == 0);
+        return data.filter(x => (x.type != null && x.type == 'view') || (x.note != null && x.note.indexOf("read file") > -1)).length;
+      }
+      else
+        return 0;
+    }
+    
     getType(item: any, ret: string) {
       var type = 'folder';      
       if (ret == "name") {
