@@ -1,0 +1,26 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formControl]="dialogAddDriver"
+  *ngIf="isAfterRender"
+>
+</codx-form>
+
+<ng-template #body> </ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-light-primary" (click)="onSaveForm()">
+      <codx-label
+        name="lblSave"
+        F
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

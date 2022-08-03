@@ -1,3 +1,5 @@
+import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
+import { PopupAddCarsComponent } from './settings/cars/popup-add-cars/popup-add-cars.component';
 import { CarsComponent } from './settings/cars/cars.component';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
@@ -33,6 +35,8 @@ import { PopupColorStationeryComponent } from './settings/stationery/popup-add-s
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
 import { ReportComponent } from './booking-room/report-view/report.component';
+import { DriversComponent } from './settings/drivers/drivers.component';
+import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/popup-add-drivers.component';
 const routes: Route[] = [
   {
     path: '',
@@ -60,7 +64,7 @@ const routes: Route[] = [
       },
       {
         path: 'drivers/:funcID',
-        component: null
+        component: DriversComponent
       },
       {
         path: 'stationery/:funcID',
@@ -97,10 +101,14 @@ const Components: Type<any>[] = [
   PopupRequestStationeryComponent,
   PopupDeviceStationeryComponent,
   PopupColorStationeryComponent,
+  PopupAddCarsComponent,
+  PopupAddRoomsComponent,
   PopupAddStationeryComponent,
+  PopupAddDriversComponent,
   PopupListStationeryComponent,
   StationeryComponent,
   CarsComponent,
+  DriversComponent,
   RoomsComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
@@ -111,7 +119,6 @@ const Components: Type<any>[] = [
 @NgModule({
   declarations: [
     Components,
-    PopupListStationeryComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
