@@ -48,7 +48,7 @@
                         <button class="btn btn-icon btn-sm btn-light-primary"><span class="icon-share"></span></button>
                     </div>
                     <ng-contianer *ngIf="dataItem?.newsType == NEWSTYPE.VIDEO;else news">
-                        <app-view-file [category]="'video'" [ObjectID]="dataItem.recID" ObjectType="WP_Comments">
+                        <app-view-file [category]="'video'" [ObjectID]="dataItem.recID" [ObjectType]="'WP_News'">
                         </app-view-file>
                     </ng-contianer>
                     <ng-template #news>

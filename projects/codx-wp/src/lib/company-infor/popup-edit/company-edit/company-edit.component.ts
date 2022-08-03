@@ -6,11 +6,11 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { WP_News } from '../../../models/WP_News.model';
 
 @Component({
-  selector: 'app-popup-edit',
-  templateUrl: './popup-edit.component.html',
-  styleUrls: ['./popup-edit.component.scss']
+  selector: 'app-company-edit',
+  templateUrl: './company-edit.component.html',
+  styleUrls: ['./company-edit.component.scss']
 })
-export class PopupEditComponent implements OnInit {
+export class CompanyEditComponent implements OnInit {
 
   dataNew: WP_News = new WP_News();
   dateStart: Date;
