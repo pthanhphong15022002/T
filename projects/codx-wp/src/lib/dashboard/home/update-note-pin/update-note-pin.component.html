@@ -1,7 +1,7 @@
 <codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template popup add #body>
         <codx-listview [itemTemplate]="template" #listview1 [funcId]="''" entityName="WP_Notes"
-            gridViewName="'grvNotes'" service="WP">
+            gridViewName="'grvNotes'" service="WP" [predicate]="predicate" [dataValue]="dataValue">
         </codx-listview>
         <ng-template #template let-item>
             <div *ngIf="item.isPin == true">

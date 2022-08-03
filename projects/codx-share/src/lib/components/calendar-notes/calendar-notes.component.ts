@@ -126,6 +126,9 @@ export class CalendarNotesComponent
             (this.lstView.dataService as CRUDService).update(data).subscribe();
           } else if (type == 'edit') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
+          } else if (type == 'edit-save-note') {
+            (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            this.WP_Notes = this.WP_Notes.filter((x) => x.recID != data.recID);
           }
           this.setEventWeek();
           var today: any = document.querySelector(
@@ -535,9 +538,5 @@ export class CalendarNotesComponent
       itemUpdate: item,
     };
     this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj);
-  }
-
-  getMoreF(item) {
-    this.dataUpdate = item;
   }
 }
