@@ -29,7 +29,7 @@ import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
 import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
 import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
-
+import * as moment from 'moment';
 @Component({
   selector: 'app-note-drawer',
   templateUrl: './note-drawer.component.html',
@@ -112,10 +112,18 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
               .update(data)
               .subscribe((res) => {
                 var dt = this.lstView?.dataService.data;
-                dt.sort(function (a, b) {
-                  return Number(b.isPin) - Number(a.isPin);
-                });
-                dt = [...dt, ...[]];
+                const sortByDate = (dt) => {
+                  const sorter = (a, b) => {
+                    return (
+                      Number(b.isPin) - Number(a.isPin) ||
+                      new Date(b.modifiedOn).getTime() -
+                        new Date(a.modifiedOn).getTime()
+                    );
+                  };
+                  dt.sort(sorter);
+                };
+                sortByDate(dt);
+                // dt = [...dt, ...[]];
               });
           }
           this.changeDetectorRef.detectChanges();

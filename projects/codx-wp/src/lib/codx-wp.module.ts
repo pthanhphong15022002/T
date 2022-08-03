@@ -18,6 +18,7 @@ import { CompanyInforComponent } from './company-infor/company-infor.component';
 import { PopupEditComponent } from './company-infor/popup-edit/popup-edit/popup-edit.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AddNoteComponent } from './dashboard/home/add-note/add-note.component';
+import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-title/popup-title.component';
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
 import { HomeComponent } from './dashboard/home/home.component';
 import { ListPostComponent } from './dashboard/home/list-post/list-post.component';
@@ -114,7 +115,8 @@ const Component: Type<any>[] =
     MyTeamComponent,
     UpdateNotePinComponent,
     ViewVideoComponent,
-    PopupDetailComponent
+    PopupDetailComponent,
+    PopupTitleComponent,
 
   ];
 
