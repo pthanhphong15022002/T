@@ -18,25 +18,25 @@
 <ng-template #paneLeft>
   <div class="codx_e-main codx_left">
     <div class="codx_e-header">
-      <div class="d-flex align-items-center btn-tabs ">
-        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="taskViewStt=='1'"
-          [class.text-primary]="taskViewStt=='1'" (click)="clickChangeTaskViewStatus('1')">
+      <div class="d-flex align-items-center btn-tabs">
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="taskViewStt == '1'"
+          [class.text-primary]="taskViewStt == '1'" (click)="clickChangeTaskViewStatus('1')">
           <i class="icon-format_list_numbered icon-16 text-warning"></i>
           <span class="ms-2 fw-bold fs-7">
             <codx-label name="lblTitleNew" [formModel]="view.formModel" default="Mới tạo" class="ms-2 fw-bold">
             </codx-label>
           </span>
         </div>
-        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="taskViewStt=='2'"
-          [class.text-primary]="taskViewStt=='2'" (click)="clickChangeTaskViewStatus('2')">
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="taskViewStt == '2'"
+          [class.text-primary]="taskViewStt == '2'" (click)="clickChangeTaskViewStatus('2')">
           <i class="icon-spellcheck icon-16"></i>
           <span class="ms-2 fw-bold fs-7">
             <codx-label name="lblTitlePending" [formModel]="view.formModel" default="Chờ duyệt" class="ms-2 fw-bold">
             </codx-label>
           </span>
         </div>
-        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="taskViewStt=='3'"
-          [class.text-primary]="taskViewStt=='3'" (click)="clickChangeTaskViewStatus('3')">
+        <div class="d-flex align-items-center me-1 cursor-pointer p-2" [class.div-active]="taskViewStt == '3'"
+          [class.text-primary]="taskViewStt == '3'" (click)="clickChangeTaskViewStatus('3')">
           <i class="icon-download_done icon-16 text-success"></i>
           <span class="ms-2 fw-bold fs-7">
             <codx-label name="lblTitleDone" [formModel]="view.formModel" default="Hoàn tất" class="ms-2 fw-bold">
@@ -52,5 +52,4 @@
   <lib-view-detail #viewdetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.currentView?.formModel"
     [view]="view">
   </lib-view-detail>
-
 </ng-template>

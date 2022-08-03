@@ -1,0 +1,13 @@
+<codx-form #form [headerText]="gridViewSetup.title" [body]="body" [dialog]="dialog" [footer]="footer">
+    <ng-template popup add #body>
+        <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="empty"
+            [placeholder]="gridViewSetup.title ? gridViewSetup.title : empty" (valueChange)="valueChange($event)"
+            field="title">
+        </codx-input>
+    </ng-template>
+    <ng-template #footer>
+        <button type="button" class="btn btn-primary ms-1" (click)="onEditNote()" *ngIf="!readOnly">
+            <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+        </button>
+    </ng-template>
+</codx-form>

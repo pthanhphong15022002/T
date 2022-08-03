@@ -288,7 +288,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
-          console.log("check KudosTransBusiness", res)
           this.lstRate = res[0];
           this.L1422 = res[1]?.datas;
           this.data_Receiver = res[2];
@@ -441,6 +440,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
     this.comboboxName = '';
     var a = this.L1483.find((x) => x.value == this.vllOrganize_value);
     this.comboboxName = a.text;
+    debugger;
     this.changedr.detectChanges();
   }
 

@@ -20,17 +20,17 @@ export class PopupAddEmployeesComponent implements OnInit {
       name: 'tabInfoPersonal'
     },
     {
-      icon: 'icon-article',
+      icon: 'icon-person',
       text: 'Nhân viên',
       name: 'tabInfoEmploy'
     },
     {
-      icon: 'icon-person_outline',
+      icon: 'icon-receipt_long',
       text: 'Thông tin cá nhân',
       name: 'tabInfoPrivate',
     },
     {
-      icon: 'icon-person_outline',
+      icon: 'icon-business_center',
       text: 'Pháp lý',
       name: 'tabInfoLaw',
     },
@@ -113,10 +113,10 @@ export class PopupAddEmployeesComponent implements OnInit {
         this.gridViewSetup = res
     });
     if (this.action === 'edit') {
-      this.title = 'Chỉnh sửa';
+      this.titleAction = 'Chỉnh sửa';
     }
     if (this.action === 'copy') {
-      this.title = 'Sao chép';
+      this.titleAction = 'Sao chép';
     }
   }
 

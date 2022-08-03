@@ -10,23 +10,23 @@ import { HR_Employees } from 'projects/codx-hr/src/lib/model/HR_Employees.model'
 export class EditInfoComponent implements OnInit {
   title = '';
   tabInfo: any[] = [
-    { 
-      icon: 'icon-info', 
-      text: 'Thông tin chung', 
-      name: 'tabInfoPersonal' 
-    },
-    { 
-      icon: 'icon-article', 
-      text: 'Nhân viên', 
-      name: 'tabInfoEmploy' 
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'tabInfoPersonal'
     },
     {
-      icon: 'icon-person_outline',
+      icon: 'icon-person',
+      text: 'Nhân viên',
+      name: 'tabInfoEmploy'
+    },
+    {
+      icon: 'icon-receipt_long',
       text: 'Thông tin cá nhân',
       name: 'tabInfoPrivate',
     },
     {
-      icon: 'icon-person_outline',
+      icon: 'icon-business_center',
       text: 'Pháp lý',
       name: 'tabInfoLaw',
     },
