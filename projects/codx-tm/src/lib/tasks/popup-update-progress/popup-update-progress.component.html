@@ -12,8 +12,8 @@
                 </codx-label>
                 <div class="d-flex align-items-center row">
                     <div class="col-5">
-                        <codx-input type="number" [min]="this.task?.percentage ? this.task?.percentage : 0" [max]="100"
-                            [crrValue]="task?.percentage" cssClass="form-control" [disabled]="percentage100"
+                        <codx-input type="number" field="percentage" placeholder="Số giờ " [min]="0" [max]="100"
+                            [crrValue]="task?.percentage"
                             (valueChange)="changePercentage($event)">
                         </codx-input>
                     </div>
@@ -30,9 +30,9 @@
         </div>
         <div class="row mt-4">
             <div class="col-12">
-                <codx-label fiedName="Commment" formName="Tasks" gridViewName="grvTasks" default="Ghi chú"></codx-label>
+                <codx-label name="lblCommment" formName="Tasks"  default="Ghi chú"></codx-label>
                 <codx-input type="textarea" field="textarea" [format]="'ed2'" class="w-100" field="comment"
-                    [crrValue]="comment" rows="6">
+                    [crrValue]="comment" rows="6" (valueChange)="valueChangComment($event)">
                 </codx-input>
             </div>
         </div>
