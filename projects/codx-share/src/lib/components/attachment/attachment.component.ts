@@ -738,14 +738,15 @@ export class AttachmentComponent implements OnInit {
     var that = this;
     if (this.interval == null)
       this.interval = [];
-    var files = this.dmSV.listFiles.getValue();
+    var files = this.dmSV.listFiles;
     var index = setInterval(() => {
       that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
         if (item != null && item != "") {
           let index = files.findIndex(d => d.recID.toString() === id);
           if (index != -1) {
             files[index].thumbnail = item;
-            that.dmSV.listFiles.next(files);
+            that.dmSV.listFiles = files;
+            that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
           }
           let indexInterval = this.interval.findIndex(d => d.id === id);
@@ -761,7 +762,7 @@ export class AttachmentComponent implements OnInit {
     interval.id = id;
     interval.instant = index;
     this.interval.push(Object.assign({}, interval));
-  }
+  } 
   
   addFile(fileItem: any) {
     var that = this;
@@ -769,13 +770,14 @@ export class AttachmentComponent implements OnInit {
     if (done) {
       done.then(item => {
         if (item.status == 0) {
-          var files = this.dmSV.listFiles.getValue();
+          var files = this.dmSV.listFiles;
           if (files == null) files = [];
           var res = item.data;
           res.thumbnail = "../../../assets/img/loader.gif";
           files.push(Object.assign({}, res));
-          this.dmSV.listFiles.next(files);
-          that.changeDetectorRef.detectChanges();
+          this.dmSV.listFiles = files;
+          this.dmSV.ChangeData.next(true);
+          this.changeDetectorRef.detectChanges();
           //this.fileUploadList = [];
         //  that.displayThumbnail(res.recID, res.pathDisk);
          // this.notificationsService.notify(item.message);
@@ -828,7 +830,7 @@ export class AttachmentComponent implements OnInit {
         var done = this.fileService.updateVersionFile(item).toPromise();
         if (done) {
           done.then(async res => {
-            var files = this.dmSV.listFiles.getValue();
+            var files = this.dmSV.listFiles;
             let index = files.findIndex(d => d.recID.toString() === item.recID);
             if (index != -1) {
               res.data.thumbnail = "../../../assets/img/loader.gif";
@@ -836,8 +838,8 @@ export class AttachmentComponent implements OnInit {
               files[index] = res.data;
               files[index].recID = res.data.recID;
             }
-            this.dmSV.listFiles.next(files);
-
+            this.dmSV.listFiles = files;
+            this.dmSV.ChangeData.next(true);
             this.fileUploadList[0].recID = res.data.recID;
             this.atSV.fileListAdded.push(Object.assign({}, item));
             this.data.push(Object.assign({}, item));
