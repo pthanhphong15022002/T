@@ -5,7 +5,7 @@ import { DataItem, FolderInfo, ItemRight, NodeTree } from "@shared/models/folder
 import { FolderService } from "@shared/services/folder.service";
 import { FileService } from "@shared/services/file.service";
 import { AlertConfirmInputConfig, AuthService, CallFuncService, FormModel, NotificationsService, SidebarModel } from "codx-core";
-import { FileInfo, FileUpload, Permission, SubFolder } from "@shared/models/file.model";
+import { FileInfo, FileUpload, HistoryFile, Permission, SubFolder, View } from "@shared/models/file.model";
 import { CopyComponent } from "./copy/copy.component";
 import { EditFileComponent } from "./editFile/editFile.component";
 import { RolesComponent } from "./roles/roles.component";
@@ -502,7 +502,8 @@ export class CodxDMService {
         }
       }
 
-    filterMoreFunction(e: any, type: string) {    
+    filterMoreFunction(e: any, data: any) {    
+      var type = this.getType(data, "entity");
       if (e) {          
         for(var i=0; i<e.length; i++) {       
           if (e[i].data != null && e[i].data.entityName == type)
@@ -513,18 +514,89 @@ export class CodxDMService {
       }
     }
 
-    clickMF($event, item: any, type) {
-        var data: any;
-        data = item;
+    checkView(read: boolean) {      
+      return read;
+      // let ret = false;
+      // permissions.forEach(item => {
+      //   if ((item.objectID == this.user.userID || item.objectID == this.user.groupID) && item.isActive) {          
+      //     if (item.read) ret = true;        
+      //   }
+  
+      //   if (item.objectID == this.user.userID && item.objectType == "1" && item.approvers != "" && item.approvers != this.user.userID && !item.isActive) {          
+      //     if (item.approvalStatus == "1")
+      //       ret = false;
+      //     else 
+      //       ret = true;       
+      //   }
+      // });
+      // return ret;
+    }
+
+    getRating(data: View[]) {
+      let _sum = 0;
+      var totalViews = 0;
+      if (data != null) {
+        var list = data.filter(x => x.rating > 0);
+        totalViews = list.length;
+        //res.views.forEach(item => {
+        for (var i = 0; i < list.length; i++) {
+          _sum = _sum + list[i].rating;
+        }
+      }
+  
+      var totalRating = 0;
+      if (totalViews != 0) {
+        totalRating = _sum / totalViews;
+      }
+     
+      totalRating = parseFloat(totalRating.toFixed(2));
+      return totalRating;    
+    }
+
+    showDownloadCount(download) {   
+      if (download === null || download === undefined)
+        return 0;
+      else
+        return download;
+    }
+    
+    getViews(data: HistoryFile[]) {
+      if (data != null) {
+        // var list = data.filter(x => x.rating == 0);
+        return data.filter(x => (x.type != null && x.type == 'view') || (x.note != null && x.note.indexOf("read file") > -1)).length;
+      }
+      else
+        return 0;
+    }
+    
+    getType(item: any, ret: string) {
+      var type = 'folder';      
+      if (ret == "name") {
+        if (item.folderName == null || item.folderName == undefined)
+          type = 'file';
+      }
+      else {
+        // entity
+        type = 'DM_FolderInfo';
+        if (item.folderName == null || item.folderName == undefined)
+          type = 'DM_FileInfo';
+      }
+      
+      return type;
+    }
+
+    clickMF($event, data: any) {        
+        var type =  this.getType(data, "name");
+
         switch($event.functionID) {
           case "DMT0210": //view file
-            this.fileService.getFile(item.recID).subscribe(data => {
-                this.callfc.openForm(ViewFileDialogComponent, item.fileName, 1000, 800, "", item, "");
+            this.fileService.getFile(data.recID).subscribe(data => {
+                this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
             });
             break;
 
           case "DMT0211": // download
-            this.fileService.getFile(item.recID).subscribe(file => {      
+            this.fileService.getFile(data.recID).subscribe(file => {      
                 var id = file.recID;
                 var that = this;
                 if (this.checkDownloadRight(file)) {
@@ -563,7 +635,7 @@ export class CodxDMService {
 
           case "DMT0206":  // xoa thu muc
           case "DMT0219": // xoa file
-             this.deleteFile(item, type);            
+             this.deleteFile(data, type);            
             break;
 
           case "DMT0202": // chinh sua thu muc  

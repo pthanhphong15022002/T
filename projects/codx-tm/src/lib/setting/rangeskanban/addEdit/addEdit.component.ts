@@ -55,7 +55,7 @@ export class AddEditComponent implements OnInit {
         else {
           this.line.recID = Util.uid();
           this.line.rangeID = this.master.rangeID;
-          this.codxService.setAddNew(this.line, 'recID')
+          //this.codxService.setAddNew(this.line, 'recID')
         }
         this.callfc.openForm(template, '', 500, 400);
       }

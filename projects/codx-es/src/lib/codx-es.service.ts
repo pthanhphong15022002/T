@@ -627,6 +627,16 @@ export class CodxEsService {
     );
   }
 
+  getDetailSignFile(recID): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetDetailAsync',
+      recID
+    );
+  }
+
   getSFByID(data) {
     return this.api.execSv(
       'ES',

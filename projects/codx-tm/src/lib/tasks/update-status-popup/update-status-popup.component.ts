@@ -79,6 +79,9 @@ export class UpdateStatusPopupComponent implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
   }
+  changeComment(data){
+    this.comment = data?.data ;
+  }
   changeEstimated(data) {
     if (!data.data) return;
     var num = Number.parseFloat(data.data);

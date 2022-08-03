@@ -38,7 +38,6 @@ export class CarsComponent implements OnInit, AfterViewInit {
   dialog!: DialogRef;
   isAdd = true;
   columnsGrid;
-  dialogCar: FormGroup;
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';

@@ -1,7 +1,9 @@
-<div class="justify-content-between main-pane stepper-body p-4 w-100">
-  <div class="main-content d-flex flex-column h-100 flex-lg-row">
+<div
+  class="d-flex align-items-stretch justify-content-between main-pane stepper-body tab-custom w-100"
+>
+  <div class="main-content d-flex flex-column-fluid h-100">
     <div
-      class="flex-column flex-lg-row-auto w-100 w-lg-275px mb-10 mb-lg-0 main-left"
+      class="flex-column flex-lg-row-auto w-lg-240px main-left"
       [class.hideCol]="hideThumbnail"
     >
       <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
@@ -29,8 +31,8 @@
         (click)="changeShowThumbnailState()"
       ></div>
     </div>
-    <div class="col-7 flex-grow-1">
-      <div class="d-flex justify-content-between w-100 bg-white">
+    <div class="d-flex flex-column flex-row-fluid mx-2">
+      <div class="d-flex flex-stack stepper-toolbar p-2">
         <div class="left_Toolbar d-flex justify-content-start">
           <ejs-toolbar>
             <e-items>
@@ -78,7 +80,7 @@
             </e-items>
           </ejs-toolbar>
           <ejs-dropdownlist
-            style="width: 100%; position: relative"
+            style="width: 100%"
             id="zoomValuesDropdownList"
             [dataSource]="lstZoomValue"
             [placeholder]="zoomValue"
@@ -133,7 +135,7 @@
       </div>
     </div>
     <div
-      class="actions flex-column flex-lg-row-auto w-100 w-lg-275px mb-10 mb-lg-0 main-right"
+      class="actions flex-column flex-lg-row-auto w-lg-350px main-right"
       [class.hideCol]="hideActions"
     >
       <ejs-tab #rightToolbar [class.d-none]="hideActions">
@@ -190,14 +192,17 @@
                   (valueChange)="changeSigner($event)"
                 ></codx-input> -->
               </div>
+              <div class="mt-3 mb-3">
+                <codx-label
+                  name="lblDragAction"
+                  [formModel]=""
+                  default="Kéo thả"
+                  class="fw-bold fs-4 text-primary"
+                >
+                </codx-label>
+              </div>
 
-              <codx-label
-                name="lblDragAction"
-                [formModel]=""
-                default="Kéo thả"
-                class="ms-2 fw-bold"
-              ></codx-label>
-              <div class="card-group">
+              <div class="d-flex flex-wrap d-grid align-items-center">
                 <div
                   class="card-item me-3 mb-3"
                   *ngFor="let action of actionsButton; let index = index"
@@ -205,8 +210,8 @@
                   (click)="changeAnnotationItem(index + 1)"
                 >
                   <codx-card-center
-                    cardCss="border h-100 min-w-100px w-100px"
-                    icoCss="icon-20  {{
+                    cardCss="border h-100 w-125px"
+                    icoCss="icon-30 mb-1 {{
                       index + 1 | vll: 'ES015':'icon' | async
                     }}"
                     content="{{ index + 1 | vll: 'ES015':'text' | async }}"
@@ -215,41 +220,50 @@
                 </div>
               </div>
 
-              <div
-                class="autoSign_Space d-flex d-flex align-items-center justify-content-between"
-                style="width: 160px"
-              >
-                <codx-label
-                  name="lblSuggestSignArea"
-                  default="Gợi ý vị trí ký"
-                  class="ms-1 fw-bold"
-                ></codx-label>
-                <codx-input
-                  type="switch"
-                  field=""
-                  [crrValue]="needSuggest"
-                  (valueChange)="changeSuggestState($event)"
-                >
-                </codx-input>
+              <!--begin::Item-->
+              <div class="d-flex align-items-center my-2">
+                <div class="d-flex justify-content-start me-2">
+                  <!--begin::Switch-->
+                  <codx-input
+                    type="switch"
+                    labelPosition="After"
+                    field=""
+                    [crrValue]="needSuggest"
+                    (valueChange)="changeSuggestState($event)"
+                  >
+                  </codx-input>
+                  <!--end::Switch-->
+                </div>
+                <div class="text-gray-800 text-nowrap">
+                  <codx-label
+                    name="lblSuggestSignArea"
+                    default="Gợi ý vị trí ký"
+                    class="fw-bold"
+                  ></codx-label>
+                </div>
               </div>
-
-              <div
-                class="autoSign_Space d-flex align-items-center justify-content-between"
-                style="width: 160px"
-              >
-                <codx-label
-                  name="lblSignLastLine"
-                  default="Ký dòng cuối cùng"
-                  class="ms-1 fw-bold"
-                ></codx-label>
-                <codx-input
-                  type="switch"
-                  field="autoSignLastLine"
-                  [crrValue]="autoSignState"
-                  (valueChange)="changeAutoSignState($event, 0)"
-                ></codx-input>
+              <!--end::Item-->
+              <!--begin::Item-->
+              <div class="autoSign_Space d-flex align-items-center my-2">
+                <div class="d-flex justify-content-start me-2">
+                  <!--begin::Switch-->
+                  <codx-input
+                    type="switch"
+                    field="autoSignLastLine"
+                    [crrValue]="autoSignState"
+                    (valueChange)="changeAutoSignState($event, 0)"
+                  ></codx-input>
+                  <!--end::Switch-->
+                </div>
+                <div class="text-gray-800 text-nowrap">
+                  <codx-label
+                    name="lblSignLastLine"
+                    default="Ký dòng cuối cùng"
+                    class="fw-bold"
+                  ></codx-label>
+                </div>
               </div>
-              <button (click)="testFunc($event)">Test Function</button>
+              <!--end::Item-->
             </ng-template>
           </e-tabitem>
 
@@ -269,7 +283,7 @@
         </e-tabitems>
       </ejs-tab>
       <div
-        class="showArrow reverse"
+        class="showArrow reverse btn btn-icon btn-light-primary btn-active-primary"
         [class.icon-arrow_back]="hideActions"
         [class.icon-arrow_forward]="!hideActions"
         (click)="changeShowActionsState()"

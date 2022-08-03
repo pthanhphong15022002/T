@@ -29,7 +29,13 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   funcID: any;
   moreFunc: any;
   vllConfirm = 'TM009';
-  
+  fieldDefault = '';
+  valueDefault = '';
+  fieldComment = 'ConfirmComment';
+  defautComment = 'Bình luận';
+  comment = '';
+  action = 'confirm';
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -42,17 +48,21 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.funcID = this.data.funcID;
     this.vllConfirm = this.data.vll;
-    
+    this.task = this.data?.data;
+    this.action = this.data?.action;
+    this.fieldComments() ;
+    this.moreFunc = this.data.moreFunc;
+    this.title = this.moreFunc.customName;
+    this.url = this.moreFunc.url;
+    var fieldDefault = UrlUtil.getUrl('defaultField', this.url);
+    this.fieldDefault =
+      fieldDefault.charAt(0).toLocaleLowerCase() + fieldDefault.slice(1);
+    this.valueDefault = UrlUtil.getUrl('defaultValue', this.url);
+    this.task[this.fieldDefault] = this.valueDefault;
   }
 
   ngOnInit(): void {}
-  ngAfterViewInit(): void {
-    this.task = this.data.data;
-    this.task.confirmStatus = this.data.moreFunc.functionID =="TMT02016" ? "2" :"3" ; //sau hỏi thương đe gọi morfun
-    // this.moreFunc = this.data.moreFunc;
-    // this.url = this.moreFunc.url;
-    // this.status = UrlUtil.getUrl('defaultValue', this.url);
-  }
+  ngAfterViewInit(): void {}
 
   valueChange(data) {
     if (data.field) {
@@ -68,6 +78,26 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   }
 
   saveData() {
+    switch (this.action) {
+      case 'confirm':
+        this.saveConfirmStatus();
+        break;
+      case 'extend':
+        this.saveExtendStatus();
+        break;
+      case 'approve':
+        this.saveApproveStatus();
+        break;
+      case 'verify':
+        this.saveVerifyStatus();
+        break;
+      default:
+        break;
+    }
+  }
+
+  saveConfirmStatus() {
+    this.task.confirmComment =this.comment;
     if (
       this.task.confirmStatus == '3' &&
       (!this.task.confirmComment || this.task.confirmComment.trim() == '')
@@ -77,7 +107,10 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     }
     ///xu ly save
     this.api
-      .execSv('TM', 'TM', 'TaskBusiness', 'ConfirmTaskAsync', [this.task,this.funcID])
+      .execSv('TM', 'TM', 'TaskBusiness', 'ConfirmStatusTaskAsync', [
+        this.task,
+        this.funcID,
+      ])
       .subscribe((res) => {
         if (res) {
           this.dialog.close(res);
@@ -85,5 +118,73 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
+  }
+
+  saveExtendStatus() {
+    this.task.extendComment =this.comment;
+    ///xu ly save
+    this.api
+      .execSv('TM', 'TM', 'TaskBusiness', 'ExtendStatusTaskAsync', [
+        this.task,
+        this.funcID,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(res);
+          this.notiService.notify('Duyệt gia hạn công việc thành công !');
+          // this.notiService.notifyCode(" 20K của Hảo :))") ;
+        } else this.dialog.close();
+      });
+  }
+
+  saveApproveStatus() {
+    this.task.approveComment =this.comment;
+    ///xu ly save
+    this.api
+      .execSv('TM', 'TM', 'TaskBusiness', 'ApproveStatusTaskAsync', [
+        this.task,
+        this.funcID,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(res);
+          this.notiService.notify('Đánh giá kết quả công việc thành công !');
+          // this.notiService.notifyCode(" 20K của Hảo :))") ;
+        } else this.dialog.close();
+      });
+  }
+
+  saveVerifyStatus() {
+    this.task.verifyComment =this.comment;
+    ///xu ly save
+    this.api
+      .execSv('TM', 'TM', 'TaskBusiness', 'VerifyStatusTaskAsync', [
+        this.task,
+        this.funcID,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(res);
+          this.notiService.notify('Duyệt công việc thành công !');
+          // this.notiService.notifyCode(" 20K của Hảo :))") ;
+        } else this.dialog.close();
+      });
+  }
+
+  fieldComments() {
+    switch (this.action) {
+      case 'confirm':
+        this.fieldComment ="ConfirmComment";
+        break;
+      case 'extend':
+        this.fieldComment ="ExtendComment";
+        break;
+      case 'approve':
+        this.fieldComment ="ApproveComment";
+        break;
+      case 'verify':
+        this.fieldComment ="VerifyComment";
+        break;
+    }
   }
 }

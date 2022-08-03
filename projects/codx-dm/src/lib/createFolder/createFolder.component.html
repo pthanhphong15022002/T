@@ -25,8 +25,6 @@
                             {{titleFileNameInvalid}}
                         </ng-template>
                     </div> -->
-
-
                 </div>
                 <div id="folderError" autofocus *ngIf="folderName === ''" class="d-flex mb-4 invalid-feedback">
                     <div *ngIf="folderName === ''; then thenBlockErrorFolder else thenBlockErrorElseFolder">
@@ -53,12 +51,12 @@
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane pt-1 fade show active" id="tab_role" role="tabpanel">
-                            <div class="user-mini-group">
+                            <div class="dms-user-mini-group">
                                 <ng-container *ngIf="fileEditing != null && fileEditing.permissions != null">
                                     <ng-container *ngFor="let perm of fileEditing.permissions; index as i;">
                                         <ng-container
                                             *ngIf="perm.isActive != false && ((!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
-                                            <div class="user-mini-item">
+                                            <div class="dms-mini-item">
                                                 <div class="d-flex align-items-center">
                                                     <div class="symbol symbol-30 symbol-circle me-2">
                                                         <div

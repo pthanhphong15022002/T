@@ -190,11 +190,11 @@ export class SprintsComponent extends UIComponent {
         break;
       case 'SYS03':
         if (data.iterationID != this.user.userID)
-        this.edit(data);
+          this.edit(data);
         break;
       case 'SYS04':
         if (data.iterationID != this.user.userID)
-        this.copy(data);
+          this.copy(data);
         break;
       case 'sendemail':
         this.sendemail(data);
@@ -260,7 +260,7 @@ export class SprintsComponent extends UIComponent {
     // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
     // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
 
-    this.codxService.navigate('',this.urlView)
+    this.codxService.navigate('', this.urlView)
   }
 
   changeView(evt: any) {

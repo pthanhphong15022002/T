@@ -1,9 +1,9 @@
 <ng-template #itemTemplate let-data>
-  <codx-temp-full (clickMF)="openFormFuncID($event,data)"  (click)="click(data)" [typeMF]="'hover'"
+  <codx-temp-full (clickMF)="openFormFuncID($event,data)" (changeDataMF)="aaaa($event)" (click)="click(data)" [typeMF]="'hover'"
     [content]="extractContent(data.title)"
     [desc]="convertHtmlAgency(data.agencyName , this.gridViewSetup?.AgencyName?.headerText)" [status]="data.status"
     [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
-    cardCss="card-template border-bottom px-2 py-3" [formModel]="view.formModel"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2" [formModel]="view.formModel"
     [resources]="getIdUser(data.createdBy,data.owner)" [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="data.isBookmark"
@@ -47,5 +47,5 @@
 <codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [entityName]="'OD_Dispatches'"
   [method]="'GetListByStatusAsync'" [assemblyName]="'OD'" [service]="'OD'" [className]="'DispatchesBusiness'"
   (selectedChange)="valueChange($event)" [selectedFirst]="true" idField="recID" (requestEnded)="requestEnded($event)"
-  (viewChanged)="viewChange($event)">
+  >
 </codx-views>
