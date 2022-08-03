@@ -1,24 +1,15 @@
 import { UIComponent } from 'codx-core';
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
-  Input,
-  OnInit,
   Optional,
-  Output,
-  ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
-  CacheService,
-  CallFuncService,
   DialogData,
   DialogRef,
 } from 'codx-core';
-import { EventEmitter } from 'stream';
 import { CodxEpService } from '../../codx-ep.service';
-import { BookingStationeryComponent } from '../booking-stationery.component';
 @Component({
   selector: 'lib-popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',
@@ -50,14 +41,18 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.epService
-      .getComboboxName(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .then((res) => {
-        this.CbxName = res;
-      });
+    this.cache.functionList('EPT3').subscribe(res => {
+      this.epService
+        .getComboboxName(
+          res.formName,
+          res.gridViewName
+        )
+        .then((res) => {
+          this.CbxName = res;
+          console.log(this.CbxName)
+        });
+    })
+
     this.initForm();
   }
 
@@ -96,16 +91,16 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   onSaveForm() {
-    // if (this.dialogRequest.invalid == true) {
-    //   return;
-    // }
-    // if (!this.dialogRequest.value.linkType) {
-    //   this.dialogRequest.value.linkType = '0';
-    // }
-    // this.dialogRequest.value.resourceType = '1';
-    // this.dialog.dataService
-    //   .save((opt: any) => this.beforeSave(opt))
-    //   .subscribe();
+    if (this.dialogRequest.invalid == true) {
+      return;
+    }
+    if (!this.dialogRequest.value.linkType) {
+      this.dialogRequest.value.linkType = '0';
+    }
+    this.dialogRequest.value.resourceType = '5';
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe();
   }
 
   valueDateChange(event: any) {

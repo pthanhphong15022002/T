@@ -32,6 +32,8 @@ export class UpdateNotePinComponent implements OnInit {
   dataOld: any;
   typeUpdate = '';
   messageParam: any;
+  predicate = 'IsPin=@0 && TransID=null';
+  dataValue = 'true';
 
   constructor(
     private api: ApiHttpService,

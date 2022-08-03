@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ApiHttpService, DialogData, DialogRef, NotificationsService, UrlUtil } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { TM_TaskExtends, TM_Tasks } from '../../models/TM_Tasks.model';
 
@@ -8,7 +8,7 @@ import { TM_TaskExtends, TM_Tasks } from '../../models/TM_Tasks.model';
   templateUrl: './popup-extend.component.html',
   styleUrls: ['./popup-extend.component.css']
 })
-export class PopupExtendComponent implements OnInit {
+export class PopupExtendComponent implements OnInit, AfterViewInit {
   
   title ='Gia hạn thời gian thực hiện'
   data: any;
@@ -17,7 +17,9 @@ export class PopupExtendComponent implements OnInit {
   task: any;
   funcID :any
   extendDate:any
-
+  moreFunc: any
+  url:any
+  
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -36,6 +38,9 @@ export class PopupExtendComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
   }
 
   changeTime(e){

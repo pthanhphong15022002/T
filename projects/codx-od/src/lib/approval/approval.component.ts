@@ -24,6 +24,7 @@ export class ApprovalComponent implements OnInit , OnChanges , AfterViewInit
     views: Array<ViewModel> | any = [];
     button?: ButtonModel;
     gridViewSetup: any;
+    dvlApproval : any;
     /**
      *
      */
@@ -59,7 +60,13 @@ export class ApprovalComponent implements OnInit , OnChanges , AfterViewInit
     click(e:any)
     {}
     getGridViewSetup(funcID:any) {
-   
+      this.cache
+      .valueList("ES022")
+      .subscribe((item) => {
+        debugger;
+        this.dvlApproval = item?.datas[0];
+        //this.ref.detectChanges();
+      });
       this.cache.functionList(funcID).subscribe((fuc) => {
         this.cache
           .gridViewSetup(fuc?.formName, fuc?.gridViewName)

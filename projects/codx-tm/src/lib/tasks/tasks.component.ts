@@ -83,7 +83,7 @@ export class TasksComponent extends UIComponent {
   popoverDataSelected: any;
   vllStatusTasks = 'TM004';
   vllStatusAssignTasks = 'TM007';
-  vllStatus = '';
+  vllStatus = 'TM004';
   taskGroup: TM_TaskGroups;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
@@ -801,7 +801,7 @@ export class TasksComponent extends UIComponent {
   }
 
   //#region Confirm
-  openConfirmPopup(moreFunc, data) {
+  openConfirmStatusPopup(moreFunc, data) {
     if (data.owner != this.user.userID) {
       this.notiService.notifyCode('TM026');
       return;
@@ -845,7 +845,7 @@ export class TasksComponent extends UIComponent {
   }
 
   //#region extends
-  openExtendsPopup(moreFunc, data) {
+  openExtendStatusPopup(moreFunc, data) {
     var obj = {
       moreFunc: moreFunc,
       data: data,
@@ -853,7 +853,7 @@ export class TasksComponent extends UIComponent {
       vll: 'TM010',
     };
     var dialogExtends = this.callfc.openForm(
-      PopupExtendComponent,
+      PopupConfirmComponent,
       '',
       500,
       350,
@@ -861,6 +861,61 @@ export class TasksComponent extends UIComponent {
       obj
     );
     dialogExtends.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
+      }
+      this.detectorRef.detectChanges();
+    });
+  }
+  //#endregion
+
+  //#region ApproveStatus
+  openApproveStatusPopup(moreFunc, data) {
+    var obj = {
+      moreFunc: moreFunc,
+      data: data,
+      funcID: this.funcID,
+      vll: 'TM011',
+    };
+    var dialogApprove = this.callfc.openForm(
+      PopupConfirmComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+    dialogApprove.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
+      }
+      this.detectorRef.detectChanges();
+    });
+  }
+  //#endregion
+  //#region verifyStatus
+  openVerifyStatusPopup(moreFunc, data) {
+    var obj = {
+      moreFunc: moreFunc,
+      data: data,
+      funcID: this.funcID,
+      vll: 'TM008',
+    };
+    var dialogVerify = this.callfc.openForm(
+      PopupConfirmComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+    dialogVerify.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
@@ -918,11 +973,20 @@ export class TasksComponent extends UIComponent {
         break;
       case 'TMT02016':
       case 'TMT02017': // cái này phải xem lại , nên có biến gì đó để xét
-        this.openConfirmPopup(e.data, data);
+        this.openConfirmStatusPopup(e.data, data);
         break;
       case 'TMT04011':
       case 'TMT04012':
-        this.openExtendsPopup(e.data, data);
+        this.openExtendStatusPopup(e.data, data);
+        break;
+      case 'TMT04021':
+      case 'TMT04022':
+      case 'TMT04023':
+        this.openApproveStatusPopup(e.data, data);  //danh gia kết qua
+        break;
+      case 'TMT04031':
+      case 'TMT04032':
+        this.openVerifyStatusPopup(e.data, data);
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
