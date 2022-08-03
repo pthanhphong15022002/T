@@ -630,7 +630,7 @@ export class EditFileComponent implements OnInit {
 
       case "fileName":
         if (this.checkFileName() != "0") {        
-          return "w-100 text-error is-invalid";
+          return "w-100 border border-danger is-invalid";
           //$('#fileName').addClass('form-control is-invalid');
          // $('#fileName').focus();
         }

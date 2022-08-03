@@ -134,7 +134,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           this.dialogCategory.patchValue({
             eSign: true,
             signatureType: '1',
-            icon: 'fa-solid fa-file-lines',
+            icon: 'icon-text_snippet',
             color: '#0078FF',
           });
           this.dialogCategory.addControl(

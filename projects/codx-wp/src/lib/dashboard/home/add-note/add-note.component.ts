@@ -462,10 +462,11 @@ export class AddNoteComponent implements OnInit {
     if (this.formType == 'edit') {
       var obj = {
         itemUpdate: this.note,
+        dialogRef: this.dialog,
       };
       this.callfc.openForm(
         SaveNoteComponent,
-        'Cập nhật ghi chú',
+        '',
         900,
         650,
         '',

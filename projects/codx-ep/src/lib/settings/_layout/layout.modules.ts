@@ -12,8 +12,6 @@ import { PopupAddRoomsComponent } from '../rooms/popup-add-rooms/popup-add-rooms
 @NgModule({
   declarations: [
     LayoutComponent,
-    PopupAddCarsComponent,
-    PopupAddRoomsComponent,
   ],
   imports: [FormsModule, ReactiveFormsModule, SharedModule, TabModule, CodxShareModule],
   exports: [RouterModule],
