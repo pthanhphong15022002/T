@@ -4,16 +4,16 @@
         <div class="d-flex align-items-center">
             <div class="me-3">
                 <codx-label class="fw-bolder fs-1" [formModel]="dialogRef.formModel" name="lblHeaderText"
-                    default="Soạn thảo văn bản"></codx-label>
+                    default="Cập nhật bài viết"></codx-label>
             </div>
             <div class="bg-gray-200 rounded-1 p-2 d-flex align-items-center" (click)="openFormShare(controlShare)">
                 <span>
-                    <img src="assets/themes/sys/default/img/{{shareIcon}}" />
+                    <img src="assets/themes/sys/default/img/{{data.shareControl | vll:'WP003':'icon' | async }}" />
                 </span>
-                <span class="text-gray-700 fs-6 ms-1">{{shareText}}</span>
+                <span class="text-gray-700 fs-6 ms-1">{{data.shareControl | vll:'WP003':'text' | async}}</span>
                 <i class="icon-arrow_drop_down icon-18 text-dark"></i>
             </div>
-            <div class="ms-2">  
+            <div class="ms-2">
                 <span class="fs-6" [innerHTML]="shareWith"></span>
             </div>
         </div>
@@ -92,13 +92,9 @@
                             <img class="w-100 h-200px" [src]="fileImage[0].data || fileImage[0].thumbnail" alt="">
                         </div>
                         <div>
-                            <codx-attachment #codxAttachment 
-                                [functionID]="dialogRef?.formModel.funcID"
-                                [objectType]="dialogRef?.formModel.entityName" 
-                                [allowMultiFile]="0"
-                                [hideImageUpload]="'1'" 
-                                [objectType]="'WP_News'"
-                                [hideUploadBtn]="0" [showMessage]="0"
+                            <codx-attachment #codxAttachment [functionID]="dialogRef?.formModel.funcID"
+                                [objectType]="dialogRef?.formModel.entityName" [allowMultiFile]="0"
+                                [hideImageUpload]="'1'" [hideUploadBtn]="0" [showMessage]="0"
                                 (fileCount)="addImage($event)">
                             </codx-attachment>
                         </div>
@@ -130,7 +126,7 @@
             </div>
         </div>
         <div class="col-7">
-            <ng-container *ngIf="newsType == NEWSTYPE.POST; else video">
+            <ng-container *ngIf="data.newsType == NEWSTYPE.POST; else video">
                 <div class="my-2">
                     <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblContents" default="Nội dung">
                     </codx-label>
@@ -153,7 +149,6 @@
                             [objectType]="dialogRef?.formModel.entityName" 
                             [allowMultiFile]="0"
                             [showMessage]="0"
-                            [objectType]="'WP_News'"
                             [hideImageUpload]="'1'"
                             [hideUploadBtn]="0"
                             (fileCount)="addVideo($event)">
@@ -184,7 +179,7 @@
     <codx-share 
         [dialog]="dialog" 
         [multiple]="false" 
-        listName="WP001"
+        listName="WP003"
         (eventApply)="eventApply($event)">
     </codx-share>
 </ng-template>

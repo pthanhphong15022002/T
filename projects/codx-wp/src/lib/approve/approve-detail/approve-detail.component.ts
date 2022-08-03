@@ -49,6 +49,14 @@ export class ApproveDetailComponent implements OnInit {
       active:false
     },
   ]
+  ENTITYNAME = {
+    WP_News : 'WP_News',
+    WP_Comments: 'WP_Comments'
+  }
+  NEWSTYPE = {
+    POST:"1",
+    VIDEO:"2"
+  }
   acceptApprove = "5";
   cancelApprove  = "4";
   remakeApprove = "2";
