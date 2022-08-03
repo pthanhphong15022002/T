@@ -59,9 +59,7 @@ export class ApproveDetailComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
   }
-
 
   clickApprovePost(data:any,approveStatus:any){
     switch(approveStatus)

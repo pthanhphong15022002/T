@@ -19,12 +19,12 @@ idField="recID"
         <div class="col-6">
           <ng-container *ngIf="lstHotNew[0];else empty1">
             <codx-img 
-            imageType="square" 
-            [cssClass]="'image-300 w-100'"
-            [width]="300"
-            (click)="clickViewDeital(lstHotNew[0])" 
-            [objectId]="lstHotNew[0].recID"
-            [objectType]="entityName">
+              imageType="square" 
+              [cssClass]="'image-300 w-100'"
+              [width]="300"
+              (click)="clickViewDeital(lstHotNew[0])" 
+              [objectId]="lstHotNew[0].recID"
+              [objectType]="entityName">
             </codx-img>
             <div class="fs-4 fw-bolder mt-2 news-title">
               {{ lstHotNew[0].subject }}

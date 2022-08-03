@@ -2,18 +2,19 @@
 <div class="p-6">
     <!-- header -->
     <div class="d-flex align-items-center justify-content-between">
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
             <div class="me-3">
                 <codx-label class="fw-bolder fs-1"  [formModel]="dialogRef.formModel" name="lblHeaderText" default="Soạn thảo văn bản"></codx-label>
             </div>
-            <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center h-24px" (click)="openFormShare(controlShare)">
+            <div class="bg-gray-200 rounded-1 p-2 d-flex align-items-center" (click)="openFormShare(controlShare)">
                 <span>
-                    <img src="assets/themes/sys/default/img/{{(shareControl | vll:'L1901' : 'icon' | async)}}" />
+                    <img src="assets/themes/sys/default/img/{{shareIcon}}" />
                 </span>
-                <span class="text-gray-700 fs-6 ms-1">
-                    {{shareControl | vll:'L1901' : 'text' | async}}
-                </span>
+                <span class="text-gray-700 fs-6 ms-1">{{shareText}}</span>
                 <i class="icon-arrow_drop_down icon-18 text-dark"></i>
+            </div>
+            <div class="ms-2">
+                <span class="fs-6" [innerHTML]="shareWith"></span>
             </div>
         </div>
         <div class="">
@@ -141,6 +142,7 @@
                             [functionID]="dialogRef?.formModel.funcID" 
                             [objectType]="dialogRef?.formModel.entityName" 
                             [allowMultiFile]="0"
+                            [showMessage]="0"
                             [hideImageUpload]="'1'"
                             [hideUploadBtn]="0"
                             (fileCount)="addVideo($event)">
@@ -171,6 +173,7 @@
     <codx-share 
         [dialog]="dialog" 
         [multiple]="false" 
+        listName="WP001"
         (eventApply)="eventApply($event)">
     </codx-share>
 </ng-template>

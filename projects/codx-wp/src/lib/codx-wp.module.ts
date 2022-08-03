@@ -33,11 +33,13 @@ import { ViewDetailComponent } from './news/view-detail/view-detail.component';
 import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { Layout2Component } from './_layout2/layout2.component';
+import { Layout3Component } from './_layout3/layout3.component';
 
 export const routes: Routes = [
+  
   {
     path: 'companyinfo',
-    component: Layout2Component,
+    component: Layout3Component,
     children: [
       {
         path: ':funcID',
@@ -69,6 +71,22 @@ export const routes: Routes = [
       }
     ]
   },
+
+  {
+    path:'approvals',
+    component: Layout2Component,
+    children:[
+      {
+        path:':funcID',
+        component: ApproveComponent
+      },
+      {
+        path: '**',
+        redirectTo: 'approvals/WPT0211',
+        pathMatch: 'full'
+      }
+    ]
+  },
   {
     path: 'portal',
     component: DashboardComponent,
@@ -95,6 +113,7 @@ const Component: Type<any>[] =
   [
     LayoutComponent,
     Layout2Component,
+    Layout3Component,
     CodxWpComponent,
     NewsComponent,
     PopupAddComponent,
