@@ -5,30 +5,14 @@ import {
   Injector,
   Input,
   IterableDiffers,
-  OnInit,
   ViewChild,
-  ViewChildren,
-  DoCheck,
   Output,
   EventEmitter,
 } from '@angular/core';
-import {
-  note,
-  pdfContent,
-  position,
-  qr,
-  refNumber,
-  signature,
-  signature2,
-  signature3,
-  stamp,
-  time,
-} from './model/mode';
+import { qr } from './model/mode';
 import {
   AnnotationAddEventArgs,
-  AnnotationRemoveEventArgs,
   PdfViewerComponent,
-  ContextMenuItem,
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { AuthStore, CacheService, LangPipe, UIComponent } from 'codx-core';
 import { tmpSignArea } from './model/tmpSignArea.model';
