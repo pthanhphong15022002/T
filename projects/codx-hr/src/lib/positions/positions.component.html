@@ -44,14 +44,13 @@
                     [subTitle]="(data.orgUnitID||'') + (data.departmentID ? ' | ' + data.departmentID: '') + (data.divisionID ? ' | ' + data.divisionID: '')"
                     [title]="data.positionName" [titleLine]="data.orgUnitID" [typeMF]="'hover'" [dataItem]="data"
                     [desc]="'Báo cáo trực tiếp: ' + data.reportTo" [formModel]="view.formModel"
-                    [desc3]="'Báo cáo gián tiếp: ' + (data.reportTo2 || '')" (clickMF)="clickMF($event,data)">
+                    [desc2]="'Báo cáo gián tiếp: ' + (data.reportTo2 || '')" (clickMF)="clickMF($event,data)">
                 </codx-temp-full>
-                <!-- -->
             </div>
 
-            <div>
+            <div >
                 <codx-temp-full cardCss="card-template" [desc]="'Nhóm chức danh: ' + data.jobID"
-                    [desc3]="'Chức vụ: ' + data.jobGroupID">
+                    [desc2]="'Chức vụ: ' + data.jobGroup">
                 </codx-temp-full>
             </div>
 

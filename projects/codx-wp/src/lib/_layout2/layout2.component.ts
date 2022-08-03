@@ -37,7 +37,7 @@ export class Layout2Component extends LayoutBaseComponent {
   navigate(category, funcID = null) {
     this.category = category;
     if(funcID){
-      this.codxService.navigate(this.funcID);
+      this.codxService.navigate(funcID);
     }
     else
     {

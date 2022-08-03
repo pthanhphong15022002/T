@@ -58,7 +58,7 @@
     </div>
     <div class="col-4">
       <codx-input name="locationControl" type="valuelist" field="locationControl" placeholder=""
-        [crrValue]="taskGroups.locationControl" (valueChange)="valueList($event)" refValue="TM012">
+        [crrValue]="taskGroups.locationControl" (valueChange)="valueList($event)" [refValue]="gridViewSetup.LocationControl.referedValue">
         <!-- [refValue]="gridViewSetup.LocationControl.referedValue" -->
       </codx-input>
     </div>
@@ -76,7 +76,7 @@
     </div>
     <div class="col-4">
       <codx-input name="planControl" type="valuelist" field="planControl" placeholder=""
-        [crrValue]="taskGroups.planControl" (valueChange)="valueList($event)" refValue="TM012">
+        [crrValue]="taskGroups.planControl" (valueChange)="valueList($event)" [refValue]="gridViewSetup.PlanControl.referedValue">
       </codx-input>
     </div>
   </div>
@@ -93,7 +93,7 @@
     </div>
     <div class="col-4">
       <codx-input name="updateControl" type="valuelist" field="updateControl" placeholder=""
-        [crrValue]="taskGroups.updateControl" (valueChange)="valueList($event)" refValue="TM013">
+        [crrValue]="taskGroups.updateControl" (valueChange)="valueList($event)" [refValue]="gridViewSetup.UpdateControl.referedValue">
       </codx-input>
     </div>
   </div>
@@ -111,7 +111,7 @@
     <div class="col-4 row">
       <div class="col-6">
         <codx-input name="verifyControl" type="switch" class="test-switch" field="verifyControl"
-          [crrValue]="taskGroups.verifyControl" (valueChange)="valueWitch($event)" refValue="TM006">
+          [crrValue]="taskGroups.verifyControl" (valueChange)="valueWitch($event)" [refValue]="gridViewSetup.VerifyControl.referedValue">
         </codx-input>
       </div>
       <div class="col-6">
@@ -133,7 +133,7 @@
     <div class="col-4 row">
       <div class="col-6">
         <codx-input name="approveControl" type="switch" class="test-switch" field="approveControl"
-          [crrValue]="taskGroups.approveControl" (valueChange)="valueWitch($event)" refValue="TM014">
+          [crrValue]="taskGroups.approveControl" (valueChange)="valueWitch($event)" [refValue]="gridViewSetup.ApproveControl.referedValue">
         </codx-input>
       </div>
       <div class="col-6">
