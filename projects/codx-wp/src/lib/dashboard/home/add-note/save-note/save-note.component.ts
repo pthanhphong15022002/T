@@ -1,3 +1,4 @@
+import { PopupTitleComponent } from './popup-title/popup-title.component';
 import {
   DialogData,
   AuthStore,
@@ -28,7 +29,7 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   predicate = 'CreatedBy=@0';
   dataValue = '';
   data = new Notes();
-  header = 'Sổ tay cá nhân';
+  header = '';
   dialog: any;
   dialogRef: any;
 
@@ -54,25 +55,17 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   onInit(): void {}
 
   ngAfterViewInit() {
-    console.log('check ssss', this.form);
+    if (this.form) {
+      this.header = this.form.headerText;
+    }
   }
 
-  onEditNote(recID) {
-    this.data.transID = recID;
-    this.api
-      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.data?.recID,
-        this.data,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.dialog.close();
-          if (this.dialogRef != undefined) this.dialogRef.close();
-          this.notificationsService.notifyCode('E0528');
-          var object = [{ data: res, type: 'edit-save-note' }];
-          this.noteService.data.next(object);
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+  onEditNote(itemNoteBook) {
+    var obj = {
+      itemNoteUpdate: this.data,
+      itemNoteBookUpdate: itemNoteBook,
+      dialogRef: this.dialog,
+    };  
+    this.callfc.openForm(PopupTitleComponent, '', 400, 100, '', obj);
   }
 }
