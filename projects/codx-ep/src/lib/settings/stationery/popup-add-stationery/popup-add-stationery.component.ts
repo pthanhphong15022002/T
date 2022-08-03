@@ -82,9 +82,8 @@ export class PopupAddStationeryComponent implements OnInit {
       .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         this.CbxName = res;
-      });
-
-    this.initForm();
+        this.initForm();
+      });    
   }
 
   ngAfterViewInit(): void {
@@ -132,7 +131,7 @@ export class PopupAddStationeryComponent implements OnInit {
         if (this.data) {
           this.dialogStationery.patchValue(this.data);
         }
-        console.log(this.isAfterRender);
+        console.log(this.dialogStationery.value);
       });
   }
   beforeSave(option: any) {
@@ -147,35 +146,33 @@ export class PopupAddStationeryComponent implements OnInit {
     return true;
   }
   onSaveForm() {
-    if (this.dialogStationery.invalid == true) {
-      console.log(this.dialogStationery);
-      return;
-    }
-    if (!this.dialogStationery.value.linkType) {
-      this.dialogStationery.value.linkType = '0';
-    }
-    this.dialogStationery.value.resourceType = '6';
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
-        this.imageUpload
-          .updateFileDirectReload(res.msgBodyData[0].resourceID)
-          .subscribe((result) => {
-            if (result) {
-              this.initForm();
-              this.loadData.emit();
-            } else {
-              this.initForm();
-            }
-          });
-        this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-        this.closeForm();
-      });
+    // if (this.dialogStationery.invalid == true) {
+    //   console.log(this.dialogStationery);
+    //   return;
+    // }
+    // if (!this.dialogStationery.value.linkType) {
+    //   this.dialogStationery.value.linkType = '0';
+    // }
+    // this.dialogStationery.value.resourceType = '6';
+    // this.dialog.dataService
+    //   .save((opt: any) => this.beforeSave(opt))
+    //   .subscribe((res) => {
+    //     this.imageUpload
+    //       .updateFileDirectReload(res.msgBodyData[0].resourceID)
+    //       .subscribe((result) => {
+    //         if (result) {
+    //           this.initForm();
+    //           this.loadData.emit();
+    //         } else {
+    //           this.initForm();
+    //         }
+    //       });
+    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
+    //     this.closeForm();
+    //   });
+    console.log('Send data', this.dialogStationery.value)
   }
 
-  valueOwnerChange(event) {
-    if (event) this.dialogStationery.patchValue({ owner: event[0] });
-  }
   closeForm() {
     this.initForm();
     this.closeEdit.emit();
@@ -222,7 +219,7 @@ export class PopupAddStationeryComponent implements OnInit {
         (result) => {
           this.dialogStationery.patchValue({ onlineUrl: this.link });
         },
-        (reason) => {}
+        (reason) => { }
       );
   }
 
@@ -245,17 +242,13 @@ export class PopupAddStationeryComponent implements OnInit {
 
   openPopupDevice(template: any, color) {
     this.color = color;
-    var dialog = this.cfService.openForm(template, '', 300, 300);
+    var dialog = this.cfService.openForm(template, '', 500, 350);
     this.changeDetectorRef.detectChanges();
   }
 
-  add() {
-    console.log(this.color);
-    console.log('Aloo');
-  }
   listColor = [];
   valueChange(event) {
-    debugger;
+
     if (event?.field) {
       if (event.data instanceof Object) {
         this.dialogStationery.patchValue({
@@ -276,7 +269,6 @@ export class PopupAddStationeryComponent implements OnInit {
       }
     } else {
       this.listColor.push(this.colorItem);
-      console.log(this.listColor);
     }
 
     this.changeDetectorRef.detectChanges();
@@ -292,5 +284,5 @@ export class PopupAddStationeryComponent implements OnInit {
     if (device) return device.text;
   }
 
-  getfileCount(event) {}
+  getfileCount(event) { }
 }

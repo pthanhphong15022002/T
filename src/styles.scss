@@ -1,1 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+/***Khong duoc xoa***/
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700");
+.e-device .e-dlg-content, .e-device .e-dlg-content * {
+    font-size: inherit;  
+}
+
+// Primary (để tạm ở đây do css từ module không nhận biến đặt trong core - đợi dev thiết lập lại dùm - css không biết làm đừng la tội nghiệp) 
+:root {
+    --primary: #3699ff;
+    --primary-dark: #0078ff;
+    --primary-darker: #005dc7;
+    --primary-darkest: #063163;
+    --primary-light: #D3E8FF;
+    --primary-lighter: #EAF0FF;
+    --primary-lightest: #F4F7FF;
+    ///
+    --primary-active: #187DE4;
+    --primary-inverse: #FFFFFF;
+
+    --bs-body-line-height: 1.4;
+}
+
+:root {
+    --codx-text-primary: #005DC7;
+}
+
+.text-primary {
+    color: var(--codx-text-primary) !important;
+}
+/***END Khong duoc xoa***/

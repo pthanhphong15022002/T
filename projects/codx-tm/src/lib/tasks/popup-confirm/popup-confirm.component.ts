@@ -29,6 +29,9 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   funcID: any;
   moreFunc: any;
   vllConfirm = 'TM009';
+  fieldDefault = ""
+  valueDefault = "" ;
+  comment =''
   
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -42,16 +45,18 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.funcID = this.data.funcID;
     this.vllConfirm = this.data.vll;
-    
+    this.task = this.data?.data;
+    this.moreFunc = this.data.moreFunc;
+    this.url = this.moreFunc.url;
+    var fieldDefault = UrlUtil.getUrl('defaultField', this.url)
+    this.fieldDefault= fieldDefault.charAt(0).toLocaleLowerCase() + fieldDefault.slice(1) ;
+    this.valueDefault = UrlUtil.getUrl('defaultValue', this.url)
+    this.task[this.fieldDefault]=  this.valueDefault ; 
   }
 
   ngOnInit(): void {}
   ngAfterViewInit(): void {
-    this.task = this.data.data;
-    this.task.confirmStatus = this.data.moreFunc.functionID =="TMT02016" ? "2" :"3" ; //sau hỏi thương đe gọi morfun
-    // this.moreFunc = this.data.moreFunc;
-    // this.url = this.moreFunc.url;
-    // this.status = UrlUtil.getUrl('defaultValue', this.url);
+   
   }
 
   valueChange(data) {
@@ -68,6 +73,10 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   }
 
   saveData() {
+   
+  }
+
+  saveConfirmTask(){
     if (
       this.task.confirmStatus == '3' &&
       (!this.task.confirmComment || this.task.confirmComment.trim() == '')

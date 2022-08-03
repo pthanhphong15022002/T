@@ -49,8 +49,8 @@
   <div class="d-flex has-action-menu">
     <codx-img [objectId]="data.owner" objectName="AD_Users"></codx-img>
     <div>
-      <div>{{ data.owner }}</div>
-      <div></div>
+      <div>{{ data.ownerName }}</div>
+      <div>{{data.position}}</div>
     </div>
     <div class="action-menu">
       <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
