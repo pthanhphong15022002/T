@@ -5,7 +5,7 @@ import { DataItem, FolderInfo, ItemRight, NodeTree } from "@shared/models/folder
 import { FolderService } from "@shared/services/folder.service";
 import { FileService } from "@shared/services/file.service";
 import { AlertConfirmInputConfig, AuthService, CallFuncService, FormModel, NotificationsService, SidebarModel } from "codx-core";
-import { FileInfo, FileUpload, Permission, SubFolder } from "@shared/models/file.model";
+import { FileInfo, FileUpload, HistoryFile, Permission, SubFolder, View } from "@shared/models/file.model";
 import { CopyComponent } from "./copy/copy.component";
 import { EditFileComponent } from "./editFile/editFile.component";
 import { RolesComponent } from "./roles/roles.component";
@@ -77,6 +77,9 @@ export class CodxDMService {
     itemRight: ItemRight;
     // public confirmationDialogService: ConfirmationDialogService;
     
+    public EmptyTrashData = new BehaviorSubject<boolean>(null);
+    isEmptyTrashData = this.EmptyTrashData.asObservable();
+
     public Location = new BehaviorSubject<string>(null);
     isLocation = this.Location.asObservable();
 
@@ -248,14 +251,7 @@ export class CodxDMService {
 
     ngOnInit(): void {
 
-    }
-
-    openFile(id, folder, type) {
-        this.fileID = id;
-        this.folderID = folder;
-        this.type = type;
-        this.openFileDialog.next(true);
-    }   
+    }  
 
     getRight(folder: FolderInfo) {
         this.parentCreate = folder.create;
@@ -502,7 +498,8 @@ export class CodxDMService {
         }
       }
 
-    filterMoreFunction(e: any, type: string) {    
+    filterMoreFunction(e: any, data: any) {    
+      var type = this.getType(data, "entity");
       if (e) {          
         for(var i=0; i<e.length; i++) {       
           if (e[i].data != null && e[i].data.entityName == type)
@@ -513,18 +510,117 @@ export class CodxDMService {
       }
     }
 
-    clickMF($event, item: any, type) {
-        var data: any;
-        data = item;
+    getImage(data) {
+      if (data.folderName != undefined)
+        return '../../../assets/codx/dms/folder.svg';
+      else
+        return this.getThumbnail(data.thumbnail, data.extension);
+    }
+
+    getSvg(icon) {
+      var path = window.location.origin;
+      return `${path}/${icon}`;
+    }
+
+    checkIconFolder(folder) {
+      if (folder.icon.indexOf('.') == -1)
+        return false;
+      else
+        return true;
+    }
+
+    getBookmarksClass(item) {
+      if (this.showBookmark(item))
+        return "icon-bookmark text-warning icon-20";
+      else
+        return "text-warning icon-20";
+    }
+
+    getFolderClass(name) {
+      // name.indexOf
+      return name;
+    }
+
+    showBookmark(item) {
+      if (item.bookmarks != null) {
+        var list = item.bookmarks.filter(x => x.objectID == this.user.userID.toString());
+        if (list.length > 0)
+          return true;
+        else
+          return false;
+      }
+      return false;
+    }
+
+    checkView(read: boolean) {      
+      return read;     
+    }
+
+    getRating(data: View[]) {
+      let _sum = 0;
+      var totalViews = 0;
+      if (data != null) {
+        var list = data.filter(x => x.rating > 0);
+        totalViews = list.length;
+        //res.views.forEach(item => {
+        for (var i = 0; i < list.length; i++) {
+          _sum = _sum + list[i].rating;
+        }
+      }
+  
+      var totalRating = 0;
+      if (totalViews != 0) {
+        totalRating = _sum / totalViews;
+      }
+     
+      totalRating = parseFloat(totalRating.toFixed(2));
+      return totalRating;    
+    }
+
+    showDownloadCount(download) {   
+      if (download === null || download === undefined)
+        return 0;
+      else
+        return download;
+    }
+    
+    getViews(data: HistoryFile[]) {
+      if (data != null) {
+        // var list = data.filter(x => x.rating == 0);
+        return data.filter(x => (x.type != null && x.type == 'view') || (x.note != null && x.note.indexOf("read file") > -1)).length;
+      }
+      else
+        return 0;
+    }
+    
+    getType(item: any, ret: string) {
+      var type = 'folder';      
+      if (ret == "name") {
+        if (item.folderName == null || item.folderName == undefined)
+          type = 'file';
+      }
+      else {
+        // entity
+        type = 'DM_FolderInfo';
+        if (item.folderName == null || item.folderName == undefined)
+          type = 'DM_FileInfo';
+      }
+      
+      return type;
+    }
+
+    clickMF($event, data: any) {        
+        var type =  this.getType(data, "name");
+
         switch($event.functionID) {
           case "DMT0210": //view file
-            this.fileService.getFile(item.recID).subscribe(data => {
-                this.callfc.openForm(ViewFileDialogComponent, item.fileName, 1000, 800, "", item, "");
+            this.fileService.getFile(data.recID).subscribe(data => {
+                this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
             });
             break;
 
           case "DMT0211": // download
-            this.fileService.getFile(item.recID).subscribe(file => {      
+            this.fileService.getFile(data.recID).subscribe(file => {      
                 var id = file.recID;
                 var that = this;
                 if (this.checkDownloadRight(file)) {
@@ -563,7 +659,7 @@ export class CodxDMService {
 
           case "DMT0206":  // xoa thu muc
           case "DMT0219": // xoa file
-             this.deleteFile(item, type);            
+             this.deleteFile(data, type);            
             break;
 
           case "DMT0202": // chinh sua thu muc  
@@ -667,23 +763,22 @@ export class CodxDMService {
       this.listFiles.next(files);        
     }
 
-    // open folder    
-    openDialog(value) {
-      this.data.next(value);
-    }
-
-    // getTemplate() {
-    //     return [
-    //         new DMItem(DetailComponent),
-    //         new DMItem(ListComponent),
-    //         new DMItem(HomeComponent),
-    //         new DMItem(SearchComponent),
-    //         new DMItem(PendingComponent),
-    //         new DMItem(AcceptComponent)
-    //     ];
-    // }
-
     emptyTrash() {
+      var config = new AlertConfirmInputConfig();
+      config.type = "YesNo";
+      this.notificationsService.alert(this.title, this.titleDeleteeMessage, config).closed.subscribe(x=>{
+          if(x.event.status == "Y") {
+            this.folderService.emptyTrash("").subscribe(async res => {
+            //  this.listFiles.next(null);
+            //  this.listFolder.next(null);
+              this.fileService.getTotalHdd().subscribe(i => {
+                  this.updateHDD.next(i.messageHddUsed);
+              })
+              this.EmptyTrashData.next(true);
+          });
+          }
+      });
+
       // this.confirmationDialogService.confirm(this.titlemessage, "Bạn co muốn xóa tất cả trong thùng rác ?")
       //     .then((confirmed) => {
       //         if (confirmed) {
@@ -693,8 +788,7 @@ export class CodxDMService {
       //                 this.fileService.getTotalHdd().subscribe(i => {
       //                     this.updateHDD.next(i.messageHddUsed);
       //                 })
-      //             });
-      //             // this.notificationsService.notify("res.message");   
+      //             });                  
       //         }
       //     })
       //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));       

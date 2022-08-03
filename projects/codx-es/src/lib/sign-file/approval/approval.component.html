@@ -1,6 +1,6 @@
-<div class="d-flex align-items-stretch justify-content-between main-pane stepper-body  tab-custom w-100">
+<div class="d-flex align-items-stretch justify-content-between main-pane stepper-body tab-custom w-100">
   <div class="main-content d-flex flex-column-fluid h-100">
-    <div class="flex-column flex-lg-row-auto  w-lg-240px  main-left" [class.hideCol]="hideThumbnail">
+    <div class="flex-column flex-lg-row-auto w-lg-240px main-left" [class.hideCol]="hideThumbnail">
       <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
         <e-tabitems>
           <e-tabitem>
@@ -19,22 +19,24 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
-      <div class="showArrow" [class.icon-arrow_back]="!hideThumbnail" [class.icon-arrow_forward]="hideThumbnail"
-        (click)="changeShowThumbnailState()"></div>
+
     </div>
-    <div class=" d-flex flex-column flex-row-fluid mx-2 ">
-      <div class="d-flex flex-stack  stepper-toolbar p-2 ">
+    <div class=" d-flex flex-column flex-row-fluid mx-2 main-center ">
+      <div class="d-flex align-items-stretch justify-content-between stepper-toolbar ">
         <div class="left_Toolbar d-flex justify-content-start">
           <ejs-toolbar>
             <e-items>
-              <e-item prefixIcon="e-chevron-up-double" (click)="pdfviewerControl?.navigation?.goToFirstPage()">
+              <e-item [prefixIcon]="hideThumbnail? 'icon-arrow_forward_ios':'icon-arrow_back_ios rotate-180'"
+                (click)="changeShowThumbnailState()"></e-item>
+              <e-item prefixIcon="icon-skip_previous icon-20" (click)="pdfviewerControl?.navigation?.goToFirstPage()">
               </e-item>
-              <e-item prefixIcon="e-chevron-up" (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()">
+              <e-item prefixIcon="icon-navigate_before icon-20"
+                (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()">
               </e-item>
               <e-item [text]="pdfviewerControl?.currentPageNumber" [disabled]="true"></e-item>
-              <e-item prefixIcon="e-chevron-down" (click)="pdfviewerControl?.navigation?.goToNextPage()">
+              <e-item prefixIcon="icon-navigate_next icon-20" (click)="pdfviewerControl?.navigation?.goToNextPage()">
               </e-item>
-              <e-item prefixIcon="e-chevron-down-double" (click)="pdfviewerControl?.navigation?.goToLastPage()">
+              <e-item prefixIcon="icon-skip_next icon-20" (click)="pdfviewerControl?.navigation?.goToLastPage()">
               </e-item>
             </e-items>
           </ejs-toolbar>
@@ -51,8 +53,8 @@
               </e-item>
             </e-items>
           </ejs-toolbar>
-          <ejs-dropdownlist style="width: 100%" id="zoomValuesDropdownList" [dataSource]="lstZoomValue"
-            [placeholder]="zoomValue" (change)="clickZoom('to', $event)"></ejs-dropdownlist>
+          <ejs-dropdownlist style="width: 100% ;min-width: 70px;" id="zoomValuesDropdownList"
+            [dataSource]="lstZoomValue" [placeholder]="zoomValue" (change)="clickZoom('to', $event)"></ejs-dropdownlist>
           <ejs-toolbar>
             <e-items>
               <e-item prefixIcon="e-zoom-in" (click)="clickZoom('in')">
@@ -64,7 +66,10 @@
               <e-item prefixIcon="e-print" (click)="clickPrint()"> </e-item>
               <e-item prefixIcon="e-download" (click)="clickDownload()">
               </e-item>
+              <e-item [prefixIcon]="!hideActions? 'icon-arrow_forward_ios':'icon-arrow_back_ios'"
+                (click)="changeShowActionsState()"></e-item>
             </e-items>
+
           </ejs-toolbar>
         </div>
       </div>
@@ -86,7 +91,7 @@
         </ejs-pdfviewer>
       </div>
     </div>
-    <div class="actions flex-column flex-lg-row-auto w-lg-350px  main-right" [class.hideCol]="hideActions">
+    <div class="actions flex-column flex-lg-row-auto w-lg-350px main-right" [class.hideCol]="hideActions">
       <ejs-tab #rightToolbar [class.d-none]="hideActions">
         <e-tabitems>
           <e-tabitem>
@@ -99,7 +104,17 @@
                 <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
                   class="ms-2 fw-bold"></codx-label>
                 <ejs-dropdownlist #inputAuthor id="signatureDropdownList" [dataSource]="lstSigners" [fields]="person"
-                  (change)="changeSigner($event)"></ejs-dropdownlist>
+                  (change)="changeSigner($event)">
+                  <ng-template #item let-approver>
+                    <codx-temp-full [typeMF]="'hover'" [content]="approver.fullName" [desc]="approver.position"
+                      [icoCss]="
+                        'icon-26 icon align-self-start rounded-circle p-3 m-1 '
+                      " [statusVll]="'ES003'" [date]="approver.signType"
+                      cardCss="card-template border-bottom px-2 py-3" [resourceObjType]="'AD_Users'"
+                      [icoStatusVll]="'ES002'" [modeImgs]="false" [titleLine]="2" [icoDateCss]="'icon-access_alarm'">
+                    </codx-temp-full>
+                  </ng-template>
+                </ejs-dropdownlist>
                 <!-- <codx-input
                   class="form-control me-2"
                   type="valuelist"
@@ -108,12 +123,12 @@
                   (valueChange)="changeSigner($event)"
                 ></codx-input> -->
               </div>
+              <div class="mt-3 mb-3">
+                <codx-label name="lblDragAction" [formModel]="" default="Kéo thả" class="fw-bold fs-4 text-primary">
+                </codx-label>
+              </div>
 
-              <codx-label name="lblDragAction" [formModel]="" default="Kéo thả"
-                class="fw-bold fs-4 text-primary mt-3 mb-3"></codx-label>
-
-
-              <div class="d-flex flex-wrap d-grid justify-content-between">
+              <div class="d-flex flex-wrap d-grid align-items-center">
                 <div class="card-item me-3 mb-3" *ngFor="let action of actionsButton; let index = index"
                   [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
                   <codx-card-center cardCss="border h-100 w-125px" icoCss="icon-30 mb-1 {{
@@ -123,17 +138,33 @@
                 </div>
               </div>
 
-              <div class="autoSign_Space d-flex d-flex align-items-center justify-content-between" style="width: 160px">
-                <codx-label name="lblSuggestSignArea" default="Gợi ý vị trí ký" class="ms-1 fw-bold"></codx-label>
-                <codx-input type="switch" field="" [crrValue]="needSuggest" (valueChange)="changeSuggestState($event)">
-                </codx-input>
+              <!--begin::Item-->
+              <div class="d-flex align-items-center my-2">
+                <div class="d-flex justify-content-start me-2">
+                  <!--begin::Switch-->
+                  <codx-input type="switch" labelPosition="After" field="" [crrValue]="needSuggest"
+                    (valueChange)="changeSuggestState($event)">
+                  </codx-input>
+                  <!--end::Switch-->
+                </div>
+                <div class="text-gray-800 text-nowrap">
+                  <codx-label name="lblSuggestSignArea" default="Gợi ý vị trí ký" class="fw-bold"></codx-label>
+                </div>
               </div>
-
-              <div class="autoSign_Space d-flex align-items-center justify-content-between" style="width: 160px">
-                <codx-label name="lblSignLastLine" default="Ký dòng cuối cùng" class="ms-1 fw-bold"></codx-label>
-                <codx-input type="switch" field="autoSignLastLine" [crrValue]="autoSignState"
-                  (valueChange)="changeAutoSignState($event, 0)"></codx-input>
+              <!--end::Item-->
+              <!--begin::Item-->
+              <div class="autoSign_Space d-flex align-items-center my-2">
+                <div class="d-flex justify-content-start me-2">
+                  <!--begin::Switch-->
+                  <codx-input type="switch" field="autoSignLastLine" [crrValue]="autoSignState"
+                    (valueChange)="changeAutoSignState($event, 0)"></codx-input>
+                  <!--end::Switch-->
+                </div>
+                <div class="text-gray-800 text-nowrap">
+                  <codx-label name="lblSignLastLine" default="Ký dòng cuối cùng" class="fw-bold"></codx-label>
+                </div>
               </div>
+              <!--end::Item-->
             </ng-template>
           </e-tabitem>
 
@@ -152,8 +183,6 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
-      <div class="showArrow reverse" [class.icon-arrow_back]="hideActions" [class.icon-arrow_forward]="!hideActions"
-        (click)="changeShowActionsState()"></div>
     </div>
   </div>
   <div class="row invisible" #qrCode id="qrCode"></div>
