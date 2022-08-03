@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -18,7 +18,7 @@ import { UpdateExtendComponent } from '../update/update.component';
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss']
 })
-export class ViewDetailComponent  implements OnInit , OnChanges {
+export class ViewDetailComponent  implements OnInit , OnChanges  {
   active = 1;
   checkUserPer: any;
   userID:any;
@@ -58,15 +58,19 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     if(changes.data) {
       if(changes.data?.previousValue?.recID != changes.data?.currentValue?.recID)
       {
+        this.formModel = this.view.formModel;
+        this.dataItem = changes.dataItem.currentValue
         this.userID = this.authStore.get().userID;
         this.data = changes.data?.currentValue;
         if(!this.data )
           this.data ={};
         this.getDataValuelist();
         this.getPermission(this.data.recID);
-
+     
+       
       }
     }
+    
   }
   ngOnInit(): void {
     this.active = 1;
@@ -307,9 +311,10 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                 
                   //this.view.dataService.update(x.event).subscribe();
                   this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
-                    debugger;
                     this.data = item;
                     this.data.lstUserID = getListImg(item.relations);
+                   /*  var foundIndex = this.view.dataService.data.findIndex((a: { recID: string }) => a.recID == x.event.recID);
+                    this.view.dataService.setDataSelected(x.event); */
                   });
                  /*  if(x.event.recID == this.view.dataService.dataSelected.recID)
                     this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
@@ -566,8 +571,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             {
               this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
                 if (item.status == 0) {
-                  //this.data = item.data[0];
-                  debugger;
+                  this.data.relations = item.data[0].relations;
                   this.data.lstUserID = getListImg(item.data[0].relations);
                   this.data.listInformationRel = item.data[1]
                 }

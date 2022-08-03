@@ -19,7 +19,7 @@
         </div>
         <div class="col-12">
              <codx-label fiedName="Comment" formName="Tasks" gridViewName="grvTasks" default="Comment"></codx-label>
-            <textarea [(ngModel)]="comment" class="form-control" rows="2"></textarea>
+             <codx-input type="textarea" class="form-control" field="comment" [crrValue]="comment" (valueChange)="changeComment($event)" rows="3" format="ed2"></codx-input>
         </div>
     </div>
   </ng-template>

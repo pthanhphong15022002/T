@@ -133,7 +133,7 @@
                         </div>
                         <div class="box-wallets" *ngIf="data_Line.length == 0">
                             <div class="d-flex align-items-center justify-content-between">
-                                <div class="text-dark font-size-h4 font-weight-bold">
+                                <div class="text-dark font-size-h4 fw-bold">
                                     <codx-label name="lblEmployee" formName="FD_KudosTrans"
                                         default="Biến động số dư theo ví bộ phận"></codx-label>
                                 </div>
@@ -156,7 +156,7 @@
                         </div>
                         <div class="box-wallets top-100" *ngIf="data_Line.length !== 0">
                             <div class="d-flex align-items-center justify-content-between">
-                                <div class="text-dark font-size-h4 font-weight-bold">
+                                <div class="text-dark font-size-h4 fw-bold">
                                     <codx-label name="lblEmployee" formName="FD_KudosTrans"
                                         default="Biến động số dư theo ví bộ phận"></codx-label>
                                 </div>
@@ -193,7 +193,7 @@
                                         </div>
                                     </div>
                                     <div class="top-name w-100 text-center">
-                                        <div class="text-dark font-size-sm font-weight-bold">
+                                        <div class="text-dark font-size-sm fw-bold">
                                             {{ lstRate[1]?.employeeName }}
                                         </div>
                                         <div class="text-dark-50">{{ lstRate[1]?.totalCoreEmp }}</div>
@@ -208,7 +208,7 @@
                                         </div>
                                     </div>
                                     <div class="top-name w-100 text-center">
-                                        <div class="text-dark font-size-sm font-weight-bold">
+                                        <div class="text-dark font-size-sm fw-bold">
                                             {{ lstRate[0]?.employeeName }}
                                         </div>
                                         <div class="text-dark-50">{{ lstRate[0]?.totalCoreEmp }}</div>
@@ -223,7 +223,7 @@
                                         </div>
                                     </div>
                                     <div class="top-name w-100 text-center">
-                                        <div class="text-dark font-size-sm font-weight-bold">
+                                        <div class="text-dark font-size-sm fw-bold">
                                             {{ lstRate[2]?.employeeName }}
                                         </div>
                                         <div class="text-dark-50">{{ lstRate[2]?.totalCoreEmp }}</div>
@@ -271,13 +271,13 @@
             </div>
         </div>
         <div class="d-flex flex-column flex-grow-1 left-15">
-            <div class="text-dark font-weight-bold">
+            <div class="text-dark fw-bold">
                 {{ item?.employeeName }}
             </div>
             <div class="text-dark-50">{{ item?.orgUnitName }}</div>
         </div>
         <div class="d-flex flex-column pr-3">
-            <div class="text-dark font-size-h5 text-right font-weight-bold mt-1">
+            <div class="text-dark font-size-h5 text-right fw-bold mt-1">
                 {{ item?.totalCoreEmp }}
             </div>
         </div>

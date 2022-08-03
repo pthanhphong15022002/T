@@ -30,6 +30,7 @@ import {
   AccumulationChart,
   AnimationModel,
   Theme,
+  Thickness,
 } from '@syncfusion/ej2-angular-charts';
 import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { CodxDMService } from '../codx-dm.service';
@@ -64,6 +65,7 @@ export class HomeComponent extends UIComponent {
   views: Array<ViewModel> = [];
   listFolders: FolderInfo[];
   listFiles: FileInfo[];
+  data = [];
   titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
   //loadedFile: boolean;
   //loadedFolder: boolean;
@@ -79,25 +81,8 @@ export class HomeComponent extends UIComponent {
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService
   ) {
-    super(inject);
-    // this.dmSV.isOpenCreateFolder.subscribe(item => {
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view?.currentView?.dataService;
-    //   option.FormModel = this.dmSV.formModel;
-    //   option.Width = '750px';
-
-    //   this.dialog = this.callfc.openSide(CreateFolderComponent, null, option);
-    //   this.dialog.closed.subscribe(e => {
-    //     console.log(e);
-    //   })
-    // });
+    super(inject);   
   }
-
-  // override ngOnInit() {
-  //   if (this.view != null && this.view.dataService?.data != null) {
-  //     this.listFolder = this.view.dataService.data
-  //   }
-  // }
 
   onInit(): void {
     this.user = this.auth.get();
@@ -112,6 +97,7 @@ export class HomeComponent extends UIComponent {
     //  alert(1);
     //this.attachment.uploadFile();
     /*
+     this.data=[...this.data, ...res];
     <attachment
       #attachment
       [objectType]="formModel?.entityName"
@@ -186,13 +172,13 @@ export class HomeComponent extends UIComponent {
 
     if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
       item1 =
-        '<img class="max-h-18px" src="../../../assets/codx/dms/folder.svg">';
+        '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
     else {
       if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
       else {
         var path = `${this.path}/${folder.icon}`;
-        item1 = `<img class="max-h-18px " src="${path}">`;
+        item1 = `<img class="h-15px " src="${path}">`;
       }
     }
 
@@ -240,6 +226,7 @@ export class HomeComponent extends UIComponent {
       // this.dmSV.breadcumb.next(breadcumb);
       // this.dmSV.currentNode = id;
       // this.dmSV.currentNode = id;
+      this.data = [];
       this.dmSV.folderId.next(id);
       //this.view.dataService.addDatas(id, )
       var items = item.items;
@@ -255,6 +242,7 @@ export class HomeComponent extends UIComponent {
             var data = res[0];
             // this.view.dataService.addNew(data);
             this.listFolders = data;
+            this.data = [...this.data, ...data];
             var tree = this.codxview.currentView.currentComponent.treeView;
             item.items = [];
             tree.addChildNodes(item, data);
@@ -263,6 +251,8 @@ export class HomeComponent extends UIComponent {
             //  this.dmSV.listFolder.next(res);
             // $data.dataItem.items = [];
             //  this.tree.addChildNodes($data.dataItem, res);
+            
+      
             this.changeDetectorRef.detectChanges();
             // this.dmSV.isTree = false;
           }
@@ -270,8 +260,9 @@ export class HomeComponent extends UIComponent {
       } else {
         //this.dmSV.isTree = true;
         //  alert(1);
-        this.dmSV.listFolder.next(item.items);
-        this.listFolders = item.items;
+        this.data = [...this.data, ...item.items];
+       // this.dmSV.listFolder.next(item.items);
+      //  this.listFolders = item.items;
         this.changeDetectorRef.detectChanges();
         //this.dmSV.isTree = false;
       }
@@ -356,11 +347,13 @@ export class HomeComponent extends UIComponent {
     // this.views[0].type = ViewType.content;
     // this.views[1].type = ViewType.content;
     // this.views[2].type = ViewType.content;
-
+    this.data = [] ;//=[...this.data, ...res];
     this.folderService.options.funcID = this.view.funcID;
     if (this.dmSV.folderType != this.view.funcID) {
-      this.listFolders = this.view.dataService.data;
-      this.dmSV.listFolder.next(this.listFolders);
+      this.data = [...this.data, ...this.view.dataService.data];
+      this.changeDetectorRef.detectChanges();
+     // this.listFolders = this.view.dataService.data;
+     // this.dmSV.listFolder.next(this.listFolders);
     }
       
     this.dmSV.folderType = this.view.funcID;
@@ -386,8 +379,9 @@ export class HomeComponent extends UIComponent {
       .getListActiveFiles('', this.view.funcID)
       .subscribe(async (res) => {
         if (res != null) {
-          this.listFiles = res;
-          this.dmSV.listFiles.next(res);
+          //this.listFiles = res;
+         // this.dmSV.listFiles.next(res);
+          //this.data = [...this.data, ...res];
           this.dmSV.loadedFile = true;
           this.changeDetectorRef.detectChanges();
         }

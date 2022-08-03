@@ -1,4 +1,4 @@
-import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsService, CacheService } from 'codx-core';
 import { Component, OnInit, Input, ChangeDetectorRef, Optional } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
@@ -19,12 +19,14 @@ export class UpdateNotePinComponent implements OnInit {
   checkEditIsPin = false;
   data: any = [];
   dataOld: any;
+  messageParam: any;
 
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private noteService: NoteServices,
+    private cache: CacheService,
     @Optional() data?: DialogData,
     @Optional() dt?: DialogRef,
   ) {
@@ -34,6 +36,11 @@ export class UpdateNotePinComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cache.message('WP003').subscribe((res) => {
+      if(res) {
+        this.messageParam = res.description;
+      }
+    });
   }
 
   valueChange(e, item = null) {

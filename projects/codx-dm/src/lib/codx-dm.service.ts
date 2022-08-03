@@ -502,7 +502,8 @@ export class CodxDMService {
         }
       }
 
-    filterMoreFunction(e: any, type: string) {    
+    filterMoreFunction(e: any, data: any) {    
+      var type = this.getType(data, "entity");
       if (e) {          
         for(var i=0; i<e.length; i++) {       
           if (e[i].data != null && e[i].data.entityName == type)
@@ -513,18 +514,34 @@ export class CodxDMService {
       }
     }
 
-    clickMF($event, item: any, type) {
-        var data: any;
-        data = item;
+    getType(item: any, ret: string) {
+      var type = 'folder';      
+      if (ret == "name") {
+        if (item.folderName == null || item.folderName == undefined)
+          type = 'file';
+      }
+      else {
+        // entity
+        type = 'DM_FolderInfo';
+        if (item.folderName == null || item.folderName == undefined)
+          type = 'DM_FileInfo';
+      }
+      
+      return type;
+    }
+
+    clickMF($event, data: any) {        
+        var type =  this.getType(data, "name");
+
         switch($event.functionID) {
           case "DMT0210": //view file
-            this.fileService.getFile(item.recID).subscribe(data => {
-                this.callfc.openForm(ViewFileDialogComponent, item.fileName, 1000, 800, "", item, "");
+            this.fileService.getFile(data.recID).subscribe(data => {
+                this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
             });
             break;
 
           case "DMT0211": // download
-            this.fileService.getFile(item.recID).subscribe(file => {      
+            this.fileService.getFile(data.recID).subscribe(file => {      
                 var id = file.recID;
                 var that = this;
                 if (this.checkDownloadRight(file)) {
@@ -563,7 +580,7 @@ export class CodxDMService {
 
           case "DMT0206":  // xoa thu muc
           case "DMT0219": // xoa file
-             this.deleteFile(item, type);            
+             this.deleteFile(data, type);            
             break;
 
           case "DMT0202": // chinh sua thu muc  

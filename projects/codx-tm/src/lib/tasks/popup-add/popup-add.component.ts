@@ -409,7 +409,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     if (
-      this.param?.LocationCotrol == '2' &&
+      this.param?.LocationControl == '2' &&
       (!this.task.location || this.task.location.trim() != '')
     ) {
       this.notiService.notifyCode('TM029');
@@ -954,5 +954,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.param.VerifyByType = taskGroup.verifyByType;
     this.param.VerifyControl = taskGroup.verifyControl;
     this.param.DueDateControl = taskGroup.dueDateControl;
+    this.param.ExtendControl = taskGroup.extendControl ;
+    this.param.ExtendBy = taskGroup.extendBy ;
+    this.param.CompletedControl = taskGroup.completedControl;
   }
 }

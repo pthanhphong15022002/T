@@ -12,7 +12,6 @@ import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import {
   AuthGuard,
   CodxCoreModule,
-  CodxShareComponent,
   EnvironmentConfig,
 } from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
@@ -95,6 +94,11 @@ const Components: Type<any>[] = [
   BookingStationeryComponent,
   PopupAddBookingRoomComponent,
   PopupAddBookingCarComponent,
+  PopupRequestStationeryComponent,
+  PopupDeviceStationeryComponent,
+  PopupColorStationeryComponent,
+  PopupAddStationeryComponent,
+  PopupListStationeryComponent,
   StationeryComponent,
   CarsComponent,
   RoomsComponent,
@@ -107,11 +111,7 @@ const Components: Type<any>[] = [
 @NgModule({
   declarations: [
     Components,
-    PopupRequestStationeryComponent,
     PopupListStationeryComponent,
-    PopupDeviceStationeryComponent,
-    PopupColorStationeryComponent,
-    PopupAddStationeryComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -21,7 +21,7 @@ import { CodxTMService } from '../../../codx-tm.service';
   templateUrl: './popup-add-event.component.html',
   styleUrls: ['./popup-add-event.component.scss'],
 })
-export class PopupAddEventComponent extends UIComponent implements OnInit {
+export class PopupAddEventComponent extends UIComponent {
   @ViewChild('schedule') schedule: CodxScheduleComponent;
   dialogAddEvent: FormGroup;
   formModel: FormModel;

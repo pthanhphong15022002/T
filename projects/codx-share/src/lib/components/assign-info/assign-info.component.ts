@@ -190,12 +190,14 @@ export class AssignInfoComponent implements OnInit {
     var dt = event.data;
     this.task.memo = dt?.value ? dt.value : dt;
   }
+  cbxChange(e){}
+
+  changeVLL(e){}
 
 
   saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
-      // this.notiService.notifyCode('???code');
-      this.notiService.notify('Tên công việc không được để trống !');
+      this.notiService.notifyCode('TM027');
       return;
     }
     if (this.task.assignTo == null || this.task.assignTo == '') {

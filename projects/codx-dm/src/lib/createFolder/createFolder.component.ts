@@ -762,7 +762,7 @@ export class CreateFolderComponent implements OnInit {
     switch (item) {
       case "folderName":
         if (this.checkFolderName() != "0") {
-          return "w-100 text-error is-invalid";
+          return "w-100 dms-text-error is-invalid";
         }
         else {
           return "w-100";

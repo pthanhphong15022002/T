@@ -302,7 +302,7 @@ export class CopyComponent implements OnInit {
     switch (item) {  
       case "fullName":
         if (this.checkFolderName() != "0") {        
-          return "w-100 text-error is-invalid";       
+          return "w-100 dms-text-error is-invalid";       
         }
         else {
           return "w-100";      
