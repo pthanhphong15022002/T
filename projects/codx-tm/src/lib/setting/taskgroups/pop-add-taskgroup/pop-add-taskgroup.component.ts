@@ -32,6 +32,8 @@ export class PopAddTaskgroupComponent implements OnInit {
   title = 'Tạo mới công việc';
   formName = "";
   gridViewName = "";
+  gridViewSetUp: any;
+
   entityName = "";
   readOnly = false;
   action = "";
@@ -55,6 +57,8 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.action = dt.data[1];
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.functionID = this.dialog.formModel.funcID;
+
   }
 
   ngOnInit(): void {
@@ -76,6 +80,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     }
     this.changDetec.detectChanges();
     // this.openForm(this.taskGroups, false);
+    this.getGridViewSetUp()
   }
 
   getParam(callback = null) {
@@ -111,6 +116,16 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.enableAddtodolist = !this.enableAddtodolist;
     this.todoAddText = "";
     this.changDetec.detectChanges();
+  }
+
+  getGridViewSetUp(){
+    this.cache.functionList(this.functionID).subscribe((func) => {
+      console.log('functuonID: ',func);
+      this.cache.gridViewSetup(func?.formName, func?.gridViewName).subscribe((grd) => {
+        this.gridViewSetUp = grd;
+        console.log('gridViewSetUp: ',this.gridViewSetUp);
+      })
+    })
   }
 
   addTodolist() {

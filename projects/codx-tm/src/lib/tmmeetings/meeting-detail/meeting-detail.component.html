@@ -34,24 +34,25 @@
 </div> -->
 
 <ng-template #titleTmp let-data>
-  <!-- <div class="d-flex flex-column">
+  <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-1">
       <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2"> {{data.meetingName}}</div>
-      <div class="badge border badge-white d-flex align-items-center me-2" >
+      <div class="badge badge-light-primary d-flex align-items-center me-2">
         ccccc
       </div>
     </div>
-  </div> -->
-  aaaaaaaaaa
+  </div>
+
 </ng-template>
 
 <ng-template #footer let-data>
-  <div class="d-flex flex-wrap  ms-17">
-    <div class="d-flex align-items-center me-4">
-      <div class="row" *ngIf="data.fromDate && data.toDate">
-        <span>
-          Thời gian review dữ liệu: {{data.fromDate | date: "dd/MM/yyyy"}} - {{data.toDate | date: "dd/MM/yyyy"}}
-        </span>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-1">
+      <div class="d-flex" *ngIf="data.fromDate && data.toDate">
+        <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">Thời gian review dữ liệu:</div>
+        <div class="d-flex align-items-center me-2">
+           {{data.fromDate | date: "dd/MM/yyyy"}} - {{data.toDate | date: "dd/MM/yyyy"}}
+        </div>
       </div>
     </div>
   </div>
@@ -61,14 +62,15 @@
 <div class="px-5">
   <div class="d-flex justify-content-between align-items-center flex-wrap  pt-4 pb-2">
     <div class=" justify-content-start">
-      <codx-temp-full cardCss="card-template" [titleTmp]="titleTmp" [dataItem]="meeting" [footer]="footer">
+      <codx-temp-full cardCss="card-template" [titleTmp]="titleTmp"
+        [desc]="convertHtmlAgency(data.startDate, startTime, data.userName)" [dataItem]="data" [footer]="footer">
       </codx-temp-full>
     </div>
     <div class="d-flex flex-wrap">
       <div class="flex">
-        <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="meeting.avataResource" objectType="AD_Users"
-        [numberImages]="6">
-      </codx-imgs>
+        <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="meeting.avataResource"
+          objectType="AD_Users" [numberImages]="6">
+        </codx-imgs>
       </div>
     </div>
     <div class="separator"></div>
