@@ -118,18 +118,7 @@
                 <codx-label name="lblDragAction" [formModel]="" default="Kéo thả" class="fw-bold fs-4 text-primary">
                 </codx-label>
               </div>
-              <!--begin::Item-->
-              <div class="d-flex  my-2">
-                <div class="d-flex justify-content-start me-2">
-                  <!--begin::Switch-->
-                  <codx-input #checkbox type="switch" id="switch" [checked]="true" labelPosition="After"
-                    [disabled]="false" (valueChange)="changeSuggestState($event)">
-                  </codx-input>
-                  <!--end::Switch-->
-                </div>
-                <div class="text-gray-800 me-2 text-nowrap">Thanh tiến độ</div>
-              </div>
-              <!--end::Item-->
+
               <div class="d-flex flex-wrap d-grid align-items-center">
                 <div class="card-item me-3 mb-3" *ngFor="let action of actionsButton; let index = index"
                   [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
@@ -139,6 +128,8 @@
                   </codx-card-center>
                 </div>
               </div>
+
+
               <!--begin::Item-->
               <div class="d-flex align-items-center my-2">
                 <div class="d-flex justify-content-start me-2">
@@ -184,7 +175,8 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
-      <div class="showArrow reverse" [class.icon-arrow_back]="hideActions" [class.icon-arrow_forward]="!hideActions"
+      <div class="showArrow reverse btn btn-icon btn-light-primary btn-active-primary "
+        [class.icon-arrow_back]="hideActions" [class.icon-arrow_forward]="!hideActions"
         (click)="changeShowActionsState()"></div>
     </div>
   </div>
