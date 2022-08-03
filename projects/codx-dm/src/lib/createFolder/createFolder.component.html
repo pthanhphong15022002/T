@@ -11,7 +11,7 @@
                             <codx-input [placeholder]="titleFolderName" [class]="validate('folderName')" type="text"
                                 [crrValue]="folderName" (valueChange)="changeValue($event, 'folderName')"></codx-input>
                         </div>
-                        <div class="ml-2 icon-document">
+                        <div class="ms-2 icon-document">
                             <codx-valuelist [name]="'L1470'" [iconOnly]="true"
                                 (valueChange)="valueChange($event, 'icon')"></codx-valuelist>
                         </div>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="mt-2">
                     <button (click)="isShowAll(true)" type="button" class="btn btn-sm btn-primary">
-                        {{titleExpand}}<i class="icon-keyboard_arrow_right icon-16 ml-2"></i></button>
+                        {{titleExpand}}<i class="icon-keyboard_arrow_right icon-16 ms-2"></i></button>
                 </div>
 
                 <div *ngIf="this.showAll != null && isShowAll(false)" class="permission-group">
@@ -82,7 +82,7 @@
                                                     </div>
                                                     <span *ngIf="perm.isSystem == false && this.assignRight"
                                                         (click)="removeUserRight(i)"
-                                                        class="icon-close icon-16 ml-2 text-danger">
+                                                        class="icon-close icon-16 ms-2 text-danger">
                                                     </span>
                                                 </div>
                                             </div>
@@ -245,7 +245,7 @@
                                                 <td>{{SubLevel(sub)}}</td>
                                                 <td>
                                                     <div class="d-flex flex-column">
-                                                        <div class="text-dark font-weight-bold">{{SubType(sub)}}</div>
+                                                        <div class="text-dark fw-bold">{{SubType(sub)}}</div>
                                                         <div class="text-50">{{SubFormat(sub)}}</div>
                                                     </div>
                                                 </td>
@@ -261,7 +261,7 @@
                                                             <i class="icon-edit text-primary icon-18"></i>
                                                         </div>
                                                     </div>
-                                                    <!-- <div ngbDropdown class="view-more ml-2">
+                                                    <!-- <div ngbDropdown class="view-more ms-2">
                                                         <button ngbDropdownToggle class="btn btn-icon btn-md" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <span class="icon-more_vert icon-20"></span>
                                                         </button> 
@@ -269,13 +269,13 @@
                                                             <a ngbDropdownItem class="dropdown-item" (click)="onEditSub(i)">
                                                                 <div class="d-flex align-items-center">
                                                                     <span class="icon-edit icon-18 text-warning"></span>
-                                                                    <span class="ml-3">{{titleEdit}}</span>
+                                                                    <span class="ms-3">{{titleEdit}}</span>
                                                                 </div>
                                                             </a>                           
                                                             <a ngbDropdownItem class="dropdown-item" (click)="onDeleteSub(i)">
                                                                 <div class="d-flex align-items-center">
                                                                     <span class="icon-close icon-18 text-danger"></span>
-                                                                    <span class="ml-3">{{titleDelete}}</span>
+                                                                    <span class="ms-3">{{titleDelete}}</span>
                                                                 </div>
                                                             </a>                         
                                                         </div>
@@ -304,7 +304,8 @@
     <ng-template #footer>
         <div class="offcanvas-footer">
             <button type="button" class="btn btn-primary" id="btnCreateFolder"
-                [disabled]="this.updateRight == false || this.propertiesFolder" (click)="onFolderSave()">{{titleOK}}</button>
+                [disabled]="this.updateRight == false || this.propertiesFolder"
+                (click)="onFolderSave()">{{titleOK}}</button>
         </div>
     </ng-template>
 </codx-form>

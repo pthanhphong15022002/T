@@ -6,9 +6,15 @@ export const environment = {
   appVersion: 'v101lv',
   TNDATA_KEY: 'tnf649fc9a5f55',
   apiUrl: 'http://localhost:8011',
+<<<<<<< HEAD
   shopping: 'https://localhost:44317/Shopping',
   //shopping: 'https://172.16.7.34:8111/Shopping',
   // apiUrl: 'http://172.16.7.34:8011',
+=======
+  //shopping: 'https://localhost:44317/Shopping',
+  shopping: 'https://172.16.7.34:8111/Shopping',
+  //apiUrl: 'http://172.16.7.34:8011',
+>>>>>>> 9144087e12d992af4937d6b1cee0a299543f0059
   pdfUrl: 'http://localhost:8015/api/pdf',
   librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
   StoreNames: {

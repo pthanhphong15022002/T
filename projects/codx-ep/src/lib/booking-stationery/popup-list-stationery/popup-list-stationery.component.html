@@ -1,8 +1,15 @@
 <codx-form
- 
+  #form
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
+  [body]="body"
+  [dialog]="dialog"
+  [formControl]="dialogListStationery"
+  *ngIf="isAfterRender"
 >
+  <ng-template #body>
+    <div class="d-flex justify-content-between">
+     
+    </div>
+  </ng-template>
 </codx-form>
-
-<ng-template #body> </ng-template>
-
-<ng-template #footer> </ng-template>

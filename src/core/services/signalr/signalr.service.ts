@@ -56,7 +56,7 @@ export class SignalRService {
       this.signalObject.emit(obj);
     });
 
-    this.hubConnection.on('receiveChatMessage', (obj)=>{
+    this.hubConnection.on('receiveChatMessage', (obj) => {
       this.signalChat.emit(obj);
     });
   }

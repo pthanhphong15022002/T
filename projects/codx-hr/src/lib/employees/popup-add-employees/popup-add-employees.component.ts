@@ -14,15 +14,15 @@ import { HR_Employees } from '../../model/HR_Employees.model';
 export class PopupAddEmployeesComponent implements OnInit {
   title = '';
   tabInfo: any[] = [
-    { 
-      icon: 'icon-info', 
-      text: 'Thông tin chung', 
-      name: 'tabInfoPersonal' 
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'tabInfoPersonal'
     },
-    { 
-      icon: 'icon-article', 
-      text: 'Nhân viên', 
-      name: 'tabInfoEmploy' 
+    {
+      icon: 'icon-article',
+      text: 'Nhân viên',
+      name: 'tabInfoEmploy'
     },
     {
       icon: 'icon-person_outline',
@@ -256,10 +256,10 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   dataChange(e: any, field: string) {
     if (e) {
-      if (e?.length == undefined) {
-        this.employee[field] = e?.data;
+      if (!Array.isArray(e.data)) {
+        this.employee[field] = e.data;
       } else {
-        this.employee[field] = e[0];
+        this.employee[field] = e.data.join(';');
       }
     }
   }

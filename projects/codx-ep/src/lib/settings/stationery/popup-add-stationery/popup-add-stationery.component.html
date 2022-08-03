@@ -40,7 +40,8 @@
                       type="text"
                       name="text"
                       ControlName="resourceName"
-                      [crrValue]="dialogStationery.value.resourceName"
+                      field="resourceName"
+                      [crrValue]="dialogStationery.value?.resourceName"
                       [Group]="dialogStationery"
                     ></codx-input>
                   </div>
@@ -56,11 +57,11 @@
                       </codx-label>
                       <!--begin::Input-->
                       <codx-input
-                        type="combobox"
+                        type="text"
                         class="form-control"
                         field="groupID"
-                        [crrValue]="dialogStationery.value.groupID"
-                        [refValue]="CbxName['GroupID']"
+                        [crrValue]="dialogStationery.value?.groupID"
+                        (valueChange)="valueChange($event)"
                       >
                       </codx-input>
                       <!--end::Input-->
@@ -81,9 +82,10 @@
                         type="text"
                         name="text"
                         ControlName="resourceID"
-                        [crrValue]="dialogStationery.value.resourceID"
+                        [crrValue]="dialogStationery.value?.resourceID"
                         [Group]="dialogStationery"
                         [refValue]="CbxName['ResourceID']"
+                        (valueChange)="valueChange($event)"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -104,11 +106,9 @@
                       </codx-combobox> -->
                     <codx-input
                       type="text"
-                      ControlName="Location"
-                      [crrValue]="dialogStationery.value.location"
+                      ControlName="location"
+                      [crrValue]="dialogStationery.value?.location"
                       [Group]="dialogStationery"
-                      [refValue]="CbxName['Location']"
-                      [multiple]="false"
                       (valueChange)="valueChange($event)"
                     >
                     </codx-input>
@@ -126,14 +126,12 @@
                     <!--end::Label-->
                     <div class="position-relative">
                       <codx-input
-                        service="AD"
                         type="combobox"
-                        name="combobox"
-                        [crrValue]="dialogStationery.value.owner"
+                        [crrValue]="dialogStationery.value?.owner"
                         ngDefaultControl
                         field="owner"
-                        refValue="CbxName['Users']"
-                        (valueChange)="valueOwnerChange($event)"
+                        [refValue]="CbxName['Owner']"
+                        (valueChange)="valueChange($event)"
                       >
                       </codx-input>
                       <div
@@ -162,7 +160,7 @@
                       ControlName="memo"
                       rows="3"
                       ngDefaultControl
-                      [crrValue]="dialogStationery.value.memo"
+                      [crrValue]="dialogStationery.value?.memo"
                       (valueChange)="valueChange($event)"
                     >
                     </codx-input>
@@ -207,7 +205,7 @@
                               *ngFor="let item of listColor"
                               type="button"
                               class="btn btn-sm w-30px h-30px mx-2 border"
-                              style="background-color:{{ item }}"
+                              [ngStyle]="{ 'background-color': item }"
                               (click)="openPopupDevice(popupColor, item)"
                             ></button>
                           </div>
@@ -271,16 +269,15 @@
                       <codx-label
                         class="fw-bold"
                         default="Số lượng hiện có"
-                        fiedName="AvailableQty"
+                        fiedName="vailableQty"
                         [formModel]="dialog.formModel"
                       >
                       </codx-label>
                       <!--begin::Input-->
                       <codx-input
                         type="text"
-                        name="text"
-                        ControlName="availableQty"
-                        [crrValue]="dialogStationery.value.availableQty"
+                        field="availableQty"
+                        [crrValue]="dialogStationery.value?.availableQty"
                         [Group]="dialogStationery"
                       ></codx-input>
                       <!--end::Input-->
@@ -298,11 +295,9 @@
 
                       <codx-input
                         type="text"
-                        name="text"
-                        ControlName="reservedQty"
-                        [crrValue]="dialogStationery.value.reservedQty"
+                        field="reservedQty"
+                        [crrValue]="dialogStationery.value?.reservedQty"
                         [Group]="dialogStationery"
-                        [refValue]="CbxName['ReservedQty']"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -318,9 +313,9 @@
 
                       <codx-input
                         type="text"
-                        name="text"
-                        ControlName="currentQty"
-                        [crrValue]="dialogStationery.value.currentQty"
+                        field="currentQty"
+                        ngDefaultControl
+                        [crrValue]="dialogStationery.value?.currentQty"
                         [Group]="dialogStationery"
                       ></codx-input>
                       <!--end::Input-->
@@ -339,9 +334,9 @@
 
                       <codx-input
                         type="text"
-                        name="text"
-                        ControlName="costPrice"
-                        [crrValue]="dialogStationery.value.costPrice"
+                        field="costPrice"
+                        ngDefaultControl
+                        [crrValue]="dialogStationery.value?.costPrice"
                         [Group]="dialogStationery"
                       ></codx-input>
                       <!--end::Input-->
@@ -365,7 +360,7 @@
                       ControlName="note"
                       rows="3"
                       ngDefaultControl
-                      [crrValue]="dialogStationery.value.note"
+                      [crrValue]="dialogStationery.value?.note"
                       (valueChange)="valueChange($event)"
                     >
                     </codx-input>
@@ -480,12 +475,7 @@
         >
         </codx-label>
         <!--begin::Input-->
-        <codx-input
-          type="combobox"
-          class="form-control"
-          [crrValue]=""
-          [refValue]=""
-        >
+        <codx-input class="form-control" type="valuelist" [refValue]="'EP008'">
         </codx-input>
         <!--end::Input-->
       </div>
@@ -503,9 +493,9 @@
           type="number"
           field="number"
           placeholder="Input type number"
-          value="0"
-          min="0"
-          max="50"
+          [crrValue]="0"
+          [min]="0"
+          [max]="50"
         >
         </codx-input>
         <!--end::Input-->
@@ -533,7 +523,7 @@
     (click)="dialog.close()"
   >
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-outline-primary">
+      <button type="button" class="btn btn-outline-primary me-4">
         <codx-label
           name="lblSaveAdd"
           default="Lưu&Thêm"

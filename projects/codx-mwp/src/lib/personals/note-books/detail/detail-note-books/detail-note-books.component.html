@@ -2,15 +2,33 @@
     idField="recID" [entityName]="functionList.entityName" service="WP" [predicate]="predicate" [dataValue]="dataValue">
 </codx-views>
 
-<!-- <ng-container *ngIf="recID"> -->
-<!-- <div class="pw-search">
-        <codx-searchbar [width]="300" (searchEvent)="onSearch($event)" #inputSearch></codx-searchbar>
-    </div> -->
-<!-- </ng-container> -->
-
-
 <ng-template #memo let-item>
-    <span [innerHTML]="item.memo"></span>
+    <span [innerHTML]="item.memo" *ngIf="item.noteType == 'text'; else checkList_"></span>
+    <ng-template #checkList_>
+        <div *ngIf="item.noteType == 'list'">
+            <div *ngFor="let dt of item?.checkList">
+                <ul>
+                    <li>
+                        <span [innerHTML]="dt.listNote"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div *ngIf="item.noteType == 'check'">
+            <div *ngFor="let dt of item?.checkList">
+                <div class="flex">
+                    <div class="">
+                        <codx-input type="checkbox" [checked]="dt?.status == '1' || dt?.status == 'true'"
+                            class="test-check" [disabled]="true">
+                        </codx-input>
+                    </div>
+                    <div class="note-check">
+                        <span [innerHTML]="dt.listNote"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
 </ng-template>
 
 

@@ -1,15 +1,60 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { DialogData, DialogRef, UIComponent } from 'codx-core';
+import { Component, Injector, OnInit, Optional } from '@angular/core';
+import { CodxEpService } from '../../codx-ep.service';
 import { FormGroup } from '@angular/forms';
-import { DialogData, DialogRef } from 'codx-core/public-api';
 
 @Component({
   selector: 'lib-popup-list-stationery',
   templateUrl: './popup-list-stationery.component.html',
-  styleUrls: ['./popup-list-stationery.component.scss'],
+  styleUrls: ['./popup-list-stationery.component.scss']
 })
-export class PopupListStationeryComponent implements OnInit {
-  constructor() {
+export class PopupListStationeryComponent extends UIComponent {
+  headerText: string = 'Danh sách yêu cầu';
+  subHeaderText: string = 'Yêu cầu cho phòng';
+  data: any;
+  dialog: any;
+  CbxName: any;
+  isAfterRender = false;
+  dialogListStationery: FormGroup;
+
+  constructor(
+    private injector: Injector,
+    private epService: CodxEpService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef) {
+    super(injector);
+    this.data = dt?.data;
+    this.dialog = dialog;
   }
 
-  ngOnInit(): void {}
+  onInit(): void {
+    this.epService
+      .getComboboxName(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .then((res) => {
+        this.CbxName = res;
+      });
+    this.initForm();
+  }
+
+  initForm() {
+    this.epService
+      .getFormGroup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .then((res) => {
+        if (res) {
+          this.dialogListStationery = res;
+          this.isAfterRender = true;
+        } else {
+
+        }
+
+      });
+  }
+
+  valueChange(event) { }
 }

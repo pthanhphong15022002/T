@@ -20,11 +20,11 @@
       </codx-input>
     </div>
     <div class="form-group mt-3">
-      <codx-label fiedName="Note"  formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
+      <codx-label fiedName="Note" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
       </codx-label>
 
-      <codx-input type="textarea" field="note" headerposition="none" format="ed" height="150" [crrValue]="taskGroups.note" class="form-control"
-        (valueChange)="changeMemo($event)"></codx-input>
+      <codx-input type="textarea" field="note" headerposition="none" format="ed" height="150"
+        [crrValue]="taskGroups.note" class="form-control" (valueChange)="changeMemo($event)"></codx-input>
     </div>
   </div>
 </ng-template>
@@ -169,8 +169,8 @@
         gridViewName="grvTaskGroups">
       </codx-label>
       <div>
-        <codx-label fiedName="EditControl" default="Cho phép chỉnh sửa nội dung công việc"
-          formName="TaskGroups" gridViewName="grvTaskGroups">
+        <codx-label fiedName="EditControl" default="Cho phép chỉnh sửa nội dung công việc" formName="TaskGroups"
+          gridViewName="grvTaskGroups">
         </codx-label>
       </div>
     </div>
@@ -186,8 +186,8 @@
         gridViewName="grvTaskGroups">
       </codx-label>
       <div>
-        <codx-label fiedName="DueDateControl" default="Thêm công việc có ngày hết hạn ở quá khứ"
-          formName="TaskGroups" gridViewName="grvTaskGroups">
+        <codx-label fiedName="DueDateControl" default="Thêm công việc có ngày hết hạn ở quá khứ" formName="TaskGroups"
+          gridViewName="grvTaskGroups">
         </codx-label>
       </div>
     </div>
@@ -272,7 +272,7 @@
       <div class="d-flex align-items-center">
         <codx-label default="Công việc cần làm" formName="TaskGroups" gridViewName="grvTaskGroups">
         </codx-label>
-        <span class="text-primary font-weight-bold"></span>
+        <span class="text-primary fw-bold"></span>
       </div>
       <div class="d-flex mt-2">
         <a (click)="addTodolist()" class="btn btn-sm btn-outline-secondary">
@@ -291,7 +291,7 @@
                 (change)="onChangeToDoStatus(checkShareRight1.checked, i)">
               <span></span>{{item.text}}
             </label>
-            <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ml-2 text-danger"></span>
+            <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ms-2 text-danger"></span>
           </div>
         </ng-container>
       </div>

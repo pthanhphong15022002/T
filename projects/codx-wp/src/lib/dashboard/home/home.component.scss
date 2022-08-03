@@ -24,15 +24,22 @@
 }
 
 #kt_aside_menu {
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 .aside.aside-transparent {
     width: 22%;
-    min-width: 280px;
+    min-width: 220px;
+    max-width: 260px;
     //border: 1px red solid;
 }
 
 .aside.aside-transparent .aside-menu {
     width: 100%;
+}
+
+/***/
+codx-home {
+    max-width: 1000px;
+    margin: 0 auto;
 }
