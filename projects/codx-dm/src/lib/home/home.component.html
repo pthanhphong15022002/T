@@ -1,7 +1,7 @@
 <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views"
   (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="addFile($event)"
-  (viewChanged)="changeView($event)"></codx-views>
+  (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"></codx-views>
 
 <!-- <codx-temp-full  imageSrc="{{getExtension(item.data.thumbnail, item.data.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
 title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"          

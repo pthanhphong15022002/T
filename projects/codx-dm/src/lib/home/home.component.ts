@@ -337,54 +337,49 @@ export class HomeComponent extends UIComponent {
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
-    // alert(1);
-    // for(var i=0; i<this.views.length; i++) {
-    //   if (this.view.funcID == "DMT02" || this.view.funcID == "DMT03")
-    //     this.views[i].type = ViewType.treedetail;
-    //   else
-    //     this.views[i].type = ViewType.content;
-    // }
-    // this.views[0].type = ViewType.content;
-    // this.views[1].type = ViewType.content;
-    // this.views[2].type = ViewType.content;
-    this.data = [] ;//=[...this.data, ...res];
-    this.folderService.options.funcID = this.view.funcID;
-    if (this.dmSV.folderType != this.view.funcID) {
-      this.data = [...this.data, ...this.view.dataService.data];
+  }
+
+  requestEnded(e:any){
+    if(e.type ==="read"){
+      this.data = [] ;//=[...this.data, ...res];
+      this.folderService.options.funcID = this.view.funcID;
+      if (this.dmSV.folderType != this.view.funcID) {
+        this.data = [...this.data, ...e.data];
+        this.changeDetectorRef.detectChanges();
+       // this.listFolders = this.view.dataService.data;
+       // this.dmSV.listFolder.next(this.listFolders);
+      }
+        
+      this.dmSV.folderType = this.view.funcID;
+      this.dmSV.idMenuActive = this.view.funcID;
+      this.dmSV.loadedFile = false;
+      this.dmSV.folderId.next("");
+  
+      // this.dmSV.loadedFolder = false;
+      // if (this.listFolders == null)
+      //   this.listFolders = this.view.dataService.data;
+      this.dmSV.loadedFolder = true;
       this.changeDetectorRef.detectChanges();
-     // this.listFolders = this.view.dataService.data;
-     // this.dmSV.listFolder.next(this.listFolders);
+      // this.folderService.getFolders('').subscribe(async (res) => {
+      //   if (res != null) {
+      //     this.listFolders = res[0];
+      //     this.dmSV.loadedFolder = true;
+      //     this.changeDetectorRef.detectChanges();
+      //   }
+      // });
+  
+      this.fileService.options.funcID = this.view.funcID;
+      this.fileService
+        .getListActiveFiles('', this.view.funcID)
+        .subscribe(async (res) => {
+          if (res != null) {
+            //this.listFiles = res;
+           // this.dmSV.listFiles.next(res);
+            //this.data = [...this.data, ...res];
+            this.dmSV.loadedFile = true;
+            this.changeDetectorRef.detectChanges();
+          }
+        });
     }
-      
-    this.dmSV.folderType = this.view.funcID;
-    this.dmSV.idMenuActive = this.view.funcID;
-    this.dmSV.loadedFile = false;
-    this.dmSV.folderId.next("");
-
-    // this.dmSV.loadedFolder = false;
-    // if (this.listFolders == null)
-    //   this.listFolders = this.view.dataService.data;
-    this.dmSV.loadedFolder = true;
-    this.changeDetectorRef.detectChanges();
-    // this.folderService.getFolders('').subscribe(async (res) => {
-    //   if (res != null) {
-    //     this.listFolders = res[0];
-    //     this.dmSV.loadedFolder = true;
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // });
-
-    this.fileService.options.funcID = this.view.funcID;
-    this.fileService
-      .getListActiveFiles('', this.view.funcID)
-      .subscribe(async (res) => {
-        if (res != null) {
-          //this.listFiles = res;
-         // this.dmSV.listFiles.next(res);
-          //this.data = [...this.data, ...res];
-          this.dmSV.loadedFile = true;
-          this.changeDetectorRef.detectChanges();
-        }
-      });
   }
 }
