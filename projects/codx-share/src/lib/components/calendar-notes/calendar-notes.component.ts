@@ -27,7 +27,6 @@ import {
   Injector,
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
-import moment from 'moment';
 import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
 import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
@@ -43,7 +42,6 @@ export class CalendarNotesComponent
   implements OnInit, AfterViewInit
 {
   message: any;
-  messageParam: any;
   listNote: any[] = [];
   type: any;
   typeCalendar = 'week';
@@ -84,7 +82,6 @@ export class CalendarNotesComponent
   ) {
     super(injector);
     this.userID = this.auth.get().userID;
-    this.messageParam = this.cache.message('WP003');
     this.getParam();
     this.cache
       .moreFunction('PersonalNotes', 'grvPersonalNotes')
@@ -129,6 +126,9 @@ export class CalendarNotesComponent
             (this.lstView.dataService as CRUDService).update(data).subscribe();
           } else if (type == 'edit') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
+          } else if (type == 'edit-save-note') {
+            (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            this.WP_Notes = this.WP_Notes.filter((x) => x.recID != data.recID);
           }
           this.setEventWeek();
           var today: any = document.querySelector(
@@ -155,7 +155,8 @@ export class CalendarNotesComponent
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'GetParamAsync')
       .subscribe((res) => {
         if (res) {
-          this.maxPinNotes = res[0].msgBodyData[0].fieldValue;
+          if (res[0].msgBodyData)
+            this.maxPinNotes = res[0].msgBodyData[0].fieldValue;
         }
       });
   }
@@ -537,9 +538,5 @@ export class CalendarNotesComponent
       itemUpdate: item,
     };
     this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj);
-  }
-
-  getMoreF(item) {
-    this.dataUpdate = item;
   }
 }

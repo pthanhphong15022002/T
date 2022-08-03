@@ -57,6 +57,7 @@ export class ImgComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log("check listView", this.listView);
   }
 
   // getFile() {

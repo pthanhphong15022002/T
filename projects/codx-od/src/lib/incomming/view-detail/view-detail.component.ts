@@ -75,8 +75,11 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     this.userID = this.authStore.get().userID;
     this.getDataValuelist();
   }
+  
   convertHtmlAgency(agencyName:any,txtLstAgency:any)
   {
+    if(!agencyName && !txtLstAgency)
+      return '<div><span class="tex-gray-300">Tên công ty</span></div>';
     var desc = '<div class="d-flex">';
     if(agencyName)
       desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
@@ -265,8 +268,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     })
   }
   openFormFuncID(val: any , datas:any = null) {
-   
-    debugger;
     var funcID = val?.functionID;
     if(!datas)
       datas = this.data;
@@ -308,6 +309,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
                   this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
                     this.data = item;
                     this.data.lstUserID = getListImg(item.relations);
+                   /*  var foundIndex = this.view.dataService.data.findIndex((a: { recID: string }) => a.recID == x.event.recID);
+                    this.view.dataService.setDataSelected(x.event); */
                   });
                  /*  if(x.event.recID == this.view.dataService.dataSelected.recID)
                     this.odService.getDetailDispatch(x.event.recID).subscribe(item => {
@@ -378,10 +381,10 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           this.dialog.closed.subscribe(x=>{
             if(x.event) 
             {
-              this.data.owner = x.event[0].owner
-              this.data.lstUserID = getListImg(x.event[0].relations);
-              this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1])
-              //this.view.dataService.update(x.event[0]).subscribe();
+              //this.data.owner = x.event[0].owner
+              //this.data.lstUserID = getListImg(x.event[0].relations);
+              //this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1])
+              this.view.dataService.update(x.event[0]).subscribe();
             }
           });
           break;
@@ -415,16 +418,13 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
       case "ODT103":
       case "ODT202":
         {
-          if(this.checkOpenForm(funcID))
-            var option = new DialogModel();
-            option.FormModel = this.formModel;
-            this.callfunc.openForm(UpdateExtendComponent, null, 600, 400,null,{data: this.data},"",option).closed.subscribe(x=>{
-              if(x.event) 
-              {
-                this.data.updates = x.event.updates;
-                this.data.percentage = x.event.percentage;
-              }
-            });
+          //if(this.checkOpenForm(funcID))
+          var option = new DialogModel();
+          option.FormModel = this.formModel;
+          this.callfunc.openForm(UpdateExtendComponent, null, 600, 400,null,{data: this.data},"",option).closed.subscribe(x=>{
+            if(x.event) 
+              this.view.dataService.remove(x.event).subscribe();
+          });
           break;
         }
       //Chia sẻ
@@ -496,7 +496,13 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
         {
           if(this.checkOpenForm(funcID))
           {
-            this.callfunc.openForm(this.tmpdeadline,null,600, 400);
+            this.callfunc.openForm(this.tmpdeadline,null,600, 400).closed.subscribe(x=>{
+              if(x.event) 
+              {
+                this.data.deadline = x.event?.deadline;
+                this.updateNotCallFuntion(x.event);
+              }
+            });
           }
           break;
         }
@@ -528,10 +534,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
           this.odService.bookMark(datas.recID).subscribe((item) => {
             if (item.status == 0)
             {
-              this.view.dataService.update(item.data).subscribe();
-              //this.view.dataService.update(item.data).subscribe();
+              this.view.dataService.update(item.data).subscribe(); 
             } 
-              
             this.notifySvr.notify(item.message);
           });
           break;
@@ -563,7 +567,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
             {
               this.odService.recallSharing(this.view.dataService.dataSelected.recID, val?.relID).subscribe((item) => {
                 if (item.status == 0) {
-                  //this.data = item.data[0];
+                  this.data.relations = item.data[0].relations;
                   this.data.lstUserID = getListImg(item.data[0].relations);
                   this.data.listInformationRel = item.data[1]
                 }
@@ -663,5 +667,12 @@ export class ViewDetailComponent  implements OnInit , OnChanges {
     if(relationType == "1")
       return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
     return this.fmTextValuelist(relationType,"6") +' bởi '+ (shareBy !=undefined ? shareBy : createdBy) ;
+  }
+  updateNotCallFuntion(data:any)
+  {
+    const index = this.view.dataService.data.findIndex(object => {
+      return object.recID == data?.recID;
+    });
+    this.view.dataService.data[index] = data
   }
 }

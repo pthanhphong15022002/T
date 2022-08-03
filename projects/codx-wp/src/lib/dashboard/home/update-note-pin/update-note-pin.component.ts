@@ -1,5 +1,6 @@
 import {
   ApiHttpService,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
@@ -30,12 +31,16 @@ export class UpdateNotePinComponent implements OnInit {
   data: any = [];
   dataOld: any;
   typeUpdate = '';
+  messageParam: any;
+  predicate = 'IsPin=@0 && TransID=null';
+  dataValue = 'true';
 
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private noteService: NoteServices,
+    private cache: CacheService,
     @Optional() data?: DialogData,
     @Optional() dt?: DialogRef
   ) {
@@ -43,9 +48,16 @@ export class UpdateNotePinComponent implements OnInit {
     this.itemUpdate = data.data?.itemUpdate;
     this.data = data.data?.data;
     this.typeUpdate = data.data?.typeUpdate;
+    
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.cache.message('WP003').subscribe((res) => {
+      if(res) {
+        this.messageParam = res.description;
+      }
+    });
+   }
 
   valueChange(e, item = null) {
     if (e) {

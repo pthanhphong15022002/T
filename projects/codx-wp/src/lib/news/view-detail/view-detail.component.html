@@ -1,7 +1,22 @@
 <codx-views #codxViews [entityName]="entityName" [views]="views" [showToolBar]="false">
 </codx-views>
+<div class="more-function">
+    <div class="d-flex flex-column">
+        <a class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+        <span class="postnews mt-3">
+            <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+            <div class="d-flex btn-postnews">
+
+                <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
+                        class="icon-video_call fs-1"></i></a>
+                <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
+                        class="icon-post_add fs-1"></i></a>
+            </div>
+        </span>
+    </div>
+</div>
 <ng-template #panelLeftRef>
-    <div class="px-6">
+    <div class="fix-container p-6">
         <div class="row">
             <div class="col-8">
                 <div class="fs-2 fw-bolder text-dark mb-3" [innerHTML]="dataItem?.subject"></div>
@@ -10,7 +25,8 @@
                         <div class="d-flex flex-center">
                             <div class="d-flex flex-center bagde-light me-6">
                                 <span class="fs-7 text-gray-600 me-1">
-                                    <img class="h-13px w-13px" src="assets/themes/sys/default/img/{{(dataItem.shareControl | vll:'L1901' : 'icon' | async)}}" />
+                                    <img class="h-13px w-13px"
+                                        src="assets/themes/sys/default/img/{{(dataItem.shareControl | vll:'L1901' : 'icon' | async)}}" />
                                 </span>
                                 <span class="fs-7 text-gray-600">
                                     {{dataItem?.shareControl | vll:'L1901':'text' | async}}
@@ -29,11 +45,11 @@
                                 <span class="fs-7 text-gray-600">{{dataItem?.views}}</span>
                             </div>
                         </div>
-                        <button class="btn btn-icon btn-sm btn-light-primary"><span
-                                class="icon-share"></span></button>
+                        <button class="btn btn-icon btn-sm btn-light-primary"><span class="icon-share"></span></button>
                     </div>
                     <ng-contianer *ngIf="dataItem?.newsType == NEWSTYPE.VIDEO;else news">
-                        <app-view-file [category]="'video'" [ObjectID]="dataItem.recID" ObjectType="WP_Comments"></app-view-file>
+                        <app-view-file [category]="'video'" [ObjectID]="dataItem.recID" ObjectType="WP_Comments">
+                        </app-view-file>
                     </ng-contianer>
                     <ng-template #news>
                         <div class="py-3" [innerHTML]="dataItem?.subContent"></div>
@@ -45,9 +61,9 @@
                     <div class="">
                         <ul>
                             <li (click)="clickViewDeital(item)" *ngFor="let item of listNews"
-                                class="fs-6 er mt-2 news-title ">
+                                class="fs-5 er mt-2 news-title ">
                                 <a href="javascript:void(0)">
-                                    <span class="fs-6 text-dark fw-bolder">{{item.subject}}</span>
+                                    <span class="fs-5 text-dark fw-bold">{{item.subject}}</span>
                                     <span class="fs-7 ms-4 text-muted">({{item.createdOn | fmDT}})</span>
                                 </a>
                             </li>
@@ -61,19 +77,16 @@
                         <codx-label fromName="News" name="lblTopview" default="Xem nhiều nhất"></codx-label>
                     </div>
                     <ng-container *ngFor="let item of listViews; index as i">
-                        <div [class]="(i == 0 || i == listViews.length - 1)?'my-2':'my-4'" (click)="clickViewDeital(item)">
+                        <div [class]="(i == 0 || i == listViews.length - 1)?'my-2':'my-4'"
+                            (click)="clickViewDeital(item)">
                             <div class="row">
                                 <div class="col-3">
-                                    <codx-img
-                                        [width]="70"  
-                                        imageType="square" 
-                                        [cssClass]="'img'"  
-                                        [objectId]="item.recID"
+                                    <codx-img [width]="70" imageType="square" [cssClass]="'img'" [objectId]="item.recID"
                                         [objectType]="'WP_News'">
                                     </codx-img>
                                 </div>
                                 <div class="col-9">
-                                    <div class="fs-6 fw-bolder news-title">
+                                    <div class="fs-5 fw-bold news-title">
                                         {{item.subContent | maxlenght:75}}
                                     </div>
                                     <div class="d-flex justify-content-between mt-2">
@@ -90,9 +103,7 @@
                     <div class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray">
                         <codx-label formName="News" name="lblTags" default="Tag #"></codx-label>
                         <div class="badge-group">
-                            <span *ngFor="let tag of listTag" 
-                                class="badge badge-danger" 
-                                [style.background]="tag.color"
+                            <span *ngFor="let tag of listTag" class="badge badge-danger" [style.background]="tag.color"
                                 (click)="clickTag(tag)">
                                 {{tag.text}}
                             </span>
@@ -101,21 +112,7 @@
                 </div>
             </div>
         </div>
-        <div class="more-function">
-            <div class="d-flex flex-column">
-                <a class="btn btn-icon btn-primary"><i
-                        class="icon-search fs-1"></i></a>
-                <span class="postnews mt-3">
-                    <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
-                    <div class="d-flex btn-postnews">
 
-                        <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
-                            class="icon-video_call fs-1"></i></a>
-                        <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i class="icon-post_add fs-1"></i></a>
-                    </div>
-                </span>
-            </div>
-        </div>
     </div>
 </ng-template>
 

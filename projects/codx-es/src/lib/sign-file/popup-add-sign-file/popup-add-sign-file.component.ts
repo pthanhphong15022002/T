@@ -39,7 +39,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   headerText = 'Thêm mới tài liệu';
 
-  currentTab = 0;
+  currentTab = 3;
   processTab = 0;
   formModel: FormModel;
   isAfterRender = false;
@@ -100,7 +100,7 @@ export class PopupAddSignFileComponent implements OnInit {
             this.dialogSignFile.patchValue({
               approveStatus: '1',
               // employeeID: user.employee?.employeeID,
-              // orgUnitID: user.employee?.orgUnitID,
+              // orgUnitID: user.employee?.orgUnitID, -- coment lai do loi
             });
             this.dialogSignFile.addControl(
               'approveControl',
@@ -166,9 +166,9 @@ export class PopupAddSignFileComponent implements OnInit {
     });
   }
 
-  getfileCount(event) {}
+  getfileCount(event) { }
 
-  onSaveForm() {}
+  onSaveForm() { }
 
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {

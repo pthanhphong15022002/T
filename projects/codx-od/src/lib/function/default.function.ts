@@ -9,8 +9,9 @@ function extractContent(s:any) {
     span.innerHTML = s;
   else
   {
-    span.classList.add("text-gray-600")
-    span.innerHTML = 'Chưa có dữ liệu'
+    span.classList.add("text-gray-300")
+    span.classList.add("fw-light")
+    span.innerHTML = 'Mô tả ngắn gọn'
   } 
   return span.outerHTML || span.innerText;
 };
