@@ -25,8 +25,8 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
       <div [innerHTML]="setFullHtmlNode(data, '')">
       </div>
       <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer"
-        (clickMF)="dmSV.clickMF($event, data, 'folder')"  (changeDataMF)="dmSV.filterMoreFunction($event, 'DM_FolderInfo')" [title]="data.folderName" [formModel]="view.formModel"
-        [typeMF]="'hover'" cardCss="w-150px">
+        (clickMF)="dmSV.clickMF($event, data)"  (changeDataMF)="dmSV.filterMoreFunction($event, data)" [title]="data.folderName" [formModel]="view.formModel"
+        [typeMF]="'hover'">
       </codx-temp-full>
     </div>
   </ng-template>
@@ -66,7 +66,10 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
     > 
   </codx-attachment>
    -->
-  <card type="card"  [listFiles]="listFiles"  [listFolders]="listFolders" [formModel]="view.formModel"></card>
+   <!-- <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
+   attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">     -->
+      <card class="dms-card-item" *ngFor="let item of data" [data]="item" [formModel]="view.formModel"></card>        
+   <!-- </div> -->
   <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">
     <i class="icon-add"></i>
     <span class="font-size-lg">Open File 1</span>
@@ -90,10 +93,27 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
 </codx-attachment> -->
 </ng-template>
 <ng-template #templateSmallCard>
-  <card type="smallcard" [formModel]="view.formModel"></card>
+  <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
+   attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">
+    <!-- <codx-temp-full  *ngFor="let item in data" 
+        class="float-start" imageSrc="../../../assets/codx/dms/folder.svg"
+        imgCss="card-item img-folder me-4" (clickMF)="dmSV.clickMF($event, item)"
+        [title]="item.folderName" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+        [formModel]="formModel" [typeMF]="'hover'" [bookmark]="showBookmark(item)"
+        subTitle="{{item.createdOn | date : 'dd/MM/yyyy'}} | {{item.userName}}"
+        cardCss="card-item card-template w-225px px-2 py-3 text-box-140">
+    </codx-temp-full> -->
+  </div>
 </ng-template>
 <ng-template #templateList>
-  <detail type="list"  [formModel]="view.formModel"></detail>
+  <!-- <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
+  attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">
+    <detail *ngFor="let d in data"  [data]="d" type="list"  [formModel]="view.formModel"></detail>
+  </div> -->
+</ng-template> 
+
+<ng-template #empty>
+  <div *ngIf="!data || data.length == 0">no data</div>
 </ng-template> 
 
 <!-- <ng-template #templateRight>  

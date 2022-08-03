@@ -1,4 +1,56 @@
-<div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
+<codx-card-img class="float-start" cardCss="border w-175px m-5 h-100" 
+    imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="data"
+    [typeMF]="'hover'" [bookmark]="showBookmark(data)" [formModel]="formModel"
+    (clickMF)="dmSV.clickMF($event, data)" [content]="data.folderName"
+    [footer]="cardImgFooterFolder" (changeDataMF)="dmSV.filterMoreFunction($event, data)">
+</codx-card-img>
+
+<!-- <codx-card-img class="float-start" cardCss="card-item border m-5 h-100 float-start"
+[imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="card-img-center h-100px"
+[rootData]="file" [typeMF]="'hover'" [footer]="cardImgFooterFile" [bookmark]="showBookmark(file)"
+[formModel]="formModel" (clickMF)="dmSV.clickMF($event, file, 'file')"
+(changeDataMF)="dmSV.filterMoreFunction($event, 'DM_FileInfo')" [content]="file.fileName">
+</codx-card-img> -->
+
+
+<ng-template #cardImgFooterFolder let-data let-setting="setting">
+<div title="{{data.folderName}}" class="d-flex align-items-start">
+    <div *ngIf="(data.icon != null && data.icon != '') then showicon2 else noshowicon2">
+    </div>
+    <ng-template #showicon2>
+    <div *ngIf="(checkIconFolder(data)) then showsvg2 else noshowsvg2">
+    </div>
+    <ng-template #showsvg2>
+        <img alt="" class="mh-20px me-2" src="{{getSvg(data.icon)}}">
+    </ng-template>
+    <ng-template #noshowsvg2>
+        <span [className]="getFolderClass(data.icon)"></span>
+    </ng-template>
+    </ng-template>
+    <ng-template #noshowicon2>
+    <img alt="" class="mh-20px me-2" src="../../../assets/codx/dms/folder.svg">
+    </ng-template>
+
+    <div class="d-flex flex-column flex-grow-1 dms-footer-r">
+    <div class="text-dark-75 fw-bold file-name text-box-140">{{data.folderName}}
+    </div>
+    <div class="d-flex justify-content-between">
+        <div *ngIf="(!data.isSystem) then createBy2 else nocreateBy2">
+        </div>
+        <ng-template #createBy2>
+        <span class="text-dark-50 font-size-sm">{{data.userName}}</span>
+        </ng-template>
+        <ng-template #nocreateBy2>
+        <span class="text-dark-50 font-size-sm"></span>
+        </ng-template>
+        <span *ngIf="checkView(data.read) == false"
+        class="icon-security text-primary icon-18"></span>
+    </div>
+    </div>
+</div>
+</ng-template>
+
+<!-- <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
   class="d-flex flex-column-fluid home hover-scroll-overlay-y"
   style="overflow: auto !important; height: 82vh; display: block;" data-kt-scroll="true"
   data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
@@ -26,9 +78,9 @@
           <ng-container *ngFor="let folder of listFolders; index as i; trackBy:identifyFolder">
             <div class="cursor-pointer"
               (dblclick)="onDbclick(folder, folder.permissions, folder.recID, folder.level, folder.parentId, folder.folderName)">
-              <container-element [ngSwitch]="this.type">
-                <some-element *ngSwitchCase="'card'">
-                  <codx-card-img class="float-start" cardCss="card-item w-175px border m-5 h-100 float-start"
+              <ng-container [ngSwitch]="this.type">
+                <ng-container *ngSwitchCase="'card'">
+                  <codx-card-img class="float-start" cardCss="border m-5 loat-start"
                     imageSrc="../../../assets/codx/dms/folder.svg" imgCss="card-img-center h-100px" [rootData]="folder"
                     [typeMF]="'hover'" [bookmark]="showBookmark(folder)" [formModel]="formModel"
                     (clickMF)="dmSV.clickMF($event, folder, 'folder')" [content]="folder.folderName"
@@ -55,9 +107,6 @@
                       <div class="d-flex flex-column flex-grow-1 dms-footer-r">
                         <div class="text-dark-75 fw-bold file-name text-box-140">{{folder.folderName}}
                         </div>
-                        <!-- <div *ngIf="showBookmark(folder)" class="dms-bookmark">
-                                                    <span class="icon-bookmark icon-24"></span>
-                                                </div> -->
                         <div class="d-flex justify-content-between">
                           <div *ngIf="(!folder.isSystem) then createBy2 else nocreateBy2">
                           </div>
@@ -73,8 +122,8 @@
                       </div>
                     </div>
                   </ng-template>
-                </some-element>
-                <some-element *ngSwitchCase="'smallcard'">
+                </ng-container>
+                <ng-container *ngSwitchCase="'smallcard'">
                   <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg"
                     imgCss="card-item img-folder me-4" (clickMF)="dmSV.clickMF($event, folder, 'folder')"
                     [title]="folder.folderName" (changeDataMF)="dmSV.filterMoreFunction($event, 'DM_FolderInfo')"
@@ -82,8 +131,8 @@
                     subTitle="{{folder.createdOn | date : 'dd/MM/yyyy'}} | {{folder.userName}}"
                     cardCss="card-item card-template w-225px px-2 py-3 text-box-140">
                   </codx-temp-full>
-                </some-element>
-              </container-element>
+                </ng-container>
+              </ng-container>
             </div>
           </ng-container>
 
@@ -104,9 +153,6 @@
                           <img alt="" class="mh-20px me-2" src="{{dmSV.getThumbnail('', file.extension)}}">
                           <div class="text-dark-75 fw-bold file-name text-box-140">{{file.fileName}}</div>
                         </div>
-                        <!-- <div *ngIf="showBookmark(file)" class="dms-bookmark">
-                                                    <span class="icon-bookmark icon-24"></span>
-                                                </div> -->
                         <div class="d-flex align-items-center mt-2">
                           <div class="d-flex flex-grow-1 text-dark-75">
                             <div class="d-flex me-3">
@@ -123,8 +169,6 @@
                             </div>
                           </div>
                           <span *ngIf="checkView(file.read) == false" class="icon-security text-primary icon-18"></span>
-                          <!-- <span *ngIf="checkView(file.read) == false"
-                                                        class="icon-security text-primary icon-18"></span> -->
                         </div>
                       </div>
                     </div>
@@ -161,9 +205,6 @@
                           <img alt="" class="mh-20px me-2" src="{{dmSV.getThumbnail('', file.extension)}}">
                           <div class="text-dark-75 fw-bold file-name text-box-140">{{file.fileName}}</div>
                         </div>
-                        <!-- <div *ngIf="showBookmark(file)" class="dms-bookmark">
-                                                    <span class="icon-bookmark icon-24"></span>
-                                                </div> -->
                         <div class="d-flex align-items-center mt-2">
                           <div class="d-flex flex-grow-1 text-dark-75">
                             <div class="d-flex me-3">
@@ -180,8 +221,6 @@
                             </div>
                           </div>
                           <span *ngIf="checkView(file.read) == false" class="icon-security text-primary icon-18"></span>
-                          <!-- <span *ngIf="checkView(file.read) == false"
-                                                        class="icon-security text-primary icon-18"></span> -->
                         </div>
                       </div>
                     </div>
@@ -231,9 +270,6 @@
                       <div class="d-flex flex-column flex-grow-1 dms-footer-r">
                         <div class="text-dark-75 fw-bold file-name text-box-140">{{folder.folderName}}
                         </div>
-                        <!-- <div *ngIf="showBookmark(folder)" class="dms-bookmark">
-                                                    <span class="icon-bookmark icon-24"></span>
-                                                </div> -->
                         <div class="d-flex justify-content-between">
                           <div *ngIf="(!folder.isSystem) then createBy2 else nocreateBy2">
                           </div>
@@ -289,19 +325,4 @@
       </ng-template>
     </div>
   </div>
-</div>
-<!-- <ng-template #contentDblClickViewFile let-modal>
-    <div class="viewfile">
-        <div class="viewfile-toolbar">
-            <span class="icon-arrow_back icon-18 left" (click)="modal.close('Cancel click')"></span>
-            <span class="left namefile">{{fullName}}</span>
-            <div *ngIf="this.item.download">
-                <span class="icon-download icon-18 right" (click)="download()"></span>
-                <span class="icon-print icon-18 right" (click)="print()"></span>
-            </div>
-        </div>
-    </div>
-    <div class="viewfile-content">
-        <view-file iD="{{id}}" ext={{ext}}></view-file>
-    </div>
-</ng-template> -->
+</div> -->

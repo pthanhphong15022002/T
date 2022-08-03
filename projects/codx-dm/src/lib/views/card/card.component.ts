@@ -20,31 +20,32 @@ import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardComponent implements OnInit {
-  @Input() listFolders: any;
-  @Input() listFiles: any;
+  // @Input() listFolders: any;
+  // @Input() listFiles: any;
   @Input() formModel: any;
-  @Input() type: any;
-  html: string;
-  count: number;
-  tenant: string;
-  oldFolderId: string;
-  _propertyName: string = "";
-  fullName: string = "";
-  id: string = "";
-  ext: string = "";
+  // @Input() type: any;
+  // html: string;
+  // count: number;
+  // tenant: string;
+  // oldFolderId: string;
+  // _propertyName: string = "";
+  // fullName: string = "";
+  // id: string = "";
+  // ext: string = "";
   user: any;
-  item: FolderInfo;
-  totalRating: number;
-  totalViews: number;
-  loaded: boolean;
-  loadedFile: boolean;
-  loadedFolder: boolean;
-  setting: any;
-  titleAccessDenied = "Bạn không có quyền truy cập thư mục này";
+  // item: FolderInfo;
+  // totalRating: number;
+  // totalViews: number;
+  // loaded: boolean;
+  // loadedFile: boolean;
+  // loadedFolder: boolean;
+  // setting: any;
+  // titleAccessDenied = "Bạn không có quyền truy cập thư mục này";
+  @Input() data: any;
   //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
-  @ViewChild('view') view!: ViewsComponent;
+  // @ViewChild('view') view!: ViewsComponent;
 
-  @Output() eventShow = new EventEmitter<boolean>();
+  // @Output() eventShow = new EventEmitter<boolean>();
   constructor(
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
@@ -58,7 +59,7 @@ export class CardComponent implements OnInit {
     private callfc: CallFuncService,
     // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
+    private systemDialogService: SystemDialogService
   ) {
     // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
@@ -85,19 +86,21 @@ export class CardComponent implements OnInit {
     //   this.folderService.options.srtColumns = this.dmSV.sortColumn.getValue();
     // });
 
-    this.dmSV.isListFolder.subscribe(res => {
-      //this.refresh();
-      this.listFolders = res;
-      this.loadedFolder = true;
-      this.changeDetectorRef.detectChanges();
-    });
+    // this.dmSV.isListFolder.subscribe(res => {
+    //   //this.refresh();
+    //   this.listFolders = res;
+    //   this.loadedFolder = true;
+    //   this.data=[...this.data, ...res];
+    //   this.changeDetectorRef.detectChanges();
+    // });
 
-    this.dmSV.islistFiles.subscribe(res => {
-      // this.refresh();    
-      this.listFiles = res;
-      this.loadedFile = true;
-      this.changeDetectorRef.detectChanges();
-    });
+    // this.dmSV.islistFiles.subscribe(res => {
+    //   // this.refresh();    
+    //   this.listFiles = res;
+    //   this.loadedFile = true;
+    //   this.data = [...this.data, ...res];
+    //   this.changeDetectorRef.detectChanges();
+    // });
 
     // this.dmSV.isAdd.subscribe(res => {
     //   if (res) {        
@@ -219,198 +222,198 @@ export class CardComponent implements OnInit {
       return 0;
   }
 
-  getRating(data: View[]) {
-    let _sum = 0;
-    this.totalViews = 0;
-    if (data != null) {
-      var list = data.filter(x => x.rating > 0);
-      this.totalViews = list.length;
-      //res.views.forEach(item => {
-      for (var i = 0; i < list.length; i++) {
-        _sum = _sum + list[i].rating;
-      }
-    }
+  // getRating(data: View[]) {
+  //   let _sum = 0;
+  //   this.totalViews = 0;
+  //   if (data != null) {
+  //     var list = data.filter(x => x.rating > 0);
+  //     this.totalViews = list.length;
+  //     //res.views.forEach(item => {
+  //     for (var i = 0; i < list.length; i++) {
+  //       _sum = _sum + list[i].rating;
+  //     }
+  //   }
 
-    if (this.totalViews != 0) {
-      this.totalRating = _sum / this.totalViews;
-    }
-    else {
-      this.totalRating = 0;
-    }
-    this.totalRating = parseFloat(this.totalRating.toFixed(2));
-    return this.totalRating;
-    //alert(this.styleRating);
-  }
+  //   if (this.totalViews != 0) {
+  //     this.totalRating = _sum / this.totalViews;
+  //   }
+  //   else {
+  //     this.totalRating = 0;
+  //   }
+  //   this.totalRating = parseFloat(this.totalRating.toFixed(2));
+  //   return this.totalRating;
+  //   //alert(this.styleRating);
+  // }
 
-  getSizeByte(size: any) {
-    return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
+  // getSizeByte(size: any) {
+  //   return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  // }
 
-  getSizeKB(size: any) {
-    var kb = size / 1024;
-    return kb.toFixed(2);
-  }
+  // getSizeKB(size: any) {
+  //   var kb = size / 1024;
+  //   return kb.toFixed(2);
+  // }
 
-  getAvatar(ext: string) {
-    if (ext == null) return "file.svg";
-    switch (ext) {
-      case ".txt":
-        return "txt.svg";
-      case ".doc":
-      case ".docx":
-        return "doc.svg";
-      case ".7z":
-      case ".rar":
-      case ".zip":
-        return "zip.svg";
-      case ".jpg":
-        return "jpg.svg";
-      case ".mp4":
-        return "mp4.svg";
-      case ".xls":
-      case ".xlsx":
-        return "xls.svg";
-      case ".pdf":
-        return "pdf.svg";
-      case ".png":
-        return "png.svg";
-      case ".js":
-        return "javascript.svg";
-      default:
-        return "file.svg";
-    }
-  }
+  // getAvatar(ext: string) {
+  //   if (ext == null) return "file.svg";
+  //   switch (ext) {
+  //     case ".txt":
+  //       return "txt.svg";
+  //     case ".doc":
+  //     case ".docx":
+  //       return "doc.svg";
+  //     case ".7z":
+  //     case ".rar":
+  //     case ".zip":
+  //       return "zip.svg";
+  //     case ".jpg":
+  //       return "jpg.svg";
+  //     case ".mp4":
+  //       return "mp4.svg";
+  //     case ".xls":
+  //     case ".xlsx":
+  //       return "xls.svg";
+  //     case ".pdf":
+  //       return "pdf.svg";
+  //     case ".png":
+  //       return "png.svg";
+  //     case ".js":
+  //       return "javascript.svg";
+  //     default:
+  //       return "file.svg";
+  //   }
+  // }
 
-  getOldFolderId() {
-    var id = this.dmSV.oldFolderId.getValue();
-    if (id == null)
-      return "0";
-    else
-      return id.toString();
-  }
+  // getOldFolderId() {
+  //   var id = this.dmSV.oldFolderId.getValue();
+  //   if (id == null)
+  //     return "0";
+  //   else
+  //     return id.toString();
+  // }
 
-  onDbclick(item, permissions, id, level, parentid, fullName) {
-    //if (!this.checkView(permissions)) {
-    if (!item.read) {
-      this.notificationsService.notify(this.titleAccessDenied);
-      return;
-    }
+  // onDbclick(item, permissions, id, level, parentid, fullName) {
+  //   //if (!this.checkView(permissions)) {
+  //   if (!item.read) {
+  //     this.notificationsService.notify(this.titleAccessDenied);
+  //     return;
+  //   }
 
-    if (this.dmSV.idMenuActive == "2")
-      return;
-    //  alert(id);
-    // alert(level);
-    this.loadedFile = false;
-    this.loadedFolder = false;
-    this.dmSV.level = level;
-    if (level == "1")
-      this.dmSV.parentFolderId = "000000000000000000000000";
-    else
-      this.dmSV.parentFolderId = parentid;
-    this.dmSV.isTree = false;
-    this.dmSV.folderName = fullName;
-    this.dmSV.currentNode = '';
-    this.dmSV.folderId.next(id);
-    this.dmSV.disableInput.next(false);
+  //   if (this.dmSV.idMenuActive == "2")
+  //     return;
+  //   //  alert(id);
+  //   // alert(level);
+  //   this.loadedFile = false;
+  //   this.loadedFolder = false;
+  //   this.dmSV.level = level;
+  //   if (level == "1")
+  //     this.dmSV.parentFolderId = "000000000000000000000000";
+  //   else
+  //     this.dmSV.parentFolderId = parentid;
+  //   this.dmSV.isTree = false;
+  //   this.dmSV.folderName = fullName;
+  //   this.dmSV.currentNode = '';
+  //   this.dmSV.folderId.next(id);
+  //   this.dmSV.disableInput.next(false);
 
-    this.folderService.getFolder(id).subscribe(async res => {
-      if (res != null) {
-        this.dmSV.parentFolder.next(res);
-        this.dmSV.getRight(res);
-        this.dmSV.folderName = res.folderName;
-        this.dmSV.parentFolderId = res.parentId;
-        this.dmSV.add.next(true);
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+  //   this.folderService.getFolder(id).subscribe(async res => {
+  //     if (res != null) {
+  //       this.dmSV.parentFolder.next(res);
+  //       this.dmSV.getRight(res);
+  //       this.dmSV.folderName = res.folderName;
+  //       this.dmSV.parentFolderId = res.parentId;
+  //       this.dmSV.add.next(true);
+  //       this.changeDetectorRef.detectChanges();
+  //     }
+  //   });
 
-    // this.dmSV.listFolder.next(null);
+  //   // this.dmSV.listFolder.next(null);
 
-    // this.changeDetectorRef.detectChanges();
+  //   // this.changeDetectorRef.detectChanges();
 
-    this.folderService.getFolders(id).subscribe(async res => {
-      //  this.dmSV.changeData(res, null, id); 
-      this.dmSV.isTree = true;
-      //  console.log(res);
-      this.dmSV.listFolder.next(res[0]);
-      this.dmSV.listFiles.next(null);
-      this.loadedFolder = true;
-      this.changeDetectorRef.detectChanges();
-    });
+  //   this.folderService.getFolders(id).subscribe(async res => {
+  //     //  this.dmSV.changeData(res, null, id); 
+  //     this.dmSV.isTree = true;
+  //     //  console.log(res);
+  //     this.dmSV.listFolder.next(res[0]);
+  //     this.dmSV.listFiles.next(null);
+  //     this.loadedFolder = true;
+  //     this.changeDetectorRef.detectChanges();
+  //   });
 
-    this.fileService.getListActiveFiles(id, "").subscribe(async res => {
-      //  this.dmSV.changeData(null, res, id);  
-      // console.log(res);
-      this.dmSV.listFiles.next(res);
-      this.loadedFile = true;
-      this.changeDetectorRef.detectChanges();
-    });
+  //   this.fileService.getListActiveFiles(id, "").subscribe(async res => {
+  //     //  this.dmSV.changeData(null, res, id);  
+  //     // console.log(res);
+  //     this.dmSV.listFiles.next(res);
+  //     this.loadedFile = true;
+  //     this.changeDetectorRef.detectChanges();
+  //   });
 
-  }
+  // }
 
-  showDownloadCount(download) {
-    console.log(download);
-    if (download === null || download === undefined)
-      return 0;
-    else
-      return download;
-  }
+  // showDownloadCount(download) {
+  //   console.log(download);
+  //   if (download === null || download === undefined)
+  //     return 0;
+  //   else
+  //     return download;
+  // }
 
-  base64ToArrayBuffer(base64) {
-    var binaryString = window.atob(base64);
-    var binaryLen = binaryString.length;
-    var bytes = new Uint8Array(binaryLen);
-    for (var i = 0; i < binaryLen; i++) {
-      var ascii = binaryString.charCodeAt(i);
-      bytes[i] = ascii;
-    }
-    return bytes;
-  }
+  // base64ToArrayBuffer(base64) {
+  //   var binaryString = window.atob(base64);
+  //   var binaryLen = binaryString.length;
+  //   var bytes = new Uint8Array(binaryLen);
+  //   for (var i = 0; i < binaryLen; i++) {
+  //     var ascii = binaryString.charCodeAt(i);
+  //     bytes[i] = ascii;
+  //   }
+  //   return bytes;
+  // }
 
-  async setDownload(id): Promise<void> {
-    this.fileService.downloadFile(id).subscribe(async res => {
-      if (res && res.content != null) {
-        let json = JSON.parse(res.content);
-        var bytes = this.base64ToArrayBuffer(json);
-        let blob = new Blob([bytes], { type: res.mimeType });
-        let url = window.URL.createObjectURL(blob);
-        var link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", res.fileName);
-        link.style.display = "none";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    });
-  }
+  // async setDownload(id): Promise<void> {
+  //   this.fileService.downloadFile(id).subscribe(async res => {
+  //     if (res && res.content != null) {
+  //       let json = JSON.parse(res.content);
+  //       var bytes = this.base64ToArrayBuffer(json);
+  //       let blob = new Blob([bytes], { type: res.mimeType });
+  //       let url = window.URL.createObjectURL(blob);
+  //       var link = document.createElement("a");
+  //       link.setAttribute("href", url);
+  //       link.setAttribute("download", res.fileName);
+  //       link.style.display = "none";
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //     }
+  //   });
+  // }
 
-  openDialogFile() {
-    this.dmSV.openDialog(new FolderInfo())
-  }
+  // openDialogFile() {
+  //   this.dmSV.openDialog(new FolderInfo())
+  // }
 
-  fileFolderDropped($event) {
-    if ($event.source.recID != $event.target.recID) {
-      if ($event.source.fileName) {
-        this.dmSV.copyFileTo($event.source.recID, $event.source.fileName, $event.target.recID);
-      }
-      else {
-        this.dmSV.copyFolderTo($event.source.recID, $event.source.folderName, $event.target.recID);
-      }
-    }
-  }
+  // fileFolderDropped($event) {
+  //   if ($event.source.recID != $event.target.recID) {
+  //     if ($event.source.fileName) {
+  //       this.dmSV.copyFileTo($event.source.recID, $event.source.fileName, $event.target.recID);
+  //     }
+  //     else {
+  //       this.dmSV.copyFolderTo($event.source.recID, $event.source.folderName, $event.target.recID);
+  //     }
+  //   }
+  // }
 
-  getDataString(data) {
-    return JSON.stringify(data);
-  }
+  // getDataString(data) {
+  //   return JSON.stringify(data);
+  // }
 
-  getBookmarkString(data) {
-    return JSON.stringify(data);
-  }
+  // getBookmarkString(data) {
+  //   return JSON.stringify(data);
+  // }
 
-  getPermissionString(data) {
-    return JSON.stringify(data);
-  }
+  // getPermissionString(data) {
+  //   return JSON.stringify(data);
+  // }
 
   checkView(read: boolean) {
     //console.log(read);
@@ -430,7 +433,7 @@ export class CardComponent implements OnInit {
     // });
     // return ret;
   }
-
+  
   checkDownload(download) {
     // let ret = false;
     // permissions.forEach(item => {
@@ -493,24 +496,24 @@ export class CardComponent implements OnInit {
     window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
   }
 
-  async download(): Promise<void> {
-    if (this.item.download) {
-      var that = this;
-      this.fileService.downloadFile(this.item.recID).subscribe(async res => {
-        if (res && res.content != null) {
-          let json = JSON.parse(res.content);
-          var bytes = that.base64ToArrayBuffer(json);
-          let blob = new Blob([bytes], { type: res.mimeType });
-          let url = window.URL.createObjectURL(blob);
-          var link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", res.fileName);
-          link.style.display = "none";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      });
-    }
-  }
+  // async download(): Promise<void> {
+  //   if (this.item.download) {
+  //     var that = this;
+  //     this.fileService.downloadFile(this.item.recID).subscribe(async res => {
+  //       if (res && res.content != null) {
+  //         let json = JSON.parse(res.content);
+  //         var bytes = that.base64ToArrayBuffer(json);
+  //         let blob = new Blob([bytes], { type: res.mimeType });
+  //         let url = window.URL.createObjectURL(blob);
+  //         var link = document.createElement("a");
+  //         link.setAttribute("href", url);
+  //         link.setAttribute("download", res.fileName);
+  //         link.style.display = "none";
+  //         document.body.appendChild(link);
+  //         link.click();
+  //         document.body.removeChild(link);
+  //       }
+  //     });
+  //   }
+  // }
 }
