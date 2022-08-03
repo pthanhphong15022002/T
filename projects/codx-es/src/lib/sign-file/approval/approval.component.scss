@@ -214,7 +214,10 @@
 .tab-custom{
     .e-tab .e-tab-header{
       height:42px;
-      min-height:42px
+      min-height:42px;        
+    }
+    .e-content{
+      padding: 20px;
     }
     .e-tab .e-tab-header .e-toolbar-items{
       min-height:42px;
@@ -296,13 +299,44 @@
       background:transparent;
       border:0px solid rgba(0,0,0,0);
       border-radius:0
-    }   
+    }  
+    .e-pv-thumbnail-anchor-node{
+      border: 1px solid #C9C9D4;
+      border-radius: 3px;
+      padding: 10px 15px 15px 13px;
+      display: block;
+      margin-bottom: 10px;
+    } 
+    .e-pv-thumbnail-number {
+      /* color: #343a40; */
+      /* font-family: Roboto; */
+      /* padding-left: 50px; */
+      /* padding-right: 50px; */
+      padding: 0;
+      padding-top: 8px;
+      text-align: right;
+  }
 
   }
   .main-right{
-    .e-content{
-      padding: 20px;
-    }
+   
   }
+  // .showArrow {
+  //       position: absolute;
+  //       top: 50%;
+  //       right: 0;
+  //       width: 40px;
+  //       height: 40px;
+  //       align-items: center;
+  //       justify-content: center;
+  //       display: flex;
+  //       &:hover {
+  //         background-color: rgb(172, 165, 157);
+  //         color: blue;
+  //       }
+  //       &.reverse {
+  //         left: -20px;
+  //       }
+  //     }
 
 }
