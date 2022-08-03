@@ -104,7 +104,7 @@ export class ApprovalComponent extends UIComponent {
   autoSignState: boolean = false;
 
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
-  hideThumbnail: boolean = true;
+  hideThumbnail: boolean = false;
   hideActions: boolean = false;
 
   saveAnnoQueue: Map<string, any>;
