@@ -10,7 +10,7 @@
             <div class="d-flex align-items-top">
               <div class="me-3 w-150px">
                 <div class="d-flex flex-column" #ToDate>
-                  <codx-label name="lblToDate" formName="FD_KudosTrans" default="Đến ngày" class="font-weight-bold">
+                  <codx-label name="lblToDate" formName="FD_KudosTrans" default="Đến ngày" class="fw-bold">
                   </codx-label>
                   <codx-input type="datetime" format="d" class="form-control" [crrValue]="toDate" field="toDate"
                     ngDefaultControl (valueChange)="valueChange($event)">
@@ -19,8 +19,8 @@
               </div>
               <div class="me-3 left-5">
                 <div class="d-flex flex-column" #Organize>
-                  <codx-label name="lblOrganize" formName="FD_KudosTrans" default="Cơ cấu tổ chức"
-                    class="font-weight-bold"></codx-label>
+                  <codx-label name="lblOrganize" formName="FD_KudosTrans" default="Cơ cấu tổ chức" class="fw-bold">
+                  </codx-label>
                   <div class="d-flex header-combo">
                     <codx-input class="form-control me-2" type="valuelist" field="vllOrganize" refValue="L1483"
                       (valueChange)="valueChange($event)">
@@ -35,7 +35,7 @@
               </div>
               <div class="me-3 w-200px left-5">
                 <div class="d-flex flex-column" #Employee>
-                  <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Nhân viên" class="font-weight-bold">
+                  <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Nhân viên" class="fw-bold">
                   </codx-label>
                   <codx-input class="form-control" type="combobox" field="Employee" refValue="Employees"
                     (valueChange)="valueChange($event)">
@@ -46,7 +46,7 @@
             <div class="d-flex align-items-center mt-3 mb-3 chart-circle">
               <div class="d-flex me-9 pd-r-30" *ngFor="let item of chartLabels; let i = index">
                 <span class="square-status" [style.background-color]="colors[0].backgroundColor[i]"></span>
-                <span class="text-dark-75 ml-2 left-5">{{ item ? item : '...' }}</span>
+                <span class="text-dark-75 ms-2 left-5">{{ item ? item : '...' }}</span>
               </div>
             </div>
             <div class="row">
@@ -65,15 +65,15 @@
               <div class="box-wallets">
                 <div class="text-dark font-size-h4">
                   <codx-label name="lbl" formName="FD_KudosTrans" default="Bảng thành tích theo bộ phận"
-                    class="font-weight-bold"></codx-label>
+                    class="fw-bold"></codx-label>
                 </div>
 
-                <!-- <span class="icon-open_in_new icon-20 ml-2"></span> -->
+                <!-- <span class="icon-open_in_new icon-20 ms-2"></span> -->
 
                 <div class="d-flex align-items-center mt-3">
                   <div class="d-flex me-9 pd-r-30" *ngFor="let item of dataProcess">
                     <span class="square-status" [style.background-color]="item.color"></span>
-                    <span class="text-dark-75 ml-2 left-5">{{item.breakName}}</span>
+                    <span class="text-dark-75 ms-2 left-5">{{item.breakName}}</span>
                   </div>
                 </div>
                 <hr class="gray">
@@ -106,7 +106,7 @@
 
                               </span>
                               <span
-                                class="text-dark font-size-h4 font-weight-bold ml-1">{{item.dicLine[itemline.breakName].countEmp}}</span>
+                                class="text-dark font-size-h4 fw-bold ms-1">{{item.dicLine[itemline.breakName].countEmp}}</span>
                             </div>
                             <div class="symbol-group symbol-hover mt-1 justify-content-center">
                               <ng-container
@@ -119,7 +119,7 @@
                               </ng-container>
                               <div class="symbol symbol-24 symbol-circle symbol-light"
                                 *ngIf="item.dicLine[itemline.breakName].countEmp > 3">
-                                <span class="symbol-label font-weight-bold">+{{item.dicLine[itemline.breakName].countEmp
+                                <span class="symbol-label fw-bold">+{{item.dicLine[itemline.breakName].countEmp
                                   -
                                   3}}</span>
                               </div>
@@ -145,7 +145,7 @@
                     </div>
                   </div>
                   <div class="top-name w-100 text-center">
-                    <div class="text-dark font-size-sm font-weight-bold">
+                    <div class="text-dark font-size-sm fw-bold">
                       {{ lstRate[1]?.employeeName }}
                     </div>
                     <div class="text-dark-50">{{ lstRate[1]?.totalCoreEmp }}</div>
@@ -160,7 +160,7 @@
                     </div>
                   </div>
                   <div class="top-name w-100 text-center">
-                    <div class="text-dark font-size-sm font-weight-bold">
+                    <div class="text-dark font-size-sm fw-bold">
                       {{ lstRate[0]?.employeeName }}
                     </div>
                     <div class="text-dark-50">{{ lstRate[0]?.totalCoreEmp }}</div>
@@ -175,7 +175,7 @@
                     </div>
                   </div>
                   <div class="top-name w-100 text-center">
-                    <div class="text-dark font-size-sm font-weight-bold">
+                    <div class="text-dark font-size-sm fw-bold">
                       {{ lstRate[2]?.employeeName }}
                     </div>
                     <div class="text-dark-50">{{ lstRate[2]?.totalCoreEmp }}</div>
@@ -229,7 +229,7 @@
       <span class="list-number top-premium">{{ item?.rate }}</span>
     </div>
     <div class="d-flex flex-column flex-grow-1 left-15">
-      <div class="text-dark font-weight-bold">
+      <div class="text-dark fw-bold">
         {{ item?.employeeName }}
       </div>
       <div class="text-dark-50">{{ item?.orgUnitName }}</div>
@@ -238,7 +238,7 @@
       <span class="label label-inline label-light-primary">{{
         item.textRate
         }}</span>
-      <div class="text-dark font-size-h4 text-right font-weight-bold mt-1">
+      <div class="text-dark font-size-h4 text-right fw-bold mt-1">
         {{ item?.totalCoreEmp }}
       </div>
     </div>

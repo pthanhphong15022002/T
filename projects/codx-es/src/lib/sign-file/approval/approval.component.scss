@@ -1,120 +1,183 @@
+// ::ng-deep {
+//   .e-device .e-dlg-content, .e-device .e-dlg-content * {
+//     font-size: inherit; 
+// }
+//   .row {
+//     position: relative;
+//     .action {
+//       height: 100px !important;
+//       border: 1px solid black !important;
+//       margin: 10px 10px 0 0 !important;
+//       align-items: center !important;
+//       display: flex !important;
+//       justify-content: center !important;
+
+//       &:hover {
+//         cursor: pointer !important;
+//         background-color: antiquewhite;
+//         color: blue;
+//       }
+//     }
+
+//     .active {
+//       color: blue;
+//       background-color: antiquewhite;
+//     }
+//   }
+
+//   .main-content {
+//     width: 100% !important;
+//     height: 100% !important;
+//     position: relative !important;
+//   }
+//   #thumbnailTab {
+//     height: 100% !important;
+//     overflow: hidden !important;
+//   }
+
+//   label {
+//     margin-left: 10px !important;
+//     margin-top: 10px !important;
+//   }
+
+//   button {
+//     outline: none !important;
+//     border-radius: 3px !important;
+//   }
+
+//   .main-pane {
+//     width: 100% !important;
+//     height: 97% !important;
+//     overflow-y: hidden;
+//     position: absolute !important;
+//   }
+
+//   #signfilesDropdownList {
+//     width: 75% !important;
+//     text-align: center !important;
+//     position: relative !important;
+//   }
+
+//   #signatureDropdownList {
+//     width: 100% !important;
+//     text-align: center !important;
+//     position: relative !important;
+//   }
+
+//   .showArrow {
+//     position: absolute;
+//     top: 50%;
+//     right: 0;
+//     width: 40px;
+//     height: 40px;
+//     align-items: center;
+//     justify-content: center;
+//     display: flex;
+//     &:hover {
+//       background-color: rgb(172, 165, 157);
+//       color: blue;
+//     }
+//     &.reverse {
+//       left: -20px;
+//     }
+//   }
+//   .col-2 {
+//     overflow-y: scroll !important;
+//     overflow-x: hidden !important;
+//     height: 100% !important;
+//     position: relative;
+//     .e-tab-header {
+//       position: fixed !important;
+//       height: auto !important;
+//       width: fit-content !important;
+//       z-index: 10 !important;
+//       background: white !important;
+//       &.hideCol {
+//         width: 75px;
+//       }
+//     }
+//   }
+
+//   .col-7 {
+//     .pdfviewer_Space {
+//       #pdfViewer_viewerMainContainer {
+//         display: flex;
+//         justify-content: center;
+//       }
+//     }
+//   }
+//   .actions {
+//     height: 100% !important;
+//     position: inherit;
+//     .autoSign_Space {
+//       margin-top: 15px;
+//     }
+//   }
+
+//   .hideCol {
+//     width: 75px !important;
+//   }
+// }
+// /**Fix 8.1.2022***/
+
+// .e-tab .e-tab-header .e-toolbar-item {
+//   border: 0 !important;
+// }
+// .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap    {
+//   color: #212529;
+//   border: 0;
+//   font-weight: 500;
+// }
+// .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
+// .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
+//   //color: $primary-dark;
+//   color: #0078ff;
+// }
+// .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
+//   text-transform: none;
+// }
+  
+// .e-tab .e-tab-header.e-vertical::before {
+//   display: none;      
+// }
+// /***fix**/
+// .e-tab .e-tab-header.e-vertical .e-toolbar-item:not(.e-separator) {
+//   height: auto;
+//   min-height: auto;
+//   min-width: auto;      
+//   padding: 0 0px;
+//   margin: 0;
+// }
+// .e-tab .e-tab-header.e-vertical .e-toolbar-item .e-tab-wrap {
+//   padding: 0;  
+//   height: auto;
+//   min-width: auto;
+//   margin-bottom: 1px;
+//   border-radius: 3px;
+// }
+// .e-tab.e-focused>.e-tab-header .e-toolbar-item .e-tab-wrap:focus, .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover { 
+//   background-color: #f4f8ff;
+//   border-radius: 3px!important;
+// }   
+// .e-tab .e-tab-header.e-vertical.e-vertical-left .e-toolbar-item.e-active .e-tab-wrap {       
+//   background-color: #eaeff7;
+//   border-radius: 3px!important;
+// }
+// .e-tab .e-tab-header .e-toolbar-item .e-text-wrap {
+//   height: auto;
+//   min-height: 34px;
+// }
+// .div-active {
+//   border-bottom: solid 2px #187DE4;
+// }
+
 ::ng-deep {
   .e-device .e-dlg-content, .e-device .e-dlg-content * {
     font-size: inherit; 
 }
-  .row {
-    position: relative;
-    .action {
-      height: 100px !important;
-      border: 1px solid black !important;
-      margin: 10px 10px 0 0 !important;
-      align-items: center !important;
-      display: flex !important;
-      justify-content: center !important;
-
-      &:hover {
-        cursor: pointer !important;
-        background-color: antiquewhite;
-        color: blue;
-      }
+.main-content {
+      width: 100% !important;
+      height: 100% !important;
+      position: relative !important;
     }
-
-    .active {
-      color: blue;
-      background-color: antiquewhite;
-    }
-  }
-
-  .main-content {
-    width: 100% !important;
-    height: 100% !important;
-    position: relative !important;
-  }
-  #thumbnailTab {
-    height: 100% !important;
-    overflow: hidden !important;
-  }
-
-  label {
-    margin-left: 10px !important;
-    margin-top: 10px !important;
-  }
-
-  button {
-    outline: none !important;
-    border-radius: 3px !important;
-  }
-
-  .main-pane {
-    width: 100% !important;
-    height: 97% !important;
-    overflow-y: hidden;
-    position: absolute !important;
-  }
-
-  #signfilesDropdownList {
-    width: 75% !important;
-    text-align: center !important;
-    position: relative !important;
-  }
-
-  #signatureDropdownList {
-    width: 100% !important;
-    text-align: center !important;
-    position: relative !important;
-  }
-
-  .showArrow {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    width: 40px;
-    height: 40px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    &:hover {
-      background-color: rgb(172, 165, 157);
-      color: blue;
-    }
-    &.reverse {
-      left: -20px;
-    }
-  }
-  .col-2 {
-    overflow-y: scroll !important;
-    overflow-x: hidden !important;
-    height: 100% !important;
-    position: relative;
-    .e-tab-header {
-      position: fixed !important;
-      height: auto !important;
-      width: fit-content !important;
-      z-index: 10 !important;
-      background: white !important;
-      &.hideCol {
-        width: 75px;
-      }
-    }
-  }
-
-  .col-7 {
-    .pdfviewer_Space {
-      #pdfViewer_viewerMainContainer {
-        display: flex;
-        justify-content: center;
-      }
-    }
-  }
-  .actions {
-    height: 100% !important;
-    position: inherit;
-    .autoSign_Space {
-      margin-top: 15px;
-    }
-  }
-
-  .hideCol {
-    width: 75px !important;
-  }
 }

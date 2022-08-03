@@ -42,20 +42,20 @@
                 </div>
                 <div class="d-flex mb-2">
                     <span class="text-dark-75 me-2">{{titleFileType}}: </span>
-                    <span class="font-weight-bold">{{fileEditing.type}} ({{fileEditing.extension}})</span>
+                    <span class="fw-bold">{{fileEditing.type}} ({{fileEditing.extension}})</span>
                 </div>
                 <div class="d-flex mb-2">
                     <span class="text-dark-75 me-2">{{titleSize}}: </span>
-                    <span class="text-dark font-weight-bold">{{getSizeKB(fileEditing.fileSize)}} KB
+                    <span class="text-dark fw-bold">{{getSizeKB(fileEditing.fileSize)}} KB
                         ({{getSizeByte(fileEditing.fileSize)}} bytes)</span>
                 </div>
                 <div class="d-flex mb-2">
                     <span class="text-dark-75 me-2">{{titleCreator}}: </span>
-                    <span class="text-dark font-weight-bold">{{fileEditing.createdBy}}</span>
+                    <span class="text-dark fw-bold">{{fileEditing.createdBy}}</span>
                 </div>
                 <div class="d-flex mb-2">
                     <span class="text-dark-75 me-2">{{titleCreaton}}: </span>
-                    <span class="text-dark font-weight-bold">{{fileEditing.createdOn}}</span>
+                    <span class="text-dark fw-bold">{{fileEditing.createdOn}}</span>
                 </div>
                 <div class="d-flex align-items-center justify-content-between">
                     <ul class="nav nav-tabs nav-tabs-line">
@@ -66,7 +66,7 @@
                         </li>
                     </ul>
                     <button type="button" (click)="openRight()"
-                    class="btn btn-sm btn-outline-primary">{{titleSelectObject}}</button>
+                        class="btn btn-sm btn-outline-primary">{{titleSelectObject}}</button>
 
                     <!-- <button type="button" (click)="openRight()"
                         class="btn btn-pill btn-xs btn-outline-primary">{{titleSelectObject}}</button> -->
@@ -120,7 +120,7 @@
                                         </div>
                                         <!-- <div class="text-dark-75">{{perm.objectName}}</div> -->
                                         <span *ngIf="perm.isSystem == false && this.assignRight"
-                                            (click)="removeUserRight(i)" class="icon-close icon-16 ml-2 text-danger">
+                                            (click)="removeUserRight(i)" class="icon-close icon-16 ms-2 text-danger">
                                         </span>
                                     </div>
                                 </div>
@@ -131,7 +131,7 @@
                 <div (click)="hideInfo()"
                     class="d-flex text-primary text-hover-danger hover-cursor align-items-center mt-6">
                     <span class="icon-add_circle icon-18 me-2"></span>
-                    <span class="font-weight-bold">{{titleExpand}}</span>
+                    <span class="fw-bold">{{titleExpand}}</span>
                 </div>
                 <div [hidden]="!information" class="mt-3 mb-3">
                     <div class="form-group row">
@@ -197,7 +197,7 @@
                 <div (click)="hideLicence()"
                     class="d-flex text-primary text-hover-danger hover-cursor align-items-center mt-6">
                     <span class="icon-add_circle icon-18 me-2"></span>
-                    <span class="font-weight-bold">{{titleCopyright}}</span>
+                    <span class="fw-bold">{{titleCopyright}}</span>
                 </div>
                 <div [hidden]="!license" class="mt-3 mb-3">
                     <div class="form-group row">

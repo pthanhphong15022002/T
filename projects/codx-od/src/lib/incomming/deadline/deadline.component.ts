@@ -34,7 +34,7 @@ export class ExtendDeadlineComponent implements OnInit {
     if(this.deadlineForm.value.extendOn == null)this.deadlineForm.value.extendOn = new Date();
     this.odService.extendDeadLinee(this.deadlineForm.value).subscribe((item)=>{
       if(item.status == 0)
-        this.dialog.close();
+        this.dialog.close(item?.data);
         
       this.notifySvr.notify(item.message);
     })

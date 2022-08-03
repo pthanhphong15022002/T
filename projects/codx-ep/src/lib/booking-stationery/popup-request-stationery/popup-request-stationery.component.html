@@ -11,7 +11,7 @@
   <ng-template #body>
     <div class="d-flex justify-content-between">
       <codx-temp-full
-        imageId="ADMIN"
+        [imageId]="dialogRequest.value?.owner"
         [title]="'Lê Phạm Hoài Thương'"
         [subTitle]="'Thư ký trung tâm-NDX'"
         cardCss="card-template border-bottom px-2 py-3"
@@ -22,20 +22,20 @@
       >
       </codx-temp-full>
       <div>
-        <span class="badge badge-secondary"
-          ><codx-label
+        <span class="badge badge-secondary">
+          <codx-label
             name="lblPerson"
             default="Cá nhân"
             [formModel]="form.formModel"
-          ></codx-label
-        ></span>
-        <span class="badge badge-primary"
-          ><codx-label
+          ></codx-label>
+        </span>
+        <span class="badge badge-primary">
+          <codx-label
             name="lblRoom"
             default="Phòng"
             [formModel]="form.formModel"
-          ></codx-label
-        ></span>
+          ></codx-label>
+        </span>
       </div>
     </div>
     <div
@@ -47,7 +47,7 @@
           name="lblDepartment"
           default="Đơn vị/bộ phận:"
           [formModel]="form.formModel"
-          >{{ dialog.BUID }}</codx-label
+          >{{ dialogRequest.value?.bUID }}</codx-label
         >
       </div>
       <!--begin: btn-icon-->
@@ -102,7 +102,7 @@
                 ></codx-img>
               </div>
               <div class="">
-                <div class="text-dark font-weight-bold font-size-h6">
+                <div class="text-dark fw-bold font-size-h6">
                   {{ item.resourceName }}
                 </div>
                 <codx-label name="lblUnit" default="Đơn vị tính: "></codx-label>
@@ -197,14 +197,12 @@
         </div>
         <div class="col-10">
           <codx-input
-            type="valuelist"
-            field=""
-            [refValue]="CbxName['reasonID']"
+            type="combobox"
+            [refValue]="CbxName['ReasonID']"
             ngDefaultControl
-            [crrValue]="this.dialogRequest.value.reasonID"
+            [crrValue]="this.dialogRequest.value?.reasonID"
             field="reasonID"
             (valueChange)="valueChange($event)"
-            [disabled]="true"
           ></codx-input>
         </div>
       </div>
@@ -227,6 +225,4 @@
     </div>
   </ng-template>
 </codx-form>
-<ng-template #popupDevice let-dialog>
-  
-</ng-template>
+<ng-template #popupDevice let-dialog> </ng-template>

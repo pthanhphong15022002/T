@@ -10,3 +10,29 @@
     height: 100% !important;
 }
 
+.active [class*="icon-"] {
+    color: #0078FF;
+}
+
+.add-note {
+    position: relative;
+    height: 100%;
+}
+
+.note-text {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 120px;
+    top: 50px;
+    overflow: auto;
+}
+
+.dot-black {
+    width: 4px;
+    height: 4px;
+    display: block;
+    border-radius: 3px;
+    background-color: rgb(51, 53, 54);
+
+}

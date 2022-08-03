@@ -1,20 +1,7 @@
-<codx-views
-  #base
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
-  [views]="views"
-  [button]="button"
-  (buttonClick)="add($event)"
-  [moreFuncs]="moreFunc"
-  [idField]="idField"
-  [className]="className"
-  [method]="method"
-  (requestEnded)="closeEditForm($event)"
->
+<codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="add($event)"
+  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
+  (requestEnded)="closeEditForm($event)">
 </codx-views>
 
 <ng-template #resourceNameCol let-data>
@@ -23,7 +10,7 @@
       <codx-img [objectId]="" imageType="square" width="100"></codx-img>
     </div>
     <div>
-      <div class="text-dark font-weight-bold font-size-h6">
+      <div class="text-dark fw-bold font-size-h6">
         {{ data.resourceName }}
       </div>
       <div>Đơn vị tính:</div>
@@ -66,11 +53,7 @@
       <div></div>
     </div>
     <div class="action-menu">
-      <codx-mfunc
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-      ></codx-mfunc>
+      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
     </div>
   </div>
 </ng-template>

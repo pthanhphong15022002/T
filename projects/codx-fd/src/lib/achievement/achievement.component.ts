@@ -6,20 +6,26 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
-} from "@angular/core";
-import { ApiHttpService, DataRequest, ViewModel, ViewsComponent, ViewType } from "codx-core";
+} from '@angular/core';
+import {
+  ApiHttpService,
+  DataRequest,
+  UIComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 
 @Component({
-  selector: "app-achievement",
-  templateUrl: "./achievement.component.html",
-  styleUrls: ["./achievement.component.scss"],
+  selector: 'app-achievement',
+  templateUrl: './achievement.component.html',
+  styleUrls: ['./achievement.component.scss'],
 })
-export class AchievementComponent implements OnInit {
-
+export class AchievementComponent extends UIComponent implements OnInit {
   funcID: any;
   reloadTop = true;
-  labels_empty: string[] = ["Empty"];
-  colors_empty: string[] = ["#B7B7B7"];
+  labels_empty: string[] = ['Empty'];
+  colors_empty: string[] = ['#B7B7B7'];
   chartDatas_empty: number[] = [100];
   chartDatas: number[] = [];
   optionsChart = {
@@ -28,7 +34,7 @@ export class AchievementComponent implements OnInit {
       bodyFontSize: 16,
     },
     legend: {
-      position: "right",
+      position: 'right',
       labels: {
         fontSize: 9,
       },
@@ -36,9 +42,9 @@ export class AchievementComponent implements OnInit {
     },
     cutoutPercentage: 80,
     title: {
-      align: "start",
+      align: 'start',
       fontSize: 16,
-      text: "Xu nhận",
+      text: 'Xu nhận',
       display: false,
     },
   };
@@ -51,14 +57,14 @@ export class AchievementComponent implements OnInit {
   options = new DataRequest();
   lstRate = [];
   dataProcess = [];
-  heightList = "200";
+  heightList = '200';
   toDate = new Date();
-  orgUnit = "";
-  emloyeeID = "";
-  predicate = "";
-  dataValue = "";
-  comboboxName = "";
-  type = "";
+  orgUnit = '';
+  emloyeeID = '';
+  predicate = '';
+  dataValue = '';
+  comboboxName = '';
+  type = '';
   lstDataChart = [];
   ishide = true;
   loadList = false;
@@ -70,22 +76,20 @@ export class AchievementComponent implements OnInit {
   showHeader: boolean = true;
   userPermission: any;
 
-  @ViewChild("listview") listview;
-  @ViewChild("subheader") subheader;
+  @ViewChild('listview') listview;
+  @ViewChild('subheader') subheader;
   @ViewChild('iTemplateLeft') iTemplateLeft: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
-  @ViewChild('viewbase') viewbase: ViewsComponent;
-  @ViewChild('view') view!: ViewsComponent;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
 
   constructor(
+    private injector: Injector,
     private dt: ChangeDetectorRef,
-    private api: ApiHttpService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
-    this.route.params.subscribe(param => {
-      this.funcID = param["funcID"]
-      this.dt.detectChanges();
+    super(injector);
+    this.route.params.subscribe((param) => {
+      this.funcID = param['funcID'];
     });
   }
 
@@ -95,12 +99,12 @@ export class AchievementComponent implements OnInit {
     return true;
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.options.pageLoading = false;
-    this.options.entityName = "FD_KudosTrans";
-    this.options.entityPermission = "FD_KudosTrans";
-    this.options.gridViewName = "grvKudosTrans";
-    this.options.formName = "KudosTrans";
+    this.options.entityName = 'FD_KudosTrans';
+    this.options.entityPermission = 'FD_KudosTrans';
+    this.options.gridViewName = 'grvKudosTrans';
+    this.options.formName = 'KudosTrans';
     this.options.funcID = this.funcID;
     //this.LoadData();
   }
@@ -115,40 +119,36 @@ export class AchievementComponent implements OnInit {
           panelLeftRef: this.templateLeft,
         },
       },
-    ]
-    this.userPermission = this.viewbase.userPermission;
-    this.dt.detectChanges();
+    ];
+    this.userPermission = this.view.userPermission;
   }
-
 
   LoadData() {
     this.api
-      .execSv<any>("FD", "FD", "KudosTransBusiness", "LoadDataKudoAsync", [
-        this.options, this.type
+      .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
+        this.options,
+        this.type,
       ])
       .subscribe((res) => {
         if (res) {
           this.lstRate = res[0];
           this.dataProcess = res[1];
-          console.log("check dataProcess", this.dataProcess)
           this.dataTable = res[2];
           this.dicEmployeeByOrg = res[3];
           if (this.dataProcess.length > 0) {
             var t = this;
             this.lstDataChart = [];
-            var sField = "orgUnitID";
-            var sFieldName = "orgUnitName";
-            if (this.type == "1") {
-              sField = "companyID";
-              sFieldName = "companyName";
-            }
-            else if (this.type == "3") {
-              sField = "divisionID";
-              sFieldName = "divisionName";
-            }
-            else if (this.type == "4") {
-              sField = "departmentID";
-              sFieldName = "departmentName";
+            var sField = 'orgUnitID';
+            var sFieldName = 'orgUnitName';
+            if (this.type == '1') {
+              sField = 'companyID';
+              sFieldName = 'companyName';
+            } else if (this.type == '3') {
+              sField = 'divisionID';
+              sFieldName = 'divisionName';
+            } else if (this.type == '4') {
+              sField = 'departmentID';
+              sFieldName = 'departmentName';
             }
             this.dataProcess.forEach(function (element, index) {
               if (index > 2) return;
@@ -179,7 +179,6 @@ export class AchievementComponent implements OnInit {
                 ) {
                   t.chartLabels.push(items[0][sFieldName]);
                   t.colors[0].backgroundColor.push(t.getRandomColor());
-
                 }
                 if (count > 0) chartDatas.push(count);
               }
@@ -192,7 +191,6 @@ export class AchievementComponent implements OnInit {
               // };
               //t.lstDataChart.push(obj);
             });
-            console.log("check chartDatas", this.chartDatas)
           }
           if (this.lstDataChart.length > 0) this.ishide = false;
           this.setHeightList();
@@ -203,69 +201,70 @@ export class AchievementComponent implements OnInit {
   }
 
   valueChange(e) {
-    switch (e.field) {
-      case "toDate":
-        var value = new Date(e.data?.toDate);
-        this.toDate = value;
-        // this.options.predicate += " && TransDate <= @1";
-        // this.options.dataValue += ";" + value.toISOString();
-        break;
-      case "vllOrganize":
-        this.comboboxName = e.data?.text;
-        this.type = e.data?.value;
-        this.dt.detectChanges();
-        break;
-      case "Organize":
-        var sField = "OrgUnitID";
-        if (this.type == "1")
-          sField = "CompanyID";
-        else if (this.type == "3")
-          sField = "DivisionID";
-        else if (this.type == "4")
-          sField = "DepartmentID";
-        this.orgUnit = e.data[sField];
-        break;
-      case "Employee":
-        sField = "EmployeeID";
-        this.emloyeeID = e.data?.EmployeeID;
-        break;
-      default:
-        break;
+    if (e) {
+      if (e.component != undefined) var textVll = e.component.dataSource;
+      switch (e.field) {
+        case 'toDate':
+          var value = new Date(e.data?.toDate);
+          this.toDate = value;
+          // this.options.predicate += " && TransDate <= @1";
+          // this.options.dataValue += ";" + value.toISOString();
+          break;
+        case 'vllOrganize':
+          textVll.forEach((res) => {
+            if (res.value == e.data) {
+              this.comboboxName = res.text;
+              this.dt.detectChanges();
+            }
+          });
+          this.type = e.data?.value;
+          break;
+        case 'Organize':
+          var sField = 'OrgUnitID';
+          if (this.type == '1') sField = 'CompanyID';
+          else if (this.type == '3') sField = 'DivisionID';
+          else if (this.type == '4') sField = 'DepartmentID';
+          this.orgUnit = e.data[sField];
+          break;
+        case 'Employee':
+          sField = 'EmployeeID';
+          this.emloyeeID = e.data?.EmployeeID;
+          break;
+        default:
+          break;
+      }
     }
     this.setPredicate();
   }
 
   setPredicate() {
-    this.options.predicate = "TransType=@0";
-    this.options.dataValue = "3";
-    var predicate = "",
-      dataValue = "",
+    this.options.predicate = 'TransType=@0';
+    this.options.dataValue = '3';
+    var predicate = '',
+      dataValue = '',
       arrTemp = [];
     if (this.toDate)
-      arrTemp.push({ field: "TransDate", value: this.toDate.toISOString() });
+      arrTemp.push({ field: 'TransDate', value: this.toDate.toISOString() });
     if (this.orgUnit) {
-      var sField = "OrgUnitID";
-      if (this.type == "1")
-        sField = "CompanyID";
-      else if (this.type == "3")
-        sField = "DivisionID";
-      else if (this.type == "4")
-        sField = "DepartmentID";
+      var sField = 'OrgUnitID';
+      if (this.type == '1') sField = 'CompanyID';
+      else if (this.type == '3') sField = 'DivisionID';
+      else if (this.type == '4') sField = 'DepartmentID';
       arrTemp.push({ field: sField, value: this.orgUnit });
     }
     if (this.emloyeeID)
-      arrTemp.push({ field: "EmployeeID", value: this.emloyeeID });
+      arrTemp.push({ field: 'EmployeeID', value: this.emloyeeID });
     arrTemp.forEach(function (element, index) {
       if (!element) return;
-      var opartor = "=@";
-      if (element.field == "TransDate") opartor = "<=@";
-      if (predicate) predicate += "&&" + element.field + opartor + (index + 1);
+      var opartor = '=@';
+      if (element.field == 'TransDate') opartor = '<=@';
+      if (predicate) predicate += '&&' + element.field + opartor + (index + 1);
       else predicate = element.field + opartor + (index + 1);
-      if (dataValue) dataValue += ";" + element.value;
+      if (dataValue) dataValue += ';' + element.value;
       else dataValue = element.value;
     });
-    this.options.predicate += "&&" + predicate;
-    this.options.dataValue += ";" + dataValue;
+    this.options.predicate += '&&' + predicate;
+    this.options.dataValue += ';' + dataValue;
     this.loadList = true;
     if (this.listview) {
       this.listview.predicate = this.options.predicate;
@@ -290,7 +289,7 @@ export class AchievementComponent implements OnInit {
 
   setValueChartTable(value): any {
     if (!value) return;
-    var css = this.renderMiddleText(value, "");
+    var css = this.renderMiddleText(value, '');
     // var plugin: PluginServiceGlobalRegistrationAndOptions[] = [];
     // plugin[0] = css;
     // return plugin;
@@ -301,20 +300,20 @@ export class AchievementComponent implements OnInit {
       beforeDraw(chart) {
         const ctx = chart.ctx;
         const txt = value;
-        ctx.textAlign = "center";
+        ctx.textAlign = 'center';
         ctx.fontSize = 16;
-        ctx.textBaseline = "middle";
+        ctx.textBaseline = 'middle';
         const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
         const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
-        ctx.fillText(txt + " " + name, centerX, centerY);
+        ctx.fillText(txt + ' ' + name, centerX, centerY);
       },
     };
     return css;
   }
 
   getRandomColor() {
-    var letters = "0123456789ABCDEF";
-    var color = "#";
+    var letters = '0123456789ABCDEF';
+    var color = '#';
     for (var i = 0; i < 6; i++) {
       color += letters[Math.floor(Math.random() * 16)];
     }
@@ -323,10 +322,10 @@ export class AchievementComponent implements OnInit {
 
   setHeightList() {
     let wh = window.innerHeight;
-    var top = document.getElementsByClassName("top-champion");
-    var process = document.getElementsByClassName("process-performance");
+    var top = document.getElementsByClassName('top-champion');
+    var process = document.getElementsByClassName('process-performance');
     if (top.length > 0) wh = wh - top[0].clientHeight;
     if (process.length > 0) wh = wh - process[0].clientHeight;
-    this.heightList = wh - 60 + "";
+    this.heightList = wh - 60 + '';
   }
 }

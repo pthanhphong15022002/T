@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
-import { Notes } from '@shared/models/notes.model';
+import { Notes, NoteType } from '@shared/models/notes.model';
 import { falseLine } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
 
 @Component({
@@ -44,6 +44,10 @@ export class PopupAddUpdate implements OnInit {
   fileCount: any = 0;
   checkUpload = false;
   dataAdd: any = '';
+  empty = '';
+  type = 'text';
+  noteType: NoteType = new NoteType();
+  listNote: any = [];
 
   note: Notes = new Notes();
 
@@ -53,6 +57,7 @@ export class PopupAddUpdate implements OnInit {
     public atSV: AttachmentService,
     private cache: CacheService,
     private api: ApiHttpService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -74,9 +79,45 @@ export class PopupAddUpdate implements OnInit {
 
   ngOnInit(): void {}
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    if (this.formType == 'edit') {
+      this.checkActiveFormEdit();
+    }
+  }
 
-  valueChange(e) {
+  checkActiveFormEdit() {
+    if (this.note?.noteType == 'text') {
+      this.noteType.text = true;
+      this.noteType.check = false;
+      this.noteType.list = false;
+    } else if (this.note?.noteType == 'check') {
+      this.noteType.check = true;
+      this.noteType.text = false;
+      this.noteType.list = false;
+    } else {
+      this.noteType.list = true;
+      this.noteType.check = false;
+      this.noteType.text = false;
+    }
+  }
+
+  checkActiveFormAdd() {
+    if (this.type == 'text') {
+      this.noteType.text = true;
+      this.noteType.check = false;
+      this.noteType.list = false;
+    } else if (this.type == 'check') {
+      this.noteType.check = true;
+      this.noteType.text = false;
+      this.noteType.list = false;
+    } else {
+      this.noteType.list = true;
+      this.noteType.check = false;
+      this.noteType.text = false;
+    }
+  }
+
+  valueChange(e, item = null, index = null) {
     if (e) {
       var field = e.field;
       var dt = e.data;
@@ -122,26 +163,10 @@ export class PopupAddUpdate implements OnInit {
       });
   }
 
-  // updateNote2(item = null) {
-  //   this.note.fileCount = this.fileCount;
-  //   this.api
-  //     .exec<any>(
-  //       'ERM.Business.WP',
-  //       'NoteBooksBusiness',
-  //       'UpdateNoteBookDetailAsync',
-  //       [item?.recID, this.note]
-  //     )
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         (this.dialog.dataService as CRUDService).update(res).subscribe();
-  // this.dialog.close();
-  //       }
-  //     });
-  // }
+  onUpdateNote(e) {}
 
   beforeSave(option: any) {
     this.note.transID = this.transID;
-    // this.note.fileCount = this.fileCount;
     if (this.formType == 'add') {
       option.method = 'CreateNoteBookDetailsAsync';
       option.data = this.note;
@@ -177,6 +202,19 @@ export class PopupAddUpdate implements OnInit {
   valueChangeTag(e) {
     if (e) {
       this.note.tag = e.data;
+    }
+  }
+
+  onType(type) {
+    if (this.formType == 'add') {
+      this.type = type;
+      this.listNote = [];
+      if (type == 'list' || type == 'check') {
+        var todoCheck = { status: type == 'check' ? 0 : null, listNote: '' };
+        this.listNote.push(todoCheck);
+        this.changeDetectorRef.detectChanges();
+      }
+      this.checkActiveFormAdd();
     }
   }
 }
