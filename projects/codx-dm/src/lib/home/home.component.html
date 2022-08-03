@@ -1,12 +1,7 @@
 <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views"
   (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="addFile($event)"
-  (viewChanged)="changeView($event)"></codx-views>
-
-<!-- <codx-temp-full  imageSrc="{{getExtension(item.data.thumbnail, item.data.extension)}}" imgCss="w-20px me-3 cursor-pointer" 
-title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"          
-[desc]="getSubTitle(item.data.recID)" [descLine]="1">
-</codx-temp-full> -->
+  (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"></codx-views>
 
 <ng-template #templateMain let-data>
   <div *ngIf="(dmSV.checkUserForder(data)) then noContext else context">
@@ -16,11 +11,7 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
       <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
     </div>
   </ng-template>
-  <ng-template #context>
-    <!-- <codx-temp-full  [imageSrc]="setFullHtmlNode(data, '')" imgCss="w-20px me-3 cursor-pointer" 
-    [title]="data.folderName"          
-    [descLine]="1">
-    </codx-temp-full> -->
+  <ng-template #context>   
     <div class="d-flex align-items-center  px-3 pt-2 pb-1 ">
       <div [innerHTML]="setFullHtmlNode(data, '')">
       </div>
@@ -33,7 +24,16 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
 </ng-template>
 
 <ng-template #templateRight>
-  <ng-container *ngTemplateOutlet="currView"></ng-container>
+  <div class=" w-100 hover-scroll-y" 
+    data-kt-scroll="true" 
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto"
+    data-kt-scroll-wrappers=".dms-card-row"
+    data-kt-scroll-offset="'0px'">
+      <ng-container *ngTemplateOutlet="empty"></ng-container>
+      <ng-container *ngTemplateOutlet="nodata"></ng-container>
+      <ng-container *ngTemplateOutlet="currView"></ng-container>
+  </div>  
 </ng-template>
 
 <ng-template #templateCard>
@@ -68,66 +68,98 @@ title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
    -->
   <!-- <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
    attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">     -->
-  <div class="d-flex flex-wrap dms-card-row ">
+  <div class="d-flex flex-wrap dms-card-row">
     <card class="pe-6 pb-6" *ngFor="let item of data" [data]="item" [formModel]="view.formModel"></card>
-  </div>
-  <!-- </div> -->
-  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">
-    <i class="icon-add"></i>
-    <span class="font-size-lg">Open File 1</span>
-  </button>
-  <codx-attachment  
-  #attachment1  
-  [objectType]="'OD_Dispatches'" 
-  [objectId]="'965e692f-8230-4ad1-b1be-ee68ce010b6f'" 
-  hideFolder="1"  
-  hideUploadBtn="0"   
-  hideDes="1" 
-  type="inline"
-  idBrowse="btn2"
-  hideImageUpload="0"
-  allowExtensions=".jpg,.png"
-  allowMultiFile="1"
-  [formModel]="view.formModel"
-  [functionID]="'ODT3'" 
-  displayThumb="full"
-> 
-</codx-attachment> -->
+  </div>  
 </ng-template>
-<ng-template #templateSmallCard>
-  <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
-    attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">
-    <!-- <codx-temp-full  *ngFor="let item in data" 
-        class="float-start" imageSrc="../../../assets/codx/dms/folder.svg"
-        imgCss="card-item img-folder me-4" (clickMF)="dmSV.clickMF($event, item)"
-        [title]="item.folderName" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
-        [formModel]="formModel" [typeMF]="'hover'" [bookmark]="showBookmark(item)"
-        subTitle="{{item.createdOn | date : 'dd/MM/yyyy'}} | {{item.userName}}"
-        cardCss="card-item card-template w-225px px-2 py-3 text-box-140">
-    </codx-temp-full> -->
-  </div>
+<ng-template #templateSmallCard>  
+  <div class="d-flex flex-wrap dms-card-row">    
+    <codx-temp-full *ngFor="let item of data" class="float-start" [imageSrc]="dmSV.getImage(item)"
+      imgCss="card-item img-folder me-4" (clickMF)="dmSV.clickMF($event, item)"
+      [title]="item.folderName != undefined ? item.folderName : item.fileName" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+      [formModel]="view.formModel" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(item)"
+      subTitle="{{item.createdOn | date : 'dd/MM/yyyy'}} | {{item.userName}}"
+      cardCss="card-item card-template w-225px px-2 py-3 text-box-140">
+    </codx-temp-full>  
+  </div>    
 </ng-template>
-<ng-template #templateList>
-  <!-- <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
-  attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">
-    <detail *ngFor="let d in data"  [data]="d" type="list"  [formModel]="view.formModel"></detail>
-  </div> -->
+<ng-template #templateList>   
+    <table class="table">
+      <thead>
+          <tr>
+              <th class="px-0" scope="col"></th>
+              <th scope="col">
+                  <div>{{titleFileName}}</div>
+              </th>
+              <th scope="col">
+                  <div>{{titleCreatedBy}}</div>
+              </th>
+              <th scope="col">
+                  <div>{{titleCreatedOn}}</div>
+              </th>
+              <th scope="col">
+                  <div>{{titleLength}}</div>
+              </th>
+          </tr>
+      </thead>
+      <tbody> 
+        <tr *ngFor="let item of data" [title]="item.folderName != undefined ? item.folderName : item.fileName">
+            <td class="w-25px text-center px-0"><span
+                [className]="dmSV.getBookmarksClass(item)"></span>
+            </td>                                     
+            <td> 
+                <codx-temp-full class="float-start" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"  [title]="item.folderName != undefined ? item.folderName : item.fileName" cardCss="w-225px">
+                </codx-temp-full> 
+            </td>
+            <td>
+                <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users"
+                    imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+                    [imageWidth]="25" [title]="item.userName">
+                </codx-temp-full>
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <div class="erm-date">{{item.createdOn | date : "dd/MM/yyyy"}}</div>
+                </div>
+            </td>
+            <td>
+                <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, item)" 
+                    [formModel]="view.formModel" [typeMF]="'hover'" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+                    cardCss="w-150px">
+                </codx-temp-full>                                       
+            </td>
+        </tr>  
+      </tbody>
+  </table>
 </ng-template>
-
 <ng-template #empty>
-  <div *ngIf="!data || data.length == 0">no data</div>
+  <ng-container *ngIf="data && data[0] != null && data[0].isDelete"> 
+    <div class="nondata-container w-100 mb-2">
+        <div class="d-flex justify-content-between page-heading align-items-center">
+            <div>{{dmSV.titleEmptyTrash30}}</div>
+            <button (click)="this.dmSV.emptyTrash()"
+                class="btn btn-sm btn-secondary">{{dmSV.titleEmptyAction}}</button>
+        </div>
+    </div>
+  </ng-container> 
 </ng-template>
-
-<!-- <ng-template #templateRight>  
-  <container-element [ngSwitch]="this.viewIcon">
-    <some-element *ngSwitchCase="'icon-appstore'">   
-        <card [dataFolders]="listFolder"></card>
-    </some-element>
-    <some-element *ngSwitchCase="'icon-apps'">
-      small card
-    </some-element>
-    <some-element *ngSwitchCase="'icon-format_list_bulleted'">
-      list
-    </some-element>
-  </container-element>
-</ng-template> -->
+<ng-template #nodata>
+  <ng-container *ngIf="!data || data.length < 0"> 
+    <div class="w-100 align-items-center mt-20">
+      <div class="text-center">
+          <img class="mh-200px" src="../../../assets/codx/dms/data-empty.png" />
+      </div>
+      <div class="text-center">
+          <h5 class="text-dark mt-6">{{dmSV.titleNodaTa}}</h5>
+          <div class="mt-3">{{dmSV.titleNodaTaFolder}}</div>
+      </div>
+    </div>
+  </ng-container> 
+</ng-template>
+<ng-template #loading>  
+  <div class="w-100 align-items-center mt-20">
+    <div class="text-center">
+        <img class="mh-200px" src="../../../assets/img/loader.gif" />
+    </div>                   
+  </div>  
+</ng-template>

@@ -1,6 +1,6 @@
 <div class="d-flex align-items-stretch justify-content-between main-pane stepper-body tab-custom w-100">
   <div class="main-content d-flex flex-column-fluid h-100">
-    <div class="flex-column flex-lg-row-auto  w-lg-240px  main-left" [class.hideCol]="hideThumbnail">
+    <div class="flex-column flex-lg-row-auto w-lg-240px main-left" [class.hideCol]="hideThumbnail">
       <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
         <e-tabitems>
           <e-tabitem>
@@ -91,7 +91,7 @@
         </ejs-pdfviewer>
       </div>
     </div>
-    <div class="actions flex-column flex-lg-row-auto w-lg-350px  main-right" [class.hideCol]="hideActions">
+    <div class="actions flex-column flex-lg-row-auto w-lg-350px main-right" [class.hideCol]="hideActions">
       <ejs-tab #rightToolbar [class.d-none]="hideActions">
         <e-tabitems>
           <e-tabitem>
@@ -100,17 +100,21 @@
             </ng-template>
 
             <ng-template #content>
-              <div class="position-relative" *ngIf="!isApprover">
-                <div class=" mt-3 mb-3">
-                  <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
-                    class="fw-bold fs-4 text-primary"></codx-label>
-                </div>
-                <div class="form-floating border border-gray-300 rounded mb-7">
-
-                  <ejs-dropdownlist #inputAuthor id="signatureDropdownList" [dataSource]="lstSigners" [fields]="person"
-                    (change)="changeSigner($event)"></ejs-dropdownlist>
-                </div>
-
+              <div class="row position-relative" style="margin-top: 10px" *ngIf="!isApprover">
+                <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
+                  class="ms-2 fw-bold"></codx-label>
+                <ejs-dropdownlist #inputAuthor id="signatureDropdownList" [dataSource]="lstSigners" [fields]="person"
+                  (change)="changeSigner($event)">
+                  <ng-template #item let-approver>
+                    <codx-temp-full [typeMF]="'hover'" [content]="approver.fullName" [desc]="approver.position"
+                      [icoCss]="
+                        'icon-26 icon align-self-start rounded-circle p-3 m-1 '
+                      " [statusVll]="'ES003'" [date]="approver.signType"
+                      cardCss="card-template border-bottom px-2 py-3" [resourceObjType]="'AD_Users'"
+                      [icoStatusVll]="'ES002'" [modeImgs]="false" [titleLine]="2" [icoDateCss]="'icon-access_alarm'">
+                    </codx-temp-full>
+                  </ng-template>
+                </ejs-dropdownlist>
                 <!-- <codx-input
                   class="form-control me-2"
                   type="valuelist"
@@ -119,7 +123,7 @@
                   (valueChange)="changeSigner($event)"
                 ></codx-input> -->
               </div>
-              <div class=" mt-3 mb-3">
+              <div class="mt-3 mb-3">
                 <codx-label name="lblDragAction" [formModel]="" default="Kéo thả" class="fw-bold fs-4 text-primary">
                 </codx-label>
               </div>
@@ -133,7 +137,6 @@
                   </codx-card-center>
                 </div>
               </div>
-
 
               <!--begin::Item-->
               <div class="d-flex align-items-center my-2">
@@ -158,7 +161,7 @@
                   <!--end::Switch-->
                 </div>
                 <div class="text-gray-800 text-nowrap">
-                  <codx-label name="lblSignLastLine" default="Ký dòng cuối cùng" class=" fw-bold"></codx-label>
+                  <codx-label name="lblSignLastLine" default="Ký dòng cuối cùng" class="fw-bold"></codx-label>
                 </div>
               </div>
               <!--end::Item-->
@@ -180,7 +183,6 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
-
     </div>
   </div>
   <div class="row invisible" #qrCode id="qrCode"></div>
