@@ -21,6 +21,7 @@ import {
   UrlUtil,
   NotificationsService,
   UIComponent,
+  DialogModel,
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
@@ -31,6 +32,7 @@ import { TM_Parameter } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
 import { PopupConfirmComponent } from './popup-confirm/popup-confirm.component';
 import { PopupExtendComponent } from './popup-extend/popup-extend.component';
+import { PopupUpdateProgressComponent } from './popup-update-progress/popup-update-progress.component';
 import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
@@ -155,6 +157,7 @@ export class TasksComponent extends UIComponent {
         sameData: true,
         model: {
           template: this.itemViewList,
+          groupBy: 'fieldGroup',
         },
       },
       {
@@ -164,6 +167,7 @@ export class TasksComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
+          groupBy: 'fieldGroup',
         },
       },
       {
@@ -819,9 +823,9 @@ export class TasksComponent extends UIComponent {
         data: data,
         funcID: this.funcID,
         vll: 'TM009',
-        action :"confirm"
+        action: 'confirm',
       };
-     var dialogConfirmTask = this.callfc.openForm(
+      var dialogConfirmTask = this.callfc.openForm(
         PopupConfirmComponent,
         '',
         500,
@@ -855,7 +859,7 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM010',
-      action :"extend"
+      action: 'extend',
     };
     var dialogExtends = this.callfc.openForm(
       PopupConfirmComponent,
@@ -884,7 +888,7 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM011',
-      action :"approve"
+      action: 'approve',
     };
     var dialogApprove = this.callfc.openForm(
       PopupConfirmComponent,
@@ -912,7 +916,7 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM008',
-      action :"verrify"
+      action: 'verrify',
     };
     var dialogVerify = this.callfc.openForm(
       PopupConfirmComponent,
@@ -931,6 +935,45 @@ export class TasksComponent extends UIComponent {
       }
       this.detectorRef.detectChanges();
     });
+  }
+  //#endregion
+
+  //#region Cập nhật tiến độ
+  openUpdateProgress(moreFunc, data) {
+    if (data.owner != this.user.userID) {
+      this.notiService.notifyCode('TM052');
+      return;
+    }
+    var obj = {
+      moreFunc: moreFunc,
+      data: data,
+      funcID: this.funcID,
+      vll: 'TM008',
+      action: 'verrify',
+    };
+    var dialogProgess = this.callfc.openForm(
+      PopupUpdateProgressComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+    dialogProgess.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
+      }
+      this.detectorRef.detectChanges();
+    });
+    // var option = new DialogModel();
+    // option.FormModel = this.view.currentView.formModel;
+    // this.callfc.openForm(PopupUpdateProgressComponent, null, 600, 400,null,obj,"",option).closed.subscribe(x=>{
+    //   if(x.event)
+    //     this.view.dataService.remove(x.event).subscribe();
+    // });
   }
   //#endregion
 
@@ -979,7 +1022,7 @@ export class TasksComponent extends UIComponent {
         this.assignTask(data);
         break;
       case 'TMT02016':
-      case 'TMT02017': 
+      case 'TMT02017':
         this.openConfirmStatusPopup(e.data, data);
         break;
       case 'TMT04011':
@@ -989,11 +1032,16 @@ export class TasksComponent extends UIComponent {
       case 'TMT04021':
       case 'TMT04022':
       case 'TMT04023':
-        this.openApproveStatusPopup(e.data, data);  //danh gia kết qua
+        this.openApproveStatusPopup(e.data, data); //danh gia kết qua
         break;
       case 'TMT04031':
       case 'TMT04032':
         this.openVerifyStatusPopup(e.data, data);
+        break;
+      case 'TMT02018':
+      case 'TMT02026':
+      case 'TMT02035':
+        this.openUpdateProgress(e.data, data);
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
@@ -1004,7 +1052,10 @@ export class TasksComponent extends UIComponent {
       case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
         //???? chắc làm sau ??
         break;
-      default:
+      case 'TMT02011':
+      case 'TMT02012':
+      case 'TMT02013':
+      case 'TMT02014':
         this.changeStatusTask(e.data, data);
         break;
     }
