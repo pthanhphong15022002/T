@@ -1,4 +1,4 @@
-<div class="d-flex">
+<!-- <div class="d-flex">
   <div class="d-flex col-8">
     <div class="row">
       <div class="col col-6 ">
@@ -6,8 +6,8 @@
           {{meeting.meetingName}}
         </div>
       </div>
-      <div class="col col-2">
-        bbbbbb
+      <div class="col col-2" *ngIf="meeting.fromDate && meeting.toDate">
+        Thời gian review dữ liệu: {{meeting.fromDate | date: "dd/MM/yyyy"}} - {{meeting.toDate | date: "dd/MM/yyyy"}}
       </div>
     </div>
     <div class="row">
@@ -18,7 +18,7 @@
         {{startTime}}
       </div>
       <div class="col col-3">
-        {{meeting.createBy}}
+        {{meeting.userName}}
       </div>
     </div>
     <div>
@@ -26,12 +26,50 @@
     </div>
   </div>
   <div class="d-flex col-4">
-    <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.avataResource" objectType="AD_Users"
-      [numberImages]="6">
 
-    </codx-imgs>
   </div>
 </div>
 <div>
 
-</div>
+</div> -->
+
+<ng-template #titleTmp let-data>
+  <!-- <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mb-1">
+      <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2"> {{data.meetingName}}</div>
+      <div class="badge border badge-white d-flex align-items-center me-2" >
+        ccccc
+      </div>
+    </div>
+  </div> -->
+  aaaaaaaaaa
+</ng-template>
+
+<ng-template #footer let-data>
+  <div class="d-flex flex-wrap  ms-17">
+    <div class="d-flex align-items-center me-4">
+      <div class="row" *ngIf="data.fromDate && data.toDate">
+        <span>
+          Thời gian review dữ liệu: {{data.fromDate | date: "dd/MM/yyyy"}} - {{data.toDate | date: "dd/MM/yyyy"}}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<div class="px-5">
+  <div class="d-flex justify-content-between align-items-center flex-wrap  pt-4 pb-2">
+    <div class=" justify-content-start">
+      <codx-temp-full cardCss="card-template" [titleTmp]="titleTmp" [dataItem]="meeting" [footer]="footer">
+      </codx-temp-full>
+    </div>
+    <div class="d-flex flex-wrap">
+      <div class="flex">
+        <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="meeting.avataResource" objectType="AD_Users"
+        [numberImages]="6">
+      </codx-imgs>
+      </div>
+    </div>
+    <div class="separator"></div>
+  </div>
