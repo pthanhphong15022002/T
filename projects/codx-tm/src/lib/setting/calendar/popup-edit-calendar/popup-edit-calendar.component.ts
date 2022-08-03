@@ -23,7 +23,6 @@ import {
 } from '../../../models/calendar.model';
 import { PopupAddDayoffsComponent } from '../popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupAddEventComponent } from '../popup-add-event/popup-add-event.component';
-import { CodxTMService } from '../../../codx-tm.service';
 
 declare var _;
 
@@ -32,10 +31,7 @@ declare var _;
   templateUrl: './popup-edit-calendar.component.html',
   styleUrls: ['./popup-edit-calendar.component.scss'],
 })
-export class PopupEditCalendarComponent
-  extends UIComponent
-  implements OnInit, AfterViewInit
-{
+export class PopupEditCalendarComponent extends UIComponent {
   calendarID: string;
   stShift = new CalendarWeekModel();
   ndShift = new CalendarWeekModel();
@@ -55,7 +51,6 @@ export class PopupEditCalendarComponent
 
   constructor(
     private injector: Injector,
-    private tmService: CodxTMService,
     private authService: AuthStore,
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
@@ -92,7 +87,7 @@ export class PopupEditCalendarComponent
       });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   getParams() {
     this.api

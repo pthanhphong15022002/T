@@ -8,18 +8,12 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  ApiHttpService,
   ButtonModel,
-  CacheService,
   CallFuncService,
-  CodxGridviewComponent,
   DataRequest,
   DialogRef,
-  NotificationsService,
   ResourceModel,
   SidebarModel,
   ViewModel,

@@ -59,7 +59,6 @@ export class ApprovalComponent extends UIComponent {
   saveToDBQueueChange: any;
 
   vllActions: any;
-  notify = ' ';
 
   constructor(
     private inject: Injector,
@@ -78,16 +77,6 @@ export class ApprovalComponent extends UIComponent {
       .find([])
       .create(null);
     this.saveToDBQueueChange = actionCollectionsChanges.find([]).create(null);
-
-    var pipe = new LangPipe(this.cache);
-
-    pipe.transform('Chưa', 'lblNotify', 'Sys').subscribe((res) => {
-      this.notify = res;
-    });
-
-    pipe.transform('Có', 'lblNotify', 'Sys').subscribe((res) => {
-      this.notify += ' ' + res + ' ';
-    });
   }
 
   @ViewChild('fileUpload') fileUpload!: ElementRef;
@@ -122,7 +111,7 @@ export class ApprovalComponent extends UIComponent {
 
   curSelectedAnno: any;
 
-  after_X_Second: number = 300;
+  after_X_Second: number = 3000;
 
   formatForAreas: Array<any> = [];
 
@@ -131,6 +120,7 @@ export class ApprovalComponent extends UIComponent {
     { text: 'History' },
     { text: 'Comment' },
   ];
+
   ajaxSetting: any;
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
 
@@ -162,9 +152,7 @@ export class ApprovalComponent extends UIComponent {
     };
 
     this.tmpLstSigners.push({
-      // authorSignature: signature,
-      authorSignature: '',
-
+      authorSignature: signature,
       authorStamp: stamp,
       authorName: 'Buu',
       type: '1',
@@ -231,6 +219,7 @@ export class ApprovalComponent extends UIComponent {
       16, 128, 256, 30,
     ];
   }
+
   onCreated(evt: any) {
     this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
     this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
@@ -343,18 +332,19 @@ export class ApprovalComponent extends UIComponent {
   }
 
   async genFileQR(fileName, fileRefNo, companyID) {
+    let text = `
+      File Name: ${fileName}\n
+      Ref No: ${fileRefNo}\n
+      Company: ${companyID}\n
+      CreatedOn: ${this.datePipe.transform(new Date(), 'd/M/yy, h:mm a')}\n
+      Pages: ${this.pdfviewerControl.pageCount}
+    `;
     let barcode = new QRCodeGenerator({
-      width: '100px',
-      height: '100px',
+      width: '500px',
+      height: '500px',
       mode: 'SVG',
       displayText: { visibility: false },
-      value: JSON.stringify({
-        FileName: fileName,
-        FileRefNo: fileRefNo,
-        Company: companyID,
-        CreatedOn: this.datePipe.transform(new Date(), 'M/d/yy, h:mm a'),
-        Pages: this.pdfviewerControl.pageCount,
-      }),
+      value: text,
     });
     barcode.appendTo('#qrCode');
     let barCodeUrl = '';
@@ -380,7 +370,6 @@ export class ApprovalComponent extends UIComponent {
     if (this.needSuggest) {
       this.pdfviewerControl.navigation.goToLastPage();
       this.pdfviewerControl.scrollSettings.delayPageRequestTimeOnScroll = 300;
-      let lastPage = this.pdfviewerControl.pageCount - 1;
     }
   }
 
@@ -456,7 +445,7 @@ export class ApprovalComponent extends UIComponent {
             this.fileInfo.fileID,
             annot.annotationId,
           ])
-          .subscribe((res) => {});
+          .subscribe((res) => { });
         clearTimeout(this.saveAnnoQueue.get(annot.annotationId));
         this.saveAnnoQueue.delete(annot.annotationId);
       });
@@ -472,15 +461,19 @@ export class ApprovalComponent extends UIComponent {
       });
     }
   }
+
   changeShowThumbnailState() {
     this.hideThumbnail = !this.hideThumbnail;
   }
+
   changeShowActionsState() {
     this.hideActions = !this.hideActions;
   }
+
   changeZoomValue(e: any) {
     this.zoomValue = e.zoomValue;
   }
+
   changeAnnotationItem(type: number) {
     if (this.signerInfo && (this.isActiveToSign || !this.isApprover)) {
       this.holding = type;
@@ -661,17 +654,17 @@ export class ApprovalComponent extends UIComponent {
               //duoi
               (anno.bounds.top >= suggestLocation.top &&
                 anno.bounds.top <=
-                  suggestLocation.top + suggestLocation.height))) ||
+                suggestLocation.top + suggestLocation.height))) ||
             //conflit ben phai
             (anno.bounds.left >= suggestLocation.left &&
               anno.bounds.left <=
-                suggestLocation.left + suggestLocation.width &&
+              suggestLocation.left + suggestLocation.width &&
               //tren
               ((suggestLocation.top >= anno.bounds.top &&
                 suggestLocation.top <= anno.bounds.top + anno.bounds.height) ||
                 (anno.bounds.top >= suggestLocation.top &&
                   anno.bounds.top <=
-                    suggestLocation.top + suggestLocation.height))))
+                  suggestLocation.top + suggestLocation.height))))
         );
       }
     );
@@ -679,6 +672,7 @@ export class ApprovalComponent extends UIComponent {
     return conflictArea ? false : true;
   }
 
+  //dont use this version
   suggestAreas(
     numberOfSignatures: number,
     top: number,
@@ -1034,12 +1028,13 @@ export class ApprovalComponent extends UIComponent {
         }
       });
   }
+
   removeAnnot(e: any) {
     console.log('remove event', e);
 
     this.esService
       .deleteAreaById([this.recID, this.fileInfo.fileID, e.annotationId])
-      .subscribe((res) => {});
+      .subscribe((res) => { });
 
     this.pdfviewerControl.annotationCollection =
       this.pdfviewerControl.annotationCollection.filter((annot) => {
@@ -1115,7 +1110,7 @@ export class ApprovalComponent extends UIComponent {
       }
     );
   }
-  testFunc(e: any) {}
+  testFunc(e: any) { }
 
   selectedAnnotation(e: any) {
     console.log(e);
@@ -1148,6 +1143,8 @@ export class ApprovalComponent extends UIComponent {
   clickPrint() {
     this.pdfviewerControl.download();
   }
+
+  clickDownload() { }
 }
 
 class Guid {

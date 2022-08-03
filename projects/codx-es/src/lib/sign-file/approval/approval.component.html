@@ -1,6 +1,6 @@
-<div class="justify-content-between main-pane stepper-body p-4 w-100">
-  <div class="main-content d-flex flex-column h-100 flex-lg-row">
-    <div class="flex-column flex-lg-row-auto w-100 w-lg-275px mb-10 mb-lg-0 main-left" [class.hideCol]="hideThumbnail">
+<div class="d-flex align-items-stretch justify-content-between main-pane stepper-body  tab-custom w-100">
+  <div class="main-content d-flex flex-column-fluid h-100">
+    <div class="flex-column flex-lg-row-auto  w-lg-240px  main-left" [class.hideCol]="hideThumbnail">
       <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
         <e-tabitems>
           <e-tabitem>
@@ -22,30 +22,18 @@
       <div class="showArrow" [class.icon-arrow_back]="!hideThumbnail" [class.icon-arrow_forward]="hideThumbnail"
         (click)="changeShowThumbnailState()"></div>
     </div>
-    <div class="flex-lg-row-fluid ms-lg-7 ms-xl-10 main-center">
-
-      <div class="d-flex justify-content-between w-100  bg-white">
-        <div class="left_Toolbar w-100 d-flex justify-content-start">
-          <ejs-toolbar>
-            <e-items>
-              <e-item prefixIcon="e-zoom-out" (click)="clickZoom('out')">
-              </e-item>
-            </e-items>
-          </ejs-toolbar>
-          <ejs-dropdownlist style="width: 20%" id="zoomValuesDropdownList" [dataSource]="lstZoomValue"
-            [placeholder]="zoomValue" (change)="clickZoom('to', $event)"></ejs-dropdownlist>
-          <ejs-toolbar>
-            <e-items>
-              <e-item prefixIcon="e-zoom-in" (click)="clickZoom('in')">
-              </e-item>
-            </e-items>
-          </ejs-toolbar>
-
+    <div class=" d-flex flex-column flex-row-fluid mx-2 ">
+      <div class="d-flex flex-stack  stepper-toolbar p-2 ">
+        <div class="left_Toolbar d-flex justify-content-start">
           <ejs-toolbar>
             <e-items>
               <e-item prefixIcon="e-chevron-up-double" (click)="pdfviewerControl?.navigation?.goToFirstPage()">
               </e-item>
+              <e-item prefixIcon="e-chevron-up" (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()">
+              </e-item>
               <e-item [text]="pdfviewerControl?.currentPageNumber" [disabled]="true"></e-item>
+              <e-item prefixIcon="e-chevron-down" (click)="pdfviewerControl?.navigation?.goToNextPage()">
+              </e-item>
               <e-item prefixIcon="e-chevron-down-double" (click)="pdfviewerControl?.navigation?.goToLastPage()">
               </e-item>
             </e-items>
@@ -59,13 +47,29 @@
         <div class="right_Toolbar d-flex justify-content-end">
           <ejs-toolbar>
             <e-items>
+              <e-item prefixIcon="e-zoom-out" (click)="clickZoom('out')">
+              </e-item>
+            </e-items>
+          </ejs-toolbar>
+          <ejs-dropdownlist style="width: 100%" id="zoomValuesDropdownList" [dataSource]="lstZoomValue"
+            [placeholder]="zoomValue" (change)="clickZoom('to', $event)"></ejs-dropdownlist>
+          <ejs-toolbar>
+            <e-items>
+              <e-item prefixIcon="e-zoom-in" (click)="clickZoom('in')">
+              </e-item>
+            </e-items>
+          </ejs-toolbar>
+          <ejs-toolbar>
+            <e-items>
               <e-item prefixIcon="e-print" (click)="clickPrint()"> </e-item>
+              <e-item prefixIcon="e-download" (click)="clickDownload()">
+              </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
       </div>
 
-      <div class=" h-100 pdfviewer_Space">
+      <div class="h-100 pdfviewer_Space">
         <ejs-pdfviewer #pdfviewer id="pdfViewer" [serviceUrl]="service" [enableToolbar]="false"
           [enableNavigationToolbar]="false" [enableAnnotationToolbar]="false" [enableThumbnail]="true"
           (created)="onCreated($event)" (annotationAdd)="addAnnoEvent($event)" (annotationMove)="resetTime($event)"
@@ -82,8 +86,7 @@
         </ejs-pdfviewer>
       </div>
     </div>
-    <div class="actions flex-column flex-lg-row-auto w-100 w-lg-275px mb-10 mb-lg-0 main-right"
-      [class.hideCol]="hideActions">
+    <div class="actions flex-column flex-lg-row-auto w-lg-350px  main-right" [class.hideCol]="hideActions">
       <ejs-tab #rightToolbar [class.d-none]="hideActions">
         <e-tabitems>
           <e-tabitem>
@@ -106,11 +109,14 @@
                 ></codx-input> -->
               </div>
 
-              <codx-label name="lblDragAction" [formModel]="" default="Kéo thả" class="ms-2 fw-bold"></codx-label>
-              <div class="card-group">
+              <codx-label name="lblDragAction" [formModel]="" default="Kéo thả"
+                class="fw-bold fs-4 text-primary mt-3 mb-3"></codx-label>
+
+
+              <div class="d-flex flex-wrap d-grid justify-content-between">
                 <div class="card-item me-3 mb-3" *ngFor="let action of actionsButton; let index = index"
                   [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
-                  <codx-card-center cardCss="border h-100 min-w-100px w-100px" icoCss="icon-20  {{
+                  <codx-card-center cardCss="border h-100 w-125px" icoCss="icon-30 mb-1 {{
                       index + 1 | vll: 'ES015':'icon' | async
                     }}" content="{{ index + 1 | vll: 'ES015':'text' | async }}">
                   </codx-card-center>

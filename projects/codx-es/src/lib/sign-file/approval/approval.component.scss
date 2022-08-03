@@ -170,14 +170,139 @@
 // .div-active {
 //   border-bottom: solid 2px #187DE4;
 // }
-/****CSS 2.8.2022 *****/
+
 ::ng-deep {
-    .e-device .e-dlg-content, .e-device .e-dlg-content * {
-      font-size: inherit; 
+  .e-device .e-dlg-content, .e-device .e-dlg-content * {
+    font-size: inherit; 
+}
+.main-content {
+      width: 100% !important;
+      height: 100% !important;
+      position: relative !important;
+    }
+    .stepper-body {
+      background: rgba(229, 229, 229, 0.67);
+      box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
+      height: calc(100% - 60px);
   }
-  .main-content {
-    width: 100% !important;
-    height: 100% !important;
-    position: relative !important;
+  .main-left{
+    background-color: white;
+    display: flex;
+    width: 240px;
+    overflow: hidden;
+    height: 100%;
+    
   }
+  .main-right{
+    background-color: white;   
+    width: 350px;
+  }
+  .stepper-toolbar{
+    height: 42px;
+    background-color: white;
+  }
+  .left_Toolbar{
+
+  }
+  .e-toolbar .e-tbar-btn{
+    background-color: transparent;
+  }
+  .e-pv-thumbnail-anchor-node{
+    left: auto!important;
+  }
+/***tab****/
+.tab-custom{
+    .e-tab .e-tab-header{
+      height:42px;
+      min-height:42px
+    }
+    .e-tab .e-tab-header .e-toolbar-items{
+      min-height:42px;
+      height:42px;
+      height:auto;
+      margin:0;
+    }
+    .e-tab .e-tab-header .e-toolbar-item .e-text-wrap{
+      height:42px;
+      align-content:center;
+      align-items:center;
+      display:inline-flex;
+    }
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-text-wrap{
+      height:42px;
+      align-content:center;
+      align-items:center;
+      display:inline-flex;
+    }
+    .e-tab .e-tab-header .e-toolbar-item .e-tab-text{
+      display:inherit;
+      font-family:"Roboto",Arial,system-ui,-apple-system,"Segoe UI","Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+      font-size:14px;
+      font-weight:500;
+      text-transform: none;
+    }
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text{
+      font-weight:500;
+    }
+    .e-tab .e-tab-header .e-toolbar-item {
+        border: 0 !important;
+      }
+      .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap    {
+        color: #212529;
+        border: 0;
+        font-weight: 500;
+      }
+      .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
+      .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
+        //color: $primary-dark;
+        color: #0078ff;
+      }
+    
+    .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover .e-tab-text,.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover .e-tab-icon{
+      color: #0078ff
+    }
+    .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
+      height: 42px;
+      margin: 0 2px 0 0;
+      min-height: auto;
+      min-width: auto;
+      padding: 0;
+      border: 0 !important;
+      border-radius:0!important;
+      border-bottom: 2px solid transparent!important;
+    }
+    .e-tab .e-tab-header .e-toolbar-item.e-active,.e-tab .e-tab-header .e-toolbar-item:hover,.e-tab .e-tab-header .e-toolbar-item:focus{
+      border: 0 !important;
+      margin: 0 2px 0 0;
+      border-radius:0!important;
+      border-bottom: 2px solid  #0078ff!important;
+    }
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap{
+      border:0
+    }
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-text,.e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-icon{
+      color: #0078ff;
+    }
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,.e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon{
+      color: #0078ff;
+    }
+    .e-tab .e-tab-header .e-toolbar-item.e-active.e-ileft .e-tab-icon,.e-tab .e-tab-header .e-toolbar-item.e-active.e-iright .e-tab-icon{
+      color: #0078ff;
+    }
+    .e-tab .e-tab-header .e-toolbar-item.e-active.e-ileft .e-tab-text,.e-tab .e-tab-header .e-toolbar-item.e-active.e-iright .e-tab-text{
+      color: #0078ff;
+    }
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text{
+      background:transparent;
+      border:0px solid rgba(0,0,0,0);
+      border-radius:0
+    }   
+
+  }
+  .main-right{
+    .e-content{
+      padding: 20px;
+    }
+  }
+
 }

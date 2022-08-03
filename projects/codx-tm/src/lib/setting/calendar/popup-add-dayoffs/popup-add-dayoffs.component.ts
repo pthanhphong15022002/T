@@ -21,7 +21,7 @@ import { CodxTMService } from '../../../codx-tm.service';
   templateUrl: './popup-add-dayoffs.component.html',
   styleUrls: ['./popup-add-dayoffs.component.scss'],
 })
-export class PopupAddDayoffsComponent extends UIComponent implements OnInit {
+export class PopupAddDayoffsComponent extends UIComponent {
   @ViewChild('schedule') schedule: CodxScheduleComponent;
   dialogAddDayoffs: FormGroup;
   formModel: FormModel;
