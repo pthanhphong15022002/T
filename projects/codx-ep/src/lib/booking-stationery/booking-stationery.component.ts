@@ -22,7 +22,7 @@ import { PopupListStationeryComponent } from './popup-list-stationery/popup-list
 
 
 @Component({
-  selector: 'codx-stationery',
+  selector: 'stationery',
   templateUrl: './booking-stationery.component.html',
   styleUrls: ['./booking-stationery.component.scss'],
 })
@@ -42,7 +42,6 @@ export class BookingStationeryComponent extends UIComponent {
   model: DataRequest;
   modelResource: ResourceModel;
   cart: [];
-
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';

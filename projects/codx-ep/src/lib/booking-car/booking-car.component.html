@@ -1,7 +1,6 @@
 <codx-views
   #base
   [funcID]="funcID"
-
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
@@ -16,112 +15,65 @@
   [method]="method"
 >
 </codx-views>
-<ng-template #panelLeftRef> </ng-template>
 
-<ng-template #carBookingDialog>
-  <popup-add-booking-car
-    #editor
-    (closeEdit)="closeEditForm()"
-    (onDone)="onDone($event)"
-  ></popup-add-booking-car>
-</ng-template>
-
-<ng-template #gridTemplateCar>
-  <codx-gridview
-    #gridView
-    [columnsGrid]="columnsGrid"
-    [allowSorting]=""
-    [sortSettings]=""
-    [allowGrouping]=""
-    [groupSettings]=""
-    [editSettings]=""
-    [selectionOptions]=""
-    [rowHeight]="40"
-    [pageSize]="10"
-    funcId="EPT11.1"
-    assemblyName="EP"
-    entityName="EP_Bookings"
-    className="BookingsBusiness"
-    method="GetEventsAsync"
-    predicate="ResourceType=@0"
-    dataValue="2"
-    [pageSize]="15"
-    height="500px"
-    [showColumnMenu]="true"
-    [filterSettings]=""
-    [allowFiltering]=""
-    [allowResizing]=""
-  ></codx-gridview>
-</ng-template>
-
-<ng-template #itemCreate let-data>
-  {{ data.bookingOn | fmDT: "dmy" }}
-</ng-template>
-
-<ng-template #scheduleTemplate let-data>
-  <codx-schedule
-    height="100%"
-    #schedule
-    service="EP"
-    assemblyName="EP"
-    [templateResourceHeader]="resourceHeader"
-    className="BookingsBusiness"
-    method="GetEventsAsync"
-    methodResource="GetResourceAsync"
-    [cellFooterTemplate]="cellFooter"
-    [fields]="fields"
-    [entityName]="modelPage.entity"
-    (onViewChange)="viewChange($event)"
-    eventStyle="colored"
-    [resourceTooltipTemplate]="resourceTootip"
-    (onAddNew)="addNew($event)"
-    (onEdit)="edit($event)"
-    (onDrag)="edit($event)"
-    (onDelete)="delete($event)"
-    [resourceField]="resourceField"
-    [options]="model"
-    [optionsResource]="model"
-  >
-  </codx-schedule>
-</ng-template>
-
-<ng-template #dashboard let-data>
+<ng-template #chart let-data>
   <div class="w-100">
     <car-dashboard></car-dashboard>
   </div>
 </ng-template>
 
+<ng-template #resourceHeader let-data>
+  <div class="container">
+    <div class="row">
+      <div class="col-4">
+        <div style="width: 30px">
+          <codx-img objectId="ADMIN" [width]="30"></codx-img>
+        </div>
+      </div>
+      <div class="col-8">
+        <div>{{ data.resourceData.resourceName }}</div>
+        <div>{{ data.resourceData.companyID }}</div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #resourceTootip let-data>
   <div class="template-wrap">
-    <div class="res-text">Tên: {{ data.resourceData.resourceName }}</div>
+    <div class="res-text">Code: {{ data.resourceData.recCode }}</div>
+    <div class="res-text">Name: {{ data.resourceData.resourceName }}</div>
+    <div class="res-text">Bookings: {{ data.resourceData.events }}</div>
   </div>
 </ng-template>
-<ng-template #resourceHeader let-data>
-  <div class="">
-    <div class="type">{{ data.resourceData.resourceName }}</div>
+
+<ng-template #footerButton let-data>
+  <div class="d-flex justify-content-between">
+    <button class="btn btn-light-primary" (click)="edit(data)">Sửa</button>
+    <button class="btn btn-light-danger" (click)="delete(data)">Xóa</button>
   </div>
 </ng-template>
-<ng-template #cellFooter let-data>
-  <div class="row border">
-    <button ejs-button id="more-details" cssClass="e-flat" (click)="edit(data)">
-      <codx-label
-        name="lblEdit"
-        default="Sửa"
-        [formModel]="dialog.formModel"
-      ></codx-label>
-    </button>
-    <button
-      ejs-button
-      id="delete"
-      cssClass="e-flat"
-      [isPrimary]="true"
-      (click)="deleteBooking(data)"
-    >
-      <codx-label
-        name="lblDelete"
-        default="Xoá"
-        [formModel]="dialog.formModel"
-      ></codx-label>
-    </button>
+
+<ng-template #footer let-data>
+  <div class="container my-3 p-3">
+    <div class="row">
+      <div style="width: 90%">
+        <span style="font-weight: 600; text-transform: uppercase">{{
+          data.title
+        }}</span>
+      </div>
+      <div style="width: 10%">
+        <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-3 d-flex justify-content-center">
+        <codx-img [objectId]="data.requester" [width]="35"></codx-img>
+      </div>
+      <div class="col-9">
+        <span class="text-muted mt-3" style="font-weight: 500; float: left">{{
+          data.requester
+        }}</span>
+      </div>
+    </div>
   </div>
 </ng-template>

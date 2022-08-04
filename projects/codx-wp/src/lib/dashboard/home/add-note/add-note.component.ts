@@ -75,7 +75,6 @@ export class AddNoteComponent implements OnInit {
   maxPinNotes = 0;
   countNotePin = 0;
   component: any;
-  typeEntity = '';
   countValueChange = 0;
   date1: any;
   date2: any;
@@ -317,15 +316,16 @@ export class AddNoteComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.typeEntity = 'WP_Notes';
+            var dtNew = res;
+            dtNew.type = 'WP_Notes';
             if (this.checkFile == true) {
-              this.attachment.objectId = res.recID;
+              this.attachment.objectId = dtNew.recID;
               this.attachment.saveFiles();
             }
             var object = [];
             if (this.date2 != undefined)
-              object = [{ data: res, type: 'add-otherDate' }];
-            else object = [{ data: res, type: 'add-currentDate' }];
+              object = [{ data: dtNew, type: 'add-otherDate' }];
+            else object = [{ data: dtNew, type: 'add-currentDate' }];
             this.noteService.data.next(object);
             this.dialog.close();
             if (this.note?.showCalendar == true) {
@@ -395,6 +395,7 @@ export class AddNoteComponent implements OnInit {
 
   onEdit() {
     this.note.createdOn = this.currentDate;
+    this.note.isNote = true;
     if (this.checkPin == true) this.note.isPin = this.pin;
     if (this.listNote.length != 0) this.note.checkList = this.listNote;
     if (this.note.checkList != null) this.note.checkList.pop();
@@ -406,12 +407,14 @@ export class AddNoteComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
+          var dtNew = res;
+          dtNew.type = 'WP_Notes';
           this.checkUpdate = true;
           if (this.checkFile == true) this.attachment.saveFiles();
           var object = [];
           if (this.date2 != undefined)
-            object = [{ data: res, type: 'edit-otherDate' }];
-          else object = [{ data: res, type: 'edit-currentDate' }];
+            object = [{ data: dtNew, type: 'edit-otherDate' }];
+          else object = [{ data: dtNew, type: 'edit-currentDate' }];
           this.noteService.data.next(object);
           this.dialog.close();
           this.changeDetectorRef.detectChanges();

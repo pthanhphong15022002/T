@@ -121,11 +121,12 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   }
 
   saveExtendStatus() {
-    this.task.extendComment =this.comment;
+   // this.task.extendComment =this.comment; ko cos field nafy
     ///xu ly save
     this.api
       .execSv('TM', 'TM', 'TaskBusiness', 'ExtendStatusTaskAsync', [
         this.task,
+        this.comment,
         this.funcID,
       ])
       .subscribe((res) => {

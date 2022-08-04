@@ -86,7 +86,7 @@ export class HomeComponent extends UIComponent {
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService
   ) {
-    super(inject);   
+    super(inject);
   }
 
   onInit(): void {
@@ -96,7 +96,16 @@ export class HomeComponent extends UIComponent {
       id: 'btnUpload',
     };
 
-    this.dmSV.isEmptyTrashData.subscribe(item => {
+    this.dmSV.isChangeData.subscribe((item) => {
+      if (item) {
+        this.data = [];
+        this.data = [...this.data, ...this.dmSV.listFolder];
+        this.data = [...this.data, ...this.dmSV.listFiles];
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+
+    this.dmSV.isEmptyTrashData.subscribe((item) => {
       if (item) {
         this.data = [];
         this.changeDetectorRef.detectChanges();
@@ -104,13 +113,13 @@ export class HomeComponent extends UIComponent {
     });
   }
 
-  addFile($event) {  
+  addFile($event) {
     var data = new DialogAttachmentType();
     data.objectType = 'WP_Notes';
     data.objectId = '628c326c590addf224627f42';
     data.functionID = 'ODT3';
     data.type = 'popup';
-    
+
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
@@ -132,9 +141,9 @@ export class HomeComponent extends UIComponent {
   }
 
   saveFile() {
-    this.attachment.saveFilesObservable().subscribe(item => {
+    this.attachment.saveFilesObservable().subscribe((item) => {
       console.log(item);
-    })
+    });
     //  this.attachment.saveFiles();
   }
 
@@ -162,8 +171,7 @@ export class HomeComponent extends UIComponent {
     var item2 = '';
 
     if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 =
-        '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
+      item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
     else {
       if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
@@ -221,6 +229,7 @@ export class HomeComponent extends UIComponent {
       this.dmSV.folderId.next(id);
       //this.view.dataService.addDatas(id, )
       var items = item.items;
+      //  this.dmSV.listFolder = [];
       if (items == undefined || items.length <= 0) {
         //     this.folderService.options.funcID =
         this.folderService.options.funcID = this.view.funcID;
@@ -234,6 +243,7 @@ export class HomeComponent extends UIComponent {
             // this.view.dataService.addNew(data);
             this.listFolders = data;
             this.data = [...this.data, ...data];
+            this.dmSV.listFolder = data;
             var tree = this.codxview.currentView.currentComponent.treeView;
             item.items = [];
             tree.addChildNodes(item, data);
@@ -245,21 +255,26 @@ export class HomeComponent extends UIComponent {
         //this.dmSV.isTree = true;
         //  alert(1);
         this.data = [...this.data, ...item.items];
-       // this.dmSV.listFolder.next(item.items);
-      //  this.listFolders = item.items;
+        this.dmSV.listFolder = item.items;
+        // this.dmSV.listFolder.next(item.items);
+        //  this.listFolders = item.items;
         this.changeDetectorRef.detectChanges();
         //this.dmSV.isTree = false;
       }
 
-      this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
-        ///this.dmSV.listFiles.next(res);
-        this.data = [...this.data, ...res];
-        this.changeDetectorRef.detectChanges();
-      });
+      this.fileService
+        .getListActiveFiles(id, this.dmSV.idMenuActive)
+        .subscribe(async (res) => {
+          ///this.dmSV.listFiles.next(res);
+          this.data = [...this.data, ...res];
+          this.dmSV.listFolder = res;
+          this.changeDetectorRef.detectChanges();
+        });
     } else {
       this.dmSV.disableInput.next(true);
       this.notificationsService.notify(this.titleAccessDenied);
     }
+    ScrollComponent.reinitialization();
   }
 
   // checkUserForder(data) {
@@ -322,32 +337,32 @@ export class HomeComponent extends UIComponent {
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
-    ScrollComponent.reinitialization("[data-kt-scroll='true']");
-    ScrollComponent.resize();
+    // ScrollComponent.reinitialization("[data-kt-scroll='true']");
+    // ScrollComponent.resize();
   }
 
-  requestEnded(e:any){
-    if(e.type ==="read"){
+  requestEnded(e: any) {
+    if (e.type === 'read') {
       this.data = [];
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.folderType != this.view.funcID) {
         this.data = [...this.data, ...e.data];
         this.dmSV.listFolder = e.data;
         this.dmSV.loadedFolder = true;
-        this.changeDetectorRef.detectChanges();      
+        this.changeDetectorRef.detectChanges();
       }
-        
+
       this.dmSV.folderType = this.view.funcID;
       this.dmSV.idMenuActive = this.view.funcID;
       this.dmSV.loadedFile = false;
-      this.dmSV.folderId.next("");  
+      this.dmSV.folderId.next('');
       this.dmSV.loadedFolder = true;
       this.changeDetectorRef.detectChanges();
       this.fileService.options.funcID = this.view.funcID;
       this.fileService
         .getListActiveFiles('', this.view.funcID)
         .subscribe(async (res) => {
-          if (res != null) {            
+          if (res != null) {
             this.data = [...this.data, ...res];
             this.dmSV.listFiles = e.data;
             this.dmSV.loadedFile = true;

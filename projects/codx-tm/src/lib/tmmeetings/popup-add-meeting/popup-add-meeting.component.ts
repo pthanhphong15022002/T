@@ -48,6 +48,8 @@ export class PopupAddMeetingComponent implements OnInit {
   linkURL = '';
   resources: Resources[] = [];
   listRoles: any;
+  idUserSelected: any;
+  popover: any;
 
   selectedDate = new Date();
   constructor(
@@ -72,6 +74,7 @@ export class PopupAddMeetingComponent implements OnInit {
     // }
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
+        console.log(res.datas)
         this.listRoles = res.datas;
       }
     });
@@ -338,5 +341,21 @@ export class PopupAddMeetingComponent implements OnInit {
   onDeleteUser(item) {
     this.meeting.resources.splice(item, 1); //remove element from array
     this.changDetec.detectChanges();
+  }
+
+  showPopover(p, userID) {
+    if (this.popover) this.popover.close();
+    if (userID) this.idUserSelected = userID;
+    p.open();
+    this.popover = p;
+  }
+
+  selectRoseType(idUserSelected, value) {
+    this.meeting.resources.forEach((res) => {
+      if (res.resourceID == idUserSelected) res.roleType = value;
+    });
+    this.changDetec.detectChanges();
+
+    this.popover.close();
   }
 }

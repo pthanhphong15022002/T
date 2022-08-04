@@ -2,7 +2,7 @@ import { CodxShareService } from './../codx-share.service';
 import { Component, OnInit, Injector } from '@angular/core';
 import { CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { Observable } from 'rxjs';
-import { NoteDrawerComponent } from '../components/note-drawer/note-drawer.component';
+import { NoteDrawerComponent } from '../layout/drawers/note-drawer/note-drawer.component';
 @Component({
   selector: 'lib-layoutNoAside',
   templateUrl: './layoutNoAside.component.html',

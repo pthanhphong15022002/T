@@ -160,7 +160,7 @@ export class PropertiesComponent implements OnInit {
         this.commenttext = '';
         this.fileEditing = res.data;
         this.getRating(res.data.views);
-        var files = this.dmSV.listFiles.getValue();
+        var files = this.dmSV.listFiles;
         if (files != null) {
           let index = files.findIndex(d => d.recID.toString() === this.id);
           if (index != -1) {
@@ -168,7 +168,8 @@ export class PropertiesComponent implements OnInit {
             files[index] = res.data;
             files[index].thumbnail = thumbnail;
           }
-          that.dmSV.listFiles.next(files);
+          this.dmSV.listFiles = files;
+          this.dmSV.ChangeData.next(true);
         }
 
         this.changeDetectorRef.detectChanges();          //alert(res.message);
@@ -249,7 +250,7 @@ export class PropertiesComponent implements OnInit {
         this.onUpdateTags();
         this.currentRate = 1;
         this.getRating(res.views);
-        var files = this.dmSV.listFiles.getValue();
+        var files = this.dmSV.listFiles;
         if (files != null) {
           let index = files.findIndex(d => d.recID.toString() === id);
           if (index != -1) {
@@ -257,7 +258,8 @@ export class PropertiesComponent implements OnInit {
             files[index] = res;
             files[index].thumbnail = thumbnail;
           }
-          this.dmSV.listFiles.next(files);
+          this.dmSV.listFiles = files;
+          this.dmSV.ChangeData.next(true);
         }
         
         this.changeDetectorRef.detectChanges();
