@@ -27,7 +27,7 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = '9ac0d301-1300-11ed-9783-509a4c39550b';
+  @Input() recID = '2d5905b4-116f-11ed-9781-b8acb4518a97';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
 

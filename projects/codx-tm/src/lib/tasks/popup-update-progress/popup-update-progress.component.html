@@ -4,7 +4,7 @@
             <div class="col-5">
                 <codx-label fiedName="ModifiedOn" formName="Tasks" gridViewName="grvTasks" default='Ngày cập nhật'>
                 </codx-label>
-                <codx-input type="dateTime" format="d" [crrValue]="task?.modifiedOn" [disabled]="true">
+                <codx-input type="dateTime" field="modifiedOn" format="F" [crrValue]="task?.modifiedOn" [disabled]="true">
                 </codx-input>
             </div>
             <div class="col-7 align-items-center">
@@ -12,14 +12,14 @@
                 </codx-label>
                 <div class="d-flex align-items-center row">
                     <div class="col-5">
-                        <codx-input type="number" [min]="this.task?.percentage ? this.task?.percentage : 0" [max]="100"
-                            [crrValue]="task?.percentage" cssClass="form-control" [disabled]="percentage100"
+                        <codx-input type="number" field="percentage" placeholder="Số giờ " [min]="0" [max]="100"
+                            [crrValue]="task?.percentage"
                             (valueChange)="changePercentage($event)">
                         </codx-input>
                     </div>
 
                     <div class="d-flex align-items-center col-7">
-                        <codx-input type="switch" class="test-check" [crrValue]="percentage100"
+                        <codx-input type="switch" class="test-check" [checked]="percentage100"
                             (valueChange)="valueChangePercentage100($event)">
                         </codx-input>
                         <codx-label name="lblProgess" formName="Tasks" default="Hoàn thành 100%" class="ms-2 w-150px">
@@ -30,9 +30,9 @@
         </div>
         <div class="row mt-4">
             <div class="col-12">
-                <codx-label fiedName="Commment" formName="Tasks" gridViewName="grvTasks" default="Ghi chú"></codx-label>
+                <codx-label name="lblCommment" formName="Tasks"  default="Ghi chú"></codx-label>
                 <codx-input type="textarea" field="textarea" [format]="'ed2'" class="w-100" field="comment"
-                    [crrValue]="comment" rows="6">
+                    [crrValue]="comment" rows="6" (valueChange)="valueChangComment($event)">
                 </codx-input>
             </div>
         </div>
