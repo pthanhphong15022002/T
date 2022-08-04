@@ -49,9 +49,7 @@ import { EditSkillComponent } from './employeeinfomation/edit-skill/edit-skill.c
 import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-skill/pop-add-skill.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layoutOnlyHeader/layoutOnlyHeader.component';
-import { DetailComponent } from './personals/note-books/detail/detail.component';
-import { DetailGridComponent } from './personals/note-books/detail/detail-grid/detail-grid.component';
-import { DetailListComponent } from './personals/note-books/detail/detail-list/detail-list.component';
+import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books.component';
 
 export const routes: Routes = [
   {
@@ -79,7 +77,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'notedetails/:funcID',
-        component: DetailComponent,
+        component: DetailNoteBooksComponent,
       },
     ],
   },
@@ -98,14 +96,12 @@ const Component: Type<any>[] = [
   NoteBooksComponent,
   AddUpdateNoteBookComponent,
   PopupAddUpdate,
-  DetailGridComponent,
+  DetailNoteBooksComponent,
   PostsComponent,
   EditInfoComponent,
   EditHobbyComponent,
   EditExperenceComponent,
   EditRelationComponent,
-  DetailListComponent,
-  DetailComponent,
 ];
 
 @NgModule({

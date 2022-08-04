@@ -1,39 +1,28 @@
-import { CodxShareService } from './../../../../../../../codx-share/src/lib/codx-share.service';
 import { ActivatedRoute } from '@angular/router';
 import {
   ViewsComponent,
-  CodxService,
-  CallFuncService,
-  ApiHttpService,
   ButtonModel,
   UIComponent,
   ViewType,
   CodxGridviewComponent,
-  SidebarModel,
   DialogRef,
   DialogModel,
-  CacheService,
-  CRUDService,
 } from 'codx-core';
 import {
   Component,
-  OnInit,
   TemplateRef,
   ViewChild,
-  ChangeDetectorRef,
   OnDestroy,
   Injector,
   Input,
 } from '@angular/core';
-import { LayoutModel } from '@shared/models/layout.model';
-import { PopupAddUpdate } from '../popup-add-update/popup-add-update.component';
-import { L } from '@angular/cdk/keycodes';
+import { PopupAddUpdate } from './popup-add-update/popup-add-update.component';
 @Component({
-  selector: 'app-detail-grid',
-  templateUrl: './detail-grid.component.html',
-  styleUrls: ['./detail-grid.component.scss'],
+  selector: 'app-detail-note-books',
+  templateUrl: './detail-note-books.component.html',
+  styleUrls: ['./detail-note-books.component.scss'],
 })
-export class DetailGridComponent extends UIComponent implements OnDestroy {
+export class DetailNoteBooksComponent extends UIComponent {
   @Input() views: any = [];
 
   recID: any;
@@ -64,6 +53,7 @@ export class DetailGridComponent extends UIComponent implements OnDestroy {
 
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
+  @ViewChild('listView') listView: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('lstGrid') lstGrid: CodxGridviewComponent;
   @ViewChild('list') list: TemplateRef<any>;
@@ -76,7 +66,6 @@ export class DetailGridComponent extends UIComponent implements OnDestroy {
   constructor(
     injector: Injector,
     private route: ActivatedRoute,
-    private codxShareService: CodxShareService
   ) {
     super(injector);
     this.route.params.subscribe((params) => {
@@ -100,10 +89,6 @@ export class DetailGridComponent extends UIComponent implements OnDestroy {
           this.saveMF = res[1];
         }
       });
-    this.codxShareService.hideAside.next(false);
-  }
-  ngOnDestroy(): void {
-    this.codxShareService.hideAside.next(true);
   }
 
   onInit(): void {
@@ -164,6 +149,17 @@ export class DetailGridComponent extends UIComponent implements OnDestroy {
         icon: 'icon-grid_on',
         model: {
           resources: this.columnsGrid,
+        },
+      },
+      {
+        sameData: true,
+        id: '2',
+        type: ViewType.list,
+        active: false,
+        text: 'View List',
+        icon: 'icon-view_list',
+        model: {
+          template: this.listView,
         },
       },
     ];
