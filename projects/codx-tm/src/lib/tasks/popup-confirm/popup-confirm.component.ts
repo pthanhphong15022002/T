@@ -23,6 +23,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   data: any;
   dialog: any;
   task: any;
+  taskExtends: any;
   url: string;
   status: string;
   title: string = 'Xác nhận ';
@@ -48,7 +49,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.funcID = this.data.funcID;
     this.vllConfirm = this.data.vll;
-    this.task = this.data?.data;
+   
     this.action = this.data?.action;
     this.fieldComments();
     this.moreFunc = this.data.moreFunc;
@@ -58,7 +59,13 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.fieldDefault =
       fieldDefault.charAt(0).toLocaleLowerCase() + fieldDefault.slice(1);
     this.valueDefault = UrlUtil.getUrl('defaultValue', this.url);
-    this.task[this.fieldDefault] = this.valueDefault;
+    if(this.action='extend') {
+      this.taskExtends = this.data?.data;
+      this.taskExtends[this.fieldDefault] = this.valueDefault 
+    }
+    else {this.task = this.data?.data;
+      this.task[this.fieldDefault] = this.valueDefault 
+    }
   }
 
   ngOnInit(): void {}
@@ -123,18 +130,20 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   }
 
   saveExtendStatus() {
-    // this.task.extendComment =this.comment; ko cos field nafy
-    ///xu ly save
     this.api
-      .execSv<any>('TM', 'TM', 'TaskBusiness', 'ExtendStatusTaskAsync', [
-        this.funcID,
-        this.task.taskID,
-        this.task.extendStatus,
+      .execSv<any>('TM', 'TM', 'TaskExtendsBusiness', 'ExtendStatusTaskAsync', [
+        this.taskExtends.taskID,
+        this.taskExtends.extendStatus,
         this.comment,
       ])
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(res);
+          if(res.extendStatus=='5'){
+            this.taskExtends.task.dueDate = res.extendDate ;
+            this.taskExtends.task.extends = this.taskExtends.task.extends + 1 ;
+          }
+          this.taskExtends.extendComment =  this.comment,
+          this.dialog.close(this.taskExtends);
           this.notiService.notify('Duyệt gia hạn công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();

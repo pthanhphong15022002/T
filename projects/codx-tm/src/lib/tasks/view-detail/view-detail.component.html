@@ -51,15 +51,15 @@
               </div>
               <div class="d-status">
                 <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                    (itemSelected?.status | vll: vllStatus:'textColor' | async) +
+                    (extendStatus? extendStatus:itemSelected?.status  | vll: vllStatus:'textColor' | async) +
                     '30'
                   " [style.background-color]="
-                    (itemSelected?.status | vll: vllStatus:'textColor' | async) +
+                    (extendStatus? extendStatus:itemSelected?.status | vll: vllStatus:'textColor' | async) +
                     '30'
                   " [style.color]="
-                    itemSelected?.status | vll: vllStatus:'textColor' | async
+                  extendStatus? extendStatus:itemSelected?.status | vll: vllStatus:'textColor' | async
                   " style="border: none">
-                  {{ itemSelected?.status | vll: vllStatus:"text" | async }}
+                  {{ extendStatus? extendStatus:itemSelected?.status | vll: vllStatus:"text" | async }}
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@
                 itemSelected.dueDate | date: "dd/MM/yyyy"
                 }}</span>
               <span #dueDate *ngIf="!itemSelected?.dueDate ">{{ itemSelected.dueDate | formatvalue:
-                formModel:"dueDate":dueDate | async }}</span>
+                formModel:"dueDate":dueDate :"Tasks":"grvTasks"| async }}</span>
             </div>
             <div class="float-left align-items-center text-dark me-6">
               <div class="me-1 fw-bold">
@@ -100,7 +100,7 @@
                   }}</span>
               </div>
               <div #priority *ngIf="!itemSelected?.priority">{{itemSelected?.priority| formatvalue :
-                formModel:"priority" : priority|async}}</div>
+                formModel:"priority" : priority:"Tasks":"grvTasks"|async}}</div>
 
             </div>
             <div class="float-left">
@@ -130,7 +130,7 @@
               <span *ngIf="itemSelected?.startDate" class="text-gray-700">{{itemSelected?.startDate | date:
                 "dd/MM/yyyy"}}</span>
               <span #startDate *ngIf="!itemSelected?.startDate">{{itemSelected?.startDate| formatvalue :
-                formModel:"startDate" : startDate|async}}</span>
+                formModel:"startDate" : startDate:"Tasks":"grvTasks"|async}}</span>
             </div>
             <div class="float-left align-items-center text-dark me-6">
               <div class="me-1 fw-bold">
@@ -143,7 +143,7 @@
               <span *ngIf="itemSelected?.endDate" class="text-gray-700">{{itemSelected?.endDate | date:
                 "dd/MM/yyyy"}}</span>
               <span #endDate *ngIf="!itemSelected?.endDate">{{itemSelected?.endDate| formatvalue : formModel:"endDate" :
-                endDate|async}}</span>
+                endDate:"Tasks":"grvTasks"|async}}</span>
             </div>
             <div class="float-left">
               <div class="fw-bold me-1">
@@ -160,7 +160,7 @@
               <span *ngIf="itemSelected?.completedOn" class="text-gray-700">{{itemSelected?.completedOn| date:
                 "dd/MM/yyyy" }} | {{itemSelected.completed}} <span>h</span> </span>
               <span *ngIf="!itemSelected?.completedOn" #completedOn>{{itemSelected?.completedOn| formatvalue :
-                formModel:"completedOn" : completedOn|async }}</span>
+                formModel:"completedOn" : completedOn:"Tasks":"grvTasks"|async }}</span>
             </div>
           </div>
         </div>
@@ -184,7 +184,7 @@
             <!-- <span class="text-gray-700">{{ itemSelected?.location }}</span> -->
             <span *ngIf="itemSelected?.location" class="text-gray-700">{{itemSelected?.location}}</span>
             <span #location *ngIf="!itemSelected?.location">{{itemSelected?.location| formatvalue :
-              formModel:"location" : location|async}}</span>
+              formModel:"location" : location :"Tasks":"grvTasks"|async}}</span>
           </div>
         </div>
         <div *ngIf="itemSelected.tags" class="mt-2">

@@ -479,20 +479,20 @@ export class TasksComponent extends UIComponent {
           [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
           option
         );
-        // this.dialog.closed.subscribe((e) => {
-        //   if (e?.event == null)
-        //     this.view.dataService.delete(
-        //       [this.view.dataService.dataSelected],
-        //       false
-        //     );
-        //   if (e?.event && e?.event != null) {
-        //     e?.event.forEach((obj) => {
-        //       this.view.dataService.update(e?.event).subscribe();
-        //     });
-        //     this.itemSelected = e?.event;
-        //   }
-        //   this.detectorRef.detectChanges();
-        // });
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+          if (e?.event && e?.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = e?.event[0];
+          }
+          this.detectorRef.detectChanges();
+        });
       });
   }
 
@@ -605,38 +605,45 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM025');
       return;
     }
-    this.notiService.alertCode('TM054').subscribe((confirm) => {
-      if (confirm?.event && confirm?.event?.status == 'Y') {
-        const fieldName = 'UpdateControl';
-        if (taskAction.taskGroupID) {
-          this.api
-            .execSv<any>(
-              'TM',
-              'ERM.Business.TM',
-              'TaskGroupBusiness',
-              'GetAsync',
-              taskAction.taskGroupID
-            )
-            .subscribe((res) => {
-              if (res) {
-                this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
-              } else {
-                this.actionUpdateStatus(
-                  this.paramModule[fieldName],
-                  moreFunc,
-                  taskAction
-                );
-              }
-            });
-        } else {
-          this.actionUpdateStatus(
-            this.paramModule[fieldName],
-            moreFunc,
-            taskAction
-          );
+    if(taskAction.status=="90"){
+      this.notiService.alertCode('TM054').subscribe((confirm) => {
+        if (confirm?.event && confirm?.event?.status == 'Y') {
+          this.confirmUpdateStatus(moreFunc,taskAction)
         }
-      }
-    });
+      });
+    }else this.confirmUpdateStatus(moreFunc,taskAction)
+   
+  }
+
+  confirmUpdateStatus(moreFunc,taskAction){
+    const fieldName = 'UpdateControl';
+    if (taskAction.taskGroupID) {
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskGroupBusiness',
+          'GetAsync',
+          taskAction.taskGroupID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
+          } else {
+            this.actionUpdateStatus(
+              this.paramModule[fieldName],
+              moreFunc,
+              taskAction
+            );
+          }
+        });
+    } else {
+      this.actionUpdateStatus(
+        this.paramModule[fieldName],
+        moreFunc,
+        taskAction
+      );
+    }
   }
 
   actionUpdateStatus(fieldValue, moreFunc, taskAction) {
@@ -697,7 +704,7 @@ export class TasksComponent extends UIComponent {
     };
     this.dialog = this.callfc.openForm(
       UpdateStatusPopupComponent,
-      'Cập nhật tình trạng',
+      '',
       500,
       350,
       '',
@@ -965,13 +972,7 @@ export class TasksComponent extends UIComponent {
         this.itemSelected = e?.event[0];
       }
       this.detectorRef.detectChanges();
-    });
-    // var option = new DialogModel();
-    // option.FormModel = this.view.currentView.formModel;
-    // this.callfc.openForm(PopupUpdateProgressComponent, null, 600, 400,null,obj,"",option).closed.subscribe(x=>{
-    //   if(x.event)
-    //     this.view.dataService.remove(x.event).subscribe();
-    // });
+    })
   }
   //#endregion
 
