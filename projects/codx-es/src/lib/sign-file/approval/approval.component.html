@@ -196,6 +196,7 @@
                     [fields]="person"
                     (change)="changeSigner($event)"
                     [itemTemplate]="signer"
+                    [valueTemplate]="signer"
                   >
                     <ng-template #signer let-approver>
                       <codx-temp-full
