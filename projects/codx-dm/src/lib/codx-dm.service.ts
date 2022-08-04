@@ -624,6 +624,15 @@ export class CodxDMService {
           case "DMT0210": //view file
             this.fileService.getFile(data.recID).subscribe(data => {
                 this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+                var files = this.listFiles;
+                if (files != null) {
+                  let index = files.findIndex(d => d.recID.toString() === data.recID);
+                  if (index != -1) {
+                    files[index] = data;
+                  }
+                  this.listFiles = files;                    
+                  this.ChangeData.next(true);                
+                }
             });
             break;
 
@@ -634,17 +643,26 @@ export class CodxDMService {
                 if (this.checkDownloadRight(file)) {
                 this.fileService.downloadFile(id).subscribe(async res => {
                     if (res && res.content != null) {
-                    let json = JSON.parse(res.content);
-                    var bytes = that.base64ToArrayBuffer(json);
-                    let blob = new Blob([bytes], { type: res.mimeType });
-                    let url = window.URL.createObjectURL(blob);
-                    var link = document.createElement("a");
-                    link.setAttribute("href", url);
-                    link.setAttribute("download", res.fileName);
-                    link.style.display = "none";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                      let json = JSON.parse(res.content);
+                      var bytes = that.base64ToArrayBuffer(json);
+                      let blob = new Blob([bytes], { type: res.mimeType });
+                      let url = window.URL.createObjectURL(blob);
+                      var link = document.createElement("a");
+                      link.setAttribute("href", url);
+                      link.setAttribute("download", res.fileName);
+                      link.style.display = "none";
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }
+                    var files = this.listFiles;
+                    if (files != null) {
+                      let index = files.findIndex(d => d.recID.toString() === id);
+                      if (index != -1) {
+                        files[index].countDownload = files[index].countDownload + 1;
+                      }
+                      this.listFiles = files;                    
+                      this.ChangeData.next(true);                
                     }
                 });
                 }

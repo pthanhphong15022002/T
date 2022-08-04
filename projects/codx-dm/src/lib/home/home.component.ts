@@ -99,8 +99,9 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isChangeData.subscribe(item => {
       if (item) {
         this.data = [];
-        this.data = [...this.data, ...this.dmSV.listFolder];
-        this.data = [...this.data, ...this.dmSV.listFiles];
+        this.changeDetectorRef.detectChanges();
+      //  this.data = [...this.data, ...this.dmSV.listFolder];
+        this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -111,6 +112,10 @@ export class HomeComponent extends UIComponent {
         this.changeDetectorRef.detectChanges();
       }
     });
+  }
+
+  identifyData(index, data) {
+    return data;
   }
 
   addFile($event) {  
@@ -196,7 +201,7 @@ export class HomeComponent extends UIComponent {
     //  console.log($data.data);
     // alert(1);
     //let data = $event.data;
-    if ($data.data == null) return;
+    if ($data == null || $data.data == null) return;
 
     let id = $data.data.recID;
     let item = $data.data;
@@ -266,12 +271,12 @@ export class HomeComponent extends UIComponent {
       this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
         ///this.dmSV.listFiles.next(res);
         this.data = [...this.data, ...res];
-        this.dmSV.listFolder = res;  
+        this.dmSV.listFiles = res;  
         this.changeDetectorRef.detectChanges();
       });
     } else {
       this.dmSV.disableInput.next(true);
-      this.notificationsService.notify(this.titleAccessDenied);
+     // this.notificationsService.notify(this.titleAccessDenied);
     }
   }
 
@@ -337,17 +342,47 @@ export class HomeComponent extends UIComponent {
     this.currView = event.view.model.template2;
     ScrollComponent.reinitialization("[data-kt-scroll='true']");
     ScrollComponent.resize();
+    if (this.dmSV.folderType != this.view.funcID) {
+      this.data = [];
+      this.dmSV.folderType = this.view.funcID;
+      this.dmSV.idMenuActive = this.view.funcID;
+      this.changeDetectorRef.detectChanges();
+    }
+    // this.folderService.options.funcID = this.view.funcID;
+    // if (this.dmSV.folderType != this.view.funcID) {
+    //   this.data = [...this.data, ...this.view.dataService.dataSelected];
+    //   this.dmSV.listFolder = this.view.dataService.dataSelected;
+    //   this.dmSV.loadedFolder = true;
+    //   this.changeDetectorRef.detectChanges();      
+    // }
+      
+    // this.dmSV.folderType = this.view.funcID;
+    // this.dmSV.idMenuActive = this.view.funcID;
+    // this.dmSV.loadedFile = false;
+    // this.dmSV.folderId.next("");  
+    // this.dmSV.loadedFolder = true;
+    // this.changeDetectorRef.detectChanges();
+    // this.fileService.options.funcID = this.view.funcID;
+    // this.fileService
+    //   .getListActiveFiles('', this.view.funcID)
+    //   .subscribe(async (res) => {
+    //     if (res != null) {            
+    //       this.data = [...this.data, ...res];
+    //       this.dmSV.listFiles = res;
+    //       this.dmSV.loadedFile = true;
+    //       this.changeDetectorRef.detectChanges();
+    //     }
+    //   });
   }
 
-  requestEnded(e:any){
-    if(e.type ==="read"){
-      this.data = [];
+  requestEnded(e: any){
+    this.data = [];
+    if(e.type === "read"){     
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.folderType != this.view.funcID) {
         this.data = [...this.data, ...e.data];
         this.dmSV.listFolder = e.data;
-        this.dmSV.loadedFolder = true;
-        this.changeDetectorRef.detectChanges();      
+        this.dmSV.loadedFolder = true;       
       }
         
       this.dmSV.folderType = this.view.funcID;
@@ -362,11 +397,12 @@ export class HomeComponent extends UIComponent {
         .subscribe(async (res) => {
           if (res != null) {            
             this.data = [...this.data, ...res];
-            this.dmSV.listFiles = e.data;
+            this.dmSV.listFiles = res;
             this.dmSV.loadedFile = true;
             this.changeDetectorRef.detectChanges();
           }
-        });
+        });        
     }
+    this.changeDetectorRef.detectChanges();     
   }
 }
