@@ -472,7 +472,7 @@ export class CodxTMService {
   //   param.ConfirmControl = taskGroup.confirmControl;
   //   param.EditControl = taskGroup.editControl;
   //   param.LocationControl = taskGroup.locationControl;
-  //   param.MaxHours = taskGroup.maxHours;
+  //   param.MaxHours = taskGroup.maxHours.toString();
   //   param.MaxHoursControl = taskGroup.maxHoursControl;
   //   param.PlanControl = taskGroup.planControl;
   //   param.ProjectControl = taskGroup.projectControl;

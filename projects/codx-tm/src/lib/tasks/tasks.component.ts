@@ -28,7 +28,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { isBuffer } from 'util';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
-import { TM_Parameter } from '../models/TM_Tasks.model';
+import { TM_Parameter, TM_TaskExtends } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
 import { PopupConfirmComponent } from './popup-confirm/popup-confirm.component';
 import { PopupExtendComponent } from './popup-extend/popup-extend.component';
@@ -67,6 +67,7 @@ export class TasksComponent extends UIComponent {
   dialogApproveStatus!: DialogRef;
   dialogVerifyStatus!: DialogRef;
   dialogProgess!: DialogRef;
+  dialogExtends!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
   endDate: Date;
@@ -93,6 +94,7 @@ export class TasksComponent extends UIComponent {
   vllStatusAssignTasks = 'TM007';
   vllStatus = 'TM004';
   taskGroup: TM_TaskGroups;
+  taskExtend: TM_TaskExtends = new TM_TaskExtends();
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -981,28 +983,54 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM052');
       return;
     }
-    var obj = {
-      moreFunc: moreFunc,
-      data: data,
-      funcID: this.funcID,
-    };
-    this.dialogProgess = this.callfc.openForm(
-      PopupExtendComponent,
-      '',
-      500,
-      350,
-      '',
-      obj
-    );
-    this.dialogProgess.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        e?.event.forEach((obj) => {
-          this.view.dataService.update(obj).subscribe();
-        });
-        this.itemSelected = e?.event[0];
-      }
-      this.detectorRef.detectChanges();
-    });
+    // var obj = {
+    //   moreFunc: moreFunc,
+    //   data: data,
+    //   funcID: this.funcID,
+    // };
+    // this.dialogExtends = this.callfc.openForm(
+    //   PopupExtendComponent,
+    //   '',
+    //   500,
+    //   350,
+    //   '',
+    //   obj
+    // );
+
+    if (data.createdBy != data.owner)
+      this.taskExtend.extendApprover = data.createdBy;
+    else this.taskExtend.extendApprover = data.verifyBy;
+    this.taskExtend.dueDate = data.dueDate ;
+    this.api
+      .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync',[this.taskExtend.extendApprover]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.taskExtend.extendApproverName = res.userName;
+          var obj = {
+            moreFunc: moreFunc,
+            data: this.taskExtend,
+            funcID: this.funcID,
+          };
+          this.dialogExtends = this.callfc.openForm(
+            PopupExtendComponent,
+            '',
+            500,
+            350,
+            '',
+            obj
+          );
+          // this.dialogExtends.closed.subscribe((e) => {
+          //   if (e?.event && e?.event != null) {
+          //     e?.event.forEach((obj) => {
+          //       this.view.dataService.update(obj).subscribe();
+          //     });
+          //     this.itemSelected = e?.event[0];
+          //   }
+          //   this.detectorRef.detectChanges();
+          // });
+        }
+      });
   }
   //#endregion
 
@@ -1014,7 +1042,7 @@ export class TasksComponent extends UIComponent {
     this.param.ConfirmControl = taskGroup.confirmControl;
     this.param.EditControl = taskGroup.editControl;
     this.param.LocationControl = taskGroup.locationControl;
-    this.param.MaxHours = taskGroup.maxHours;
+    this.param.MaxHours = taskGroup.maxHours.toString();
     this.param.MaxHoursControl = taskGroup.maxHoursControl;
     this.param.PlanControl = taskGroup.planControl;
     this.param.ProjectControl = taskGroup.projectControl;

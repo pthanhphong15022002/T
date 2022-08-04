@@ -18,7 +18,8 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
   funcID :any
   extendDate:any
   moreFunc: any
-  url:any
+  url:any ;
+  nameApprover: any ;
   
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -31,10 +32,13 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
     this.data = dt?.data;
     this.dialog = dialog;
     this.funcID = this.data.funcID
-    this.task = this.data.data ;
-    if(this.task.createdBy!=this.task.owner) this.taskExtend.extendApprover = this.task.createdBy ;
-    else  this.taskExtend.extendApprover = this.task.VerifyBy ;
-    this.taskExtend.dueDate = this.task.dueDate ;
+    this.taskExtend = this.data.data ;
+    // if(this.task.createdBy!=this.task.owner) this.taskExtend.extendApprover = this.task.createdBy ;
+    // else  this.taskExtend.extendApprover = this.task.verifyBy ;
+    // this.api.execSv<any>('SYS','AD','UsersBusiness','GetUserAsync',[this.taskExtend.extendApprover]).subscribe(res=>{
+    //   if(res)this.nameApprover = res.userName
+    // })
+    // this.taskExtend.dueDate = this.task.dueDate ;
   }
 
   ngOnInit(): void {
