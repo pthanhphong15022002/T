@@ -955,7 +955,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.param.ConfirmControl = taskGroup.confirmControl;
     this.param.EditControl = taskGroup.editControl;
     this.param.LocationControl = taskGroup.locationControl;
-    this.param.MaxHours = taskGroup.maxHours;
+    this.param.MaxHours = taskGroup.maxHours.toString();
     this.param.MaxHoursControl = taskGroup.maxHoursControl;
     this.param.PlanControl = taskGroup.planControl;
     this.param.ProjectControl = taskGroup.projectControl;
