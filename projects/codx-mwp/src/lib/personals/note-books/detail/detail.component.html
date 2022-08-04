@@ -1,0 +1,11 @@
+<codx-views #view [views]="views" [button]="button" [funcID]="funcID" (buttonClick)="openFormCreateDetail($event)"
+    idField="recID" [entityName]="functionList.entityName" service="WP" [predicate]="predicate" [dataValue]="dataValue">
+</codx-views>
+
+<ng-template #gridView>
+    <app-detail-grid [views]="views"></app-detail-grid>
+</ng-template>
+
+<ng-template #listView>
+
+</ng-template>
