@@ -20,7 +20,6 @@ export class PopupEditComponent implements OnInit {
   subContent: string;
   formGroup: FormGroup;
   user: any;
-  
   popupFiled = 1;
   popupContent = 2;
   objectID = '';
@@ -34,19 +33,16 @@ export class PopupEditComponent implements OnInit {
   userRecevier: any;
   recevierID = "";
   recevierName = "";
-
   data:any;
-  isUpload:boolean = false;
   fileUpload:any[] = [];
-  fileImage:any[] = [];
-  fileVideo:any[] = [];
+  fileImage:any = null;
+  fileVideo:any = null;
   myPermission:Permission = null;
   apprPermission:Permission = null;
   shareIcon:string = "";
   shareText:string = "";
   shareWith:String = "";
   permissions:Permission[] = [];
-
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -82,6 +78,8 @@ export class PopupEditComponent implements OnInit {
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('codxAttachment') codxAttachment: AttachmentComponent;
   @ViewChild('codxATMVideo') codxAttachmentVideo: AttachmentComponent;
+  @ViewChild('codxAttm') codxAttm: AttachmentComponent;
+
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
@@ -95,7 +93,7 @@ export class PopupEditComponent implements OnInit {
 
   ) {
 
-    this.data = dd.data.dataEdit;
+    this.data = dd.data;
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
@@ -105,59 +103,78 @@ export class PopupEditComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.cache.valueList('L1491').subscribe((vll:any) => {
-      if(vll)
-      {
-        // let value = vll.datas.find()
-      }
-    });
-    this.setDataForm();
+    this.setData();
   }
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
   clickInsertNews() {
-    let objNews = new WP_News();
-    objNews = this.formGroup.value;
-    objNews.status = '2';
-    objNews.approveControl = "0";
-    objNews.shareControl = this.shareControl;
-    objNews.permissions = this.permissions;
-    objNews.isActive = true;
-    if(objNews.allowShare){
-      objNews.permissions.map((p:Permission)=>{p.share = true});
+    this.data.shareControl = this.shareControl;
+    this.data.permissions = this.permissions;
+    this.data.tags = this.formGroup.controls['Tags'].value;
+    this.data.category = this.formGroup.controls['Category'].value;
+    this.data.startDate = this.formGroup.controls['StartDate'].value;
+    this.data.endDate = this.formGroup.controls['EndDate'].value;
+    this.data.subject = this.formGroup.controls['Subject'].value;
+    this.data.subContent = this.formGroup.controls['SubContent'].value;
+    this.data.contents = this.formGroup.controls['Contents'].value;
+    this.data.allowShare = this.formGroup.controls['AllowShare'].value;
+    this.data.createPost = this.formGroup.controls['CreatePost'].value;
+    if(this.data.allowShare){
+      this.data.permissions.map((p:Permission)=>{p.share = true});
     }
-    objNews.createdBy = this.user.userID;
+    else{
+      this.data.permissions.map((p:Permission)=>{p.share = false});
+    }
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
-        'InsertNewsAsync',
-        objNews
+        'UpdateNewsAsync',
+        this.data
       )
       .subscribe((res: any) => {
         if (res) {
-          let data = res;
-          if(this.fileImage.length > 0){
-          this.codxAttachment.objectId = data.recID;
-            this.dmSV.fileUploadList = [...this.fileImage];
-            this.codxAttachment.saveFilesObservable().subscribe();
+          let result = res;
+          if(this.fileUpload.length > 0){
+            this.deleteFileByObjectID(this.data.recID);
+            this.dmSV.fileUploadList = [...this.fileUpload];
+            this.codxAttm.saveFilesObservable().subscribe((res2:any) =>
+            {
+              if(res2)
+              {
+                this.initForm();
+                this.shareControl = this.SHARECONTROLS.EVERYONE;
+                this.notifSV.notifyCode('SYS007');
+                this.insertWPComment(result);
+                this.dialogRef.close();
+              }
+            });
           }
-          if(this.fileVideo.length > 0){
-            this.codxAttachmentVideo.objectId = data.recID;
-            this.dmSV.fileUploadList = [...this.fileVideo];
-            this.codxAttachmentVideo.saveFilesObservable().subscribe();
+          else
+          {
+            this.initForm();
+            this.shareControl = this.SHARECONTROLS.EVERYONE;
+            this.notifSV.notifyCode('SYS007');
+            this.insertWPComment(result);
+            this.dialogRef.close();
           }
-          this.initForm();
-          this.shareControl = this.SHARECONTROLS.EVERYONE;
-          this.notifSV.notifyCode('E0026');
-          this.dialogRef.close();
-          this.insertWPComment(data);
         }
       });
   }
 
+
+  deleteFileByObjectID(recID:string){
+    if(recID){
+      this.api.execSv(
+      "DM",
+      "ERM.Business.DM",
+      "FileBussiness",
+      "DeleteByObjectIDAsync",
+      [recID, 'WP_Comments', true]).subscribe();
+    }
+  }
   insertWPComment(data: WP_News){
     if(data.createPost){
       var post = new WP_Comments();
@@ -210,8 +227,6 @@ export class PopupEditComponent implements OnInit {
     this.formGroup.patchValue(obj);
     this.changedt.detectChanges();
   }
-  
-
   eventApply(event: any) {
     if (!event) {
       return;
@@ -395,8 +410,10 @@ export class PopupEditComponent implements OnInit {
     }
     this.changedt.detectChanges();
   }
-  setDataForm(){
+  setData(){
     this.tagName = this.data.tags;
+    this.shareControl = this.data.shareControl;
+    this.permissions = this.data.permissions;
     this.formGroup = new FormGroup({
       Tags: new FormControl(this.data.tags),
       Category: new FormControl(this.data.category),
@@ -471,36 +488,40 @@ export class PopupEditComponent implements OnInit {
       this.changedt.detectChanges();
     }
   }
-
-  addImage(file){
-    this.dmSV.fileUploadList = [];
-    if(file && file.data.length > 0 ){
-        if(file.data[0].mimeType.indexOf("image") >= 0 ){
-          file.data[0]['referType'] = this.FILE_REFERTYPE.IMAGE;
-          this.fileImage = [...file.data];
-          this.changedt.detectChanges();
-        }
-        else {
-          this.notifSV.notify("Vui lòng chọn file image.")
-        }
+  addImage(files:any){
+    if(files && files.data.length > 0 ){
+      let file = files.data[0];
+      if(file.mimeType.indexOf("image") >= 0 ){
+        file['referType'] = this.FILE_REFERTYPE.IMAGE;
+        this.fileImage = file;
+        this.fileUpload.push(file);
+        this.changedt.detectChanges();
+      }
+      else this.notifSV.notify("Vui lòng chọn file image.");
     }
   }
-  addVideo(file){
-    this.dmSV.fileUploadList = [];
-    if(file && file.data.length > 0 ){
-         if(file.data[0].mimeType.indexOf("video") >= 0)
+  addVideo(files:any){
+    if(files && files.data.length > 0 ){
+      let file = files.data[0];
+         if(file.mimeType.indexOf("video") >= 0)
         {
-          file.data[0]['referType'] = this.FILE_REFERTYPE.VIDEO;
-          this.fileVideo = [...file.data];
+          file['referType'] = this.FILE_REFERTYPE.VIDEO;
+          this.fileVideo = file;
+          this.fileUpload.push(file);
           this.changedt.detectChanges();
         }
         else{
-          this.notifSV.notify("Vui lòng chọn file video.")
+          this.notifSV.notify("Vui lòng chọn file video.");
         }
     }
   }
   clickClosePopup(){
     this.dialogRef.close();
+  }
+
+
+  clickUploadFile(){
+    this.codxAttm.uploadFile();
   }
 
 }

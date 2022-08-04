@@ -461,7 +461,7 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion
 
-  sendemail(data) {}
+  sendemail(data) { }
 
   editConfirm(data) {
     if (data) {
@@ -479,20 +479,20 @@ export class TasksComponent extends UIComponent {
           [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
           option
         );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
-          }
-          this.detectorRef.detectChanges();
-        });
+        // this.dialog.closed.subscribe((e) => {
+        //   if (e?.event == null)
+        //     this.view.dataService.delete(
+        //       [this.view.dataService.dataSelected],
+        //       false
+        //     );
+        //   if (e?.event && e?.event != null) {
+        //     e?.event.forEach((obj) => {
+        //       this.view.dataService.update(e?.event).subscribe();
+        //     });
+        //     this.itemSelected = e?.event;
+        //   }
+        //   this.detectorRef.detectChanges();
+        // });
       });
   }
 
@@ -563,7 +563,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
   requestEnded(evt: any) {
     // if (evt.type == 'read') {
@@ -653,8 +653,8 @@ export class TasksComponent extends UIComponent {
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -1028,9 +1028,6 @@ export class TasksComponent extends UIComponent {
     // if (data.taskGroupID) this.getTaskGroup(data.taskGroupID);
     // else this.param = this.paramModule;
     switch (e.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
       case 'SYS02':
         this.delete(data);
         break;

@@ -1,27 +1,54 @@
 /* You can add global styles to this file, and also import other style files */
 /***Khong duoc xoa***/
-.e-device .e-dlg-content, .e-device .e-dlg-content * {
-    font-size: inherit;  
+.e-device .e-dlg-content,
+.e-device .e-dlg-content * {
+    font-size: inherit;
 }
 
-// Primary (để tạm ở đây do css từ module không nhận biến đặt trong core - đợi dev thiết lập lại dùm - css không biết làm đừng la tội nghiệp) 
+//codx core
+$white: #ffffff;
+$black: #0f0f0f;
+$gray-100: if(isDarkMode(), #202325, #f5f9fa);
+$gray-200: if(isDarkMode(), #2c2d2e, #ebf0f1);
+$gray-300: if(isDarkMode(), #3b3f41, #c2c8ca);
+$gray-400: if(isDarkMode(), #646a6e, #a4a9ac);
+$gray-500: if(isDarkMode(), #667174, #8f9596);
+$gray-600: if(isDarkMode(), #747b81, #5d6061);
+$gray-700: if(isDarkMode(), #929a9f, #3f4144);
+$gray-800: if(isDarkMode(), #cdd9de, #28292b);
+$gray-900: if(isDarkMode(), #FFFFFF, #1d1f1f);
+$text-muted: $gray-500;
+
+// Primary
+$primary: if(isDarkMode(), #3699fe, #3699ff);
+$primary-dark: if(isDarkMode(), #0078fe, #0078ff);
+$primary-darker: if(isDarkMode(), #005dc6, #005dc7);
+$primary-darkest: if(isDarkMode(), #063162, #063163);
+$primary-light: if(isDarkMode(), #D3E8FE, #D3E8FF);
+$primary-lighter: if(isDarkMode(), #EAF0FE, #EAF0FF);
+$primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
+
 :root {
-    --primary: #3699ff;
-    --primary-dark: #0078ff;
-    --primary-darker: #005dc7;
-    --primary-darkest: #063163;
-    --primary-light: #D3E8FF;
-    --primary-lighter: #EAF0FF;
-    --primary-lightest: #F4F7FF;
     ///
     --primary-active: #187DE4;
     --primary-inverse: #FFFFFF;
 
     --bs-body-line-height: 1.4;
-    --codx-text-primary: #005DC7;
+
+    /////
+    --text-primary: #005dc7;
+    --text-dark: #1d1f1f;
+    --gray-800: #28292b;
+    --gray-700: #3f4144;
+    --gray-600: #5d6061;
+    --gray-500: #8f9596;
+    --gray-400: #a4a9ac;
+    --gray-300: #c2c8ca;
+    --gray-200: #ebf0f1;
 }
 
 .text-primary {
-    color: var(--codx-text-primary) !important;
+    color: var(--text-primary) !important;
 }
+
 /***END Khong duoc xoa***/

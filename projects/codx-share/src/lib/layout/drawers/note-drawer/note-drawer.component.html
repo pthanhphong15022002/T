@@ -1,5 +1,13 @@
 <codx-form [headerText]="header" [subHeader]="subheader" [body]="body" [dialog]="dialog">
     <ng-template popup add #body>
+        <div class="d-flex pd-b-10">
+            <div class="pw-search">
+                <codx-searchbar (searchEvent)="onSearch($event)"></codx-searchbar>
+            </div>
+            <div class="btn btn-icon btn-white me-1 btn btn-icon btn-active-light-primary position-relative btn-sort">
+                <i class="icon-sort_A-Z icon-18" (click)="sortDt()"></i>
+            </div>
+        </div>
         <div class="d-flex flex-column">
             <div class="notes">
                 <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"

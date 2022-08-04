@@ -345,6 +345,8 @@ export class ApprovalComponent extends UIComponent {
   }
 
   changeSigner(e: any) {
+    console.log(e.itemData);
+
     this.signerInfo = e.itemData;
   }
 
@@ -428,7 +430,7 @@ export class ApprovalComponent extends UIComponent {
             this.fileInfo.fileID,
             annot.annotationId,
           ])
-          .subscribe((res) => { });
+          .subscribe((res) => {});
         clearTimeout(this.saveAnnoQueue.get(annot.annotationId));
         this.saveAnnoQueue.delete(annot.annotationId);
       });
@@ -637,17 +639,17 @@ export class ApprovalComponent extends UIComponent {
               //duoi
               (anno.bounds.top >= suggestLocation.top &&
                 anno.bounds.top <=
-                suggestLocation.top + suggestLocation.height))) ||
+                  suggestLocation.top + suggestLocation.height))) ||
             //conflit ben phai
             (anno.bounds.left >= suggestLocation.left &&
               anno.bounds.left <=
-              suggestLocation.left + suggestLocation.width &&
+                suggestLocation.left + suggestLocation.width &&
               //tren
               ((suggestLocation.top >= anno.bounds.top &&
                 suggestLocation.top <= anno.bounds.top + anno.bounds.height) ||
                 (anno.bounds.top >= suggestLocation.top &&
                   anno.bounds.top <=
-                  suggestLocation.top + suggestLocation.height))))
+                    suggestLocation.top + suggestLocation.height))))
         );
       }
     );
@@ -845,9 +847,10 @@ export class ApprovalComponent extends UIComponent {
   }
 
   async addAnnotIntoPDF(type: number) {
-    let signed;
+    let signed = [];
+    console.log('this.url', this.url);
 
-    if (this.url != '')
+    if (this.url && this.url != '')
       signed = this.pdfviewerControl.annotationCollection.find((annotation) => {
         return (
           annotation.customData === this.signerInfo.authorID + ':' + type &&
@@ -855,7 +858,7 @@ export class ApprovalComponent extends UIComponent {
         );
       });
 
-    if (!signed) {
+    if (signed.length != 0) {
       if ([1, 2, 8].includes(type) && this.url != '') {
         let stamp = {
           customStampName: type.toString(),
@@ -1017,7 +1020,7 @@ export class ApprovalComponent extends UIComponent {
 
     this.esService
       .deleteAreaById([this.recID, this.fileInfo.fileID, e.annotationId])
-      .subscribe((res) => { });
+      .subscribe((res) => {});
 
     this.pdfviewerControl.annotationCollection =
       this.pdfviewerControl.annotationCollection.filter((annot) => {
@@ -1133,7 +1136,7 @@ export class ApprovalComponent extends UIComponent {
     this.pdfviewerControl.download();
   }
 
-  clickDownload() { }
+  clickDownload() {}
 }
 
 class Guid {

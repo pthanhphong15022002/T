@@ -70,7 +70,7 @@ export class PopupAddUpdate implements OnInit {
       this.header = 'Cập nhật chi tiết sổ tay';
       this.note = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-      if(this.note.noteType !== 'text') {
+      if (this.note.noteType !== 'text') {
         var dtt = {
           status: this.type == 'check' ? 0 : null,
           listNote: '',
@@ -224,6 +224,9 @@ export class PopupAddUpdate implements OnInit {
             this.attachment.objectId = res.recID;
             this.attachment.saveFiles();
           }
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
           this.dialog.close();
         }
       });

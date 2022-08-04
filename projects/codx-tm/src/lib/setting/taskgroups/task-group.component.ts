@@ -1,25 +1,69 @@
-import { ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthStore, ButtonModel, CacheService, CallFuncService, DialogRef, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  ButtonModel,
+  CacheService,
+  CallFuncService,
+  DialogRef,
+  RequestOption,
+  SidebarModel,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.component';
 
 @Component({
   selector: 'lib-task-group',
   templateUrl: './task-group.component.html',
-  styleUrls: ['./task-group.component.css']
+  styleUrls: ['./task-group.component.css'],
 })
 export class TaskGroupComponent implements OnInit {
   @ViewChild('main') main: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
-  @ViewChild('itemTaskGroupID', { static: true }) itemTaskGroupID: TemplateRef<any>;
-  @ViewChild('itemTaskGroupName', { static: true }) itemTaskGroupName: TemplateRef<any>;
-  @ViewChild('itemTaskGroupName2', { static: true }) itemTaskGroupName2: TemplateRef<any>;
+  @ViewChild('itemTaskGroupID', { static: true })
+  itemTaskGroupID: TemplateRef<any>;
+  @ViewChild('itemTaskGroupName', { static: true })
+  itemTaskGroupName: TemplateRef<any>;
+  @ViewChild('itemTaskGroupName2', { static: true })
+  itemTaskGroupName2: TemplateRef<any>;
   @ViewChild('itemCreatedBy', { static: true }) itemCreatedBy: TemplateRef<any>;
-  @ViewChild('itemApproveControl', { static: true }) itemApproveControl: TemplateRef<any>;
-  @ViewChild('itemProjectControl', { static: true }) itemProjectControl: TemplateRef<any>;
-  @ViewChild('itemAttachmentControl', { static: true }) itemAttachmentControl: TemplateRef<any>;
-  @ViewChild('itemCheckListControl', { static: true }) itemCheckListControl: TemplateRef<any>;
-  @ViewChild('itemCheckList', { static: true }) itemCheckList: TemplateRef<any>;
+  @ViewChild('itemProjectControl', { static: true })
+  itemProjectControl: TemplateRef<any>;
+  @ViewChild('itemLocationControl', { static: true })
+  itemLocationControl: TemplateRef<any>;
+  @ViewChild('itemPlanControl', { static: true })
+  itemPlanControl: TemplateRef<any>;
+  @ViewChild('itemUpdateControl', { static: true })
+  itemUpdateControl: TemplateRef<any>;
+  @ViewChild('itemCheckListControl', { static: true })
+  itemCheckListControl: TemplateRef<any>;
+  @ViewChild('itemVerifyControl', { static: true })
+  itemVerifyControl: TemplateRef<any>;
+  @ViewChild('itemApproveControl', { static: true })
+  itemApproveControl: TemplateRef<any>;
+  @ViewChild('itemMaxHoursControl', { static: true })
+  itemMaxHoursControl: TemplateRef<any>;
+  @ViewChild('itemEditControl', { static: true })
+  itemEditControl: TemplateRef<any>;
+  @ViewChild('itemDueDateControl', { static: true })
+  itemDueDateControl: TemplateRef<any>;
+  @ViewChild('itemAutoCompleted', { static: true })
+  itemAutoCompleted: TemplateRef<any>;
+  @ViewChild('itemExtendControl', { static: true })
+  itemExtendControl: TemplateRef<any>;
+  @ViewChild('itemConfirmControl', { static: true })
+  itemConfirmControl: TemplateRef<any>;
+
   @ViewChild('itemNote', { static: true }) itemNote: TemplateRef<any>;
   @ViewChild('itemCreatedOn', { static: true }) itemCreatedOn: TemplateRef<any>;
 
@@ -27,14 +71,15 @@ export class TaskGroupComponent implements OnInit {
 
   @ViewChild('view') view!: ViewsComponent;
 
-  constructor(private dt: ChangeDetectorRef, private callfunc: CallFuncService,
-  ) {
-
-  }
+  constructor(
+    private dt: ChangeDetectorRef,
+    private callfunc: CallFuncService,
+    private tmService: CodxTMService
+  ) {}
 
   views: Array<ViewModel> = [];
-  formName = "";
-  gridViewName = "";
+  formName = '';
+  gridViewName = '';
   columnsGrid = [];
   dialog!: DialogRef;
   itemSelected: any;
@@ -47,14 +92,14 @@ export class TaskGroupComponent implements OnInit {
     textAlign: 'center',
     backgroundColor: '#F1F2F3',
     fontWeight: 'bold',
-    border: 'none'
-  }
+    border: 'none',
+  };
   columnStyle = {
     border: 'none',
     fontSize: '13px !important',
     fontWeight: 400,
-    lineHeight: 1.4
-  }
+    lineHeight: 1.4,
+  };
 
   ngOnInit(): void {
     this.columnsGrid = [
@@ -62,15 +107,23 @@ export class TaskGroupComponent implements OnInit {
       { headerTemplate: this.itemTaskGroupName, width: 200 },
       { headerTemplate: this.itemTaskGroupName2, width: 200 },
       { headerTemplate: this.itemNote, width: 200 },
-      { headerTemplate: this.itemApproveControl, width: 140 },
       { headerTemplate: this.itemProjectControl, width: 140 },
-      { headerTemplate: this.itemAttachmentControl, width: 140 },
+      { headerTemplate: this.itemLocationControl, width: 140 },
+      { headerTemplate: this.itemPlanControl, width: 180 },
+      { headerTemplate: this.itemUpdateControl, width: 180 },
       { headerTemplate: this.itemCheckListControl, width: 180 },
-      { headerTemplate: this.itemCheckList, width: 200 },
+      { headerTemplate: this.itemVerifyControl, width: 180 },
+      { headerTemplate: this.itemApproveControl, width: 180 },
+      { headerTemplate: this.itemMaxHoursControl, width: 140 },
+      { headerTemplate: this.itemEditControl, width: 180 },
+      { headerTemplate: this.itemDueDateControl, width: 180 },
+      { headerTemplate: this.itemAutoCompleted, width: 180 },
+      { headerTemplate: this.itemExtendControl, width: 180 },
+      { headerTemplate: this.itemConfirmControl, width: 180 },
+
       { headerTemplate: this.itemCreatedBy, width: 200 },
       { headerTemplate: this.itemCreatedOn, width: 100 },
       { field: '', headerText: '#', width: 30 },
-
     ];
     this.button = {
       id: 'btnAdd',
@@ -88,6 +141,8 @@ export class TaskGroupComponent implements OnInit {
         text: 'more 2',
       },
     ];
+
+
   }
 
   clickMF(e: any, data?: any) {
@@ -111,27 +166,28 @@ export class TaskGroupComponent implements OnInit {
     }
   }
   ngAfterViewInit(): void {
-    this.views = [{
-      type: ViewType.grid,
-      sameData: true,
-      active: false,
-      model: {
-        resources: this.columnsGrid,
-        template: this.grid,
-      }
-    },
-    {
-      type: ViewType.list,
-      sameData: true,
-      active: true,
-      model: {
-        template: this.itemTemplate,
-      }
-    }];
+    this.views = [
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          resources: this.columnsGrid,
+          template: this.grid,
+        },
+      },
+      {
+        type: ViewType.list,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemTemplate,
+        },
+      },
+    ];
     this.view.dataService.methodSave = 'AddTaskGroupsAsync';
-    this.view.dataService.methodUpdate = 'UpdateTaskGroupsAsync'
+    this.view.dataService.methodUpdate = 'UpdateTaskGroupsAsync';
     this.view.dataService.methodDelete = 'DeleteTaskGroupAsync';
-
   }
 
   //#region Functions
@@ -139,7 +195,6 @@ export class TaskGroupComponent implements OnInit {
     console.log('evt: ', evt);
     var t = this;
   }
-
 
   selectedChange(val: any) {
     console.log(val);
@@ -177,21 +232,17 @@ export class TaskGroupComponent implements OnInit {
 
   getCheckList(checkList) {
     if (checkList != null) {
-      return checkList.split(";");
+      return checkList.split(';');
     }
-    return []
-
+    return [];
   }
 
   PopoverDetail(p: any, emp) {
     if (emp != null) {
       this.popoverList?.close();
-      this.popoverDetail = emp.checkList.split(";");
-      if (emp.checkList != null)
-        p.open();
-    }
-    else
-      p.close();
+      this.popoverDetail = emp.checkList.split(';');
+      if (emp.checkList != null) p.open();
+    } else p.close();
   }
 
   add() {
@@ -200,10 +251,12 @@ export class TaskGroupComponent implements OnInit {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = 'Auto';
-      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, 'add', option);
-      this.dialog.closed.subscribe((x) => {
-
-      });
+      this.dialog = this.callfunc.openSide(
+        PopAddTaskgroupComponent,
+        'add',
+        option
+      );
+      this.dialog.closed.subscribe((x) => {});
     });
   }
 
@@ -211,26 +264,33 @@ export class TaskGroupComponent implements OnInit {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopAddTaskgroupComponent, 'edit', option);
-    });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        this.dialog = this.callfunc.openSide(
+          PopAddTaskgroupComponent,
+          'edit',
+          option
+        );
+      });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
-      this.beforeDel(opt)).subscribe((res) => {
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
         if (res[0]) {
           this.itemSelected = this.view.dataService.data[0];
         }
-      }
-      );
-  };
-
+      });
+  }
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
@@ -248,5 +308,4 @@ export class TaskGroupComponent implements OnInit {
   aaa(val: any) {
     console.log(val);
   }
-
 }
