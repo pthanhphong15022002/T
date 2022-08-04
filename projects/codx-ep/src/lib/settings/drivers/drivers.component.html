@@ -15,5 +15,19 @@
   [method]="method"
   (requestEnded)="closeDialog($event)"
 >
+
 </codx-views>
+<ng-template #rankingCol let-data>
+  <div class="has-action-menu">
+    {{ data.ranking | vll: "EP005":"text" | async }}
+    <!-- <div class="action-menu">
+      <codx-mfunc
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+      ></codx-mfunc> 
+    </div> -->
+  </div>
+  
+</ng-template>
 
