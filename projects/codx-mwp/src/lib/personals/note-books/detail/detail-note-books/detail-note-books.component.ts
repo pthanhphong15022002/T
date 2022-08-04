@@ -1,10 +1,11 @@
 import { CodxShareService } from './../../../../../../../codx-share/src/lib/codx-share.service';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import { ActivatedRoute } from '@angular/router';
-import { ViewsComponent, CodxService, CallFuncService, ApiHttpService, ButtonModel, UIComponent, ViewType, CodxGridviewComponent, SidebarModel, DialogRef, DialogModel, CacheService } from 'codx-core';
+import { ViewsComponent, CodxService, CallFuncService, ApiHttpService, ButtonModel, UIComponent, ViewType, CodxGridviewComponent, SidebarModel, DialogRef, DialogModel, CacheService, CRUDService } from 'codx-core';
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, OnDestroy, Injector } from '@angular/core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { PopupAddUpdate } from '../popup-add-update/popup-add-update.component';
+import { L } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-detail-note-books',
   templateUrl: './detail-note-books.component.html',
@@ -39,6 +40,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnDestroy {
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('lstGrid') lstGrid: CodxGridviewComponent;
+  @ViewChild('list') list: TemplateRef<any>; 
   @ViewChild('memo', { static: true }) memo;
   @ViewChild('tag', { static: true }) tag;
   @ViewChild('createdOn', { static: true }) createdOn;
@@ -118,11 +120,26 @@ export class DetailNoteBooksComponent extends UIComponent implements OnDestroy {
     this.views = [{
       type: ViewType.grid,
       sameData: true,
+      id: '1',
       active: true,
+      text: 'View Grid',
+      icon: 'icon-grid_on',
       model: {
         resources: this.columnsGrid,
       }
-    }];
+    },
+    {
+      sameData: true,
+      id: '2',
+      type: ViewType.content,
+      active: false,
+      text: 'View List',
+      icon: 'icon-view_list',
+      model: {
+        panelLeftRef: this.list,
+      },
+    },
+  ];
   }
 
   getQueryParams() {

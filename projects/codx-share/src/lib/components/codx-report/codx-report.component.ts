@@ -64,7 +64,7 @@ export class CodxReportComponent implements OnInit, AfterViewInit {
       }
     }
     this.parameters = [this.paramRequest];
-    this.reportUUID = '3cdcde9d-8d64-ec11-941d-00155d035518';
+    //this.reportUUID = '3cdcde9d-8d64-ec11-941d-00155d035518';
   }
   ngOnInit(): void {
     if(!this.locale){
