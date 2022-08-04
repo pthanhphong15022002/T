@@ -14,6 +14,7 @@ export class Notes {
     createdBy: string;   
     tag: string;
     fileCount: string;
+    isNote: boolean;
 }
 
 export class TempNote {

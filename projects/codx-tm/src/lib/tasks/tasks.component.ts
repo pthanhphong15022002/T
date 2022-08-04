@@ -585,7 +585,7 @@ export class TasksComponent extends UIComponent {
     }
   }
   selectedChange(val: any) {
-    this.itemSelected = val.data;
+    this.itemSelected = val?.data;
     this.detectorRef.detectChanges();
   }
 
@@ -978,6 +978,38 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion
 
+    //#region Yêu cầu gia hạn
+    openExtendsAction(moreFunc, data) {
+      if (data.owner != this.user.userID) {
+        this.notiService.notifyCode('TM052');
+        return;
+      }
+      var obj = {
+        moreFunc: moreFunc,
+        data: data,
+        funcID: this.funcID,
+      
+      };
+      this.dialogProgess = this.callfc.openForm(
+        PopupExtendComponent,
+        '',
+        500,
+        350,
+        '',
+        obj
+      );
+      this.dialogProgess.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          e?.event.forEach((obj) => {
+            this.view.dataService.update(obj).subscribe();
+          });
+          this.itemSelected = e?.event[0];
+        }
+        this.detectorRef.detectChanges();
+      });
+    }
+    //#endregion
+
   //#region Convert
   convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
     this.param.ApproveBy = taskGroup.approveBy;
@@ -1059,6 +1091,9 @@ export class TasksComponent extends UIComponent {
       case 'TMT02014':
         this.changeStatusTask(e.data, data);
         break;
+      case'TMT02019':
+        this.openExtendsAction(e.data,data)
+        break ;
     }
   }
   changeDataMF(e,data){
