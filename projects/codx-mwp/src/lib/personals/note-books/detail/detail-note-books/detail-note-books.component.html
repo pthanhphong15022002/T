@@ -44,18 +44,20 @@
     <!-- <codx-mfunc [formModel]="view?.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
         [dataItem]="item" type="hover">
     </codx-mfunc> -->
-    <div class="action-menu d-flex">
-        <div class="d-flex align-items-center">
-            <a class="action-item" (click)="edit(item)">
-                <div class="d-flex align-items-center btn-tooltip icon-18">
-                    <span [class]="editMF?.largeIcon" [style.color]="editMF?.color"></span>
-                </div>
-            </a>
-            <a class="action-item" (click)="delete(item)">
-                <div class="d-flex align-items-center btn-tooltip icon-18">
-                    <span [class]="deleteMF?.largeIcon" [style.color]="deleteMF?.color"></span>
-                </div>
-            </a>
+    <div class="has-action-menu">
+        <div class="action-menu d-flex">
+            <div class="d-flex align-items-center">
+                <a class="action-item" (click)="edit(item)">
+                    <div class="d-flex align-items-center btn-tooltip icon-18">
+                        <span [class]="editMF?.largeIcon" [style.color]="editMF?.color"></span>
+                    </div>
+                </a>
+                <a class="action-item" (click)="delete(item)">
+                    <div class="d-flex align-items-center btn-tooltip icon-18">
+                        <span [class]="deleteMF?.largeIcon" [style.color]="deleteMF?.color"></span>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
     <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
