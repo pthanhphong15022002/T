@@ -195,22 +195,20 @@
                     [dataSource]="lstSigners"
                     [fields]="person"
                     (change)="changeSigner($event)"
+                    [itemTemplate]="signer"
                   >
-                    <ng-template #item let-approver>
+                    <ng-template #signer let-approver>
                       <codx-temp-full
-                        [content]="approver.fullName"
-                        [desc]="approver.position"
-                        [icoCss]="
-                          'icon-26 icon align-self-start rounded-circle p-3 m-1 '
+                        [imageId]="approver.authorID"
+                        [imageObjType]="'AD_Users'"
+                        [imageWidth]="35"
+                        [title]="
+                          approver.roleType == 'U'
+                            ? approver.fullName
+                            : (approver.roleType | vll: 'ES014':'text' | async)
                         "
-                        [statusVll]="'ES003'"
-                        [date]="approver.signType"
-                        cardCss="card-template border-bottom px-2 py-3"
-                        [resourceObjType]="'AD_Users'"
-                        [icoStatusVll]="'ES002'"
-                        [modeImgs]="false"
-                        [titleLine]="2"
-                        [icoDateCss]="'icon-access_alarm'"
+                        [subTitle]="approver.position ?? 'Vị trí công việc'"
+                        [desc]="approver.signType | vll: 'ES002':'text' | async"
                       >
                       </codx-temp-full>
                     </ng-template>
