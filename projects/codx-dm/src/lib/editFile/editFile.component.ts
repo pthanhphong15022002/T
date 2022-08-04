@@ -278,13 +278,14 @@ export class EditFileComponent implements OnInit {
           let res = item.data;
           this.dmSV.fileEditing.next(item.data);
           if (res != null) {
-            var files = this.dmSV.listFiles.getValue();
+            var files = this.dmSV.listFiles;//.getValue();
             if (files != null) {
               let index = files.findIndex(d => d.recID.toString() === this.id);
               if (index != -1) {
                 files[index].fileName = res.fileName;
               }
-              this.dmSV.listFiles.next(files);
+              this.dmSV.listFiles = files;
+              this.dmSV.ChangeData.next(true);
               this.changeDetectorRef.detectChanges();
             }
             // if (modal != null)
@@ -311,13 +312,14 @@ export class EditFileComponent implements OnInit {
                 this.fileService.updateFile(this.fileEditing).subscribe(async res => {
                   if (res.status == 0) {
                     this.dmSV.fileEditing.next(item.data);
-                    var files = this.dmSV.listFiles.getValue();
+                    var files = this.dmSV.listFiles;
                     if (files != null) {
                       let index = files.findIndex(d => d.recID.toString() === this.id);
                       if (index != -1) {
                         files[index].fileName = res.data.fileName;
                       }
-                      this.dmSV.listFiles.next(files);                    
+                      this.dmSV.listFiles = files;                    
+                      this.dmSV.ChangeData.next(true);
                       // if (modal != null)
                       //   this.modalService.dismissAll();
                       this.changeDetectorRef.detectChanges();

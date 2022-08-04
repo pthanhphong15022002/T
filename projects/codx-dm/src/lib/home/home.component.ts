@@ -96,6 +96,15 @@ export class HomeComponent extends UIComponent {
       id: 'btnUpload',
     };
 
+    this.dmSV.isChangeData.subscribe(item => {
+      if (item) {
+        this.data = [];
+        this.data = [...this.data, ...this.dmSV.listFolder];
+        this.data = [...this.data, ...this.dmSV.listFiles];
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+
     this.dmSV.isEmptyTrashData.subscribe(item => {
       if (item) {
         this.data = [];
@@ -221,6 +230,7 @@ export class HomeComponent extends UIComponent {
       this.dmSV.folderId.next(id);
       //this.view.dataService.addDatas(id, )
       var items = item.items;
+    //  this.dmSV.listFolder = [];
       if (items == undefined || items.length <= 0) {
         //     this.folderService.options.funcID =
         this.folderService.options.funcID = this.view.funcID;
@@ -234,6 +244,7 @@ export class HomeComponent extends UIComponent {
             // this.view.dataService.addNew(data);
             this.listFolders = data;
             this.data = [...this.data, ...data];
+            this.dmSV.listFolder = data;            
             var tree = this.codxview.currentView.currentComponent.treeView;
             item.items = [];
             tree.addChildNodes(item, data);
@@ -245,6 +256,7 @@ export class HomeComponent extends UIComponent {
         //this.dmSV.isTree = true;
         //  alert(1);
         this.data = [...this.data, ...item.items];
+        this.dmSV.listFolder = item.items;            
        // this.dmSV.listFolder.next(item.items);
       //  this.listFolders = item.items;
         this.changeDetectorRef.detectChanges();
@@ -254,6 +266,7 @@ export class HomeComponent extends UIComponent {
       this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
         ///this.dmSV.listFiles.next(res);
         this.data = [...this.data, ...res];
+        this.dmSV.listFolder = res;  
         this.changeDetectorRef.detectChanges();
       });
     } else {

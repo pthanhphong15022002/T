@@ -42,10 +42,10 @@
 
 <ng-template #modifiedOn let-item>
     <div class="has-action-menu">
-        <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
+        <codx-mfunc [formModel]="view?.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
             [dataItem]="item" type="hover">
         </codx-mfunc>
-        <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
+        <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span> 
     </div>
 </ng-template>
 
@@ -54,4 +54,8 @@
         <span class="">{{item.fileCount ? item.fileCount : 0}}</span>
         <span class="icon-attach_file"></span>
     </div>
+</ng-template>
+
+<ng-template #list>
+    <lib-list-detail-note-books [formModel]="view?.formModel" [dataValue]="dataValue"></lib-list-detail-note-books>
 </ng-template>
