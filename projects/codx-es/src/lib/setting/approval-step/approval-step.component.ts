@@ -120,6 +120,11 @@ export class ApprovalStepComponent implements OnInit {
     this.dialog && this.dialog.close();
   }
 
+  saveStep() {
+    this.esService.setApprovalStep(this.lstStep);
+    this.esService.setLstDeleteStep(this.lstDeleteStep);
+  }
+
   openFormFuncID(val: any, data: any) {}
 
   clickMF(event: any, data) {
