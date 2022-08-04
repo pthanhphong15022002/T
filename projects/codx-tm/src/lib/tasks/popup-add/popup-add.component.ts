@@ -420,7 +420,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     if (
       this.param?.LocationControl == '2' &&
-      (!this.task.location || this.task.location.trim() != '')
+      (this.task.location == null || this.task?.location.trim() == '')
     ) {
       this.notiService.notifyCode('TM029');
       return;

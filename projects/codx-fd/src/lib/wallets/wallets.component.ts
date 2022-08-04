@@ -391,6 +391,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e, f) {
+    debugger;
     if (f == 'Organize') {
       this.orgUnit = e?.data[0];
     } else if (f == 'Employee') {
@@ -413,12 +414,13 @@ export class WalletsComponent extends UIComponent implements OnInit {
       case 'vllOrganize':
         this.vllOrganize_value = e.data;
         this.getComboboxName();
+        this.dt.detectChanges();
         break;
       case 'Organize':
-        this.orgUnit = e?.data[0];
+        this.orgUnit = e.data;
         break;
       case 'Employee':
-        this.emloyeeID = e?.data[0];
+        this.emloyeeID = e.data;
         break;
       default:
         break;
@@ -441,7 +443,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
     var a = this.L1483.find((x) => x.value == this.vllOrganize_value);
     this.comboboxName = a.text;
     debugger;
-    this.changedr.detectChanges();
   }
 
   setPredicate() {
