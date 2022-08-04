@@ -1,6 +1,23 @@
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, CodxService, ApiHttpService, CodxListviewComponent, CacheService, AuthService, CallFuncService, CRUDService } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, Injector } from '@angular/core';
+import {
+  AuthStore,
+  CodxService,
+  ApiHttpService,
+  CodxListviewComponent,
+  CacheService,
+  AuthService,
+  CallFuncService,
+  CRUDService,
+  ScrollComponent,
+} from 'codx-core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  AfterViewInit,
+  ViewChild,
+  Injector,
+} from '@angular/core';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -10,24 +27,23 @@ import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/
 @Component({
   selector: 'app-img',
   templateUrl: './img.component.html',
-  styleUrls: ['./img.component.scss']
+  styleUrls: ['./img.component.scss'],
 })
 export class ImgComponent implements OnInit, AfterViewInit {
-
   data: any = [];
   user: any;
   functionList = {
     entityName: '',
     funcID: '',
-  }
+  };
   FILE_REFERTYPE = {
-    IMAGE: "image",
-    VIDEO: "video",
-  }
+    IMAGE: 'image',
+    VIDEO: 'video',
+  };
   file_img: any[] = [];
   predicate = `ObjectType=@0 && IsDelete=@1 && CreatedBy=@2 && ReferType=@3`;
   dataValue: any;
-  dtService: CRUDService
+  dtService: CRUDService;
   // x =>  x.ObjectType == objectType && x.IsDelete == false &&
   //          x.CreatedBy == UserID && (x.ReferType == "image" || x.ReferType == "video"
 
@@ -40,9 +56,9 @@ export class ImgComponent implements OnInit, AfterViewInit {
     private fileService: FileService,
     private callfc: CallFuncService,
     private auth: AuthStore,
-    private injector: Injector,
+    private injector: Injector
   ) {
-    this.cache.functionList('WP').subscribe(res => {
+    this.cache.functionList('WP').subscribe((res) => {
       this.functionList.entityName = res.entityName;
       this.functionList.funcID = res.functionID;
     });
@@ -53,11 +69,11 @@ export class ImgComponent implements OnInit, AfterViewInit {
     this.dtService = dataSv;
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit() {
-    console.log("check listView", this.listView);
+    ScrollComponent.reinitialization();
+    console.log('check listView', this.listView);
   }
 
   // getFile() {
@@ -75,8 +91,16 @@ export class ImgComponent implements OnInit, AfterViewInit {
   // }
 
   openImg(item) {
-    this.fileService.getFile(item.recID).subscribe(data => {
-      this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+    this.fileService.getFile(item.recID).subscribe((data) => {
+      this.callfc.openForm(
+        ViewFileDialogComponent,
+        data.fileName,
+        1000,
+        800,
+        '',
+        data,
+        ''
+      );
     });
   }
 }

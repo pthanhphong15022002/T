@@ -107,7 +107,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     }
     ///xu ly save
     this.api
-      .execSv('TM', 'TM', 'TaskBusiness', 'ConfirmStatusTaskAsync', [
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'ConfirmStatusTaskAsync', [
         this.funcID,
         this.task.taskID,
         this.task.confirmStatus,
@@ -126,7 +126,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     // this.task.extendComment =this.comment; ko cos field nafy
     ///xu ly save
     this.api
-      .execSv('TM', 'TM', 'TaskBusiness', 'ExtendStatusTaskAsync', [
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'ExtendStatusTaskAsync', [
         this.funcID,
         this.task.taskID,
         this.task.extendStatus,
@@ -145,7 +145,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     // this.task.approveComment = this.comment;
     ///xu ly save
     this.api
-      .execSv('TM', 'TM', 'TaskBusiness', 'ApproveStatusTaskAsync', [
+    .execSv<any>('TM', 'TM', 'TaskBusiness', 'ApproveStatusTaskAsync', [
         this.funcID,
         this.task.taskID,
         this.task.approveStatus,
@@ -164,7 +164,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     // this.task.verifyComment = this.comment;
     ///xu ly save
     this.api
-      .execSv('TM', 'TM', 'TaskBusiness', 'VerifyStatusTaskAsync', [
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'VerifyStatusTaskAsync', [
         this.funcID,
         this.task.taskID,
         this.task.verifyStatus,
