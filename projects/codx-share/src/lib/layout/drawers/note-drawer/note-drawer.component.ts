@@ -1,22 +1,41 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CallFuncService, ApiHttpService, CodxListviewComponent, UIComponent, DialogModel, CRUDService, DialogRef, DialogData, CacheService, DataService } from 'codx-core';
-import { AddNoteComponent } from '@pages/home/add-note/add-note.component';
+import {
+  CallFuncService,
+  ApiHttpService,
+  CodxListviewComponent,
+  UIComponent,
+  DialogModel,
+  CRUDService,
+  DialogRef,
+  DialogData,
+  CacheService,
+  DataService,
+  AuthStore,
+} from 'codx-core';
 
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Injector, Optional } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  Input,
+  Injector,
+  Optional,
+} from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { AddUpdateNoteBookComponent } from 'projects/codx-mwp/src/lib/personals/note-books/add-update-note-book/add-update-note-book.component';
-import { UpdateNotePinComponent } from '@pages/home/update-note-pin/update-note-pin.component';
-import { SaveNoteComponent } from '@pages/home/add-note/save-note/save-note.component';
 import { MoreFunctionNote } from '@shared/models/moreFunctionNote.model';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
-
+import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
+import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
+import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
+import * as moment from 'moment';
 @Component({
   selector: 'app-note-drawer',
   templateUrl: './note-drawer.component.html',
   styleUrls: ['./note-drawer.component.scss'],
 })
 export class NoteDrawerComponent extends UIComponent implements OnInit {
-
   @Input() dataAdd = new Notes();
 
   data: any;
@@ -28,36 +47,43 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   countNotePin = 0;
   maxPinNotes: any;
   checkUpdateNotePin = false;
-  typeList = "note-drawer";
+  typeList = 'note-drawer';
   header = 'Ghi chú';
   dialog: DialogRef;
-  predicate = '';
+  predicate = 'CreatedBy=@0 and IsNote=true';
   dataValue = '';
   editMF: any;
   deleteMF: any;
   pinMF: any;
-  saveMF: any; 
+  saveMF: any;
   dtService: CRUDService;
   dataUpdate: any;
+  user: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
 
-  constructor(private injector: Injector,
+  constructor(
+    private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private noteService: NoteServices,
+    private authStore: AuthStore,
     @Optional() dialog: DialogRef,
-    @Optional() dt: DialogData,
+    @Optional() dt: DialogData
   ) {
     super(injector);
+    this.user = this.authStore.get();
+    this.dataValue = `${this.user?.userID}`;
     this.dialog = dialog;
-    this.cache.moreFunction('PersonalNotes', 'grvPersonalNotes').subscribe((res) => {
-      if (res) {
-        this.editMF = res[2];
-        this.deleteMF = res[3];
-        this.pinMF = res[0];
-        this.saveMF = res[1];
-      }
-    })
+    this.cache
+      .moreFunction('PersonalNotes', 'grvPersonalNotes')
+      .subscribe((res) => {
+        if (res) {
+          this.editMF = res[2];
+          this.deleteMF = res[3];
+          this.pinMF = res[0];
+          this.saveMF = res[1];
+        }
+      });
     var dataSv = new CRUDService(injector);
     dataSv.request.pageSize = 10;
     this.dtService = dataSv;
@@ -79,20 +105,31 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             if (today) {
               today.click();
             }
+          } else if (type == 'edit-save-note') {
+            (this.lstView.dataService as CRUDService).remove(data).subscribe();
           } else {
-            (this.lstView.dataService as CRUDService).update(data).subscribe((res)=>{
-          
-              var dt = this.lstView?.dataService.data;
-              dt.sort(function(a, b) {
-                return Number(b.isPin) - Number(a.isPin);
-            });
-              dt = [...dt, ...[]];
-            });
+            (this.lstView.dataService as CRUDService)
+              .update(data)
+              .subscribe((res) => {
+                var dt = this.lstView?.dataService.data;
+                const sortByDate = (dt) => {
+                  const sorter = (a, b) => {
+                    return (
+                      Number(b.isPin) - Number(a.isPin) ||
+                      new Date(b.modifiedOn).getTime() -
+                        new Date(a.modifiedOn).getTime()
+                    );
+                  };
+                  dt.sort(sorter);
+                };
+                sortByDate(dt);
+                // dt = [...dt, ...[]];
+              });
           }
           this.changeDetectorRef.detectChanges();
         }
       }
-    })
+    });
     this.getMaxPinNote();
   }
 
@@ -105,11 +142,11 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             if (res?.isPin == true || res?.isPin == '1') {
               this.countNotePin += 1;
             }
-          })
+          });
         }
         (this.lstView.dataService as CRUDService).page = 5;
       }
-    }
+    };
   }
 
   getMaxPinNote() {
@@ -161,7 +198,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       450,
       '',
       obj
-    )
+    );
 
     this.itemUpdate = data;
     this.listNote = this.itemUpdate.checkList;
@@ -189,8 +226,15 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       var obj = {
         data: this.lstView.dataService.data,
         itemUpdate: data,
-      }
-      this.callfc.openForm(UpdateNotePinComponent, "Cập nhật ghi chú đã ghim", 500, 600, "", obj);
+      };
+      this.callfc.openForm(
+        UpdateNotePinComponent,
+        'Cập nhật ghi chú đã ghim',
+        500,
+        600,
+        '',
+        obj
+      );
     } else {
       this.onEditIsPin(data);
     }
@@ -202,26 +246,35 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       typeLst: this.typeList,
       formType: 'add',
       component: 'note-drawer',
+      maxPinNotes: this.maxPinNotes,
     };
     let option = new DialogModel();
     option.DataService = this.lstView.dataService as CRUDService;
     option.FormModel = this.lstView.formModel;
-    this.callfc
-      .openForm(AddNoteComponent, 'Thêm mới ghi chú', 600, 450, '', obj, '', option);
+    this.callfc.openForm(
+      AddNoteComponent,
+      'Thêm mới ghi chú',
+      600,
+      450,
+      '',
+      obj,
+      '',
+      option
+    );
   }
 
   onEditIsPin(data: Notes) {
     var isPin = !data.isPin;
     data.isPin = isPin;
+    data.isNote = true;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
         data?.recID,
-        data
+        data,
       ])
       .subscribe((res) => {
-        this.dataValue = '';
-       // this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
-        var object = [{ data: data, type: 'edit' }]
+        // this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
+        var object = [{ data: data, type: 'edit' }];
         this.noteService.data.next(object);
         this.changeDetectorRef.detectChanges();
       });
@@ -237,7 +290,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          var object = [{ data: res, type: 'delete' }]
+          var object = [{ data: res, type: 'delete' }];
           this.noteService.data.next(object);
         }
       });
@@ -247,10 +300,13 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     var obj = {
       itemUpdate: item,
     };
-    this.callfc.openForm(SaveNoteComponent, 'Cập nhật ghi chú', 900, 650, '', obj);
-  }
-
-  getMoreF(item) {
-    this.dataUpdate = item;
+    this.callfc.openForm(
+      SaveNoteComponent,
+      'Cập nhật ghi chú',
+      900,
+      650,
+      '',
+      obj
+    );
   }
 }
