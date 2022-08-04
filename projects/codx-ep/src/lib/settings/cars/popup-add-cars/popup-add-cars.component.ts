@@ -36,6 +36,7 @@ export class PopupAddCarsComponent implements OnInit {
   dialog: any;
   headerText = 'Thêm mới xe';
   subHeaderText = 'Thêm mới xe';
+  
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
@@ -113,7 +114,7 @@ export class PopupAddCarsComponent implements OnInit {
 
   beforeSave(option: any) {
     let itemData = this.dialogAddCar.value;
-    option.method = 'AddEditItemAsync';
+    option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }

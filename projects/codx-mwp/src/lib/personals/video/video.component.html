@@ -1,29 +1,58 @@
-<codx-listview #listView entityName="DM_FileInfo" gridViewName="grvFileInfo" [predicate]="predicate"
-    [dataValue]="dataValue" [itemTemplate]="" type="cardView" formName="FileInfo" service="DM">
-</codx-listview>
+<div class="pw-storgae">
+  <div
+    class="hover-scroll-overlay-y"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto"
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".codx-wrapper, .wrapper, .pw-storgae, .pw-content"
+    data-kt-scroll-offset="0px"
+  >
+    <codx-listview
+      #listView
+      entityName="DM_FileInfo"
+      gridViewName="grvFileInfo"
+      [predicate]="predicate"
+      [dataValue]="dataValue"
+      [itemTemplate]="templateListCard"
+      type="cardView"
+      formName="FileInfo"
+      service="DM"
+    >
+    </codx-listview>
 
-<!-- <ng-template #templateListCard let-item>
-    <div class="pw-listcard">
+    <ng-template #templateListCard let-item>
+      <div class="pw-listcard" *ngIf="item.srcVideo">
         <div class="pw-card">
-            <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
-                <video #video controls class="w-100 rounded bg-secondary h-150px mh-150px">
-                    <source [src]="item.srcVideo || item.data" type="video/mp4">
-                </video>
-            </ng-container>
+          <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
+            <video
+              #video
+              controls
+              class="w-100 rounded bg-secondary h-150px mh-150px"
+            >
+              <source [src]="item.srcVideo" type="video/mp4" />
+            </video>
+          </ng-container>
         </div>
-    </div>
-</ng-template> -->
+      </div>
+    </ng-template>
 
-<div *ngIf="file_video.length > 0">
-    <div class="pw-listcard">
+    <!-- <div *ngIf="file_video.length > 0">
+      <div class="pw-listcard">
         <div *ngFor="let item of file_video">
-            <div class="pw-card">
-                <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
-                    <video #video controls class="w-100 rounded bg-secondary h-150px mh-150px">
-                        <source [src]="item.srcVideo || item.data" type="video/mp4">
-                    </video>
-                </ng-container>
-            </div>
+          <div class="pw-card">
+            <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
+              <video
+                #video
+                controls
+                class="w-100 rounded bg-secondary h-150px mh-150px"
+              >
+                <source [src]="item.srcVideo || item.data" type="video/mp4" />
+              </video>
+            </ng-container>
+          </div>
         </div>
-    </div>
+      </div>
+    </div> -->
+  </div>
 </div>

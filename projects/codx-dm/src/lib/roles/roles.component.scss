@@ -4,13 +4,18 @@
     bottom: 0;
 }
 
-.user-nav-item.user-nav-active {
-    background-color: #f4f7ff;
-    border-left: 3px solid #3699ff;
+.user-nav-item {
+    border-left: 3px solid transparent;
 }
 
-.role-left .user-mini-nav, .role-right {
-    max-height: calc(100vh - 200px)!important;
+.user-nav-item.user-nav-active {
+    background-color: #f4f7ff;
+    border-left-color: #3699ff;
+}
+
+.role-left .user-mini-nav,
+.role-right {
+    max-height: calc(100vh - 200px) !important;
     overflow: auto;
 }
 
@@ -37,12 +42,14 @@ th {
 //     padding: 10px 15px;
 //     font-size: 13px;
 // }
-.table thead td, .table thead th {
-    font-weight: 600;
+.table thead td,
+.table thead th {
+    font-weight: 500;
     font-size: 1rem;
     border-bottom-width: 1px;
     padding-top: 1rem;
     padding-bottom: 1rem;
+    color: var(--text-dark);
 }
 
 .table thead th {

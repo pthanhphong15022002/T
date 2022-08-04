@@ -74,7 +74,6 @@ export class RangesKanbanComponent implements OnInit {
     }];
     this.view.dataService.methodSave = '';
     this.view.dataService.methodDelete = '';
-
   }
   //#endregion
 

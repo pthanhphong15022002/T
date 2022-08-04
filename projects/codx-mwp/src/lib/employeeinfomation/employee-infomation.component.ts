@@ -72,6 +72,7 @@ export class EmployeeInfomationComponent implements OnInit {
   @ViewChild('header') header: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
   itemSelected: any;
+  employeeID: any;
 
   //currentSection = 'InfoPersonal';
   constructor(
@@ -193,6 +194,16 @@ export class EmployeeInfomationComponent implements OnInit {
         this.ExperencesCurrent = exp.CurrentCompany;
     }
   }
+
+  getQueryParams() {
+    this.routeActive.queryParams.subscribe((params) => {
+      if (params) {
+        this.employeeID = params.employeeID;
+        this.dataValue = this.employeeID;
+      }
+    });
+  }
+
   loadEmployee(employeeID, cb?) {
     if ((typeof employeeID === 'object')) {
       if (employeeID.Employee) // employee
