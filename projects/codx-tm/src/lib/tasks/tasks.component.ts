@@ -916,7 +916,7 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM008',
-      action: 'verrify',
+      action: 'verify',
     };
     this.dialogVerifyStatus = this.callfc.openForm(
       PopupConfirmComponent,
