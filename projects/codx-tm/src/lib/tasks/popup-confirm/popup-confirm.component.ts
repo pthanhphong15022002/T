@@ -50,7 +50,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.vllConfirm = this.data.vll;
     this.task = this.data?.data;
     this.action = this.data?.action;
-    this.fieldComments() ;
+    this.fieldComments();
     this.moreFunc = this.data.moreFunc;
     this.title = this.moreFunc.customName;
     this.url = this.moreFunc.url;
@@ -65,8 +65,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
 
   valueChange(data) {
-    if (data.field) {
-      this.task[data.field] = data?.data ? data?.data : '';
+    if (data?.data) {
+      this.comment = data?.data ? data?.data : '';
     }
     this.changeDetectorRef.detectChanges;
   }
@@ -97,19 +97,21 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   }
 
   saveConfirmStatus() {
-    this.task.confirmComment =this.comment;
+    this.task.confirmComment = this.comment;
     if (
       this.task.confirmStatus == '3' &&
-      (!this.task.confirmComment || this.task.confirmComment.trim() == '')
+      (this.task.confirmComment ==null || this.task.confirmComment.trim() == '')
     ) {
       this.notiService.notifyCode('TM019');
       return;
     }
     ///xu ly save
     this.api
-      .execSv('TM', 'TM', 'TaskBusiness', 'ConfirmStatusTaskAsync', [
-        this.task,
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'ConfirmStatusTaskAsync', [
         this.funcID,
+        this.task.taskID,
+        this.task.confirmStatus,
+        this.task.confirmComment,
       ])
       .subscribe((res) => {
         if (res) {
@@ -121,12 +123,14 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   }
 
   saveExtendStatus() {
-    this.task.extendComment =this.comment;
+    // this.task.extendComment =this.comment; ko cos field nafy
     ///xu ly save
     this.api
-      .execSv('TM', 'TM', 'TaskBusiness', 'ExtendStatusTaskAsync', [
-        this.task,
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'ExtendStatusTaskAsync', [
         this.funcID,
+        this.task.taskID,
+        this.task.extendStatus,
+        this.comment,
       ])
       .subscribe((res) => {
         if (res) {
@@ -138,12 +142,14 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   }
 
   saveApproveStatus() {
-    this.task.approveComment =this.comment;
+    // this.task.approveComment = this.comment;
     ///xu ly save
     this.api
-      .execSv('TM', 'TM', 'TaskBusiness', 'ApproveStatusTaskAsync', [
-        this.task,
+    .execSv<any>('TM', 'TM', 'TaskBusiness', 'ApproveStatusTaskAsync', [
         this.funcID,
+        this.task.taskID,
+        this.task.approveStatus,
+        this.comment,
       ])
       .subscribe((res) => {
         if (res) {
@@ -155,12 +161,14 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   }
 
   saveVerifyStatus() {
-    this.task.verifyComment =this.comment;
+    // this.task.verifyComment = this.comment;
     ///xu ly save
     this.api
-      .execSv('TM', 'TM', 'TaskBusiness', 'VerifyStatusTaskAsync', [
-        this.task,
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'VerifyStatusTaskAsync', [
         this.funcID,
+        this.task.taskID,
+        this.task.verifyStatus,
+        this.comment,
       ])
       .subscribe((res) => {
         if (res) {
@@ -174,16 +182,16 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   fieldComments() {
     switch (this.action) {
       case 'confirm':
-        this.fieldComment ="ConfirmComment";
+        this.fieldComment = 'ConfirmComment';
         break;
       case 'extend':
-        this.fieldComment ="ExtendComment";
+        this.fieldComment = 'ExtendComment';
         break;
       case 'approve':
-        this.fieldComment ="ApproveComment";
+        this.fieldComment = 'ApproveComment';
         break;
       case 'verify':
-        this.fieldComment ="VerifyComment";
+        this.fieldComment = 'VerifyComment';
         break;
     }
   }

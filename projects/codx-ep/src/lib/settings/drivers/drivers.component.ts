@@ -60,7 +60,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       {
         sameData: true,
         id: '1',
-        text: 'Danh mục tài xế',
+        text: 'Danh mục lái xe',
         type: ViewType.grid,
         active: true,
         model: {

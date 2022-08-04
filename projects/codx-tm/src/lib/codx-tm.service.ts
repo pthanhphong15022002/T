@@ -201,7 +201,7 @@ export class CodxTMService {
       [predicate, dataValue]
     );
   }
-
+  //update status
   setStatusTask(
     funcID: string,
     id: string,
@@ -216,6 +216,22 @@ export class CodxTMService {
       'TaskBusiness',
       'SetStatusTaskAsync',
       [funcID, id, status, datacomplete, hour, comment]
+    );
+  }
+  //update tien độ thực hiện
+  updateProgressTask(
+    funcID: string,
+    id: string,
+    modifiedOn: Date,
+    percentage: string,
+    comment: string
+  ) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'UpdateProgressTaskAsync',
+      [funcID, id, modifiedOn, percentage, comment]
     );
   }
 
@@ -456,7 +472,7 @@ export class CodxTMService {
   //   param.ConfirmControl = taskGroup.confirmControl;
   //   param.EditControl = taskGroup.editControl;
   //   param.LocationControl = taskGroup.locationControl;
-  //   param.MaxHours = taskGroup.maxHours;
+  //   param.MaxHours = taskGroup.maxHours.toString();
   //   param.MaxHoursControl = taskGroup.maxHoursControl;
   //   param.PlanControl = taskGroup.planControl;
   //   param.ProjectControl = taskGroup.projectControl;

@@ -50,6 +50,7 @@ import { EditSkillComponent } from './employeeinfomation/edit-skill/edit-skill.c
 import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-skill/pop-add-skill.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layoutOnlyHeader/layoutOnlyHeader.component';
+import { ListDetailNoteBooksComponent } from './personals/note-books/detail/list-detail-note-books/list-detail-note-books.component';
 
 export const routes: Routes = [
   {
@@ -102,6 +103,7 @@ const Component: Type<any>[] = [
   EditHobbyComponent,
   EditExperenceComponent,
   EditRelationComponent,
+  ListDetailNoteBooksComponent,
 ];
 
 @NgModule({
@@ -126,7 +128,7 @@ const Component: Type<any>[] = [
   exports: [
     RouterModule,
   ],
-  declarations: [Component, EditSkillComponent, PopAddSkillComponent],
+  declarations: [Component, EditSkillComponent, PopAddSkillComponent, ListDetailNoteBooksComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     AreaSeriesService,

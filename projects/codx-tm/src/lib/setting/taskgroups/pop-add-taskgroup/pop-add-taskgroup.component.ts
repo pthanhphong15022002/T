@@ -1,6 +1,24 @@
-import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, CodxGridviewComponent, DialogData, DialogRef, NotificationsService, ViewsComponent, FormModel } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  CodxGridviewComponent,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  ViewsComponent,
+  FormModel,
+  CallFuncService,
+} from 'codx-core';
 import { AnyARecord } from 'dns';
 import { Observable, Subject } from 'rxjs';
 import { CodxTMService } from '../../../codx-tm.service';
@@ -11,13 +29,14 @@ import { TM_TaskGroups } from '../../../models/TM_TaskGroups.model';
 @Component({
   selector: 'lib-pop-add-taskgroup',
   templateUrl: './pop-add-taskgroup.component.html',
-  styleUrls: ['./pop-add-taskgroup.component.css']
+  styleUrls: ['./pop-add-taskgroup.component.css'],
 })
 export class PopAddTaskgroupComponent implements OnInit {
   @Input() taskGroups = new TM_TaskGroups();
 
   @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('addLink', { static: true }) addLink;
 
   user: any;
   STATUS_TASK_GOAL = StatusTaskGoal;
@@ -30,23 +49,38 @@ export class PopAddTaskgroupComponent implements OnInit {
   listTodo: any;
   todoAddText: any;
   title = 'Tạo mới công việc';
-  formName = "";
-  gridViewName = "";
+  formName = '';
+  gridViewName = '';
   gridViewSetUp: any;
-
-  entityName = "";
+  checked: any;
+  entityName = '';
   readOnly = false;
-  action = "";
+  action = '';
   dialog: any;
   isAfterRender = false;
   isAddMode = true;
+
+  listCombobox = {
+    U: 'Share_Users_Sgl',
+    P: 'Share_Positions_Sgl',
+    R: 'Share_UserRoles_Sgl',
+  };
+
+  listCombobox1 = {
+    P: 'Share_Positions_Sgl',
+    R: 'Share_UserRoles_Sgl',
+  };
+
   constructor(
     private authStore: AuthStore,
     private cache: CacheService,
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
+    private callfc: CallFuncService,
+    private notiService: NotificationsService,
     @Optional() dialog?: DialogRef,
-    @Optional() dt?: DialogData,) {
+    @Optional() dt?: DialogData
+  ) {
     this.getParam();
     // this.taskGroups = {
     //   ...this.taskGroups,
@@ -58,21 +92,18 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
-
   }
 
   ngOnInit(): void {
     //   this.initForm();
-    this.cache.gridViewSetup('TaskGroups', 'grvTaskGroups').subscribe(res => {
-      if (res)
-        this.gridViewSetup = res
-    })
+    this.cache.gridViewSetup('TaskGroups', 'grvTaskGroups').subscribe((res) => {
+      if (res) this.gridViewSetup = res;
+    });
 
     if (this.taskGroups.checkList) {
-      for (let item of this.taskGroups.checkList.split(";")) {
-        if (this.listTodo == null)
-          this.listTodo = []
-        var todo = new ToDo;
+      for (let item of this.taskGroups.checkList.split(';')) {
+        if (this.listTodo == null) this.listTodo = [];
+        var todo = new ToDo();
         todo.status = true;
         todo.text = item;
         this.listTodo.push(Object.assign({}, todo));
@@ -80,7 +111,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     }
     this.changDetec.detectChanges();
     // this.openForm(this.taskGroups, false);
-    this.getGridViewSetUp()
+    this.getGridViewSetUp();
   }
 
   getParam(callback = null) {
@@ -101,38 +132,38 @@ export class PopAddTaskgroupComponent implements OnInit {
   }
 
   onDeleteTodo(index) {
-    this.listTodo.splice(index, 1);//remove element from array
+    this.listTodo.splice(index, 1); //remove element from array
     this.changDetec.detectChanges();
   }
 
   onAddToDo() {
-    if (this.listTodo == null)
-      this.listTodo = [];
-    var todo = new ToDo;
+    if (this.listTodo == null) this.listTodo = [];
+    var todo = new ToDo();
     todo.status = false;
     todo.text = this.todoAddText;
     this.listTodo.push(Object.assign({}, todo));
     //this.listTodo.push(this.todoAddText);
     this.enableAddtodolist = !this.enableAddtodolist;
-    this.todoAddText = "";
+    this.todoAddText = '';
     this.changDetec.detectChanges();
   }
 
-  getGridViewSetUp(){
+  getGridViewSetUp() {
     this.cache.functionList(this.functionID).subscribe((func) => {
-      console.log('functuonID: ',func);
-      this.cache.gridViewSetup(func?.formName, func?.gridViewName).subscribe((grd) => {
-        this.gridViewSetUp = grd;
-        console.log('gridViewSetUp: ',this.gridViewSetUp);
-      })
-    })
+      console.log('functuonID: ', func);
+      this.cache
+        .gridViewSetup(func?.formName, func?.gridViewName)
+        .subscribe((grd) => {
+          this.gridViewSetUp = grd;
+          console.log('gridViewSetUp: ', this.gridViewSetUp);
+        });
+    });
   }
 
   addTodolist() {
     if (this.enableAddtodolist) {
       this.enableAddtodolist = false;
-    }
-    else {
+    } else {
       this.enableAddtodolist = true;
     }
   }
@@ -154,15 +185,26 @@ export class PopAddTaskgroupComponent implements OnInit {
   }
   valueList(data) {
     this.taskGroups[data.field] = data.data;
-
   }
 
-  valueWitch(data){
-    if(data.data == true){
+  valueWitch(data) {
+    if (data.data == true) {
       this.taskGroups[data.field] = '1';
-    }else{
+    } else {
       this.taskGroups[data.field] = '0';
     }
+  }
+
+  changeHours(e){
+    console.log(e);
+    var numberValue = Number(e.data);
+    if(numberValue >= 0 && numberValue <= 8){
+      this.taskGroups.maxHours = numberValue;
+    }else{
+      this.notiService.notifyCode('Vui lòng nhập giá trị lớn hơn 0 hoặc nhỏ hơn 9');
+      this.taskGroups.maxHours = 1;
+    }
+
   }
   // valuePro(data) {
   //   this.taskGroups.projectControl = data.data;
@@ -172,10 +214,54 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   // }
   valueCheck(data) {
-    this.taskGroups.checkListControl = data.data
+    this.taskGroups.checkListControl = data.data;
   }
+
+  valueCbx(e) {
+    console.log(e);
+    var verifyByType = '';
+    switch (e[0].objectType) {
+      case 'U':
+        verifyByType += e[0].objectType;
+        break;
+      case 'R':
+        verifyByType += e[0].objectType;
+        break;
+      case 'P':
+        verifyByType += e[0].objectType;
+        break;
+      case 'TL':
+        verifyByType += e[0].objectType;
+        break;
+    }
+
+    this.taskGroups.verifyByType = verifyByType;
+  }
+
+  valueCbx1(e) {
+    console.log(e);
+    var approveBy = '';
+    switch (e[0].objectType) {
+      case 'S':
+        approveBy += e[0].objectType;
+        break;
+      case 'R':
+        approveBy += e[0].objectType;
+        break;
+      case 'P':
+        approveBy += e[0].objectType;
+        break;
+      case 'TL':
+        approveBy += e[0].objectType;
+        break;
+    }
+
+    this.taskGroups.approveBy = approveBy;
+  }
+
+
   closePanel() {
-    this.dialog.close()
+    this.dialog.close();
     //this.viewBase.currentView.closeSidebarRight();
   }
 
@@ -184,42 +270,57 @@ export class PopAddTaskgroupComponent implements OnInit {
       this.isAddMode = false;
       this.taskGroups = new TM_TaskGroups();
       this.title = 'Chỉnh sửa nhóm công việc';
-      this.api.execSv<any>('TM', 'TM', 'TaskGroupBusiness', 'GetTaskGroupByIdAsync', data.taskGroupID).subscribe((res) => {
-        if (res) {
-          data = res;
-          this.taskGroups = data;
-          if (data.checkList) {
-            for (let item of data.checkList.split(";")) {
-              if (this.listTodo == null)
-                this.listTodo = []
-              var todo = new ToDo;
-              todo.status = true;
-              todo.text = item;
-              this.listTodo.push(Object.assign({}, todo));
+      this.api
+        .execSv<any>(
+          'TM',
+          'TM',
+          'TaskGroupBusiness',
+          'GetTaskGroupByIdAsync',
+          data.taskGroupID
+        )
+        .subscribe((res) => {
+          if (res) {
+            data = res;
+            this.taskGroups = data;
+            if (data.checkList) {
+              for (let item of data.checkList.split(';')) {
+                if (this.listTodo == null) this.listTodo = [];
+                var todo = new ToDo();
+                todo.status = true;
+                todo.text = item;
+                this.listTodo.push(Object.assign({}, todo));
+              }
             }
+            this.changDetec.detectChanges();
           }
-          this.changDetec.detectChanges();
-
-        }
-      })
+        });
     }
     // this.renderer.addClass(popup, 'drawer-on');
   }
 
+  openShare(share: any) {
+    this.callfc.openForm(share, '', 420, window.innerHeight);
+  }
+
+  openShare1(share: any) {
+    this.callfc.openForm(share, '', 420, window.innerHeight);
+  }
+
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
-    { icon: 'icon-playlist_add_check', text: 'Kiểm soát nhập liệu', name: 'Control' },
+    {
+      icon: 'icon-playlist_add_check',
+      text: 'Kiểm soát nhập liệu',
+      name: 'Control',
+    },
     { icon: 'icon-playlist_add_check', text: 'Việc cần làm', name: 'Job' },
-
   ];
 
   setTitle(e: any) {
-    if(this.action=='add'){
+    if (this.action == 'add') {
       this.title = 'Thêm ' + e;
-
-    }else if(this.action == 'edit'){
+    } else if (this.action == 'edit') {
       this.title = 'Sửa ' + e;
-
     }
     this.changDetec.detectChanges();
   }
@@ -230,18 +331,11 @@ export class PopAddTaskgroupComponent implements OnInit {
     var data = [];
     if (this.isAddMode) {
       op.method = 'AddTaskGroupsAsync';
-      data = [
-        this.taskGroups,
-        this.isAddMode
-      ];
+      data = [this.taskGroups, this.isAddMode];
     } else {
       op.method = 'UpdateTaskGroupsAsync';
-      data = [
-        this.taskGroups,
-        this.isAddMode
-      ];
+      data = [this.taskGroups, this.isAddMode];
     }
-
 
     op.data = data;
     return true;
@@ -278,21 +372,24 @@ export class PopAddTaskgroupComponent implements OnInit {
     if (this.taskGroups.checkListControl == '2') {
       for (let item of this.listTodo) {
         if (item.status == true) {
-          this.lstSavecheckList.push(item.text)
+          this.lstSavecheckList.push(item.text);
         }
       }
 
-      this.taskGroups.checkList = this.lstSavecheckList.join(";");
-      if (this.taskGroups.checkList == "")
-        this.taskGroups.checkList = null;
-    }
-    else {
+      this.taskGroups.checkList = this.lstSavecheckList.join(';');
+      if (this.taskGroups.checkList == '') this.taskGroups.checkList = null;
+    } else {
       this.taskGroups.checkList = null;
     }
+
     if (this.isAddMode) {
       return this.addRow();
     }
     return this.updateRow();
   }
 
+
+  openPopupLink() {
+    this.callfc.openForm(this.addLink, '', 500, 300);
+  }
 }

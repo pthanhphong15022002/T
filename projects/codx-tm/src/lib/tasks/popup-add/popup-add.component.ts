@@ -420,7 +420,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     if (
       this.param?.LocationControl == '2' &&
-      (!this.task.location || this.task.location.trim() != '')
+      (this.task.location == null || this.task?.location.trim() == '')
     ) {
       this.notiService.notifyCode('TM029');
       return;
@@ -955,7 +955,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.param.ConfirmControl = taskGroup.confirmControl;
     this.param.EditControl = taskGroup.editControl;
     this.param.LocationControl = taskGroup.locationControl;
-    this.param.MaxHours = taskGroup.maxHours;
+    this.param.MaxHours = taskGroup.maxHours.toString();
     this.param.MaxHoursControl = taskGroup.maxHoursControl;
     this.param.PlanControl = taskGroup.planControl;
     this.param.ProjectControl = taskGroup.projectControl;

@@ -1,12 +1,20 @@
-<codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [entityName]="'ES_ApprovalTrans'"
-  [method]="'LoadDataAsync'" [assemblyName]="'CM'" [service]="'ES'" [className]="'DataBusiness'"
-   [selectedFirst]="true" idField="recID" 
+<codx-views #view [views]="views" 
+  (buttonClick)="click($event)" 
+  (selectedChange)="valueChange($event)" 
+  [button]="button" 
+  [entityName]="'ES_ApprovalTrans'"
+  [method]="'LoadDataAsync'" 
+  [assemblyName]="'CM'" 
+  [service]="'ES'" [className]="'DataBusiness'"
+  [selectedFirst]="true" 
+  idField="recID" 
   >
 </codx-views>
 <ng-template #itemTemplate let-data>
   <codx-temp-full
     [title]="dvlApproval?.text "
-    [icoCss]="dvlApproval?.icon + ' symbol-40px symbol-label symbol-circle'"
+    [icoCss]="dvlApproval?.icon + ' w-30px d-flex h-30px justify-content-center align-items-center rounded-circle text-white'"
+    [icoStyle]="setStyles(dvlApproval?.color)"
     [statusVll]="gridViewSetup['Status']['referedValue']"
     [status]="data?.status"
     [titleLine]="2"
@@ -19,5 +27,7 @@
   <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
 <ng-template #panelRightRef>
-  
+  <app-approval-view-detail #viewdetail [data]="lstDtDis" [dataItem]="dataItem" [gridViewSetup]="gridViewSetup" [view]="view"
+    (uploaded)="getDtDis($event)">
+  </app-approval-view-detail>
 </ng-template>
