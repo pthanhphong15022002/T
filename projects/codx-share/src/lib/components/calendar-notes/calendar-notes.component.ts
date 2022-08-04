@@ -498,6 +498,7 @@ export class CalendarNotesComponent
   onEditIsPin(data: Notes) {
     var isPin = !data.isPin;
     data.isPin = isPin;
+    data.isNote = true;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
         data?.recID,

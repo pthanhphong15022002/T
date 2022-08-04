@@ -19,7 +19,7 @@ export class DetailNoteBooksComponent extends UIComponent implements OnDestroy {
   item: any;
   columnsGrid;
   funcID = '';
-  predicate = 'TransID=@0';
+  predicate = 'TransID=@0 && IsNote = false';
   dataValue = '';
   button?: ButtonModel;
   itemSelected: any;
@@ -35,6 +35,10 @@ export class DetailNoteBooksComponent extends UIComponent implements OnDestroy {
     assemblyName: '',
     className: '',
   }
+  editMF: any;
+  deleteMF: any;
+  pinMF: any;
+  saveMF: any;
 
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
@@ -64,6 +68,16 @@ export class DetailNoteBooksComponent extends UIComponent implements OnDestroy {
         this.functionList.entityName = res.entityName;
       }
     })
+    this.cache
+    .moreFunction('PersonalNotes', 'grvPersonalNotes')
+    .subscribe((res) => {
+      if (res) {
+        this.editMF = res[2];
+        this.deleteMF = res[3];
+        this.pinMF = res[0];
+        this.saveMF = res[1];
+      }
+    });
     this.codxShareService.hideAside.next(false);
   }
   ngOnDestroy(): void {
