@@ -379,7 +379,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (listTodoCopy != null) {
       listTodoCopy.forEach((td) => {
         var todo = new TaskGoal();
-        todo.status = td.status;
+        todo.status = StatusTaskGoal.NotChecked;
         todo.text = td.text;
         t.listTodo.push(Object.assign({}, todo));
       });
