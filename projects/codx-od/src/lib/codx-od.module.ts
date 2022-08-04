@@ -32,6 +32,7 @@ import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-
 import { SearchingComponent } from './incomming/searching/searching.component';
 import { TabsComponent } from './incomming/tab/tabs.component';
 import { ApprovalComponent } from './approval/approval.component';
+import { ApprovalViewDetailComponent } from './approval/view-detail/view-detail.component';
 
 const routes: Routes = [
   {
@@ -89,7 +90,8 @@ const routes: Routes = [
     FolderComponent,
     SearchingComponent,
     TabsComponent,
-    ApprovalComponent
+    ApprovalComponent,
+    ApprovalViewDetailComponent
   ],
   imports: [RouterModule.forChild(routes),
   CodxCoreModule.forRoot({ environment }),

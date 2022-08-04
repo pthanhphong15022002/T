@@ -21,7 +21,7 @@
         </div>
         <div class="col-12">
              <codx-label fiedName="Reason" formName="TaskExtends" gridViewName="grvTaskExtends" default="Lý do"></codx-label>
-             <codx-input type="textarea" (valueChange)="valueChange($event)" field="reason" [crrValue]="taskExtend?.reason" format="ed2" rows="4"></codx-input>
+             <codx-input type="textarea" (valueChange)="valueChange($event)" field="reason" [crrValue]="taskExtend?.reason ?taskExtend?.reason :''" format="ed2" rows="4"></codx-input>
         </div>
     </div>
   </ng-template>
