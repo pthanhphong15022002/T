@@ -605,6 +605,7 @@ export class RolesComponent implements OnInit {
     }
 
     this.dmSV.fileEditing.next(this.fileEditing);
+    this.changeDetectorRef.detectChanges();
     if (this.modePermission) {
       if (this.type == "file") {
     //    this.onSaveEditingFile(modal);
@@ -620,7 +621,7 @@ export class RolesComponent implements OnInit {
       }
     }
     
-    this.dialog.close();
+    this.dialog.close(this.fileEditing);
     //this.modal
     //modal.dismiss('Cross click');// modal.close();
   }

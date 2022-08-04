@@ -1,11 +1,10 @@
 
 
-<codx-views #codxViews  
+<codx-views #view  
 [service]="service" 
 [entityName]="entityName" 
 idField="recID" 
-[views]="views"
-[autoLoad]="true">
+[views]="views">
 </codx-views>
 
 <ng-template #panelLeftRef>
@@ -29,7 +28,8 @@ idField="recID"
         #viewdetail
         [data]="dataSelected"
         [option]="option"
-        [formModel]="codxViews.formModel"
+        (evtApproval)="clickApprovePost($event)"
+        [formModel]="view.formModel"
     ></app-view-detail>
 </ng-template>
 
@@ -40,7 +40,7 @@ idField="recID"
             [typeMF]="'hover'" 
             (clickMF)="clickMF($event,data)"
             (click)="clickViewDetail(data,entityName)"
-            [formModel]="codxViews.formModel"
+            [formModel]="view.formModel"
             [resourceObjType]="entityName"
             imgCss="me-2"
             cardCss="card-template border-bottom px-2 py-3"
@@ -51,6 +51,7 @@ idField="recID"
             [date]="data.createdOn"
             [status]="data.approveStatus"
             [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']"
+            [dataItem]="data"
             [bookmark]="false">
         </codx-temp-full>
     </ng-container>
@@ -60,7 +61,7 @@ idField="recID"
             [typeMF]="'hover'" 
             (clickMF)="clickMF($event,data)"
             (click)="clickViewDetail(data,entityName)"
-            [formModel]="codxViews.formModel"
+            [formModel]="view.formModel"
             [resourceObjType]="'AD_Users'"
             [resources]="data.createdBy"
             [icoTitleFld]="data.category"
@@ -72,6 +73,7 @@ idField="recID"
             [date]="data.createdOn"
             [status]="data.approveStatus"
             [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']"
+            [dataItem]="data"
             [bookmark]="false">
         </codx-temp-full>
     </ng-template>
