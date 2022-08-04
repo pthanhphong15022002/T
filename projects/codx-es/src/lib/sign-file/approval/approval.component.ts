@@ -204,8 +204,8 @@ export class ApprovalComponent extends UIComponent {
   }
 
   onCreated(evt: any) {
-    this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
-    this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    // this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
+    // this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
   }
 
   loadingAnnot(e: any) {
@@ -1078,14 +1078,14 @@ export class ApprovalComponent extends UIComponent {
   }
 
   pageChange(e: any) {
-    let curImg = this.thumbnailEle.childNodes[
-      e.currentPageNumber - 1
-    ] as Element;
-    curImg.scrollIntoView({
-      behavior: 'auto',
-      block: 'center',
-      inline: 'center',
-    });
+    // let curImg = this.thumbnailEle.childNodes[
+    //   e.currentPageNumber - 1
+    // ] as Element;
+    // curImg.scrollIntoView({
+    //   behavior: 'auto',
+    //   block: 'center',
+    //   inline: 'center',
+    // });
   }
 
   show(e: any) {

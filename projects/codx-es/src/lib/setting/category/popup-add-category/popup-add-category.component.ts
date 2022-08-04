@@ -132,7 +132,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .then((res) => {
         if (res) {
           this.dialogCategory = res;
-          this.isAfterRender = true;
           this.dialogCategory.patchValue({
             eSign: true,
             signatureType: '1',
@@ -196,6 +195,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               });
           }
         }
+        this.isAfterRender = true;
       });
     this.isSaved = false;
     this.cr.detectChanges();

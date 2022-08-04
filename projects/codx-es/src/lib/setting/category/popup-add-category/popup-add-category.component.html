@@ -24,8 +24,8 @@
         <div class="form-group">
           <codx-label default="Tên phân loại" fiedName="CategoryName" [formModel]="form.formModel">
           </codx-label>
-          <codx-input type="text" name="text" field="categoryName" ngDefaultControl cssClass="form-control"
-            [Group]="dialogCategory">
+          <codx-input type="text" name="text" field="categoryName" [crrValue]="dialogCategory.value.categoryName"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
@@ -33,8 +33,8 @@
         <div class="form-group">
           <codx-label default="Mã phân loại" fiedName="CategoryID" [formModel]="form.formModel">
           </codx-label>
-          <codx-input type="text" name="text" field="categoryID" ngDefaultControl cssClass="form-control"
-            [Group]="dialogCategory" disabled="true">
+          <codx-input type="text" name="text" field="categoryID" [crrValue]="dialogCategory.value.categroyID"
+            disabled="true">
           </codx-input>
         </div>
       </div>
