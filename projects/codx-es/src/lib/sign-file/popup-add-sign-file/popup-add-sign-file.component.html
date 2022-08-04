@@ -136,8 +136,8 @@
                     <div class="form-group">
                       <codx-label fiedName="RefNo" [formModel]="formModel" default="Số văn bản">
                       </codx-label>
-                      <codx-input type="text" name="text" [Group]="dialogSignFile" ControlName="refNo"
-                        [disabled]="true">
+                      <codx-input type="text" name="text" [Group]="dialogSignFile" ControlName="refNo" [disabled]="true"
+                        [crrValue]="dialogSignFile.value.refNo">
                       </codx-input>
                     </div>
                   </div>

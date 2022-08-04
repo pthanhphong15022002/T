@@ -35,6 +35,8 @@ export class ApprovalStepComponent implements OnInit {
   headerText = 'Qui trình duyệt';
   subHeaderText;
 
+  lstOldData;
+
   currentStepNo = 1;
   dialog: DialogRef;
   formModel: FormModel;
@@ -47,8 +49,6 @@ export class ApprovalStepComponent implements OnInit {
 
   constructor(
     private cfService: CallFuncService,
-    private api: ApiHttpService,
-    private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notifySvr: NotificationsService,
@@ -98,6 +98,7 @@ export class ApprovalStepComponent implements OnInit {
           if (res && res?.length >= 0) {
             this.lstStep = res;
             this.currentStepNo = this.lstStep.length + 1;
+            this.lstOldData = [...res];
           }
         });
       } else {
@@ -121,8 +122,10 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   saveStep() {
-    this.esService.setApprovalStep(this.lstStep);
-    this.esService.setLstDeleteStep(this.lstDeleteStep);
+    if (this.lstStep != this.lstOldData) {
+      this.esService.setApprovalStep(this.lstStep);
+      this.esService.setLstDeleteStep(this.lstDeleteStep);
+    }
   }
 
   openFormFuncID(val: any, data: any) {}

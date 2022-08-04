@@ -98,7 +98,6 @@ export class PopupAddSignFileComponent implements OnInit {
         if (res) {
           this.dialogSignFile = res;
 
-          this.isAfterRender = true;
           if (this.isAddNew) {
             this.dialogSignFile.patchValue({
               approveStatus: '1',
@@ -123,6 +122,7 @@ export class PopupAddSignFileComponent implements OnInit {
                   refNo: dt,
                 });
               });
+            this.isAfterRender = true;
           } else {
             this.esService
               .getDetailSignFile(this.data?.recID)
@@ -141,6 +141,7 @@ export class PopupAddSignFileComponent implements OnInit {
                   console.log(this.dialogSignFile.value);
 
                   this.cr.detectChanges();
+                  this.isAfterRender = true;
                 }
               });
             this.dialogSignFile.addControl(
@@ -255,7 +256,6 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   saveNewProcessStep(data) {
-    debugger;
     let lstStep = [];
     if (data) {
       data.forEach((element) => {
