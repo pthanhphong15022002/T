@@ -951,7 +951,7 @@ export class TasksComponent extends UIComponent {
       funcID: this.funcID,
     };
     this.dialogProgess = this.callfc.openForm(
-      PopupExtendComponent,
+      PopupUpdateProgressComponent,
       '',
       500,
       350,
@@ -990,7 +990,7 @@ export class TasksComponent extends UIComponent {
         action: 'verrify',
       };
       this.dialogProgess = this.callfc.openForm(
-        PopupUpdateProgressComponent,
+        PopupExtendComponent,
         '',
         500,
         350,
