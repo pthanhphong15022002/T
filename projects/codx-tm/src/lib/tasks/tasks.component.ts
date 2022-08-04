@@ -470,20 +470,20 @@ export class TasksComponent extends UIComponent {
           [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
           option
         );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
-          }
-          this.detectorRef.detectChanges();
-        });
+        // this.dialog.closed.subscribe((e) => {
+        //   if (e?.event == null)
+        //     this.view.dataService.delete(
+        //       [this.view.dataService.dataSelected],
+        //       false
+        //     );
+        //   if (e?.event && e?.event != null) {
+        //     e?.event.forEach((obj) => {
+        //       this.view.dataService.update(e?.event).subscribe();
+        //     });
+        //     this.itemSelected = e?.event;
+        //   }
+        //   this.detectorRef.detectChanges();
+        // });
       });
   }
 
@@ -798,16 +798,16 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM026')
       return;
     }
-    if(data.confirmControl =='0' || data.status > '10'){
-       this.notiService.notifyCode('TM039')
+    if (data.confirmControl == '0' || data.status > '10') {
+      this.notiService.notifyCode('TM039')
       return;
     }
-   
+
     var obj = {
       moreFunc: moreFunc,
       data: data,
       funcID: this.funcID,
-      vll : "TM009",
+      vll: "TM009",
     }
     this.dialogConFirmTask = this.callfc.openForm(
       PopupConfirmComponent,
@@ -832,7 +832,7 @@ export class TasksComponent extends UIComponent {
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
-   // if(data.taskGroupID)this.getTaskGroup(data.taskGroupID)
+    // if(data.taskGroupID)this.getTaskGroup(data.taskGroupID)
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -852,9 +852,9 @@ export class TasksComponent extends UIComponent {
       case 'TMT02015': // cái này phải xem lại , nên có biến gì đó để xét
         this.assignTask(data);
         break;
-        case 'TMT02016':
-        case 'TMT02017': // cái này phải xem lại , nên có biến gì đó để xét
-        this.openConfirmPopup(e.data,data);
+      case 'TMT02016':
+      case 'TMT02017': // cái này phải xem lại , nên có biến gì đó để xét
+        this.openConfirmPopup(e.data, data);
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
