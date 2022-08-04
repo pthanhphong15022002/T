@@ -33,6 +33,7 @@ import { map, Observable, of } from 'rxjs';
   selector: 'codx-attachment',
   templateUrl: './attachment.component.html',
   styleUrls: ['./attachment.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AttachmentComponent implements OnInit {
   user: any;
@@ -449,9 +450,9 @@ export class AttachmentComponent implements OnInit {
     //this.disEdit.agencyName = this.dispatch.AgencyName = event.data
   }
   //fetch () : Observable<any[]> 
-  saveFilesObservable(): Observable<any[]> {  
-    this.atSV.fileListAdded = [];  
-    return this.onMultiFileSaveObservable();    
+  saveFilesObservable(): Observable<any[]> {
+    this.atSV.fileListAdded = [];
+    return this.onMultiFileSaveObservable();
   };
 
   onMultiFileSaveObservable(): Observable<any[]> {
@@ -459,11 +460,11 @@ export class AttachmentComponent implements OnInit {
       this.data = [];
 
     let total = this.fileUploadList.length;
-  //  var that = this;
+    //  var that = this;
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectId = this.objectId;
     }
-   
+
     if (total > 1) {
       return this.fileService.addMultiFileObservable(this.fileUploadList).pipe(
         map(res => {
@@ -471,12 +472,12 @@ export class AttachmentComponent implements OnInit {
             var newlist = res.filter(x => x.status == 6);
             var newlistNot = res.filter(x => x.status == -1);
             var addList = res.filter(x => x.status == 0 || x.status == 9);
-  
+
             for (var i = 0; i < addList.length; i++) {
               this.data.push(Object.assign({}, addList[i]));
               this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
             }
-  
+
             if (addList.length == this.fileUploadList.length) {
               this.atSV.fileList.next(this.fileUploadList);
               this.atSV.fileListAdded = addList;
@@ -488,7 +489,7 @@ export class AttachmentComponent implements OnInit {
             }
             else {
               var item = newlist[0];
-              var newUploadList = [];          
+              var newUploadList = [];
               // copy list
               for (var i = 0; i < this.fileUploadList.length; i++) {
                 var file = this.fileUploadList[i];
@@ -506,7 +507,7 @@ export class AttachmentComponent implements OnInit {
                 this.fileUploadList = newUploadList;
                 var config = new AlertConfirmInputConfig();
                 config.type = "checkBox";
-                return  this.notificationsService.alert(this.titlemessage, item.message, config).closed.pipe(
+                return this.notificationsService.alert(this.titlemessage, item.message, config).closed.pipe(
                   map(x => {
                     if (x.event.status == "Y") {
                       // save all
@@ -555,20 +556,20 @@ export class AttachmentComponent implements OnInit {
               }
             }
           }
-        })      
-      );      
+        })
+      );
     }
     else if (total == 1) {
       return this.addFileObservable(this.fileUploadList[0]);
-     // this.atSV.fileList.next(this.fileUploadList);
+      // this.atSV.fileList.next(this.fileUploadList);
     }
-    else {      
+    else {
       this.notificationsService.notify(this.title2);
-      return null;      
+      return null;
     }
   }
 
-  testObservable(){
+  testObservable() {
     return true;
   }
 
@@ -690,10 +691,10 @@ export class AttachmentComponent implements OnInit {
         if (item.status == 0) {
           if (this.showMessage == "1")
             this.notificationsService.notify(item.message);
-          this.fileUploadList[0].recID = item.data.recID;          
-          this.atSV.fileListAdded.push(Object.assign({}, item));    
-          this.data.push(Object.assign({}, item));         
-          this.fileUploadList = [];               
+          this.fileUploadList[0].recID = item.data.recID;
+          this.atSV.fileListAdded.push(Object.assign({}, item));
+          this.data.push(Object.assign({}, item));
+          this.fileUploadList = [];
           return item;
         }
         else if (item.status == 6) {
@@ -702,50 +703,51 @@ export class AttachmentComponent implements OnInit {
           return this.rewriteFileObservable(this.titlemessage, item.message, fileItem);
         }
         else {
-           this.notificationsService.notify(item.message);           
+          this.notificationsService.notify(item.message);
         }
 
         return null;
       })
-    );    
+    );
   }
 
   rewriteFileObservable(title: any, message: any, item: FileUpload): Observable<any> {
     var config = new AlertConfirmInputConfig();
     config.type = "YesNo";
-    return  this.notificationsService.alert(title, message, config).closed.pipe(
+    return this.notificationsService.alert(title, message, config).closed.pipe(
       map(x => {
-        if (x.event.status == "Y") { 
-         // return null;
+        if (x.event.status == "Y") {
+          // return null;
           return this.fileService.updateVersionFileObservable(item).pipe(
             map(res => {
               this.fileUploadList[0].recID = res.data.recID;
-              this.atSV.fileListAdded.push(Object.assign({}, item));           
+              this.atSV.fileListAdded.push(Object.assign({}, item));
               if (this.showMessage == "1")
-                this.notificationsService.notify(res.message);           
+                this.notificationsService.notify(res.message);
               this.fileUploadList = [];
               this.data.push(Object.assign({}, item));
-              return item;              
+              return item;
             })
           )
-        }          
+        }
         return null;
       })
-    );   
+    );
   }
 
   displayThumbnail(id, pathDisk) {
     var that = this;
     if (this.interval == null)
       this.interval = [];
-    var files = this.dmSV.listFiles.getValue();
+    var files = this.dmSV.listFiles;
     var index = setInterval(() => {
       that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
         if (item != null && item != "") {
           let index = files.findIndex(d => d.recID.toString() === id);
           if (index != -1) {
             files[index].thumbnail = item;
-            that.dmSV.listFiles.next(files);
+            that.dmSV.listFiles = files;
+            that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
           }
           let indexInterval = this.interval.findIndex(d => d.id === id);
@@ -762,30 +764,31 @@ export class AttachmentComponent implements OnInit {
     interval.instant = index;
     this.interval.push(Object.assign({}, interval));
   }
-  
+
   addFile(fileItem: any) {
     var that = this;
     var done = this.fileService.addFile(fileItem).toPromise();
     if (done) {
       done.then(item => {
         if (item.status == 0) {
-          var files = this.dmSV.listFiles.getValue();
+          var files = this.dmSV.listFiles;
           if (files == null) files = [];
           var res = item.data;
           res.thumbnail = "../../../assets/img/loader.gif";
           files.push(Object.assign({}, res));
-          this.dmSV.listFiles.next(files);
-          that.changeDetectorRef.detectChanges();
+          this.dmSV.listFiles = files;
+          this.dmSV.ChangeData.next(true);
+          this.changeDetectorRef.detectChanges();
           //this.fileUploadList = [];
-        //  that.displayThumbnail(res.recID, res.pathDisk);
-         // this.notificationsService.notify(item.message);
+          //  that.displayThumbnail(res.recID, res.pathDisk);
+          // this.notificationsService.notify(item.message);
           this.fileUploadList[0].recID = item.data.recID;
           // list.push(Object.assign({}, res));
           this.atSV.fileListAdded.push(Object.assign({}, item));
           // for(var i=0; i<addList.length; i++) {
           this.data.push(Object.assign({}, item));
-                 
-          this.displayThumbnail(item.data.recID, item.data.pathDisk);          
+
+          this.displayThumbnail(item.data.recID, item.data.pathDisk);
           this.dmSV.updateHDD.next(item.messageHddUsed);
           this.notificationsService.notify(item.message);
         }
@@ -800,7 +803,7 @@ export class AttachmentComponent implements OnInit {
         console.log("Promise rejected with " + JSON.stringify(error));
       });
     }
-    this.closePopup();  
+    this.closePopup();
   }
 
   // ngOnDestroy(): void {
@@ -828,7 +831,7 @@ export class AttachmentComponent implements OnInit {
         var done = this.fileService.updateVersionFile(item).toPromise();
         if (done) {
           done.then(async res => {
-            var files = this.dmSV.listFiles.getValue();
+            var files = this.dmSV.listFiles;
             let index = files.findIndex(d => d.recID.toString() === item.recID);
             if (index != -1) {
               res.data.thumbnail = "../../../assets/img/loader.gif";
@@ -836,15 +839,15 @@ export class AttachmentComponent implements OnInit {
               files[index] = res.data;
               files[index].recID = res.data.recID;
             }
-            this.dmSV.listFiles.next(files);
-
+            this.dmSV.listFiles = files;
+            this.dmSV.ChangeData.next(true);
             this.fileUploadList[0].recID = res.data.recID;
             this.atSV.fileListAdded.push(Object.assign({}, item));
             this.data.push(Object.assign({}, item));
-          //  res.data.thumbnail = "../../../assets/img/loader.gif";
-          //  this.displayThumbnail(res.data.recID, res.data.pathDisk);
+            //  res.data.thumbnail = "../../../assets/img/loader.gif";
+            //  this.displayThumbnail(res.data.recID, res.data.pathDisk);
             this.notificationsService.notify(res.message);
-          //  this.closePopup();
+            //  this.closePopup();
             this.fileUploadList = [];
           }).catch((error) => {
             console.log("Promise rejected with " + JSON.stringify(error));
@@ -1049,7 +1052,7 @@ export class AttachmentComponent implements OnInit {
   }
 
 
-  uploadFile() {    
+  uploadFile() {
     var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
     if (ctrl != null)
       ctrl.click();

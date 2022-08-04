@@ -190,6 +190,14 @@ export class SignFileComponent implements OnInit {
     });
   }
 
+  setStyles(color): any {
+    let styles = {
+      backgroundColor: color,
+      color: 'white',
+    };
+    return styles;
+  }
+
   edit(data) {
     // let item = this.codxViews.dataService.dataSelected;
     // if (evt) {

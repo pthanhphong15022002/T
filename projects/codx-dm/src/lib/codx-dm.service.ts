@@ -74,9 +74,13 @@ export class CodxDMService {
     public loadedFolder: boolean;
     public fileUploadList: FileUpload[];
     public dataFileEditing: FileUpload;
+    public listFolder = [];
+    public listFiles = [];
     itemRight: ItemRight;
     // public confirmationDialogService: ConfirmationDialogService;
-    
+    public ChangeData = new BehaviorSubject<boolean>(null);
+    isChangeData = this.ChangeData.asObservable();
+
     public EmptyTrashData = new BehaviorSubject<boolean>(null);
     isEmptyTrashData = this.EmptyTrashData.asObservable();
 
@@ -200,11 +204,11 @@ export class CodxDMService {
     public refreshTree = new BehaviorSubject<string>(null);
     isRefreshTree = this.refreshTree.asObservable();
 
-    public listFolder = new BehaviorSubject<FolderInfo[]>(null);
-    isListFolder = this.listFolder.asObservable();
+    // public listFolder = new BehaviorSubject<FolderInfo[]>(null);
+    // isListFolder = this.listFolder.asObservable();
 
-    public listFiles = new BehaviorSubject<FileInfo[]>(null);
-    islistFiles = this.listFiles.asObservable();
+    // public listFiles = new BehaviorSubject<FileInfo[]>(null);
+    // islistFiles = this.listFiles.asObservable();
 
     public pageNo = new BehaviorSubject<Number>(null);
     isPageNo = this.pageNo.asObservable();
@@ -405,13 +409,14 @@ export class CodxDMService {
                 // this.isDelete = true;
                 if (type == 'file') {
                   this.fileService.deleteFileToTrash(id, this.folderId.getValue(), false).subscribe(async res => {
-                    let list = this.listFiles.getValue();
+                    let list = this.listFiles;
                     //list = list.filter(item => item.recID != id);
                     let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
                     if (index > -1) {
                       list.splice(index, 1);//remove element from array
-                      this.changeData(null, list, id);   
-                      this.listFiles.next(list);
+                      //this.changeData(null, list, id);   
+                      this.listFiles = list;
+                      this.ChangeData.next(true);
                     //  this.changeDetectorRef.detectChanges();
                     }
     
@@ -423,14 +428,15 @@ export class CodxDMService {
                 }
                 else {
                   this.folderService.deleteFolderToTrash(id, false).subscribe(async res => {
-                    let list = this.listFolder.getValue();
+                    let list = this.listFolder;
                     //list = list.filter(item => item.recID != id);
                     let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
                     this.nodeDeleted.next(id);
                     if (index > -1) {
                       list.splice(index, 1);//remove element from array
                       this.nodeDeleted.next(id);
-                      this.listFolder.next(list);
+                      this.listFolder = list;
+                      this.ChangeData.next(true);
                       //  this.dmSV.changeData(list, null, id);                       
                     //  this.changeDetectorRef.detectChanges();
                     }
@@ -452,7 +458,7 @@ export class CodxDMService {
         if (type === 'file') {
           this.fileService.bookmarkFile(id).subscribe(async res => {
             if (res) {
-              let list = that.listFiles.getValue();
+              let list = that.listFiles;
               let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
     
               if (that.idMenuActive == "DMT04") {
@@ -464,7 +470,8 @@ export class CodxDMService {
                 list[index] = res;
               }
             //  this.isBookmark = !this.isBookmark;
-              that.listFiles.next(list);
+              this.listFiles = list;
+              this.ChangeData.next(true);
            //   that.changeDetectorRef.detectChanges();
             }
           });
@@ -474,7 +481,7 @@ export class CodxDMService {
           // alert('bookmarks');
           this.folderService.bookmarkFolder(id).subscribe(async res => {
             if (res) {
-              let list = that.listFolder.getValue();
+              let list = that.listFolder;
               let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
               if (that.idMenuActive == "DMT04") {
                 if (index > -1) {
@@ -491,7 +498,8 @@ export class CodxDMService {
                 }
               }
              // this.isBookmark = !this.isBookmark;
-              that.listFolder.next(list);
+              this.listFolder = list;
+              this.ChangeData.next(true);
               //that.changeDetectorRef.detectChanges();
             }
           });
@@ -616,6 +624,15 @@ export class CodxDMService {
           case "DMT0210": //view file
             this.fileService.getFile(data.recID).subscribe(data => {
                 this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+                var files = this.listFiles;
+                if (files != null) {
+                  let index = files.findIndex(d => d.recID.toString() === data.recID);
+                  if (index != -1) {
+                    files[index] = data;
+                  }
+                  this.listFiles = files;                    
+                  this.ChangeData.next(true);                
+                }
             });
             break;
 
@@ -626,17 +643,26 @@ export class CodxDMService {
                 if (this.checkDownloadRight(file)) {
                 this.fileService.downloadFile(id).subscribe(async res => {
                     if (res && res.content != null) {
-                    let json = JSON.parse(res.content);
-                    var bytes = that.base64ToArrayBuffer(json);
-                    let blob = new Blob([bytes], { type: res.mimeType });
-                    let url = window.URL.createObjectURL(blob);
-                    var link = document.createElement("a");
-                    link.setAttribute("href", url);
-                    link.setAttribute("download", res.fileName);
-                    link.style.display = "none";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                      let json = JSON.parse(res.content);
+                      var bytes = that.base64ToArrayBuffer(json);
+                      let blob = new Blob([bytes], { type: res.mimeType });
+                      let url = window.URL.createObjectURL(blob);
+                      var link = document.createElement("a");
+                      link.setAttribute("href", url);
+                      link.setAttribute("download", res.fileName);
+                      link.style.display = "none";
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }
+                    var files = this.listFiles;
+                    if (files != null) {
+                      let index = files.findIndex(d => d.recID.toString() === id);
+                      if (index != -1) {
+                        files[index].countDownload = files[index].countDownload + 1;
+                      }
+                      this.listFiles = files;                    
+                      this.ChangeData.next(true);                
                     }
                 });
                 }
@@ -758,10 +784,11 @@ export class CodxDMService {
     }
 
     // edit folder
-    changeData(folders: any, files: any, folderId: any) {      
-      this.listFolder.next(folders);        
-      this.listFiles.next(files);        
-    }
+    // changeData(folders: any, files: any, folderId: any) {      
+    //   this.listFolder = folders;        
+    //   this.listFiles = files;        
+    //   this.ChangeData.next(true);
+    // }
 
     emptyTrash() {
       var config = new AlertConfirmInputConfig();
@@ -798,12 +825,13 @@ export class CodxDMService {
         var that = this;
         this.fileService.copyFile(id, fullName, toselectId, 1).subscribe(async res => {
             if (res.status == 0) {
-                let list = this.listFiles.getValue();
+                let list = this.listFiles;
                 // move                                    
                 let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
                 if (index > -1) {
                     list.splice(index, 1);//remove element from array             
-                    this.listFiles.next(list);
+                    this.listFiles = list;
+                    this.ChangeData.next(true);
                 }
                 this.notificationsService.notify(res.message);
             }
@@ -842,13 +870,14 @@ export class CodxDMService {
         var that = this;
         this.folderService.copyFolder(id, fullName, toselectId, 1).subscribe(async res => {
             if (res.status == 0) {
-                let list = this.listFolder.getValue();
+                let list = this.listFolder;
                 this.nodeDeleted.next(id);
                 //list = list.filter(item => item.recID != id);
                 let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
                 if (index > -1) {
                     list.splice(index, 1);//remove element from array
-                    this.listFolder.next(list);
+                    this.listFolder = list;                    
+                    this.ChangeData.next(true);
                 }
             }
 

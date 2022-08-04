@@ -1,6 +1,6 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { CallFuncService, CodxService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
-import { NoteDrawerComponent } from 'projects/codx-share/src/lib/components/note-drawer/note-drawer.component';
+import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-layout',

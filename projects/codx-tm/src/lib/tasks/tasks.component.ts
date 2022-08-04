@@ -21,16 +21,18 @@ import {
   UrlUtil,
   NotificationsService,
   UIComponent,
+  DialogModel,
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { isBuffer } from 'util';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
-import { TM_Parameter } from '../models/TM_Tasks.model';
+import { TM_Parameter, TM_TaskExtends } from '../models/TM_Tasks.model';
 import { PopupAddComponent } from './popup-add/popup-add.component';
 import { PopupConfirmComponent } from './popup-confirm/popup-confirm.component';
 import { PopupExtendComponent } from './popup-extend/popup-extend.component';
+import { PopupUpdateProgressComponent } from './popup-update-progress/popup-update-progress.component';
 import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
@@ -57,11 +59,15 @@ export class TasksComponent extends UIComponent {
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
   resourceTree: ResourceModel;
+  resource: ResourceModel;
+  resourceTaskExtends: ResourceModel;
   dialog!: DialogRef;
   dialogConfirmStatus!: DialogRef;
   dialogExtendsStatus!: DialogRef;
   dialogApproveStatus!: DialogRef;
   dialogVerifyStatus!: DialogRef;
+  dialogProgess!: DialogRef;
+  dialogExtends!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
   endDate: Date;
@@ -88,6 +94,7 @@ export class TasksComponent extends UIComponent {
   vllStatusAssignTasks = 'TM007';
   vllStatus = 'TM004';
   taskGroup: TM_TaskGroups;
+  taskExtend: TM_TaskExtends = new TM_TaskExtends();
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -131,11 +138,11 @@ export class TasksComponent extends UIComponent {
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
 
-    // this.resourceTree = new ResourceModel();
-    // this.resourceTree.assemblyName = 'TM';
-    // this.resourceTree.className = 'TaskBusiness';
-    // this.resourceTree.service = 'TM';
-    // this.resourceTree.method = 'GetListTasksTreeAsync';
+    this.resourceTaskExtends = new ResourceModel();
+    this.resourceTaskExtends.service = 'TM';
+    this.resourceTaskExtends.className = 'TaskExtendsBusiness';
+    this.resourceTaskExtends.assemblyName = 'ERM.Business.TM';
+    this.resourceTaskExtends.method = 'GetListTaskExtendsLogic';
 
     this.button = {
       id: 'btnAdd',
@@ -155,6 +162,7 @@ export class TasksComponent extends UIComponent {
         sameData: true,
         model: {
           template: this.itemViewList,
+          groupBy: 'fieldGroup',
         },
       },
       {
@@ -164,6 +172,7 @@ export class TasksComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
+          groupBy: 'fieldGroup',
         },
       },
       {
@@ -577,7 +586,7 @@ export class TasksComponent extends UIComponent {
     }
   }
   selectedChange(val: any) {
-    this.itemSelected = val.data;
+    this.itemSelected = val?.data;
     this.detectorRef.detectChanges();
   }
 
@@ -809,43 +818,40 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM026');
       return;
     }
-    if (data.confirmControl != '0') {
-      if (data.status > '10') {
-        this.notiService.notifyCode('TM039');
-        return;
-      }
-      var obj = {
-        moreFunc: moreFunc,
-        data: data,
-        funcID: this.funcID,
-        vll: 'TM009',
-        action :"confirm"
-      };
-     var dialogConfirmTask = this.callfc.openForm(
-        PopupConfirmComponent,
-        '',
-        500,
-        350,
-        '',
-        obj
-      );
-      dialogConfirmTask.closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          e?.event.forEach((obj) => {
-            this.view.dataService.update(obj).subscribe();
-          });
-          this.itemSelected = e?.event[0];
-        }
-        this.detectorRef.detectChanges();
-      });
+    // if (data.confirmControl != '0') {
+    if (data.status > '10') {
+      this.notiService.notifyCode('TM039');
+      return;
     }
-    // this.notiService.notifyCode(
-    //   'Cần 1 code mess Hảo ơi  :))'
-    // );
-    else
-      this.notiService.notify(
-        'Bạn không thể thực hiện chức năng này với công việc đang chọn !'
-      );
+    var obj = {
+      moreFunc: moreFunc,
+      data: data,
+      funcID: this.funcID,
+      vll: 'TM009',
+      action: 'confirm',
+    };
+    this.dialogConfirmStatus = this.callfc.openForm(
+      PopupConfirmComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+    this.dialogConfirmStatus.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
+      }
+      this.detectorRef.detectChanges();
+    });
+    // }
+    // else
+    //   this.notiService.notify(
+    //     'Bạn không thể thực hiện chức năng này với công việc đang chọn !'
+    //   );
   }
 
   //#region extends
@@ -855,9 +861,9 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM010',
-      action :"extend"
+      action: 'extend',
     };
-    var dialogExtends = this.callfc.openForm(
+    this.dialogExtendsStatus = this.callfc.openForm(
       PopupConfirmComponent,
       '',
       500,
@@ -865,7 +871,7 @@ export class TasksComponent extends UIComponent {
       '',
       obj
     );
-    dialogExtends.closed.subscribe((e) => {
+    this.dialogExtendsStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
@@ -884,9 +890,9 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM011',
-      action :"approve"
+      action: 'approve',
     };
-    var dialogApprove = this.callfc.openForm(
+    this.dialogApproveStatus = this.callfc.openForm(
       PopupConfirmComponent,
       '',
       500,
@@ -894,7 +900,7 @@ export class TasksComponent extends UIComponent {
       '',
       obj
     );
-    dialogApprove.closed.subscribe((e) => {
+    this.dialogApproveStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
@@ -912,9 +918,9 @@ export class TasksComponent extends UIComponent {
       data: data,
       funcID: this.funcID,
       vll: 'TM008',
-      action :"verrify"
+      action: 'verify',
     };
-    var dialogVerify = this.callfc.openForm(
+    this.dialogVerifyStatus = this.callfc.openForm(
       PopupConfirmComponent,
       '',
       500,
@@ -922,7 +928,7 @@ export class TasksComponent extends UIComponent {
       '',
       obj
     );
-    dialogVerify.closed.subscribe((e) => {
+    this.dialogVerifyStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
@@ -934,6 +940,100 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion
 
+  //#region Cập nhật tiến độ
+  openUpdateProgress(moreFunc, data) {
+    if (data.owner != this.user.userID) {
+      this.notiService.notifyCode('TM052');
+      return;
+    }
+    var obj = {
+      moreFunc: moreFunc,
+      data: data,
+      funcID: this.funcID,
+    };
+    this.dialogProgess = this.callfc.openForm(
+      PopupUpdateProgressComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+    this.dialogProgess.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        e?.event.forEach((obj) => {
+          this.view.dataService.update(obj).subscribe();
+        });
+        this.itemSelected = e?.event[0];
+      }
+      this.detectorRef.detectChanges();
+    });
+    // var option = new DialogModel();
+    // option.FormModel = this.view.currentView.formModel;
+    // this.callfc.openForm(PopupUpdateProgressComponent, null, 600, 400,null,obj,"",option).closed.subscribe(x=>{
+    //   if(x.event)
+    //     this.view.dataService.remove(x.event).subscribe();
+    // });
+  }
+  //#endregion
+
+  //#region Yêu cầu gia hạn
+  openExtendsAction(moreFunc, data) {
+    if (data.owner != this.user.userID) {
+      this.notiService.notifyCode('TM052');
+      return;
+    }
+    // var obj = {
+    //   moreFunc: moreFunc,
+    //   data: data,
+    //   funcID: this.funcID,
+    // };
+    // this.dialogExtends = this.callfc.openForm(
+    //   PopupExtendComponent,
+    //   '',
+    //   500,
+    //   350,
+    //   '',
+    //   obj
+    // );
+
+    if (data.createdBy != data.owner)
+      this.taskExtend.extendApprover = data.createdBy;
+    else this.taskExtend.extendApprover = data.verifyBy;
+    this.taskExtend.dueDate = data.dueDate ;
+    this.api
+      .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync',[this.taskExtend.extendApprover]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.taskExtend.extendApproverName = res.userName;
+          var obj = {
+            moreFunc: moreFunc,
+            data: this.taskExtend,
+            funcID: this.funcID,
+          };
+          this.dialogExtends = this.callfc.openForm(
+            PopupExtendComponent,
+            '',
+            500,
+            350,
+            '',
+            obj
+          );
+          // this.dialogExtends.closed.subscribe((e) => {
+          //   if (e?.event && e?.event != null) {
+          //     e?.event.forEach((obj) => {
+          //       this.view.dataService.update(obj).subscribe();
+          //     });
+          //     this.itemSelected = e?.event[0];
+          //   }
+          //   this.detectorRef.detectChanges();
+          // });
+        }
+      });
+  }
+  //#endregion
+
   //#region Convert
   convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
     this.param.ApproveBy = taskGroup.approveBy;
@@ -942,7 +1042,7 @@ export class TasksComponent extends UIComponent {
     this.param.ConfirmControl = taskGroup.confirmControl;
     this.param.EditControl = taskGroup.editControl;
     this.param.LocationControl = taskGroup.locationControl;
-    this.param.MaxHours = taskGroup.maxHours;
+    this.param.MaxHours = taskGroup.maxHours.toString();
     this.param.MaxHoursControl = taskGroup.maxHoursControl;
     this.param.PlanControl = taskGroup.planControl;
     this.param.ProjectControl = taskGroup.projectControl;
@@ -979,7 +1079,7 @@ export class TasksComponent extends UIComponent {
         this.assignTask(data);
         break;
       case 'TMT02016':
-      case 'TMT02017': 
+      case 'TMT02017':
         this.openConfirmStatusPopup(e.data, data);
         break;
       case 'TMT04011':
@@ -989,11 +1089,16 @@ export class TasksComponent extends UIComponent {
       case 'TMT04021':
       case 'TMT04022':
       case 'TMT04023':
-        this.openApproveStatusPopup(e.data, data);  //danh gia kết qua
+        this.openApproveStatusPopup(e.data, data); //danh gia kết qua
         break;
       case 'TMT04031':
       case 'TMT04032':
         this.openVerifyStatusPopup(e.data, data);
+        break;
+      case 'TMT02018':
+      case 'TMT02026':
+      case 'TMT02035':
+        this.openUpdateProgress(e.data, data);
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
@@ -1004,9 +1109,24 @@ export class TasksComponent extends UIComponent {
       case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
         //???? chắc làm sau ??
         break;
-      default:
+      case 'TMT02011':
+      case 'TMT02012':
+      case 'TMT02013':
+      case 'TMT02014':
         this.changeStatusTask(e.data, data);
         break;
+      case 'TMT02019':
+        this.openExtendsAction(e.data, data);
+        break;
+    }
+  }
+  changeDataMF(e, data) {
+    if (e && data.confirmControl == '0') {
+      e.forEach((x) => {
+        if (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') {
+          x.disabled = true;
+        }
+      });
     }
   }
 

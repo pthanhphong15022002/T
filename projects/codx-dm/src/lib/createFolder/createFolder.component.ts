@@ -254,14 +254,27 @@ export class CreateFolderComponent implements OnInit {
 
   ngOnInit(): void {
     //  this.openForm();
+    this.dmSV.isFileEditing.subscribe(item => {
+      if (item) {
+        this.fileEditing = item;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+
     this.dmSV.isLocation.subscribe(item => {
-      this.location = item;
-      this.fileEditing.location = item;
-      this.changeDetectorRef.detectChanges();
+      if (item) {
+        this.location = item;
+        if (this.fileEditing === undefined)
+          this.fileEditing = new FileUpload;
+        this.fileEditing.location = item;
+        this.changeDetectorRef.detectChanges();
+      }      
     });
 
     this.dmSV.isListSubFolder.subscribe(item => {
       this.listSubFolder = item;
+      if (this.fileEditing === undefined)
+        this.fileEditing = new FileUpload;
       this.fileEditing.subFolder = this.listSubFolder;
       this.changeDetectorRef.detectChanges();
     });
@@ -539,12 +552,13 @@ export class CreateFolderComponent implements OnInit {
       this.fileEditing.folderType = this.dmSV.folderType;
       this.folderService.addFolder(this.fileEditing).subscribe(async res => {
         if (res.status == 0) {
-          var folders = this.dmSV.listFolder.getValue();
+          var folders = this.dmSV.listFolder;
           if (folders == null) folders = [];
           if ((res.data.level != "1" && this.dmSV.idMenuActive == "3") || (res.data.level != "3" && this.dmSV.idMenuActive == "4"))
             that.dmSV.isTree = true;
           folders.push(Object.assign({}, res.data));
-          that.dmSV.listFolder.next(folders);
+          that.dmSV.listFolder = folders;
+          that.dmSV.ChangeData.next(true);
           that.dmSV.addFolder.next(res.data);
           //  that.dmSV.changeData(folders, null, this.dmSV.getFolderId());
           //  that.dmSV.changeAddFolder(res.data);
@@ -574,13 +588,14 @@ export class CreateFolderComponent implements OnInit {
           folder.recID = that.id;
           folder.folderName = that.folderName;
           //  this.dmSV.nodeChange.next(folder);
-          var folders = this.dmSV.listFolder.getValue();
+          var folders = this.dmSV.listFolder;
           let index = folders.findIndex(d => d.recID.toString() === this.id);
           if (index != -1) {
             //   folders[index].folderName = that.folderName;
             folders[index] = item.data;
           }
-          that.dmSV.listFolder.next(folders);
+          that.dmSV.listFolder = folders;
+          that.dmSV.ChangeData.next(true);
           that.dmSV.nodeChange.next(folders[index]);
           that.changeDetectorRef.detectChanges();
           this.modalService.dismissAll();
@@ -605,13 +620,14 @@ export class CreateFolderComponent implements OnInit {
                   that.dmSV.isTree = false;
                   that.dmSV.currentNode = '';
                   that.dmSV.folderId.next(res.data.recID);
-                  var folders = this.dmSV.listFolder.getValue();
+                  var folders = this.dmSV.listFolder;
                   let index = folders.findIndex(d => d.recID.toString() === that.id);
                   if (index > -1) {
                     that.dmSV.nodeDeleted.next(that.id);
                     folders.splice(index, 1);//remove element from array
                   }
-                  that.dmSV.listFolder.next(folders);
+                  that.dmSV.listFolder = folders;
+                  that.dmSV.ChangeData.next(true);
                   this.dialog.close();
                 }
                 else {
