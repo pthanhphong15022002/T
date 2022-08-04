@@ -274,8 +274,7 @@ export class HomeComponent extends UIComponent {
       this.dmSV.disableInput.next(true);
       this.notificationsService.notify(this.titleAccessDenied);
     }
-    ScrollComponent.reinitialization("[data-kt-scroll='true']");
-    ScrollComponent.resize();
+    ScrollComponent.reinitialization();
   }
 
   // checkUserForder(data) {
