@@ -111,7 +111,7 @@
         </div>
       </div>
     </div>
-    <div class="row my-8">
+    <div class="row my-8" *ngIf="listSlider.length > 0">
       <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
         [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
         <ng-template ngbSlide *ngFor="let list of listSlider">
@@ -128,7 +128,7 @@
         </ng-template>
       </ngb-carousel>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="lstGroup.length > 0">
       <ng-container *ngIf="category == CATEGORY.HOME;else grCategory">
         <ng-container *ngFor="let grItem of lstGroup">
           <ng-container *ngFor="let item of grItem">
