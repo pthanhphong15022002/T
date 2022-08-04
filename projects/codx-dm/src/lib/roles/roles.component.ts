@@ -398,12 +398,13 @@ export class RolesComponent implements OnInit {
         if (item.status == 0) {
           let res = item.data;
           if (res != null) {
-            var files = this.dmSV.listFiles.getValue();
+            var files = this.dmSV.listFiles;
             let index = files.findIndex(d => d.recID.toString() === this.id);
             if (index != -1) {
               files[index].fileName = res.fileName;
             }
-            this.dmSV.listFiles.next(files);
+            this.dmSV.listFiles = files;
+            this.dmSV.ChangeData.next(true);
             this.changeDetectorRef.detectChanges();
             if (modal != null)
               this.modalService.dismissAll();

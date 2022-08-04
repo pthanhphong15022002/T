@@ -56,7 +56,7 @@ export class AttachmentComponent implements OnInit {
   titleUpload = 'Upload';
   interval: ItemInterval[];
   intervalCount = 0;
-  //fileUploadList: FileUpload[];
+  fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
   data: any;
@@ -78,7 +78,7 @@ export class AttachmentComponent implements OnInit {
   @Input() hideUploadBtn = "0";
   @Input() hideFolder = "0";
   @Input() hideDes = "0";
-  @Input() hideImageUpload = "1";
+  @Input() hideImageUpload = "0";
   @Input() hideImageThumb = "1";
   @Input() showMessage = "1";
   @Input() displayThumb: string;
@@ -125,7 +125,7 @@ export class AttachmentComponent implements OnInit {
       this.hideBtnSave = data?.data.hideBtnSave;
     }
 
-    this.dmSV.fileUploadList = [];
+    this.fileUploadList = [];
     if (this.folderType == null || this.folderType == "")
       this.folderType = "3";
 
@@ -233,7 +233,7 @@ export class AttachmentComponent implements OnInit {
   }
 
   openPopup() {
-    this.dmSV.fileUploadList = [];
+    this.fileUploadList = [];
     // if (this.type == "center") {
     // }
     // else {
@@ -258,7 +258,7 @@ export class AttachmentComponent implements OnInit {
       this.dialog.close();
     }
 
-    this.dmSV.fileUploadList = [];
+    this.fileUploadList = [];
     this.changeDetectorRef.detectChanges();
   }
 
@@ -458,14 +458,14 @@ export class AttachmentComponent implements OnInit {
     if (this.data == undefined)
       this.data = [];
 
-    let total = this.dmSV.fileUploadList.length;
+    let total = this.fileUploadList.length;
   //  var that = this;
     for (var i = 0; i < total; i++) {
-      this.dmSV.fileUploadList[i].objectId = this.objectId;
+      this.fileUploadList[i].objectId = this.objectId;
     }
    
     if (total > 1) {
-      return this.fileService.addMultiFileObservable(this.dmSV.fileUploadList).pipe(
+      return this.fileService.addMultiFileObservable(this.fileUploadList).pipe(
         map(res => {
           if (res != null) {
             var newlist = res.filter(x => x.status == 6);
@@ -477,21 +477,21 @@ export class AttachmentComponent implements OnInit {
               this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
             }
   
-            if (addList.length == this.dmSV.fileUploadList.length) {
-              this.atSV.fileList.next(this.dmSV.fileUploadList);
+            if (addList.length == this.fileUploadList.length) {
+              this.atSV.fileList.next(this.fileUploadList);
               this.atSV.fileListAdded = addList;
               if (this.showMessage == "1")
                 this.notificationsService.notify(this.title);
               //this.closePopup();
-              this.dmSV.fileUploadList = [];
+              this.fileUploadList = [];
               return this.atSV.fileListAdded;
             }
             else {
               var item = newlist[0];
               var newUploadList = [];          
               // copy list
-              for (var i = 0; i < this.dmSV.fileUploadList.length; i++) {
-                var file = this.dmSV.fileUploadList[i];
+              for (var i = 0; i < this.fileUploadList.length; i++) {
+                var file = this.fileUploadList[i];
                 var index = newlist.findIndex(x => x.data.fileName == file.fileName);
                 if (index > -1) {
                   newUploadList.push(Object.assign({}, file));
@@ -503,7 +503,7 @@ export class AttachmentComponent implements OnInit {
                 return this.atSV.fileListAdded;//this.data;                
               }
               else {
-                this.dmSV.fileUploadList = newUploadList;
+                this.fileUploadList = newUploadList;
                 var config = new AlertConfirmInputConfig();
                 config.type = "checkBox";
                 return  this.notificationsService.alert(this.titlemessage, item.message, config).closed.pipe(
@@ -511,10 +511,10 @@ export class AttachmentComponent implements OnInit {
                     if (x.event.status == "Y") {
                       // save all
                       if (x.event.data) {
-                        for (var i = 0; i < this.dmSV.fileUploadList.length; i++) {
-                          this.dmSV.fileUploadList[i].reWrite = true;
+                        for (var i = 0; i < this.fileUploadList.length; i++) {
+                          this.fileUploadList[i].reWrite = true;
                         }
-                        this.fileService.addMultiFileObservable(this.dmSV.fileUploadList).pipe().subscribe(result => {
+                        this.fileService.addMultiFileObservable(this.fileUploadList).pipe().subscribe(result => {
                           var mess = '';
                           for (var i = 0; i < result.length; i++) {
                             var f = result[i];
@@ -523,30 +523,30 @@ export class AttachmentComponent implements OnInit {
                           }
                           if (this.showMessage == "1")
                             this.notificationsService.notify(mess);
-                          this.dmSV.fileUploadList = [];
+                          this.fileUploadList = [];
                           return this.atSV.fileListAdded;//this.data;
                           //this.closePopup();
                         });
                       }
                       else {
                         // save 1
-                        var index = this.dmSV.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
-                        this.dmSV.fileUploadList[index].reWrite = true;
+                        var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                        this.fileUploadList[index].reWrite = true;
                         this.onMultiFileSaveObservable();
                       }
                     }
                     else if (x.event.status == "N") {
                       // cancel all
                       if (x.event.data) {
-                        this.dmSV.fileUploadList = [];
+                        this.fileUploadList = [];
                         return this.atSV.fileListAdded;//this.data;
                         //this.closePopup();
                       }
                       else {
                         // cancel 1
-                        var index = this.dmSV.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
-                        this.dmSV.fileUploadList.splice(index, 1);//remove element from array
-                        if (this.dmSV.fileUploadList.length > 0)
+                        var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                        this.fileUploadList.splice(index, 1);//remove element from array
+                        if (this.fileUploadList.length > 0)
                           this.onMultiFileSaveObservable();
                       }
                     }
@@ -559,8 +559,8 @@ export class AttachmentComponent implements OnInit {
       );      
     }
     else if (total == 1) {
-      return this.addFileObservable(this.dmSV.fileUploadList[0]);
-     // this.atSV.fileList.next(this.dmSV.fileUploadList);
+      return this.addFileObservable(this.fileUploadList[0]);
+     // this.atSV.fileList.next(this.fileUploadList);
     }
     else {      
       this.notificationsService.notify(this.title2);
@@ -580,14 +580,14 @@ export class AttachmentComponent implements OnInit {
     if (this.data == undefined)
       this.data = [];
 
-    let total = this.dmSV.fileUploadList.length;
+    let total = this.fileUploadList.length;
     var that = this;
     for (var i = 0; i < total; i++) {
-      this.dmSV.fileUploadList[i].objectId = this.objectId;
+      this.fileUploadList[i].objectId = this.objectId;
     }
     this.atSV.fileListAdded = [];
     if (total > 1) {
-      var done = this.fileService.addMultiFile(this.dmSV.fileUploadList).toPromise().then(res => {
+      var done = this.fileService.addMultiFile(this.fileUploadList).toPromise().then(res => {
         if (res != null) {
           var newlist = res.filter(x => x.status == 6);
           var newlistNot = res.filter(x => x.status == -1);
@@ -597,12 +597,12 @@ export class AttachmentComponent implements OnInit {
             this.data.push(Object.assign({}, addList[i]));
           }
 
-          if (addList.length == this.dmSV.fileUploadList.length) {
-            this.atSV.fileList.next(this.dmSV.fileUploadList);
+          if (addList.length == this.fileUploadList.length) {
+            this.atSV.fileList.next(this.fileUploadList);
             this.atSV.fileListAdded = addList;
             this.notificationsService.notify(this.title);
             this.closePopup();
-            this.dmSV.fileUploadList = [];
+            this.fileUploadList = [];
           }
           else {
             var item = newlist[0];
@@ -610,8 +610,8 @@ export class AttachmentComponent implements OnInit {
             //   this.fileUploadList = [];
             //   this.fileUploadList = addList;
             // copy list
-            for (var i = 0; i < this.dmSV.fileUploadList.length; i++) {
-              var file = this.dmSV.fileUploadList[i];
+            for (var i = 0; i < this.fileUploadList.length; i++) {
+              var file = this.fileUploadList[i];
               var index = newlist.findIndex(x => x.data.fileName == file.fileName);
               if (index > -1) {
                 newUploadList.push(Object.assign({}, file));
@@ -622,7 +622,7 @@ export class AttachmentComponent implements OnInit {
               this.closePopup();
             }
             else {
-              this.dmSV.fileUploadList = newUploadList;
+              this.fileUploadList = newUploadList;
               var config = new AlertConfirmInputConfig();
               config.type = "checkBox";
 
@@ -630,10 +630,10 @@ export class AttachmentComponent implements OnInit {
                 if (x.event.status == "Y") {
                   // save all
                   if (x.event.data) {
-                    for (var i = 0; i < this.dmSV.fileUploadList.length; i++) {
-                      this.dmSV.fileUploadList[i].reWrite = true;
+                    for (var i = 0; i < this.fileUploadList.length; i++) {
+                      this.fileUploadList[i].reWrite = true;
                     }
-                    this.fileService.addMultiFile(this.dmSV.fileUploadList).toPromise().then(result => {
+                    this.fileService.addMultiFile(this.fileUploadList).toPromise().then(result => {
                       var mess = '';
                       for (var i = 0; i < result.length; i++) {
                         var f = result[i];
@@ -641,28 +641,28 @@ export class AttachmentComponent implements OnInit {
 
                       }
                       this.notificationsService.notify(mess);
-                      this.dmSV.fileUploadList = [];
+                      this.fileUploadList = [];
                       this.closePopup();
                     });
                   }
                   else {
                     // save 1
-                    var index = this.dmSV.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
-                    this.dmSV.fileUploadList[index].reWrite = true;
+                    var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                    this.fileUploadList[index].reWrite = true;
                     this.onMultiFileSave();
                   }
                 }
                 else if (x.event.status == "N") {
                   // cancel all
                   if (x.event.data) {
-                    this.dmSV.fileUploadList = [];
+                    this.fileUploadList = [];
                     this.closePopup();
                   }
                   else {
                     // cancel 1
-                    var index = this.dmSV.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
-                    this.dmSV.fileUploadList.splice(index, 1);//remove element from array
-                    if (this.dmSV.fileUploadList.length > 0)
+                    var index = this.fileUploadList.findIndex(x => x.fileName == item.data.fileName);
+                    this.fileUploadList.splice(index, 1);//remove element from array
+                    if (this.fileUploadList.length > 0)
                       this.onMultiFileSave();
                   }
                 }
@@ -673,8 +673,8 @@ export class AttachmentComponent implements OnInit {
       });
     }
     else if (total == 1) {
-      this.addFile(this.dmSV.fileUploadList[0]);
-      this.atSV.fileList.next(this.dmSV.fileUploadList);
+      this.addFile(this.fileUploadList[0]);
+      this.atSV.fileList.next(this.fileUploadList);
     }
     else {
       // this.cacheService.message('DM001')
@@ -690,10 +690,10 @@ export class AttachmentComponent implements OnInit {
         if (item.status == 0) {
           if (this.showMessage == "1")
             this.notificationsService.notify(item.message);
-          this.dmSV.fileUploadList[0].recID = item.data.recID;          
+          this.fileUploadList[0].recID = item.data.recID;          
           this.atSV.fileListAdded.push(Object.assign({}, item));    
           this.data.push(Object.assign({}, item));         
-          this.dmSV.fileUploadList = [];               
+          this.fileUploadList = [];               
           return item;
         }
         else if (item.status == 6) {
@@ -719,11 +719,11 @@ export class AttachmentComponent implements OnInit {
          // return null;
           return this.fileService.updateVersionFileObservable(item).pipe(
             map(res => {
-              this.dmSV.fileUploadList[0].recID = res.data.recID;
+              this.fileUploadList[0].recID = res.data.recID;
               this.atSV.fileListAdded.push(Object.assign({}, item));           
               if (this.showMessage == "1")
                 this.notificationsService.notify(res.message);           
-              this.dmSV.fileUploadList = [];
+              this.fileUploadList = [];
               this.data.push(Object.assign({}, item));
               return item;              
             })
@@ -738,14 +738,15 @@ export class AttachmentComponent implements OnInit {
     var that = this;
     if (this.interval == null)
       this.interval = [];
-    var files = this.dmSV.listFiles.getValue();
+    var files = this.dmSV.listFiles;
     var index = setInterval(() => {
       that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
         if (item != null && item != "") {
           let index = files.findIndex(d => d.recID.toString() === id);
           if (index != -1) {
             files[index].thumbnail = item;
-            that.dmSV.listFiles.next(files);
+            that.dmSV.listFiles = files;
+            that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
           }
           let indexInterval = this.interval.findIndex(d => d.id === id);
@@ -761,7 +762,7 @@ export class AttachmentComponent implements OnInit {
     interval.id = id;
     interval.instant = index;
     this.interval.push(Object.assign({}, interval));
-  }
+  } 
   
   addFile(fileItem: any) {
     var that = this;
@@ -769,22 +770,23 @@ export class AttachmentComponent implements OnInit {
     if (done) {
       done.then(item => {
         if (item.status == 0) {
-          var files = this.dmSV.listFiles.getValue();
+          var files = this.dmSV.listFiles;
           if (files == null) files = [];
           var res = item.data;
           res.thumbnail = "../../../assets/img/loader.gif";
           files.push(Object.assign({}, res));
-          this.dmSV.listFiles.next(files);
-          that.changeDetectorRef.detectChanges();
+          this.dmSV.listFiles = files;
+          this.dmSV.ChangeData.next(true);
+          this.changeDetectorRef.detectChanges();
           //this.fileUploadList = [];
-          that.displayThumbnail(res.recID, res.pathDisk);
+        //  that.displayThumbnail(res.recID, res.pathDisk);
          // this.notificationsService.notify(item.message);
-          this.dmSV.fileUploadList[0].recID = item.data.recID;
+          this.fileUploadList[0].recID = item.data.recID;
           // list.push(Object.assign({}, res));
           this.atSV.fileListAdded.push(Object.assign({}, item));
           // for(var i=0; i<addList.length; i++) {
           this.data.push(Object.assign({}, item));
-          this.closePopup();          
+                 
           this.displayThumbnail(item.data.recID, item.data.pathDisk);          
           this.dmSV.updateHDD.next(item.messageHddUsed);
           this.notificationsService.notify(item.message);
@@ -800,6 +802,7 @@ export class AttachmentComponent implements OnInit {
         console.log("Promise rejected with " + JSON.stringify(error));
       });
     }
+    this.closePopup();  
   }
 
   // ngOnDestroy(): void {
@@ -827,12 +830,24 @@ export class AttachmentComponent implements OnInit {
         var done = this.fileService.updateVersionFile(item).toPromise();
         if (done) {
           done.then(async res => {
-            this.dmSV.fileUploadList[0].recID = res.data.recID;
+            var files = this.dmSV.listFiles;
+            let index = files.findIndex(d => d.recID.toString() === item.recID);
+            if (index != -1) {
+              res.data.thumbnail = "../../../assets/img/loader.gif";
+              this.displayThumbnail(res.data.recID, res.data.pathDisk);
+              files[index] = res.data;
+              files[index].recID = res.data.recID;
+            }
+            this.dmSV.listFiles = files;
+            this.dmSV.ChangeData.next(true);
+            this.fileUploadList[0].recID = res.data.recID;
             this.atSV.fileListAdded.push(Object.assign({}, item));
             this.data.push(Object.assign({}, item));
+          //  res.data.thumbnail = "../../../assets/img/loader.gif";
+          //  this.displayThumbnail(res.data.recID, res.data.pathDisk);
             this.notificationsService.notify(res.message);
-            this.closePopup();
-            this.dmSV.fileUploadList = [];
+          //  this.closePopup();
+            this.fileUploadList = [];
           }).catch((error) => {
             console.log("Promise rejected with " + JSON.stringify(error));
           });
@@ -860,10 +875,10 @@ export class AttachmentComponent implements OnInit {
   }
 
   onDeleteUploaded(file: string) {
-    let index = this.dmSV.fileUploadList.findIndex(d => d.fileName.toString() === file.toString()); //find index in your array
+    let index = this.fileUploadList.findIndex(d => d.fileName.toString() === file.toString()); //find index in your array
     if (index > -1) {
-      this.dmSV.fileUploadList.splice(index, 1);//remove element from array
-      //  this.dmSV.fileUploadList.next(this.fileUploadList);
+      this.fileUploadList.splice(index, 1);//remove element from array
+      //  this.fileUploadList.next(this.fileUploadList);
     }
   }
 
@@ -882,8 +897,8 @@ export class AttachmentComponent implements OnInit {
 
 
   sortBy() {
-    if (this.dmSV.fileUploadList != null)
-      return this.dmSV.fileUploadList.sort((a, b) => a.order - b.order)
+    if (this.fileUploadList != null)
+      return this.fileUploadList.sort((a, b) => a.order - b.order)
     else
       return null;
   }
@@ -1044,11 +1059,11 @@ export class AttachmentComponent implements OnInit {
 
   async handleFileInput1(files: FileList) {
 
-    var count = this.dmSV.fileUploadList.length;
+    var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
     for (var i = 0; i < files.length; i++) {
-      let index = this.dmSV.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
+      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
         let no = count + i;
         let data: ArrayBuffer;
@@ -1073,7 +1088,7 @@ export class AttachmentComponent implements OnInit {
         fileUpload.item = files[i];
         fileUpload.folderId = this.folderId;
         fileUpload.permissions = this.remotePermission;
-        this.dmSV.fileUploadList.push(Object.assign({}, fileUpload));
+        this.fileUploadList.push(Object.assign({}, fileUpload));
 
       }
     }
@@ -1081,8 +1096,8 @@ export class AttachmentComponent implements OnInit {
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";
-    //  this.dmSV.fileUploadList.next(this.fileUploadList);
-    this.fileAdded.emit({ data: this.dmSV.fileUploadList });
+    //  this.fileUploadList.next(this.fileUploadList);
+    this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
 
     return false;
@@ -1756,12 +1771,12 @@ export class AttachmentComponent implements OnInit {
 
   async handleFileInput(files: FileInfo[]) {
 
-    var count = this.dmSV.fileUploadList.length;
+    var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
-      let index = this.dmSV.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
+      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
         var data = await this.convertBlobToBase64(files[i].rawFile);
         var fileUpload = new FileUpload();
@@ -1798,17 +1813,17 @@ export class AttachmentComponent implements OnInit {
         //   fileUpload.permissions = this.remotePermission;
         // }
         addedList.push(Object.assign({}, fileUpload));
-        this.dmSV.fileUploadList.push(Object.assign({}, fileUpload));
+        this.fileUploadList.push(Object.assign({}, fileUpload));
 
       }
     }
     //   this.fileAdded.emit({ data: this.fileUploadList });
     //  this.fileCount.emit(data: addedList);
-    this.fileCount.emit({ data: this.dmSV.fileUploadList });
+    this.fileCount.emit({ data: this.fileUploadList });
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";
-    //  this.dmSV.fileUploadList.next(this.fileUploadList);
+    //  this.fileUploadList.next(this.fileUploadList);
     // this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
 

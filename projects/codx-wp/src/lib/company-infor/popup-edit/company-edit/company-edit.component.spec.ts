@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SaveNoteComponent } from './save-note.component';
+import { CompanyEditComponent } from './company-edit.component';
 
-describe('SaveNoteComponent', () => {
-  let component: SaveNoteComponent;
-  let fixture: ComponentFixture<SaveNoteComponent>;
+describe('PopupEditComponent', () => {
+  let component: CompanyEditComponent;
+  let fixture: ComponentFixture<CompanyEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SaveNoteComponent ]
+      declarations: [ CompanyEditComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SaveNoteComponent);
+    fixture = TestBed.createComponent(CompanyEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

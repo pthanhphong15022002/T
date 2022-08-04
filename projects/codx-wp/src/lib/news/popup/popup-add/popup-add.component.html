@@ -13,7 +13,7 @@
                 <span class="text-gray-700 fs-6 ms-1">{{shareText}}</span>
                 <i class="icon-arrow_drop_down icon-18 text-dark"></i>
             </div>
-            <div class="ms-2">
+            <div class="ms-2">  
                 <span class="fs-6" [innerHTML]="shareWith"></span>
             </div>
         </div>
@@ -92,9 +92,13 @@
                             <img class="w-100 h-200px" [src]="fileImage[0].data || fileImage[0].thumbnail" alt="">
                         </div>
                         <div>
-                            <codx-attachment #codxAttachment [functionID]="dialogRef?.formModel.funcID"
-                                [objectType]="dialogRef?.formModel.entityName" [allowMultiFile]="0"
-                                [hideImageUpload]="'1'" [hideUploadBtn]="0" [showMessage]="0"
+                            <codx-attachment #codxAttachment 
+                                [functionID]="dialogRef?.formModel.funcID"
+                                [objectType]="dialogRef?.formModel.entityName" 
+                                [allowMultiFile]="0"
+                                [hideImageUpload]="'1'" 
+                                [objectType]="'WP_News'"
+                                [hideUploadBtn]="0" [showMessage]="0"
                                 (fileCount)="addImage($event)">
                             </codx-attachment>
                         </div>
@@ -149,6 +153,7 @@
                             [objectType]="dialogRef?.formModel.entityName" 
                             [allowMultiFile]="0"
                             [showMessage]="0"
+                            [objectType]="'WP_News'"
                             [hideImageUpload]="'1'"
                             [hideUploadBtn]="0"
                             (fileCount)="addVideo($event)">

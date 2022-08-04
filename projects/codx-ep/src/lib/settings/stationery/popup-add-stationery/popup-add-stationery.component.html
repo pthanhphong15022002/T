@@ -4,7 +4,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formGroup]="dialogStationery"
+  [formGroup]="dialogAddStationery"
   *ngIf="isAfterRender"
 >
   <ng-template popup add #body>
@@ -41,8 +41,8 @@
                       name="text"
                       ControlName="resourceName"
                       field="resourceName"
-                      [crrValue]="dialogStationery.value?.resourceName"
-                      [Group]="dialogStationery"
+                      [crrValue]="dialogAddStationery.value?.resourceName"
+                      [Group]="dialogAddStationery"
                     ></codx-input>
                   </div>
 
@@ -60,7 +60,7 @@
                         type="text"
                         class="form-control"
                         field="groupID"
-                        [crrValue]="dialogStationery.value?.groupID"
+                        [crrValue]="dialogAddStationery.value?.groupID"
                         (valueChange)="valueChange($event)"
                       >
                       </codx-input>
@@ -82,8 +82,8 @@
                         type="text"
                         name="text"
                         ControlName="resourceID"
-                        [crrValue]="dialogStationery.value?.resourceID"
-                        [Group]="dialogStationery"
+                        [crrValue]="dialogAddStationery.value?.resourceID"
+                        [Group]="dialogAddStationery"
                         [refValue]="CbxName['ResourceID']"
                         (valueChange)="valueChange($event)"
                       ></codx-input>
@@ -102,13 +102,13 @@
                     </codx-label>
                     <!--end::Label-->
                     <!-- <codx-combobox service="SYS" name="combobox" placeholder="" ngDefaultControl refValue="Users"
-                        file="reasonID" [pageSize]="5" popupHeight="200px" [allowFilter]=true [Group]="dialogStationery">
+                        file="reasonID" [pageSize]="5" popupHeight="200px" [allowFilter]=true [Group]="dialogAddStationery">
                       </codx-combobox> -->
                     <codx-input
                       type="text"
                       ControlName="location"
-                      [crrValue]="dialogStationery.value?.location"
-                      [Group]="dialogStationery"
+                      [crrValue]="dialogAddStationery.value?.location"
+                      [Group]="dialogAddStationery"
                       (valueChange)="valueChange($event)"
                     >
                     </codx-input>
@@ -127,7 +127,7 @@
                     <div class="position-relative">
                       <codx-input
                         type="combobox"
-                        [crrValue]="dialogStationery.value?.owner"
+                        [crrValue]="dialogAddStationery.value?.owner"
                         ngDefaultControl
                         field="owner"
                         [refValue]="CbxName['Owner']"
@@ -160,7 +160,7 @@
                       ControlName="memo"
                       rows="3"
                       ngDefaultControl
-                      [crrValue]="dialogStationery.value?.memo"
+                      [crrValue]="dialogAddStationery.value?.memo"
                       (valueChange)="valueChange($event)"
                     >
                     </codx-input>
@@ -277,8 +277,8 @@
                       <codx-input
                         type="text"
                         field="availableQty"
-                        [crrValue]="dialogStationery.value?.availableQty"
-                        [Group]="dialogStationery"
+                        [crrValue]="dialogAddStationery.value?.availableQty"
+                        [Group]="dialogAddStationery"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -296,8 +296,8 @@
                       <codx-input
                         type="text"
                         field="reservedQty"
-                        [crrValue]="dialogStationery.value?.reservedQty"
-                        [Group]="dialogStationery"
+                        [crrValue]="dialogAddStationery.value?.reservedQty"
+                        [Group]="dialogAddStationery"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -315,8 +315,8 @@
                         type="text"
                         field="currentQty"
                         ngDefaultControl
-                        [crrValue]="dialogStationery.value?.currentQty"
-                        [Group]="dialogStationery"
+                        [crrValue]="dialogAddStationery.value?.currentQty"
+                        [Group]="dialogAddStationery"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -336,8 +336,8 @@
                         type="text"
                         field="costPrice"
                         ngDefaultControl
-                        [crrValue]="dialogStationery.value?.costPrice"
-                        [Group]="dialogStationery"
+                        [crrValue]="dialogAddStationery.value?.costPrice"
+                        [Group]="dialogAddStationery"
                       ></codx-input>
                       <!--end::Input-->
                     </div>
@@ -360,7 +360,7 @@
                       ControlName="note"
                       rows="3"
                       ngDefaultControl
-                      [crrValue]="dialogStationery.value?.note"
+                      [crrValue]="dialogAddStationery.value?.note"
                       (valueChange)="valueChange($event)"
                     >
                     </codx-input>

@@ -92,19 +92,19 @@ export class DetailComponent implements OnInit {
     //   this.folderService.options.srtColumns = this.dmSV.sortColumn.getValue();
     // });
 
-    this.dmSV.isListFolder.subscribe(res => {     
-      //this.refresh();
-      this.listFolders = res;
-      this.loadedFolder = true;
-      this.changeDetectorRef.detectChanges();
-    });
+    // this.dmSV.isListFolder.subscribe(res => {     
+    //   //this.refresh();
+    //   this.listFolders = res;
+    //   this.loadedFolder = true;
+    //   this.changeDetectorRef.detectChanges();
+    // });
 
-    this.dmSV.islistFiles.subscribe(res => {    
-     // this.refresh();    
-      this.listFiles = res;  
-      this.loadedFile = true;
-      this.changeDetectorRef.detectChanges();
-    });
+    // this.dmSV.islistFiles.subscribe(res => {    
+    //  // this.refresh();    
+    //   this.listFiles = res;  
+    //   this.loadedFile = true;
+    //   this.changeDetectorRef.detectChanges();
+    // });
     // this.dmSV.isAdd.subscribe(res => {
     //   if (res) {
     //     this.refresh();
@@ -330,8 +330,8 @@ export class DetailComponent implements OnInit {
       //  this.dmSV.changeData(res, null, id);
       this.dmSV.isTree = true;
       //  console.log(res);
-      this.dmSV.listFolder.next(res);
-      this.dmSV.listFiles.next(null);
+      // this.dmSV.listFolder.next(res);
+      // this.dmSV.listFiles.next(null);
       this.loadedFolder = true;
       this.changeDetectorRef.detectChanges();
     });
@@ -339,7 +339,7 @@ export class DetailComponent implements OnInit {
     this.fileService.getListActiveFiles(id, "").subscribe(async res => {
       //  this.dmSV.changeData(null, res, id);
       // console.log(res);
-      this.dmSV.listFiles.next(res);
+      // this.dmSV.listFiles.next(res);
       this.loadedFile = true;
       this.changeDetectorRef.detectChanges();
     });
@@ -381,11 +381,7 @@ export class DetailComponent implements OnInit {
         document.body.removeChild(link);
       }
     });
-  }
-
-  openDialogFile() {
-    this.dmSV.openDialog(new FolderInfo())
-  }
+  }  
 
   fileFolderDropped($event) {
     if ($event.source.recID != $event.target.recID) {

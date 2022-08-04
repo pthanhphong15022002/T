@@ -46,14 +46,15 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
   vllDevices = [];
   lstDeviceRoom = [];
   tmplstDevice = [];
-  public headerText: Object = [
+  master: any;
+  headerText: Object = [
     { text: 'Thông tin chung', iconCss: 'icon-info' },
     { text: 'Người đi cùng', iconCss: 'icon-person_add' },
     { text: 'Thông tin khác', iconCss: 'icon-tune' },
   ];
-
   dialog: any;
   isSaveSuccess = false;
+
   constructor(
     private api: ApiHttpService,
     private modalService: NgbModal,
@@ -67,6 +68,7 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
+    this.master = dialog.dataService!.dataSelected;
   }
   ngAfterViewInit(): void {
     if (this.dialog) {
@@ -87,8 +89,6 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
         this.vllDevices = res.datas;
       });
       this.cacheSv.valueList('EP012').subscribe((res) => {
-        console.log('Res: ', res);
-
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
           let device = new Device();
@@ -104,6 +104,7 @@ export class PopupAddBookingCarComponent implements OnInit, AfterViewInit {
           this.CbxName = res;
           console.log('Cbx', this.CbxName);
         });
+      
     });
   }
 

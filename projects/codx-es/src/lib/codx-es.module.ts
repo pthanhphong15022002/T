@@ -83,7 +83,7 @@ const routes: Routes = [
         component: SettingComponent,
       },
       {
-        path: 'setting',
+        path: 'set',
         canActivate: [AuthGuard],
         loadChildren: () =>
           import('./setting/setting-routing.modules').then(

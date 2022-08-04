@@ -33,6 +33,7 @@ export class CO_Meetings{
     modifiedBy: Date;
     online: boolean;
     avataResource: string;
+    userName: string;
 }
 
 export class Resources{

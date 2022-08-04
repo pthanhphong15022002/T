@@ -106,27 +106,37 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     icon: 'icon-info',
     text: 'Thông tin chung',
     name: 'Description',
+    subName: 'Description Info',
+    subText: 'Description Info',
   };
 
   menuJobDes = {
     icon: 'icon-article',
     text: 'Mô tả công việc',
     name: 'JobDescription',
+    subName: 'Job Description',
+    subText: 'Job Description',
   };
   menuAssign = {
     icon: 'icon-person_outline',
     text: 'Phân công cho',
     name: 'AssignTo',
+    subName: 'Assign To',
+    subText: 'Assign To',
   };
   menuListTaskGoal = {
     icon: 'icon-check_box',
     text: 'Công việc cần làm',
     name: 'ListTaskGoal',
+    subName: 'List Task Goal',
+    subText: 'List Task Goal',
   };
   menuRef = {
     icon: 'icon-insert_link',
     text: 'Tham chiếu',
     name: 'Reference',
+    subName: 'Reference',
+    subText: 'Reference',
   };
 
   tabInfo: any[] = [];
@@ -410,7 +420,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     if (
       this.param?.LocationControl == '2' &&
-      (!this.task.location || this.task.location.trim() != '')
+      (this.task.location == null || this.task?.location.trim() == '')
     ) {
       this.notiService.notifyCode('TM029');
       return;

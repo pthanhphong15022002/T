@@ -1,5 +1,5 @@
 <codx-form [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer" [dialog]="dialog"
-  [formControl]="dialogRoom" *ngIf="isAfterRender">
+  [formControl]="dialogAddRoom" *ngIf="isAfterRender">
 </codx-form>
 <ng-template #body>
   <div class="row mb-4">
@@ -9,7 +9,7 @@
       <div class="d-flex position-relative">
         <div class="w-100">
           <codx-input type="text" class="form-control flex-grow-1 me-3 w-100" ControlName="resourceName"
-            [Group]="dialogRoom" [crrValue]="dialogRoom.value.resourceName" (valueChange)="valueCbxChange($event)">
+            [Group]="dialogAddRoom" [crrValue]="dialogAddRoom.value.resourceName" (valueChange)="valueCbxChange($event)">
           </codx-input>
         </div>
         <div class="ms-2 room-icon" style="display: none">
@@ -32,7 +32,7 @@
       <!--end::Label-->
       <!--begin::Input-->
       <codx-input type="valuelist" name="valuelist" ControlName="ranking" [refValue]="CbxName['Ranking']"
-        [crrValue]="dialogRoom.value.ranking" (valueChange)="valueCbxChange($event)">
+        [crrValue]="dialogAddRoom.value.ranking" (valueChange)="valueCbxChange($event)">
       </codx-input>
     </div>
 
@@ -42,14 +42,14 @@
       </codx-label>
       <!--end::Label-->
       <!--begin::Input-->
-      <codx-input type="text" [Group]="dialogRoom" ControlName="area" field="area" [crrValue]="dialogRoom.value.area"
+      <codx-input type="text" [Group]="dialogAddRoom" ControlName="area" field="area" [crrValue]="dialogAddRoom.value.area"
         (valueChange)="valueCbxChange($event)">
       </codx-input>
     </div>
     <div class="col-3">
       <codx-label class="fw-bold" default="Sức chứa(người)" fiedName="Capacity" [formModel]="dialog.formModel">
       </codx-label>
-      <codx-input type="text" ControlName="capacity" [Group]="dialogRoom" field="capacity"
+      <codx-input type="text" ControlName="capacity" [Group]="dialogAddRoom" field="capacity"
         (valueChange)="valueCbxChange($event)">
       </codx-input>
     </div>
@@ -58,7 +58,7 @@
     <div class="col-8">
       <codx-label class="fw-bold" default="Vị trí" fiedName="Location" [formModel]="dialog.formModel">
       </codx-label>
-      <codx-input type="combobox" name="combobox" ngDefaultControl [crrValue]="dialogRoom.value.location"
+      <codx-input type="combobox" name="combobox" ngDefaultControl [crrValue]="dialogAddRoom.value.location"
         field="location" (valueChange)="valueCbxChange($event)">
       </codx-input>
       <!--end::Input-->
@@ -69,7 +69,7 @@
       <codx-label class="fw-bold" default="Đơn vị" fiedName="CompanyID" [formModel]="dialog.formModel">
       </codx-label>
       <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="CbxName['CompanyID']"
-        [crrValue]="dialogRoom.value.companyID" field="companyID" (valueChange)="valueCbxChange($event)">
+        [crrValue]="dialogAddRoom.value.companyID" field="companyID" (valueChange)="valueCbxChange($event)">
       </codx-input>
     </div>
     <!--end::Col-->
@@ -83,14 +83,14 @@
       <codx-label class="fw-bold" default="Người quản lí" fiedName="Owner" [formModel]="dialog.formModel">
       </codx-label>
       <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="CbxName['Owner']"
-        [crrValue]="dialogRoom.value.owner" field="owner" multiple="false" (valueChange)="valueCbxChange($event)">
+        [crrValue]="dialogAddRoom.value.owner" field="owner" multiple="false" (valueChange)="valueCbxChange($event)">
       </codx-input>
     </div>
   </div>
   <div class="row mb-4">
     <div class="col-12">
       <codx-label default="Mô tả" fiedName="Note" [formModel]="dialog.formModel"></codx-label>
-      <codx-input type="textarea" class="test-textarea" field="note" [crrValue]="dialogRoom.value.note" placeholder=""
+      <codx-input type="textarea" class="test-textarea" field="note" [crrValue]="dialogAddRoom.value.note" placeholder=""
         rows="3" ControlName="note" (valueChange)="valueCbxChange($event)">
       </codx-input>
     </div>

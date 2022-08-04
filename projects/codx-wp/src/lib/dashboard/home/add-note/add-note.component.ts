@@ -1,4 +1,9 @@
-import { CodxFormComponent, NotificationsService } from 'codx-core';
+import {
+  CodxFormComponent,
+  CRUDService,
+  DialogModel,
+  NotificationsService,
+} from 'codx-core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { SaveNoteComponent } from './save-note/save-note.component';
 import {
@@ -70,7 +75,6 @@ export class AddNoteComponent implements OnInit {
   maxPinNotes = 0;
   countNotePin = 0;
   component: any;
-  typeEntity = '';
   countValueChange = 0;
   date1: any;
   date2: any;
@@ -115,15 +119,10 @@ export class AddNoteComponent implements OnInit {
       };
       if (this.note.noteType != 'text') this.note.checkList.push(dtt);
       this.listFileUploadEdit = this.note.images;
-      // if (this.note.noteType != 'text') this.addFirstObjectInArray();
     }
     this.getNumberNotePin();
     this.noteType.text = true;
-    this.cache
-      .gridViewSetup('PersonalNotes', 'grvPersonalNotes')
-      .subscribe((res) => {
-        console.log('check gridViewSetup', res);
-      });
+    this.cache.gridViewSetup('Notes', 'grvNotes').subscribe((res) => {});
   }
 
   getNumberNotePin() {
@@ -228,6 +227,23 @@ export class AddNoteComponent implements OnInit {
       var field = e.field;
       var dt = e.data;
       this.note[field] = dt?.value ? dt?.value : dt;
+      if (
+        this.type == 'check' ||
+        this.type == 'list' ||
+        this.note?.noteType == 'check' ||
+        this.note?.noteType == 'list'
+      ) {
+        if (item?.lisNote != '') {
+          if (this.formType == 'edit') this.listNote = this.note.checkList;
+          let i = 0;
+          this.listNote.forEach((data) => {
+            if (i == index) {
+              if (field == 'status') data.status = dt;
+            }
+            i++;
+          });
+        }
+      }
       if (field == 'listNote') {
         if (dt == '' && index !== this.listNote.length - 1) {
           for (var i = 0; i < this.listNote.length; i++) {
@@ -268,23 +284,6 @@ export class AddNoteComponent implements OnInit {
           htmlEle.focus();
         }
       }
-      if (
-        this.type == 'check' ||
-        this.type == 'list' ||
-        this.note?.noteType == 'check' ||
-        this.note?.noteType == 'list'
-      ) {
-        if (item?.lisNote != '') {
-          if (this.formType == 'edit') this.listNote = this.note.checkList;
-          let i = 0;
-          this.listNote.forEach((data) => {
-            if (i == index) {
-              if (field == 'status') data.status = dt;
-            }
-            i++;
-          });
-        }
-      }
       if (field == 'showCalendar') {
         this.checkSwitch == true;
       }
@@ -317,15 +316,16 @@ export class AddNoteComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.typeEntity = 'WP_Notes';
+            var dtNew = res;
+            dtNew.type = 'WP_Notes';
             if (this.checkFile == true) {
-              this.attachment.objectId = res.recID;
+              this.attachment.objectId = dtNew.recID;
               this.attachment.saveFiles();
             }
             var object = [];
             if (this.date2 != undefined)
-              object = [{ data: res, type: 'add-otherDate' }];
-            else object = [{ data: res, type: 'add-currentDate' }];
+              object = [{ data: dtNew, type: 'add-otherDate' }];
+            else object = [{ data: dtNew, type: 'add-currentDate' }];
             this.noteService.data.next(object);
             this.dialog.close();
             if (this.note?.showCalendar == true) {
@@ -395,6 +395,7 @@ export class AddNoteComponent implements OnInit {
 
   onEdit() {
     this.note.createdOn = this.currentDate;
+    this.note.isNote = true;
     if (this.checkPin == true) this.note.isPin = this.pin;
     if (this.listNote.length != 0) this.note.checkList = this.listNote;
     if (this.note.checkList != null) this.note.checkList.pop();
@@ -406,12 +407,14 @@ export class AddNoteComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
+          var dtNew = res;
+          dtNew.type = 'WP_Notes';
           this.checkUpdate = true;
           if (this.checkFile == true) this.attachment.saveFiles();
           var object = [];
           if (this.date2 != undefined)
-            object = [{ data: res, type: 'edit-otherDate' }];
-          else object = [{ data: res, type: 'edit-currentDate' }];
+            object = [{ data: dtNew, type: 'edit-otherDate' }];
+          else object = [{ data: dtNew, type: 'edit-currentDate' }];
           this.noteService.data.next(object);
           this.dialog.close();
           this.changeDetectorRef.detectChanges();
@@ -464,14 +467,7 @@ export class AddNoteComponent implements OnInit {
         itemUpdate: this.note,
         dialogRef: this.dialog,
       };
-      this.callfc.openForm(
-        SaveNoteComponent,
-        '',
-        900,
-        650,
-        '',
-        obj
-      );
+      this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj, '');
     } else {
       this.notificationsService.notifyCode('TM037');
     }

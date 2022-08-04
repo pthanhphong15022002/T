@@ -2,9 +2,10 @@ import { E, P } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { DataRequest, CodxListviewComponent, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel } from 'codx-core';
+import { DataRequest, CodxListviewComponent, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel } from 'codx-core';
 import { extractContent } from '../function/default.function';
 import { PopupAddComponent } from '../news/popup/popup-add/popup-add.component';
+import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
 import { ApproveDetailComponent } from './approve-detail/approve-detail.component';
 
 @Component({
@@ -292,32 +293,41 @@ export class ApproveComponent implements OnInit {
   clickMF(event:any,data:any){
     switch(event.functionID){
       case 'SYS02':
-        if(this.entityName == "WP_News"){
-          this.api.execSv(this.service,this.assemblyName,"NewsBusiness","DeleteNewsAsync",data.recID)
-          .subscribe((res:boolean) => {
-            if(res){
-              this.notifySvr.notifyCode('E0026');
-            }
-          })
-        }
-        else //WP_Comments
-        {
-          this.api.execSv(this.service,this.assemblyName,"CommentsBusiness","DeletePostAsync",data.recID)
-          .subscribe((res:boolean) => {
-            if(res){
-              this.notifySvr.notifyCode('E0026');
-            }
-          })
-        }
+        this.deletedPost(data);
         break;
       case 'SYS03':
-        let option = new SidebarModel();
+        let option = new DialogModel();
         option.DataService = this.codxViews.dataService;
         option.FormModel = this.codxViews.formModel;
-        this.callFuc.openSide(PopupAddComponent,data,option);
+        option.IsFull = true;
+        this.callFuc.openForm(PopupEditComponent,'Cập nhật bài viết',0,0,this.funcID,{dataEdit:data, type : data.newsType},'',option);
         break;
       default:
         break;
     }
+  }
+
+  beforDeletedPost(option:RequestOption,data:any){
+    option.service = "WP";
+    option.assemblyName = "ERM.Business.WP";
+    if(this.entityName == "WP_News"){
+      option.className = "NewsBusiness";
+      option.methodName = "DeleteNewsAsync";
+    }
+    else 
+    {
+      option.className = "CommentsBusiness";
+      option.methodName = "DeletePostAsync";
+    }
+    option.data = data;
+    return true;
+  }
+
+  deletedPost(data:any){
+    if(!data)return;
+    this.codxViews.dataService.delete(
+      [data],
+      true,
+      (opt:any)=>this.beforDeletedPost(opt,data)).subscribe();
   }
 }

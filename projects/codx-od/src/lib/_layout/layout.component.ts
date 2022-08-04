@@ -5,7 +5,7 @@ import {
   LayoutBaseComponent, SidebarModel
 } from 'codx-core';
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
-import { NoteDrawerComponent } from 'projects/codx-share/src/lib/components/note-drawer/note-drawer.component';
+import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { CodxOdService } from '../codx-od.service';
 
 @Component({

@@ -2,39 +2,42 @@
 <ng-template #popup>
     <codx-form headerText="{{titleDialog}}" [subHeader]="header" [body]="body" [footer]="footer" [dialog]="dialog">
         <ng-template #header>
-            <div class="card-body p-0">
+            <div class="card-body py-0 ps-0">
                 <form name="frm_file">
                     <div class="offcanvas-wrapper">
                         <div class="modal-subheader">
                             <div for="fileName" class="d-flex justify-content-between mb-1">
                                 <div class="d-flex align-items-center col-form-label pb-0">
                                     <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>
-                                </div>                              
+                                </div>
                             </div>
                         </div>
-                        <div class="control-section mb-5">
+                        <div class="control-section">
                             <div class="col-lg-12">
                                 <div class="control_wrapper">
                                     <div class="uploadtemplate">
-                                        <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column" id='dropArea'>
+                                        <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+                                            id='dropArea'>
                                             <div class="d-none">
                                                 <span id='drop' class="droparea">Drop files here or <a href=""
                                                         [id]='idBrowse'><u>Browse</u></a> </span>
                                             </div>
                                             <div class="dropzone-msg dz-message needsclick">
-                                                <div class="dropzone-msg-title mb-2">Chọn một hay nhiều file từ máy của bạn.</div>
-                                                <span class="dropzone-msg-desc">Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây,
+                                                <div class="dropzone-msg-title mb-2">Chọn một hay nhiều file từ máy của
+                                                    bạn.</div>
+                                                <span class="dropzone-msg-desc">Kéo thả file tài liệu (.doc, .xlx,
+                                                    .pdf...) vào đây,
                                                     hoặc</span>
-                                            </div>                                        
+                                            </div>
                                             <div class="dropzone-panel mt-6">
                                                 <ejs-uploader #templateupload id='templatefileupload'
                                                     [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()'
                                                     [asyncSettings]='path' [dropArea]='dropElement'
                                                     (selected)='onFileSelect($event)'></ejs-uploader>
                                             </div>
-                                         
+
                                         </div>
-                                       <!-- <div id='dropArea'>
+                                        <!-- <div id='dropArea'>
                                             <div class="d-none">
                                                 <span id='drop' class="droparea">Drop files here or <a href=""
                                                         id='browse'><u>Browse</u></a> </span>
@@ -76,7 +79,7 @@
         </ng-template>
         <ng-template #body>
             <div class="card-body p-0">
-                <form name="frm_file1">                    
+                <form name="frm_file1">
                     <div class="offcanvas-wrapper">
                         <div *ngFor="let file of sortBy();  index as i;" class=" mt-2 mb-2 has-action-menu">
                             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
@@ -103,7 +106,7 @@
                                         <span class="text-dark"></span>
                                         <div class="d-flex">
                                             <codx-input placeholder="Mô tả tài liệu" style="width:86%"
-                                                class="form-control no-boder" type="text" [crrValue]="file.description"
+                                                class="border-0 p-0" type="text" [crrValue]="file.description"
                                                 (valueChange)="changeValueAgencyText($event)"> </codx-input>
                                         </div>
                                     </div>
@@ -138,7 +141,7 @@
                     </div>
                 </form>
             </div>
-        </ng-template> 
+        </ng-template>
         <ng-template #footer>
             <div class="card-footer pt-4">
                 <div class="d-flex justify-content-end">
@@ -225,7 +228,7 @@
                                         <span class="text-dark"></span>
                                         <div class="d-flex">
                                             <codx-input placeholder="Mô tả tài liệu" style="width:86%"
-                                                class="form-control no-boder" type="text" [crrValue]="file.description"
+                                                class="border-0 p-0" type="text" [crrValue]="file.description"
                                                 (valueChange)="changeValueAgencyText($event)"> </codx-input>
                                         </div>
                                     </div>
@@ -248,7 +251,7 @@
                                         <span class="text-dark"></span>
                                         <div class="d-flex">
                                             <codx-input placeholder="Mô tả tài liệu" style="width:86%"
-                                                class="form-control no-boder" type="text" [crrValue]="file.description"
+                                                class="border-0 p-0" type="text" [crrValue]="file.description"
                                                 (valueChange)="changeValueAgencyText($event)"> </codx-input>
                                         </div>
                                     </div>

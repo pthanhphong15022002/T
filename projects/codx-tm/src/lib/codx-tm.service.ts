@@ -201,7 +201,7 @@ export class CodxTMService {
       [predicate, dataValue]
     );
   }
-
+  //update status
   setStatusTask(
     funcID: string,
     id: string,
@@ -216,6 +216,22 @@ export class CodxTMService {
       'TaskBusiness',
       'SetStatusTaskAsync',
       [funcID, id, status, datacomplete, hour, comment]
+    );
+  }
+  //update tien độ thực hiện
+  updateProgressTask(
+    funcID: string,
+    id: string,
+    modifiedOn: Date,
+    percentage: string,
+    comment: string
+  ) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'UpdateProgressTaskAsync',
+      [funcID, id, modifiedOn, percentage, comment]
     );
   }
 

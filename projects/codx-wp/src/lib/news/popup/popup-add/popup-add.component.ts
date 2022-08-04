@@ -37,9 +37,7 @@ export class PopupAddComponent implements OnInit {
   userRecevier: any;
   recevierID = "";
   recevierName = "";
-  lstRecevier = [];
-  dataEdit:any;
-  isUpload:boolean = false;
+
   fileUpload:any[] = [];
   fileImage:any[] = [];
   fileVideo:any[] = [];
@@ -48,6 +46,8 @@ export class PopupAddComponent implements OnInit {
   shareIcon:string = "";
   shareText:string = "";
   shareWith:String = "";
+  permissions:Permission[] = [];
+
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -96,7 +96,10 @@ export class PopupAddComponent implements OnInit {
 
   ) {
 
-    this.newsType = dd.data;
+    this.newsType = dd.data.type;
+    if (this.newsType != "1") {
+      this.isVideo = false;
+    }
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
@@ -106,15 +109,18 @@ export class PopupAddComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.setDataDefault();
+  }
+
+
+  setDataDefault(){
     this.cache.valueList('L1901').subscribe((vll: any) => {
       let modShare = vll.datas.find((x: any) => x.value == this.SHARECONTROLS.EVERYONE);
       this.shareIcon = modShare.icon;
       this.shareText = modShare.text;
       this.shareControl = this.SHARECONTROLS.EVERYONE;
     });
-    if (this.newsType != "1") {
-      this.isVideo = false;
-    }
+    this.tagName = "";
     this.shareControl = this.SHARECONTROLS.EVERYONE;
     this.myPermission = new Permission();
     this.myPermission.objectType = this.SHARECONTROLS.OWNER;
@@ -152,7 +158,6 @@ export class PopupAddComponent implements OnInit {
     this.permissions.push(evrPermission);
     this.initForm();
   }
-
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
@@ -192,7 +197,6 @@ export class PopupAddComponent implements OnInit {
           }
           this.initForm();
           this.shareControl = this.SHARECONTROLS.EVERYONE;
-          this.lstRecevier = [];
           this.notifSV.notifyCode('E0026');
           this.dialogRef.close();
           this.insertWPComment(data);
@@ -213,12 +217,6 @@ export class PopupAddComponent implements OnInit {
       post.createdBy = data.createdBy;
       this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","PublishPostAsync", [post, null]).subscribe();
     }
-  }
-  clearData(){
-    this.lstRecevier = [];
-    this.userRecevier = [];
-    this.tagName = "";
-    this.clearValueForm();
   }
   valueChange(event: any) {
     if(!event || event.data == "" || !event.data){
@@ -260,7 +258,6 @@ export class PopupAddComponent implements OnInit {
   }
   
 
-  permissions:Permission[] = [];
   eventApply(event: any) {
     if (!event) {
       return;

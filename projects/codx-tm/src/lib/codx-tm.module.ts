@@ -64,6 +64,7 @@ import { PopupViewTaskResourceComponent } from './tasks/popup-view-task-resource
 import { PopupConfirmComponent } from './tasks/popup-confirm/popup-confirm.component';
 import { PopupExtendComponent } from './tasks/popup-extend/popup-extend.component';
 import { MeetingDetailComponent } from './tmmeetings/meeting-detail/meeting-detail.component';
+import { PopupUpdateProgressComponent } from './tasks/popup-update-progress/popup-update-progress.component';
 
 export const routes: Routes = [
   {
@@ -218,6 +219,7 @@ const T_Component: Type<any>[] = [
   PopupViewTaskResourceComponent,
   PopupConfirmComponent,
   PopupExtendComponent,
+  PopupUpdateProgressComponent,
   MeetingDetailComponent,
 ];
 @NgModule({
