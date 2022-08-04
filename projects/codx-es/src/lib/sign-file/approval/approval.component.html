@@ -1,7 +1,7 @@
 <div class="d-flex  justify-content-between main-pane stepper-body tab-custom w-100">
   <div class="main-content d-flex flex-column-fluid h-100">
     <div class="flex-column flex-lg-row-auto w-lg-240px main-left" [class.hideCol]="hideThumbnail">
-      <div class="hover-scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+      <div class="hover-scroll-overlay-y pe-6 me-n6" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto" data-kt-scroll-dependencies=".e-tab-header" data-kt-scroll-wrappers=".main-left"
         data-kt-scroll-offset="'0px'">
         <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
@@ -95,7 +95,7 @@
       </div>
     </div>
     <div class="actions flex-column flex-lg-row-auto w-lg-350px main-right" [class.hideCol]="hideActions">
-      <div class=" hover-scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+      <div class="hover-scroll-overlay-y pe-6 me-n6" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto" data-kt-scroll-dependencies=".e-tab-header" data-kt-scroll-wrappers=".main-right"
         data-kt-scroll-offset="'0px'">
         <ejs-tab #rightToolbar [class.d-none]="hideActions">
