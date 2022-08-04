@@ -2,25 +2,25 @@
   [formControl]="dialogAddCar" *ngIf="isAfterRender">
 </codx-form>
 <ng-template #body>
-  <div class="row mb-4">
-    <div style="width: 88%">
-      <codx-label class="fs-5 fw-bold" default="Tên xe" fiedName="ResourceName" [formModel]="dialog.formModel">
+  <div class="row">
+    <div class="col-10 form-group">
+      <codx-label default="Tên xe" fiedName="ResourceName" [formModel]="dialog.formModel">
       </codx-label>
-      <div class="d-flex position-relative">
-        <div class="w-100">
-          <codx-input type="text" class="form-control flex-grow-1 me-3 w-100" ControlName="resourceName"
-            [Group]="dialogAddCar" [crrValue]="dialogAddCar.value.resourceName" (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
+      <codx-input type="text" class="form-control flex-grow-1 me-3 w-100" ControlName="resourceName"
+        [Group]="dialogAddCar" [crrValue]="dialogAddCar.value.resourceName" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+          <!-- <div class="">        
         <div class="ms-2 room-icon" style="display: none">
           <codx-input type="vllicon" refValue="L1470" field="icon" class="btn btn-primary dropdown-toggle">
           </codx-input>
-          <!-- <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
-                    </select-icon> -->
+          <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
+                    </select-icon>
         </div>
-      </div>
-    </div>
-    <div style="width: 12%; margin-top: 21px">
+      </div> -->    
+    <div class="col-1 form-group">
+      <codx-label class="fs-5" default=""[formModel]="dialog.formModel">
+      </codx-label>
       <button type="button" class="btn btn-primary">Icon</button>
     </div>
   </div>
@@ -51,8 +51,15 @@
     <div class="col-6">
       <codx-label class="fw-bold" default="Phân loại" fiedName="Ranking" [formModel]="dialog.formModel">
       </codx-label>
-      <codx-input type="valuelist" name="valuelist" ControlName="ranking" [refValue]="CbxName['Ranking']"
-        [crrValue]="dialogAddCar.value.ranking" (valueChange)="valueCbxChange($event)">
+      <codx-input
+        type="valuelist"
+        name="valuelist"
+        ngDefaultControl
+        [crrValue]="dialogAddCar.value.ranking"
+        refValue="EP005"
+        field="ranking"
+        (valueChange)="valueChange($event)"
+      >
       </codx-input>
     </div>
   </div>
@@ -70,8 +77,17 @@
     <div class="col-4">
       <codx-label class="fw-bold" default="Đơn vị" fiedName="CompanyID" [formModel]="dialog.formModel">
       </codx-label>
-      <codx-input service="EP" type="combobox" name="combobox" [crrValue]="dialogAddCar.value.companyID"
-        [refValue]="CbxName['CompanyID']" [loadFull]="true" field="companyID" (valueChange)="valueChange($event)">
+      <codx-input
+        service="SYS"
+        type="combobox"
+        name="combobox"
+        [crrValue]="dialogAddCar.value.Owner"
+        ngDefaultControl
+        refValue="BusinessUnits"
+        [loadFull]="true"
+        field="BUName"
+        (valueChange)="valueChange($event)"
+      >
       </codx-input>
     </div>
     <!--end::Col-->
@@ -84,32 +100,34 @@
     <div class="w-100">
       <codx-label class="fw-bold" default="Tài xế" fiedName="LinkID">
       </codx-label>
-      <!-- <codx-input
-                service="EP"
-                type="combobox"
-                name="combobox"
-                [crrValue]="dialogAddCar.value.linkID"
-                ngDefaultControl
-                refValue="EP_Rooms"
-                [loadFull]="true"
-                field="LinkID"
-                (valueChange)="valueChange($event)"
-              >
-              </codx-input> -->
+      <codx-input
+        service="EP"
+        type="combobox"
+        name="combobox"
+        [crrValue]="dialogAddCar.value.linkID"
+        ngDefaultControl
+        refValue="EP_Drivers"
+        [loadFull]="true"
+        field="LinkID"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
     </div>
   </div>
   <div class="row mb-4">
     <div class="col-12">
       <codx-label class="fw-bold" default="Người điều phối" fiedName="Owner" [formModel]="dialog.formModel">
       </codx-label>
-      <div class="position-relative">
-        <codx-input service="AD" type="combobox" name="combobox" ngDefaultControl [loadFull]="true"
-          [crrValue]="[dialogAddCar.value.owner]" [refValue]="CbxName['Owner']" (valueChange)="valueCbxChange($event)">
-        </codx-input>
-        <div class="position-absolute translate-middle-y top-50 end-0 me-3">
-          <span class="icon-person_pin_circle"> </span>
-        </div>
-      </div>
+      <codx-combobox 
+        service="SYS"   
+        name="combobox"  
+        ngDefaultControl
+        refValue="Users"
+        field="UserName"
+        multiple="false"
+        [pageSize]="5"
+        [allowFilter]=true>
+      </codx-combobox>
     </div>
   </div>
   <div class="row mb-4">

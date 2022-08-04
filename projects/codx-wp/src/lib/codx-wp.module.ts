@@ -79,7 +79,7 @@ export const routes: Routes = [
     children:[
       {
         path:':funcID',
-        component: ApproveComponent
+        component: ApproveComponent,     
       },
       {
         path: '**',
