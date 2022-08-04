@@ -949,6 +949,8 @@ export class TasksComponent extends UIComponent {
       moreFunc: moreFunc,
       data: data,
       funcID: this.funcID,
+      vll: 'TM008',
+      action: 'verrify',
     };
     this.dialogProgess = this.callfc.openForm(
       PopupUpdateProgressComponent,
@@ -986,8 +988,7 @@ export class TasksComponent extends UIComponent {
         moreFunc: moreFunc,
         data: data,
         funcID: this.funcID,
-        vll: 'TM008',
-        action: 'verrify',
+      
       };
       this.dialogProgess = this.callfc.openForm(
         PopupExtendComponent,
