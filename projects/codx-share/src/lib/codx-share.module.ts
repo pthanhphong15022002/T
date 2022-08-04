@@ -56,7 +56,7 @@ import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej
 import '@boldreports/global/l10n/ej.localetexts.vi-VN.min.js';
 import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
 import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
-import { NoteDrawerComponent } from './components/note-drawer/note-drawer.component';
+import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,

@@ -104,7 +104,6 @@ export class IncommingComponent
     this.notifySvr = inject.get(NotificationsService);
     this.atSV = inject.get(AttachmentService);
     // this.codxService = inject.get(CodxService);
-    // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
     this.fileService = inject.get(FileService);
   }
   ngOnChanges(changes: SimpleChanges): void { }
@@ -372,6 +371,7 @@ export class IncommingComponent
   }
 
   requestEnded(evt: any) {
+    debugger;
     console.log(evt);
   }
   openFormFuncID(val: any, data: any) {

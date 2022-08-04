@@ -5,6 +5,7 @@ import {
   DialogRef,
   CacheService,
   CRUDService,
+  RequestOption,
 } from 'codx-core';
 import {
   Component,
@@ -248,7 +249,7 @@ export class PopupAddUpdate implements OnInit {
     }
   }
 
-  beforeSave(option: any) {
+  beforeSave(option: RequestOption) {
     this.note.transID = this.transID;
     this.note.checkList = this.listNote;
     if (this.formType == 'edit') {
@@ -258,10 +259,10 @@ export class PopupAddUpdate implements OnInit {
     }
     this.note.noteType = this.type;
     if (this.formType == 'add') {
-      option.method = 'CreateNoteBookDetailsAsync';
+      option.methodName = 'CreateNoteBookDetailsAsync';
       option.data = this.note;
     } else {
-      option.method = 'UpdateNoteBookDetailAsync';
+      option.methodName = 'UpdateNoteBookDetailAsync';
       option.data = [this.data?.recID, this.note];
     }
     option.assemblyName = 'ERM.Business.WP';
