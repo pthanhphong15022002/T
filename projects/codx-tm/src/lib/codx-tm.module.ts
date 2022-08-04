@@ -65,6 +65,7 @@ import { PopupConfirmComponent } from './tasks/popup-confirm/popup-confirm.compo
 import { PopupExtendComponent } from './tasks/popup-extend/popup-extend.component';
 import { MeetingDetailComponent } from './tmmeetings/meeting-detail/meeting-detail.component';
 import { PopupUpdateProgressComponent } from './tasks/popup-update-progress/popup-update-progress.component';
+import { TaskExtendsComponent } from './taskextends/taskextends.component';
 
 export const routes: Routes = [
   {
@@ -80,6 +81,10 @@ export const routes: Routes = [
             component: TasksComponent,
           },
         ],
+      },
+      {
+        path: 'taskextends/:funcID',
+        component: TaskExtendsComponent,
       },
       {
         path: 'viewboards/:funcID',
@@ -221,6 +226,7 @@ const T_Component: Type<any>[] = [
   PopupExtendComponent,
   PopupUpdateProgressComponent,
   MeetingDetailComponent,
+  TaskExtendsComponent
 ];
 @NgModule({
   imports: [
