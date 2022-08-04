@@ -145,8 +145,7 @@ export class DetailNoteBooksComponent extends UIComponent {
         sameData: true,
         id: '1',
         active: true,
-        text: 'View Grid',
-        icon: 'icon-grid_on',
+        text: 'Lưới',
         model: {
           resources: this.columnsGrid,
         },
@@ -156,8 +155,7 @@ export class DetailNoteBooksComponent extends UIComponent {
         id: '2',
         type: ViewType.list,
         active: false,
-        text: 'View List',
-        icon: 'icon-view_list',
+        text: 'Danh sách',
         model: {
           template: this.listView,
         },
