@@ -14,6 +14,7 @@ import {
   DialogRef,
   NotificationsService,
   CallFuncService,
+  CacheService,
 } from 'codx-core';
 import moment from 'moment';
 
@@ -46,6 +47,9 @@ export class PopupAddMeetingComponent implements OnInit {
   action: any;
   linkURL = '';
   resources: Resources[] = [];
+  listRoles: any;
+  idUserSelected: any;
+  popover: any;
 
   selectedDate = new Date();
   constructor(
@@ -54,6 +58,7 @@ export class PopupAddMeetingComponent implements OnInit {
     private authStore: AuthStore,
     private notiService: NotificationsService,
     private callFuncService: CallFuncService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -67,6 +72,12 @@ export class PopupAddMeetingComponent implements OnInit {
     // if (this.meeting.startDate) {
     //   this.selectedDate = this.meeting.startDate;
     // }
+    this.cache.valueList('CO001').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        console.log(res.datas)
+        this.listRoles = res.datas;
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -184,28 +195,17 @@ export class PopupAddMeetingComponent implements OnInit {
     this.changDetec.detectChanges();
   }
 
-  // valueTime(e) {
-  //   if (!e.field || e.data == null) return;
-  //   this.meeting[e.field] = e.data?.fromDate;
-  //   if (e.field == 'startDate' || e.field == 'endDate') {
-  //     let hour = (e.data.fromdate as Date).getHours();
-  //     let minutes = (e.data.fromdate as Date).getMinutes();
-  //     this.meeting.startDate = new Date(this.selectedDate.setHours(hour, minutes, 0, 0));
 
-  //     this.endDate = new Date(this.selectedDate.getTime());
-
-  //     this.meeting.endDate = new Date(this.endDate.setHours(hour, minutes, 0, 0));
-  //     console.log(this.meeting.startDate);
-  //     console.log(this.meeting.endDate);
-
-  //   }
-
-  // }
 
   valueDateChange(event: any) {
-    this.selectedDate = event.data.fromDate;
-    if (this.selectedDate) this.meeting[event.field] = this.selectedDate;
-    this.setDate();
+    if(event.field == 'startDate'){ // cái field này đề e biết nó change ở ô nào
+      this.selectedDate = event.data.fromDate;
+      if (this.selectedDate) this.meeting[event.field] = this.selectedDate;
+      this.setDate();
+    }
+    else{
+      this.meeting[event.field] = event.data.fromDate;
+    }
   }
 
   valueStartTimeChange(event: any) {
@@ -341,5 +341,21 @@ export class PopupAddMeetingComponent implements OnInit {
   onDeleteUser(item) {
     this.meeting.resources.splice(item, 1); //remove element from array
     this.changDetec.detectChanges();
+  }
+
+  showPopover(p, userID) {
+    if (this.popover) this.popover.close();
+    if (userID) this.idUserSelected = userID;
+    p.open();
+    this.popover = p;
+  }
+
+  selectRoseType(idUserSelected, value) {
+    this.meeting.resources.forEach((res) => {
+      if (res.resourceID == idUserSelected) res.roleType = value;
+    });
+    this.changDetec.detectChanges();
+
+    this.popover.close();
   }
 }

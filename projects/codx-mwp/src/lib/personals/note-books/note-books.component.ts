@@ -1,8 +1,35 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, CodxService, ApiHttpService, ImageViewerComponent, CodxSearchBarComponent, CodxCardImgComponent, ButtonModel, UIComponent, SidebarModel, DialogRef, FormModel, CacheService, CodxListviewComponent, CRUDService } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, Output, OnDestroy, Injector, AfterViewInit, Input, ViewEncapsulation } from '@angular/core';
-import { isNullOrUndefined } from '@syncfusion/ej2-base';
+import {
+  AuthStore,
+  CodxService,
+  ApiHttpService,
+  ImageViewerComponent,
+  CodxSearchBarComponent,
+  CodxCardImgComponent,
+  ButtonModel,
+  UIComponent,
+  SidebarModel,
+  DialogRef,
+  FormModel,
+  CacheService,
+  CodxListviewComponent,
+  CRUDService,
+  ScrollComponent,
+} from 'codx-core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ViewChild,
+  EventEmitter,
+  Output,
+  OnDestroy,
+  Injector,
+  AfterViewInit,
+  Input,
+  ViewEncapsulation,
+} from '@angular/core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-note-book.component';
 import { AddUpdateStorageComponent } from '../storage/add-update-storage/add-update-storage.component';
@@ -13,12 +40,14 @@ import { NoteBookServices } from '../../services/notebook.services';
   selector: 'app-note-books',
   templateUrl: './note-books.component.html',
   styleUrls: ['./note-books.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
-export class NoteBooksComponent extends UIComponent implements OnInit, AfterViewInit {
-
-  predicate = "CreatedBy=@0";
-  dataValue = "";
+export class NoteBooksComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
+  predicate = 'CreatedBy=@0';
+  dataValue = '';
   user: any;
   data: any;
   onUpdate = false;
@@ -34,15 +63,16 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   @ViewChild('listView') listView: CodxListviewComponent;
   @Output() loadData = new EventEmitter();
 
-  constructor(inject: Injector,
+  constructor(
+    inject: Injector,
     private authStore: AuthStore,
     private modalService: NgbModal,
-    private noteBookService: NoteBookServices,
+    private noteBookService: NoteBookServices
   ) {
     super(inject);
-    this.cache.functionList('MWP00941').subscribe(res => {
+    this.cache.functionList('MWP00941').subscribe((res) => {
       this.urlDetailNoteBook = res?.url;
-    })
+    });
 
     this.user = this.authStore.get();
     this.dataValue = this.user?.userID;
@@ -58,10 +88,11 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
           (this.listView.dataService as CRUDService).update(data).subscribe();
         }
       }
-    })
+    });
   }
 
   ngAfterViewInit() {
+    ScrollComponent.reinitialization();
   }
 
   clickMF(e: any, data?: any) {
@@ -78,7 +109,9 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   openDetailPage(item) {
-    this.codxService.navigate('', this.urlDetailNoteBook, { recID: item.recID })
+    this.codxService.navigate('', this.urlDetailNoteBook, {
+      recID: item.recID,
+    });
   }
 
   openFormMoreFunc(data: any) {
@@ -86,24 +119,26 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     this.onUpdate = true;
   }
 
-  closePopover(p: any) {
-    this.hidePopOver(p);
-  }
-
-  hidePopOver(popover: any) {
-    setTimeout(() => {
-      if (!isNullOrUndefined(popover)) {
-        popover.close();
-      }
-    }, 5000);
-  }
-
   delete(data: any) {
     this.api
-      .exec<any>('ERM.Business.WP', 'NoteBooksBusiness', 'DeleteNoteBookAsync', data.recID)
+      .exec<any>(
+        'ERM.Business.WP',
+        'NoteBooksBusiness',
+        'DeleteNoteBookAsync',
+        data.recID
+      )
       .subscribe((res) => {
         if (res) {
           (this.listView.dataService as CRUDService).remove(data).subscribe();
+          this.api
+            .execSv(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'DeleteByObjectIDAsync',
+              [res.recID, 'WP_NoteBooks', true]
+            )
+            .subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -113,13 +148,19 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     if (data) {
       this.listView.dataService.dataSelected = data;
     }
-    (this.listView.dataService as CRUDService).edit(this.listView.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.listView?.dataService;
-      option.FormModel = this.listView?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.listView.dataService.dataSelected, 'edit'], option);
-    });
+    (this.listView.dataService as CRUDService)
+      .edit(this.listView.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.listView?.dataService;
+        option.FormModel = this.listView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          AddUpdateNoteBookComponent,
+          [this.listView.dataService.dataSelected, 'edit'],
+          option
+        );
+      });
   }
 
   openFormUpdateBackground(content, recID) {
@@ -141,21 +182,29 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
   }
 
   formAddNoteBook() {
-    (this.listView.dataService as CRUDService).addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.listView?.dataService;
-      option.FormModel = this.listView?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfc.openSide(AddUpdateNoteBookComponent, [this.listView.dataService.data, 'add'], option);
-    });
+    (this.listView.dataService as CRUDService)
+      .addNew()
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.listView?.dataService;
+        option.FormModel = this.listView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          AddUpdateNoteBookComponent,
+          [this.listView.dataService.data, 'add'],
+          option
+        );
+      });
   }
 
   sortNoteBooks() {
-    this.listView.dataService.data = this.listView.dataService.data.sort(function (a, b) {
-      var dateA = new Date(a.createdOn).toLocaleDateString();
-      var dateB = new Date(b.createdOn).toLocaleDateString();
-      return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
-    });
+    this.listView.dataService.data = this.listView.dataService.data.sort(
+      function (a, b) {
+        var dateA = new Date(a.createdOn).toLocaleDateString();
+        var dateB = new Date(b.createdOn).toLocaleDateString();
+        return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
+      }
+    );
     this.detectorRef.detectChanges();
   }
 
@@ -163,5 +212,4 @@ export class NoteBooksComponent extends UIComponent implements OnInit, AfterView
     this.listView.dataService.search(e);
     this.detectorRef.detectChanges();
   }
-
 }

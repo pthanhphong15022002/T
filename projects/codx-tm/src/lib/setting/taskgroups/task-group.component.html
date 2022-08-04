@@ -77,14 +77,15 @@
     </td>
     <td class="rowphoto w-20">
       <div class="padding">
-        <div class="dropdown ml-2" [ngbPopover]="popDetail" placement="bottom" #empPopover="ngbPopover"
-        [openDelay]="500" (mouseenter)="PopoverDetail(empPopover, data)" (mouseleave)="PopoverDetail(empPopover, null)">
-          <button [disabled]="!data.checkList" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-              <div class="b text-start" *ngIf="data.checkList">
-                {{data?.checkList}}
-              </div>
-              <span *ngIf="!data.checkList" class="b text-start">Không có CheckList</span>
+        <div class="dropdown ms-2" [ngbPopover]="popDetail" placement="bottom" #empPopover="ngbPopover"
+          [openDelay]="500" (mouseenter)="PopoverDetail(empPopover, data)"
+          (mouseleave)="PopoverDetail(empPopover, null)">
+          <button [disabled]="!data.checkList" class="btn" type="button" id="dropdownShowDescription"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="b text-start" *ngIf="data.checkList">
+              {{data?.checkList}}
+            </div>
+            <span *ngIf="!data.checkList" class="b text-start">Không có CheckList</span>
           </button>
         </div>
 
@@ -113,8 +114,8 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
-        [isBookMark]="false" [dataItem]="data">
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
+          [dataItem]="data">
         </codx-mfunc>
       </div>
     </td>

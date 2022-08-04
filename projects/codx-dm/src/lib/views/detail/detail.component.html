@@ -1,4 +1,4 @@
-<div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
+<!-- <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
     class="d-flex flex-column-fluid position-relative main-2zone cancelEvent"
     style="overflow: auto !important; height: 82vh; display: block;" data-kt-scroll="true"
     data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
@@ -44,15 +44,13 @@
                             <ng-container *ngFor="let folder of listFolders;  trackBy:identifyFolder">
                                 <tr title="{{folder.folderName}}">
                                     <td class="w-25px text-center px-0"><span
-                                            [className]="getBookmarksClass(folder)"></span>
-                                    </td>
-                                    <td>
-                                        <codx-temp-full class="float-start"
-                                            imageSrc="../../../assets/codx/dms/folder.svg"
-                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                            [title]="folder.folderName" [formModel]="formModel" [typeMF]="'hover'"
-                                            cardCss="w-225px">
-                                        </codx-temp-full>
+                                        [className]="getBookmarksClass(folder)"></span>
+                                     </td>                                     
+                                    <td> 
+                                        <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"  [title]="folder.folderName" 
+                                           cardCss="w-225px"                                            
+                                            >
+                                        </codx-temp-full> 
                                     </td>
                                     <td>
                                         <codx-temp-full [imageId]="folder.createdBy" imageObjType="AD_Users"
@@ -66,12 +64,10 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <codx-temp-full class="float-start"
-                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                            (clickMF)="dmSV.clickMF($event, folder, 'folder')" [formModel]="formModel"
-                                            [typeMF]="'hover'" cardCss="w-150px">
-                                        </codx-temp-full>
-                                        <!-- <div class="erm-date"></div>                                           -->
+                                        <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, folder, 'folder')" 
+                                            [formModel]="formModel" [typeMF]="'hover'" (changeDataMF)="dmSV.filterMoreFunction($event, 'DM_FolderInfo')"
+                                            cardCss="w-150px">
+                                         </codx-temp-full>                                       
                                     </td>
                                 </tr>
                             </ng-container>
@@ -81,11 +77,9 @@
                                             [className]="getBookmarksClass(file)"></span>
                                     </td>
                                     <td>
-                                        <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)"
-                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                            [title]="file.fileName" [formModel]="formModel" [typeMF]="'hover'"
-                                            cardCss="w-225px">
-                                        </codx-temp-full>
+                                        <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [title]="file.fileName"                                                                          
+                                        cardCss="w-225px">
+                                        </codx-temp-full>                                             
                                     </td>
                                     <td>
                                         <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users"
@@ -99,13 +93,10 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <codx-temp-full
-                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                            (clickMF)="dmSV.clickMF($event, file, 'file')"
-                                            title="{{getSizeKB(file.fileSize)}}Kb" [formModel]="formModel"
-                                            [typeMF]="'hover'" cardCss="w-150px">
-                                        </codx-temp-full>
-                                        <!-- <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div> -->
+                                        <codx-temp-full imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, file, 'file')" title="{{getSizeKB(file.fileSize)}}Kb" (changeDataMF)="dmSV.filterMoreFunction($event, 'DM_FolderInfo')"
+                                        [formModel]="formModel" [typeMF]="'hover'"                                        
+                                        cardCss="w-150px">
+                                        </codx-temp-full>                                                                                           
                                     </td>
                                 </tr>
                             </ng-container>
@@ -117,11 +108,9 @@
                                             [className]="getBookmarksClass(file)"></span>
                                     <td>
                                     <td>
-                                        <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)"
-                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                            (clickMF)="dmSV.clickMF($event, file, 'file')" [title]="file.fileName"
-                                            [formModel]="formModel" [typeMF]="'hover'" cardCss="w-225px">
-                                        </codx-temp-full>
+                                        <codx-temp-full [imageSrc]="dmSV.getThumbnail(file.thumbnail, file.extension)" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, file, 'file')" [title]="file.fileName"                                                                      
+                                        cardCss="w-225px">
+                                        </codx-temp-full>                                             
                                     </td>
                                     <td>
                                         <codx-temp-full [imageId]="file.createdBy" imageObjType="AD_Users"
@@ -134,14 +123,11 @@
                                             <div class="erm-date">{{file.createdOn | date : "dd/MM/yyyy"}}</div>
                                         </div>
                                     </td>
-                                    <td>
-                                        <codx-temp-full
-                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                            (clickMF)="dmSV.clickMF($event, file, 'file')"
-                                            title="{{getSizeKB(file.fileSize)}}Kb" [formModel]="formModel"
-                                            [typeMF]="'hover'" cardCss="w-150px">
-                                        </codx-temp-full>
-                                        <!-- <div class="erm-date">{{getSizeKB(file.fileSize)}}Kb</div> -->
+                                    <td>   
+                                        <codx-temp-full imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, file, 'file')" title="{{getSizeKB(file.fileSize)}}Kb" (changeDataMF)="dmSV.filterMoreFunction($event, 'DM_FolderInfo')"
+                                        [formModel]="formModel" [typeMF]="'hover'"                                        
+                                        cardCss="w-150px">
+                                        </codx-temp-full>                                                                                 
                                     </td>
                                 </tr>
                             </ng-container>
@@ -151,10 +137,7 @@
                                             [className]="getBookmarksClass(folder)"></span>
                                     </td>
                                     <td>
-                                        <codx-temp-full class="float-start"
-                                            imageSrc="../../../assets/codx/dms/folder.svg"
-                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                            [title]="folder.folderName" [formModel]="formModel" [typeMF]="'hover'"
+                                        <codx-temp-full class="float-start" imageSrc="../../../assets/codx/dms/folder.svg" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" [title]="folder.folderName"
                                             cardCss="w-225px">
                                         </codx-temp-full>
                                     </td>
@@ -170,12 +153,10 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <codx-temp-full class="float-start"
-                                            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                            (clickMF)="dmSV.clickMF($event, folder, 'folder')" [formModel]="formModel"
-                                            [typeMF]="'hover'" cardCss="w-150px">
-                                        </codx-temp-full>
-                                        <!-- <div class="erm-date"></div>                                           -->
+                                        <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, data)" 
+                                        [formModel]="formModel" [typeMF]="'hover'" (changeDataMF)="dmSV.filterMoreFunction($event, data)"
+                                        cardCss="w-150px">
+                                         </codx-temp-full>                                       
                                     </td>
                                 </tr>
                             </ng-container>
@@ -203,11 +184,7 @@
                 <div class="w-100 align-items-center mt-20">
                     <div class="text-center">
                         <img class="mh-200px" src="../../../assets/img/loader.gif" />
-                    </div>
-                    <!-- <div class="text-center">
-                        <h5 class="text-dark mt-6">Đang tải dữ liệu</h5>
-                        <div class="mt-3">Thư mục hiện tại đang tải dữ liệu</div>
-                    </div> -->
+                    </div>                   
                 </div>
             </ng-template>
         </ng-template>
@@ -237,4 +214,4 @@
             hideHeader="false" fullName="{{getMame(item)}}" type="{{getType(item)}}" ext="{{getExt(item)}}">
         </app-submenu>
     </ng-template>
-</context-menu>
+</context-menu> -->

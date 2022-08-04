@@ -48,6 +48,7 @@ export class UpdateStatusPopupComponent implements OnInit {
   ngOnInit(): void {
     this.task = this.data.taskAction;
     this.moreFunc = this.data.moreFunc;
+    this.title = this.moreFunc.customName ;
     this.url = this.moreFunc.url;
     this.status = UrlUtil.getUrl('defaultValue', this.url);
     this.completedOn = moment(new Date()).toDate();
@@ -78,6 +79,9 @@ export class UpdateStatusPopupComponent implements OnInit {
       this.completed = Number.parseFloat(time);
     }
     this.changeDetectorRef.detectChanges();
+  }
+  changeComment(data){
+    this.comment = data?.data ;
   }
   changeEstimated(data) {
     if (!data.data) return;
@@ -114,7 +118,11 @@ export class UpdateStatusPopupComponent implements OnInit {
   saveData() {
     this.comment = this.comment.trim();
     if (this.data.fieldValue == '2') {
-      if (this.comment == '') return;
+      if (this.comment==null || this.comment.trim() == ''){
+        // this.notiService.notifyCode("TM0.....")  //đợi Hảo thương
+        this.notiService.notify("Phải nhập comment khi hoàn thành công việc !")
+        return;
+      } 
     }
     this.tmSv
       .setStatusTask(
@@ -127,16 +135,10 @@ export class UpdateStatusPopupComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res && res.length > 0) {
-          // this.task.status = this.status;
-          // this.task.completedOn = this.completedOn;
-          // this.task.comment = this.comment;
-          // this.task.completed = this.completed;
-          // res.forEach(obj=>{
-          //   this.dialog.dataService.update(obj).subscribe();
-          // })
           this.dialog.close(res)
           this.notiService.notifyCode('TM009');
         } else {
+          this.dialog.close()
           this.notiService.notifyCode('TM008');
         }
       });

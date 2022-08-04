@@ -133,7 +133,7 @@ export class NewsComponent implements OnInit {
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent,'',0,0,'',newsType,'',option);
+    this.callfc.openForm(PopupAddComponent,'',0,0,'',{type:newsType},'',option);
   }
 
   clickShowPopupSearch() {

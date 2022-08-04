@@ -7,7 +7,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { ApiHttpService, CacheService, DataRequest, ViewModel, ViewsComponent } from 'codx-core';
+import { ApiHttpService, CacheService, DataRequest, UIComponent, ViewModel, ViewsComponent } from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { ChartComponent } from '@syncfusion/ej2-angular-charts';
 import { Browser } from '@syncfusion/ej2-base';
@@ -19,7 +19,7 @@ declare var _;
     templateUrl: './statistical.component.html',
     styleUrls: ['./statistical.component.scss']
 })
-export class StatisticalComponent implements OnInit {
+export class StatisticalComponent extends UIComponent implements OnInit {
 
     @ViewChild("subheader") subheader;
     @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
@@ -220,14 +220,13 @@ export class StatisticalComponent implements OnInit {
     predicate = "";
     dataValue = "";
     options = new DataRequest();
-    constructor(
+    constructor(private injector: Injector,
         private changeDf: ChangeDetectorRef,
-        private api: ApiHttpService,
         private cacheService: CacheService,
         private modalService: NgbModal,
 
     ) {
-        // super({ title: "Thống kê", formName: "", gridViewName: "", hideSubHeader: true } as ModelPage, injector);
+        super(injector);
         let year = this.today.getFullYear();
         let month = this.today.getMonth();
         var firstDayInMonth = new Date(year, month, 1);
@@ -236,7 +235,7 @@ export class StatisticalComponent implements OnInit {
         this.toDate = this.dateTimeToString(lastDayInMonth);
     }
 
-    ngOnInit(): void {
+    onInit(): void {
         this.options.pageLoading = false;
         this.options.entityName = "FED_TagObjects";
         this.options.entityPermission = "FED_TagObjects";

@@ -46,7 +46,7 @@ export class PopupAddStationeryComponent implements OnInit {
   vllDevices = [];
   lstDeviceRoom = [];
   isAfterRender = false;
-  dialogStationery: FormGroup;
+  dialogAddStationery: FormGroup;
   chosenDate = null;
   CbxName: any;
   link = '';
@@ -82,9 +82,8 @@ export class PopupAddStationeryComponent implements OnInit {
       .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         this.CbxName = res;
-      });
-
-    this.initForm();
+        this.initForm();
+      });    
   }
 
   ngAfterViewInit(): void {
@@ -122,21 +121,21 @@ export class PopupAddStationeryComponent implements OnInit {
     this.bookingService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.dialogStationery = item;
+        this.dialogAddStationery = item;
         this.isAfterRender = true;
-        this.dialogStationery.patchValue({
+        this.dialogAddStationery.patchValue({
           ranking: '1',
           category: '1',
           owner: '',
         });
         if (this.data) {
-          this.dialogStationery.patchValue(this.data);
+          this.dialogAddStationery.patchValue(this.data);
         }
-        console.log(this.isAfterRender);
+        console.log(this.dialogAddStationery.value);
       });
   }
   beforeSave(option: any) {
-    let itemData = this.dialogStationery.value;
+    let itemData = this.dialogAddStationery.value;
     if (!itemData.resourceID) {
       this.isAdd = true;
     } else {
@@ -147,35 +146,33 @@ export class PopupAddStationeryComponent implements OnInit {
     return true;
   }
   onSaveForm() {
-    if (this.dialogStationery.invalid == true) {
-      console.log(this.dialogStationery);
-      return;
-    }
-    if (!this.dialogStationery.value.linkType) {
-      this.dialogStationery.value.linkType = '0';
-    }
-    this.dialogStationery.value.resourceType = '6';
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
-        this.imageUpload
-          .updateFileDirectReload(res.msgBodyData[0].resourceID)
-          .subscribe((result) => {
-            if (result) {
-              this.initForm();
-              this.loadData.emit();
-            } else {
-              this.initForm();
-            }
-          });
-        this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-        this.closeForm();
-      });
+    // if (this.dialogAddStationery.invalid == true) {
+    //   console.log(this.dialogAddStationery);
+    //   return;
+    // }
+    // if (!this.dialogAddStationery.value.linkType) {
+    //   this.dialogAddStationery.value.linkType = '0';
+    // }
+    // this.dialogAddStationery.value.resourceType = '6';
+    // this.dialog.dataService
+    //   .save((opt: any) => this.beforeSave(opt))
+    //   .subscribe((res) => {
+    //     this.imageUpload
+    //       .updateFileDirectReload(res.msgBodyData[0].resourceID)
+    //       .subscribe((result) => {
+    //         if (result) {
+    //           this.initForm();
+    //           this.loadData.emit();
+    //         } else {
+    //           this.initForm();
+    //         }
+    //       });
+    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
+    //     this.closeForm();
+    //   });
+    console.log('Send data', this.dialogAddStationery.value)
   }
 
-  valueOwnerChange(event) {
-    if (event) this.dialogStationery.patchValue({ owner: event[0] });
-  }
   closeForm() {
     this.initForm();
     this.closeEdit.emit();
@@ -202,12 +199,12 @@ export class PopupAddStationeryComponent implements OnInit {
   }
 
   checkedOnlineChange(event) {
-    this.dialogStationery.patchValue({
+    this.dialogAddStationery.patchValue({
       online: event.data instanceof Object ? event.data.checked : event.data,
     });
 
-    if (!this.dialogStationery.value.online)
-      this.dialogStationery.patchValue({ onlineUrl: null });
+    if (!this.dialogAddStationery.value.online)
+      this.dialogAddStationery.patchValue({ onlineUrl: null });
     this.changeDetectorRef.detectChanges();
   }
 
@@ -220,9 +217,9 @@ export class PopupAddStationeryComponent implements OnInit {
       .open(this.addLink, { centered: true, size: 'md' })
       .result.then(
         (result) => {
-          this.dialogStationery.patchValue({ onlineUrl: this.link });
+          this.dialogAddStationery.patchValue({ onlineUrl: this.link });
         },
-        (reason) => {}
+        (reason) => { }
       );
   }
 
@@ -231,7 +228,7 @@ export class PopupAddStationeryComponent implements OnInit {
       this.isAdd = true;
       this.initForm();
     } else {
-      this.dialogStationery.patchValue(data);
+      this.dialogAddStationery.patchValue(data);
     }
   }
 
@@ -245,24 +242,20 @@ export class PopupAddStationeryComponent implements OnInit {
 
   openPopupDevice(template: any, color) {
     this.color = color;
-    var dialog = this.cfService.openForm(template, '', 300, 300);
+    var dialog = this.cfService.openForm(template, '', 500, 350);
     this.changeDetectorRef.detectChanges();
   }
 
-  add() {
-    console.log(this.color);
-    console.log('Aloo');
-  }
   listColor = [];
   valueChange(event) {
-    debugger;
+
     if (event?.field) {
       if (event.data instanceof Object) {
-        this.dialogStationery.patchValue({
+        this.dialogAddStationery.patchValue({
           [event['field']]: event.data.value,
         });
       } else {
-        this.dialogStationery.patchValue({ [event['field']]: event.data });
+        this.dialogAddStationery.patchValue({ [event['field']]: event.data });
       }
     }
     this.colorItem = event.data;
@@ -276,7 +269,6 @@ export class PopupAddStationeryComponent implements OnInit {
       }
     } else {
       this.listColor.push(this.colorItem);
-      console.log(this.listColor);
     }
 
     this.changeDetectorRef.detectChanges();
@@ -292,5 +284,5 @@ export class PopupAddStationeryComponent implements OnInit {
     if (device) return device.text;
   }
 
-  getfileCount(event) {}
+  getfileCount(event) { }
 }

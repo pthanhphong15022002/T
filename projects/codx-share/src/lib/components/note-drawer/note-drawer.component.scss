@@ -20,12 +20,6 @@
     margin-left: -8px;
 }
 
-.show-customName {
-    margin-left: 3%;
-    width: 130px;
-    margin-top: 1%;
-}
-
 .note-option {
     max-height: 80px;
     overflow: auto;
@@ -35,6 +29,11 @@
 .icon-edit-one {
     position: absolute;
     right: 48px;
-    top: 8px;
+    top: 9px;
     border-radius: 30px !important;
+}
+
+.note-content {
+    background-color: #fff7df;
+    border-left: 3px #ffd075 solid;
 }

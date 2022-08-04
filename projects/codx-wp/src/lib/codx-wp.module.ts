@@ -15,9 +15,10 @@ import { ApproveDetailComponent } from './approve/approve-detail/approve-detail.
 import { ApproveComponent } from './approve/approve.component';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
-import { PopupEditComponent } from './company-infor/popup-edit/popup-edit/popup-edit.component';
+import { CompanyEditComponent } from './company-infor/popup-edit/company-edit/company-edit.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AddNoteComponent } from './dashboard/home/add-note/add-note.component';
+import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-title/popup-title.component';
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
 import { HomeComponent } from './dashboard/home/home.component';
 import { ListPostComponent } from './dashboard/home/list-post/list-post.component';
@@ -27,17 +28,20 @@ import { MyTeamComponent } from './dashboard/home/my-team/my-team.component';
 import { UpdateNotePinComponent } from './dashboard/home/update-note-pin/update-note-pin.component';
 import { NewsComponent } from './news/news.component';
 import { PopupAddComponent } from './news/popup/popup-add/popup-add.component';
+import { PopupEditComponent } from './news/popup/popup-edit/popup-edit.component';
 import { ElecticSearchComponent } from './news/popup/popup-search/electic-search/electic-search.component';
 import { PopupSearchComponent } from './news/popup/popup-search/popup-search.component';
 import { ViewDetailComponent } from './news/view-detail/view-detail.component';
 import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { Layout2Component } from './_layout2/layout2.component';
+import { Layout3Component } from './_layout3/layout3.component';
 
 export const routes: Routes = [
+  
   {
     path: 'companyinfo',
-    component: Layout2Component,
+    component: Layout3Component,
     children: [
       {
         path: ':funcID',
@@ -70,6 +74,21 @@ export const routes: Routes = [
     ]
   },
   {
+    path:'approvals',
+    component: Layout2Component,
+    children:[
+      {
+        path:':funcID',
+        component: ApproveComponent
+      },
+      {
+        path: '**',
+        redirectTo: 'approvals/WPT0211',
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
     path: 'portal',
     component: DashboardComponent,
     children: [
@@ -79,14 +98,14 @@ export const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: 'portal/wp',
+        redirectTo: 'portal/WP',
         pathMatch: 'full'
       }
     ],
   },
   {
     path: '',
-    redirectTo: 'portal/wp',
+    redirectTo: 'portal/WP',
     pathMatch: 'full'
   }
 ];
@@ -95,6 +114,7 @@ const Component: Type<any>[] =
   [
     LayoutComponent,
     Layout2Component,
+    Layout3Component,
     CodxWpComponent,
     NewsComponent,
     PopupAddComponent,
@@ -114,7 +134,9 @@ const Component: Type<any>[] =
     MyTeamComponent,
     UpdateNotePinComponent,
     ViewVideoComponent,
-    PopupDetailComponent
+    PopupDetailComponent,
+    CompanyEditComponent,
+    PopupTitleComponent,
 
   ];
 

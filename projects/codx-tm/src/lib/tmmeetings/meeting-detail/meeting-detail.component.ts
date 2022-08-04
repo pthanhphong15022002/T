@@ -1,16 +1,22 @@
+import { formatDate } from '@angular/common';
 import { CO_Meetings } from './../../models/CO_Meetings.model';
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
-import { Component, Injector, OnDestroy, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnDestroy,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UIComponent, ViewType, AuthStore, DialogData } from 'codx-core';
 
 @Component({
   selector: 'lib-meeting-detail',
   templateUrl: './meeting-detail.component.html',
-  styleUrls: ['./meeting-detail.component.css']
+  styleUrls: ['./meeting-detail.component.css'],
 })
 export class MeetingDetailComponent extends UIComponent implements OnDestroy {
-
   funcID = '';
   views = [];
   meetingID: any;
@@ -18,29 +24,29 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
     formName: '',
     gridViewName: '',
     entityName: '',
-  }
+  };
   dataValue = '';
   user: any;
-  iterationID= '';
-  data: any ;
-  meeting= new CO_Meetings()
+  iterationID = '';
+  data: any;
+  month: any;
+  day: any;
+  startTime: any;
+  meeting = new CO_Meetings();
   constructor(
     private injector: Injector,
     private TMService: CodxTMService,
     private route: ActivatedRoute,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    @Optional() dt?: DialogData,
-
+    @Optional() dt?: DialogData
   ) {
     super(injector);
-    this.route.params.subscribe(params => {
-      if (params)
-        this.funcID = params['funcID'];
-    })
+    this.route.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
 
     this.TMService.hideAside.next(false);
-
   }
 
   ngOnDestroy(): void {
@@ -49,13 +55,22 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
 
   onInit(): void {
     this.getQueryParams();
-    this.loadMeeting();
-
+    if (this.meetingID != null) {
+      this.TMService.getMeetingID(this.meetingID).subscribe((res) => {
+        if (res) {
+          this.data = res;
+          this.meeting = this.data;
+        }
+      });
+    }
   }
 
+  ngAfterViewInit(): void {
+    this.getDate();
+  }
 
   getQueryParams() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params) {
         this.meetingID = params.meetingID;
         this.dataValue = this.meetingID;
@@ -63,14 +78,45 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
     });
   }
 
-  loadMeeting(){
-    if(this.meetingID!=null){
-      this.TMService.getMeetingID(this.meetingID).subscribe(res=>{
-        if(res){
-          this.data = res;
-          this.meeting = this.data;
-        }
-      });
+  getDate() {
+    if (this.meeting.startDate) {
+      var date = new Date(this.meeting.startDate);
+      this.month = this.addZero(date.getMonth() + 1);
+      this.day = this.addZero(date.getDate());
+      var endDate = new Date(this.meeting.endDate);
+      let start =
+        this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
+      let end =
+        this.addZero(endDate.getHours()) +
+        ':' +
+        this.addZero(endDate.getMinutes());
+
+      this.startTime = start + ' - ' + end;
     }
+  }
+
+  addZero(i) {
+    if (i < 10) {
+      i = '0' + i;
+    }
+    return i;
+  }
+
+  convertHtmlAgency(day: any, startTime: any, userName: any) {
+    var desc = '<div class="d-flex flex-column"><div class="d-flex align-items-center mb-1">';
+    if (day && startTime && userName) {
+      day = new Date(day).toLocaleDateString('en-GB')
+      desc +=
+        ' <div class="d-flex me-4"><span class="icon-email icon-16 me-1"></span><div>' +
+        day +
+        '</div></div>' +
+        '<div class="d-flex me-4"><span class="icon-phone_android icon-16 me-1"></span><div>' +
+        startTime +
+        '</div></div>' +
+        '<div class="d-flex me-4"><span class="icon-email icon-16 me-1"></span><div>' +
+        userName +
+        '</div></div>';
+    }
+    return desc + '</div></div>';
   }
 }

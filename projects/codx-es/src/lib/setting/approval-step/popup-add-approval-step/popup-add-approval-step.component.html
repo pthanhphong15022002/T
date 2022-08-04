@@ -57,7 +57,7 @@
         <codx-label class="text-primary" default="Người thực hiện" fiedName="Attendees" [formModel]="formModel">
         </codx-label>
       </div>
-      <div class="icon-person_add_alt_1 text-hover-primary icon-22 ml-2 mb-2" (click)="testdata(controlShare)">
+      <div class="icon-person_add_alt_1 text-hover-primary icon-22 ms-2 mb-2" (click)="testdata(controlShare)">
       </div>
 
     </div>
@@ -175,7 +175,7 @@
               </codx-input>
             </div>
             <div class="col-2">
-              <div class="icon-email icon-24 ml-2"
+              <div class="icon-email icon-24 ms-2"
                 [ngClass]="item?.isEmail == '1' ? 'text-hover-primary' : 'text-muted'" (click)="openSetupEmail(item)">
               </div>
             </div>
@@ -229,7 +229,7 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <a class="btn btn-primary font-weight-bold" (click)="onSaveForm()">
+    <a class="btn btn-primary fw-bold" (click)="onSaveForm()">
       <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
     </a>
   </div>
@@ -279,23 +279,23 @@
         <codx-label class="text-primary" default="Người thực hiện" fiedName="Attendees" [formModel]="formModel">
         </codx-label>
       </div>
-      <div class="icon-person_add_alt_1 text-hover-primary icon-22 ml-2 mb-2" (click)="testdata(controlShare)">
+      <div class="icon-person_add_alt_1 text-hover-primary icon-22 ms-2 mb-2" (click)="testdata(controlShare)">
       </div>
 
     </div>
     <ng-container *ngFor="let item of lstApprover">
       <div class="d-flex align-items-center mb-2 w-100">
-        <codx-temp-full cardCss="card-template" *ngIf="item.roleType=='U'" [imageId]="item.approver" [subTitle]=""
-          [title]="item.approverName" [subTitle]="item.roleType == 'U' ? (item.positionName ?? 'Vị trí công việc') : ''"
-          [imageObjType]="'AD_Users'" [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item)"
-          [dataItem]="item" typeMF="hover">
+        <codx-temp-full cardCss="card-template" *ngIf="item.roleType?.length==1" [imageId]="item.approver" [subTitle]=""
+          [title]="item.approverName" [subTitle]=" (item.positionName ?? 'Vị trí công việc')"
+          [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3" [formModel]="formModel"
+          (clickMF)="MFClick($event, item)" [dataItem]="item" typeMF="hover">
         </codx-temp-full>
 
-        <codx-temp-full cardCss="card-template" *ngIf="item.roleType != 'U'" [imageSrc]="'./assets/themes/sys/default/img/' +
-            (item.icon ? item.icon : 'share_default.svg')" imgCss="me-4 symbol symbol-40px symbol-circle"
+        <codx-temp-full cardCss="card-template" *ngIf="item.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
+            (item.icon ? item.icon : 'share_default.svg')" [imageWidth]="20" imgCss="w-30px p-3 me-3 user-mini-icon"
           [imageWidth]="30" [subTitle]="(item.approver| vll:'ES014':'text'|async)"
           [title]="(item.approver| vll:'ES014':'text'|async)"
-          [subTitle]="item.roleType == 'U' ? (item.positionName ?? 'Vị trí công việc') : ''" [titleLine]="3"
+          [subTitle]="item.positionName ?? (item.approver| vll:'ES014':'text'|async)" [titleLine]="3"
           [formModel]="formModel" (clickMF)="MFClick($event, item)" [dataItem]="item" typeMF="hover">
         </codx-temp-full>
       </div>

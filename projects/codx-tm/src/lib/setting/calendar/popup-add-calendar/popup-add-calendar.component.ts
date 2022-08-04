@@ -21,7 +21,7 @@ import { APICONSTANT } from '@shared/constant/api-const';
   templateUrl: './popup-add-calendar.component.html',
   styleUrls: ['./popup-add-calendar.component.scss'],
 })
-export class PopupAddCalendarComponent extends UIComponent implements OnInit {
+export class PopupAddCalendarComponent extends UIComponent {
   dialog: DialogRef;
   dialogAddCalendar: FormGroup;
   formModel: FormModel;
@@ -30,7 +30,6 @@ export class PopupAddCalendarComponent extends UIComponent implements OnInit {
   funcID: string;
   calendarID: string;
   data: any;
-  cbxName: object;
 
   constructor(
     private injector: Injector,

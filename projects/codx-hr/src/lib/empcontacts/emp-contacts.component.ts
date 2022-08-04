@@ -164,17 +164,5 @@ export class EmpContactsComponent implements OnInit {
 
   }
 
-  clickMF(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'btnAdd':
-        // this.show();
-        break;
-      // case 'edit':
-      //   this.edit(data);
-      //   break;
-      // case 'delete':
-      //   this.delete(data);
-      //   break;
-    }
-  }
+  
 }

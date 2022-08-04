@@ -1,3 +1,5 @@
+import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
+import { PopupAddCarsComponent } from './settings/cars/popup-add-cars/popup-add-cars.component';
 import { CarsComponent } from './settings/cars/cars.component';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
@@ -12,7 +14,6 @@ import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import {
   AuthGuard,
   CodxCoreModule,
-  CodxShareComponent,
   EnvironmentConfig,
 } from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
@@ -34,6 +35,8 @@ import { PopupColorStationeryComponent } from './settings/stationery/popup-add-s
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
 import { ReportComponent } from './booking-room/report-view/report.component';
+import { DriversComponent } from './settings/drivers/drivers.component';
+import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/popup-add-drivers.component';
 const routes: Route[] = [
   {
     path: '',
@@ -58,6 +61,10 @@ const routes: Route[] = [
       {
         path: 'cars/:funcID',
         component: CarsComponent,
+      },
+      {
+        path: 'drivers/:funcID',
+        component: DriversComponent
       },
       {
         path: 'stationery/:funcID',
@@ -91,8 +98,17 @@ const Components: Type<any>[] = [
   BookingStationeryComponent,
   PopupAddBookingRoomComponent,
   PopupAddBookingCarComponent,
+  PopupRequestStationeryComponent,
+  PopupDeviceStationeryComponent,
+  PopupColorStationeryComponent,
+  PopupAddCarsComponent,
+  PopupAddRoomsComponent,
+  PopupAddStationeryComponent,
+  PopupAddDriversComponent,
+  PopupListStationeryComponent,
   StationeryComponent,
   CarsComponent,
+  DriversComponent,
   RoomsComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
@@ -103,11 +119,6 @@ const Components: Type<any>[] = [
 @NgModule({
   declarations: [
     Components,
-    PopupRequestStationeryComponent,
-    PopupListStationeryComponent,
-    PopupDeviceStationeryComponent,
-    PopupColorStationeryComponent,
-    PopupAddStationeryComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HoverPreloadStrategy } from 'ngx-hover-preload';
 import { AuthGuard } from 'codx-core';
+import { SosComponent } from '@pages/sos/sos.component';
 export const routes: Routes = [
   {
     path: ':tenant',
@@ -88,7 +89,10 @@ export const routes: Routes = [
         loadChildren: () =>
           import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
       },
-
+      {
+        path: 'sos',
+        component: SosComponent
+      },
       { path: '**', redirectTo: 'error/404' }
     ],
   }

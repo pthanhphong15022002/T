@@ -32,10 +32,8 @@ export class CO_Meetings{
     createBy: string;
     modifiedBy: Date;
     online: boolean;
-    startTime: any = null;
-    endTime: any = null;
-    isFullDay = false;
     avataResource: string;
+    userName: string;
 }
 
 export class Resources{

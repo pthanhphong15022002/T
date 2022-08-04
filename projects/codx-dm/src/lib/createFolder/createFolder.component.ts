@@ -175,7 +175,8 @@ export class CreateFolderComponent implements OnInit {
   postblog: boolean;
   historyFileNameExt: string;
   clipboard: any;
-  titleDialogPHysical = 'Physical Control';
+  titleOK = 'OK';
+  titleDialogPHysical = 'Physical Control'; 
   titleRolesDialog = 'Cập nhật quyền';
   titleShare = 'Chia sẻ';
   titleExpand = 'Mở rộng';
@@ -195,9 +196,11 @@ export class CreateFolderComponent implements OnInit {
   titleStoreControl = 'Kiểm soát vị trí kho';
   titleVersionControl = 'Kiểm soát phiên bản';
   titleApprovar = 'Xét duyệt tài liệu';
-  titleFolderName = 'Tên thư mục';
-  titleFolderRequired = 'Tên thư mục bắt buộc..';
-  width = '720';
+  titleFolderName = 'Tên thư mục';  
+  titleFolderRequired = 'Tên thư mục bắt buộc..';  
+  titleAccessDenied = '';
+  titleApprovalName = "Bạn chưa nhập thông tin người xét duyệt";
+  width = '720'; 
   height = window.innerHeight;
   //objectType="";
   indexSub: number;
@@ -252,13 +255,19 @@ export class CreateFolderComponent implements OnInit {
   ngOnInit(): void {
     //  this.openForm();
     this.dmSV.isLocation.subscribe(item => {
-      this.location = item;
-      this.fileEditing.location = item;
-      this.changeDetectorRef.detectChanges();
+      if (item) {
+        this.location = item;
+        if (this.fileEditing === null)
+          this.fileEditing = new FileUpload;
+        this.fileEditing.location = item;
+        this.changeDetectorRef.detectChanges();
+      }      
     });
 
     this.dmSV.isListSubFolder.subscribe(item => {
       this.listSubFolder = item;
+      if (this.fileEditing === null)
+        this.fileEditing = new FileUpload;
       this.fileEditing.subFolder = this.listSubFolder;
       this.changeDetectorRef.detectChanges();
     });
@@ -507,7 +516,7 @@ export class CreateFolderComponent implements OnInit {
   onFolderSave() {
 
     if (this.approval && (this.approvers == "" || this.approvers == undefined)) {
-      this.notificationsService.notifyCode("DM058");
+      this.notificationsService.notify(this.titleApprovalName);
       return;
     }
 
@@ -536,12 +545,13 @@ export class CreateFolderComponent implements OnInit {
       this.fileEditing.folderType = this.dmSV.folderType;
       this.folderService.addFolder(this.fileEditing).subscribe(async res => {
         if (res.status == 0) {
-          var folders = this.dmSV.listFolder.getValue();
+          var folders = this.dmSV.listFolder;
           if (folders == null) folders = [];
           if ((res.data.level != "1" && this.dmSV.idMenuActive == "3") || (res.data.level != "3" && this.dmSV.idMenuActive == "4"))
             that.dmSV.isTree = true;
           folders.push(Object.assign({}, res.data));
-          that.dmSV.listFolder.next(folders);
+          that.dmSV.listFolder = folders;
+          that.dmSV.ChangeData.next(true);
           that.dmSV.addFolder.next(res.data);
           //  that.dmSV.changeData(folders, null, this.dmSV.getFolderId());
           //  that.dmSV.changeAddFolder(res.data);
@@ -571,13 +581,14 @@ export class CreateFolderComponent implements OnInit {
           folder.recID = that.id;
           folder.folderName = that.folderName;
           //  this.dmSV.nodeChange.next(folder);
-          var folders = this.dmSV.listFolder.getValue();
+          var folders = this.dmSV.listFolder;
           let index = folders.findIndex(d => d.recID.toString() === this.id);
           if (index != -1) {
             //   folders[index].folderName = that.folderName;
             folders[index] = item.data;
           }
-          that.dmSV.listFolder.next(folders);
+          that.dmSV.listFolder = folders;
+          that.dmSV.ChangeData.next(true);
           that.dmSV.nodeChange.next(folders[index]);
           that.changeDetectorRef.detectChanges();
           this.modalService.dismissAll();
@@ -602,13 +613,14 @@ export class CreateFolderComponent implements OnInit {
                   that.dmSV.isTree = false;
                   that.dmSV.currentNode = '';
                   that.dmSV.folderId.next(res.data.recID);
-                  var folders = this.dmSV.listFolder.getValue();
+                  var folders = this.dmSV.listFolder;
                   let index = folders.findIndex(d => d.recID.toString() === that.id);
                   if (index > -1) {
                     that.dmSV.nodeDeleted.next(that.id);
                     folders.splice(index, 1);//remove element from array
                   }
-                  that.dmSV.listFolder.next(folders);
+                  that.dmSV.listFolder = folders;
+                  that.dmSV.ChangeData.next(true);
                   this.dialog.close();
                 }
                 else {
@@ -759,7 +771,7 @@ export class CreateFolderComponent implements OnInit {
     switch (item) {
       case "folderName":
         if (this.checkFolderName() != "0") {
-          return "w-100 text-error is-invalid";
+          return "w-100 dms-text-error is-invalid";
         }
         else {
           return "w-100";

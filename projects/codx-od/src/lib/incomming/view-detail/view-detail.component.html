@@ -1,10 +1,10 @@
-<codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel"  [body]="body" [footer]="footer" (clickMF)="openFormFuncID($event)">
+<codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel"  [body]="body" [footer]="footer" (clickMF)="openFormFuncID($event)" class="h-100">
   <ng-template #header>
     <div class="d-flex justify-content-between">
       <div class="w-100">
         <div>
           <codx-temp-full 
-            [title]="extractContent(data?.title)"  
+            [title]="extractContent(data?.title)"
             [desc]="convertHtmlAgency(data?.agencyName,data?.txtLstAgency)"
             [bookmark]="false"
             [titleLine]="2"
@@ -19,6 +19,7 @@
               [field]="'Category'"
               [value]="data?.category"
               [showText]="true"
+              [showBgColor]="true"
               class="text-gray-600"
             >
             </codx-vll>
@@ -59,7 +60,7 @@
           </div>
           <div class="d-flex align-items-center me-5 mb-2">
             <codx-label [default]="gridViewSetup?.Deadline?.headerText +' : '" ngClass="me-2"></codx-label>
-            <codx-label [default]="data?.deadline ? (data?.deadline | date:'dd/MM/yyyy') : gridViewSetup?.Deadline?.headerText" ngClass="text-gray-600"></codx-label>
+            <span class="text-gray-600">{{data?.deadline ? (data?.deadline | date:'dd/MM/yyyy') : gridViewSetup?.Deadline?.headerText}}</span>
           </div>
           <div class="d-flex align-items-center me-5 mb-2">
             <codx-label [default]="gridViewSetup?.RefNo?.headerText +' : '" ngClass="me-2"></codx-label>
@@ -76,6 +77,7 @@
         <div class="d-flex justify-content-end">
           <codx-vll 
             [showText]="true" 
+            [showBgColor]="true"
             [formModel]="formModel" 
             [field]="'Status'" 
             [value]="data?.status" 
@@ -97,16 +99,17 @@
     </ng-container>
   </ng-template>
   <ng-template #body>
-    <div class="tab-horizone">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <div class="tab-horizone h-od-tab  ">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active"  class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink>Nơi nhận</a>
+          <a ngbNavLink>
+            Nơi nhận</a>
           <ng-template ngbNavContent>
             <ng-container *ngFor="let item of data?.listInformationRel">
-              <div class="list-item has-action-menu  mb-6">
+              <div class="list-item has-action-menu-1 mb-6">
                 <div class="d-flex align-items-top">
                   <div class="w-120px me-6">
-                    <div class="text-primary d-flex justify-content-center fw-bolder fs-4">{{(item.date ? item.date : item.createdOn) | date:'shortTime'}}</div>
+                    <div class="text-primary d-flex justify-content-center fw-bold fs-4">{{(item.date ? item.date : item.createdOn) | date:'shortTime'}}</div>
                     <div class="text-dark d-flex justify-content-center text-gray-400 fs-6">{{(item.date ? item.date : item.createdOn) | date :  "dd/MM/yyyy"}}</div>
                   </div>
                   <div class="d-flex align-items-center">
@@ -147,14 +150,19 @@
                     class="badge badge-light"
                   >
                   </codx-vll> -->
+                  <codx-vll 
+                    [showText]="true"
+                    [showBgColor]="true" 
+                    [name]="this.gridViewSetup['Status']['referedValue']"
+                    [value]="4" 
+                    class="badge badge-light badge-square badge-md fs-7">
+                  </codx-vll>
                     <span class="badge badge-light-primary" [style.color]="getTextColor(item.status,'4')" [style.backgroundColor]="getBgColor(item.status,'4')">{{fmTextValuelist(item.status,"5")}}</span>
                     <span class="badge badge-light" [style.color]="getTextColor(item.reCall,'6')" [style.backgroundColor]="getBgColor(item.reCall,'5')" *ngIf="item.reCall">Đã thu hồi</span>
                   </div>
                   <ng-container *ngIf="item.relationType != '1' && !item.reCall && item.userID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
-                    <div class="action-menu d-flex align-items-center cursor-pointer" (click)="openFormFuncID({functionID:'recallUser',relID: item.recID})"><!--  -->
-                      <div class="btn btn-sm btn-icon btn-white" ><!-- (click)="openFormRecallSharing(data?.recID,item.recID)" -->
-                        <i class="icon-redo text-primary icon-18"></i>
-                      </div>
+                    <div class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer" (click)="openFormFuncID({functionID:'recallUser',relID: item.recID})"><!--  -->
+                      <i class="icon-redo text-primary icon-18"></i>
                     </div>
                   </ng-container>
                 </div>
@@ -166,9 +174,9 @@
         <li [ngbNavItem]="2">
           <a ngbNavLink>Công việc</a>
           <ng-template ngbNavContent>
-         <!--    <ng-container *ngIf="data?.tasks[0].length>0">
+            <ng-container *ngIf="data?.tasks[0].length>0">
               <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
-            </ng-container> -->
+            </ng-container> 
           </ng-template>
         </li>
         <li [ngbNavItem]="3">
@@ -184,7 +192,7 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <codx-tabs></codx-tabs>
+    <app-od-tabs></app-od-tabs>
   </ng-template>
   <ng-template #templateorg let-data>
     <div class="container-fluid justify-content-between d-flex">
@@ -215,9 +223,9 @@
           </div>
       </div>
       <div class="mt-5 ms-5 justify-content-end w-120px text-center" *ngIf="data?.items.length == 0">
-        <span class="fs-8" [style.color]="getTextColor(data?.status,'5')" >{{fmTextValuelist(data?.status,"7")}}</span>
+        <codx-vll [name]="'L0614'" [value]="data?.status" [showText]="true" [showBgColor]="false"></codx-vll>
         <div class="progress h-6px w-100 mt-2">
-          <div class="progress-bar bg-primary" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="data?.percentage" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div class="d-flex mt-2">
           <span class="icon-schedule icon-16 text-gray-600"></span>

@@ -30,7 +30,7 @@ export class PopupAddRoomsComponent implements OnInit {
   dialog: any;
   cacheGridViewSetup: any;
   CbxName: any;
-  dialogRoom: FormGroup;
+  dialogAddRoom: FormGroup;
   vllDevices = [];
   lstDevices: [];
   isAfterRender = false;
@@ -80,15 +80,15 @@ export class PopupAddRoomsComponent implements OnInit {
         this.dialog.formModel.gridViewName
       )
       .then((item) => {
-        this.dialogRoom = item;
-        this.dialogRoom.patchValue({
+        this.dialogAddRoom = item;
+        this.dialogAddRoom.patchValue({
           ranking: '1',
           category: '1',
           owner: '',
         });
 
         if (this.data) {
-          this.dialogRoom.patchValue(this.data);
+          this.dialogAddRoom.patchValue(this.data);
         }
         this.isAfterRender = true;
       });
@@ -97,9 +97,9 @@ export class PopupAddRoomsComponent implements OnInit {
   valueCbxChange(event: any) {
     if (event?.field != null) {
       if (event.data instanceof Object) {
-        this.dialogRoom.patchValue({ [event['field']]: event.data.value });
+        this.dialogAddRoom.patchValue({ [event['field']]: event.data.value });
       } else {
-        this.dialogRoom.patchValue({ [event['field']]: event.data });
+        this.dialogAddRoom.patchValue({ [event['field']]: event.data });
       }
     }
   }
@@ -115,8 +115,8 @@ export class PopupAddRoomsComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   onSaveForm() {
-    if (this.dialogRoom.invalid == true) {
-      console.log(this.dialogRoom);
+    if (this.dialogAddRoom.invalid == true) {
+      console.log(this.dialogAddRoom);
       return;
     }
     let equipments = '';
@@ -129,17 +129,17 @@ export class PopupAddRoomsComponent implements OnInit {
         }
       }
     });
-    if (!this.dialogRoom.value.linkType) {
-      this.dialogRoom.value.linkType = '0';
+    if (!this.dialogAddRoom.value.linkType) {
+      this.dialogAddRoom.value.linkType = '0';
     }
-    this.dialogRoom.value.resourceType = '1';
+    this.dialogAddRoom.value.resourceType = '1';
 
     this.dialog.dataService.save((opt: any) => this.beforeSave(opt)).subscribe();
 
   }
 
   beforeSave(option: any) {
-    let itemData = this.dialogRoom.value;
+    let itemData = this.dialogAddRoom.value;
     if (!itemData.resourceID) {
       this.isAdd = true;
     } else {

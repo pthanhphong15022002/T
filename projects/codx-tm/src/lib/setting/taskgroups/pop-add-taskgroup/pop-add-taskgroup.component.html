@@ -20,11 +20,11 @@
       </codx-input>
     </div>
     <div class="form-group mt-3">
-      <codx-label fiedName="Note"  formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
+      <codx-label fiedName="Note" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
       </codx-label>
 
-      <codx-input type="textarea" field="note" headerposition="none" format="ed" height="150" [crrValue]="taskGroups.note" class="form-control"
-        (valueChange)="changeMemo($event)"></codx-input>
+      <codx-input type="textarea" field="note" headerposition="none" format="ed" height="150"
+        [crrValue]="taskGroups.note" class="form-control" (valueChange)="changeMemo($event)"></codx-input>
     </div>
   </div>
 </ng-template>
@@ -58,7 +58,7 @@
     </div>
     <div class="col-4">
       <codx-input name="locationControl" type="valuelist" field="locationControl" placeholder=""
-        [crrValue]="taskGroups.locationControl" (valueChange)="valueList($event)" refValue="TM012">
+        [crrValue]="taskGroups.locationControl" (valueChange)="valueList($event)" [refValue]="gridViewSetup.LocationControl.referedValue">
         <!-- [refValue]="gridViewSetup.LocationControl.referedValue" -->
       </codx-input>
     </div>
@@ -76,7 +76,7 @@
     </div>
     <div class="col-4">
       <codx-input name="planControl" type="valuelist" field="planControl" placeholder=""
-        [crrValue]="taskGroups.planControl" (valueChange)="valueList($event)" refValue="TM012">
+        [crrValue]="taskGroups.planControl" (valueChange)="valueList($event)" [refValue]="gridViewSetup.PlanControl.referedValue">
       </codx-input>
     </div>
   </div>
@@ -93,7 +93,7 @@
     </div>
     <div class="col-4">
       <codx-input name="updateControl" type="valuelist" field="updateControl" placeholder=""
-        [crrValue]="taskGroups.updateControl" (valueChange)="valueList($event)" refValue="TM013">
+        [crrValue]="taskGroups.updateControl" (valueChange)="valueList($event)" [refValue]="gridViewSetup.UpdateControl.referedValue">
       </codx-input>
     </div>
   </div>
@@ -111,11 +111,15 @@
     <div class="col-4 row">
       <div class="col-6">
         <codx-input name="verifyControl" type="switch" class="test-switch" field="verifyControl"
-          [crrValue]="taskGroups.verifyControl" (valueChange)="valueWitch($event)" refValue="TM006">
+          [crrValue]="taskGroups.verifyControl" (valueChange)="valueWitch($event)" [refValue]="gridViewSetup.VerifyControl.referedValue">
         </codx-input>
       </div>
       <div class="col-6">
-        <span class="icon-edit text-primary icon-18"></span>
+        <span class="icon-edit text-primary icon-18" *ngIf="taskGroups.verifyControl == '1'">
+          <codx-input type="Share" refValue="TM006" field="verifyByType" (valueChange)="valueCbx($event)"
+           [listCombobox]="listCombobox" [dataShared]="[]" multiple="true" [showInput]="false">
+          </codx-input>
+        </span>
       </div>
     </div>
   </div>
@@ -133,7 +137,7 @@
     <div class="col-4 row">
       <div class="col-6">
         <codx-input name="approveControl" type="switch" class="test-switch" field="approveControl"
-          [crrValue]="taskGroups.approveControl" (valueChange)="valueWitch($event)" refValue="TM014">
+          [crrValue]="taskGroups.approveControl" (valueChange)="valueWitch($event)" [refValue]="gridViewSetup.ApproveControl.referedValue">
         </codx-input>
       </div>
       <div class="col-6">
@@ -169,8 +173,8 @@
         gridViewName="grvTaskGroups">
       </codx-label>
       <div>
-        <codx-label fiedName="EditControl" default="Cho phép chỉnh sửa nội dung công việc"
-          formName="TaskGroups" gridViewName="grvTaskGroups">
+        <codx-label fiedName="EditControl" default="Cho phép chỉnh sửa nội dung công việc" formName="TaskGroups"
+          gridViewName="grvTaskGroups">
         </codx-label>
       </div>
     </div>
@@ -186,8 +190,8 @@
         gridViewName="grvTaskGroups">
       </codx-label>
       <div>
-        <codx-label fiedName="DueDateControl" default="Thêm công việc có ngày hết hạn ở quá khứ"
-          formName="TaskGroups" gridViewName="grvTaskGroups">
+        <codx-label fiedName="DueDateControl" default="Thêm công việc có ngày hết hạn ở quá khứ" formName="TaskGroups"
+          gridViewName="grvTaskGroups">
         </codx-label>
       </div>
     </div>
@@ -272,7 +276,7 @@
       <div class="d-flex align-items-center">
         <codx-label default="Công việc cần làm" formName="TaskGroups" gridViewName="grvTaskGroups">
         </codx-label>
-        <span class="text-primary font-weight-bold"></span>
+        <span class="text-primary fw-bold"></span>
       </div>
       <div class="d-flex mt-2">
         <a (click)="addTodolist()" class="btn btn-sm btn-outline-secondary">
@@ -291,7 +295,7 @@
                 (change)="onChangeToDoStatus(checkShareRight1.checked, i)">
               <span></span>{{item.text}}
             </label>
-            <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ml-2 text-danger"></span>
+            <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ms-2 text-danger"></span>
           </div>
         </ng-container>
       </div>

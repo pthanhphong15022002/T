@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
 import { preRender } from '@syncfusion/ej2-angular-buttons';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService } from 'codx-core';
+import { ViewModel, ViewsComponent, ImageViewerComponent, ApiHttpService, AuthService, DialogData, ViewType, DialogRef, NotificationsService, CallFuncService, Util, CacheService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -37,12 +37,17 @@ export class PopupAddComponent implements OnInit {
   userRecevier: any;
   recevierID = "";
   recevierName = "";
-  lstRecevier = [];
-  dataEdit:any;
-  isUpload:boolean = false;
+
   fileUpload:any[] = [];
   fileImage:any[] = [];
   fileVideo:any[] = [];
+  myPermission:Permission = null;
+  apprPermission:Permission = null;
+  shareIcon:string = "";
+  shareText:string = "";
+  shareWith:String = "";
+  permissions:Permission[] = [];
+
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -63,7 +68,7 @@ export class PopupAddComponent implements OnInit {
     GROUPS: "G",
     USER: "U",
   }
-  MEMPERTYPE ={
+  MEMBERTYPE ={
     CREATED: "1",
     SHARE: "2",
     TAGS: "3"
@@ -73,41 +78,53 @@ export class PopupAddComponent implements OnInit {
     VIDEO: "video",
     APPLICATION :'application'
   }
-  myPermission:any;
-  approverPermission:any;
-  @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
+
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('codxAttachment') codxAttachment: AttachmentComponent;
   @ViewChild('codxATMVideo') codxAttachmentVideo: AttachmentComponent;
-
-  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
-    protected callFunc: CallFuncService,
+    private callFunc: CallFuncService,
+    private cache:CacheService,
     private dmSV:CodxDMService,
     @Optional() dd? : DialogData,
     @Optional() dialogRef?: DialogRef
 
   ) {
 
-    this.newsType = dd.data;
+    this.newsType = dd.data.type;
+    if (this.newsType != "1") {
+      this.isVideo = false;
+    }
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
   ngAfterViewInit(): void {
   }
+
+
+
   ngOnInit(): void {
-    if (this.newsType != "1") {
-      this.isVideo = false;
-    }
+    this.setDataDefault();
+  }
+
+
+  setDataDefault(){
+    this.cache.valueList('L1901').subscribe((vll: any) => {
+      let modShare = vll.datas.find((x: any) => x.value == this.SHARECONTROLS.EVERYONE);
+      this.shareIcon = modShare.icon;
+      this.shareText = modShare.text;
+      this.shareControl = this.SHARECONTROLS.EVERYONE;
+    });
+    this.tagName = "";
     this.shareControl = this.SHARECONTROLS.EVERYONE;
     this.myPermission = new Permission();
     this.myPermission.objectType = this.SHARECONTROLS.OWNER;
-    this.myPermission.memberType = this.MEMPERTYPE.CREATED;
+    this.myPermission.memberType = this.MEMBERTYPE.CREATED;
     this.myPermission.objectID = this.user.userID;
     this.myPermission.objectName = this.user.userName;
     this.myPermission.create = true;
@@ -122,15 +139,25 @@ export class PopupAddComponent implements OnInit {
     this.myPermission.createdBy = this.user.userID;
     this.myPermission.createdOn = new Date();
     // appover 
-    this.approverPermission = new Permission();
-    this.approverPermission.objectType = this.SHARECONTROLS.ADMINISTRATOR;
-    this.approverPermission.read = true;
-    this.approverPermission.isActive = true;
-    this.approverPermission.createdBy = this.user.userID;
-    this.approverPermission.createdOn = new Date();
+    this.apprPermission = new Permission();
+    this.apprPermission.objectType = this.SHARECONTROLS.ADMINISTRATOR;
+    this.apprPermission.read = true;
+    this.apprPermission.isActive = true;
+    this.apprPermission.createdBy = this.user.userID;
+    this.apprPermission.createdOn = new Date();
+    let evrPermission = new Permission();
+    evrPermission.objectType = this.shareControl;
+    evrPermission.memberType = this.MEMBERTYPE.SHARE;
+    evrPermission.read = true;
+    evrPermission.isActive = true;
+    evrPermission.createdBy = this.user.userID;
+    evrPermission.createdOn = new Date();
+    this.shareWith = "";
+    this.permissions.push(this.myPermission);
+    this.permissions.push(this.apprPermission);
+    this.permissions.push(evrPermission);
     this.initForm();
   }
-
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
@@ -141,45 +168,12 @@ export class PopupAddComponent implements OnInit {
     objNews.status = '2';
     objNews.approveControl = "0";
     objNews.shareControl = this.shareControl;
-    objNews.createdBy = this.user.userID;
-    var lstPermissions: Permission[] = [];
-    lstPermissions.push(this.myPermission);
-    lstPermissions.push(this.approverPermission);
-    // permission
-    if(this.lstRecevier.length > 0){
-      this.lstRecevier.forEach((item) => {
-        var per = new Permission();
-        switch(this.objectType){
-          case this.SHARECONTROLS.USER:
-            per.objectID = item.UserID;
-            per.objectName = item.UserName;
-            break;
-          case this.SHARECONTROLS.POSITIONS:
-            per.objectID = item.PositionID;
-            per.objectName = item.PositionName;
-            break
-          case this.SHARECONTROLS.DEPARMENTS:
-            per.objectID = item.OrgUnitID;
-            per.objectName = item.OrgUnitName;
-            break;
-          case this.SHARECONTROLS.GROUPS:
-            per.objectID = item.UserID;
-            per.objectName = item.UserName;
-            break;
-          case this.SHARECONTROLS.ROLES:
-            per.objectID = item.RoleID;
-            per.objectName = item.RoleName;
-            break
-        }
-        per.memberType = this.MEMPERTYPE.TAGS;
-        per.read = true;
-        per.isActive = true;
-        per.createdBy = this.user.userID;
-        per.createdOn = new Date();
-        lstPermissions.push(per);
-      })
+    objNews.permissions = this.permissions;
+    objNews.isActive = true;
+    if(objNews.allowShare){
+      objNews.permissions.map((p:Permission)=>{p.share = true});
     }
-    objNews.permissions = lstPermissions;
+    objNews.createdBy = this.user.userID;
     this.api
       .execSv(
         'WP',
@@ -194,23 +188,21 @@ export class PopupAddComponent implements OnInit {
           if(this.fileImage.length > 0){
           this.codxAttachment.objectId = data.recID;
             this.dmSV.fileUploadList = [...this.fileImage];
-            this.codxAttachment.saveFiles();
+            this.codxAttachment.saveFilesObservable().subscribe();
           }
           if(this.fileVideo.length > 0){
             this.codxAttachmentVideo.objectId = data.recID;
             this.dmSV.fileUploadList = [...this.fileVideo];
-            this.codxAttachmentVideo.saveFiles();
+            this.codxAttachmentVideo.saveFilesObservable().subscribe();
           }
           this.initForm();
           this.shareControl = this.SHARECONTROLS.EVERYONE;
-          this.lstRecevier = [];
           this.notifSV.notifyCode('E0026');
           this.dialogRef.close();
           this.insertWPComment(data);
         }
       });
   }
-  
 
   insertWPComment(data: WP_News){
     if(data.createPost){
@@ -225,12 +217,6 @@ export class PopupAddComponent implements OnInit {
       post.createdBy = data.createdBy;
       this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","PublishPostAsync", [post, null]).subscribe();
     }
-  }
-  clearData(){
-    this.lstRecevier = [];
-    this.userRecevier = [];
-    this.tagName = "";
-    this.clearValueForm();
   }
   valueChange(event: any) {
     if(!event || event.data == "" || !event.data){
@@ -271,42 +257,187 @@ export class PopupAddComponent implements OnInit {
     this.changedt.detectChanges();
   }
   
-  eventApply(event:any){
-    var data = event[0];
-    var objectType = data.objectType;
-    if(objectType && !isNaN(Number(objectType))){
-      this.lstRecevier = data.data;
-      this.shareControl = objectType;
+
+  eventApply(event: any) {
+    if (!event) {
+      return;
     }
-    else
-    {
-      this.objectType = data.objectType;
-      this.lstRecevier = data.dataSelected;
-      this.shareControl = objectType;
-      this.userRecevier = this.lstRecevier[0];
-      switch(objectType){
-        case 'U':
-          this.recevierID = this.userRecevier.UserID;
-          this.recevierName = this.userRecevier.UserName;
-          break;
-        case 'D':
-          this.recevierID = this.userRecevier.OrgUnitID;
-          this.recevierName = this.userRecevier.OrgUnitName;
-          break;
-        case 'P':
-          this.recevierID = this.userRecevier.PositionID;
-          this.recevierName = this.userRecevier.PositionName;
-          break;
-        case 'G':
-          this.recevierID = this.userRecevier.UserID;
-          this.recevierName = this.userRecevier.UserName;
-          break;
-        case 'R':
-          this.recevierID = this.userRecevier.RoleID;
-          this.recevierName = this.userRecevier.RoleName;
-          break;
-      }
-      
+    let data = event[0];
+    let countPermission = 0;
+    if(this.shareControl){
+      this.permissions = [];
+      this.permissions.push(this.myPermission);
+      this.permissions.push(this.apprPermission);
+    }
+    this.shareControl = data.objectType;
+    this.shareIcon = data.icon;
+    this.shareText = data.objectName;
+    if (data.dataSelected) {
+      countPermission = data.dataSelected.length;
+    }
+    switch (this.shareControl) {
+      case this.SHARECONTROLS.OWNER:
+        break;
+      case this.SHARECONTROLS.EVERYONE:
+        let evrPermission = new Permission();
+        evrPermission.objectType = this.shareControl;
+        evrPermission.memberType = this.MEMBERTYPE.SHARE;
+        evrPermission.read = true;
+        evrPermission.isActive = true;
+        evrPermission.createdBy = this.user.userID;
+        evrPermission.createdOn = new Date();
+        this.shareWith = "";
+        this.permissions.push(evrPermission);
+        break;
+      case this.SHARECONTROLS.MYGROUP:
+      case this.SHARECONTROLS.MYTEAM:
+      case this.SHARECONTROLS.MYDEPARMENTS:
+      case this.SHARECONTROLS.MYDIVISION:
+      case this.SHARECONTROLS.MYCOMPANY:
+        let permission = new Permission();
+        permission.objectType = this.shareControl;
+        permission.memberType = this.MEMBERTYPE.SHARE;
+        permission.read = true;
+        permission.isActive = true;
+        permission.createdBy = this.user.userID;
+        permission.createdOn = new Date();
+        this.shareWith = "";
+        this.permissions.push(permission);
+        break;
+      case this.SHARECONTROLS.OGRHIERACHY:
+      case this.SHARECONTROLS.DEPARMENTS:
+        data.dataSelected.forEach((x: any) => {
+          let p = new Permission();
+          p.objectType = this.shareControl;
+          p.objectID = x.OrgUnitID;
+          p.objectName = x.OrgUnitName;
+          p.memberType = this.MEMBERTYPE.SHARE;
+          p.read = true;
+          p.isActive = true;
+          p.createdBy = this.user.userID;
+          p.createdOn = new Date();
+          this.permissions.push(p);
+        });
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].OrgUnitName + '</b>', countPermission - 1, this.shareText);
+          });
+        }
+        else {
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].OrgUnitName + '</b>');
+          });
+        }
+        break;
+      case this.SHARECONTROLS.POSITIONS:
+        data.dataSelected.forEach((x: any) => {
+          let p = new Permission();
+          p.objectType = this.shareControl;
+          p.objectID = x.PositionID;
+          p.objectName = x.PositionName;
+          p.memberType = this.MEMBERTYPE.SHARE;
+          p.read = true;
+          p.isActive = true;
+          p.createdBy = this.user.userID;
+          p.createdOn = new Date();
+          this.permissions.push(p);
+
+        });
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].PositionName + '</b>', countPermission - 1, this.shareText);
+          });
+        }
+        else {
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].PositionName + '</b>');
+          });
+        }
+        break;
+      case this.SHARECONTROLS.ROLES:
+        data.dataSelected.forEach((x: any) => {
+          let p = new Permission();
+          p.objectType = this.shareControl;
+          p.objectID = x.RoleID;
+          p.objectName = x.RoleName;
+          p.memberType = this.MEMBERTYPE.SHARE;
+          p.read = true;
+          p.isActive = true;
+          p.createdBy = this.user.userID;
+          p.createdOn = new Date();
+          this.permissions.push(p);
+        });
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].RoleName + '</b>', countPermission - 1, this.shareText);
+          });
+        }
+        else {
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].RoleName + '</b>');
+          });
+        }
+        break;
+      case this.SHARECONTROLS.GROUPS:
+        data.dataSelected.forEach((x: any) => {
+          let p = new Permission();
+          p.objectType = this.shareControl;
+          p.objectID = x.UserID;
+          p.objectName = x.UserName;
+          p.memberType = this.MEMBERTYPE.SHARE;
+          p.read = true;
+          p.isActive = true;
+          p.createdBy = this.user.userID;
+          p.createdOn = new Date();
+          this.permissions.push(p);
+
+        });
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>', countPermission - 1, this.shareText);
+          });
+        }
+        else {
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>');
+          });
+        }
+        break;
+      default:
+        data.dataSelected.forEach((x: any) => {
+          let p = new Permission();
+          p.objectType = this.shareControl;
+          p.objectID = x.UserID;
+          p.objectName = x.UserName;
+          p.memberType = this.MEMBERTYPE.SHARE;
+          p.read = true;
+          p.isActive = true;
+          p.createdBy = this.user.userID;
+          p.createdOn = new Date();
+          this.permissions.push(p);
+        });
+        if (countPermission > 1) {
+          this.cache.message('WP002').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>', countPermission - 1, this.shareText);
+          });
+        }
+        else {
+          this.cache.message('WP001').subscribe((mssg: any) => {
+            if (mssg)
+              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>');
+          });
+        }
+        break;
+
     }
     this.changedt.detectChanges();
   }

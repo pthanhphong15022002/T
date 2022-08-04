@@ -1,6 +1,10 @@
-import { CodxFormComponent, NotificationsService } from 'codx-core';
+import {
+  CodxFormComponent,
+  CRUDService,
+  DialogModel,
+  NotificationsService,
+} from 'codx-core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { SaveNoteComponent } from './save-note/save-note.component';
 import {
   ApiHttpService,
@@ -114,18 +118,12 @@ export class AddNoteComponent implements OnInit {
         status: this.type == 'check' ? 0 : null,
         listNote: '',
       };
-      if(this.note.noteType != 'text')
-        this.note.checkList.push(dtt);
+      if (this.note.noteType != 'text') this.note.checkList.push(dtt);
       this.listFileUploadEdit = this.note.images;
-      // if (this.note.noteType != 'text') this.addFirstObjectInArray();
     }
     this.getNumberNotePin();
     this.noteType.text = true;
-    this.cache
-      .gridViewSetup('PersonalNotes', 'grvPersonalNotes')
-      .subscribe((res) => {
-        console.log('check gridViewSetup', res);
-      });
+    this.cache.gridViewSetup('Notes', 'grvNotes').subscribe((res) => {});
   }
 
   getNumberNotePin() {
@@ -238,23 +236,56 @@ export class AddNoteComponent implements OnInit {
       ) {
         if (item?.lisNote != '') {
           if (this.formType == 'edit') this.listNote = this.note.checkList;
+          let i = 0;
           this.listNote.forEach((data) => {
-            if (item?.listNote == data.listNote) {
+            if (i == index) {
               if (field == 'status') data.status = dt;
             }
+            i++;
           });
         }
       }
       if (field == 'listNote') {
-        if (dt == '') {
+        if (dt == '' && index !== this.listNote.length - 1) {
           for (var i = 0; i < this.listNote.length; i++) {
             if (i === index) {
               this.listNote.splice(i, 1);
+              return;
             }
           }
         }
+        this.countUpdateTodo++;
+        if (this.countUpdateTodo == 1 && this.formType == 'add') {
+          this.listNote[this.listNote.length - 1] = {
+            status: this.type == 'check' ? 0 : null,
+            listNote: '',
+          };
+        } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
+          this.listNote.pop();
+        }
+        this.keyUpEnter(e);
+        var dt: any = {
+          status: this.tempNote.status,
+          listNote: this.tempNote.listNote,
+        };
+        if (this.countUpdateTodo == 1 && this.formType == 'add') {
+          this.listNote.unshift(Object.assign({}, dt));
+        } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
+          this.listNote.push(dt);
+          var dtt = {
+            status: this.type == 'check' ? 0 : null,
+            listNote: '',
+          };
+          this.listNote.push(dtt);
+        }
+        this.changeDetectorRef.detectChanges();
+        var ele = document.getElementsByClassName('test-textbox');
+        if (ele) {
+          let htmlEle = ele[ele.length - 1] as HTMLElement;
+          htmlEle.focus();
+        }
       }
-      if(field == 'showCalendar') {
+      if (field == 'showCalendar') {
         this.checkSwitch == true;
       }
     }
@@ -264,8 +295,7 @@ export class AddNoteComponent implements OnInit {
     this.note.createdOn = this.currentDate;
     this.note.noteType = this.type;
     this.note.isPin = this.pin;
-    if(this.checkSwitch == false)
-      this.note.showCalendar = true;
+    if (this.checkSwitch == false) this.note.showCalendar = true;
     if (this.type == 'check' || this.type == 'list') {
       this.listNote.pop();
       this.note.checkList = this.listNote;
@@ -420,38 +450,7 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
-  onUpdateNote(e: any) {
-    this.countUpdateTodo++;
-    if (this.countUpdateTodo == 1 && this.formType == 'add') {
-      this.listNote[this.listNote.length - 1] = {
-        status: this.type == 'check' ? 0 : null,
-        listNote: '',
-      };
-    } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
-      this.listNote.pop();
-    }
-    this.keyUpEnter(e);
-    var dt: any = {
-      status: this.tempNote.status,
-      listNote: this.tempNote.listNote,
-    };
-    if (this.countUpdateTodo == 1 && this.formType == 'add') {
-      this.listNote.unshift(Object.assign({}, dt));
-    } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
-      this.listNote.push(dt);
-      var dtt = {
-        status: this.type == 'check' ? 0 : null,
-        listNote: '',
-      };
-      this.listNote.push(dtt);
-    }
-    this.changeDetectorRef.detectChanges();
-    var ele = document.getElementsByClassName('test-textbox');
-    if (ele) {
-      let htmlEle = ele[ele.length - 1] as HTMLElement;
-      htmlEle.focus();
-    }
-  }
+  onUpdateNote(e: any) {}
 
   isPin() {
     this.checkPin = true;
@@ -463,15 +462,9 @@ export class AddNoteComponent implements OnInit {
     if (this.formType == 'edit') {
       var obj = {
         itemUpdate: this.note,
+        dialogRef: this.dialog,
       };
-      this.callfc.openForm(
-        SaveNoteComponent,
-        'Cập nhật ghi chú',
-        900,
-        650,
-        '',
-        obj
-      );
+      this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj, '');
     } else {
       this.notificationsService.notifyCode('TM037');
     }

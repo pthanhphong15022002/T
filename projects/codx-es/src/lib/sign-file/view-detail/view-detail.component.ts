@@ -14,7 +14,7 @@ import {
   SidebarModel,
   ViewsComponent,
 } from 'codx-core';
-import { CodxEsService } from '../../codx-es.service';
+import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 
 @Component({
@@ -42,6 +42,7 @@ export class ViewDetailComponent implements OnInit {
   process;
   itemDetailDataStt;
   dialog: DialogRef;
+  lstStep = [];
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   ngOnInit(): void {
@@ -52,15 +53,38 @@ export class ViewDetailComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.itemDetail && this.itemDetail !== null) {
-      console.log('detail', this.itemDetail);
+      this.esService
+        .getDetailSignFile(this.itemDetail?.recID)
+        .subscribe((res) => {
+          if (res) {
+            this.itemDetail = res;
+            this.df.detectChanges();
+          }
+        });
 
-      // this.esService
-      //   .getApprovalTrans(this.itemDetail?.recID)
-      //   .subscribe((res) => {
-      //     this.process = res;
+      let transID = this.itemDetail.processID;
+      if (this.itemDetail?.approveControl == '1') {
+        transID = this.itemDetail.recID;
+      }
 
-      //     this.df.detectChanges();
-      //   });
+      this.esService.getFormModel('EST04').then((res) => {
+        if (res) {
+          let fmApprovalStep = res;
+          let gridModels = new GridModels();
+          gridModels.dataValue = transID;
+          gridModels.predicate = 'TransID=@0';
+          gridModels.funcID = fmApprovalStep.funcID;
+          gridModels.entityName = fmApprovalStep.entityName;
+          gridModels.gridViewName = fmApprovalStep.gridViewName;
+          gridModels.pageSize = 20;
+
+          this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+            if (res && res?.length >= 0) {
+              this.lstStep = res;
+            }
+          });
+        }
+      });
     }
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
@@ -113,7 +137,6 @@ export class ViewDetailComponent implements OnInit {
 
   edit(datas: any) {
     this.view.dataService.edit(datas).subscribe((res: any) => {
-      debugger;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.view?.currentView?.dataService;
@@ -129,9 +152,9 @@ export class ViewDetailComponent implements OnInit {
         this.funcID,
         {
           isAddNew: false,
-          dataSelected: this.view.dataService.dataSelected,
-          isAdd: true,
+          dataSelected: datas,
           formModel: this.view?.currentView?.formModel,
+          view: this.view,
         },
         '',
         dialogModel
@@ -150,7 +173,6 @@ export class ViewDetailComponent implements OnInit {
     this.view.dataService
       .delete([datas], true, (opt) => this.beforeDel(opt))
       .subscribe((item: any) => {
-        debugger;
         if (item) {
         }
       });

@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { HR_Employees } from 'projects/codx-hr/src/lib/model/HR_Employees.model';
 
@@ -8,7 +8,30 @@ import { HR_Employees } from 'projects/codx-hr/src/lib/model/HR_Employees.model'
   styleUrls: ['./edit-info.component.css']
 })
 export class EditInfoComponent implements OnInit {
-  title = 'Chỉnh sửa';
+  title = '';
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'tabInfoPersonal'
+    },
+    {
+      icon: 'icon-person',
+      text: 'Nhân viên',
+      name: 'tabInfoEmploy'
+    },
+    {
+      icon: 'icon-receipt_long',
+      text: 'Thông tin cá nhân',
+      name: 'tabInfoPrivate',
+    },
+    {
+      icon: 'icon-business_center',
+      text: 'Pháp lý',
+      name: 'tabInfoLaw',
+    },
+  ];
+  titleAction = 'Thêm';
   currentSection = "InfoPersonal";
   dialog: any;
   data: any;
@@ -21,6 +44,7 @@ export class EditInfoComponent implements OnInit {
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
+    private detectorRef: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -37,6 +61,16 @@ export class EditInfoComponent implements OnInit {
   changeTime(data) {
     if (!data.field || !data.data) return;
     this.employee[data.field] = data.data?.fromDate;
+  }
+
+  setTitle(e: any) {
+    this.title = this.titleAction + ' ' + e;
+    this.detectorRef.detectChanges();
+    console.log(e);
+  }
+
+  buttonClick(e: any) {
+    console.log(e);
   }
 
   dataChange(e: any, field: string) {

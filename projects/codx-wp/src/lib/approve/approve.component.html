@@ -1,29 +1,26 @@
 
 
-<codx-views #codxViews 
-[funcID]="funcID" 
+<codx-views #codxViews  
 [service]="service" 
 [entityName]="entityName" 
 idField="recID" 
-[assemblyName]="assemblyName"
-[className]="className" 
-[method]="method" 
-[predicate]="predicate" 
-[dataValue]="dataValue" 
-
 [views]="views"
 [autoLoad]="true">
 </codx-views>
 
 <ng-template #panelLeftRef>
     <div class="row">
-            <ul class="nav ">
-                <li class="nav-item" *ngFor="let item of navAsside">
-                    <a  (click)="clickNavApprove(item,item.predicate,item.datavalue)"  [class.text-muted]="!item.active" class="nav-link text-primary fw-bolder" href="javascript:;" (click)="clickNavApprove(item,item.predicate,item.datavalue)">
-                        <codx-label formName="" [name]="'lbl'+item.text" [default]="item.text"></codx-label>
-                        <span>({{item.value}})</span>
-                    </a>
-                </li>
+        <ul class="nav ">
+            <li class="nav-item" *ngFor="let item of tabAsside">
+                <a
+                    [class.text-muted]="!item.active" 
+                    class="nav-link text-primary fw-bolder" 
+                    href="javascript:;"
+                    (click)="clickTabApprove(item,item.predicate,item.datavalue)">
+                    <codx-label formName="" [name]="'lbl'+item.text" [default]="item.text"></codx-label>
+                    <span>({{item.total}})</span>
+                </a>
+            </li>
         </ul>
     </div>
 </ng-template>
@@ -37,25 +34,53 @@ idField="recID"
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-    <codx-temp-full 
-        [typeMF]="'hover'" 
-        (clickMF)="clickMF($event,data)"
-        (click)="clickViewDetail(data.recID,entityName)"
-        [formModel]="codxViews.formModel"
-        [resourceObjType]="entityName"
-        [imageId]="data.recID"
-        imgCss="me-2"
-        [imageObjType]="entityName"
-        imageType="circle"
-        cardCss="card-template border-bottom px-2 py-3" 
-        [title]="data.category"
-        [desc]="data.content"
-        [date]="data.createdOn"
-        [status]="data.approveStatus"
-        [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']"
-        [bookmark]="false">
-    </codx-temp-full>
+    <ng-container *ngIf="funcID == 'WPT0213';else wp_news">
+        <codx-temp-full 
+            [dataItem]="data"
+            [typeMF]="'hover'" 
+            (clickMF)="clickMF($event,data)"
+            (click)="clickViewDetail(data,entityName)"
+            [formModel]="codxViews.formModel"
+            [resourceObjType]="entityName"
+            imgCss="me-2"
+            cardCss="card-template border-bottom px-2 py-3"
+            [icoTitleFld]="data.category"
+            [icoTitleVll]="'WP004'"
+            [title]="data.category"
+            [desc]="data.comments"
+            [date]="data.createdOn"
+            [status]="data.approveStatus"
+            [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']"
+            [bookmark]="false">
+        </codx-temp-full>
+    </ng-container>
+    <ng-template #wp_news>
+        <codx-temp-full 
+            [dataItem]="data"
+            [typeMF]="'hover'" 
+            (clickMF)="clickMF($event,data)"
+            (click)="clickViewDetail(data,entityName)"
+            [formModel]="codxViews.formModel"
+            [resourceObjType]="'AD_Users'"
+            [resources]="data.createdBy"
+            [icoTitleFld]="data.category"
+            [icoTitleVll]="'WP004'"
+            imgCss="me-2"
+            cardCss="card-template border-bottom px-2 py-3" 
+            title="<span class='fw-bolder ms-2'>{{data.category | vll:'WP004':'text'|async}}</span>"
+            [desc]="data.category == 'companyinfo'? data.content : data.subject"
+            [date]="data.createdOn"
+            [status]="data.approveStatus"
+            [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']"
+            [bookmark]="false">
+        </codx-temp-full>
+    </ng-template>
 </ng-template>
+<!-- <ng-template #footer>
+    <div class="d-flex align-items-end me-2">
+        <codx-img [objectId]=""></codx-img>
+    </div>
+</ng-template> -->
 
 
     

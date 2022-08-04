@@ -14,7 +14,7 @@
 <!-- <app-systemdialog></app-systemdialog> -->
 <ng-template #itemSenderOrReceiver let-dataItem>
     <div class="d-flex align-items-center">
-        <codx-img class="symbol symbol-24 symbol-circle mr-3" [objectId]="dataItem.userID" objectType="AD_Users"
+        <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.userID" objectType="AD_Users"
            >
         </codx-img>
         <div class="d-flex flex-column">
@@ -37,7 +37,7 @@
 </ng-template>
 <ng-template #itemReference let-dataItem>
     <div class="d-flex align-items-center" *ngIf="dataItem.cardType">
-        <img class="symbol symbol-24 symbol-circle mr-3 w-25px h-25px"
+        <img class="symbol symbol-24 symbol-circle me-3 w-25px h-25px"
             src="../../../assets/demos/svg/{{dataItem.cardType| vll:'L1422':'icon'|async}}">
         <div class="d-flex flex-column">
             <div class="text-dark font-size-lg"> {{dataItem?.cardType | vll:'L1422':'text'|async}}</div>
@@ -51,7 +51,7 @@
 
 <ng-template #itemCategory let-dataItem>
     <div class="d-flex align-items-center">
-        <img class="symbol symbol-24 symbol-circle mr-3 w-25px h-25px"
+        <img class="symbol symbol-24 symbol-circle me-3 w-25px h-25px"
             src="../../../assets/demos/svg/{{dataItem.transType| vll:'L1422':'icon'|async}}">
 
         <div class="d-flex flex-column">

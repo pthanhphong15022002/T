@@ -136,8 +136,12 @@ export class TM_Parameter {
   Approver: string;
   AutoCompleted: string;
   CalendarID: string;
+  CompletedControl:string;
   ConfirmControl: string;
+  DueDateControl: string;
   EditControl: string;
+  ExtendBy: string
+  ExtendControl: string
   LocationControl: string;
   MaxHours: string;
   MaxHoursControl: string;
@@ -149,6 +153,4 @@ export class TM_Parameter {
   VerifyBy: string;
   VerifyByType: string;
   VerifyControl: string;
-  LocationCotrol: string;
-  DueDateControl: string;
 }

@@ -190,12 +190,14 @@ export class AssignInfoComponent implements OnInit {
     var dt = event.data;
     this.task.memo = dt?.value ? dt.value : dt;
   }
+  cbxChange(e){}
+
+  changeVLL(e){}
 
 
   saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
-      // this.notiService.notifyCode('???code');
-      this.notiService.notify('Tên công việc không được để trống !');
+      this.notiService.notifyCode('TM027');
       return;
     }
     if (this.task.assignTo == null || this.task.assignTo == '') {
@@ -208,19 +210,15 @@ export class AssignInfoComponent implements OnInit {
     this.tmSv
       .saveAssign([this.task, this.functionID, this.listTaskResources, null,taskIDParent])
       .subscribe((res) => {
-        if (res && res.length) {
-          // this.dialog.dataService.data = res.concat(this.dialog.dataService.data);
-          // this.dialog.dataService.setDataSelected(res[0]);
-          // this.dialog.dataService.afterSave.next(res);
-          // this.changeDetectorRef.detectChanges();
-          this.dialog.close(res);
+        if (res[0]) {
           this.notiService.notifyCode('TM006');
+          this.dialog.close(res[1]);
           if (!isContinue) {
             this.closePanel();
           }
           this.resetForm();
         } else {
-          this.notiService.notifyCode('TM038'); /// call sau
+          this.notiService.notifyCode('TM038'); 
           return;
         }
       });
