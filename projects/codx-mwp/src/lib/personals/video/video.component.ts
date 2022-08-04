@@ -5,6 +5,7 @@ import {
   CodxListviewComponent,
   CacheService,
   AuthService,
+  ScrollComponent,
 } from 'codx-core';
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
@@ -49,8 +50,10 @@ export class VideoComponent implements OnInit {
   ngOnInit(): void {}
 
   ngAfterViewInit() {
+    ScrollComponent.reinitialization();
     this.listview.dataService.requestEnd = (t, d) => {
       if (t == 'loaded') {
+        debugger;
         if (d) this.getFile(d);
       }
     };
@@ -63,7 +66,11 @@ export class VideoComponent implements OnInit {
           f[
             'srcVideo'
           ] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
-          this.file_video.push(f);
+          //this.file_video.push(f);
+          this.listview.dataService.data = [
+            ...this.listview.dataService.data,
+            ...[],
+          ];
         }
       });
       this.dt.detectChanges();

@@ -245,13 +245,13 @@ export class EditFileComponent implements OnInit {
       this.fileEditing =  JSON.parse(JSON.stringify(this.data[1]));   
       this.user = this.auth.get();
       this.dialog = dialog;     
-      this.id = this.fileEditing.recID;
-      this.dmSV.isFileEditing.subscribe(item => {
-        if (item != undefined) {
-          this.fileEditing = item;
-          this.changeDetectorRef.detectChanges();
-        }          
-      });
+      this.id = this.fileEditing.recID;      
+      // this.dmSV.isFileEditing.subscribe(item => {
+      //   if (item != undefined && this.fileEditing.recID == item.recID) {
+      //     this.fileEditing.permissions = item.permissions;
+      //     this.changeDetectorRef.detectChanges();
+      //   }                  
+      // });
     //  this.changeDetectorRef.detectChanges();
    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
@@ -260,8 +260,6 @@ export class EditFileComponent implements OnInit {
   ngOnInit(): void {   
    
   }
-  
-  
 
   onSaveEditingFile() {
     if (this.fileEditing.fileName === "") {
@@ -276,15 +274,16 @@ export class EditFileComponent implements OnInit {
       this.fileService.updateFile(this.fileEditing).subscribe(item => {
         if (item.status == 0) {
           let res = item.data;
-          this.dmSV.fileEditing.next(item.data);
+        //  this.dmSV.fileEditing.next(item.data);
           if (res != null) {
-            var files = this.dmSV.listFiles.getValue();
+            var files = this.dmSV.listFiles;//.getValue();
             if (files != null) {
               let index = files.findIndex(d => d.recID.toString() === this.id);
               if (index != -1) {
-                files[index].fileName = res.fileName;
+                files[index] = res;
               }
-              this.dmSV.listFiles.next(files);
+              this.dmSV.listFiles = files;
+              this.dmSV.ChangeData.next(true);
               this.changeDetectorRef.detectChanges();
             }
             // if (modal != null)
@@ -311,13 +310,14 @@ export class EditFileComponent implements OnInit {
                 this.fileService.updateFile(this.fileEditing).subscribe(async res => {
                   if (res.status == 0) {
                     this.dmSV.fileEditing.next(item.data);
-                    var files = this.dmSV.listFiles.getValue();
+                    var files = this.dmSV.listFiles;
                     if (files != null) {
                       let index = files.findIndex(d => d.recID.toString() === this.id);
                       if (index != -1) {
                         files[index].fileName = res.data.fileName;
                       }
-                      this.dmSV.listFiles.next(files);                    
+                      this.dmSV.listFiles = files;                    
+                      this.dmSV.ChangeData.next(true);
                       // if (modal != null)
                       //   this.modalService.dismissAll();
                       this.changeDetectorRef.detectChanges();
@@ -327,29 +327,7 @@ export class EditFileComponent implements OnInit {
                   this.notificationsService.notify(res.message);
                 });
             }
-          })
-          // this.confirmationDialogService.confirm(this.titlemessage, item.message + ". " + newNameMessage)
-          //   .then((confirmed) => {
-          //     if (confirmed) {
-          //       this.fileEditing.fileName = item.data.fileName;
-          //       this.fileService.updateFile(this.fileEditing).subscribe(async res => {
-          //         if (res.status == 0) {
-          //           var files = this.dmSV.listFiles.getValue();
-          //           let index = files.findIndex(d => d.recID.toString() === this.id);
-          //           if (index != -1) {
-          //             files[index].fileName = res.data.fileName;
-          //           }
-          //           this.dmSV.listFiles.next(files);
-          //           if (modal != null)
-          //             this.modalService.dismissAll();
-          //           this.changeDetectorRef.detectChanges();
-          //         }
-          //         this.notificationsService.notify(res.message);
-          //       });
-          //     }
-          //   })
-          //   .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
-
+          })        
         }
         else {
           this.notificationsService.notify(item.message);
@@ -360,12 +338,12 @@ export class EditFileComponent implements OnInit {
     }
     else {
       //  this.dmSV.fileEditing.next(this.fileEditing);
-      let index = this.dmSV.fileUploadList.findIndex(d => d.order.toString() === this.fileEditing.order.toString()); //find index in your array
+      let index = this.fileUploadList.findIndex(d => d.order.toString() === this.fileEditing.order.toString()); //find index in your array
       if (index > -1) {
-        this.dmSV.fileUploadList.splice(index, 1);//remove element from array
+        this.fileUploadList.splice(index, 1);//remove element from array
         // this.fileUploadList.push(new Object(), this.fileEditing);
-        this.dmSV.fileUploadList.push(Object.assign({}, this.fileEditing));
-        this.dmSV.fileUploadListAdd.next(true);
+        this.fileUploadList.push(Object.assign({}, this.fileEditing));
+      //  this.dmSV.fileUploadListAdd.next(true);
       }
       this.dialog.close();
       // if (modal != null)
@@ -427,7 +405,12 @@ export class EditFileComponent implements OnInit {
 
   openRight(mode = 1, type = true) {
     this.dmSV.dataFileEditing = this.fileEditing;
-    this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "");
+    this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "").closed.subscribe(item => {
+      if (item) {
+        this.fileEditing = item.event;
+        this.changeDetectorRef.detectChanges();
+      }        
+    });
     // if (this.fileEditing != null)
     //   this.fileEditingOld = JSON.parse(JSON.stringify(this.fileEditing));
     // if (mode == 2) {
@@ -630,7 +613,7 @@ export class EditFileComponent implements OnInit {
 
       case "fileName":
         if (this.checkFileName() != "0") {        
-          return "w-100 text-error is-invalid";
+          return "w-100 border border-danger is-invalid";
           //$('#fileName').addClass('form-control is-invalid');
          // $('#fileName').focus();
         }

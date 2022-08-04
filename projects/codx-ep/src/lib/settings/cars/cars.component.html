@@ -1,7 +1,6 @@
 <codx-views
   #view
   [funcID]="funcID"
-
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
@@ -14,6 +13,7 @@
   [idField]="idField"
   [className]="className"
   [method]="method"
+  (selectedChange)="onSelect($event)"
   (requestEnded)="closeDialog($event)"
 >
 </codx-views>

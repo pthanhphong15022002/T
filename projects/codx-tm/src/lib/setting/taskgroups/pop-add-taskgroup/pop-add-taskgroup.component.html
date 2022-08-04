@@ -58,7 +58,7 @@
     </div>
     <div class="col-4">
       <codx-input name="locationControl" type="valuelist" field="locationControl" placeholder=""
-        [crrValue]="taskGroups.locationControl" (valueChange)="valueList($event)" refValue="TM012">
+        [crrValue]="taskGroups.locationControl" (valueChange)="valueList($event)" [refValue]="gridViewSetup.LocationControl.referedValue">
         <!-- [refValue]="gridViewSetup.LocationControl.referedValue" -->
       </codx-input>
     </div>
@@ -76,7 +76,7 @@
     </div>
     <div class="col-4">
       <codx-input name="planControl" type="valuelist" field="planControl" placeholder=""
-        [crrValue]="taskGroups.planControl" (valueChange)="valueList($event)" refValue="TM012">
+        [crrValue]="taskGroups.planControl" (valueChange)="valueList($event)" [refValue]="gridViewSetup.PlanControl.referedValue">
       </codx-input>
     </div>
   </div>
@@ -93,7 +93,7 @@
     </div>
     <div class="col-4">
       <codx-input name="updateControl" type="valuelist" field="updateControl" placeholder=""
-        [crrValue]="taskGroups.updateControl" (valueChange)="valueList($event)" refValue="TM013">
+        [crrValue]="taskGroups.updateControl" (valueChange)="valueList($event)" [refValue]="gridViewSetup.UpdateControl.referedValue">
       </codx-input>
     </div>
   </div>
@@ -111,11 +111,12 @@
     <div class="col-4 row">
       <div class="col-6">
         <codx-input name="verifyControl" type="switch" class="test-switch" field="verifyControl"
-          [crrValue]="taskGroups.verifyControl" (valueChange)="valueWitch($event)" refValue="TM006">
+          [crrValue]="taskGroups.verifyControl === '1' ? true : false" (valueChange)="valueWitch($event)" [refValue]="gridViewSetup.VerifyControl.referedValue">
         </codx-input>
       </div>
       <div class="col-6">
-        <span class="icon-edit text-primary icon-18"></span>
+        <span class="icon-edit text-primary icon-18" *ngIf="taskGroups.verifyControl == '1'" (click)="openShare(controlShare)">
+        </span>
       </div>
     </div>
   </div>
@@ -133,11 +134,13 @@
     <div class="col-4 row">
       <div class="col-6">
         <codx-input name="approveControl" type="switch" class="test-switch" field="approveControl"
-          [crrValue]="taskGroups.approveControl" (valueChange)="valueWitch($event)" refValue="TM014">
+          [checked]="taskGroups.approveControl === '1'" (valueChange)="valueWitch($event)" [refValue]="gridViewSetup.ApproveControl.referedValue">
         </codx-input>
       </div>
       <div class="col-6">
-        <span class="icon-edit text-primary icon-18"></span>
+        <span class="icon-edit text-primary icon-18" *ngIf="taskGroups.approveControl == '1'" (click)="openShare1(controlApp)">
+
+        </span>
       </div>
     </div>
   </div>
@@ -155,11 +158,11 @@
     <div class="col-4 row">
       <div class="col-6">
         <codx-input name="maxHoursControl" type="switch" class="test-switch" field="maxHoursControl"
-          [crrValue]="taskGroups.maxHoursControl" (valueChange)="valueWitch($event)">
+          [checked]="taskGroups.maxHoursControl === '1'" (valueChange)="valueWitch($event)">
         </codx-input>
       </div>
       <div class="col-6">
-        <span class="icon-edit text-primary icon-18"></span>
+        <span class="icon-edit text-primary icon-18" (click)="openPopupLink()" *ngIf="taskGroups.maxHoursControl == '1'"></span>
       </div>
     </div>
   </div>
@@ -176,7 +179,7 @@
     </div>
     <div class="col-4">
       <codx-input name="editControl" type="switch" class="test-switch" field="editControl"
-        [crrValue]="taskGroups.editControl" (valueChange)="valueWitch($event)">
+        [checked]="taskGroups.editControl ==='1'" (valueChange)="valueWitch($event)">
       </codx-input>
     </div>
   </div>
@@ -193,7 +196,7 @@
     </div>
     <div class="col-4">
       <codx-input name="dueDateControl" type="switch" class="test-switch" field="dueDateControl"
-        [crrValue]="taskGroups.dueDateControl" (valueChange)="valueWitch($event)">
+        [checked]="taskGroups.dueDateControl === '1'" (valueChange)="valueWitch($event)">
       </codx-input>
     </div>
   </div>
@@ -210,7 +213,7 @@
     </div>
     <div class="col-4">
       <codx-input name="autoCompleted" type="switch" class="test-switch" field="autoCompleted"
-        [crrValue]="taskGroups.autoCompleted" (valueChange)="valueWitch($event)">
+        [checked]="taskGroups.autoCompleted === '1'" (valueChange)="valueWitch($event)">
       </codx-input>
     </div>
   </div>
@@ -227,7 +230,7 @@
     </div>
     <div class="col-4">
       <codx-input name="extendControl" type="switch" class="test-switch" field="extendControl"
-        [crrValue]="taskGroups.extendControl" (valueChange)="valueWitch($event)">
+        [checked]="taskGroups.extendControl ==='1'" (valueChange)="valueWitch($event)">
       </codx-input>
     </div>
   </div>
@@ -244,7 +247,7 @@
     </div>
     <div class="col-4">
       <codx-input name="confirmControl" type="switch" class="test-switch" field="confirmControl"
-        [crrValue]="taskGroups.confirmControl" (valueChange)="valueWitch($event)">
+        [checked]="taskGroups.confirmControl==='1'" (valueChange)="valueWitch($event)">
       </codx-input>
     </div>
   </div>
@@ -310,6 +313,62 @@
   </div>
 </ng-template>
 
+<ng-template #controlShare let-dialogShare>
+  <codx-share
+    listName="TM006"
+    field="verifyByType"
+    [listCombobox]="listCombobox"
+    [dataShared]="[]"
+    [dialog]="dialogShare"
+    [multiple]="false"
+    (eventApply)="valueCbx($event)"
+  >
+  </codx-share>
+</ng-template>
+
+<ng-template #controlApp let-dialogShare>
+  <codx-share
+    listName="TM014"
+    field="approveBy"
+    [listCombobox]="listCombobox1"
+    [dataShared]="[]"
+    [dialog]="dialogShare"
+    [multiple]="false"
+    (eventApply)="valueCbx1($event)"
+
+  >
+  </codx-share>
+</ng-template>
+
+<ng-template #addLink let-dialog>
+  <div class="card-header">
+    <h4 class="card-title" id="card-basic-title">
+      <codx-label name="lblLink" default="Thời gian" [formModel]="dialog.formModel"></codx-label>
+    </h4>
+    <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+      (click)="dialog.close()">
+      <span class="icon-close icon-20"></span>
+    </button>
+  </div>
+  <div class="card-body">
+    <div class="form-group row">
+      <div class="col-4">
+        <label>
+          <codx-label name="lblPath" default="Thời gian" [formModel]="dialog.formModel"></codx-label>
+        </label>
+      </div>
+    </div>
+    <div class="form-group row">
+      <codx-input type="text" class="form-control" placeholder="Tối thiểu 0, tối đa 8" [crrValue]="taskGroups.approveBy"
+        (valueChange)="changeHours($event)"></codx-input>
+    </div>
+  </div>
+  <div class="card-footer" (click)="dialog.close()">
+    <button type="button" class="btn btn-primary">
+      <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
+    </button>
+  </div>
+</ng-template>
 
 <!-- <codx-form headerText="{{ title }}" #form [body]="body" [footer]="footer" [data]="data" [formModel]="dialog.formModel"
   [dialog]="dialog">

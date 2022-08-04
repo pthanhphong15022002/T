@@ -4,18 +4,14 @@
     <div class="form-group row">
         <div class="col-12">
             <codx-label name ="lblStatus" formName="Tasks"  default="Tình trạng"></codx-label>
-            <!-- <codx-valuelist
-            [name]="vllConfirm"
-            [iconOnly]="true"
-            (valueChange)="valueSelected($event)"></codx-valuelist> -->
-            <codx-input type="valuelist"  field="confirmStatus" [crrValue]="task?.confirmStatus" [refValue]="vllConfirm"
+            <codx-input type="valuelist" [field]=" fieldDefault"  [crrValue]="valueDefault" [refValue]="vllConfirm"
             placeholder="" (valueChange)="valueSelected($event)" [disabled]="true">
           </codx-input>
 
         </div>
         <div class="col-12">
-             <codx-label fiedName="ConfirmComment" formName="Tasks"  default="Comment"></codx-label>
-            <codx-input type="textarea" (valueChange)="valueChange($event)" field="confirmComment" [crrValue]="task?.confirmComment" format="ed2" rows="4"></codx-input>
+             <codx-label [fiedName]="fieldComment" formName="Tasks" gridViewName="grvTasks" default="Bình luận"></codx-label>
+            <codx-input type="textarea" (valueChange)="valueChange($event)"  [crrValue]="comment" format="ed2" rows="6" ></codx-input>
         </div>
     </div>
   </ng-template>

@@ -1,154 +1,323 @@
-<div class="justify-content-between main-pane stepper-body p-4 w-100">
-  <div class="main-content d-flex flex-column h-100 flex-lg-row">
-    <div class="flex-column flex-lg-row-auto w-100 w-lg-275px mb-10 mb-lg-0 main-left" [class.hideCol]="hideThumbnail">
-      <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
-        <e-tabitems>
-          <e-tabitem>
-            <ng-template #headerText>
-              {{ headerLeftName[0].text }}
-            </ng-template>
-            <ng-template #content>
-              <div #thumbnailTab id="thumbnailTab"></div>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem>
-            <ng-template #headerText>
-              {{ headerLeftName[1].text }}
-            </ng-template>
-            <ng-template #content> </ng-template>
-          </e-tabitem>
-        </e-tabitems>
-      </ejs-tab>
-      <div class="showArrow" [class.icon-arrow_back]="!hideThumbnail" [class.icon-arrow_forward]="hideThumbnail"
-        (click)="changeShowThumbnailState()"></div>
+<div
+  class="d-flex justify-content-between main-pane stepper-body tab-custom w-100"
+>
+  <div class="main-content d-flex flex-column-fluid h-100">
+    <div
+      class="flex-column flex-lg-row-auto w-lg-240px main-left"
+      [class.hideCol]="hideThumbnail"
+    >
+      <div
+        class="hover-scroll-overlay-y pe-6 me-n6"
+        data-kt-scroll="true"
+        data-kt-scroll-activate="{default: true}"
+        data-kt-scroll-height="auto"
+        data-kt-scroll-dependencies=".e-tab-header"
+        data-kt-scroll-wrappers=".main-left"
+        data-kt-scroll-offset="'0px'"
+      >
+        <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
+          <e-tabitems>
+            <e-tabitem>
+              <ng-template #headerText>
+                {{ headerLeftName[0].text }}
+              </ng-template>
+              <ng-template #content>
+                <div #thumbnailTab id="thumbnailTab"></div>
+              </ng-template>
+            </e-tabitem>
+            <e-tabitem>
+              <ng-template #headerText>
+                {{ headerLeftName[1].text }}
+              </ng-template>
+              <ng-template #content> </ng-template>
+            </e-tabitem>
+          </e-tabitems>
+        </ejs-tab>
+      </div>
     </div>
-    <div class="flex-lg-row-fluid ms-lg-7 ms-xl-10 main-center">
+    <div class="d-flex flex-column flex-row-fluid mx-3 main-center">
+      <div
+        class="d-flex d-flex align-items-center justify-content-between stepper-toolbar"
+      >
+        <div
+          class="left_Toolbar d-flex justify-content-start align-items-center"
+        >
+          <ejs-toolbar>
+            <e-items>
+              <e-item
+                [prefixIcon]="
+                  hideThumbnail
+                    ? 'icon-arrow_forward_ios'
+                    : 'icon-arrow_back_ios rotate-180'
+                "
+                (click)="changeShowThumbnailState()"
+              ></e-item>
+              <e-item
+                prefixIcon="icon-skip_previous icon-20"
+                (click)="pdfviewerControl?.navigation?.goToFirstPage()"
+              >
+              </e-item>
+              <e-item
+                prefixIcon="icon-navigate_before icon-20"
+                (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()"
+              >
+              </e-item>
+              <e-item
+                [text]="pdfviewerControl?.currentPageNumber"
+                [disabled]="true"
+              ></e-item>
+              <e-item
+                prefixIcon="icon-navigate_next icon-20"
+                (click)="pdfviewerControl?.navigation?.goToNextPage()"
+              >
+              </e-item>
+              <e-item
+                prefixIcon="icon-skip_next icon-20"
+                (click)="pdfviewerControl?.navigation?.goToLastPage()"
+              >
+              </e-item>
+            </e-items>
+          </ejs-toolbar>
+        </div>
 
-      <div class="d-flex justify-content-between w-100  bg-white">
-        <div class="left_Toolbar w-100 d-flex justify-content-start">
+        <div
+          class="chooseSignFile w-100 d-flex justify-content-center align-items-center"
+        >
+          <ejs-dropdownlist
+            id="signfilesDropdownList"
+            [dataSource]="lstFiles"
+            [fields]="file"
+            (change)="changeSignFile($event)"
+          ></ejs-dropdownlist>
+        </div>
+        <div
+          class="right_Toolbar d-flex justify-content-end align-items-center"
+        >
           <ejs-toolbar>
             <e-items>
               <e-item prefixIcon="e-zoom-out" (click)="clickZoom('out')">
               </e-item>
             </e-items>
           </ejs-toolbar>
-          <ejs-dropdownlist style="width: 20%" id="zoomValuesDropdownList" [dataSource]="lstZoomValue"
-            [placeholder]="zoomValue" (change)="clickZoom('to', $event)"></ejs-dropdownlist>
+          <ejs-dropdownlist
+            style="width: 100%; min-width: 70px"
+            id="zoomValuesDropdownList"
+            [dataSource]="lstZoomValue"
+            [placeholder]="zoomValue"
+            (change)="clickZoom('to', $event)"
+          ></ejs-dropdownlist>
           <ejs-toolbar>
             <e-items>
               <e-item prefixIcon="e-zoom-in" (click)="clickZoom('in')">
               </e-item>
             </e-items>
           </ejs-toolbar>
-
-          <ejs-toolbar>
-            <e-items>
-              <e-item prefixIcon="e-chevron-up-double" (click)="pdfviewerControl?.navigation?.goToFirstPage()">
-              </e-item>
-              <e-item [text]="pdfviewerControl?.currentPageNumber" [disabled]="true"></e-item>
-              <e-item prefixIcon="e-chevron-down-double" (click)="pdfviewerControl?.navigation?.goToLastPage()">
-              </e-item>
-            </e-items>
-          </ejs-toolbar>
-        </div>
-
-        <div class="chooseSignFile w-100 d-flex justify-content-center">
-          <ejs-dropdownlist id="signfilesDropdownList" [dataSource]="lstFiles" [fields]="file"
-            (change)="changeSignFile($event)"></ejs-dropdownlist>
-        </div>
-        <div class="right_Toolbar d-flex justify-content-end">
           <ejs-toolbar>
             <e-items>
               <e-item prefixIcon="e-print" (click)="clickPrint()"> </e-item>
+              <e-item prefixIcon="e-download" (click)="clickDownload()">
+              </e-item>
+              <e-item
+                [prefixIcon]="
+                  !hideActions
+                    ? 'icon-arrow_forward_ios'
+                    : 'icon-arrow_back_ios'
+                "
+                (click)="changeShowActionsState()"
+              ></e-item>
             </e-items>
           </ejs-toolbar>
         </div>
       </div>
 
-      <div class=" h-100 pdfviewer_Space">
-        <ejs-pdfviewer #pdfviewer id="pdfViewer" [serviceUrl]="service" [enableToolbar]="false"
-          [enableNavigationToolbar]="false" [enableAnnotationToolbar]="false" [enableThumbnail]="true"
-          (created)="onCreated($event)" (annotationAdd)="addAnnoEvent($event)" (annotationMove)="resetTime($event)"
-          (annotationRemove)="removeAnnot($event)" (annotationResize)="resetTime($event)"
-          (annotationSelect)="selectedAnnotation($event)" (annotationPropertiesChange)="resetTime($event)"
-          (documentLoad)="loadingAnnot($event)" (pageChange)="pageChange($event)" [zoomValue]="zoomValue"
-          (zoomChange)="changeZoomValue($event)" [ajaxRequestSettings]="ajaxSetting" style="
+      <div class="h-100 pdfviewer_Space">
+        <ejs-pdfviewer
+          #pdfviewer
+          id="pdfViewer"
+          [serviceUrl]="service"
+          [enableToolbar]="false"
+          [enableNavigationToolbar]="false"
+          [enableAnnotationToolbar]="false"
+          [enableThumbnail]="true"
+          (created)="onCreated($event)"
+          (annotationAdd)="addAnnoEvent($event)"
+          (annotationMove)="resetTime($event)"
+          (annotationRemove)="removeAnnot($event)"
+          (annotationResize)="resetTime($event)"
+          (annotationSelect)="selectedAnnotation($event)"
+          (annotationPropertiesChange)="resetTime($event)"
+          (documentLoad)="loadingAnnot($event)"
+          (pageChange)="pageChange($event)"
+          [zoomValue]="zoomValue"
+          (zoomChange)="changeZoomValue($event)"
+          [ajaxRequestSettings]="ajaxSetting"
+          style="
             height: 100% !important;
             width: 100% !important;
-
             position: relative;
             display: block;
-          ">
+          "
+        >
         </ejs-pdfviewer>
       </div>
     </div>
-    <div class="actions flex-column flex-lg-row-auto w-100 w-lg-275px mb-10 mb-lg-0 main-right"
-      [class.hideCol]="hideActions">
-      <ejs-tab #rightToolbar [class.d-none]="hideActions">
-        <e-tabitems>
-          <e-tabitem>
-            <ng-template #headerText>
-              {{ headerRightName[0].text }}
-            </ng-template>
+    <div
+      class="actions flex-column flex-lg-row-auto w-lg-350px main-right"
+      [class.hideCol]="hideActions"
+    >
+      <div
+        class="hover-scroll-overlay-y pe-6 me-n6"
+        data-kt-scroll="true"
+        data-kt-scroll-activate="{default: true}"
+        data-kt-scroll-height="auto"
+        data-kt-scroll-dependencies=".e-tab-header"
+        data-kt-scroll-wrappers=".main-right"
+        data-kt-scroll-offset="'0px'"
+      >
+        <ejs-tab #rightToolbar [class.d-none]="hideActions">
+          <e-tabitems>
+            <e-tabitem>
+              <ng-template #headerText>
+                {{ headerRightName[0].text }}
+              </ng-template>
 
-            <ng-template #content>
-              <div class="row position-relative" style="margin-top: 10px" *ngIf="!isApprover">
-                <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
-                  class="ms-2 fw-bold"></codx-label>
-                <ejs-dropdownlist #inputAuthor id="signatureDropdownList" [dataSource]="lstSigners" [fields]="person"
-                  (change)="changeSigner($event)"></ejs-dropdownlist>
-                <!-- <codx-input
-                  class="form-control me-2"
-                  type="valuelist"
-                  field="vllOrganize"
-                  refValue="ES015"
-                  (valueChange)="changeSigner($event)"
-                ></codx-input> -->
-              </div>
-
-              <codx-label name="lblDragAction" [formModel]="" default="Kéo thả" class="ms-2 fw-bold"></codx-label>
-              <div class="card-group">
-                <div class="card-item me-3 mb-3" *ngFor="let action of actionsButton; let index = index"
-                  [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
-                  <codx-card-center cardCss="border h-100 min-w-100px w-100px" icoCss="icon-20  {{
-                      index + 1 | vll: 'ES015':'icon' | async
-                    }}" content="{{ index + 1 | vll: 'ES015':'text' | async }}">
-                  </codx-card-center>
+              <ng-template #content>
+                <div class="position-relative" *ngIf="!isApprover">
+                  <codx-label
+                    name="lblChooseSigner"
+                    [formModel]=""
+                    default="Chọn người kí cần thiết lập"
+                    class="ms-2 fw-bold"
+                  ></codx-label>
+                  <ejs-dropdownlist
+                    #inputAuthor
+                    id="signatureDropdownList"
+                    [dataSource]="lstSigners"
+                    [fields]="person"
+                    (change)="changeSigner($event)"
+                    [itemTemplate]="signer"
+                    [valueTemplate]="signer"
+                  >
+                    <ng-template #signer let-approver>
+                      <codx-temp-full
+                        [imageId]="approver.authorID"
+                        [imageObjType]="'AD_Users'"
+                        [imageWidth]="35"
+                        [title]="
+                          approver.roleType == 'U'
+                            ? approver.fullName
+                            : (approver.roleType | vll: 'ES014':'text' | async)
+                        "
+                        [subTitle]="approver.position ?? 'Vị trí công việc'"
+                        [footer]="footer"
+                        [dataItem]="approver"
+                      >
+                      </codx-temp-full>
+                    </ng-template>
+                  </ejs-dropdownlist>
+                  <!-- <codx-input
+                    class="form-control me-2"
+                    type="valuelist"
+                    field="vllOrganize"
+                    refValue="ES015"
+                    (valueChange)="changeSigner($event)"
+                  ></codx-input> -->
                 </div>
-              </div>
+                <div class="mt-3 mb-3">
+                  <codx-label
+                    name="lblDragAction"
+                    [formModel]=""
+                    default="Kéo thả"
+                    class="fw-bold fs-4 text-primary"
+                  >
+                  </codx-label>
+                </div>
 
-              <div class="autoSign_Space d-flex d-flex align-items-center justify-content-between" style="width: 160px">
-                <codx-label name="lblSuggestSignArea" default="Gợi ý vị trí ký" class="ms-1 fw-bold"></codx-label>
-                <codx-input type="switch" field="" [crrValue]="needSuggest" (valueChange)="changeSuggestState($event)">
-                </codx-input>
-              </div>
+                <div class="d-flex flex-wrap d-grid align-items-center">
+                  <div
+                    class="card-item me-3 mb-3"
+                    *ngFor="let action of actionsButton; let index = index"
+                    [class.active]="holding == index + 1"
+                    (click)="changeAnnotationItem(index + 1)"
+                  >
+                    <codx-card-center
+                      cardCss="border h-100 w-125px"
+                      icoCss="icon-30 mb-1 {{
+                        index + 1 | vll: 'ES015':'icon' | async
+                      }}"
+                      content="{{ index + 1 | vll: 'ES015':'text' | async }}"
+                    >
+                    </codx-card-center>
+                  </div>
+                </div>
 
-              <div class="autoSign_Space d-flex align-items-center justify-content-between" style="width: 160px">
-                <codx-label name="lblSignLastLine" default="Ký dòng cuối cùng" class="ms-1 fw-bold"></codx-label>
-                <codx-input type="switch" field="autoSignLastLine" [crrValue]="autoSignState"
-                  (valueChange)="changeAutoSignState($event, 0)"></codx-input>
-              </div>
-            </ng-template>
-          </e-tabitem>
+                <!--begin::Item-->
+                <div class="d-flex align-items-center my-2">
+                  <div class="d-flex justify-content-start me-2">
+                    <!--begin::Switch-->
+                    <codx-input
+                      type="switch"
+                      labelPosition="After"
+                      field=""
+                      [crrValue]="needSuggest"
+                      (valueChange)="changeSuggestState($event)"
+                    >
+                    </codx-input>
+                    <!--end::Switch-->
+                  </div>
+                  <div class="text-gray-800 text-nowrap">
+                    <codx-label
+                      name="lblSuggestSignArea"
+                      default="Gợi ý vị trí ký"
+                      class="fw-bold"
+                    ></codx-label>
+                  </div>
+                </div>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <div class="autoSign_Space d-flex align-items-center my-2">
+                  <div class="d-flex justify-content-start me-2">
+                    <!--begin::Switch-->
+                    <codx-input
+                      type="switch"
+                      field="autoSignLastLine"
+                      [crrValue]="autoSignState"
+                      (valueChange)="changeAutoSignState($event, 0)"
+                    ></codx-input>
+                    <!--end::Switch-->
+                  </div>
+                  <div class="text-gray-800 text-nowrap">
+                    <codx-label
+                      name="lblSignLastLine"
+                      default="Ký dòng cuối cùng"
+                      class="fw-bold"
+                    ></codx-label>
+                  </div>
+                </div>
+                <!--end::Item-->
+              </ng-template>
+            </e-tabitem>
 
-          <e-tabitem *ngIf="isApprover">
-            <ng-template #headerText>
-              {{ headerRightName[1].text }}
-            </ng-template>
-            <ng-template #content></ng-template>
-          </e-tabitem>
+            <e-tabitem *ngIf="isApprover">
+              <ng-template #headerText>
+                {{ headerRightName[1].text }}
+              </ng-template>
+              <ng-template #content></ng-template>
+            </e-tabitem>
 
-          <e-tabitem *ngIf="isApprover">
-            <ng-template #headerText>
-              {{ headerRightName[2].text }}
-            </ng-template>
-            <ng-template #content></ng-template>
-          </e-tabitem>
-        </e-tabitems>
-      </ejs-tab>
-      <div class="showArrow reverse" [class.icon-arrow_back]="hideActions" [class.icon-arrow_forward]="!hideActions"
-        (click)="changeShowActionsState()"></div>
+            <e-tabitem *ngIf="isApprover">
+              <ng-template #headerText>
+                {{ headerRightName[2].text }}
+              </ng-template>
+              <ng-template #content></ng-template>
+            </e-tabitem>
+          </e-tabitems>
+        </ejs-tab>
+      </div>
     </div>
   </div>
   <div class="row invisible" #qrCode id="qrCode"></div>
 </div>
+<ng-template #footer let-data>
+  <codx-vll [showText]="true" name="ES002" [value]="data.signType"></codx-vll>
+</ng-template>

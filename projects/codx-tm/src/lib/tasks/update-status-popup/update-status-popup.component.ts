@@ -48,6 +48,7 @@ export class UpdateStatusPopupComponent implements OnInit {
   ngOnInit(): void {
     this.task = this.data.taskAction;
     this.moreFunc = this.data.moreFunc;
+    this.title = this.moreFunc.customName ;
     this.url = this.moreFunc.url;
     this.status = UrlUtil.getUrl('defaultValue', this.url);
     this.completedOn = moment(new Date()).toDate();
@@ -78,6 +79,9 @@ export class UpdateStatusPopupComponent implements OnInit {
       this.completed = Number.parseFloat(time);
     }
     this.changeDetectorRef.detectChanges();
+  }
+  changeComment(data){
+    this.comment = data?.data ;
   }
   changeEstimated(data) {
     if (!data.data) return;

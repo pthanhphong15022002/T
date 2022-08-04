@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CallFuncService, DataRequest, DialogModel, DialogRef, NotificationsService, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { PopupEditComponent } from './popup-edit/popup-edit/popup-edit.component';
+import { CompanyEditComponent } from './popup-edit/company-edit/company-edit.component';
 
 @Component({
   selector: 'app-company-infor',
@@ -10,13 +10,13 @@ import { PopupEditComponent } from './popup-edit/popup-edit/popup-edit.component
 })
 export class CompanyInforComponent implements OnInit, AfterViewInit {
 
-  funcID = 'WPT01P';
-  entityName = 'WP_News';
-  gridViewName = 'grvNews';
-  predicate = "NewsType =@0 Category = @1 and (ApproveStatus = @2 or ApproveStatus = @3) and Status = @4";
-  dataValue = "1;0;5;null;2";
-  fromName = "News";
-  data :any;
+  funcID:string = '';
+  entityName:string = 'WP_News';
+  gridViewName:string = 'grvNews';
+  predicate:string = "NewsType =@0 Category = @1 and (ApproveStatus = @2 or ApproveStatus = @3) and Status = @4";
+  dataValue:string = "1;0;5;null;2";
+  fromName:string = "News";
+  data :any = null;
   views: Array<ViewModel> = [];
   @ViewChild('panelLeftRef') panelLefRef :  TemplateRef<any>;
   @ViewChild('codxViews') codxView: ViewsComponent;
@@ -65,13 +65,15 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
     option.IsFull = true;
-    let popup = this.callc.openForm(PopupEditComponent,"",0,0,"",this.data,"",option);
+    let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
     popup.closed.subscribe((res:any)=>{
-      if(res){
+      if(res.event && res.closedBy != "escape"){
         this.data = res.event;
         this.changedt.detectChanges();
       }
     })
   }
+
+  public inlineMode: object = { enable: true, onSelection: true };
 }
 

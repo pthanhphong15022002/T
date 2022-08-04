@@ -32,10 +32,11 @@ export class PopupAddCarsComponent implements OnInit {
   @Output() onDone = new EventEmitter();
   cacheGridViewSetup: any;
   CbxName: any;
-  dialogCar: FormGroup;
+  dialogAddCar: FormGroup;
   dialog: any;
   headerText = 'Thêm mới xe';
   subHeaderText = 'Thêm mới xe';
+  
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
@@ -83,7 +84,7 @@ export class PopupAddCarsComponent implements OnInit {
       .gridViewSetup('Resources', 'EP_Resources')
       .subscribe((item) => {
         this.editResources = item;
-        this.dialogCar.patchValue({
+        this.dialogAddCar.patchValue({
           ranking: '1',
           category: '1',
           owner: '',
@@ -93,9 +94,9 @@ export class PopupAddCarsComponent implements OnInit {
     this.bookingService
       .getFormGroup('Resources', 'grvResources')
       .then((item) => {
-        this.dialogCar = item;
+        this.dialogAddCar = item;
         if (this.data) {
-          this.dialogCar.patchValue(this.data);
+          this.dialogAddCar.patchValue(this.data);
         }
         this.isAfterRender = true;
       });
@@ -104,16 +105,16 @@ export class PopupAddCarsComponent implements OnInit {
   valueChange(event: any) {
     if (event?.field != null) {
       if (event.data instanceof Object) {
-        this.dialogCar.patchValue({ [event['field']]: event.data.value });
+        this.dialogAddCar.patchValue({ [event['field']]: event.data.value });
       } else {
-        this.dialogCar.patchValue({ [event['field']]: event.data });
+        this.dialogAddCar.patchValue({ [event['field']]: event.data });
       }
     }
   }
 
   beforeSave(option: any) {
-    let itemData = this.dialogCar.value;
-    option.method = 'AddEditItemAsync';
+    let itemData = this.dialogAddCar.value;
+    option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
@@ -121,9 +122,9 @@ export class PopupAddCarsComponent implements OnInit {
   valueCbxChange(event: any) {
     if (event?.field != null) {
       if (event.data instanceof Object) {
-        this.dialogCar.patchValue({ [event['field']]: event.data.value });
+        this.dialogAddCar.patchValue({ [event['field']]: event.data.value });
       } else {
-        this.dialogCar.patchValue({ [event['field']]: event.data });
+        this.dialogAddCar.patchValue({ [event['field']]: event.data });
       }
     }
   }
@@ -138,8 +139,8 @@ export class PopupAddCarsComponent implements OnInit {
     }
   }
   onSaveForm() {
-    if (this.dialogCar.invalid == true) {
-      console.log(this.dialogCar);
+    if (this.dialogAddCar.invalid == true) {
+      console.log(this.dialogAddCar);
       return;
     }
     let equipments = '';
@@ -152,10 +153,10 @@ export class PopupAddCarsComponent implements OnInit {
         }
       }
     });
-    if (!this.dialogCar.value.linkType) {
-      this.dialogCar.value.linkType = '0';
+    if (!this.dialogAddCar.value.linkType) {
+      this.dialogAddCar.value.linkType = '0';
     }
-    this.dialogCar.value.resourceType = '2';
+    this.dialogAddCar.value.resourceType = '2';
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();

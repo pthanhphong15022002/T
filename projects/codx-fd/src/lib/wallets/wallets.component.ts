@@ -262,7 +262,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
 
     this.route.params.subscribe((param) => {
       this.funcID = param['funcID'];
-      this.changedr.detectChanges();
     });
     this.setPredicate();
   }
@@ -280,7 +279,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
     ];
     this.userPermission = this.view.userPermission;
     if (this.listView) this.listView.dataService.dataObj = 'Coins';
-    this.changedr.detectChanges();
   }
 
   LoadData() {
@@ -290,7 +288,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
-          console.log("check KudosTransBusiness", res)
           this.lstRate = res[0];
           this.L1422 = res[1]?.datas;
           this.data_Receiver = res[2];
@@ -394,6 +391,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e, f) {
+    debugger;
     if (f == 'Organize') {
       this.orgUnit = e?.data[0];
     } else if (f == 'Employee') {
@@ -416,12 +414,13 @@ export class WalletsComponent extends UIComponent implements OnInit {
       case 'vllOrganize':
         this.vllOrganize_value = e.data;
         this.getComboboxName();
+        this.dt.detectChanges();
         break;
       case 'Organize':
-        this.orgUnit = e?.data[0];
+        this.orgUnit = e.data;
         break;
       case 'Employee':
-        this.emloyeeID = e?.data[0];
+        this.emloyeeID = e.data;
         break;
       default:
         break;
@@ -443,7 +442,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
     this.comboboxName = '';
     var a = this.L1483.find((x) => x.value == this.vllOrganize_value);
     this.comboboxName = a.text;
-    this.changedr.detectChanges();
+    debugger;
   }
 
   setPredicate() {

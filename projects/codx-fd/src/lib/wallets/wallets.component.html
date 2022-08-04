@@ -35,16 +35,16 @@
                                         <codx-input class="form-control" type="valuelist" field="vllOrganize"
                                             refValue="L1483" (valueChange)="valueChange($event, 'vllOrganize')">
                                         </codx-input>
-                                        <div class="organize left-5" *ngIf="comboboxName">
+                                        <div class="organize left-5">
                                             <codx-input class="form-control" type="combobox" field="Organize"
                                                 [refValue]="comboboxName"
                                                 (valueChange)="valueChange($event, 'Organize')">
                                             </codx-input>
                                         </div>
-                                        <div class="organize left-5" *ngIf="!comboboxName">
+                                        <!-- <div class="organize left-5" *ngIf="!comboboxName">
                                             <codx-input class="form-control" type="combobox">
                                             </codx-input>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>

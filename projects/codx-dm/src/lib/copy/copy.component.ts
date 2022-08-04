@@ -101,14 +101,15 @@ export class CopyComponent implements OnInit {
     var that = this;
     if (this.interval == null)
       this.interval = [];
-    var files = this.dmSV.listFiles.getValue();
+    var files = this.dmSV.listFiles;
     var index = setInterval(() => {
       that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
         if (item != null && item != "") {
           let index = files.findIndex(d => d.recID.toString() === id);
           if (index != -1) {
             files[index].thumbnail = item;
-            that.dmSV.listFiles.next(files);
+            that.dmSV.listFiles = files;
+            that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
           }
           let indexInterval = this.interval.findIndex(d => d.id === id);
@@ -138,13 +139,14 @@ export class CopyComponent implements OnInit {
       if (this.copy) {
         this.fileService.copyFile(that.id, that.fullName, "").subscribe(async res => {
           if (res.status == 0) {
-            var files = that.dmSV.listFiles.getValue();
+            var files = that.dmSV.listFiles;
             if (files == null) files = [];
             res.data.thumbnail = "../../../assets/img/loader.gif";
             files.push(Object.assign({}, res.data));
-            this.dmSV.listFiles.next(files);
+            this.dmSV.listFiles = files;
+            that.dmSV.ChangeData.next(true);
             that.displayThumbnail(res.data.recID, res.data.pathDisk);
-            this.modalService.dismissAll();
+            this.dialog.close();
           }
           else {       
             this.titleMessage = res.message;
@@ -159,7 +161,7 @@ export class CopyComponent implements OnInit {
               if(x.event.status == "Y") {
                 that.fileService.copyFile(that.id, that.fullName, "", 0, 1).subscribe(async item => {
                   if (item.status == 0) {
-                    var files = that.dmSV.listFiles.getValue();
+                    var files = that.dmSV.listFiles;
                     if (files == null) files = [];
 
                     let index = files.findIndex(d => d.recID.toString() === item.data.recID);
@@ -167,7 +169,8 @@ export class CopyComponent implements OnInit {
                       item.data.thumbnail = "../../../assets/img/loader.gif";
                       files[index] = item.data;
                       that.displayThumbnail(item.data.recID, item.data.pathDisk);
-                      that.dmSV.listFiles.next(files);
+                      that.dmSV.listFiles = files;
+                      that.dmSV.ChangeData.next(true);
                     }
 
                     this.changeDetectorRef.detectChanges();  
@@ -184,12 +187,13 @@ export class CopyComponent implements OnInit {
         // rename
         this.fileService.renameFile(that.id, that.fullName).subscribe(async res => {
           if (res.status == 0) {
-            var files = that.dmSV.listFiles.getValue();
+            var files = that.dmSV.listFiles;
             let index = files.findIndex(d => d.recID.toString() === this.id);
             if (index != -1) {
               files[index].fileName = this.fullName;
             }
-            this.dmSV.listFiles.next(files);
+            this.dmSV.listFiles = files;
+            this.dmSV.ChangeData.next(true);
             this.dialog.close();         
           }
           else {          
@@ -203,14 +207,14 @@ export class CopyComponent implements OnInit {
             this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
               that.fileService.renameFile(that.id, res.data.fileName).subscribe(async item => {
                 if (item.status == 0) {
-                  var files = that.dmSV.listFiles.getValue();
+                  var files = that.dmSV.listFiles;
                   let index = files.findIndex(d => d.recID.toString() === this.id);
                   if (index != -1) {
                     files[index].fileName = item.data.fileName;
                   }
-                  that.dmSV.listFiles.next(files);
-                  that.modalService.dismissAll();
+                  that.dmSV.listFiles = files;                
                   that.changeDetectorRef.detectChanges();
+                  this.dialog.close();
                 }
                 that.notificationsService.notify(item.message);
               });
@@ -230,14 +234,15 @@ export class CopyComponent implements OnInit {
           folder.recID = that.id;
           folder.folderName = that.fullName;
           //    that.dmSV.nodeChange.next(folder);
-          var folders = that.dmSV.listFolder.getValue();
+          var folders = that.dmSV.listFolder;
           //folders.forEach(item => )
           let index = folders.findIndex(d => d.recID.toString() === that.id);
           if (index != -1) {
             folders[index].folderName = that.fullName;
             that.dmSV.nodeChange.next(folders[index]);
           }
-          that.dmSV.listFolder.next(folders);
+          that.dmSV.listFolder = folders;
+          that.dmSV.ChangeData.next(true);
           that.changeDetectorRef.detectChanges();
           this.dialog.close();
          // this.modalService.dismissAll();
@@ -262,13 +267,14 @@ export class CopyComponent implements OnInit {
                 that.dmSV.isTree = false;
                 that.dmSV.currentNode = '';
                 that.dmSV.folderId.next(item.data.parentId);
-                var folders = this.dmSV.listFolder.getValue();
+                var folders = this.dmSV.listFolder;
                 let index = folders.findIndex(d => d.recID.toString() === that.id);
                 if (index > -1) {
                   folders[index] = item.data;
                   that.dmSV.nodeChange.next(folders[index]);
                 }
-                that.dmSV.listFolder.next(folders);                    
+                that.dmSV.listFolder = folders;                    
+                that.dmSV.ChangeData.next(true);
               //  that.modalService.dismissAll();                      
                 that.changeDetectorRef.detectChanges();
                 this.dialog.close();
@@ -302,7 +308,7 @@ export class CopyComponent implements OnInit {
     switch (item) {  
       case "fullName":
         if (this.checkFolderName() != "0") {        
-          return "w-100 text-error is-invalid";       
+          return "w-100 border border-danger is-invalid";       
         }
         else {
           return "w-100";      

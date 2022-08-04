@@ -483,7 +483,7 @@ export class CodxEsService {
   public approvalStep = new BehaviorSubject<any>(null);
   isSetupApprovalStep = this.approvalStep.asObservable();
 
-  private lstDelete = new BehaviorSubject<any>(null);
+  public lstDelete = new BehaviorSubject<any>(null);
   private transID = new BehaviorSubject<any>(null);
   getTransID(transID) {
     this.transID.next(transID);
@@ -491,10 +491,12 @@ export class CodxEsService {
 
   setApprovalStep(lstStep) {
     this.approvalStep.next(lstStep);
+    console.log('setdataStep', lstStep);
   }
 
   setLstDeleteStep(lstStep) {
     this.lstDelete.next(lstStep);
+    console.log('setdata delete Step', lstStep);
   }
 
   getApprovalStep() {
@@ -513,17 +515,18 @@ export class CodxEsService {
     );
   }
 
-  addNewApprovalStep(): Observable<any> {
-    let lstDataNew = null;
-    this.approvalStep.subscribe((res) => {
-      lstDataNew = res;
-    });
+  addNewApprovalStep(lstData = null): Observable<any> {
+    if (lstData == null) {
+      this.approvalStep.subscribe((res) => {
+        lstData = res;
+      });
+    }
     return this.api.execSv(
       'ES',
       'ES',
       'ApprovalStepsBusiness',
       'AddNewApprovalStepsAsync',
-      [lstDataNew]
+      [lstData]
     );
   }
 
@@ -580,6 +583,7 @@ export class CodxEsService {
       []
     );
   }
+
   //#endregion
 
   //#region EmailTemplate
@@ -624,6 +628,16 @@ export class CodxEsService {
       'AutoNumbersBusiness',
       'CreateAutoNumberAsync',
       [categoryID, null, true, null]
+    );
+  }
+
+  getDetailSignFile(recID): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetDetailAsync',
+      recID
     );
   }
 
@@ -720,6 +734,16 @@ export class CodxEsService {
         pageIndex: pageNumber - 1,
       },
       httpOptions
+    );
+  }
+
+  toPDF(data) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'ToPDFAsync',
+      data
     );
   }
   //#endregion

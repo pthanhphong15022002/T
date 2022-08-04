@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { PopupAddEmployeesComponent } from './employees/popup-add-employees/popup-add-employees.component';
@@ -31,79 +32,94 @@ import { LayoutComponent } from './_layout/layout.component';
 export const routes: Routes = [
   {
     path: '',
-    component: LayoutComponent,
     children: [
       {
-        path: 'contactbook/:funcID',
-        component: EmpContactsComponent
-      },
-      {
-        path: 'employee/:funcID',
-        component: EmployeesComponent
-      },
-      {
-        path: 'employeeleave/:funcID',
-        component: EmployeesLeaveComponent
-      },
-      {
-        path: 'reportingline/:funcID',
-        component: PositionsComponent
-      },
-      {
-        path: 'employeeinfomation/:funcID',
-        component: EmployeeInfomationComponent,
-      },
-      {
-        path: 'setting',
-        component: HRParametersComponent,
+        path: '',
+        component: LayoutNoAsideComponent,
         children: [
           {
-            path: ':funcID',
-            component: HomeHrparametersComponent
-          },
-          {
-            path: 'certificate/:funcID',
-            component: CertificatesComponent
-          },
-          {
-            path: 'nationality/:funcID',
-            component: NationalitiesComponent
-          },
-          {
-            path: 'country/:funcID',
-            component: CountriesComponent
-          },
-          {
-            path: 'province/:funcID',
-            component: ProvincesComponent
-          },
-          {
-            path: 'district/:funcID',
-            component: DistrictsComponent
-          },
-          {
-            path: 'competence/:funcID',
-            component: CompetencesComponent
-          },
-          {
-            path: 'education/:funcID',
-            component: EducationsComponent
-          },
-          {
-            path: 'organization/:funcID',
-            component: OrganizationsComponent
-          },
-          {
-            path: 'religions/:funcID',
-            component: ReligionsComponent
-          },
-          {
-            path: 'ethnicgroups/:funcID',
-            component: EthnicGroupsComponent
-          },
+            path: 'contactbook/:funcID',
+            component: EmpContactsComponent
+          }
         ]
       },
-    ],
+      {
+        path: '',
+        component: LayoutComponent,
+        children: [
+          {
+            path: 'contactbook/:funcID',
+            component: EmpContactsComponent
+          },
+          {
+            path: 'employee/:funcID',
+            component: EmployeesComponent
+          },
+          {
+            path: 'employeeleave/:funcID',
+            component: EmployeesLeaveComponent
+          },
+          {
+            path: 'reportingline/:funcID',
+            component: PositionsComponent
+          },
+          {
+            path: 'employeeinfomation/:funcID',
+            component: EmployeeInfomationComponent,
+          },
+          {
+            path: 'setting',
+            component: HRParametersComponent,
+            children: [
+              {
+                path: ':funcID',
+                component: HomeHrparametersComponent
+              },
+              {
+                path: 'certificate/:funcID',
+                component: CertificatesComponent
+              },
+              {
+                path: 'nationality/:funcID',
+                component: NationalitiesComponent
+              },
+              {
+                path: 'country/:funcID',
+                component: CountriesComponent
+              },
+              {
+                path: 'province/:funcID',
+                component: ProvincesComponent
+              },
+              {
+                path: 'district/:funcID',
+                component: DistrictsComponent
+              },
+              {
+                path: 'competence/:funcID',
+                component: CompetencesComponent
+              },
+              {
+                path: 'education/:funcID',
+                component: EducationsComponent
+              },
+              {
+                path: 'organization/:funcID',
+                component: OrganizationsComponent
+              },
+              {
+                path: 'religions/:funcID',
+                component: ReligionsComponent
+              },
+              {
+                path: 'ethnicgroups/:funcID',
+                component: EthnicGroupsComponent
+              },
+            ]
+          },
+        ],
+      },
+    ]
   },
 ];
 

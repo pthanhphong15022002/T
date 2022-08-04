@@ -190,6 +190,9 @@ export class AssignInfoComponent implements OnInit {
     var dt = event.data;
     this.task.memo = dt?.value ? dt.value : dt;
   }
+  cbxChange(e){}
+
+  changeVLL(e){}
 
 
   saveAssign(id, isContinue) {

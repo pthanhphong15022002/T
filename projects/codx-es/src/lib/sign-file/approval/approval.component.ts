@@ -5,36 +5,19 @@ import {
   Injector,
   Input,
   IterableDiffers,
-  OnInit,
   ViewChild,
-  ViewChildren,
-  DoCheck,
   Output,
   EventEmitter,
 } from '@angular/core';
-import {
-  note,
-  pdfContent,
-  position,
-  qr,
-  refNumber,
-  signature,
-  signature2,
-  signature3,
-  stamp,
-  time,
-} from './model/mode';
+import { qr } from './model/mode';
 import {
   AnnotationAddEventArgs,
-  AnnotationRemoveEventArgs,
   PdfViewerComponent,
-  ContextMenuItem,
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { AuthStore, CacheService, LangPipe, UIComponent } from 'codx-core';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
-import { M, T } from '@angular/cdk/keycodes';
 import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 @Component({
@@ -44,7 +27,7 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = '2f6589a9-1179-11ed-9440-00155d035517';
+  @Input() recID = 'd0ddb965-13a9-11ed-9785-509a4c39550b';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
 
@@ -59,7 +42,6 @@ export class ApprovalComponent extends UIComponent {
   saveToDBQueueChange: any;
 
   vllActions: any;
-  notify = ' ';
 
   constructor(
     private inject: Injector,
@@ -78,16 +60,6 @@ export class ApprovalComponent extends UIComponent {
       .find([])
       .create(null);
     this.saveToDBQueueChange = actionCollectionsChanges.find([]).create(null);
-
-    var pipe = new LangPipe(this.cache);
-
-    pipe.transform('Chưa', 'lblNotify', 'Sys').subscribe((res) => {
-      this.notify = res;
-    });
-
-    pipe.transform('Có', 'lblNotify', 'Sys').subscribe((res) => {
-      this.notify += ' ' + res + ' ';
-    });
   }
 
   @ViewChild('fileUpload') fileUpload!: ElementRef;
@@ -115,14 +87,14 @@ export class ApprovalComponent extends UIComponent {
   autoSignState: boolean = false;
 
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
-  hideThumbnail: boolean = true;
+  hideThumbnail: boolean = false;
   hideActions: boolean = false;
 
   saveAnnoQueue: Map<string, any>;
 
   curSelectedAnno: any;
 
-  after_X_Second: number = 300;
+  after_X_Second: number = 3000;
 
   formatForAreas: Array<any> = [];
 
@@ -131,6 +103,7 @@ export class ApprovalComponent extends UIComponent {
     { text: 'History' },
     { text: 'Comment' },
   ];
+
   ajaxSetting: any;
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
 
@@ -161,17 +134,15 @@ export class ApprovalComponent extends UIComponent {
       ],
     };
 
-    this.tmpLstSigners.push({
-      // authorSignature: signature,
-      authorSignature: '',
-
-      authorStamp: stamp,
-      authorName: 'Buu',
-      type: '1',
-      authorID: 'ADMIN',
-      authorPosition: 'Giám đốc',
-      fileQRCode: qr,
-    });
+    // this.tmpLstSigners.push({
+    //   authorSignature: signature,
+    //   authorStamp: stamp,
+    //   authorName: 'Buu',
+    //   type: '1',
+    //   authorID: 'ADMIN',
+    //   authorPosition: 'Giám đốc',
+    //   fileQRCode: qr,
+    // });
 
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
@@ -186,8 +157,8 @@ export class ApprovalComponent extends UIComponent {
               fileName: file.fileName,
               fileRefNum: sf.refNo,
               fileID: file.fileID,
-              // signers: res?.approvers,
-              signers: this.tmpLstSigners,
+              signers: res?.approvers,
+              // signers: this.tmpLstSigners,
             });
           });
           if (this.isApprover) {
@@ -231,6 +202,7 @@ export class ApprovalComponent extends UIComponent {
       16, 128, 256, 30,
     ];
   }
+
   onCreated(evt: any) {
     this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
     this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
@@ -343,18 +315,19 @@ export class ApprovalComponent extends UIComponent {
   }
 
   async genFileQR(fileName, fileRefNo, companyID) {
+    let text = `
+      File Name: ${fileName}\n
+      Ref No: ${fileRefNo}\n
+      Company: ${companyID}\n
+      CreatedOn: ${this.datePipe.transform(new Date(), 'd/M/yy, h:mm a')}\n
+      Pages: ${this.pdfviewerControl.pageCount}
+    `;
     let barcode = new QRCodeGenerator({
-      width: '100px',
-      height: '100px',
+      width: '500px',
+      height: '500px',
       mode: 'SVG',
       displayText: { visibility: false },
-      value: JSON.stringify({
-        FileName: fileName,
-        FileRefNo: fileRefNo,
-        Company: companyID,
-        CreatedOn: this.datePipe.transform(new Date(), 'M/d/yy, h:mm a'),
-        Pages: this.pdfviewerControl.pageCount,
-      }),
+      value: text,
     });
     barcode.appendTo('#qrCode');
     let barCodeUrl = '';
@@ -372,6 +345,8 @@ export class ApprovalComponent extends UIComponent {
   }
 
   changeSigner(e: any) {
+    console.log(e.itemData);
+
     this.signerInfo = e.itemData;
   }
 
@@ -380,7 +355,6 @@ export class ApprovalComponent extends UIComponent {
     if (this.needSuggest) {
       this.pdfviewerControl.navigation.goToLastPage();
       this.pdfviewerControl.scrollSettings.delayPageRequestTimeOnScroll = 300;
-      let lastPage = this.pdfviewerControl.pageCount - 1;
     }
   }
 
@@ -472,15 +446,19 @@ export class ApprovalComponent extends UIComponent {
       });
     }
   }
+
   changeShowThumbnailState() {
     this.hideThumbnail = !this.hideThumbnail;
   }
+
   changeShowActionsState() {
     this.hideActions = !this.hideActions;
   }
+
   changeZoomValue(e: any) {
     this.zoomValue = e.zoomValue;
   }
+
   changeAnnotationItem(type: number) {
     if (this.signerInfo && (this.isActiveToSign || !this.isApprover)) {
       this.holding = type;
@@ -679,6 +657,7 @@ export class ApprovalComponent extends UIComponent {
     return conflictArea ? false : true;
   }
 
+  //dont use this version
   suggestAreas(
     numberOfSignatures: number,
     top: number,
@@ -868,9 +847,10 @@ export class ApprovalComponent extends UIComponent {
   }
 
   async addAnnotIntoPDF(type: number) {
-    let signed;
+    let signed = [];
+    console.log('this.url', this.url);
 
-    if (this.url != '')
+    if (this.url && this.url != '')
       signed = this.pdfviewerControl.annotationCollection.find((annotation) => {
         return (
           annotation.customData === this.signerInfo.authorID + ':' + type &&
@@ -878,7 +858,7 @@ export class ApprovalComponent extends UIComponent {
         );
       });
 
-    if (!signed) {
+    if (signed.length != 0) {
       if ([1, 2, 8].includes(type) && this.url != '') {
         let stamp = {
           customStampName: type.toString(),
@@ -1034,6 +1014,7 @@ export class ApprovalComponent extends UIComponent {
         }
       });
   }
+
   removeAnnot(e: any) {
     console.log('remove event', e);
 
@@ -1115,7 +1096,13 @@ export class ApprovalComponent extends UIComponent {
       }
     );
   }
-  testFunc(e: any) {}
+  testFunc(e: any) {
+    this.esService
+      .toPDF(['62ea2856d263513fc83fcfc1', '.xls'])
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
 
   selectedAnnotation(e: any) {
     console.log(e);
@@ -1148,6 +1135,8 @@ export class ApprovalComponent extends UIComponent {
   clickPrint() {
     this.pdfviewerControl.download();
   }
+
+  clickDownload() {}
 }
 
 class Guid {

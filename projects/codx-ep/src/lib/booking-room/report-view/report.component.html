@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-3 border border-2 overflow-auto " #paramEle>
+    <div class="col-3 border border-2 overflow-auto" #paramEle>
       <div class="d-flex">
         <div class="float-start w-100">
           <h3 class="mt-5">Tham số báo cáo</h3>
@@ -10,24 +10,25 @@
         </div>
       </div>
 
-      <div class="row p-3">
+      <div class="row p-3" *ngFor="let group of lstParent; let idx = index">
         <a
-          #param1
-          id="param1"
-          (click)="collapseChange($event, 'param1')"
-          [attr.aria-expanded]="!isCollapsed"
-          aria-controls="collapseParam1"
+          [id]="group"
+          (click)="collapseChange($event, group)"
+          [attr.aria-expanded]="!collapses[idx]"
+          [attr.aria-controls]="group"
           class="text-primary font-weight-500"
         >
           <div class="d-flex">
-            <div class="w-100">Nhóm tham số 1</div>
+            <div class="w-100">
+              <codx-label [name]="group"></codx-label>
+            </div>
             <div><i class="icon-keyboard_arrow_down text-primary"></i></div>
           </div>
         </a>
-        <div id="collapseParam1" [ngbCollapse]="isCollapsed">
+        <div [id]="group" [ngbCollapse]="collapses[idx]">
           <div class="w-100">
             <ng-container>
-              <div class="mt-3">
+              <!-- <div class="mt-3">
                 <span class="text-muted"
                   ><codx-label name="lblTime" default="Thời gian"></codx-label
                 ></span>
@@ -177,55 +178,206 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div *ngFor="let item of parameters" class="my-2">
+              </div> -->
+
+              <div *ngFor="let item of parameters[group]" class="mt-3">
                 <codx-label
-                  [default]="item.headerText"
-                  class="fw-bold"
+                  [default]="item.labelName"
+                  class="fw-bold text-muted"
                 ></codx-label>
-                <ng-container [ngSwitch]="item?.dataType">
-                  <ng-container *ngSwitchCase="'String'">
-                    <div class="my-2">
-                      <codx-input
-                        type="text"
-                        (keyUpEnter)="changeValueText($event)"
-                      ></codx-input>
+
+                  <ng-container *ngIf="item.dependences" >
+                    <div class="w-100 mt-3" *ngFor="let child of lstParamsNotGroup" >
+                      <div *ngIf="child.controlName == item.dependences">
+                        <ng-container [ngSwitch]="child?.dataType">
+                          <ng-container *ngSwitchCase="'string'">
+                            <div class="w-100 mt-3" *ngIf="!child.referedType">
+                              <codx-input
+                                type="textarea"
+                                [field]="child.controlName"
+                                placeholder="Có chứa giá trị..."
+                                format="ed2"
+                                [rows]="2"
+                                [crrValue]="child.defaultValue"
+                                (valueChange)="valueChange($event,true)"
+                              ></codx-input>
+                            </div>
+                            <div class="w-100 mt-3" *ngIf="child.referedType == '3'">
+                              <codx-input
+                                type="combobox"
+                                [field]="child.controlName"
+                                [crrValue]="child.defaultValue"
+                                [refValue]="child.referedValue"
+                                (valueChange)="valueChange($event,true)"
+
+                              >
+                              </codx-input>
+                            </div>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="'bool'">
+                            <div
+                              class="float-end"
+                              *ngIf="child.controlType == 'LVSwitch'"
+                            >
+                              <codx-input
+                                class="float-right"
+                                type="switch"
+                                [field]="child.controlName"
+                                [crrValue]="
+                                child.defaultValue ? child.defaulValue : false
+                                "
+                                (valueChange)="valueChange($event,true,'switch')"
+                              ></codx-input>
+                            </div>
+                            <div
+                              class="w-100 ms-5 mt-3"
+                              *ngIf="child.controlType == 'LVCheckBox'"
+                            >
+                              <codx-input
+                                type="checkBox"
+                                [field]="child.controlName"
+                                [crrValue]="
+                                child.defaultValue ? child.defaulValue : false
+                                "
+                                (valueChange)="valueChange($event,true,'checkbox')"
+                              ></codx-input>
+                            </div>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="'DateTime'">
+                            <div class="my-2">
+                              <codx-dropdown-calendar
+                                cssPopup="h-600px w-800px"
+                                cssClass="w-100 button-radius"
+                                (change)="changeValueDate($event,true)"
+                              ></codx-dropdown-calendar>
+                            </div>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="'int'">
+                            <div class="w-100 mt-3">
+                              <div class="d-flex">
+                                <div class="float-start me-1">
+                                  <codx-input
+                                    type="number"
+                                    field="numberFrom"
+                                    [crrValue]="
+                                    child.defaultValue ? child.defaultValue : 0
+                                    "
+                                    (valueChange)="valueChange($event,true)"
+                                    placeholder="Từ"
+                                  ></codx-input>
+                                </div>
+                                <div class="float-end ms-1">
+                                  <codx-input
+                                    type="number"
+                                    field="numberTo"
+                                    [crrValue]="
+                                    child.defaultValue ? child.defaultValue : 0
+                                    "
+                                    (valueChange)="valueChange($event,true)"
+                                    placeholder="Đến"
+                                  ></codx-input>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </div>
                     </div>
                   </ng-container>
-                  <ng-container *ngSwitchCase="'Bool'">
-                    <div class="my-2">
+
+                <ng-container [ngSwitch]="item?.dataType">
+                  <ng-container *ngSwitchCase="'string'">
+                    <div class="w-100 mt-3" *ngIf="!item.referedType">
                       <codx-input
+                        type="textarea"
+                        [field]="item.controlName"
+                        placeholder="Có chứa giá trị..."
+                        format="ed2"
+                        [disabled]="!item.isVisible"
+                        [crrValue]="item.defaultValue"
+                        (valueChange)="valueChange($event)"
+                      ></codx-input>
+                    </div>
+                    <div class="w-100 mt-3" *ngIf="item.referedType == '3'">
+                      <codx-input
+                        type="combobox"
+                        [field]="item.controlName"
+                        [crrValue]="item.defaultValue"
+                        [refValue]="item.referedValue"
+                        [disabled]="!item.isVisible"
+                        (valueChange)="valueChange($event)"
+                      >
+                      </codx-input>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'bool'">
+                    <div
+                      class="float-end"
+                      *ngIf="item.controlType == 'LVSwitch'"
+                    >
+                      <codx-input
+                        class="float-right"
                         type="switch"
-                        (valueChange)="changeValueText($event)"
+                        [field]="item.controlName"
+                        [crrValue]="
+                          item.defaultValue ? item.defaulValue : false
+                        "
+                        [disabled]="!item.isVisible"
+                        (valueChange)="valueChange($event,false,'switch')"
+                      ></codx-input>
+                    </div>
+                    <div
+                      class="w-100 ms-5 mt-3"
+                      *ngIf="item.controlType == 'LVCheckBox'"
+                    >
+                      <codx-input
+                        type="checkBox"
+                        [field]="item.controlName"
+                        [crrValue]="
+                          item.defaultValue ? item.defaulValue : false
+                        "
+                        [disabled]="!item.isVisible"
+                        (valueChange)="valueChange($event,false,'checkBox')"
                       ></codx-input>
                     </div>
                   </ng-container>
                   <ng-container *ngSwitchCase="'DateTime'">
                     <div class="my-2">
                       <codx-dropdown-calendar
-                        cssPopup="h-500px w-800px"
-                        cssClass="w-100"
+                        cssPopup="h-600px w-800px"
+                        cssClass="w-100 button-radius"
                         (change)="changeValueDate($event)"
                       ></codx-dropdown-calendar>
                     </div>
                   </ng-container>
-                  <ng-container *ngSwitchCase="'Int'">
-                    <div class="my-2">
-                      <codx-input
-                        type="number"
-                        (valueChange)="changeValueText($event)"
-                      ></codx-input>
-                    </div>
-                  </ng-container>
-                </ng-container>
-                <ng-container *ngIf="item?.data">
-                  <ng-container *ngFor="let item2 of item?.data">
-                    <div class="my-2">
-                      <codx-input
-                        type="checkbox"
-                        [label]="item2?.name"
-                        (valueChange)="changeValueCbb($event)"
-                      ></codx-input>
+                  <ng-container *ngSwitchCase="'int'">
+                    <div class="w-100 mt-3">
+                      <div class="d-flex">
+                        <div class="float-start me-1">
+                          <codx-input
+                            type="number"
+                            field="numberFrom"
+                            [crrValue]="
+                              item.defaultValue ? item.defaultValue : 0
+                            "
+                            (valueChange)="valueChange($event)"
+                            placeholder="Từ"
+                            [disabled]="!item.isVisible"
+                          ></codx-input>
+                        </div>
+                        <div class="float-end ms-1">
+                          <codx-input
+                            type="number"
+                            field="numberTo"
+                            [crrValue]="
+                              item.defaultValue ? item.defaultValue : 0
+                            "
+                            [disabled]="!item.isVisible"
+                            (valueChange)="valueChange($event)"
+                            placeholder="Đến"
+                          ></codx-input>
+                        </div>
+                      </div>
                     </div>
                   </ng-container>
                 </ng-container>
@@ -234,100 +386,35 @@
           </div>
         </div>
       </div>
-      <div class="row p-3 ">
-        <a
-          #param2
-          id="param2"
-          (click)="collapseChange($event, 'param2')"
-          [attr.aria-expanded]="!isCollapsed2"
-          aria-controls="collapseParam2"
-          class="text-primary font-weight-500"
-        >
-          <div class="d-flex">
-            <div class="w-100">Nhóm tham số 2</div>
-            <div><i class="icon-keyboard_arrow_down text-primary"></i></div>
-          </div>
-        </a>
-
-        <div id="collapseParam2" [ngbCollapse]="isCollapsed2">
-         <div class="mt-3 overflow-scroll">
-          <h3>PARAMETERS 2 Here</h3>
-          <h3>PARAMETERS 2 Here</h3>
-          <h3>PARAMETERS 2 Here</h3>
-          <h3>PARAMETERS 2 Here</h3>
-          <h3>PARAMETERS 2 Here</h3>
-          <h3>PARAMETERS 2 Here</h3>
-          <h3>PARAMETERS 2 Here</h3>
-          <h3>PARAMETERS 2 Here</h3>
-          <h3>PARAMETERS 2 Here</h3>
-          <h3>PARAMETERS 2 Here</h3>
-         </div>
-        </div>
-      </div>
-      <div class="row p-3 ">
-        <a
-          #param3
-          id="param3"
-          (click)="collapseChange($event, 'param3')"
-          [attr.aria-expanded]="!isCollapsed3"
-          aria-controls="collapseParam3"
-          class="text-primary font-weight-500"
-        >
-          <div class="d-flex">
-            <div class="w-100">Nhóm tham số 3</div>
-            <div><i class="icon-keyboard_arrow_down text-primary"></i></div>
-          </div>
-        </a>
-
-        <div id="collapseParam3" [ngbCollapse]="isCollapsed3">
-         <div class="mt-3 overflow-scroll">
-          <h3>PARAMETERS 3 Here</h3>
-          <h3>PARAMETERS 3 Here</h3>
-          <h3>PARAMETERS 3 Here</h3>
-          <h3>PARAMETERS 3 Here</h3>
-          <h3>PARAMETERS 3 Here</h3>
-          <h3>PARAMETERS 3 Here</h3>
-          <h3>PARAMETERS 3 Here</h3>
-          <h3>PARAMETERS 3 Here</h3>
-          <h3>PARAMETERS 3 Here</h3>
-          <h3>PARAMETERS 3 Here</h3>
-         </div>
-        </div>
-      </div>
-      <div class="fixed-bottom col-3 background-white pt-2 mb-0 mx-2">
+      <div class="fixed-bottom col-3 background-white pt-2 mb-5 mx-2">
         <div class="float-start">
-          <button class="btn btn-light-primary ms-5 mb-5" >
+          <button class="btn btn-light-primary ms-5 mb-5" (click)="restoreDefault()">
             <div class="d-flex">
               <div class="float-start">
                 <i class="icon-replay"></i>
               </div>
-              <div class="float-end w-100"><codx-label
-                name="lblRestore"
-                default="Khôi phục"
-              ></codx-label></div>
+              <div class="float-end w-100">
+                <codx-label name="lblRestore" default="Khôi phục"></codx-label>
+              </div>
             </div>
-
           </button>
         </div>
         <div class="float-end">
-          <button class="btn btn-primary me-5 mb-5" >
+          <button class="btn btn-primary me-5 mb-5" (click)="apply()">
             <div class="d-flex">
               <div class="float-start">
-                <i class=" icon-check"></i>
+                <i class="icon-check"></i>
               </div>
-              <div class="float-end w-100"><codx-label
-                name="lblApply"
-                default="Áp dụng"
-              ></codx-label></div>
+              <div class="float-end w-100">
+                <codx-label name="lblApply" default="Áp dụng"></codx-label>
+              </div>
             </div>
-
           </button>
         </div>
-
       </div>
     </div>
     <div class="col-9" #reportEle>
-      <codx-report [showToolbar]="true"></codx-report>
+      <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [paramRequest]="param"></codx-report>
     </div>
   </div>
 </div>
