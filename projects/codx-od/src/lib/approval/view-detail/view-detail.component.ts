@@ -5,20 +5,21 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
+import { AddLinkComponent } from '../../incomming/addlink/addlink.component';
+import { ForwardComponent } from '../../incomming/forward/forward.component';
+import { IncommingAddComponent } from '../../incomming/incomming-add/incomming-add.component';
+import { SendEmailComponent } from '../../incomming/sendemail/sendemail.component';
+import { SharingComponent } from '../../incomming/sharing/sharing.component';
+import { UpdateExtendComponent } from '../../incomming/update/update.component';
 import { DispatchService } from '../../services/dispatch.service';
-import { AddLinkComponent } from '../addlink/addlink.component';
-import { ForwardComponent } from '../forward/forward.component';
-import { IncommingAddComponent } from '../incomming-add/incomming-add.component';
-import { SendEmailComponent } from '../sendemail/sendemail.component';
-import { SharingComponent } from '../sharing/sharing.component';
-import { UpdateExtendComponent } from '../update/update.component';
+
 
 @Component({
-  selector: 'app-view-detail',
+  selector: 'app-approval-view-detail',
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss']
 })
-export class ViewDetailComponent  implements OnInit , OnChanges  {
+export class ApprovalViewDetailComponent  implements OnInit , OnChanges  {
   active = 1;
   checkUserPer: any;
   userID:any;
@@ -120,7 +121,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
         // Phân loại
         case "4":
           {
-            debugger;
             var data = this.dvlCategory?.datas.filter(function (el: any) { return el.value == val });
             return data[0].text;
           }
@@ -152,6 +152,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
   }
   getDataValuelist()
   {
+    debugger;
     if (this.gridViewSetup["Security"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Security"]["referedValue"]).subscribe((item) => {
         this.dvlSecurity = item;
@@ -630,7 +631,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
       //Gửi duyệt 
       case "ODT201":
         {
-          debugger;
           this.api
           .execSv(
             this.view.service,
