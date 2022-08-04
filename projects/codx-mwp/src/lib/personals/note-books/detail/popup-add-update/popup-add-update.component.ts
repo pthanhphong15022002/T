@@ -5,6 +5,7 @@ import {
   DialogRef,
   CacheService,
   CRUDService,
+  RequestOption,
 } from 'codx-core';
 import {
   Component,
@@ -69,7 +70,7 @@ export class PopupAddUpdate implements OnInit {
       this.header = 'Cập nhật chi tiết sổ tay';
       this.note = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-      if(this.note.noteType !== 'text') {
+      if (this.note.noteType !== 'text') {
         var dtt = {
           status: this.type == 'check' ? 0 : null,
           listNote: '',
@@ -223,6 +224,9 @@ export class PopupAddUpdate implements OnInit {
             this.attachment.objectId = res.recID;
             this.attachment.saveFiles();
           }
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
           this.dialog.close();
         }
       });
@@ -248,7 +252,7 @@ export class PopupAddUpdate implements OnInit {
     }
   }
 
-  beforeSave(option: any) {
+  beforeSave(option: RequestOption) {
     this.note.transID = this.transID;
     this.note.checkList = this.listNote;
     if (this.formType == 'edit') {
@@ -258,10 +262,10 @@ export class PopupAddUpdate implements OnInit {
     }
     this.note.noteType = this.type;
     if (this.formType == 'add') {
-      option.method = 'CreateNoteBookDetailsAsync';
+      option.methodName = 'CreateNoteBookDetailsAsync';
       option.data = this.note;
     } else {
-      option.method = 'UpdateNoteBookDetailAsync';
+      option.methodName = 'UpdateNoteBookDetailAsync';
       option.data = [this.data?.recID, this.note];
     }
     option.assemblyName = 'ERM.Business.WP';

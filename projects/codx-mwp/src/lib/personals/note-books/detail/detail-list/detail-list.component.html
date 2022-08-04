@@ -4,6 +4,22 @@
 </codx-listview>
 
 <ng-template #template let-item>
+        <div class="has-action-menu">
+        <div class="action-menu d-flex">
+            <div class="d-flex align-items-center">
+                <a class="action-item" (click)="edit(item)">
+                    <div class="d-flex align-items-center btn-tooltip icon-18">
+                        <span [class]="editMF?.largeIcon" [style.color]="editMF?.color"></span>
+                    </div>
+                </a>
+                <a class="action-item" (click)="delete(item)">
+                    <div class="d-flex align-items-center btn-tooltip icon-18">
+                        <span [class]="deleteMF?.largeIcon" [style.color]="deleteMF?.color"></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
     <div class="d-flex flex-column flex-grow-1 border-bottom border-1">
         <div class="d-flex align-items-center justify-content-between mb-1">
             <div class="text-dark fs-6 fw-bold">{{item?.title}}</div>

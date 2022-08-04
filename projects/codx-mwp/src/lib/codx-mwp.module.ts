@@ -17,7 +17,6 @@ import { StorageComponent } from './personals/storage/storage.component';
 import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.component';
 import { AddUpdateStorageComponent } from './personals/storage/add-update-storage/add-update-storage.component';
 import { NoteBooksComponent } from './personals/note-books/note-books.component';
-import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books/detail-note-books.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AddUpdateNoteBookComponent } from './personals/note-books/add-update-note-book/add-update-note-book.component';
 import { PostsComponent } from './personals/posts/posts.component';
@@ -50,7 +49,9 @@ import { EditSkillComponent } from './employeeinfomation/edit-skill/edit-skill.c
 import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-skill/pop-add-skill.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layoutOnlyHeader/layoutOnlyHeader.component';
-import { ListDetailNoteBooksComponent } from './personals/note-books/detail/list-detail-note-books/list-detail-note-books.component';
+import { DetailComponent } from './personals/note-books/detail/detail.component';
+import { DetailGridComponent } from './personals/note-books/detail/detail-grid/detail-grid.component';
+import { DetailListComponent } from './personals/note-books/detail/detail-list/detail-list.component';
 
 export const routes: Routes = [
   {
@@ -78,7 +79,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'notedetails/:funcID',
-        component: DetailNoteBooksComponent,
+        component: DetailComponent,
       },
     ],
   },
@@ -97,13 +98,14 @@ const Component: Type<any>[] = [
   NoteBooksComponent,
   AddUpdateNoteBookComponent,
   PopupAddUpdate,
-  DetailNoteBooksComponent,
+  DetailGridComponent,
   PostsComponent,
   EditInfoComponent,
   EditHobbyComponent,
   EditExperenceComponent,
   EditRelationComponent,
-  ListDetailNoteBooksComponent,
+  DetailListComponent,
+  DetailComponent,
 ];
 
 @NgModule({
@@ -128,7 +130,7 @@ const Component: Type<any>[] = [
   exports: [
     RouterModule,
   ],
-  declarations: [Component, EditSkillComponent, PopAddSkillComponent, ListDetailNoteBooksComponent],
+  declarations: [Component, EditSkillComponent, PopAddSkillComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     AreaSeriesService,

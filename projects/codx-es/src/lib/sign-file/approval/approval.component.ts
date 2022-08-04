@@ -27,7 +27,7 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = '2d5905b4-116f-11ed-9781-b8acb4518a97';
+  @Input() recID = 'd0ddb965-13a9-11ed-9785-509a4c39550b';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
 
@@ -345,6 +345,8 @@ export class ApprovalComponent extends UIComponent {
   }
 
   changeSigner(e: any) {
+    console.log(e.itemData);
+
     this.signerInfo = e.itemData;
   }
 
@@ -845,9 +847,10 @@ export class ApprovalComponent extends UIComponent {
   }
 
   async addAnnotIntoPDF(type: number) {
-    let signed;
+    let signed = [];
+    console.log('this.url', this.url);
 
-    if (this.url != '')
+    if (this.url && this.url != '')
       signed = this.pdfviewerControl.annotationCollection.find((annotation) => {
         return (
           annotation.customData === this.signerInfo.authorID + ':' + type &&
@@ -855,7 +858,7 @@ export class ApprovalComponent extends UIComponent {
         );
       });
 
-    if (!signed) {
+    if (signed.length != 0) {
       if ([1, 2, 8].includes(type) && this.url != '') {
         let stamp = {
           customStampName: type.toString(),

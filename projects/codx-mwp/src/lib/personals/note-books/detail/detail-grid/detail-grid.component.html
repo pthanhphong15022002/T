@@ -1,6 +1,8 @@
-<codx-views #view [views]="views" [button]="button" [funcID]="funcID" (buttonClick)="openFormCreateDetail($event)"
+<!-- <codx-views #view [views]="views" [button]="button" [funcID]="funcID" (buttonClick)="openFormCreateDetail($event)"
     idField="recID" [entityName]="functionList.entityName" service="WP" [predicate]="predicate" [dataValue]="dataValue">
 </codx-views>
+ -->
+asfasdasdsa
 
 <ng-template #memo let-item>
     <span [innerHTML]="item.memo" *ngIf="item.noteType == 'text'; else checkList_"></span>
@@ -41,12 +43,26 @@
 </ng-template>
 
 <ng-template #modifiedOn let-item>
+    <!-- <codx-mfunc [formModel]="view?.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
+        [dataItem]="item" type="hover">
+    </codx-mfunc> -->
     <div class="has-action-menu">
-        <codx-mfunc [formModel]="view?.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
-            [dataItem]="item" type="hover">
-        </codx-mfunc>
-        <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span> 
+        <div class="action-menu d-flex">
+            <div class="d-flex align-items-center">
+                <a class="action-item" (click)="edit(item)">
+                    <div class="d-flex align-items-center btn-tooltip icon-18">
+                        <span [class]="editMF?.largeIcon" [style.color]="editMF?.color"></span>
+                    </div>
+                </a>
+                <a class="action-item" (click)="delete(item)">
+                    <div class="d-flex align-items-center btn-tooltip icon-18">
+                        <span [class]="deleteMF?.largeIcon" [style.color]="deleteMF?.color"></span>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
+    <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
 </ng-template>
 
 <ng-template #fileCount let-item>
@@ -56,6 +72,7 @@
     </div>
 </ng-template>
 
-<ng-template #list>
-    <lib-list-detail-note-books [formModel]="view?.formModel" [dataValue]="dataValue"></lib-list-detail-note-books>
-</ng-template>
+<!-- <ng-template #list>
+    <lib-list-detail-note-books [formModel]="view?.formModel" [dataValue]="dataValue" [predicate]="predicate" [parentID]="recID">
+    </lib-list-detail-note-books>
+</ng-template> -->
