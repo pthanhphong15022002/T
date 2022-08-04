@@ -91,32 +91,19 @@
   <!-- <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
    attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">     -->
   <div class="d-flex flex-wrap dms-card-row">
-    <card
-      class="pe-6 pb-6"
-      *ngFor="let item of data"
-      [data]="item"
-      [formModel]="view.formModel"
-    ></card>
-  </div>
+    <card *ngFor="let item of data" class="pe-6 pb-6" [data]="item" [formModel]="view.formModel"></card>    
+  </div>  
 </ng-template>
-<ng-template #templateSmallCard>
-  <div class="d-flex flex-wrap dms-card-row">
-    <codx-temp-full
-      *ngFor="let item of data"
-      class="float-start"
-      [imageSrc]="dmSV.getImage(item)"
-      imgCss="card-item img-folder me-4"
-      (clickMF)="dmSV.clickMF($event, item)"
-      [title]="item.folderName != undefined ? item.folderName : item.fileName"
-      (changeDataMF)="dmSV.filterMoreFunction($event, item)"
-      [formModel]="view.formModel"
-      [typeMF]="'hover'"
-      [bookmark]="dmSV.showBookmark(item)"
-      subTitle="{{ item.createdOn | date: 'dd/MM/yyyy' }} | {{ item.userName }}"
-      cardCss="card-item card-template w-225px px-2 py-3 text-box-140"
-    >
-    </codx-temp-full>
-  </div>
+<ng-template #templateSmallCard>  
+  <div class="d-flex flex-wrap dms-card-row"> 
+    <codx-temp-full *ngFor="let item of data" class="float-start" [imageSrc]="dmSV.getImage(item)"
+      imgCss="card-item img-folder me-4" (clickMF)="dmSV.clickMF($event, item)"
+      [title]="item.folderName != undefined ? item.folderName : item.fileName" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+      [formModel]="view.formModel" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(item)"
+      subTitle="{{item.createdOn | date : 'dd/MM/yyyy'}} | {{item.userName}}"
+      cardCss="card-item card-template w-225px px-2 py-3 text-box-140">
+    </codx-temp-full>  
+  </div>    
 </ng-template>
 <ng-template #templateList>
   <table class="table">
@@ -181,6 +168,7 @@
             (clickMF)="dmSV.clickMF($event, item)"
             [formModel]="view.formModel"
             [typeMF]="'hover'"
+            [title]="dmSV.getSizeKB(item)"
             (changeDataMF)="dmSV.filterMoreFunction($event, item)"
             cardCss="w-150px"
           >

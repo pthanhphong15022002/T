@@ -10,8 +10,136 @@
 >
 </codx-form>
 
-<ng-template #body> </ng-template>
+<ng-template #body>
+  <div class="rows">
+    <div class="col-8 form-group">
+      <codx-label default="Nguồn" fiedName="Category" [formModel]="dialog.formModel">
+      </codx-label>
+      <codx-input
+        type="valuelist"
+        name="valuelist"
+        ngDefaultControl
+        [crrValue]="dialogAddDriver.value.category"
+        refValue="VL005"
+        field="category"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
 
+    <div class="col-4 form-group">
+      <codx-label default="Đơn vị" fiedName="CompanyID" [formModel]="dialog.formModel" >
+      </codx-label>
+      <codx-input
+        service="SYS"
+        type="combobox"
+        name="combobox"
+        [crrValue]="dialogAddDriver.value.Owner"
+        ngDefaultControl
+        refValue="BusinessUnits"
+        [loadFull]="true"
+        field="BUName"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="row mb-4 position-relative">
+    <div class="col-10 form-group">
+      <codx-label default="Tên lái xe" fiedName="ResourceName" [formModel]="dialog.formModel">
+      </codx-label>
+      <div class="d-flex position-relative">
+        <div class="w-100">
+          <codx-input
+            ControlName="resourceName"            
+          >
+          </codx-input>
+           <codx-input type="text" class="form-control flex-grow-1 me-3 w-100" ControlName="resourceName"
+          [Group]="dialogAddDriver" [crrValue]="dialogAddDriver.value.resourceName" (valueChange)="valueChange($event)">
+        </codx-input> 
+        </div>
+        <!-- <div class="room-icon" >
+          <codx-input
+            type="vllicon"
+            refValue="L1470"
+            field="icon"
+            class="btn btn-primary dropdown-toggle"
+          >
+          </codx-input>
+          <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
+                  </select-icon>
+        </div> -->
+      </div>
+    </div>
+    <div class="col-2 position-absolute bottom-0 end-0">
+      <button type="button" class="btn btn-primary">Chọn</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-8 form-group">
+      <codx-label default="Xe"  [formModel]="dialog.formModel" ></codx-label>
+      <codx-combobox
+        service="ERM.Business.CM"
+        name="combobox"
+        ngDefaultControl
+        refValue="EP_Cars"
+        field="ResourceName"
+        [pageSize]="5"
+        [allowFilter]="true"
+      >
+      </codx-combobox> 
+
+    </div>
+    <div class="col-3 form-group">
+      <codx-label default="Biển số" fiedName="Code" [formModel]="dialog.formModel">
+      </codx-label>
+      <codx-input
+        type="text"
+        class="form-control"
+        field="code"
+        [crrValue]="dialogAddDriver.value.code"
+        ControlName="code"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <codx-label default="Người điều phối" fiedName="Owner" [formModel]="dialog.formModel">
+      </codx-label>
+      <codx-combobox 
+        service="SYS"   
+        name="combobox"  
+        ngDefaultControl
+        refValue="Users"
+        field="UserName"
+        multiple="false"
+        [pageSize]="5"
+        [allowFilter]=true>
+      </codx-combobox>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <codx-label default="Mô tả" fiedName="Note" [formModel]="dialog.formModel"></codx-label>
+      <codx-input
+        type="textarea"
+        class="test-textarea"
+        field="note"
+        [crrValue]="dialogAddDriver.value.note"
+        rows="3"
+        ControlName="note"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button class="btn btn-light-primary" (click)="onSaveForm()">
