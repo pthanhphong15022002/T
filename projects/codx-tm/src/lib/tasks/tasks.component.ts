@@ -96,7 +96,6 @@ export class TasksComponent extends UIComponent {
   vllVerifyStatus = 'TM008';
   vllExtendStatus = 'TM010';
   vllConfirmStatus = 'TM009';
- 
   gridViewSetup: any
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();

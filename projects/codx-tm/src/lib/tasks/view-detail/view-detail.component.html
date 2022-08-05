@@ -75,15 +75,15 @@
                 </div>
                 
                 <div *ngIf="itemSelected?.approveStatus && vllApproveStatus" class="badge badge-danger me-2 label-status" [style.border-color]="
-                    (itemSelected?.extendStatus  | vll: vllExtendStatus:'textColor' | async) +
+                    (itemSelected?.approveStatus  | vll: vllApproveStatus:'textColor' | async) +
                     '30'
                   " [style.background-color]="
-                    (itemSelected?.extendStatus | vll: vllExtendStatus:'textColor' | async) +
+                    (itemSelected?.approveStatus | vll: vllApproveStatus:'textColor' | async) +
                     '30'
                   " [style.color]="
-                  itemSelected?.extendStatus| vll: vllExtendStatus:'textColor' | async
+                  itemSelected?.approveStatus| vll: vllApproveStatus:'textColor' | async
                   " style="border: none">
-                  {{itemSelected?.extendStatus| vll: vllExtendStatus:"text" | async }}
+                  {{itemSelected?.approveStatus| vll: vllApproveStatus:"text" | async }}
                 </div>
                 
               </div>
