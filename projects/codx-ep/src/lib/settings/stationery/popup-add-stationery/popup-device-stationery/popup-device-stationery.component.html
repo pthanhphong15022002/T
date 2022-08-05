@@ -7,82 +7,81 @@
   [formGroup]="dialogVPP"
   *ngIf="isAfterRender"
 >
-</codx-form>
-
-<ng-template #body>
+  <ng-template #body>
     <div class="d-flex row align-items-center mb-2">
-        <div class="col-8">
-          <codx-label
-            class="fw-bold"
-            default="Căn cứ"
-            fiedName="GroupID"
-            [formModel]="dialog.formModel"
-          >
-          </codx-label>
-          <!--begin::Input-->
-          <codx-input
-            type="combobox"
-            class="form-control"
-            [crrValue]=""
-            [refValue]=""
-          >
-          </codx-input>
-          <!--end::Input-->
-        </div>
-        <div class="col-4">
-          <codx-label
-            class="fw-bold"
-            default="Số lượng"
-            fiedName="ResourceID"
-            [formModel]="dialog.formModel"
-          >
-          </codx-label>
-          <!--begin::Input-->
-  
-          <codx-input
-            type="number"
-            field="number"
-            placeholder="Input type number"
-            value="0"
-            min="0"
-            max="50"
-          >
-          </codx-input>
-          <!--end::Input-->
-        </div>
-      </div>
-  
-      <div class="d-flex flex-column mb-4">
-        <!--begin::Label-->
+      <div class="col-8">
         <codx-label
           class="fw-bold"
-          default="Cấp bậc"
-          fiedName="Location"
+          default="Căn cứ"
+          fiedName="GroupID"
           [formModel]="dialog.formModel"
         >
         </codx-label>
-        <!--end::Label-->
-  
-        <codx-input type="combobox" name="combobox" ControlName="Location">
+        <!--begin::Input-->
+        <codx-input
+          type="combobox"
+          class="form-control"
+          [crrValue]=""
+          [refValue]=""
+        >
         </codx-input>
+        <!--end::Input-->
       </div>
-</ng-template>
+      <div class="col-4">
+        <codx-label
+          class="fw-bold"
+          default="Số lượng"
+          fiedName="ResourceID"
+          [formModel]="dialog.formModel"
+        >
+        </codx-label>
+        <!--begin::Input-->
 
-<ng-template #footer>
-    <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-outline-primary">
-          <codx-label
-            name="lblSaveAdd"
-            default="Lưu&Thêm"
-            [formModel]="dialog.formModel"
-          ></codx-label>
-        </button>
-        <button type="button" class="btn btn-primary">
-          <codx-label
-            name="lblSave"
-            default="Lưu"
-            [formModel]="dialog.formModel"
-          ></codx-label>
-        </button>
+        <codx-input
+          type="number"
+          field="number"
+          placeholder="Input type number"
+          value="0"
+          min="0"
+          max="50"
+        >
+        </codx-input>
+        <!--end::Input-->
+      </div>
     </div>
-</ng-template>
+
+    <div class="d-flex flex-column mb-4">
+      <!--begin::Label-->
+      <codx-label
+        class="fw-bold"
+        default="Cấp bậc"
+        fiedName="Location"
+        [formModel]="dialog.formModel"
+      >
+      </codx-label>
+      <!--end::Label-->
+
+      <codx-input type="combobox" name="combobox" ControlName="Location">
+      </codx-input>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-outline-primary">
+        <codx-label
+          name="lblSaveAdd"
+          default="Lưu&Thêm"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
+      <button type="button" class="btn btn-primary">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

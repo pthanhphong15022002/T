@@ -1,6 +1,6 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, Injector, OnInit, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, FormModel } from 'codx-core';
+import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
   templateUrl: './popup-device-stationery.component.html',
   styleUrls: ['./popup-device-stationery.component.scss'],
 })
-export class PopupDeviceStationeryComponent implements OnInit {
+export class PopupDeviceStationeryComponent extends UIComponent {
   data: any = {};
   dialog: DialogRef;
   headerText = 'Thiết lập định mức VPP';
@@ -17,14 +17,20 @@ export class PopupDeviceStationeryComponent implements OnInit {
   dialogVPP: FormGroup;
   CbxName: any;
   isAfterRender = false;
-  constructor( private bookingService: CodxEpService,@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
+  constructor(
+    private injector: Injector,
+    private epService: CodxEpService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    super(injector);
     this.data = dt?.data;
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
   }
 
-  ngOnInit(): void {
-    this.bookingService
+  onInit(): void {
+    this.epService
       .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         this.CbxName = res;
@@ -33,7 +39,7 @@ export class PopupDeviceStationeryComponent implements OnInit {
     this.initForm();
   }
   initForm() {
-    this.bookingService
+    this.epService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogVPP = item;
