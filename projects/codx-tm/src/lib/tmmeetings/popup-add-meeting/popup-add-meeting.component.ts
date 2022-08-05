@@ -331,7 +331,7 @@ export class PopupAddMeetingComponent implements OnInit {
             tmpResource.resourceID = emp?.userID;
             tmpResource.resourceName = emp?.userName;
             tmpResource.positionName = emp?.positionName;
-            tmpResource.roleType = 'R';
+            tmpResource.roleType = 'P';
             this.meeting.resources.push(tmpResource);
           }
         }

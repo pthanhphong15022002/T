@@ -92,11 +92,11 @@ export class TasksComponent extends UIComponent {
   vllStatusTasks = 'TM004';
   vllStatusAssignTasks = 'TM007';
   vllStatus = 'TM004';
-  vllApproveStatus ="TM011"
+  vllApproveStatus = 'TM011';
   vllVerifyStatus = 'TM008';
   vllExtendStatus = 'TM010';
   vllConfirmStatus = 'TM009';
-  gridViewSetup: any
+  gridViewSetup: any;
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
   @Input() calendarID: string;
@@ -122,11 +122,11 @@ export class TasksComponent extends UIComponent {
     //         this.vllVerifyStatus = result.VerifyStatus.referedValue;
     //         this.vllExtendStatus = result.ExtendStatus.referedValue;
     //         this.vllConfirmStatus = result.ConfirmStatus.referedValue;
-    //       }        
+    //       }
     //     })
     //   }
     // })
-   
+
     //để cái này chay test cho nhanh
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
@@ -174,7 +174,7 @@ export class TasksComponent extends UIComponent {
         sameData: true,
         model: {
           template: this.itemViewList,
-          // groupBy: 'fieldGroup', Thương kêu gắng sau 
+          // groupBy: 'fieldGroup', Thương kêu gắng sau
         },
       },
       {
@@ -184,7 +184,7 @@ export class TasksComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
-          // groupBy: 'fieldGroup', Thương kêu gắng sau 
+          // groupBy: 'fieldGroup', Thương kêu gắng sau
         },
       },
       {
@@ -482,7 +482,7 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion
 
-  sendemail(data) { }
+  sendemail(data) {}
 
   editConfirm(data) {
     if (data) {
@@ -584,7 +584,7 @@ export class TasksComponent extends UIComponent {
     });
   }
 
-  changeView(evt: any) { }
+  changeView(evt: any) {}
 
   requestEnded(evt: any) {
     // if (evt.type == 'read') {
@@ -632,18 +632,16 @@ export class TasksComponent extends UIComponent {
     //   return;
     // }
 
-
-    if(taskAction.status=="90"){
+    if (taskAction.status == '90') {
       this.notiService.alertCode('TM054').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
-          this.confirmUpdateStatus(moreFunc,taskAction)
+          this.confirmUpdateStatus(moreFunc, taskAction);
         }
       });
-    }else this.confirmUpdateStatus(moreFunc,taskAction)
-   
+    } else this.confirmUpdateStatus(moreFunc, taskAction);
   }
 
-  confirmUpdateStatus(moreFunc,taskAction){
+  confirmUpdateStatus(moreFunc, taskAction) {
     const fieldName = 'UpdateControl';
     if (taskAction.taskGroupID) {
       this.api
@@ -688,8 +686,8 @@ export class TasksComponent extends UIComponent {
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -979,6 +977,21 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM052');
       return;
     }
+    if (data.status < '10') {
+      // this.notiService.notifyCode('cần mess code Hảo ơi !!');
+      this.notiService.notify(
+        'Công việc chưa được xác nhận thực hiện ! Vui lòng xác nhận trước khi cập nhật tiến độ !'
+      );
+      return;
+    }
+    if (data.status == '50' || data.status == '80') {
+      // this.notiService.notifyCode('cần mess code Hảo ơi !!');
+      this.notiService.notify(
+        'Công việc đang bị "Hoãn" hoặc bị "Hủy" ! Vui lòng chuyển trạng thái trước khi cập nhật tiến độ !'
+      );
+      return;
+    }
+
     var obj = {
       moreFunc: moreFunc,
       data: data,
@@ -1000,7 +1013,7 @@ export class TasksComponent extends UIComponent {
         this.itemSelected = e?.event[0];
       }
       this.detectorRef.detectChanges();
-    })
+    });
   }
   //#endregion
 
@@ -1014,48 +1027,64 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM023');
       return;
     }
-    //dang lỗi khsuc này
-    // if (this.param.ExtendControl == '0') {
-    //   this.notiService.notifyCode('TM021');
-    //   return;
-    // }
-    if (data.createdBy != data.owner)
-      this.taskExtend.extendApprover = data.createdBy;
-    else this.taskExtend.extendApprover = data.verifyBy;
-    this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
-    this.taskExtend.reason = '';
-    this.taskExtend.taskID = data?.taskID;
-    this.taskExtend.extendDate = moment(new Date()).toDate();
-    this.api
-      .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-        this.taskExtend.extendApprover,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.taskExtend.extendApproverName = res.userName;
 
-          var obj = {
-            moreFunc: moreFunc,
-            data: this.taskExtend,
-            funcID: this.funcID,
-          };
-          this.dialogExtends = this.callfc.openForm(
-            PopupExtendComponent,
-            '',
-            500,
-            350,
-            '',
-            obj
-          );
+    if (this.param.ExtendControl == '0') {
+      this.notiService.notifyCode('TM021');
+      return;
+    }
+
+    if (data.extendStatus == '1') {
+      this.notiService.alertCode('TM055').subscribe((confirm) => {
+        if (confirm?.event && confirm?.event?.status == 'Y') {
+          if (data.createdBy != data.owner)
+            this.taskExtend.extendApprover = data.createdBy;
+          else this.taskExtend.extendApprover = data.verifyBy;
+          this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
+          this.taskExtend.reason = '';
+          this.taskExtend.taskID = data?.taskID;
+          this.taskExtend.extendDate = moment(new Date()).toDate();
+          this.api
+            .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+              this.taskExtend.extendApprover,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                this.taskExtend.extendApproverName = res.userName;
+
+                var obj = {
+                  moreFunc: moreFunc,
+                  data: this.taskExtend,
+                  funcID: this.funcID,
+                };
+                this.dialogExtends = this.callfc.openForm(
+                  PopupExtendComponent,
+                  '',
+                  500,
+                  350,
+                  '',
+                  obj
+                );
+                this.dialogExtends.closed.subscribe((e) => {
+                  if (e?.event && e?.event != null) {
+                    e?.event.forEach((obj) => {
+                      this.view.dataService.update(obj).subscribe();
+                    });
+                    this.itemSelected = e?.event[0];
+                  }
+                  this.detectorRef.detectChanges();
+                });
+              }
+            });
         }
       });
+    }
   }
   //#endregion
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
-    // if (data.taskGroupID) this.getTaskGroup(data.taskGroupID);
-    // else this.param = this.paramModule;
+    if (data.taskGroupID) this.getTaskGroup(data.taskGroupID);
+    else this.param = this.paramModule;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -1090,15 +1119,6 @@ export class TasksComponent extends UIComponent {
       case 'TMT02035':
         this.openUpdateProgress(e.data, data);
         break;
-      case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
-        //Chung làm
-        break;
-      case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
-        //Chung làm
-        break;
-      case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
-        //???? chắc làm sau ??
-        break;
       case 'TMT02011':
       case 'TMT02012':
       case 'TMT02013':
@@ -1108,12 +1128,31 @@ export class TasksComponent extends UIComponent {
       case 'TMT02019':
         this.openExtendsAction(e.data, data);
         break;
+      case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
+        //Chung làm
+        break;
+      case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
+        //Chung làm
+        break;
+      case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
+        //???? chắc làm sau ??
+        break;
     }
   }
   changeDataMF(e, data) {
-    if (e && data.confirmControl == '0') {
+    if (e) {
       e.forEach((x) => {
-        if (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') {
+        if (
+          (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
+          data.confirmControl == '0'
+        ) {
+          x.disabled = true;
+        }
+        if (
+          x.functionID == 'TMT02019' &&
+          data.verifyControl == '0' &&
+          data.category == '1'
+        ) {
           x.disabled = true;
         }
       });
