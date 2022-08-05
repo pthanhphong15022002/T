@@ -106,8 +106,7 @@
                 <div class="form-group">
                   <codx-label fiedName="Title" default="Tên tài liệu" [formModel]="formModel">
                   </codx-label>
-                  <codx-input type="text" name="text" cssClass="form-control" ControlName="title"
-                    [Group]="dialogSignFile">
+                  <codx-input type="text" name="text" field="title" [Group]="dialogSignFile">
                   </codx-input>
                 </div>
                 <div class="row">
@@ -136,7 +135,7 @@
                     <div class="form-group">
                       <codx-label fiedName="RefNo" [formModel]="formModel" default="Số văn bản">
                       </codx-label>
-                      <codx-input type="text" name="text" [Group]="dialogSignFile" ControlName="refNo" [disabled]="true"
+                      <codx-input type="text" name="text" field="refNo" [disabled]="true"
                         [crrValue]="dialogSignFile.value.refNo">
                       </codx-input>
                     </div>
@@ -197,12 +196,14 @@
         </div>
       </div>
     </div>
-    <lib-approval [isApprover]="false" [recID]="dialogSignFile.value.recID"
-      *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+    <lib-approval *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0" [isApprover]="false"
+      [recID]="dialogSignFile.value.recID">
     </lib-approval>
   </div>
 </div>
+<ng-template #pdf>
 
+</ng-template>
 <ng-template #footer> </ng-template>
 
 <ng-template #processTemplate let-dialogTemplate>
