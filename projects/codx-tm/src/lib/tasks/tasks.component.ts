@@ -52,7 +52,7 @@ export class TasksComponent extends UIComponent {
   @ViewChild('treeView') treeView: TemplateRef<any>;
 
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
-
+  //#region Constructor
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   model?: DataRequest;
@@ -92,6 +92,11 @@ export class TasksComponent extends UIComponent {
   vllStatusTasks = 'TM004';
   vllStatusAssignTasks = 'TM007';
   vllStatus = 'TM004';
+  vllApproveStatus ="TM011"
+  vllVerifyStatus = 'TM008';
+  vllExtendStatus = 'TM010';
+  vllConfirmStatus = 'TM009';
+  gridViewSetup: any
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
   @Input() calendarID: string;
@@ -107,11 +112,23 @@ export class TasksComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
-    //doi thuong thieets lap xong la bo cai nay
-    if (this.funcID.includes('TMT04')) {
-      this.vllStatus = 'TM010';
-    } else if (this.funcID == 'TMT0203') {
+    // cmt truyền động để chạy debug cho nhanh
+    // this.cache.functionList(this.funcID).subscribe(res=>{
+    //   if(res){
+    //     this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(result => {
+    //       if (result){
+    //         this.vllStatus = result.Status.referedValue ;
+    //         this.vllApproveStatus = result.ApproveStatus.referedValue ;
+    //         this.vllVerifyStatus = result.VerifyStatus.referedValue;
+    //         this.vllExtendStatus = result.ExtendStatus.referedValue;
+    //         this.vllConfirmStatus = result.ConfirmStatus.referedValue;
+    //       }        
+    //     })
+    //   }
+    // })
+   
+    //để cái này chay test cho nhanh
+    if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else {
       this.vllStatus = this.vllStatusTasks;
@@ -127,7 +144,9 @@ export class TasksComponent extends UIComponent {
       }
     });
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'TM';
@@ -145,10 +164,6 @@ export class TasksComponent extends UIComponent {
       id: 'btnAdd',
     };
     this.getParams();
-  }
-
-  change() {
-    this.view.dataService.setPredicates(['Status=@0'], ['1']);
   }
 
   ngAfterViewInit(): void {
@@ -210,6 +225,12 @@ export class TasksComponent extends UIComponent {
     this.getParam();
     this.detectorRef.detectChanges();
   }
+  //#region Init
+
+  change() {
+    this.view.dataService.setPredicates(['Status=@0'], ['1']);
+  }
+
   //#region schedule
 
   fields = {
@@ -479,20 +500,20 @@ export class TasksComponent extends UIComponent {
           [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
           option
         );
-        // this.dialog.closed.subscribe((e) => {
-        //   if (e?.event == null)
-        //     this.view.dataService.delete(
-        //       [this.view.dataService.dataSelected],
-        //       false
-        //     );
-        //   if (e?.event && e?.event != null) {
-        //     e?.event.forEach((obj) => {
-        //       this.view.dataService.update(e?.event).subscribe();
-        //     });
-        //     this.itemSelected = e?.event;
-        //   }
-        //   this.detectorRef.detectChanges();
-        // });
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+          if (e?.event && e?.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = e?.event[0];
+          }
+          this.detectorRef.detectChanges();
+        });
       });
   }
 
@@ -605,38 +626,45 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM025');
       return;
     }
-    this.notiService.alertCode('TM054').subscribe((confirm) => {
-      if (confirm?.event && confirm?.event?.status == 'Y') {
-        const fieldName = 'UpdateControl';
-        if (taskAction.taskGroupID) {
-          this.api
-            .execSv<any>(
-              'TM',
-              'ERM.Business.TM',
-              'TaskGroupBusiness',
-              'GetAsync',
-              taskAction.taskGroupID
-            )
-            .subscribe((res) => {
-              if (res) {
-                this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
-              } else {
-                this.actionUpdateStatus(
-                  this.paramModule[fieldName],
-                  moreFunc,
-                  taskAction
-                );
-              }
-            });
-        } else {
-          this.actionUpdateStatus(
-            this.paramModule[fieldName],
-            moreFunc,
-            taskAction
-          );
+    if(taskAction.status=="90"){
+      this.notiService.alertCode('TM054').subscribe((confirm) => {
+        if (confirm?.event && confirm?.event?.status == 'Y') {
+          this.confirmUpdateStatus(moreFunc,taskAction)
         }
-      }
-    });
+      });
+    }else this.confirmUpdateStatus(moreFunc,taskAction)
+   
+  }
+
+  confirmUpdateStatus(moreFunc,taskAction){
+    const fieldName = 'UpdateControl';
+    if (taskAction.taskGroupID) {
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskGroupBusiness',
+          'GetAsync',
+          taskAction.taskGroupID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
+          } else {
+            this.actionUpdateStatus(
+              this.paramModule[fieldName],
+              moreFunc,
+              taskAction
+            );
+          }
+        });
+    } else {
+      this.actionUpdateStatus(
+        this.paramModule[fieldName],
+        moreFunc,
+        taskAction
+      );
+    }
   }
 
   actionUpdateStatus(fieldValue, moreFunc, taskAction) {
@@ -697,7 +725,7 @@ export class TasksComponent extends UIComponent {
     };
     this.dialog = this.callfc.openForm(
       UpdateStatusPopupComponent,
-      'Cập nhật tình trạng',
+      '',
       500,
       350,
       '',
@@ -852,7 +880,7 @@ export class TasksComponent extends UIComponent {
       moreFunc: moreFunc,
       data: data,
       funcID: this.funcID,
-      vll: 'TM009',
+      vll: this.vllConfirmStatus,
       action: 'confirm',
     };
     this.dialogConfirmStatus = this.callfc.openForm(
@@ -887,7 +915,7 @@ export class TasksComponent extends UIComponent {
       moreFunc: moreFunc,
       data: data,
       funcID: this.funcID,
-      vll: 'TM011',
+      vll: this.vllApproveStatus,
       action: 'approve',
     };
     this.dialogApproveStatus = this.callfc.openForm(
@@ -915,7 +943,7 @@ export class TasksComponent extends UIComponent {
       moreFunc: moreFunc,
       data: data,
       funcID: this.funcID,
-      vll: 'TM008',
+      vll: this.vllVerifyStatus,
       action: 'verify',
     };
     this.dialogVerifyStatus = this.callfc.openForm(
@@ -965,13 +993,7 @@ export class TasksComponent extends UIComponent {
         this.itemSelected = e?.event[0];
       }
       this.detectorRef.detectChanges();
-    });
-    // var option = new DialogModel();
-    // option.FormModel = this.view.currentView.formModel;
-    // this.callfc.openForm(PopupUpdateProgressComponent, null, 600, 400,null,obj,"",option).closed.subscribe(x=>{
-    //   if(x.event)
-    //     this.view.dataService.remove(x.event).subscribe();
-    // });
+    })
   }
   //#endregion
 

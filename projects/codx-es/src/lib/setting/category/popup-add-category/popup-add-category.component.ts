@@ -132,7 +132,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .then((res) => {
         if (res) {
           this.dialogCategory = res;
-          this.isAfterRender = true;
           this.dialogCategory.patchValue({
             eSign: true,
             signatureType: '1',
@@ -184,6 +183,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                   }
                 }
               });
+            this.isAfterRender = true;
           } else {
             this.codxService
               .getAutoNumber(
@@ -193,6 +193,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               )
               .subscribe((dt: any) => {
                 this.dialogCategory.patchValue({ categoryID: dt });
+                this.cr.detectChanges();
+                this.isAfterRender = true;
               });
           }
         }

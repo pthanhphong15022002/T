@@ -34,8 +34,8 @@ export class TaskExtendsComponent
   funcID: any;
   itemSelected: any;
   dialogExtendsStatus!: DialogRef;
-  vllStatus = 'TM010';
-
+  vllExtendStatus = 'TM010'; 
+  vllStatus ='TM004'
   constructor(
     inject: Injector,
     private authStore: AuthStore,
@@ -46,6 +46,7 @@ export class TaskExtendsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+   
   }
 
   onInit(): void {}
@@ -65,7 +66,10 @@ export class TaskExtendsComponent
     ];
   }
 
-  selectedChange(e) {}
+  selectedChange(val: any) {
+    this.itemSelected = val?.data?.task ;
+    this.detectorRef.detectChanges();
+  }
   requestEnded(e) {}
 
   //#region extends
@@ -73,7 +77,6 @@ export class TaskExtendsComponent
     var obj = {
       moreFunc: moreFunc,
       data: data,
-      funcID: this.funcID,
       vll: 'TM010',
       action: 'extend',
     };
@@ -85,6 +88,14 @@ export class TaskExtendsComponent
       '',
       obj
     );
+    this.dialogExtendsStatus.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) { 
+        this.view.dataService.update(e?.event).subscribe();
+        this.itemSelected = e?.event.task;
+        this.detectorRef.detectChanges();
+      }
+    })
+
   }
 
   receiveMF(e: any) {
@@ -92,7 +103,7 @@ export class TaskExtendsComponent
   }
 
   clickMF(e, data) {
-    this.itemSelected = data;
+    this.itemSelected = data.task;
     switch (e.functionID) {
       case 'TMT04011':
       case 'TMT04012':

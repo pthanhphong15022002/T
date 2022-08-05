@@ -1,6 +1,6 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [listRoles]="listRoles"
+  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [listRoles]="listRoles" [vllApproveStatus]="funcID=='TMT0402'?vllApproveStatus:null"
     [popoverCrr]="popoverCrr" [vllStatus]="vllStatus" (clickMoreFunction)="receiveMF($event)"
     (hoverPopover)="hoverPopover($event)">
   </app-view-detail>
