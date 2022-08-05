@@ -97,22 +97,26 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.lstView.dataService.data);
-    
-    this.lstView.dataService.requestEnd = (t, data) => {
-      if (t == 'loaded') {
-        this.data = data;
-        console.log('check data', this.data);
-        if (this.data?.length != 0) {
-          this.data.forEach((res) => {
-            if (res?.isPin == true || res?.isPin == '1') {
-              this.countNotePin += 1;
-            }
-          });
+    let myInterval = setInterval(() => {
+      this.lstView.dataService.requestEnd = (t, data) => {
+        if (t == 'loaded') {
+          this.data = data;
+          if (this.data && this.data.length > 0) {
+            clearInterval(myInterval);
+          }
+          console.log('check data', this.data);
+          if (this.data?.length != 0) {
+            this.data.forEach((res) => {
+              if (res?.isPin == true || res?.isPin == '1') {
+                this.countNotePin += 1;
+              }
+            });
+          }
+          (this.lstView.dataService as CRUDService).page = 5;
         }
-        (this.lstView.dataService as CRUDService).page = 5;
-      }
-    };
+      };
+    }, 200);
+    setTimeout(()=>{clearInterval(myInterval)}, 10000);
   }
 
   loadData() {
