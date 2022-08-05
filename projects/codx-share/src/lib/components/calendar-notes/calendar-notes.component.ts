@@ -151,7 +151,13 @@ export class CalendarNotesComponent
     });
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    this.lstView.dataService.requestEnd = (t, data) => {
+      if (t == 'loaded') {
+        console.log('check data', data);
+      }
+    };
+  }
 
   requestEnded(evt: any) {
     this.view.currentView;

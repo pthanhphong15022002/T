@@ -205,11 +205,12 @@ export class NoteBooksComponent
         return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
       }
     );
+    console.log("check data", this.listView.dataService.data)
     this.detectorRef.detectChanges();
   }
 
   onSearch(e) {
-    this.listView.dataService.search(e);
+    this.listView.dataService.search(e).subscribe();
     this.detectorRef.detectChanges();
   }
 }
