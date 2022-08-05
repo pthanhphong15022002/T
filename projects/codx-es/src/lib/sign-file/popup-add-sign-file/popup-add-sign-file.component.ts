@@ -16,6 +16,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  SidebarModel,
   ViewsComponent,
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
@@ -55,10 +56,12 @@ export class PopupAddSignFileComponent implements OnInit {
 
   dialog: DialogRef;
   data;
-  autoNo;
+  autoNo: string; //Số văn bản tự động mặc định
 
-  newNode;
-  oldNode;
+  newNode: number; //vị trí node mới
+  oldNode: number; //vị trí node trước
+
+  option: SidebarModel;
 
   showPlan: boolean = true;
   constructor(
@@ -74,10 +77,9 @@ export class PopupAddSignFileComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.formModel = data?.data.formModel;
-
-    this.data = data?.data.dataSelected;
+    this.data = data?.data.option.DataService.dataSelected;
     this.isAddNew = data?.data.isAddNew;
-    this.view = data?.data.view;
+    this.option = data?.data.option;
   }
 
   ngOnInit(): void {
@@ -98,6 +100,7 @@ export class PopupAddSignFileComponent implements OnInit {
         if (res) {
           this.dialogSignFile = res;
 
+          this.dialogSignFile.patchValue(this.data);
           if (this.isAddNew) {
             this.dialogSignFile.patchValue({
               approveStatus: '1',
@@ -167,6 +170,8 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   fileAdded(event) {
+    debugger;
+    let lstESign = ['.doc', '.pdf', '.xlsx'];
     let files = [];
     if (event) {
       if (event?.length > 0) {
@@ -176,6 +181,13 @@ export class PopupAddSignFileComponent implements OnInit {
           file.fileName = element.data.fileName;
           file.createdOn = element.data.createdOn;
           file.createdBy = element.data.createdBy;
+          file.comment = element.data.extension;
+
+          let index = lstESign.indexOf(file.comment);
+          if (index >= 0) {
+            file.eSign = true;
+          }
+
           files.push(file);
         });
       } else {
@@ -184,6 +196,12 @@ export class PopupAddSignFileComponent implements OnInit {
         file.fileName = event.data.fileName;
         file.createdOn = event.data.createdOn;
         file.createdBy = event.data.createdBy;
+        file.comment = event.data.extension;
+        let index = lstESign.indexOf(file.comment);
+        if (index >= 0) {
+          file.eSign = true;
+        }
+
         files.push(file);
       }
 
@@ -201,6 +219,7 @@ export class PopupAddSignFileComponent implements OnInit {
   onSaveForm() {}
 
   onSaveSignFile() {
+    debugger;
     if (this.dialogSignFile.invalid == true) {
       return;
     }
@@ -219,6 +238,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.attachment.saveFilesObservable().subscribe((res) => {
                 if (res) {
                   this.fileAdded(res);
+                  console.log(this.attachment.fileUploadList);
                 }
               });
             }
@@ -402,17 +422,10 @@ export class PopupAddSignFileComponent implements OnInit {
           if (newProcessStep != null) {
             this.saveNewProcessStep(newProcessStep);
           }
+        } else {
+          this.esService.editApprovalStep().subscribe((res) => {});
+          this.esService.deleteApprovalStep().subscribe((res) => {});
         }
-        let updateDeleteStep = [];
-        this.esService.lstDelete.subscribe((res) => {
-          updateDeleteStep = res;
-        });
-        let updateStep = [];
-        this.esService.approvalStep.subscribe((res) => {
-          updateStep = res;
-        });
-        console.log('update', updateStep);
-        console.log('delete', updateDeleteStep);
 
         this.upDateNodeStatus(oldNode, newNode);
         this.currentTab++;
@@ -438,9 +451,10 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   clickIsSave(isSave, dialogClose: DialogRef) {
+    debugger;
     if (this.isAddNew) {
       if (isSave) {
-        this.onSaveForm();
+        this.onSaveSignFile();
         dialogClose && dialogClose.close();
         this.dialog && this.dialog.close(this.dialogSignFile.value);
       } else if (this.isSaved) {

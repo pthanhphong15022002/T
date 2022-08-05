@@ -124,6 +124,10 @@ export class CodxEsService {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv) => {
         var model = {};
+        model['write'] = [];
+        model['delete'] = [];
+        model['assign'] = [];
+        model['share'] = [];
         if (gv) {
           const user = this.auth.get();
           for (const key in gv) {
@@ -180,6 +184,10 @@ export class CodxEsService {
               // }
             }
           }
+          model['write'].push(false);
+          model['delete'].push(false);
+          model['assign'].push(false);
+          model['share'].push(false);
         }
         resolve(this.fb.group(model, { updateOn: 'blur' }));
       });
