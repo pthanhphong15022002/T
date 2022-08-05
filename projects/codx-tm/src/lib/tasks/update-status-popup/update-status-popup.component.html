@@ -14,7 +14,7 @@
         </div>
         <div class="col-6" *ngIf="status =='90'">
             <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTask"  default="Thời gian hoàn tất"></codx-label>
-            <codx-input class="form-control" type="number" field="estimated" [crrValue]="completed"  (valueChange)="changeEstimated($event)" ></codx-input> 
+            <codx-input class="form-control" type="number" [min]="0" field="estimated" [crrValue]="completed"  (valueChange)="changeEstimated($event)" ></codx-input> 
           
         </div>
         <div class="col-12">

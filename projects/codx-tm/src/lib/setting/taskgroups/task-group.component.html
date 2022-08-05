@@ -30,68 +30,147 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
+      <div class="padding" *ngIf="data.projectControl!='0'">
         <div class="badge badge-danger me-2" [style.border-color]="
-        (data?.approveControl | vll: 'L1433':'color' | async) + '30'
+        (data?.projectControl | vll: 'TM012':'color' | async) + '30'
       " [style.background-color]="
-        (data?.approveControl | vll: 'L1433':'color' | async) + '30'
-      " [style.color]="data?.approveControl | vll: 'L1433':'color' | async" style="border: none">
-          {{data?.approveControl|vll:"L1433":"text"|async}}
+        (data?.projectControl | vll: 'TM012':'color' | async) + '30'
+      " [style.color]="data?.projectControl | vll: 'TM012':'color' | async" style="border: none">
+          {{data?.projectControl|vll:"TM012":"text"|async}}
         </div>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
+      <div class="padding" *ngIf="data.locationControl">
         <div class="badge badge-danger me-2" [style.border-color]="
-        (data?.projectControl | vll: 'L1462':'color' | async) + '30'
+        (data?.locationControl | vll: 'TM012':'color' | async) + '30'
       " [style.background-color]="
-        (data?.projectControl | vll: 'L1462':'color' | async) + '30'
-      " [style.color]="data?.projectControl | vll: 'L1462':'color' | async" style="border: none">
-          {{data?.projectControl|vll:"L1462":"text"|async}}
+        (data?.locationControl | vll: 'TM012':'color' | async) + '30'
+      " [style.color]="data?.locationControl | vll: 'TM012':'color' | async" style="border: none">
+          {{data?.locationControl|vll:"TM012":"text"|async}}
         </div>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
+      <div class="padding" *ngIf="data.planControl">
         <div class="badge badge-danger me-2" [style.border-color]="
-        (data?.locationControl | vll: 'L1462':'color' | async) + '30'
+        (data?.planControl | vll: 'TM012':'color' | async) + '30'
       " [style.background-color]="
-        (data?.locationControl | vll: 'L1462':'color' | async) + '30'
-      " [style.color]="data?.locationControl | vll: 'L1462':'color' | async" style="border: none">
-          {{data?.locationControl|vll:"L1462":"text"|async}}
+        (data?.planControl | vll: 'TM012':'color' | async) + '30'
+      " [style.color]="data?.planControl | vll: 'TM012':'color' | async" style="border: none">
+          {{data?.planControl|vll:"TM012":"text"|async}}
+        </div>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding" *ngIf="data.updateControl">
+        <div class="badge badge-danger me-2" [style.border-color]="
+        (data?.updateControl | vll: 'TM013':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.updateControl | vll: 'TM013':'color' | async) + '30'
+      " [style.color]="data?.updateControl | vll: 'TM013':'color' | async" style="border: none">
+          {{data?.updateControl|vll:"TM013":"text"|async}}
+        </div>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding" *ngIf="data.checkListControl">
+        <div class="d-flex align-items-center" style="padding-right: 30px;">
+          <div class="badge badge-danger me-2" [style.border-color]="
+          (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+        " [style.background-color]="
+          (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+        " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
+            {{data?.checkListControl|vll:"L1463":"text"|async}}
+          </div>
+          <div class="dropdown ms-2" [ngbPopover]="popDetail" placement="bottom" #empPopover="ngbPopover"
+            [openDelay]="500" (mouseenter)="PopoverDetail(empPopover, data)"
+            (mouseleave)="PopoverDetail(empPopover, null)">
+            <button [disabled]="!data.checkList" class="btn" type="button" id="dropdownShowDescription"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="d-flex">
+                <span class="icon-assignment icon-16 text-gray-600 me-1" *ngIf="data.checkList"></span>
+                <!-- <div class="b text-start" >
+                  {{data?.checkList}}
+                </div> -->
+              </div>
+              <span class="icon-assignment icon-16 b text-start" *ngIf="!data.checkList"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding" *ngIf="data.verifyControl == '1'">
+        <div class="badge badge-danger me-2" [style.border-color]="
+        (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
+      " [style.color]="data?.verifyByType | vll: 'TM006':'color' | async" style="border: none">
+          {{data?.verifyByType|vll: 'TM006':"text"|async}}
+        </div>
+        <div class="font-italic"
+          *ngIf="data.verifyByType =='R' || data.verifyByType == 'P' || data.verifyByType == 'U'">
+          {{data.roleName1}}
+        </div>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding" *ngIf="data.approveControl == '1'">
+        <div class="badge badge-danger me-2" [style.border-color]="
+        (data?.approveBy | vll: 'TM014':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.approveBy | vll: 'TM014':'color' | async) + '30'
+      " [style.color]="data?.approveBy | vll: 'TM014':'color' | async" style="border: none">
+          {{data?.approveBy|vll:"TM014":"text"|async}}
+        </div>
+        <div class="font-italic" *ngIf="data.approveBy =='R' || data.approveBy == 'P'">
+          {{data.roleName}}
         </div>
       </div>
 
     </td>
     <td class="rowphoto">
-      <div class="padding">
-        <div class="badge badge-danger me-2" [style.border-color]="
-        (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
-      " [style.background-color]="
-        (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
-      " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
-          {{data?.checkListControl|vll:"L1463":"text"|async}}
-        </div>
+      <div class="padding" *ngIf="data.maxHoursControl == '1'">
+        <span class="text-gray-600 me-1">
+          {{data.maxHours}}
+        </span>
       </div>
-
     </td>
-    <td class="rowphoto w-20">
+    <td class="rowphoto">
       <div class="padding">
-        <div class="dropdown ms-2" [ngbPopover]="popDetail" placement="bottom" #empPopover="ngbPopover"
-          [openDelay]="500" (mouseenter)="PopoverDetail(empPopover, data)"
-          (mouseleave)="PopoverDetail(empPopover, null)">
-          <button [disabled]="!data.checkList" class="btn" type="button" id="dropdownShowDescription"
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <div class="b text-start" *ngIf="data.checkList">
-              {{data?.checkList}}
-            </div>
-            <span *ngIf="!data.checkList" class="b text-start">Không có CheckList</span>
-          </button>
-        </div>
-
+        <codx-input name="editControl" type="switch" class="test-switch" field="editControl"
+          [crrValue]="data.editControl === '1' ? true : false">
+        </codx-input>
       </div>
-
-
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <codx-input name="dueDateControl" type="switch" class="test-switch" field="dueDateControl"
+          [crrValue]="data.dueDateControl === '1' ? true : false">
+        </codx-input>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <codx-input name="autoCompleted" type="switch" class="test-switch" field="autoCompleted"
+          [crrValue]="data.autoCompleted === '1' ? true : false">
+        </codx-input>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <codx-input name="extendControl" type="switch" class="test-switch" field="extendControl"
+          [crrValue]="data.extendControl === '1' ? true : false">
+        </codx-input>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <codx-input name="confirmControl" type="switch" class="test-switch" field="confirmControl"
+          [crrValue]="data.confirmControl === '1' ? true : false">
+        </codx-input>
+      </div>
     </td>
     <td class="rowphoto">
       <div class="padding">
@@ -165,10 +244,56 @@
   </div>
 </ng-template>
 
+<ng-template #itemProjectControl let-data>
+  <div class="padding">
+    <codx-label fiedName="ProjectControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Chọn dự án">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemLocationControl let-data>
+  <div class="padding">
+    <codx-label fiedName="LocationControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhập địa điểm">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemPlanControl let-data>
+  <div class="padding">
+    <codx-label fiedName="PlanControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Lập KH thực hiện">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemUpdateControl let-data>
+  <div class="padding">
+    <codx-label fiedName="UpdateControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Cập nhật tình trạng">
+    </codx-label>
+  </div>
+</ng-template>
+
+
+<ng-template #itemCheckListControl let-data>
+  <div class="padding">
+    <codx-label fiedName="CheckListControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Nhập việc cần làm">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemVerifyControl let-data>
+  <div class="padding">
+    <codx-label fiedName="VerifyControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Duyệt thực hiện công việc">
+    </codx-label>
+  </div>
+</ng-template>
+
 <ng-template #itemApproveControl let-data>
   <div class="padding">
-
-    <codx-label fiedName="ApproveControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Xét duyệt?">
+    <codx-label fiedName="ApproveControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Đánh giá công việc hoàn tất">
     </codx-label>
   </div>
 </ng-template>
@@ -181,27 +306,49 @@
   </div>
 </ng-template>
 
-<ng-template #itemAttachmentControl let-data>
+<ng-template #itemMaxHoursControl let-data>
   <div class="padding">
-
-    <codx-label fiedName="LocationControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Kế hoạch">
+    <codx-label fiedName="MaxHoursControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Thời gian tối đa hoàn thành">
     </codx-label>
   </div>
 </ng-template>
 
-<ng-template #itemCheckListControl let-data>
+<ng-template #itemEditControl let-data>
   <div class="padding">
-
-    <codx-label fiedName="CheckListControl" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Nhập việc cần làm">
+    <codx-label fiedName="EditControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Chỉnh sửa nội dung giao việc">
     </codx-label>
   </div>
 </ng-template>
 
-<ng-template #itemCheckList let-data>
+<ng-template #itemDueDateControl let-data>
   <div class="padding">
+    <codx-label fiedName="DueDateControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Thêm công việc quá khứ">
+    </codx-label>
+  </div>
+</ng-template>
 
-    <codx-label fiedName="CheckList" formName="TaskGroups" gridViewName="grvTaskGroups" default="Loại Checklist">
+<ng-template #itemAutoCompleted let-data>
+  <div class="padding">
+    <codx-label fiedName="AutoCompleted" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Cập nhật hoàn thành tự động">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemExtendControl let-data>
+  <div class="padding">
+    <codx-label fiedName="ExtendControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Gia hạn công việc">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemConfirmControl let-data>
+  <div class="padding">
+    <codx-label fiedName="ConfirmControl" formName="TaskGroups" gridViewName="grvTaskGroups"
+      default="Xác nhận thực hiện công việc">
     </codx-label>
   </div>
 </ng-template>
