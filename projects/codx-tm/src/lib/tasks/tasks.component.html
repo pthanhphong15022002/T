@@ -1,6 +1,6 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [listRoles]="listRoles"
+  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [listRoles]="listRoles" [vllApproveStatus]="funcID=='TMT0402'?vllApproveStatus:null"
     [popoverCrr]="popoverCrr" [vllStatus]="vllStatus" (clickMoreFunction)="receiveMF($event)"
     (hoverPopover)="hoverPopover($event)">
   </app-view-detail>
@@ -208,11 +208,3 @@
   [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
   (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
-
-<!-- <codx-views *ngIf="funcID =='TMT0401'" #view service="TM" entityName="TM_TaskExtends" idField="recID" assemblyName="ERM.Business.TM"
-  className="TaskExtendsBusiness" method="GetListTaskExtendsLogic" [views]="views" [button]="button"
-  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
-  [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
-  (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
-</codx-views> -->
-

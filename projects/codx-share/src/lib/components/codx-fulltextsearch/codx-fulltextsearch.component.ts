@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit,  OnChanges, SimpleChanges, Input, Tem
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, DataRequest } from 'codx-core';
 import { convertHtmlAgency, extractContent, getIdUser } from 'projects/codx-od/src/lib/function/default.function';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'codx-fulltextsearch',
   templateUrl: './codx-fulltextsearch.component.html',
@@ -37,6 +38,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   @Input() centerTmp?: TemplateRef<any>;
   @Input() rightTmp?: TemplateRef<any>;
   @Input() funcID: any;
+  @Input() formModel: any;
   constructor( 
     private router: ActivatedRoute,
     protected cache: CacheService,
@@ -118,7 +120,8 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
             {
               id : element?.value,
               name : element?.text,
-              view : key
+              view : key,
+             
             }
             result.push(obj);
           });
@@ -128,28 +131,13 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
       })
     //cbb
     else if(type == "3")
+    {
+     
       this.cache.combobox(refValue).subscribe(cbb=>{
-        this.api.execSv("OD","CM","DataBusiness","LoadDataCbxAsync",a).subscribe((item)=>{
-          if(item)
-          {
-            var res = JSON.parse(item[0]);
-            this.countCbb += res.length;
-            var result = [];
-            res.forEach(element => {
-              var obj = 
-              {
-                id : element[cbb?.viewMember],
-                name : element[cbb?.valueMember],
-                view : cbb?.viewMember
-              }
-              result.push(obj);
-            });
-            data.data = result;
-            //this.innerHTML(html , arrayCbb);
-            this.dataGroup.push(data);
-          }
-        }) as any;
+        this.fetch('new',data,a , refValue ,cbb);
       })
+    }
+      
   }
   changeValueText(view: any , e: any)
   {
@@ -264,5 +252,55 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
       var per = this.activePage - 1;
       this.changePage(per);
     }
+  }
+  fetch(type:any , data:any , request:any , refValue:any , cbb:any): Observable<any[]> 
+  {
+    let loadmore = false;
+    return this.api.execSv("OD","CM","DataBusiness","LoadDataCbxAsync",request).subscribe((item)=>{
+      if(item)
+      {
+        debugger;
+        var res = JSON.parse(item[0]);
+        var result = [];
+        var l = 0 ; if(data?.data.length>0 && type!="new") l = data?.data.length; 
+        if((l + res.length) < item[1]) loadmore = true;
+        res.forEach(element => {
+          var obj = 
+          {
+            id : element[cbb?.viewMember],
+            name : element[cbb?.valueMember],
+            view : cbb?.viewMember,
+          }
+          result.push(obj);
+        });
+        data.load = loadmore;
+        data.page = request.page;
+        data.ref = refValue;
+        data.isCbb = true;
+        data.cbb = cbb;
+        if(type == "load") data.data = data.data.concat(result);
+        else 
+        {
+          data.data = result;
+          this.dataGroup.push(data);
+
+        }
+        //this.innerHTML(html , arrayCbb);
+
+      }
+    }) as any;
+  }
+  loadMore(data:any)
+  {
+    debugger;
+    if(data.isCbb)
+    {
+      let request= new DataRequest();
+      request.comboboxName = data?.ref;
+      request.page = data?.page+1;
+      request.pageSize = 5;
+      this.fetch("load",data,request,data?.refValue,data.cbb);
+    }
+    
   }
 }

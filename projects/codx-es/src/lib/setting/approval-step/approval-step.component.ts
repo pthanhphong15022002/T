@@ -36,6 +36,7 @@ export class ApprovalStepComponent implements OnInit {
   subHeaderText;
 
   lstOldData;
+  isEdited = false;
 
   currentStepNo = 1;
   dialog: DialogRef;
@@ -83,6 +84,7 @@ export class ApprovalStepComponent implements OnInit {
     this.esService.isSetupApprovalStep.subscribe((res) => {
       if (res != null) {
         this.lstStep = res;
+        this.lstOldData = [...res];
         console.log(this.lstStep);
       } else if (this.transId != '') {
         // if (this.transId != '') {
@@ -181,6 +183,7 @@ export class ApprovalStepComponent implements OnInit {
 
           if (i != -1) {
             this.lstStep.splice(i, 1);
+            this.isEdited == true;
           }
           if (approvalStep.recID && approvalStep.recID != null) {
             this.lstDeleteStep.push(approvalStep);
@@ -211,6 +214,12 @@ export class ApprovalStepComponent implements OnInit {
           '',
           model
         );
+
+        this.dialog.closed.subscribe((res) => {
+          if (res != null) {
+            this.isEdited == true;
+          }
+        });
       }
     });
   }

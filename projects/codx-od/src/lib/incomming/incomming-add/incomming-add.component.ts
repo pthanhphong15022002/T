@@ -245,7 +245,7 @@ export class IncommingAddComponent implements OnInit {
               }
               else this.notifySvr.notify(item.message);
             });
-      } else this.notifySvr.notifyCode('DM001');
+      } else this.notifySvr.notifyCode('OD022');
     } else if (this.type == 'edit') {
       let dltDis = true;
       if (this.fileCount == 0) dltDis = false;

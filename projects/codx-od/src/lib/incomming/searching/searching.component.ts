@@ -13,6 +13,7 @@ export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
   getIdUser = getIdUser;
   gridViewSetup: any;
   funcID = "ODT31";
+  formModel : any = {};
   constructor(  
     private cache: CacheService,
     private hideToolbar : CodxOdService
@@ -33,6 +34,10 @@ export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
 
   getGridViewSetup(){
     this.cache.functionList(this.funcID).subscribe((fuc) => {
+      this.formModel.entityName = fuc?.entityName;
+      this.formModel.formName = fuc?.formName;
+      this.formModel.funcID = fuc?.functionID;
+      this.formModel.gridViewName = fuc?.gridViewName;
       this.cache
       .gridViewSetup(fuc?.formName, fuc?.gridViewName)
       .subscribe((grd) => {
