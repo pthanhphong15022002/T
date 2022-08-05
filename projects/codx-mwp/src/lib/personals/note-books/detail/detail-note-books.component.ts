@@ -58,7 +58,7 @@ export class DetailNoteBooksComponent extends UIComponent {
   @ViewChild('lstGrid') lstGrid: CodxGridviewComponent;
   @ViewChild('list') list: TemplateRef<any>;
   @ViewChild('memo', { static: true }) memo;
-  @ViewChild('tag', { static: true }) tag;
+  @ViewChild('tags', { static: true }) tags;
   @ViewChild('createdOn', { static: true }) createdOn;
   @ViewChild('modifiedOn', { static: true }) modifiedOn;
   @ViewChild('fileCount', { static: true }) fileCount;
@@ -108,7 +108,7 @@ export class DetailNoteBooksComponent extends UIComponent {
       {
         field: 'Tag#',
         headerText: 'Tag#',
-        template: this.tag,
+        template: this.tags,
         width: 200,
       },
       {

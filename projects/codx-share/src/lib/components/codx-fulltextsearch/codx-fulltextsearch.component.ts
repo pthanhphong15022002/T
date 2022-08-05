@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit,  OnChanges, SimpleChanges, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit,  OnChanges, SimpleChanges, Input, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, DataRequest } from 'codx-core';
 import { convertHtmlAgency, extractContent, getIdUser } from 'projects/codx-od/src/lib/function/default.function';
@@ -31,6 +31,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   activePage = 1;
   arrayPaging = [];
   hideN = false;
+  @Input() modeDropDown = false;
   @Input() page = 1;
   @Input() pageSize = 2;
   @Input() widthLeft = 300;
@@ -39,6 +40,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   @Input() rightTmp?: TemplateRef<any>;
   @Input() funcID: any;
   @Input() formModel: any;
+  @Output() selectedChange = new EventEmitter();
   constructor( 
     private router: ActivatedRoute,
     protected cache: CacheService,
@@ -57,7 +59,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
         if(this.funcID)     this.getGridViewSetup();
       });
     this.getGridViewSetup();
-    this.searchText(this.txtSearch);
+    this.searchText();
   }
   ngOnChanges(changes: SimpleChanges): void {
   }
@@ -108,6 +110,12 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
     a.comboboxName = refValue;
     a.page = 1;
     a.pageSize = 5;
+    if(this.modeDropDown == true && (type == "2" || type == "3"))
+    {
+      data.data = refValue;
+      this.dataGroup.push(data);
+      return;
+    }
     //vll
     if(type == "2")
       this.cache.valueList(refValue).subscribe(item=>{
@@ -143,7 +151,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   {
     var data = e?.data; 
     this.filter[view]=[data];
-    this.searchText(this.txtSearch);
+    this.searchText();
   } 
   changeValueCbb(id:any = "" , view: any , e:any)
   {
@@ -156,20 +164,20 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
       this.filter[view].push(id); 
     else
       this.filter[view] = this.filter[view].filter(function(e) { return e !== id }); 
+
     //debugger;
-    this.searchText(this.txtSearch);
+    this.searchText();
   }
   changeValueDate(view: any , e: any)
   {
 
   }
-  searchText(val:any , changePage = false)
+  searchText(changePage = false)
   {
-    this.txtSearch = val;
     if(changePage == false) this.page = 1;
     this.api.execSv<any>("OD","OD", "DispatchesBusiness", "SearchFullTextAdvAsync",
     {
-      query: val,
+      query: this.txtSearch,
       filter: this.filter,
       functionID:  this.funcID,
       entityName: "OD_Dispatches",
@@ -235,7 +243,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
         this.arrayPaging.push(i);
     }
     this.page = index;
-    this.searchText(this.txtSearch , true);
+    this.searchText(true);
   }
   nextPage()
   {
@@ -302,5 +310,27 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
       this.fetch("load",data,request,data?.refValue,data.cbb);
     }
     
+  }
+  changeValueInput(e:any)
+  {
+    var view = e?.component?.displayMembers[0];
+    var arrvalue = e?.data.split(";");
+    this.filter[view] = [];
+    if(arrvalue)
+    {
+      arrvalue.forEach(id=>{
+        this.filter[view].push(id)
+      })
+    }
+    this.searchText();
+  }
+  onSelected(val:any)
+  {
+    this.selectedChange.emit(val);
+  }
+  changeSearch(e:any)
+  {
+    this.txtSearch = e;
+    this.searchText()
   }
 }
