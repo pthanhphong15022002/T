@@ -78,77 +78,72 @@
             </div>
         </ng-template>
         <ng-template #body>
-            <div class="card-body p-0">
-                <form name="frm_file1">
-                    <div class="offcanvas-wrapper">
-                        <div *ngFor="let file of sortBy();  index as i;" class=" mt-2 mb-2 has-action-menu">
-                            <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
-                            <ng-template #simple>
-                                <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
-                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"
-                                    [subTitleTmp]="cardImgFooter" [descLine]="1">
-                                </codx-temp-full>
-                            </ng-template>
-                            <ng-template #full>
-                                <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
-                                    title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"
-                                    [subTitleTmp]="cardImgFooter" [descLine]="1">
-                                </codx-temp-full>
-                            </ng-template>
-                            <ng-template #cardImgFooter let-data>
-                                <div class="w-100 float-start">
-                                    <div *ngIf="(displayThumb == 'full')"
-                                        class="d-flex flex-column flex-grow-1 file-item float-start w-100">
-                                        {{file.createdOn}}{{' | ' + file.createdBy}}
-                                    </div>
-                                    <div *ngIf="hideDes == '0'"
-                                        class="d-flex flex-column flex-grow-1 file-item float-start w-100">
-                                        <span class="text-dark"></span>
-                                        <div class="d-flex">
-                                            <codx-input placeholder="Mô tả tài liệu" style="width:86%"
-                                                class="border-0 p-0" type="text" [crrValue]="file.description"
-                                                (valueChange)="changeValueAgencyText($event)"> </codx-input>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ng-template>
-                            <!-- <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
-                                title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
-                                [subTitleTmp]="cardImgFooter"
+            <form name="frm_file1">
+                <div class="offcanvas-wrapper">
+                    <div *ngFor="let file of sortBy();  index as i;"
+                        class="py-2 has-action-menu border-1 border-bottom">
+                        <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
+                        <ng-template #simple>
+                            <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-35px me-3"
+                                title="{{file.fileName}} ({{formatBytes(file.fileSize)}})" [subTitleTmp]="cardImgFooter"
                                 [descLine]="1">
-                            </codx-temp-full>-->
-                            <!-- <ng-template #cardImgFooter let-data>
-                                <div class="d-flex flex-column flex-grow-1 file-item">
+                            </codx-temp-full>
+                        </ng-template>
+                        <ng-template #full>
+                            <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-35px me-3"
+                                title="{{file.fileName}} ({{formatBytes(file.fileSize)}})" [subTitleTmp]="cardImgFooter"
+                                [descLine]="1">
+                            </codx-temp-full>
+                        </ng-template>
+                        <ng-template #cardImgFooter let-data>
+                            <div class="w-100 float-start">
+                                <div *ngIf="(displayThumb == 'full')"
+                                    class="d-flex flex-column flex-grow-1 file-item float-start w-100">
+                                    {{file.createdOn}}{{' | ' + file.createdBy}}
+                                </div>
+                                <div *ngIf="hideDes == '0'"
+                                    class="d-flex flex-column flex-grow-1 file-item float-start w-100">
                                     <span class="text-dark"></span>
                                     <div class="d-flex">
-                                        <codx-input placeholder="Mô tả tài liệu" style="width:86%"
-                                            class="form-control no-boder" type="text" [crrValue]="file.description"
+                                        <codx-input placeholder="Mô tả tài liệu" style="width:100%" class="border-0 p-0"
+                                            type="text" [crrValue]="file.description"
                                             (valueChange)="changeValueAgencyText($event)"> </codx-input>
                                     </div>
                                 </div>
-                            </ng-template>  -->
-                            <div class="action-menu d-flex align-items-center cursor-pointer">
-                                <div class="btn btn-sm btn-icon btn-white cursor-pointer"
-                                    (click)="onDeleteUploaded(file.fileName)">
-                                    <i class="icon-close text-primary icon-18"></i>
-                                </div>
-                                <div class="btn btn-sm btn-icon btn-white cursor-pointer"
-                                    (click)="editfile(file, true, i)">
-                                    <i class="icon-edit text-primary icon-18"></i>
+                            </div>
+                        </ng-template>
+                        <!-- <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
+                            title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
+                            [subTitleTmp]="cardImgFooter"
+                            [descLine]="1">
+                        </codx-temp-full>-->
+                        <!-- <ng-template #cardImgFooter let-data>
+                            <div class="d-flex flex-column flex-grow-1 file-item">
+                                <span class="text-dark"></span>
+                                <div class="d-flex">
+                                    <codx-input placeholder="Mô tả tài liệu" style="width:86%"
+                                        class="form-control no-boder" type="text" [crrValue]="file.description"
+                                        (valueChange)="changeValueAgencyText($event)"> </codx-input>
                                 </div>
                             </div>
+                        </ng-template>  -->
+                        <div class="action-menu d-flex align-items-center">
+                            <a class="action-item d-flex align-items-center" (click)="editfile(file, true, i)">
+                                <i class="icon-edit text-primary icon-18"></i>
+                            </a>
+                            <a class="action-item d-flex align-items-center" (click)="onDeleteUploaded(file.fileName)">
+                                <i class="icon-close text-danger icon-18"></i>
+                            </a>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </ng-template>
         <ng-template #footer>
-            <div class="card-footer pt-4">
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary" (click)="onMultiFileSave()">
-                        {{titleUpload}}
-                    </button>
-                </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary" (click)="onMultiFileSave()">
+                    {{titleUpload}}
+                </button>
             </div>
         </ng-template>
     </codx-form>
@@ -159,7 +154,7 @@
             <form name="frm_file1">
                 <div class="offcanvas-wrapper">
                     <div *ngIf="hideFolder != '1'" class="modal-subheader">
-                        <div for="fileName" class="d-flex justify-content-between mb-1">
+                        <div for="fileName" class="d-flex justify-content-between mb-2">
                             <div class="d-flex align-items-center col-form-label pb-0">
                                 <codx-breadcumb link="false" end="2" start="0" max="4"></codx-breadcumb>
                             </div>
@@ -199,7 +194,7 @@
                                         hoặc</span>
                                 </div>
                                 <!--begin::Controls-->
-                                <div class="dropzone-panel mt-6">
+                                <div class="dropzone-panel mt-3">
                                     <ejs-uploader #templateupload id='templatefileupload'
                                         [allowedExtensions]='allowExtensions' [multiple]='allowMultiple()'
                                         [asyncSettings]='path' [dropArea]='dropElement'
@@ -257,15 +252,15 @@
                                     </div>
                                 </div>
                             </ng-template>
-                            <div class="action-menu d-flex align-items-center cursor-pointer">
-                                <div class="btn btn-sm btn-icon btn-white cursor-pointer"
-                                    (click)="onDeleteUploaded(file.fileName)">
-                                    <i class="icon-close text-primary icon-18"></i>
-                                </div>
-                                <div class="btn btn-sm btn-icon btn-white cursor-pointer"
-                                    (click)="editfile(file, true, i)">
+                            <div class="action-menu d-flex align-items-center">
+
+                                <a class="action-item d-flex align-items-center" (click)="editfile(file, true, i)">
                                     <i class="icon-edit text-primary icon-18"></i>
-                                </div>
+                                </a>
+                                <a class="action-item d-flex align-items-center"
+                                    (click)="onDeleteUploaded(file.fileName)">
+                                    <i class="icon-close text-danger icon-18"></i>
+                                </a>
                             </div>
                             <!-- <div ngbDropdown class="dropdown d-flex align-items-center">
                                 <button ngbDropdownToggle class="btn align-items-center mt-1" type="button" id="dropdownMenuButton" data-toggle="dropdown"

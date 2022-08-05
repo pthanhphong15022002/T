@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -54,36 +55,6 @@ export class PopupAddEmployeesComponent implements OnInit {
   data: any;
   titleAction = 'Thêm';
 
-  // @ViewChild('tabInfoPersonal') tabInfoPersonal: TemplateRef<any>;
-  // @ViewChild('tabInfoEmploy') tabInfoEmploy: TemplateRef<any>;
-  // @ViewChild('tabInfoPrivate') tabInfoPrivate: TemplateRef<any>;
-  // @ViewChild('tabInfoLaw') tabInfoLaw: TemplateRef<any>;
-
-
-  // menuInfoPersonal = {
-  //   icon: 'icon-person',
-  //   text: 'Thông tin chung',
-  //   name: 'tabInfoPersonal',
-  // };
-
-  // menuInfoEmploy = {
-  //   icon: 'icon-receipt_long',
-  //   text: 'Nhân viên',
-  //   name: 'tabInfoEmploy',
-  // };
-
-  // menuInfoPrivate = {
-  //   icon: 'icon-info',
-  //   text: 'Thông tin cá nhân',
-  //   name: 'tabInfoPrivate',
-  // };
-
-  // menuInfoLaw = {
-  //   icon: 'icon-info',
-  //   text: 'Pháp lý',
-  //   name: 'tabInfoLaw',
-  // };
-
   constructor(
     private authStore: AuthStore,
     private notiService: NotificationsService,
@@ -114,35 +85,22 @@ export class PopupAddEmployeesComponent implements OnInit {
     });
     if (this.action === 'edit') {
       this.titleAction = 'Chỉnh sửa';
+      this.isNew === false;
     }
     if (this.action === 'copy') {
       this.titleAction = 'Sao chép';
     }
   }
 
-  // ngAfterViewInit(): void {
-  //   if (this.showAssignTo) {
-  //     this.tabInfo = [
-  //       this.menuInfoPersonal,
-  //       this.menuInfoEmploy,
-  //       this.menuInfoPrivate,
-  //       this.menuInfoLaw,
-  //     ];
-  //     this.tabContent = [
-  //       this.tabInfoPersonal,
-  //       this.tabInfoEmploy,
-  //       this.tabInfoPrivate,
-  //       this.tabInfoLaw,
-  //     ];
-  //   }
-  // }
-
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
-      this.getAutonumber("HRT03", "HR_Employees", "EmployeeID").subscribe(key => {
-        this.employee.employeeID = key;
-      })
+      if (this.action === 'add') {
+        this.getAutonumber("HRT03", "HR_Employees", "EmployeeID").subscribe(key => {
+          this.employee.employeeID = key;
+        })
+      }
+
     })
   }
 
@@ -220,9 +178,11 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
 
   OnSaveForm() {
-    for (var key in this.data) {
-      if (Array.isArray(this.data[key]))
-        this.data[key] = this.data[key].join(';');
+    if (this.action === 'add') {
+      for (var key in this.data) {
+        if (Array.isArray(this.data[key]))
+          this.data[key] = this.data[key].join(';');
+      }
     }
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))

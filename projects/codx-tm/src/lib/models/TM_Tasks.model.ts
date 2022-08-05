@@ -118,6 +118,7 @@ export class TM_TaskExtends {
   recID: string
   taskID: string
   extendApprover: string
+  extendApproverName: string
   status: string
   reason: string
   extendComment: string

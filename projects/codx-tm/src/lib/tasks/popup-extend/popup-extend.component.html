@@ -4,7 +4,7 @@
     <div class="form-group row">
         <div class="col-12">
             <codx-label fiedName="ExtendApprover" formName="TaskExtends" gridViewName="grvTaskExtends"  default="Người duyệt gia hạn"></codx-label>
-            <codx-input class="form-control" type="text"  [crrValue]="taskExtend?.extendApprover" [disabled]="true"></codx-input>
+            <codx-input class="form-control" type="text"  [crrValue]="taskExtend?.extendApproverName" [disabled]="true"></codx-input>
         </div>
         <div class="col-6" >
             <codx-label fiedName ="DueDate" formName="TaskExtends" gridViewName="grvTaskExtends"  default="Ngày hết hạn"></codx-label>
@@ -14,7 +14,7 @@
         </div>
         <div class="col-6" >
             <codx-label fiedName="ExtendDate" formName="TaskExtends" gridViewName="grvTaskExtends"   default="Ngày gia hạn"></codx-label>
-            <codx-input type="datetime" class="test-datetime" 
+            <codx-input type="datetime" class="test-datetime"  field="extendDate"
                 [crrValue]="taskExtend?.extendDate" format="F" (valueChange)="changeTime($event)">
             </codx-input>
           

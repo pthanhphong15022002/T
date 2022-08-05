@@ -15,6 +15,7 @@ import {
   CodxListviewComponent,
   CRUDService,
   CacheService,
+  ScrollComponent,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -94,7 +95,9 @@ export class StorageComponent
     // })
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    ScrollComponent.reinitialization();
+  }
 
   testdate(dr) {}
 

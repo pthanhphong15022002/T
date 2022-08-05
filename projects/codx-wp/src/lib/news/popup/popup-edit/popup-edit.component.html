@@ -84,22 +84,32 @@
 
                 <div class="row">
                     <div class="w-100 my-2">
-                        <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblImage"
-                            default="Hình hiển thị"></codx-label>
+                        <codx-label class="fw-bold" 
+                            [formModel]="dialogRef.formModel" 
+                            name="lblImage"
+                            default="Hình hiển thị">
+                        </codx-label>
                     </div>
-                    <div class="w-100">
-                        <div *ngIf="fileImage.length > 0">
-                            <img class="w-100 h-200px" [src]="fileImage[0].data || fileImage[0].thumbnail" alt="">
-                        </div>
-                        <div>
-                            <codx-attachment #codxAttachment [functionID]="dialogRef?.formModel.funcID"
-                                [objectType]="dialogRef?.formModel.entityName" [allowMultiFile]="0"
-                                [hideImageUpload]="'1'" [hideUploadBtn]="0" [showMessage]="0"
-                                (fileCount)="addImage($event)">
-                            </codx-attachment>
-                        </div>
+                    <div class="w-100" (click)="clickUploadFile()">
+                        <ng-container *ngIf="fileImage;else haveImage">
+                            <img class="w-100 h-200px" [src]="fileImage.data || fileImage.thumbnail" alt="">
+                        </ng-container>
+                        <ng-template #haveImage>
+                            <codx-img [objectId]="data.recID" [objectType]="data.refType" [width]="300" [imageType]="'square'"></codx-img>
+                        </ng-template>
                     </div>
-
+                    <div class="d-none">
+                        <codx-attachment #codxAttm 
+                            [functionID]="dialogRef?.formModel.funcID"
+                            [objectId]="data.recID" 
+                            [objectType]="dialogRef?.formModel.entityName" 
+                            [allowMultiFile]="0"
+                            [showMessage]="0"
+                            [hideImageUpload]="'1'"
+                            [hideUploadBtn]="1"
+                            (fileCount)="addImage($event)">
+                        </codx-attachment>
+                    </div>
                 </div>
                 <div class="my-2">
                     <div class="d-flex align-items-center mb-2">
@@ -137,22 +147,11 @@
                 </codx-input>
             </ng-container>
             <ng-template #video>
-                <div class="w-100 border h-500px">
+                <div class="w-100 border h-500px" (click)="clickUploadFile()">
                     <div class="w-100" *ngIf="fileVideo.length > 0">
                         <video controls class="w-100 h-300px">
                             <source [src]="fileVideo[0].data || fileVideo[0].srcVideo" alt="" />
                         </video>
-                    </div>
-                    <div class="w-100">
-                        <codx-attachment #codxATMVideo 
-                            [functionID]="dialogRef?.formModel.funcID" 
-                            [objectType]="dialogRef?.formModel.entityName" 
-                            [allowMultiFile]="0"
-                            [showMessage]="0"
-                            [hideImageUpload]="'1'"
-                            [hideUploadBtn]="0"
-                            (fileCount)="addVideo($event)">
-                        </codx-attachment>
                     </div>
                 </div>
             </ng-template>
@@ -163,14 +162,14 @@
         <div class="d-flex align-items-center justify-content-end">
             <div class="me-3">
                 <button (click)="clickInsertNews()" type="button" class="btn btn-primary">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
+                    <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Cập nhật"></codx-label>
                 </button>
             </div>
-            <div>
+            <!-- <div>
                 <button type="button" class="btn btn-primary">
                     <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Phát hành"></codx-label>
                 </button>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

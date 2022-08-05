@@ -1,10 +1,8 @@
-import { E, P } from '@angular/cdk/keycodes';
+import { T, TAB } from '@angular/cdk/keycodes';
+import { ThisReceiver } from '@angular/compiler';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { DataRequest, CodxListviewComponent, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel } from 'codx-core';
-import { extractContent } from '../function/default.function';
-import { PopupAddComponent } from '../news/popup/popup-add/popup-add.component';
+import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel } from 'codx-core';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
 import { ApproveDetailComponent } from './approve-detail/approve-detail.component';
 
@@ -13,7 +11,8 @@ import { ApproveDetailComponent } from './approve-detail/approve-detail.componen
   templateUrl: './approve.component.html',
   styleUrls: ['./approve.component.scss']
 })
-export class ApproveComponent implements OnInit {
+export class ApproveComponent extends UIComponent {
+
   service = "WP";
   assemblyName = "ERM.Business.WP";
   className = "NewsBusiness";
@@ -36,7 +35,7 @@ export class ApproveComponent implements OnInit {
   @ViewChild('itemTemplate') itemTemplate : TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef : TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef : TemplateRef<any>;
-  @ViewChild('codxViews') codxViews : ViewsComponent;
+  @ViewChild('view') codxViews : ViewsComponent;
   @ViewChild('viewdetail') viewdetail : ApproveDetailComponent;
 
 
@@ -83,15 +82,14 @@ export class ApproveComponent implements OnInit {
     private dt:ChangeDetectorRef,
     private notifySvr: NotificationsService,
     private auth:AuthService,
-    private cache: CacheService,
-    private api : ApiHttpService,
     private callFuc: CallFuncService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+private injector:Injector
   ) 
   {
-
+    super(injector);
   }
-  ngOnInit(): void {
+  onInit(): void {
     this.user = this.auth.userValue;
     this.route.params.subscribe((param) =>{
       this.funcID = param["funcID"];
@@ -100,26 +98,29 @@ export class ApproveComponent implements OnInit {
       this.dataValue = this.user.userID;     
       switch (this.funcID){
         case "WPT0211":
-          this.predicate = "CreatedBy=@0 ";
+          this.predicate = "CreatedBy=@0 && Stop=false";
           this.option = "mypost";
           break;
         case "WPT0212":
-          this.predicate = "Approver=@0";
+         this.predicate = "Approver=@0 && Stop=false";
           this.option = "webpost";
           break;
         default:
           this.entityName = 'WP_Comments'
-          this.predicate = "Approver=@0"
+          this.predicate = "Approver=@0 && Stop=false"
           this.option = "post";
           break;
           
       }
       this.getGridViewSetUp();
       this.loadTabAsside(this.predicate,this.dataValue,this.entityName);
+      if(this.view){
+        this.view.dataService.request.entityName = this.entityName;
+        this.view.dataService.setPredicates([this.tabAsside[0].predicate],[this.tabAsside[0].value]);
+        this.view.dataService.load();
+      } 
       this.dt.detectChanges();
     });
-    
-
   }
   ngAfterViewInit(): void {
     this.views  = [{
@@ -168,12 +169,23 @@ export class ApproveComponent implements OnInit {
           this.tabAsside[0].active = true;
           this.dt.detectChanges();
         }
+        else
+        {
+          this.tabAsside.map((tab:any) => tab.total = 0);
+          this.dt.detectChanges();
+        }
       }
-    )
+    );
   }
   loadData(predicate:string,dataValue:string){
-    this.codxViews.entityName = this.entityName;
-    this.codxViews.dataService.setPredicates([predicate],[dataValue]).subscribe();
+    this.view.dataService.request.entityName = this.entityName;
+    if(predicate && dataValue){
+      this.view.dataService.setPredicates([predicate],[dataValue]).subscribe();
+    }
+    else
+    {
+      this.view.dataService.setPredicates([],[]).subscribe();
+    }
   }
   clickViewDetail(data:any,entityName:string){
     this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetPostInfoAsync",[data.recID,entityName])
@@ -186,91 +198,91 @@ export class ApproveComponent implements OnInit {
       }
     })
   }
-
-  clickApprovePost(data:any,approveStatus:any){
+  clickApprovePost(event:any){
+    let approveStatus = event.approveStatus;
+    let data = event.data;
     switch(approveStatus)
     {
       case this.acceptApprove:
-        this.notifySvr.alertCode("WP004").subscribe((dt:Dialog) => {
-          var t = this;
-          dt.close = function(e){
-            return t.approvePost(e,data,approveStatus,t);
+        this.notifySvr.alertCode("WP004").subscribe((evt:any) => {
+          if(evt.event.status == 'Y'){
+            this.approvePost(data,approveStatus);
           }
         });
         break;
       case this.cancelApprove:
-        this.notifySvr.alertCode("WP006").subscribe((dt:Dialog) => {
-          var t = this;
-          dt.close = function(e){
-            return t.cancelPost(e,data,approveStatus,t);
-          }
+        this.notifySvr.alertCode("WP006").subscribe((evt:any) => {
+          if(evt.event.status == 'Y')
+            this.cancelPost(data,approveStatus);
         });
         break;
       default:
-        this.notifySvr.alertCode("WP008").subscribe((dt:Dialog) => {
-          var t = this;
-          dt.close = function(e){
-            return t.remakePost(e,data,approveStatus,t);
+        this.notifySvr.alertCode("WP008").subscribe((evt:any) => {
+          if(evt.event.status == 'Y')
+          {
+              this.remakePost(data,approveStatus);
           }
-        });
+          });
         break;
     }
   }
 
-  approvePost(e:any,data:any,approveStatus:any,t:ApproveComponent){
-    if(e.event.status == "Y"){
-      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-        (res) => 
+  approvePost(data:any,approveStatus:any){
+    this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",
+    [data.entityName,data.recID,approveStatus])
+    .subscribe((res) => 
+      {
+        if(res)
         {
-          if(res)
-          {
-            // this.listView.removeHandler(data, 'recID');
-            this.dataDetail = null;
-            this.tabAsside[0].total--;
-            this.tabAsside[1].total++;
-            t.notifySvr.notifyCode("WP005");
-            this.dt.detectChanges();
-          }
+          this.dataDetail = null;
+          this.tabAsside.forEach((t:any) => {
+            if(t.value == data.approveStatus) {
+              t.total--;
+              return;
+            }
+          });
+          this.tabAsside[1].total++;
+          this.view.dataService.remove(data).subscribe();
+          this.notifySvr.notifyCode("WP005");
+          this.dt.detectChanges();
         }
-      );
-    }
+      });
   }
 
 
-  cancelPost(e:any,data:any,approveStatus:any,t:ApproveComponent){
-    if(e.event.status == "Y"){
-      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-        (res) => 
+  cancelPost(data:any,approveStatus:any){
+      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",
+      [data.entityName,data.recID,approveStatus])
+      .subscribe((res) => 
         {
           if(res)
           {
-            // this.listView.removeHandler(data, 'recID');
             this.dataDetail = null;
-            this.tabAsside[0].total--;
+            this.tabAsside.map((t:any) => {
+              if(t.value == data.approveStatus) t.total--;
+            })
             this.tabAsside[2].total++;
-            t.notifySvr.notifyCode("WP007");
+            this.view.dataService.remove(data).subscribe();
+            this.notifySvr.notifyCode("WP007");
             this.dt.detectChanges();
           }
         }
       );
-    }
   }
 
-  remakePost(e:any,data:any,approveStatus:any,t:ApproveComponent){
-    if(e.event.status == "Y"){
-      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-        (res) => 
+  remakePost(data:any,approveStatus:any){
+      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",
+      [data.entityName,data.recID,approveStatus])
+      .subscribe((res) => 
         {
           if(res)
           {
             this.dataDetail = null;
-            this.tabAsside[0].total--;
-            t.notifySvr.notifyCode("WP009");
+            this.notifySvr.notifyCode("WP009");
             this.dt.detectChanges();
           }
         }
       );
-    } 
   }
 
   clickTabApprove(item = null ,predicate:string,dataValue:string){
@@ -297,10 +309,12 @@ export class ApproveComponent implements OnInit {
         break;
       case 'SYS03':
         let option = new DialogModel();
-        option.DataService = this.codxViews.dataService;
-        option.FormModel = this.codxViews.formModel;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
         option.IsFull = true;
-        this.callFuc.openForm(PopupEditComponent,'Cập nhật bài viết',0,0,this.funcID,{dataEdit:data, type : data.newsType},'',option);
+        if(this.entityName == "WP_News"){
+          this.callFuc.openForm(PopupEditComponent,'Cập nhật bài viết',0,0,this.funcID,data,'',option);
+        }
         break;
       default:
         break;
@@ -310,13 +324,12 @@ export class ApproveComponent implements OnInit {
   beforDeletedPost(option:RequestOption,data:any){
     option.service = "WP";
     option.assemblyName = "ERM.Business.WP";
+    option.className = "NewsBusiness";
     if(this.entityName == "WP_News"){
-      option.className = "NewsBusiness";
       option.methodName = "DeleteNewsAsync";
     }
     else 
     {
-      option.className = "CommentsBusiness";
       option.methodName = "DeletePostAsync";
     }
     option.data = data;
@@ -325,7 +338,7 @@ export class ApproveComponent implements OnInit {
 
   deletedPost(data:any){
     if(!data)return;
-    this.codxViews.dataService.delete(
+    this.view.dataService.delete(
       [data],
       true,
       (opt:any)=>this.beforDeletedPost(opt,data)).subscribe();

@@ -17,6 +17,7 @@ import {
   NotificationsService,
   ViewsComponent,
   FormModel,
+  CallFuncService,
 } from 'codx-core';
 import { AnyARecord } from 'dns';
 import { Observable, Subject } from 'rxjs';
@@ -35,6 +36,7 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('addLink', { static: true }) addLink;
 
   user: any;
   STATUS_TASK_GOAL = StatusTaskGoal;
@@ -57,11 +59,10 @@ export class PopAddTaskgroupComponent implements OnInit {
   dialog: any;
   isAfterRender = false;
   isAddMode = true;
-
+  listName = '';
+  fieldValue = '';
   listCombobox = {
-    U: 'Share_Users_Sgl',
-    P: 'Share_Positions_Sgl',
-    R: 'Share_UserRoles_Sgl',
+
   };
 
   constructor(
@@ -69,6 +70,8 @@ export class PopAddTaskgroupComponent implements OnInit {
     private cache: CacheService,
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
+    private callfc: CallFuncService,
+    private notiService: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -181,11 +184,22 @@ export class PopAddTaskgroupComponent implements OnInit {
   valueWitch(data) {
     if (data.data == true) {
       this.taskGroups[data.field] = '1';
-
     } else {
       this.taskGroups[data.field] = '0';
     }
+  }
 
+  changeHours(e) {
+    console.log(e);
+    var numberValue = Number(e.data);
+    if (numberValue > 0 && numberValue <= 8) {
+      this.taskGroups.maxHours = numberValue;
+    } else {
+      this.notiService.notifyCode(
+        'Vui lòng nhập giá trị lớn hơn 0 hoặc nhỏ hơn 9'
+      );
+      this.taskGroups.maxHours = 1;
+    }
   }
   // valuePro(data) {
   //   this.taskGroups.projectControl = data.data;
@@ -197,6 +211,64 @@ export class PopAddTaskgroupComponent implements OnInit {
   valueCheck(data) {
     this.taskGroups.checkListControl = data.data;
   }
+
+  valueCbx(e ,  fieldValue) {
+    console.log(e);
+    var verifyByType = '';
+    var verifyBy = '';
+    var approveBy = '';
+    var approves = '';
+    if(fieldValue== 'verifyByType'){
+      switch (e[0].objectType) {
+        case 'U':
+          verifyByType += e[0].objectType;
+          verifyBy += e[0].id;
+          break;
+        case 'R':
+          verifyByType += e[0].objectType;
+          verifyBy += e[0].id;
+          break;
+        case 'P':
+          verifyByType += e[0].objectType;
+          verifyBy += e[0].id;
+          break;
+        case 'TL':
+          verifyByType += e[0].objectType;
+          break;
+      }
+      if (verifyByType) this.taskGroups.verifyByType = verifyByType;
+      if (verifyBy) this.taskGroups.verifyBy = verifyBy;
+    }
+    else{
+      switch (e[0].objectType) {
+        case 'S':
+          approveBy += e[0].objectType;
+          break;
+        case 'R':
+          approveBy += e[0].objectType;
+          approves += e[0].id;
+          break;
+        case 'P':
+          approveBy += e[0].objectType;
+          approves += e[0].id;
+          break;
+        case 'TL':
+          approveBy += e[0].objectType;
+          break;
+      }
+      if (approveBy) {
+        this.taskGroups.approveBy = approveBy;
+      }
+      if (approves) this.taskGroups.approvers = approves;
+    }
+  }
+
+  valueCbx1(e) {
+    console.log(e);
+
+
+  }
+
   closePanel() {
     this.dialog.close();
     //this.viewBase.currentView.closeSidebarRight();
@@ -233,6 +305,32 @@ export class PopAddTaskgroupComponent implements OnInit {
         });
     }
     // this.renderer.addClass(popup, 'drawer-on');
+  }
+
+  openShare(share: any, isOpen) {
+    if(isOpen == true){
+      this.listCombobox = {
+        U: 'Share_Users_Sgl',
+        P: 'Share_Positions_Sgl',
+        R: 'Share_UserRoles_Sgl',
+      };
+      this.listName = 'TM006';
+      this.fieldValue = 'verifyByType';
+      this.callfc.openForm(share, '', 420, window.innerHeight);
+    }
+    else{
+      this.listCombobox = {
+        P: 'Share_Positions_Sgl',
+        R: 'Share_UserRoles_Sgl',
+      };
+      this.listName = 'TM014'
+      this.fieldValue = 'approveBy';
+      this.callfc.openForm(share, '', 420, window.innerHeight);
+    }
+  }
+
+  openShare1(share: any) {
+    this.callfc.openForm(share, '', 420, window.innerHeight);
   }
 
   tabInfo: any[] = [
@@ -317,38 +415,8 @@ export class PopAddTaskgroupComponent implements OnInit {
     return this.updateRow();
   }
 
-  valueCbx(e) {
-    console.log(e);
-    var lstUserType = '';
-    var lstPositionType = '';
-    var lstUserRoleType = '';
-    var verifyByType = '';
-    e.data?.forEach((e) => {
-      switch (e.objectType) {
-        case 'U':
-          if (!lstUserType.includes(e.objectType)) {
-            lstUserType += e.objectType + ';';
-          }
-          break;
-        case 'R':
-          if (!lstPositionType.includes(e.objectType)) {
-            lstPositionType += e.objectType + ';';
-          }
-          break;
-        case 'P':
-          if (!lstUserRoleType.includes(e.objectType)) {
-            lstUserRoleType += e.objectType + ';';
-          }
-          break;
-      }
-    });
-    if (e.data != null) {
-      verifyByType = lstUserType + lstPositionType + lstUserRoleType;
-    }
-    if (verifyByType) {
-      verifyByType = verifyByType.substring(0, verifyByType.length - 1);
-    }
-
-    this.taskGroups.verifyByType = verifyByType;
+  openPopupLink() {
+    var m = this.taskGroups.maxHours;
+    this.callfc.openForm(this.addLink, '', 500, 300);
   }
 }
