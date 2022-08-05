@@ -73,10 +73,10 @@ export class EditExperenceComponent implements OnInit {
     //     this.notiService.notifyCode('MWP00201');
     //   }
     // });
-    this.isSaving = true;
+    // this.isSaving = true;
     this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
       .subscribe((res: any) => {
-        this.isSaving = false;
+        // this.isSaving = false;
         // console.log(res);
         if (res) {
           res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
@@ -89,6 +89,6 @@ export class EditExperenceComponent implements OnInit {
           this.notiService.notifyCode("SYS021");
         }
       });
-    this.dialog.close(this.dataBind);
+    // this.dialog.close(this.dataBind);
   }
 }

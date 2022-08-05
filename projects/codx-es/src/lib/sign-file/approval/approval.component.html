@@ -134,7 +134,7 @@
         <ejs-pdfviewer
           #pdfviewer
           id="pdfViewer"
-          [serviceUrl]="service"
+          [(serviceUrl)]="service"
           [enableToolbar]="false"
           [enableNavigationToolbar]="false"
           [enableAnnotationToolbar]="false"
@@ -162,7 +162,7 @@
       </div>
     </div>
     <div
-      class="actions flex-column flex-lg-row-auto w-lg-350px main-right"
+      class="actions flex-column flex-lg-row-auto main-right"
       [class.hideCol]="hideActions"
     >
       <div
@@ -187,7 +187,7 @@
                     name="lblChooseSigner"
                     [formModel]=""
                     default="Chọn người kí cần thiết lập"
-                    class="ms-2 fw-bold"
+                    class="fw-bold text-primary"
                   ></codx-label>
                   <ejs-dropdownlist
                     #inputAuthor
@@ -200,9 +200,11 @@
                   >
                     <ng-template #signer let-approver>
                       <codx-temp-full
+                        cardCss="card-select px-2 pt-4 pb-2"
                         [imageId]="approver.authorID"
                         [imageObjType]="'AD_Users'"
                         [imageWidth]="35"
+                        imgCss="me-2"
                         [title]="
                           approver.roleType == 'U'
                             ? approver.fullName
@@ -228,14 +230,14 @@
                     name="lblDragAction"
                     [formModel]=""
                     default="Kéo thả"
-                    class="fw-bold fs-4 text-primary"
+                    class="fw-bold text-primary"
                   >
                   </codx-label>
                 </div>
 
                 <div class="d-flex flex-wrap d-grid align-items-center">
                   <div
-                    class="card-item me-3 mb-3"
+                    class="card-item me-6 mb-6"
                     *ngFor="let action of actionsButton; let index = index"
                     [class.active]="holding == index + 1"
                     (click)="changeAnnotationItem(index + 1)"
@@ -319,5 +321,10 @@
   <div class="row invisible" #qrCode id="qrCode"></div>
 </div>
 <ng-template #footer let-data>
-  <codx-vll [showText]="true" name="ES002" [value]="data.signType"></codx-vll>
+  <codx-vll
+    class="footer-left"
+    [showText]="true"
+    name="ES002"
+    [value]="data.signType"
+  ></codx-vll>
 </ng-template>

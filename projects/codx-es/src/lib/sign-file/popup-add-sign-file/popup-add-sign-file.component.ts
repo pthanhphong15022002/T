@@ -121,8 +121,8 @@ export class PopupAddSignFileComponent implements OnInit {
                 this.dialogSignFile.patchValue({
                   refNo: dt,
                 });
+                this.isAfterRender = true;
               });
-            this.isAfterRender = true;
           } else {
             this.esService
               .getDetailSignFile(this.data?.recID)

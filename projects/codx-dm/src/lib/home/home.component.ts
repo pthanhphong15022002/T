@@ -200,6 +200,7 @@ export class HomeComponent extends UIComponent {
     //  console.log($data.data);
     // alert(1);
     //let data = $event.data;
+    ScrollComponent.reinitialization();
     if ($data == null || $data.data == null) return;
 
     let id = $data.data.recID;
@@ -277,7 +278,7 @@ export class HomeComponent extends UIComponent {
       this.dmSV.disableInput.next(true);
      // this.notificationsService.notify(this.titleAccessDenied);
     }
-    ScrollComponent.reinitialization();
+    
   }
 
   // checkUserForder(data) {
@@ -342,12 +343,12 @@ export class HomeComponent extends UIComponent {
     this.currView = event.view.model.template2;
   //  ScrollComponent.reinitialization("[data-kt-scroll='true']");
    // ScrollComponent.resize();
-    if (this.dmSV.folderType != this.view.funcID) {
-      this.data = [];
-      this.dmSV.folderType = this.view.funcID;
-      this.dmSV.idMenuActive = this.view.funcID;
-      this.changeDetectorRef.detectChanges();
-    }
+    // if (this.dmSV.folderType != this.view.funcID) {
+    //   this.data = [];
+    //   this.dmSV.folderType = this.view.funcID;
+    //   this.dmSV.idMenuActive = this.view.funcID;
+    //   this.changeDetectorRef.detectChanges();
+    // }
     // this.folderService.options.funcID = this.view.funcID;
     // if (this.dmSV.folderType != this.view.funcID) {
     //   this.data = [...this.data, ...this.view.dataService.dataSelected];
@@ -376,8 +377,8 @@ export class HomeComponent extends UIComponent {
   }
 
   requestEnded(e: any){
-    this.data = [];
-    if(e.type === "read"){     
+      if(e.type === "read"){ 
+        this.data = [];    
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.folderType != this.view.funcID) {
         this.data = [...this.data, ...e.data];
@@ -390,7 +391,7 @@ export class HomeComponent extends UIComponent {
       this.dmSV.loadedFile = false;
       this.dmSV.folderId.next('');
       this.dmSV.loadedFolder = true;
-      this.changeDetectorRef.detectChanges();
+     // this.changeDetectorRef.detectChanges();
       this.fileService.options.funcID = this.view.funcID;
       this.fileService
         .getListActiveFiles('', this.view.funcID)
@@ -403,6 +404,6 @@ export class HomeComponent extends UIComponent {
           }
         });        
     }
-    this.changeDetectorRef.detectChanges();     
+  //  this.changeDetectorRef.detectChanges();     
   }
 }

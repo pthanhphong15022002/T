@@ -168,6 +168,7 @@
             (clickMF)="dmSV.clickMF($event, item)"
             [formModel]="view.formModel"
             [typeMF]="'hover'"
+            [title]="dmSV.getSizeKB(item)"
             (changeDataMF)="dmSV.filterMoreFunction($event, item)"
             cardCss="w-150px"
           >

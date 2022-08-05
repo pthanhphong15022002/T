@@ -737,6 +737,15 @@ export class CodxDMService {
         }  
       }
 
+    getSizeKB(item: any) {
+      if (item.fileSize != undefined) {
+        var kb = item.fileSize / 1024;
+        return kb.toFixed(2).toString() + 'Kb';
+      }
+      else 
+        return '';
+    }
+
     checkUserForder(folder) {
        // return true;
         if (folder.folderId != null && this.idMenuActive == "DMT02" && (folder.folderId == "DM" || folder.folderId.indexOf(this.FOLDER_NAME) > -1) && folder.isSystem && (folder.level == "1" || folder.level == "2")) {
