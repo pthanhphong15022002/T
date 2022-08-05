@@ -124,9 +124,14 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   saveStep() {
-    if (this.lstStep != this.lstOldData) {
+    if (this.isEdited) {
       this.esService.setApprovalStep(this.lstStep);
       this.esService.setLstDeleteStep(this.lstDeleteStep);
+    } else {
+      if (this.isEdited) {
+        this.esService.setApprovalStep(null);
+        this.esService.setLstDeleteStep(null);
+      }
     }
   }
 
@@ -215,11 +220,11 @@ export class ApprovalStepComponent implements OnInit {
           model
         );
 
-        this.dialog.closed.subscribe((res) => {
-          if (res != null) {
-            this.isEdited == true;
-          }
-        });
+        // this.dialog.closed.subscribe((res) => {
+        //   if (res != null) {
+        //     this.isEdited == true;
+        //   }
+        // });
       }
     });
   }
