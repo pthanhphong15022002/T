@@ -16,8 +16,9 @@ export class ViewDetailComponent implements OnInit {
   @Input() itemSelected?: any
   @Input() param?: any
   @Input() listRoles ? : any;
-  @Input() popoverCrr :any
-  @Input() vllStatus :any
+  @Input() popoverCrr? :any
+  @Input() vllStatus ?:any
+  @Input() vllExtendStatus? :any
   popoverDataSelected : any
   searchField =''
   listTaskResousceSearch = []

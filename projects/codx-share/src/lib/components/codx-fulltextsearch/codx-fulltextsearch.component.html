@@ -1,14 +1,14 @@
 <div class="h-100 d-flex">
-  <div class="d-flex flex-column bg-white p-5 me-5 rounded" [style.width.px]="widthLeft">
+  <div class="d-flex flex-column bg-white me-5 rounded" [style.width.px]="widthLeft">
     <ng-container *ngIf="gridViewSetup">
       <div *ngFor="let item of dataGroup" class="my-2">
           <codx-label [default]="item.headerText" class="fw-bold"></codx-label>
           <ng-container [ngSwitch]="item?.dataType">
             <ng-container *ngSwitchCase="'String'">
-              <div class="my-2"><codx-input type="text" (keyUpEnter)="changeValueText(item?.view , $event)"></codx-input></div>
+              <div class="my-2 mx-5"><codx-input type="text" (keyUpEnter)="changeValueText(item?.view , $event)"></codx-input></div>
             </ng-container>
             <ng-container *ngSwitchCase="'Bool'">
-              <div class="my-2"><codx-input type="switch" (valueChange)="changeValueText(item?.view , $event)"></codx-input></div>
+              <div class="my-2 mx-5"><codx-input type="switch" (valueChange)="changeValueText(item?.view , $event)"></codx-input></div>
             </ng-container>
             <ng-container *ngSwitchCase="'DateTime'">
               <div class="my-2">
@@ -20,9 +20,12 @@
             </ng-container>
           </ng-container>
           <ng-container *ngIf="item?.data">
-            <ng-container *ngFor="let item2 of item?.data">
-              <div class="my-2"><codx-input type="checkbox" [label]="item2?.name" (valueChange)="changeValueCbb(item2?.id, item2?.view , $event)"></codx-input></div>
-            </ng-container>
+            <div style="max-height: 200px; overflow: auto; overflow-x: hidden;">
+              <ng-container *ngFor="let item2 of item?.data">
+                <div class="my-2"><codx-input type="checkbox" [label]="item2?.name" (valueChange)="changeValueCbb(item2?.id, item2?.view , $event)"></codx-input></div>
+              </ng-container>
+            </div>
+            <ng-container *ngIf="item?.load"><div class="d-flex justify-content-end" ><span class="icon-more_horiz text-primary cursor-pointer" (click)="loadMore(item)" [ngbTooltip]="tipContent"></span></div></ng-container>
           </ng-container>
       </div>
     </ng-container>
@@ -38,7 +41,9 @@
       <div class="overflow-auto pe-5 h-searchtmp"  >
         <ng-container *ngIf="searchData && searchData[0]">
           <ng-container *ngFor="let data of searchData[0]">
-            <ng-container *ngTemplateOutlet="centerTmp ; context: { $implicit: data}"></ng-container>
+            <div >
+              <ng-container *ngTemplateOutlet="centerTmp ; context: { $implicit: data}"></ng-container>
+            </div>
               <!-- [icoDateCss]="'icon-access_alarm'" -->
               <!-- [icoDateCss] codx-temp-full bị lỗi do core mới nên tạm xóa  -->
           </ng-container>
@@ -64,4 +69,5 @@
     </div>
   </div>
 </div>
+<ng-template #tipContent><codx-label [formModel]="formModel" [fiedName]="'Xem thêm'"></codx-label></ng-template>
 

@@ -88,9 +88,14 @@
                             default="Hình hiển thị"></codx-label>
                     </div>
                     <div class="w-100">
-                        <div *ngIf="fileImage.length > 0">
+                        <div *ngIf="fileImage.length > 0;else defaultImage">
                             <img class="w-100 h-200px" [src]="fileImage[0].data || fileImage[0].thumbnail" alt="">
                         </div>
+                        <ng-template #defaultImage>
+                            <div>
+                                <img class="w-100 h-200px" src="../assets/themes/wp/default/img/upload_file.svg" alt="">
+                            </div>
+                        </ng-template>
                         <div>
                             <codx-attachment #codxAttachment 
                                 [functionID]="dialogRef?.formModel.funcID"
