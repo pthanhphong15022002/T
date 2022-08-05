@@ -154,4 +154,5 @@ export class TM_Parameter {
   VerifyBy: string;
   VerifyByType: string;
   VerifyControl: string;
+  ReOpenDays:string
 }

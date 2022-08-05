@@ -32,6 +32,7 @@ import { PopupEditComponent } from './news/popup/popup-edit/popup-edit.component
 import { ElecticSearchComponent } from './news/popup/popup-search/electic-search/electic-search.component';
 import { PopupSearchComponent } from './news/popup/popup-search/popup-search.component';
 import { ViewDetailComponent } from './news/view-detail/view-detail.component';
+import { ViewTagComponent } from './news/view-tag/view-tag.component';
 import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { Layout2Component } from './_layout2/layout2.component';
@@ -59,13 +60,19 @@ export const routes: Routes = [
     component: Layout2Component,
     children: [
       {
+        path: ':funcID/tag/:tagName',
+        component: ViewTagComponent
+      },
+      {
         path: ':funcID/:category',
         component: NewsComponent
       },
+      
       {
         path: ':funcID/:category/:recID',
         component: ViewDetailComponent
       },
+      
       {
         path: '**',
         redirectTo: 'WPT02P/home',
@@ -137,6 +144,7 @@ const Component: Type<any>[] =
     PopupDetailComponent,
     CompanyEditComponent,
     PopupTitleComponent,
+    ViewTagComponent,
 
   ];
 
