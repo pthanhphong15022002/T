@@ -50,19 +50,8 @@
                 </div>
               </div>
               <div class="d-status flex">
-                <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                    (itemSelected?.status  | vll: vllStatus:'textColor' | async) +
-                    '30'
-                  " [style.background-color]="
-                    (itemSelected?.status | vll: vllStatus:'textColor' | async) +
-                    '30'
-                  " [style.color]="
-                  itemSelected?.status | vll: vllStatus:'textColor' | async
-                  " style="border: none">
-                  {{itemSelected?.status | vll: vllStatus:"text" | async }}
-                </div>
-
-                <div *ngIf="itemSelected?.extendStatus && vllExtendStatus" class="badge badge-danger me-2 label-status" [style.border-color]="
+                <div *ngIf="itemSelected?.extendStatus!=null &&itemSelected?.extendStatus!= '0' && vllExtendStatus" class="badge badge-danger me-2 label-status"
+                  [style.border-color]="
                     (itemSelected?.extendStatus  | vll: vllExtendStatus:'textColor' | async) +
                     '30'
                   " [style.background-color]="
@@ -73,8 +62,9 @@
                   " style="border: none">
                   {{itemSelected?.extendStatus| vll: vllExtendStatus:"text" | async }}
                 </div>
-                
-                <div *ngIf="itemSelected?.approveStatus && vllApproveStatus" class="badge badge-danger me-2 label-status" [style.border-color]="
+
+                <div *ngIf="itemSelected?.approveStatus!=null && itemSelected?.approveStatus!='0' && vllApproveStatus"
+                  class="badge badge-danger me-2 label-status" [style.border-color]="
                     (itemSelected?.approveStatus  | vll: vllApproveStatus:'textColor' | async) +
                     '30'
                   " [style.background-color]="
@@ -85,7 +75,19 @@
                   " style="border: none">
                   {{itemSelected?.approveStatus| vll: vllApproveStatus:"text" | async }}
                 </div>
-                
+
+                <div class="badge badge-danger me-2 label-status" [style.border-color]="
+                (itemSelected?.status  | vll: vllStatus:'textColor' | async) +
+                '30'
+              " [style.background-color]="
+                (itemSelected?.status | vll: vllStatus:'textColor' | async) +
+                '30'
+              " [style.color]="
+              itemSelected?.status | vll: vllStatus:'textColor' | async
+              " style="border: none">
+                  {{itemSelected?.status | vll: vllStatus:"text" | async }}
+                </div>
+
               </div>
             </div>
           </div>
@@ -145,7 +147,7 @@
           <div class="d-flex mt-1">
             <div class="float-left me-6">
               <div class="fw-bold me-1">
-                <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
+                <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks">
                 </codx-label>:
               </div>
               <!-- <span [ngClass]="

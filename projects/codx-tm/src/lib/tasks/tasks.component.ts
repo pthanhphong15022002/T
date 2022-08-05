@@ -174,7 +174,7 @@ export class TasksComponent extends UIComponent {
         sameData: true,
         model: {
           template: this.itemViewList,
-          groupBy: 'fieldGroup',
+          // groupBy: 'fieldGroup', Thương kêu gắng sau 
         },
       },
       {
@@ -184,7 +184,7 @@ export class TasksComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
-          groupBy: 'fieldGroup',
+          // groupBy: 'fieldGroup', Thương kêu gắng sau 
         },
       },
       {
@@ -626,6 +626,13 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM025');
       return;
     }
+    // if (this.paramModule.ReOpenDays ) {
+
+    //   this.notiService.notifyCode('TM053');
+    //   return;
+    // }
+
+
     if(taskAction.status=="90"){
       this.notiService.alertCode('TM054').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {

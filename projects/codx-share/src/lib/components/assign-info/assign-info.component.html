@@ -1,6 +1,5 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
-    <!-- <div class="card-body">-->
     <div>
       <div class="d-flex justify-content-between mb-2 p-2">
         <div class="d-flex align-items-center flex-grow-1">
@@ -23,16 +22,6 @@
           </div>
           <div class="d-flex align-items-center w-100">
             <ng-container [ngTemplateOutlet]="templetUserDetail"></ng-container>
-            <!-- <codx-input
-                                [refValue]="'Users'"
-                                [crrValue]="task.assignTo"
-                                placeholder="Chọn tài khoản"
-                                type="combobox"
-                                style="width:100%"
-                                (valueChange)="changeUser($event)"
-                                >
-                        </codx-input>  -->
-
           </div>
           <codx-input type="Share" [refValue]="vllShare" field="AssignTo" [dataShared]="[]" multiple="true"
             [showInput]="false" (valueChange)="eventApply($event)"></codx-input>
@@ -76,46 +65,9 @@
           </a>
         </div>
       </div>
-      <!-- <div class="d-flex align-items-center flex-grow-1">
-                    <div class="w-110px fw-bold">Người giao việc:</div>
-                    <codx-input
-                        style="width:90%"
-                        [refValue]="gridViewSetup['Owner']['referedValue']"
-                        type="combobox"
-                        (valueChange)="changeValueChangeFrom($event)"
-                        [multiple]="true"
-                    >
-                    </codx-input>
-                </div> -->
     </div>
     <div class="d-flex justify-content-between  mb-2 p-2">
-      <!-- <div class="fw-bold">Công việc:</div>
-                <div class="d-flex align-items-center flex-grow-1">
-                    <input class="form-control borderless" type="text" placeholder="Nhập lý do" />
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-xs btn-secondary d-flex align-items-center border-0 dropdown-toggle height"
-                        type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <span>Mail mẫu</span>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item">
-                            <div class="d-flex flex-column">
-                                <span class="text-dark">Cấp quyền xem tài liệu</span>
-                                <i class="tex font-size-sm mt-1">Xin cấp quyền full xem tài liệu</i>
-                            </div>
-                        </a>
-                        <div class="subheader-separator subheader-separator-ver mt-1 ms-1 bg-gray-400"></div>
-                        <a class="dropdown-item">
-                            <span class="text-primary">Thêm mẫu mail</span>
-                        </a>
-                    </div>
-                </div> -->
     </div>
-    <!-- <div class="p-2">
-                <thumbnail data="{{getJSONString(data.files)}}"></thumbnail>
-            </div> -->
     <div class="form-group mt-3 p-2">
       <div class="d-flex align-items-center justify-content-between">
         <codx-label fiedName="Memo" formName="Tasks" gridViewName="grvTasks" default="Nội dung chi tiết">
@@ -159,12 +111,6 @@
               class="test-switch"></codx-input>
             <div class="ms-2">Yêu cầu báo cáo</div>
           </div>
-
-          <!-- <div class="d-flex flex-stack l-30px ms-3">
-                            <codx-input #email type="switch" id="switch" [checked]="false" labelPosition="Before"
-                            [disabled]="false" class="test-switch"></codx-input>
-                            <div class="ms-2">Gởi email thông báo</div>
-                        </div>  -->
         </div>
       </div>
     </div>
@@ -175,7 +121,6 @@
         (fileCount)="getfileCount($event)" displayThumb="full">
       </codx-attachment>
     </div>
-    <!-- </div> -->
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
