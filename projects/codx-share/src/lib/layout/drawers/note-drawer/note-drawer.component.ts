@@ -59,6 +59,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   dtService: CRUDService;
   dataUpdate: any;
   user: any;
+  daySelected: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
 
@@ -90,13 +91,26 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.loadData();
+    this.getMaxPinNote();
+  }
+
+  loadData() {
     this.noteService.data.subscribe((res) => {
       if (res) {
         var data = res[0]?.data;
         var type = res[0]?.type;
         if (this.lstView) {
-          if (type == 'add-currentDate' || type == 'add-otherDate') {
-            (this.lstView.dataService as CRUDService).add(data).subscribe();
+          if (
+            type == 'add-currentDate' ||
+            type == 'add-otherDate' ||
+            type == 'add-note-drawer'
+          ) {
+            (this.lstView.dataService as CRUDService)
+              .add(data)
+              .subscribe((res) => {
+                this.sortData();
+              });
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
             var today: any = document.querySelector(
@@ -111,32 +125,45 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             (this.lstView.dataService as CRUDService)
               .update(data)
               .subscribe((res) => {
-                var dt = this.lstView?.dataService.data;
-                const sortByDate = (dt) => {
-                  const sorter = (a, b) => {
-                    return (
-                      Number(b.isPin) - Number(a.isPin) ||
-                      new Date(b.modifiedOn).getTime() -
-                        new Date(a.modifiedOn).getTime()
-                    );
-                  };
-                  dt.sort(sorter);
-                };
-                sortByDate(dt);
-                // dt = [...dt, ...[]];
+                this.sortData();
               });
           }
           this.changeDetectorRef.detectChanges();
         }
       }
     });
-    this.getMaxPinNote();
+  }
+
+  sortData(type = null) {
+    // const dt = this.lstView.dataService.data;
+    // const sortByDate = (dt) => {
+    //   const sorter = (a, b) => {
+        // var dateA = new Date(a.modifiedOn).getTime();
+        // var dateB = new Date(b.modifiedOn).getTime();
+    //     if (type == 'increasing') {
+    //       return Number(b.isPin) - Number(a.isPin) || dateA - dateB;
+    //     } else {
+    //       return Number(b.isPin) - Number(a.isPin) || dateB - dateA;
+    //     }
+    //   };
+    //   dt.sort(sorter);
+    // };
+    // sortByDate(dt);
+    this.lstView.dataService.data = this.lstView.dataService.data.sort(
+      function (a, b) {
+        var dateA = new Date(a.modifiedOn).getTime();
+        var dateB = new Date(b.modifiedOn).getTime();
+        return Number(b.isPin) - Number(a.isPin) || dateA - dateB; // ? -1 : 1 for ascending/increasing order
+      }
+    );
+    this.changeDetectorRef.detectChanges();
   }
 
   ngAfterViewInit() {
     this.lstView.dataService.requestEnd = (t, data) => {
       if (t == 'loaded') {
         this.data = data;
+        console.log('check data', this.data);
         if (this.data?.length != 0) {
           this.data.forEach((res) => {
             if (res?.isPin == true || res?.isPin == '1') {
@@ -166,21 +193,6 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         item[field] = e.data.checked;
       }
     }
-  }
-
-  onCountNotePin() {
-    // let i = 0;
-    // let ip = 0;
-    // let np = 0;
-    // for (i; i < dt.length; i++) {
-    //   if (dt[i].isPin == true) {
-    //     ip++;
-    //   } else if (dt[i].isPin == false) {
-    //     np++;
-    //   }
-    // }
-    // this.countIsPin = ip;
-    // this.countNotPin = np;
   }
 
   openFormUpdateNote(data) {
@@ -274,7 +286,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         // this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
-        var object = [{ data: data, type: 'edit' }];
+        var object = [{ data: res, type: 'edit' }];
         this.noteService.data.next(object);
         this.changeDetectorRef.detectChanges();
       });
@@ -308,5 +320,10 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       '',
       obj
     );
+  }
+
+  onSearch(e) {
+    this.lstView.dataService.search(e);
+    this.detectorRef.detectChanges();
   }
 }

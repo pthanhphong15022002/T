@@ -389,7 +389,7 @@
 
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="dialog.formModel" [subHeader]=""
   [footer]="footer" [dialog]="dialog" [openMore]="true" (buttonClick)="buttonClick($event)"
-  [tabContent]="[tabInfoPersonal, tabInfoEmploy, tabInfoPrivate, tabInfoLaw]" (setTitle)="setTitle($event)">
+  [tabContent]="[tabInfoPersonal, tabInfoEmploy, tabInfoPrivate, tabInfoLaw]" (setTitle)="setTitle($event)" [data]="data">
 </codx-layout-add>
 
 <ng-template #tabInfoPersonal>
@@ -400,7 +400,7 @@
     </div>
   </div>
   <div>
-    <div *ngIf="isNew" class="row">
+    <div *ngIf="isNew" class="row" >
       <div class="col">
         <div class="form-group">
           <codx-label fiedName="EmployeeID" default="Mã nhân viên">
@@ -409,7 +409,8 @@
                         field="employeeID">
                     </codx-input> -->
 
-          <codx-input class="form-control" type="text" [crrValue]="employee?.employeeID" field="employeeID"
+          <codx-input class="form-control" type="text" [crrValue]="employee?.employeeID"
+             field="employeeID"
             (valueChange)="dataChange($event, 'employeeID')">
           </codx-input>
         </div>

@@ -2,8 +2,8 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Injector,
   Input,
-  OnInit,
   Output,
   TemplateRef,
   ViewChild,
@@ -16,6 +16,7 @@ import {
   DialogRef,
   ResourceModel,
   SidebarModel,
+  UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
@@ -27,7 +28,7 @@ import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-st
   templateUrl: './stationery.component.html',
   styleUrls: ['./stationery.component.scss'],
 })
-export class StationeryComponent implements OnInit {
+export class StationeryComponent extends UIComponent {
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
   @ViewChild('listItem') listItem: TemplateRef<any>;
@@ -44,7 +45,6 @@ export class StationeryComponent implements OnInit {
   devices: any;
   columnsGrid;
   dataSelected;
-
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
@@ -86,14 +86,13 @@ export class StationeryComponent implements OnInit {
     },
   ];
   constructor(
-    private cf: ChangeDetectorRef,
-    private callfunc: CallFuncService,
-    private activedRouter: ActivatedRoute
+    private injector: Injector,
   ) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
@@ -160,7 +159,7 @@ export class StationeryComponent implements OnInit {
         text: 'Xóa',
       },
     ];
-    this.cf.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   add(evt: any) {
@@ -184,7 +183,7 @@ export class StationeryComponent implements OnInit {
       option.Width = '800px';
       option.FormModel = this.viewBase?.currentView?.formModel;
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
         this.dataSelected,
         option
@@ -202,7 +201,7 @@ export class StationeryComponent implements OnInit {
       option.Width = '800px';
       option.FormModel = this.viewBase?.currentView?.formModel;
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
         editItem,
         option

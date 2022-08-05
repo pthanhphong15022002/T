@@ -19,37 +19,31 @@
         </div>
       </div> -->    
     <div class="col-1 form-group">
-      <codx-label class="fs-5" default=""[formModel]="dialog.formModel">
-      </codx-label>
+      <codx-label default="" [formModel]="dialog.formModel">
+      </codx-label>      
       <button type="button" class="btn btn-primary">Icon</button>
     </div>
   </div>
 
-  <div class="row mb-4">
-    <!--begin::Col-->
-    <div class="col-3">
-      <!--begin::Label-->
-      <codx-label class="fw-bold" default="Biển số" fiedName="Code">
+  <div class="row" >
+    <div class="col-3 form-group">      
+      <codx-label default="Biển số" fiedName="Code" [formModel]="dialog.formModel">
       </codx-label>
-      <!--end::Label-->
-      <!--begin::Input-->
-      <codx-input type="text" class="form-control" placeholder="" ControlName="code" [Group]="dialogAddCar"
+      <codx-input type="text"  placeholder="" ControlName="code" [Group]="dialogAddCar"
         [crrValue]="dialogAddCar.value.code" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
 
-    <div class="col-3">
-      <!--begin::Label-->
-      <codx-label class="fw-bold" default="Số chỗ" fiedName="Capacity">
+    <div class="col-3 form-group">
+      <codx-label  default="Số chỗ" fiedName="Capacity" [formModel]="dialog.formModel">
       </codx-label>
-      <!--end::Label-->
-      <!--begin::Input-->
-      <codx-input type="number" class="form-control" placeholder="" value="0" [min]="0" field="capacity"
+      <codx-input type="number" placeholder="" value="0" [min]="0" field="capacity"
         [crrValue]="dialogAddCar.value.capacity" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
-    <div class="col-6">
-      <codx-label class="fw-bold" default="Phân loại" fiedName="Ranking" [formModel]="dialog.formModel">
+
+    <div class="col-6 form-group">
+      <codx-label default="Phân loại" fiedName="Ranking" [formModel]="dialog.formModel">
       </codx-label>
       <codx-input
         type="valuelist"
@@ -63,19 +57,17 @@
       </codx-input>
     </div>
   </div>
-  <div class="row mb-4">
-    <div class="col-8">
-      <codx-label class="fw-bold" default="Nguồn" fiedName="Category">
+
+  <div class="row">
+    <div class="col-6 form-group">
+      <codx-label default="Nguồn" fiedName="Category">
       </codx-label>
       <codx-input type="valuelist" name="valuelist" ngDefaultControl [crrValue]="dialogAddCar.value.category"
         refValue="VL005" field="category" (valueChange)="valueChange($event)">
       </codx-input>
-      <!--end::Input-->
     </div>
-    <!--end::Col-->
-    <!--begin::Col-->
-    <div class="col-4">
-      <codx-label class="fw-bold" default="Đơn vị" fiedName="CompanyID" [formModel]="dialog.formModel">
+    <div class="col-6 form-group">
+      <codx-label default="Đơn vị" fiedName="CompanyID" [formModel]="dialog.formModel">
       </codx-label>
       <codx-input
         service="SYS"
@@ -90,15 +82,11 @@
       >
       </codx-input>
     </div>
-    <!--end::Col-->
   </div>
 
-  <!--end::Input group-->
-  <!--begin::Input group-->
-  <div class="row mb-4">
-    <!--begin::Col-->
-    <div class="w-100">
-      <codx-label class="fw-bold" default="Tài xế" fiedName="LinkID">
+  <div class="row">
+    <div class="form-group">
+      <codx-label default="Tài xế" fiedName="LinkID">
       </codx-label>
       <codx-input
         service="EP"
@@ -114,13 +102,13 @@
       </codx-input>
     </div>
   </div>
-  <div class="row mb-4">
-    <div class="col-12">
-      <codx-label class="fw-bold" default="Người điều phối" fiedName="Owner" [formModel]="dialog.formModel">
+  <div class="row">
+    <div class="form-group">
+      <codx-label default="Người điều phối" fiedName="Owner" [formModel]="dialog.formModel">
       </codx-label>
       <codx-combobox 
-        service="SYS"   
-        name="combobox"  
+        service="SYS" 
+        name="combobox"
         ngDefaultControl
         refValue="Users"
         field="UserName"
@@ -130,10 +118,9 @@
       </codx-combobox>
     </div>
   </div>
-  <div class="row mb-4">
-    <div class="col-12">
+  <div class="row">
+    <div class="form-group">
       <codx-label default="Mô tả" fiedName="Note"></codx-label>
-      <!-- <codx-label default="Mô tả" class="fs-5 fw-bold mb-2"></codx-label> -->
       <codx-input type="textarea" class="test-textarea" field="note" [crrValue]="dialogAddCar.value.note" placeholder=""
         rows="3" ControlName="note" (valueChange)="valueChange($event)">
       </codx-input>
@@ -150,8 +137,8 @@
     </span>
     <!--end: btn-icon-->
   </div>
-  <div class="row mb-4">
-    <div class="col-12 d-flex justify-content-between">
+  <div class="row">
+    <div class="col-12 form-group d-flex justify-content-between">
       <div class="d-flex" *ngFor="let item of lstDeviceRoom">
         <span class="d-flex align-items-center me-2 mb-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
           <span class="icon-wifi me-1" [ngClass]="item.isSelected ? 'text-primary' : ''">

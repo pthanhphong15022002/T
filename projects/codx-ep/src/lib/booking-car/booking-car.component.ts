@@ -157,6 +157,7 @@ export class BookingCarComponent extends UIComponent {
         },
       },
     ];
+
     this.detectorRef.detectChanges();
   }
 
