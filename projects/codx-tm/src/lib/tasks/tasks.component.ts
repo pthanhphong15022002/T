@@ -52,7 +52,7 @@ export class TasksComponent extends UIComponent {
   @ViewChild('treeView') treeView: TemplateRef<any>;
 
   // @ViewChild("schedule") schedule: CodxScheduleComponent;
-
+  //#region Constructor
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   model?: DataRequest;
@@ -124,7 +124,9 @@ export class TasksComponent extends UIComponent {
       }
     });
   }
+  //#endregion
 
+  //#region Init
   onInit(): void {
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'TM';
@@ -148,10 +150,6 @@ export class TasksComponent extends UIComponent {
       id: 'btnAdd',
     };
     this.getParams();
-  }
-
-  change() {
-    this.view.dataService.setPredicates(['Status=@0'], ['1']);
   }
 
   ngAfterViewInit(): void {
@@ -213,6 +211,12 @@ export class TasksComponent extends UIComponent {
     this.getParam();
     this.detectorRef.detectChanges();
   }
+  //#region Init
+
+  change() {
+    this.view.dataService.setPredicates(['Status=@0'], ['1']);
+  }
+
   //#region schedule
 
   fields = {
