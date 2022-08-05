@@ -93,6 +93,7 @@ export class EmployeesComponent implements OnInit {
       },
 
     ];
+    this.view.dataService.methodUpdate = 'UpdateAsync';
     this.changedt.detectChanges();
   }
 
