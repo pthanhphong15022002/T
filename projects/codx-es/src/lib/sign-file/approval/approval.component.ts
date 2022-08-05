@@ -27,11 +27,9 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = 'd0ddb965-13a9-11ed-9785-509a4c39550b';
+  @Input() recID = 'd5676902-13dd-11ed-9785-509a4c39550b';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
-
-  @Output() canSend = new EventEmitter<any>();
 
   user?: any;
   url: string = '';
@@ -177,27 +175,11 @@ export class ApprovalComponent extends UIComponent {
     // });
   }
 
-  ngDoCheck() {
-    let addToDBQueueChange = this.saveToDBQueueChange.diff(
-      this.saveAnnoQueue.keys()
-    );
-    if (addToDBQueueChange) {
-      if (this.saveAnnoQueue.size == 0) {
-        this.canSend.emit(true);
-      } else {
-        this.canSend.emit(false);
-      }
-    }
-  }
+  ngDoCheck() {}
 
   ngAfterViewInit() {
     this.pdfviewerControl.zoomValue = 50;
-    //send activate status for send to approver button
-    if (this.saveAnnoQueue.size == 0) {
-      this.canSend.emit(true);
-    } else {
-      this.canSend.emit(false);
-    }
+
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,
     ];
@@ -342,6 +324,7 @@ export class ApprovalComponent extends UIComponent {
     this.lstSigners = e.itemData.signers;
     this.fileInfo = e.itemData;
     this.pdfviewerControl.load(e.itemData.fileID, '');
+    console.log(this.pdfviewerControl.getInjectedModules());
   }
 
   changeSigner(e: any) {
