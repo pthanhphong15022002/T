@@ -33,7 +33,7 @@ export class StationeryComponent extends UIComponent {
   @ViewChild('owner') owner: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  button: ButtonModel;
+  buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
   columnsGrid;
@@ -85,7 +85,7 @@ export class StationeryComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.button = {
+    this.buttons = {
       id: 'btnAdd',
     };
     this.modelResource = new ResourceModel();
