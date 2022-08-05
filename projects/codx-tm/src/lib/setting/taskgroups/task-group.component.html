@@ -111,7 +111,7 @@
         </div>
         <div class="font-italic"
           *ngIf="data.verifyByType =='R' || data.verifyByType == 'P' || data.verifyByType == 'U'">
-          {{data.verifyBy}}
+          {{data.nameVerify}}
         </div>
       </div>
     </td>
@@ -125,7 +125,7 @@
           {{data?.approveBy|vll:"TM014":"text"|async}}
         </div>
         <div class="font-italic" *ngIf="data.approveBy =='R' || data.approveBy == 'P'">
-          {{data.approvers}}
+          {{data.nameApprover}}
         </div>
       </div>
 

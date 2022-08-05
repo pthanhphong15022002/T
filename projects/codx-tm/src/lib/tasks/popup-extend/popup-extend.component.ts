@@ -61,7 +61,7 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
     }
     //goi hàm luu data 
     this.api.execSv<any>('TM','TM','TaskBusiness','ExtendTaskAsync',[this.funcID,this.taskExtend]).subscribe(res=>{
-      if(res){
+      if(res && res.length){
         this.dialog.close(res) ;
         this.notiService.notify('Yêu cần gia hạn đã được gửi, xin vui lòng đợi xét duyệt !')
       }else{

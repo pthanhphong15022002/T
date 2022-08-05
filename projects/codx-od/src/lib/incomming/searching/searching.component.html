@@ -1,5 +1,5 @@
 <!-- <codx-img [objectId]="'c544f9b5-9f85-4356-a4ca-6f8914b60acb'" [objectType]="'WP_News'"></codx-img> -->
-<codx-fulltextsearch [centerTmp]="centerTmp" [widthLeft]="300" [funcID]="funcID" ></codx-fulltextsearch>
+<codx-fulltextsearch [centerTmp]="centerTmp" [widthLeft]="400" [funcID]="funcID" (selectedChange)="onSelected($event)"></codx-fulltextsearch>
 
 <ng-template #centerTmp let-data>
     <codx-temp-full [content]="extractContent(data.title)"
@@ -9,7 +9,7 @@
     [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
-    [bookmark]="data.isBookmark" [titleLine]="2" [baseHeaderRightTmp]="headerRight" [dataItem]="data" >
+    [bookmark]="data.isBookmark" [titleLine]="2"  [dataItem]="data" >
     </codx-temp-full>
 </ng-template>
 
