@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
 import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
+import { AnyARecord } from 'dns';
 import { TM_Tasks } from '../../models/TM_Tasks.model';
 import { PopupViewTaskResourceComponent } from '../popup-view-task-resource/popup-view-task-resource.component';
 
@@ -18,7 +19,8 @@ export class ViewDetailComponent implements OnInit {
   @Input() listRoles ? : any;
   @Input() popoverCrr? :any
   @Input() vllStatus ?:any
-  @Input() extendStatus? :any
+  @Input() vllExtendStatus? :any
+  @Input() vllApproveStatus?:any
   popoverDataSelected : any
   searchField =''
   listTaskResousceSearch = []

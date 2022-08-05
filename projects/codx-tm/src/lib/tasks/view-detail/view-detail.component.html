@@ -6,7 +6,7 @@
       <div class="container_detail mt-4">
         <div class="d-flex flex-grow-1 mb-3">
           <div class="symbol symbol-60px symbol-circle me-4">
-            <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users" [width]="55">
+            <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users" [width]="60">
             </codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">
@@ -49,18 +49,43 @@
                   </div>
                 </div>
               </div>
-              <div class="d-status">
+              <div class="d-status flex">
                 <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                    (extendStatus? extendStatus:itemSelected?.status  | vll: vllStatus:'textColor' | async) +
+                    (itemSelected?.status  | vll: vllStatus:'textColor' | async) +
                     '30'
                   " [style.background-color]="
-                    (extendStatus? extendStatus:itemSelected?.status | vll: vllStatus:'textColor' | async) +
+                    (itemSelected?.status | vll: vllStatus:'textColor' | async) +
                     '30'
                   " [style.color]="
-                  extendStatus? extendStatus:itemSelected?.status | vll: vllStatus:'textColor' | async
+                  itemSelected?.status | vll: vllStatus:'textColor' | async
                   " style="border: none">
-                  {{ extendStatus? extendStatus:itemSelected?.status | vll: vllStatus:"text" | async }}
+                  {{itemSelected?.status | vll: vllStatus:"text" | async }}
                 </div>
+
+                <div *ngIf="itemSelected?.extendStatus && vllExtendStatus" class="badge badge-danger me-2 label-status" [style.border-color]="
+                    (itemSelected?.extendStatus  | vll: vllExtendStatus:'textColor' | async) +
+                    '30'
+                  " [style.background-color]="
+                    (itemSelected?.extendStatus | vll: vllExtendStatus:'textColor' | async) +
+                    '30'
+                  " [style.color]="
+                  itemSelected?.extendStatus| vll: vllExtendStatus:'textColor' | async
+                  " style="border: none">
+                  {{itemSelected?.extendStatus| vll: vllExtendStatus:"text" | async }}
+                </div>
+                
+                <div *ngIf="itemSelected?.approveStatus && vllApproveStatus" class="badge badge-danger me-2 label-status" [style.border-color]="
+                    (itemSelected?.approveStatus  | vll: vllApproveStatus:'textColor' | async) +
+                    '30'
+                  " [style.background-color]="
+                    (itemSelected?.approveStatus | vll: vllApproveStatus:'textColor' | async) +
+                    '30'
+                  " [style.color]="
+                  itemSelected?.approveStatus| vll: vllApproveStatus:'textColor' | async
+                  " style="border: none">
+                  {{itemSelected?.approveStatus| vll: vllApproveStatus:"text" | async }}
+                </div>
+                
               </div>
             </div>
           </div>

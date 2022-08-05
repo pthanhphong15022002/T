@@ -142,6 +142,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
             this.taskExtends.task.dueDate = res.extendDate ;
             this.taskExtends.task.extends = this.taskExtends.task.extends + 1 ;
           }
+          this.taskExtends.task.extendStatus = res.extendStatus ;
           this.taskExtends.extendComment =  this.comment,
           this.dialog.close(this.taskExtends);
           this.notiService.notify('Duyệt gia hạn công việc thành công !');

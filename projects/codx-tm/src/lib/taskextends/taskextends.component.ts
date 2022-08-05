@@ -34,9 +34,8 @@ export class TaskExtendsComponent
   funcID: any;
   itemSelected: any;
   dialogExtendsStatus!: DialogRef;
-  vllStatus = 'TM010'; 
-  extendStatus : any
-
+  vllExtendStatus = 'TM010'; 
+  vllStatus ='TM004'
   constructor(
     inject: Injector,
     private authStore: AuthStore,
@@ -69,7 +68,6 @@ export class TaskExtendsComponent
 
   selectedChange(val: any) {
     this.itemSelected = val?.data?.task ;
-    this.extendStatus = val?.data?.status;
     this.detectorRef.detectChanges();
   }
   requestEnded(e) {}

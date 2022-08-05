@@ -52,3 +52,12 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 }
 
 /***END Khong duoc xoa***/
+.user-mini-nav{
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #f1f1fa;
+}
