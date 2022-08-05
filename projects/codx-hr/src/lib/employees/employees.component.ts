@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ApiHttpService, ButtonModel, CallFuncService, CodxService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import moment from 'moment';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
+import { CodxHrService } from '../codx-hr.service';
 import { HR_Employees } from '../model/HR_Employees.model';
 import { PopupAddEmployeesComponent } from './popup-add-employees/popup-add-employees.component';
 import { UpdateStatusComponent } from './update-status/update-status.component';
@@ -23,6 +24,7 @@ export class EmployeesComponent implements OnInit {
   functionID: string;
   employee: HR_Employees = new HR_Employees();
   itemSelected: any;
+  urlDetail = '';
 
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
@@ -44,8 +46,13 @@ export class EmployeesComponent implements OnInit {
     private api: ApiHttpService,
     private df: ChangeDetectorRef,
     private codxService: CodxService,
+    private hrService: CodxHrService,
   ) {
-
+    this.hrService.getMoreFunction(['HRT03', null, null]).subscribe((res) => {
+      if (res) {
+        this.urlDetail = res[1].url;
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -128,8 +135,8 @@ export class EmployeesComponent implements OnInit {
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
     });
@@ -242,7 +249,9 @@ export class EmployeesComponent implements OnInit {
     });
   }
 
-  viewEmployeeInfo(e, data) {
+  viewEmployeeInfo(data) {
+    this.codxService.navigate('', this.urlDetail, {employeeID: data.employeeID});
+    
     // this.urlView = e?.url;
     // if (data.iterationID != this.user.userID)
     //   this.urlView += '/' + data.iterationID;
@@ -251,6 +260,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   clickMF(e: any, data?: any) {
+    this.itemSelected = data;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -268,7 +278,7 @@ export class EmployeesComponent implements OnInit {
         this.updateStatus(data);
         break;
       case 'HR0032':
-        this.viewEmployeeInfo(e, data);
+        this.viewEmployeeInfo(data);
         break;
     }
   }

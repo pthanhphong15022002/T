@@ -11,9 +11,9 @@
 </codx-form>
 
 <ng-template #body>
-  <div class="row mb-4">
-    <div class="col-8">
-      <codx-label class="fw-bold" default="Nguồn" fiedName="Category">
+  <div class="rows">
+    <div class="col-8 form-group">
+      <codx-label default="Nguồn" fiedName="Category" [formModel]="dialog.formModel">
       </codx-label>
       <codx-input
         type="valuelist"
@@ -25,27 +25,10 @@
         (valueChange)="valueChange($event)"
       >
       </codx-input>
-      <!-- <codx-combobox 
-        service="EP"   
-        name="combobox"  
-        ngDefaultControl
-        refValue="VL005"
-        field="category"
-        [pageSize]="5"
-        [allowFilter]=true>
-      </codx-combobox> -->
-      <!--end::Input-->
     </div>
 
-    <!--end::Col-->
-    <!--begin::Col-->
-    <div class="col-4">
-      <codx-label
-        class="fw-bold"
-        default="Đơn vị"
-        fiedName="CompanyID"
-        [formModel]="dialog.formModel"
-      >
+    <div class="col-4 form-group">
+      <codx-label default="Đơn vị" fiedName="CompanyID" [formModel]="dialog.formModel" >
       </codx-label>
       <codx-input
         service="SYS"
@@ -60,25 +43,17 @@
       >
       </codx-input>
     </div>
-    <!--end::Col-->
   </div>
 
   <div class="row mb-4 position-relative">
-    <div class="col-10">
-      <codx-label
-        class="fw-bold"
-        default="Tên lái xe"
-        fiedName="ResourceName"
-        [formModel]="dialog.formModel"
-      >
+    <div class="col-10 form-group">
+      <codx-label default="Tên lái xe" fiedName="ResourceName" [formModel]="dialog.formModel">
       </codx-label>
       <div class="d-flex position-relative">
         <div class="w-100">
           <codx-input
             ControlName="resourceName"            
           >
-          <!-- [formModel]="form.formModel"
-            [Group]="form.formGroup" -->
           </codx-input>
            <codx-input type="text" class="form-control flex-grow-1 me-3 w-100" ControlName="resourceName"
           [Group]="dialogAddDriver" [crrValue]="dialogAddDriver.value.resourceName" (valueChange)="valueChange($event)">
@@ -102,9 +77,9 @@
     </div>
   </div>
 
-  <div class="row mb-4">
-    <div class="col-8">
-      <codx-label class="fw-bold" default="Xe"> </codx-label>
+  <div class="row">
+    <div class="col-8 form-group">
+      <codx-label default="Xe"  [formModel]="dialog.formModel" ></codx-label>
       <codx-combobox
         service="ERM.Business.CM"
         name="combobox"
@@ -116,14 +91,10 @@
       >
       </codx-combobox> 
 
-      <!--end::Input-->
     </div>
-    <div class="col-3">
-      <!--begin::Label-->
-      <codx-label class="fw-bold" default="Biển số" fiedName="Code">
+    <div class="col-3 form-group">
+      <codx-label default="Biển số" fiedName="Code" [formModel]="dialog.formModel">
       </codx-label>
-      <!--end::Label-->
-      <!--begin::Input-->
       <codx-input
         type="text"
         class="form-control"
@@ -136,14 +107,9 @@
     </div>
   </div>
 
-  <div class="row mb-4">
-    <div class="col-12">
-      <codx-label
-        class="fw-bold"
-        default="Người điều phối"
-        fiedName="Owner"
-        [formModel]="dialog.formModel"
-      >
+  <div class="row">
+    <div class="form-group">
+      <codx-label default="Người điều phối" fiedName="Owner" [formModel]="dialog.formModel">
       </codx-label>
       <codx-combobox 
         service="SYS"   
@@ -158,10 +124,9 @@
     </div>
   </div>
 
-  <div class="row mb-4">
-    <div class="col-12">
-      <codx-label default="Mô tả" fiedName="Note"></codx-label>
-      <!-- <codx-label default="Mô tả" class="fs-5 fw-bold mb-2"></codx-label> -->
+  <div class="row">
+    <div class="form-group">
+      <codx-label default="Mô tả" fiedName="Note" [formModel]="dialog.formModel"></codx-label>
       <codx-input
         type="textarea"
         class="test-textarea"
