@@ -115,7 +115,7 @@
         </codx-input>
       </div>
       <div class="col-6">
-        <span class="icon-edit text-primary icon-18" *ngIf="taskGroups.verifyControl == '1'" (click)="openShare(controlShare)">
+        <span class="icon-edit text-primary icon-18" *ngIf="taskGroups.verifyControl == '1'" (click)="openShare(controlShare, true)">
         </span>
       </div>
     </div>
@@ -138,7 +138,7 @@
         </codx-input>
       </div>
       <div class="col-6">
-        <span class="icon-edit text-primary icon-18" *ngIf="taskGroups.approveControl == '1'" (click)="openShare1(controlApp)">
+        <span class="icon-edit text-primary icon-18" *ngIf="taskGroups.approveControl == '1'" (click)="openShare(controlShare, false)">
 
         </span>
       </div>
@@ -315,30 +315,18 @@
 
 <ng-template #controlShare let-dialogShare>
   <codx-share
-    listName="TM006"
-    field="verifyByType"
+    [listName]="listName"
+    [field]="fieldValue"
     [listCombobox]="listCombobox"
     [dataShared]="[]"
     [dialog]="dialogShare"
     [multiple]="false"
-    (eventApply)="valueCbx($event)"
+    (eventApply)="valueCbx($event, fieldValue)"
   >
   </codx-share>
 </ng-template>
 
-<ng-template #controlApp let-dialogShare>
-  <codx-share
-    listName="TM014"
-    field="approveBy"
-    [listCombobox]="listCombobox1"
-    [dataShared]="[]"
-    [dialog]="dialogShare"
-    [multiple]="false"
-    (eventApply)="valueCbx1($event)"
 
-  >
-  </codx-share>
-</ng-template>
 
 <ng-template #addLink let-dialog>
   <div class="card-header">
@@ -359,7 +347,7 @@
       </div>
     </div>
     <div class="form-group row">
-      <codx-input type="text" class="form-control" placeholder="Tối thiểu 0, tối đa 8" [crrValue]="taskGroups.approveBy"
+      <codx-input type="text" class="form-control" placeholder="Tối thiểu 0, tối đa 8" [crrValue]="taskGroups.maxHours"
         (valueChange)="changeHours($event)"></codx-input>
     </div>
   </div>
@@ -370,62 +358,6 @@
   </div>
 </ng-template>
 
-<!-- <codx-form headerText="{{ title }}" #form [body]="body" [footer]="footer" [data]="data" [formModel]="dialog.formModel"
-  [dialog]="dialog">
-  <ng-template #body>
-    <div >
-      <form>
-        <div class="row">
-
-
-            <div class="d-flex align-items-center justify-content-between mt-4">
-              <div class="d-flex align-items-center">
-                <div class="fw-bold fs-6 text-primary">Kiểm soát nhập dữ liệu</div>
-              </div>
-            </div>
-            <div class="form-group row mt-3">
-              <div class="form-group col-8">
-                <codx-label fiedName="ApproveControl" default="Xét duyệt" formName="TaskGroups"
-                  gridViewName="grvTaskGroups"></codx-label>
-                <div>
-                  <codx-label fiedName="ApproveControl" default="Kiểm soát xét duyệt khi tạo mới công việc"
-                    formName="TaskGroups" gridViewName="grvTaskGroups"></codx-label>
-                </div>
-              </div>
-              <div class="col-4">
-                <codx-input name="approveControl" type="valuelist" field="approveControl" placeholder=""
-                  [crrValue]="taskGroups.approveControl" (valueChange)="valueApp($event)"
-                  [refValue]="gridViewSetup.approveControl.referedValue">
-                </codx-input>
-              </div>
-            </div>
-
-            <div class="form-group row mt-3">
-              <div class="form-group col-8">
-                <codx-label fiedName="AttachmentControl" default="Đính kèm file" formName="TaskGroups"
-                  gridViewName="grvTaskGroups"></codx-label>
-                <div>
-                  <codx-label fiedName="AttachmentControl" default="Kiểm soát file đính kèm khi tạo công việc"
-                    formName="TaskGroups" gridViewName="grvTaskGroups"></codx-label>
-
-                </div>
-              </div>
-              <div class="col-4">
-                <codx-input name="attachmentControl" type="valuelist" field="AttachmentControl" placeholder=""
-                  [crrValue]="taskGroups.attachmentControl" (valueChange)="valueAtt($event)"
-                  [refValue]="gridViewSetup.AttachmentControl.referedValue">
-                </codx-input>
-              </div>
-            </div>
-
-
-          </div>
-        </div>
-      </form>
-    </div>
-  </ng-template>
-
-</codx-form> -->
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>

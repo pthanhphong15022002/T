@@ -199,8 +199,7 @@
           <codx-input
             type="combobox"
             [refValue]="CbxName['ReasonID']"
-            ngDefaultControl
-            [crrValue]="this.dialogRequest.value?.reasonID"
+            [crrValue]="dialogRequest.value?.reasonID"
             field="reasonID"
             (valueChange)="valueChange($event)"
           ></codx-input>

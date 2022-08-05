@@ -1,35 +1,26 @@
 import {
   Component,
-  OnInit,
   TemplateRef,
   ViewChild,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-  Input,
+  Injector,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import {
-  ApiHttpService,
   ButtonModel,
-  CacheService,
-  CallFuncService,
   DialogRef,
   SidebarModel,
+  UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-
 import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
 @Component({
   selector: 'setting-rooms',
   templateUrl: 'rooms.component.html',
   styleUrls: ['rooms.component.scss'],
 })
-export class RoomsComponent implements OnInit, AfterViewInit {
+export class RoomsComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
@@ -58,10 +49,19 @@ export class RoomsComponent implements OnInit, AfterViewInit {
   method = 'GetListAsync';
 
   constructor(
-    private cacheSv: CacheService,
-    private callFunc: CallFuncService,
-    private activedRouter: ActivatedRoute
-  ) { }
+    private injector: Injector,
+  ) {
+    super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
+  }
+
+
+  onInit(): void {
+    this.cache.valueList('EP012').subscribe((res) => {
+      this.vllDevices = res.datas;
+    });
+  }
+
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.columnGrids = [
@@ -100,13 +100,6 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     };
   }
 
-  ngOnInit(): void {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.cacheSv.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
-    });
-  }
-
   clickMF(evt?: any, data?: any) {
     switch (evt.functionID) {
       case 'edit':
@@ -142,7 +135,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callFunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
         dataItem,
         option
@@ -159,7 +152,7 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callFunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
         item,
         option
