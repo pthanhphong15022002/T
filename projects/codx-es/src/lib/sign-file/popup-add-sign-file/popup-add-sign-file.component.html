@@ -196,12 +196,14 @@
         </div>
       </div>
     </div>
-    <lib-approval [isApprover]="false" [recID]="dialogSignFile.value.recID"
-      *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+    <lib-approval *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0" [isApprover]="false"
+      [recID]="dialogSignFile.value.recID">
     </lib-approval>
   </div>
 </div>
+<ng-template #pdf>
 
+</ng-template>
 <ng-template #footer> </ng-template>
 
 <ng-template #processTemplate let-dialogTemplate>

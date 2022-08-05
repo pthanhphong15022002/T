@@ -183,6 +183,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                   }
                 }
               });
+            this.isAfterRender = true;
           } else {
             this.codxService
               .getAutoNumber(
@@ -192,10 +193,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               )
               .subscribe((dt: any) => {
                 this.dialogCategory.patchValue({ categoryID: dt });
+                this.cr.detectChanges();
+                this.isAfterRender = true;
               });
           }
         }
-        this.isAfterRender = true;
       });
     this.isSaved = false;
     this.cr.detectChanges();
