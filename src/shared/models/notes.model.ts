@@ -12,7 +12,7 @@ export class Notes {
     showCalendar: boolean;
     createdOn: string;
     createdBy: string;   
-    tag: string;
+    tags: string;
     fileCount: string;
     isNote: boolean;
 }

@@ -60,7 +60,7 @@ export class TaskExtendsComponent
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
-          groupBy: 'fieldGroup',
+        // groupBy: 'fieldGroup', Thương kêu gắng sau 
         },
       },
     ];
