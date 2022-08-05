@@ -35,6 +35,9 @@ export class ApprovalStepComponent implements OnInit {
   headerText = 'Qui trình duyệt';
   subHeaderText;
 
+  lstOldData;
+  isEdited = false;
+
   currentStepNo = 1;
   dialog: DialogRef;
   formModel: FormModel;
@@ -47,8 +50,6 @@ export class ApprovalStepComponent implements OnInit {
 
   constructor(
     private cfService: CallFuncService,
-    private api: ApiHttpService,
-    private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notifySvr: NotificationsService,
@@ -83,6 +84,7 @@ export class ApprovalStepComponent implements OnInit {
     this.esService.isSetupApprovalStep.subscribe((res) => {
       if (res != null) {
         this.lstStep = res;
+        this.lstOldData = [...res];
         console.log(this.lstStep);
       } else if (this.transId != '') {
         // if (this.transId != '') {
@@ -98,6 +100,7 @@ export class ApprovalStepComponent implements OnInit {
           if (res && res?.length >= 0) {
             this.lstStep = res;
             this.currentStepNo = this.lstStep.length + 1;
+            this.lstOldData = [...res];
           }
         });
       } else {
@@ -118,6 +121,13 @@ export class ApprovalStepComponent implements OnInit {
     this.esService.setLstDeleteStep(this.lstDeleteStep);
     this.model.patchValue({ countStep: this.lstStep.length });
     this.dialog && this.dialog.close();
+  }
+
+  saveStep() {
+    if (this.lstStep != this.lstOldData) {
+      this.esService.setApprovalStep(this.lstStep);
+      this.esService.setLstDeleteStep(this.lstDeleteStep);
+    }
   }
 
   openFormFuncID(val: any, data: any) {}
@@ -173,6 +183,7 @@ export class ApprovalStepComponent implements OnInit {
 
           if (i != -1) {
             this.lstStep.splice(i, 1);
+            this.isEdited == true;
           }
           if (approvalStep.recID && approvalStep.recID != null) {
             this.lstDeleteStep.push(approvalStep);
@@ -203,6 +214,12 @@ export class ApprovalStepComponent implements OnInit {
           '',
           model
         );
+
+        this.dialog.closed.subscribe((res) => {
+          if (res != null) {
+            this.isEdited == true;
+          }
+        });
       }
     });
   }

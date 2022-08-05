@@ -57,4 +57,14 @@ export class CodxHrService {
     );
 
   }
+
+  getMoreFunction(data) {
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'MoreFunctionsBusiness',
+      'GetWithPermAsync',
+      data
+    );
+  }
 }

@@ -118,6 +118,7 @@ export class TM_TaskExtends {
   recID: string
   taskID: string
   extendApprover: string
+  extendApproverName: string
   status: string
   reason: string
   extendComment: string
@@ -153,4 +154,5 @@ export class TM_Parameter {
   VerifyBy: string;
   VerifyByType: string;
   VerifyControl: string;
+  ReOpenDays:string
 }

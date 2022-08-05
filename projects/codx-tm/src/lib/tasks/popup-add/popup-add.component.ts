@@ -379,7 +379,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (listTodoCopy != null) {
       listTodoCopy.forEach((td) => {
         var todo = new TaskGoal();
-        todo.status = td.status;
+        todo.status = StatusTaskGoal.NotChecked;
         todo.text = td.text;
         t.listTodo.push(Object.assign({}, todo));
       });
@@ -955,7 +955,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.param.ConfirmControl = taskGroup.confirmControl;
     this.param.EditControl = taskGroup.editControl;
     this.param.LocationControl = taskGroup.locationControl;
-    this.param.MaxHours = taskGroup.maxHours;
+    this.param.MaxHours = taskGroup.maxHours.toString();
     this.param.MaxHoursControl = taskGroup.maxHoursControl;
     this.param.PlanControl = taskGroup.planControl;
     this.param.ProjectControl = taskGroup.projectControl;

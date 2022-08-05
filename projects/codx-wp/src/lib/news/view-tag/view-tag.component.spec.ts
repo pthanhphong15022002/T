@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailNoteBooksComponent } from './detail-note-books.component';
+import { ViewTagComponent } from './view-tag.component';
 
-describe('DetailNoteBooksComponent', () => {
-  let component: DetailNoteBooksComponent;
-  let fixture: ComponentFixture<DetailNoteBooksComponent>;
+describe('ViewTagComponent', () => {
+  let component: ViewTagComponent;
+  let fixture: ComponentFixture<ViewTagComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DetailNoteBooksComponent ]
+      declarations: [ ViewTagComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DetailNoteBooksComponent);
+    fixture = TestBed.createComponent(ViewTagComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -20,11 +20,13 @@ import {
   CallFuncService,
   CodxFormComponent,
   CodxService,
+  CRUDService,
   DialogData,
   DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
 } from 'codx-core';
 import { CodxEsService, GridModels } from '../../../codx-es.service';
 import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
@@ -130,7 +132,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .then((res) => {
         if (res) {
           this.dialogCategory = res;
-          this.isAfterRender = true;
           this.dialogCategory.patchValue({
             eSign: true,
             signatureType: '1',
@@ -182,6 +183,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                   }
                 }
               });
+            this.isAfterRender = true;
           } else {
             this.codxService
               .getAutoNumber(
@@ -191,6 +193,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               )
               .subscribe((dt: any) => {
                 this.dialogCategory.patchValue({ categoryID: dt });
+                this.cr.detectChanges();
+                this.isAfterRender = true;
               });
           }
         }
@@ -208,13 +212,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.cr.detectChanges();
   }
 
-  beforeSave(option: any) {
+  beforeSave(option: RequestOption) {
     let itemData = this.dialogCategory.value;
     let countStep = this.lstStep?.length ?? 0;
     if (this.isAdd) {
-      option.method = 'AddNewAsync';
+      option.methodName = 'AddNewAsync';
     } else {
-      option.method = 'EditCategoryAsync';
+      option.methodName = 'EditCategoryAsync';
     }
     option.data = [itemData, countStep];
     return true;
@@ -234,6 +238,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           if (res.save) {
             this.updateApprovalStep(true);
           } else {
+            (this.dialog.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
             this.updateApprovalStep(false);
           }
           this.dialog && this.dialog.close();

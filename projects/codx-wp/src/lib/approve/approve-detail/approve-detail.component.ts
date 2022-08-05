@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthService, DataRequest, NotificationsService } from 'codx-core';
@@ -15,35 +15,40 @@ export class ApproveDetailComponent implements OnInit {
   @Input() data: any;
   @Input() option: string;
   @Input() formModel : any;
-  navAsside = [
+  @Output() evtApproval = new EventEmitter();
+  tabAsside = [
     {
       name:"await",
       text:"Chờ duyệt",
-      value: 0,
-      predicate:"&& ApproveStatus=@1",
-      datavalue:";3",
+      value: "3",
+      total:0,
+      predicate:"ApproveStatus=@0",
+      datavalue:"3",
       active:false
     },
     {
       name:"approve",
       text:"Đã duyệt",
-      value: 0,
-      predicate:"&& ApproveStatus=@1",
-      datavalue:";5",
+      value: "5",
+      total:0,
+      predicate:"ApproveStatus=@0",
+      datavalue:"5",
       active:false
     },
     {
       name:"cancel",
       text:"Từ chối",
-      value: 0,
-      predicate:"&& ApproveStatus=@1",
-      datavalue:";4",
+      value: "4",
+      total:0,
+      predicate:"ApproveStatus=@0",
+      datavalue:"4",
       active:false
     },
     {
       name:"all",
       text:"Tất cả",
-      value: 0,
+      value: "0",
+      total:0,
       predicate:"",
       datavalue:"",
       active:false
@@ -70,63 +75,7 @@ export class ApproveDetailComponent implements OnInit {
   }
 
   clickApprovePost(data:any,approveStatus:any){
-    switch(approveStatus)
-    {
-      case this.acceptApprove:
-        this.notifySvr.alertCode("WP004").subscribe((e:any) => {
-          if(e.event.status == "Y"){
-            this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-              (res) => 
-              {
-                if(res)
-                {
-                  this.data = null;
-                  this.navAsside[0].value--;
-                  this.navAsside[1].value++;
-                  this.notifySvr.notifyCode("WP005");
-                  this.dt.detectChanges();
-                }
-              }
-            );
-          }
-        });
-        break;
-      case this.cancelApprove:
-        this.notifySvr.alertCode("WP006").subscribe((e:any) => {
-          if(e.event.status == "Y"){
-            this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-              (res) => 
-              {
-                if(res)
-                {
-                  this.data = null;
-                  this.navAsside[0].value--;
-                  this.navAsside[2].value++;
-                  this.notifySvr.notifyCode("WP007");
-                  this.dt.detectChanges();
-                }
-              }
-            );
-          }
-        });
-        break;
-      default:
-        this.notifySvr.alertCode("WP008").subscribe((e:any) => {
-          this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-            (res) => 
-            {
-              if(res)
-              {
-                this.data = null;
-                this.navAsside[0].value--;
-                this.notifySvr.notifyCode("WP009");
-                this.dt.detectChanges();
-              }
-            }
-          );
-        });
-        break;
-    }
+    this.evtApproval.emit({data:data,approveStatus:approveStatus})
   }
 
   approvePost(e:any,data:any,approveStatus:any){
@@ -137,8 +86,8 @@ export class ApproveDetailComponent implements OnInit {
           if(res)
           {
             this.data = null;
-            this.navAsside[0].value--;
-            this.navAsside[1].value++;
+            this.tabAsside[0].total--;
+            this.tabAsside[1].total++;
             this.notifySvr.notifyCode("WP005");
             this.dt.detectChanges();
           }
@@ -156,8 +105,8 @@ export class ApproveDetailComponent implements OnInit {
           if(res)
           {
             this.data = null;
-            this.navAsside[0].value--;
-            this.navAsside[2].value++;
+            this.tabAsside[0].total--;
+            this.tabAsside[2].total++;
             this.notifySvr.notifyCode("WP007");
             this.dt.detectChanges();
           }
@@ -174,7 +123,7 @@ export class ApproveDetailComponent implements OnInit {
           if(res)
           {
             this.data = null;
-            this.navAsside[0].value--;
+            this.tabAsside[0].total--;
             this.notifySvr.notifyCode("WP009");
             this.dt.detectChanges();
           }

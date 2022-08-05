@@ -16,11 +16,11 @@
   </div>
 </div>
 <ng-template #panelLeftRef>
-  <div class="fix-container rounded-4 p-6 position-relative">
+  <div class="fix-container rounded-4 position-relative">
     <div class="row">
       <div class="row" *ngIf="lstHotNew[0]">
         <div class="fw-bold text-dark fs-2 mt-3 mb-3 border-bottom border-gray">
-          <codx-label formName="News" name="lblNews" default="Tin tức sự kiện"></codx-label>
+          <codx-label [formModel]="codxViews.formModel" name="lblNews" default="Tin mới nhất"></codx-label>
         </div>
       </div>
 
@@ -111,7 +111,7 @@
         </div>
       </div>
     </div>
-    <div class="row my-8">
+    <div class="row my-8" *ngIf="listSlider.length > 0">
       <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
         [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
         <ng-template ngbSlide *ngFor="let list of listSlider">
@@ -128,30 +128,34 @@
         </ng-template>
       </ngb-carousel>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="lstGroup">
       <ng-container *ngIf="category == CATEGORY.HOME;else grCategory">
-        <ng-container *ngFor="let grItem of lstGroup">
-          <ng-container *ngFor="let item of grItem">
-            <div (click)="clickViewDeital(item)" class="row my-4">
+        <ng-container *ngFor="let grItem of lstGroup | keyvalue">
+          <div class="row">
+            <div>
+              <span class="fw-bolder fs-5">{{grItem.key | vll:'WP002':'text' | async}}</span>
+            </div>
+            <div *ngFor="let item of grItem.value" (click)="clickViewDeital(item)" class="row my-4">
               <div class="col-2">
                 <codx-img [width]="180" [cssClass]="'image-125 w-100'" imageType="square" [objectId]="item.recID"
                   objectType="WP_News"></codx-img>
               </div>
               <div class="col-10">
-                <!-- <div class="fs-5 mt-2 fw-bolder">{{item.subject}}</div>
-                <div class="text-gray-700 mt-1">
-                  {{item.subContent | maxlenght:500}}
-                </div>
-                <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div> -->
                 <codx-temp-full [resourceObjType]="entityName" imageType="square" cardCss="h-125px"
                   [title]="item.subject" [desc]="item.subContent" [date]="item.createdOn" [bookmark]="false">
                 </codx-temp-full>
               </div>
             </div>
-          </ng-container>
+          </div>
+          
         </ng-container>
       </ng-container>
       <ng-template #grCategory>
+        <div class="row">
+          <span class="fw-bolder fs-5">
+            <codx-label [formModel]="codxView.formModel" name="lblHeaderGroup" default="Tin cũ hơn"></codx-label>
+          </span>
+        </div>
         <ng-container *ngFor="let item of lstGroup">
           <div (click)="clickViewDeital(item)" class="row my-4">
             <div class="col-2">

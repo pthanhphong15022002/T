@@ -10,10 +10,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
-  ApiHttpService,
-  AuthService,
   CallFuncService,
   CodxService,
   DialogData,
@@ -116,27 +113,22 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           stop: false,
         });
         this.dialogSignature.addControl('id', new FormControl(this.data?.id));
+        this.dialogSignature.addControl(
+          'recID',
+          new FormControl(this.data?.recID)
+        );
         if (!this.isAdd) {
           this.dialogSignature.patchValue(this.data);
-          this.dialogSignature.addControl(
-            'recID',
-            new FormControl(this.data?.recID)
-          );
-
-          console.log(this.dialogSignature.value);
         } else {
           this.dialogSignature.addControl(
             'recID',
             new FormControl(this.data?.recID)
           );
-          console.log(this.dialogSignature.value);
         }
         this.isAfterRender = true;
         this.Signature1 = null;
         this.Signature2 = null;
         this.Stamp = null;
-
-        console.log(this.dialogSignature);
       });
   }
 

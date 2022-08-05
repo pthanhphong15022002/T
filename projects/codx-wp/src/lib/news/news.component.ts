@@ -28,7 +28,7 @@ export class NewsComponent implements OnInit {
   listSlider = [];
   lstHotNew:any[] = [];
   lstVideo:any[] = [];
-  lstGroup:any[] = []
+  lstGroup:object[] = [];
   userPermission: any;
   isAllowNavigationArrows = false;
   views: Array<ViewModel> = [];
@@ -86,25 +86,30 @@ export class NewsComponent implements OnInit {
       this.changedt.detectChanges();
     })
   }
-
   loadDataAync(funcID:string,category:string){
     this.api.execSv(this.service,this.assemblyName,this.className,"GetDatasNewsAsync",[funcID,category])
     .subscribe((res:any[]) => 
     {
-      if(res){
-        this.lstHotNew = [...res[0]]; // tin mới nhất
-        this.lstVideo = [...res[1]]; // video
-        this.lstGroup = [...res[2]]; // tin cũ hơn
-        if (res[1].length <= this.silderNumber) {
-          this.carousel?.pause();
-          this.listSlider = [...this.lstVideo];
+      if(res.length > 0){
+        this.lstHotNew = res[0]; // tin mới nhất
+        this.lstVideo = res[1]; // video
+        this.lstGroup = res[2]; // tin cũ hơn
+        console.log(res[2]);
+        if(this.lstVideo.length == 0){
+          this.listSlider = [];
         }
-        else
-        {
-          this.isAllowNavigationArrows = true;
-          this.carousel?.cycle();
-          this.listSlider.push(res[1].splice(0, 3));
-          this.listSlider.push(res[1]);
+        else {
+          if (res[1].length <= this.silderNumber) {
+            this.carousel?.pause();
+            this.listSlider.push(this.lstVideo);
+          }
+          else
+          {
+            this.isAllowNavigationArrows = true;
+            this.carousel?.cycle();
+            this.listSlider.push(res[1].splice(0, 3));
+            this.listSlider.push(res[1]);
+          }
         }
         this.changedt.detectChanges();
       }

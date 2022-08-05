@@ -10,6 +10,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { CacheService, CodxService, DialogData, DialogRef } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { isBuffer } from 'util';
 
 @Component({
   selector: 'app-popup-signature',
@@ -89,19 +90,29 @@ export class PopupSignatureComponent implements OnInit {
   onSaveForm() {
     if (this.attSignature1.fileUploadList.length == 1) {
       this.attSignature1.saveFilesObservable().subscribe((res) => {
-        this.dialogSignature.patchValue({ signature1: this.Signature1 });
+        if (res) {
+          this.dialogSignature.patchValue({
+            signature1: (res as any).data.recID,
+          });
+        }
       });
     }
 
     if (this.attSignature2.fileUploadList.length == 1) {
-      this.attSignature2.saveFilesObservable().subscribe((res) => {
-        this.dialogSignature.patchValue({ signature2: this.Signature2 });
+      this.attSignature2.saveFilesObservable().subscribe((res1) => {
+        if (res1) {
+          this.dialogSignature.patchValue({
+            signature2: (res1 as any).data.recID,
+          });
+        }
       });
     }
 
     if (this.attStamp.fileUploadList.length == 1) {
-      this.attStamp.saveFilesObservable().subscribe((res) => {
-        this.dialogSignature.patchValue({ stamp: this.Signature1 });
+      this.attStamp.saveFilesObservable().subscribe((res2) => {
+        if (res2) {
+          this.dialogSignature.patchValue({ stamp: (res2 as any).data.recID });
+        }
       });
     }
 
