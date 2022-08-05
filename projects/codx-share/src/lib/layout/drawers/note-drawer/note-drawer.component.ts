@@ -60,6 +60,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   dataUpdate: any;
   user: any;
   daySelected: any;
+  checkSortASC = false;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
 
@@ -95,6 +96,25 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.getMaxPinNote();
   }
 
+  ngAfterViewInit() {
+    console.log(this.lstView.dataService.data);
+    
+    this.lstView.dataService.requestEnd = (t, data) => {
+      if (t == 'loaded') {
+        this.data = data;
+        console.log('check data', this.data);
+        if (this.data?.length != 0) {
+          this.data.forEach((res) => {
+            if (res?.isPin == true || res?.isPin == '1') {
+              this.countNotePin += 1;
+            }
+          });
+        }
+        (this.lstView.dataService as CRUDService).page = 5;
+      }
+    };
+  }
+
   loadData() {
     this.noteService.data.subscribe((res) => {
       if (res) {
@@ -109,7 +129,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             (this.lstView.dataService as CRUDService)
               .add(data)
               .subscribe((res) => {
-                this.sortData();
+                this.sortDataByDESC();
               });
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
@@ -125,7 +145,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             (this.lstView.dataService as CRUDService)
               .update(data)
               .subscribe((res) => {
-                this.sortData();
+                this.sortDataByDESC();
               });
           }
           this.changeDetectorRef.detectChanges();
@@ -134,46 +154,28 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     });
   }
 
-  sortData(type = null) {
-    // const dt = this.lstView.dataService.data;
-    // const sortByDate = (dt) => {
-    //   const sorter = (a, b) => {
-        // var dateA = new Date(a.modifiedOn).getTime();
-        // var dateB = new Date(b.modifiedOn).getTime();
-    //     if (type == 'increasing') {
-    //       return Number(b.isPin) - Number(a.isPin) || dateA - dateB;
-    //     } else {
-    //       return Number(b.isPin) - Number(a.isPin) || dateB - dateA;
-    //     }
-    //   };
-    //   dt.sort(sorter);
-    // };
-    // sortByDate(dt);
+  sortDataByDESC() {
     this.lstView.dataService.data = this.lstView.dataService.data.sort(
       function (a, b) {
         var dateA = new Date(a.modifiedOn).getTime();
         var dateB = new Date(b.modifiedOn).getTime();
-        return Number(b.isPin) - Number(a.isPin) || dateA - dateB; // ? -1 : 1 for ascending/increasing order
+        return Number(b.isPin) - Number(a.isPin) || dateB - dateA;
       }
     );
-    this.changeDetectorRef.detectChanges();
+    this.lstView.listView.refresh();
+    this.checkSortASC = false;
   }
 
-  ngAfterViewInit() {
-    this.lstView.dataService.requestEnd = (t, data) => {
-      if (t == 'loaded') {
-        this.data = data;
-        console.log('check data', this.data);
-        if (this.data?.length != 0) {
-          this.data.forEach((res) => {
-            if (res?.isPin == true || res?.isPin == '1') {
-              this.countNotePin += 1;
-            }
-          });
-        }
-        (this.lstView.dataService as CRUDService).page = 5;
+  sortDataByASC() {
+    this.lstView.dataService.data = this.lstView.dataService.data.sort(
+      function (a, b) {
+        var dateA = new Date(a.modifiedOn).getTime();
+        var dateB = new Date(b.modifiedOn).getTime();
+        return Number(b.isPin) - Number(a.isPin) || dateA - dateB;
       }
-    };
+    );
+    this.lstView.listView.refresh();
+    this.checkSortASC = true;
   }
 
   getMaxPinNote() {
@@ -323,7 +325,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   onSearch(e) {
-    this.lstView.dataService.search(e);
+    this.lstView.dataService.search(e).subscribe();
     this.detectorRef.detectChanges();
   }
 }
