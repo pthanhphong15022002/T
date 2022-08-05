@@ -145,7 +145,7 @@ export class BookingStationeryComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  add(evt: any) {
+  click(evt: any) {
     switch (evt.id) {
       case 'btnAdd':
         this.addNewRequest();
@@ -235,7 +235,4 @@ export class BookingStationeryComponent extends UIComponent {
 
   clickMF(evt, data) { }
 
-  click(data) {
-    console.log(data);
-  }
 }
