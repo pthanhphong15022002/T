@@ -545,17 +545,18 @@ export class TasksComponent extends UIComponent {
     return true;
   }
 
-  assignTask(data) {
+  assignTask(moreFunc ,data) {
     this.view.dataService.dataSelected = data;
     var vllControlShare = 'TM003';
     var vllRose = 'TM001';
+    var title = moreFunc.customName ;
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose],
+      [this.view.dataService.dataSelected, vllControlShare, vllRose,title],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -1106,7 +1107,7 @@ export class TasksComponent extends UIComponent {
         this.sendemail(data);
         break;
       case 'TMT02015':
-        this.assignTask(data);
+        this.assignTask(e.data,data);
         break;
       case 'TMT02016':
       case 'TMT02017':
