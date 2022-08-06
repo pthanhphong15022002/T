@@ -626,13 +626,20 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM025');
       return;
     }
-    // if (this.paramModule.ReOpenDays ) {
-
-    //   this.notiService.notifyCode('TM053');
-    //   return;
-    // }
 
     if (taskAction.status == '90') {
+      if (this.paramModule.ReOpenDays) {
+        var time =
+          moment(new Date()).toDate().getTime() -
+          Number.parseFloat(this.paramModule.ReOpenDays) * 3600000;  
+        var timeCompletedOn = moment(new Date(taskAction.completedOn))
+          .toDate()
+          .getTime();
+        if (time > timeCompletedOn) {
+          this.notiService.notifyCode('TM053');
+          return ;
+        }
+      }
       this.notiService.alertCode('TM054').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
           this.confirmUpdateStatus(moreFunc, taskAction);

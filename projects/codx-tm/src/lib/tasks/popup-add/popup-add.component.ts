@@ -176,9 +176,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listRoles = res.datas;
       }
     });
-    // this.cache.viewSettingValues('tm1').subscribe(res=>{
-    //   console.log(res)
-    // })
   }
 
   ngOnInit(): void {
