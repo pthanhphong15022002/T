@@ -74,11 +74,6 @@ export class PopupAddStationeryComponent extends UIComponent {
         this.CbxName = res;
         this.initForm();
       });
-    this.cache.functionList('EPS24').subscribe(res => {
-      this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
-        console.log(res)
-      })
-    })
   }
 
   initForm() {
@@ -130,7 +125,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
     //     this.dialog.close();
     //   });
-    console.log('Send data', this.dialogAddStationery.value)
+    console.log('payload', this.dialogAddStationery.value)
   }
 
   checkedOnlineChange(event) {
