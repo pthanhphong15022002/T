@@ -41,7 +41,7 @@ export class AssignInfoComponent implements OnInit {
   listUser: any[];
   idUserSelected: string;
   listUserDetail: any[] = [];
-  listTodo: TaskGoal[];
+  listTodo: TaskGoal[] = [];
   listTaskResources: tmpTaskResource[] = [];
   todoAddText: any;
   disableAddToDo = true;
@@ -58,11 +58,11 @@ export class AssignInfoComponent implements OnInit {
   vllRole = 'TM001';
   listRoles = [];
   isHaveFile = false;
-  taskParent : any;
+  taskParent: any;
   refID = "";
-  refType= "" ;
-  taskType ='1' ;
-  vllPriority ="TM005" ;
+  refType = "";
+  taskType = '1';
+  vllPriority = "TM005";
 
   constructor(
     private authStore: AuthStore,
@@ -79,11 +79,11 @@ export class AssignInfoComponent implements OnInit {
       ...dt?.data[0],
     };
     this.refID = this.task?.refID;
-    this.refType= this.task?.refType;
-    if(this.task?.taskID) this.taskParent = this.task ;
+    this.refType = this.task?.refType;
+    if (this.task?.taskID) this.taskParent = this.task;
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
     this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
-    this.title = dt?.data[3] ? dt?.data[3] : this.title ;
+    this.title = dt?.data[3] ? dt?.data[3] : this.title;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -132,11 +132,11 @@ export class AssignInfoComponent implements OnInit {
     this.listUser = [];
     this.listTaskResources = [];
     this.task.category = "3"
-    this.task.status = "10" ;
+    this.task.status = "10";
     this.task.refID = this.refID
     this.task.refType = this.refType;
-    if(this.taskParent){
-      this.task.taskName = this.taskParent.taskName ;
+    if (this.taskParent) {
+      this.task.taskName = this.taskParent.taskName;
       this.task.memo = this.taskParent.memo;
       this.task.memo2 = this.taskParent.memo2;
       this.task.taskGroupID = this.taskParent.taskGroupID;
@@ -146,37 +146,18 @@ export class AssignInfoComponent implements OnInit {
       this.task.refID = this.taskParent.refID;
       this.task.refNo = this.taskParent.refNo;
       this.task.taskType = this.taskParent.taskType;
+      if(this.taskParent.listTaskGoals.length>0){
+        var toDos = this.taskParent.listTaskGoals
+        toDos.forEach((obj) => {
+          var taskG = new TaskGoal();
+          taskG.status = this.STATUS_TASK_GOAL.NotChecked;
+          taskG.text = obj.memo;
+          taskG.recID = null;
+          this.listTodo.push(taskG);
+        });
+      }
+     
     }
-
-    // if (this.task.memo == null) this.task.memo = '';
-    // if (this.task.assignTo != null && this.task.assignTo != '') {
-    //   this.listUser = this.task.assignTo.split(';');
-    //   this.api
-    //     .execSv<any>(
-    //       'TM',
-    //       'ERM.Business.TM',
-    //       'TaskResourcesBusiness',
-    //       'GetListTaskResourcesByTaskIDAsync',
-    //       this.task.taskID
-    //     )
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         this.listTaskResources = res;
-    //       }
-    //     });
-
-    // this.api
-    //   .execSv<any>(
-    //     'TM',
-    //     'ERM.Business.TM',
-    //     'TaskBusiness',
-    //     'GetListUserDetailAsync',
-    //     this.task.assignTo
-    //   )
-    //   .subscribe((res) => {
-    //     this.listUserDetail = this.listUserDetail.concat(res);
-    //   });
-    // }
 
     this.changeDetectorRef.detectChanges();
   }
@@ -242,7 +223,7 @@ export class AssignInfoComponent implements OnInit {
     }
   }
 
-  changeVLL(e){}
+  changeVLL(e) { }
 
 
   saveAssign(id, isContinue) {
@@ -256,9 +237,9 @@ export class AssignInfoComponent implements OnInit {
     }
     if (this.isHaveFile)
       this.attachment.saveFiles();
-    var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID:null ;
+    var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
     this.tmSv
-      .saveAssign([this.task, this.functionID, this.listTaskResources, null,taskIDParent])
+      .saveAssign([this.task, this.functionID, this.listTaskResources, this.listTodo, taskIDParent])
       .subscribe((res) => {
         if (res[0]) {
           this.notiService.notifyCode('TM006');
@@ -268,13 +249,13 @@ export class AssignInfoComponent implements OnInit {
           }
           this.resetForm();
         } else {
-          this.notiService.notifyCode('TM038'); 
+          this.notiService.notifyCode('TM038');
           return;
         }
       });
   }
 
-   //Form Old
+  //Form Old
   // onDeleteUser(userID) {
   //   var listUser = [];
   //   var listUserDetail = [];
@@ -304,7 +285,7 @@ export class AssignInfoComponent implements OnInit {
   //   } else this.task.assignTo = '';
   // }
   onDeleteUser(item) {
-  
+
     var userID = item.resourceID;
     var listUser = [];
     var listTaskResources = [];
@@ -440,7 +421,7 @@ export class AssignInfoComponent implements OnInit {
         }
       });
   }
-   //Form Old
+  //Form Old
   // getListUser(listUser) {
   //   while (listUser.includes(' ')) {
   //     listUser = listUser.replace(' ', '');
@@ -542,6 +523,7 @@ export class AssignInfoComponent implements OnInit {
               var taskG = new TaskGoal();
               taskG.status = this.STATUS_TASK_GOAL.NotChecked;
               taskG.text = tx;
+              taskG.recID = null;
               this.listTodo.push(taskG);
             });
           }
@@ -562,7 +544,7 @@ export class AssignInfoComponent implements OnInit {
         if (res) {
           var param = JSON.parse(res.dataValue);
           this.param = param;
-          this.taskType = param?.TaskType ;
+          this.taskType = param?.TaskType;
           //  this.paramModule = param;
         }
       });
@@ -584,8 +566,8 @@ export class AssignInfoComponent implements OnInit {
     this.param.VerifyByType = taskGroup.verifyByType;
     this.param.VerifyControl = taskGroup.verifyControl;
     this.param.DueDateControl = taskGroup.dueDateControl;
-    this.param.ExtendControl = taskGroup.extendControl ;
-    this.param.ExtendBy = taskGroup.extendBy ;
+    this.param.ExtendControl = taskGroup.extendControl;
+    this.param.ExtendBy = taskGroup.extendBy;
     this.param.CompletedControl = taskGroup.completedControl;
   }
 }
