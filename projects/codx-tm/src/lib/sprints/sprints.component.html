@@ -1,6 +1,6 @@
 <codx-views #view service="TM" entityName="TM_Sprints" idField="iterationID" assemblyName="ERM.Business.TM"
-  className="SprintsBusiness" method="GetListSprintAsync" [views]="views" [button]="button" [autoLoad]="false"
-  (buttonClick)="click($event)" [moreFuncs]="moreFuncs">
+  className="SprintsBusiness" method="GetListSprintAsync" [views]="views" [button]="button" [autoLoad]="true"
+  (buttonClick)="click($event)" >
 </codx-views>
 
 <ng-template #itemViewBoard let-data>
