@@ -1,6 +1,16 @@
-<!-- <codx-img [objectId]="'c544f9b5-9f85-4356-a4ca-6f8914b60acb'" [objectType]="'WP_News'"></codx-img> -->
-<codx-fulltextsearch [centerTmp]="centerTmp" [widthLeft]="400" [funcID]="funcID" (selectedChange)="onSelected($event)"></codx-fulltextsearch>
-
+<codx-fulltextsearch #view 
+    [centerTmp]="centerTmp" 
+    [widthItemTmp]="400" 
+    [pageSize]="10" 
+    [widthLeft]="400" 
+    [funcID]="funcID" 
+    [service]="service" 
+    [entityName]="entityName" 
+    (selectedChange)="onSelected($event)">
+</codx-fulltextsearch>
+<!-- <ng-template #menu >
+    <button (click)="testSearch()">test</button>
+</ng-template> -->
 <ng-template #centerTmp let-data>
     <codx-temp-full [content]="extractContent(data.title)"
     [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
@@ -11,11 +21,6 @@
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
     [bookmark]="data.isBookmark" [titleLine]="2"  [dataItem]="data" >
     </codx-temp-full>
-</ng-template>
-
-<ng-template #headerRight let-data>
-    <codx-input type="radio" [crrValue]="data.recID" name="rddispatch" ControlName="recID">
-    </codx-input>
 </ng-template>
 
 <ng-template #rightTmp>

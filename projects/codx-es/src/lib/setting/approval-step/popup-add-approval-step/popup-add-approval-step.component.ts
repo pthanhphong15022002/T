@@ -9,8 +9,6 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { ListViewModule } from '@syncfusion/ej2-angular-lists';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -34,6 +32,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   @Output() close = new EventEmitter();
   @Input() transId = '';
   @Input() stepNo = 1;
+  @Input() vllShare = 'ES014';
   dataEdit: any;
 
   tmplstDevice;
@@ -44,7 +43,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   formModel: FormModel;
   dialogApprovalStep: FormGroup;
   vllEmail = [];
-  vllShare = 'ES014';
+
   lstApproveMode: any;
   cbxName;
   time: any;
@@ -247,12 +246,12 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     });
     if (this.isAdd) {
       this.lstStep.push(this.dialogApprovalStep.value);
-      this.dialog && this.dialog.close();
+      this.dialog && this.dialog.close(this.dialogApprovalStep.value);
     } else {
       let i = this.lstStep.indexOf(this.dataEdit);
       if (i != -1) {
         this.lstStep[i] = this.dialogApprovalStep.value;
-        this.dialog && this.dialog.close();
+        this.dialog && this.dialog.close(this.dialogApprovalStep.value);
       }
     }
   }

@@ -19,6 +19,7 @@ export class HR_Employees {
     public joinedOn: Date;
     public hiredOn: Date;
     public idCardNo: string;
+    public status: string;
     public issuedOn: Date;
     public issuedBy: string;
     public maritalStatus: string;

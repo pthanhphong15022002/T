@@ -53,7 +53,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-center body-function">
                 <div class="text-gray-500 fw-bold">
-                    <codx-label formName="" name="lblInsertPost" default="Thêm vào bài viết"></codx-label>
+                    <codx-label [formModel]="dialogRef.formModel" name="lblInsertPost" default="Thêm vào bài viết"></codx-label>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-emoji">
@@ -69,12 +69,12 @@
                         </ng-container>
                     </div>
                     <div>
-                        <button type="button" data-toggle="tooltip" class="btn btn-icon btn-md ms-2">
+                        <button (click)="tagUser()"  type="button" data-toggle="tooltip" class="btn btn-icon btn-md ms-2">
                             <i class="icon-local_offer icon-24 text-primary"></i>
                         </button>
                     </div>
                     <div class="btn-upload">
-                        <button (click)="openFile()" type="button" data-toggle="tooltip"
+                        <button (click)="uploadFile()" type="button" data-toggle="tooltip"
                             class="btn btn-icon btn-md ms-2 ng-star-inserted">
                             <i class="icon-photo icon-24 text-success"></i>
                         </button>
@@ -124,29 +124,38 @@
 
 <ng-template #edit>
     <ng-container *ngIf="dataEdit">
-        <div>
-            <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message" [placeholder]="title"
+        <div class="row my-3">
+            <div>
+                <codx-input format="ed3" 
+                [class]="'border-none'" 
+                type="textarea" 
+                [crrValue]="message"
+                [placeholder]="title"
                 (valueChange)="valueChange($event)">
-            </codx-input>
-        </div>
-        <div>
-            <codx-file #codxFileEdit [lstFile]="dataEdit.files" [edit]='true' (addFile)="addFile($event)"
+                </codx-input>
+            </div>
+            <div>
+                <codx-file #codxFileEdit 
+                [objectID]="dataEdit.recID" 
+                [edit]='true' 
+                (addFile)="addFile($event)"
                 (removeFile)="removeFile($event)"></codx-file>
-        </div>
-        <div class="d-none">
-            <codx-attachment #atmEdit 
-                objectType="WP_Comments" 
-                hideFolder="1" 
-                hideUploadBtn="1" 
-                hideDes="1"
-                type="inline" 
-                [showMessage]="0"
-                allowExtensions=".jpg,.png" 
-                allowMultiFile="1" 
-                (fileCount)="getfileCount($event)"
-                idBrowse="atmEdit" 
-                [functionID]="dialogRef.formModel.funcID">
-            </codx-attachment>
+            </div>
+            <div class="d-none">
+                <codx-attachment #atmEdit 
+                    objectType="WP_Comments" 
+                    hideFolder="1" 
+                    hideUploadBtn="1" 
+                    hideDes="1"
+                    type="inline" 
+                    [showMessage]="0"
+                    allowExtensions=".jpg,.png" 
+                    allowMultiFile="1" 
+                    (fileCount)="getfileCount($event)"
+                    idBrowse="atmEdit" 
+                    [functionID]="dialogRef.formModel.funcID">
+                </codx-attachment>
+            </div>
         </div>
     </ng-container>
 </ng-template>

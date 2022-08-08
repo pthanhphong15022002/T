@@ -3,6 +3,7 @@ import { ThisReceiver } from '@angular/compiler';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel } from 'codx-core';
+import { AddPostComponent } from '../dashboard/home/list-post/popup-add/addpost/addpost.component';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
 import { ApproveDetailComponent } from './approve-detail/approve-detail.component';
 
@@ -47,7 +48,7 @@ export class ApproveComponent extends UIComponent {
       total:0,
       predicate:"ApproveStatus=@0",
       datavalue:"3",
-      active:false
+      active:true
     },
     {
       name:"approve",
@@ -116,8 +117,7 @@ private injector:Injector
       this.loadTabAsside(this.predicate,this.dataValue,this.entityName);
       if(this.view){
         this.view.dataService.request.entityName = this.entityName;
-        this.view.dataService.setPredicates([this.tabAsside[0].predicate],[this.tabAsside[0].value]);
-        this.view.dataService.load();
+        this.view.dataService.setPredicates([this.tabAsside[0].predicate],[this.tabAsside[0].value]).subscribe();
       } 
       this.dt.detectChanges();
     });
@@ -133,7 +133,6 @@ private injector:Injector
         panelRightRef : this.panelRightRef
       }
     }];
-    this.clickTabApprove(null,this.tabAsside[0].predicate,this.tabAsside[0].datavalue)
     this.dt.detectChanges();
   }
 
@@ -311,9 +310,29 @@ private injector:Injector
         let option = new DialogModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.IsFull = true;
         if(this.entityName == "WP_News"){
+          option.IsFull = true;
           this.callFuc.openForm(PopupEditComponent,'Cập nhật bài viết',0,0,this.funcID,data,'',option);
+        }
+        else 
+        {
+          this.api.execSv(this.service,this.assemblyName,"CommentsBusiness","GetPostByIDAsync", data.recID)
+          .subscribe((res:any) => {
+            if(res) {
+              let obj = {
+                post: res,
+                status: 'edit',
+                headerText: 'Chỉnh sửa bài viết',
+              };
+              let option = new DialogModel();
+              option.DataService = this.view.dataService;
+              option.FormModel = this.view.formModel;
+              this.callfc.openForm(AddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
+                if(data.result){
+                  console.log(data);
+                }
+              })
+            }});
         }
         break;
       default:

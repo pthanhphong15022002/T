@@ -8,41 +8,20 @@
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <div class="container">
-          <div class="row">
-            <!-- <div class="col col-3">
-              <codx-input name="group" class="test-check" type="radio" style="width:100%"
-                [checked]="selection == true ? true : false" [label]="titleCopyTo"
-                (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
-            </div> -->
-            <div class="form-group">
-              <div class="container">
-                <div class="row">
-                  <div class="col col-3">
-                    <codx-input name="group" class="test-check" type="radio" style="width:100%"
-                      [checked]="selection == 0 ? true : false" [label]="titleCopyTo"
-                      (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
-                  </div>
-                  <div class="col col-3">
-                    <codx-input name="group" class="test-check" type="radio" style="width:100%"
-                      [checked]="selection == 1 ? true : false" [label]="titleMove"
-                      (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class="container">
+        <div class="row">
+          <div class="col col-3">
+            <codx-input name="group" class="test-check" type="radio" style="width:100%"
+              [checked]="selection == 0 ? true : false" [label]="titleCopyTo"
+              (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
+          </div>
+          <div class="col col-3">
+            <codx-input name="group" class="test-check" type="radio" style="width:100%"
+              [checked]="selection == 1 ? true : false" [label]="titleMove"
+              (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
           </div>
         </div>
-      </div>
-      <div class="form-group">
-
-      </div>
-      <!-- <mat-radio-group (change)="radioChange($event)" name="group" [(ngModel)]="selection"
-                aria-labelledby="example-radio-group-label">
-                <mat-radio-button [value]="0" [checked]='true'>{{titleCopyTo}}</mat-radio-button>
-                <mat-radio-button [value]="1">{{titleMove}}</mat-radio-button>
-            </mat-radio-group> -->
+      </div>    
       <div class="mt-6 moveto">
         <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeMove"
           entityName="DM_FolderInfo" service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false
@@ -50,39 +29,11 @@
           [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
         </codx-treeview>
         <ng-template #templatetree let-data>
-          <div class="d-flex align-items-center mb-2" #item>
-            <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
+          <div  class="d-flex align-items-center px-3 pt-3 pb-2" #item>
+            <div [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
           </div>
         </ng-template>
-
-        <!-- <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree"  [data]="listNodeMove" entityName="DM_FolderInfo"
-                service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false idField="recID"
-                parentIdField="parentId" (selectionChange)="onSelectionChanged($event, treeAdd)" [autoLoad]="false"
-                [isOutput]="true" [isLoadChild]="false">
-              </codx-treeview> -->
-        <!-- <ng-template #templatetree let-data>
-                <codx-temp-full class="float-start" imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle" (clickMF)="dmSV.clickMF($event, data, 'folder')" [title]="data.folderName"
-                [formModel]="view.formModel" [typeMF]="'hover'"
-                cardCss="w-150px">
-              </codx-temp-full>  -->
-        <!-- <ng-template  #templatetree let-data>
-                <div class="d-flex align-items-center mb-2" #item>                  
-                  <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
-                </div>
-              </ng-template> -->
-
-        <!-- <codx-treeview id="tree" #tree [itemTemplate]="templatetree" [data]="listNodeMove"
-                    entityName="DM_FolderInfo" service="DM" textField="folderName" fieldCheck="hasChild"
-                    [enableCheck]=false idField="recID" parentIdField="parentId"
-                    (selectionChange)="onSelectionChanged($event, tree)" [autoLoad]="false" [isOutput]="true"
-                    [isLoadChild]="false">
-                </codx-treeview> -->
       </div>
-      <!-- <ng-template #templatetree let-data>
-                <div class="d-flex align-items-center mb-2" #item>
-                    <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
-                </div>
-            </ng-template>             -->
     </form>
   </ng-template>
   <ng-template #footer>

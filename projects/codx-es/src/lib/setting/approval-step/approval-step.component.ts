@@ -134,9 +134,12 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   saveStep() {
-    if (this.lstStep != this.lstOldData) {
+    if (this.isEdited) {
       this.esService.setApprovalStep(this.lstStep);
       this.esService.setLstDeleteStep(this.lstDeleteStep);
+    } else {
+      this.esService.setApprovalStep(null);
+      this.esService.setLstDeleteStep(null);
     }
   }
 
@@ -193,7 +196,7 @@ export class ApprovalStepComponent implements OnInit {
 
           if (i != -1) {
             this.lstStep.splice(i, 1);
-            this.isEdited == true;
+            this.isEdited = true;
           }
           if (approvalStep.recID && approvalStep.recID != null) {
             this.lstDeleteStep.push(approvalStep);
@@ -214,7 +217,7 @@ export class ApprovalStepComponent implements OnInit {
       if (res) {
         var model = new DialogModel();
         model.FormModel = res;
-        this.cfService.openForm(
+        this.dialog = this.cfService.openForm(
           PopupAddApprovalStepComponent,
           '',
           850,
@@ -226,8 +229,9 @@ export class ApprovalStepComponent implements OnInit {
         );
 
         this.dialog.closed.subscribe((res) => {
-          if (res != null) {
-            this.isEdited == true;
+          debugger;
+          if (res?.event) {
+            this.isEdited = true;
           }
         });
       }

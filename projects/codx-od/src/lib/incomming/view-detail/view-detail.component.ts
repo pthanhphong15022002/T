@@ -411,13 +411,14 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
             task.refType = this.view?.formModel.entityName;
             var vllControlShare = 'TM003' ;
             var vllRose = 'TM002' ;
+            var title = val?.data.customName
             let option = new SidebarModel();
             option.DataService = this.view?.dataService;
             option.FormModel = this.view?.formModel;
             option.Width = '800px';
             this.dialog = this.callfunc.openSide(
               AssignInfoComponent,
-              [task,vllControlShare,vllRose],
+              [task,vllControlShare,vllRose,title],
               option
             );
             this.dialog.closed.subscribe((e) => {
@@ -630,18 +631,17 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
       //Gửi duyệt 
       case "ODT201":
         {
-          debugger;
           this.api
           .execSv(
             this.view.service,
             'ERM.Business.CM',
             'DataBusiness',
             'ReleaseAsync',
-            [datas?.recID,"3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",this.view.formModel.entityName]
+            [datas?.recID,"3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",this.view.formModel.entityName,this.formModel.funcID,'<div>'+datas?.title+'</div>']
           ).subscribe((res2:any) =>
           {
             if(res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError)
-            console.log(res2)
+            //this.notifySvr.notify(res2?.msgCodeError)
           });
           break;
         }
