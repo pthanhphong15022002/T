@@ -159,8 +159,19 @@ export class ViewFileDialogComponent implements OnInit {
   }
 
   print() {
-    console.log(window);
-    window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
+   // console.log(window);
+   if (this.linkViewImage) 
+   {
+    const output = document.getElementById("output");
+    const img = document.createElement("img");
+    img.src = this.linkViewImage;
+    output.appendChild(img);        
+    const br = document.createElement("br");
+    output.appendChild(br);
+    window.print();
+   }
+   else 
+     window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
   }
 
   base64ToArrayBuffer(base64) {
@@ -206,10 +217,13 @@ export class ViewFileDialogComponent implements OnInit {
     this.access_token = this.auth.userValue.token;
     //alert(1);
     this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
-    setTimeout(() => {
-      (document.getElementById("frmFile") as HTMLFormElement).submit();
-      //$("#viewfiledalog").find("form")[0]["submit"]();
-    }, 100);
+    if (document.getElementById("frmFile") != null) {
+      setTimeout(() => {
+        (        
+            document.getElementById("frmFile") as HTMLFormElement).submit();
+            //$("#viewfiledalog").find("form")[0]["submit"]();
+      }, 100);
+    }
   }
 
   _animalOpen(name, num, callback?) {
