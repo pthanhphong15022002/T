@@ -24,6 +24,7 @@ export class ApprovalComponent implements OnInit , OnChanges , AfterViewInit
     @ViewChild('view') view!: ViewsComponent;
     @ViewChild('itemTemplate') template!: TemplateRef<any>;
     @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
+    funcID: any;
     views: Array<ViewModel> | any = [];
     button?: ButtonModel;
     gridViewSetup: any;
@@ -70,7 +71,6 @@ export class ApprovalComponent implements OnInit , OnChanges , AfterViewInit
     }
 
     valueChange(dt: any) {
-      debugger;
       var recID = null;
       if (dt?.data) {
         if(dt?.data[0])
@@ -88,6 +88,7 @@ export class ApprovalComponent implements OnInit , OnChanges , AfterViewInit
         recID = dt.transID
         this.dataItem = dt;
       };
+      this.funcID = this.dataItem?.functionID;
       this.getDtDis(recID);
     }
     getDtDis(id: any) {
@@ -108,18 +109,17 @@ export class ApprovalComponent implements OnInit , OnChanges , AfterViewInit
       this.cache
       .valueList("ES022")
       .subscribe((item) => {
-        debugger;
         this.dvlApproval = item?.datas[0];
         //this.ref.detectChanges();
       });
-      this.cache.functionList(funcID).subscribe((fuc) => {
+     /*  this.cache.functionList('ODT31').subscribe((fuc) => {
         debugger;
         this.cache
           .gridViewSetup(fuc?.formName, fuc?.gridViewName)
           .subscribe((grd) => {
             this.gridViewSetup = grd;
           });
-      });
+      }); */
       //formName: string, gridName: string
     }
     public setStyles(bg:any): any {

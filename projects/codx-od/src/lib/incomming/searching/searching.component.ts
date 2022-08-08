@@ -1,5 +1,6 @@
-import { Component, OnInit,  OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit,  OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { CacheService } from 'codx-core';
+import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { CodxOdService } from '../../codx-od.service';
 import { convertHtmlAgency, extractContent, getIdUser } from '../../function/default.function';
 @Component({
@@ -8,11 +9,15 @@ import { convertHtmlAgency, extractContent, getIdUser } from '../../function/def
 })
 
 export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
+
+  @ViewChild("view") view : CodxFullTextSearch;
   extractContent = extractContent;
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
   gridViewSetup: any;
   funcID = "ODT31";
+  service = "OD"
+  entityName = "OD_Dispatches"
   formModel : any = {};
   constructor(  
     private cache: CacheService,
@@ -48,5 +53,11 @@ export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
   onSelected(e:any)
   {
     alert(JSON.stringify(e));
+  }
+
+  testSearch()
+  {
+    this.view!.filter = {"AgencyName" : ["Bảo"]};
+    this.view.searchText();
   }
 }

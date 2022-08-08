@@ -17,7 +17,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   dataGroup = [];
   firstCbb = [];
   countCbb = 0;
-  filter = {};
+  filter : any = {} ;
   searchData:any;
   count = 0;
   txtSearch = "";
@@ -31,9 +31,16 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   activePage = 1;
   arrayPaging = [];
   hideN = false;
+  page = 1;
+
+  //template 
+  @Input() tempMenu : TemplateRef<any>;
+  @Input() service : string;
+  @Input() entityName : string;
+  //
+
   @Input() modeDropDown = false;
-  @Input() page = 1;
-  @Input() pageSize = 2;
+  @Input() pageSize = 7;
   @Input() widthLeft = 300;
   @Input() widthRight : any;
   @Input() centerTmp?: TemplateRef<any>;
@@ -56,9 +63,10 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
     if(!this.funcID)
       this.router.params.subscribe((params) => {
         this.funcID = params['funcID'];
-        if(this.funcID)     this.getGridViewSetup();
+        if(this.funcID) this.getGridViewSetup();
       });
-    this.getGridViewSetup();
+    if(!this.tempMenu)
+      this.getGridViewSetup();
     this.searchText();
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -174,13 +182,14 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   }
   searchText(changePage = false)
   {
+    debugger;
     if(changePage == false) this.page = 1;
-    this.api.execSv<any>("OD","OD", "DispatchesBusiness", "SearchFullTextAdvAsync",
+    this.api.execSv<any>(this.service,"CM", "DataBusiness", "SearchFullTextAdvAsync",
     {
       query: this.txtSearch,
       filter: this.filter,
       functionID:  this.funcID,
-      entityName: "OD_Dispatches",
+      entityName: this.entityName,
       page: this.page,
       pageSize: this.pageSize
     }).subscribe((item) => {
@@ -210,12 +219,11 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   }
   aaa(e:any)
   {
-    debugger;
   }
   pagingLayout(count:any)
   {
     this.arrayPaging= [];
-    this.pageTotal = Number((count / this.pageSize).toFixed(0));
+    this.pageTotal = Math.ceil(Number((count / this.pageSize)));
     if(this.pageTotal < this.pageDraw) this.pageDraw = this.pageTotal;
     this.pageStart = 0 ;
     this.pageEnd = this.pageDraw;
@@ -264,10 +272,9 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   fetch(type:any , data:any , request:any , refValue:any , cbb:any): Observable<any[]> 
   {
     let loadmore = false;
-    return this.api.execSv("OD","CM","DataBusiness","LoadDataCbxAsync",request).subscribe((item)=>{
+    return this.api.execSv(this.service,"CM","DataBusiness","LoadDataCbxAsync",request).subscribe((item)=>{
       if(item)
       {
-        debugger;
         var res = JSON.parse(item[0]);
         var result = [];
         var l = 0 ; if(data?.data.length>0 && type!="new") l = data?.data.length; 
@@ -293,21 +300,18 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
           this.dataGroup.push(data);
 
         }
-        //this.innerHTML(html , arrayCbb);
-
       }
     }) as any;
   }
   loadMore(data:any)
   {
-    debugger;
     if(data.isCbb)
     {
       let request= new DataRequest();
       request.comboboxName = data?.ref;
       request.page = data?.page+1;
-      request.pageSize = 5;
-      this.fetch("load",data,request,data?.refValue,data.cbb);
+      request.pageSize = 1;
+      this.fetch("load",data,request,data?.ref,data.cbb);
     }
     
   }
