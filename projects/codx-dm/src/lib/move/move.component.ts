@@ -283,11 +283,11 @@ export class MoveComponent implements OnInit {
           let index = folders.findIndex(d => d.recID.toString() === that.id);
           if (index != -1) {
             folders[index].folderName = that.fullName;
-            that.dmSV.nodeChange.next(folders[index]);
+            this.dmSV.nodeChange.next(folders[index]);
           }
-          that.dmSV.listFolder = folders;
+          this.dmSV.listFolder = folders;
           this.dmSV.ChangeData.next(true);
-          that.changeDetectorRef.detectChanges();
+          this.changeDetectorRef.detectChanges();
           this.dialog.close();
          // this.modalService.dismissAll();
         }
@@ -308,19 +308,19 @@ export class MoveComponent implements OnInit {
             this.folderService.copyFolder(that.id, res.data.folderName, "", 1, 1).subscribe(async item => {
               if (item.status == 0) {
                 // id = item.data.recID; 
-                that.dmSV.isTree = false;
-                that.dmSV.currentNode = '';
-                that.dmSV.folderId.next(item.data.parentId);
+              //  that.dmSV.isTree = false;
+                this.dmSV.currentNode = '';
+                this.dmSV.folderId.next(item.data.parentId);
                 var folders = this.dmSV.listFolder;
                 let index = folders.findIndex(d => d.recID.toString() === that.id);
                 if (index > -1) {
                   folders[index] = item.data;
                   that.dmSV.nodeChange.next(folders[index]);
                 }
-                that.dmSV.listFolder = folders;                    
-                that.dmSV.ChangeData.next(true);
+                this.dmSV.listFolder = folders;                    
+                this.dmSV.ChangeData.next(true);
               //  that.modalService.dismissAll();                      
-                that.changeDetectorRef.detectChanges();
+                this.changeDetectorRef.detectChanges();
                 this.dialog.close();
               }
               else {
@@ -340,31 +340,31 @@ export class MoveComponent implements OnInit {
     }
   }
  
-  setFullHtmlNode(folder, text) {
-    var item1 = '';
-    var item2 = '';
+  // setFullHtmlNode(folder, text) {
+  //   var item1 = '';
+  //   var item2 = '';
 
-    if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 =
-        '<img class="max-h-18px" src="../../../assets/codx/dms/folder.svg">';
-    else {
-      if (folder.icon.indexOf('.') == -1)
-        item1 = `<i class="${folder.icon}" role="presentation"></i>`;
-      else {
-        var path = `${this.path}/${folder.icon}`;
-        item1 = `<img class="max-h-18px" src="${path}">`;
-      }
-    }
+  //   if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
+  //     item1 =
+  //       '<img class="max-h-18px" src="../../../assets/codx/dms/folder.svg">';
+  //   else {
+  //     if (folder.icon.indexOf('.') == -1)
+  //       item1 = `<i class="${folder.icon}" role="presentation"></i>`;
+  //     else {
+  //       var path = `${this.path}/${folder.icon}`;
+  //       item1 = `<img class="max-h-18px" src="${path}">`;
+  //     }
+  //   }
 
-    if (!folder.read)
-      item2 = `<i class="icon-per no-permission" role="presentation"></i>`;
-    var fullText = `${item1}
-                    ${item2}
-                    <span class="mytree_node"></span>
-                    ${text}`;
+  //   if (!folder.read)
+  //     item2 = `<i class="icon-per no-permission" role="presentation"></i>`;
+  //   var fullText = `${item1}
+  //                   ${item2}
+  //                   <span class="mytree_node"></span>
+  //                   ${text}`;
 
-    return fullText;
-  }
+  //   return fullText;
+  // }
   
   onSelectionAddChanged($node, tree) {
     var id = $node.data.recID;
