@@ -550,7 +550,6 @@ export class PopupAddComponent implements OnInit {
   }
 
   addImage(files){
-    this.dmSV.fileUploadList = [];
     if(files && files.data.length > 0 ){
       let file = files.data[0];
         if(file.mimeType.indexOf("image") >= 0 ){
@@ -565,7 +564,6 @@ export class PopupAddComponent implements OnInit {
     }
   }
   addVideo(files){
-    this.dmSV.fileUploadList = [];
     if(files && files.data.length > 0 ){
       let file = files.data[0];
          if(file.mimeType.indexOf("video") >= 0)
@@ -583,10 +581,24 @@ export class PopupAddComponent implements OnInit {
   clickClosePopup(){
     this.dialogRef.close();
   }
+
+  fileCount(files){
+    if(this.isUpload == "image"){
+      this.addImage(files);
+    }
+    else{
+      this.addVideo(files);
+    }
+  }
+  isUpload:string = 'image'  // check upload imgae or video
   clickUploadImage(){
+    this.isUpload = "image";
+    this.changedt.detectChanges();
     this.codxATMImage.uploadFile();
   }
   clickUploadVideo(){
-    this.codxATMVideo.uploadFile();
+    this.isUpload = "video";
+    this.changedt.detectChanges();
+    this.codxATMImage.uploadFile();
   }
 }
