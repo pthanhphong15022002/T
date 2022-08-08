@@ -74,10 +74,11 @@ export class AssignInfoComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.getParam()
     this.task = {
       ...this.task,
       ...dt?.data[0],
-    };
+    }; 
     this.refID = this.task?.refID;
     this.refType = this.task?.refType;
     if (this.task?.taskID) this.taskParent = this.task;
@@ -156,7 +157,7 @@ export class AssignInfoComponent implements OnInit {
           this.listTodo.push(taskG);
         });
       }
-     
+     if(this.taskParent?.taskGroupID) this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
 
     this.changeDetectorRef.detectChanges();
@@ -175,10 +176,10 @@ export class AssignInfoComponent implements OnInit {
     if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
-      if (!this.task.endDate && this.task.startDate) {
-        if (this.task.estimated) {
+      if (!this.task?.endDate && this.task?.startDate) {
+        if (this.task?.estimated) {
           var timeEndDay =
-            this.task.startDate.getTime() + this.task.estimated * 3600000;
+            this.task?.startDate.getTime() + this.task?.estimated * 3600000;
           this.task.endDate = moment(new Date(timeEndDay)).toDate();
         } else
           this.task.endDate = moment(new Date(this.task.startDate))
@@ -187,9 +188,9 @@ export class AssignInfoComponent implements OnInit {
       }
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
-      if (this.task.startDate && this.task.endDate) {
+      if (this.task?.startDate && this.task?.endDate) {
         var time = (
-          (this.task.endDate.getTime() - this.task.startDate.getTime()) /
+          (this.task?.endDate.getTime() - this.task?.startDate.getTime()) /
           3600000
         ).toFixed(2);
         this.task.estimated = Number.parseFloat(time);
@@ -234,6 +235,31 @@ export class AssignInfoComponent implements OnInit {
     if (this.task.assignTo == null || this.task.assignTo == '') {
       this.notiService.notifyCode('TM011');
       return;
+    }
+    if (this.param?.ProjectControl == '2' && !this.task.projectID) {
+      this.notiService.notifyCode('TM028');
+      return;
+    }
+    if (
+      this.param?.LocationControl == '2' &&
+      (this.task.location == null || this.task?.location.trim() == '')
+    ) {
+      this.notiService.notifyCode('TM029');
+      return;
+    }
+    if (this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)) {
+      this.notiService.notifyCode('TM030');
+      return;
+    }
+    if (this.param?.DueDateControl == '1' && this.task.dueDate <= new Date()) {
+      this.notiService.notifyCode('TM031');
+      return;
+    }
+    if (this.task.taskGroupID) {
+      if (this.taskGroup?.checkListControl != '0' && this.listTodo.length == 0) {
+        this.notiService.notifyCode('TM032');
+        return;
+      }
     }
     if (this.isHaveFile)
       this.attachment.saveFiles();
@@ -503,8 +529,6 @@ export class AssignInfoComponent implements OnInit {
   }
 
   loadTodoByGroup(idTaskGroup) {
-    // if( this.countTodoByGroup>0)
-    // this.listTodo.slice(this.listTodo.length- this.countTodoByGroup, this.countTodoByGroup)
     this.api
       .execSv<any>(
         'TM',
@@ -546,6 +570,21 @@ export class AssignInfoComponent implements OnInit {
           this.param = param;
           this.taskType = param?.TaskType;
           //  this.paramModule = param;
+        }
+      });
+  }
+  logicTaskGroup(idTaskGroup) {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskGroupBusiness',
+        'GetAsync',
+        idTaskGroup
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.convertParameterByTaskGroup(res);
         }
       });
   }

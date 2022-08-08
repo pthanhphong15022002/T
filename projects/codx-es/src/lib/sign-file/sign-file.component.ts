@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  Injector,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -18,6 +19,7 @@ import {
   DialogRef,
   NotificationsService,
   SidebarModel,
+  UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
@@ -32,14 +34,16 @@ import { ViewDetailComponent } from './view-detail/view-detail.component';
   templateUrl: './sign-file.component.html',
   styleUrls: ['./sign-file.component.scss'],
 })
-export class SignFileComponent implements OnInit {
+export class SignFileComponent extends UIComponent {
   constructor(
+    private inject: Injector,
     private esService: CodxEsService,
     private df: ChangeDetectorRef,
     private notifySv: NotificationsService,
     private callfunc: CallFuncService,
     private activedRouter: ActivatedRoute
   ) {
+    super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
   @ViewChild('popup', { static: true }) popup;
@@ -50,7 +54,6 @@ export class SignFileComponent implements OnInit {
   @ViewChild('paneLeft') panelLeft: TemplateRef<any>;
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
-  @ViewChild('view') view: ViewsComponent;
 
   autoLoad = true;
   taskViewStt;
@@ -65,6 +68,8 @@ export class SignFileComponent implements OnInit {
   entity = 'ES_SignFiles';
   className = 'SignFilesBusiness';
   method = 'GetAsync';
+  idField = 'idField';
+
   dataSelected;
   SidebarModel;
 
@@ -75,12 +80,18 @@ export class SignFileComponent implements OnInit {
 
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
 
-  ngOnInit(): void {
+  onInit(): void {
     this.taskViewStt = '1';
     this.preStepNo = 0;
     this.button = {
       id: 'btnAdd',
     };
+    this.esService.getSFByUserID(['ADMIN', '5']).subscribe((res) => {
+      console.log('kq', res);
+    });
+    this.cache.functionList('EST021').subscribe((res) => {
+      console.log('funcList', res);
+    });
   }
 
   ngAfterViewInit(): void {

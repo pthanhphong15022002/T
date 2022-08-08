@@ -20,10 +20,8 @@ export class ViewTagComponent implements OnInit {
   listTag = [];
   views: Array<ViewModel> = [];
   tagName:string = "";
-  @ViewChild('listview') codxListView: CodxListviewComponent;
+  @ViewChild('listview') codxListView: any;
   @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
-  @ViewChild('panelRight') panelRight: TemplateRef<any>;
-  @ViewChild('panelRight') content: TemplateRef<any>;
 
   constructor(private api:ApiHttpService,
     private codxService:CodxService,
@@ -39,11 +37,10 @@ export class ViewTagComponent implements OnInit {
         sameData: true,
         model: {
           panelLeftRef: this.panelLeft,
-          panelRightRef: this.panelRight
         }
       },
     ];
-    this.codxListView.dataService.setPredicates(this.predicates,this.dataValues).subscribe();
+    // this.codxListView.dataService.setPredicates(this.predicates,this.dataValues).subscribe();
     this.changedt.detectChanges();
   }
 

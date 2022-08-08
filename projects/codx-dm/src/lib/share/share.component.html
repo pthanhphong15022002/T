@@ -1,0 +1,168 @@
+<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">
+  <ng-template #body>
+    <div class="offcanvas-wrapper">
+      <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center flex-grow-1 py-2 px-3 breadcrum-box mr-2">             
+              <app-custombreadcumb end="1" start="0" max="3"></app-custombreadcumb>
+              <span class="icon-keyboard_arrow_right icon-20"></span>
+              <span class="text-dark-75 font-weight-bold">{{fullName}}</span>
+          </div>          
+
+          <a (click)="copyPath()" matTooltip="copy link" alt="copy link"
+              class="btn btn-icon btn-md btn-light-primary">
+              <span class="icon-file_copy icon-20"></span>
+          </a>
+      </div>
+      <div class="request-to mt-4">
+          <div class="d-flex justify-content-between border-bottom mb-2 p-2">
+              <div class="d-flex align-items-top flex-grow-1">
+                  <div class="w-50px">Đến:</div>
+                  <div class="send-group">
+                      <ng-container *ngIf="toPermission != null && toPermission != null">
+                          <div *ngFor="let perm of toPermission; index as i;"
+                              class="d-flex align-items-center mr-4">
+                              <div class="symbol symbol-20 symbol-circle mr-2">                                 
+                                  <div
+                                      *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar8 else elsethenAvatar8">
+                                  </div>
+                                  <ng-template #thenAvatar8>
+                                      <img class="symbol symbol-30 symbol-circle"
+                                          src="../../../assets/demos/user/user-admin.svg">
+                                  </ng-template>
+                                  <ng-template #elsethenAvatar8>
+                                      <!-- <lv-image-viewer class="symbol symbol-30 symbol-circle"
+                                          [objectId]="perm.objectID" objectType="AD_Users"> </lv-image-viewer> -->
+                                  </ng-template>
+                              </div>
+                              <div class="text-dark-75">{{perm.objectName}}</div>
+                              <span (click)="removeUserRight(i, toPermission)"
+                                  class="icon-close icon-16 ml-2 text-danger"></span>
+                          </div>
+                      </ng-container>
+                  </div>
+              </div>
+              <div class="d-flex">
+                  <!-- <span class="icon-person_add_alt_1 text-dark-75 text-hover-primary icon-18"
+                      (click)="openRolePermission('share', 'to')"></span> -->
+              </div>
+          </div>
+          <div class="d-flex justify-content-between border-bottom mb-2 p-2">
+              <div class="d-flex align-items-top flex-grow-1">
+                  <div class="w-50px">Cc:</div>
+                  <div class="send-group">
+                      <ng-container *ngIf="ccPermission != null && ccPermission != null">
+                          <div *ngFor="let perm of ccPermission; index as i;"
+                              class="d-flex align-items-center mr-4">
+                              <div class="symbol symbol-20 symbol-circle mr-2">
+                                  <div
+                                      *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar9 else elsethenAvatar9">
+                                  </div>
+                                  <ng-template #thenAvatar9>
+                                      <img class="symbol symbol-30 symbol-circle"
+                                          src="../../../assets/demos/user/user-admin.svg">
+                                  </ng-template>
+                                  <ng-template #elsethenAvatar9>
+                                      <lv-image-viewer class="symbol symbol-30 symbol-circle"
+                                          [objectId]="perm.objectID" objectType="AD_Users"> </lv-image-viewer>
+                                  </ng-template>
+                              </div>
+                              <div class="text-dark-75">{{perm.objectName}}</div>
+                              <span (click)="removeUserRight(i, ccPermission)"
+                                  class="icon-close icon-16 ml-2 text-danger"></span>
+                          </div>
+                      </ng-container>
+                  </div>
+              </div>
+              <!-- <span class="icon-person_add_alt_1 text-dark-75 text-hover-primary icon-18"
+                  (click)="openRolePermission('share', 'cc')"></span> -->
+          </div>         
+      </div>
+      <div class="request-box mt-4">
+          <!-- <textarea id="shareContent" [(ngModel)]='shareContent' name="shareContent"
+              (keydown)="doShareTextareaValueChange($event)" (change)="doShareTextareaValueChange($event)"
+              class="form-control" rows="6" placeholder="Nhập nội dung..."></textarea> -->
+      </div>
+      <div class="d-flex align-items-center justify-content-between share-item mt-2">
+          <div class="text-dark-75">Cho phép chia sẻ lại cho người khác?</div>
+          <div class="d-flex">
+              <span class="switch switch-sm mr-2">
+                  <label>
+                      <!-- <input #checkShareRight1 type="checkbox" [checked]="share" id="checkShareRight1"
+                          (change)="onSaveRightChanged(checkShareRight1.checked, 'share')"> -->
+                      <span></span>
+                  </label>
+              </span>
+          </div>
+      </div>
+      <div class="d-flex align-items-center justify-content-between share-item">
+          <div class="text-dark-75">Cho phép dowlnload hoặc in tài liệu?</div>
+          <div class="d-flex">
+              <span class="switch switch-sm mr-2">
+                  <label>
+                      <!-- <input #checkDownloadRight1 type="checkbox" [checked]="download" id="checkDownloadRight1"
+                          (change)="onSaveRightChanged(checkDownloadRight1.checked, 'download')"> -->
+                      <span></span>
+                  </label>
+              </span>
+          </div>
+      </div>
+      <div class="text-primary font-weight-bold mt-4">Giới hạn thời gian chia sẻ</div>
+      <div class="row mt-3">
+          <div class="col-xl-6 col-lg-6 col-md-6">
+              <div class="form-group row">
+                  <label class="col-4 pr-0 col-form-label">Từ ngày</label>
+                  <div class="col-8">
+                      <!-- <lvInput datatype="datetime" dataformat="d" (valueChange)="changeDate($event, 'startDate')"
+                          [value]="startDate"></lvInput>                      -->
+                  </div>
+              </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6">
+              <div class="form-group row">
+                  <label class="col-4 pr-0 col-form-label">Đến ngày</label>
+                  <div class="col-8">
+                      <!-- <lvInput datatype="datetime" dataformat="d" (valueChange)="changeDate($event, 'endDate')"
+                          [value]="endDate"></lvInput>                     -->
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="offcanvas-footer">
+      <div class="d-flex align-items-center justify-content-between">
+          <div class="checkbox-inline">
+              <ng-container *ngIf="this.type === 'file'">              
+                <codx-input 
+                class="test-check"
+                type="checkbox" 
+                style="width:100%"   
+                [checked]="sentemail"  
+                field="sentemail"                      
+                (valueChange)="onSaveRightChanged($event, 'sentemail')"                                                            
+                ></codx-input>   
+                <span></span>                      
+                <codx-label name="lblSendEmail" [formModel]="formModel" default="Gửi mail" class="ms-1 fw-bold"></codx-label>
+            
+                <codx-input 
+                class="test-check"
+                type="checkbox" 
+                style="width:100%"   
+                [checked]="postblog"  
+                field="postblog"                      
+                (valueChange)="onSaveRightChanged($event, 'postblog')"                                                            
+                ></codx-input>   
+                <span></span>
+                <codx-label name="lblCreatePost" [formModel]="formModel" default="Tạo bài viết" class="ms-1 fw-bold"></codx-label>                      
+                
+              </ng-container>
+          </div>
+          <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
+            <codx-label name="lblSend" [formModel]="formModel" default="Gửi" class="ms-1 fw-bold"></codx-label>
+          </button>
+      </div>
+  </div>
+  </ng-template>
+</codx-form>
