@@ -295,7 +295,7 @@ export class PopupAddUpdate implements OnInit {
 
   valueChangeTag(e) {
     if (e) {
-      this.note.tag = e.data;
+      this.note.tags = e.data;
     }
   }
 

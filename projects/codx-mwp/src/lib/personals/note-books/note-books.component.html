@@ -8,11 +8,12 @@
                 <codx-label name="lblSortNoteBook" formName="NoteBooks" default="Sắp xếp"></codx-label>
             </div>
             <div class="text-primary">
-                <codx-label name="lblDateUpdate" formName="NoteBooks" default="Ngày cập nhật"></codx-label>
+                {{gridViewSetup?.Title?.headerText}}
             </div>
             <div class="mx-2 text-gray-400">|</div>
-            <div class="btn btn-icon btn-white me-1">
-                <i class="icon-sort_A-Z icon-18" (click)="sortNoteBooks()"></i>
+            <div class="btn btn-icon btn-white me-1 btn btn-icon btn-active-light-primary position-relative">
+                <i class="icon-sort_A-Z icon-18" (click)="sortByDESC()" *ngIf="checkDESC == false"></i>
+                <i class="icon-sort_Z-A icon-18" (click)="sortByASC()" *ngIf="checkDESC == true"></i>
             </div>
             <div id="kt_drawer_addNoteBook_toggle" (click)="formAddNoteBook()">
                 <button class="btn btn-primary" type="button" id="dropdownMenuButton1" aria-expanded="false">

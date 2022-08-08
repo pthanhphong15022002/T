@@ -13,6 +13,7 @@ import {
   CallFuncService,
   DialogData,
   DialogRef,
+  FormModel,
 } from 'codx-core';
 import { Device } from '../../../booking-room/popup-add-booking-room/popup-add-booking-room.component';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -36,8 +37,10 @@ export class PopupAddRoomsComponent implements OnInit {
   isAfterRender = false;
   tmplstDevice = [];
   lstDeviceRoom = [];
+  formModel: FormModel;
   headerText = 'Thêm mới phòng họp';
   subHeaderText = 'Thêm mới phòng họp';
+
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
@@ -48,6 +51,7 @@ export class PopupAddRoomsComponent implements OnInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
+    this.formModel = this.dialog.formModel;
   }
 
   ngOnInit(): void {
@@ -55,10 +59,12 @@ export class PopupAddRoomsComponent implements OnInit {
     this.cacheSv.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
+        console.log(item)
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
         this.lstDeviceRoom.push(device);
+
       });
       this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
     });
@@ -69,7 +75,6 @@ export class PopupAddRoomsComponent implements OnInit {
       )
       .then((res) => {
         this.CbxName = res;
-        console.log('Cbx', this.CbxName);
       });
   }
 
@@ -134,8 +139,9 @@ export class PopupAddRoomsComponent implements OnInit {
     }
     this.dialogAddRoom.value.resourceType = '1';
 
-    this.dialog.dataService.save((opt: any) => this.beforeSave(opt)).subscribe();
-
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe();
   }
 
   beforeSave(option: any) {

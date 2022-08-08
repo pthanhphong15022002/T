@@ -45,4 +45,8 @@ export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
       });
     });
   }
+  onSelected(e:any)
+  {
+    alert(JSON.stringify(e));
+  }
 }

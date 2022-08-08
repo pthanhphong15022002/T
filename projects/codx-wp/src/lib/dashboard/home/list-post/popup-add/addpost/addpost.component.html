@@ -130,8 +130,11 @@
             </codx-input>
         </div>
         <div>
-            <codx-file #codxFileEdit [lstFile]="dataEdit.files" [edit]='true' (addFile)="addFile($event)"
-                (removeFile)="removeFile($event)"></codx-file>
+            <codx-file #codxFileEdit 
+            [objectID]="dataEdit.recID" 
+            [edit]='true' 
+            (addFile)="addFile($event)"
+            (removeFile)="removeFile($event)"></codx-file>
         </div>
         <div class="d-none">
             <codx-attachment #atmEdit 

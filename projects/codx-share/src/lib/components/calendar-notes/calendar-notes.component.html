@@ -172,7 +172,7 @@
             </div>
             <div class="show-event-check">
                 <codx-input type="checkbox" field="WP_Notes_ShowEvent"
-                    [checked]="WP_NotesParam?.ShowEvent == 'true' || WP_NotesParam?.ShowEvent == '1'"
+                    [checked]="checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'"
                     labelPosition="Before" [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
@@ -190,7 +190,7 @@
             </div>
             <div class="show-event-check">
                 <codx-input type="checkbox" field="TM_Tasks_ShowEvent"
-                    [checked]="TM_TasksParam?.ShowEvent == 'true' || TM_TasksParam?.ShowEvent == '1'"
+                    [checked]="checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'"
                     labelPosition="Before" [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>

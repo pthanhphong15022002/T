@@ -137,7 +137,7 @@ export class CalendarNotesComponent
             this.WP_Notes = this.WP_Notes.filter((x) => x.recID != data.recID);
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
-          } 
+          }
           this.setEventWeek();
           var today: any = document.querySelector(
             ".e-footer-container button[aria-label='Today']"
@@ -151,7 +151,13 @@ export class CalendarNotesComponent
     });
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    this.lstView.dataService.requestEnd = (t, data) => {
+      if (t == 'loaded') {
+        console.log('check data', data);
+      }
+    };
+  }
 
   requestEnded(evt: any) {
     this.view.currentView;

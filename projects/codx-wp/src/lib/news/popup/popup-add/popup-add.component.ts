@@ -39,8 +39,8 @@ export class PopupAddComponent implements OnInit {
   recevierName = "";
 
   fileUpload:any[] = [];
-  fileImage:any[] = [];
-  fileVideo:any[] = [];
+  fileImage:any = null;
+  fileVideo:any = null;
   myPermission:Permission = null;
   apprPermission:Permission = null;
   shareIcon:string = "";
@@ -81,8 +81,8 @@ export class PopupAddComponent implements OnInit {
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
-  @ViewChild('codxAttachment') codxAttachment: AttachmentComponent;
-  @ViewChild('codxATMVideo') codxAttachmentVideo: AttachmentComponent;
+  @ViewChild('codxATMImage') codxATMImage: AttachmentComponent;
+  @ViewChild('codxATMVideo') codxATMVideo: AttachmentComponent;
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
@@ -97,7 +97,7 @@ export class PopupAddComponent implements OnInit {
   ) {
 
     this.newsType = dd.data.type;
-    if (this.newsType != "1") {
+    if (this.newsType != this.NEWSTYPE.POST) {
       this.isVideo = false;
     }
     this.dialogRef = dialogRef;
@@ -162,6 +162,54 @@ export class PopupAddComponent implements OnInit {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
   clickInsertNews() {
+    if(!this.formGroup.controls['Category'].value){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = Util.stringFormat(mssg.defaultName,"Phân loại");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
+    if(!this.formGroup.controls['Subject'].value){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = Util.stringFormat(mssg.defaultName,"Tiêu đề");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
+    if(!this.formGroup.controls['SubContent'].value){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = Util.stringFormat(mssg.defaultName,"Mô tả");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
+    if(!this.formGroup.controls['Contents'].value){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = Util.stringFormat(mssg.defaultName,"Nội dung");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
+    if(this.fileUpload.length == 0){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = "";
+          if(this.newsType == this.NEWSTYPE.POST)
+             mssgCode = Util.stringFormat(mssg.defaultName,"Hình ảnh");
+          else mssgCode = Util.stringFormat(mssg.defaultName,"Hình ảnh/Video");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
     let objNews = new WP_News();
     objNews = this.formGroup.value;
     objNews.newsType = this.newsType;
@@ -185,21 +233,22 @@ export class PopupAddComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           let data = res;
-          if(this.fileImage.length > 0){
-          this.codxAttachment.objectId = data.recID;
-            this.dmSV.fileUploadList = [...this.fileImage];
-            this.codxAttachment.saveFilesObservable().subscribe();
+          if(this.fileUpload.length > 0){
+            this.codxATMImage.objectId = data.recID;
+            this.dmSV.fileUploadList = [...this.fileUpload];
+            this.codxATMImage.saveFilesObservable().subscribe(
+              (res2:any) => {
+                if(res2){
+                  this.initForm();
+                  this.shareControl = this.SHARECONTROLS.EVERYONE;
+                  this.notifSV.notifyCode('E0026');
+                  this.dialogRef.close();
+                  this.insertWPComment(data);
+                }
+              }
+            );
           }
-          if(this.fileVideo.length > 0){
-            this.codxAttachmentVideo.objectId = data.recID;
-            this.dmSV.fileUploadList = [...this.fileVideo];
-            this.codxAttachmentVideo.saveFilesObservable().subscribe();
-          }
-          this.initForm();
-          this.shareControl = this.SHARECONTROLS.EVERYONE;
-          this.notifSV.notifyCode('E0026');
-          this.dialogRef.close();
-          this.insertWPComment(data);
+          
         }
       });
   }
@@ -256,8 +305,6 @@ export class PopupAddComponent implements OnInit {
     this.formGroup.patchValue(obj);
     this.changedt.detectChanges();
   }
-  
-
   eventApply(event: any) {
     if (!event) {
       return;
@@ -502,12 +549,13 @@ export class PopupAddComponent implements OnInit {
     }
   }
 
-  addImage(file){
-    this.dmSV.fileUploadList = [];
-    if(file && file.data.length > 0 ){
-        if(file.data[0].mimeType.indexOf("image") >= 0 ){
-          file.data[0]['referType'] = this.FILE_REFERTYPE.IMAGE;
-          this.fileImage = [...file.data];
+  addImage(files){
+    if(files && files.data.length > 0 ){
+      let file = files.data[0];
+        if(file.mimeType.indexOf("image") >= 0 ){
+          file['referType'] = this.FILE_REFERTYPE.IMAGE;
+          this.fileImage = file;
+          this.fileUpload.push(file);
           this.changedt.detectChanges();
         }
         else {
@@ -515,13 +563,14 @@ export class PopupAddComponent implements OnInit {
         }
     }
   }
-  addVideo(file){
-    this.dmSV.fileUploadList = [];
-    if(file && file.data.length > 0 ){
-         if(file.data[0].mimeType.indexOf("video") >= 0)
+  addVideo(files){
+    if(files && files.data.length > 0 ){
+      let file = files.data[0];
+         if(file.mimeType.indexOf("video") >= 0)
         {
-          file.data[0]['referType'] = this.FILE_REFERTYPE.VIDEO;
-          this.fileVideo = [...file.data];
+          file['referType'] = this.FILE_REFERTYPE.VIDEO;
+          this.fileVideo = file;
+          this.fileUpload.push(file);
           this.changedt.detectChanges();
         }
         else{
@@ -531,5 +580,25 @@ export class PopupAddComponent implements OnInit {
   }
   clickClosePopup(){
     this.dialogRef.close();
+  }
+
+  fileCount(files){
+    if(this.isUpload == "image"){
+      this.addImage(files);
+    }
+    else{
+      this.addVideo(files);
+    }
+  }
+  isUpload:string = 'image'  // check upload imgae or video
+  clickUploadImage(){
+    this.isUpload = "image";
+    this.changedt.detectChanges();
+    this.codxATMImage.uploadFile();
+  }
+  clickUploadVideo(){
+    this.isUpload = "video";
+    this.changedt.detectChanges();
+    this.codxATMImage.uploadFile();
   }
 }
