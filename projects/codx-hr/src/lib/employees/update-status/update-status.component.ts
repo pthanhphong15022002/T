@@ -23,6 +23,7 @@ export class UpdateStatusComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.data = dt?.data;
+    this.employee = this.data;
     this.dialog = dialog;
     this.funcID = this.data.funcID
   }
@@ -33,6 +34,8 @@ export class UpdateStatusComponent implements OnInit {
   beforeSave(op: any) {
     var data = [];
     op.method = 'UpdateStatusAsync';
+    op.methodName = 'UpdateStatusAsync';
+
     data = [
       this.employee,
     ];
@@ -42,11 +45,9 @@ export class UpdateStatusComponent implements OnInit {
 
   updateStatus() {
     this.api
-      .call("ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", {
-        employeeID: this.employStatus.employeeID,
-        status: this.employStatus.status,
-      })
-      .subscribe((res) => { });
+      .execSv<any>("HR","ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", this.employee)
+      .subscribe(
+      );
     // if (this.employStatus.status == "90") {
     //   this.view.removeHandler(this.employStatus, "employeeID");
     // } else {
@@ -56,7 +57,6 @@ export class UpdateStatusComponent implements OnInit {
   }
 
   valueChange(e) {
-    this.employStatus[e.field] = e.data.value;
-    this.employStatus.statusName = e.data.text;
+    this.employee.status = e.data;
   }
 }

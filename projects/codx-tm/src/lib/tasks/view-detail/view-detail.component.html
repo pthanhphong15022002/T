@@ -50,7 +50,7 @@
                 </div>
               </div>
               <div class="d-status flex">
-                <div *ngIf="itemSelected?.extendStatus!=null &&itemSelected?.extendStatus!= '0' && vllExtendStatus" class="badge badge-danger me-2 label-status"
+                <div *ngIf="itemSelected?.extendStatus!=null &&itemSelected?.extendStatus>='3' && vllExtendStatus" class="badge badge-danger me-2 label-status"
                   [style.border-color]="
                     (itemSelected?.extendStatus  | vll: vllExtendStatus:'textColor' | async) +
                     '30'
@@ -63,7 +63,7 @@
                   {{itemSelected?.extendStatus| vll: vllExtendStatus:"text" | async }}
                 </div>
 
-                <div *ngIf="itemSelected?.approveStatus!=null && itemSelected?.approveStatus!='0' &&  itemSelected?.approveStatus!='1' && vllApproveStatus"
+                <div *ngIf="itemSelected?.approveStatus!=null && itemSelected?.approveStatus>='2' && vllApproveStatus"
                   class="badge badge-danger me-2 label-status" [style.border-color]="
                     (itemSelected?.approveStatus  | vll: vllApproveStatus:'textColor' | async) +
                     '30'

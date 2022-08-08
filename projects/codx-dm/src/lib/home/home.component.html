@@ -23,12 +23,12 @@
       class="d-flex align-items-center px-3 pt-3 pb-2"
       #item
     >
-      <div [innerHTML]="setFullHtmlNode(data, data.folderName)"></div>
+      <div [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
     </div>
   </ng-template>
   <ng-template #context>
     <div class="d-flex align-items-center px-3 pt-2 pb-1">
-      <div [innerHTML]="setFullHtmlNode(data, '')"></div>
+      <div [innerHTML]="dmSV.setFullHtmlNode(data, '')"></div>
       <codx-temp-full
         class="float-start"
         imgCss="me-3 cursor-pointer"

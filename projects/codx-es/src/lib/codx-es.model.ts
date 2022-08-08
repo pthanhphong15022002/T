@@ -2,7 +2,7 @@ export class File {
   recID: string;
   fileID: string;
   fileName: string;
-  eSign: boolean;
+  eSign: boolean = false;
   areas: object;
   comment: string;
   createdOn: Date;

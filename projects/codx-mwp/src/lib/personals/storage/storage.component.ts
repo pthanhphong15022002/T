@@ -57,6 +57,8 @@ export class StorageComponent
   dialog!: DialogRef;
   moreFuncs: Array<ButtonModel> = [];
   listStorage = [];
+  checkDESC = false;
+  gridViewSetup: any = [];
 
   @ViewChild('lstCardStorage') lstCardStorage: CodxCardCenterComponent;
   @ViewChild('lstStorage') lstStorage: AddUpdateStorageComponent;
@@ -79,6 +81,11 @@ export class StorageComponent
     this.dataValue = this.user?.userID;
     this.route.params.subscribe((params) => {
       this.funcID = params['funcID'];
+    });
+    this.cache.gridViewSetup('Storages', 'grvStorages').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
     });
   }
 
@@ -220,14 +227,19 @@ export class StorageComponent
     this.checkFormComment = false;
   }
 
-  sortStorage() {
+  sortByDESC() {
     this.listView.dataService.data = this.listView.dataService.data.sort(
-      function (a, b) {
-        var dateA = new Date(a.createdOn).toLocaleDateString();
-        var dateB = new Date(b.createdOn).toLocaleDateString();
-        return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
-      }
+      (a, b) => b.title.localeCompare(a.title)
     );
     this.detectorRef.detectChanges();
+    this.checkDESC = true;
+  }
+
+  sortByASC() {
+    this.listView.dataService.data = this.listView.dataService.data.sort(
+      (a, b) => a.title.localeCompare(b.title)
+    );
+    this.detectorRef.detectChanges();
+    this.checkDESC = false;
   }
 }

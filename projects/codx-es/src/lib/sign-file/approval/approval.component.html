@@ -53,13 +53,16 @@
                 (click)="changeShowThumbnailState()"
               ></e-item>
               <e-item
+                [disabled]="cannotAct"
                 prefixIcon="icon-skip_previous icon-20"
                 (click)="pdfviewerControl?.navigation?.goToFirstPage()"
+                [disabled]="cannotAct"
               >
               </e-item>
               <e-item
                 prefixIcon="icon-navigate_before icon-20"
                 (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()"
+                [disabled]="cannotAct"
               >
               </e-item>
               <e-item
@@ -69,13 +72,15 @@
               <e-item
                 prefixIcon="icon-navigate_next icon-20"
                 (click)="pdfviewerControl?.navigation?.goToNextPage()"
+                [disabled]="cannotAct"
               >
               </e-item>
-              <e-item
-                prefixIcon="icon-skip_next icon-20"
-                (click)="pdfviewerControl?.navigation?.goToLastPage()"
+              <!-- <e-item
+                prefixIcon="icon-check-correct icon-20"
+                (click)="renderQRFile()"
+                [disabled]="cannotAct"
               >
-              </e-item>
+              </e-item> -->
             </e-items>
           </ejs-toolbar>
         </div>
@@ -95,7 +100,11 @@
         >
           <ejs-toolbar>
             <e-items>
-              <e-item prefixIcon="e-zoom-out" (click)="clickZoom('out')">
+              <e-item
+                prefixIcon="e-zoom-out"
+                (click)="clickZoom('out')"
+                [disabled]="cannotAct"
+              >
               </e-item>
             </e-items>
           </ejs-toolbar>
@@ -108,14 +117,27 @@
           ></ejs-dropdownlist>
           <ejs-toolbar>
             <e-items>
-              <e-item prefixIcon="e-zoom-in" (click)="clickZoom('in')">
+              <e-item
+                prefixIcon="e-zoom-in"
+                (click)="clickZoom('in')"
+                [disabled]="cannotAct"
+              >
               </e-item>
             </e-items>
           </ejs-toolbar>
           <ejs-toolbar>
             <e-items>
-              <e-item prefixIcon="e-print" (click)="clickPrint()"> </e-item>
-              <e-item prefixIcon="e-download" (click)="clickDownload()">
+              <e-item
+                prefixIcon="e-print"
+                (click)="clickPrint($event)"
+                [disabled]="cannotAct"
+              >
+              </e-item>
+              <e-item
+                prefixIcon="e-download"
+                (click)="clickDownload()"
+                [disabled]="cannotAct"
+              >
               </e-item>
               <e-item
                 [prefixIcon]="
@@ -140,12 +162,14 @@
           [enableAnnotationToolbar]="false"
           [enableThumbnail]="true"
           (created)="onCreated($event)"
+          (documentUnload)="changeCanActState(true)"
           (annotationAdd)="addAnnoEvent($event)"
           (annotationMove)="resetTime($event)"
           (annotationRemove)="removeAnnot($event)"
           (annotationResize)="resetTime($event)"
           (annotationSelect)="selectedAnnotation($event)"
           (annotationPropertiesChange)="resetTime($event)"
+          (printEnd)="cancelPrint($event)"
           (documentLoad)="loadingAnnot($event)"
           (pageChange)="pageChange($event)"
           [zoomValue]="zoomValue"

@@ -7,8 +7,8 @@
     <div class="form-group row mt-3 pb-5">
       <codx-img #imageUpload class="symbol symbol-120 symbol-circle me-2 image-inpt-wrapper fullImage" [width]="150"
         funcId="AD006" [objectId]="adUser.userID" [objectName]="adUser.userName" objectType="AD_Users"
-        [isAllowEdit]=true data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
-        data-kt-menu-flip="bottom" [updateDirect]="false">
+        data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
+        data-kt-menu-flip="bottom" [isAllowEdit]="true">
       </codx-img>
     </div>
     <div class="form-group row mt-3">
@@ -19,10 +19,10 @@
         </codx-input>
       </div>
       <div class="form-group col-6">
-        <codx-label fiedName="EmployeeID" formName="Users" gridViewName="grvUsers" default="Nhân viên">
+        <codx-label fiedName="EmployeeID" formName="Users" gridViewName="grvUsers">
         </codx-label>
         <codx-input type="combobox" refValue="EmployeeUser" [disabled]="readOnly" field="employeeID"
-          [crrValue]="adUser.employeeID" (valueChange)="valueEmp($event)" [multiple]="false" loadFull="true">
+          [crrValue]="employeeID" (valueChange)="valueEmp($event)" [multiple]="false" loadFull="true">
         </codx-input>
       </div>
     </div>
@@ -30,7 +30,7 @@
     <div class="form-group mt-3">
       <codx-label name="UserName" formName="Users" gridViewName="grvUsers" default="Tên người dùng">
       </codx-label>
-      <codx-input type="text" field="userName" [crrValue]="adUser.userName" (valueChange)="valueChange($event)">
+      <codx-input type="text" field="userName" [crrValue]="userName" (valueChange)="valueChangeU($event)">
       </codx-input>
     </div>
     <div class="form-group row mt-3">
@@ -44,20 +44,20 @@
       <codx-label fiedName="BUID" formName="Users" gridViewName="grvUsers" default="Bộ phận">
       </codx-label>
       <codx-input type="combobox" field="buid" [crrValue]="adUser.buid" refValue="BusinessUnits"
-        (valueChange)="valueBU($event)" [multiple]="false" loadFull="true">
+        (valueChange)="valueBU($event)">
       </codx-input>
     </div>
     <div class="form-group row mt-3">
       <div class="form-group col-6">
         <codx-label fiedName="Email" formName="Users" gridViewName="grvUsers" default="Email">
         </codx-label>
-        <codx-input field="email" type="text" [crrValue]="adUser.email" (valueChange)="valueChange($event)">
+        <codx-input field="email" type="text" [crrValue]="email" (valueChange)="valueChangeM($event)">
         </codx-input>
       </div>
       <div class="form-group col-6">
         <codx-label fiedName="Mobile" formName="Users" gridViewName="grvUsers" default="Phone">
         </codx-label>
-        <codx-input type="text" field="mobile" [crrValue]="adUser.mobile" (valueChange)="valueChange($event)">
+        <codx-input type="text" field="mobile" [crrValue]="mobile" (valueChange)="valueChangeP($event)">
         </codx-input>
       </div>
     </div>

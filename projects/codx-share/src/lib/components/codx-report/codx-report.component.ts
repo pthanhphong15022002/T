@@ -1,5 +1,5 @@
 /// <reference types="@boldreports/types/reports.all" />
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Router, Params } from '@angular/router';
 import { BoldReportDesignerComponent } from '@boldreports/angular-reporting-components/reportdesigner.component';
 import { BoldReportViewerComponent } from '@boldreports/angular-reporting-components/reportviewer.component';
@@ -10,13 +10,13 @@ import { BoldReportViewerComponent } from '@boldreports/angular-reporting-compon
   templateUrl: './codx-report.component.html',
   styleUrls: ['./codx-report.component.scss']
 })
-export class CodxReportComponent implements OnInit, AfterViewInit {
+export class CodxReportComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('designer') designerInst!: BoldReportDesignerComponent;
   @ViewChild('viewer') viewer!: BoldReportViewerComponent;
   @Input() isViewMode: boolean = true;
   @Input() showToolbar: boolean = true;
-  @Input() parameters: any = [];
-  @Input() paramRequest: any = {};
+  @Input() print: boolean = false;
+  @Input() parameters: any = {};
   @Input() reportUUID: any = '';
   @Input() locale!: string;
   @Input() serviceDesignUrl: string = 'http://localhost:9000/api/ReportDesigner';
@@ -25,10 +25,9 @@ export class CodxReportComponent implements OnInit, AfterViewInit {
   @Input() toolbarViewSettings: any;
   public isAdmin = true;
   protected changeDetectorRef!: ChangeDetectorRef;
-  constructor() {
-    this.paramRequest.name = "Tèo";
-    this.paramRequest.address = "HCM, VN";
-    this.paramRequest.age = 17;
+  constructor(
+  ) {
+
     this.serviceViewUrl = 'http://localhost:9000/api/ReportViewer';
     this.toolbarViewSettings = {
       showToolbar: this.showToolbar,
@@ -63,8 +62,15 @@ export class CodxReportComponent implements OnInit, AfterViewInit {
          ~ej.ReportDesigner.ToolbarItems.Open
       }
     }
-    this.parameters = [this.paramRequest];
+
     //this.reportUUID = '3cdcde9d-8d64-ec11-941d-00155d035518';
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(Object.keys(this.parameters).length ==0){
+    //   this.parameters.name = "Tèo";
+    // this.parameters.address = "HCM, VN";
+    // this.parameters.age = 17;
+    }
   }
   ngOnInit(): void {
     if(!this.locale){

@@ -128,48 +128,51 @@
         </ng-template>
       </ngb-carousel>
     </div>
-    <div class="row" *ngIf="lstGroup">
+    <div class="row">
       <ng-container *ngIf="category == CATEGORY.HOME;else grCategory">
-        <ng-container *ngFor="let grItem of lstGroup | keyvalue">
-          <div class="row">
-            <div>
-              <span class="fw-bolder fs-5">{{grItem.key | vll:'WP002':'text' | async}}</span>
-            </div>
-            <div *ngFor="let item of grItem.value" (click)="clickViewDeital(item)" class="row my-4">
-              <div class="col-2">
-                <codx-img [width]="180" [cssClass]="'image-125 w-100'" imageType="square" [objectId]="item.recID"
-                  objectType="WP_News"></codx-img>
+        <ng-container *ngIf="lstGroup">
+          <ng-container *ngFor="let grItem of lstGroup | keyvalue">
+            <div class="row">
+              <div>
+                <span class="fw-bolder fs-5">{{grItem.key | vll:'WP002':'text' | async}}</span>
               </div>
-              <div class="col-10">
-                <codx-temp-full [resourceObjType]="entityName" imageType="square" cardCss="h-125px"
-                  [title]="item.subject" [desc]="item.subContent" [date]="item.createdOn" [bookmark]="false">
-                </codx-temp-full>
+              <div *ngFor="let item of grItem.value" (click)="clickViewDeital(item)" class="row my-4">
+                <div class="col-2">
+                  <codx-img [width]="180" [cssClass]="'image-125 w-100'" imageType="square" [objectId]="item.recID"
+                    objectType="WP_News"></codx-img>
+                </div>
+                <div class="col-10">
+                  <codx-temp-full [resourceObjType]="entityName" imageType="square" cardCss="h-125px"
+                    [title]="item.subject" [desc]="item.subContent" [date]="item.createdOn" [bookmark]="false">
+                  </codx-temp-full>
+                </div>
               </div>
             </div>
-          </div>
-          
+          </ng-container>
         </ng-container>
       </ng-container>
       <ng-template #grCategory>
-        <div class="row">
-          <span class="fw-bolder fs-5">
-            <codx-label [formModel]="codxView.formModel" name="lblHeaderGroup" default="Tin cũ hơn"></codx-label>
-          </span>
-        </div>
-        <ng-container *ngFor="let item of lstGroup">
-          <div (click)="clickViewDeital(item)" class="row my-4">
-            <div class="col-2">
-              <codx-img [width]="180" [cssClass]="'image-150 w-100'" imageType="square" [objectId]="item.recID"
-                objectType="WP_News"></codx-img>
-            </div>
-            <div class="col-10">
-              <div class="fs-5 mt-2 fw-bolder">{{item.subject}}</div>
-              <div class="text-gray-700 mt-1">
-                {{item.subContent | maxlenght:500}}
-              </div>
-              <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
-            </div>
+        <ng-container *ngIf="lstGroup.length > 0">
+          <div class="row">
+            <span class="fw-bolder fs-5">
+              <codx-label [formModel]="codxView.formModel" name="lblHeaderGroup" default="Tin cũ hơn"></codx-label>
+            </span>
           </div>
+          <ng-container *ngFor="let item of lstGroup">
+            <div (click)="clickViewDeital(item)" class="row my-4">
+              <div class="col-2">
+                <codx-img [width]="180" [cssClass]="'image-150 w-100'" imageType="square" [objectId]="item.recID"
+                  objectType="WP_News"></codx-img>
+              </div>
+              <div class="col-10">
+                <div class="fs-5 mt-2 fw-bolder">{{item.subject}}</div>
+                <div class="text-gray-700 mt-1">
+                  {{item.subContent | maxlenght:500}}
+                </div>
+                <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
+              </div>
+            </div>
+          </ng-container>
         </ng-container>
       </ng-template>
     </div>
@@ -224,20 +227,4 @@
   <div class="text-center">
     <img style="max-width:700px" src="../assets/demos/svg/card-preview2.png" />
   </div>
-</ng-template>
-<ng-template #listGroup let-item>
-  <div (click)="clickViewDeital(item)" class="row my-2">
-    <div class="col-2">
-      <codx-img [width]="180" [cssClass]="'image-180 w-100'" imageType="square" [objectId]="item.recID"
-        objectType="WP_News"></codx-img>
-    </div>
-    <div class="col-10">
-      <div class="fs-5 mt-2 fw-bolder">{{item.subject}}</div>
-      <div class="text-gray-700 mt-1">
-        {{item.subContent | maxlenght:500}}
-      </div>
-      <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
-    </div>
-  </div>
-
 </ng-template>

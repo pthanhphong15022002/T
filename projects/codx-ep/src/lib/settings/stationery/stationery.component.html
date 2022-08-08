@@ -1,59 +1,91 @@
-<codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="add($event)"
-  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
-  (requestEnded)="closeEditForm($event)">
+<codx-views
+  #base
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [views]="views"
+  [button]="buttons"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFuncs"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
+  (requestEnded)="closeEditForm($event)"
+>
 </codx-views>
 
-<ng-template #resourceNameCol let-data>
-  <div class="d-flex">
-    <div class="w-100px h-100px m-4">
-      <codx-img [objectId]="" imageType="square" width="100"></codx-img>
-    </div>
-    <div>
-      <div class="text-dark fw-bold font-size-h6">
-        {{ data.resourceName }}
+<ng-template #productImg let-data>
+  <div class="w-100px h-100px m-4">
+    <codx-img [objectId]="" imageType="square" width="100"></codx-img>
+  </div>
+</ng-template>
+
+<ng-template #product let-data>
+  <div class="text-dark fw-bold font-size-h6">
+    {{ data.resourceName }}
+  </div>
+  <div>Đơn vị tính:</div>
+  <div>Nhóm: {{ data.groupID }}</div>
+  <div class="d-flex justify-content-between align-items-end mt-2">
+    <div class="d-flex align-items-end me-2 codx-badge">
+      <div class="d-flex align-items-center position-relative me-4">
+        <span class="icon-view_agenda icon-20 text-gray-400"></span>
+        <span>{{ data.currentQty }}</span>
       </div>
-      <div>Đơn vị tính:</div>
-      <div>Nhóm: {{ data.groupID }}</div>
-      <div class="d-flex justify-content-between align-items-end mt-2">
-        <div class="d-flex align-items-end me-2 codx-badge">
-          <div class="d-flex align-items-center position-relative me-4">
-            <span class="icon-view_agenda icon-20 text-gray-400"></span>
-            <span>{{ data.currentQty }}</span>
-          </div>
-          <div class="d-flex align-items-center position-relative me-4">
-            <span class="icon-shopping_cart icon-20 text-gray-400"></span>
-            <span>{{ data.reservedQty }}</span>
-          </div>
-          <div class="d-flex align-items-center position-relative me-4">
-            <span class="icon-brightness_auto icon-20 text-gray-400"></span>
-            <span>{{ data.availableQty }}</span>
-          </div>
-        </div>
+      <div class="d-flex align-items-center position-relative me-4">
+        <span
+          class="icon-shopping_cart icon-20 text-gray-400 reservedQty"
+        ></span>
+        <span>{{ data.reservedQty }}</span>
+      </div>
+      <div class="d-flex align-items-center position-relative me-4">
+        <span
+          class="icon-brightness_auto icon-20 text-gray-400 availableQty"
+        ></span>
+        <span>{{ data.availableQty }}</span>
       </div>
     </div>
   </div>
 </ng-template>
 
-<ng-template #colorCol let-data>
-  <div class="d-flex justify-content-between">
-    <div>{{ data.color }}</div>
+<ng-template #color let-data>
+  <div class="d-flex justify-content-start">
+    <div *ngFor="let color of splitColor(data.color)">
+      <div
+        class="me-4"
+        [ngStyle]="{ 'background-color': color }"
+        style="width: 20px; height: 20px; border-radius: 25%"
+      ></div>
+    </div>
   </div>
 </ng-template>
 
-<ng-template #costPriceCol let-data>
-  {{ data.costPrice * 1000 }}
+<ng-template #costPrice let-data>
+  <div class="text-end fw-bold text-black-50">
+    {{ data.costPrice | currency: "VND" }}
+  </div>
 </ng-template>
 
-<ng-template #ownerCol let-data>
+<ng-template #location let-data>
+  <div class="fw-bold">{{ data.location }}</div>
+</ng-template>
+
+<ng-template #owner let-data>
   <div class="d-flex has-action-menu">
     <codx-img [objectId]="data.owner" objectName="AD_Users"></codx-img>
-    <div>
-      <div>{{ data.ownerName }}</div>
-      <div>{{data.position}}</div>
+    <div class="ms-4">
+      <div class="fw-bold">{{ data.ownerName }}</div>
+      <div class="text-black-50">{{ data.position }}</div>
     </div>
     <div class="action-menu">
-      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
+      <codx-mfunc
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+      ></codx-mfunc>
     </div>
   </div>
 </ng-template>

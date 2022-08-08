@@ -56,6 +56,9 @@ export class NoteBooksComponent
   views = [];
   dialog!: DialogRef;
   urlDetailNoteBook = '';
+  functionList: any = [];
+  gridViewSetup: any = [];
+  checkDESC = false;
 
   @ViewChild('lstCardNoteBooks') lstCardNoteBooks: CodxCardImgComponent;
   @ViewChild('lstNoteBook') lstNoteBook: AddUpdateNoteBookComponent;
@@ -71,7 +74,15 @@ export class NoteBooksComponent
   ) {
     super(inject);
     this.cache.functionList('MWP00941').subscribe((res) => {
-      this.urlDetailNoteBook = res?.url;
+      if (res) {
+        this.urlDetailNoteBook = res?.url;
+        this.functionList = res;
+      }
+    });
+    this.cache.gridViewSetup('Notes', 'grvNotes').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
     });
 
     this.user = this.authStore.get();
@@ -197,16 +208,20 @@ export class NoteBooksComponent
       });
   }
 
-  sortNoteBooks() {
+  sortByDESC() {
     this.listView.dataService.data = this.listView.dataService.data.sort(
-      function (a, b) {
-        var dateA = new Date(a.createdOn).toLocaleDateString();
-        var dateB = new Date(b.createdOn).toLocaleDateString();
-        return dateA < dateB ? 1 : -1; // ? -1 : 1 for ascending/increasing order
-      }
+      (a, b) => b.title.localeCompare(a.title)
     );
-    console.log("check data", this.listView.dataService.data)
     this.detectorRef.detectChanges();
+    this.checkDESC = true;
+  }
+  
+  sortByASC() {
+    this.listView.dataService.data = this.listView.dataService.data.sort(
+      (a, b) => a.title.localeCompare(b.title)
+    );
+    this.detectorRef.detectChanges();
+    this.checkDESC = false;
   }
 
   onSearch(e) {

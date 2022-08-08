@@ -17,6 +17,7 @@ import {
   CacheService,
 } from 'codx-core';
 import moment from 'moment';
+import { TemplateComponent } from '../template/template.component';
 
 @Component({
   selector: 'lib-popup-add-meeting',
@@ -50,6 +51,7 @@ export class PopupAddMeetingComponent implements OnInit {
   listRoles: any;
   idUserSelected: any;
   popover: any;
+  dialogRole: DialogRef
 
   selectedDate = new Date();
   constructor(
@@ -261,6 +263,16 @@ export class PopupAddMeetingComponent implements OnInit {
     this.callFuncService.openForm(this.addLink, '', 500, 300);
   }
 
+  openPopupTemplate(item: any) {
+    this.dialogRole = this.callFuncService.openForm(TemplateComponent, '', 1200, 700, '', item);
+    this.dialogRole.closed.subscribe(e => {
+      if (e?.event) {
+        console.log(e);
+
+      }
+    })
+  }
+
   changeLink(event) {
     this.linkURL = event.data;
     if (this.linkURL) this.meeting.link = this.linkURL;
@@ -331,7 +343,7 @@ export class PopupAddMeetingComponent implements OnInit {
             tmpResource.resourceID = emp?.userID;
             tmpResource.resourceName = emp?.userName;
             tmpResource.positionName = emp?.positionName;
-            tmpResource.roleType = 'R';
+            tmpResource.roleType = 'P';
             this.meeting.resources.push(tmpResource);
           }
         }
@@ -358,4 +370,7 @@ export class PopupAddMeetingComponent implements OnInit {
 
     this.popover.close();
   }
+
+
+
 }
