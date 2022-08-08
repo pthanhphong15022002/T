@@ -195,7 +195,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.permissions.push(this.myPermission);
       this.permissions.push(this.adminPermission);
     }
-    
     this.dt.detectChanges();
   }
   Submit() {
@@ -215,13 +214,10 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(e: any) {
-    if (!e.data.value) {
+    if (e.data) {
       this.message = e.data;
+      this.dt.detectChanges();
     }
-    else {
-      this.message = e.data.value;
-    }
-    this.dt.detectChanges();
   }
 
   eventApply(event: any) {
@@ -479,7 +475,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         this.dataEdit.files = this.codxFileEdit.getFiles();
         (this.dialogRef.dataService as CRUDService).update(this.dataEdit).subscribe();
         this.notifySvr.notifyCode('SYS007');
-        this.dialogRef.close();
+        this.dialogRef.close(this.dataEdit);
       }
     });
 
@@ -534,7 +530,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.message += event.emoji.native;
     this.dt.detectChanges();
   }
-  openFile() {
+  uploadFile() {
     this.dmSV.fileUploadList = [];
     if (this.dialogData.status == this.STATUS.EDIT) {
       this.atmEdit.uploadFile();
@@ -605,5 +601,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.listFileUpload.concat(files);
     }
     this.dt.detectChanges();
+  }
+
+  tagUser(){
+    
   }
 }

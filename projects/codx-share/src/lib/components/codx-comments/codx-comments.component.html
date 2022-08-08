@@ -32,10 +32,8 @@
         <div class="btn-like delay-500">
             <div *ngIf="!dataComment.myVotedType;else myVoted">
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <!-- <img src="/assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
-                        style="width: 18px; height: 18x;"> -->
                     <span class="fw-bold ms-2" style="color: gray;">
-                        <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
+                        <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
                     </span>
                 </div>
             </div>
@@ -65,7 +63,7 @@
             <div class="d-flex align-items-center justify-content-center text-hover-primary">
                 <span class="icon-chat_bubble_outline icon-18"></span>
                 <span class="text-dark fw-bold ms-2">
-                    <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+                    <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
                 </span>
             </div>
         </div>
@@ -76,11 +74,12 @@
         <div>
             <codx-input 
                 class="border-0 bg-transparent" 
-                type="textarea" placeholder="Bình luận" 
+                type="text" placeholder="Bình luận" 
                 [crrValue]="comments"
                 (keyup.enter)="sendComment(dataComment,comments)"
                 (valueChange)="valueChange($event,'comments')">
             </codx-input>
+            
         </div>
         <div class="feed-icon btn-send">
             <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
@@ -338,8 +337,6 @@
                         <div class="btn-like delay-500">
                             <div *ngIf="!childData.myVotedType;else childMyVoted">
                                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                    <!-- <img src="/assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
-                                        style="width: 18px; height: 18px;"> -->
                                     <span class="fw-bold ms-2" style="color: gray;">
                                         <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
                                     </span>
@@ -354,8 +351,6 @@
                             </div>
                             <ng-template #childMyVoted>
                                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                    <!-- <img src="/assets/themes/wp/default/img/{{(childData.myVotedType | vll:'L1480':'icon' | async)}}"
-                                        alt="Kiwi standing on oval" style="width: 18px; height: 18px"> -->
                                     <div>
                                         <span class="fw-bold ms-2"
                                             [style.color]="childData.myVotedType | vll:'L1480':'textColor' | async">
@@ -377,7 +372,7 @@
                         </span>
                         <span class="text-gray-800" (click)="loadSubComment(childData)">
                             {{childData.totalRecord}}
-                            <codx-label formName="WP_Comments" name="lblReply" default="Trả lời"></codx-label>
+                            <codx-label [formModel]="formModel" name="lblReply" default="Trả lời"></codx-label>
                         </span>
                     </div>
                 </ng-container>
@@ -473,5 +468,5 @@
             </div>
         </div>
     </ng-template>
-
 </ng-template>
+
