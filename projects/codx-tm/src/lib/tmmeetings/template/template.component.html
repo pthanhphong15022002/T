@@ -1,1 +1,11 @@
-<p>template works!</p>
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [data]="data"
+  [formModel]="dialog.formModel" [dialog]="dialog">
+
+  <ng-template #body>
+    aaaa
+  </ng-template>
+  <ng-template #footer>
+    ccc
+  </ng-template>
+
+</codx-form>
