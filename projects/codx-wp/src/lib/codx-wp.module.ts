@@ -29,7 +29,6 @@ import { UpdateNotePinComponent } from './dashboard/home/update-note-pin/update-
 import { NewsComponent } from './news/news.component';
 import { PopupAddComponent } from './news/popup/popup-add/popup-add.component';
 import { PopupEditComponent } from './news/popup/popup-edit/popup-edit.component';
-import { ElecticSearchComponent } from './news/popup/popup-search/electic-search/electic-search.component';
 import { PopupSearchComponent } from './news/popup/popup-search/popup-search.component';
 import { ViewDetailComponent } from './news/view-detail/view-detail.component';
 import { ViewTagComponent } from './news/view-tag/view-tag.component';
@@ -129,8 +128,6 @@ const Component: Type<any>[] =
     CompanyInforComponent,
     PopupEditComponent,
     ApproveComponent,
-    PopupSearchComponent,
-    ElecticSearchComponent,
     ApproveDetailComponent,
     DashboardComponent,
     HomeComponent,
@@ -145,6 +142,7 @@ const Component: Type<any>[] =
     CompanyEditComponent,
     PopupTitleComponent,
     ViewTagComponent,
+    PopupSearchComponent
 
   ];
 

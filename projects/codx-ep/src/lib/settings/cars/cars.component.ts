@@ -28,7 +28,8 @@ export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
-
+  @ViewChild('moreFunction', { static: true }) moreFunction: TemplateRef<any>;
+  
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
@@ -48,6 +49,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
   dataObj:any = {};
+  itemSelected: any;
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -126,7 +128,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
@@ -142,7 +144,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
     if (evt) this.dataSelected = evt;
     this.viewBase.dataService.edit(this.dataSelected).subscribe((res) => {
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(

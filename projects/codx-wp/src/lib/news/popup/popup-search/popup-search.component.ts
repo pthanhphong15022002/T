@@ -1,69 +1,74 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ApiHttpService, CacheService, CodxService, DataRequest, ViewModel, ViewType } from 'codx-core';
-import { ElecticSearchComponent } from './electic-search/electic-search.component';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { Dialog } from '@syncfusion/ej2-angular-popups';
+import { ApiHttpService, CacheService, CodxService, DialogData, DialogRef } from 'codx-core';
+import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 
 @Component({
-  selector: 'app-popup-search',
+  selector: 'lib-popup-search',
   templateUrl: './popup-search.component.html',
   styleUrls: ['./popup-search.component.scss']
 })
-export class PopupSearchComponent implements OnInit, AfterViewInit {
+export class PopupSearchComponent implements OnInit {
 
-  formGroup: FormGroup;
-  startDateValue: Date;
-  endDateValue: Date;
-  listValueList = [];
-  listTag: any;
-  totalRowCount = 0;
-  dataSearch: any;
-  views: Array<ViewModel> = [];
-  @ViewChild('templateElectic') Electic : ElecticSearchComponent;
-
+  funcID:string = "";
+  services:string = "WP";
+  entityName:string = "WP_News";
+  gridViewSetup:any = null;
+  formModel:any = null;
+  dialogRef:DialogRef = null;
+  @ViewChild("view") view : CodxFullTextSearch;
   constructor(
-    private api: ApiHttpService,
-    private codxService: CodxService,
-    private cache: CacheService,
-    private dt: ChangeDetectorRef
-  ) {
-    this.cache.valueList('L1492').subscribe((res) => {
-      this.listValueList = res.datas;
-    });
-  }
-  ngAfterViewInit(): void {
-    
+    private api:ApiHttpService,
+    private cache:CacheService,
+    private codxService:CodxService,
+    @Optional() dd?: DialogData,
+    @Optional() dialog?:DialogRef
+  ) 
+  {
+    this.funcID = dd.data.funcID;
+    this.dialogRef = dialog;
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.getGridViewSetup();
   }
 
+  onSelected(event:any){
 
-  loadData() {
-    this.api.execSv("BS", "ERM.Business.BS", "TagsBusiness", "GetListTmpTagsByName", "WP_News").subscribe(
-      (res) => {
-        this.listTag = res;
-        this.dt.detectChanges();
+  }
+
+  getGridViewSetup(){
+    this.cache.functionList(this.funcID).subscribe((fuc) => {
+      this.formModel.entityName = fuc?.entityName;
+      this.formModel.formName = fuc?.formName;
+      this.formModel.funcID = fuc?.functionID;
+      this.formModel.gridViewName = fuc?.gridViewName;
+      this.cache.gridViewSetup(fuc?.formName, fuc?.gridViewName)
+      .subscribe((grd) => {
+        this.gridViewSetup = grd;
       });
+    });
   }
 
-  clickTag(data: any) {
-    data.isChecked = !data.isChecked;
-    this.dt.detectChanges();
-  }
-
-  clickSearchElectic(textSearch: any) {
-    this.api.execNonDB<any>(
-      "Background",
-      "ElastisSearchBusinesss",
-      "SearchObjectAsync",
-      [textSearch, "WPT02", "tester"]
+  clickViewDetail(data:any){
+    this.api
+    .execSv(
+      'WP',
+      'ERM.Business.WP',
+      'NewsBusiness',
+      'UpdateViewNewsAsync',
+      data.recID
     )
-      .subscribe((res) => {
-        console.log('clickSearchElectic', res)
-        this.Electic.dataSource = res.data;
-        this.totalRowCount = res.total
-        this.dt.detectChanges();
-      });
+    .subscribe((res:any) => {
+      if(res){
+        this.dialogRef.close();
+        this.codxService.navigate('','/wp/news/'+this.funcID + '/' + data.category +'/' + data.recID);
+      }
+    });
   }
+
+  clickClosePopup(){
+    this.dialogRef.close();
+  }
+
 }

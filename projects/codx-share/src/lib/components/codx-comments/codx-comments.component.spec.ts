@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ElecticSearchComponent } from './electic-search.component';
+import { CodxCommentsComponent } from './codx-comments.component';
 
-describe('ElecticSearchComponent', () => {
-  let component: ElecticSearchComponent;
-  let fixture: ComponentFixture<ElecticSearchComponent>;
+describe('CodxCommentsComponent', () => {
+  let component: CodxCommentsComponent;
+  let fixture: ComponentFixture<CodxCommentsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ElecticSearchComponent ]
+      declarations: [ CodxCommentsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ElecticSearchComponent);
+    fixture = TestBed.createComponent(CodxCommentsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -21,25 +21,33 @@ export const routes: Routes = [
         path: '',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-wp/src/lib/codx-wp.module').then((m) => m.CodxWpModule),
+          import('projects/codx-wp/src/lib/codx-wp.module').then(
+            (m) => m.CodxWpModule
+          ),
       },
       {
         path: 'tm',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-tm/src/lib/codx-tm.module').then((m) => m.TMModule),
+          import('projects/codx-tm/src/lib/codx-tm.module').then(
+            (m) => m.TMModule
+          ),
       },
       {
         path: 'wp',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-wp/src/lib/codx-wp.module').then((m) => m.CodxWpModule),
+          import('projects/codx-wp/src/lib/codx-wp.module').then(
+            (m) => m.CodxWpModule
+          ),
       },
       {
         path: 'dm',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-dm/src/lib/codx-dm.module').then((m) => m.CodxDmModule),
+          import('projects/codx-dm/src/lib/codx-dm.module').then(
+            (m) => m.CodxDmModule
+          ),
       },
       // {
       //   path: 'mwp',
@@ -51,56 +59,75 @@ export const routes: Routes = [
         path: 'ep',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-ep/src/lib/codx-ep.module').then((m) => m.CodxEpModule),
+          import('projects/codx-ep/src/lib/codx-ep.module').then(
+            (m) => m.CodxEpModule
+          ),
       },
       {
         path: 'es',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-es/src/lib/codx-es.module').then((m) => m.CodxEsModule),
+          import('projects/codx-es/src/lib/codx-es.module').then(
+            (m) => m.CodxEsModule
+          ),
       },
       {
         path: 'fd',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-fd/src/lib/codx-fd.module').then((m) => m.CodxFdModule),
+          import('projects/codx-fd/src/lib/codx-fd.module').then(
+            (m) => m.CodxFdModule
+          ),
       },
       {
         path: 'hr',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-hr/src/lib/codx-hr.module').then((m) => m.CodxHRModule),
+          import('projects/codx-hr/src/lib/codx-hr.module').then(
+            (m) => m.CodxHRModule
+          ),
       },
       {
         path: 'mwp',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-mwp/src/lib/codx-mwp.module').then((m) => m.CodxMwpModule),
+          import('projects/codx-mwp/src/lib/codx-mwp.module').then(
+            (m) => m.CodxMwpModule
+          ),
       },
       {
         path: 'od',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-od/src/lib/codx-od.module').then((m) => m.CodxODModule),
+          import('projects/codx-od/src/lib/codx-od.module').then(
+            (m) => m.CodxODModule
+          ),
       },
       {
         path: 'ad',
         canActivate: [AuthGuard],
         loadChildren: () =>
-          import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
+          import('projects/codx-ad/src/lib/codx-ad.module').then(
+            (m) => m.ADModule
+          ),
+      },
+      {
+        path: 'share',
+        component: SosComponent,
       },
       {
         path: 'sos',
-        component: SosComponent
+        component: SosComponent,
       },
-      { path: '**', redirectTo: 'error/404' }
+      { path: '**', redirectTo: 'error/404' },
     ],
-  }
-
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { preloadingStrategy: HoverPreloadStrategy })],
+  imports: [
+    RouterModule.forRoot(routes, { preloadingStrategy: HoverPreloadStrategy }),
+  ],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
