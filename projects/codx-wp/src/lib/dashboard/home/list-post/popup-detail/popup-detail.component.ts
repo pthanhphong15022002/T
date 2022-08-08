@@ -34,7 +34,6 @@ export class PopupDetailComponent implements OnInit {
   {
     this.dialogRef = dialogRef;
     this.file = dd.data;
-    console.log(this.file);
   }
 
   ngOnInit(): void {

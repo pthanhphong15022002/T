@@ -165,7 +165,7 @@ export class PopupAddComponent implements OnInit {
     if(!this.formGroup.controls['Category'].value){
       this.cache.message("SYS009").subscribe((mssg:any) => {
         if(mssg){
-          let mssgCode = Util.stringFormat(mssg.defaultName,"Phân loại");
+          let mssgCode = Util.stringFormat(mssg.defaultName,"Loại bài viết");
           this.notifSV.notify(mssgCode);
         }
       });
@@ -248,11 +248,9 @@ export class PopupAddComponent implements OnInit {
               }
             );
           }
-          
         }
       });
   }
-
   insertWPComment(data: WP_News){
     if(data.createPost){
       var post = new WP_Comments();
