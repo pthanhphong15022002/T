@@ -1,6 +1,6 @@
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
@@ -27,7 +27,6 @@ import {
 } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import {
-  UploaderComponent,
   UploaderModule,
 } from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
