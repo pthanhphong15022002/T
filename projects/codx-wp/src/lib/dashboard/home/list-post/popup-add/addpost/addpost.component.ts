@@ -57,7 +57,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   @ViewChild('codxFileEdit') codxFileEdit: ImageGridComponent;
   //Variable for control share
   CATEGORY = {
-    POST: "1",
+    POST: "Post",
     COMMENTS: "2",
     FEEDBACK: "3",
     SHARE: "4",
@@ -131,7 +131,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dialogData = dd.data;
     this.dialogRef = dialog;
     this.headerText = this.dialogData.headerText;
-    this.title = this.dialogData.title;
 
   }
   ngAfterViewInit(): void {
@@ -169,6 +168,10 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.adminPermission.isActive = true;
     this.adminPermission.createdBy = this.user.userID;
     this.adminPermission.createdOn = new Date();
+    this.cache.message('WP011').subscribe((mssg: any) => {
+      this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
+      this.dt.detectChanges();
+    });
     if (this.dialogData.status == this.STATUS.EDIT) {
       this.dataEdit = this.dialogData.post;
       this.message = this.dataEdit.content;
@@ -192,6 +195,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.permissions.push(this.myPermission);
       this.permissions.push(this.adminPermission);
     }
+    
     this.dt.detectChanges();
   }
   Submit() {
@@ -425,11 +429,18 @@ export class AddPostComponent implements OnInit, AfterViewInit {
             this.atmCreate.objectId = result.recID;
             this.dmSV.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
-            this.atmCreate.saveFilesObservable().subscribe();
+            this.atmCreate.saveFilesObservable().subscribe((res:any)=>{
+              if(res){
+                (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+                this.notifySvr.notifyCode('SYS006');
+                this.dialogRef.close();
+              }});
           }
-          (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
-          this.notifySvr.notifyCode('SYS006');
-          this.dialogRef.close();
+          else{
+            (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+            this.notifySvr.notifyCode('SYS006');
+            this.dialogRef.close();
+          }
         }
       });
   }
@@ -490,15 +501,24 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.shares = this.dataShare;
     post.permissions = this.permissions;
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
-      .subscribe((res: any) => {
-        if (res) {
+      .subscribe((result: any) => {
+        if (result) {
           if (this.listFileUpload.length > 0) {
-            this.atmCreate.objectId = res.recID;
-            this.atmCreate.saveFilesObservable().subscribe()
+            this.atmCreate.objectId = result.recID;
+            this.dmSV.fileUploadList = [...this.listFileUpload];
+            result.files = [...this.listFileUpload];
+            this.atmCreate.saveFilesObservable().subscribe((res:any)=>{
+              if(res){
+                (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+                this.notifySvr.notifyCode('SYS006');
+                this.dialogRef.close();
+              }});
           }
-          this.notifySvr.notifyCode('SYS006');
-          (this.dialogRef.dataService as CRUDService).add(res, 0).subscribe();
-          this.dialogRef.close();
+          else{
+            (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+            this.notifySvr.notifyCode('SYS006');
+            this.dialogRef.close();
+          }
         }
       });
   }

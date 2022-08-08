@@ -77,9 +77,7 @@
         <div class="menu-item me-lg-1" *ngFor="let vll of valueList">
           <a [class.isActive]="category == vll.value" href="javascript:;" routerlinkactive="active"
             class="menu-link py-3" (click)="navigate(vll.value)">
-            <span class="menu-title">
-              <codx-label formName="News" name="lblVLLName" [default]="vll.text"></codx-label>
-            </span>
+            <span class="menu-title">{{vll.text}}</span>
           </a>
         </div>
 
