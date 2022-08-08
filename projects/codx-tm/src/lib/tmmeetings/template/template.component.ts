@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
+import { DialogData, DialogRef } from 'codx-core';
 
 @Component({
   selector: 'lib-template',
@@ -7,7 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TemplateComponent implements OnInit {
 
-  constructor() { }
+  dialog: any;
+  data: any;
+  title: '';
+  constructor(
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef,
+  ) {
+    this.dialog = dialog;
+    this.data = dt?.data;
+  }
 
   ngOnInit(): void {
   }
