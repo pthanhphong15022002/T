@@ -1,6 +1,7 @@
-<!-- <codx-img [objectId]="'c544f9b5-9f85-4356-a4ca-6f8914b60acb'" [objectType]="'WP_News'"></codx-img> -->
-<codx-fulltextsearch [centerTmp]="centerTmp" [widthLeft]="400" [funcID]="funcID" (selectedChange)="onSelected($event)"></codx-fulltextsearch>
-
+<codx-fulltextsearch #view [centerTmp]="centerTmp"  [widthLeft]="400" [funcID]="funcID" [service]="service" [entityName]="entityName" (selectedChange)="onSelected($event)"></codx-fulltextsearch>
+<!-- <ng-template #menu >
+    <button (click)="testSearch()">test</button>
+</ng-template> -->
 <ng-template #centerTmp let-data>
     <codx-temp-full [content]="extractContent(data.title)"
     [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"

@@ -1,8 +1,9 @@
 <div class="h-100 d-flex">
-  <div class="d-flex flex-column bg-white me-5 rounded py-2" [style.width.px]="widthLeft">
+  <div class="d-flex flex-column bg-white me-5 rounded py-5 overflow-auto h-100" [style.width.px]="widthLeft">
+    <ng-template [ngTemplateOutlet]="tempMenu" ></ng-template>
     <ng-container *ngIf="gridViewSetup">
       <div *ngFor="let item of dataGroup" class="my-2">
-          <codx-label [default]="item.headerText" class="fw-bold mx-5"></codx-label>
+          <codx-label [default]="item.headerText " class="fw-bold mx-5"></codx-label>
           <ng-container [ngSwitch]="item?.dataType">
             <ng-container *ngSwitchCase="'String'">
               <div class="my-2 mx-5"><codx-input type="text" (keyUpEnter)="changeValueText(item?.view , $event)"></codx-input></div>
@@ -38,7 +39,7 @@
                 </codx-input>
               </div>
             </ng-template>
-            <ng-container *ngIf="item?.load"><div class="d-flex justify-content-end mx-5" ><span class="icon-more_horiz text-primary cursor-pointer" (click)="loadMore(item)" [ngbTooltip]="tipContent"></span></div></ng-container>
+            <ng-container *ngIf="item?.load"><div class="d-flex justify-content-end mx-5" ><span class="icon-more_horiz text-primary cursor-pointer" (click)="loadMore(item)" [autoClose]="'outside'" [ngbTooltip]="tipContent"></span></div></ng-container>
           </ng-container>
          
       </div>

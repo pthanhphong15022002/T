@@ -23,8 +23,10 @@ export class ApprovalViewDetailComponent  implements OnInit , OnChanges  {
   active = 1;
   checkUserPer: any;
   userID:any;
+  gridViewSetup: any;
+  fucList: any = {};
   @Input() data : any;
-  @Input() gridViewSetup:any;
+  @Input() funcID : any;
   @Input() view: ViewsComponent; 
   @Input() getDataDispatch : Function;
   @Input() dataItem:any;
@@ -67,11 +69,19 @@ export class ApprovalViewDetailComponent  implements OnInit , OnChanges  {
         this.data = changes.data?.currentValue;
         if(!this.data )
           this.data ={};
-        this.getDataValuelist();
+       
         this.getPermission(this.data.recID);
-        this.ref.detectChanges();
         
       }
+    }
+    if(changes.funcID?.previousValue != changes.funcID?.currentValue)
+    {
+      this.getGridViewSetup(changes.funcID?.currentValue);
+      this.ref.detectChanges();
+      /* this.gridViewSetup = changes.gridViewSetup?.currentValue;
+      this.getDataValuelist();
+      this.getDataValuelist();
+      this.ref.detectChanges(); */
     }
     this.active = 1;
   }
@@ -82,7 +92,19 @@ export class ApprovalViewDetailComponent  implements OnInit , OnChanges  {
     this.userID = this.authStore.get().userID;
     this.getDataValuelist();
   }
-  
+  getGridViewSetup(funcID:any)
+  {
+    this.cache.functionList(funcID).subscribe((fuc) => {
+      this.fucList = fuc;
+      this.cache
+      .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+      .subscribe((grd) => {
+        this.gridViewSetup = grd;
+        this.getDataValuelist();
+      });
+      
+    })
+  }
   convertHtmlAgency(agencyName:any,txtLstAgency:any)
   {
     if(!agencyName && !txtLstAgency)
@@ -152,7 +174,6 @@ export class ApprovalViewDetailComponent  implements OnInit , OnChanges  {
   }
   getDataValuelist()
   {
-    debugger;
     if (this.gridViewSetup["Security"]["referedValue"])
       this.cache.valueList(this.gridViewSetup["Security"]["referedValue"]).subscribe((item) => {
         this.dvlSecurity = item;

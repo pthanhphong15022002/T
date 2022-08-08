@@ -630,18 +630,17 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
       //Gửi duyệt 
       case "ODT201":
         {
-          debugger;
           this.api
           .execSv(
             this.view.service,
             'ERM.Business.CM',
             'DataBusiness',
             'ReleaseAsync',
-            [datas?.recID,"3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",this.view.formModel.entityName]
+            [datas?.recID,"3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",this.view.formModel.entityName,this.formModel.funcID]
           ).subscribe((res2:any) =>
           {
             if(res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError)
-            console.log(res2)
+            //this.notifySvr.notify(res2?.msgCodeError)
           });
           break;
         }
