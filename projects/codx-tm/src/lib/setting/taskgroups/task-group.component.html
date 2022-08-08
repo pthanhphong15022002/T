@@ -25,7 +25,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <div [innerHTML]="data.note" [ngbTooltip]="data.note">
+        <div [innerHTML]="data.note" [ngbTooltip]="innerHTML(data.note)">
         </div>
       </div>
     </td>
@@ -131,49 +131,49 @@
 
     </td>
     <td class="rowphoto">
-      <div class="padding" *ngIf="data.maxHoursControl == '1'">
+      <div class="padding center" *ngIf="data.maxHoursControl == '1'">
         <span class="text-gray-600 me-1">
           {{data.maxHours}}
         </span>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
+      <div class="padding center" >
         <codx-input name="editControl" type="switch" class="test-switch" field="editControl"
-          [crrValue]="data.editControl === '1' ? true : false">
+          [crrValue]="data.editControl === '1' ? true : false" disabled="disabled">
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
+      <div class="padding center">
         <codx-input name="dueDateControl" type="switch" class="test-switch" field="dueDateControl"
-          [crrValue]="data.dueDateControl === '1' ? true : false">
+          [crrValue]="data.dueDateControl === '1' ? true : false" disabled="disabled">
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
+      <div class="padding center">
         <codx-input name="autoCompleted" type="switch" class="test-switch" field="autoCompleted"
-          [crrValue]="data.autoCompleted === '1' ? true : false">
+          [crrValue]="data.autoCompleted === '1' ? true : false" disabled="disabled">
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
+      <div class="padding center">
         <codx-input name="extendControl" type="switch" class="test-switch" field="extendControl"
-          [crrValue]="data.extendControl === '1' ? true : false">
+          [crrValue]="data.extendControl === '1' ? true : false" disabled="disabled">
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
+      <div class="padding center">
         <codx-input name="confirmControl" type="switch" class="test-switch" field="confirmControl"
-          [crrValue]="data.confirmControl === '1' ? true : false">
+          [crrValue]="data.confirmControl === '1' ? true : false" disabled="disabled">
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
+      <div class="padding center">
         <div class="d-flex align-items-center" #itemCreateBy>
           <codx-img class="symbol symbol-24 symbol-circle me-2" width="25" [objectId]="data.createdBy"
             objectType="AD_Users">
@@ -376,6 +376,8 @@
     <!-- icoSubTitleCss="icon-assignment" [subTitle]="data.positionName" 1;fa fa-flag-o;2;fa fa-flag-o;3;fa fa-flag-o-->
   </codx-temp-full>
 </ng-template>
+
+<ng-template #tipContent let-data><codx-label [innerHTML]="data.note" ></codx-label></ng-template>
 
 
 <!-- <ng-template #itemCreateBy let-dataItem>
