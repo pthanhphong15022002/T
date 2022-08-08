@@ -176,9 +176,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listRoles = res.datas;
       }
     });
-    // this.cache.viewSettingValues('tm1').subscribe(res=>{
-    //   console.log(res)
-    // })
   }
 
   ngOnInit(): void {
@@ -670,7 +667,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         var time = (
           (this.task.endDate.getTime() - this.task.startDate.getTime()) /
           3600000
-        ).toFixed(1);
+        ).toFixed(2);
         this.task.estimated = Number.parseFloat(time);
         this.crrEstimated = this.task.estimated;
       }
