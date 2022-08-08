@@ -112,8 +112,12 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'share',
-        component: SosComponent,
+        path: 'shared',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-share/src/lib/codx-share.module').then(
+            (m) => m.CodxShareModule
+          ),
       },
       {
         path: 'sos',

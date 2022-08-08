@@ -68,7 +68,7 @@ import { HttpClientModule } from '@angular/common/http';
 export const routes: Routes = [
   {
     path: '',
-    component: LayoutNoAsideComponent,
+    component: LayoutOnlyHeaderComponent,
     children: [
       {
         path: 'settings/:funcID',
