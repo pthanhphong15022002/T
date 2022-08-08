@@ -61,6 +61,23 @@ import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
 import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
+import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
+import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'settings/:funcID',
+        component: DynamicSettingParamaterComponent,
+      },
+    ],
+  },
+];
+import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -92,6 +109,9 @@ const T_Component: Type<any>[] = [
   CodxReportViewerComponent,
   CodxReportDesignerComponent,
   NoteDrawerComponent,
+  CodxApprovalComponent,
+  CodxCommentsComponent,
+  DynamicSettingParamaterComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
