@@ -65,13 +65,11 @@ export class PopupAddEmployeesComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
   ) {
-    this.employee = {
-      ...this.employee,
-      ...dt?.data,
-    };
     this.action = dt.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.formName = this.dialog.formModel.formName;
+    this.gridViewName = this.dialog.formModel.gridViewName;
     this.functionID = this.dialog.formModel.funcID;
     this.data = dialog.dataService!.dataSelected;
     this.employee = this.data;
@@ -85,7 +83,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     });
     if (this.action === 'edit') {
       this.titleAction = 'Chỉnh sửa';
-      this.isNew === false;
+      this.isNew = false;
     }
     if (this.action === 'copy') {
       this.titleAction = 'Sao chép';
@@ -169,6 +167,13 @@ export class PopupAddEmployeesComponent implements OnInit {
   beforeSave(op: any) {
     var data = [];
     op.method = 'UpdateAsync';
+    op.className = 'EmployeesBusiness';
+
+    if(this.action === 'add'){
+      this.isNew = true;
+    }else if(this.action === 'edit'){
+      this.isNew = false;
+    }
     data = [
       this.employee,
       this.isNew
@@ -178,19 +183,15 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
 
   OnSaveForm() {
-    if (this.action === 'add') {
-      for (var key in this.data) {
-        if (Array.isArray(this.data[key]))
-          this.data[key] = this.data[key].join(';');
-      }
-    }
-    this.dialog.dataService
+    // for (var key in this.data) {
+    //   if (Array.isArray(this.data[key]))
+    //     this.data[key] = this.data[key].join(';');
+    // }
+      this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        if (res.save) {
-          this.dialog.close();
-        }
-      });
+      .subscribe();
+    this.dialog.close();
+
   }
 
   addEmployee() {

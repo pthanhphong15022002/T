@@ -5,8 +5,11 @@
         <div class="float-start w-100">
           <h3 class="mt-5">Tham số báo cáo</h3>
         </div>
-        <div class="float-end mt-5">
-          <i class="icon-save"></i>
+        <div class="float-end mt-3">
+          <button class="btn btn-light" (click)="save()">
+            <i class="icon-save"></i>
+          </button>
+
         </div>
       </div>
 
@@ -184,6 +187,7 @@
                 <codx-label
                   [default]="item.labelName"
                   class="fw-bold text-muted"
+                  *ngIf="item.isVisible"
                 ></codx-label>
 
                   <ng-container *ngIf="item.dependences" >
@@ -209,17 +213,24 @@
                                 [crrValue]="child.defaultValue"
                                 [refValue]="child.referedValue"
                                 (valueChange)="valueChange($event,true)"
-
                               >
                               </codx-input>
                             </div>
                           </ng-container>
                           <ng-container *ngSwitchCase="'bool'">
                             <div
-                              class="float-end"
+                              class="w-100 mt-1"
                               *ngIf="child.controlType == 'LVSwitch'"
                             >
-                              <codx-input
+                            <div class="d-flex">
+                              <div class="w-100 float-start">
+                                <span
+                                  style="font-size:12px;font-weight: 400;"
+                                  >{{child.labelName}}
+                                </span>
+                              </div>
+                              <div class="float-end">
+                                <codx-input
                                 class="float-right"
                                 type="switch"
                                 [field]="child.controlName"
@@ -228,12 +239,17 @@
                                 "
                                 (valueChange)="valueChange($event,true,'switch')"
                               ></codx-input>
+                              </div>
+                            </div>
+
                             </div>
                             <div
                               class="w-100 ms-5 mt-3"
-                              *ngIf="child.controlType == 'LVCheckBox'"
+                              *ngIf="child.controlType == 'LVCheckbox'"
                             >
-                              <codx-input
+                            <div class="d-flex">
+                              <div class="float-start mx-5">
+                                <codx-input
                                 type="checkBox"
                                 [field]="child.controlName"
                                 [crrValue]="
@@ -241,6 +257,15 @@
                                 "
                                 (valueChange)="valueChange($event,true,'checkbox')"
                               ></codx-input>
+                              </div>
+                              <div class="w-100 float-end">
+                                <span
+                                style="font-size:12px;font-weight: 400;"
+                                >{{child.labelName}}
+                              </span>
+                              </div>
+                            </div>
+
                             </div>
                           </ng-container>
                           <ng-container *ngSwitchCase="'DateTime'">
@@ -285,7 +310,7 @@
                     </div>
                   </ng-container>
 
-                <ng-container [ngSwitch]="item?.dataType">
+                <ng-container [ngSwitch]="item?.dataType" *ngIf="item.isVisible">
                   <ng-container *ngSwitchCase="'string'">
                     <div class="w-100 mt-3" *ngIf="!item.referedType">
                       <codx-input
@@ -293,7 +318,7 @@
                         [field]="item.controlName"
                         placeholder="Có chứa giá trị..."
                         format="ed2"
-                        [disabled]="!item.isVisible"
+                        [disabled]="!item.isEnable"
                         [crrValue]="item.defaultValue"
                         (valueChange)="valueChange($event)"
                       ></codx-input>
@@ -304,7 +329,7 @@
                         [field]="item.controlName"
                         [crrValue]="item.defaultValue"
                         [refValue]="item.referedValue"
-                        [disabled]="!item.isVisible"
+                        [disabled]="!item.isEnable"
                         (valueChange)="valueChange($event)"
                       >
                       </codx-input>
@@ -322,23 +347,34 @@
                         [crrValue]="
                           item.defaultValue ? item.defaulValue : false
                         "
-                        [disabled]="!item.isVisible"
+                        [disabled]="!item.isEnable"
                         (valueChange)="valueChange($event,false,'switch')"
                       ></codx-input>
                     </div>
                     <div
                       class="w-100 ms-5 mt-3"
-                      *ngIf="item.controlType == 'LVCheckBox'"
+                      *ngIf="item.controlType == 'LVCheckbox'"
                     >
-                      <codx-input
+                    <div class="d-flex">
+                      <div class="float-start mx-5">
+                        <codx-input
                         type="checkBox"
                         [field]="item.controlName"
                         [crrValue]="
                           item.defaultValue ? item.defaulValue : false
                         "
-                        [disabled]="!item.isVisible"
-                        (valueChange)="valueChange($event,false,'checkBox')"
+                        [disabled]="!item.isEnable"
+                        (valueChange)="valueChange($event)"
                       ></codx-input>
+                      </div>
+                      <div class="w-100 float-end">
+                        <span
+                        style="font-size:12px;font-weight: 400;"
+                        >{{item.labelName}}
+                      </span>
+                      </div>
+                    </div>
+
                     </div>
                   </ng-container>
                   <ng-container *ngSwitchCase="'DateTime'">
@@ -347,6 +383,7 @@
                         cssPopup="h-600px w-800px"
                         cssClass="w-100 button-radius"
                         (change)="changeValueDate($event)"
+                        [disabled]="!item.isEnable"
                       ></codx-dropdown-calendar>
                     </div>
                   </ng-container>
@@ -362,7 +399,7 @@
                             "
                             (valueChange)="valueChange($event)"
                             placeholder="Từ"
-                            [disabled]="!item.isVisible"
+                            [disabled]="!item.isEnable"
                           ></codx-input>
                         </div>
                         <div class="float-end ms-1">
@@ -372,7 +409,7 @@
                             [crrValue]="
                               item.defaultValue ? item.defaultValue : 0
                             "
-                            [disabled]="!item.isVisible"
+                            [disabled]="!item.isEnable"
                             (valueChange)="valueChange($event)"
                             placeholder="Đến"
                           ></codx-input>
@@ -414,7 +451,7 @@
       </div>
     </div>
     <div class="col-9" #reportEle>
-      <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [paramRequest]="param"></codx-report>
+      <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report>
     </div>
   </div>
 </div>
