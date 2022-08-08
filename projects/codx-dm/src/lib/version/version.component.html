@@ -1,0 +1,117 @@
+<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">
+  <ng-template #body>    
+      <div class="form-group">
+          <div class="modal-subheader">
+              <div for="fileName" class="d-flex justify-content-between">
+                  <div class="d-flex align-items-center col-form-label pb-0">                      
+                      <codx-breadcumb end="1" start="0" max="3"></codx-breadcumb>
+                      <span class="icon-keyboard_arrow_right icon-20"></span>
+                      <span class="text-dark-75">{{this.fileEditing.fileName}}</span>
+                  </div>
+                  <!-- <a [class.disabled]="disableFolder() ? true: null"
+                      class="btn btn-icon btn-xs btn-light-primary">
+                      <span class="icon-folder_open icon-18"></span>
+                  </a> -->
+              </div>
+              <div class="uploadtemplate">
+                    <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+                        id='dropArea'>
+                        <div class="d-none">
+                            <span id='drop' class="droparea"><codx-label name="lblDropHere" [formModel]="formModel" default="Drop files here or " class="ms-1 fw-bold"></codx-label><a href=""
+                                    [id]='idBrowse'><u><codx-label name="lblBrowse" [formModel]="formModel" default="Browse" class="ms-1 fw-bold"></codx-label></u></a> </span>
+                        </div>
+                        <div class="dropzone-msg dz-message needsclick">
+                            <div class="dropzone-msg-title mb-2"><codx-label name="lblSelect" [formModel]="formModel" default="Chọn một file từ máy của bạn." class="ms-1 fw-bold"></codx-label></div>
+                            <span class="dropzone-msg-desc"><codx-label name="lblDagdrops" [formModel]="formModel" default="Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây, hoặc" class="ms-1 fw-bold"></codx-label></span>
+                        </div>
+                        <div class="dropzone-panel mt-6">
+                            <ejs-uploader #templateupload id='templatefileupload'
+                                [asyncSettings]='path' [dropArea]='dropElement' [multiple]='false'
+                                (selected)='onFileSelect($event)'></ejs-uploader>
+                        </div>
+                    </div>               
+                </div>             
+            </div>
+          <div class="font-weight-bold text-dark mt-3">
+            <codx-label name="lblBusiness" [formModel]="formModel" default="Ghi chú"
+            class="ms-1 fw-bold"></codx-label>
+          </div>
+          <div class="mt-1">
+            <codx-input class="form-control test-datetime" placeholder="{{titleComment}}..." 
+            type="textarea" format="ed2" style="width:100%" [crrValue]="comment"
+            (valueChange)="txtValue($event, 'comment')"></codx-input>              
+          </div>
+          <div class="modal-main">
+              <div *ngIf="this.updateversion" class="d-flex align-items-center file-item mt-1">
+                  <img alt="" class="max-h-35px mr-2"
+                      src="../../../assets/codx/dms/{{dmSV.getAvatar(fileEditing.extension)}}">
+                  <div class="d-flex flex-column flex-grow-1">
+                      <span class="text-dark">{{fileEditing.fileName}}</span>
+                  </div>
+              </div>
+          </div>         
+
+          <ng-container *ngIf="fileEditing != null && fileEditing.history != null">
+              <ng-container *ngFor="let file of fileEditing.history">
+                  <ng-container *ngIf="file.fileName != '' && file.fileName != null">
+                    <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
+                    <ng-template #simple>
+                        <codx-temp-full imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" imgCss="w-35px me-3"
+                            title="{{file.fileName}}" [subTitleTmp]="cardImgFooter"
+                            [descLine]="1">
+                        </codx-temp-full>
+                    </ng-template>
+                    <ng-template #full>
+                        <codx-temp-full imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" imgCss="w-35px me-3"
+                            title="{{file.fileName}}" [subTitleTmp]="cardImgFooter"
+                            [descLine]="1">
+                        </codx-temp-full>
+                    </ng-template>
+                    <ng-template #cardImgFooter let-data>
+                        <div class="w-100 float-start">
+                            <div *ngIf="(displayThumb == 'full')"
+                                class="d-flex flex-column flex-grow-1 file-item float-start w-100">
+                                {{file.createdOn}}{{' | ' + file.createdBy}}
+                            </div>                            
+                        </div>
+                    </ng-template>                   
+                    <div class="action-menu d-flex align-items-center">
+                        <a class="action-item d-flex align-items-center" (click)="openHistory(file)">
+                            <i class="icon-edit text-primary icon-18"></i>
+                        </a>
+                        <a class="action-item d-flex align-items-center" (click)="onDeleteHistory(file.recID)">
+                            <i class="icon-close text-danger icon-18"></i>
+                        </a>
+                    </div>
+                      <!-- <div class="d-flex align-items-center file-item mt-3">
+                          <img alt="" class="max-h-35px mr-2"
+                              src="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}">
+                          <div class="d-flex flex-column flex-grow-1">
+                              <span class="text-dark">{{file.fileName}}</span>
+                              <div class="d-flex mt-1"> 
+                                  <div class="text-dark-75 mr-3">{{file.createdOn |  date : 'dd/MM/yyyy'}}</div>
+                                  <div class="text-dark-75">{{file.createdBy}}</div>
+                              </div>
+                          </div>
+                          <div class="action-menu d-flex align-items-center">
+                                <a class="action-item d-flex align-items-center" (click)="openHistory(file)">
+                                    <i class="icon-edit text-primary icon-18"></i>
+                                </a>
+                                <a class="action-item d-flex align-items-center" (click)="onDeleteHistory(file.recID)">
+                                    <i class="icon-close text-danger icon-18"></i>
+                                </a>
+                          </div>                         
+                      </div> -->
+                  </ng-container>
+              </ng-container>
+          </ng-container>
+      </div>    
+  </ng-template>
+  <ng-template #footer>
+    <button type="button" class="btn btn-primary" (click)="versionFile()">
+      <!-- <codx-label></codx-label> -->
+      <codx-label name="lblVersionUpload" [formModel]="formModel" default="Upload"
+      class="ms-1 fw-bold"></codx-label>
+    </button>
+  </ng-template>
+</codx-form>
