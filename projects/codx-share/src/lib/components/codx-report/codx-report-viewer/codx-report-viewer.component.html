@@ -1,14 +1,16 @@
 <div class="h-100">
   <bold-reportviewer
     #viewer
-    [locale]="locale"
     [toolbarSettings]="toolbarViewSettings"
     [reportServiceUrl]="serviceViewUrl"
-    [parameters]="parameters"
+    [parameters]="paramRequest"
+    [exportSettings]="exportSettings"
     [id]="reportUUID"
     [autoRender]="true"
+    (exportItemClick)="onExportItemClick($event)"
     (toolBarItemClick)="onToolbarViewerClick($event)"
-    style="width: 100%;height: 100%;height: 800px;"
+    (reportLoaded)="loaded($event)"
+    style="width: 100%; height: 100%; height: 800px"
   >
   </bold-reportviewer>
 </div>
