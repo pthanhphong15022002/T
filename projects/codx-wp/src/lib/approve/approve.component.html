@@ -12,8 +12,8 @@ idField="recID"
         <ul class="nav ">
             <li class="nav-item" *ngFor="let item of tabAsside">
                 <a
-                    [class.text-muted]="!item.active" 
-                    class="nav-link text-primary fw-bolder" 
+                    [class.text-primary]="item.active" 
+                    class="nav-link text-muted fw-bolder" 
                     href="javascript:;"
                     (click)="clickTabApprove(item,item.predicate,item.datavalue)">
                     <codx-label formName="" [name]="'lbl'+item.text" [default]="item.text"></codx-label>
@@ -46,7 +46,7 @@ idField="recID"
             cardCss="card-template border-bottom px-2 py-3"
             [icoTitleFld]="data.category"
             [icoTitleVll]="'WP004'"
-            [title]="data.category"
+            title="<span class='fw-bolder ms-2'>{{data.category | vll:'WP004':'text'|async}}</span>"
             [desc]="data.comments"
             [date]="data.createdOn"
             [status]="data.approveStatus"

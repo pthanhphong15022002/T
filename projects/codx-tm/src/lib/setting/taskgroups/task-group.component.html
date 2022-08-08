@@ -89,12 +89,12 @@
             <button [disabled]="!data.checkList" class="btn" type="button" id="dropdownShowDescription"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <div class="d-flex">
-                <span class="icon-assignment icon-16 text-gray-600 me-1" *ngIf="data.checkList"></span>
+                <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
                 <!-- <div class="b text-start" >
                   {{data?.checkList}}
                 </div> -->
               </div>
-              <span class="icon-assignment icon-16 b text-start" *ngIf="!data.checkList"></span>
+              <!-- <span class="icon-assignment icon-16 b text-start" *ngIf="!data.checkList"></span> -->
             </button>
           </div>
         </div>
@@ -205,7 +205,7 @@
   <ng-container *ngFor="let item of popoverDetail; index as i;">
     <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
       <label class="checkbox checkbox-square checkbox-sm mb-0">
-        <codx-input type="checkbox" checked="checked" label="{{item}}" disabled>
+        <codx-input type="checkbox" label="{{item}}" disabled>
         </codx-input>
       </label>
     </div>

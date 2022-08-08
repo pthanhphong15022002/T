@@ -58,38 +58,13 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     }
     else
     {
-      this.converFile();
+      this.convertFile();
     }
   }
   getFiles(){
     return this.lstFile =this.file_img_video.concat(this.file_application);
   }
   getFileByObjectID() {
-    // this.api.execSv(
-    //   "DM","ERM.Business.DM",
-    //   "FileBussiness",
-    //   "GetFilesByObjectIDImageAsync",
-    //   this.objectID)
-    // .subscribe((files:any[]) => {
-    //   if(files.length > 0){
-    //     files.forEach((f:any) => {
-    //       if(f.referType == this.FILE_REFERTYPE.IMAGE){
-    //         this.file_img_video.push(f);
-    //       }
-    //       else if(f.referType == this.FILE_REFERTYPE.VIDEO){
-    //         f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
-    //         this.file_img_video.push(f);
-    //       }
-    //       else{
-    //         this.file_application.push(f);
-    //       }
-    //     });
-    //     this.dt.detectChanges();
-    //     this.evtGetFiles.emit(files);
-    //   }
-    // })
-
-
     this.api.execSv(
         "DM","ERM.Business.DM",
         "FileBussiness",
@@ -110,12 +85,11 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
             }
           }); 
         this.dt.detectChanges();
-        this.evtGetFiles.emit(files);
         }
       })
   }
 
-  converFile(){
+  convertFile(){
     if(this.lstFile){
       this.lstFile.forEach((f:any) => {
         if(f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO  ){
@@ -134,25 +108,46 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   }
 
   removeFiles(file:any){
-    if(file.referType == this.FILE_REFERTYPE.IMAGE || file.referType == this.FILE_REFERTYPE.VIDEO){
-      for (let i = 0; i < this.file_img_video.length; i++) {
-        if(this.file_img_video[i].fileName == file.fileName)
-        {
-          this.file_img_video.splice(i,1);
-          break;
+    switch(file.referType){
+      case this.FILE_REFERTYPE.APPLICATION:
+        for (let i = 0; i < this.file_application.length; i++) {
+          if(this.file_application[i].fileName == file.fileName)
+          {
+            this.file_application.splice(i,1);
+            break;
+          };
         };
-      };
+        break;
+      default:
+        
+        for (let i = 0; i < this.file_img_video.length; i++) {
+          if(this.file_img_video[i].fileName == file.fileName)
+          {
+            this.file_img_video.splice(i,1);
+            break;
+          };
+        }; 
+        break;
     }
-    else
-    {
-      for (let i = 0; i < this.file_application.length; i++) {
-        if(this.file_application[i].fileName == file.fileName)
-        {
-          this.file_application.splice(i,1);
-          break;
-        };
-      };
-    }
+    // if(file.referType == this.FILE_REFERTYPE.IMAGE || file.referType == this.FILE_REFERTYPE.VIDEO){
+    //   for (let i = 0; i < this.file_img_video.length; i++) {
+    //     if(this.file_img_video[i].fileName == file.fileName)
+    //     {
+    //       this.file_img_video.splice(i,1);
+    //       break;
+    //     };
+    //   };
+    // }
+    // else
+    // {
+    //   for (let i = 0; i < this.file_application.length; i++) {
+    //     if(this.file_application[i].fileName == file.fileName)
+    //     {
+    //       this.file_application.splice(i,1);
+    //       break;
+    //     };
+    //   };
+    // }
       this.filesDelete.push(file);
       this.removeFile.emit(file);
       this.dt.detectChanges();

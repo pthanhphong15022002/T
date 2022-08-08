@@ -194,7 +194,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       } else {
         this.task.category = '1';
       }
-      this.titleAction = 'Copy';
+      this.titleAction = 'Sao chép';
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
       this.titleAction = this.action == 'edit' ? 'Chỉnh sửa' : 'Xem chi tiết';
@@ -205,6 +205,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openInfo(this.task.taskID, this.action);
     }
+  }
+
+  setTitle(e: any) {
+    this.title = this.titleAction + ' ' +  e.charAt(0).toLocaleLowerCase() + e.slice(1);;
+    this.changeDetectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -879,12 +884,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.crrIndex = i;
     p.open();
     this.popover = p;
-  }
-
-  setTitle(e: any) {
-    this.title = this.titleAction + ' ' + e;
-    this.changeDetectorRef.detectChanges();
-    console.log(e);
   }
 
   buttonClick(e: any) {

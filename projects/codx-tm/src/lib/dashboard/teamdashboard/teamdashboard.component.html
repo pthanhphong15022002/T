@@ -243,7 +243,7 @@
         <codx-img [width]="25" [objectId]="item?.id" [objectName]="item?.id" [objectType]="'AD_Users'"></codx-img>
       </div>
       <div class="d-flex align-items-center mb-5">
-        <span class="fw-bold me-3">{{ item?.qtyTasks }}</span>
+        <span class="fw-bold w-50px me-3 text-end">{{ item?.qtyTasks }}</span>
         <div class="progress w-100">
           <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="item?.status?.done"></div>
           <div class="progress-bar progress-bar-processing" role="progressbar" [style.backgroundColor]=""
@@ -266,7 +266,7 @@
         <codx-img [width]="25" [objectId]="item?.id" [objectName]="item?.id" [objectType]="'AD_Users'"></codx-img>
       </div>
       <div class="d-flex align-items-center mb-5">
-        <span class="fw-bold me-3">{{ item?.completed }}</span>
+        <span class="fw-bold w-50px me-3 text-end">{{ item?.completed }}</span>
         <div class="progress w-100">
           <div class="progress-bar progress-bar-processing" role="progressbar" [style.width.%]="item?.percentage"></div>
         </div>

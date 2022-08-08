@@ -13,10 +13,10 @@
         </div>
         <div class="d-flex flex-wrap mt-2">
           <div class="d-flex align-items-center me-5 mb-2">
-            <codx-label [default]="gridViewSetup?.Category?.headerText +' : '" class="me-2"></codx-label>
+          <!--   <codx-label [gridViewName]="fucList['gridViewName']" [formName]="fucList['formName']" fiedName="Category" class="me-2"></codx-label> -->
+            <span>{{gridViewSetup?.Category?.headerText}}</span>
             <codx-vll
-              [formModel]="formModel"
-              [field]="'Category'"
+              [name]="gridViewSetup?.Category?.referedValue"
               [value]="data?.category"
               [showText]="true"
               [showBgColor]="true"
