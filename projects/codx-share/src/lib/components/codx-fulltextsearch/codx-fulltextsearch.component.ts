@@ -182,7 +182,6 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   }
   searchText(changePage = false)
   {
-    debugger;
     if(changePage == false) this.page = 1;
     this.api.execSv<any>(this.service,"CM", "DataBusiness", "SearchFullTextAdvAsync",
     {
