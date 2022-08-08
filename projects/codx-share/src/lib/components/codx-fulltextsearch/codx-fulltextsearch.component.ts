@@ -37,6 +37,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   @Input() tempMenu : TemplateRef<any>;
   @Input() service : string;
   @Input() entityName : string;
+  @Input() widthItemTmp : number | any;
   //
 
   @Input() modeDropDown = false;
