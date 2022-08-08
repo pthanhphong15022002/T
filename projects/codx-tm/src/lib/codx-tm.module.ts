@@ -67,6 +67,7 @@ import { MeetingDetailComponent } from './tmmeetings/meeting-detail/meeting-deta
 import { PopupUpdateProgressComponent } from './tasks/popup-update-progress/popup-update-progress.component';
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
 import { TemplateComponent } from './tmmeetings/template/template.component';
+import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 
 export const routes: Routes = [
   {
@@ -248,6 +249,7 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
+    SplitterModule
   ],
   exports: [RouterModule],
   declarations: T_Component,

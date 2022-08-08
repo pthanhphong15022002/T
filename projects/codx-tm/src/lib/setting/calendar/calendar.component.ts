@@ -89,7 +89,7 @@ export class CalendarComponent
         APICONSTANT.ASSEMBLY.CM,
         APICONSTANT.BUSINESS.CM.Parameters,
         'GetOneField',
-        ['TM_Parameters', null, 'CalendarID']
+        ['TMParameters', null, 'CalendarID']
       )
       .subscribe((res) => {
         if (res) {

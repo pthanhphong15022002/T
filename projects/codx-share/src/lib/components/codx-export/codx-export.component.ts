@@ -58,6 +58,22 @@ export class CodxExportComponent implements OnInit, OnChanges {
   assemblyName: string = 'AD';
   className: string = 'ExcelTemplatesBusiness';
   method: string = 'GetByEntityAsync';
+
+  moreFunction = 
+  [
+    {
+      id: "edit",
+      icon: "icon-edit",
+      text: "Chỉnh sửa",
+      textColor : "#307CD2"
+    },
+    {
+      id: "delete",
+      icon: "icon-delete",
+      text: "Xóa",
+      textColor: "#F54E60"
+    }
+  ]
   @ViewChild('attachment') attachment: AttachmentComponent;
   constructor(
     private callfunc: CallFuncService,
@@ -227,6 +243,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
         if (value.dataExport == 'all') {
           this.gridModel.page = 1;
           this.gridModel.pageSize = -1;
+          this.gridModel.predicates = null;
+          this.gridModel.dataValues = null;
         } else if (value.dataExport == 'selected') {
           this.gridModel.predicates = 'RecID=@0';
           this.gridModel.dataValues = [this.recID].join(';');
