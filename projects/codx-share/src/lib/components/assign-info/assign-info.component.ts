@@ -157,7 +157,7 @@ export class AssignInfoComponent implements OnInit {
           this.listTodo.push(taskG);
         });
       }
-     
+     if(this.taskParent?.taskGroupID) this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
 
     this.changeDetectorRef.detectChanges();
@@ -570,6 +570,21 @@ export class AssignInfoComponent implements OnInit {
           this.param = param;
           this.taskType = param?.TaskType;
           //  this.paramModule = param;
+        }
+      });
+  }
+  logicTaskGroup(idTaskGroup) {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskGroupBusiness',
+        'GetAsync',
+        idTaskGroup
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.convertParameterByTaskGroup(res);
         }
       });
   }
