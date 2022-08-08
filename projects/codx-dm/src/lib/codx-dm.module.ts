@@ -28,6 +28,9 @@ import { PropertiesComponent } from './properties/properties.component';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { CoreModule } from '@core/core.module';
 import { MoveComponent } from './move/move.component';
+import { VersionComponent } from './version/version.component';
+import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
+import { ShareComponent } from './share/share.component';
 
 export const routes: Routes = [
   {
@@ -68,7 +71,9 @@ const T_Component: Type<any>[] = [
   SubFolderComponent,
   CopyComponent,
   PropertiesComponent,
-  MoveComponent
+  MoveComponent,
+  VersionComponent,
+  ShareComponent
 ]
 @NgModule({
   imports: [
@@ -88,7 +93,8 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
-    CoreModule    
+    CoreModule,
+    UploaderModule    
   ],
   exports: [
     RouterModule

@@ -110,15 +110,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   removeFiles(file:any){
     switch(file.referType){
       case this.FILE_REFERTYPE.APPLICATION:
-        for (let i = 0; i < this.file_img_video.length; i++) {
-          if(this.file_img_video[i].fileName == file.fileName)
-          {
-            this.file_img_video.splice(i,1);
-            break;
-          };
-        }; 
-        break;
-      default:
         for (let i = 0; i < this.file_application.length; i++) {
           if(this.file_application[i].fileName == file.fileName)
           {
@@ -126,6 +117,16 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
             break;
           };
         };
+        break;
+      default:
+        
+        for (let i = 0; i < this.file_img_video.length; i++) {
+          if(this.file_img_video[i].fileName == file.fileName)
+          {
+            this.file_img_video.splice(i,1);
+            break;
+          };
+        }; 
         break;
     }
     // if(file.referType == this.FILE_REFERTYPE.IMAGE || file.referType == this.FILE_REFERTYPE.VIDEO){
