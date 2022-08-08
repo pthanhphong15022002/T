@@ -1,4 +1,13 @@
-<codx-fulltextsearch #view [centerTmp]="centerTmp"  [widthLeft]="400" [funcID]="funcID" [service]="service" [entityName]="entityName" (selectedChange)="onSelected($event)"></codx-fulltextsearch>
+<codx-fulltextsearch #view 
+    [centerTmp]="centerTmp" 
+    [widthItemTmp]="400" 
+    [pageSize]="10" 
+    [widthLeft]="400" 
+    [funcID]="funcID" 
+    [service]="service" 
+    [entityName]="entityName" 
+    (selectedChange)="onSelected($event)">
+</codx-fulltextsearch>
 <!-- <ng-template #menu >
     <button (click)="testSearch()">test</button>
 </ng-template> -->
@@ -12,11 +21,6 @@
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
     [bookmark]="data.isBookmark" [titleLine]="2"  [dataItem]="data" >
     </codx-temp-full>
-</ng-template>
-
-<ng-template #headerRight let-data>
-    <codx-input type="radio" [crrValue]="data.recID" name="rddispatch" ControlName="recID">
-    </codx-input>
 </ng-template>
 
 <ng-template #rightTmp>

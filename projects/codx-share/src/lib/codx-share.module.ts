@@ -58,6 +58,7 @@ import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
 import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
+import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -89,6 +90,7 @@ const T_Component: Type<any>[] = [
   CodxReportViewerComponent,
   CodxReportDesignerComponent,
   NoteDrawerComponent,
+  CodxApprovalComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

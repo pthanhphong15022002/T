@@ -16,6 +16,7 @@
     [title]="dvlApproval?.text"
     [icoCss]="dvlApproval?.icon + ' w-30px d-flex h-30px justify-content-center align-items-center rounded-circle text-white'"
     [icoStyle]="setStyles(dvlApproval?.color)"
+    [desc]="data?.htmlView"
     [statusVll]="'VL003'"
     [status]="data?.status"
     [titleLine]="2"
@@ -29,7 +30,5 @@
   <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
 <ng-template #panelRightRef>
- <app-approval-view-detail #viewdetail [data]="lstDtDis" [dataItem]="dataItem" [funcID]="funcID" [view]="view"
-   >
-  </app-approval-view-detail> 
+  <ng-container *ngTemplateOutlet="tmpDetail"></ng-container>
 </ng-template>
