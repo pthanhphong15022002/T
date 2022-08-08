@@ -102,26 +102,14 @@ export class PopupAddSprintsComponent implements OnInit {
       .save((option: any) => this.beforeSave(option, isAdd)) //Hảo code mới
       .subscribe((res) => {
         if (res) {
-          this.imageAvatar
-            .updateFileDirectReload(this.master.iterationID)
-            .subscribe((res) => {
-              // if (isAdd) {
-              //   var dataNew = this.dialog.dataService.data[0];
-              //   this.dialog.dataService.data[0] =
-              //     this.dialog.dataService.data[1];
-              //   this.dialog.dataService.data[1] = dataNew;
-              // }
-              // this.dialog.close();
-            });
-            if (isAdd) {
-              var dataNew = this.dialog.dataService.data[0];
-              this.dialog.dataService.data[0] =
-                this.dialog.dataService.data[1];
-              this.dialog.dataService.data[1] = dataNew;
-            }
-            this.dialog.close();
+          this.imageAvatar.updateFileDirectReload(this.master.iterationID);
+          if (isAdd) {
+            var dataNew = this.dialog.dataService.data[0];
+            this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
+            this.dialog.dataService.data[1] = dataNew;
+          }
+          this.dialog.close();
         }
-
       });
     // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
     //   if (res) {

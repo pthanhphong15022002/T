@@ -303,7 +303,7 @@ export class TasksComponent extends UIComponent {
         'ERM.Business.CM',
         'ParametersBusiness',
         'GetOneField',
-        ['TM_Parameters', null, 'CalendarID']
+        ['TMParameters', null, 'CalendarID']
       )
       .subscribe((res) => {
         if (res) {
@@ -765,7 +765,7 @@ export class TasksComponent extends UIComponent {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleWithCategoryAsync',
-        ['TM_Parameters', '1']
+        ['TMParameters', '1']
       )
       .subscribe((res) => {
         if (res) {
