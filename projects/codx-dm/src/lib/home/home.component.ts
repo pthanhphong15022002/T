@@ -171,30 +171,30 @@ export class HomeComponent extends UIComponent {
     }
   }
 
-  setFullHtmlNode(folder, text) {
-    var item1 = '';
-    var item2 = '';
+  // setFullHtmlNode(folder, text) {
+  //   var item1 = '';
+  //   var item2 = '';
 
-    if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
-    else {
-      if (folder.icon.indexOf('.') == -1)
-        item1 = `<i class="${folder.icon}" role="presentation"></i>`;
-      else {
-        var path = `${this.path}/${folder.icon}`;
-        item1 = `<img class="h-15px " src="${path}">`;
-      }
-    }
+  //   if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
+  //     item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
+  //   else {
+  //     if (folder.icon.indexOf('.') == -1)
+  //       item1 = `<i class="${folder.icon}" role="presentation"></i>`;
+  //     else {
+  //       var path = `${this.path}/${folder.icon}`;
+  //       item1 = `<img class="h-15px " src="${path}">`;
+  //     }
+  //   }
 
-    if (!folder.read)
-      item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
-    var fullText = `${item1}
-                    ${item2}
-                    <span class="mytree_node  me-2"></span>
-                    ${text}`;
+  //   if (!folder.read)
+  //     item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
+  //   var fullText = `${item1}
+  //                   ${item2}
+  //                   <span class="mytree_node  me-2"></span>
+  //                   ${text}`;
 
-    return fullText;
-  }
+  //   return fullText;
+  // }
 
   onSelectionChanged($data) {
     //  console.log($data.data);
