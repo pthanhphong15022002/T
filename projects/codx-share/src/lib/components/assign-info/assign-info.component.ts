@@ -74,10 +74,11 @@ export class AssignInfoComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.getParam()
     this.task = {
       ...this.task,
       ...dt?.data[0],
-    };
+    }; 
     this.refID = this.task?.refID;
     this.refType = this.task?.refType;
     if (this.task?.taskID) this.taskParent = this.task;
@@ -234,6 +235,31 @@ export class AssignInfoComponent implements OnInit {
     if (this.task.assignTo == null || this.task.assignTo == '') {
       this.notiService.notifyCode('TM011');
       return;
+    }
+    if (this.param?.ProjectControl == '2' && !this.task.projectID) {
+      this.notiService.notifyCode('TM028');
+      return;
+    }
+    if (
+      this.param?.LocationControl == '2' &&
+      (this.task.location == null || this.task?.location.trim() == '')
+    ) {
+      this.notiService.notifyCode('TM029');
+      return;
+    }
+    if (this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)) {
+      this.notiService.notifyCode('TM030');
+      return;
+    }
+    if (this.param?.DueDateControl == '1' && this.task.dueDate <= new Date()) {
+      this.notiService.notifyCode('TM031');
+      return;
+    }
+    if (this.task.taskGroupID) {
+      if (this.taskGroup?.checkListControl != '0' && this.listTodo.length == 0) {
+        this.notiService.notifyCode('TM032');
+        return;
+      }
     }
     if (this.isHaveFile)
       this.attachment.saveFiles();
@@ -503,8 +529,6 @@ export class AssignInfoComponent implements OnInit {
   }
 
   loadTodoByGroup(idTaskGroup) {
-    // if( this.countTodoByGroup>0)
-    // this.listTodo.slice(this.listTodo.length- this.countTodoByGroup, this.countTodoByGroup)
     this.api
       .execSv<any>(
         'TM',
