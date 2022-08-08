@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 /***Khong duoc xoa***/
+@import "/node_modules/codx-core/assets/sass/init";
+
 .e-device .e-dlg-content,
 .e-device .e-dlg-content * {
     font-size: inherit;
@@ -36,7 +38,12 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
     --bs-body-line-height: 1.4;
 
     /////
+
     --text-primary: #005dc7;
+    --text-primary-dark: #0078FF;
+    --text-primary-darker: #005dc7;
+    --text-primary-light:#D3E8FF;
+    --text-dark: #1d1f1f;
     --gray-800: #28292b;
     --gray-700: #3f4144;
     --gray-600: #5d6061;
@@ -51,3 +58,63 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 }
 
 /***END Khong duoc xoa***/
+.user-mini-icon{
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #f1f1fa;
+}
+.rounded {
+    border-radius: 0.475rem !important;
+  }
+  
+  .rounded-0 {
+    border-radius: 0 !important;
+  }
+  
+  .rounded-1 {
+    border-radius: 0.425rem !important;
+  }
+  
+  .rounded-2 {
+    border-radius: 0.475rem !important;
+  }
+  
+  .rounded-3 {
+    border-radius: 0.625rem !important;
+  }
+  
+  .rounded-4 {
+    border-radius: 1rem !important;
+  }
+  
+  .rounded-circle {
+    border-radius: 50% !important;
+  }
+  
+  .rounded-pill {
+    border-radius: 50rem !important;
+  }
+  
+  .rounded-top {
+    border-top-left-radius: var(--bs-border-radius) !important;
+    border-top-right-radius: var(--bs-border-radius) !important;
+  }
+  
+  .rounded-end {
+    border-top-right-radius: var(--bs-border-radius) !important;
+    border-bottom-right-radius: var(--bs-border-radius) !important;
+  }
+  
+  .rounded-bottom {
+    border-bottom-right-radius: var(--bs-border-radius) !important;
+    border-bottom-left-radius: var(--bs-border-radius) !important;
+  }
+  
+  .rounded-start {
+    border-bottom-left-radius: var(--bs-border-radius) !important;
+    border-top-left-radius: var(--bs-border-radius) !important;
+  }

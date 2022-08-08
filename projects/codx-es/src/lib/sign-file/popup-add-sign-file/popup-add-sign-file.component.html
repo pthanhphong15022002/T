@@ -2,8 +2,8 @@
   [headerText]="" [subHeaderText]=""> -->
 <div class="card-body p-0 codx-card-custom" *ngIf="isAfterRender">
   <div class="codx-stepper stepper stepper-pills">
-    <div class="stepper-header d-flex flex-wrap flex-stack px-6">
-      <div class="d-flex align-items-center">
+    <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
+      <div class="d-flex align-items-center ">
         <h2 class="h2-title">
           <codx-label name="lblTitleSignFile" default="Thêm mới tài liệu" [formModel]="formModel"></codx-label>
         </h2>
@@ -63,20 +63,26 @@
         </div>
       </div>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" (click)="continue(currentTab)"
-          *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+
+        <a href="#" class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4">Từ chối</a>
+        <a href="#" class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4">Làm lại</a>
+        <a href="#" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4">Ký</a>
+
+        <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+          (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
           <codx-label name="lbl" [formModel]="formModel" default="Tiếp tục"></codx-label>
         </button>
-
-        <i class="icon-close icon-18" (click)="close(templateClose)"></i>
+        <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
+          <i class="icon-close icon-18" (click)="close(templateClose)"></i>
+        </div>
       </div>
     </div>
-    <div class="stepper-body p-6 w-100" *ngIf="currentTab < 3">
-      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-900px h-100">
-        <div class="card-body px-6 px-lg-10 py-6 py-lg-10 overflow-auto">
-          <div class="tab-content py-5">
+    <div class="stepper-body p-2 w-100" *ngIf="currentTab < 3">
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100">
+        <div class="card-body overflow-auto">
+          <div class="tab-content">
             <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
-              <div class="mb-10 text-center">
+              <div class="mb-10 mt-10 text-center">
                 <h2 class="h2-title">
                   <codx-label name="lblUploadFile" [formModel]="formModel" default="Upload file"></codx-label>
                 </h2>
@@ -96,7 +102,7 @@
               </div>
             </div>
             <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
-              <div class="mb-10 text-center">
+              <div class="mb-10 mt-10 text-center">
                 <h2 class="h2-title">
                   <codx-label name="lblTitleAddSignFile" [formModel]="formModel" default="Bổ sung thông tin tài liệu">
                   </codx-label>
@@ -106,8 +112,7 @@
                 <div class="form-group">
                   <codx-label fiedName="Title" default="Tên tài liệu" [formModel]="formModel">
                   </codx-label>
-                  <codx-input type="text" name="text" cssClass="form-control" ControlName="title"
-                    [Group]="dialogSignFile">
+                  <codx-input type="text" name="text" field="title" [Group]="dialogSignFile">
                   </codx-input>
                 </div>
                 <div class="row">
@@ -136,7 +141,7 @@
                     <div class="form-group">
                       <codx-label fiedName="RefNo" [formModel]="formModel" default="Số văn bản">
                       </codx-label>
-                      <codx-input type="text" name="text" [Group]="dialogSignFile" ControlName="refNo" [disabled]="true"
+                      <codx-input type="text" name="text" field="refNo" [disabled]="true"
                         [crrValue]="dialogSignFile.value.refNo">
                       </codx-input>
                     </div>
@@ -182,12 +187,22 @@
           </div>
         </div>
 
-        <div class="d-flex justify-content-between card-footer border-0 px-6 px-lg-10 pt-0 pb-6 pb-lg-10">
-          <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0"
-            (click)="openPopup(processTemplate)">
-            <codx-label name="" [formModel]="formModel" class="" default="Quy trình mẫu" class="">
-            </codx-label>
-          </button>
+
+
+        <div class="d-flex flex-stack  justify-content-between card-footer border-0">
+
+          <div class="left">
+            <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">
+              <codx-label name="" [formModel]="formModel" class="" default="Quay lại" class="">
+              </codx-label>
+            </button>
+            <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0"
+              (click)="openPopup(processTemplate)">
+              <codx-label name="" [formModel]="formModel" class="" default="Quy trình mẫu" class="">
+              </codx-label>
+            </button>
+          </div>
+
           <div *ngIf="currentTab == 0"></div>
           <button type="button" class="btn btn-primary" (click)="continue(currentTab)"
             [ngClass]="(attachment?.fileUploadList?.length <= 0 && currentTab == 0) && dialogSignFile.value.files?.length <= 0 ? 'disabled' : ''">
@@ -197,8 +212,8 @@
         </div>
       </div>
     </div>
-    <lib-approval [isApprover]="false" [recID]="dialogSignFile.value.recID"
-      *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+    <lib-approval *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0" [isApprover]="false"
+      [recID]="dialogSignFile.value.recID">
     </lib-approval>
   </div>
 </div>

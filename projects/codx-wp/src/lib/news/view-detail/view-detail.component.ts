@@ -78,14 +78,13 @@ export class ViewDetailComponent implements OnInit {
     this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID).subscribe(
       (res) => {
         if (res) {
-          this.codxService.navigate('', '/wp/' + data.category + '/view-detail/' + data.recID + '/' + this.funcID);
+          this.codxService.navigate('', '/wp/news/'+this.funcID+'/'+data.category+'/'+data.recID);
           this.loadData(data.recID);
         }
       });
   }
-  clickTag(data: any) {
-    let funcID = this.route.snapshot.params["funcID"];
-    this.codxService.navigate('', '/wp/tag/' + funcID + '/tagID/' + data.value);
+  clickTag(tag: any) {
+    this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + tag.value);
   }
 
   clickShowPopupCreate(newsType: string) {
@@ -93,7 +92,7 @@ export class ViewDetailComponent implements OnInit {
     option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
+    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', {type:newsType}, '', option);
   }
 
   searchField: string = "";

@@ -1,21 +1,17 @@
 import {
-  ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
+  Injector,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
-  CallFuncService,
   DataRequest,
   DialogRef,
+  NotificationsService,
   ResourceModel,
   SidebarModel,
+  UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
@@ -27,24 +23,20 @@ import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-st
   templateUrl: './stationery.component.html',
   styleUrls: ['./stationery.component.scss'],
 })
-export class StationeryComponent implements OnInit {
+export class StationeryComponent extends UIComponent {
   @ViewChild('base') viewBase: ViewsComponent;
-  @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
-  @ViewChild('listItem') listItem: TemplateRef<any>;
-  @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
-  @ViewChild('colorCol') colorCol: TemplateRef<any>;
-  @ViewChild('costPriceCol') costPriceCol: TemplateRef<any>;
-  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
-  @Input('data') data;
-  @Output() editData = new EventEmitter();
+  @ViewChild('productImg') productImg: TemplateRef<any>;
+  @ViewChild('product') product: TemplateRef<any>;
+  @ViewChild('color') color: TemplateRef<any>;
+  @ViewChild('costPrice') costPrice: TemplateRef<any>;
+  @ViewChild('location') location: TemplateRef<any>;
+  @ViewChild('owner') owner: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  button: ButtonModel;
+  buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
   columnsGrid;
-  dataSelected;
-
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
@@ -69,7 +61,6 @@ export class StationeryComponent implements OnInit {
     icon: '',
     equipments: '',
   };
-  // dialog: FormGroup;
   dialog!: DialogRef;
   model: DataRequest;
   modelResource: ResourceModel;
@@ -86,15 +77,15 @@ export class StationeryComponent implements OnInit {
     },
   ];
   constructor(
-    private cf: ChangeDetectorRef,
-    private callfunc: CallFuncService,
-    private activedRouter: ActivatedRoute
+    private injector: Injector,
+    private notiService: NotificationsService
   ) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void {
-    this.button = {
+  onInit(): void {
+    this.buttons = {
       id: 'btnAdd',
     };
     this.modelResource = new ResourceModel();
@@ -109,29 +100,30 @@ export class StationeryComponent implements OnInit {
   ngAfterViewInit(): void {
     this.columnsGrid = [
       {
+        headerText: '',
+        template: this.productImg,
+      },
+      {
         headerText: 'Sản phẩm',
-        width: '40%',
-        template: this.resourceNameCol,
+        width: '20%',
+        template: this.product,
       },
       {
         headerText: 'Màu',
-        width: '20%',
-        template: this.colorCol,
+        template: this.color,
       },
       {
-        field: 'costPrice',
-        width: '15%',
         headerText: 'Giá mua gần nhất',
-      },
-      {
-        field: 'location',
-        width: '10%',
-        headerText: 'Quản lý kho',
+        template: this.costPrice
       },
       {
         headerText: 'Quản lý kho',
-        width: '15%',
-        template: this.ownerCol,
+        template: this.location,
+      },
+      {
+        headerText: 'Quản lý kho',
+        width: '20%',
+        template: this.owner,
       },
     ];
 
@@ -160,61 +152,58 @@ export class StationeryComponent implements OnInit {
         text: 'Xóa',
       },
     ];
-    this.cf.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
-  add(evt: any) {
+  click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.addNew();
-        break;
-      case 'btnEdit':
-        this.edit();
-        break;
-      case 'btnDelete':
-        this.delete();
+        this.add();
         break;
     }
   }
 
-  addNew(evt?: any) {
-    this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
+  add() {
+    this.viewBase.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
+      let dataSelected = this.viewBase.dataService.dataSelected;
+
       option.Width = '800px';
       option.FormModel = this.viewBase?.currentView?.formModel;
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
-        this.dataSelected,
+        dataSelected,
         option
       );
     });
   }
 
   edit(data?) {
+    let option = new SidebarModel();
     let editItem = this.viewBase.dataService.dataSelected;
+
     if (data) {
       editItem = data;
     }
     this.viewBase.dataService.edit(editItem).subscribe((res) => {
-      let option = new SidebarModel();
       option.Width = '800px';
       option.FormModel = this.viewBase?.currentView?.formModel;
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
         editItem,
         option
       );
     });
   }
+
   delete(evt?) {
+    let dataSelected = this.viewBase.dataService.dataSelected;
     this.viewBase.dataService
       .delete([this.viewBase.dataService.dataSelected])
       .subscribe((res) => {
-        console.log(res);
-        this.dataSelected = res;
+        if (res) this.notiService.notifyCode('TM004');
       });
   }
 
@@ -241,7 +230,7 @@ export class StationeryComponent implements OnInit {
     }
   }
 
-  click(data) {
-    console.log(data);
+  splitColor(color: string): any {
+    return color.split(";");
   }
 }

@@ -1,10 +1,8 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-
+<codx-form headerText="{{title}}" [body]="body" [dialog]="dialog">
   <ng-template #body>
     <div style="margin-bottom: 10px;">
       <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
     </div>
-
     <div *ngFor="let item of allRoles">
       <div class="d-flex align-items-start" style="margin-bottom: 10px;">
         <!-- <codx-img class="symbol symbol-40 symbol-circle me-4" [objectId]="item.smallIcon" objectType="AD_Roles">
@@ -20,7 +18,5 @@
         </div>
       </div>
     </div>
-
   </ng-template>
-  <ng-template #footer></ng-template>
 </codx-form>

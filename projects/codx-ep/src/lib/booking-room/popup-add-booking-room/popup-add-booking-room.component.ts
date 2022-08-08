@@ -3,23 +3,19 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Injector,
   OnInit,
   Optional,
   Output,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DatetimePipe } from '@core/pipes/datetime.pipe';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { traceChildProgressBar } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
 import {
-  ApiHttpService,
-  CacheService,
-  CallFuncService,
   DialogData,
   DialogRef,
-  NotificationMessage,
   NotificationsService,
+  UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService, ModelPage } from '../../codx-ep.service';
@@ -35,7 +31,7 @@ export class Device {
   templateUrl: './popup-add-booking-room.component.html',
   styleUrls: ['./popup-add-booking-room.component.scss'],
 })
-export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
+export class PopupAddBookingRoomComponent extends UIComponent {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -46,7 +42,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   vllDevices = [];
   lstDeviceRoom = [];
   isAfterRender = false;
-  addEditForm: FormGroup;
+  dialogAddBookingRoom: FormGroup;
   chosenDate = null;
   CbxName: any;
   link = '';
@@ -76,39 +72,25 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   dialog: any;
   isSaveSuccess = false;
   constructor(
-    private bookingService: CodxEpService,
-    private cacheSv: CacheService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private notification: NotificationsService,
-    private cfService: CallFuncService,
-    private api: ApiHttpService,
-    private modalService: NgbModal,
-    private callFuncService: CallFuncService,
+    private injector: Injector,
+    private notiService: NotificationsService,
+    private epService: CodxEpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(injector);
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
     this.range = dialog.dataService!.dataSelected;
   }
-  ngAfterViewInit(): void {
-    if (this.dialog) {
-      if (!this.isSaveSuccess) {
-        this.dialog.closed.subscribe((res: any) => {
-          console.log('Close without saving or save failed', res);
-          this.dialog.dataService.saveFailed.next(null);
-        });
-      }
-    }
-  }
 
-  ngOnInit(): void {
-    this.bookingService.getModelPage('EPT1').then((res) => {
+  onInit(): void {
+    this.epService.getModelPage('EPT1').then((res) => {
       if (res) {
         this.modelPage = res;
       }
-      this.cacheSv.valueList('EP012').subscribe((res) => {
+      this.cache.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
           let device = new Device();
@@ -120,12 +102,17 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
         console.log('Device: ', this.lstDeviceRoom);
       });
 
-      this.bookingService
+      this.epService
         .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
         .then((res) => {
           this.CbxName = res;
-          console.log(res);
         });
+
+      this.cache.functionList('EPT1').subscribe(res => {
+        this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
+          console.log('Test', res)
+        })
+      })
 
       this.initForm();
     });
@@ -134,17 +121,26 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
     this.chosenDate = null;
   }
 
+  ngAfterViewInit(): void {
+    if (this.dialog) {
+      if (!this.isSaveSuccess) {
+        this.dialog.closed.subscribe((res: any) => {
+          console.log('Close without saving or save failed', res);
+          this.dialog.dataService.saveFailed.next(null);
+        });
+      }
+    }
+  }
+
   initForm() {
-    this.bookingService
+    this.epService
       .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
       .then((item) => {
-        this.addEditForm = item;
+        this.dialogAddBookingRoom = item;
         this.isAfterRender = true;
         if (!this.isAdd) {
-          this.addEditForm && this.addEditForm.patchValue(this.data);
-          console.log(this.addEditForm.value);
+          this.dialogAddBookingRoom && this.dialogAddBookingRoom.patchValue(this.data);
         }
-        console.log(this.addEditForm);
       });
     this.link = null;
     this.selectDate = null;
@@ -152,61 +148,61 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
     this.startTime = null;
   }
   beforeSave(option: any) {
-    let itemData = this.addEditForm.value;
+    let itemData = this.dialogAddBookingRoom.value;
     option.method = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
   onSaveForm() {
-    if (this.resource) {
-      console.log(this.resource);
-    }
-    if (this.addEditForm.invalid == true) {
-      return;
-    }
-    if (
-      this.addEditForm.value.endDate - this.addEditForm.value.startDate <=
-      0
-    ) {
-      this.notification.notifyCode('EP003');
-    }
-    if (this.startTime && this.endTime) {
-      let hours = parseInt(
-        ((this.endTime - this.startTime) / 1000 / 60 / 60).toFixed()
-      );
-      if (!isNaN(hours) && hours > 0) {
-        this.addEditForm.patchValue({ hours: hours });
-      }
-    }
-    let equipments = '';
-    this.lstDeviceRoom.forEach((element) => {
-      if (element.isSelected) {
-        if (equipments == '') {
-          equipments += element.id;
-        } else {
-          equipments += ';' + element.id;
-        }
-      }
-    });
-    this.addEditForm.patchValue({ equipments: equipments });
-    if (this.isAdd) {
-      this.addEditForm.patchValue({
-        category: '1',
-        status: '1',
-        resourceType: '1',
-      });
-      if (!this.addEditForm.value.resourceID) {
-        this.addEditForm.value.resourceID =
-          'd501dea4-e636-11ec-a4e6-8cec4b569fde';
-      }
-    }
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res: any) => {
-        if (res) {
-          this.isSaveSuccess = true;
-        }
-      });
+    // if (this.resource) {
+    // }
+    // if (this.addEditForm.invalid == true) {
+    //   return;
+    // }
+    // if (
+    //   this.addEditForm.value.endDate - this.addEditForm.value.startDate <=
+    //   0
+    // ) {
+    //   this.notiService.notifyCode('EP003');
+    // }
+    // if (this.startTime && this.endTime) {
+    //   let hours = parseInt(
+    //     ((this.endTime - this.startTime) / 1000 / 60 / 60).toFixed()
+    //   );
+    //   if (!isNaN(hours) && hours > 0) {
+    //     this.addEditForm.patchValue({ hours: hours });
+    //   }
+    // }
+    // let equipments = '';
+    // this.lstDeviceRoom.forEach((element) => {
+    //   if (element.isSelected) {
+    //     if (equipments == '') {
+    //       equipments += element.id;
+    //     } else {
+    //       equipments += ';' + element.id;
+    //     }
+    //   }
+    // });
+    // this.addEditForm.patchValue({ equipments: equipments });
+    // if (this.isAdd) {
+    //   this.addEditForm.patchValue({
+    //     category: '1',
+    //     status: '1',
+    //     resourceType: '1',
+    //   });
+    //   if (!this.addEditForm.value.resourceID) {
+    //     this.addEditForm.value.resourceID =
+    //       'd501dea4-e636-11ec-a4e6-8cec4b569fde';
+    //   }
+    // }
+    // this.dialog.dataService
+    //   .save((opt: any) => this.beforeSave(opt))
+    //   .subscribe((res: any) => {
+    //     if (res) {
+    //       this.isSaveSuccess = true;
+    //     }
+    //   });
+    console.log(this.dialogAddBookingRoom.value);
   }
 
   valueChange(event) {
@@ -220,17 +216,14 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
         this.startTime = null;
       }
     } else if (event?.field) {
-      if (event?.field === 'resourceID') {
-        this.addEditForm.patchValue({ resourceID: event.data[0] });
+      if (event.data instanceof Object) {
+        this.dialogAddBookingRoom.patchValue({ [event['field']]: event.data.value });
       } else {
-        if (event.data instanceof Object) {
-          this.addEditForm.patchValue({ [event['field']]: event.data.value });
-        } else {
-          this.addEditForm.patchValue({ [event['field']]: event.data });
-        }
+        this.dialogAddBookingRoom.patchValue({ [event['field']]: event.data });
       }
+
     }
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   closeForm() {
@@ -249,8 +242,8 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 550, 370);
-    this.changeDetectorRef.detectChanges();
+    var dialog = this.callfc.openForm(template, '', 550, 370);
+    this.detectorRef.detectChanges();
   }
 
   private getDismissReason(reason: any): string {
@@ -266,7 +259,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   valueDateChange(event: any) {
     this.selectDate = event.data.fromDate;
     if (this.selectDate) {
-      this.addEditForm.patchValue({ bookingOn: this.selectDate });
+      this.dialogAddBookingRoom.patchValue({ bookingOn: this.selectDate });
     }
 
     this.setDate();
@@ -294,10 +287,9 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
             this.selectDate.setHours(this.beginHour, this.beginMinute, 0)
           );
           if (this.startDate) {
-            this.addEditForm.patchValue({ startDate: this.startDate });
+            this.dialogAddBookingRoom.patchValue({ startDate: this.startDate });
           }
         }
-        console.log(this.startDate);
       }
     }
     if (this.endTime) {
@@ -309,25 +301,24 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
             this.selectDate.setHours(this.endHour, this.endMinute, 0)
           );
           if (this.endDate) {
-            this.addEditForm.patchValue({ endDate: this.endDate });
+            this.dialogAddBookingRoom.patchValue({ endDate: this.endDate });
           }
         }
-        console.log(this.endDate);
       }
       if (this.beginHour > this.endHour || this.beginMinute > this.endMinute) {
-        this.notification.notifyCode('EP003');
+        this.notiService.notifyCode('EP003');
       }
     }
   }
 
   checkedOnlineChange(event) {
-    this.addEditForm.patchValue({
+    this.dialogAddBookingRoom.patchValue({
       online: event.data instanceof Object ? event.data.checked : event.data,
     });
 
-    if (!this.addEditForm.value.online)
-      this.addEditForm.patchValue({ onlineUrl: null });
-    this.changeDetectorRef.detectChanges();
+    if (!this.dialogAddBookingRoom.value.online)
+      this.dialogAddBookingRoom.patchValue({ onlineUrl: null });
+    this.detectorRef.detectChanges();
   }
 
   changeLink(event) {
@@ -335,7 +326,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   }
 
   openPopupLink() {
-    this.callFuncService.openForm(this.addLink, '', 500, 300);
+    this.callfc.openForm(this.addLink, '', 500, 300);
   }
 
   public setdata(data: any) {
@@ -343,7 +334,7 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
       this.isAdd = true;
       this.initForm();
     } else {
-      this.addEditForm.patchValue(data);
+      this.dialogAddBookingRoom.patchValue(data);
     }
   }
 
@@ -352,6 +343,5 @@ export class PopupAddBookingRoomComponent implements OnInit, AfterViewInit {
   }
 
   fileAdded(evt: any) {
-    console.log(evt);
   }
 }

@@ -58,15 +58,12 @@ export class DetailNoteBooksComponent extends UIComponent {
   @ViewChild('lstGrid') lstGrid: CodxGridviewComponent;
   @ViewChild('list') list: TemplateRef<any>;
   @ViewChild('memo', { static: true }) memo;
-  @ViewChild('tag', { static: true }) tag;
+  @ViewChild('tags', { static: true }) tags;
   @ViewChild('createdOn', { static: true }) createdOn;
   @ViewChild('modifiedOn', { static: true }) modifiedOn;
   @ViewChild('fileCount', { static: true }) fileCount;
 
-  constructor(
-    injector: Injector,
-    private route: ActivatedRoute,
-  ) {
+  constructor(injector: Injector, private route: ActivatedRoute) {
     super(injector);
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
@@ -108,7 +105,7 @@ export class DetailNoteBooksComponent extends UIComponent {
       {
         field: 'Tag#',
         headerText: 'Tag#',
-        template: this.tag,
+        template: this.tags,
         width: 200,
       },
       {
@@ -250,6 +247,15 @@ export class DetailNoteBooksComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
+          this.api
+            .execSv(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'DeleteByObjectIDAsync',
+              [data.recID, 'WP_Notes', true]
+            )
+            .subscribe();
           this.view.dataService.remove(res).subscribe();
           this.detectorRef.detectChanges();
         }
