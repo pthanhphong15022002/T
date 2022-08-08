@@ -80,6 +80,7 @@ export class UpdateNotePinComponent implements OnInit {
   onEditIsPin() {
     var isPin = !this.dataOld.isPin;
     this.dataOld.isPin = isPin;
+    this.dataOld.isNote = true;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
         this.dataOld.recID,
@@ -104,6 +105,7 @@ export class UpdateNotePinComponent implements OnInit {
       this.onEditIsPin();
       var isPin = !this.itemUpdate.isPin;
       this.itemUpdate.isPin = isPin;
+      this.itemUpdate.isNote = true;
       this.api
         .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
           this.itemUpdate?.recID,

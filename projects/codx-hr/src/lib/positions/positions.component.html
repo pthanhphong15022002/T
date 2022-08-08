@@ -1,9 +1,3 @@
-<!-- <codx-views #view funcID="HRT02" entityName="HR_Positions" [views]="views" [button]="button" 
-    (buttonClick)="click($event)" idField="employeeID" assemblyName="ERM.Business.HR" className="PositionsBusiness"
-    method="GetModelFormPositionsAsync"  [pageSize]="100"
-    [selectedFirst]="true">
-</codx-views> -->
-
 <codx-views #view [funcID]="funcID" service="HR" entityName="HR_Positions" idField="positionID"
     [itemSelected]="itemSelected" assemblyName="ERM.Business.HR" className="PositionsBusiness"
     method="GetModelFormPositionsAsync" [views]="views" [button]="button" (buttonClick)="click($event)"
@@ -26,7 +20,7 @@
             <codx-treeview id="chartOrg" #chartOrg [pageSize]=10 [itemTemplate]="templateorg" funcId="HRS0201"
                 entityName="HR_OrganizationUnits" service="HR" type="treeView" textField="orgUnitName"
                 gridViewName="grvOrganizationUnits" formName="OrganizationUnits" [enableCheck]=false idField="orgUnitID"
-                (onSelectionChanged)="onSelectionChanged($event)" parentIdField="ParentID">
+                (onSelectionChanged)="onSelectionChanged($event)">
             </codx-treeview>
         </div>
     </div>
@@ -48,10 +42,28 @@
                 </codx-temp-full>
             </div>
 
-            <div >
-                <codx-temp-full cardCss="card-template" [desc]="'Nhóm chức danh: ' + data.jobID"
+            <div class="d-flex flex-wrap">
+                <!-- <codx-temp-full cardCss="card-template" [desc]="'Nhóm chức danh: ' + data.jobID"
                     [desc2]="'Chức vụ: ' + data.jobGroup">
-                </codx-temp-full>
+                </codx-temp-full> -->
+                <div class="d-flex pos-group">
+                    <div class="d-flex flex-column align-items-center pos-item">
+                        <div class="align-items-center1 fs-7">
+                            <codx-label name="lblJobName" formName="Positions" default="Nhóm chức danh: ">
+                            </codx-label>
+                            <span class="text-dark fw-bold">
+                                <span #jobID>{{ data.jobID | formatvalue: view.formModel:"jobID":jobID | async }}</span>
+                            </span>
+                        </div>
+                        <div class="align-items-center1 fs-7">
+                            <codx-label name="lbljobGroup" formName="Positions" default="Chức vụ: ">
+                            </codx-label>
+                            <span class="text-dark fw-bold">
+                                <span #jobGroupID>{{ data.jobGroupID | formatvalue: view.formModel:"jobGroupID":jobGroupID | async }}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="d-flex flex-wrap">

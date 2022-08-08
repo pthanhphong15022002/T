@@ -176,9 +176,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listRoles = res.datas;
       }
     });
-    // this.cache.viewSettingValues('tm1').subscribe(res=>{
-    //   console.log(res)
-    // })
   }
 
   ngOnInit(): void {
@@ -379,7 +376,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (listTodoCopy != null) {
       listTodoCopy.forEach((td) => {
         var todo = new TaskGoal();
-        todo.status = td.status;
+        todo.status = StatusTaskGoal.NotChecked;
         todo.text = td.text;
         t.listTodo.push(Object.assign({}, todo));
       });
@@ -420,7 +417,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     if (
       this.param?.LocationControl == '2' &&
-      (!this.task.location || this.task.location.trim() != '')
+      (this.task.location == null || this.task?.location.trim() == '')
     ) {
       this.notiService.notifyCode('TM029');
       return;
@@ -670,7 +667,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         var time = (
           (this.task.endDate.getTime() - this.task.startDate.getTime()) /
           3600000
-        ).toFixed(1);
+        ).toFixed(2);
         this.task.estimated = Number.parseFloat(time);
         this.crrEstimated = this.task.estimated;
       }
@@ -955,7 +952,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.param.ConfirmControl = taskGroup.confirmControl;
     this.param.EditControl = taskGroup.editControl;
     this.param.LocationControl = taskGroup.locationControl;
-    this.param.MaxHours = taskGroup.maxHours;
+    this.param.MaxHours = taskGroup.maxHours.toString();
     this.param.MaxHoursControl = taskGroup.maxHoursControl;
     this.param.PlanControl = taskGroup.planControl;
     this.param.ProjectControl = taskGroup.projectControl;

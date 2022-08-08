@@ -3,29 +3,49 @@
     height: 0px;
 }
 
-.pd-note {
-    padding-left: 20px;
-    padding-right: 20px;
-}
 
 .active [class*="icon-"] {
-    color: var(--primary-dark);
+    color: #0078FF;
 }
 
 .btn-add {
     margin-left: 21%;
 }
 
-// .notes {
-//     height: 670px !important;
-// }
+.notes {
+    height: 670px !important;
+}
 
-// .note-list {
-//     margin-left: -8px;
-// }
+.note-list {
+    margin-left: -8px;
+}
 
-.show-customName {
-    margin-left: 3%;
-    width: 130px;
-    margin-top: 1%;
+.note-option {
+    max-height: 80px;
+    overflow: auto;
+    width: 100%;
+}
+
+.icon-edit-one {
+    position: absolute;
+    right: 48px;
+    top: 9px;
+    border-radius: 30px !important;
+}
+
+.note-content {
+    background-color: #fff7df;
+    border-left: 3px #ffd075 solid;
+}
+
+.pw-search {
+    width: 94% !important;
+}
+
+.pd-b-10 {
+    padding-bottom: 10px;
+}
+
+.btn-sort {
+    margin-left: 1%;
 }

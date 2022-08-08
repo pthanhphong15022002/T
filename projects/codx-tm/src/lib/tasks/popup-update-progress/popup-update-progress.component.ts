@@ -34,7 +34,6 @@ export class PopupUpdateProgressComponent implements OnInit {
   funcID: any;
   updateForm: FormGroup;
   percentage100 = false;
-  preValue: any;
   submitted = false;
   crrpercentage = 0;
 

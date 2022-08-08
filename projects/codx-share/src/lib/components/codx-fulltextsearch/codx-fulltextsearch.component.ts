@@ -1,7 +1,8 @@
-import { Component, OnInit, AfterViewInit,  OnChanges, SimpleChanges, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit,  OnChanges, SimpleChanges, Input, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, DataRequest } from 'codx-core';
 import { convertHtmlAgency, extractContent, getIdUser } from 'projects/codx-od/src/lib/function/default.function';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'codx-fulltextsearch',
   templateUrl: './codx-fulltextsearch.component.html',
@@ -30,6 +31,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   activePage = 1;
   arrayPaging = [];
   hideN = false;
+  @Input() modeDropDown = false;
   @Input() page = 1;
   @Input() pageSize = 2;
   @Input() widthLeft = 300;
@@ -37,6 +39,8 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
   @Input() centerTmp?: TemplateRef<any>;
   @Input() rightTmp?: TemplateRef<any>;
   @Input() funcID: any;
+  @Input() formModel: any;
+  @Output() selectedChange = new EventEmitter();
   constructor( 
     private router: ActivatedRoute,
     protected cache: CacheService,
@@ -55,7 +59,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
         if(this.funcID)     this.getGridViewSetup();
       });
     this.getGridViewSetup();
-    this.searchText(this.txtSearch);
+    this.searchText();
   }
   ngOnChanges(changes: SimpleChanges): void {
   }
@@ -106,6 +110,12 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
     a.comboboxName = refValue;
     a.page = 1;
     a.pageSize = 5;
+    if(this.modeDropDown == true && (type == "2" || type == "3"))
+    {
+      data.data = refValue;
+      this.dataGroup.push(data);
+      return;
+    }
     //vll
     if(type == "2")
       this.cache.valueList(refValue).subscribe(item=>{
@@ -118,7 +128,8 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
             {
               id : element?.value,
               name : element?.text,
-              view : key
+              view : key,
+             
             }
             result.push(obj);
           });
@@ -128,34 +139,19 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
       })
     //cbb
     else if(type == "3")
+    {
+     
       this.cache.combobox(refValue).subscribe(cbb=>{
-        this.api.execSv("OD","CM","DataBusiness","LoadDataCbxAsync",a).subscribe((item)=>{
-          if(item)
-          {
-            var res = JSON.parse(item[0]);
-            this.countCbb += res.length;
-            var result = [];
-            res.forEach(element => {
-              var obj = 
-              {
-                id : element[cbb?.viewMember],
-                name : element[cbb?.valueMember],
-                view : cbb?.viewMember
-              }
-              result.push(obj);
-            });
-            data.data = result;
-            //this.innerHTML(html , arrayCbb);
-            this.dataGroup.push(data);
-          }
-        }) as any;
+        this.fetch('new',data,a , refValue ,cbb);
       })
+    }
+      
   }
   changeValueText(view: any , e: any)
   {
     var data = e?.data; 
     this.filter[view]=[data];
-    this.searchText(this.txtSearch);
+    this.searchText();
   } 
   changeValueCbb(id:any = "" , view: any , e:any)
   {
@@ -168,20 +164,20 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
       this.filter[view].push(id); 
     else
       this.filter[view] = this.filter[view].filter(function(e) { return e !== id }); 
+
     //debugger;
-    this.searchText(this.txtSearch);
+    this.searchText();
   }
   changeValueDate(view: any , e: any)
   {
 
   }
-  searchText(val:any , changePage = false)
+  searchText(changePage = false)
   {
-    this.txtSearch = val;
     if(changePage == false) this.page = 1;
     this.api.execSv<any>("OD","OD", "DispatchesBusiness", "SearchFullTextAdvAsync",
     {
-      query: val,
+      query: this.txtSearch,
       filter: this.filter,
       functionID:  this.funcID,
       entityName: "OD_Dispatches",
@@ -247,7 +243,7 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
         this.arrayPaging.push(i);
     }
     this.page = index;
-    this.searchText(this.txtSearch , true);
+    this.searchText(true);
   }
   nextPage()
   {
@@ -264,5 +260,77 @@ export class CodxFullTextSearch implements OnInit , OnChanges , AfterViewInit  {
       var per = this.activePage - 1;
       this.changePage(per);
     }
+  }
+  fetch(type:any , data:any , request:any , refValue:any , cbb:any): Observable<any[]> 
+  {
+    let loadmore = false;
+    return this.api.execSv("OD","CM","DataBusiness","LoadDataCbxAsync",request).subscribe((item)=>{
+      if(item)
+      {
+        debugger;
+        var res = JSON.parse(item[0]);
+        var result = [];
+        var l = 0 ; if(data?.data.length>0 && type!="new") l = data?.data.length; 
+        if((l + res.length) < item[1]) loadmore = true;
+        res.forEach(element => {
+          var obj = 
+          {
+            id : element[cbb?.viewMember],
+            name : element[cbb?.valueMember],
+            view : cbb?.viewMember,
+          }
+          result.push(obj);
+        });
+        data.load = loadmore;
+        data.page = request.page;
+        data.ref = refValue;
+        data.isCbb = true;
+        data.cbb = cbb;
+        if(type == "load") data.data = data.data.concat(result);
+        else 
+        {
+          data.data = result;
+          this.dataGroup.push(data);
+
+        }
+        //this.innerHTML(html , arrayCbb);
+
+      }
+    }) as any;
+  }
+  loadMore(data:any)
+  {
+    debugger;
+    if(data.isCbb)
+    {
+      let request= new DataRequest();
+      request.comboboxName = data?.ref;
+      request.page = data?.page+1;
+      request.pageSize = 5;
+      this.fetch("load",data,request,data?.refValue,data.cbb);
+    }
+    
+  }
+  changeValueInput(e:any)
+  {
+    var view = e?.component?.displayMembers[0];
+    var arrvalue = e?.data.split(";");
+    this.filter[view] = [];
+    if(arrvalue)
+    {
+      arrvalue.forEach(id=>{
+        this.filter[view].push(id)
+      })
+    }
+    this.searchText();
+  }
+  onSelected(val:any)
+  {
+    this.selectedChange.emit(val);
+  }
+  changeSearch(e:any)
+  {
+    this.txtSearch = e;
+    this.searchText()
   }
 }

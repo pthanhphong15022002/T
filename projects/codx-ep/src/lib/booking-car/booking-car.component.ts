@@ -1,21 +1,15 @@
-import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
 import {
   Component,
-  OnInit,
   TemplateRef,
   ViewChild,
-  AfterViewInit,
-  ChangeDetectorRef,
+  Injector,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import {
-  ApiHttpService,
   NotificationsService,
-  CacheService,
   ResourceModel,
   DialogRef,
   SidebarModel,
-  CallFuncService,
+  UIComponent,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -27,157 +21,72 @@ import {
 } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { CodxEpService, ModelPage } from '../codx-ep.service';
-import { ActivatedRoute } from '@angular/router';
-export class defaultRecource {}
+import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
 @Component({
   selector: 'booking-car',
   templateUrl: 'booking-car.component.html',
   styleUrls: ['booking-car.component.scss'],
 })
-export class BookingCarComponent implements OnInit, AfterViewInit {
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('asideLeft') asideLeft: TemplateRef<any>;
-  @ViewChild('popupDevice', { static: true }) popupDevice;
+export class BookingCarComponent extends UIComponent {
   @ViewChild('base') viewBase: ViewsComponent;
-  @ViewChild('scheduleTemplate') scheduleTemplate: TemplateRef<any>;
-  @ViewChild('scheduleCar') schedule: CodxScheduleComponent;
-  @ViewChild('gridTemplateCar') gridTemplate: TemplateRef<any>;
-  @ViewChild('carBookingDialog') carBookingEditor: TemplateRef<any>;
-  @ViewChild('editor') carBookingForm: PopupAddBookingCarComponent;
-  @ViewChild('dashboard') dashboard: TemplateRef<any>;
-  @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('Devices', { static: true }) templateDevices: TemplateRef<any>;
-  @ViewChild('itemCreate', { static: true }) itemCreate: TemplateRef<any>;
+  @ViewChild('chart') chart: TemplateRef<any>;
+  @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
+  @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
+  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('footer') footerTemplate?: TemplateRef<any>;
 
-  devices: any;
-  views: Array<ViewModel> = [];
-  buttons: ButtonModel;
-  moreFunc: Array<ButtonModel> = [];
-  defaultRecource: any = {
-    resourceName: '',
-    ranking: '1',
-    category: '1',
-    area: '',
-    capacity: '',
-    location: '',
-    companyID: '1',
-    owner: '',
-    note: '',
-    resourceType: '',
-    icon: '',
-    equipments: '',
-  };
-  oldData: any;
-  editform: FormGroup;
-  isAdd = true;
-  vllDevices = [];
-  lstDevices = [];
-  tmplstDevice = [];
-  columnsGrid = [];
-  fields: any;
-  resourceField: any;
-  modelResource?: ResourceModel;
-  model = new DataRequest();
-  // modelResource = new DataRequest();
-  dataSelected: any;
-  dialog!: DialogRef;
-  modelPage: ModelPage;
-  funcID: string;
+
   service = 'EP';
   assemblyName = 'EP';
-  entityName = 'EP_Resources';
+  entityName = 'EP_Bookings';
   predicate = 'ResourceType=@0';
   dataValue = '2';
   idField = 'RecID';
   className = 'BookingsBusiness';
   method = 'GetEventsAsync';
+  modelPage: ModelPage;
+  modelResource?: ResourceModel;
+  model = new DataRequest();
+  dataSelected: any;
+  isAdd = true;
+  isCollapsed = true;
+  dialog!: DialogRef;
+  views: Array<ViewModel> = [];
+  buttons: ButtonModel;
+  moreFunc: Array<ButtonModel> = [];
+  fields: any;
+  resourceField: any;
+  funcID: string;
 
   constructor(
-    private api: ApiHttpService,
-    private formBuilder: FormBuilder,
-    private modalService: NgbModal,
-    private cacheSv: CacheService,
-    private cr: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
-    private callfunc: CallFuncService,
-    private activedRouter: ActivatedRoute,
-    private bookingService: CodxEpService
+    private injector: Injector,
+    private notiService: NotificationsService,
+    private epService: CodxEpService
   ) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.bookingService.getModelPage(this.funcID).then((res) => {
-      if (res) {
-        this.modelPage = res;
-      }
-    });
+    super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.modelPage = {
+      entity: 'EP_Bookings',
+      formName: 'Bookings',
+      gridViewName: 'grvBookings',
+      functionID: 'EP2',
+    };
   }
 
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        sameData: true,
-        id: '1',
-        type: ViewType.schedule,
-        active: true,
-        request2: this.modelResource,
-        model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
-        },
-      },
+  onInit(): void {
+    this.modelResource = new ResourceModel();
+    this.modelResource.assemblyName = 'EP';
+    this.modelResource.className = 'BookingsBusiness';
+    this.modelResource.service = 'EP';
+    this.modelResource.method = 'GetResourceAsync';
+    this.modelResource.predicate = 'ResourceType=@0';
+    this.modelResource.dataValue = '2';
 
-      {
-        sameData: true,
-        id: '3',
-        type: ViewType.chart,
-        active: true,
-        model: {
-          panelLeftRef: this.dashboard,
-        },
-      },
-    ];
-    this.columnsGrid = [
-      {
-        field: 'bookingNo',
-        headerText: 'Số hiệu',
-        template: '',
-        width: 150,
-      },
-      {
-        field: 'title',
-        headerText: 'Tiêu đề',
-        template: '',
-        width: 150,
-      },
-      {
-        field: 'resourceName',
-        headerText: 'Tên xe',
-        template: '',
-        width: 150,
-      },
-      {
-        field: 'bookingOn',
-        headerText: 'Ngày đặt',
-        template: this.itemCreate,
-        width: 150,
-      },
-      {
-        field: 'hours',
-        headerText: 'Số giờ đặt',
-        template: '',
-        width: 150,
-      },
+    this.model.page = 1;
+    this.model.pageSize = 200;
+    this.model.predicate = 'ResourceType=@0';
+    this.model.dataValue = '2';
 
-      {
-        field: 'equipments',
-        headerText: 'Thiết bị',
-        template: this.templateDevices,
-        width: 150,
-      },
-      { field: 'noName', headerText: '', template: this.GiftIDCell, width: 30 },
-    ];
-  }
-
-  ngOnInit(): void {
     this.moreFunc = [
       {
         id: 'EPS22',
@@ -195,18 +104,6 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
         text: 'Xóa',
       },
     ];
-    this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'EP';
-    this.modelResource.className = 'BookingsBusiness';
-    this.modelResource.service = 'EP';
-    this.modelResource.method = 'GetResourceAsync';
-    this.modelResource.predicate = 'ResourceType=@0';
-    this.modelResource.dataValue = '2';
-
-    this.model.page = 1;
-    this.model.pageSize = 200;
-    this.model.predicate = 'ResourceType=@0';
-    this.model.dataValue = '2';
 
     this.fields = {
       id: 'bookingNo',
@@ -228,6 +125,43 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
       id: 'btnAdd',
     };
   }
+
+  ngAfterViewInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
+    this.viewBase.dataService.methodSave = 'AddNewAsync';
+    this.viewBase.dataService.methodUpdate = 'EditAsync';
+    this.views = [
+      {
+        sameData: true,
+        id: '1',
+        type: ViewType.schedule,
+        active: true,
+        request2: this.modelResource,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template4: this.resourceHeader,
+          template5: this.resourceTootip,
+          template6: this.footerTemplate,
+          template7: this.footerButton
+        },
+      },
+
+      {
+        sameData: true,
+        id: '3',
+        type: ViewType.chart,
+        active: true,
+        model: {
+          panelLeftRef: this.chart,
+        },
+      },
+    ];
+
+    this.detectorRef.detectChanges();
+  }
+
+
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -241,13 +175,14 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
         break;
     }
   }
+
   addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfunc.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddBookingCarComponent,
         this.dataSelected,
         option
@@ -263,13 +198,14 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
         let option = new SidebarModel();
         option.Width = '800px';
         option.DataService = this.viewBase?.currentView?.dataService;
-        this.dialog = this.callfunc.openSide(
+        this.dialog = this.callfc.openSide(
           PopupAddBookingCarComponent,
           this.viewBase.dataService.dataSelected,
           option
         );
       });
   }
+
   delete(evt?) {
     this.viewBase.dataService
       .delete([this.viewBase.dataService.dataSelected])
@@ -284,48 +220,4 @@ export class BookingCarComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getlstDevice(items: string) {
-    if (items) {
-      this.lstDevices = items.split(';');
-    }
-    return this.lstDevices;
-  }
-  getDeviceName(value) {
-    let device = this.vllDevices.find((x) => x.value == value);
-    if (device) return device.text;
-  }
-
-  viewChange(event) {}
-
-  deleteBooking(event) {
-    if (confirm('Are you sure to delete booking')) {
-      this.api
-        .execSv('EP', 'EP', 'BookingsBusiness', 'DeleteBookingAsync', [
-          event.recID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.notificationsService.notifyCode('E0408');
-            if (this.schedule) {
-              this.schedule.scheduleObj.deleteEvent(event);
-            }
-          }
-        });
-    }
-  }
-  onDone(evt: any) {
-    //*evt: evt[0]: dataItem, evt[1]: true = add, false = edit
-
-    if (evt.length > 1) {
-      if (evt[1]) {
-        this.schedule.scheduleObj.addEvent(evt[0]);
-      } else {
-        if (!evt[0]) {
-          this.schedule.scheduleObj.saveEvent(this.oldData);
-        } else {
-          this.schedule.scheduleObj.saveEvent(evt[0]);
-        }
-      }
-    }
-  }
 }

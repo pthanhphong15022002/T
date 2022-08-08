@@ -1,87 +1,118 @@
 import { AD_User } from './../../models/AD_User.models';
-import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import { DialogData, DialogRef, CallFuncService, AuthStore, ImageViewerComponent, CodxService, ViewsComponent, SidebarModel, FormModel, CacheService } from 'codx-core';
+import {
+  Component,
+  OnInit,
+  Optional,
+  ChangeDetectorRef,
+  ViewChild,
+  Output,
+  EventEmitter,
+  Injector,
+} from '@angular/core';
+import {
+  DialogData,
+  DialogRef,
+  CallFuncService,
+  AuthStore,
+  ImageViewerComponent,
+  CodxService,
+  ViewsComponent,
+  SidebarModel,
+  FormModel,
+  CacheService,
+  RequestOption,
+  CRUDService,
+  UIComponent,
+} from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 import { FormGroup } from '@angular/forms';
+import { AnyRecordWithTtl } from 'dns';
 
 @Component({
   selector: 'lib-add-user',
   templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.css']
+  styleUrls: ['./add-user.component.css'],
 })
-export class AddUserComponent implements OnInit {
-  @ViewChild("imageUpload", { static: false }) imageUpload?: ImageViewerComponent;
+export class AddUserComponent extends UIComponent implements OnInit {
+  @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
   @ViewChild('view') codxView!: any;
-  @ViewChild('view') view!: ViewsComponent;
 
   title = 'Thêm người dùng';
   dialog!: DialogRef;
-  dialogRole: DialogRef
+  dialogRole: DialogRef;
   data: any;
   readOnly = false;
   isAddMode = true;
   user: any;
-  data1: any;
   adUser = new AD_User();
   countListViewChooseRoleApp: Number = 0;
   countListViewChooseRoleService: Number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
   formModel: FormModel;
+  formType: any;
+  email: any = '';
+  userName: any = '';
+  mobile: any = '';
+  employeeID: any = '';
+
   constructor(
-    private callfc: CallFuncService,
-    private changDetec: ChangeDetectorRef,
+    private injector: Injector,
+    private changeDetector: ChangeDetectorRef,
     private auth: AuthStore,
-    public codxService: CodxService,
-    private cache: CacheService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
+    super(injector);
+    this.formType = dt?.data.type;
     this.data = dialog.dataService!.dataSelected;
-    this.adUser = this.data;
+    this.adUser = JSON.parse(JSON.stringify(this.data));
+    debugger;
     this.dialog = dialog;
-    this.data1 = dt?.data;
     this.user = auth.get();
   }
 
-  ngOnInit(): void {
-    if (this.data1 == 'edit')
-      this.title = 'Cập nhật người dùng';
+  onInit(): void {
+    if (this.formType == 'edit') this.title = 'Cập nhật người dùng';
     this.isAddMode = false;
   }
 
   openPopup(item: any) {
-    this.dialogRole = this.callfc.openForm(PopRolesComponent, '', 1200, 700, '', item);
-    this.dialogRole.closed.subscribe(e => {
+    this.dialogRole = this.callfc.openForm(
+      PopRolesComponent,
+      '',
+      1200,
+      700,
+      '',
+      item
+    );
+    this.dialogRole.closed.subscribe((e) => {
       if (e?.event) {
         this.viewChooseRole = e?.event;
-        this.countListViewChooseRoleApp = this.viewChooseRole.filter(obj => obj.isPortal == false).length;
-        this.countListViewChooseRoleService = this.viewChooseRole.filter(obj => obj.isPortal == true).length;
-        this.changDetec.detectChanges()
-
+        this.countListViewChooseRoleApp = this.viewChooseRole.filter(
+          (obj) => obj.isPortal == false
+        ).length;
+        this.countListViewChooseRoleService = this.viewChooseRole.filter(
+          (obj) => obj.isPortal == true
+        ).length;
+        this.changeDetector.detectChanges();
       }
-    })
+    });
   }
 
-  beforeSave(op: any) {
+  beforeSave(op: RequestOption) {
     var data = [];
-    if (this.data1 == 'add') {
+    if (this.formType == 'add') {
       this.isAddMode = true;
-      op.method = 'AddUserAsync';
-      data = [
-        this.adUser,
-        this.isAddMode,
-      ];
-    };
-    if (this.data1 == 'edit') {
+      op.methodName = 'AddUserAsync';
+      data = [this.adUser, this.isAddMode];
+    }
+    if (this.formType == 'edit') {
       this.isAddMode = false;
-      op.method = 'UpdateUserAsync';
-      data = [
-        this.adUser,
-        this.isAddMode,
-      ];
+      op.methodName = 'UpdateUserAsync';
+      data = [this.adUser, this.isAddMode];
     }
     op.data = data;
     return true;
@@ -89,7 +120,7 @@ export class AddUserComponent implements OnInit {
 
   onAdd() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
+      .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
           this.imageUpload
@@ -99,19 +130,16 @@ export class AddUserComponent implements OnInit {
                 this.loadData.emit();
               }
             });
-          this.dialog.dataService.setDataSelected(res.save);
-          this.dialog.dataService.afterSave.next(res);
-          this.changDetec.detectChanges();
+          this.changeDetector.detectChanges();
         }
       });
     this.closePanel();
     this.dialog.close();
-    console.log(this.viewChooseRole);
   }
 
   onUpdate() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave)
+      .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.update) {
           this.imageUpload
@@ -121,16 +149,17 @@ export class AddUserComponent implements OnInit {
                 this.loadData.emit();
               }
             });
-          this.dialog.dataService.setDataSelected(res.update);
-          this.changDetec.detectChanges();
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
+          this.changeDetector.detectChanges();
         }
-      })
+      });
     this.closePanel();
   }
 
   onSave() {
-    if (this.isAddMode)
-      return this.onAdd();
+    if (this.isAddMode) return this.onAdd();
     return this.onUpdate();
   }
 
@@ -139,25 +168,29 @@ export class AddUserComponent implements OnInit {
   }
 
   closePanel() {
-    this.dialog.close()
+    this.dialog.close();
     //this.viewBase.currentView.closeSidebarRight();
   }
 
-  valueChange(data) {
-    if (data.data) {
-      this.adUser[data.field] = data.data;
-    }
+  valueChangeM(data) {
+    this.adUser[data.field] = data.data;
+  }
+  valueChangeU(data) {
+    this.adUser[data.field] = data.data;
+  }
+  valueChangeP(data) {
+    this.adUser[data.field] = data.data;
   }
 
   valueEmp(data) {
-    if (data.data) {
-      this.adUser.employeeID = data.data;
-    }
+    this.employeeID = data.data;
+    this.getEmployee(this.employeeID);
   }
 
   valueUG(data) {
     if (data.data) {
       this.adUser.userGroup = data.data;
+      this.loadUserRole(data.data);
     }
   }
   valueBU(data) {
@@ -166,6 +199,38 @@ export class AddUserComponent implements OnInit {
     }
   }
 
+  getEmployee(employeeID: string) {
+    this.api
+      .exec<any>('ERM.Business.HR', 'HRBusiness', 'GetModelEmp', [employeeID])
+      .subscribe((employee) => {
+        debugger;
+        if (employee) {
+          this.adUser.employeeID = employeeID;
+          this.adUser.userName = employee.employeeName;
+          // this.adUser.positionID = employee.positionID,
+          this.adUser.buid = employee.organizationID;
+          this.adUser.email = employee.email;
+          this.adUser.mobile = employee.phone;
+          this.adUser = { ...this.adUser };
+          this.email = employee.email;
+          this.mobile = employee.phone;
+          this.user = employee.employeeName;
+        }
+      });
+  }
+
+  loadUserRole(userID) {
+    if (!userID) return;
+    this.api
+      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRoles', [userID])
+      .subscribe((res) => {
+        if (res && res.msgBodyData) {
+          this.viewChooseRole = res.msgBodyData[0];
+          this.countListViewChooseRoleApp = this.viewChooseRole.length;
+          this.changeDetector.detectChanges();
+        }
+      });
+  }
 
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
@@ -174,12 +239,10 @@ export class AddUserComponent implements OnInit {
 
   setTitle(e: any) {
     this.title = 'Thêm ' + e;
-    this.changDetec.detectChanges();
+    this.changeDetector.detectChanges();
   }
 
-  buttonClick(e: any) {
-
-  }
+  buttonClick(e: any) {}
 
   // getFormGroup(formName, gridView): Promise<FormGroup> {
   //   return new Promise<FormGroup>((resolve, reject) => {
@@ -223,5 +286,4 @@ export class AddUserComponent implements OnInit {
   //     });
   //   });
   // }
-
 }

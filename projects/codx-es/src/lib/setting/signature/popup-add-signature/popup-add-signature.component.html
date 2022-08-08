@@ -70,8 +70,10 @@
           <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
             <div class="m-auto">
               <div class="m-auto">
-                <codx-img [objectId]="dialogSignature.value.signature1" [objectType]="form.formModel.entityName"
-                  [funcId]="form.formModel.funcID"></codx-img>
+                <!-- <codx-img [objectId]="dialogSignature.value.signature1" [objectType]="form.formModel.entityName"
+                  [funcId]="form.formModel.funcID"></codx-img> -->
+
+                <img [src]="'data:image/png;base64,'+dialogSignature.value.signature1Url" />
               </div>
             </div>
           </div>

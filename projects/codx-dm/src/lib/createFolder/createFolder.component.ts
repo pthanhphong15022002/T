@@ -254,10 +254,17 @@ export class CreateFolderComponent implements OnInit {
 
   ngOnInit(): void {
     //  this.openForm();
+    this.dmSV.isFileEditing.subscribe(item => {
+      if (item) {
+        this.fileEditing = item;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+
     this.dmSV.isLocation.subscribe(item => {
       if (item) {
         this.location = item;
-        if (this.fileEditing === null)
+        if (this.fileEditing === undefined)
           this.fileEditing = new FileUpload;
         this.fileEditing.location = item;
         this.changeDetectorRef.detectChanges();
@@ -266,7 +273,7 @@ export class CreateFolderComponent implements OnInit {
 
     this.dmSV.isListSubFolder.subscribe(item => {
       this.listSubFolder = item;
-      if (this.fileEditing === null)
+      if (this.fileEditing === undefined)
         this.fileEditing = new FileUpload;
       this.fileEditing.subFolder = this.listSubFolder;
       this.changeDetectorRef.detectChanges();

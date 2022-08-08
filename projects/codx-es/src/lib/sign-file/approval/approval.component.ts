@@ -27,11 +27,9 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = '2d5905b4-116f-11ed-9781-b8acb4518a97';
+  @Input() recID = 'd5676902-13dd-11ed-9785-509a4c39550b';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
-
-  @Output() canSend = new EventEmitter<any>();
 
   user?: any;
   url: string = '';
@@ -177,35 +175,19 @@ export class ApprovalComponent extends UIComponent {
     // });
   }
 
-  ngDoCheck() {
-    let addToDBQueueChange = this.saveToDBQueueChange.diff(
-      this.saveAnnoQueue.keys()
-    );
-    if (addToDBQueueChange) {
-      if (this.saveAnnoQueue.size == 0) {
-        this.canSend.emit(true);
-      } else {
-        this.canSend.emit(false);
-      }
-    }
-  }
+  ngDoCheck() {}
 
   ngAfterViewInit() {
     this.pdfviewerControl.zoomValue = 50;
-    //send activate status for send to approver button
-    if (this.saveAnnoQueue.size == 0) {
-      this.canSend.emit(true);
-    } else {
-      this.canSend.emit(false);
-    }
+
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,
     ];
   }
 
   onCreated(evt: any) {
-    this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
-    this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    // this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
+    // this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
   }
 
   loadingAnnot(e: any) {
@@ -342,6 +324,7 @@ export class ApprovalComponent extends UIComponent {
     this.lstSigners = e.itemData.signers;
     this.fileInfo = e.itemData;
     this.pdfviewerControl.load(e.itemData.fileID, '');
+    console.log(this.pdfviewerControl.getInjectedModules());
   }
 
   changeSigner(e: any) {
@@ -428,7 +411,7 @@ export class ApprovalComponent extends UIComponent {
             this.fileInfo.fileID,
             annot.annotationId,
           ])
-          .subscribe((res) => {});
+          .subscribe((res) => { });
         clearTimeout(this.saveAnnoQueue.get(annot.annotationId));
         this.saveAnnoQueue.delete(annot.annotationId);
       });
@@ -637,17 +620,17 @@ export class ApprovalComponent extends UIComponent {
               //duoi
               (anno.bounds.top >= suggestLocation.top &&
                 anno.bounds.top <=
-                  suggestLocation.top + suggestLocation.height))) ||
+                suggestLocation.top + suggestLocation.height))) ||
             //conflit ben phai
             (anno.bounds.left >= suggestLocation.left &&
               anno.bounds.left <=
-                suggestLocation.left + suggestLocation.width &&
+              suggestLocation.left + suggestLocation.width &&
               //tren
               ((suggestLocation.top >= anno.bounds.top &&
                 suggestLocation.top <= anno.bounds.top + anno.bounds.height) ||
                 (anno.bounds.top >= suggestLocation.top &&
                   anno.bounds.top <=
-                    suggestLocation.top + suggestLocation.height))))
+                  suggestLocation.top + suggestLocation.height))))
         );
       }
     );
@@ -1017,7 +1000,7 @@ export class ApprovalComponent extends UIComponent {
 
     this.esService
       .deleteAreaById([this.recID, this.fileInfo.fileID, e.annotationId])
-      .subscribe((res) => {});
+      .subscribe((res) => { });
 
     this.pdfviewerControl.annotationCollection =
       this.pdfviewerControl.annotationCollection.filter((annot) => {
@@ -1075,14 +1058,14 @@ export class ApprovalComponent extends UIComponent {
   }
 
   pageChange(e: any) {
-    let curImg = this.thumbnailEle.childNodes[
-      e.currentPageNumber - 1
-    ] as Element;
-    curImg.scrollIntoView({
-      behavior: 'auto',
-      block: 'center',
-      inline: 'center',
-    });
+    // let curImg = this.thumbnailEle.childNodes[
+    //   e.currentPageNumber - 1
+    // ] as Element;
+    // curImg.scrollIntoView({
+    //   behavior: 'auto',
+    //   block: 'center',
+    //   inline: 'center',
+    // });
   }
 
   show(e: any) {
@@ -1133,7 +1116,7 @@ export class ApprovalComponent extends UIComponent {
     this.pdfviewerControl.download();
   }
 
-  clickDownload() {}
+  clickDownload() { }
 }
 
 class Guid {

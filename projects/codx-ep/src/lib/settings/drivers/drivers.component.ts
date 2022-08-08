@@ -1,6 +1,23 @@
-import { ButtonModel, DialogRef, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { AfterViewInit, Component, Injector, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  Injector,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import {
+  ButtonModel,
+  CallFuncService,
+  DialogRef,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 import { PopupAddDriversComponent } from './popup-add-drivers/popup-add-drivers.component';
 
 @Component({
@@ -9,12 +26,13 @@ import { PopupAddDriversComponent } from './popup-add-drivers/popup-add-drivers.
   styleUrls: ['./drivers.component.scss']
 })
 export class DriversComponent extends UIComponent implements AfterViewInit {
-  @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('view') viewBase: ViewsComponent;  
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
   predicate = 'ResourceType=@0';
-  dataValue = '1';
+  dataValue = '3';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
@@ -44,16 +62,8 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
         headerText: 'Tên lái xe',
       },
       {
-        field: 'resourceName',
-        headerText: 'Xe',
-      },
-      {
-        field: 'code',
-        headerText: 'Biển số',
-      },
-      {
-        field: 'owner',
-        headerText: 'Người điều phối',
+        headerText: 'Xếp hạng',
+        template: this.rankingCol,
       },
     ];
     this.views = [
@@ -107,7 +117,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfc.openSide(

@@ -69,14 +69,14 @@ export class UpdateStatusPopupComponent implements OnInit {
       ).toFixed(2);
       this.completed = Number.parseFloat(time).toFixed(2);
     }
-    this.crrCompleted = this.completed;
+    // this.crrCompleted = this.completed;
   }
   changeTime(data) {
     if (!data.data) return;
     this.completedOn = data.data.fromDate;
     if (this.completed <= 0) {
       var time = (((this.completedOn?.getTime() - this.timeStart.getTime()) / 3600000).toFixed(2));
-      this.completed = Number.parseFloat(time);
+      this.completed = Number.parseFloat(time).toFixed(2);
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -94,14 +94,13 @@ export class UpdateStatusPopupComponent implements OnInit {
     //   return;
     // }
     if (num < 0) {
-      //  this.notiService.notifyCode("can cai code o day đang gan tam")
       this.notiService.notifyCode('TM033');
       this.completed = this.crrCompleted > 0 ? this.crrCompleted : 0;
       this.changeDetectorRef.detectChanges();
       return;
     }
-    this.completed = num
-    this.crrCompleted = this.completed;
+    this.completed = num.toFixed(2)
+    // this.crrCompleted = this.completed;
   }
 
   beforeSave(op: any) {

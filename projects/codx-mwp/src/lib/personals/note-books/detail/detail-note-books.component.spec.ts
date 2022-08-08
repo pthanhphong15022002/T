@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SaveNoteComponent } from './save-note.component';
+import { DetailNoteBooksComponent } from './detail-note-books.component';
 
-describe('SaveNoteComponent', () => {
-  let component: SaveNoteComponent;
-  let fixture: ComponentFixture<SaveNoteComponent>;
+describe('DetailGridComponent', () => {
+  let component: DetailNoteBooksComponent;
+  let fixture: ComponentFixture<DetailNoteBooksComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SaveNoteComponent ]
+      declarations: [ DetailNoteBooksComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SaveNoteComponent);
+    fixture = TestBed.createComponent(DetailNoteBooksComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

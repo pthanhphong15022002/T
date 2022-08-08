@@ -22,7 +22,7 @@ import { PopupListStationeryComponent } from './popup-list-stationery/popup-list
 
 
 @Component({
-  selector: 'codx-stationery',
+  selector: 'stationery',
   templateUrl: './booking-stationery.component.html',
   styleUrls: ['./booking-stationery.component.scss'],
 })
@@ -42,7 +42,6 @@ export class BookingStationeryComponent extends UIComponent {
   model: DataRequest;
   modelResource: ResourceModel;
   cart: [];
-
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
@@ -146,7 +145,7 @@ export class BookingStationeryComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  add(evt: any) {
+  click(evt: any) {
     switch (evt.id) {
       case 'btnAdd':
         this.addNewRequest();
@@ -236,7 +235,4 @@ export class BookingStationeryComponent extends UIComponent {
 
   clickMF(evt, data) { }
 
-  click(data) {
-    console.log(data);
-  }
 }

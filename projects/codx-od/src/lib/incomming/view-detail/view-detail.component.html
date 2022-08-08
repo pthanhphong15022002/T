@@ -102,63 +102,28 @@
     <div class="tab-horizone h-od-tab  ">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active"  class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink>
-            Nơi nhận</a>
+          <a ngbNavLink><codx-label default="Nơi nhận"></codx-label></a>
           <ng-template ngbNavContent>
             <ng-container *ngFor="let item of data?.listInformationRel">
               <div class="list-item has-action-menu-1 mb-6">
-                <div class="d-flex align-items-top">
+                <div class="d-flex align-items-center">
                   <div class="w-120px me-6">
                     <div class="text-primary d-flex justify-content-center fw-bold fs-4">{{(item.date ? item.date : item.createdOn) | date:'shortTime'}}</div>
                     <div class="text-dark d-flex justify-content-center text-gray-400 fs-6">{{(item.date ? item.date : item.createdOn) | date :  "dd/MM/yyyy"}}</div>
                   </div>
                   <div class="d-flex align-items-center">
-                   <!--  <codx-img #image class="symbol symbol-50px symbol-circle me-4" [objectId]="item.employeeID"></codx-img>
-                    <div class="d-flex flex-column">
-                      <div class="d-flex align-items-center">
-                        <div class="text-dark fw-bold me-2">{{item.employeeName}}</div>
-                        <span class="badge badge-light-primary" [style.color]="getTextColor(item.status,'4')" [style.backgroundColor]="getBgColor(item.status,'4')">{{fmTextValuelist(item.status,"5")}}</span>
-                        <span class="badge badge-light" [style.color]="getTextColor(item.reCall,'6')" [style.backgroundColor]="getBgColor(item.reCall,'5')" *ngIf="item.reCall">Đã thu hồi</span>
-                      </div>
-                      <div class="text-gray-600 fs-7">{{item.positionName}}</div>
-                      <div class="text-muted fs-8" *ngIf="item.relationType == '1'; else elseDiv">{{fmTextValuelist(item.relationType,"6")}} bởi {{data?.agencyName}}</div>
-                      <ng-template #elseDiv>
-                        <div class="text-muted fs-8">{{fmTextValuelist(item.relationType,"6")}} bởi {{item.shareBy !=undefined ? item.shareBy : item.createdBy }}</div>
-                      </ng-template>
-                    </div> -->
                     <codx-temp-full
-                      [imageId]="item.userID"
+                      [imageId]="item?.userID"
                       [imageObjType]="'AD_Users'"
-                      [title]="item.employeeName"
-                      [desc]="getSubTitle(item.relationType,data?.agencyName,item?.shareBy , item?.createdBy)"
+                      [title]="item?.employeeName"
+                      [subTitle]="item?.positionName"
+                      [desc]="getSubTitle(item.relationType,data?.agencyName,item?.shareBy)"
                       [descLine]="1"
+                      [dataItem]="item"
+                      [baseHeaderRightTmp]="baseTmpRight"
+                      [cardCss]="'justify-content-center align-items-center'"
                     >
                     </codx-temp-full>
-                  </div>
-                  <div class="ms-2">
-                  <!--   <codx-vll
-                      [name]="'OD009'"
-                      [value]="item['status']"
-                      [showText]="true"
-                      class="badge badge-light-primary"
-                    >
-                    </codx-vll>
-                    <codx-vll
-                    [name]="'L0614'"
-                    [value]="item['reCall']"
-                    [showText]="true"
-                    class="badge badge-light"
-                  >
-                  </codx-vll> -->
-                  <codx-vll 
-                    [showText]="true"
-                    [showBgColor]="true" 
-                    [name]="this.gridViewSetup['Status']['referedValue']"
-                    [value]="4" 
-                    class="badge badge-light badge-square badge-md fs-7">
-                  </codx-vll>
-                    <span class="badge badge-light-primary" [style.color]="getTextColor(item.status,'4')" [style.backgroundColor]="getBgColor(item.status,'4')">{{fmTextValuelist(item.status,"5")}}</span>
-                    <span class="badge badge-light" [style.color]="getTextColor(item.reCall,'6')" [style.backgroundColor]="getBgColor(item.reCall,'5')" *ngIf="item.reCall">Đã thu hồi</span>
                   </div>
                   <ng-container *ngIf="item.relationType != '1' && !item.reCall && item.userID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
                     <div class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer" (click)="openFormFuncID({functionID:'recallUser',relID: item.recID})"><!--  -->
@@ -197,7 +162,7 @@
   <ng-template #templateorg let-data>
     <div class="container-fluid justify-content-between d-flex">
       <div class="d-flex align-items-top mt-5" >
-          <div class="symbol symbol-40px symbol-circle me-4">
+         <!--  <div class="symbol symbol-40px symbol-circle me-4">
               <codx-img #image [objectId]="data?.userID" [objectType]="'AD_Users'"></codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">
@@ -220,7 +185,18 @@
                     <span class="text-dark"></span>
                 </div>
             </div>
-          </div>
+          </div> -->
+          <codx-temp-full
+            [imageId]="data?.userID" 
+            [imageObjType]="'AD_Users'"
+            [title]="data?.userName"
+            [titleLine]="2"
+            [subTitle]="data?.positionNameCreate" 
+            [desc]="data?.taskName"
+            [dataItem]="data"
+            [footer]="footerTask"         
+          >
+          </codx-temp-full>
       </div>
       <div class="mt-5 ms-5 justify-content-end w-120px text-center" *ngIf="data?.items.length == 0">
         <codx-vll [name]="'L0614'" [value]="data?.status" [showText]="true" [showBgColor]="false"></codx-vll>
@@ -240,4 +216,38 @@
 </ng-template>
 <ng-template #tmpFolderCopy let-dialog>
   <app-od-folder [dialog]="dialog" [data]="data"></app-od-folder>
+</ng-template>
+<ng-template #footerTask let-data>
+  <div class="d-flex align-items-center mt-2" [style.marginLeft.px]="50">
+    <div class="d-flex align-items-center">
+        <span class="icon-person me-1" [class.text-muted]="data?.items.length == 0" [class.text-primary]="data?.items.length > 0"></span>
+        <span class="text-dark" *ngIf="data?.items.length > 0">{{data?.items.length}}</span>
+    </div>
+    <div class="d-flex align-items-center ms-6">
+        <span class="icon-chat_bubble_outline me-1 text-muted"></span>
+        <span class="text-dark"></span>
+    </div>
+    <div class="d-flex align-items-center ms-6">
+        <span class="icon-attach_file me-1 text-muted"></span>
+        <span class="text-dark"></span>
+    </div>
+</div>
+</ng-template>
+<ng-template #baseTmpRight let-data>
+  <codx-vll 
+    [showText]="true"
+    [showBgColor]="true" 
+    [name]="'OD009'"
+    [value]="data?.status" 
+    class="badge badge-light badge-md fs-7 ms-2">
+  </codx-vll>
+  <ng-container *ngIf="data?.reCall">
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true" 
+      [name]="'OD010'"
+      [value]="data?.reCall" 
+      class="badge badge-light badge-md fs-7 ">
+    </codx-vll>
+  </ng-container>
 </ng-template>

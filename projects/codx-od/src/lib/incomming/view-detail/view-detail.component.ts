@@ -1,5 +1,5 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, Util, ViewsComponent } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
@@ -43,6 +43,8 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
   formModel:any;
   dialog!: DialogRef;
   name:any;
+  ms020:any;
+  ms021:any;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -54,23 +56,23 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
   ) {
   }
   ngOnChanges(changes: SimpleChanges): void {
-    this.active = 1;
     if(changes.data) {
       if(changes.data?.previousValue?.recID != changes.data?.currentValue?.recID)
       {
-        this.formModel = this.view.formModel;
-        this.dataItem = changes.dataItem.currentValue
+        
+        this.formModel = this.view?.formModel;
+        this.dataItem = changes?.dataItem?.currentValue
         this.userID = this.authStore.get().userID;
         this.data = changes.data?.currentValue;
         if(!this.data )
           this.data ={};
         this.getDataValuelist();
         this.getPermission(this.data.recID);
-     
-       
+        this.ref.detectChanges();
+        
       }
     }
-    
+    this.active = 1;
   }
   ngOnInit(): void {
     this.active = 1;
@@ -181,6 +183,12 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
     })
     this.cache.valueList("L0614").subscribe((item) => {
       this.dvlStatusTM = item;
+    })
+    this.cache.message("OD020").subscribe(item=>{
+      this.ms020 = item;
+    })
+    this.cache.message("OD021").subscribe(item=>{
+      this.ms021 = item;
     })
   }
   getTextColor(val: any, type: any) {
@@ -403,13 +411,14 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
             task.refType = this.view?.formModel.entityName;
             var vllControlShare = 'TM003' ;
             var vllRose = 'TM002' ;
+            var title = val?.data.customName
             let option = new SidebarModel();
             option.DataService = this.view?.dataService;
             option.FormModel = this.view?.formModel;
             option.Width = '800px';
             this.dialog = this.callfunc.openSide(
               AssignInfoComponent,
-              [task,vllControlShare,vllRose],
+              [task,vllControlShare,vllRose,title],
               option
             );
             this.dialog.closed.subscribe((e) => {
@@ -629,10 +638,10 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
             'ERM.Business.CM',
             'DataBusiness',
             'ReleaseAsync',
-            [datas?.recID,"5A5DCC53ADC142F1A2663C81E0A8EA57",this.view.formModel.entityName]
-          ).subscribe((res2) =>
+            [datas?.recID,"3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",this.view.formModel.entityName]
+          ).subscribe((res2:any) =>
           {
-            debugger;
+            if(res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError)
             console.log(res2)
           });
           break;
@@ -666,11 +675,10 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
   getJSONString(data) {
     return JSON.stringify(data);    
   }
-  getSubTitle(relationType:any , agencyName:any , shareBy: any , createdBy :any)
+  getSubTitle(relationType:any , agencyName:any , shareBy: any )
   {
-    if(relationType == "1")
-      return this.fmTextValuelist(relationType,"6") +' bởi '+ agencyName;
-    return this.fmTextValuelist(relationType,"6") +' bởi '+ (shareBy !=undefined ? shareBy : createdBy) ;
+    if(relationType == "1") return Util.stringFormat(this.ms020?.customName, this.fmTextValuelist(relationType,"6"), agencyName);
+    return Util.stringFormat(this.ms021?.customName, this.fmTextValuelist(relationType,"6"),shareBy);
   }
   updateNotCallFuntion(data:any)
   {

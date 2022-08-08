@@ -19,17 +19,15 @@
             </div>
         </div>
     </div>
-
     <div class="lstView">
         <codx-listview #listview service="SYS" assemblyName="ERM.Business.SYS" className="SettingValuesBusiness"
             method="GetDataByDateAsync" entityName="WP_Notes" [predicate]="predicate" [dataValue]="dataValue"
             [itemTemplate]="dataPara" type="listView">
         </codx-listview>
     </div>
-
     <ng-template #dataPara let-item>
         <div class="d-flex flex-column top-2" *ngIf="(checkWP_NotesParam == true || checkWP_NotesParam == '1')
-        && (item.type == 'WP_Notes' || !item?.type) && item.showCalendar == true">
+        && item.type == 'WP_Notes' && item.showCalendar == true">
             <div class="note-content">
                 <div class="checkbox-list">
                     <div *ngIf="item.memo != null">
@@ -143,7 +141,7 @@
             </div>
         </div>
         <div
-            *ngIf="(checkTM_TasksParam == true || checkTM_TasksParam == '1') && (item?.type == 'TM_Tasks' || !item?.type)">
+            *ngIf="(checkTM_TasksParam == true || checkTM_TasksParam == '1') && item?.type == 'TM_Tasks'">
             <div class="task-content">
                 <div class="checkbox-list">
                     <div class="d-flex flex-column note-option">
@@ -174,7 +172,7 @@
             </div>
             <div class="show-event-check">
                 <codx-input type="checkbox" field="WP_Notes_ShowEvent"
-                    [checked]="WP_NotesParam?.ShowEvent == 'true' || WP_NotesParam?.ShowEvent == '1'"
+                    [checked]="checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'"
                     labelPosition="Before" [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
@@ -192,7 +190,7 @@
             </div>
             <div class="show-event-check">
                 <codx-input type="checkbox" field="TM_Tasks_ShowEvent"
-                    [checked]="TM_TasksParam?.ShowEvent == 'true' || TM_TasksParam?.ShowEvent == '1'"
+                    [checked]="checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'"
                     labelPosition="Before" [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>

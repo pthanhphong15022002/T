@@ -173,9 +173,8 @@ export class SignFileComponent implements OnInit {
         this.funcID,
         {
           isAddNew: true,
-          // data: this.view.dataService.dataSelected,
-          isAdd: true,
           formModel: this.view?.currentView?.formModel,
+          option: option,
         },
         '',
         dialogModel

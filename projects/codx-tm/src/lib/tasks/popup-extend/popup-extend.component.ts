@@ -18,7 +18,8 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
   funcID :any
   extendDate:any
   moreFunc: any
-  url:any
+  url:any ;
+  nameApprover: any ;
   
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -31,10 +32,7 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
     this.data = dt?.data;
     this.dialog = dialog;
     this.funcID = this.data.funcID
-    this.task = this.data.data ;
-    if(this.task.createdBy!=this.task.owner) this.taskExtend.extendApprover = this.task.createdBy ;
-    else  this.taskExtend.extendApprover = this.task.VerifyBy ;
-    this.taskExtend.dueDate = this.task.dueDate ;
+    this.taskExtend = this.data.data ;
   }
 
   ngOnInit(): void {
@@ -43,12 +41,13 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
   }
 
-  changeTime(e){
-
+  changeTime(data){
+    // if (!data.field || !data.data) return;
+    this.taskExtend[data.field] = data.data?.fromDate;
   }
 
   valueChange(e){
-
+    this.taskExtend.reason = e?.data
   }
 
   saveData(){
@@ -60,8 +59,14 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode("TM019")
       return ;
     }
-
     //goi hàm luu data 
+    this.api.execSv<any>('TM','TM','TaskBusiness','ExtendTaskAsync',[this.funcID,this.taskExtend]).subscribe(res=>{
+      if(res && res.length){
+        this.dialog.close(res) ;
+        this.notiService.notify('Yêu cần gia hạn đã được gửi, xin vui lòng đợi xét duyệt !')
+      }else{
+        this.dialog.close() ;
+      }
+    })
   }
-
 }
