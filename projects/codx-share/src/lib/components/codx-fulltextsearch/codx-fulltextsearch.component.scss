@@ -1,5 +1,8 @@
 
 .h-searchtmp {
     height: calc(100% - 100px)!important;
-    max-width: 400px;
 }
+.h-searchtmp > div {
+    max-width: 400px;
+} 
+

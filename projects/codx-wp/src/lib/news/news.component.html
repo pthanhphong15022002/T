@@ -111,7 +111,7 @@
         </div>
       </div>
     </div>
-    <div class="row my-8" *ngIf="listSlider.length > 0">
+    <div class="row my-8" *ngIf="listSlider.length > 0; else emptySilder">
       <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
         [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
         <ng-template ngbSlide *ngFor="let list of listSlider">
@@ -121,7 +121,7 @@
                 <codx-img [cssClass]="'image-200 w-100'" [width]="300" imageType="square" [objectId]="item.recID"
                   objectType="WP_News">
                 </codx-img>
-                <div class="fs-5 mt-2 fw-bold">{{item.subject | maxlenght:150 }}</div>
+                <div class="fs-5 mt-2 fw-bold">{{item.subject | maxlenght:200 }}</div>
               </div>
             </div>
           </div>
@@ -177,7 +177,6 @@
       </ng-template>
     </div>
   </div>
-
 </ng-template>
 <ng-template #itemTemplate let-item>
   <div (click)="clickViewDeital(item)" class="row my-4">
@@ -207,7 +206,6 @@
     [bookmark]="false">
   </codx-temp-full> -->
 </ng-template>
-<!-- empty -->
 <ng-template #empty1>
   <div class="text-center">
     <img class="w-100 h-320px" src="../assets/demos/svg/pic-avata.png" />
@@ -226,5 +224,18 @@
 <ng-template #emptyVideo>
   <div class="text-center">
     <img style="max-width:700px" src="../assets/demos/svg/card-preview2.png" />
+  </div>
+</ng-template>
+<ng-template #emptySilder>
+  <div class="row mt-4 justify-content-around">
+    <div class="col-3">
+      <img class="w-100 h-200px" src="../assets/demos/svg/card-preview2.png" />
+    </div>
+    <div class="col-3">
+      <img class="w-100 h-200px" src="../assets/demos/svg/card-preview2.png" />
+    </div>
+    <div class="col-3">
+      <img class="w-100 h-200px" src="../assets/demos/svg/card-preview2.png" />
+    </div>
   </div>
 </ng-template>

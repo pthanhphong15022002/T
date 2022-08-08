@@ -8,7 +8,7 @@
     <codx-card-center cardCss="border h-100 w-225px" [formModel]="view.formModel"
       [iconCss]="data.sharedByOther?'icon-share':' '" [iconColorCss]="'blue'" [imageId]="data.iterationID" [imageObjType]="view.formModel.entityName" 
       [imageWidth]="55" [title]="data.iterationName" [icoDescCss]="'icon-assignment'" [desc]="data.projectName"
-      [desc2]="data.memo" [footer]="cardImgFooter" (clickMF)="clickMF($event, data)" [dataItem]="data">
+      [desc2]="data.memo" [footer]="cardImgFooter" (clickMF)="clickMF($event, data)" (changeDataMF)=" changeDataMF($event, data)" [dataItem]="data">
     </codx-card-center>
   </ng-container> 
 </ng-template>

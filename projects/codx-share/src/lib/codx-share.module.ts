@@ -77,6 +77,7 @@ export const routes: Routes = [
     ],
   },
 ];
+import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -108,12 +109,14 @@ const T_Component: Type<any>[] = [
   CodxReportViewerComponent,
   CodxReportDesignerComponent,
   NoteDrawerComponent,
+  CodxCommentsComponent,
+  DynamicSettingParamaterComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe, DynamicSettingParamaterComponent],
+  declarations: [T_Component, T_Pipe],
   imports: [
     CommonModule,
     NgbModule,

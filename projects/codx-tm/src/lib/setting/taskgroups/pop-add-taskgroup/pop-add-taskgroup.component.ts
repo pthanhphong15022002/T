@@ -109,8 +109,8 @@ export class PopAddTaskgroupComponent implements OnInit {
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetParameterByModuleWithCategoryAsync',
-        ['TM_Parameters', '1']
+        'GetByModuleWithCategoryAsync',
+        ['TMParameters', '1']
       )
       .subscribe((res) => {
         if (res) {
