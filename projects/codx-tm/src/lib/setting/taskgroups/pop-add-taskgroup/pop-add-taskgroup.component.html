@@ -290,7 +290,7 @@
         <ng-container *ngFor="let item of listTodo; index as i;">
           <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
             <label class="checkbox checkbox-square checkbox-sm mb-0">
-              <input #checkShareRight1 type="checkbox" [checked]="item.status" id="checkShareRight1"
+              <input #checkShareRight1 type="checkbox" id="checkShareRight1"
                 (change)="onChangeToDoStatus(checkShareRight1.checked, i)" disabled="disabled">
               <span></span>{{item.text}}
             </label>
@@ -298,7 +298,7 @@
           </div>
         </ng-container>
       </div>
-      <div class="add-control mt-2">
+      <div class="add-control mt-2" *ngIf="enableAddtodolist">
         <div class="input-group">
           <input type="text" id="txtTodoAdd" name="txtTodoAdd" [(ngModel)]='todoAddText'
             [ngModelOptions]="{standalone: true}" required matInput class="form-control" (keydown.enter)="onAddToDo()" placeholder="Add..." />

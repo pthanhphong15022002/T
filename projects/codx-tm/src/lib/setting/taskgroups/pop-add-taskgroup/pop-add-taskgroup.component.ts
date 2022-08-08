@@ -132,7 +132,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     todo.text = this.todoAddText;
     this.listTodo.push(Object.assign({}, todo));
     //this.listTodo.push(this.todoAddText);
-    this.enableAddtodolist = this.enableAddtodolist;
+    this.enableAddtodolist = !this.enableAddtodolist;
     this.todoAddText = '';
     this.changDetec.detectChanges();
   }
