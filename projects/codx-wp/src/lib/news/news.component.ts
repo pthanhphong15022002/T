@@ -28,7 +28,7 @@ export class NewsComponent implements OnInit {
   listSlider = [];
   lstHotNew:any[] = [];
   lstVideo:any[] = [];
-  lstGroup:any[] = []
+  lstGroup:any[] = [];
   userPermission: any;
   isAllowNavigationArrows = false;
   views: Array<ViewModel> = [];
@@ -91,9 +91,9 @@ export class NewsComponent implements OnInit {
     .subscribe((res:any[]) => 
     {
       if(res.length > 0){
-        this.lstHotNew = [...res[0]]; // tin mới nhất
-        this.lstVideo = [...res[1]]; // video
-        this.lstGroup = [...res[2]]; // tin cũ hơn
+        this.lstHotNew = res[0]; // tin mới nhất
+        this.lstVideo = res[1]; // video
+        this.lstGroup = res[2]; // tin cũ hơn
         if(this.lstVideo.length == 0){
           this.listSlider = [];
         }

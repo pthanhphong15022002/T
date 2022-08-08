@@ -1,1 +1,28 @@
-<p>template works!</p>
+<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [data]="data"
+  [formModel]="dialog.formModel" [dialog]="dialog">
+
+  <ng-template #body>
+    <ejs-splitter #horizontal>
+      <e-panes>
+        <e-pane size='200px' min='20%' max='40%'>
+          <ng-template #content>
+            <div>
+              aaaaaa
+            </div>
+          </ng-template>
+        </e-pane>
+        <e-pane size='200px' >
+          <ng-template #content>
+            <div>
+              bbbbb
+            </div>
+          </ng-template>
+        </e-pane>
+      </e-panes>
+    </ejs-splitter>
+  </ng-template>
+  <ng-template #footer>
+    ccc
+  </ng-template>
+
+</codx-form>

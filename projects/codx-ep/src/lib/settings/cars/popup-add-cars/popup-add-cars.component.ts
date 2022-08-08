@@ -14,6 +14,7 @@ import {
   CallFuncService,
   DialogData,
   DialogRef,
+  FormModel,
 } from 'codx-core';
 import { Device } from '../../../booking-car/popup-add-booking-car/popup-add-booking-car.component';
 
@@ -36,7 +37,8 @@ export class PopupAddCarsComponent implements OnInit {
   dialog: any;
   headerText = 'Thêm mới xe';
   subHeaderText = 'Thêm mới xe';
-  
+  formModel: FormModel;
+
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
@@ -48,6 +50,7 @@ export class PopupAddCarsComponent implements OnInit {
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
+    this.formModel = this.dialog.formModel;
   }
 
   isAfterRender = false;

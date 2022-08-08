@@ -10,8 +10,8 @@ import { Observable } from 'rxjs';
 export class LayoutComponent extends LayoutBaseComponent {
   
   module = 'HR';
-
   dialog!: DialogRef;
+  
   constructor(inject: Injector,
     private callfc: CallFuncService,
     ) {

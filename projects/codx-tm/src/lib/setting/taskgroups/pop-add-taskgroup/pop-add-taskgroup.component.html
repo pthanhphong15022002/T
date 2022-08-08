@@ -301,7 +301,7 @@
       <div class="add-control mt-2" *ngIf="enableAddtodolist">
         <div class="input-group">
           <input type="text" id="txtTodoAdd" name="txtTodoAdd" [(ngModel)]='todoAddText'
-            [ngModelOptions]="{standalone: true}" required matInput class="form-control" placeholder="Add..." />
+            [ngModelOptions]="{standalone: true}" required matInput class="form-control" (keydown.enter)="onAddToDo()" placeholder="Add..." />
           <div class="input-group-append">
             <button (click)="onAddToDo()" class="btn btn-secondary" type="button">
               <span class="icon-add icon-20"></span>

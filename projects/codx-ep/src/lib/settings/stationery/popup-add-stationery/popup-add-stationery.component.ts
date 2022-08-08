@@ -1,45 +1,34 @@
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
-  OnInit,
+  Injector,
   Optional,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import {
-  CallFuncService,
-  CodxGridviewComponent,
   DialogData,
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { CodxEpService, ModelPage } from '../../../codx-ep.service';
+import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
   selector: 'popup-add-stationery',
   templateUrl: './popup-add-stationery.component.html',
   styleUrls: ['./popup-add-stationery.component.scss'],
 })
-export class PopupAddStationeryComponent implements OnInit {
+export class PopupAddStationeryComponent extends UIComponent {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('popupColor') popupTemp: TemplateRef<any>;
-  @ViewChild('gridTemplate') gridTemplate: TemplateRef<any>;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
-
-  @ViewChild('Devices', { static: true }) templateDevices: TemplateRef<any>;
-  @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('ranking', { static: true }) ranking: TemplateRef<any>;
-
-  @Output() closeEdit = new EventEmitter();
-  @Output() onDone = new EventEmitter();
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
 
@@ -49,91 +38,56 @@ export class PopupAddStationeryComponent implements OnInit {
   dialogAddStationery: FormGroup;
   chosenDate = null;
   CbxName: any;
-  link = '';
+  link: string = '';
   color: any;
   columnGrid;
-  headerTitle = 'Thêm Văn Phòng phẩm';
-  subHeaderTilte = 'Thêm mới Văn phòng phẩm';
-  public headerText: Object = [
-    { text: 'Thông tin chung', iconCss: 'icon-info' },
-    { text: 'Định mức sử dụng', iconCss: 'icon-person_add' },
-    { text: 'Thông tin khác', iconCss: 'icon-tune' },
-  ];
+  headerTitle: string = 'Thêm Văn Phòng phẩm';
+  subHeaderTilte: string = 'Thêm mới Văn phòng phẩm';
   data: any = {};
   dialog: DialogRef;
   isAdd = true;
   colorItem: any;
+  listColor = [];
   formModel: FormModel;
+  headerText: Object = [
+    { text: 'Thông tin chung', iconCss: 'icon-info' },
+    { text: 'Định mức sử dụng', iconCss: 'icon-person_add' },
+    { text: 'Thông tin khác', iconCss: 'icon-tune' },
+  ];
+
   constructor(
-    private bookingService: CodxEpService,
-    private modalService: NgbModal,
-    private changeDetectorRef: ChangeDetectorRef,
-    private cfService: CallFuncService,
+    private injector: Injector,
+    private epService: CodxEpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(injector);
     this.data = dt?.data;
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
   }
 
-  ngOnInit(): void {
-    this.bookingService
+  onInit(): void {
+    this.epService
       .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         this.CbxName = res;
         this.initForm();
-      });    
-  }
-
-  ngAfterViewInit(): void {
-    // this.views = [
-    //   {
-    //     sameData: false,
-    //     id: '1',
-    //     type: 'grid',
-    //     active: true,
-    //     model: {
-    //       panelLeftRef: this.gridTemplate,
-    //       widthAsideRight: '750px',
-    //       sideBarRightRef: this.carResourceDialog,
-    //     },
-    //   },
-    // ];
-
-    this.columnGrid = [
-      {
-        field: 'resourceName',
-        headerText: 'Định mức',
-        template: '',
-        width: 200,
-      },
-      {
-        field: 'ranking',
-        headerText: 'Cấp bậc nhân viên',
-        template: this.ranking,
-        width: 150,
-      },
-    ];
+      });
   }
 
   initForm() {
-    this.bookingService
+    this.epService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.dialogAddStationery = item;
+        this.dialogAddStationery = item
         this.isAfterRender = true;
-        this.dialogAddStationery.patchValue({
-          ranking: '1',
-          category: '1',
-          owner: '',
-        });
         if (this.data) {
           this.dialogAddStationery.patchValue(this.data);
         }
-        console.log(this.dialogAddStationery.value);
       });
   }
+
   beforeSave(option: any) {
     let itemData = this.dialogAddStationery.value;
     if (!itemData.resourceID) {
@@ -145,6 +99,7 @@ export class PopupAddStationeryComponent implements OnInit {
     option.data = [itemData, this.isAdd];
     return true;
   }
+
   onSaveForm() {
     // if (this.dialogAddStationery.invalid == true) {
     //   console.log(this.dialogAddStationery);
@@ -168,34 +123,9 @@ export class PopupAddStationeryComponent implements OnInit {
     //         }
     //       });
     //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-    //     this.closeForm();
+    //     this.dialog.close();
     //   });
-    console.log('Send data', this.dialogAddStationery.value)
-  }
-
-  closeForm() {
-    this.initForm();
-    this.closeEdit.emit();
-  }
-
-  lstDevices = [];
-  tmplstDevice = [];
-
-  checkedChange(event: any, device: any) {
-    let index = this.tmplstDevice.indexOf(device);
-    if (index != -1) {
-      this.tmplstDevice[index].isSelected = event.target.checked;
-    }
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
+    console.log('payload', this.dialogAddStationery.value)
   }
 
   checkedOnlineChange(event) {
@@ -205,7 +135,7 @@ export class PopupAddStationeryComponent implements OnInit {
 
     if (!this.dialogAddStationery.value.online)
       this.dialogAddStationery.patchValue({ onlineUrl: null });
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   changeLink(event) {
@@ -213,14 +143,14 @@ export class PopupAddStationeryComponent implements OnInit {
   }
 
   openPopupLink() {
-    this.modalService
-      .open(this.addLink, { centered: true, size: 'md' })
-      .result.then(
-        (result) => {
-          this.dialogAddStationery.patchValue({ onlineUrl: this.link });
-        },
-        (reason) => { }
-      );
+    // this.modalService
+    //   .open(this.addLink, { centered: true, size: 'md' })
+    //   .result.then(
+    //     (result) => {
+    //       this.dialogAddStationery.patchValue({ onlineUrl: this.link });
+    //     },
+    //     (reason) => { }
+    //   );
   }
 
   public setdata(data: any) {
@@ -242,11 +172,10 @@ export class PopupAddStationeryComponent implements OnInit {
 
   openPopupDevice(template: any, color) {
     this.color = color;
-    var dialog = this.cfService.openForm(template, '', 500, 350);
-    this.changeDetectorRef.detectChanges();
+    var dialog = this.callfc.openForm(template, '', 500, 350);
+    this.detectorRef.detectChanges();
   }
 
-  listColor = [];
   valueChange(event) {
 
     if (event?.field) {
@@ -271,18 +200,10 @@ export class PopupAddStationeryComponent implements OnInit {
       this.listColor.push(this.colorItem);
     }
 
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
-  getlstDevice(items: string) {
-    this.lstDevices = items.split(';');
-    return this.lstDevices;
-  }
 
-  getDeviceName(value) {
-    let device = this.vllDevices.find((x) => x.value == value);
-    if (device) return device.text;
-  }
 
   getfileCount(event) { }
 }

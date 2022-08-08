@@ -18,7 +18,6 @@ export class UserComponent extends UIComponent {
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
-  moreFuncs: Array<ButtonModel> = [];
 
   // @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
 
@@ -44,18 +43,6 @@ export class UserComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-    this.moreFuncs = [
-      {
-        id: 'edit',
-        icon: 'icon-list-checkbox',
-        text: 'Sửa',
-      },
-      {
-        id: 'btnMF2',
-        icon: 'icon-list-checkbox',
-        text: 'more 2',
-      },
-    ];
   }
 
   ngAfterViewInit(): void {
@@ -98,9 +85,6 @@ export class UserComponent extends UIComponent {
 
   openPopup(item: any) {
     this.dialog = this.callfc.openForm(ViewUsersComponent, ' ', 300, 400, '', item);
-    this.dialog.closed.subscribe(e => {
-      console.log(e);
-    })
   }
 
   convertHtmlAgency(buID: any) {
@@ -122,11 +106,14 @@ export class UserComponent extends UIComponent {
     // });
 
     this.view.dataService.addNew().subscribe((res: any) => {
+      var obj = {
+        type: 'add',
+      }
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
-      this.dialog = this.callfunc.openSide(AddUserComponent, 'add', option);
+      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       this.dialog.closed.subscribe((x) => {
         if (x.event == null)
           this.view.dataService
@@ -143,11 +130,14 @@ export class UserComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      var obj = {
+        type: 'edit',
+      }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
-      this.dialog = this.callfunc.openSide(AddUserComponent, 'edit', option);
+      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
     });
 
     // this.view.dataService.addNew().subscribe((res: any) => {
@@ -166,13 +156,11 @@ export class UserComponent extends UIComponent {
 
   //#region Functions
   changeView(evt: any) {
-    console.log('evt: ', evt);
     var t = this;
   }
 
 
   selectedChange(val: any) {
-    console.log(val);
     this.itemSelected = val.data;
     this.dt.detectChanges();
   }

@@ -154,7 +154,7 @@ export class ViewDetailComponent implements OnInit {
           isAddNew: false,
           dataSelected: datas,
           formModel: this.view?.currentView?.formModel,
-          view: this.view,
+          option: option,
         },
         '',
         dialogModel

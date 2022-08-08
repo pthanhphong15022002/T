@@ -19,13 +19,16 @@ export class ReportComponent implements OnInit, AfterViewInit {
   @ViewChild('reportEle') reportEle: ElementRef<any>;
 
   @Input() reportUUID: any = '3cdcde9d-8d64-ec11-941d-00155d035518';
+  @Input() parameters: any = {};
   lstParent: any;
-  parameters: any = [];
   lstParamsNotGroup: any = [];
   collapses: any = [];
   objParam: any = {};
   missingLabel = '';
-  param: any = {};
+  param: any = {
+
+  };
+  print: boolean = false;
 
   constructor(
     private dt: ChangeDetectorRef,
@@ -73,7 +76,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
           if(item && item.length > 0){
             let field = item.find(x=>x.dependences == evt.field);
             if(field){
-               field.isVisible = evt.data;
+               field.isEnable = evt.data;
                field = {...field};
             }
            }
@@ -86,7 +89,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
           if(item && item.length > 0){
             let field = item.find(x=>x.dependences == evt.field);
             if(field){
-               field.isVisible = true;
+               field.isEnable = true;
                field = {...field};
             }
            }
@@ -138,7 +141,13 @@ export class ReportComponent implements OnInit, AfterViewInit {
   }
 
   apply(){
-    this.param = this.objParam;
+    this.param = undefined;
+    this.param = {...this.objParam};
+
+  }
+
+  save(){
+    this.print = true;
   }
 
   private loadParams(){
@@ -152,7 +161,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
       if(res && res.length > 0){
         for(let i =0;i< res.length;i++){
           if(!res[i].dependences){
-            res[i].isVisible = true;
+            res[i].isEnable = true;
           }
         }
       }
