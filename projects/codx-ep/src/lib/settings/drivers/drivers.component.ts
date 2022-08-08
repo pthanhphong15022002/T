@@ -117,7 +117,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfc.openSide(
