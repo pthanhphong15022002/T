@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
   Optional,
+  ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -12,10 +13,13 @@ import {
   CallFuncService,
   DialogData,
   DialogRef,
+  ImageViewerComponent,
   NotificationsService,
+  UploadFile,
   ViewsComponent,
 } from 'codx-core';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { Observable } from 'rxjs';
 import { CodxTMService } from '../../codx-tm.service';
 import { TM_Sprints } from '../../models/TM_Sprints.model';
 
@@ -36,7 +40,12 @@ export class PopupAddSprintsComponent implements OnInit {
   funcID: string = '';
   sprintDefaut = new TM_Sprints();
   dataDefault = [];
-  dataOnLoad = []
+  dataOnLoad = [];
+  vllShare = 'TM003';
+  isUploadImg = false;
+  imageUpload: UploadFile = new UploadFile();
+  @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -56,7 +65,7 @@ export class PopupAddSprintsComponent implements OnInit {
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
     this.sprintDefaut = this.dialog.dataService.data[0];
-    this.dataDefault.push(this.sprintDefaut)
+    this.dataDefault.push(this.sprintDefaut);
     this.dataOnLoad = this.dialog.dataService.data;
   }
 
@@ -81,22 +90,55 @@ export class PopupAddSprintsComponent implements OnInit {
       return this.notiService.notifyCode('TM035');
     if (this.master.projectID && Array.isArray(this.master.projectID))
       this.master.projectID = this.master.projectID[0];
-    if (!this.master.isShared)
-      this.master.resources = null;
-    if (this.resources == '')
-      this.master.resources = null;
+    if (!this.master.isShared) this.master.resources = null;
+    if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
     this.saveMaster(isAdd);
   }
 
   saveMaster(isAdd: boolean) {
-    this.dialog.dataService.save((option: any) => this.beforeSave(option, isAdd))
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option, isAdd)) //Hảo code mới
       .subscribe((res) => {
         if (res) {
-          this.dialog.close();
+          this.imageAvatar
+            .updateFileDirectReload(this.master.iterationID)
+            .subscribe((res) => {
+              // if (isAdd) {
+              //   var dataNew = this.dialog.dataService.data[0];
+              //   this.dialog.dataService.data[0] =
+              //     this.dialog.dataService.data[1];
+              //   this.dialog.dataService.data[1] = dataNew;
+              // }
+              // this.dialog.close();
+            });
+            if (isAdd) {
+              var dataNew = this.dialog.dataService.data[0];
+              this.dialog.dataService.data[0] =
+                this.dialog.dataService.data[1];
+              this.dialog.dataService.data[1] = dataNew;
+            }
+            this.dialog.close();
         }
+
       });
+    // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
+    //   if (res) {
+    //     if(isAdd){
+    //       this.dataOnLoad[0]= res;
+    //       this.dataOnLoad=this.dataDefault.concat(this.dataOnLoad);
+    //       this.dialog.dataService.data =  this.dataOnLoad
+    //      // this.notiService.notifyCode('TM005');
+    //     }else{
+    //       this.dialog.dataService.update(res).subscribe();
+    //       //  var index = this.dialog.dataService.data.findIndex(x=>x.iterationID==res.iterationID)
+    //       //  this.dialog.dataService.data[index] = res;
+    //      // this.notiService.notifyCode('E0528');
+    //     }
+    //     this.dialog.close();
+    //   }
+    // });
   }
 
   //#endregion
@@ -154,7 +196,7 @@ export class PopupAddSprintsComponent implements OnInit {
   openInfo(interationID, action) {
     // this.taskBoard = new TM_Sprints();
 
-    this.readOnly = false
+    this.readOnly = false;
     this.title = 'Chỉnh sửa task board';
     this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
@@ -182,7 +224,7 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   valueChangeShared(e) {
-    this.master.isShared = e.data
+    this.master.isShared = e.data;
     if (!this.master.isShared) {
       this.master.resources = null;
       this.listUserDetail = [];
@@ -202,7 +244,7 @@ export class PopupAddSprintsComponent implements OnInit {
           break;
         case 'O':
         case 'D':
-          listDepartmentID += obj.id + ";";
+          listDepartmentID += obj.id + ';';
           break;
       }
       //  }
@@ -248,4 +290,8 @@ export class PopupAddSprintsComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
+
+  changeMemo(e) {
+    this.master.memo = e?.data;
+  }
 }
