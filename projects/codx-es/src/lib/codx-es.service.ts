@@ -641,6 +641,16 @@ export class CodxEsService {
     );
   }
 
+  getSFByUserID(data) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetSignFilesByUserIDAsync',
+      data
+    );
+  }
+
   getSFByID(data) {
     return this.api.execSv(
       'ES',
@@ -732,6 +742,47 @@ export class CodxEsService {
       {
         action: 'TextOnPage',
         pageIndex: pageNumber - 1,
+      },
+      httpOptions
+    );
+  }
+
+  renderQRFile(
+    docId,
+    eleId,
+    freeTextAnnotation,
+    hashId,
+    inkSignatureData,
+    measureShapeAnnotations,
+    shapeAnnotations,
+    signatureData,
+    stampAnnotations,
+    stickyNotesAnnotation,
+    textMarkupAnnotations,
+    uniqueId
+  ): Observable<number> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.http.post<any>(
+      environment.pdfUrl + '/RenderQRFile',
+      {
+        action: 'Download',
+        documentId: docId,
+        elementId: eleId,
+        fieldsData: undefined,
+        freeTextAnnotation: freeTextAnnotation,
+        hashId: hashId,
+        inkSignatureData: inkSignatureData,
+        measureShapeAnnotations: measureShapeAnnotations,
+        shapeAnnotations: shapeAnnotations,
+        signatureData: signatureData,
+        stampAnnotations: stampAnnotations,
+        stickyNotesAnnotation: stickyNotesAnnotation,
+        textMarkupAnnotations: textMarkupAnnotations,
+        uniqueId: uniqueId,
       },
       httpOptions
     );
