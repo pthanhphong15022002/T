@@ -53,6 +53,14 @@
         top: 0;
         width: 14px;
       }
+      /***Custom table bootstrap****/
+      .e-grid .e-headercell, .e-grid .e-detailheadercell{
+        height: 42px;
+      }
+      .progress-approval .action-menu{
+        padding: 0!important;
+        top: 0!important;
+      }
 
 }
 

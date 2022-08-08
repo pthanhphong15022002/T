@@ -18,7 +18,6 @@
     </div>
   </ng-template>
   <ng-template #body>
-
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
@@ -39,17 +38,15 @@
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center">
-
+    <div class="d-flex align-items-center mb-3 ">
       <codx-input #checkbox type="switch" id="switch" [checked]="dialogCategory.value.eSign" labelPosition="After"
         field="eSign" class="test-switch" (valueChange)="valueChange($event)">
       </codx-input>
       <label class="ms-2">
         <codx-label fiedName="ESign" default="Chữ ký số" [formModel]="form.formModel"></codx-label>
       </label>
-
     </div>
-    <div class="row mt-3">
+    <div class="row ">
       <div class="col-md-6">
         <div class="form-group">
           <codx-label default="Loại chữ kí" fiedName="SignatureType" [formModel]="form.formModel">
@@ -65,15 +62,14 @@
       </div>
     </div>
     <div class="form-group">
-
       <codx-label default="Ghi chú" fiedName="Memo" [formModel]="form.formModel">
       </codx-label>
       <codx-input type="textarea" format="ed2" rows="3" class="form-control" field="memo" ControlName="memo"
         (valueChange)="valueChange($event)" ngDefaultControl [crrValue]="dialogCategory.value.memo??''">
       </codx-input>
     </div>
-    <div class="row mt-3">
-      <div class="d-flex flex-stack">
+    <div class="row ">
+      <div class="d-flex flex-stack mb-3">
         <div class="fw-bold text-primary">
           <codx-label default="Đánh số văn bản" fiedName="AutoNumber" [formModel]="form.formModel">
           </codx-label>
@@ -81,16 +77,18 @@
         <span class="text-end align-items-end">
           <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
             (click)="openAutoNumPopup()">
-            <i class=" icon-edit-one text-hover-primary icon-24"></i>
+            <i class=" icon-edit-one text-hover-primary icon-20"></i>
           </button>
         </span>
       </div>
       <div class="col-md-6">
-        <codx-input type="text" name="text" [crrValue]="viewAutoNumber" disabled="true">
-        </codx-input>
+        <div class="form-group">
+          <codx-input type="text" name="text" [crrValue]="viewAutoNumber" disabled="true">
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="d-flex flex-stack mt-3">
+    <div class="d-flex flex-stack mb-3">
       <div class="fw-bold ">
         <codx-label class="text-primary" default="Qui trình duyệt" fiedName="ProcessID" [formModel]="form.formModel">
         </codx-label>
@@ -98,12 +96,12 @@
       <span class="text-end align-items-end">
         <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
           (click)="openPopupApproval()">
-          <i class="icon-settings text-hover-primary icon-24"></i>
+          <i class="icon-settings text-hover-primary icon-20"></i>
         </button>
       </span>
     </div>
 
-    <div class="codx-approval mt-3" *ngIf="lstStep?.length > 0">
+    <div class="codx-approval mt-3 " *ngIf="lstStep?.length > 0">
       <ng-container *ngFor="let item of lstStep, let index = index">
         <div class="codx-approval-step step-test pb-1">
           <div class="codx-approval-header d-flex align-items-center">

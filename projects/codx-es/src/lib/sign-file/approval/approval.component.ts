@@ -27,7 +27,7 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = 'd5676902-13dd-11ed-9785-509a4c39550b';
+  @Input() recID = '358624aa-13e1-11ed-9785-509a4c39550b';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
 
@@ -175,7 +175,7 @@ export class ApprovalComponent extends UIComponent {
     // });
   }
 
-  ngDoCheck() {}
+  ngDoCheck() { }
 
   ngAfterViewInit() {
     this.pdfviewerControl.zoomValue = 50;
