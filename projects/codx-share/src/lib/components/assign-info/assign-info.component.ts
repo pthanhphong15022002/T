@@ -176,10 +176,10 @@ export class AssignInfoComponent implements OnInit {
     if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
-      if (!this.task.endDate && this.task.startDate) {
-        if (this.task.estimated) {
+      if (!this.task?.endDate && this.task?.startDate) {
+        if (this.task?.estimated) {
           var timeEndDay =
-            this.task.startDate.getTime() + this.task.estimated * 3600000;
+            this.task?.startDate.getTime() + this.task?.estimated * 3600000;
           this.task.endDate = moment(new Date(timeEndDay)).toDate();
         } else
           this.task.endDate = moment(new Date(this.task.startDate))
@@ -188,9 +188,9 @@ export class AssignInfoComponent implements OnInit {
       }
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
-      if (this.task.startDate && this.task.endDate) {
+      if (this.task?.startDate && this.task?.endDate) {
         var time = (
-          (this.task.endDate.getTime() - this.task.startDate.getTime()) /
+          (this.task?.endDate.getTime() - this.task?.startDate.getTime()) /
           3600000
         ).toFixed(2);
         this.task.estimated = Number.parseFloat(time);
