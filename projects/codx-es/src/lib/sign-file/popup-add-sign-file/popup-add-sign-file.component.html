@@ -79,10 +79,10 @@
     </div>
     <div class="stepper-body p-2 w-100" *ngIf="currentTab < 3">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100">
-        <div class="card-body overflow-auto">
+        <div class="card-body">
           <div class="tab-content">
             <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
-              <div class="mb-10 mt-10 text-center">
+              <div class="mb-10 mt-10 text-center tab-pane-header">
                 <h2 class="h2-title">
                   <codx-label name="lblUploadFile" [formModel]="formModel" default="Upload file"></codx-label>
                 </h2>
@@ -102,7 +102,7 @@
               </div>
             </div>
             <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
-              <div class="mb-10 mt-10 text-center">
+              <div class="mb-10 mt-10 text-center tab-pane-header">
                 <h2 class="h2-title">
                   <codx-label name="lblTitleAddSignFile" [formModel]="formModel" default="Bổ sung thông tin tài liệu">
                   </codx-label>
@@ -189,7 +189,7 @@
 
 
 
-        <div class="d-flex flex-stack  justify-content-between card-footer border-0">
+        <div class="d-flex flex-stack  justify-content-between card-footer tab-pane-footer border-0">
 
           <div class="left">
             <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">

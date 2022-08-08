@@ -1,6 +1,7 @@
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
@@ -27,7 +28,6 @@ import {
 } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import {
-  UploaderComponent,
   UploaderModule,
 } from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
@@ -62,6 +62,7 @@ import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
 import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
+import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -109,7 +110,9 @@ const T_Component: Type<any>[] = [
   CodxReportViewerComponent,
   CodxReportDesignerComponent,
   NoteDrawerComponent,
+  CodxApprovalComponent,
   CodxCommentsComponent,
+  DynamicFormComponent,
   DynamicSettingParamaterComponent,
 ];
 

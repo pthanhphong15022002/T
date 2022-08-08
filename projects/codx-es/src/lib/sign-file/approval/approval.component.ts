@@ -12,6 +12,7 @@ import {
 import { qr } from './model/mode';
 import {
   AnnotationAddEventArgs,
+  AnnotationDataFormat,
   PdfViewerComponent,
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { AuthStore, CacheService, LangPipe, UIComponent } from 'codx-core';
@@ -20,6 +21,7 @@ import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
+import { PopupApproveSignFileComponent } from '../popup-approve-sign-file/popup-approve-sign-file.component';
 @Component({
   selector: 'lib-approval',
   templateUrl: './approval.component.html',
@@ -27,7 +29,7 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 })
 export class ApprovalComponent extends UIComponent {
   public service: string = environment.pdfUrl;
-  @Input() recID = 'ef2f8ef0-16c1-11ed-a50d-d89ef34bb550';
+  @Input() recID = '358624aa-13e1-11ed-9785-509a4c39550b';
   @Input() isApprover = false;
   isActiveToSign: boolean = false;
 
@@ -41,14 +43,12 @@ export class ApprovalComponent extends UIComponent {
 
   vllActions: any;
 
+  funcID;
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
     private esService: CodxEsService,
-    private cacheSv: CacheService,
-    private df: ChangeDetectorRef,
     private actionCollectionsChanges: IterableDiffers,
-    private saveToDBChanges: IterableDiffers,
     private datePipe: DatePipe
   ) {
     super(inject);
@@ -58,6 +58,7 @@ export class ApprovalComponent extends UIComponent {
       .find([])
       .create(null);
     this.saveToDBQueueChange = actionCollectionsChanges.find([]).create(null);
+    this.funcID = this.router.snapshot.params['funcID'];
   }
 
   @ViewChild('fileUpload') fileUpload!: ElementRef;
@@ -107,6 +108,17 @@ export class ApprovalComponent extends UIComponent {
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
 
   ajaxSetting: any;
+
+  clickOpenPopup() {
+    this.callfc.openForm(
+      PopupApproveSignFileComponent,
+      'Duyệt',
+      500,
+      500,
+      this.funcID,
+      [{ funcID: this.funcID, Mode: 1 }]
+    );
+  }
 
   onInit() {
     this.saveAnnoQueue = new Map();
@@ -166,7 +178,7 @@ export class ApprovalComponent extends UIComponent {
             this.signerInfo = res?.approvers;
           }
         }
-        this.df.detectChanges();
+        this.detectorRef.detectChanges();
       });
 
     this.cache.valueList('ES015').subscribe((res) => {
@@ -174,7 +186,7 @@ export class ApprovalComponent extends UIComponent {
     });
   }
 
-  ngDoCheck() {}
+  ngDoCheck() { }
 
   ngAfterViewInit() {
     this.pdfviewerControl.zoomValue = 50;
@@ -191,6 +203,9 @@ export class ApprovalComponent extends UIComponent {
 
   loadingAnnot(e: any) {
     this.pdfviewerControl.zoomValue = 50;
+    this.esService.getSignFormat().subscribe((res) => {
+      console.log('res', res);
+    });
     // this.esService
     //   .getSignAreas([
     //     this.recID,
@@ -1116,8 +1131,10 @@ export class ApprovalComponent extends UIComponent {
   clickPrint(args) {}
 
   renderQRFile() {
-    this.pdfviewerControl.exportAnnotationsAsObject();
+    let annotationDataFormat: AnnotationDataFormat;
+    this.pdfviewerControl.exportAnnotationsAsBase64String(annotationDataFormat);
   }
+
   cancelPrint(e: any) {}
 
   show(e: any) {}

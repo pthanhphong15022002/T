@@ -8,22 +8,28 @@ import {
   Injector,
   OnInit,
   ChangeDetectorRef,
+  Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { ButtonModel, CacheService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { formatDtDis } from '../function/default.function';
-import { DispatchService } from '../services/dispatch.service';
+import { formatDtDis } from '../../../../../codx-od/src/lib/function/default.function';
+import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
 
 @Component({
-  selector: 'app-approval',
-  templateUrl: './approval.component.html',
-  styleUrls: ['./approval.component.scss'],
+  selector: 'codx-approval',
+  templateUrl: './codx-approval.component.html',
+  styleUrls: ['./codx-approval.component.scss'],
 })
-export class ApprovalComponent implements OnInit , OnChanges , AfterViewInit
+export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
   {
     @ViewChild('view') view!: ViewsComponent;
     @ViewChild('itemTemplate') template!: TemplateRef<any>;
     @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
+    @Input() tmpDetail?: TemplateRef<any>;
+
+    @Output() selectedChange = new EventEmitter<any>(); 
     funcID: any;
     views: Array<ViewModel> | any = [];
     button?: ButtonModel;
@@ -88,8 +94,7 @@ export class ApprovalComponent implements OnInit , OnChanges , AfterViewInit
         recID = dt.transID
         this.dataItem = dt;
       };
-      this.funcID = this.dataItem?.functionID;
-      this.getDtDis(recID);
+      this.selectedChange.emit(this.dataItem);
     }
     getDtDis(id: any) {
       this.lstDtDis = null;
