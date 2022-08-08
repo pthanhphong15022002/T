@@ -241,7 +241,7 @@ export class SprintsTasksComponent extends UIComponent {
         'ERM.Business.CM',
         'ParametersBusiness',
         'GetOneField',
-        ['TM_Parameters', null, 'CalendarID']
+        ['TMParameters', null, 'CalendarID']
       )
       .subscribe((res) => {
         if (res) {
