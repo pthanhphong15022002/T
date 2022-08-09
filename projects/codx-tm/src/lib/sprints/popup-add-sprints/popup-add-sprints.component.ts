@@ -105,7 +105,7 @@ export class PopupAddSprintsComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.imageAvatar.updateFileDirectReload(this.master.iterationID);
-          if (isAdd) {
+          if (isAdd && res.iterationType !='1') {
             var dataNew = this.dialog.dataService.data[0];
             this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
             this.dialog.dataService.data[1] = dataNew;
