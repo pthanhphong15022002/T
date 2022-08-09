@@ -31,6 +31,7 @@ import { MoveComponent } from './move/move.component';
 import { VersionComponent } from './version/version.component';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { ShareComponent } from './share/share.component';
+import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,10 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: HomeComponent
+      },   
+      {
+        path: ':funcID/:fileID',
+        component: ViewFileDialogComponent
       },           
       {
         path: '**',

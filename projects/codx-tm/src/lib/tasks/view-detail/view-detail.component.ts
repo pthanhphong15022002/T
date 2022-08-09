@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
+import { viewport } from '@popperjs/core';
 import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { AnyARecord } from 'dns';
 import { TM_Tasks } from '../../models/TM_Tasks.model';
@@ -14,7 +15,8 @@ export class ViewDetailComponent implements OnInit {
   dialog: any;
   active = 1;
   @Input() formModel?: FormModel;
-  @Input() itemSelected?: any
+  @Input() itemSelected?: any 
+  @Input() taskExtends?: any
   @Input() param?: any
   @Input() listRoles ? : any;
   @Input() popoverCrr? :any
@@ -43,6 +45,7 @@ export class ViewDetailComponent implements OnInit {
   }
 
   clickMF(e: any, dt?: any) {
+    if(this.taskExtends) return  this.clickMoreFunction.emit({e:e,data:this.taskExtends})
     this.clickMoreFunction.emit({e:e,data:dt})
   }
   openViewListTaskResource(data){
