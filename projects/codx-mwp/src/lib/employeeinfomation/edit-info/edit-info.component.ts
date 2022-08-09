@@ -85,7 +85,7 @@ export class EditInfoComponent implements OnInit {
 
   beforeSave(op: any) {
     var data = [];
-    op.method = 'UpdateAsync';
+    op.methodName = 'UpdateAsync';
     data = [
       this.employee,
       this.isNew

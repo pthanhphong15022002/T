@@ -4,13 +4,12 @@ import { ApiHttpService } from 'codx-core';
 import { lstat } from 'fs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CodxAdService {
-
   listview: any;
 
-  constructor(private api: ApiHttpService) { }
+  constructor(private api: ApiHttpService) {}
 
   private modules = new BehaviorSubject<any>(null);
   loadModule = this.modules.asObservable();
@@ -22,17 +21,51 @@ export class CodxAdService {
   loadListRoles = this.lstRoleAfterchoose.asObservable();
 
   getListFunction(data) {
-    return this.api.execSv<any>("SYS", "SYS", "FunctionListBusiness", "GetByParentAsync", data)
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'FunctionListBusiness',
+      'GetByParentAsync',
+      data
+    );
   }
 
   getListCompanySettings() {
-    return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "GetAsync")
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'CompanySettingsBusiness',
+      'GetAsync'
+    );
   }
 
-  updateInformationCompanySettings(data, option?:any,imageUpload?:any) {
-    return this.api.execSv<any>("SYS", "AD", "CompanySettingsBusiness", "UpdateBusinessInformationAsync", [data,option,imageUpload])
+  updateInformationCompanySettings(data, option?: any, imageUpload?: any) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'CompanySettingsBusiness',
+      'UpdateBusinessInformationAsync',
+      [data, option, imageUpload]
+    );
   }
-  getListAppByUserRoles(data?:any) {
-    return  this.api.exec('ERM.Business.AD','UsersBusiness','GetListAppByUserRolesAsync',data)
+  getListAppByUserRoles(data?: any) {
+    return this.api.exec(
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListAppByUserRolesAsync',
+      data
+    );
+  }
+
+  deleteFile(objectID, objectType, delForever) {
+    return this.api
+      .execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'DeleteByObjectIDAsync',
+        [objectID, objectType, delForever]
+      )
+      .subscribe();
   }
 }

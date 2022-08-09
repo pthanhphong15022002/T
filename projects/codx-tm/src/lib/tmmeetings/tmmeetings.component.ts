@@ -248,10 +248,10 @@ export class TMMeetingsComponent extends UIComponent {
               false
             );
           if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
+            // e?.event.forEach((obj) => {
+            //   this.view.dataService.update(obj).subscribe();
+            // });
+            this.itemSelected = e?.event;
           }
           this.detectorRef.detectChanges();
         });

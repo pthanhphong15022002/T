@@ -82,7 +82,7 @@ export class EmployeesLeaveComponent implements OnInit {
 
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteAsync';
-    opt.data = this.itemSelected.taskID;
+    opt.data = this.itemSelected.employeeID;
     return true;
   }
 

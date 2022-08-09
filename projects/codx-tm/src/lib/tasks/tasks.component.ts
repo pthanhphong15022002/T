@@ -100,6 +100,7 @@ export class TasksComponent extends UIComponent {
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
   sprints :any ;
+  dataTree= [] ;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -612,10 +613,7 @@ export class TasksComponent extends UIComponent {
         });
     }
   }
-  selectedChange(val: any) {
-    this.itemSelected = val?.data;
-    this.detectorRef.detectChanges();
-  }
+
 
   //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
@@ -761,6 +759,14 @@ export class TasksComponent extends UIComponent {
       }
       this.detectorRef.detectChanges();
     });
+  }
+
+  //codx-view select 
+
+  selectedChange(val: any) {
+    this.itemSelected = val?.data;
+    this.loadTreeView() ;
+    this.detectorRef.detectChanges();
   }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);
@@ -1197,6 +1203,22 @@ export class TasksComponent extends UIComponent {
     }
   }
   //#endregion
-
+  
+  //#region  tree
+  loadTreeView(){
+    this.api
+    .execSv<any>(
+      'TM',
+      'ERM.Business.TM',
+      'TaskBusiness',
+      'GetListTasksTreeAsync',
+      this.itemSelected?.taskID
+    )
+    .subscribe((res) => {
+      if(res)
+      this.dataTree = res;
+    });
+  }
+//#endregion
 
 }
