@@ -88,7 +88,8 @@ export class PopupAddPositionsComponent implements OnInit {
 
   beforeSave(op: any) {
     var data = [];
-    op.method = 'UpdateAsync';
+    op.methodName = 'UpdateAsync';
+    op.className = 'EmployeesBusiness';
     data = [
       this.position,
       this.isNew
