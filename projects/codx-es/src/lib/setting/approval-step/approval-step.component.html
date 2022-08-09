@@ -16,10 +16,10 @@
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 mw-800px h-100">
         <div class="card-body p-0 ">
           <div class="text-center p-10">
-            <div *ngIf="lstStep?.length == 0 || lstStep == null">
+            <div *ngIf="lstStep?.length == 0">
               <!-- <div class="mb-10 text-center">
                 <h2 class="h2-title">
-                  <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
+                  <codx-label name="lblSubHeaderApprover" default="Quy trình xét duyệt" [formModel]="formModel">
                   </codx-label>
                 </h2>
               </div> -->
@@ -59,7 +59,7 @@
             <div *ngIf="lstStep?.length > 0">
               <div class="mb-10 mt-10 text-center">
                 <!-- <h2 class="h2-title">
-                  <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
+                  <codx-label name="lblSubHeaderApprover" default="Quy trình xét duyệt" [formModel]="formModel">
                   </codx-label>
                 </h2> -->
               </div>
@@ -146,10 +146,10 @@
 </div>
 
 <ng-container *ngIf="type == '1'">
-  <div *ngIf="lstStep?.length == 0 || lstStep == null">
+  <div *ngIf="lstStep?.length == 0">
     <div class="mb-10 mt-10 text-center LaGia">
       <h2 class="h2-title">
-        <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
+        <codx-label name="lblSubHeaderApprover" default="Quy trình xét duyệt" [formModel]="formModel">
         </codx-label>
       </h2>
     </div>
@@ -189,7 +189,7 @@
   <div *ngIf="lstStep?.length > 0">
     <div class="mb-10 mt-10 text-center">
       <h2 class="h2-title">
-        <codx-label name="lblSubHeaderApprover" default="Hợp đồng lao động" [formModel]="formModel">
+        <codx-label name="lblSubHeaderApprover" default="Quy trình xét duyệt" [formModel]="formModel">
         </codx-label>
       </h2>
     </div>

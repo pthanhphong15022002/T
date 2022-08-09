@@ -42,7 +42,7 @@ export class ApprovalStepComponent implements OnInit {
   dialog: DialogRef;
   formModel: FormModel;
   approvers = [];
-  lstStep: any = null;
+  lstStep: any;
   lstDeleteStep = [];
   isDeleteAll = false;
 
@@ -67,6 +67,7 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger;
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
