@@ -1,9 +1,9 @@
 import { N } from '@angular/cdk/keycodes';
 import { variable } from '@angular/compiler/src/output/output_ast';
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { eventClick } from '@syncfusion/ej2-angular-schedule';
-import { DialogData, DialogRef, ApiHttpService, NotificationsService, FormModel } from 'codx-core';
+import { DialogData, DialogRef, ApiHttpService, NotificationsService, FormModel, CodxFormComponent, CacheService } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_Roles } from '../../models/AD_Roles.models';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
@@ -35,11 +35,15 @@ export class PopRolesComponent implements OnInit {
   optionThird = 'ADC03' // Check select from list
   checkApp = false;
   checkService = true;
+
+  @ViewChild('form') form: CodxFormComponent;
+
   constructor(
     private api: ApiHttpService,
     private changeDec: ChangeDetectorRef,
     private notiService: NotificationsService,
     private adService: CodxAdService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
@@ -49,7 +53,9 @@ export class PopRolesComponent implements OnInit {
   ngOnInit(): void {
     this.listChooseRole = this.data;
     this.loadData();
+  }
 
+  ngAfterViewInit() {
   }
 
   loadData() {

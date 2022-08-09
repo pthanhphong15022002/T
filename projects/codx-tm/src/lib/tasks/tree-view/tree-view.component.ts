@@ -36,17 +36,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
    
   }
   ngAfterViewInit(): void {
-    this.api
-    .execSv<any>(
-      'TM',
-      'ERM.Business.TM',
-      'TaskBusiness',
-      'GetListTasksTreeAsync',
-      this.data?.taskID
-    )
-    .subscribe((res) => {
-      this.dataTree = res;
-    });
+
   }
 
   clickMF(e: any, dt?: any) {

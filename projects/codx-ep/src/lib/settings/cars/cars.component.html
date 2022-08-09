@@ -1,5 +1,5 @@
 <codx-views
-  #view
+  #view  
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
@@ -25,16 +25,27 @@
 
 <ng-template #rankingCol let-data>
   <div class="has-action-menu">
-    {{ data.ranking | vll: "EP005":"text" | async }}
-    <div class="action-menu">
-      <codx-mfunc
+    {{ data.ranking | vll: "EP005":"text" | async }}    
+  </div>  
+</ng-template>
+
+<ng-template #categoryCol let-data>
+  <div class="has-action-menu">
+    {{ data.category | vll: "VL005":"text" | async }}    
+    <!-- <div class="action-menu">
+      <codx-mfunc        
+        [dataItem]="data"
         [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
+        click="clickMF($event, data)"
         type="hover"
-      ></codx-mfunc>
-    </div>
+      ></codx-mfunc> 
+    </div> -->
+    <div class="action-menu">
+      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" type="hover" [dataItem]="data">
+      </codx-mfunc>
+    </div> 
   </div>
-  
+   
 </ng-template>
 
 

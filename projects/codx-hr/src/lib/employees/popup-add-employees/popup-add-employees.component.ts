@@ -42,7 +42,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   showAssignTo = false;
   isSaving: boolean = false;
   isNew: boolean = true;
-  dataBind: any = {};
+  // dataBind: any = {};
   currentSection = "InfoPersonal";
   isDisable = false;
   user: any;
@@ -166,12 +166,12 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   beforeSave(op: any) {
     var data = [];
-    op.method = 'UpdateAsync';
+    op.methodName = 'UpdateAsync';
     op.className = 'EmployeesBusiness';
 
-    if(this.action === 'add'){
+    if (this.action === 'add') {
       this.isNew = true;
-    }else if(this.action === 'edit'){
+    } else if (this.action === 'edit') {
       this.isNew = false;
     }
     data = [
@@ -187,32 +187,12 @@ export class PopupAddEmployeesComponent implements OnInit {
     //   if (Array.isArray(this.data[key]))
     //     this.data[key] = this.data[key].join(';');
     // }
-      this.dialog.dataService
+    this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe();
+    this.detectorRef.detectChanges();
     this.dialog.close();
 
-  }
-
-  addEmployee() {
-    var t = this;
-    this.dialog.dataService.save((opt: any) => {
-      opt.data = [this.employee];
-      return true;
-    })
-      .subscribe((res) => {
-        if (res.save) {
-          this.dialog.close();
-        }
-      });
-  }
-
-  closePanel() {
-    this.dialog.close()
-  }
-
-  scrollTo(session) {
-    this.currentSection = session;
   }
 
   dataChange(e: any, field: string) {

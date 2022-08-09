@@ -1,14 +1,14 @@
-import { Component, Injector, Input, OnInit, Optional } from '@angular/core';
+import { Component, Injector, OnInit, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
+import { UIComponent, DialogData, DialogRef, FormModel } from 'codx-core';
 import { CodxEsService } from '../../codx-es.service';
 
 @Component({
-  selector: 'lib-popup-approve-sign-file',
-  templateUrl: './popup-approve-sign-file.component.html',
-  styleUrls: ['./popup-approve-sign-file.component.scss'],
+  selector: 'lib-popup-reason-ard',
+  templateUrl: './popup-reason-ard.component.html',
+  styleUrls: ['./popup-reason-ard.component.scss'],
 })
-export class PopupApproveSignFileComponent extends UIComponent {
+export class PopupReasonARDComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
