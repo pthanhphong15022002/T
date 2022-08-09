@@ -1,33 +1,21 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
-import { SignalRService } from '@core/services/signalr/signalr.service';
-import { Post } from '@shared/models/post';
-import { NgbModal, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-declare var _;
-import { ApiHttpService, AuthService, CacheService, CallFuncService, NotificationsService } from 'codx-core';
-import { PopupVoteComponent } from './popup-vote/popup-vote.component';
+import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService } from 'codx-core';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
+import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.component';
+
 @Component({
-  selector: 'treeview-comment',
-  templateUrl: './treeview-comment.component.html',
-  styleUrls: ['./treeview-comment.component.scss'],
+  selector: 'codx-comments',
+  templateUrl: './codx-comments.component.html',
+  styleUrls: ['./codx-comments.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TreeviewCommentComponent implements OnInit {
+export class CodxCommentsComponent implements OnInit {
+
   @Input() funcID:string;
   @Input() objectType:string;
-  @Input() fromModel:any;
+  @Input() formModel:any;
   @Input() rootData: any;
   @Input() dataComment: any;
   @Output() pushComment = new EventEmitter;

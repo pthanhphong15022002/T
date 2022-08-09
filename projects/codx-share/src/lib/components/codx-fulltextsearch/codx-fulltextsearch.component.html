@@ -54,7 +54,7 @@
         <span class="fs-6 text-muted">Khoảng {{count}} kết quả được tìm thấy</span>
       </div>
       <div class="overflow-auto pe-5 h-searchtmp"  >
-        <div class="ps-5">
+        <div class="ps-5" [style.maxWidth.px]="widthItemTmp">
           <ng-container *ngIf="searchData && searchData[0]">
             <ng-container *ngFor="let data of searchData[0]">
               <div (click)="onSelected(data)">

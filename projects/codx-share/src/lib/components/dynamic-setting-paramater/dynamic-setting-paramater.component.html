@@ -1,1 +1,11 @@
-<p>dynamic-setting-paramater works!</p>
+<codx-views
+  #view
+  [views]="views"
+  [autoLoad]="false"
+  (viewChanged)="viewChanged($event, view)"
+>
+</codx-views>
+
+<ng-template #template>
+  <p>dynamic-setting-paramater works!</p>
+</ng-template>

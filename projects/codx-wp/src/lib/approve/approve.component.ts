@@ -327,7 +327,11 @@ private injector:Injector
               let option = new DialogModel();
               option.DataService = this.view.dataService;
               option.FormModel = this.view.formModel;
-              this.callfc.openForm(AddPostComponent,'',700,550,'',obj,'',option);
+              this.callfc.openForm(AddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
+                if(data.result){
+                  console.log(data);
+                }
+              })
             }});
         }
         break;
