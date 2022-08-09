@@ -129,18 +129,21 @@ export class SignatureComponent implements OnInit, AfterViewInit {
         headerText: 'Chữ kí chính',
         template: this.imageSignature1,
         width: 150,
+        textAlign: 'Center',
       },
       {
         field: 'signature2',
         headerText: 'Chữ kí nháy',
         template: this.imageSignature2,
         width: 150,
+        textAlign: 'Center',
       },
       {
         field: 'stamp',
         headerText: 'Con dấu',
         template: this.imageStamp,
         width: 150,
+        textAlign: 'Center',
       },
       {
         field: 'otpControl',

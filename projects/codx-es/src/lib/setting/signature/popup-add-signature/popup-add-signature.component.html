@@ -70,10 +70,8 @@
           <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
             <div class="m-auto">
               <div class="m-auto">
-                <!-- <codx-img [objectId]="dialogSignature.value.signature1" [objectType]="form.formModel.entityName"
-                  [funcId]="form.formModel.funcID"></codx-img> -->
-
-                <img [src]="'data:image/png;base64,'+dialogSignature.value.signature1Url" />
+                <codx-img [objectId]="dialogSignature.value.recID+'1'" imageType="square" [width]="50"
+                  [recId]="dialogSignature.value.signature1"></codx-img>
               </div>
             </div>
           </div>
@@ -82,8 +80,8 @@
         <div class="text-center">
           <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
             <div class="m-auto">
-              <codx-img [objectId]="dialogSignature.value.signature2" [objectType]="form.formModel.entityName"
-                [funcId]="form.formModel.funcID"></codx-img>
+              <codx-img [objectId]="dialogSignature.value.recID+'2'" imageType="square" [width]="50"
+                [recId]="dialogSignature.value.signature2"></codx-img>
             </div>
           </div>
           <codx-label fiedName="Signature2" default="Kí nháy" [formModel]="form.formModel" class="">
@@ -92,8 +90,8 @@
         <div class="text-center">
           <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
             <div class="m-auto">
-              <codx-img [objectId]="dialogSignature.value.stamp" [objectType]="form.formModel.entityName"
-                [funcId]="form.formModel.funcID"></codx-img>
+              <codx-img [objectId]="dialogSignature.value.recID+'s'" imageType="square" [width]="50"
+                [recId]="dialogSignature.value.stamp"></codx-img>
             </div>
           </div>
           <codx-label fiedName="Stamp" default="Con dấu" [formModel]="form.formModel" class="">
