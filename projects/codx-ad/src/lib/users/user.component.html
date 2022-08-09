@@ -9,7 +9,7 @@
       <div class=" justify-content-start">
         <codx-temp-full cardCss="card-template" (clickMF)="clickMF($event,data)" [imageId]="data.userID"
           imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.buName)" [typeMF]="'hover'"
-          [formModel]="view.formModel" [dataItem]="data" [footer]="footer" [dataItem]="data">
+          [formModel]="view.formModel" [dataItem]="data" [footer]="footer" #tempFull>
         </codx-temp-full>
       </div>
       <div class="d-flex flex-wrap">

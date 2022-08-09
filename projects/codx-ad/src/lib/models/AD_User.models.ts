@@ -6,7 +6,7 @@ export class AD_User{
     email: string;
     buid: string;
     activeOn: Date;
-    mobile: string;
+    phone: string;
     employeeID: string;
     stop: boolean;
     status: string;
