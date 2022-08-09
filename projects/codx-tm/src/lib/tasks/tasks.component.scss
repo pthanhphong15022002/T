@@ -14,3 +14,14 @@
 .expired {
     color: #F64E60;
 }
+
+codx-view-list-detail .codx-detail-footer {
+    overflow: hidden;
+}
+
+.codx-textarea {
+    border-radius: 2px !important;
+    padding: 5px 10px;
+    border-color: #d4d9dd;
+    outline: 0;
+}
