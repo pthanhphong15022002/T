@@ -85,7 +85,11 @@ export class PopupAddDriversComponent implements OnInit {
         this.dialogAddDriver = item;
         if (this.data) {
           this.dialogAddDriver.patchValue(this.data);
-        }
+        } 
+        this.dialogAddDriver.addControl(
+          'code',
+          new FormControl(this.data.code)
+        ); 
         this.isAfterRender = true;
       });
   }
@@ -118,22 +122,17 @@ export class PopupAddDriversComponent implements OnInit {
     }
   }
   valueCbxCarChange(event: any) {    
-    var cbxCar= event.component.dataService.data;
-    cbxCar.forEach(element => {
-      if(element.RecID == event.component.valueSelected) {
-        this.dialogAddDriver.value.color = element.ResourceID;
-        this.changeDetectorRef.detectChanges();
-      }
-    });
-    
-    // if(event!=null)
-    // {      
-    //   if (event.data instanceof Object) {
-    //     this.dialogAddDriver.patchValue({ [event['field']]: event.data.value });
-    //   } else {
-    //     this.dialogAddDriver.patchValue({ [event['field']]: event.data });
-    //   }
-    // }
+    if(event.data != "") {
+      var cbxCar = event.component.dataService.data;
+      cbxCar.forEach(element => {
+        if(element.RecID == event.component.valueSelected) {
+          this.dialogAddDriver.patchValue({code : element.Code}); 
+          this.changeDetectorRef.detectChanges();
+        }
+        
+      });
+    }
+    debugger    
   }
   openPopupDevice(template: any) {
     var dialog = this.callFuncService.openForm(template, '', 550, 430);
