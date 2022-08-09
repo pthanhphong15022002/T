@@ -448,35 +448,7 @@
         
 
 }
-.hover-scroll-overlay-y {
-  position: relative;
-}
-@media (min-width: 992px) {
-  .hover-scroll-overlay-y {
-    overflow-y: hidden;
-  }
-  .hover-scroll-overlay-y::-webkit-scrollbar {
-    width: calc(var(--kt-scrollbar-width) + var(--kt-scrollbar-space));
-  }
-  .hover-scroll-overlay-y::-webkit-scrollbar-thumb {
-    background-clip: content-box;
-    border-right: var(--kt-scrollbar-space) solid transparent;
-  }
-  .hover-scroll-overlay-y:hover {
-    overflow-y: overlay;
-  }
-  @-moz-document url-prefix() {
-    .hover-scroll-overlay-y {
-      overflow-y: scroll;
-      position: relative;
-    }
-  }
-}
-@media (max-width: 991.98px) {
-  .hover-scroll-overlay-y {
-    overflow-y: auto;
-  }
-}
+
 codx-vll{
   margin-left: 3.25rem;
 }
