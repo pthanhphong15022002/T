@@ -1,4 +1,4 @@
-import { CO_Meetings, Resources } from './../../models/CO_Meetings.model';
+import { CO_Meetings, CO_Resources } from './../../models/CO_Meetings.model';
 import {
   ChangeDetectorRef,
   Component,
@@ -47,7 +47,7 @@ export class PopupAddMeetingComponent implements OnInit {
   endDate: any;
   action: any;
   linkURL = '';
-  resources: Resources[] = [];
+  resources: CO_Resources[] = [];
   listRoles: any;
   idUserSelected: any;
   popover: any;
@@ -114,6 +114,7 @@ export class PopupAddMeetingComponent implements OnInit {
     if (this.action == 'add') {
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
+      this.meeting.meetingType = '1';
       data = [this.meeting, this.functionID];
     } else if (this.action == 'edit') {
       op.method = 'UpdateMeetingsAsync';
@@ -339,7 +340,7 @@ export class PopupAddMeetingComponent implements OnInit {
         if (res && res.length > 0) {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
-            var tmpResource = new Resources();
+            var tmpResource = new CO_Resources();
             tmpResource.resourceID = emp?.userID;
             tmpResource.resourceName = emp?.userName;
             tmpResource.positionName = emp?.positionName;

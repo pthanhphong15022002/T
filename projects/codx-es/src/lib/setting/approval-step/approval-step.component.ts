@@ -17,6 +17,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  ScrollComponent,
 } from 'codx-core';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddApprovalStepComponent } from './popup-add-approval-step/popup-add-approval-step.component';
@@ -42,7 +43,7 @@ export class ApprovalStepComponent implements OnInit {
   dialog: DialogRef;
   formModel: FormModel;
   approvers = [];
-  lstStep: any = null;
+  lstStep: any;
   lstDeleteStep = [];
   isDeleteAll = false;
 
@@ -76,6 +77,10 @@ export class ApprovalStepComponent implements OnInit {
     console.log('transID', this.transId);
   }
 
+  ngAfterViewInit() {
+    //ScrollComponent.reinitialization();
+  }
+
   close() {
     this.dialog && this.dialog.close();
   }
@@ -86,6 +91,8 @@ export class ApprovalStepComponent implements OnInit {
         this.lstStep = res;
         this.lstOldData = [...res];
         console.log(this.lstStep);
+        this.cr.detectChanges();
+        ScrollComponent.reinitialization();
       } else if (this.transId != '') {
         // if (this.transId != '') {
         let gridModels = new GridModels();
@@ -101,6 +108,8 @@ export class ApprovalStepComponent implements OnInit {
             this.lstStep = res;
             this.currentStepNo = this.lstStep.length + 1;
             this.lstOldData = [...res];
+            this.cr.detectChanges();
+            ScrollComponent.reinitialization();
           }
         });
       } else {
@@ -114,6 +123,7 @@ export class ApprovalStepComponent implements OnInit {
     this.transId = transID;
     this.initForm();
     this.cr.detectChanges();
+    ScrollComponent.reinitialization();
   }
 
   onSaveForm() {
@@ -219,7 +229,6 @@ export class ApprovalStepComponent implements OnInit {
         );
 
         this.dialog.closed.subscribe((res) => {
-          debugger;
           if (res?.event) {
             this.isEdited = true;
           }

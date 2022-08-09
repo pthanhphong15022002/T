@@ -1,60 +1,88 @@
-import { CodxEpService } from './../../../codx-ep.service';
+import {
+  ChangeDetectorRef,  Component,  EventEmitter,  Input,  OnInit,  Optional,  Output,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, UIComponent } from 'codx-core';
-import { Component, EventEmitter, Injector, Input, OnInit, Optional, Output } from '@angular/core';
+
+import {
+  CacheService,
+  CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
+} from 'codx-core';
+
+import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
   selector: 'popup-add-drivers',
-  templateUrl: './popup-add-drivers.component.html',
-  styleUrls: ['./popup-add-drivers.component.scss']
+  templateUrl: 'popup-add-drivers.component.html',
+  styleUrls: ['popup-add-drivers.component.scss'],
 })
-export class PopupAddDriversComponent extends UIComponent {
-  
+export class PopupAddDriversComponent implements OnInit {
+  @Input() editResources: any;
   @Input() isAdd = true;
+  @Input() data!: any;
   @Output() closeEdit = new EventEmitter();
+  @Output() onDone = new EventEmitter();
+  cacheGridViewSetup: any;
+  CbxName: any;
+  dialogAddDriver: FormGroup;
+  formModel: FormModel;
+  dialog: any;
   headerText = 'Thêm mới lái xe';
   subHeaderText = 'Tạo & upload file văn bản';
-  dialogAddDriver: FormGroup;
-  isAfterRender = false;
-  data: any;
-  dialog: any;  
+
   constructor(
-    private injector: Injector,
-    private epService: CodxEpService,
+    private cacheSv: CacheService,
+    private bookingService: CodxEpService,
+    private callFuncService: CallFuncService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-    
   ) {
-    super(injector);
-    this.data = dt?.data;
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
     this.dialog = dialog;
+    this.formModel = this.dialog.formModel;
   }
 
-  onInit(): void {
+  isAfterRender = false;
+  ngOnInit(): void {
     this.initForm();
-  }
-
-  initForm() {
-    this.epService
-      .getFormGroup(
+    
+    this.bookingService
+      .getComboboxName(
         this.dialog.formModel.formName,
         this.dialog.formModel.gridViewName
       )
-      .then((item) => {
-        this.dialogAddDriver = item;
+      .then((res) => {
+        this.CbxName = res;
+        console.log('cbx', this.CbxName);
+      });
+  }
+
+  initForm() {
+    this.cacheSv
+      .gridViewSetup('Resources', 'EP_Resources')
+      .subscribe((item) => {
+        this.editResources = item;
         this.dialogAddDriver.patchValue({
           ranking: '1',
           category: '1',
           owner: '',
         });
+      });
 
+    this.bookingService
+      .getFormGroup('Resources', 'grvResources')
+      .then((item) => {
+        this.dialogAddDriver = item;
         if (this.data) {
           this.dialogAddDriver.patchValue(this.data);
         }
         this.isAfterRender = true;
       });
   }
- 
 
   valueChange(event: any) {
     if (event?.field != null) {
@@ -82,23 +110,20 @@ export class PopupAddDriversComponent extends UIComponent {
       }
     }
   }
-  // openPopupDevice(template: any) {
-  //   var dialog = this.callFuncService.openForm(template, '', 550, 430);
-  //   this.changeDetectorRef.detectChanges();
-  // }
-  // checkedChange(event: any, device: any) {
-  //   let index = this.tmplstDevice.indexOf(device);
-  //   if (index != -1) {
-  //     this.tmplstDevice[index].isSelected = event.target.checked;
-  //   }
-  // }
+  openPopupDevice(template: any) {
+    var dialog = this.callFuncService.openForm(template, '', 550, 430);
+    this.changeDetectorRef.detectChanges();
+  }
+  
   onSaveForm() {
     if (this.dialogAddDriver.invalid == true) {
       console.log(this.dialogAddDriver);
       return;
     }    
+    this.dialogAddDriver.value.bUID = this.dialogAddDriver.value.bUID[0];
+    this.dialogAddDriver.value.companyID = this.dialogAddDriver.value.companyID[0];
     if (!this.dialogAddDriver.value.linkType) {
-      this.dialogAddDriver.value.linkType = '0';
+      this.dialogAddDriver.value.linkType = '2';
     }
     this.dialogAddDriver.value.resourceType = '3';
     this.dialog.dataService

@@ -5,8 +5,8 @@ className="TaskExtendsBusiness" method="GetListTaskExtendsAsync" [views]="views"
 </codx-views>
 
 <ng-template #panelRight>
-    <app-view-detail [formModel]="view.formModel"  [itemSelected]="itemSelected" [vllStatus]="vllStatus"
-   [vllExtendStatus]="vllExtendStatus" (clickMoreFunction)="receiveMF($event)">
+    <app-view-detail [formModel]="view.formModel" [itemSelected]="itemSelected"  [taskExtends]="taskExtends"  [vllStatus]="vllStatus"
+   [vllExtendStatus]="vllExtendStatus"  (clickMoreFunction)="receiveMF($event)">
     </app-view-detail>
 </ng-template>
 

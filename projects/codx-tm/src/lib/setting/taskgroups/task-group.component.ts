@@ -123,7 +123,7 @@ export class TaskGroupComponent implements OnInit {
 
       { headerTemplate: this.itemCreatedBy, width: 200 },
       { headerTemplate: this.itemCreatedOn, width: 100 },
-      { field: '', headerText: '#', width: 30 },
+      { field: '', headerText: '', width: 30 },
     ];
     this.button = {
       id: 'btnAdd',
@@ -307,5 +307,13 @@ export class TaskGroupComponent implements OnInit {
   }
   aaa(val: any) {
     console.log(val);
+  }
+
+  innerHTML(note){
+    var desc = document.createElement('div');
+    if(note){
+      desc.innerHTML = '<div>'+note+'</div>';
+    }
+    return desc.innerText;
   }
 }

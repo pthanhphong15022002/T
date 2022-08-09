@@ -1,8 +1,11 @@
-.text-error, codx-input.text-error, .file-item input.text-error {
+.text-error,
+codx-input.text-error,
+.file-item input.text-error {
     border: 1px solid red !important;
     //height: 38px !important;
     height: 32px !important;
 }
+
 // role="tooltip"
 ngb-popover-window[role="tooltip"] {
     z-index: 10000;
@@ -11,6 +14,7 @@ ngb-popover-window[role="tooltip"] {
 .user-mini-group {
     padding-bottom: 0;
 }
+
 .user-mini-group {
     border: 1px solid #e0e0e0;
     border-radius: 4px;
@@ -31,12 +35,13 @@ ngb-popover-window[role="tooltip"] {
     height: 30px;
 }
 
+
 .align-items-center {
-    align-items: center!important;
+    align-items: center !important;
 }
 
 .d-flex {
-    display: flex!important;
+    display: flex !important;
 }
 
 .user-mini-item div.text-dark-75 {
@@ -44,23 +49,27 @@ ngb-popover-window[role="tooltip"] {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
 .text-dark-75 {
-    color: #3e4347!important;
+    color: #3e4347 !important;
 }
 
 .nav-tabs {
-    border-bottom-width: 0!important;
+    border-bottom-width: 0 !important;
 }
+
 .nav-tabs {
     border-bottom: 1px solid #e4e6ef;
 }
 
 .nav-tabs {
-    border-bottom-width: 0!important;
+    border-bottom-width: 0 !important;
 }
+
 .nav-tabs {
     border-bottom: 1px solid #e4e6ef;
 }
+
 .nav {
     display: flex;
     flex-wrap: wrap;
@@ -69,13 +78,17 @@ ngb-popover-window[role="tooltip"] {
     list-style: none;
 }
 
-.symbol.symbol-circle, .symbol.symbol-circle .symbol-label, .symbol.symbol-circle>img {
+.symbol.symbol-circle,
+.symbol.symbol-circle .symbol-label,
+.symbol.symbol-circle>img {
     border-radius: 50%;
 }
 
-.nav.nav-tabs.nav-tabs-line .nav-link.active, .nav.nav-tabs.nav-tabs-line .nav-link:hover:not(.disabled), .nav.nav-tabs.nav-tabs-line .show>.nav-link {
+.nav.nav-tabs.nav-tabs-line .nav-link.active,
+.nav.nav-tabs.nav-tabs-line .nav-link:hover:not(.disabled),
+.nav.nav-tabs.nav-tabs-line .show>.nav-link {
     background-color: transparent;
     border: 0;
     border-bottom: 1px solid #3699ff;
-    transition: color .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease;
+    transition: color .15s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
 }

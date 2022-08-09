@@ -226,44 +226,27 @@
           <div class="codx_des">
             <i class="text-gray-400">{{ item.description }}</i>
           </div>
+          
         </div>
         <div class="d-flex align-items-start ms-6">
-          <div ngbDropdown class="dropdown ms-6">
-            <button
-              ngbDropdownToggle
-              class="btn"
+          <button
               type="button"
-              id="dropdownMenuButton1"
-              aria-haspopup="true"
-              aria-expanded="false"
+              class="btn btn-outline-secondary"
+              triggers="click"
+              [autoClose]="true"
+              [ngbTooltip]="tool"
+              ngClass="border-0"
             >
-              <span class="icon-more_vert icon-18"></span>
-            </button>
-            <div
-              ngbDropdownMenu
-              class="dropdown-menu p-3"
-              aria-labelledby="dropdownMenuButton1"
-            >
-              <a ngbDropdownItem class="dropdown-item">
-                <div
-                  class="d-flex align-items-center cursor-pointer"
-                  (click)="openForm('edit', item, 'excel')"
-                >
-                  <span class="icon-edit text-primary icon-16"></span>
-                  <span class="ms-2">Chỉnh sửa</span>
-                </div>
-              </a>
-              <a ngbDropdownItem class="dropdown-item">
-                <div
-                  class="d-flex align-items-center cursor-pointer"
-                  (click)="openForm('delete', item, 'excel')"
-                >
-                  <span class="icon-delete text-danger icon-16"></span>
-                  <span class="ms-2">Xóa</span>
-                </div>
-              </a>
-            </div>
-          </div>
+            <span class="icon-more_vert icon-18"></span>
+          </button>
+          <ng-template #tool >
+            <ng-container *ngFor="let x of moreFunction" >
+              <div class="d-flex p-2 cursor-pointer" (click)="openForm(x?.id, item, 'excel')">
+                <span class="icon-16 me-2" [ngClass]="x?.icon" [style.color]="x?.textColor"></span>
+                <codx-label [formModel]="formModel" [fiedName]="x?.text"></codx-label>
+              </div>
+            </ng-container>
+          </ng-template>
         </div>
       </div>
     </div>

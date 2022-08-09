@@ -16,6 +16,8 @@ import { NgbModal, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 declare var _;
 import { ApiHttpService, AuthService, CacheService, CallFuncService, NotificationsService } from 'codx-core';
 import { PopupVoteComponent } from './popup-vote/popup-vote.component';
+import { AttachmentComponent } from '../attachment/attachment.component';
+import { ImageGridComponent } from '../image-grid/image-grid.component';
 @Component({
   selector: 'treeview-comment',
   templateUrl: './treeview-comment.component.html',
@@ -23,9 +25,15 @@ import { PopupVoteComponent } from './popup-vote/popup-vote.component';
   encapsulation: ViewEncapsulation.None,
 })
 export class TreeviewCommentComponent implements OnInit {
+  @Input() funcID:string;
+  @Input() objectType:string;
+  @Input() fromModel:any;
   @Input() rootData: any;
   @Input() dataComment: any;
   @Output() pushComment = new EventEmitter;
+  @ViewChild('codxATM') codxATM :AttachmentComponent;
+  @ViewChild('codxFile') codxFile : ImageGridComponent;
+
   crrId = '';
   checkValueInput = false;
   lstData: any;
@@ -57,7 +65,6 @@ export class TreeviewCommentComponent implements OnInit {
     
   }
 
-
   ngOnInit(): void {
     this.user = this.auth.userValue;
     this.cache.valueList('L1480').subscribe((res) => {
@@ -66,8 +73,6 @@ export class TreeviewCommentComponent implements OnInit {
       }
     });
   }
-
-
 
   showVotes(data: any) {
     this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
@@ -102,7 +107,6 @@ export class TreeviewCommentComponent implements OnInit {
             post.showReply = false;
             this.crrId = "";
             this.setNodeTree(res);
-            // this.loadSubComment(post);
             this.dt.detectChanges();
           }
         });
@@ -110,11 +114,10 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
   sendComment(post: any, value: any) {
-    if (!value.trim()) {
+    if (!value.trim() && this.fileUpload.length == 0) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    if (post.recID) {
       var type = "WP_Comments";
       this.api
         .execSv<any>(
@@ -126,17 +129,34 @@ export class TreeviewCommentComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.comments = "";
-            this.repComment = "";
-            this.dataComment.totalComment += 1;
-            post.showReply = false;
-            this.crrId = "";
-            this.dicDatas[res["recID"]] = res;
-            this.setNodeTree(res);
-            this.dt.detectChanges();
+            if(this.fileUpload.length > 0){
+              this.codxATM.objectId = res.recID;
+              this.codxATM.saveFilesObservable().subscribe((result:any)=>{
+                if(result){
+                  this.comments = "";
+                  this.repComment = "";
+                  this.dataComment.totalComment += 1;
+                  post.showReply = false;
+                  this.crrId = "";
+                  this.dicDatas[res["recID"]] = res;
+                  this.setNodeTree(res);
+                  this.dt.detectChanges();
+                }
+              })
+            }
+            else{
+              this.comments = "";
+              this.repComment = "";
+              this.dataComment.totalComment += 1;
+              post.showReply = false;
+              this.crrId = "";
+              this.dicDatas[res["recID"]] = res;
+              this.setNodeTree(res);
+              this.dt.detectChanges();
+            }
           }
         });
-    }
+    
   }
 
   replyTo(data) {
@@ -222,20 +242,6 @@ export class TreeviewCommentComponent implements OnInit {
     }
     this.dt.detectChanges();
   }
-
-  checkInput() {
-    this.checkValueInput = false;
-    // var fields = $("form :input");
-    // for (var i = 0; i < fields.length; i++) {
-    //   if ($(fields[i]).val() != '') {
-    //     this.checkValueInput = true;
-    //     break;
-    //   }
-    // }
-  }
-
-
-
   valueChange(value: any, type) {
     var text = value.data.toString().trim();
     if (text) {
@@ -262,7 +268,6 @@ export class TreeviewCommentComponent implements OnInit {
     var parent = this.dicDatas[parentId];
     if (parent) {
       this.addNode(parent, newNode, id);
-      // parent[this.fieldCheck] = true;
     } else {
       this.addNode(this.dataComment, newNode, id);
     }
@@ -369,5 +374,31 @@ export class TreeviewCommentComponent implements OnInit {
           this.notifySvr.notifyCode("SYS021");
         }
       })
+  }
+
+  upLoadFile(){
+    this.codxATM.uploadFile();
+  }
+  fileUpload:any[] = [];
+  fileCount(files:any){
+    if(files && files.data.length > 0){
+      this.fileUpload = files.data;
+      this.codxFile.addFiles(this.fileUpload);
+      this.dt.detectChanges();
+    }
+  }
+
+  addFile(files: any) {
+    if (this.fileUpload.length == 0) {
+      this.fileUpload = files;
+    }
+    else {
+      this.fileUpload.concat(files);
+    }
+    this.dt.detectChanges();
+  }
+  removeFile(file: any) {
+    this.fileUpload = this.fileUpload.filter((f: any) => { return f.fileName != file.fileName });
+    this.dt.detectChanges();
   }
 }

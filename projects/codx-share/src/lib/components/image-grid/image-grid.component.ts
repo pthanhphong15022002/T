@@ -24,8 +24,8 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Input() objectID:string = "";
   @Input() objectType:string = "";
   @Input() edit: boolean = false;
-  @Input() lstFile:any[] = [];
-  @Input() isNew:boolean = false;
+  @Input() files:any[] = [];
+  @Input() multiple:boolean = true;
   @Output() evtGetFiles = new EventEmitter();
   @Output() removeFile = new EventEmitter();
   @Output() addFile = new EventEmitter();
@@ -62,7 +62,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     }
   }
   getFiles(){
-    return this.lstFile =this.file_img_video.concat(this.file_application);
+    return this.files =this.file_img_video.concat(this.file_application);
   }
   getFileByObjectID() {
     this.api.execSv(
@@ -90,8 +90,8 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   }
 
   convertFile(){
-    if(this.lstFile){
-      this.lstFile.forEach((f:any) => {
+    if(this.files){
+      this.files.forEach((f:any) => {
         if(f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO  ){
           this.file_img_video.push(f);
         }
@@ -110,15 +110,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   removeFiles(file:any){
     switch(file.referType){
       case this.FILE_REFERTYPE.APPLICATION:
-        for (let i = 0; i < this.file_img_video.length; i++) {
-          if(this.file_img_video[i].fileName == file.fileName)
-          {
-            this.file_img_video.splice(i,1);
-            break;
-          };
-        }; 
-        break;
-      default:
         for (let i = 0; i < this.file_application.length; i++) {
           if(this.file_application[i].fileName == file.fileName)
           {
@@ -127,26 +118,17 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
           };
         };
         break;
+      default:
+        
+        for (let i = 0; i < this.file_img_video.length; i++) {
+          if(this.file_img_video[i].fileName == file.fileName)
+          {
+            this.file_img_video.splice(i,1);
+            break;
+          };
+        }; 
+        break;
     }
-    // if(file.referType == this.FILE_REFERTYPE.IMAGE || file.referType == this.FILE_REFERTYPE.VIDEO){
-    //   for (let i = 0; i < this.file_img_video.length; i++) {
-    //     if(this.file_img_video[i].fileName == file.fileName)
-    //     {
-    //       this.file_img_video.splice(i,1);
-    //       break;
-    //     };
-    //   };
-    // }
-    // else
-    // {
-    //   for (let i = 0; i < this.file_application.length; i++) {
-    //     if(this.file_application[i].fileName == file.fileName)
-    //     {
-    //       this.file_application.splice(i,1);
-    //       break;
-    //     };
-    //   };
-    // }
       this.filesDelete.push(file);
       this.removeFile.emit(file);
       this.dt.detectChanges();
