@@ -31,9 +31,10 @@ export class InfoLeftComponent implements OnInit {
     this.user = this.auth.get();
     this.codxMwpService.InfoLeftComponent = this;
     this.routeActive.queryParams.subscribe((params) => {
-      if (params.id || this.user.userID) {
+      debugger
+      if (params.employeeID || this.user.userID) {
         this.codxMwpService
-          .LoadData(params.id, this.user.userID, '0')
+          .LoadData(params.employeeID, this.user.userID, '0')
           .subscribe((response: any) => {
             if (response) {
               this.dataEmployee.dataRoot = response.Employee;
