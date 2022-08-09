@@ -122,7 +122,7 @@
           ngDefaultControl
           [crrValue]="dialogAddCar.value.category"
           refValue="VL005"
-          field="ranking"
+          field="category"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -150,7 +150,7 @@
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
-        </codx-input>           
+        </codx-input>
         <!-- <codx-input
           service="SYS"
           type="combobox"
@@ -159,7 +159,7 @@
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
-        </codx-input>-->
+        </codx-input> -->
       </div>
     </div>
 
@@ -170,7 +170,17 @@
           [formModel]="dialog.formModel"
           default="Tài xế"
         >
-        </codx-label>        
+        </codx-label>   
+        <!-- <codx-input 
+          type="combobox"
+          service="EP" 
+          refValue="EP_Drivers"
+          field="linkID" 
+          placeholder="Chọn lái xe"
+          ngDefaultControl
+          [pageSize]="5"
+          (valueChange)="valueCbxDriverChange($event)">
+        </codx-input>      -->
         <codx-input
           service="EP"
           type="combobox"
@@ -178,7 +188,7 @@
           ControlName="resourceID"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
-          (valueChange)="valueCbxDriverChange($event)"
+          (valueChange)="valueCbxDriverChange($event)"  
         >
         </codx-input>
       </div>

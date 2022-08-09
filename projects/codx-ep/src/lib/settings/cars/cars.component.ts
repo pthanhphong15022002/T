@@ -78,6 +78,9 @@ export class CarsComponent implements OnInit, AfterViewInit {
       {
         field: 'resourceName',
         headerText: 'Tên xe',
+      },{
+        field: 'code',
+        headerText: 'Biển số xe',
       },
       {
         headerText: 'Tình trạng',

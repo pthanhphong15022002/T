@@ -1,5 +1,5 @@
 <codx-views
-  #view
+  #view  
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
@@ -28,6 +28,7 @@
     {{ data.ranking | vll: "EP005":"text" | async }}
     <div class="action-menu">
       <codx-mfunc
+        [dataItem]="data"
         [formModel]="viewBase.formModel"
         (clickMF)="clickMF($event, data)"
         type="hover"

@@ -1,7 +1,7 @@
 import {
   ChangeDetectorRef,  Component,  EventEmitter,  Input,  OnInit,  Optional,  Output,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import {
   CacheService,
@@ -21,12 +21,13 @@ import { CodxEpService } from '../../../codx-ep.service';
 export class PopupAddDriversComponent implements OnInit {
   @Input() editResources: any;
   @Input() isAdd = true;
-  @Input() data!: any;
+  @Input() data: any;
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   cacheGridViewSetup: any;
   CbxName: any;
   dialogAddDriver: FormGroup;
+  
   formModel: FormModel;
   dialog: any;
   headerText = 'Thêm mới lái xe';
@@ -44,11 +45,15 @@ export class PopupAddDriversComponent implements OnInit {
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
+    this.cacheSv.valueList("VL005").subscribe(res => {
+      console.log(res);      
+    })
   }
 
   isAfterRender = false;
   ngOnInit(): void {
     this.initForm();
+    
     
     this.bookingService
       .getComboboxName(
@@ -65,8 +70,9 @@ export class PopupAddDriversComponent implements OnInit {
     this.cacheSv
       .gridViewSetup('Resources', 'EP_Resources')
       .subscribe((item) => {
-        this.editResources = item;
+        this.editResources = item;       
         this.dialogAddDriver.patchValue({
+          code: '',
           ranking: '1',
           category: '1',
           owner: '',
@@ -98,6 +104,7 @@ export class PopupAddDriversComponent implements OnInit {
     let itemData = this.dialogAddDriver.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
+    debugger;
     return true;
   }
 
@@ -109,6 +116,24 @@ export class PopupAddDriversComponent implements OnInit {
         this.dialogAddDriver.patchValue({ [event['field']]: event.data });
       }
     }
+  }
+  valueCbxCarChange(event: any) {    
+    var cbxCar= event.component.dataService.data;
+    cbxCar.forEach(element => {
+      if(element.RecID == event.component.valueSelected) {
+        this.dialogAddDriver.value.color = element.ResourceID;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+    
+    // if(event!=null)
+    // {      
+    //   if (event.data instanceof Object) {
+    //     this.dialogAddDriver.patchValue({ [event['field']]: event.data.value });
+    //   } else {
+    //     this.dialogAddDriver.patchValue({ [event['field']]: event.data });
+    //   }
+    // }
   }
   openPopupDevice(template: any) {
     var dialog = this.callFuncService.openForm(template, '', 550, 430);
@@ -122,6 +147,8 @@ export class PopupAddDriversComponent implements OnInit {
     }    
     this.dialogAddDriver.value.bUID = this.dialogAddDriver.value.bUID[0];
     this.dialogAddDriver.value.companyID = this.dialogAddDriver.value.companyID[0];
+    this.dialogAddDriver.value.linkID = this.dialogAddDriver.value.resourceID[0];
+    this.dialogAddDriver.value.resourceID = null;         
     if (!this.dialogAddDriver.value.linkType) {
       this.dialogAddDriver.value.linkType = '2';
     }
