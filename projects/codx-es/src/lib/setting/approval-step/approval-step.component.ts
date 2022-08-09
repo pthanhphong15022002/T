@@ -22,7 +22,7 @@ import {
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddApprovalStepComponent } from './popup-add-approval-step/popup-add-approval-step.component';
 
-export class Approver { }
+export class Approver {}
 @Component({
   selector: 'app-approval-steps',
   templateUrl: './approval-step.component.html',
@@ -43,7 +43,7 @@ export class ApprovalStepComponent implements OnInit {
   dialog: DialogRef;
   formModel: FormModel;
   approvers = [];
-  lstStep: any = null;
+  lstStep: any;
   lstDeleteStep = [];
   isDeleteAll = false;
 
@@ -143,7 +143,7 @@ export class ApprovalStepComponent implements OnInit {
     }
   }
 
-  openFormFuncID(val: any, data: any) { }
+  openFormFuncID(val: any, data: any) {}
 
   clickMF(event: any, data) {
     switch (event.functionID) {
@@ -229,7 +229,6 @@ export class ApprovalStepComponent implements OnInit {
         );
 
         this.dialog.closed.subscribe((res) => {
-          debugger;
           if (res?.event) {
             this.isEdited = true;
           }

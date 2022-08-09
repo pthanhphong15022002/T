@@ -10,6 +10,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import {
   ApiHttpService,
   AuthStore,
+  CacheService,
   CallFuncService,
   CodxService,
   DialogData,
@@ -21,6 +22,7 @@ import {
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { iif } from 'rxjs';
 import { isBuffer } from 'util';
 import { File } from '../../codx-es.model';
 import { CodxEsService } from '../../codx-es.service';
@@ -72,6 +74,7 @@ export class PopupAddSignFileComponent implements OnInit {
     private callfuncService: CallFuncService,
     public dmSV: CodxDMService,
     private notify: NotificationsService,
+    private cache: CacheService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -103,6 +106,7 @@ export class PopupAddSignFileComponent implements OnInit {
           this.dialogSignFile.patchValue(this.data);
           if (this.isAddNew) {
             this.dialogSignFile.patchValue({
+              priority: '1',
               approveStatus: '1',
               employeeID: user.employee?.employeeID,
               orgUnitID: user.employee?.orgUnitID,
@@ -165,12 +169,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cr.detectChanges();
   }
 
-  closeDialogTmp(dialogTmp: DialogRef) {
-    dialogTmp && dialogTmp.close();
-  }
-
   fileAdded(event) {
-    debugger;
     let lstESign = ['.doc', '.pdf', '.xlsx'];
     let files = [];
     if (event) {
@@ -216,11 +215,39 @@ export class PopupAddSignFileComponent implements OnInit {
 
   getfileCount(event) {}
 
-  onSaveForm() {}
+  valueChange(event) {
+    if (event?.field && event?.component) {
+      if (event?.data === Object(event?.data))
+        this.dialogSignFile.patchValue({ [event['field']]: event.data[0] });
+      else this.dialogSignFile.patchValue({ [event['field']]: event.data });
 
+      if (event.field == 'categoryID') {
+        this.esService
+          .getAutoNumberByCategory(this.dialogSignFile.value.categoryID)
+          .subscribe((res) => {
+            if (res != null) {
+              this.dialogSignFile.patchValue({ refNo: res });
+            } else {
+              this.dialogSignFile.patchValue({ refNo: this.autoNo });
+            }
+          });
+      }
+
+      if (event.field == 'employeeID') {
+        if (event.component?.itemsSelected[0]?.OrgUnitID) {
+          this.dialogSignFile.patchValue({
+            orgUnitID: event.component?.itemsSelected[0]?.OrgUnitID,
+          });
+          this.cr.detectChanges();
+        }
+      }
+    }
+  }
+
+  //#region Methods Save
   onSaveSignFile() {
-    debugger;
     if (this.dialogSignFile.invalid == true) {
+      this.notify.notifyCode('E0016');
       return;
     }
 
@@ -264,7 +291,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cr.detectChanges();
   }
 
-  onSaveProcessID(dialogTmp: DialogRef) {
+  onSaveProcessTemplateID(dialogTmp: DialogRef) {
     if (this.processID != '') {
       this.dialogSignFile.patchValue({
         processID: this.processID,
@@ -275,94 +302,37 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  saveNewProcessStep(data) {
-    let lstStep = [];
-    if (data) {
-      data.forEach((element) => {
-        if (element?.id) delete element.id;
-        if (element?.recID) delete element.recID;
-        element.transID = this.dialogSignFile.value.recID;
-        lstStep.push(element);
+  saveProcessStep() {
+    this.stepAppr.saveStep();
+    if (this.dialogSignFile.value.approveControl != '1') {
+      let newProcessStep = [];
+      this.esService.approvalStep.subscribe((res) => {
+        newProcessStep = res;
       });
-    }
+      if (newProcessStep != null) {
+        let lstStep = [];
+        newProcessStep.forEach((element) => {
+          if (element?.id) delete element.id;
+          if (element?.recID) delete element.recID;
+          element.transID = this.dialogSignFile.value.recID;
+          lstStep.push(element);
+        });
 
-    this.esService.addNewApprovalStep(lstStep).subscribe((res) => {
-      if (res) {
-        this.dialogSignFile.patchValue({ approveControl: '1' });
+        this.esService.addNewApprovalStep(lstStep).subscribe((res) => {
+          if (res) {
+            this.dialogSignFile.patchValue({ approveControl: '1' });
+          }
+        });
       }
-    });
-  }
-
-  close(dialogClose) {
-    if (this.processTab == 0) {
-      this.dialog && this.dialog.close();
-    }
-    if (this.processTab > 0) {
-      this.callfuncService.openForm(dialogClose, '', 400, 250);
+    } else {
+      this.esService.editApprovalStep().subscribe((res) => {});
+      this.esService.deleteApprovalStep().subscribe((res) => {});
     }
   }
 
-  valueChange(event) {
-    if (event?.field && event?.component) {
-      if (event?.data === Object(event?.data))
-        this.dialogSignFile.patchValue({ [event['field']]: event.data[0] });
-      else this.dialogSignFile.patchValue({ [event['field']]: event.data });
+  //#endregion
 
-      if (event.field == 'categoryID') {
-        this.esService
-          .getAutoNumberByCategory(this.dialogSignFile.value.categoryID)
-          .subscribe((res) => {
-            if (res != null) {
-              this.dialogSignFile.patchValue({ refNo: res });
-            } else {
-              this.dialogSignFile.patchValue({ refNo: this.autoNo });
-            }
-          });
-      }
-
-      if (event.field == 'employeeID') {
-        if (event.component?.itemsSelected[0]?.OrgUnitID) {
-          this.dialogSignFile.patchValue({
-            orgUnitID: event.component?.itemsSelected[0]?.OrgUnitID,
-          });
-          this.cr.detectChanges();
-        }
-      }
-    }
-  }
-
-  openFilePopup() {
-    this.attachment.openPopup();
-  }
-
-  upDateNodeStatus(oldNode: number, newNode: number) {
-    let nodes = Array.from(
-      (this.status.nativeElement as HTMLElement).childNodes
-    );
-
-    let newClassName = (nodes[newNode] as HTMLElement).className.toString();
-    switch (newClassName) {
-      case 'stepper-item':
-        (nodes[newNode] as HTMLElement).classList.add('active');
-
-        break;
-      case 'stepper-item approve-disabled':
-        (nodes[newNode] as HTMLElement).classList.remove('approve-disabled');
-        (nodes[newNode] as HTMLElement).classList.add('approve');
-        break;
-    }
-
-    let oldClassName = (nodes[oldNode] as HTMLElement).className.toString();
-    switch (oldClassName) {
-      case 'stepper-item approve':
-        (nodes[oldNode] as HTMLElement).classList.remove('approve');
-        break;
-      case 'stepper-item active':
-        (nodes[oldNode] as HTMLElement).classList.remove('active');
-        break;
-    }
-    (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
-  }
+  //#region Change Tab
 
   clickTab(tabNo) {
     let newNo = tabNo * 2;
@@ -413,20 +383,7 @@ export class PopupAddSignFileComponent implements OnInit {
         break;
 
       case 2:
-        this.stepAppr.saveStep();
-        if (this.dialogSignFile.value.approveControl != '1') {
-          let newProcessStep = [];
-          this.esService.approvalStep.subscribe((res) => {
-            newProcessStep = res;
-          });
-          if (newProcessStep != null) {
-            this.saveNewProcessStep(newProcessStep);
-          }
-        } else {
-          this.esService.editApprovalStep().subscribe((res) => {});
-          this.esService.deleteApprovalStep().subscribe((res) => {});
-        }
-
+        this.saveProcessStep();
         this.upDateNodeStatus(oldNode, newNode);
         this.currentTab++;
         if (this.processTab == 1) this.processTab++;
@@ -437,6 +394,43 @@ export class PopupAddSignFileComponent implements OnInit {
 
     this.cr.detectChanges();
   }
+
+  previous(currentTab) {
+    let oldNode = currentTab * 2;
+    let newNode = oldNode - 2;
+    this.upDateNodeStatus(oldNode, newNode);
+    this.currentTab--;
+  }
+
+  upDateNodeStatus(oldNode: number, newNode: number) {
+    let nodes = Array.from(
+      (this.status.nativeElement as HTMLElement).childNodes
+    );
+
+    let newClassName = (nodes[newNode] as HTMLElement).className.toString();
+    switch (newClassName) {
+      case 'stepper-item':
+        (nodes[newNode] as HTMLElement).classList.add('active');
+
+        break;
+      case 'stepper-item approve-disabled':
+        (nodes[newNode] as HTMLElement).classList.remove('approve-disabled');
+        (nodes[newNode] as HTMLElement).classList.add('approve');
+        break;
+    }
+
+    let oldClassName = (nodes[oldNode] as HTMLElement).className.toString();
+    switch (oldClassName) {
+      case 'stepper-item approve':
+        (nodes[oldNode] as HTMLElement).classList.remove('approve');
+        break;
+      case 'stepper-item active':
+        (nodes[oldNode] as HTMLElement).classList.remove('active');
+        break;
+    }
+    (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
+  }
+  //#endregion
 
   openFormAdd(event) {
     this.callfuncService.openForm(this.content, 'Quy trình mẫu', 700, 1000);
@@ -450,8 +444,9 @@ export class PopupAddSignFileComponent implements OnInit {
     this.showPlan = !this.showPlan;
   }
 
+  //#region Method close form
+
   clickIsSave(isSave, dialogClose: DialogRef) {
-    debugger;
     if (this.isAddNew) {
       if (isSave) {
         this.onSaveSignFile();
@@ -486,4 +481,19 @@ export class PopupAddSignFileComponent implements OnInit {
     dialogClose && dialogClose.close();
     this.dialog && this.dialog.close();
   }
+
+  close(dialogClose) {
+    if (this.processTab == 0) {
+      this.dialog && this.dialog.close();
+    }
+    if (this.processTab > 0) {
+      this.callfuncService.openForm(dialogClose, '', 400, 250);
+    }
+  }
+
+  closeDialogTmp(dialogTmp: DialogRef) {
+    dialogTmp && dialogTmp.close();
+  }
+
+  //#endregion
 }
