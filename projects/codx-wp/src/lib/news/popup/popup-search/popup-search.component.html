@@ -1,66 +1,65 @@
-<div class="row mt-6">
-    <div class="col-4">
-        <div class="search-box d-flex justify-content-between">
-            <input type="text" class="form-control" #search />
-            <button class="btn btn-icon btn-white" (click)="clickSearchElectic(search.value)">
-                <i class="icon-search fs-1 text-dark"></i>
+<div class="p-6">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <codx-label class="fw-bolder fs-1" 
+                [formModel]="dialogRef.formModel" 
+                name="lblHeaderText"
+                default="Tìm kiếm">
+            </codx-label>
+        </div>
+        <div class="">
+            <button class="btn" (click)="clickClosePopup()">
+                <i class="icon-close"></i>
             </button>
         </div>
-        <div class="form-group d-flex align-items-center mt-3">
-            <codx-input #checkbox type="switch" id="switch" [checked]="false" labelPosition="Before" [disabled]="false"
-                class="test-switch"></codx-input>
-            <div class="ms-3 text-dark" for="switch">
-                <codx-label name="lblMyPost" default="Bài viết của tôi"></codx-label>
-            </div>
-        </div>
-        <div class="fs-6 text-dark mt-6 fw-bold">
-            <codx-label name="lblCategory" default="Phân loại"></codx-label>
-        </div>
-        <div class="form-group mt-3">
-            <div class="control mt-3">
-                <codx-input type="radio" name="radio" label="Tất cả" [checked]="true" labelPosition="After"
-                    [disabled]="false" class="ms-6" [ControlName]="'All'"></codx-input>
-            </div>
-            <div class="control mt-1" *ngFor="let vll of listValueList">
-                <codx-input type="radio" name="radio" [label]="vll.text" [checked]="false" labelPosition="After"
-                    [disabled]="false" class="ms-6" [ControlName]="vll.value"></codx-input>
-            </div>
-        </div>
-        <div class="fs-6 text-dark mt-6 fw-bold">
-            <codx-label name="lblDateNews" default="Ngày tin tức"></codx-label>
-        </div>
-        <div class="form-group row mt-2">
-            <div class="col-6">
-                <codx-input label="Từ ngày" type="datetime" field="datetime" placeholder="datetime" dataformat="d">
-                </codx-input>
-            </div>
-            <div class="col-6">
-                <codx-input label="Đến ngày" type="datetime" field="datetime" placeholder="datetime" dataformat="d">
-                </codx-input>
-            </div>
-        </div>
-        <div class="fs-6 text-dark mt-6 fw-bold">
-            <codx-label name="lblTag" default="Tag #"></codx-label>
-        </div>
-        <div class="mt-2">
-            <div class="badge-group">
-                <span *ngFor="let item of listTag">
-                    <button class="tag-item align-items-center mb-1 me-1" (click)="clickTag(item)"
-                        [class.isActive]="item.isChecked">
-                        <span *ngIf="item.isChecked"><i class="icon icon-check icon-16"></i></span>
-                        <span>{{item.text}}</span>
-                    </button>
-                </span>
-            </div>
-        </div>
     </div>
-    <div class="col-8 h-500">
-        <p *ngIf="totalRowCount>0">
-            <span>{{totalRowCount}} </span>
-            <span>
-                <codx-label name="lblResult" default="kết quả tìm được"></codx-label>
-            </span>
-        </p>
-        <app-electic-search #templateElectic></app-electic-search>
+    <div class="row mt-2">
+        <codx-fulltextsearch #view 
+            [centerTmp]="itemTemplate"  
+            [funcID]="funcID" 
+            [service]="services" 
+            [entityName]="entityName" 
+            (selectedChange)="onSelected($event)">
+        </codx-fulltextsearch>
     </div>
 </div>
+
+<ng-template #itemTemplate let-data>
+    <!-- <div class="row my-2">
+        <div class="col-3">
+            <codx-img [objectId]="data.recID" [objectType]="entityName" [width]="200"></codx-img>
+        </div>
+        <div class="col-8">
+            <codx-temp-full 
+                [dataItem]="data"
+                [content]="data.subject"
+                [desc]="data.subContent"
+                cardCss="card-template border-bottom px-2 py-3"
+                [resourceObjType]="entityName"
+                [bookmark]="false" 
+                [titleLine]="2"   >
+            </codx-temp-full>
+        </div>
+    </div> -->
+    <div (click)="clickViewDetail(data)" class="row my-4">
+        <div class="col-4">
+          <codx-img [width]="180" 
+            [cssClass]="'image-150 w-100'" 
+            imageType="square" [objectId]="data.recID"
+            objectType="WP_News">
+          </codx-img>
+        </div>
+        <div class="col-8">
+            <codx-temp-full 
+                [dataItem]="data"
+                [content]="data.subject"
+                [desc]="data.subContent"
+                [date]="data.createdOn" 
+                cardCss="card-template border-bottom px-2 py-3"
+                [resourceObjType]="entityName"
+                [bookmark]="false" 
+                [titleLine]="2"  >
+            </codx-temp-full>
+        </div>
+      </div>
+</ng-template>

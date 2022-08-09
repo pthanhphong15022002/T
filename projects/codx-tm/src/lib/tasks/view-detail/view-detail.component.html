@@ -50,8 +50,8 @@
                 </div>
               </div>
               <div class="d-status flex">
-                <div *ngIf="itemSelected?.extendStatus!=null &&itemSelected?.extendStatus>='3' && vllExtendStatus" class="badge badge-danger me-2 label-status"
-                  [style.border-color]="
+                <div *ngIf="itemSelected?.extendStatus!=null &&itemSelected?.extendStatus>='3' && vllExtendStatus"
+                  class="badge badge-danger me-2 label-status" [style.border-color]="
                     (itemSelected?.extendStatus  | vll: vllExtendStatus:'textColor' | async) +
                     '30'
                   " [style.background-color]="
@@ -268,8 +268,6 @@
         </div> -->
       </div>
       <div class="mt-6 mb-3 text-primary fw-bold">
-        <!-- <codx-label fiedName="TaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc">
-        </codx-label>: -->
         <codx-label name="lblTaskName" formName="Tasks" default="Công việc">
         </codx-label>:
       </div>
@@ -293,7 +291,7 @@
       </div>
     </ng-template>
     <ng-template #footer>
-      <codx-tabs></codx-tabs>
+      <codx-tabs [dataTree]="dataTree"></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
 </ng-container>
@@ -353,3 +351,5 @@
     </div>
   </div>
 </ng-template>
+
+

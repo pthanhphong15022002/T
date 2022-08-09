@@ -85,6 +85,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   idUserSelected: any;
   viewTask = false;
   taskType ='1' ;
+  formModel :any ;
+  gridViewSetup :any ;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -156,6 +158,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.getParam();
+    // this.formModel = this.dialog.dataService?.formModel ;
+    // this.gridViewSetup = this.formModel?.gridViewSetup ;
     this.task = {
       ...this.task,
       ...dt?.data[0],
@@ -251,7 +255,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleWithCategoryAsync',
-        ['TM_Parameters', '1']
+        ['TMParameters', '1']
       )
       .subscribe((res) => {
         if (res) {

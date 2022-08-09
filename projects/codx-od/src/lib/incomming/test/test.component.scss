@@ -1,0 +1,22 @@
+.w-120px {
+    width: 120px;
+}
+
+.item-tree>div {
+    width: 100%;
+}
+
+.bg-op-5 {
+    opacity: .5;
+}
+
+:host {
+    height: 100%;
+}
+.div-active {
+    border-bottom: solid 2px #187DE4;
+    //border-radius: 5px;
+}
+.div-active i {
+    color: #187DE4 !important;
+}

@@ -1,10 +1,11 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template popup #body>
-        <div class="row">
+        <div class="row form-group">
             <div class="col-5">
                 <codx-label fiedName="ModifiedOn" formName="Tasks" gridViewName="grvTasks" default='Ngày cập nhật'>
                 </codx-label>
-                <codx-input type="dateTime" field="modifiedOn" format="F" [crrValue]="task?.modifiedOn" [disabled]="true">
+                <codx-input type="dateTime" field="modifiedOn" format="F" [crrValue]="task?.modifiedOn"
+                    [disabled]="true">
                 </codx-input>
             </div>
             <div class="col-7 align-items-center">
@@ -13,8 +14,7 @@
                 <div class="d-flex align-items-center row">
                     <div class="col-5">
                         <codx-input type="number" field="percentage" placeholder="Số giờ " [min]="0" [max]="100"
-                            [crrValue]="task?.percentage"
-                            (valueChange)="changePercentage($event)">
+                            [crrValue]="task?.percentage" (valueChange)="changePercentage($event)">
                         </codx-input>
                     </div>
 
@@ -28,11 +28,11 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-4">
+        <div class="row mt-4 form-group">
             <div class="col-12">
-                <codx-label name="lblCommment" formName="Tasks"  default="Ghi chú"></codx-label>
-                <codx-input type="textarea" field="textarea" [format]="'ed2'" class="w-100" field="comment"
-                    [crrValue]="comment" rows="6" (valueChange)="valueChangComment($event)">
+                <codx-label name="lblCommment" formName="Tasks" default="Ghi chú"></codx-label>
+                <codx-input class="form-control" type="textarea" field="textarea" [format]="'ed2'" class="w-100"
+                    field="comment" [crrValue]="comment" rows="6" (valueChange)="valueChangComment($event)">
                 </codx-input>
             </div>
         </div>

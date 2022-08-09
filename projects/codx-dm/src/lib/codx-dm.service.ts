@@ -752,6 +752,19 @@ export class CodxDMService {
             this.callfc.openForm(VersionComponent, "", 650, 600, "", [FormModel, data], "");   
             break;   
 
+          //request permisssion  
+          case "DMT0221":
+          case "DMT0208":
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
+            option.Width = '550px';
+          
+           // let data = {} as any;
+            data.title = this.titleUpdateFolder;
+            data.id =  data.recID;            
+            this.callfc.openSide(ShareComponent, [type, data, false], option);      
+            break;
+            break;  
           // share
           case "DMT0201":   
           case "DMT0212":          
@@ -762,7 +775,7 @@ export class CodxDMService {
            // let data = {} as any;
             data.title = this.titleUpdateFolder;
             data.id =  data.recID;            
-            this.callfc.openSide(ShareComponent, [type, data], option);      
+            this.callfc.openSide(ShareComponent, [type, data, true], option);      
             break;
           default:
             break;    

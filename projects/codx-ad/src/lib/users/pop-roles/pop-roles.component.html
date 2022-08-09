@@ -1,4 +1,4 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [data]="data"
+<codx-form #form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [data]="data"
   [formModel]="dialogSecond.formModel" [dialog]="dialogSecond">
   <ng-template #body>
     <ejs-tab headerPlacement="Top">
@@ -10,7 +10,7 @@
                 <span class="icon-info icon-24 me-2"></span>
                 <span class="d-flex flex-column align-items-start">
                   <span class="fw-bolder">
-                    <codx-label name="Apps" formName="Users" default="Ứng dụng">
+                    <codx-label name="Apps" formName="UserRoles" default="Ứng dụng">
                     </codx-label>
                   </span>
                 </span>
@@ -21,7 +21,9 @@
             <div class="form-group">
               <div class="form-group mt-3">
                 <div class="text-dark fw-bolder d-flex justify-content-end">
-                  Đã chọn ({{countApp}})
+                  <codx-label fiedName="lblChoose" formName="UserRoles" gridViewName="grvUserRoles" default="Đã chọn">
+                  </codx-label>
+                  ({{countApp}})
                 </div>
               </div>
               <div class="form-group row mt-3">
@@ -85,7 +87,9 @@
             <div class="form-group">
               <div class="form-group mt-3">
                 <div class="text-dark fw-bolder d-flex justify-content-end">
-                  Đã chọn ({{countService}})
+                  <codx-label fiedName="lblChoose" formName="UserRoles" gridViewName="grvUserRoles" default="Đã chọn">
+                  </codx-label>
+                  ({{countService}})
                 </div>
               </div>
               <div class="form-group row mt-3">
@@ -107,9 +111,7 @@
                             </div>
                           </div>
                           <div class="col-12">
-
                             <div *ngIf="item.ischeck; else checkEmpIsNull">
-
                               <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole"
                                 refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false"
                                 [multiple]="false" [disabled]="false" loadFull="true">

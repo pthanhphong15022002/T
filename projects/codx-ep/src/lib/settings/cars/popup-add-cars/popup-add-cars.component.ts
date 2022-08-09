@@ -1,7 +1,7 @@
 import {
   ChangeDetectorRef,  Component,  EventEmitter,  Input,  OnInit,  Optional,  Output,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import {
   CacheService,
@@ -32,7 +32,6 @@ export class PopupAddCarsComponent implements OnInit {
   dialog: any;
   headerText ="Thêm mới xe"
   subHeaderText = 'Tạo & upload file văn bản';
-
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
@@ -85,7 +84,7 @@ export class PopupAddCarsComponent implements OnInit {
           ranking: '1',
           category: '1',
           owner: '',
-        });
+        });        
       });
 
     this.bookingService
@@ -94,7 +93,11 @@ export class PopupAddCarsComponent implements OnInit {
         this.dialogAddCar = item;
         if (this.data) {
           this.dialogAddCar.patchValue(this.data);
-        }
+        } 
+        this.dialogAddCar.addControl(
+          'code',
+          new FormControl(this.data.code)
+        );       
         this.isAfterRender = true;
       });
   }
@@ -125,10 +128,7 @@ export class PopupAddCarsComponent implements OnInit {
       }
     }
   }
-  valueCbxDriverChange(event: any) {
-    var x= this.cacheSv
-      .gridView('EP_Resources');
-      
+  valueCbxDriverChange(event: any) {   
   }
   openPopupDevice(template: any) {
     var dialog = this.callFuncService.openForm(template, '', 550, 430);
@@ -156,14 +156,16 @@ export class PopupAddCarsComponent implements OnInit {
           equipments += ';' + element.id;
         }
       }
-    });
+    });       
     this.dialogAddCar.value.equipments = equipments;
     this.dialogAddCar.value.bUID = this.dialogAddCar.value.bUID[0];
     this.dialogAddCar.value.companyID = this.dialogAddCar.value.companyID[0];
+    this.dialogAddCar.value.linkID = this.dialogAddCar.value.resourceID[0];
+    this.dialogAddCar.value.resourceID = null;         
     if (!this.dialogAddCar.value.linkType) {
       this.dialogAddCar.value.linkType = '3';
     }
-    this.dialogAddCar.value.resourceType = '2';
+    this.dialogAddCar.value.resourceType = '2';    
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();

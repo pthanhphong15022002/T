@@ -43,6 +43,7 @@ export class PopupAddSprintsComponent implements OnInit {
   dataOnLoad = [];
   vllShare = 'TM003';
   isUploadImg = false;
+  gridViewSetup : any
   imageUpload: UploadFile = new UploadFile();
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
 
@@ -58,9 +59,10 @@ export class PopupAddSprintsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    
     this.master = dialog.dataService!.dataSelected;
     this.action = dt?.data[1];
-
+    this.gridViewSetup = dt?.data?.gridViewSetup ;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
@@ -102,26 +104,14 @@ export class PopupAddSprintsComponent implements OnInit {
       .save((option: any) => this.beforeSave(option, isAdd)) //Hảo code mới
       .subscribe((res) => {
         if (res) {
-          this.imageAvatar
-            .updateFileDirectReload(this.master.iterationID)
-            .subscribe((res) => {
-              // if (isAdd) {
-              //   var dataNew = this.dialog.dataService.data[0];
-              //   this.dialog.dataService.data[0] =
-              //     this.dialog.dataService.data[1];
-              //   this.dialog.dataService.data[1] = dataNew;
-              // }
-              // this.dialog.close();
-            });
-            if (isAdd) {
-              var dataNew = this.dialog.dataService.data[0];
-              this.dialog.dataService.data[0] =
-                this.dialog.dataService.data[1];
-              this.dialog.dataService.data[1] = dataNew;
-            }
-            this.dialog.close();
+          this.imageAvatar.updateFileDirectReload(this.master.iterationID);
+          if (isAdd) {
+            var dataNew = this.dialog.dataService.data[0];
+            this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
+            this.dialog.dataService.data[1] = dataNew;
+          }
+          this.dialog.close();
         }
-
       });
     // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
     //   if (res) {
@@ -223,7 +213,7 @@ export class PopupAddSprintsComponent implements OnInit {
     });
   }
 
-  valueChangeShared(e) {
+  valueChangeSharedResource(e) {
     this.master.isShared = e.data;
     if (!this.master.isShared) {
       this.master.resources = null;
@@ -293,5 +283,36 @@ export class PopupAddSprintsComponent implements OnInit {
 
   changeMemo(e) {
     this.master.memo = e?.data;
+  }
+
+  changeUser(e){
+   if(e?.data?.value.length >0){
+    var arrResources = e?.data?.value ;
+    this.valueSelectUserCombobox(arrResources)
+   }
+  }
+
+  valueSelectUserCombobox(arrResources: any[]) {
+    var resources ='' ;
+    if (arrResources.length>0) {
+      if (this.master.resources && this.master.resources != '') {
+        var arrNew = [];
+        arrResources.forEach((e) => {
+          if (!this.master.resources.includes(e)) {
+            arrNew.push(e);
+          }
+        });
+        if (arrNew.length > 0) {
+          resources = arrNew.join(';');
+          this.master.resources += ';' + resources;
+          this.getListUser(resources);
+        }
+      } else {
+         resources = arrResources.join(';');
+        this.master.resources = resources;
+        this.getListUser(resources);
+      }
+    }
+    this.changeDetectorRef.detectChanges();
   }
 }

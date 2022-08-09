@@ -19,6 +19,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() objectID!: any;
   @Input() formModel!: any;
   @Input() TabControl: TabModel[] = [];
+  @Input() dataTree: any[];
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
