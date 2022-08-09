@@ -81,28 +81,6 @@
                                         <div
                                             *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
                                         </div>
-
-                                        <!-- <codx-temp-full  imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer" 
-                                            title="{{file.fileName}} ({{formatBytes(file.fileSize)}})"        
-                                            [subTitleTmp]="cardImgFooter"
-                                            [descLine]="1">
-                                        </codx-temp-full>
-                                        <ng-template #cardImgFooter let-data>
-                                            <div class="d-flex flex-column flex-grow-1 file-item">
-                                                <span class="text-dark"></span>
-                                                <div class="d-flex">
-                                                    <codx-input
-                                                        placeholder="Mô tả tài liệu"
-                                                        style="width:86%"
-                                                        class="form-control no-boder"
-                                                        type="text"
-                                                        [crrValue]="file.description"
-                                                        (valueChange)="changeValueAgencyText($event)"                                       
-                                                    > </codx-input> 
-                                                </div>
-                                            </div>                                      
-                                        </ng-template>    -->
-
                                         <ng-template #thenAvatar1>
                                             <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg"
                                                 [imageWidth]="25"
