@@ -27,7 +27,6 @@ import {
 import { CodxEsService } from '../codx-es.service';
 import { PopupAddSignatureComponent } from '../setting/signature/popup-add-signature/popup-add-signature.component';
 import { PopupAddSignFileComponent } from './popup-add-sign-file/popup-add-sign-file.component';
-import { PopupApproveSignFileComponent } from './popup-approve-sign-file/popup-approve-sign-file.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 
 @Component({

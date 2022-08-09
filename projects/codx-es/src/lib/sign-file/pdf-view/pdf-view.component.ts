@@ -1,36 +1,36 @@
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
   Injector,
   Input,
   IterableDiffers,
   ViewChild,
-  Output,
-  EventEmitter,
+  ViewChildren,
+  QueryList,
+  AfterViewInit,
 } from '@angular/core';
-import { qr } from './model/mode';
 import {
   AnnotationAddEventArgs,
   AnnotationDataFormat,
   PdfViewerComponent,
 } from '@syncfusion/ej2-angular-pdfviewer';
-import { AuthStore, CacheService, LangPipe, UIComponent } from 'codx-core';
-import { tmpSignArea } from './model/tmpSignArea.model';
+import { AuthStore, UIComponent } from 'codx-core';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
-import { PopupApproveSignFileComponent } from '../popup-approve-sign-file/popup-approve-sign-file.component';
+import { tmpSignArea } from './model/tmpSignArea.model';
+import { qr } from './model/mode';
+
 @Component({
-  selector: 'lib-approval',
-  templateUrl: './approval.component.html',
-  styleUrls: ['./approval.component.scss'],
+  selector: 'lib-pdf-view',
+  templateUrl: './pdf-view.component.html',
+  styleUrls: ['./pdf-view.component.scss'],
 })
-export class ApprovalComponent extends UIComponent {
+export class PdfViewComponent extends UIComponent implements AfterViewInit {
   public service: string = environment.pdfUrl;
-  @Input() recID = '358624aa-13e1-11ed-9785-509a4c39550b';
-  @Input() isApprover = false;
+  @Input() recID = 'f85d429e-1790-11ed-a50e-d89ef34bb550';
+  @Input() isApprover;
   isActiveToSign: boolean = false;
 
   user?: any;
@@ -62,10 +62,12 @@ export class ApprovalComponent extends UIComponent {
   }
 
   @ViewChild('fileUpload') fileUpload!: ElementRef;
-  @ViewChild('pdfviewer') pdfviewerControl!: PdfViewerComponent;
+  @ViewChildren('pdfviewer')
+  pdfviewerControls: any; //QueryList<PdfViewerComponent>;
   @ViewChild('inputAuthor') inputAuthor!: ElementRef | any;
   @ViewChild('thumbnailTab') thumbnailTab!: ElementRef;
   @ViewChild('qrCode') qrCode!: ElementRef;
+  pdfviewerControl;
   thumbnailEle!: Element;
 
   signerInfo: any;
@@ -108,17 +110,6 @@ export class ApprovalComponent extends UIComponent {
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
 
   ajaxSetting: any;
-
-  clickOpenPopup() {
-    this.callfc.openForm(
-      PopupApproveSignFileComponent,
-      'Duyệt',
-      500,
-      500,
-      this.funcID,
-      [{ funcID: this.funcID, Mode: 1 }]
-    );
-  }
 
   onInit() {
     this.saveAnnoQueue = new Map();
@@ -189,16 +180,30 @@ export class ApprovalComponent extends UIComponent {
   ngDoCheck() { }
 
   ngAfterViewInit() {
-    this.pdfviewerControl.zoomValue = 50;
-
-    this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
-      16, 128, 256, 30,
-    ];
+    console.log('on after view controls', this.pdfviewerControls);
   }
 
   onCreated(evt: any) {
-    this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
-    this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    console.log('on created controls', this.pdfviewerControls);
+
+    if (this.pdfviewerControls.first) {
+      this.pdfviewerControl = this.pdfviewerControls.first;
+    } else {
+      this.pdfviewerControls.changes.subscribe(
+        (comps: QueryList<PdfViewerComponent>) => {
+          this.pdfviewerControl = comps.first;
+
+          this.detectorRef.detectChanges();
+        }
+      );
+    }
+    // this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
+    // this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    this.pdfviewerControl.zoomValue = 50;
+    this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
+      16, 128, 256, 30,
+    ];
+    this.detectorRef.detectChanges();
   }
 
   loadingAnnot(e: any) {
@@ -340,10 +345,12 @@ export class ApprovalComponent extends UIComponent {
     this.fileInfo = e.itemData;
     this.pdfviewerControl.load(e.itemData.fileID, '');
     this.cannotAct = false;
+    this.detectorRef.detectChanges();
   }
 
   changeSigner(e: any) {
     this.signerInfo = e.itemData;
+    this.detectorRef.detectChanges();
   }
 
   changeSuggestState(e: any) {
@@ -846,7 +853,7 @@ export class ApprovalComponent extends UIComponent {
     return [areas, top + 10 + height];
   }
 
-  async addAnnotIntoPDF(type: number) {
+  addAnnotIntoPDF(type: number) {
     let signed;
 
     if (this.url != '')
@@ -861,7 +868,7 @@ export class ApprovalComponent extends UIComponent {
       if ([1, 2, 8].includes(type) && this.url != '') {
         let stamp = {
           customStampName: type.toString(),
-          customStampImageSource: this.url,
+          customStampImageSource: 'data:image/jpeg;base64,' + this.url,
         };
         this.pdfviewerControl.customStamp = [stamp];
       } else {
@@ -908,7 +915,7 @@ export class ApprovalComponent extends UIComponent {
           this.signerInfo?.authorID + ':' + type;
 
         this.pdfviewerControl.freeTextSettings.fontSize = 30;
-        this.pdfviewerControl.annotation.setAnnotationMode('FreeText');
+        this.pdfviewerControl.annotationModule.setAnnotationMode('FreeText');
       }
     } else {
       this.holding = 0;
@@ -1132,7 +1139,13 @@ export class ApprovalComponent extends UIComponent {
 
   renderQRFile() {
     let annotationDataFormat: AnnotationDataFormat;
-    this.pdfviewerControl.exportAnnotationsAsBase64String(annotationDataFormat);
+
+    let qrAnnot = this.pdfviewerControl?.annotationCollection?.find(
+      (annot) => {}
+    );
+    this.pdfviewerControl
+      .exportAnnotationsAsBase64String(annotationDataFormat)
+      .then((res) => {});
   }
 
   cancelPrint(e: any) {}

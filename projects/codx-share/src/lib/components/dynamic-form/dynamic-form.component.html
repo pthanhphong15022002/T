@@ -1,38 +1,19 @@
-<codx-form
-  #form
-  [body]="body"
-  [footer]="footer"
-  [data]="data"
-  [formModel]="formModel"
+<codx-views
+  #view
+  [views]="views"
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [views]="views"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
 >
-  <ng-template #body>
-    <div class="card-body">
-      <div class="row">
-        <div class="form-group">
-          <div class="form-group mt-3">
-            <codx-label
-              fiedName="RangeID"
-              [formModel]="form.formModel"
-              default="Mã danh mục"
-            >
-            </codx-label>
-            <codx-input
-              field="rangeID"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-            >
-            </codx-input>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
+</codx-views>
 
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSaveForm()">
-        Lưu
-      </button>
-    </div>
-  </ng-template>
-</codx-form>
+<ng-template #template>
+  <p>dynamic-form works!</p>
+</ng-template>
