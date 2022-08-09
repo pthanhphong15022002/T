@@ -33,6 +33,7 @@ export class TaskExtendsComponent
   user: any;
   funcID: any;
   itemSelected: any;
+  taskExtends: any;
   dialogExtendsStatus!: DialogRef;
   vllExtendStatus = 'TM010'; 
   vllStatus ='TM004'
@@ -67,6 +68,7 @@ export class TaskExtendsComponent
   }
 
   selectedChange(val: any) {
+    this.taskExtends = val?.data
     this.itemSelected = val?.data?.task ;
     this.detectorRef.detectChanges();
   }
@@ -90,8 +92,10 @@ export class TaskExtendsComponent
     );
     this.dialogExtendsStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) { 
-        this.view.dataService.update(e?.event).subscribe();
-        this.itemSelected = e?.event.task;
+        var taskExtends = e?.event
+        this.view.dataService.update(taskExtends).subscribe();
+        this.taskExtends = taskExtends
+        this.itemSelected = taskExtends.task;
         this.detectorRef.detectChanges();
       }
     })
@@ -99,10 +103,11 @@ export class TaskExtendsComponent
   }
 
   receiveMF(e: any) {
-    this.clickMF(e.e, this.itemSelected);
+    this.clickMF(e.e, this.taskExtends);
   }
 
   clickMF(e, data) {
+    this.taskExtends = data ;
     this.itemSelected = data.task;
     switch (e.functionID) {
       case 'TMT04011':
