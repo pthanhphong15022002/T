@@ -165,6 +165,7 @@ export class EmployeesComponent implements OnInit {
         }
       }
       );
+      this.df.detectChanges();
   }
 
   async onSelectionChanged($event) {
@@ -219,7 +220,7 @@ export class EmployeesComponent implements OnInit {
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteAsync';
-
+    opt.className = 'EmployeesBusiness';
     opt.data = itemSelected.employeeID;
     return true;
   }
@@ -251,8 +252,8 @@ export class EmployeesComponent implements OnInit {
   }
 
   viewEmployeeInfo(data) {
-    this.codxService.navigate('', this.urlDetail, {employeeID: data.employeeID});
-    
+    this.codxService.navigate('', this.urlDetail, { employeeID: data.employeeID });
+
     // this.urlView = e?.url;
     // if (data.iterationID != this.user.userID)
     //   this.urlView += '/' + data.iterationID;

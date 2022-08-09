@@ -1,3 +1,4 @@
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
 import { FormsModule } from '@angular/forms';
@@ -68,7 +69,7 @@ import { HttpClientModule } from '@angular/common/http';
 export const routes: Routes = [
   {
     path: '',
-    component: LayoutNoAsideComponent,
+    component: LayoutOnlyHeaderComponent,
     children: [
       {
         path: 'settings/:funcID',
@@ -78,6 +79,7 @@ export const routes: Routes = [
   },
 ];
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
+import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -111,7 +113,9 @@ const T_Component: Type<any>[] = [
   NoteDrawerComponent,
   CodxApprovalComponent,
   CodxCommentsComponent,
+  DynamicFormComponent,
   DynamicSettingParamaterComponent,
+  CodxReferencesComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

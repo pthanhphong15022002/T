@@ -169,8 +169,8 @@ export class CalendarNotesComponent
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'GetParamAsync')
       .subscribe((res) => {
         if (res) {
-          if (res[0].msgBodyData)
-            this.maxPinNotes = res[0].msgBodyData[0].fieldValue;
+          if (res[0]?.msgBodyData)
+            this.maxPinNotes = res[0]?.msgBodyData[0]?.fieldValue;
         }
       });
   }

@@ -1,10 +1,9 @@
-
 <ng-template #titleTmp let-data>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-1">
       <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2"> {{data.meetingName}}</div>
       <div class="badge badge-light-primary d-flex align-items-center me-2">
-        ccccc
+        {{template.templateName}}
       </div>
     </div>
   </div>
@@ -47,8 +46,13 @@
                   </a>
                 </div>
               </ng-template>
-              <ng-template #content>
-                Nội dung họp
+              <ng-template #content >
+                <div class="text-dark fw-bolder">
+                  ĐÃ THỰC HIỆN
+                </div>
+                <div  *ngFor="let ct of content1">
+                  {{ct.memo}}
+                </div>
               </ng-template>
             </e-tabitem>
             <e-tabitem>

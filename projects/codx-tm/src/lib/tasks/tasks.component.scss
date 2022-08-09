@@ -2,9 +2,9 @@
     height: 100%;
 }
 
-.codx_tempfull {
-    padding: 6px 12px !important;
-}
+// .codx_tempfull {
+//     padding: 6px 12px !important;
+// }
 
 // css trễ hạn công việc 
 .unexpired {
@@ -13,4 +13,15 @@
 
 .expired {
     color: #F64E60;
+}
+
+codx-view-list-detail .codx-detail-footer {
+    overflow: hidden;
+}
+
+textarea.codx-textarea {
+    border-radius: 2px !important;
+    padding: 5px 10px;
+    border-color: #d4d9dd;
+    outline: 0;
 }

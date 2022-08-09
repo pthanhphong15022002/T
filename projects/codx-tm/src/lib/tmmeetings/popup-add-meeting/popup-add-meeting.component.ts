@@ -1,3 +1,4 @@
+import { CO_Content, CO_MeetingTemplates } from './../../models/CO_MeetingTemplates.model';
 import { CO_Meetings, CO_Resources } from './../../models/CO_Meetings.model';
 import {
   ChangeDetectorRef,
@@ -48,11 +49,12 @@ export class PopupAddMeetingComponent implements OnInit {
   action: any;
   linkURL = '';
   resources: CO_Resources[] = [];
+  template= new CO_MeetingTemplates();
   listRoles: any;
   idUserSelected: any;
   popover: any;
-  dialogRole: DialogRef
-
+  dialog1: DialogRef
+  templateName: any;
   selectedDate = new Date();
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -91,6 +93,15 @@ export class PopupAddMeetingComponent implements OnInit {
       this.title = 'Chỉnh sửa họp định kì';
     }
     this.isFullDay = false;
+    if(this.meeting.templateID){
+      this.api.execSv<any>('CO','CO','MeetingTemplatesBusiness','GetTemplateByMeetingAsync',this.meeting.templateID).subscribe(res=>{
+        if(res){
+          this.template = res;
+          this.templateName = this.template.templateName;
+        }
+      })
+    }
+
   }
   getParam(callback = null) {
     this.api
@@ -145,9 +156,10 @@ export class PopupAddMeetingComponent implements OnInit {
       .subscribe((res) => {
         if (res.update) {
           this.dialog.dataService.setDataSelected(res.update[0]);
+          this.meeting == res.update[0];
         }
       });
-    this.dialog.close();
+    this.dialog.close(this.meeting);
   }
 
   onSave() {
@@ -265,11 +277,19 @@ export class PopupAddMeetingComponent implements OnInit {
   }
 
   openPopupTemplate(item: any) {
-    this.dialogRole = this.callFuncService.openForm(TemplateComponent, '', 1200, 700, '', item);
-    this.dialogRole.closed.subscribe(e => {
+    this.dialog1 = this.callFuncService.openForm(TemplateComponent, '', 1200, 700, '', item);
+    this.dialog1.closed.subscribe(e => {
       if (e?.event) {
         console.log(e);
-
+        this.meeting.templateID = e.event;
+        if(this.meeting.templateID){
+          this.api.execSv<any>('CO','CO','MeetingTemplatesBusiness','GetTemplateByMeetingAsync',this.meeting.templateID).subscribe(res=>{
+            if(res){
+              this.template = res;
+              this.templateName = this.template.templateName;
+            }
+          })
+        }
       }
     })
   }

@@ -177,7 +177,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  ngDoCheck() {}
+  ngDoCheck() { }
 
   ngAfterViewInit() {
     console.log('on after view controls', this.pdfviewerControls);
