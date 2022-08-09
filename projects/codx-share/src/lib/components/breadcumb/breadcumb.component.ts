@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentService } from '../attachment/attachment.service';
 
 declare var $: any;
@@ -25,13 +26,13 @@ export class BreadcumbComponent implements OnInit {
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    public atSV: AttachmentService,
+    public dmSV: CodxDMService,
   ) {
     //this.dmSV.folderId.next(id);
   }
 
   ngOnInit(): void {
-    this.atSV.isBreadcumTree.subscribe(res => {
+    this.dmSV.isBreadcumTree.subscribe(res => {
       if (res != null) {
         this.breadcumbTree = res;
         this.tree = true;
@@ -39,11 +40,11 @@ export class BreadcumbComponent implements OnInit {
       }
     })
 
-    this.atSV.isBreadcum.subscribe(res => {
+    this.dmSV.isBreadcum.subscribe(res => {
       if (res != null) {
         this.breadcumb = res;
         this.breadcumbTree = res;
-        this.linkList = this.atSV.breadcumbLink;
+        this.linkList = this.dmSV.breadcumbLink;
         this.changeDetectorRef.detectChanges();
       }
     })
@@ -62,11 +63,11 @@ export class BreadcumbComponent implements OnInit {
   }
 
   onJump(id) {
-    this.atSV.isTree = false;
+    this.dmSV.isTree = false;
     // alert(this.linkList[id]);
-    this.atSV.parentFolderId = this.linkList[id];
-    this.atSV.currentNode = '';
-    this.atSV.folderId.next(this.linkList[id]);
+    this.dmSV.parentFolderId = this.linkList[id];
+    this.dmSV.currentNode = '';
+    this.dmSV.folderId.next(this.linkList[id]);
     //isFolderId
     this.changeDetectorRef.detectChanges();
   }

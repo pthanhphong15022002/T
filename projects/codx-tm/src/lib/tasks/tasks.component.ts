@@ -99,6 +99,7 @@ export class TasksComponent extends UIComponent {
   gridViewSetup: any;
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
+  sprints :any ;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -143,6 +144,13 @@ export class TasksComponent extends UIComponent {
         this.listRoles = res.datas;
       }
     });
+    if(this.iterationID!=""){
+      this.tmSv.getSprintsDetails(this.iterationID).subscribe(res=>{
+         if(res){
+          this.sprints = res;
+         }
+      })
+    }
   }
   //#endregion
 
@@ -1189,4 +1197,6 @@ export class TasksComponent extends UIComponent {
     }
   }
   //#endregion
+
+
 }
