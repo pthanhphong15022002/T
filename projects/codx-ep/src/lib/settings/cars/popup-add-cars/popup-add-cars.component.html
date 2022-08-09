@@ -31,14 +31,14 @@
         <codx-label default="" [formModel]="dialog.formModel"> </codx-label>
         <button type="button" class="btn btn-primary">Icon</button>
       </div>
-      <div class="">        
-        <div class="ms-2 room-icon" style="display: none">
+      <!-- <div class="">        
+        <div class="ms-2 room-icon">
           <codx-input type="vllicon" refValue="L1470" field="icon" class="btn btn-primary dropdown-toggle">
           </codx-input>
-          <!-- <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
-                    </select-icon> -->
+          <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
+                    </select-icon>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="row">
@@ -52,6 +52,7 @@
         <codx-input
           type="text"
           ControlName="code"
+          placeholder="Biển số"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
@@ -86,13 +87,13 @@
           type="valuelist"
           name="ranking"
           ngDefaultControl
-          [crrValue]="dialogAddCar.value.ranking"
+          [crrValue]="dialogAddCar.value?.ranking"
           refValue="EP005"
           field="ranking"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
-
+        
         <!-- <codx-input
           type="valuelist"
           name="valuelist"
@@ -122,7 +123,7 @@
           ngDefaultControl
           [crrValue]="dialogAddCar.value.category"
           refValue="VL005"
-          field="ranking"
+          field="category"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -150,7 +151,7 @@
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
-        </codx-input>           
+        </codx-input>
         <!-- <codx-input
           service="SYS"
           type="combobox"
@@ -159,7 +160,7 @@
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
-        </codx-input>-->
+        </codx-input> -->
       </div>
     </div>
 
@@ -170,7 +171,17 @@
           [formModel]="dialog.formModel"
           default="Tài xế"
         >
-        </codx-label>        
+        </codx-label>   
+        <!-- <codx-input 
+          type="combobox"
+          service="EP" 
+          refValue="EP_Drivers"
+          field="linkID" 
+          placeholder="Chọn lái xe"
+          ngDefaultControl
+          [pageSize]="5"
+          (valueChange)="valueCbxDriverChange($event)">
+        </codx-input>      -->
         <codx-input
           service="EP"
           type="combobox"
@@ -178,7 +189,7 @@
           ControlName="resourceID"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
-          (valueChange)="valueCbxDriverChange($event)"
+          (valueChange)="valueCbxDriverChange($event)"  
         >
         </codx-input>
       </div>

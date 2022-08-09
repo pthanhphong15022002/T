@@ -18,33 +18,26 @@
         [formModel]="dialog.formModel"
         default="Nguồn"
       >
-      </codx-label>
+      </codx-label>      
       <codx-input
-        type="valuelist"
-        name="valuelist"
-        ngDefaultControl
-        [crrValue]="dialogAddDriver.value.category"
-        refValue="VL005"
-        field="ranking"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-      <!-- <codx-input
-        type="valuelist"
-        refValue="VL005"
-        ControlName="category"
-        [formModel]="form.formModel"
-        [Group]="dialogAddCar"
-      >
-      </codx-input> -->
+          type="valuelist"
+          name="valuelist"
+          ngDefaultControl
+          [crrValue]="dialogAddDriver.value.category"
+          refValue="VL005"
+          field="category"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
     </div>
     <div class="col-6 form-group">
       <codx-label
         fiedName="CompanyID"
         [formModel]="dialog.formModel"
         default="Đơn vị"
-      >
+        >
       </codx-label>
+
       <codx-input
         service="OD"
         refValue="AgencyNames"
@@ -53,21 +46,7 @@
         [formModel]="form.formModel"
         [Group]="dialogAddDriver"
       >
-      </codx-input>           
-      <!-- <codx-input
-        service="SYS"
-        type="combobox"
-        name="combobox"
-        [crrValue]="dialogAddCar.value.companyID"
-        ngDefaultControl
-        refValue="Companies"
-        [loadFull]="true"
-        ControlName="companyID"
-        [formModel]="form.formModel"
-        [Group]="dialogAddCar"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>-->
+      </codx-input> 
     </div>
   </div>
   <div class="row">
@@ -78,12 +57,12 @@
         default="Tên lái xe"
       >
       </codx-label>
+
       <codx-input
         type="text"
         ControlName="resourceName"
         [formModel]="form.formModel"
         [Group]="dialogAddDriver"
-        (valueChange)="valueChange($event)"
       >
       </codx-input>
     </div>
@@ -114,11 +93,12 @@
           service="EP"
           type="combobox"
           refValue="EP_Cars"
-          ControlName="linkID"
+          ControlName="resourceID"
           [formModel]="form.formModel"
           [Group]="dialogAddDriver"
+          (valueChange)="valueCbxCarChange($event)"
         >
-        </codx-input>
+      </codx-input>
 
     </div>
     <div class="col-3 form-group">
@@ -127,8 +107,10 @@
       <codx-input
         type="text"
         ControlName="code"
+        placeholder="Biển số"
         [formModel]="form.formModel"
         [Group]="dialogAddDriver"
+        [crrValue]="dialogAddDriver.value.code"
       >
       </codx-input>
     </div>
@@ -136,7 +118,7 @@
 
   <div class="row">
     <div class="form-group">
-      <codx-label default="Người điều phối" fiedName="Owner" [formModel]="dialog.formModel">
+      <codx-label default="Người điều phối" fiedName="BUID" [formModel]="dialog.formModel">
       </codx-label>
       <codx-input
           service="OD"
@@ -152,17 +134,7 @@
 
   <div class="row">
     <div class="form-group">
-      <codx-label default="Mô tả" fiedName="Note" [formModel]="dialog.formModel"></codx-label>
-      <!-- <codx-input
-        type="textarea"
-        class="test-textarea"
-        field="note"
-        [crrValue]="dialogAddDriver.value.note"
-        rows="3"
-        ControlName="note"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input> -->
+      <codx-label default="Mô tả" fiedName="Note" [formModel]="dialog.formModel"></codx-label>      
       <codx-input      
         type="textarea"
         rows="3"
@@ -182,7 +154,6 @@
     <button class="btn btn-light-primary" (click)="onSaveForm()">
       <codx-label
         name="lblSave"
-        F
         default="Lưu"
         [formModel]="dialog.formModel"
       ></codx-label>

@@ -33,7 +33,6 @@ import { ViewDetailComponent } from './sign-file/view-detail/view-detail.compone
 import { PopupAddSignFileComponent } from './sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
 import { PopupSignatureComponent } from './setting/signature/popup-signature/popup-signature.component';
-import { ApprovalComponent } from './sign-file/approval/approval.component';
 import {
   LinkAnnotationService,
   BookmarkViewService,
@@ -50,7 +49,9 @@ import {
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { SettingComponent } from './setting/setting.component';
-import { PopupApproveSignFileComponent } from './sign-file/popup-approve-sign-file/popup-approve-sign-file.component';
+import { PdfViewComponent } from './sign-file/pdf-view/pdf-view.component';
+import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
+import { PopupReasonARDComponent } from './sign-file/popup-reason-ard/popup-reason-ard.component';
 
 const routes: Routes = [
   {
@@ -63,8 +64,8 @@ const routes: Routes = [
       },
 
       {
-        path: 'approval/:funcID',
-        component: ApprovalComponent,
+        path: 'pdf/:funcID',
+        component: PdfViewComponent,
       },
 
       {
@@ -116,10 +117,11 @@ const routes: Routes = [
     ViewDetailComponent,
     SignFileComponent,
     PopupSignatureComponent,
-    ApprovalComponent,
     SignatureComponent,
     SettingComponent,
-    PopupApproveSignFileComponent,
+    PdfViewComponent,
+    PopupADRComponent,
+    PopupReasonARDComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

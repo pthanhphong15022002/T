@@ -1,6 +1,5 @@
-import { FormGroup } from '@angular/forms';
-import { UIComponent, FormModel, DialogRef } from 'codx-core';
-import { Component, Injector, Input } from '@angular/core';
+import { UIComponent, FormModel, ViewModel, LayoutService, ViewType, ViewsComponent } from 'codx-core';
+import { Component, Injector, Input, TemplateRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -8,57 +7,77 @@ import { Component, Injector, Input } from '@angular/core';
   styleUrls: ['./dynamic-form.component.scss']
 })
 export class DynamicFormComponent extends UIComponent {
-  @Input() formModel: FormModel;
-  @Input() data: any;
-  @Input() isAdd: boolean = true;
-  formGroup: FormGroup
-  dialog: DialogRef;
-  funcID: string;
+  @Input() funcID: string;
+  @ViewChild('template') template: TemplateRef<any>;
+  views: Array<ViewModel> = [];
+  columnsGrid: any
   formName: string;
   gridViewName: string;
+  data: any
+  showToolBar = 'true';
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_Resources';
+  predicate = 'ResourceType=@0';
+  dataValue = '1';
+  idField = 'recID';
+  className = 'ResourcesBusiness';
+  method = 'GetListAsync';
 
-  constructor(private inject: Injector,) {
+  constructor(
+    private inject: Injector,
+    private layout: LayoutService,
+  ) {
     super(inject)
   }
 
   onInit(): void {
-    debugger;
-    const { funcID, formName, gridViewName } = this.formModel
-    this.funcID = funcID
-    this.formName = formName
-    this.gridViewName = gridViewName
-    var obj: { [key: string]: any } = {};
-    this.cache.gridViewSetup(formName, gridViewName).subscribe((gv) => {
-      if (gv) {
-        for (const key in gv) {
-          if (Object.prototype.hasOwnProperty.call(gv, key)) {
-            const element = gv[key];
-            if (element?.referedValue != null) {
-              obj[key] = element.referedValue;
-              console.log(obj[key])
-            }
-          }
-        }
-      }
+    this.cache.functionList(this.funcID).subscribe(res => {
+      this.formName = res.formName;
+      this.gridViewName = res.gridViewName
+    })
+    this.cache.gridViewSetup(this.formName, this.gridViewName).subscribe(res => {
+      this.data = Object.values(res)
+      this.data.map(res => {
+        this.data = [...this.data, {
+          headerText: res.headerText,
+          width: res.width,
+          field: this.camelize(res.fieldName)
+        }]
+      })
+      this.columnsGrid = this.data;
     })
   }
 
-  beforeSave(option: any) {
-    let itemData = this.formGroup.value;
-    if (!itemData.recID) {
-      this.isAdd = true;
-    } else {
-      this.isAdd = false;
-    }
-    option.method = this.dialog.dataService.method;
-    option.data = [itemData, this.isAdd];
-    return true;
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.grid,
+        sameData: false,
+        active: true,
+        model: {
+          resources: this.columnsGrid,
+        },
+      },
+    ];
   }
 
-  onSaveForm() {
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe();
+  viewChanged(evt: any, view: ViewsComponent) {
+    debugger;
+    var module = view.function!.module;
+    var formName = view.function!.formName;
+    this.cache.functionList(module).subscribe((f) => {
+      if (f) {
+        this.layout.setUrl(f.url);
+        this.layout.setLogo(f.smallIcon);
+      }
+    });
+  }
+
+  camelize(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+      return index === 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
   }
 
 }

@@ -1,7 +1,7 @@
 <codx-form #form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [subHeader]="subHeader"
   [body]="body" [footer]="footer" *ngIf="isAfterRender">
   <ng-template #subHeader>
-    <div class="mt-3">
+    <div class="">
       <div class="fw-bold codx-label">
         <codx-label default="Icon & màu sắc" name="lblIconColor" [formModel]="form.formModel"></codx-label>
       </div>
@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center mb-3 ">
+    <div class="d-flex align-items-center mb-4 ">
       <codx-input #checkbox type="switch" id="switch" [checked]="dialogCategory.value.eSign" labelPosition="After"
         field="eSign" class="test-switch" (valueChange)="valueChange($event)">
       </codx-input>
@@ -69,17 +69,14 @@
       </codx-input>
     </div>
     <div class="row ">
-      <div class="d-flex flex-stack mb-3">
-        <div class="fw-bold text-primary">
-          <codx-label default="Đánh số văn bản" fiedName="AutoNumber" [formModel]="form.formModel">
-          </codx-label>
-        </div>
-        <span class="text-end align-items-end">
-          <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
-            (click)="openAutoNumPopup()">
-            <i class=" icon-edit-one text-hover-primary icon-20"></i>
-          </button>
-        </span>
+      <div class="d-flex flex-stack mb-4">
+        <codx-label class="text-primary fw-bold" default="Đánh số văn bản" fiedName="AutoNumber"
+          [formModel]="form.formModel">
+        </codx-label>
+        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+          (click)="openAutoNumPopup()">
+          <i class=" icon-edit-one text-primary icon-20"></i>
+        </button>
       </div>
       <div class="col-md-6">
         <div class="form-group">
@@ -88,51 +85,47 @@
         </div>
       </div>
     </div>
-    <div class="d-flex flex-stack mb-3">
-      <div class="fw-bold ">
-        <codx-label class="text-primary" default="Qui trình duyệt" fiedName="ProcessID" [formModel]="form.formModel">
-        </codx-label>
-      </div>
-      <span class="text-end align-items-end">
-        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
-          (click)="openPopupApproval()">
-          <i class="icon-settings text-hover-primary icon-20"></i>
-        </button>
-      </span>
+    <div class="d-flex flex-stack mb-4">
+      <codx-label class="text-primary fw-bold" default="Qui trình duyệt" fiedName="ProcessID"
+        [formModel]="form.formModel">
+      </codx-label>
+      <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+        (click)="openPopupApproval()">
+        <i class="icon-settings text-primary icon-20"></i>
+      </button>
     </div>
 
-    <div class="codx-approval mt-3 " *ngIf="lstStep?.length > 0">
+    <div class="codx-approval" *ngIf="lstStep?.length > 0">
       <ng-container *ngFor="let item of lstStep, let index = index">
-        <div class="codx-approval-step step-test pb-1">
+        <div class="codx-approval-step">
           <div class="codx-approval-header d-flex align-items-center">
             <div class="step-number">{{item.stepNo}}</div>
-            <div class="step-title text-gray-800 fw-bold fs-5">{{item.stepName}}</div>
+            <div class="step-title text-dark fw-bold fs-5">{{item.stepName}}</div>
           </div>
-          <div class="codx-approval-content ms-17">
+          <div class="codx-approval-content ms-18">
             <ng-container *ngFor="let approver of item.approvers">
-              <div class="d-flex align-items-top justify-content-between mb-2">
-                <codx-temp-full *ngIf="approver.roleType?.length == 1" [imageId]="approver.approver"
-                  [imageObjType]="'AD_Users'" [imageWidth]="35"
+              <div class="d-flex align-items-top justify-content-between ">
+                <codx-temp-full cardCss="mb-4" *ngIf="approver.roleType?.length == 1" [imageId]="approver.approver"
+                  [imageObjType]="'AD_Users'" [imageWidth]="35" imgCss="me-3"
                   [title]="approver.approverName ?? (approver.approver |vll: 'ES014': 'text'|async)"
                   [desc]="approver.positionName ?? 'Vị trí công việc'">
                 </codx-temp-full>
-                <codx-temp-full *ngIf="approver.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
-                (item.icon ? item.icon : 'share_default.svg')" imgCss="w-30px p-3 me-3 user-mini-icon"
+                <codx-temp-full cardCss="mb-4" *ngIf="approver.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
+                (item.icon ? item.icon : 'share_default.svg')" imgCss="w-35px  w-35px p-3 me-3 user-mini-icon"
                   [imageWidth]="20" [title]="(approver.approver |vll: 'ES014': 'text'|async)"
                   [desc]="approver.approver |vll: 'ES014': 'text'|async">
                 </codx-temp-full>
 
                 <div class="d-flex align-items-center text-center">
                   <div class="ms-6 d-flex">
-                    <span class="text-dark">{{item.leadtime}} giờ</span>
+                    <span class="text-primary">{{item.leadtime}} giờ</span>
                   </div>
                 </div>
               </div>
             </ng-container>
-
           </div>
         </div>
-        <div class="codx-approval-step step-signature-temp pb-3" *ngIf="index == lstStep.length-1"></div>
+        <div class="codx-approval-step step-signature-temp " *ngIf="index == lstStep.length-1"></div>
       </ng-container>
     </div>
   </ng-template>

@@ -158,7 +158,7 @@ export class PositionsComponent implements OnInit {
     var itemSelected = opt.data[0];
     opt.methodName = 'Delete';
 
-    opt.data = itemSelected.taskGroupID;
+    opt.data = itemSelected.employeeID;
     return true;
   }
 
