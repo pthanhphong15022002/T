@@ -72,10 +72,16 @@
     </div>
 </div>
 <div class="isHiden border-top" [class.isShow]="dataComment.isShowComment">
-    <div class="position-relative cmt c1 feed-box my-3" (keyup.enter)="sendComment(dataComment,comments)">
-        <codx-input class="border-0 bg-transparent" type="text" placeholder="Bình luận" [crrValue]="comments"
-            (valueChange)="valueChange($event,'comments')">
-        </codx-input>
+    <div class="position-relative cmt c1 feed-box my-3">
+        <div>
+            <codx-input 
+                class="border-0 bg-transparent" 
+                type="textarea" placeholder="Bình luận" 
+                [crrValue]="comments"
+                (keyup.enter)="sendComment(dataComment,comments)"
+                (valueChange)="valueChange($event,'comments')">
+            </codx-input>
+        </div>
         <div class="feed-icon btn-send">
             <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
                 (click)="sendComment(dataComment,comments)">
@@ -123,9 +129,7 @@
                             </div>
                         </ng-container>
                         <ng-template #comment>
-                            <div class="text-dark text-comment" [innerHTML]="data.content">
-
-                            </div>
+                            <div class="text-dark text-comment" [innerHTML]="data.content"></div>
                         </ng-template>
                         <ng-container *ngIf="data.totalVote==0;else dataVote">
                             <div class="d-flex align-items-center comment-thumb">
@@ -179,8 +183,6 @@
                             <div class="btn-like delay-500">
                                 <div *ngIf="!data.myVotedType;else dataMyVoted">
                                     <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                        <!-- <img src="/assets/themes/wp/default/img/L1480_None.svg"
-                                            alt="Kiwi standing on oval" style="width: 18px; height: 18px;"> -->
                                         <span class="fs-7 text-gray-400 ms-2">
                                             <codx-label formName="WP_Comments" name="lblLike" default="Thích">
                                             </codx-label>
@@ -196,8 +198,6 @@
                                 </div>
                                 <ng-template #dataMyVoted>
                                     <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                        <!-- <img src="/assets/themes/wp/default/img/{{(data.myVotedType | vll:'L1480':'icon' | async)}}"
-                                            alt="Kiwi standing on oval" style="width: 18px; height: 18px"> -->
                                         <div>
                                             <span class="fw-bold ms-2"
                                                 [style.color]="data.myVotedType | vll:'L1480':'textColor' | async">
@@ -263,7 +263,6 @@
                                 </span>
                             </div>
                         </div>
-                        <!-- <div class="text-dark text-comment" [innerHTML]="childData?.content"></div> -->
                         <ng-container *ngIf="childData.isEditComment;else comment">
                             <div class="text-dark text-comment">
                                 <codx-input type="text" format="ed3" [crrValue]="childData.content"
@@ -279,22 +278,6 @@
                         <ng-template #comment>
                             <div class="text-dark text-comment" [innerHTML]="childData.content"></div>
                         </ng-template>
-                        <!-- <div>
-                            <div class="d-flex align-items-center comment-thumb">
-                                <ng-container *ngIf="childData.totalVote == 0;else listVote">
-                                    <span class="icon-thumb_up icon-16 text-hover-primary"></span>
-                                </ng-container>
-                                <ng-template #listVote>
-                                    <div *ngFor="let votedType of childData.listVoteType">
-                                        <a class="me-1" (click)="showVotes(childData)">
-                                            <img src="/assets/themes/wp/default/img/{{(votedType | vll:'L1480':'icon' | async)}}"
-                                                alt="Kiwi standing on oval" style="width: 18px; height: 18px;">
-                                        </a>
-                                    </div>
-                                </ng-template>
-                                <span class="ms-1">{{childData.totalVote}}</span>
-                            </div>
-                        </div> -->
                         <ng-container *ngIf="childData.totalVote==0;else childDataVote">
                             <div class="d-flex align-items-center comment-thumb">
                                 <span class="icon-thumb_up icon-16 text-hover-primary"></span>
@@ -425,8 +408,6 @@
         </div>
     </ng-template>
 </div>
-
-
 <ng-template #popContentListVoted let-dialog>
     <codx-form headerText="Danh sách" [body]="body" [dialog]="dialog">
     </codx-form>

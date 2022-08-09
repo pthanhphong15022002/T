@@ -92,7 +92,7 @@ export class ViewDetailComponent implements OnInit {
     option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
+    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', {type:newsType}, '', option);
   }
 
   searchField: string = "";

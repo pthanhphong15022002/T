@@ -303,7 +303,7 @@ export class TasksComponent extends UIComponent {
         'ERM.Business.CM',
         'ParametersBusiness',
         'GetOneField',
-        ['TM_Parameters', null, 'CalendarID']
+        ['TMParameters', null, 'CalendarID']
       )
       .subscribe((res) => {
         if (res) {
@@ -545,17 +545,18 @@ export class TasksComponent extends UIComponent {
     return true;
   }
 
-  assignTask(data) {
+  assignTask(moreFunc ,data) {
     this.view.dataService.dataSelected = data;
     var vllControlShare = 'TM003';
     var vllRose = 'TM001';
+    var title = moreFunc.customName ;
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '800px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose],
+      [this.view.dataService.dataSelected, vllControlShare, vllRose,title],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -626,13 +627,20 @@ export class TasksComponent extends UIComponent {
       this.notiService.notifyCode('TM025');
       return;
     }
-    // if (this.paramModule.ReOpenDays ) {
-
-    //   this.notiService.notifyCode('TM053');
-    //   return;
-    // }
 
     if (taskAction.status == '90') {
+      if (this.paramModule.ReOpenDays) {
+        var time =
+          moment(new Date()).toDate().getTime() -
+          Number.parseFloat(this.paramModule.ReOpenDays) * 3600000;  
+        var timeCompletedOn = moment(new Date(taskAction.completedOn))
+          .toDate()
+          .getTime();
+        if (time > timeCompletedOn) {
+          this.notiService.notifyCode('TM053');
+          return ;
+        }
+      }
       this.notiService.alertCode('TM054').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
           this.confirmUpdateStatus(moreFunc, taskAction);
@@ -757,7 +765,7 @@ export class TasksComponent extends UIComponent {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleWithCategoryAsync',
-        ['TM_Parameters', '1']
+        ['TMParameters', '1']
       )
       .subscribe((res) => {
         if (res) {
@@ -1099,7 +1107,7 @@ export class TasksComponent extends UIComponent {
         this.sendemail(data);
         break;
       case 'TMT02015':
-        this.assignTask(data);
+        this.assignTask(e.data,data);
         break;
       case 'TMT02016':
       case 'TMT02017':

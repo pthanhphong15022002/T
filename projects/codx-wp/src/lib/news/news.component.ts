@@ -28,7 +28,7 @@ export class NewsComponent implements OnInit {
   listSlider = [];
   lstHotNew:any[] = [];
   lstVideo:any[] = [];
-  lstGroup:object[] = [];
+  lstGroup:any[] = [];
   userPermission: any;
   isAllowNavigationArrows = false;
   views: Array<ViewModel> = [];
@@ -94,7 +94,6 @@ export class NewsComponent implements OnInit {
         this.lstHotNew = res[0]; // tin mới nhất
         this.lstVideo = res[1]; // video
         this.lstGroup = res[2]; // tin cũ hơn
-        console.log(res[2]);
         if(this.lstVideo.length == 0){
           this.listSlider = [];
         }
@@ -118,7 +117,7 @@ export class NewsComponent implements OnInit {
 
   searchEvent(event: any) { }
 
-  clickViewDeital(data: any) {
+  clickViewDetail(data: any) {
     this.api
     .execSv(
       'WP',
@@ -142,7 +141,10 @@ export class NewsComponent implements OnInit {
   }
 
   clickShowPopupSearch() {
-    this.dialogRef = this.callfc.openForm(PopupSearchComponent, "Tìm kiếm", 900, 700);
+    let option = new DialogModel();
+    option.FormModel = this.codxView.formModel;
+    option.IsFull = true;
+    this.callfc.openForm(PopupSearchComponent,"",0,0,"",{funcID: this.funcID},"",option);
   }
 
 

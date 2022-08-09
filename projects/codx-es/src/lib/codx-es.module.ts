@@ -50,6 +50,7 @@ import {
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { SettingComponent } from './setting/setting.component';
+import { PopupApproveSignFileComponent } from './sign-file/popup-approve-sign-file/popup-approve-sign-file.component';
 
 const routes: Routes = [
   {
@@ -118,6 +119,7 @@ const routes: Routes = [
     ApprovalComponent,
     SignatureComponent,
     SettingComponent,
+    PopupApproveSignFileComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

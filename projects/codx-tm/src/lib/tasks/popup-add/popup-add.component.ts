@@ -176,9 +176,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listRoles = res.datas;
       }
     });
-    // this.cache.viewSettingValues('tm1').subscribe(res=>{
-    //   console.log(res)
-    // })
   }
 
   ngOnInit(): void {
@@ -197,7 +194,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       } else {
         this.task.category = '1';
       }
-      this.titleAction = 'Copy';
+      this.titleAction = 'Sao chép';
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
       this.titleAction = this.action == 'edit' ? 'Chỉnh sửa' : 'Xem chi tiết';
@@ -208,6 +205,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openInfo(this.task.taskID, this.action);
     }
+  }
+
+  setTitle(e: any) {
+    this.title = this.titleAction + ' ' +  e.charAt(0).toLocaleLowerCase() + e.slice(1);;
+    this.changeDetectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -249,7 +251,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleWithCategoryAsync',
-        ['TM_Parameters', '1']
+        ['TMParameters', '1']
       )
       .subscribe((res) => {
         if (res) {
@@ -670,7 +672,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         var time = (
           (this.task.endDate.getTime() - this.task.startDate.getTime()) /
           3600000
-        ).toFixed(1);
+        ).toFixed(2);
         this.task.estimated = Number.parseFloat(time);
         this.crrEstimated = this.task.estimated;
       }
@@ -882,12 +884,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.crrIndex = i;
     p.open();
     this.popover = p;
-  }
-
-  setTitle(e: any) {
-    this.title = this.titleAction + ' ' + e;
-    this.changeDetectorRef.detectChanges();
-    console.log(e);
   }
 
   buttonClick(e: any) {

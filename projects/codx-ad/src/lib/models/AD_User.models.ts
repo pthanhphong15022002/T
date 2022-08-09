@@ -17,6 +17,7 @@ export class AD_User{
     modifiedOn: Date;
     sessionID: string;
     owner: String;
+    positionID: string;
 
 
 

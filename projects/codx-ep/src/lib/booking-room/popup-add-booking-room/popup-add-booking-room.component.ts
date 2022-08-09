@@ -9,17 +9,11 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { DatetimePipe } from '@core/pipes/datetime.pipe';
+import { FormGroup } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { traceChildProgressBar } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
 import {
-  ApiHttpService,
-  CacheService,
-  CallFuncService,
   DialogData,
   DialogRef,
-  NotificationMessage,
   NotificationsService,
   UIComponent,
 } from 'codx-core';

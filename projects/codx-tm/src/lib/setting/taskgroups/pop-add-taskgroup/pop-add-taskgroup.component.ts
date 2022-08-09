@@ -75,11 +75,6 @@ export class PopAddTaskgroupComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
-    this.getParam();
-    // this.taskGroups = {
-    //   ...this.taskGroups,
-    //   ...dt?.data,
-    // };
     this.data = dialog.dataService!.dataSelected;
     this.taskGroups = this.data;
     this.action = dt.data[1];
@@ -114,8 +109,8 @@ export class PopAddTaskgroupComponent implements OnInit {
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetParameterByModuleWithCategoryAsync',
-        ['TM_Parameters', '1']
+        'GetByModuleWithCategoryAsync',
+        ['TMParameters', '1']
       )
       .subscribe((res) => {
         if (res) {
@@ -398,9 +393,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.lstSavecheckList = [];
     if (this.taskGroups.checkListControl == '2') {
       for (let item of this.listTodo) {
-        if (item.status == true) {
           this.lstSavecheckList.push(item.text);
-        }
       }
 
       this.taskGroups.checkList = this.lstSavecheckList.join(';');
