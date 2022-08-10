@@ -110,9 +110,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
   //popoverCrr
-  popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
-    this.countResource = 0;
+  popoverEmpList(p: any) {
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
     }
