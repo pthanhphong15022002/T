@@ -31,14 +31,14 @@
         <codx-label default="" [formModel]="dialog.formModel"> </codx-label>
         <button type="button" class="btn btn-primary">Icon</button>
       </div>
-      <div class="">        
-        <div class="ms-2 room-icon" style="display: none">
+      <!-- <div class="">        
+        <div class="ms-2 room-icon">
           <codx-input type="vllicon" refValue="L1470" field="icon" class="btn btn-primary dropdown-toggle">
           </codx-input>
-          <!-- <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
-                    </select-icon> -->
+          <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
+                    </select-icon>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="row">
@@ -52,6 +52,7 @@
         <codx-input
           type="text"
           ControlName="code"
+          placeholder="Biển số"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
@@ -86,13 +87,13 @@
           type="valuelist"
           name="ranking"
           ngDefaultControl
-          [crrValue]="dialogAddCar.value.ranking"
+          [crrValue]="dialogAddCar.value?.ranking"
           refValue="EP005"
           field="ranking"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
-
+        
         <!-- <codx-input
           type="valuelist"
           name="valuelist"

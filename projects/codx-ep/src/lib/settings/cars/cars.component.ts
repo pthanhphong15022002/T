@@ -28,6 +28,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
+  @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
   @ViewChild('moreFunction', { static: true }) moreFunction: TemplateRef<any>;
   
   views: Array<ViewModel> = [];
@@ -89,6 +90,10 @@ export class CarsComponent implements OnInit, AfterViewInit {
       {
         headerText: 'Xếp hạng',
         template: this.rankingCol,
+      },
+      {
+        headerText: 'Nguồn',
+        template: this.categoryCol,
       },
     ];
     this.views = [

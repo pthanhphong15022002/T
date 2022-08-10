@@ -1,7 +1,7 @@
 import {
   ChangeDetectorRef,  Component,  EventEmitter,  Input,  OnInit,  Optional,  Output,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import {
   CacheService,
@@ -32,7 +32,6 @@ export class PopupAddCarsComponent implements OnInit {
   dialog: any;
   headerText ="Thêm mới xe"
   subHeaderText = 'Tạo & upload file văn bản';
-
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
@@ -94,12 +93,13 @@ export class PopupAddCarsComponent implements OnInit {
         this.dialogAddCar = item;
         if (this.data) {
           this.dialogAddCar.patchValue(this.data);
-        }
+        } 
+        this.dialogAddCar.addControl(
+          'code',
+          new FormControl(this.data.code)
+        );       
         this.isAfterRender = true;
       });
-
-      
-
   }
 
   valueChange(event: any) {

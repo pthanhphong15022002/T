@@ -1,8 +1,9 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [listRoles]="listRoles"
-    [vllApproveStatus]="vllApproveStatus" [vllExtendStatus]="vllExtendStatus" [popoverCrr]="popoverCrr"
-    [vllStatus]="vllStatus" (clickMoreFunction)="receiveMF($event)" (hoverPopover)="hoverPopover($event)">
+  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [dataTree]="dataTree"
+    [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus" [vllExtendStatus]="vllExtendStatus"
+    [popoverCrr]="popoverCrr" [vllStatus]="vllStatus" (clickMoreFunction)="receiveMF($event)"
+    (hoverPopover)="hoverPopover($event)">
   </app-view-detail>
 </ng-template>
 
@@ -201,9 +202,56 @@
   </div>
 </ng-template>
 
-<codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
-  className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
-  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
-  [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
-  (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
+<codx-views *ngIf="funcID!='TMT03011'" #view service="TM" entityName="TM_Tasks" idField="taskID"
+  assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views"
+  [button]="button" (buttonClick)="click($event)" (viewChanged)="changeView($event)"
+  (requestEnded)="requestEnded($event)" [dataObj]="dataObj" (selectedChange)="selectedChange($event)"
+  (onDragDrop)="onDragDrop($event)" (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
+
+<div *ngIf="funcID=='TMT03011'" class="page-content d-flex flex-row">
+  <div class="w-100 ">
+    <div class="row m-0 bg-body rounded-2 p-3 d-flex justify-content-between">
+      <div class="col-8 ">
+        <div class="d-flex ">
+          <div class=" text-dark fw-bolder my-1 fs-3 p-3">
+            {{sprints?.iterationName}}
+          </div>
+          <div class="d-status  p-3">
+            <div class="badge badge-danger me-2 label-status">
+              Nội bộ
+            </div>
+          </div>
+          <div class="p-3 ">
+            <span #createdOn> {{sprints?.createdOn | date: "dd/MM/yyyy" }}</span>
+          </div>
+          <div class="p-3">
+            {{sprints?.createdByName}}
+          </div>
+        </div>
+        <div>
+          <div class="d-flex ">
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Dashboard</a>
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Công việc</a>
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Lịch sử</a>
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Bình luận</a>
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Họp định kì</a>
+        
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <codx-imgs style="float: right;" [objectId]="sprints?.resources" objectType="AD_Users" [width]="40"
+          [numberImages]="7"></codx-imgs>
+      </div>
+    </div>
+    <div class="m-0 bg-body rounded-2 ">
+      <codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
+        className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
+        (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
+        [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
+        (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
+      </codx-views>
+    </div>
+  </div>
+</div>
