@@ -78,7 +78,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.data = dialog?.dataService?.dataSelected;
-    this.isAdd = data?.data[1];
+    this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
   }
 
@@ -131,6 +131,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
+          this.dialogCategory = res;
           this.dialogCategory.addControl(
             'countStep',
             new FormControl(this.data.countStep ?? 0)
