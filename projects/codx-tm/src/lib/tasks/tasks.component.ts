@@ -99,8 +99,8 @@ export class TasksComponent extends UIComponent {
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
   dataTree= [] ;
-  @Input() iterationID: string = '';
-
+  iterationID ='' ;
+  @Input() projectID?: any;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -166,6 +166,7 @@ export class TasksComponent extends UIComponent {
       id: 'btnAdd',
     };
     this.getParams();
+    // if(this.sprints)this.projectID = this.sprints?.projectID ;
   }
 
   ngAfterViewInit(): void {
@@ -342,6 +343,7 @@ export class TasksComponent extends UIComponent {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
+      if(this.projectID)this.view.dataService.dataSelected.projectID = this.projectID ;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [this.view.dataService.dataSelected, 'add', this.isAssignTask],
