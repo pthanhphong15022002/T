@@ -93,7 +93,7 @@
           </div>
         </div>
         <div class="d-flex flex-column">
-          <div class="task-info mt-2">
+          <div class="task-info">
             <div class="float-left mt-1">
               <div class="d-flex me-6">
                 <div class="fw-bold me-1">
@@ -229,18 +229,19 @@
         <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Người thực hiện">
         </codx-label>:
       </div>
-      <div class="">
+      <div class="d-flex">
         <!-- <div *ngIf="itemSelected.category == '3'" class="" (click)="openViewListTaskResource(itemSelected)">
           <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="10" >
           </codx-imgs>
         </div>-->
-        <div *ngIf="itemSelected.category == '3'" class="">
+        <div *ngIf="itemSelected.category == '3'" class="user-groups">
           <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="10"
             (mouseenter)="popoverEmpList(popoverList,itemSelected)" [ngbPopover]="popEmpList"
             popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" container="body"
             autoClose="outside" [openDelay]="500">
           </codx-imgs>
         </div>
+
         <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="">
           <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="10">
           </codx-imgs>
@@ -286,7 +287,7 @@
         </div>
         <div class="checkbox-list mt-2 ms-6 text-dark">
           <ng-container *ngFor="let item of itemSelected?.listTaskGoals">
-            <div>
+            <div class="mb-2">
               <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
                 [crrValue]="item.status == '90'" [disabled]="true"></codx-input>
             </div>

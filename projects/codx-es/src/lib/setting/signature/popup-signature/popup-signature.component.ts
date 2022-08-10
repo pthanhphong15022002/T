@@ -49,7 +49,7 @@ export class PopupSignatureComponent implements OnInit {
     this.dialog = dialog;
     this.dialog.formModel = data?.data.dialog.formModel;
     this.dialogSignature = data?.data.model;
-    this.data = data?.data.data;
+    this.data = dialog.DataService?.dataSelected;
   }
 
   ngOnInit(): void {}

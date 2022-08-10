@@ -189,18 +189,6 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
 
   addNew(evt?: any) {
-    // this.viewBase.dataService.addNew().subscribe((res) => {
-    //   this.dataSelected = this.viewBase.dataService.dataSelected;
-    //   let option = new SidebarModel();
-    //   option.Width = '550px';
-    //   option.DataService = this.viewBase?.currentView?.dataService;
-    //   option.FormModel = this.viewBase?.currentView?.formModel;
-    //   this.dialog = this.callfunc.openSide(
-    //     PopupAddSignatureComponent,
-    //     [this.viewBase.dataService.dataSelected, true],
-    //     option
-    //   );
-    // });
     this.viewBase.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.viewBase.dataService;
@@ -223,23 +211,25 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
 
   edit(evt?) {
-    let item = this.viewBase.dataService.dataSelected;
     if (evt) {
-      item = evt;
-    }
-    this.viewBase.dataService.edit(item).subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
+      this.viewBase.dataService.dataSelected = evt;
 
-      this.dialog = this.callfunc.openSide(
-        PopupAddSignatureComponent,
-        [item, false],
-        option
-      );
-    });
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.viewBase?.currentView?.dataService;
+          option.FormModel = this.viewBase?.currentView?.formModel;
+
+          this.dialog = this.callfunc.openSide(
+            PopupAddSignatureComponent,
+            [evt, false],
+            option
+          );
+        });
+    }
   }
 
   delete(evt?) {
