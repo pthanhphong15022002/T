@@ -521,10 +521,14 @@ export class AssignInfoComponent implements OnInit {
   valueChangeEstimated(data) {
     if (!data.data) return;
     var num = data.data;
-    if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
-      num = this.param?.MaxHours;
+    if (num < 0) {
+      this.notiService.notifyCode('TM033');
+      return;
     }
-    this.task[data.field] = num;
+    if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
+      this.task[data.field] = this.param?.MaxHours;
+    }else   this.task[data.field] = num
+  
     this.changeDetectorRef.detectChanges();
   }
 
