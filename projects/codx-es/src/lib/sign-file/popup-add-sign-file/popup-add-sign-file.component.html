@@ -71,7 +71,7 @@
 
         <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
           (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
-          <codx-label name="lbl" [formModel]="formModel" default="Tiếp tục"></codx-label>
+          <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
         </button>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18" (click)="close(templateClose)"></i>
@@ -80,14 +80,23 @@
     </div>
     <div class="stepper-body p-2 w-100" *ngIf="currentTab < 3">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100">
-        <div class="card-body overflow-auto">
-          <div class="tab-content">
+        <div class="mb-10 mt-10 text-center tab-pane-header">
+          <h2 class="h2-title">
+            <codx-label *ngIf="currentTab == 0" name="lblUploadFile" [formModel]="formModel" default="Upload file">
+            </codx-label>
+            <codx-label *ngIf="currentTab == 1" name="lblTitleAddSignFile" [formModel]="formModel"
+              default="Bổ sung thông tin tài liệu">
+            </codx-label>
+            <codx-label *ngIf="currentTab == 2" name="lblSubHeaderApprover" default="Quy trình xét duyệt"
+              [formModel]="formModel">
+            </codx-label>
+          </h2>
+        </div>
+        <div class="card-body hover-scroll-overlay-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
+          data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
+          <div class="tab-content ">
             <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
-              <div class="mb-10 mt-10 text-center">
-                <h2 class="h2-title">
-                  <codx-label name="lblUploadFile" [formModel]="formModel" default="Upload file"></codx-label>
-                </h2>
-              </div>
               <div class="text-center">
                 <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0"
                   [objectId]="dialogSignFile.value.recID" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
@@ -103,12 +112,6 @@
               </div>
             </div>
             <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
-              <div class="mb-10 mt-10 text-center">
-                <h2 class="h2-title">
-                  <codx-label name="lblTitleAddSignFile" [formModel]="formModel" default="Bổ sung thông tin tài liệu">
-                  </codx-label>
-                </h2>
-              </div>
               <div class="w-100 form-content">
                 <div class="form-group">
                   <codx-label fiedName="Title" default="Tên tài liệu" [formModel]="formModel">
@@ -287,8 +290,8 @@
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>
-        <a *ngIf="isAddNew" class="btn btn-danger" (click)="clickIsSave(false, dialogClose)">
-          <codx-label name="lblDelete" default="Xóa" [formModel]="formModel">
+        <a *ngIf="isAddNew" class="btn btn-secondary" (click)="clickIsSave(false, dialogClose)">
+          <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
           </codx-label>
         </a>
         <a *ngIf="!isAddNew" class="btn btn-secondary" (click)="clickNotSave(dialogClose)">
