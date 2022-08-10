@@ -55,22 +55,23 @@ export class DynamicSettingComponent implements OnInit {
   }
 
   navigate(evt: any, catagory: string) {
-    this.loaded = false;
-    var res = this.valuelist as any;
-    if (res && res.datas) {
-      this.catagory = catagory;
-      var url = this.view?.function?.url;
-      var state = {
-        setting: this.dataSetting[this.catagory],
-        function: this.view.function,
-      };
-      const ds = (res.datas as any[]).find((item) => item.value == catagory);
-      var path = window.location.pathname;
-      if (path.endsWith('/' + ds.default)) {
-        history.pushState(state, '', path);
-      } else {
-        url += '/' + ds.default;
-        this.codxService.navigate('', url, null, state);
+    this.cacheService.valueList(this.listName).subscribe((res) => {
+      if (res && res.datas) {
+        this.catagory = catagory;
+        var url = this.view?.function?.url;
+        var state = {
+          setting: this.dataSetting[this.catagory],
+          function: this.view.function,
+        };
+        const ds = (res.datas as any[]).find((item) => item.value == catagory);
+        var path = window.location.pathname;
+        if (path.endsWith('/' + ds.default)) {
+          history.pushState(state, '', path);
+        } else {
+          url += '/' + ds.default;
+          // this.codxService.navigate('', url, null, state);
+        }
+        this.loaded = true;
       }
       this.loaded = true;
     }

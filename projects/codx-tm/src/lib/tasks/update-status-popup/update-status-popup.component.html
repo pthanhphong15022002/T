@@ -8,20 +8,23 @@
             </codx-input>
         </div>
     </div>
-    <div class="form-group row">
+    <div class="row">
         <div class="col-6" *ngIf="status =='90'">
-            <codx-label fiedName="CompletedOn" formName="Tasks" gridViewName="grvTasks" default="Ngày cập nhật">
-            </codx-label>
-            <codx-input type="datetime" class="test-datetime" field="completedOn" placeholder="datetime"
-                [crrValue]="completedOn" format="F" (valueChange)="changeTime($event)">
-            </codx-input>
+            <div class="form-group">
+                <codx-label fiedName="CompletedOn" formName="Tasks" gridViewName="grvTasks" default="Ngày cập nhật">
+                </codx-label>
+                <codx-input type="datetime" class="test-datetime" field="completedOn" placeholder="datetime"
+                    [crrValue]="completedOn" format="F" (valueChange)="changeTime($event)">
+                </codx-input>
+            </div>
         </div>
         <div class="col-6" *ngIf="status =='90'">
-            <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTask" default="Thời gian hoàn tất">
-            </codx-label>
-            <codx-input class="form-control" type="number" [min]="0" field="estimated" [crrValue]="completed"
-                (valueChange)="changeEstimated($event)"></codx-input>
-
+            <div class="form-group">
+                <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTask" default="Thời gian hoàn tất">
+                </codx-label>
+                <codx-input class="form-control" type="number" [min]="0" field="estimated" [crrValue]="completed"
+                    (valueChange)="changeEstimated($event)"></codx-input>
+            </div>
         </div>
     </div>
     <div class="form-group row">
