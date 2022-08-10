@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { ViewsComponent } from 'codx-core';
 
 @Injectable({
-  providedIn: 'any',
+  providedIn: 'root',
 })
 export class DynamicSettingService {
-  view!: ViewsComponent;
+  function: any = {};
   setting: any = {};
   constructor() {}
 }

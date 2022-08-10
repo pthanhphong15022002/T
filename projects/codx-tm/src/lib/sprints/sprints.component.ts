@@ -256,7 +256,8 @@ export class SprintsComponent extends UIComponent {
   }
 
   viewBoard(e, data) {
-    this.urlView = e?.url;
+    // this.urlView = e?.url;
+    this.urlView = "tm/sprintdetails/TMT03011";
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
     // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);

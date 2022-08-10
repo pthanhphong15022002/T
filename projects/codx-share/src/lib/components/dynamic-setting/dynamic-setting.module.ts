@@ -9,6 +9,8 @@ import { SharedModule } from '@shared/shared.module';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxCoreModule } from 'codx-core';
 import { GroupPipe } from './pipes/group-filter.pipe';
+import { DynamicSettingService } from './dynamic-setting.service';
+import { FormatPipe } from './pipes/format-string.pipe';
 
 export const routes: Routes = [
   {
@@ -25,7 +27,7 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [CatagoryComponent];
 
-const T_Pipe: Type<any>[] = [GroupPipe];
+const T_Pipe: Type<any>[] = [GroupPipe, FormatPipe];
 
 @NgModule({
   declarations: [T_Component, T_Pipe],
@@ -40,4 +42,4 @@ const T_Pipe: Type<any>[] = [GroupPipe];
   ],
   exports: [T_Component, T_Pipe],
 })
-export class CodxShareModule {}
+export class DynamicSettingModule {}

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { HR_Employees } from 'projects/codx-hr/src/lib/model/HR_Employees.model';
+import { CodxMwpService } from '../../codx-mwp.service';
 
 @Component({
   selector: 'lib-edit-info',
@@ -39,12 +40,13 @@ export class EditInfoComponent implements OnInit {
   gridViewSetup: any;
   employee: HR_Employees = new HR_Employees();
   isDisable = false;
-  isNew: false;
 
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
     private detectorRef: ChangeDetectorRef,
+    private api: ApiHttpService,
+    private codxMwp: CodxMwpService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -86,22 +88,32 @@ export class EditInfoComponent implements OnInit {
   beforeSave(op: any) {
     var data = [];
     op.methodName = 'UpdateAsync';
+    op.className = 'EmployeesBusiness';
     data = [
       this.employee,
-      this.isNew
     ];
     op.data = data;
     return true;
   }
 
   OnSaveForm() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        if (res.save) {
+    // this.dialog.dataService
+    //   .save((option: any) => this.beforeSave(option))
+    //   .subscribe();
+    // this.detectorRef.detectChanges();
+    // this.dialog.close();
+
+    this.api.call("ERM.Business.HR", "EmployeesBusiness", "UpdateAsync", [this.employee]).subscribe(res => {
+      if (res && res.msgBodyData[0]) {
+        if (res) {
+          this.codxMwp.EmployeeInfomation.loadEmployee(res.msgBodyData[0]);
           this.dialog.close();
         }
-      });
+        else {
+          this.notiService.notify("Error");
+        }
+      }
+    });
   }
 
   scrollTo(session) {
