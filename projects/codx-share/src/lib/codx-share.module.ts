@@ -61,24 +61,8 @@ import { CodxReportViewerComponent } from './components/codx-report/codx-report-
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
-import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
-export const routes: Routes = [
-  {
-    path: '',
-    component: LayoutOnlyHeaderComponent,
-    children: [
-      {
-        path: 'setting/:funcID',
-        loadChildren: () =>
-          import(
-            'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
-          ).then((m) => m.DynamicSettingModule),
-      },
-    ],
-  },
-];
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
 
@@ -130,7 +114,6 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     InlineSVGModule.forRoot(),
     CodxCoreModule,
     CalendarModule,
-    //RouterModule.forChild(routes),
     DateRangePickerModule,
     TabModule,
     UploaderModule,
