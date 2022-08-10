@@ -22,25 +22,27 @@ export class CatagoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    var state = history.state;
-    if (state) {
-      this.setting = state.setting;
-      this.function = state.function;
-      // this.groupSetting = this.setting.filter(
-      //   (x) => x.controlType.toLowerCase() === 'groupcontrol'
-      // );
-    }
-    var catagory = this.route.snapshot.params['catagory'];
-    this.cacheService.valueList(this.listName).subscribe((res) => {
-      if (res && res.datas) {
-        const ds = (res.datas as any[]).find(
-          (item) => item.default == catagory
+    this.route.params.subscribe((routeParams) => {
+      var state = history.state;
+      if (state) {
+        this.setting = state.setting || [];
+        this.function = state.function || [];
+        this.groupSetting = this.setting.filter(
+          (x) => x.controlType.toLowerCase() === 'groupcontrol'
         );
-        this.category = ds.value;
-        this.title = ds.text;
       }
+      var catagory = routeParams.catagory;
+      this.cacheService.valueList(this.listName).subscribe((res) => {
+        if (res && res.datas) {
+          const ds = (res.datas as any[]).find(
+            (item) => item.default == catagory
+          );
+          this.category = ds.value;
+          this.title = ds.text;
+        }
+      });
+      this.changeDetectorRef.detectChanges();
     });
-    this.changeDetectorRef.detectChanges();
   }
 
   loadSettingValue(formName: string) {
