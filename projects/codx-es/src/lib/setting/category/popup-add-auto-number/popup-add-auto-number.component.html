@@ -10,7 +10,6 @@
             [refValue]="cbxName['StringFormat']" field="stringFormat" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
-
       </div>
       <div class="col-6">
         <div class="form-group">
@@ -21,10 +20,8 @@
             min="0" max="100" field="maxLength" (valueChange)="valueChange($event)" [showSpinButton]="false">
           </codx-input>
         </div>
-
       </div>
     </div>
-
     <div class="row ">
       <div class="col-4">
         <div class="form-group">
@@ -54,7 +51,6 @@
             [refValue]="cbxName['DateFormat']" field="dateFormat" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
-
       </div>
     </div>
     <div class="form-group">
@@ -63,16 +59,13 @@
       <codx-input type="text" name="text" cssClass="form-control" [crrValue]="viewAutoNumber" [disabled]="true">
       </codx-input>
     </div>
-
     <div class="row ">
-
       <div class="col-7">
         <div class="form-group">
           <codx-input type="checkbox" label="Tự động reset theo" labelPosition="after" field="autoReset"
             class="test-check" (valueChange)="valueChange($event)" [crrValue]="dialogAutoNum.value.autoReset">
           </codx-input>
         </div>
-
       </div>
       <div class="col-5">
         <!-- <codx-label fiedName="Interval" [formModel]="formModel" default="Chu kỳ reset ">
@@ -82,7 +75,6 @@
             [refValue]="cbxName['Interval']" field="interval" (valueChange)="valueChange($event)"
             [disabled]="!dialogAutoNum.value.autoReset"></codx-input>
         </div>
-
       </div>
     </div>
   </ng-template>
