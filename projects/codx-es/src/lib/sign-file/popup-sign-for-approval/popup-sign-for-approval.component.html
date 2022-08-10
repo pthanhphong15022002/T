@@ -1,0 +1,10 @@
+<div class="btns">
+  <button
+    type="button"
+    class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+    (click)="clickOpenADR(1)"
+  >
+    <codx-label name="lbl" [formModel]="formModel" default=""></codx-label>
+  </button>
+</div>
+<lib-pdf-view [isApprover]="true" [recID]="recID"> </lib-pdf-view>
