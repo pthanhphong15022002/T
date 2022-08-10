@@ -68,7 +68,7 @@ export class DynamicSettingComponent implements OnInit {
           history.pushState(state, '', path);
         } else {
           url += '/' + ds.default;
-          this.codxService.navigate('', url, null, state);
+          // this.codxService.navigate('', url, null, state);
         }
         this.loaded = true;
       }
