@@ -33,3 +33,9 @@ export class TM_Sprints {
   orgUnitID: string;
   divisionID: string;
 }
+
+export class TabModelSprints {
+  name: 'Dashboard' | 'Công việc' | 'Lịch sử' | 'Bình luận' | 'Họp định kì' | string;
+  textDefault: string;
+  isActive: boolean;
+}

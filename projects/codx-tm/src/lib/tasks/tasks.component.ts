@@ -36,7 +36,7 @@ import { PopupUpdateProgressComponent } from './popup-update-progress/popup-upda
 import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
-  selector: 'test-views',
+  selector: 'codx-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -80,7 +80,6 @@ export class TasksComponent extends UIComponent {
   param: TM_Parameter;
   paramModule: any;
   dataObj: any;
-  iterationID: string = '';
   listTaskResousce = [];
   searchField = '';
   listTaskResousceSearch = [];
@@ -99,8 +98,9 @@ export class TasksComponent extends UIComponent {
   gridViewSetup: any;
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
-  sprints :any ;
   dataTree= [] ;
+  @Input() iterationID: string = '';
+
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -145,13 +145,6 @@ export class TasksComponent extends UIComponent {
         this.listRoles = res.datas;
       }
     });
-    if(this.iterationID!=""){
-      this.tmSv.getSprintsDetails(this.iterationID).subscribe(res=>{
-         if(res){
-          this.sprints = res;
-         }
-      })
-    }
   }
   //#endregion
 
@@ -562,7 +555,7 @@ export class TasksComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
-    option.Width = '800px';
+    option.Width = '550px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
       [this.view.dataService.dataSelected, vllControlShare, vllRose,title],
