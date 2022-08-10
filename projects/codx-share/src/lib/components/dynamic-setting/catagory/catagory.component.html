@@ -1,25 +1,30 @@
 <div class="list-group">
   <h3 class="list-header">{{ title }}</h3>
   <div class="list-content">
-    <div class="d-flex justify-content-between list-item">
-      <div class="d-flex flex-column">
-        <div class="font-size-h6 font-weight-bold text-dark mb-2">
-          Tuyên dương
-        </div>
-        <div class="text-muted">
-          Ghi nhận lời khen tăng cho 1 đồng nghiệp đã có hành đồng tuân theo các
-          qui tắt ứng xử của công ty để giải quyết công việc hiệu quả trong 1
-          tình huống xác định
-        </div>
-      </div>
-      <a href="/default/standard/setting2"
-        ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span
-      ></a>
-      <!-- <a href="/default/standard/setting2"
-        ><span class="icon-settings  icon-20 ml-6"></span
-      ></a> -->
-    </div>
-    <hr />
+    <ng-container *ngIf="groupSetting && groupSetting.length > 0; else noGroup">
+      <ng-container *ngFor="let item of groupSetting">
+        <ng-container
+          *ngTemplateOutlet="template; context: { $implicit: item }"
+        >
+        </ng-container>
+        <ng-container *ngFor="let itemchild of setting | group: item.recID">
+          <ng-container
+            *ngTemplateOutlet="template; context: { $implicit: itemchild }"
+          >
+          </ng-container>
+          <hr />
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    <ng-template #noGroup>
+      <ng-container *ngFor="let item of setting">
+        <ng-container
+          *ngTemplateOutlet="template; context: { $implicit: item }"
+        >
+        </ng-container>
+        <hr />
+      </ng-container>
+    </ng-template>
     <!-- <div class="d-flex justify-content-between list-item">
       <div class="d-flex flex-column">
         <div class="font-size-h6 font-weight-bold text-dark mb-2">
@@ -101,6 +106,49 @@
     </div> -->
   </div>
 </div>
+<ng-template #template let-data>
+  <div class="d-flex justify-content-between list-item">
+    <div class="d-flex flex-column">
+      <div class="font-size-h6 font-weight-bold text-dark mb-2">
+        {{ data.tilte }}
+      </div>
+      <div class="text-muted">
+        {{ data.description }}
+      </div>
+    </div>
+    <div class="d-flex align-items-center ml-4">
+      <!-- <span class="switch switch-sm ml-3">
+        <label>
+          <input type="checkbox" checked="checked" name="select" />
+          <span></span>
+        </label>
+      </span> -->
+      <codx-input
+        *ngIf="data.controlType != 'GroupControl'"
+        [type]="data.controlType"
+        [name]="data.controlType"
+        class=""
+        placeholder=""
+        ngDefaultControl
+        [refType]="data.referedType"
+        [refValue]="data.referedValue || data.referdValue"
+        [loadFull]="true"
+        [field]="data.fieldName"
+      >
+      </codx-input>
+      <a href="/default/standard/setting2" *ngIf="data.displayMode === '1'"
+        ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span
+      ></a>
+      <a href="/default/standard/setting2" *ngIf="data.displayMode === '2'"
+        ><span class="icon-edit icon-20 ml-6"></span
+      ></a>
+      <a href="/default/standard/setting2" *ngIf="data.displayMode === '3'"
+        ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span
+      ></a>
+      <!-- <span class="icon-keyboard_arrow_right icon-22 ml-2"></span> -->
+    </div>
+  </div>
+</ng-template>
 
 <!-- <div class="list-group">
   <h3 class="list-header">Danh mục</h3>

@@ -30,6 +30,8 @@ import { throws } from 'assert';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AnyRecordWithTtl } from 'dns';
+import { AD_Roles } from '../../models/AD_Roles.models';
+import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 
 @Component({
   selector: 'lib-add-user',
@@ -50,6 +52,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
   isAddMode = true;
   user: any;
   adUser = new AD_User();
+  adRoles: AD_Roles = new AD_Roles();
+  adUserRoles: AD_UserRoles = new AD_UserRoles();
   countListViewChooseRoleApp: Number = 0;
   countListViewChooseRoleService: Number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
@@ -65,8 +69,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     @Optional() dt?: DialogData
   ) {
     super(injector);
-    this.formType = dt?.data.type;
+    this.formType = dt?.data.formType;
     this.data = dialog.dataService!.dataSelected;
+    if (this.formType == 'edit') {
+      this.viewChooseRole = this.data?.chooseRoles;
+      this.countListViewChoose();
+    }
     this.adUser = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
@@ -95,7 +103,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     var obj = {
       formType: this.formType,
       data: item,
-    }
+    };
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,
       '',
@@ -109,16 +117,24 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.dialogRole.closed.subscribe((e) => {
       if (e?.event) {
         this.viewChooseRole = e?.event;
-        console.log("check viewChooseRole", this.viewChooseRole)
-        this.countListViewChooseRoleApp = this.viewChooseRole.filter(
-          (obj) => obj.isPortal == false
-        ).length;
-        this.countListViewChooseRoleService = this.viewChooseRole.filter(
-          (obj) => obj.isPortal == true
-        ).length;
+        this.countListViewChoose();
+        this.viewChooseRole.forEach((dt) => {
+          dt['module'] = dt.functionID;
+          dt['roleID'] = dt.recIDofRole;
+          dt.userID = this.adUser.userID;
+        });
         this.changeDetector.detectChanges();
       }
     });
+  }
+
+  countListViewChoose() {
+    this.countListViewChooseRoleApp = this.viewChooseRole.filter(
+      (obj) => obj.isPortal == false
+    ).length;
+    this.countListViewChooseRoleService = this.viewChooseRole.filter(
+      (obj) => obj.isPortal == true
+    ).length;
   }
 
   beforeSave(op: RequestOption) {
@@ -126,12 +142,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUser, this.isAddMode];
+      data = [this.adUser, this.isAddMode, this.viewChooseRole];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      data = [this.adUser, this.isAddMode];
+      data = [this.adUser, this.isAddMode, this.viewChooseRole];
     }
     op.data = data;
     return true;
@@ -146,10 +162,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
               if (result) {
-                (this.dialog.dataService as CRUDService).update(res.save).subscribe();
                 this.loadData.emit();
               }
             });
+          res.save['chooseRoles'] = res.save?.functions;
+          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
           this.changeDetector.detectChanges();
         }
       });
@@ -168,6 +185,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 this.loadData.emit();
               }
             });
+          res.update['chooseRoles'] = res.update?.functions;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
@@ -241,6 +259,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res && res.msgBodyData) {
           this.viewChooseRole = res.msgBodyData[0];
+          this.viewChooseRole.forEach((dt) => {
+            dt['module'] = dt.functionID;
+            dt['roleID'] = dt.recIDofRole;
+            dt.userID = this.adUser.userID;
+          });
           this.countListViewChooseRoleApp = this.viewChooseRole.length;
           this.changeDetector.detectChanges();
         }

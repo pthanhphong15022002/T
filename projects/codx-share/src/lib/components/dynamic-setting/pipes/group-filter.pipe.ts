@@ -5,6 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class GroupPipe implements PipeTransform {
   transform(items: any[], groupName: string): any[] {
     if (!items || !groupName) return [];
-    return items.filter((x) => x.refLineID === groupName);
+    var dt = items.filter((x) => x.refLineID === groupName);
+    if (!dt) dt = [];
+    return dt;
   }
 }
