@@ -254,7 +254,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   updateAutonumber() {
     this.esService.isSetupAutoNumber.subscribe((res) => {
       if (res != null) {
-        this.esService.addEditAutoNumbers(res, true).subscribe((res) => {});
+        this.esService.addEditAutoNumbers(res, true).subscribe((res) => { });
       }
     });
   }
@@ -280,7 +280,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.cfService.openForm(
       PopupAddAutoNumberComponent,
       '',
-      (screen.width * 35) / 100,
+      550,
       (screen.width * 40) / 100,
       '',
       [
