@@ -65,10 +65,11 @@ export class DynamicSettingComponent implements OnInit {
         url += '/' + ds.default;
         console.log(ds);
         //this.router.navigateByUrl(url, { state: this.settingService });
-        this.codxService.navigate('', url, null, {
-          setting: this.dataSetting[this.catagory],
-          function: this.view.function,
-        });
+        // this.codxService.navigate('', url, null, {
+        //   setting: this.dataSetting[this.catagory],
+        //   function: this.view.function,
+        // });
+        this.loaded = true;
       }
     });
     this.changeDetectorRef.detectChanges();
@@ -112,7 +113,6 @@ export class DynamicSettingComponent implements OnInit {
           var item = items[0] as HTMLElement;
           item.click();
         }
-        this.loaded = true;
         console.log(res);
       });
   }
