@@ -1,0 +1,69 @@
+<codx-views
+  #view
+  [views]="views"
+  [autoLoad]="false"
+  (viewChanged)="viewChanged($event, view)"
+>
+</codx-views>
+
+<ng-template #template>
+  <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--<app-subheader></app-subheader>-->
+    <div id="erm_content" class="d-flex flex-column-fluid">
+      <div class="container">
+        <div class="d-flex mb-3 mt-2">
+          <div class="aside-detail flex-row-auto w-300px">
+            <div class="aside-menu mr-6">
+              <ul class="menu-nav">
+                <li
+                  class="menu-item"
+                  *ngFor="let item of itemMenu"
+                  (click)="navigate($event, item)"
+                  [attr.data-id]="item"
+                  [ngClass]="catagory === item ? 'menu-item-active' : ''"
+                >
+                  <a class="menu-link d-flex align-items-center">
+                    <i
+                      class="me-2"
+                      [ngClass]="item | vll: listName:'icon' | async"
+                    ></i>
+                    {{ item | vll: listName:"text" | async }}
+                  </a>
+                </li>
+                <!-- <li class="menu-item">
+                  <a class="menu-link d-flex align-items-center">
+                    <i class="icon-format_list_bulleted icon-20 mr-2"></i>
+                    Danh mục
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a class="menu-link d-flex align-items-center">
+                    <i class="icon-account_balance_wallet icon-20 mr-2"></i>
+                    Ví nhân viên
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a class="menu-link d-flex align-items-center">
+                    <i class="icon-credit_card icon-20 mr-2"></i>
+                    Hạng cống hiến
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a class="menu-link d-flex align-items-center">
+                    <i class="icon-bar_chart icon-20 mr-2"></i>
+                    Thống kê
+                  </a>
+                </li> -->
+              </ul>
+            </div>
+          </div>
+          <div class="d-flex flex-column flex-grow-1">
+            <ng-container *ngIf="loaded">
+              <router-outlet></router-outlet>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
