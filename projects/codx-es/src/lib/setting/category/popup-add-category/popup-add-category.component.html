@@ -6,7 +6,7 @@
         <codx-label default="Icon & màu sắc" name="lblIconColor" [formModel]="form.formModel"></codx-label>
       </div>
       <div class="d-flex">
-        <codx-input class="me-3 user-mini-icon w-30px me-5" type="vllicon" refValue="L1470" field="icon"
+        <codx-input class="mt-1 me-3 user-mini-icon w-30px me-5" type="vllicon" refValue="L1470" field="icon"
           [crrValue]="dialogCategory.value.icon" (valueChange)="valueChange($event)">
         </codx-input>
         <div class="ms-4">
@@ -80,6 +80,8 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
+          <codx-label default="Định dạng" fiedName="AutoNumber" [formModel]="form.formModel">
+          </codx-label>
           <codx-input type="text" name="text" [crrValue]="viewAutoNumber" disabled="true">
           </codx-input>
         </div>
