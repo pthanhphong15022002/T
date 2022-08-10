@@ -413,6 +413,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM027');
       return;
     }
+    if (this.task.estimated < 0) {
+      this.notiService.notifyCode('TM033');
+      // this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
+      return;
+    }
     if (
       this.showAssignTo &&
       (this.task.assignTo == '' || this.task.assignTo == null)

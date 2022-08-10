@@ -236,6 +236,10 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('TM011');
       return;
     }
+    if (this.task.estimated < 0) {
+      this.notiService.notifyCode('TM033');
+      return;
+    }
     if (this.param?.ProjectControl == '2' && !this.task.projectID) {
       this.notiService.notifyCode('TM028');
       return;
