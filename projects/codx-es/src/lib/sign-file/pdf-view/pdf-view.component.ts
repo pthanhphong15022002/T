@@ -38,6 +38,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   actionCollection: any;
   actionCollectionsChange: any;
+  approveStatus;
 
   saveToDBQueueChange: any;
 
@@ -90,7 +91,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
   hideThumbnail: boolean = true;
-  hideActions: boolean = true;
+  hideActions: boolean = false;
 
   saveAnnoQueue: Map<string, any>;
 
@@ -152,11 +153,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
       .subscribe((res: any) => {
-        console.log(res);
+        console.log('sf', res);
 
         let sf = res?.signFile;
 
         if (sf) {
+          this.approveStatus = sf.approveStatus;
           sf.files.forEach((file) => {
             this.lstFiles.push({
               fileName: file.fileName,
@@ -219,8 +221,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         if (res) {
           this.lstRenderAnnotation = res;
           this.lstRenderAnnotation.forEach((item: any) => {
-            console.log('item', item);
-
             let anno = {
               annotationId: item.recID,
               annotationSelectorSettings: {
@@ -295,7 +295,15 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
                   break;
                 }
                 case '8': {
-                  anno.stampAnnotationPath = '';
+                  switch (this.approveStatus) {
+                    case '1':
+                      anno.stampAnnotationPath = qr;
+                      break;
+                    case '3':
+                    case '5':
+                      anno.stampAnnotationPath = '';
+                      break;
+                  }
                   break;
                 }
               }
@@ -1164,7 +1172,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
       this.pdfviewerControl
         .exportAnnotationsAsBase64String(annotationDataFormat)
-        .then((res) => {});
+        .then((res) => {
+          console.log('base64 new pdf', res);
+        });
     }
   }
 
