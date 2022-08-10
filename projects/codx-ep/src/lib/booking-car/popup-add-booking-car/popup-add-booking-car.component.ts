@@ -45,7 +45,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   CbxName: any;
   vllDevices = [];
   lstDeviceRoom = [];
-  tmplstDevice = []
+  tmplstDevice = [];
   headerText: Object = [
     { text: 'Thông tin chung', iconCss: 'icon-info' },
     { text: 'Người đi cùng', iconCss: 'icon-person_add' },
@@ -90,12 +90,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.CbxName = res;
         });
 
-      this.cache.functionList('EPT2').subscribe(res => {
-        this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
-          console.log('Test', res)
-        })
-      })
-
+      this.cache.functionList('EPT2').subscribe((res) => {
+        this.cache
+          .gridViewSetup(res.formName, res.gridViewName)
+          .subscribe((res) => {
+            console.log('Test', res);
+          });
+      });
     });
   }
 
@@ -185,7 +186,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
 
   valueChange(event) {
-    debugger;
     if (event?.field) {
       if (event.data instanceof Object) {
         this.dialogAddBookingCar.patchValue({

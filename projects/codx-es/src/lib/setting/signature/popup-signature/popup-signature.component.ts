@@ -36,6 +36,7 @@ export class PopupSignatureComponent implements OnInit {
 
   dialog: DialogRef;
   dialogSignature: FormGroup;
+  data: any;
 
   constructor(
     private codxService: CodxService,
@@ -48,44 +49,10 @@ export class PopupSignatureComponent implements OnInit {
     this.dialog = dialog;
     this.dialog.formModel = data?.data.dialog.formModel;
     this.dialogSignature = data?.data.model;
+    this.data = dialog.DataService?.dataSelected;
   }
 
-  ngOnInit(): void {
-    console.log(this.dialogSignature.value);
-    if (this.dialogSignature.value.signature1 == null) {
-      this.codxService
-        .getAutoNumber(
-          this.dialog.formModel.funcID,
-          this.dialog.formModel.entityName,
-          'Signature1'
-        )
-        .subscribe((res) => {
-          this.Signature1 = res + 'signature1';
-        });
-    }
-    if (this.dialogSignature.value.signature2 == null) {
-      this.codxService
-        .getAutoNumber(
-          this.dialog.formModel.funcID,
-          this.dialog.formModel.entityName,
-          'Signature2'
-        )
-        .subscribe((res) => {
-          this.Signature2 = res + 'signature2';
-        });
-    }
-    if (this.dialogSignature.value.stamp == null) {
-      this.codxService
-        .getAutoNumber(
-          this.dialog.formModel.funcID,
-          this.dialog.formModel.entityName,
-          'Stamp'
-        )
-        .subscribe((res) => {
-          this.Stamp = res + 'stamp';
-        });
-    }
-  }
+  ngOnInit(): void {}
 
   onSaveForm() {
     if (this.attSignature1.fileUploadList.length == 1) {
@@ -94,6 +61,7 @@ export class PopupSignatureComponent implements OnInit {
           this.dialogSignature.patchValue({
             signature1: (res as any).data.recID,
           });
+          //this.data.signature1 = (res as any).data.recID;
         }
       });
     }
@@ -104,6 +72,7 @@ export class PopupSignatureComponent implements OnInit {
           this.dialogSignature.patchValue({
             signature2: (res1 as any).data.recID,
           });
+          //this.data.signature2 = (res1 as any).data.recID;
         }
       });
     }
@@ -112,6 +81,7 @@ export class PopupSignatureComponent implements OnInit {
       this.attStamp.saveFilesObservable().subscribe((res2) => {
         if (res2) {
           this.dialogSignature.patchValue({ stamp: (res2 as any).data.recID });
+          //this.data.stamp = (res2 as any).data.recID;
         }
       });
     }
@@ -121,28 +91,15 @@ export class PopupSignatureComponent implements OnInit {
 
   onSavePopup() {}
 
-  fileAdded(event, currentTab) {
-    debugger;
-    // switch (currentTab) {
-    //   case 3:
-    //     if (event.data) {
-    //       this.isAddSignature1 = true;
-    //     }
-    //     break;
-    //   case 4:
-    //     if (event.data) {
-    //       this.isAddSignature2 = true;
-    //     }
-    //     break;
-    //   case 5:
-    //     if (event.data) {
-    //       this.isAddStamp = true;
-    //     }
-    //     break;
-    // }
-  }
+  fileAdded(event, currentTab) {}
 
-  fileCount(event, currentTab) {}
+  fileCount(event, currentTab) {
+    if (event.data[0]) {
+      console.log('.data.length > 0data:image');
+
+      return;
+    }
+  }
 
   changeTab(tab) {
     this.currentTab = tab;
