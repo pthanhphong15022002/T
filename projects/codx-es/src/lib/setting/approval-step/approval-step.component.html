@@ -68,11 +68,12 @@
                           <span class="stepper-number">{{item.stepNo}}</span>
                         </div>
                         <div class="stepper-label">
-                          <h3 class="stepper-title line-clamp  line-clamp-3">
-                            {{item.stepName}}
+                          <h3 class="stepper-title line-clamp line-clamp-3">
+                            {{(item.stepType | vll:'ES002':'text'|async)}}
                           </h3>
                           <div class="stepper-desc">
-                            {{(item.stepType | vll:'ES002':'text'|async)}}
+                            {{item.stepName}}
+
                           </div>
                           <div class="action-menu">
                             <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover"
@@ -177,10 +178,10 @@
                   </div>
                   <div class="stepper-label">
                     <h3 class="stepper-title line-clamp  line-clamp-3">
-                      {{item.stepName}}
+                      {{(item.stepType | vll:'ES002':'text'|async)}}
                     </h3>
                     <div class="stepper-desc">
-                      {{(item.stepType | vll:'ES002':'text'|async)}}
+                      {{item.stepName}}
                     </div>
                     <div class="action-menu">
                       <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover"
@@ -249,10 +250,10 @@
                 </div>
                 <div class="stepper-label">
                   <h3 class="stepper-title line-clamp  line-clamp-3">
-                    {{item.stepName}}
+                    {{(item.stepType | vll:'ES002':'text'|async)}}
                   </h3>
                   <div class="stepper-desc">
-                    {{(item.stepType | vll:'ES002':'text'|async)}}
+                    {{item.stepName}}
                   </div>
                   <div class="action-menu">
                     <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover" [dataItem]="item">

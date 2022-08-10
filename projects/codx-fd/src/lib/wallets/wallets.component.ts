@@ -391,7 +391,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e, f) {
-    debugger;
     if (f == 'Organize') {
       this.orgUnit = e?.data[0];
     } else if (f == 'Employee') {
@@ -442,7 +441,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
     this.comboboxName = '';
     var a = this.L1483.find((x) => x.value == this.vllOrganize_value);
     this.comboboxName = a.text;
-    debugger;
   }
 
   setPredicate() {

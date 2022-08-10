@@ -51,7 +51,7 @@ import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-ad
 import { SettingComponent } from './setting/setting.component';
 import { PdfViewComponent } from './sign-file/pdf-view/pdf-view.component';
 import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
-import { PopupReasonARDComponent } from './sign-file/popup-reason-ard/popup-reason-ard.component';
+import { PopupSignForApprovalComponent } from './sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 
 const routes: Routes = [
   {
@@ -65,7 +65,7 @@ const routes: Routes = [
 
       {
         path: 'pdf/:funcID',
-        component: PdfViewComponent,
+        component: PopupSignForApprovalComponent,
       },
 
       {
@@ -121,7 +121,7 @@ const routes: Routes = [
     SettingComponent,
     PdfViewComponent,
     PopupADRComponent,
-    PopupReasonARDComponent,
+    PopupSignForApprovalComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

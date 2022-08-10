@@ -27,9 +27,7 @@ import {
   DateRangePickerModule,
 } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
-import {
-  UploaderModule,
-} from '@syncfusion/ej2-angular-inputs';
+import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { FileImage } from './pipe/fileImage.pipe';
 import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
@@ -61,23 +59,10 @@ import '@boldreports/global/l10n/ej.localetexts.vi-VN.min.js';
 import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
 import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
-import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
+import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
-import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
-export const routes: Routes = [
-  {
-    path: '',
-    component: LayoutOnlyHeaderComponent,
-    children: [
-      {
-        path: 'settings/:funcID',
-        component: DynamicSettingParamaterComponent,
-      },
-    ],
-  },
-];
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
 
@@ -114,14 +99,13 @@ const T_Component: Type<any>[] = [
   CodxApprovalComponent,
   CodxCommentsComponent,
   DynamicFormComponent,
-  DynamicSettingParamaterComponent,
-  CodxReferencesComponent
+  CodxReferencesComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe],
+  declarations: [T_Component, T_Pipe, DynamicSettingComponent],
   imports: [
     CommonModule,
     NgbModule,
@@ -130,7 +114,6 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     InlineSVGModule.forRoot(),
     CodxCoreModule,
     CalendarModule,
-    RouterModule.forChild(routes),
     DateRangePickerModule,
     TabModule,
     UploaderModule,
