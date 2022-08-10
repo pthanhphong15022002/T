@@ -129,18 +129,21 @@ export class SignatureComponent implements OnInit, AfterViewInit {
         headerText: 'Chữ kí chính',
         template: this.imageSignature1,
         width: 150,
+        textAlign: 'Center',
       },
       {
         field: 'signature2',
         headerText: 'Chữ kí nháy',
         template: this.imageSignature2,
         width: 150,
+        textAlign: 'Center',
       },
       {
         field: 'stamp',
         headerText: 'Con dấu',
         template: this.imageStamp,
         width: 150,
+        textAlign: 'Center',
       },
       {
         field: 'otpControl',
@@ -186,38 +189,47 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
 
   addNew(evt?: any) {
-    this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
+    this.viewBase.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
+      option.DataService = this.viewBase.dataService;
+      option.FormModel = this.viewBase.formModel;
       option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddSignatureComponent,
-        [this.viewBase.dataService.dataSelected, true],
+        { isAdd: true },
         option
       );
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null && this.viewBase.dataService.hasSaved)
+          this.viewBase.dataService
+            .delete([this.viewBase.dataService.dataSelected])
+            .subscribe((x) => {
+              this.cr.detectChanges();
+            });
+      });
     });
   }
 
   edit(evt?) {
-    let item = this.viewBase.dataService.dataSelected;
     if (evt) {
-      item = evt;
-    }
-    this.viewBase.dataService.edit(item).subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
+      this.viewBase.dataService.dataSelected = evt;
 
-      this.dialog = this.callfunc.openSide(
-        PopupAddSignatureComponent,
-        [item, false],
-        option
-      );
-    });
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.viewBase?.currentView?.dataService;
+          option.FormModel = this.viewBase?.currentView?.formModel;
+
+          this.dialog = this.callfunc.openSide(
+            PopupAddSignatureComponent,
+            [evt, false],
+            option
+          );
+        });
+    }
   }
 
   delete(evt?) {
@@ -243,9 +255,5 @@ export class SignatureComponent implements OnInit, AfterViewInit {
         this.delete(data);
         break;
     }
-  }
-
-  getLinkImg(data) {
-    return `${environment.apiUrl}/api/dm/files/GetImage?id=${data[0]?.recID}&access_token=${this.auth.userValue.token}`;
   }
 }

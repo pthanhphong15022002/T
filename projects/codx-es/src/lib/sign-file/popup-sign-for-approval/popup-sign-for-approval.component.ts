@@ -4,11 +4,11 @@ import { UIComponent, DialogData, DialogRef, FormModel } from 'codx-core';
 import { CodxEsService } from '../../codx-es.service';
 
 @Component({
-  selector: 'lib-popup-reason-ard',
-  templateUrl: './popup-reason-ard.component.html',
-  styleUrls: ['./popup-reason-ard.component.scss'],
+  selector: 'lib-popup-sign-for-approval',
+  templateUrl: './popup-sign-for-approval.component.html',
+  styleUrls: ['./popup-sign-for-approval.component.scss'],
 })
-export class PopupReasonARDComponent extends UIComponent {
+export class PopupSignForApprovalComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
@@ -17,30 +17,25 @@ export class PopupReasonARDComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.data = dt.data[0];
+    // this.data = dt.data[0];
   }
 
-  title = 'Duyệt';
-  subTitle = 'Comment khi duyệt';
-
   dialog;
-  data;
+  data = {
+    funcID: 'EST011',
+  };
 
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
+  recID = '76ec6750-184a-11ed-a50e-d89ef34bb550';
   funcID;
   cbxName;
 
   onInit(): void {
-    console.log(this.data);
-
     this.funcID = this.data.funcID;
-    console.log(this.funcID);
 
     this.cache.functionList(this.funcID).subscribe((res) => {
-      console.log('res', res);
-
       this.esService
         .getComboboxName(res.formName, res.gridViewName)
         .then((res) => {
@@ -50,6 +45,8 @@ export class PopupReasonARDComponent extends UIComponent {
         });
     });
   }
+
+  clickOpenADR(mode) {}
 
   valueChange(e) {}
   saveDialog() {
