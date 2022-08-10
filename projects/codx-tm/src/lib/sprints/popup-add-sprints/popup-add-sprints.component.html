@@ -19,7 +19,7 @@
         </div>
       </span>
     </div>
-    <div class="form-group" *ngIf="this.master.iterationType=='1'">
+    <div class="form-group" *ngIf="master.iterationType=='1'">
       <div class="text-dark fw-bold mb-1">
         <codx-label fiedName="ProjectName" [formModel]="form.formModel" default="Dự án"></codx-label>
       </div>
@@ -53,7 +53,7 @@
       <!-- <codx-input type="Share" [refValue]="vllShare" field="Resources" [dataShared]="[]" multiple="true" [showInput]="false"
         (valueChange)="eventApply($event)"></codx-input> -->
       <!-- <codx-input type="Combobox" name="combobox" [refValue]="gridViewSetup!=null?gridViewSetup['Resources']['referedValue']:null" multiple="true"
-         [showInput]="false" refType="P" (valueChange)="changeUser($event)">
+         [showInput]="false" [refType]="gridViewSetup!=null?gridViewSetup['Resources']['referedType']:null" (valueChange)="changeUser($event)">
       </codx-input> -->
       <codx-input type="Combobox" name="combobox" [refValue]="'Users'" multiple="true"
          [showInput]="false" refType="P" (valueChange)="changeUser($event)">

@@ -92,19 +92,24 @@ export class AddUserComponent extends UIComponent implements OnInit {
   openPopup(item: any) {
     var option = new DialogModel();
     option.FormModel = this.form.formModel;
+    var obj = {
+      formType: this.formType,
+      data: item,
+    }
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,
       '',
       1200,
       700,
       '',
-      item,
+      obj,
       '',
       option
     );
     this.dialogRole.closed.subscribe((e) => {
       if (e?.event) {
         this.viewChooseRole = e?.event;
+        console.log("check viewChooseRole", this.viewChooseRole)
         this.countListViewChooseRoleApp = this.viewChooseRole.filter(
           (obj) => obj.isPortal == false
         ).length;
