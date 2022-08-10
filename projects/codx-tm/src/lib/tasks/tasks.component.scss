@@ -44,3 +44,10 @@ codx-mfunc span,
 codx-view-kanban .e-card .border {
     border: 0 !important;
 }
+
+ejs-richtexteditor .e-dialog>.e-dlg-content,
+ejs-richtexteditor .e-dialog>.e-dlg-header-content,
+ejs-richtexteditor .e-dialog>.e-footer-content,
+ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
+    padding: 15px;
+}
