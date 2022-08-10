@@ -172,7 +172,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddCategoryComponent,
-        [this.viewBase.dataService.dataSelected, true],
+        { data: this.viewBase.dataService.dataSelected, isAdd: true },
         option
       );
     });
