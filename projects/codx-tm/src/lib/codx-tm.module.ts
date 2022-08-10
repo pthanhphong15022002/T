@@ -32,8 +32,6 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
 import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-sprints.component';
-import { SprintsTasksComponent } from './sprints/sprints-tasks/sprints-tasks.component';
-import { ViewDetailsTaskComponent } from './sprints/sprints-tasks/view-details-task/view-details-task.component';
 import { UpdateStatusPopupComponent } from './tasks/update-status-popup/update-status-popup.component';
 import { PopAddTaskgroupComponent } from './setting/taskgroups/pop-add-taskgroup/pop-add-taskgroup.component';
 import { RangesKanbanComponent } from './setting/rangeskanban/ranges-kanban.component';
@@ -68,6 +66,8 @@ import { PopupUpdateProgressComponent } from './tasks/popup-update-progress/popu
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
 import { TemplateComponent } from './tmmeetings/template/template.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
+import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
 
 export const routes: Routes = [
   {
@@ -77,12 +77,6 @@ export const routes: Routes = [
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
-        children: [
-          {
-            path: ':id',
-            component: TasksComponent,
-          },
-        ],
       },
       {
         path: 'taskextends/:funcID',
@@ -91,16 +85,6 @@ export const routes: Routes = [
       {
         path: 'viewboards/:funcID',
         component: SprintsComponent,
-      },
-      {
-        path: 'sprinttasks/:funcID',
-        component: SprintsTasksComponent,
-        children: [
-          {
-            path: ':id',
-            component: SprintsTasksComponent,
-          },
-        ],
       },
       {
         path: 'meeting/:funcID',
@@ -181,6 +165,22 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'sprintdetails/:funcID',
+        component: SprintDetailsComponent,
+        children: [
+          {
+            path: ':id',
+            component: SprintDetailsComponent,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [
@@ -189,8 +189,6 @@ const T_Component: Type<any>[] = [
   ViewDetailComponent,
   SprintsComponent,
   PopupAddSprintsComponent,
-  SprintsTasksComponent,
-  ViewDetailsTaskComponent,
   UpdateStatusPopupComponent,
   HomeSettingComponent,
   SettingComponent,
@@ -229,7 +227,8 @@ const T_Component: Type<any>[] = [
   PopupUpdateProgressComponent,
   MeetingDetailComponent,
   TaskExtendsComponent,
-  TemplateComponent
+  TemplateComponent,
+  SprintDetailsComponent
 ];
 @NgModule({
   imports: [

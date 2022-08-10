@@ -53,7 +53,6 @@ export class VideoComponent implements OnInit {
     ScrollComponent.reinitialization();
     this.listview.dataService.requestEnd = (t, d) => {
       if (t == 'loaded') {
-        debugger;
         if (d) this.getFile(d);
       }
     };
