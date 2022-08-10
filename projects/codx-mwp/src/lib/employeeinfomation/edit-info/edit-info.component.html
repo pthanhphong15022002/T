@@ -11,21 +11,6 @@
         </div>
     </div>
     <div>
-        <div *ngIf="isNew" class="row">
-            <div class="col">
-                <div class="form-group">
-                    <codx-label fiedName="EmployeeID" default="Mã nhân viên">
-                    </codx-label>
-                    <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup"
-                        field="employeeID">
-                    </codx-input> -->
-
-                    <codx-input class="form-control" type="text" [crrValue]="employee?.employeeID" field="employeeID"
-                        (valueChange)="dataChange($event, 'employeeID')">
-                    </codx-input>
-                </div>
-            </div>
-        </div>
         <div class="row">
             <div class="col">
                 <div class="form-group">
