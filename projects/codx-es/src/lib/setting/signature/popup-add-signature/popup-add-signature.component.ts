@@ -13,6 +13,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import {
   CallFuncService,
   CodxService,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -178,6 +179,11 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         if (res.update || res.save) {
           this.isSaveSuccess = true;
           console.log(res);
+          if (res.update) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+          }
           this.dialog && this.dialog.close();
         }
       });

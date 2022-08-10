@@ -179,22 +179,24 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   edit(evt?) {
-    let item = this.viewBase.dataService.dataSelected;
     if (evt) {
-      item = evt;
+      this.viewBase.dataService.dataSelected = evt;
+
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.viewBase?.currentView?.dataService;
+          option.FormModel = this.viewBase?.currentView?.formModel;
+          this.dialog = this.callfunc.openSide(
+            PopupAddCategoryComponent,
+            { data: evt, isAdd: false },
+            option
+          );
+        });
     }
-    this.viewBase.dataService.edit(item).subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callfunc.openSide(
-        PopupAddCategoryComponent,
-        [item, false],
-        option
-      );
-    });
   }
 
   delete(evt?) {
