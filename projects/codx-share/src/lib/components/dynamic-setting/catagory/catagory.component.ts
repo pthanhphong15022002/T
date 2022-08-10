@@ -11,6 +11,9 @@ export class CatagoryComponent implements OnInit {
   category = '';
   title = '';
   listName = 'SYS001';
+  setting = [];
+  groupSetting = [];
+  function = {};
   constructor(
     private route: ActivatedRoute,
     private cacheService: CacheService,
@@ -19,10 +22,16 @@ export class CatagoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    var a = history.state;
+    var state = history.state;
+    if (state) {
+      this.setting = state.setting;
+      this.function = state.function;
+      // this.groupSetting = this.setting.filter(
+      //   (x) => x.controlType.toLowerCase() === 'groupcontrol'
+      // );
+    }
     var catagory = this.route.snapshot.params['catagory'];
     this.cacheService.valueList(this.listName).subscribe((res) => {
-      debugger;
       if (res && res.datas) {
         const ds = (res.datas as any[]).find(
           (item) => item.default == catagory
@@ -31,6 +40,7 @@ export class CatagoryComponent implements OnInit {
         this.title = ds.text;
       }
     });
+    this.changeDetectorRef.detectChanges();
   }
 
   loadSettingValue(formName: string) {
@@ -40,7 +50,7 @@ export class CatagoryComponent implements OnInit {
     //     this.category,
     //   ])
     //   .subscribe((res) => {
-    //     debugger;
+    //
     //     if (res) {
     //       // this.dataSetting = res;
     //       // this.itemMenu = Object.keys(res);

@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ApiHttpService,
   CacheService,
@@ -35,8 +35,7 @@ export class DynamicSettingComponent implements OnInit {
     private cacheService: CacheService,
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
-    private codxService: CodxService,
-    private router: Router
+    private codxService: CodxService
   ) {}
 
   ngOnInit(): void {}
@@ -55,20 +54,22 @@ export class DynamicSettingComponent implements OnInit {
   }
 
   navigate(evt: any, catagory: string) {
-    this.catagory = catagory;
-    var url = this.view?.function?.url;
-    //this.settingService.setting = this.dataSetting[this.catagory];
     this.cacheService.valueList(this.listName).subscribe((res) => {
-      debugger;
       if (res && res.datas) {
+        this.catagory = catagory;
+        var url = this.view?.function?.url;
+        var state = {
+          setting: this.dataSetting[this.catagory],
+          function: this.view.function,
+        };
         const ds = (res.datas as any[]).find((item) => item.value == catagory);
-        url += '/' + ds.default;
-        console.log(ds);
-        //this.router.navigateByUrl(url, { state: this.settingService });
-        // this.codxService.navigate('', url, null, {
-        //   setting: this.dataSetting[this.catagory],
-        //   function: this.view.function,
-        // });
+        var path = window.location.pathname;
+        if (path.endsWith('/' + ds.default)) {
+          history.pushState(state, '', path);
+        } else {
+          url += '/' + ds.default;
+          // this.codxService.navigate('', url, null, state);
+        }
         this.loaded = true;
       }
     });
@@ -77,7 +78,6 @@ export class DynamicSettingComponent implements OnInit {
   }
 
   viewChanged(evt: any, view: ViewsComponent) {
-    debugger;
     this.view = view;
     var module = view.function!.module;
     var formName = view.function!.formName;
@@ -100,7 +100,6 @@ export class DynamicSettingComponent implements OnInit {
         formName
       )
       .subscribe((res) => {
-        debugger;
         if (res) {
           this.dataSetting = res;
           this.itemMenu = Object.keys(res);
