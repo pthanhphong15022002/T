@@ -74,7 +74,7 @@ export const routes: Routes = [
         loadChildren: () =>
           import(
             'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
-          ).then((m) => m.CodxShareModule),
+          ).then((m) => m.DynamicSettingModule),
       },
     ],
   },
@@ -115,14 +115,13 @@ const T_Component: Type<any>[] = [
   CodxApprovalComponent,
   CodxCommentsComponent,
   DynamicFormComponent,
-  DynamicSettingComponent,
   CodxReferencesComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe],
+  declarations: [T_Component, T_Pipe, DynamicSettingComponent],
   imports: [
     CommonModule,
     NgbModule,
@@ -131,7 +130,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     InlineSVGModule.forRoot(),
     CodxCoreModule,
     CalendarModule,
-    RouterModule.forChild(routes),
+    //RouterModule.forChild(routes),
     DateRangePickerModule,
     TabModule,
     UploaderModule,
@@ -144,17 +143,17 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
   exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule {
-  // public static forRoot(
-  //   config?: EnvironmentConfig
-  // ): ModuleWithProviders<CodxCoreModule> {
-  //   return {
-  //     ngModule: CodxCoreModule,
-  //     providers: [
-  //       HttpClientModule,
-  //       { provide: EnvironmentConfig, useValue: config },
-  //     ],
-  //   };
-  // }
+  public static forRoot(
+    config?: EnvironmentConfig
+  ): ModuleWithProviders<CodxCoreModule> {
+    return {
+      ngModule: CodxCoreModule,
+      providers: [
+        HttpClientModule,
+        { provide: EnvironmentConfig, useValue: config },
+      ],
+    };
+  }
 }
 // const T_Moudule: Type<any>[] = [
 //   CommonModule,

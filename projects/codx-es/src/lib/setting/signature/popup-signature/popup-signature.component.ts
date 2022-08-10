@@ -122,7 +122,6 @@ export class PopupSignatureComponent implements OnInit {
   onSavePopup() {}
 
   fileAdded(event, currentTab) {
-    debugger;
     // switch (currentTab) {
     //   case 3:
     //     if (event.data) {
