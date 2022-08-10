@@ -64,8 +64,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = data?.data[0];
-    this.isAdd = data?.data[1];
+    this.data = dialog?.dataService?.dataSelected;
+    this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
     if (!this.isAdd) this.headerText = 'Chỉnh sửa chữ ký số';
   }
@@ -105,20 +105,21 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogSignature = item;
-        this.dialogSignature.patchValue({
-          signatureType: '1',
-          supplier: '1',
-          oTPControl: '0',
-          spanTime: 0,
-          stop: false,
-        });
         this.dialogSignature.addControl('id', new FormControl(this.data?.id));
         this.dialogSignature.addControl(
           'recID',
           new FormControl(this.data?.recID)
         );
+        this.dialogSignature.patchValue(this.data);
+
         if (!this.isAdd) {
-          this.dialogSignature.patchValue(this.data);
+          this.dialogSignature.patchValue({
+            signatureType: '1',
+            supplier: '1',
+            oTPControl: '0',
+            spanTime: 0,
+            stop: false,
+          });
         } else {
           this.dialogSignature.addControl(
             'recID',
@@ -135,6 +136,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   valueChange(event: any) {
     if (event?.field && event?.component) {
       if (event?.field == 'userID') {
+        // this.data[event['field']] = event?.data.value[0];
+        // this.data.fullName = event?.data.dataSelected[0].text;
         this.dialogSignature.patchValue({
           [event['field']]: event?.data.value[0],
         });
@@ -144,11 +147,13 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       } else if (event?.data === Object(event?.data))
         this.dialogSignature.patchValue({ [event['field']]: event.data.value });
       else this.dialogSignature.patchValue({ [event['field']]: event.data });
+      this.cr.detectChanges();
     }
   }
 
   beforeSave(option: any) {
     let itemData = this.dialogSignature.value;
+    //let itemData = this.data;
     if (this.isAdd) {
       option.method = 'AddNewAsync';
     } else {
@@ -165,9 +170,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    console.log(this.dialogSignature.value);
-
     this.dialog.dataService.dataSelected = this.dialogSignature.value;
+    //this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -189,6 +193,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     let data = {
       dialog: this.dialog,
       model: this.dialogSignature,
+      data: this.data,
     };
     this.cfService.openForm(
       PopupSignatureComponent,

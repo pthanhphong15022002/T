@@ -1,6 +1,7 @@
 <!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus" [vllExtendStatus]="vllExtendStatus"
+  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [dataTree]="dataTree"
+    [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus" [vllExtendStatus]="vllExtendStatus"
     [popoverCrr]="popoverCrr" [vllStatus]="vllStatus" (clickMoreFunction)="receiveMF($event)"
     (hoverPopover)="hoverPopover($event)">
   </app-view-detail>
@@ -17,11 +18,12 @@
 
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" (changeDataMF)="changeDataMF($event,data)" [typeMF]="'hover'"
+  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
+    (changeDataMF)="changeDataMF($event,data)" [typeMF]="'hover'"
     [iconCss]="'icon-notifications' +' '+(data.isTimeOut?'expired':'unexpired')" [icoStatus2]="data?.priority"
-    [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" imageObjType="AD_Users" [title]="data.userNameCreate"
-    [subTitle]="data.positionNameCreate" [content]="data.taskName" [formModel]="view.formModel" [footer]="footerList"
-    [dataItem]="data">
+    [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" [imageWidth]="35" imgCss="me-3" imageObjType="AD_Users"
+    [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.taskName"
+    [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 
@@ -86,25 +88,23 @@
 
 
 <ng-template #footerList let-data>
-  <div class="d-flex justify-content-between align-items-end mt-2">
-    <div class="d-flex align-items-end me-2 codx-badge">
-      <span>
-        <div class="d-status">
-          <div class="badge badge-danger me-2 label-status" [style.border-color]="
-              (data?.status | vll:vllStatus:'textColor' | async) +
-              '30'
-            " [style.background-color]="
-              (data?.status | vll: vllStatus:'textColor' | async) +
-              '30'
-            " [style.color]="
-            data?.status | vll: vllStatus:'textColor' | async
-            " style="border: none">
-            {{ data?.status | vll: vllStatus:"text" | async }}
-          </div>
+  <div class="d-flex justify-content-between align-items-end mt-1">
+    <div class="d-flex align-items-end ms-14 codx-badge">
+      <div class="d-status">
+        <div class="badge badge-danger me-2 label-status" [style.border-color]="
+            (data?.status | vll:vllStatus:'textColor' | async) +
+            '30'
+          " [style.background-color]="
+            (data?.status | vll: vllStatus:'textColor' | async) +
+            '30'
+          " [style.color]="
+          data?.status | vll: vllStatus:'textColor' | async
+          " style="border: none">
+          {{ data?.status | vll: vllStatus:"text" | async }}
         </div>
-      </span>
+      </div>
       <span>
-        <span class="text-gray-700">{{
+        <span class="fs-7 text-gray-600">{{
           data.dueDate | date: "dd/MM/yyyy"
           }}</span>
       </span>
@@ -112,7 +112,7 @@
     <div *ngIf="data.category == '3'" class="" (mouseenter)="popoverEmpList(popoverList,data)" [ngbPopover]="popEmpList"
       popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" container="body"
       autoClose="outside">
-      <codx-imgs [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3" [openDelay]="500">
+      <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3" [openDelay]="500">
       </codx-imgs>
     </div>
     <!-- <div *ngIf="(data.category == '1' || data.category == '2') && data.owner != user.userID" class="">
@@ -146,17 +146,17 @@
 </ng-template>
 
 <ng-template #popEmpList>
-  <div class="fw-bold">
+  <div class="fw-bold mb-1">
     <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho"></codx-label>
-    <span>{{'('+countResource +')'}}</span>
+    <span class="text-danger">{{'('+countResource +')'}}</span>
   </div>
   <div>
     <codx-searchbar *ngIf="countResource>0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div>
-  <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousceSearch">
+  <div class="d-flex align-items-start user-card py-3" *ngFor="let item of listTaskResousceSearch">
     <div class="me-3">
       <div style=" position: relative">
-        <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
+        <codx-img [width]="30" [objectId]="item?.resourceID" objectType="AD_Users">
         </codx-img>
         <div style="position: absolute; right: 0px;bottom: 0px">
           <ng-container *ngFor="let role of listRoles">
@@ -202,9 +202,56 @@
   </div>
 </ng-template>
 
-<codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
-  className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
-  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
-  [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
-  (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
+<codx-views *ngIf="funcID!='TMT03011'" #view service="TM" entityName="TM_Tasks" idField="taskID"
+  assemblyName="ERM.Business.TM" className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views"
+  [button]="button" (buttonClick)="click($event)" (viewChanged)="changeView($event)"
+  (requestEnded)="requestEnded($event)" [dataObj]="dataObj" (selectedChange)="selectedChange($event)"
+  (onDragDrop)="onDragDrop($event)" (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
+
+<div *ngIf="funcID=='TMT03011'" class="page-content d-flex flex-row">
+  <div class="w-100 ">
+    <div class="row m-0 bg-body rounded-2 p-3 d-flex justify-content-between">
+      <div class="col-8 ">
+        <div class="d-flex ">
+          <div class=" text-dark fw-bolder my-1 fs-3 p-3">
+            {{sprints?.iterationName}}
+          </div>
+          <div class="d-status  p-3">
+            <div class="badge badge-danger me-2 label-status">
+              Nội bộ
+            </div>
+          </div>
+          <div class="p-3 ">
+            <span #createdOn> {{sprints?.createdOn | date: "dd/MM/yyyy" }}</span>
+          </div>
+          <div class="p-3">
+            {{sprints?.createdByName}}
+          </div>
+        </div>
+        <div>
+          <div class="d-flex ">
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Dashboard</a>
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Công việc</a>
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Lịch sử</a>
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Bình luận</a>
+              <a class="m-3 text-gray-800 text-hover-primary btn-light-primary" href="#">Họp định kì</a>
+        
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <codx-imgs style="float: right;" [objectId]="sprints?.resources" objectType="AD_Users" [width]="40"
+          [numberImages]="7"></codx-imgs>
+      </div>
+    </div>
+    <div class="m-0 bg-body rounded-2 ">
+      <codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
+        className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
+        (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
+        [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
+        (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
+      </codx-views>
+    </div>
+  </div>
+</div>

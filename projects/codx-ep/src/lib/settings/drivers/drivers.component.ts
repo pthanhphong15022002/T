@@ -28,6 +28,8 @@ import { PopupAddDriversComponent } from './popup-add-drivers/popup-add-drivers.
 export class DriversComponent extends UIComponent implements AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;  
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
+  @ViewChild('statusCol') statusCol: TemplateRef<any>;
+  @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -38,7 +40,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   method = 'GetListAsync';
   funcID: string;
   columnGrids: any;
-  moreFuncs: any
+  moreFuncs: any;
   dataSelected: any;
   dialog!: DialogRef;
   buttons: ButtonModel;
@@ -62,8 +64,16 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
         headerText: 'Tên lái xe',
       },
       {
+        headerText: 'Tình trạng',
+        template: this.statusCol,
+      },      
+      {
         headerText: 'Xếp hạng',
         template: this.rankingCol,
+      },
+      {
+        headerText: 'Nguồn',
+        template: this.categoryCol,
       },
     ];
     this.views = [
@@ -117,7 +127,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfc.openSide(

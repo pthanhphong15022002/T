@@ -75,12 +75,24 @@
                 [disabled]="cannotAct"
               >
               </e-item>
-              <!-- <e-item
+              <e-item
+                prefixIcon="icon-skip_next icon-20"
+                (click)="pdfviewerControl?.navigation?.goToLastPage()"
+                [disabled]="cannotAct"
+              >
+              </e-item>
+              <e-item
                 prefixIcon="icon-check-correct icon-20"
                 (click)="renderQRFile()"
                 [disabled]="cannotAct"
               >
-              </e-item> -->
+              </e-item>
+              <e-item
+                prefixIcon="icon-article icon-20"
+                (click)="show($event)"
+                [disabled]="cannotAct"
+              >
+              </e-item>
             </e-items>
           </ejs-toolbar>
         </div>

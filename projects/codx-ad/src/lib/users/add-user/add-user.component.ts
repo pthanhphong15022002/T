@@ -23,11 +23,12 @@ import {
   RequestOption,
   CRUDService,
   UIComponent,
+  DialogModel,
 } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AnyRecordWithTtl } from 'dns';
 
 @Component({
@@ -37,10 +38,11 @@ import { AnyRecordWithTtl } from 'dns';
 })
 export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
+  @ViewChild('form') form: any;
   @Output() loadData = new EventEmitter();
   @ViewChild('view') codxView!: any;
 
-  title = 'Thêm người dùng';
+  title = '';
   dialog!: DialogRef;
   dialogRole: DialogRef;
   data: any;
@@ -53,10 +55,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   viewChooseRole: tmpformChooseRole[] = [];
   formModel: FormModel;
   formType: any;
-  email: any = '';
-  userName: any = '';
-  mobile: any = '';
-  employeeID: any = '';
+  formGroupAdd: FormGroup;
 
   constructor(
     private injector: Injector,
@@ -69,28 +68,48 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.formType = dt?.data.type;
     this.data = dialog.dataService!.dataSelected;
     this.adUser = JSON.parse(JSON.stringify(this.data));
-    debugger;
     this.dialog = dialog;
     this.user = auth.get();
   }
 
   onInit(): void {
-    if (this.formType == 'edit') this.title = 'Cập nhật người dùng';
-    this.isAddMode = false;
+    if (this.formType == 'edit') {
+      this.title = 'Cập nhật người dùng';
+      this.isAddMode = false;
+    } else this.title = this.form?.title;
+    this.formGroupAdd = new FormGroup({
+      userName: new FormControl('', Validators.required),
+      buid: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.required),
+      phone: new FormControl('', Validators.required),
+    });
+  }
+
+  ngAfterViewInit() {
+    this.formModel = this.form?.formModel;
   }
 
   openPopup(item: any) {
+    var option = new DialogModel();
+    option.FormModel = this.form.formModel;
+    var obj = {
+      formType: this.formType,
+      data: item,
+    }
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,
       '',
       1200,
       700,
       '',
-      item
+      obj,
+      '',
+      option
     );
     this.dialogRole.closed.subscribe((e) => {
       if (e?.event) {
         this.viewChooseRole = e?.event;
+        console.log("check viewChooseRole", this.viewChooseRole)
         this.countListViewChooseRoleApp = this.viewChooseRole.filter(
           (obj) => obj.isPortal == false
         ).length;
@@ -127,13 +146,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
               if (result) {
+                (this.dialog.dataService as CRUDService).update(res.save).subscribe();
                 this.loadData.emit();
               }
             });
           this.changeDetector.detectChanges();
         }
       });
-    this.closePanel();
     this.dialog.close();
   }
 
@@ -155,7 +174,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.changeDetector.detectChanges();
         }
       });
-    this.closePanel();
+    this.dialog.close();
   }
 
   onSave() {
@@ -165,11 +184,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   reloadAvatar(data: any): void {
     this.imageUpload?.reloadImageWhenUpload();
-  }
-
-  closePanel() {
-    this.dialog.close();
-    //this.viewBase.currentView.closeSidebarRight();
   }
 
   valueChangeM(data) {
@@ -183,8 +197,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   valueEmp(data) {
-    this.employeeID = data.data;
-    this.getEmployee(this.employeeID);
+    this.adUser.employeeID = data.data;
+    this.getEmployee(this.adUser.employeeID);
   }
 
   valueUG(data) {
@@ -203,18 +217,19 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.api
       .exec<any>('ERM.Business.HR', 'HRBusiness', 'GetModelEmp', [employeeID])
       .subscribe((employee) => {
-        debugger;
         if (employee) {
           this.adUser.employeeID = employeeID;
           this.adUser.userName = employee.employeeName;
           // this.adUser.positionID = employee.positionID,
           this.adUser.buid = employee.organizationID;
           this.adUser.email = employee.email;
-          this.adUser.mobile = employee.phone;
-          this.adUser = { ...this.adUser };
-          this.email = employee.email;
-          this.mobile = employee.phone;
-          this.user = employee.employeeName;
+          this.adUser.phone = employee.phone;
+          // this.formGroupAdd.controls['userName'].setValue(employee.employeeName);
+          // this.formGroupAdd.controls['buid'].setValue(employee.organizationID);
+          // this.formGroupAdd.controls['email'].setValue(employee.email);
+          // this.formGroupAdd.controls['phone'].setValue(employee.phone);
+          // this.formGroupAdd.patchValue({ [employee['field']]: employee });
+          this.changeDetector.detectChanges();
         }
       });
   }

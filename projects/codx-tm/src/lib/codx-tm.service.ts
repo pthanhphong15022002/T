@@ -295,6 +295,17 @@ export class CodxTMService {
     );
   }
 
+  
+  getSprintsDetails(id) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'SprintsBusiness',
+      'GetSprintDetailByIDAsync',
+      id
+    );
+  }
+
   deleteSprints(id) {
     return this.api.execSv<any>(
       'TM',

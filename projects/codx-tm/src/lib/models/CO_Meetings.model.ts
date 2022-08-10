@@ -17,7 +17,7 @@ export class CO_Meetings{
     templateID: string;
     contents: string;
     permissions: string;
-    resources: Resources[];
+    resources: CO_Resources[];
     refType: string;
     refID: string;
     dateType: string;
@@ -34,9 +34,10 @@ export class CO_Meetings{
     online: boolean;
     avataResource: string;
     userName: string;
+
 }
 
-export class Resources{
+export class CO_Resources{
     recID: string;
     resourceID: string;
     resourceName: string;
@@ -51,3 +52,6 @@ export class Resources{
     modifiedBy: string;
     positionName: string;
 }
+
+
+

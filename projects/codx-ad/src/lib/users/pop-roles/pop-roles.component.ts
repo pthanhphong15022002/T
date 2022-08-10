@@ -1,9 +1,23 @@
 import { N } from '@angular/cdk/keycodes';
 import { variable } from '@angular/compiler/src/output/output_ast';
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { eventClick } from '@syncfusion/ej2-angular-schedule';
-import { DialogData, DialogRef, ApiHttpService, NotificationsService, FormModel } from 'codx-core';
+import {
+  DialogData,
+  DialogRef,
+  ApiHttpService,
+  NotificationsService,
+  FormModel,
+  CodxFormComponent,
+  CacheService,
+} from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_Roles } from '../../models/AD_Roles.models';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
@@ -11,10 +25,9 @@ import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
 @Component({
   selector: 'lib-pop-roles',
   templateUrl: './pop-roles.component.html',
-  styleUrls: ['./pop-roles.component.css']
+  styleUrls: ['./pop-roles.component.css'],
 })
 export class PopRolesComponent implements OnInit {
-
   choose1: tmpformChooseRole[] = [];
   choose = new tmpformChooseRole();
   data: any;
@@ -30,40 +43,49 @@ export class PopRolesComponent implements OnInit {
   // listChooseRole:tmpformChooseRole[] =[];
   idClickFunc: any;
   listRoles: AD_Roles[] = [];
-  optionFrist = 'ADC01' // Check unselect from list
-  optionSecond = 'ADC02' // Check list is null
-  optionThird = 'ADC03' // Check select from list
+  optionFirst = 'ADC01'; // Check unselect from list
+  optionSecond = 'ADC02'; // Check list is null
+  optionThird = 'ADC03'; // Check select from list
   checkApp = false;
   checkService = true;
+  formType = '';
+  isCheck = true;
+
+  @ViewChild('form') form: CodxFormComponent;
+
   constructor(
     private api: ApiHttpService,
     private changeDec: ChangeDetectorRef,
     private notiService: NotificationsService,
     private adService: CodxAdService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef,
+    @Optional() dialog?: DialogRef
   ) {
     this.dialogSecond = dialog;
-    this.data = dt?.data;
+    this.data = dt?.data.data;
+    this.formType = dt?.data.formType;
   }
   ngOnInit(): void {
     this.listChooseRole = this.data;
     this.loadData();
-
   }
 
+  ngAfterViewInit() {}
+
   loadData() {
-    this.adService.getListAppByUserRoles(this.choose1)
-      .subscribe((res) => {
-        if (res) {
-          this.lstFunc = res[0];
-          this.listRoles = res[1];
-          this.lstEmp = res[2];
-          this.getListLoadDataApp();
-          this.getListLoadDataService();
-          this.changeDec.detectChanges();
-        }
-      })
+    this.adService.getListAppByUserRoles(this.choose1).subscribe((res) => {
+      if (res) {
+        this.lstFunc = res[0];
+        console.log('check lstFunc', this.lstFunc);
+        this.listRoles = res[1];
+        this.lstEmp = res[2];
+        console.log('check lstEmp', this.lstEmp);
+        this.getListLoadDataApp();
+        this.getListLoadDataService();
+        this.changeDec.detectChanges();
+      }
+    });
 
     this.changeDec.detectChanges();
   }
@@ -77,12 +99,14 @@ export class PopRolesComponent implements OnInit {
     if (this.listChooseRole.length > 0) {
       for (var i = 0; i < this.lstFunc.length; i++) {
         for (var j = 0; j < this.listChooseRole.length; j++) {
-          if (this.listChooseRole[j].functionID === this.lstFunc[i].functionID && this.lstFunc[i].isPortal == false) {
+          if (
+            this.listChooseRole[j].functionID === this.lstFunc[i].functionID &&
+            this.lstFunc[i].isPortal == false
+          ) {
             this.lstFunc[i].ischeck = true;
             this.lstFunc[i].recIDofRole = this.listChooseRole[j].recIDofRole;
             this.countApp++;
           }
-
         }
       }
     }
@@ -96,8 +120,10 @@ export class PopRolesComponent implements OnInit {
     if (this.listChooseRole.length > 0) {
       for (var i = 0; i < this.lstEmp.length; i++) {
         for (var j = 0; j < this.listChooseRole.length; j++) {
-          if (this.listChooseRole[j].functionID === this.lstEmp[i].functionID
-            && this.lstEmp[i].isPortal == true) {
+          if (
+            this.listChooseRole[j].functionID === this.lstEmp[i].functionID &&
+            this.lstEmp[i].isPortal == true
+          ) {
             this.lstEmp[i].ischeck = true;
             this.lstEmp[i].recIDofRole = this.listChooseRole[j].recIDofRole;
             this.countService++;
@@ -106,7 +132,6 @@ export class PopRolesComponent implements OnInit {
       }
     }
   }
-
 
   onChange(event, item?: any) {
     if (item.ischeck) {
@@ -136,12 +161,11 @@ export class PopRolesComponent implements OnInit {
             this.listChooseRole.splice(i, 1);
           }
         }
-      }
-      else {
+      } else {
         this.countApp = this.countApp + 1;
         item.idChooseRole = this.countApp;
         var checkExist = true;
-        this.listChooseRole.forEach(element => {
+        this.listChooseRole.forEach((element) => {
           if (element.functionID == item.functionID) {
             checkExist = false;
           }
@@ -150,10 +174,8 @@ export class PopRolesComponent implements OnInit {
           this.listChooseRole.push(item);
         }
         item.ischeck = true;
-
       }
-    }
-    else {
+    } else {
       if (event.target.checked === false) {
         item.ischeck = false;
         this.countService = this.countService - 1;
@@ -174,17 +196,17 @@ export class PopRolesComponent implements OnInit {
             this.listChooseRole.splice(i, 1);
           }
         }
-      }
-      else {
+      } else {
         this.countService = this.countService + 1;
         item.idChooseRole = this.countService;
         var checkExist = true;
-        this.listChooseRole.forEach(element => {
+        this.listChooseRole.forEach((element) => {
           if (element.functionID == item.functionID) {
             checkExist = false;
           }
         });
         if (checkExist) {
+          item.recIDofRole = ''
           this.listChooseRole.push(item);
         }
         item.ischeck = true;
@@ -195,12 +217,13 @@ export class PopRolesComponent implements OnInit {
   onCbx(event, item?: any) {
     if (event.data) {
       item.recIDofRole = event.data[0];
-      this.listRoles.forEach(element => {
+      this.listRoles.forEach((element) => {
         if (element.recID == item.recIDofRole) {
           item.recRoleName = element.roleName;
           item.color = element.color;
         }
       });
+      console.log("check role", this.listRoles);
     }
   }
   checkClickValueOfUserRoles(value?: any) {
@@ -211,26 +234,22 @@ export class PopRolesComponent implements OnInit {
   }
 
   onSave() {
-
-    if (this.CheckListUserRoles() === this.optionFrist) {
-
-      this.notiService.notifyCode("AD006");
-    }
-    else if (this.CheckListUserRoles() === this.optionSecond) {
+    if (this.CheckListUserRoles() === this.optionFirst) {
+      this.notiService.notifyCode('AD006');
+    } else if (this.CheckListUserRoles() === this.optionSecond) {
       this.notiService.notifyCode('Lưu thành công');
       this.dialogSecond.close(this.listChooseRole);
       this.changeDec.detectChanges();
-    }
-    else {
+    } else {
       this.notiService.notifyCode('Không có gì thay đổi');
       this.dialogSecond.close(this.listChooseRole);
     }
   }
-  
+
   CheckListUserRoles() {
     for (var i = 0; i < this.listChooseRole.length; i++) {
       if (this.checkClickValueOfUserRoles(this.listChooseRole[i].recIDofRole)) {
-        return this.optionFrist;
+        return this.optionFirst;
       }
     }
     if (this.listChooseRole.length > 0) {
@@ -238,7 +257,6 @@ export class PopRolesComponent implements OnInit {
     }
     return this.optionThird;
   }
-
 
   // addLine(template: any, data = null) {
   //   this.dialog.dataService.save().subscribe(res => {
@@ -256,6 +274,4 @@ export class PopRolesComponent implements OnInit {
   //     }
   //   });
   // }
-
-
 }

@@ -1,5 +1,10 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
+import {
+  CallFuncService,
+  DialogRef,
+  LayoutBaseComponent,
+  SidebarModel,
+} from 'codx-core';
 import { Observable } from 'rxjs';
 import { NoteDrawerComponent } from '../layout/drawers/note-drawer/note-drawer.component';
 @Component({
@@ -10,25 +15,22 @@ import { NoteDrawerComponent } from '../layout/drawers/note-drawer/note-drawer.c
 export class LayoutOnlyHeaderComponent extends LayoutBaseComponent {
   module = '';
   dialog!: DialogRef;
-  // override aside = false;
+  override aside = false;
   //override asideFixed = true;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = true;
-  constructor(inject: Injector,
-    private callfc: CallFuncService,
-    ) {
+  override toolbar = false;
+  constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
   }
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
-  onAfterViewInit(): void { }
+  onAfterViewInit(): void {}
 
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
     this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    this.dialog.closed.subscribe()
+    this.dialog.closed.subscribe();
   }
 }

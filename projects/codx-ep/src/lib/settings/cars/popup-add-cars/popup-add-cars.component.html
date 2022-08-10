@@ -26,18 +26,19 @@
         >
         </codx-input>
       </div>
+      
+      <div class="col-1 form-group">
+        <codx-label default="" [formModel]="dialog.formModel"> </codx-label>
+        <button type="button" class="btn btn-primary">Icon</button>
+      </div>
       <!-- <div class="">        
-        <div class="ms-2 room-icon" style="display: none">
+        <div class="ms-2 room-icon">
           <codx-input type="vllicon" refValue="L1470" field="icon" class="btn btn-primary dropdown-toggle">
           </codx-input>
           <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
                     </select-icon>
         </div>
       </div> -->
-      <div class="col-1 form-group">
-        <codx-label default="" [formModel]="dialog.formModel"> </codx-label>
-        <button type="button" class="btn btn-primary">Icon</button>
-      </div>
     </div>
 
     <div class="row">
@@ -51,6 +52,7 @@
         <codx-input
           type="text"
           ControlName="code"
+          placeholder="Biển số"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
@@ -80,14 +82,30 @@
           [formModel]="dialog.formModel"
           default="Phân loại"
         >
-        </codx-label>
+        </codx-label>        
         <codx-input
           type="valuelist"
+          name="ranking"
+          ngDefaultControl
+          [crrValue]="dialogAddCar.value?.ranking"
+          refValue="EP005"
+          field="ranking"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        
+        <!-- <codx-input
+          type="valuelist"
+          name="valuelist"
+          refValue="EP005"
           ControlName="ranking"
+          ngDefaultControl
+          [crrValue]="dialogAddCar.value.ranking"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
-        </codx-input>
+        </codx-input> -->
+        
       </div>
     </div>
 
@@ -101,12 +119,22 @@
         </codx-label>
         <codx-input
           type="valuelist"
+          name="valuelist"
+          ngDefaultControl
+          [crrValue]="dialogAddCar.value.category"
+          refValue="VL005"
+          field="category"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <!-- <codx-input
+          type="valuelist"
           refValue="VL005"
           ControlName="category"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
-        </codx-input>
+        </codx-input> -->
       </div>
       <div class="col-6 form-group">
         <codx-label
@@ -116,12 +144,23 @@
         >
         </codx-label>
         <codx-input
+          service="OD"
+          refValue="AgencyNames"
           type="combobox"
           ControlName="companyID"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
         </codx-input>
+        <!-- <codx-input
+          service="SYS"
+          type="combobox"
+          refValue="Companies"
+          ControlName="companyID"
+          [formModel]="form.formModel"
+          [Group]="dialogAddCar"
+        >
+        </codx-input> -->
       </div>
     </div>
 
@@ -132,31 +171,48 @@
           [formModel]="dialog.formModel"
           default="Tài xế"
         >
-        </codx-label>
-        <codx-input
+        </codx-label>   
+        <!-- <codx-input 
           type="combobox"
-          ControlName="linkID"
+          service="EP" 
+          refValue="EP_Drivers"
+          field="linkID" 
+          placeholder="Chọn lái xe"
+          ngDefaultControl
+          [pageSize]="5"
+          (valueChange)="valueCbxDriverChange($event)">
+        </codx-input>      -->
+        <codx-input
+          service="EP"
+          type="combobox"
+          refValue="EP_Drivers"
+          ControlName="resourceID"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
+          (valueChange)="valueCbxDriverChange($event)"  
         >
         </codx-input>
       </div>
     </div>
+
     <div class="row">
       <div class="form-group">
         <codx-label
-          fiedName="Owner"
+          fiedName="BUID"
           [formModel]="dialog.formModel"
           default="Người điều phối"
         >
         </codx-label>
         <codx-input
+          service="OD"
           type="combobox"
-          ControlName="owner"
+          refValue="BusinessUnits"
+          ControlName="bUID"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
-        </codx-input>
+        </codx-input>    
+        
       </div>
     </div>
     <div class="row">
@@ -168,6 +224,7 @@
         ></codx-label>
         <codx-input
           type="textarea"
+          rows="3"
           ControlName="note"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
@@ -199,15 +256,15 @@
     </div>
     <div class="row">
       <div class="col-12 form-group d-flex justify-content-between">
-        <div class="d-flex" *ngFor="let item of lstDeviceRoom">
+        <div class="d-flex" *ngFor="let item of tmplstDevice">
           <span
             class="d-flex align-items-center me-2 mb-2"
             [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
           >
             <span
-              class="icon-wifi me-1"
-              [ngClass]="item.isSelected ? 'text-primary' : ''"
-            >
+            class="me-1"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']"
+          >
             </span
             >{{ item.text }}
           </span>
@@ -229,7 +286,6 @@
   </ng-template>
 
   <ng-template #popupDevice let-dialog>
-    <!--begin::Card body-->
     <div class="modal-header">
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
@@ -262,14 +318,14 @@
     </div>
     <div class="modal-body">
       <div class="py-2" *ngFor="let item of tmplstDevice">
-        <!--begin::Item-->
         <div class="d-flex flex-stack">
           <div class="d-flex">
-            <span class="text-dark icon-wifi me-2 p-1"></span>
+            <span class="text-dark me-2 p-1" [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']">
+            </span>
             <div class="d-flex flex-column">
-              <a href="#" class="text-dark text-hover-primary fw-bolder">{{
+              <span href="#" class="text-dark fw-bolder">{{
                 item.text
-              }}</a>
+              }}</span>
             </div>
           </div>
           <div class="d-flex justify-content-end">
@@ -279,16 +335,13 @@
                 type="switch"
                 id="googleswitch"
                 [checked]="item.isSelected"
-                (change)="checkedChange($event, item)"
+                (valueChange)="checkedChange($event, item)"
               ></codx-input>
               <label class="form-check-label" for="googleswitch"></label>
             </div>
           </div>
         </div>
-        <!--end::Item-->
-        <!-- <div class="separator separator-dashed my-5"></div> -->
       </div>
-      <!--end::Card body-->
     </div>
     <div class="modal-footer" (click)="dialog.close()">
       <button type="button" class="btn btn-primary">
@@ -300,4 +353,5 @@
       </button>
     </div>
   </ng-template>
+  
 </codx-form>

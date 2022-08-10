@@ -53,6 +53,23 @@
         top: 0;
         width: 14px;
       }
+      /***Custom table bootstrap****/
+      .e-grid {
+        border-radius: 0px;
+        border-style: none solid solid;
+        border-width: 0px;        
+    }
+      .e-grid .e-headercell, .e-grid .e-detailheadercell{
+        height: 42px;
+        background-color:white!important;
+      }
+      .e-grid .e-headercell .e-headercontent{
+        border-right: 0;
+      }
+      .progress-approval .action-menu{
+        padding: 0!important;
+        top: 0!important;
+      }
 
 }
 

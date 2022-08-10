@@ -1,13 +1,7 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Optional,
-  Output,
+  ChangeDetectorRef,  Component,  EventEmitter,  Input,  OnInit,  Optional,  Output,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import {
   CacheService,
@@ -34,11 +28,10 @@ export class PopupAddCarsComponent implements OnInit {
   cacheGridViewSetup: any;
   CbxName: any;
   dialogAddCar: FormGroup;
-  dialog: any;
-  headerText = 'Thêm mới xe';
-  subHeaderText = 'Thêm mới xe';
   formModel: FormModel;
-
+  dialog: any;
+  headerText ="Thêm mới xe"
+  subHeaderText = 'Tạo & upload file văn bản';
   constructor(
     private cacheSv: CacheService,
     private bookingService: CodxEpService,
@@ -91,7 +84,7 @@ export class PopupAddCarsComponent implements OnInit {
           ranking: '1',
           category: '1',
           owner: '',
-        });
+        });        
       });
 
     this.bookingService
@@ -100,7 +93,11 @@ export class PopupAddCarsComponent implements OnInit {
         this.dialogAddCar = item;
         if (this.data) {
           this.dialogAddCar.patchValue(this.data);
-        }
+        } 
+        this.dialogAddCar.addControl(
+          'code',
+          new FormControl(this.data.code)
+        );       
         this.isAfterRender = true;
       });
   }
@@ -121,7 +118,7 @@ export class PopupAddCarsComponent implements OnInit {
     option.data = [itemData, this.isAdd];
     return true;
   }
-
+  
   valueCbxChange(event: any) {
     if (event?.field != null) {
       if (event.data instanceof Object) {
@@ -131,14 +128,17 @@ export class PopupAddCarsComponent implements OnInit {
       }
     }
   }
+  valueCbxDriverChange(event: any) {   
+  }
   openPopupDevice(template: any) {
     var dialog = this.callFuncService.openForm(template, '', 550, 430);
     this.changeDetectorRef.detectChanges();
   }
+  lstDevices = [];
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
     if (index != -1) {
-      this.tmplstDevice[index].isSelected = event.target.checked;
+      this.tmplstDevice[index].isSelected = event.data;
     }
   }
   onSaveForm() {
@@ -146,8 +146,9 @@ export class PopupAddCarsComponent implements OnInit {
       console.log(this.dialogAddCar);
       return;
     }
+    
     let equipments = '';
-    this.lstDeviceRoom.forEach((element) => {
+    this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
         if (equipments == '') {
           equipments += element.id;
@@ -155,11 +156,16 @@ export class PopupAddCarsComponent implements OnInit {
           equipments += ';' + element.id;
         }
       }
-    });
+    });       
+    this.dialogAddCar.value.equipments = equipments;
+    this.dialogAddCar.value.bUID = this.dialogAddCar.value.bUID[0];
+    this.dialogAddCar.value.companyID = this.dialogAddCar.value.companyID[0];
+    this.dialogAddCar.value.linkID = this.dialogAddCar.value.resourceID[0];
+    this.dialogAddCar.value.resourceID = null;         
     if (!this.dialogAddCar.value.linkType) {
-      this.dialogAddCar.value.linkType = '0';
+      this.dialogAddCar.value.linkType = '3';
     }
-    this.dialogAddCar.value.resourceType = '2';
+    this.dialogAddCar.value.resourceType = '2';    
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();

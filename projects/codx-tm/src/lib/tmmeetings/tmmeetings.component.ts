@@ -21,7 +21,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
-import { Resources } from '../models/CO_Meetings.model';
+import { CO_Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
 
 @Component({
@@ -60,7 +60,7 @@ export class TMMeetingsComponent extends UIComponent {
   funcID: string;
   gridView: any;
   param: any;
-  resources: Resources[] = [];
+  resources: CO_Resources[] = [];
   resourceID: any;
   urlView = '';
   urlDetail = '';
@@ -248,10 +248,10 @@ export class TMMeetingsComponent extends UIComponent {
               false
             );
           if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
+            // e?.event.forEach((obj) => {
+            //   this.view.dataService.update(obj).subscribe();
+            // });
+            this.itemSelected = e?.event;
           }
           this.detectorRef.detectChanges();
         });
