@@ -115,12 +115,8 @@ const T_Component: Type<any>[] = [
   CodxApprovalComponent,
   CodxCommentsComponent,
   DynamicFormComponent,
-<<<<<<< HEAD
   DynamicSettingComponent,
-=======
-  DynamicSettingParamaterComponent,
-  CodxReferencesComponent
->>>>>>> 80b6c0907217f19411b1e67ccd0b0bcf5a6db765
+  CodxReferencesComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
