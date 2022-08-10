@@ -20,13 +20,15 @@ export class PopupADRComponent extends UIComponent {
     this.data = dt.data[0];
   }
 
+  title = 'Duyệt';
+  subTitle = 'Comment khi duyệt';
+
   dialog;
   data;
 
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
-  recID = 'bcb4eb9f-17cd-11ed-b6b1-b8ca3a760f21';
   funcID;
   cbxName;
 
