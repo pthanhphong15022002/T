@@ -343,9 +343,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       Pages: ${this.pdfviewerControl.pageCount}
     `;
     let barcode = new QRCodeGenerator({
-      width: '500px',
-      height: '500px',
-      mode: 'SVG',
+      width: '250px',
+      height: '250px',
+      mode: 'Canvas',
       displayText: { visibility: false },
       value: text,
     });
@@ -363,6 +363,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.fileInfo = e.itemData;
     this.pdfviewerControl.load(e.itemData.fileID, '');
     this.cannotAct = false;
+    console.log(e.itemData);
+
     this.detectorRef.detectChanges();
   }
 
@@ -1162,20 +1164,39 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       return annot.customData.split(':')[1] == '8';
     });
 
-    if (qrAnnot) {
-      for (let i = 0; i < this.pdfviewerControl.pageCount - 1; i++) {
-        let cloneQR = { ...qrAnnot };
-        cloneQR.pageNumber = i;
-        this.pdfviewerControl.addAnnotation(cloneQR);
-      }
-      console.log('pdf', this.pdfviewerControl.annotationCollection);
+    this.genFileQR(this.fileInfo.fileName, this.fileInfo.fileRefNum, '').then(
+      (value: string) => {
+        qrAnnot.stampAnnotationPath = value;
+        if (qrAnnot) {
+          this.pdfviewerControl.annotationModule.deleteAnnotationById(
+            qrAnnot.annotationId
+          );
+          this.saveAnnoQueue.set(
+            qrAnnot.annotationId,
+            setTimeout(
+              this.saveAnnoToDB.bind(this),
+              10,
+              this.esService,
+              { ...qrAnnot },
+              this.fileInfo,
+              this.user
+            )
+          );
+          for (let i = 0; i < this.pdfviewerControl.pageCount - 1; i++) {
+            let cloneQR = { ...qrAnnot };
+            cloneQR.annotationId = Guid.newGuid();
+            cloneQR.pageNumber = i;
+            this.pdfviewerControl.addAnnotation(cloneQR);
+          }
 
-      this.pdfviewerControl
-        .exportAnnotationsAsBase64String(annotationDataFormat)
-        .then((res) => {
-          console.log('base64 new pdf', res);
-        });
-    }
+          this.pdfviewerControl
+            .exportAnnotationsAsBase64String(annotationDataFormat)
+            .then((res) => {
+              console.log('base64 new pdf', res);
+            });
+        }
+      }
+    );
   }
 
   cancelPrint(e: any) {}
