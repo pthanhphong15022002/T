@@ -70,11 +70,11 @@
 <ng-template #templateSmallCard>
   <div class="d-flex flex-wrap dms-card-row">
     <codx-temp-full *ngFor="let item of data" class="float-start" [imageSrc]="dmSV.getImage(item)"
-      imgCss="card-item img-folder me-4" (clickMF)="dmSV.clickMF($event, item)"
+      imgCss="card-item img-folder me-3" (clickMF)="dmSV.clickMF($event, item)"
       [title]="item.folderName != undefined ? item.folderName : item.fileName"
       (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
       [bookmark]="dmSV.showBookmark(item)" subTitle="{{item.createdOn | date : 'dd/MM/yyyy'}} | {{item.userName}}"
-      cardCss="card-item card-template w-225px px-2 py-3 text-box-140">
+      cardCss="card-item card-template w-225px me-6 mb-6 text-box-140">
     </codx-temp-full>
   </div>
 </ng-template>

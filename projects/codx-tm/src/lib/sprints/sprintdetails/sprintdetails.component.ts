@@ -110,11 +110,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
   //popoverCrr
-  popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
-    this.countResource = 0;
+  popoverEmpList(p: any) {
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+      p.open();
+      this.popoverCrr = p ;
     }
   }
 
@@ -126,7 +126,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
       return;
     }
     this.listTaskResousce.forEach((res) => {
-      var name = res.resourceName;
+      var name = res.employeeName;
       if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
         listTaskResousceSearch.push(res);
       }
