@@ -25,10 +25,30 @@
     [resourceObjType]="'AD_Users'"  
     [icoDateCss]="'icon-access_alarm'"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    [formModel]="view?.formModel"
+    [dataItem]="data"
+    [typeMF]="'hover'"
   >
   </codx-temp-full>
   <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
 <ng-template #panelRightRef>
-  <ng-container *ngTemplateOutlet="tmpDetail"></ng-container>
+  <codx-detail-tmp [header]="header"  [dataItem]="dataItem" [formModel]="view?.formModel"  [body]="body" [footer]="footer" (clickMF)="openFormFuncID($event)" class="h-100"></codx-detail-tmp>
+  <ng-template #header>
+
+  </ng-template>
+  <ng-template #body>
+    <div class="od-approval-detail h-100">
+      <router-outlet></router-outlet>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <codx-approval-tabs [transID]></codx-approval-tabs>
+  </ng-template>
+  <!-- <div class="pe-6 pt-1">
+    <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [dataItem]="dataItem"></codx-mfunc>
+  </div>
+  <div class="od-approval-detail">
+    <router-outlet></router-outlet>
+  </div> -->
 </ng-template>

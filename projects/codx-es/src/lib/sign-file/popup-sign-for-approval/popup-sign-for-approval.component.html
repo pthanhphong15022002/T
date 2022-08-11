@@ -1,10 +1,37 @@
-<div class="btns">
+<div class="btns d-flex justify-content-end w-100 position-relative">
   <button
     type="button"
     class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-    (click)="clickOpenADR(1)"
+    (click)="clickOpenPopupADR(1)"
   >
-    <codx-label name="lbl" [formModel]="formModel" default=""></codx-label>
+    <codx-label
+      name="lblApprove"
+      [formModel]="formModel"
+      default="Ký"
+    ></codx-label>
+  </button>
+  <button
+    type="button"
+    class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
+    (click)="clickOpenPopupADR(2)"
+  >
+    <codx-label
+      name="lblDeny"
+      [formModel]="formModel"
+      default="Từ chối"
+    ></codx-label>
+  </button>
+  <button
+    type="button"
+    class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
+    (click)="clickOpenPopupADR(3)"
+  >
+    <codx-label
+      name="lblRedo"
+      [formModel]="formModel"
+      default="Làm lại"
+    ></codx-label>
   </button>
 </div>
-<lib-pdf-view [isApprover]="true" [recID]="recID"> </lib-pdf-view>
+<lib-pdf-view #pdfView [isApprover]="isApprover" [recID]="recID">
+</lib-pdf-view>

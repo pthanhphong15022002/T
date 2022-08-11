@@ -12,6 +12,7 @@ import {
   AlertConfirmInputConfig,
   ApiHttpService,
   ButtonModel,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogModel,
@@ -55,6 +56,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notifySvr: NotificationsService,
+    private cache: CacheService,
     @Optional() dialogData: DialogData,
     @Optional() dialog: DialogRef
   ) {
@@ -69,6 +71,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.cache.message('').subscribe((res) => {});
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
