@@ -77,8 +77,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.data = data?.data[0];
-    this.isAdd = data?.data[1];
+    this.data = dialog?.dataService?.dataSelected;
+    this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
   }
 
@@ -132,12 +132,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .then((res) => {
         if (res) {
           this.dialogCategory = res;
-          this.dialogCategory.patchValue({
-            eSign: true,
-            signatureType: '1',
-            icon: 'icon-text_snippet',
-            color: '#0078FF',
-          });
           this.dialogCategory.addControl(
             'countStep',
             new FormControl(this.data.countStep ?? 0)
@@ -150,6 +144,15 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             'recID',
             new FormControl(this.data.recID)
           );
+          this.dialogCategory.patchValue(this.data);
+          this.dialogCategory = res;
+          this.dialogCategory.patchValue({
+            eSign: true,
+            signatureType: '1',
+            icon: 'icon-text_snippet',
+            color: '#0078FF',
+          });
+
           if (!this.isAdd) {
             this.dialogCategory.patchValue(this.data);
             this.esService.getFormModel('EST04').then((res) => {
@@ -251,7 +254,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   updateAutonumber() {
     this.esService.isSetupAutoNumber.subscribe((res) => {
       if (res != null) {
-        this.esService.addEditAutoNumbers(res, true).subscribe((res) => {});
+        this.esService.addEditAutoNumbers(res, true).subscribe((res) => { });
       }
     });
   }
@@ -277,7 +280,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.cfService.openForm(
       PopupAddAutoNumberComponent,
       '',
-      (screen.width * 35) / 100,
+      550,
       (screen.width * 40) / 100,
       '',
       [

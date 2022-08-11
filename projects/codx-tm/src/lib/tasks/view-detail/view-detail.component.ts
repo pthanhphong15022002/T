@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
 import { viewport } from '@popperjs/core';
 import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { AnyARecord } from 'dns';
@@ -10,7 +10,7 @@ import { PopupViewTaskResourceComponent } from '../popup-view-task-resource/popu
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss']
 })
-export class ViewDetailComponent implements OnInit {
+export class ViewDetailComponent implements OnInit,AfterViewInit {
   data: any;
   dialog: any;
   active = 1;
@@ -23,13 +23,13 @@ export class ViewDetailComponent implements OnInit {
   @Input() vllStatus ?:any
   @Input() vllExtendStatus? :any
   @Input() vllApproveStatus?:any
+  @Input() dataTree?:any [] 
   popoverDataSelected : any
   searchField =''
   listTaskResousceSearch = []
   listTaskResousce = []
   vllRole = 'TM002';
   countResource = 0;
-
  
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
@@ -42,6 +42,9 @@ export class ViewDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+  ngAfterViewInit(): void {
+  
   }
 
   clickMF(e: any, dt?: any) {

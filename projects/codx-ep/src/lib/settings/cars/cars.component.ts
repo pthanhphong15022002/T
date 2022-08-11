@@ -28,6 +28,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
+  @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
   @ViewChild('moreFunction', { static: true }) moreFunction: TemplateRef<any>;
   
   views: Array<ViewModel> = [];
@@ -78,6 +79,9 @@ export class CarsComponent implements OnInit, AfterViewInit {
       {
         field: 'resourceName',
         headerText: 'Tên xe',
+      },{
+        field: 'code',
+        headerText: 'Biển số xe',
       },
       {
         headerText: 'Tình trạng',
@@ -86,6 +90,10 @@ export class CarsComponent implements OnInit, AfterViewInit {
       {
         headerText: 'Xếp hạng',
         template: this.rankingCol,
+      },
+      {
+        headerText: 'Nguồn',
+        template: this.categoryCol,
       },
     ];
     this.views = [
@@ -140,48 +148,47 @@ export class CarsComponent implements OnInit, AfterViewInit {
   }
 
   edit(evt?) {
-    this.dataSelected = this.viewBase.dataService.dataSelected;
-    if (evt) this.dataSelected = evt;
-    this.viewBase.dataService.edit(this.dataSelected).subscribe((res) => {
+    let item = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      item = evt;
+    }
+    this.viewBase.dataService.edit(item).subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFunc.openSide(
         PopupAddCarsComponent,
-        [this.dataSelected, true],
+        [item, false],
         option
       );
     });
   }
-  onSelect(evt:any){
-    console.log(evt);
-    
-  }
+
   delete(evt?) {
-    debugger
-    console.log(this.dataObj);
-    
-    let delItem = this.viewBase.dataService.dataSelected;
-    if (evt) delItem = evt;
-    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
-      this.dataSelected = res;
+    let deleteItem = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.viewBase.dataService.delete([deleteItem], true).subscribe((res) => {
+      console.log(res);
     });
   }
-  // delete(data: any) {
-  //   this.viewBase.dataService.dataSelected = data;
-  //   this.viewBase.dataService.delete([this.viewBase.dataService.dataSelected]).subscribe();
-  // };
 
-  clickMF(evt?: any, data?: any) {
-    switch (evt.functionID) {
-      case 'edit':
+  onSelect(evt:any){
+    console.log(evt);    
+  }
+ 
+
+  clickMF(event, data) {
+    console.log(event)
+    switch (event?.functionID) {
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
-        break;
-      default:
         break;
     }
   }

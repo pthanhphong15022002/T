@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -11,6 +12,7 @@ import {
   AlertConfirmInputConfig,
   ApiHttpService,
   ButtonModel,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogModel,
@@ -28,7 +30,7 @@ export class Approver {}
   templateUrl: './approval-step.component.html',
   styleUrls: ['./approval-step.component.scss'],
 })
-export class ApprovalStepComponent implements OnInit {
+export class ApprovalStepComponent implements OnInit, AfterViewInit {
   @Input() transId = '';
   @Input() type = '0';
   @Output() addEditItem = new EventEmitter();
@@ -54,6 +56,7 @@ export class ApprovalStepComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notifySvr: NotificationsService,
+    private cache: CacheService,
     @Optional() dialogData: DialogData,
     @Optional() dialog: DialogRef
   ) {
@@ -68,6 +71,7 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cache.message('').subscribe((res) => {});
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
@@ -78,7 +82,7 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    //ScrollComponent.reinitialization();
+    ScrollComponent.reinitialization();
   }
 
   close() {
@@ -92,7 +96,7 @@ export class ApprovalStepComponent implements OnInit {
         this.lstOldData = [...res];
         console.log(this.lstStep);
         this.cr.detectChanges();
-        ScrollComponent.reinitialization();
+        // ScrollComponent.reinitialization();
       } else if (this.transId != '') {
         // if (this.transId != '') {
         let gridModels = new GridModels();
@@ -109,7 +113,7 @@ export class ApprovalStepComponent implements OnInit {
             this.currentStepNo = this.lstStep.length + 1;
             this.lstOldData = [...res];
             this.cr.detectChanges();
-            ScrollComponent.reinitialization();
+            //ScrollComponent.reinitialization();
           }
         });
       } else {
@@ -123,7 +127,7 @@ export class ApprovalStepComponent implements OnInit {
     this.transId = transID;
     this.initForm();
     this.cr.detectChanges();
-    ScrollComponent.reinitialization();
+    //ScrollComponent.reinitialization();
   }
 
   onSaveForm() {

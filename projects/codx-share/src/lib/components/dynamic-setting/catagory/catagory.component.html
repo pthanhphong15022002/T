@@ -1,0 +1,333 @@
+<div class="list-group">
+  <h3 class="list-header">{{ title }}</h3>
+  <div class="list-content">
+    <ng-container *ngIf="groupSetting && groupSetting.length > 0; else noGroup">
+      <ng-container *ngFor="let item of groupSetting">
+        <ng-container
+          *ngTemplateOutlet="template; context: { $implicit: item }"
+        >
+        </ng-container>
+        <ng-container *ngFor="let itemchild of setting | group: item.recID">
+          <ng-container
+            *ngTemplateOutlet="template; context: { $implicit: itemchild }"
+          >
+          </ng-container>
+          <hr />
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    <ng-template #noGroup>
+      <ng-container *ngFor="let item of setting">
+        <ng-container
+          *ngTemplateOutlet="template; context: { $implicit: item }"
+        >
+        </ng-container>
+        <hr />
+      </ng-container>
+    </ng-template>
+    <!-- <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Lời cảm ơn
+        </div>
+        <div class="text-muted">
+          Ghi nhận lời cảm ơn từ 1 đồng nghiệp cho một đồng nghiệp khác vì đã hỗ
+          trợ họ trong công việc hàng ngày.
+        </div>
+      </div>
+      <span class="icon-keyboard_arrow_right icon-20 ml-6"></span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Góp ý thay đổi
+        </div>
+        <div class="text-muted">
+          Ghi nhận lời góp ý cho một đồng nghiệp khi phát hiện anh/chị đó có
+          hành vi ứng xử chưa đúng với chuẩn mực của công ty, giúp anh/ chị ấy
+          có cơ hội hoàn thiện & phát triển bản thân.
+        </div>
+      </div>
+      <span class="icon-keyboard_arrow_right icon-20 ml-6"></span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Đề xuất cải tiến
+        </div>
+        <div class="text-muted">
+          Ghi nhận tất cả các ý tưởng nhằm đưa ra các cải tiến trong bất kỳ lĩnh
+          vực của công ty: Sản phẩm, qui trình, qui định, tăng năng suất...
+        </div>
+      </div>
+      <span class="icon-keyboard_arrow_right icon-20 ml-6"></span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">Chia sẻ</div>
+        <div class="text-muted">
+          Cho phép cá nhân chia sẽ thông tin/kinh nghiệm/tài liệu hữu ích đến
+          các thành viên trong nhóm/công ty nhằm mục đích nâng cao hiệu quả công
+          việc, nâng cao năng lực cá nhân cho các đồng nghiệp
+        </div>
+      </div>
+      <span class="icon-keyboard_arrow_right icon-20 ml-6"></span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Gửi thiệp chúc mừng
+        </div>
+        <div class="text-muted">
+          Cho phép cá nhân gửi những lời hỏi thăm, lời chúc đầy ý nghĩa đến
+          những đồng nghiệp thân yêu
+        </div>
+      </div>
+      <span class="icon-keyboard_arrow_right icon-20 ml-6"></span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Radio yêu thương
+        </div>
+        <div class="text-muted">
+          Cho phép một đồng nghiệp bộc bạch tình cảm của mình với một đồng
+          nghiệp khác trong công ty thông qua các thông điệp yêu thương (radio,
+          video clip...) bộ phận HR (văn hóa công ty) sẽ là "cầu nối" để chuyển
+          các thông điệp chuyển đến đúng đối tượng bằng 1 cách "bất ngờ nhất"
+        </div>
+      </div>
+      <span class="icon-keyboard_arrow_right icon-20 ml-6"></span>
+    </div> -->
+  </div>
+</div>
+<ng-template #template let-data>
+  <div class="d-flex justify-content-between list-item">
+    <div class="d-flex flex-column">
+      <div class="font-size-h6 font-weight-bold text-dark mb-2">
+        {{ data.tilte }}
+      </div>
+      <div class="text-muted">
+        {{ data.description }}
+      </div>
+    </div>
+    <div class="d-flex align-items-center ml-4">
+      <!-- <span class="switch switch-sm ml-3">
+        <label>
+          <input type="checkbox" checked="checked" name="select" />
+          <span></span>
+        </label>
+      </span> -->
+      <codx-input
+        *ngIf="data.controlType != 'GroupControl'"
+        [type]="data.controlType"
+        [name]="data.controlType"
+        class=""
+        placeholder=""
+        ngDefaultControl
+        [refType]="data.referedType"
+        [refValue]="data.referedValue || data.referdValue"
+        [loadFull]="true"
+        [field]="data.fieldName"
+      >
+      </codx-input>
+      <a
+        [routerLink]="data.reference ? '../../../../' + data.reference : ''"
+        [state]="data"
+        *ngIf="data.displayMode === '1'"
+        ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span
+      ></a>
+      <a href="/default/standard/setting2" *ngIf="data.displayMode === '2'"
+        ><span class="icon-edit icon-20 ml-6"></span
+      ></a>
+      <a href="/default/standard/setting2" *ngIf="data.displayMode === '3'"
+        ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span
+      ></a>
+      <!-- <span class="icon-keyboard_arrow_right icon-22 ml-2"></span> -->
+    </div>
+  </div>
+</ng-template>
+
+<!-- <div class="list-group">
+  <h3 class="list-header">Danh mục</h3>
+  <div class="list-content">
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">Quà tặng</div>
+        <div class="text-muted">Danh sách quà tặng</div>
+      </div>
+      <span class="icon-settings icon-20 ml-6"></span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Nhóm quà tặng
+        </div>
+        <div class="text-muted">Danh sách phân loại nhóm quà tặng.</div>
+      </div>
+      <span class="icon-settings icon-20 ml-6"></span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Bộ qui tắc ứng xử
+        </div>
+        <div class="text-muted">
+          Các hành vi quy định cụ thể theo Giá trị Cốt lõi công ty: Chuẩn mực
+          công sở, quy tắc ứng xử khách hàng...
+        </div>
+      </div>
+      <span class="icon-settings icon-20 ml-6"></span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Hành vi ứng xử
+        </div>
+        <div class="text-muted">
+          Các hành vi quy định cụ thể theo Giá trị Cốt lõi công ty: Chuẩn mực
+          công sở, quy tắc ứng xử khách hàng...
+        </div>
+      </div>
+      <span class="icon-settings icon-20 ml-6"></span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex flex-column">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Lĩnh vực chia sẻ
+        </div>
+      </div>
+      <span class="icon-settings icon-20 ml-6"></span>
+    </div>
+  </div>
+</div>
+
+<div class="list-group">
+  <h3 class="list-header">Ví nhân viên</h3>
+  <div class="list-content">
+    <div class="d-flex justify-content-between list-item">
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-settings icon-20 mr-3"></span>
+        <div class="font-size-h6 font-weight-bold text-dark">
+          Cấu hình ví nhân viên
+        </div>
+      </div>
+      <span class="icon-keyboard_arrow_right icon-20 ml-6"></span>
+    </div>
+  </div>
+</div>
+
+<div class="list-group">
+  <h3 class="list-header">Hạng cống hiến</h3>
+  <div class="list-content">
+    <div class="row">
+      <div class="col-lg-6 col-md-6">
+        <table class="table list-ranking">
+          <thead>
+            <tr>
+              <th scope="col">Xếp hạng</th>
+              <th scope="col">Điểm cống hiến</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <span class="label label-sm label-primary mr-3"></span>
+                  <span class="tex-dark">Standard</span>
+                </div>
+              </td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <span class="label label-sm label-default mr-3"></span>
+                  <span class="tex-dark">Silver</span>
+                </div>
+              </td>
+              <td>1.000</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <span class="label label-sm label-warning mr-3"></span>
+                  <span class="tex-dark">Gold</span>
+                </div>
+              </td>
+              <td>3.500</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <span class="label label-sm label-info mr-3"></span>
+                  <span class="tex-dark">Platinum</span>
+                </div>
+              </td>
+              <td>5.500</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-lg-6 col-md-6 pt-8 pl-6">
+        <img
+          class="w-100%"
+          src="../../../assets/demos/svg/Ranking_card.png"
+          alt=""
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="list-group">
+  <h3 class="list-header">Thống kê</h3>
+  <div class="list-content">
+    <div class="d-flex justify-content-between list-item">
+      <span class="icon-settings icon-20 mr-3"></span>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Thống kê phiếu phản hồi
+        </div>
+        <div class="text-muted">
+          Mặc định cấu hình xem dữ liệu thống kê các phiếu phản hồi theo thiết
+          lập đã chọn
+        </div>
+      </div>
+      <div class="w-200px">
+        <select class="form-control" placeholder="My department">
+          <option>1</option>
+          <option>2</option>
+        </select>
+      </div>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between list-item">
+      <span class="icon-settings icon-20 mr-3"></span>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="font-size-h6 font-weight-bold text-dark mb-2">
+          Danh sách xếp hạng cống hiến
+        </div>
+        <div class="text-muted">
+          Mặc định cấu hình xem dữ liệu danh sách xếp hạng cống hiến theo thiết
+          lập đã chọn
+        </div>
+      </div>
+      <div class="w-200px">
+        <select class="form-control" placeholder="My department">
+          <option>1</option>
+          <option>2</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div> -->

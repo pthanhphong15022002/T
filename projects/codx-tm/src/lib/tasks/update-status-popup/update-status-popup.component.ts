@@ -69,6 +69,10 @@ export class UpdateStatusPopupComponent implements OnInit {
       ).toFixed(2);
       this.completed = Number.parseFloat(time).toFixed(2);
     }
+    if (this.data?.maxHoursControl != '0' && this.completed > this.data?.maxHours) {
+      this.notiService.notifyCode('TM058')  ///truyền có tham số
+      return;
+     }  
     // this.crrCompleted = this.completed;
   }
   changeTime(data) {
@@ -115,12 +119,14 @@ export class UpdateStatusPopupComponent implements OnInit {
     ];
   }
   saveData() {
-    this.comment = this.comment.trim();
-    if (this.data.fieldValue == '2') {
+    if (this.data?.maxHoursControl != '0' && this.completed > this.data?.maxHours) {
+      this.notiService.notifyCode('TM058')  ///truyền có tham số
+      return;
+     }  
+    if (this.data.updateControl == '2') {
       if (this.comment==null || this.comment.trim() == ''){
-        // this.notiService.notifyCode("TM0.....")  //đợi Hảo thương
-        this.notiService.notify("Phải nhập comment khi hoàn thành công việc !")
-        return;
+         this.notiService.notifyCode("TM057")
+       
       } 
     }
     this.tmSv

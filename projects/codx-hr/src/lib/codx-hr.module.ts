@@ -1,13 +1,19 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  NgModule,
+  Type,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { PopupAddEmployeesComponent } from './employees/popup-add-employees/popup-add-employees.component';
@@ -39,9 +45,9 @@ export const routes: Routes = [
         children: [
           {
             path: 'contactbook/:funcID',
-            component: EmpContactsComponent
-          }
-        ]
+            component: EmpContactsComponent,
+          },
+        ],
       },
       {
         path: '',
@@ -49,19 +55,19 @@ export const routes: Routes = [
         children: [
           {
             path: 'contactbook/:funcID',
-            component: EmpContactsComponent
+            component: EmpContactsComponent,
           },
           {
             path: 'employee/:funcID',
-            component: EmployeesComponent
+            component: EmployeesComponent,
           },
           {
             path: 'employeeleave/:funcID',
-            component: EmployeesLeaveComponent
+            component: EmployeesLeaveComponent,
           },
           {
             path: 'reportingline/:funcID',
-            component: PositionsComponent
+            component: PositionsComponent,
           },
           {
             path: 'employeeinfomation/:funcID',
@@ -73,53 +79,53 @@ export const routes: Routes = [
             children: [
               {
                 path: ':funcID',
-                component: HomeHrparametersComponent
+                component: HomeHrparametersComponent,
               },
               {
                 path: 'certificate/:funcID',
-                component: CertificatesComponent
+                component: CertificatesComponent,
               },
               {
                 path: 'nationality/:funcID',
-                component: NationalitiesComponent
+                component: NationalitiesComponent,
               },
               {
                 path: 'country/:funcID',
-                component: CountriesComponent
+                component: CountriesComponent,
               },
               {
                 path: 'province/:funcID',
-                component: ProvincesComponent
+                component: ProvincesComponent,
               },
               {
                 path: 'district/:funcID',
-                component: DistrictsComponent
+                component: DistrictsComponent,
               },
               {
                 path: 'competence/:funcID',
-                component: CompetencesComponent
+                component: CompetencesComponent,
               },
               {
                 path: 'education/:funcID',
-                component: EducationsComponent
+                component: EducationsComponent,
               },
               {
                 path: 'organization/:funcID',
-                component: OrganizationsComponent
+                component: OrganizationsComponent,
               },
               {
                 path: 'religions/:funcID',
-                component: ReligionsComponent
+                component: ReligionsComponent,
               },
               {
                 path: 'ethnicgroups/:funcID',
-                component: EthnicGroupsComponent
+                component: EthnicGroupsComponent,
               },
-            ]
+            ],
           },
         ],
       },
-    ]
+    ],
   },
 ];
 
@@ -144,7 +150,7 @@ const T_Component: Type<any>[] = [
   ReligionsComponent,
   EthnicGroupsComponent,
   UpdateStatusComponent,
-]
+];
 @NgModule({
   imports: [
     CommonModule,
@@ -154,10 +160,9 @@ const T_Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),
+    ChartAllModule,
   ],
-  exports: [
-    RouterModule
-  ],
+  exports: [RouterModule],
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

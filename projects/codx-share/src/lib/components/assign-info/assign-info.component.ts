@@ -236,6 +236,14 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('TM011');
       return;
     }
+    if (this.param?.MaxHoursControl != '0' && this.task.estimated > Number.parseFloat(this.param?.MaxHours)) {
+      this.notiService.notifyCode('TM058') ///cần truyền tham số
+      return ;
+     }  
+    if (this.task.estimated < 0) {
+      this.notiService.notifyCode('TM033');
+      return;
+    }
     if (this.param?.ProjectControl == '2' && !this.task.projectID) {
       this.notiService.notifyCode('TM028');
       return;
@@ -521,10 +529,14 @@ export class AssignInfoComponent implements OnInit {
   valueChangeEstimated(data) {
     if (!data.data) return;
     var num = data.data;
-    if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
-      num = this.param?.MaxHours;
-    }
-    this.task[data.field] = num;
+    // if (num < 0) {
+    //   this.notiService.notifyCode('TM033');
+    // }
+    // if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
+    //   this.task[data.field] = this.param?.MaxHours;
+    // }else   
+    this.task[data.field] = num
+  
     this.changeDetectorRef.detectChanges();
   }
 

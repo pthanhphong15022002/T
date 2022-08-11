@@ -17,6 +17,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  ScrollComponent,
   SidebarModel,
   ViewsComponent,
 } from 'codx-core';
@@ -93,6 +94,10 @@ export class PopupAddSignFileComponent implements OnInit {
       .then((res) => {
         if (res) this.cbxName = res;
       });
+  }
+
+  ngAfterViewInit() {
+    ScrollComponent.reinitialization();
   }
 
   initForm() {
