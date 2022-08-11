@@ -6,11 +6,11 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { Observable } from 'rxjs';
-import { NoteDrawerComponent } from '../layout/drawers/note-drawer/note-drawer.component';
+import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawer.component';
 @Component({
   selector: 'lib-layoutOnlyHeader',
-  templateUrl: './layoutOnlyHeader.component.html',
-  styleUrls: ['./layoutOnlyHeader.component.css'],
+  templateUrl: './_onlyHeader.component.html',
+  styleUrls: ['./_onlyHeader.component.css'],
 })
 export class LayoutOnlyHeaderComponent extends LayoutBaseComponent {
   module = '';

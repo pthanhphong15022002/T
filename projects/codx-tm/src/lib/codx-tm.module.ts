@@ -1,3 +1,4 @@
+import { LayoutNoAsideToolbarFluidComponent } from './../../../codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { AddEditComponent } from './setting/rangeskanban/addEdit/addEdit.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { PopupAddDayoffsComponent } from './setting/calendar/popup-add-dayoffs/popup-add-dayoffs.component';
@@ -66,8 +67,9 @@ import { PopupUpdateProgressComponent } from './tasks/popup-update-progress/popu
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
 import { TemplateComponent } from './tmmeetings/template/template.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
+import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
 import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
 
 export const routes: Routes = [
@@ -90,7 +92,6 @@ export const routes: Routes = [
       {
         path: 'meeting/:funcID',
         component: TMMeetingsComponent,
-
       },
       {
         path: 'meetingdetails/:funcID',
@@ -172,7 +173,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: LayoutNoAsideComponent,
+    component: LayoutNoAsideToolbarFluidComponent,
     children: [
       {
         path: 'sprintdetails/:funcID',
@@ -233,8 +234,7 @@ const T_Component: Type<any>[] = [
   MeetingDetailComponent,
   TaskExtendsComponent,
   TemplateComponent,
-  SprintDetailsComponent,
-  ViewWorkComponent
+  SprintDetailsComponent
 ];
 @NgModule({
   imports: [
@@ -254,7 +254,7 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
-    SplitterModule
+    SplitterModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,

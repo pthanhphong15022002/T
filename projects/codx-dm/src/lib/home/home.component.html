@@ -6,13 +6,13 @@
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
   <ng-template #noContext>
-    <div oncontextmenu="return false;" class="d-flex align-items-center px-3 pt-3 pb-2" #item>
-      <div [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
+    <div oncontextmenu="return false;" class="d-flex align-items-center px-3 py-1" #item>
+      <div class="node" [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
     </div>
   </ng-template>
   <ng-template #context>
-    <div class="d-flex align-items-center px-3 pt-2 pb-1">
-      <div [innerHTML]="dmSV.setFullHtmlNode(data, '')"></div>
+    <div class="d-flex align-items-center px-3 py-1">
+      <div class="leaf" [innerHTML]="dmSV.setFullHtmlNode(data, '')"></div>
       <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data)"
         (changeDataMF)="dmSV.filterMoreFunction($event, data)" [title]="data.folderName" [formModel]="view.formModel"
         [typeMF]="'hover'">
@@ -74,7 +74,7 @@
       [title]="item.folderName != undefined ? item.folderName : item.fileName"
       (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
       [bookmark]="dmSV.showBookmark(item)" subTitle="{{item.createdOn | date : 'dd/MM/yyyy'}} | {{item.userName}}"
-      cardCss="card-item card-template w-225px me-6 mb-6 text-box-140">
+      cardCss="card-item card-template w-300px sm-card me-4 mb-4 p-3">
     </codx-temp-full>
   </div>
 </ng-template>
@@ -84,21 +84,21 @@
       <tr>
         <th class="px-0" scope="col"></th>
         <th scope="col">
-          <div>{{ titleFileName }}</div>
+          <div class="fw-bold text-dark">{{ titleFileName }}</div>
         </th>
         <th scope="col">
-          <div>{{ titleCreatedBy }}</div>
+          <div class="fw-bold text-dark">{{ titleCreatedBy }}</div>
         </th>
         <th scope="col">
-          <div>{{ titleCreatedOn }}</div>
+          <div class="fw-bold text-dark">{{ titleCreatedOn }}</div>
         </th>
         <th scope="col">
-          <div>{{ titleLength }}</div>
+          <div class="fw-bold text-dark">{{ titleLength }}</div>
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr class="border-bottom" *ngFor="let item of data"
+      <tr class="border-top dms-list" *ngFor="let item of data"
         [title]="item.folderName != undefined ? item.folderName : item.fileName">
         <td class="w-25px text-center px-0">
           <span [className]="dmSV.getBookmarksClass(item)"></span>

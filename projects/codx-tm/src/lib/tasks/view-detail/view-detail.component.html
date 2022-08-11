@@ -280,16 +280,28 @@
         {{ itemSelected?.taskName }}
       </div>
       <div class="text-gray-700" *ngIf="itemSelected?.memo" [innerHTML]="itemSelected?.memo"></div>
-      <!-- <div class="text-gray-400"  *ngIf="itemSelected?.memo2"  [innerHTML]="itemSelected?.memo2"></div> -->
+      <div *ngIf="itemSelected?.memo2">
+        <span class="text-gray-700">
+          <codx-label name="lblMemo2" formName="Tasks" default="Ghi chú phân công">
+          </codx-label>:
+        </span>
+        <span class="text-gray-700"   [innerHTML]="itemSelected?.memo2"></span>
+      </div>
+    
       <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
-        <div class="text-primary fw-bold">
+        <!-- <div class="text-primary fw-bold"> -->
+          <!-- <div class="text-gray-700">
           <codx-label name="lblListTaskBoard" formName="Tasks" default="Danh sách việc cần làm"></codx-label>:
-        </div>
+        </div> -->
         <div class="checkbox-list mt-2 ms-6 text-dark">
           <ng-container *ngFor="let item of itemSelected?.listTaskGoals">
             <div class="mb-2">
-              <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
-                [crrValue]="item.status == '90'" [disabled]="true"></codx-input>
+              <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
+                [crrValue]="item.status == '90'" [disabled]="true"></codx-input> -->
+                <codx-input type="checkbox" class="me-2"
+                [crrValue]="item.status == '90'" [disabled]="true"></codx-input><span class="text-gray-700">
+                  {{ item.memo }}
+                </span>
             </div>
           </ng-container>
         </div>
