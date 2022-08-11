@@ -260,6 +260,36 @@ export class CodxDMService {
 
   }
 
+  openItem(data: any) {
+    if (data.fileName == undefined) 
+    {
+      // open folder
+      let option = new SidebarModel();
+      option.DataService = this.dataService;
+      option.FormModel = this.formModel;
+      option.Width = '550px';
+      // let data = {} as any;
+      data.title = this.titleUpdateFolder;
+      data.id =  data.recID;            
+      this.callfc.openSide(CreateFolderComponent, data, option);    
+    }
+    else {
+      // open file
+      this.fileService.getFile(data.recID).subscribe(data => {
+        this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+        var files = this.listFiles;
+        if (files != null) {
+          let index = files.findIndex(d => d.recID.toString() === data.recID);
+          if (index != -1) {
+            files[index] = data;
+          }
+          this.listFiles = files;                    
+          this.ChangeData.next(true);                
+        }
+    });
+    }
+  } 
+  
   getRight(folder: FolderInfo) {
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
