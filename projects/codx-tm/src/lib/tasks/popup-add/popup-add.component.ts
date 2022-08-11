@@ -415,9 +415,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     if (this.task.estimated < 0) {
       this.notiService.notifyCode('TM033');
-      // this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       return;
-    }
+    } 
+    if (this.param?.MaxHoursControl != '0' && this.task.estimated > Number.parseFloat(this.param?.MaxHours)) {
+      this.notiService.notifyCode('TM058')  ///truyền có tham số
+      return;
+     }  
     if (
       this.showAssignTo &&
       (this.task.assignTo == '' || this.task.assignTo == null)
@@ -630,10 +633,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       // this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       return;
     }
-    if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
-      this.task[data.field] = this.param?.MaxHours;
-    }else   this.task[data.field] = num
-  
+    this.task[data.field] = num
+   
     //xử lý nhập estimated thay đổi thời gian
     // if (data.data && num) {
     //   this.task[data.field] = data.data;

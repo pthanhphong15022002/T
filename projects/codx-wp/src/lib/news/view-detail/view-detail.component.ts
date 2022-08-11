@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel, AuthService } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
+import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
 @Component({
   selector: 'lib-view-detail',
@@ -140,5 +141,11 @@ export class ViewDetailComponent implements OnInit {
           }
         });
     }
+  }
+  clickShowPopupSearch() {
+    let option = new DialogModel();
+    option.FormModel = this.codxViews.formModel;
+    option.IsFull = true;
+    this.callfc.openForm(PopupSearchComponent,"",0,0,"",{funcID: this.funcID},"",option);
   }
 }

@@ -52,5 +52,11 @@ export class CO_Resources{
     positionName: string;
 }
 
+export class TabControl{
+  name: 'Bình luận' | 'Họp định kì' | 'Dashboard' | 'Công việc' |string;
+  textDefault: string;
+  isActive: boolean;
+}
+
 
 

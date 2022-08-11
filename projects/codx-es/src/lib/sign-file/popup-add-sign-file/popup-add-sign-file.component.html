@@ -263,7 +263,58 @@
 </ng-template>
 
 <ng-template #templateClose let-dialogClose>
-  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+  <!--begin::Alert-->
+  <div class="card-alert alert alert-dismissible  d-flex flex-column  mw-650px mx-auto p-10">
+    <!--begin::Close-->
+    <button type="button" class="position-absolute top-0 end-0 m-2 btn btn-icon" (click)="closeDialogTmp(dialogClose)">
+      <span class="icon-close icon-18"></span>
+    </button>
+
+    <!--end::Close-->
+    <!--begin::Item-->
+    <div class="d-flex flex-stack my-10">
+      <div class="d-flex">
+        <span class="icon-help_outline me-5 icon-56 text-primary"></span>
+        <div class="d-flex flex-column">
+          <div class="text-dark fs-5 fw-bold mb-4">
+            <codx-label *ngIf="isAddNew" name="lblCloseAddNewForm" [formModel]="formModel"
+              default="Bạn có muốn lưu quy trình đã thiết lập"></codx-label>
+            <codx-label *ngIf="!isAddNew" name="lblCloseEditForm" [formModel]="formModel"
+              default="Bạn có muốn lưu quy trình đã đã chỉnh sửa"></codx-label>
+          </div>
+          <!--begin::Content-->
+          <span class="mb-4">Chương trình sẽ thực hiện ghi đè file trùng tên hiện có trên hệ thống. Quá trình này không
+            thể khôi phục
+            lại
+            như trước khi ghi đè, bạn có muốn thực hiện không?</span>
+          <!--end::Content-->
+          <!-- <div class="d-flex ">
+            <codx-input type="checkbox" label="Apply to all" [checked]="false" labelPosition="After"></codx-input>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <!--end::Item-->
+    <!--begin::Buttons-->
+    <div class="d-flex justify-content-end">
+      <a class="btn btn-primary me-2" (click)="clickIsSave(true, dialogClose)">
+        <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
+        </codx-label>
+      </a>
+      <a *ngIf="isAddNew" class="btn btn-light-primary me-2 " (click)="clickIsSave(false, dialogClose)">
+        <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
+        </codx-label>
+      </a>
+      <a *ngIf="!isAddNew" class="btn btn-light-primary me-2" (click)="clickNotSave(dialogClose)">
+        <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
+        </codx-label>
+      </a>
+
+    </div>
+    <!--end::Buttons-->
+  </div>
+  <!--end::Alert-->
+  <!-- <div class="card-alert alert alert-dismissible card w-100 h-100 rounded-0 border-0">
     <div class="card-header flex-column">
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
@@ -306,5 +357,5 @@
         </a>
       </div>
     </div>
-  </div>
+  </div> -->
 </ng-template>
