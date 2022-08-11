@@ -68,6 +68,7 @@ import { TemplateComponent } from './tmmeetings/template/template.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
+import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
@@ -228,7 +229,8 @@ const T_Component: Type<any>[] = [
   MeetingDetailComponent,
   TaskExtendsComponent,
   TemplateComponent,
-  SprintDetailsComponent
+  SprintDetailsComponent,
+  DashboardComponent
 ];
 @NgModule({
   imports: [

@@ -38,7 +38,8 @@
     </div>
     <div class="m-0 bg-body rounded-2" >
       <ng-container *ngIf="name == 'Dashboard'">
-        <ng-container> This is Dashboard... </ng-container>
+        <!-- <ng-container> This is Dashboard... </ng-container> -->
+        <codx-sprintdetails-dashboard [sprints]="sprints"></codx-sprintdetails-dashboard>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
         <codx-tasks [projectID]="projectID"></codx-tasks>
