@@ -1,4 +1,9 @@
-<codx-approval [tmpDetail]="tmpdetail" (selectedChange)="selectedChange($event)"></codx-approval>
-<ng-template #tmpdetail>
-    <div>aaaaa{{funcID}}</div>
-</ng-template>
+
+<app-view-detail
+  #viewdetail
+  [data]="data"
+  [pfuncID]="funcID"
+  [hideMF]="true"
+  [hideFooter]="true"
+>
+</app-view-detail>

@@ -1,15 +1,46 @@
 .w-15 {
     width: 15% !important;
+    padding-right: 13px;
   }
 .w-25 {
     width: 25% !important;
+    padding-right: 13px;
+
 }
 .w-10 {
     width: 10% !important;
+    padding-right: 13px;
+
   }
 .w-30 {
     width: 30% !important;
+    padding-right: 13px;
+
   }
   .w-5 {
     width: 5% !important;
+    padding-right: 13px;
+
   }
+
+.a{
+  background-color: #f7d0c2;
+  background-size: 40% 40%;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+}
+
+
+.a2{
+  padding-top: 5px;
+  font-weight: 700;
+  font-size: 25px;
+  color: #e10303;
+}
+.a3{
+  padding-top: 5px;
+  font-weight: 600;
+
+}

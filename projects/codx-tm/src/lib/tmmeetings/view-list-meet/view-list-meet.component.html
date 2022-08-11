@@ -1,22 +1,22 @@
 <div class="d-flex flex-row align-items-center p-2 border-bottom">
   <td class="w-15">
-    <div class="center">
-      <div>
+    <div class="a" >
+      <div >
         Tháng {{month }}
       </div>
-      <div>
+      <div class="a2">
         {{day}}
       </div>
-      <div>
+      <div class="a3">
         {{startTime}}
       </div>
     </div>
   </td>
   <td class="w-30">
-    <div class="text-dark fw-bold fs-6">
+    <div class="text-dark fw-bold fs-6 ">
       {{data.meetingName}}
     </div>
-    <div class=" justify-content-start">
+    <div class=" justify-content-start" style="margin-top: 10px;">
       <codx-temp-full cardCss="card-template"  [imageId]="data.userID"
         imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data"
        >

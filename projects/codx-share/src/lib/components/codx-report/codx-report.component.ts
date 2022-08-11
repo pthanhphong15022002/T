@@ -3,7 +3,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, 
 import { Router, Params } from '@angular/router';
 import { BoldReportDesignerComponent } from '@boldreports/angular-reporting-components/reportdesigner.component';
 import { BoldReportViewerComponent } from '@boldreports/angular-reporting-components/reportviewer.component';
-
+import { AuthStore } from 'codx-core';
 
 @Component({
   selector: 'codx-report',
@@ -19,16 +19,18 @@ export class CodxReportComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() parameters: any = {};
   @Input() reportUUID: any = '';
   @Input() locale!: string;
-  @Input() serviceDesignUrl: string = 'http://localhost:9000/api/ReportDesigner';
-  @Input() serviceViewUrl: string = 'http://localhost:9000/api/ReportViewer';
+  @Input() serviceDesignUrl: string = 'http://localhost:8011/api/ReportDesigner';
+  @Input() serviceViewUrl: string = 'http://localhost:8011/api/ReportViewer';
   @Input() toolbarDesignSettings: any;
   @Input() toolbarViewSettings: any;
   public isAdmin = true;
+  _user: any;
   protected changeDetectorRef!: ChangeDetectorRef;
   constructor(
+    private auth : AuthStore
   ) {
-
-    this.serviceViewUrl = 'http://localhost:9000/api/ReportViewer';
+    this._user = this.auth.get();
+    this.serviceViewUrl = 'http://localhost:8011/api/ReportViewer';
     this.toolbarViewSettings = {
       showToolbar: this.showToolbar,
       customGroups: [{

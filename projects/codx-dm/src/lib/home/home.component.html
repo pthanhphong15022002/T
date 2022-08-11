@@ -6,13 +6,13 @@
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
   <ng-template #noContext>
-    <div oncontextmenu="return false;" class="d-flex align-items-center px-3 pt-3 pb-2" #item>
-      <div [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
+    <div oncontextmenu="return false;" class="d-flex align-items-center px-3 py-1" #item>
+      <div class="node" [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
     </div>
   </ng-template>
   <ng-template #context>
-    <div class="d-flex align-items-center px-3 pt-2 pb-1">
-      <div [innerHTML]="dmSV.setFullHtmlNode(data, '')"></div>
+    <div class="d-flex align-items-center px-3 py-1">
+      <div class="leaf" [innerHTML]="dmSV.setFullHtmlNode(data, '')"></div>
       <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data)"
         (changeDataMF)="dmSV.filterMoreFunction($event, data)" [title]="data.folderName" [formModel]="view.formModel"
         [typeMF]="'hover'">
