@@ -186,10 +186,13 @@ export class DashboardComponent extends UIComponent implements OnInit,AfterViewI
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.pageLoading = false;
-    this.model.predicate = 'ProjectID=@0 and @1.Contains(outerIt.Owner)' ;
-    var projectID = this.projectID ?this.projectID:'null'
+     this.model.predicates = '(Category=@0 or Category=@1)and @2.Contains(outerIt.Owner) and ProjectID=@3' ;
+    //this.model.predicate = '(Category=@0 or Category=@1)and ProjectID=@2' ;
+    var projectID = this.projectID ?this.projectID:null
     var resources = this.resources.replaceAll(';',',')
-    this.model.dataValue = projectID+';['+resources+']';
+     this.model.dataValues = '1;2;['+resources+'];'+projectID;
+    //this.model.dataValue = '1;2;'+projectID;
+
     this.getGeneralData();
   }
 
