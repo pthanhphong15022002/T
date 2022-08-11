@@ -1,3 +1,4 @@
+import { LayoutNoAsideToolbarFluidComponent } from './../../../codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { AddEditComponent } from './setting/rangeskanban/addEdit/addEdit.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { PopupAddDayoffsComponent } from './setting/calendar/popup-add-dayoffs/popup-add-dayoffs.component';
@@ -167,7 +168,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: LayoutNoAsideComponent,
+    component: LayoutNoAsideToolbarFluidComponent,
     children: [
       {
         path: 'sprintdetails/:funcID',
