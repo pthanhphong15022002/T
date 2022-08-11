@@ -230,7 +230,7 @@ export class CalendarNotesComponent
     var fromDate = dateT.toISOString();
     this.daySelected = fromDate;
     var toDate = new Date(dateT.setDate(dateT.getDate() + 1)).toISOString();
-    (lstView.dataService as CRUDService).dataObj = `WP_Calendars`;
+    (lstView.dataService as CRUDService).dataObj = `WPCalendars`;
     (lstView.dataService as CRUDService).predicates =
       'CreatedOn >= @0 && CreatedOn < @1';
     (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
@@ -258,7 +258,7 @@ export class CalendarNotesComponent
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetDataInCalendarAsync',
-        'WP_Calendars'
+        'WPCalendars'
       )
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {

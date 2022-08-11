@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxMwpService } from '../codx-mwp.service';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
+import { EditHobbyComponent } from './edit-hobby/edit-hobby.component';
 import { EditInfoComponent } from './edit-info/edit-info.component';
 import { EditRelationComponent } from './edit-relation/edit-relation.component';
 import { EditSkillComponent } from './edit-skill/edit-skill.component';
@@ -467,7 +468,7 @@ export class EmployeeInfomationComponent implements OnInit {
     });
   }
 
-  popupAddHobbi() {
+  popupAddHobbi(item: any) {
     // this.allowhobby = true;
     // this.codxMwpService.EmployeeInfomation = this;
     // data = data || { employeeID: this.employeeInfo.employeeID };
@@ -482,6 +483,16 @@ export class EmployeeInfomationComponent implements OnInit {
     // this.dialog.closed.subscribe(e => {
     //   console.log(e);
     // })
+    this.allowhobby = true;
+    var model = new DialogModel();
+    model.DataService = new CRUDService(this.inject);
+    var dt = item;
+    var dialog = this.callfunc.openForm(EditHobbyComponent, '', 500, 350, '', dt, "", model);
+    dialog.closed.subscribe(e => {
+      this.employeeHobbie = [...e.event, ...[]];
+      this.dt.detectChanges();
+      console.log(e);
+    })
   }
 
 

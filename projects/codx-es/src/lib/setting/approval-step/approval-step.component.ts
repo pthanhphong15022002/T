@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -11,6 +12,7 @@ import {
   AlertConfirmInputConfig,
   ApiHttpService,
   ButtonModel,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogModel,
@@ -22,13 +24,13 @@ import {
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddApprovalStepComponent } from './popup-add-approval-step/popup-add-approval-step.component';
 
-export class Approver { }
+export class Approver {}
 @Component({
   selector: 'app-approval-steps',
   templateUrl: './approval-step.component.html',
   styleUrls: ['./approval-step.component.scss'],
 })
-export class ApprovalStepComponent implements OnInit {
+export class ApprovalStepComponent implements OnInit, AfterViewInit {
   @Input() transId = '';
   @Input() type = '0';
   @Output() addEditItem = new EventEmitter();
@@ -54,6 +56,7 @@ export class ApprovalStepComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notifySvr: NotificationsService,
+    private cache: CacheService,
     @Optional() dialogData: DialogData,
     @Optional() dialog: DialogRef
   ) {
@@ -68,6 +71,7 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cache.message('').subscribe((res) => {});
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
@@ -78,7 +82,7 @@ export class ApprovalStepComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    //ScrollComponent.reinitialization();
+    ScrollComponent.reinitialization();
   }
 
   close() {
@@ -143,7 +147,7 @@ export class ApprovalStepComponent implements OnInit {
     }
   }
 
-  openFormFuncID(val: any, data: any) { }
+  openFormFuncID(val: any, data: any) {}
 
   clickMF(event: any, data) {
     switch (event.functionID) {

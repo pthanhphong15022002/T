@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HoverPreloadStrategy } from 'ngx-hover-preload';
 import { AuthGuard } from 'codx-core';
 import { SosComponent } from '@pages/sos/sos.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layoutOnlyHeader/layoutOnlyHeader.component';
 export const routes: Routes = [
   {
     path: ':tenant',
@@ -114,10 +115,20 @@ export const routes: Routes = [
       {
         path: 'shared',
         canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('projects/codx-share/src/lib/codx-share.module').then(
-            (m) => m.CodxShareModule
-          ),
+        // loadChildren: () =>
+        //   import('projects/codx-share/src/lib/codx-share.module').then(
+        //     (m) => m.CodxShareModule
+        //   ),
+        component: LayoutOnlyHeaderComponent,
+        children: [
+          {
+            path: 'setting/:funcID',
+            loadChildren: () =>
+              import(
+                'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
+              ).then((m) => m.DynamicSettingModule),
+          },
+        ],
       },
       {
         path: 'sos',

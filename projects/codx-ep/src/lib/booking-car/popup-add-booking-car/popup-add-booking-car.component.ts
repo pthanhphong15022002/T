@@ -116,6 +116,16 @@ export class PopupAddBookingCarComponent extends UIComponent {
     });
   }
 
+  ngAfterViewInit(): void {
+    if (this.dialog) {
+      if (!this.isSaveSuccess) {
+        this.dialog.closed.subscribe((res: any) => {
+          this.dialog.dataService.saveFailed.next(null);
+        });
+      }
+    }
+  }
+
   initForm() {  
     this.epService
       .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
@@ -207,7 +217,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
 
   valueChange(event) {
-    debugger;
     if (event?.field) {
       if (event.data instanceof Object) {
         this.dialogAddBookingCar.patchValue({[event['field']]: event.data.value, });

@@ -1,19 +1,32 @@
-import { UIComponent, FormModel, ViewModel, LayoutService, ViewType, ViewsComponent } from 'codx-core';
-import { Component, Injector, Input, TemplateRef, ViewChild } from '@angular/core';
+import {
+  UIComponent,
+  FormModel,
+  ViewModel,
+  LayoutService,
+  ViewType,
+  ViewsComponent,
+} from 'codx-core';
+import {
+  Component,
+  Injector,
+  Input,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 
 @Component({
   selector: 'codx-dynamic-form',
   templateUrl: './dynamic-form.component.html',
-  styleUrls: ['./dynamic-form.component.scss']
+  styleUrls: ['./dynamic-form.component.scss'],
 })
 export class DynamicFormComponent extends UIComponent {
   @Input() funcID: string;
   @ViewChild('template') template: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  columnsGrid: any
+  columnsGrid: any;
   formName: string;
   gridViewName: string;
-  data: any
+  data: any;
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
@@ -24,29 +37,31 @@ export class DynamicFormComponent extends UIComponent {
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
 
-  constructor(
-    private inject: Injector,
-    private layout: LayoutService,
-  ) {
-    super(inject)
+  constructor(private inject: Injector, private layout: LayoutService) {
+    super(inject);
   }
 
   onInit(): void {
-    this.cache.functionList(this.funcID).subscribe(res => {
+    this.cache.functionList(this.funcID).subscribe((res) => {
       this.formName = res.formName;
-      this.gridViewName = res.gridViewName
-    })
-    this.cache.gridViewSetup(this.formName, this.gridViewName).subscribe(res => {
-      this.data = Object.values(res)
-      this.data.map(res => {
-        this.data = [...this.data, {
-          headerText: res.headerText,
-          width: res.width,
-          field: this.camelize(res.fieldName)
-        }]
-      })
-      this.columnsGrid = this.data;
-    })
+      this.gridViewName = res.gridViewName;
+    });
+    this.cache
+      .gridViewSetup(this.formName, this.gridViewName)
+      .subscribe((res) => {
+        this.data = Object.values(res);
+        this.data.map((res) => {
+          this.data = [
+            ...this.data,
+            {
+              headerText: res.headerText,
+              width: res.width,
+              field: this.camelize(res.fieldName),
+            },
+          ];
+        });
+        this.columnsGrid = this.data;
+      });
   }
 
   ngAfterViewInit(): void {
@@ -63,7 +78,6 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   viewChanged(evt: any, view: ViewsComponent) {
-    debugger;
     var module = view.function!.module;
     var formName = view.function!.formName;
     this.cache.functionList(module).subscribe((f) => {
@@ -75,9 +89,10 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   camelize(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
-      return index === 0 ? word.toLowerCase() : word.toUpperCase();
-    }).replace(/\s+/g, '');
+    return str
+      .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+        return index === 0 ? word.toLowerCase() : word.toUpperCase();
+      })
+      .replace(/\s+/g, '');
   }
-
 }

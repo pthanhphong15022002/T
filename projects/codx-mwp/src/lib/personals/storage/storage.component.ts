@@ -95,7 +95,7 @@ export class StorageComponent
     //     var data = res[0]?.data;
     //     var type = res[0]?.type;
     //     if (type == 'add') {
-    //       debugger;
+    //
     //       this.view.dataService.add(data).subscribe();
     //     }
     //   }

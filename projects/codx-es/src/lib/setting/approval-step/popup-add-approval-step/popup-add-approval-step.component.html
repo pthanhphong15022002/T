@@ -28,12 +28,6 @@
   </div>
 </ng-template>
 <ng-template #tabInfo0>
-  <div class="form-group">
-    <codx-label default="Mô tả" fiedName="StepName" [formModel]="formModel">
-    </codx-label>
-    <codx-input type="text" name="text" ControlName="stepName" [Group]="dialogApprovalStep" placeholder=""
-      class="form-control"></codx-input>
-  </div>
   <div class="row">
     <div class="col-6 ">
       <div class="form-group">
@@ -54,7 +48,12 @@
       </div>
     </div>
   </div>
-
+  <div class="form-group">
+    <codx-label default="Mô tả" fiedName="StepName" [formModel]="formModel">
+    </codx-label>
+    <codx-input type="text" name="text" ControlName="stepName" [Group]="dialogApprovalStep" placeholder=""
+      class="form-control"></codx-input>
+  </div>
   <div class="d-flex flex-column ">
     <div class="d-flex flex-stack mb-4 ">
       <codx-label class="text-primary fw-bold" default="Người thực hiện" fiedName="Attendees" [formModel]="formModel">
@@ -249,13 +248,6 @@
 </codx-form>
 <ng-template #body>
 
-  <div class="form-group">
-    <codx-label default="Mô tả" fiedName="StepName" [formModel]="formModel">
-    </codx-label>
-    <codx-input type="text" name="text" ControlName="stepName" [Group]="dialogApprovalStep" placeholder=""
-      class="form-control"></codx-input>
-  </div>
-
   <div class="row">
     <div class="col-6">
       <div class="form-group">
@@ -278,7 +270,12 @@
 
     </div>
   </div>
-
+  <div class="form-group">
+    <codx-label default="Mô tả" fiedName="StepName" [formModel]="formModel">
+    </codx-label>
+    <codx-input type="text" name="text" ControlName="stepName" [Group]="dialogApprovalStep" placeholder=""
+      class="form-control"></codx-input>
+  </div>
 
   <div class="d-flex flex-column">
     <div class="d-flex flex-stack  mb-4">
