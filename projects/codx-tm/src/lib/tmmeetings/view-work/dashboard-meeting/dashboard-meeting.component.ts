@@ -1,18 +1,22 @@
+import { CodxTMService } from './../../../codx-tm.service';
+import { CallFuncService, DataRequest, UIComponent } from 'codx-core';
 import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
-import { AuthStore, DataRequest, UIComponent } from 'codx-core';
-import { CodxTMService } from '../../../codx-tm.service';
 import { StatusTask } from '../../../models/enum/enum';
 
 @Component({
-  selector: 'codx-sprintdetails-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'lib-dashboard-meeting',
+  templateUrl: './dashboard-meeting.component.html',
+  styleUrls: ['./dashboard-meeting.component.css']
 })
-export class DashboardComponent extends UIComponent implements OnInit,AfterViewInit {
+export class DashboardMeetingComponent extends UIComponent implements OnInit, AfterViewInit {
+
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
-  funcID: string;
+
+  @Input() projectID?: any;
+  @Input() resources?: any;
   model: DataRequest;
+  funcID: string;
   daySelected: Date;
   fromDate: Date;
   toDate: Date;
@@ -40,9 +44,6 @@ export class DashboardComponent extends UIComponent implements OnInit,AfterViewI
   qtyTasks: number = 0;
   vlWork = [];
   hrWork = [];
-  @Input() projectID?: any;
-  @Input() resources?: any;
-
   rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
     { start: 50, end: 100, color: 'orange' },
@@ -126,9 +127,6 @@ export class DashboardComponent extends UIComponent implements OnInit,AfterViewI
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
-  closeTooltip() {
-  }
-
   //#region chartcolumn
   columnXAxis: Object = {
     interval: 1,
@@ -169,17 +167,17 @@ export class DashboardComponent extends UIComponent implements OnInit,AfterViewI
 
   constructor(
     private inject: Injector,
-    private auth: AuthStore,
     private tmService: CodxTMService
   ) {
     super(inject);
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.user = this.auth.get();
+    // this.funcID = this.router.snapshot.params['funcID'];
+    // this.user = this.auth.get();
   }
 
   onInit(): void {
     // this.getGeneralData();
   }
+
   ngAfterViewInit(): void {
     this.model = new DataRequest();
     this.model.formName = 'Tasks';
@@ -280,7 +278,6 @@ export class DashboardComponent extends UIComponent implements OnInit,AfterViewI
       }
     });
   }
-
   sort() {
     this.isDesc = !this.isDesc;
     this.vlWork = this.vlWork.reverse();

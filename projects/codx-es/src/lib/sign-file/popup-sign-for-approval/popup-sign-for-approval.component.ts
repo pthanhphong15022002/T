@@ -40,7 +40,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
-  recID = '10642368-1864-11ed-a50e-d89ef34bb550';
+  recID = '3ef30bc0-195e-11ed-b72c-f8b15698c607';
   funcID;
   cbxName;
 
@@ -93,7 +93,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
       }
     );
     this.dialog.closed.subscribe((res) => {
-      console.log('data', this.dialogSignFile.value);
+      if (res.event == 'ok') {
+        console.log('run');
+
+        this.pdfView.renderQRFile();
+      }
     });
   }
 

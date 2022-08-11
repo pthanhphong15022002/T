@@ -45,7 +45,7 @@ import {
   PrintService,
   AnnotationService,
   FormFieldsService,
-  PdfViewerModule,
+  PdfViewerAllModule,
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { SettingComponent } from './setting/setting.component';
@@ -134,7 +134,7 @@ const routes: Routes = [
     SharedModule,
     TabModule,
     CodxShareModule,
-    PdfViewerModule,
+    PdfViewerAllModule,
   ],
   exports: [CodxEsComponent],
   providers: [

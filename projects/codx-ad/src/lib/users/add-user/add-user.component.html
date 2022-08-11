@@ -90,7 +90,7 @@
           </span>
         </div>
 
-        <div class="col-12 " *ngFor="let item of viewChooseRole; let i= index">
+        <div class="col-12 " *ngFor="let item of viewChooseRole; let i = index">
           <div class="row" *ngIf="!item.isPortal">
             <div class="col-6 text-start">
               <div class="row">
@@ -157,13 +157,6 @@
 </ng-template>
 
 <ng-template #footer>
-  <div class="d-flex justify-content-lg-start pl-3">
-    <span>
-      <input #checkShareRight1 type="checkbox" [disabled]="readOnly" id="checkShareRight1">
-    </span>
-    <codx-label fiedName="lblStopUse" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
-      default="Ngưng sử dụng"></codx-label>
-  </div>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="onSave()">
       <codx-label fiedName="lblSave" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"

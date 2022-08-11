@@ -472,7 +472,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     ).subscribe((res: any) => {
       if (res) {
         this.dataEdit = res;
-        this.dataEdit.files = this.codxFileEdit.getFiles();
+        this.dataEdit.files = this.codxFileEdit.files;
         (this.dialogRef.dataService as CRUDService).update(this.dataEdit).subscribe();
         this.notifySvr.notifyCode('SYS007');
         this.dialogRef.close(this.dataEdit);

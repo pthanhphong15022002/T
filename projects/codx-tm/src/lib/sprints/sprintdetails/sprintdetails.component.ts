@@ -24,6 +24,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   tabControl: TabModelSprints[] = [];
   name = 'Công việc';
   projectID: any;
+  resources: any;
   searchField = '';
   listTaskResousceSearch = [];
   listTaskResousce = [];
