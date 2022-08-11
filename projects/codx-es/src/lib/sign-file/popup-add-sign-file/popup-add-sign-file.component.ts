@@ -1,3 +1,4 @@
+import { I } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -23,8 +24,6 @@ import {
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { iif } from 'rxjs';
-import { isBuffer } from 'util';
 import { File } from '../../codx-es.model';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
@@ -84,6 +83,9 @@ export class PopupAddSignFileComponent implements OnInit {
     this.data = data?.data.option.DataService.dataSelected;
     this.isAddNew = data?.data.isAddNew;
     this.option = data?.data.option;
+    if (!this.isAddNew) {
+      this.processTab = 4;
+    }
   }
 
   ngOnInit(): void {
@@ -367,7 +369,7 @@ export class PopupAddSignFileComponent implements OnInit {
         ) {
           this.upDateNodeStatus(oldNode, newNode);
           this.currentTab++;
-          this.processTab++;
+          this.processTab == 0 && this.processTab++;
         } else {
           this.notify.notifyCode('ES006');
         }
@@ -382,7 +384,7 @@ export class PopupAddSignFileComponent implements OnInit {
           this.onSaveSignFile();
         } else {
           this.upDateNodeStatus(oldNode, newNode);
-          this.processTab == this.currentTab && this.processTab++;
+          this.processTab == 1 && this.processTab++;
           this.currentTab++;
         }
         break;
@@ -391,7 +393,7 @@ export class PopupAddSignFileComponent implements OnInit {
         this.saveProcessStep();
         this.upDateNodeStatus(oldNode, newNode);
         this.currentTab++;
-        if (this.processTab == 1) this.processTab++;
+        this.processTab == 2 && this.processTab++;
         break;
       case 3:
         if (this.esService.getApprovalStep) break;
@@ -412,7 +414,7 @@ export class PopupAddSignFileComponent implements OnInit {
       (this.status.nativeElement as HTMLElement).childNodes
     );
 
-    let newClassName = (nodes[newNode] as HTMLElement).className.toString();
+    let newClassName = (nodes[newNode] as HTMLElement).className;
     switch (newClassName) {
       case 'stepper-item':
         (nodes[newNode] as HTMLElement).classList.add('active');
@@ -424,7 +426,7 @@ export class PopupAddSignFileComponent implements OnInit {
         break;
     }
 
-    let oldClassName = (nodes[oldNode] as HTMLElement).className.toString();
+    let oldClassName = (nodes[oldNode] as HTMLElement).className;
     switch (oldClassName) {
       case 'stepper-item approve':
         (nodes[oldNode] as HTMLElement).classList.remove('approve');
@@ -433,7 +435,10 @@ export class PopupAddSignFileComponent implements OnInit {
         (nodes[oldNode] as HTMLElement).classList.remove('active');
         break;
     }
-    (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
+    if (oldNode > newNode && this.currentTab == this.processTab) {
+    } else {
+      (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
+    }
   }
   //#endregion
 

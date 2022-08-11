@@ -8,8 +8,8 @@
       </div>
       <div class="d-flex align-items-center stepper">
         <div class="stepper-nav flex-center flex-wrap" #status>
-          <div class="stepper-item active" data-kt-stepper-element="nav" data-kt-stepper-action="step"
-            ngbTooltip="Upload file" (click)="clickTab(0)">
+          <div [ngClass]="isAddNew ? 'stepper-item active' : 'stepper-item approve'" data-kt-stepper-element="nav"
+            data-kt-stepper-action="step" ngbTooltip="Upload file" (click)="clickTab(0)">
             <div class="stepper-wrapper d-flex align-items-center">
               <div class="stepper-icon">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
@@ -21,8 +21,8 @@
             <div class="stepper-line w-35px mx-1"></div>
           </div>
 
-          <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)"
-            ngbTooltip="Bổ sung thông tin tài liệu">
+          <div [ngClass]="isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'" data-kt-stepper-element="nav"
+            data-kt-stepper-action="step" (click)="clickTab(1)" ngbTooltip="Bổ sung thông tin tài liệu">
             <div class="stepper-wrapper d-flex align-items-center">
               <div class="stepper-icon">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
@@ -34,8 +34,8 @@
             <div class="stepper-line w-35px mx-1"></div>
           </div>
 
-          <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(2)"
-            ngbTooltip="Quy trình duyệt">
+          <div [ngClass]="isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'" data-kt-stepper-element="nav"
+            data-kt-stepper-action="step" (click)="clickTab(2)" ngbTooltip="Quy trình duyệt">
             <div class="stepper-wrapper d-flex align-items-center">
               <div class="stepper-icon">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
@@ -47,8 +47,8 @@
             <div class="stepper-line w-35px mx-1"></div>
           </div>
 
-          <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(3)"
-            ngbTooltip="Đánh dấu chữ ký">
+          <div [ngClass]="isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'" data-kt-stepper-element="nav"
+            data-kt-stepper-action="step" (click)="clickTab(3)" ngbTooltip="Đánh dấu chữ ký">
             <div class="stepper-wrapper d-flex align-items-center">
               <div class="stepper-icon">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
@@ -68,6 +68,13 @@
         <a href="#" class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4">Từ chối</a>
         <a href="#" class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4">Làm lại</a>
         <a href="#" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4">Ký</a> -->
+        <div class="form-group">
+          <codx-input type="checkbox" labelPosition="after" field="autoReset" class="test-check"
+            (valueChange)="valueChange($event)" [crrValue]="">
+          </codx-input>
+          <codx-label class="ms-2" fiedName="autoReset" [formModel]="dialog.formModel" default="Lưu thành mẫu">
+          </codx-label>
+        </div>
 
         <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
           (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
@@ -184,12 +191,11 @@
 
         <div class="d-flex flex-stack justify-content-between card-footer border-0">
           <div class="left">
-            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0"
-              (click)="previous(currentTab)">
+            <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0" (click)="previous(currentTab)">
               <codx-label name="lblBack" [formModel]="formModel" default="Quay lại">
               </codx-label>
             </button>
-            <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0"
+            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0"
               (click)="openPopup(processTemplate)">
               <codx-label name="" [formModel]="formModel" class="" default="Quy trình mẫu" class="">
               </codx-label>
