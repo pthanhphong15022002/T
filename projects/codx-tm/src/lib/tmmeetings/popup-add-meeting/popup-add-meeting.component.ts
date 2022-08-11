@@ -426,6 +426,8 @@ export class PopupAddMeetingComponent implements OnInit {
         if (arrayNew.length > 0) {
           resourceID = arrayNew.join(';');
           id += ';' + resourceID;
+          if(this.action === 'edit')
+            this.getListUser(id);
           this.getListUser(resourceID);
         }
       } else {
@@ -472,7 +474,10 @@ export class PopupAddMeetingComponent implements OnInit {
   }
 
   onDeleteUser(item) {
-    this.meeting.resources.splice(item, 1); //remove element from array
+    const index: number = this.meeting.resources.indexOf(item);
+    if (index !== -1) {
+      this.meeting.resources.splice(index, 1);
+    }
     this.changDetec.detectChanges();
   }
 

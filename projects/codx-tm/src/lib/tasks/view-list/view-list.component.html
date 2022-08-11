@@ -27,7 +27,7 @@
     </div>
   </td>
   <td class=" w-20">
-    <div class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
+    <div *ngIf="data.memo" class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
       [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)" placement="bottom"
       autoClose="outside">
       <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
@@ -36,6 +36,14 @@
           <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
           <div class="b text-start" *ngIf="data.memo" [innerHTML]="data?.memo">
           </div>
+        </div>
+      </button>
+    </div>
+    <div *ngIf="!data.memo" >
+      <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <div class="d-flex">
+          <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
           <span *ngIf="!data.memo" class="b text-start">Không có mô tả</span>
         </div>
       </button>
@@ -99,9 +107,9 @@
   </td>
 </div>
 
-<ng-template #popDetail>
+<ng-template #popDetail >
   <div>
-    <ng-container>
+    <ng-container >
       <div class="d-flex flex-column flex-grow-1">
         <div class="text-gray-800 " [innerHTML]="popoverDetail?.memo">
           <div class="d-flex align-items-center mt-2">
