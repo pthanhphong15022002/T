@@ -13,7 +13,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ButtonModel, CacheService, CodxService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, ButtonModel, CacheService, CodxService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { formatDtDis } from '../../../../../codx-od/src/lib/function/default.function';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
@@ -33,6 +33,7 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
     @Input() tmpDetail?: TemplateRef<any>;
     @Output() selectedChange = new EventEmitter<any>(); 
     funcID: any;
+    transID:any;
     views: Array<ViewModel> | any = [];
     button?: ButtonModel;
     gridViewSetup: any;
@@ -45,10 +46,10 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
      */
     constructor(
       private router: Router, 
-      private cache: CacheService ,  
-      private odService :DispatchService , 
-      private detectorRef : ChangeDetectorRef
-      ,private route:ActivatedRoute,
+      private cache: CacheService,  
+      private odService :DispatchService, 
+      private detectorRef : ChangeDetectorRef,
+      private route:ActivatedRoute,
       private codxService: CodxService
       ) {
       
@@ -89,21 +90,21 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
 
     }
     valueChange(dt: any) {
-      var recID = null;
+      this.transID = null;
       if (dt?.data) {
         if(dt?.data[0])
         {
-          recID = dt.data[0].transID
+          this.transID = dt.data[0].transID
           this.dataItem = dt?.data[0];
         }
         else
         {
-          recID = dt?.data?.transID
+          this.transID = dt?.data?.transID
           this.dataItem = dt?.data;
         }
       }
       else if(dt?.transID){
-        recID = dt.transID
+        this.transID = dt.transID
         this.dataItem = dt;
       };
       this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
@@ -114,7 +115,6 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
           {
             params = fuc?.url.split("/");
             this.codxService.navigate('','/od/approvals/ODT71/'+params[1]+"/"+fuc?.functionID+"/"+this.dataItem?.transID)
-
           }
           //const queryParams = { 'id' : this.dataItem?.transID};
         
