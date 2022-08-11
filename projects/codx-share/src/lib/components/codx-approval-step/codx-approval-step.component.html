@@ -1,0 +1,103 @@
+<ng-container *ngIf="data!={}">
+  <div class="codx-approval">
+    <div class="codx-approval-step step-test pb-3" *ngFor="let item of data | keyvalue">
+      <div class="codx-approval-header d-flex align-items-center mb-4">
+        <div class="step-number">{{item?.key}}</div>
+        <div class="step-title text-gray-800 fw-bold fs-4">{{item?.value?.name}}</div>
+        <div class="badge badge-success badge-sm badge-circle ms-3">
+          <span class="icon-check icon-16"></span>
+        </div>
+      </div>
+      <div class="codx-approval-content ms-17">
+        <ng-container *ngIf="item?.value?.data">
+          <div class="d-flex align-items-top justify-content-between mb-3" *ngFor="let item2 of item?.value?.data">
+            <codx-temp-full [imageId]="item2?.approver" imageObjType="AD_Users" [imageWidth]="35"
+              [title]="item2?.approverName" [desc]="item2?.approverPosition" [desc2]="'Comment...'">
+            </codx-temp-full>
+            <div class="d-flex align-items-center text-center">
+              <div class="d-flex flex-column">
+                <div class="text-dark fw-bold">Hoàn tất</div>
+                <div class="badge badge-primary my-1">5h15 - 4h</div>
+                <div class="text-gray-600 fs-7">14/6/2022 5:09</div>
+              </div>
+              <div class="ms-6 d-flex">
+                <span class="icon-attach_file icon-18 me-1"></span>
+                <span class="text-dark">3</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        
+      </div>
+    </div>
+  </div>
+</ng-container>
+<!-- <div class="codx-approval">
+  <div class="codx-approval-step step-test pb-3">
+    <div class="codx-approval-header d-flex align-items-center mb-4">
+      <div class="step-number">1</div>
+      <div class="step-title text-gray-800 fw-bold fs-4">KIỂM TRA</div>
+      <div class="badge badge-success badge-sm badge-circle ms-3">
+        <span class="icon-check icon-16"></span>
+      </div>
+    </div>
+    <div class="codx-approval-content ms-17">
+      <div class="d-flex align-items-top justify-content-between mb-3">
+        <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+          [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'" [desc2]="'Comment...'">
+        </codx-temp-full>
+        <div class="d-flex align-items-center text-center">
+          <div class="d-flex flex-column">
+            <div class="text-dark fw-bold">Hoàn tất</div>
+            <div class="badge badge-primary my-1">5h15 - 4h</div>
+            <div class="text-gray-600 fs-7">14/6/2022 5:09</div>
+          </div>
+          <div class="ms-6 d-flex">
+            <span class="icon-attach_file icon-18 me-1"></span>
+            <span class="text-dark">3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="codx-approval-step step-signature-temp pb-3">
+    <div class="codx-approval-header d-flex align-items-center mb-4">
+      <div class="step-number">2</div>
+      <div class="step-title text-gray-800 fw-bold fs-4">KÝ NHÁY</div>
+    </div>
+    <div class="codx-approval-content ms-17">
+      <div class="d-flex align-items-top justify-content-between mb-3">
+        <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+          [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'" [desc2]="'Comment...'">
+        </codx-temp-full>
+        <div class="d-flex align-items-center text-center">
+          <div class="d-flex flex-column">
+            <div class="text-dark fw-bold">Hoàn tất</div>
+            <div class="badge badge-primary my-1">5h15 - 4h</div>
+            <div class="text-gray-600 fs-7">14/6/2022 5:09</div>
+          </div>
+          <div class="ms-6 d-flex">
+            <span class="icon-attach_file icon-18 me-1"></span>
+            <span class="text-dark">3</span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-top justify-content-between mb-3">
+        <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+          [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'" [desc2]="'Comment...'">
+        </codx-temp-full>
+        <div class="d-flex align-items-center text-center">
+          <div class="d-flex flex-column">
+            <div class="text-dark fw-bold">Hoàn tất</div>
+            <div class="badge badge-primary my-1">5h15 - 4h</div>
+            <div class="text-gray-600 fs-7">14/6/2022 5:09</div>
+          </div>
+          <div class="ms-6 d-flex">
+            <span class="icon-attach_file icon-18 me-1"></span>
+            <span class="text-dark">3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

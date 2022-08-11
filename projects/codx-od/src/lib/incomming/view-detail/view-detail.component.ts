@@ -1,42 +1,10 @@
-import {
-  AfterViewChecked,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Optional,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
-import {
-  AlertConfirmInputConfig,
-  ApiHttpService,
-  AuthStore,
-  CacheService,
-  CallFuncService,
-  DataRequest,
-  DialogData,
-  DialogModel,
-  DialogRef,
-  FormModel,
-  NotificationsService,
-  RequestOption,
-  SidebarModel,
-  Util,
-  ViewsComponent,
-} from 'codx-core';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, Util, ViewsComponent } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
-import {
-  extractContent,
-  formatDtDis,
-  getListImg,
-} from '../../function/default.function';
+import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
 import { AddLinkComponent } from '../addlink/addlink.component';
 import { ForwardComponent } from '../forward/forward.component';
@@ -48,31 +16,34 @@ import { UpdateExtendComponent } from '../update/update.component';
 @Component({
   selector: 'app-view-detail',
   templateUrl: './view-detail.component.html',
-  styleUrls: ['./view-detail.component.scss'],
+  styleUrls: ['./view-detail.component.scss']
 })
 export class ViewDetailComponent implements OnInit, OnChanges {
   active = 1;
   checkUserPer: any;
-  userID: any;
-  @Input() data: any;
-  @Input() gridViewSetup: any;
-  @Input() view: ViewsComponent;
-  @Input() getDataDispatch: Function;
-  @Input() dataItem: any;
+  userID:any;
+  @Input() data : any;
+  @Input() gridViewSetup:any;
+  @Input() view: ViewsComponent; 
+  @Input() getDataDispatch : Function;
+  @Input() dataItem:any;
+  @Input() pfuncID: any;
+  @Input() hideFooter:boolean = false;
+  @Input() hideMF:boolean = false;
   @Output() uploaded = new EventEmitter<string>();
   @ViewChild('tmpdeadline') tmpdeadline: any;
   @ViewChild('tmpFolderCopy') tmpFolderCopy: any;
   @ViewChild('tmpexport') tmpexport!: any;
   extractContent = extractContent;
-  dvlSecurity: any;
-  dvlUrgency: any;
-  dvlStatus: any;
-  dvlCategory: any;
-  dvlRelType: any;
-  dvlStatusRel: any;
-  dvlReCall: any;
-  dvlStatusTM: any;
-  formModel: any;
+  dvlSecurity:any;
+  dvlUrgency:any;
+  dvlStatus:any;
+  dvlCategory:any;
+  dvlRelType:any;
+  dvlStatusRel:any;
+  dvlReCall:any;
+  dvlStatusTM:any;
+  formModel:any;
   dialog!: DialogRef;
   name: any;
   ms020: any;
@@ -87,12 +58,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private ref: ChangeDetectorRef
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data) {
-      if (
-        changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
-      ) {
+    if(changes.data) {
+      if(changes.data?.previousValue?.recID != changes.data?.currentValue?.recID)
+      {
+        
         this.formModel = this.view?.formModel;
-        this.dataItem = changes?.dataItem?.currentValue;
+        this.dataItem = changes?.dataItem?.currentValue
         this.userID = this.authStore.get().userID;
         this.data = changes.data?.currentValue;
         if (!this.data) this.data = {};
@@ -101,6 +72,15 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         this.ref.detectChanges();
       }
     }
+    if(changes?.view?.currentValue != changes?.view?.previousValue)
+      this.formModel = changes?.view?.currentValue?.formModel
+    if(changes?.pfuncID?.currentValue != changes?.pfuncID?.previousValue)
+    {
+      this.pfuncID = changes?.pfuncID?.currentValue;
+      if(this.pfuncID) this.getGridViewSetup(this.pfuncID);
+    }  
+    if(changes?.gridViewSetup?.currentValue != changes?.gridViewSetup?.previousValue)
+      this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
   }
   ngOnInit(): void {
@@ -109,22 +89,27 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getDataValuelist();
+   
   }
-
-  convertHtmlAgency(agencyName: any, txtLstAgency: any) {
-    if (!agencyName && !txtLstAgency)
+  getGridViewSetup(id:any)
+  {
+    this.cache.functionList(id).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((grd) => {
+          this.gridViewSetup = grd;
+        });
+    });
+  }
+  convertHtmlAgency(agencyName:any,txtLstAgency:any)
+  {
+    if(!agencyName && !txtLstAgency)
       return '<div><span class="tex-gray-300">Tên công ty</span></div>';
     var desc = '<div class="d-flex">';
-    if (agencyName)
-      desc +=
-        '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-20"></span><span class="ms-1">' +
-        agencyName +
-        '</span></div>';
-    if (txtLstAgency)
-      desc +=
-        '<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">' +
-        txtLstAgency +
-        '</span></div>';
+    if(agencyName)
+      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
+    if(txtLstAgency)
+      desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+txtLstAgency+'</span></div>';
     return desc + '</div>';
   }
   ///////////////Các function format valuelist///////////////////////
@@ -325,12 +310,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       return 'white';
     }
   }
-  getPermission(recID: any) {
-    this.odService.checkUserPermiss(recID, this.userID).subscribe((item) => {
-      if (item.status == 0) this.checkUserPer = item.data;
-    });
+  getPermission(recID:any)
+  {
+    this.odService.checkUserPermiss(recID , this.userID).subscribe((item)=>{
+      if(item.status == 0) this.checkUserPer = item.data;
+    })
   }
-  openFormFuncID(val: any, datas: any = null) {
+  openFormFuncID(val: any , datas:any = null) {
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
     else {
@@ -472,7 +458,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           let option = new SidebarModel();
           option.DataService = this.view?.dataService;
           option.FormModel = this.view?.formModel;
-          option.Width = '800px';
+          option.Width = '550px';
           this.dialog = this.callfunc.openSide(
             AssignInfoComponent,
             [task, vllControlShare, vllRose, title],
