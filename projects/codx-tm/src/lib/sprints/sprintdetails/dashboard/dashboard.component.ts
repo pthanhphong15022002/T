@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../../codx-tm.service';
@@ -9,7 +9,7 @@ import { StatusTask } from '../../../models/enum/enum';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent extends UIComponent implements OnInit {
+export class DashboardComponent extends UIComponent implements OnInit,AfterViewInit {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
   funcID: string;
   model: DataRequest;
@@ -23,6 +23,7 @@ export class DashboardComponent extends UIComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   user: any;
+  data: any;
   isDesc: boolean = true;
   availability: number = 0;
   performance: number = 0;
@@ -39,7 +40,8 @@ export class DashboardComponent extends UIComponent implements OnInit {
   qtyTasks: number = 0;
   vlWork = [];
   hrWork = [];
-  @Input() sprints?:any
+  @Input() projectID?: any;
+  @Input() resources?: any;
 
   rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -173,16 +175,21 @@ export class DashboardComponent extends UIComponent implements OnInit {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.auth.get();
+  }
+
+  onInit(): void {
+    // this.getGeneralData();
+  }
+  ngAfterViewInit(): void {
     this.model = new DataRequest();
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
     this.model.pageLoading = false;
-    this.model.predicate = 'ProjectID = @0 and Owner in (@1)';
-    this.model.dataValue = this.sprints.projectID+';['+this.sprints.resources+']';
-  }
-
-  onInit(): void {
+    this.model.predicate = 'ProjectID=@0 and @1.Contains(outerIt.Owner)' ;
+    var projectID = this.projectID ?this.projectID:'null'
+    var resources = this.resources.replaceAll(';',',')
+    this.model.dataValue = projectID+';['+resources+']';
     this.getGeneralData();
   }
 
@@ -199,6 +206,7 @@ export class DashboardComponent extends UIComponent implements OnInit {
           vltasksByEmp,
           hoursByEmp,
         } = res;
+        this.data = res;
         this.availability = efficiency.availability.toFixed(2);
         this.performance = efficiency.performance.toFixed(2);
         this.quality = efficiency.quality.toFixed(2);
