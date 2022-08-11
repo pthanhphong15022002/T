@@ -66,8 +66,7 @@
       data-kt-scroll-offset="0px"
     >
       <ng-container *ngIf="name == 'Dashboard'">
-        <!-- <ng-container> This is Dashboard... </ng-container> -->
-        <codx-sprintdetails-dashboard [sprints]="sprints"></codx-sprintdetails-dashboard>
+        <codx-sprintdetails-dashboard [projectID]="projectID" [resources]="resources"></codx-sprintdetails-dashboard>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
         <codx-tasks [projectID]="projectID"></codx-tasks>
@@ -118,6 +117,3 @@
     <div class="d-flex flex-column flex-grow-1">
       <div class="text-dark fw-bold">{{ item?.employeeName }}</div>
       <div class="text-gray-600 fs-7">{{ item?.positionName }}</div>
-    </div>
-  </div>
-</ng-template>
