@@ -1,4 +1,4 @@
-<div class="row m-0 bg-body rounded-2 mb-3 p-3 sprints-task-header">
+<div class="row m-0 bg-body mb-3 p-3 sprints-task-header">
   <div class="col-8">
     <div class="d-flex">
       <div class="text-dark fw-bolder my-1 fs-3 p-3">
@@ -17,19 +17,13 @@
     <div>
       <div class="d-flex">
         <ng-container *ngFor="let item of tabControl; let i = index">
-          <a
-            [class]="
+          <a [class]="
               'm-3 text-gray-800 text-hover-primary btn-light-primary' +
               ' ' +
               (item.isActive ? 'text-primary' : '')
-            "
-          >
-            <codx-label
-              [name]="'lbl' + item.name"
-              [formName]="'SYS'"
-              [default]="item.textDefault"
-              (click)="clickMenu(item)"
-            >
+            ">
+            <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
+              (click)="clickMenu(item)">
             </codx-label>
           </a>
         </ng-container>
@@ -37,38 +31,19 @@
     </div>
   </div>
   <div class="col-4">
-    <codx-imgs
-      style="float: right"
-      [objectId]="sprints?.resources"
-      objectType="AD_Users"
-      [numberImages]="7"
-      [width]="40"
-      (mouseenter)="popoverEmpList(popoverList)"
-      [ngbPopover]="popEmpList"
-      popoverClass="empPopoverClass"
-      #popoverList="ngbPopover"
-      placement="bottom"
-      container="body"
-      autoClose="outside"
-      [openDelay]="500"
-    ></codx-imgs>
+    <codx-imgs style="float: right" [objectId]="sprints?.resources" objectType="AD_Users" [numberImages]="7"
+      [width]="40" (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
+      #popoverList="ngbPopover" placement="bottom" container="body" autoClose="outside" [openDelay]="500"></codx-imgs>
   </div>
 </div>
 <div class="page-content d-flex flex-row">
   <div class="w-100">
-    <div
-      class="m-0 bg-body rounded-2 sprints-task-detail"
-      data-kt-scroll="true"
-      data-kt-scroll-activate="{default: true}"
-      data-kt-scroll-height="auto"
+    <div class="m-0 bg-body rounded-2 sprints-task-detail" data-kt-scroll="true"
+      data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
       data-kt-scroll-dependencies=".page-content, .sprints-task-header"
-      data-kt-scroll-wrappers=".sprints-task-detail, .no-wrapper"
-      data-kt-scroll-offset="0px"
-    >
+      data-kt-scroll-wrappers=".sprints-task-detail, .no-wrapper" data-kt-scroll-offset="0px">
       <ng-container *ngIf="name == 'Dashboard'">
-        <codx-sprintdetails-dashboard
-          [sprints]="sprints"
-        ></codx-sprintdetails-dashboard>
+        <codx-sprintdetails-dashboard [sprints]="sprints"></codx-sprintdetails-dashboard>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
         <codx-tasks [projectID]="projectID"></codx-tasks>
@@ -93,23 +68,13 @@
 
 <ng-template #popEmpList>
   <div class="fw-bold">
-    <codx-label
-      name="Resouces"
-      formName="Sprints"
-      default="Danh sách phân công cho"
-    ></codx-label>
+    <codx-label name="Resouces" formName="Sprints" default="Danh sách phân công cho"></codx-label>
     <span>{{ "(" + countResource + ")" }}</span>
   </div>
   <div>
-    <codx-searchbar
-      *ngIf="countResource > 0"
-      (searchEvent)="searchName($event)"
-    ></codx-searchbar>
+    <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div>
-  <div
-    class="d-flex align-items-start user-card p-3"
-    *ngFor="let item of listTaskResousceSearch"
-  >
+  <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousceSearch">
     <div class="me-3">
       <div>
         <codx-img class="" [objectId]="item?.employeeID" objectType="AD_Users">

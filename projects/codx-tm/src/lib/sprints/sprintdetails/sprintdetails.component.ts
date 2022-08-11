@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
@@ -13,6 +13,7 @@ import { TabModelSprints } from '../../models/TM_Sprints.model';
   selector: 'lib-sprintdetails',
   templateUrl: './sprintdetails.component.html',
   styleUrls: ['./sprintdetails.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SprintDetailsComponent implements OnInit, AfterViewInit {
   active = 1;
@@ -54,10 +55,10 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     );
     if (this.iterationID != '') {
       this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
-        if (res) {    
+        if (res) {
           this.sprints = res;
           this.projectID = this.sprints?.projectID;
-          if(this.sprints?.resources!=null){
+          if (this.sprints?.resources != null) {
             // this.api
             // .execSv<any>(
             //   'TM',
@@ -66,20 +67,20 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
             //   'GetListUserDetailByResourcesAsync',
             //   this.sprints?.resources)
             this.api
-            .execSv<any>(
-              'HR',
-              'ERM.Business.HR',
-              'EmployeesBusiness',
-              'GetListEmployeesByUserIDAsync',
-             JSON.stringify(this.sprints?.resources.split(';')) )
-            .subscribe((data) => {
-              if (data) {
-                this.listTaskResousce = data;
-                this.listTaskResousceSearch = data;
-                this.countResource = data.length;
-                this.changeDetectorRef.detectChanges();
-              }
-            });
+              .execSv<any>(
+                'HR',
+                'ERM.Business.HR',
+                'EmployeesBusiness',
+                'GetListEmployeesByUserIDAsync',
+                JSON.stringify(this.sprints?.resources.split(';')))
+              .subscribe((data) => {
+                if (data) {
+                  this.listTaskResousce = data;
+                  this.listTaskResousceSearch = data;
+                  this.countResource = data.length;
+                  this.changeDetectorRef.detectChanges();
+                }
+              });
           }
         }
       });
@@ -102,9 +103,9 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
   ngAfterViewInit(): void {
-   
+
   }
-  
+
   clickMenu(item) {
     this.name = item.name;
     this.tabControl.forEach((obj) => {
@@ -121,7 +122,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
       p.open();
-      this.popoverCrr = p ;
+      this.popoverCrr = p;
     }
   }
 
@@ -141,20 +142,20 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.listTaskResousceSearch = listTaskResousceSearch;
   }
 
-  getListUserByResource(sprints){
+  getListUserByResource(sprints) {
     this.api
-    .execSv<any>(
-      'TM',
-      'ERM.Business.TM',
-      'SprintsBusiness',
-      'GetListUserDetailByResourcesAsync',
-      sprints.resources)
-    .subscribe((res) => {
-      if (res) {
-        this.listTaskResousce = res;
-        this.listTaskResousceSearch = res;
-        this.countResource = res.length;
-      }
-    });
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'SprintsBusiness',
+        'GetListUserDetailByResourcesAsync',
+        sprints.resources)
+      .subscribe((res) => {
+        if (res) {
+          this.listTaskResousce = res;
+          this.listTaskResousceSearch = res;
+          this.countResource = res.length;
+        }
+      });
   }
 }
