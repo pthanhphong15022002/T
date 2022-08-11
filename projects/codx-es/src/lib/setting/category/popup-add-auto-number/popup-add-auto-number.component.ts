@@ -75,7 +75,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       .then((res) => {
         if (res) {
           this.dialogAutoNum = res;
-          this.isAfterRender = true;
           this.esService.getAutoNumber(this.autoNoCode).subscribe((res) => {
             if (res != null) {
               if (res.autoNoCode != null) {
@@ -94,6 +93,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
               });
               this.setViewAutoNumber();
               console.log(this.dialogAutoNum.value);
+              this.isAfterRender = true;
             }
           });
         }
@@ -173,16 +173,16 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     // replace chuỗi và dấu phân cách
     stringFormat = stringFormat
       .replace(
-        'Chuỗi',
-        this.dialogAutoNum.value.fixedString == null
-          ? ''
-          : this.dialogAutoNum.value.fixedString
-      )
-      .replace(
         /-/g,
         this.dialogAutoNum.value.separator == null
           ? ''
           : this.dialogAutoNum.value.separator
+      )
+      .replace(
+        'Chuỗi',
+        this.dialogAutoNum.value.fixedString == null
+          ? ''
+          : this.dialogAutoNum.value.fixedString
       );
 
     //replace ngày

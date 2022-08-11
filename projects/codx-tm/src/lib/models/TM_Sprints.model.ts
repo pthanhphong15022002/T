@@ -1,6 +1,6 @@
 export class TM_Sprints {
   iterationID: string;
-  iterationType: string ='1';
+  iterationType: string;
   iterationName: string;
   interval: string;
   year: number;
@@ -32,4 +32,10 @@ export class TM_Sprints {
   positionID: string;
   orgUnitID: string;
   divisionID: string;
+}
+
+export class TabModelSprints {
+  name: 'Dashboard' | 'Công việc' | 'Lịch sử' | 'Bình luận' | 'Họp định kì' | string;
+  textDefault: string;
+  isActive: boolean;
 }

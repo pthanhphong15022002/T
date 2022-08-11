@@ -85,6 +85,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   idUserSelected: any;
   viewTask = false;
   taskType ='1' ;
+  formModel :any ;
+  gridViewSetup :any ;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -156,6 +158,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.getParam();
+    // this.formModel = this.dialog.dataService?.formModel ;
+    // this.gridViewSetup = this.formModel?.gridViewSetup ;
     this.task = {
       ...this.task,
       ...dt?.data[0],
@@ -409,6 +413,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM027');
       return;
     }
+    if (this.task.estimated < 0) {
+      this.notiService.notifyCode('TM033');
+      // this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
+      return;
+    }
     if (
       this.showAssignTo &&
       (this.task.assignTo == '' || this.task.assignTo == null)
@@ -617,16 +626,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     //   return;
     // }
     if (num < 0) {
-      //  this.notiService.notifyCode("can cai code o day đang gan tam")
       this.notiService.notifyCode('TM033');
-      this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
-      this.changeDetectorRef.detectChanges();
+      // this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       return;
     }
     if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
-      num = this.param?.MaxHours;
-    }
-    this.task[data.field] = num;
+      this.task[data.field] = this.param?.MaxHours;
+    }else   this.task[data.field] = num
+  
     //xử lý nhập estimated thay đổi thời gian
     // if (data.data && num) {
     //   this.task[data.field] = data.data;
@@ -674,7 +681,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           3600000
         ).toFixed(2);
         this.task.estimated = Number.parseFloat(time);
-        this.crrEstimated = this.task.estimated;
+        // this.crrEstimated = this.task.estimated;
       }
     }
   }
@@ -847,7 +854,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (event.field) {
       this.task[event.field] = event?.data ? event?.data : '';
     }
-    this.changeDetectorRef.detectChanges;
+    this.changeDetectorRef.detectChanges();
   }
   changeMemo2(e, id) {
     var message = e?.data;

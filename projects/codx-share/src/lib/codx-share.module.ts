@@ -61,30 +61,16 @@ import '@boldreports/global/l10n/ej.localetexts.vi-VN.min.js';
 import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
 import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
-import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
+//import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-const routerOptions: ExtraOptions = {
-  scrollPositionRestoration: 'enabled',
-  anchorScrolling: 'enabled',
-  scrollOffset: [0, 64],
-};
-export const routes: Routes = [
-  {
-    path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'settings/:funcID',
-        component: DynamicSettingParamaterComponent,
-      },
-    ],
-  },
-];
+
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
 import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
+import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -118,9 +104,10 @@ const T_Component: Type<any>[] = [
   NoteDrawerComponent,
   CodxApprovalComponent,
   CodxCommentsComponent,
-  DynamicSettingParamaterComponent,
+  DynamicSettingComponent,
   CodxApprovalStepComponent,
-  ApprovalTabsComponent
+  ApprovalTabsComponent,
+  DynamicFormComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -135,8 +122,6 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     InlineSVGModule.forRoot(),
     CodxCoreModule,
     CalendarModule,
-    RouterModule.forChild(routes),
-    
     DateRangePickerModule,
     TabModule,
     UploaderModule,

@@ -117,7 +117,7 @@ export class NewsComponent implements OnInit {
 
   searchEvent(event: any) { }
 
-  clickViewDeital(data: any) {
+  clickViewDetail(data: any) {
     this.api
     .execSv(
       'WP',
@@ -141,7 +141,10 @@ export class NewsComponent implements OnInit {
   }
 
   clickShowPopupSearch() {
-    this.dialogRef = this.callfc.openForm(PopupSearchComponent, "Tìm kiếm", 900, 700);
+    let option = new DialogModel();
+    option.FormModel = this.codxView.formModel;
+    option.IsFull = true;
+    this.callfc.openForm(PopupSearchComponent,"",0,0,"",{funcID: this.funcID},"",option);
   }
 
 

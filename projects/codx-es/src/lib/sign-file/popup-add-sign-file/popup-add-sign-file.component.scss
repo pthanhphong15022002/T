@@ -5,26 +5,7 @@
   popup-add-sign-file{
     height: 100%;
     display: block;
-    .codx-card-custom{
-      height: 100%;
-      .codx-stepper{
-        height: 100%;
-      }
-      .stepper-header{
-        height: 60px;
-      }
-      .h2-title{
-        font-family: 'Roboto';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 16px;
-        color: #3E4347;
-      }
-      .stepper-body{
-        height: calc(100% - 60px);
-      }
-    }
+   
     .e-btn, .e-css.e-btn {
       -webkit-tap-highlight-color: rgba(0,0,0,0);
      // background-color: #0d6dc2;

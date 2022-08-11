@@ -1,4 +1,16 @@
-import { ApiHttpService, AuthStore, ButtonModel, CacheService, CodxListviewComponent, DialogRef, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewType } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  ButtonModel,
+  CacheService,
+  CodxListviewComponent,
+  DialogRef,
+  NotificationsService,
+  SidebarModel,
+  TenantStore,
+  UIComponent,
+  ViewType,
+} from 'codx-core';
 import {
   ChangeDetectorRef,
   Component,
@@ -8,18 +20,18 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
-} from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { TempService } from "../services/temp.service";
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TempService } from '../services/temp.service';
 import { RolesService } from '../services/roles.service';
 import { CodxAdService } from '../../codx-ad.service';
 import { RoleEditComponent } from '../role-edit/role-edit.component';
 
 declare var $: any;
 @Component({
-  selector: "app-roles",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.scss"],
+  selector: 'app-roles',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
   // providers: [EditService],
 
   encapsulation: ViewEncapsulation.None,
@@ -42,16 +54,15 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     private tenantStore: TenantStore,
     private tempService: TempService,
     private changedt: ChangeDetectorRef,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     super(injector);
     this.route.params.subscribe((params) => {
       this.funcID = params['funcID'];
-    })
-    this.cache.moreFunction('Roles', 'grvRoles').subscribe(res => {
-      debugger;
+    });
+    this.cache.moreFunction('Roles', 'grvRoles').subscribe((res) => {
       this.urlDetailRoles = res[0]?.url;
-    })
+    });
     this.tenant = this.tenantStore.get()?.tenant;
   }
 
@@ -67,7 +78,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // show buton tree
-    var btnTreeView = $("#btnTreeView");
+    var btnTreeView = $('#btnTreeView');
     btnTreeView.show();
   }
 
@@ -108,7 +119,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     // if (roleType == '1' || roleType == '2') return;
     this.tempService.roleName = roleName;
     this.tempService.isSystem = isSystem;
-    this.codxService.navigate('', this.urlDetailRoles, { recID: recID })
+    this.codxService.navigate('', this.urlDetailRoles, { recID: recID });
     //TEMP
     // this.router.navigate([`${this.tenant}/ad/roledetail/${recID}`]);
     //TEMP
@@ -126,11 +137,13 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   // }
 
   openFormEdit(data) {
-    var obj = [{
-      data: this.view.dataService.data,
-      dataUpdate: data,
-      formType: 'edit'
-    }]
+    var obj = [
+      {
+        data: this.view.dataService.data,
+        dataUpdate: data,
+        formType: 'edit',
+      },
+    ];
 
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
@@ -161,11 +174,11 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   styleObject(elm): Object {
     var $elm = $(elm);
     if ($elm.length > 0) {
-      var color = $elm.css("background-color");
-      if (color == "rgba(0, 0, 0, 0)") color = this.getRandomColor();
+      var color = $elm.css('background-color');
+      if (color == 'rgba(0, 0, 0, 0)') color = this.getRandomColor();
       return {
-        "background-color": color,
-        "background-image": "none",
+        'background-color': color,
+        'background-image': 'none',
       };
     }
     return elm;
@@ -173,18 +186,20 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
 
   getRandomColor(): string {
     var color = Math.floor(0x1000000 * Math.random()).toString(16);
-    return "#" + ("000000" + color).slice(-6);
+    return '#' + ('000000' + color).slice(-6);
   }
 
   SaveasRole(data, saveas): void {
-    this.tempService.changeDatasaveas("1");
+    this.tempService.changeDatasaveas('1');
   }
 
   openFormAdd(e) {
-    var obj = [{
-      data: this.view.dataService.data,
-      formType: 'add',
-    }]
+    var obj = [
+      {
+        data: this.view.dataService.data,
+        formType: 'add',
+      },
+    ];
 
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
@@ -194,7 +209,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   clickMF(e, item) {
-    switch(e.functionID) {
+    switch (e.functionID) {
       case 'edit':
         this.openFormEdit(item);
         break;
