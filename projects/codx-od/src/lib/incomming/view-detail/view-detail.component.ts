@@ -27,6 +27,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   @Input() view: ViewsComponent; 
   @Input() getDataDispatch : Function;
   @Input() dataItem:any;
+  @Input() hideFooter:boolean = false;
+  @Input() hideMF:boolean = false;
   @Output() uploaded = new EventEmitter<string>();
   @ViewChild('tmpdeadline') tmpdeadline: any;
   @ViewChild('tmpFolderCopy') tmpFolderCopy: any;
@@ -91,7 +93,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   getGridViewSetup(id:any)
   {
-    
+    this.cache.functionList(id).subscribe((fuc) => {
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((grd) => {
+          this.gridViewSetup = grd;
+        });
+    });
   }
   convertHtmlAgency(agencyName:any,txtLstAgency:any)
   {
