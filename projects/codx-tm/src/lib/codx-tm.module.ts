@@ -234,7 +234,8 @@ const T_Component: Type<any>[] = [
   MeetingDetailComponent,
   TaskExtendsComponent,
   TemplateComponent,
-  SprintDetailsComponent
+  SprintDetailsComponent,
+  ViewWorkComponent
 ];
 @NgModule({
   imports: [
