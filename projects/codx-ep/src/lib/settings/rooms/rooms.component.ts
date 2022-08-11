@@ -64,37 +64,6 @@ export class RoomsComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-    this.columnGrids = [
-      {
-        field: 'resourceID',
-        headerText: 'Mã phòng',
-      },
-      {
-        field: 'resourceName',
-        headerText: 'Tên phòng',
-      },
-      {
-        headerText: 'Tình trạng',
-        template: this.statusCol,
-      },
-      {
-        headerText: 'Xếp hạng',
-        template: this.rankingCol,
-      },
-    ];
-    this.views = [
-      {
-        sameData: true,
-        id: '1',
-        text: 'Danh mục phòng',
-        type: ViewType.grid,
-        active: true,
-        model: {
-          resources: this.columnGrids,
-        },
-      },
-    ];
-
     this.buttons = {
       id: 'btnAdd',
     };

@@ -42,7 +42,7 @@ export class PopupAddMeetingComponent implements OnInit {
   title = '';
   showPlan = true;
   data: any;
-  isFullDay : boolean;
+  isFullDay: boolean;
   beginHour = 0;
   beginMinute = 0;
   endHour = 0;
@@ -78,10 +78,12 @@ export class PopupAddMeetingComponent implements OnInit {
     this.user = this.authStore.get();
 
     this.action = dt.data;
+    if(this.action === 'add'){
+      this.getListUser(this.user.userID);
+
+    }
     this.functionID = this.dialog.formModel.funcID;
-    // if (this.meeting.startDate) {
-    //   this.selectedDate = this.meeting.startDate;
-    // }
+
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
@@ -96,7 +98,6 @@ export class PopupAddMeetingComponent implements OnInit {
       this.title = 'Thêm họp định kì';
       this.meeting.meetingType = '1';
       this.meeting.startDate = new Date(Date.now());
-
     } else if (this.action == 'edit') {
       this.title = 'Chỉnh sửa họp định kì';
       this.setTimeEdit();
@@ -118,7 +119,6 @@ export class PopupAddMeetingComponent implements OnInit {
         });
     }
   }
-
 
 
   setTimeEdit() {
@@ -235,7 +235,6 @@ export class PopupAddMeetingComponent implements OnInit {
       } else {
         this.endTime = null;
         this.startTime = null;
-
       }
     } else if (event?.field) {
       if (event?.field === 'resources') {
@@ -402,7 +401,9 @@ export class PopupAddMeetingComponent implements OnInit {
       resourceID = resourceID.substring(0, resourceID.length - 1);
     }
     this.valueUser(resourceID);
-    if (this.resources != null) this.meeting.resources = this.resources;
+    if (this.resources != null)
+      this.meeting.resources = this.resources;
+
   }
 
   valueUser(resourceID) {
@@ -425,7 +426,9 @@ export class PopupAddMeetingComponent implements OnInit {
         if (arrayNew.length > 0) {
           resourceID = arrayNew.join(';');
           id += ';' + resourceID;
-          this.getListUser(id);
+          if(this.action === 'edit')
+            this.getListUser(id);
+          this.getListUser(resourceID);
         }
       } else {
         this.getListUser(resourceID);
@@ -450,18 +453,31 @@ export class PopupAddMeetingComponent implements OnInit {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var tmpResource = new CO_Resources();
-            tmpResource.resourceID = emp?.userID;
-            tmpResource.resourceName = emp?.userName;
-            tmpResource.positionName = emp?.positionName;
-            tmpResource.roleType = 'P';
-            this.meeting.resources.push(tmpResource);
+            if (emp.userID == this.user.userID) {
+              tmpResource.resourceID = emp?.userID;
+              tmpResource.resourceName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.roleType = 'A';
+              this.resources.push(tmpResource);
+            } else {
+              tmpResource.resourceID = emp?.userID;
+              tmpResource.resourceName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.roleType = 'P';
+              this.resources.push(tmpResource);
+            }
+
+            console.log(this.meeting.resources);
           }
         }
       });
   }
 
   onDeleteUser(item) {
-    this.meeting.resources.splice(item, 1); //remove element from array
+    const index: number = this.meeting.resources.indexOf(item);
+    if (index !== -1) {
+      this.meeting.resources.splice(index, 1);
+    }
     this.changDetec.detectChanges();
   }
 

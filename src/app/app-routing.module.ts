@@ -122,7 +122,7 @@ export const routes: Routes = [
         component: LayoutOnlyHeaderComponent,
         children: [
           {
-            path: 'setting/:funcID',
+            path: 'settings/:funcID',
             loadChildren: () =>
               import(
                 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
