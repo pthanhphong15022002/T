@@ -663,7 +663,7 @@ export class TasksComponent extends UIComponent {
         )
         .subscribe((res) => {
           if (res) {
-            this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
+            this.actionUpdateStatus(res.updateControl, moreFunc, taskAction);
           } else {
             this.actionUpdateStatus(
               this.paramModule[fieldName],

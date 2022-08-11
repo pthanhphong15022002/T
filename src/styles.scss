@@ -139,3 +139,50 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
         height: calc(100% - 60px);
       }
   }
+  /**table bootstarp***/
+.e-grid {
+  border-radius: 0px;
+  border-style: none solid solid;
+  border-width: 0px;        
+}
+.e-grid .e-gridheader {
+  border-bottom-color: #dee2e6;
+  border-top-color: transparent!important;
+}
+.e-grid .e-headercell,
+.e-grid .e-detailheadercell {
+  background-color: #ffffff!important;
+}
+.e-grid .e-rowcell {
+  font-size: 13px;
+  color: #343638;
+  border-color: #eff2f5!important;
+  padding: 8px;
+  border-width: 0.5px 0 0!important;
+ 
+}
+.e-grid .e-headercell,
+.e-grid .e-detailheadercell {
+  font-size: 13px;
+  font-weight: 500;
+}
+.e-grid .e-headercelldiv {
+  font-size: 13px;
+  font-weight: 500;
+}
+.e-grid td.e-active {
+  background: #f2f9fb;
+}
+.e-grid .e-headercontent{
+  border-right-width: 0px!important;
+}
+.e-grid .e-headercell, .e-grid .e-detailheadercell{
+  height: 42px;  
+  background-color:white!important;
+}
+.e-grid.e-default tr td:first-child, .e-grid.e-default tr th.e-headercell:first-child:not(.e-firstcell), .e-grid.e-default tr th.e-detailheadercell:first-child, .e-grid.e-default tr th.e-filterbarcell:first-child{
+  padding-left: 20px;
+}
+.e-templatecell .has-action-menu  .action-menu{   
+  top: -8px!important;
+}
