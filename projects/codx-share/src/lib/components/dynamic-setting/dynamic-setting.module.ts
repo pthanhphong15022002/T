@@ -32,7 +32,11 @@ export const routes: Routes = [
   },
 ];
 
-const T_Component: Type<any>[] = [CatagoryComponent, SubCategoryComponent];
+const T_Component: Type<any>[] = [
+  CatagoryComponent,
+  SubCategoryComponent,
+  DynamicSettingComponent,
+];
 
 const T_Pipe: Type<any>[] = [GroupPipe, FormatPipe];
 

@@ -63,11 +63,6 @@ import { CodxApprovalComponent } from './components/codx-approval/codx-approval.
 import { HttpClientModule } from '@angular/common/http';
 
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
-import { LayoutNoAsideToolbarFluidComponent } from './_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
-import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
-import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
-import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
-import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -102,10 +97,7 @@ const T_Component: Type<any>[] = [
   NoteDrawerComponent,
   CodxApprovalComponent,
   CodxCommentsComponent,
-  DynamicSettingComponent,
-  CodxApprovalStepComponent,
-  ApprovalTabsComponent,
-  DynamicFormComponent,
+  DynamicSettingParamaterComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
