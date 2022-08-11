@@ -1,0 +1,36 @@
+.header-fixed.toolbar-fixed .wrapper {
+    padding-top: 50px;
+}
+
+.sprints-task-header {
+    margin-left: -15px !important;
+    margin-right: -15px !important;
+}
+
+codx-wrapper {
+    padding-top: 0px;
+    border-top: 1px #eee solid;
+}
+
+codx-wrapper.hover-scroll-overlay-y:hover {
+    overflow-y: hidden;
+}
+
+codx-views {
+    position: relative;
+}
+
+codx-view-list-detail {
+    padding-top: 45px;
+}
+
+.header-fixed.toolbar-fixed .toolbar {
+    top: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+}
+
+.e-pane.e-static-pane .card .card-body {
+    padding-bottom: 50px !important;
+}
