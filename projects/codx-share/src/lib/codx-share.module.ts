@@ -79,6 +79,7 @@ export const routes: Routes = [
   },
 ];
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
+import { CodxFilesComponent } from './components/codx-files/codx-files.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -113,6 +114,7 @@ const T_Component: Type<any>[] = [
   CodxApprovalComponent,
   CodxCommentsComponent,
   DynamicSettingParamaterComponent,
+  CodxFilesComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
