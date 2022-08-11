@@ -22,6 +22,8 @@ export class DashboardComponent
   implements OnInit, AfterViewInit
 {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  @Input() projectID?: any;
+  @Input() resources?: any;
   funcID: string;
   model: DataRequest;
   daySelected: Date;
@@ -51,8 +53,7 @@ export class DashboardComponent
   qtyTasks: number = 0;
   vlWork = [];
   hrWork = [];
-  @Input() projectID?: any;
-  @Input() resources?: any;
+ 
 
   rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },

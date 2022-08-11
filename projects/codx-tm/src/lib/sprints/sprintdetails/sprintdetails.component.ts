@@ -59,6 +59,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         if (res) {
           this.sprints = res;
           this.projectID = this.sprints?.projectID;
+          this.resources =  this.sprints.resources ;
           if (this.sprints?.resources != null) {
             // this.api
             // .execSv<any>(
