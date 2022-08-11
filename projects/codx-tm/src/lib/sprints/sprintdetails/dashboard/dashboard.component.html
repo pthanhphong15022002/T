@@ -1,7 +1,142 @@
 <div class="page-content d-flex flex-row">
     <div class="w-100 me-4 scroll-y h-100">
       <div class="row m-0 bg-body rounded-2 mb-3">
-        <div class="fs-4 fw-bold mt-4">Đánh giá hiệu quả làm việc</div>
+        <div class="col-2 px-2">
+          <div
+          class="d-flex justify-content-between p-3"
+          style="background-color: #f08795"
+        >
+          <div class="d-flex justify-content-between">
+            <div
+              class="icon-28 icon-access_time me-2"
+              style="color: rgb(194, 18, 26)"
+            ></div>
+            <div>
+              <div class="text-gray-600">
+                <codx-label name="lblTask" default="Công việc"></codx-label>
+              </div>
+              <div class="text-dark fw-bold">
+                <codx-label
+                  name="lblOverdueTask"
+                  default="Đã quá hạn"
+                ></codx-label>
+              </div>
+            </div>
+          </div>
+          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+            {{ data?.status.overdueTasks }}
+          </div>
+        </div>
+        </div>
+        <div class="col-2 px-2">
+          <div
+          class="d-flex justify-content-between p-3"
+          style="background-color: #e3e7ec"
+        >
+          <div class="d-flex justify-content-between">
+            <div
+              class="icon-28 icon-access_time me-2"
+              style="color: rgb(176, 188, 201)"
+            ></div>
+            <div>
+              <div class="text-gray-600">
+                <codx-label name="lblTask" default="Công việc"></codx-label>
+              </div>
+              <div class="text-dark fw-bold">
+                <codx-label
+                  name="lblNewTask"
+                  default="Chưa thực hiện"
+                ></codx-label>
+              </div>
+            </div>
+          </div>
+          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+            {{ data?.status.newTasks }}
+          </div>
+        </div>
+        </div> 
+        <div class="col-2 px-2">
+          <div
+            class="d-flex justify-content-between p-3"
+            style="background-color: #5578da"
+          >
+            <div class="d-flex justify-content-between">
+              <div
+                class="icon-28 icon-access_time me-2"
+                style="color: rgb(26, 23, 177)"
+              ></div>
+              <div>
+                <div class="text-gray-600">
+                  <codx-label name="lblTask" default="Công việc"></codx-label>
+                </div>
+                <div class="text-dark fw-bold">
+                  <codx-label
+                    name="lblProcessingTask"
+                    default="Đang thực hiện"
+                  ></codx-label>
+                </div>
+              </div>
+            </div>
+            <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+              {{ data?.status.processingTasks }}
+            </div>
+          </div>
+        </div> 
+        <div class="col-2 px-2">
+          <div
+            class="d-flex justify-content-between p-3"
+            style="background-color: #7be79c"
+          >
+            <div class="d-flex justify-content-between">
+              <div
+                class="icon-28 icon-access_time me-2"
+                style="color: rgb(18, 122, 58)"
+              ></div>
+              <div>
+                <div class="text-gray-600">
+                  <codx-label name="lblTask" default="Công việc"></codx-label>
+                </div>
+                <div class="text-dark fw-bold">
+                  <codx-label
+                    name="lblCompletedTask"
+                    default="Hoàn tất"
+                  ></codx-label>
+                </div>
+              </div>
+            </div>
+            <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+              {{ data?.status.doneTasks }}
+            </div>
+          </div>
+        </div> 
+        <div class="col-2 px-2">
+          <div
+          class="d-flex justify-content-between p-3"
+          style="background-color: #fff8e6"
+        >
+          <div class="d-flex justify-content-between">
+            <div
+              class="icon-28 icon-access_time me-2"
+              style="color: rgb(255, 128, 8)"
+            ></div>
+            <div>
+              <div class="text-gray-600">
+                <codx-label name="lblTask" default="Công việc"></codx-label>
+              </div>
+              <div class="text-dark fw-bold">
+                <codx-label
+                  name="lblPostponeTask"
+                  default="Hoãn lại"
+                ></codx-label>
+              </div>
+            </div>
+          </div>
+          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+            {{ data?.status.canceledTasks }}
+          </div>
+        </div>
+        </div>
+        <!-- <div class="fs-4 fw-bold mt-4">Đánh giá hiệu quả làm việc</div>
         <div class="d-flex justify-content-end">
           <button type="button" class="btn btn-sm align-self-end" (mouseenter)="openTooltip()"
             (mouseleave)="closeTooltip()">
@@ -127,9 +262,9 @@
               {{ kpi }}
             </p>
           </div>
-        </div>
+        </div> -->
       </div>
-      <div class="row m-0 bg-body rounded-2 mb-3">
+      <div class="row m-0 bg-body rounded-2 mb-3">  
         <div class="fs-4 fw-bold mt-4">Thống kê theo nhóm công việc</div>
         <div class="col-lg-6" style="height: 250px">
           <ejs-accumulationchart id="chart-group-task" width="100%" height="250"
@@ -141,7 +276,7 @@
             </e-accumulation-series-collection>
           </ejs-accumulationchart>
         </div>
-        <div class="col-lg-6" style="position: relative; height: 250px">
+        <!-- <div class="col-lg-6" style="position: relative; height: 250px">
           <ejs-accumulationchart id="chart-rate-done" width="100%" height="250" [legendSettings]="legendRateDoneSettings">
             <e-accumulation-series-collection>
               <e-accumulation-series [dataSource]="piedata ? piedata : {}" xName="x" yName="y" innerRadius="80%">
@@ -159,7 +294,38 @@
             </p>
             <p class="text-center fs-7 text-gray-500">Đánh giá</p>
           </div>
-        </div>
+        </div> -->
+
+        <div class="col-lg-3 col-sm-6 p-0" style="position: relative; height: 250px">
+          <ejs-circulargauge style="display: block" centerY="50%" width="250" height="250">
+            <e-axes>
+              <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
+                [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+                <e-ranges>
+                  <e-range start="0" end="150" radius="100%" roundedCornerRadius="10" fill="#da8c33"
+                    [linearGradient]="rangeLinearGradient2" startWidth="10" endWidth="10">
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer type="Marker" [value]="kpi" markerShape="Image"
+                    imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                  </e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
+          <div style="
+              position: absolute;
+              top: 36%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            ">
+            <div class="text-center fs-8 text-gray-600 text-nowrap">KPI</div>
+            <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+              {{ kpi }}
+            </p>
+          </div>
+        </div> 
       </div>
       <div class="row m-0 bg-body mb-2">
         <div class="fs-4 fw-bold mt-4">
