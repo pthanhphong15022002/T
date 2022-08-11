@@ -1,10 +1,10 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, Util, ViewsComponent } from 'codx-core';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
-import { extractContent, formatDtDis, getListImg } from '../../function/default.function';
+import { convertHtmlAgency2, extractContent, formatDtDis, getListImg } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
 import { AddLinkComponent } from '../addlink/addlink.component';
 import { ForwardComponent } from '../forward/forward.component';
@@ -16,22 +16,27 @@ import { UpdateExtendComponent } from '../update/update.component';
 @Component({
   selector: 'app-view-detail',
   templateUrl: './view-detail.component.html',
-  styleUrls: ['./view-detail.component.scss']
+  styleUrls: ['./view-detail.component.scss'],
+  encapsulation:ViewEncapsulation.None
 })
 export class ViewDetailComponent  implements OnInit , OnChanges  {
   active = 1;
   checkUserPer: any;
   userID:any;
+  @Input() pfuncID : any;
   @Input() data : any;
   @Input() gridViewSetup:any;
   @Input() view: ViewsComponent; 
   @Input() getDataDispatch : Function;
   @Input() dataItem:any;
+  @Input() hideMF = false;
+  @Input() hideFooter = false;
   @Output() uploaded = new EventEmitter<string>();
   @ViewChild("tmpdeadline") tmpdeadline : any; 
   @ViewChild("tmpFolderCopy") tmpFolderCopy : any; 
   @ViewChild('tmpexport') tmpexport!: any;
   extractContent = extractContent;
+  convertHtmlAgency = convertHtmlAgency2
   dvlSecurity:any;
   dvlUrgency:any;
   dvlStatus:any;
@@ -60,7 +65,6 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
       if(changes.data?.previousValue?.recID != changes.data?.currentValue?.recID)
       {
         
-        this.formModel = this.view?.formModel;
         this.dataItem = changes?.dataItem?.currentValue
         this.userID = this.authStore.get().userID;
         this.data = changes.data?.currentValue;
@@ -72,26 +76,50 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
         
       }
     }
+    if(changes?.view?.currentValue != changes?.view?.previousValue)
+      this.formModel = changes?.view?.currentValue?.formModel
+    if(changes?.pfuncID?.currentValue != changes?.pfuncID?.previousValue)
+    {
+      this.pfuncID = changes?.pfuncID?.currentValue;
+      if(this.pfuncID) this.getGridViewSetup(this.pfuncID);
+    }  
+    if(changes?.gridViewSetup?.currentValue != changes?.gridViewSetup?.previousValue)
+      this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
   }
   ngOnInit(): void {
     this.active = 1;
     this.formModel = this.view.formModel;
-        //this.data = this.view.dataService.dataSelected;
+    //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getDataValuelist();
+   
   }
-  
-  convertHtmlAgency(agencyName:any,txtLstAgency:any)
+  getGridViewSetup(funcID:any)
   {
-    if(!agencyName && !txtLstAgency)
-      return '<div><span class="tex-gray-300">Tên công ty</span></div>';
-    var desc = '<div class="d-flex">';
-    if(agencyName)
-      desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
-    if(txtLstAgency)
-      desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+txtLstAgency+'</span></div>';
-    return desc + '</div>';
+    this.cache.functionList(funcID).subscribe((fuc) => {
+      this.formModel = 
+      {
+        entityName : fuc?.entityName,
+        formName : fuc?.formName,
+        funcID : funcID,
+        gridViewName : fuc?.gridViewName
+      }
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((grd) => {
+          this.gridViewSetup = grd;
+        })
+    });
+    this.cache.message("OD020").subscribe(item=>{
+      this.ms020 = item;
+    })
+    this.cache.message("OD021").subscribe(item=>{
+      this.ms021 = item;
+    })
+    this.cache.valueList("OD008").subscribe((item) => {
+      this.dvlRelType = item;
+    })
   }
    ///////////////Các function format valuelist///////////////////////
    fmTextValuelist(val: any, type: any) {

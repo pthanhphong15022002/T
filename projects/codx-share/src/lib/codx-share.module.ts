@@ -63,9 +63,13 @@ import { CodxReportViewerComponent } from './components/codx-report/codx-report-
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
-import { RouterModule, Routes } from '@angular/router';
+import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-
+const routerOptions: ExtraOptions = {
+  scrollPositionRestoration: 'enabled',
+  anchorScrolling: 'enabled',
+  scrollOffset: [0, 64],
+};
 export const routes: Routes = [
   {
     path: '',
@@ -79,6 +83,8 @@ export const routes: Routes = [
   },
 ];
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
+import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
+import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -113,6 +119,8 @@ const T_Component: Type<any>[] = [
   CodxApprovalComponent,
   CodxCommentsComponent,
   DynamicSettingParamaterComponent,
+  CodxApprovalStepComponent,
+  ApprovalTabsComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -128,6 +136,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     CodxCoreModule,
     CalendarModule,
     RouterModule.forChild(routes),
+    
     DateRangePickerModule,
     TabModule,
     UploaderModule,
@@ -136,6 +145,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     BoldReportsModule,
     BoldReportDesignerModule,
     BoldReportViewerModule,
+  
   ],
   exports: [T_Component, T_Pipe],
 })

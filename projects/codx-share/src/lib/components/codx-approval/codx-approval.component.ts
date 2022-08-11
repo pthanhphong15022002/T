@@ -12,7 +12,8 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { ButtonModel, CacheService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApiHttpService, ButtonModel, CacheService, CodxService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { formatDtDis } from '../../../../../codx-od/src/lib/function/default.function';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
@@ -27,10 +28,12 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
     @ViewChild('view') view!: ViewsComponent;
     @ViewChild('itemTemplate') template!: TemplateRef<any>;
     @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
+    @Input() tmpHeader?: TemplateRef<any>;
+    @Input() tmpBody?: TemplateRef<any>;
     @Input() tmpDetail?: TemplateRef<any>;
-
     @Output() selectedChange = new EventEmitter<any>(); 
     funcID: any;
+    transID:any;
     views: Array<ViewModel> | any = [];
     button?: ButtonModel;
     gridViewSetup: any;
@@ -41,7 +44,14 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
     /**
      *
      */
-    constructor( private cache: CacheService ,  private odService :DispatchService , private detectorRef : ChangeDetectorRef) {
+    constructor(
+      private router: Router, 
+      private cache: CacheService,  
+      private odService :DispatchService, 
+      private detectorRef : ChangeDetectorRef,
+      private route:ActivatedRoute,
+      private codxService: CodxService
+      ) {
       
     }
     ngOnChanges(changes: SimpleChanges): void {
@@ -75,41 +85,49 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
     {
 
     }
+    openFormFuncID(e:any)
+    {
 
+    }
     valueChange(dt: any) {
-      var recID = null;
+      this.transID = null;
       if (dt?.data) {
         if(dt?.data[0])
         {
-          recID = dt.data[0].transID
+          this.transID = dt.data[0].transID
           this.dataItem = dt?.data[0];
         }
         else
         {
-          recID = dt?.data?.transID
+          this.transID = dt?.data?.transID
           this.dataItem = dt?.data;
         }
       }
       else if(dt?.transID){
-        recID = dt.transID
+        this.transID = dt.transID
         this.dataItem = dt;
       };
-      this.selectedChange.emit(this.dataItem);
-    }
-    getDtDis(id: any) {
-      this.lstDtDis = null;
-      if(id)
-      {
-        this.lstUserID = '';
-        this.odService.getDetailDispatch(id).subscribe((item) => {
-          //this.getChildTask(id);
-          if (item) {
-            this.lstDtDis = formatDtDis(item);
-            //this.view.dataService.setDataSelected(this.lstDtDis);
+      this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
+        if(fuc)
+        {
+          var params ;
+          if(fuc?.url)
+          {
+            params = fuc?.url.split("/");
+            this.codxService.navigate('','/od/approvals/ODT71/'+params[1]+"/"+fuc?.functionID+"/"+this.dataItem?.transID)
           }
-        });
-      }
+          //const queryParams = { 'id' : this.dataItem?.transID};
+        
+          //this.router.navigate(['tester/od/approvals/ODT71/'+params[1]+"/"+fuc?.functionID]);
+        }
+        //this.router.navigate([{ outlets: { 'detail': ['/tester/'+fuc?.url+'/detail'] } }], { skipLocationChange: true });
+        //this.router.navigate([ { outlets: { primary:['/tester/od/dispatches/'+fuc?.url+'/detail', 'test1'] } }]);
+        //this.router.navigate(['/tester/od/dispatches/'+fuc?.url+'/detail'])
+        //this.codxService.navigate("","",{})
+      });
+      this.selectedChange.emit([this.dataItem,this.view]);
     }
+    
     getGridViewSetup(funcID:any) {
       this.cache
       .valueList("ES022")

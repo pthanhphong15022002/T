@@ -5,3 +5,4 @@
 export * from './lib/codx-od.service';
 export * from './lib/codx-od.component';
 export * from './lib/codx-od.module';
+export * from './lib/codx-approvel.module';
