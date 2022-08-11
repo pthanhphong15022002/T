@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CodxTMService } from '../../codx-tm.service';
 import { CO_Meetings, TabControl } from '../../models/CO_Meetings.model';
 
@@ -13,13 +14,24 @@ export class ViewWorkComponent implements OnInit {
   data: any;
   startDateMeeting: any;
   name= '';
+  meetingID: any;
   private all = ['Dashboard', 'Công việc'];
   tabControl: TabControl[] = [];
+  funcID: any;
+  dataValue = '';
 
   constructor(
     private tmService: CodxTMService,
     private changeDetectorRef: ChangeDetectorRef,
-  ) { }
+    private route: ActivatedRoute,
+
+  ) {
+    this.getQueryParams();
+
+    this.route.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
+  }
 
   ngOnInit(): void {
     this.loadData();
@@ -62,5 +74,14 @@ export class ViewWorkComponent implements OnInit {
     });
     item.isActive = true;
     this.changeDetectorRef.detectChanges();
+  }
+
+  getQueryParams() {
+    this.route.queryParams.subscribe((params) => {
+      if (params) {
+        this.meetingID = params.meetingID;
+        this.dataValue = this.meetingID;
+      }
+    });
   }
 }

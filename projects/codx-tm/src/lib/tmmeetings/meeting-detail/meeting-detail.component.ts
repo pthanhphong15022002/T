@@ -65,7 +65,7 @@ export class MeetingDetailComponent extends UIComponent {
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
-    this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
+    this.tmService.getMoreFunction(['TMT05011', null, null]).subscribe((res) => {
       if (res) {
         this.urlDetail = res[0].url;
       }
