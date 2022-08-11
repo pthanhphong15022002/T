@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
 
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
@@ -9,6 +9,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { count } from 'console';
+import { CodxTMService } from '../../codx-tm.service';
 
 @Component({
   selector: 'app-popup-share-sprints',
@@ -26,9 +27,10 @@ export class PopupShareSprintsComponent implements OnInit {
   userID = '';
   listUserDetail = [];
   taskBoard: any;
+  vllShare : any ;
   constructor(
     private api: ApiHttpService,
-    private callfc: CallFuncService,
+    private tmSv: CodxTMService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
@@ -37,6 +39,8 @@ export class PopupShareSprintsComponent implements OnInit {
     this.data = dt?.data;
     this.dialog = dialog;
     this.taskBoard = this.data.boardAction;
+    this.title =  this.data?.title ;
+    this.vllShare =  this.data?.vllShare ;
     this.listUserDetailOld = this.data.listUserDetail;
     this.listUserDetail = this.listUserDetailOld;
     for (var i = 0; i < this.listUserDetail.length; i++) {
@@ -85,24 +89,56 @@ export class PopupShareSprintsComponent implements OnInit {
   //caí này chạy tạm đã
   eventApply(e: any) {
     var resources = '';
+    var listDepartmentID = '';
+    var listUserID = '';
+
     e?.data?.forEach((obj) => {
-      // if (obj?.data && obj?.data != '') {
       switch (obj.objectType) {
         case 'U':
-          resources += obj.id + ';';
+          listUserID += obj.id + ';';
           break;
-        //  case 'D':
-        //   resources += obj.id+";";
-        //    break;
+        case 'O':
+        case 'D':
+          listDepartmentID += obj.id + ';';
+          break;
       }
-      //  }
     });
+    if (listUserID != '')
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
+        if (res) {
+          resources += res;
+          if (listUserID != '') resources += ';' + listUserID;
+          this.valueSelectUser(resources);
+        }
+      });
+    } else this.valueSelectUser(listUserID);
   }
 
   valueSelectUser(resources) {
     if (resources != '') {
-      resources = resources.substring(0, resources.length - 1);
-      this.getListUser(resources);
+      if (this.listIdUser.length > 0) {
+        var arrResource= resources.split(';');
+        var arrNew = [];
+        var oldListUser = this.listIdUser.join(";") ;
+        arrResource.forEach((e) => {
+          if (!oldListUser.includes(e)) {
+            arrNew.push(e);
+          }
+        });
+        if (arrNew.length > 0) {
+          resources = arrNew.join(';');
+          this.getListUser(resources);
+        }
+      } else {
+        this.getListUser(resources);
+      }
       this.changeDetectorRef.detectChanges();
     }
   }

@@ -98,6 +98,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
       this.dt.detectChanges();
     });
+
   }
 
   ngAfterViewInit(): void {
@@ -127,16 +128,18 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       });
   }
 
-  beforDelete(option:any,data:any){
+  beforDelete(option:RequestOption,data:any){
     option.service = "WP";
     option.assemblyName = "ERM.Business.WP";
     option.className = "CommentsBusiness";
-    option.method = "DeletePostAsync";
+    option.methodName = "DeletePostAsync";
     option.data = data;
     return true;
   }
   removePost(data: any) {
-    (this.listview.dataService as CRUDService).delete([data],true,(op:any)=>this.beforDelete(op,data)).subscribe((res) => {
+    (this.listview.dataService as CRUDService).
+    delete([data],true,(op:any)=>this.beforDelete(op,data)).
+    subscribe((res) => {
       if (res) {
         if(data.files){
           this.api.execSv("DM",
@@ -170,7 +173,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     var obj = {
       status: 'create',
       headerText: 'Tạo bài viết',
-      title: this.title,
       lstView: this.listview,
     };
     let option = new DialogModel();
@@ -194,7 +196,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       post: dataEdit,
       status: 'edit',
       headerText: 'Chỉnh sửa bài viết',
-      title: this.title,
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
@@ -216,7 +217,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       post: data,
       status: 'share',
       headerText: 'Chia sẻ bài viết',
-      title: this.title,
     };
     this.dt.detectChanges();
     let option = new DialogModel();

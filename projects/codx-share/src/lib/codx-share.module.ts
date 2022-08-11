@@ -2,11 +2,11 @@ import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CodxCoreModule } from 'codx-core';
+import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
 import { AttachmentComponent } from './components/attachment/attachment.component';
 import { AssignInfoComponent } from './components/assign-info/assign-info.component';
-import { NgModule, Type } from '@angular/core';
+import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { SelectweekComponent } from './components/selectweek/selectweek.component';
 import { CodxTabsComponent } from './components/codx-tabs/codx-tabs.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -43,7 +43,11 @@ import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-in
 import { UserInnerComponent } from './layout/dropdown-inner/user-inner/user-inner.component';
 import { CodxReportComponent } from './components/codx-report/codx-report.component';
 import { CodxReportDesignerComponent } from './components/codx-report/codx-report-designer/codx-report-designer.component';
-import { BoldReportDesignerModule, BoldReportsModule, BoldReportViewerModule } from '@boldreports/angular-reporting-components';
+import {
+  BoldReportDesignerModule,
+  BoldReportsModule,
+  BoldReportViewerModule,
+} from '@boldreports/angular-reporting-components';
 
 // Report viewer
 import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
@@ -57,6 +61,16 @@ import '@boldreports/global/l10n/ej.localetexts.vi-VN.min.js';
 import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
 import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
+//import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
+import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
+import { ExtraOptions, RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+
+import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
+import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
+import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
+import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -88,6 +102,12 @@ const T_Component: Type<any>[] = [
   CodxReportViewerComponent,
   CodxReportDesignerComponent,
   NoteDrawerComponent,
+  CodxApprovalComponent,
+  CodxCommentsComponent,
+  DynamicSettingComponent,
+  CodxApprovalStepComponent,
+  ApprovalTabsComponent,
+  DynamicFormComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -109,11 +129,24 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     ChartAllModule,
     BoldReportsModule,
     BoldReportDesignerModule,
-    BoldReportViewerModule
+    BoldReportViewerModule,
+  
   ],
   exports: [T_Component, T_Pipe],
 })
-export class CodxShareModule { }
+export class CodxShareModule {
+  public static forRoot(
+    config?: EnvironmentConfig
+  ): ModuleWithProviders<CodxCoreModule> {
+    return {
+      ngModule: CodxCoreModule,
+      providers: [
+        HttpClientModule,
+        { provide: EnvironmentConfig, useValue: config },
+      ],
+    };
+  }
+}
 // const T_Moudule: Type<any>[] = [
 //   CommonModule,
 //   CodxCoreModule,

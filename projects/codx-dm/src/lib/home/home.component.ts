@@ -171,64 +171,62 @@ export class HomeComponent extends UIComponent {
     }
   }
 
-  setFullHtmlNode(folder, text) {
-    var item1 = '';
-    var item2 = '';
+  // setFullHtmlNode(folder, text) {
+  //   var item1 = '';
+  //   var item2 = '';
 
-    if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
-    else {
-      if (folder.icon.indexOf('.') == -1)
-        item1 = `<i class="${folder.icon}" role="presentation"></i>`;
-      else {
-        var path = `${this.path}/${folder.icon}`;
-        item1 = `<img class="h-15px " src="${path}">`;
-      }
-    }
+  //   if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
+  //     item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
+  //   else {
+  //     if (folder.icon.indexOf('.') == -1)
+  //       item1 = `<i class="${folder.icon}" role="presentation"></i>`;
+  //     else {
+  //       var path = `${this.path}/${folder.icon}`;
+  //       item1 = `<img class="h-15px " src="${path}">`;
+  //     }
+  //   }
 
-    if (!folder.read)
-      item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
-    var fullText = `${item1}
-                    ${item2}
-                    <span class="mytree_node  me-2"></span>
-                    ${text}`;
+  //   if (!folder.read)
+  //     item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
+  //   var fullText = `${item1}
+  //                   ${item2}
+  //                   <span class="mytree_node  me-2"></span>
+  //                   ${text}`;
 
-    return fullText;
-  }
+  //   return fullText;
+  // }
 
-  onSelectionChanged($data) {
-    //  console.log($data.data);
-    // alert(1);
-    //let data = $event.data;
+  onSelectionChanged($data) {    
     ScrollComponent.reinitialization();
     if ($data == null || $data.data == null) return;
 
     let id = $data.data.recID;
     let item = $data.data;
     if (item.read) {
-      // var breadcumb = [];
-      // var breadcumbLink = [];
-      // var list = this.tree.getBreadCumb(id);
-      // this.dmSV.folderName = item.folderName;
-      // this.dmSV.parentFolderId = item.parentId;
-      // this.dmSV.level = item.level;
+      var breadcumb = [];
+      var breadcumbLink = [];
+      this.codxview.currentView.currentComponent.treeView.textField = "folderName";
+      var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
+      this.dmSV.folderName = item.folderName;
+      this.dmSV.parentFolderId = item.parentId;
+      this.dmSV.level = item.level;
       // this.dmSV.disableInput.next(false);
       // if (this.dmSV.currentDMIndex.getValue() == "3")
       //   this.dmSV.changeTemplate("0");
       // // this.dmSV.level = data.node.data;
       // //this.dmSV.parentFolderId = data.node.parent;
       // this.dmSV.parentFolder.next(item);
-      // this.dmSV.getRight(item);
+      this.dmSV.getRight(item);
       // console.log(list);
 
-      // breadcumb.push(this.dmSV.menuActive.getValue());
-      // breadcumbLink.push(this.dmSV.idMenuActive);
-      // for (var i = list.length - 1; i >= 0; i--) {
-      //   breadcumb.push(list[i].text);
-      //   breadcumbLink.push(list[i].id);
-      // }
-      // this.dmSV.breadcumbLink = breadcumbLink;
-      // this.dmSV.breadcumb.next(breadcumb);
+      breadcumb.push(this.dmSV.menuActive.getValue());
+      breadcumbLink.push(this.dmSV.idMenuActive);
+      for (var i = list.length - 1; i >= 0; i--) {
+        breadcumb.push(list[i].text);
+        breadcumbLink.push(list[i].id);
+      }
+      this.dmSV.breadcumbLink = breadcumbLink;
+      this.dmSV.breadcumb.next(breadcumb);
       // this.dmSV.currentNode = id;
       // this.dmSV.currentNode = id;
       this.data = [];
@@ -277,13 +275,8 @@ export class HomeComponent extends UIComponent {
     } else {
       this.dmSV.disableInput.next(true);
      // this.notificationsService.notify(this.titleAccessDenied);
-    }
-    
+    }    
   }
-
-  // checkUserForder(data) {
-  //   return false;
-  // }
 
   ngAfterViewInit(): void {
     // this.button.nativeElement.disabled = true;
@@ -340,40 +333,7 @@ export class HomeComponent extends UIComponent {
 
   changeView(event) {
     this.currView = null;
-    this.currView = event.view.model.template2;
-  //  ScrollComponent.reinitialization("[data-kt-scroll='true']");
-   // ScrollComponent.resize();
-    // if (this.dmSV.folderType != this.view.funcID) {
-    //   this.data = [];
-    //   this.dmSV.folderType = this.view.funcID;
-    //   this.dmSV.idMenuActive = this.view.funcID;
-    //   this.changeDetectorRef.detectChanges();
-    // }
-    // this.folderService.options.funcID = this.view.funcID;
-    // if (this.dmSV.folderType != this.view.funcID) {
-    //   this.data = [...this.data, ...this.view.dataService.dataSelected];
-    //   this.dmSV.listFolder = this.view.dataService.dataSelected;
-    //   this.dmSV.loadedFolder = true;
-    //   this.changeDetectorRef.detectChanges();      
-    // }
-      
-    // this.dmSV.folderType = this.view.funcID;
-    // this.dmSV.idMenuActive = this.view.funcID;
-    // this.dmSV.loadedFile = false;
-    // this.dmSV.folderId.next("");  
-    // this.dmSV.loadedFolder = true;
-    // this.changeDetectorRef.detectChanges();
-    // this.fileService.options.funcID = this.view.funcID;
-    // this.fileService
-    //   .getListActiveFiles('', this.view.funcID)
-    //   .subscribe(async (res) => {
-    //     if (res != null) {            
-    //       this.data = [...this.data, ...res];
-    //       this.dmSV.listFiles = res;
-    //       this.dmSV.loadedFile = true;
-    //       this.changeDetectorRef.detectChanges();
-    //     }
-    //   });
+    this.currView = event.view.model.template2; 
   }
 
   requestEnded(e: any){
@@ -390,8 +350,13 @@ export class HomeComponent extends UIComponent {
       this.dmSV.idMenuActive = this.view.funcID;
       this.dmSV.loadedFile = false;
       this.dmSV.folderId.next('');
-      this.dmSV.loadedFolder = true;
-     // this.changeDetectorRef.detectChanges();
+      this.dmSV.loadedFolder = true;      
+      this.dmSV.menuIdActive.next(this.view.funcID);
+      this.dmSV.idMenuActive = this.view.funcID;;
+      var breadcumb = [];      
+      breadcumb.push(this.view.function.customName);
+      this.dmSV.menuActive.next(this.view.function.customName);
+      this.dmSV.breadcumb.next(breadcumb);    
       this.fileService.options.funcID = this.view.funcID;
       this.fileService
         .getListActiveFiles('', this.view.funcID)
@@ -404,6 +369,6 @@ export class HomeComponent extends UIComponent {
           }
         });        
     }
-  //  this.changeDetectorRef.detectChanges();     
+    
   }
 }

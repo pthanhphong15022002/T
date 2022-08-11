@@ -1,4 +1,4 @@
-import { Resources } from './../../models/CO_Meetings.model';
+import { CO_Resources } from './../../models/CO_Meetings.model';
 import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
 import { DialogData, DialogRef, FormModel } from 'codx-core';
 
@@ -17,7 +17,7 @@ export class ViewListMeetComponent implements OnInit {
   day: any;
   startTime: any;
   endTime: any;
-  resources: Resources[] = [];
+  resources: CO_Resources[] = [];
   resourceID: any;
   constructor(
     @Optional() dt?: DialogData,

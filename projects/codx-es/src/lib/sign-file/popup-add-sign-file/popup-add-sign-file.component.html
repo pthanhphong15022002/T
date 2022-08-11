@@ -1,9 +1,7 @@
-<!-- <codx-form [formGroup]="dialogSignFile" *ngIf="isAfterRender" [body]="body" [footer]="footer" [dialog]="dialog"
-  [headerText]="" [subHeaderText]=""> -->
 <div class="card-body p-0 codx-card-custom" *ngIf="isAfterRender">
   <div class="codx-stepper stepper stepper-pills">
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
-      <div class="d-flex align-items-center ">
+      <div class="d-flex align-items-center">
         <h2 class="h2-title">
           <codx-label name="lblTitleSignFile" default="Thêm mới tài liệu" [formModel]="formModel"></codx-label>
         </h2>
@@ -63,14 +61,17 @@
         </div>
       </div>
       <div class="d-flex justify-content-end">
-
-        <a href="#" class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4">Từ chối</a>
+        <!-- <a href="#" class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4">Từ chối</a>
         <a href="#" class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4">Làm lại</a>
         <a href="#" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4">Ký</a>
 
+        <a href="#" class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4">Từ chối</a>
+        <a href="#" class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4">Làm lại</a>
+        <a href="#" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4">Ký</a> -->
+
         <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
           (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
-          <codx-label name="lbl" [formModel]="formModel" default="Tiếp tục"></codx-label>
+          <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
         </button>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18" (click)="close(templateClose)"></i>
@@ -79,14 +80,23 @@
     </div>
     <div class="stepper-body p-2 w-100" *ngIf="currentTab < 3">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100">
-        <div class="card-body overflow-auto">
-          <div class="tab-content">
+        <div class="mb-10 mt-10 text-center tab-pane-header">
+          <h2 class="h2-title">
+            <codx-label *ngIf="currentTab == 0" name="lblUploadFile" [formModel]="formModel" default="Upload file">
+            </codx-label>
+            <codx-label *ngIf="currentTab == 1" name="lblTitleAddSignFile" [formModel]="formModel"
+              default="Bổ sung thông tin tài liệu">
+            </codx-label>
+            <codx-label *ngIf="currentTab == 2" name="lblSubHeaderApprover" default="Quy trình xét duyệt"
+              [formModel]="formModel">
+            </codx-label>
+          </h2>
+        </div>
+        <div class="card-body hover-scroll-overlay-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
+          data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
+          <div class="tab-content ">
             <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
-              <div class="mb-10 mt-10 text-center">
-                <h2 class="h2-title">
-                  <codx-label name="lblUploadFile" [formModel]="formModel" default="Upload file"></codx-label>
-                </h2>
-              </div>
               <div class="text-center">
                 <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0"
                   [objectId]="dialogSignFile.value.recID" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
@@ -102,12 +112,6 @@
               </div>
             </div>
             <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
-              <div class="mb-10 mt-10 text-center">
-                <h2 class="h2-title">
-                  <codx-label name="lblTitleAddSignFile" [formModel]="formModel" default="Bổ sung thông tin tài liệu">
-                  </codx-label>
-                </h2>
-              </div>
               <div class="w-100 form-content">
                 <div class="form-group">
                   <codx-label fiedName="Title" default="Tên tài liệu" [formModel]="formModel">
@@ -146,16 +150,7 @@
                       </codx-input>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <!-- <div class="form-group">
-                        <codx-label fiedName="Pages" default="Số trang" [formModel]="formModel">
-                        </codx-label>
-                        <codx-input type="number" name="number" ngDefaultControl field="pages" [Group]="dialogSignFile"
-                          (valueChange)="valueChange($event)" [min]="0" placeholder="0"
-                          [crrValue]="dialogSignFile.value?.pages" [showSpinButton]="false">
-                        </codx-input>
-                      </div> -->
-                  </div>
+                  <div class="col-md-6"></div>
                 </div>
                 <div class="form-group">
                   <codx-label fiedName="EmployeeID" [formModel]="formModel" default="Người yêu cầu">
@@ -176,24 +171,22 @@
               </div>
             </div>
             <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''">
-              <app-approval-steps #stepAppr *ngIf="currentTab == 2" #viewApprovalStep
-                [transId]="dialogSignFile.value.approveControl=='1'? dialogSignFile.value.recID : dialogSignFile.value.processID"
-                (addEditItem)="openFormAdd($event)">
+              <app-approval-steps #stepAppr *ngIf="currentTab == 2" #viewApprovalStep [transId]="
+                  dialogSignFile.value.approveControl == '1'
+                    ? dialogSignFile.value.recID
+                    : dialogSignFile.value.processID
+                " (addEditItem)="openFormAdd($event)">
               </app-approval-steps>
             </div>
-            <div class="tab-pane fade" id="pane_4" [ngClass]="currentTab == 3 ? 'active show' : ''">
-
-            </div>
+            <div class="tab-pane fade" id="pane_4" [ngClass]="currentTab == 3 ? 'active show' : ''"></div>
           </div>
         </div>
 
-
-
-        <div class="d-flex flex-stack  justify-content-between card-footer border-0">
-
+        <div class="d-flex flex-stack justify-content-between card-footer border-0">
           <div class="left">
-            <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">
-              <codx-label name="" [formModel]="formModel" class="" default="Quay lại" class="">
+            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0"
+              (click)="previous(currentTab)">
+              <codx-label name="lblBack" [formModel]="formModel" default="Quay lại">
               </codx-label>
             </button>
             <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0"
@@ -204,17 +197,21 @@
           </div>
 
           <div *ngIf="currentTab == 0"></div>
-          <button type="button" class="btn btn-primary" (click)="continue(currentTab)"
-            [ngClass]="(attachment?.fileUploadList?.length <= 0 && currentTab == 0) && dialogSignFile.value.files?.length <= 0 ? 'disabled' : ''">
+          <button type="button" class="btn btn-primary" (click)="continue(currentTab)" [ngClass]="
+              attachment?.fileUploadList?.length <= 0 &&
+              currentTab == 0 &&
+              dialogSignFile.value.files?.length <= 0
+                ? 'disabled'
+                : ''
+            ">
             <codx-label name="lblContinue" [formModel]="formModel" default="Tiếp tục"></codx-label>
           </button>
-
         </div>
       </div>
     </div>
-    <lib-approval *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0" [isApprover]="false"
+    <lib-pdf-view *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0" [isApprover]="false"
       [recID]="dialogSignFile.value.recID">
-    </lib-approval>
+    </lib-pdf-view>
   </div>
 </div>
 
@@ -250,7 +247,7 @@
     </div>
     <div class="card-footer border-0">
       <div class="d-flex justify-content-end">
-        <a class="btn btn-primary" (click)="onSaveProcessID(dialogTemplate)">
+        <a class="btn btn-primary" (click)="onSaveProcessTemplateID(dialogTemplate)">
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>
@@ -260,7 +257,58 @@
 </ng-template>
 
 <ng-template #templateClose let-dialogClose>
-  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+  <!--begin::Alert-->
+  <div class="card-alert alert alert-dismissible  d-flex flex-column  mw-650px mx-auto p-10">
+    <!--begin::Close-->
+    <button type="button" class="position-absolute top-0 end-0 m-2 btn btn-icon" (click)="closeDialogTmp(dialogClose)">
+      <span class="icon-close icon-18"></span>
+    </button>
+
+    <!--end::Close-->
+    <!--begin::Item-->
+    <div class="d-flex flex-stack my-10">
+      <div class="d-flex">
+        <span class="icon-help_outline me-5 icon-56 text-primary"></span>
+        <div class="d-flex flex-column">
+          <div class="text-dark fs-5 fw-bold mb-4">
+            <codx-label *ngIf="isAddNew" name="lblCloseAddNewForm" [formModel]="formModel"
+              default="Bạn có muốn lưu quy trình đã thiết lập"></codx-label>
+            <codx-label *ngIf="!isAddNew" name="lblCloseEditForm" [formModel]="formModel"
+              default="Bạn có muốn lưu quy trình đã đã chỉnh sửa"></codx-label>
+          </div>
+          <!--begin::Content-->
+          <span class="mb-4">Chương trình sẽ thực hiện ghi đè file trùng tên hiện có trên hệ thống. Quá trình này không
+            thể khôi phục
+            lại
+            như trước khi ghi đè, bạn có muốn thực hiện không?</span>
+          <!--end::Content-->
+          <!-- <div class="d-flex ">
+            <codx-input type="checkbox" label="Apply to all" [checked]="false" labelPosition="After"></codx-input>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <!--end::Item-->
+    <!--begin::Buttons-->
+    <div class="d-flex justify-content-end">
+      <a class="btn btn-primary me-2" (click)="clickIsSave(true, dialogClose)">
+        <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
+        </codx-label>
+      </a>
+      <a *ngIf="isAddNew" class="btn btn-light-primary me-2 " (click)="clickIsSave(false, dialogClose)">
+        <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
+        </codx-label>
+      </a>
+      <a *ngIf="!isAddNew" class="btn btn-light-primary me-2" (click)="clickNotSave(dialogClose)">
+        <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
+        </codx-label>
+      </a>
+
+    </div>
+    <!--end::Buttons-->
+  </div>
+  <!--end::Alert-->
+  <!-- <div class="card-alert alert alert-dismissible card w-100 h-100 rounded-0 border-0">
     <div class="card-header flex-column">
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="card-title">
@@ -293,8 +341,8 @@
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>
-        <a *ngIf="isAddNew" class="btn btn-danger" (click)="clickIsSave(false, dialogClose)">
-          <codx-label name="lblDelete" default="Xóa" [formModel]="formModel">
+        <a *ngIf="isAddNew" class="btn btn-secondary" (click)="clickIsSave(false, dialogClose)">
+          <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
           </codx-label>
         </a>
         <a *ngIf="!isAddNew" class="btn btn-secondary" (click)="clickNotSave(dialogClose)">
@@ -303,5 +351,5 @@
         </a>
       </div>
     </div>
-  </div>
+  </div> -->
 </ng-template>

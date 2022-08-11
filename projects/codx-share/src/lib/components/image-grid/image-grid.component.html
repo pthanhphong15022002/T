@@ -1,13 +1,11 @@
-<div class="main">
+
+<ng-container *ngIf="multiple;else single">
   <ng-container *ngIf="file_img_video.length > 0">
     <div [ngSwitch]="file_img_video.length" class="position-relative1">
       <ng-container *ngSwitchCase="1">
         <div class="feed-1pic position-relative" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">
-            <ng-container *ngIf="isNew;else codxImage1_0">
-              <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
-            </ng-container>
-            <ng-template #codxImage1_0>
+            <ng-container *ngIf="file_img_video[0].recID;else image_1_0">
               <codx-img 
                 [recId]="file_img_video[0].recID" 
                 [objectId]="file_img_video[0].objectID" 
@@ -15,6 +13,9 @@
                 cssClass="pic"
                 imageType="square">
               </codx-img>
+            </ng-container>
+            <ng-template #image_1_0>
+              <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
             </ng-template>
           </ng-container>
           <ng-template #video_1_0>
@@ -31,10 +32,7 @@
         <div class="row row-custom feed-2pic m-0 ">
           <div class="col-7 pe-2 ps-0 position-relative">
             <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_2_0">
-              <ng-container *ngIf="isNew;else codxImage2_0">
-                <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
-              </ng-container>
-              <ng-template #codxImage2_0>
+              <ng-container *ngIf="file_img_video[0].recID;else Image_2_0">
                 <codx-img 
                   [recId]="file_img_video[0].recID" 
                   [objectId]="file_img_video[0].objectID" 
@@ -42,6 +40,9 @@
                   [cssClass]="'pic'"
                   imageType="square">
                 </codx-img>
+              </ng-container>
+              <ng-template #Image_2_0>
+                <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
               </ng-template>
             </ng-container>
             <ng-template #video_2_0>
@@ -55,10 +56,7 @@
           </div>
           <div class="col-5 px-0 h-250px bg-secondary d-flex algin-items-center position-relative">
             <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_2_1">
-              <ng-container *ngIf="isNew;else codxImage2_1">
-                <img class="w-100 rounded h-250px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
-              </ng-container>
-              <ng-template #codxImage2_1>
+              <ng-container *ngIf="file_img_video[1].recID;else Image_2_1">
                 <codx-img 
                   [recId]="file_img_video[1].recID" 
                   [objectId]="file_img_video[1].objectID" 
@@ -66,6 +64,9 @@
                   [cssClass]="'pic'"
                   imageType="square">
                 </codx-img>
+              </ng-container>
+              <ng-template #Image_2_1>
+                <img class="w-100 rounded h-250px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
               </ng-template>
             </ng-container>
             <ng-template #video_2_1>
@@ -83,11 +84,7 @@
         <div class="row row-custom feed-3pic m-0">
           <div class="col-7 ps-0 pe-2 position-relative">
             <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_3_0">
-              <!-- <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" /> -->
-              <ng-container *ngIf="isNew;else codxImage3_0">
-                <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
-              </ng-container>
-              <ng-template #codxImage3_0>
+              <ng-container *ngIf="file_img_video[0].recID;else Image_3_0">
                 <codx-img 
                   [recId]="file_img_video[0].recID" 
                   [objectId]="file_img_video[0].objectID" 
@@ -95,6 +92,9 @@
                   [cssClass]="'pic'"
                   imageType="square">
                 </codx-img>
+              </ng-container>
+              <ng-template #Image_3_0>
+                <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
               </ng-template>
             </ng-container>
             <ng-template #video_3_0>
@@ -109,11 +109,7 @@
           <div class="col-5 px-0 ">
             <div class="position-relative">
               <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_3_1">
-                <!-- <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" /> -->
-                <ng-container *ngIf="isNew;else codxImage3_1">
-                  <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
-                </ng-container>
-                <ng-template #codxImage3_1>
+                <ng-container *ngIf="file_img_video[1].recID;else Image_3_1">
                   <codx-img 
                     [recId]="file_img_video[1].recID" 
                     [objectId]="file_img_video[1].objectID" 
@@ -121,6 +117,9 @@
                     [cssClass]="'pic'"
                     imageType="square">
                   </codx-img>
+                </ng-container>
+                <ng-template #Image_3_1>
+                  <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
                 </ng-template>
               </ng-container>
               <ng-template #video_3_1>
@@ -134,10 +133,7 @@
             </div>
             <div class="position-relative">
               <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_3_2">
-                <ng-container *ngIf="isNew;else codxImage3_2">
-                  <img class="w-100 rounded h-150px mt-2" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
-                </ng-container>
-                <ng-template #codxImage3_2>
+                <ng-container *ngIf="file_img_video[2].recID;else Image_3_2">
                   <codx-img 
                     [recId]="file_img_video[2].recID" 
                     [objectId]="file_img_video[2].objectID" 
@@ -145,6 +141,9 @@
                     [cssClass]="'pic'"
                     imageType="square">
                   </codx-img>
+                </ng-container>
+                <ng-template #Image_3_2>
+                  <img class="w-100 rounded h-150px mt-2" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
                 </ng-template>
               </ng-container>
               <ng-template #video_3_2>
@@ -163,10 +162,7 @@
         <div class="row row-custom feed-4pic m-0">
           <div class="col-5 pe-2 ps-0 position-relative">
             <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_4_0">
-              <ng-container *ngIf="isNew;else codxImage4_0">
-                <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
-              </ng-container>
-              <ng-template #codxImage4_0>
+              <ng-container *ngIf="file_img_video[0].recID;else Image_4_0">
                 <codx-img 
                   [recId]="file_img_video[0].recID" 
                   [objectId]="file_img_video[0].objectID" 
@@ -174,6 +170,9 @@
                   [cssClass]="'pic pic-320'"
                   imageType="square">
                 </codx-img>
+              </ng-container>
+              <ng-template #Image_4_0>
+                <img class="w-100 rounded h-320px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
               </ng-template>
             </ng-container>
             <ng-template #video_4_0>
@@ -188,10 +187,7 @@
           <div class="col-7 px-0">
             <div class="position-relative">
               <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_4_1">
-                <ng-container *ngIf="isNew;else codxImage4_1">
-                  <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
-                </ng-container>
-                <ng-template #codxImage4_1>
+                <ng-container *ngIf="file_img_video[1].recID;else Image_4_1">
                   <codx-img 
                     [recId]="file_img_video[1].recID" 
                     [objectId]="file_img_video[1].objectID" 
@@ -199,6 +195,9 @@
                     [cssClass]="'pic'"
                     imageType="square">
                   </codx-img>
+                </ng-container>
+                <ng-template #Image_4_1>
+                  <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
                 </ng-template>
               </ng-container>
               <ng-template #video_4_1>
@@ -213,10 +212,7 @@
             <div class="row row-custom mt-2 mx-0">
               <div class="col-6 ps-0 pe-0 position-relative">
                 <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_4_2">
-                  <ng-container *ngIf="isNew;else codxImage4_2">
-                    <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
-                  </ng-container>
-                  <ng-template #codxImage4_2>
+                  <ng-container *ngIf="file_img_video[2].recID;else Image_4_2">
                     <codx-img 
                       [recId]="file_img_video[2].recID" 
                       [objectId]="file_img_video[2].objectID" 
@@ -224,6 +220,9 @@
                       [cssClass]="'pic'"
                       imageType="square">
                     </codx-img>
+                  </ng-container>
+                  <ng-template #Image_4_2>
+                    <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data" />
                   </ng-template>
                 </ng-container>
                 <ng-template #video_4_2>
@@ -238,10 +237,7 @@
               </div>
               <div class="col-6 px-0 ps-2 position-relative">
                 <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_4_3">
-                  <ng-container *ngIf="isNew;else codxImage4_3">
-                    <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail || file_img_video[3].data" />
-                  </ng-container>
-                  <ng-template #codxImage4_3>
+                  <ng-container *ngIf="file_img_video[3].recID;else Image_4_3">
                     <codx-img 
                       [recId]="file_img_video[3].recID" 
                       [objectId]="file_img_video[3].objectID" 
@@ -249,6 +245,9 @@
                       [cssClass]="'pic'"
                       imageType="square">
                     </codx-img>
+                  </ng-container>
+                  <ng-template #Image_4_3>
+                    <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail || file_img_video[3].data" />
                   </ng-template>
                 </ng-container>
                 <ng-template #video_4_3>
@@ -270,10 +269,7 @@
           <div class="col-7 ps-0 pe-2">
             <div class="position-relative">
               <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_n_0">
-                <ng-container *ngIf="isNew;else codxImage_n_0">
-                  <img class="w-100 rounded h-150px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
-                </ng-container>
-                <ng-template #codxImage_n_0>
+                <ng-container *ngIf="file_img_video[0].recID;else Image_n_0">
                   <codx-img 
                     [recId]="file_img_video[0].recID" 
                     [objectId]="file_img_video[0].objectID" 
@@ -281,6 +277,9 @@
                     [cssClass]="'pic'"
                     imageType="square">
                   </codx-img>
+                </ng-container>
+                <ng-template #Image_n_0>
+                  <img class="w-100 rounded h-150px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
                 </ng-template>
               </ng-container>
               <ng-template #video_n_0>
@@ -295,10 +294,7 @@
             <div class="row row-custom mt-2 mx-0">
               <div class="col-6 pe-0 ps-0 position-relative">
                 <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_n_1">
-                  <ng-container *ngIf="isNew;else codxImage_n_1">
-                    <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
-                  </ng-container>
-                  <ng-template #codxImage_n_1>
+                  <ng-container *ngIf="file_img_video[1].recID;else Image_n_1">
                     <codx-img 
                       [recId]="file_img_video[1].recID" 
                       [objectId]="file_img_video[1].objectID" 
@@ -306,6 +302,9 @@
                       [cssClass]="'pic'"
                       imageType="square">
                     </codx-img>
+                  </ng-container>
+                  <ng-template #Image_n_1>
+                    <img class="w-100 rounded h-150px" [src]="file_img_video[1].thumbnail || file_img_video[1].data" />
                   </ng-template>
                 </ng-container>
                 <ng-template #video_n_1>
@@ -320,10 +319,7 @@
               </div>
               <div class="col-6 ps-2 pe-0 position-relative">
                 <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_n_2">
-                  <ng-container *ngIf="isNew;else codxImage_n_2">
-                    <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data " />
-                  </ng-container>
-                  <ng-template #codxImage_n_2>
+                  <ng-container *ngIf="file_img_video[2].recID;else Image_n_2">
                     <codx-img 
                       [recId]="file_img_video[2].recID" 
                       [objectId]="file_img_video[2].objectID" 
@@ -331,6 +327,9 @@
                       [cssClass]="'pic'"
                       imageType="square">
                     </codx-img>
+                  </ng-container>
+                  <ng-template #Image_n_2>
+                    <img class="w-100 rounded h-150px" [src]="file_img_video[2].thumbnail || file_img_video[2].data " />
                   </ng-template>
                 </ng-container>
                 <ng-template #video_n_2>
@@ -348,10 +347,7 @@
           <div class="col-5 px-0">
             <div class="position-relative">
               <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_n_3">
-                <ng-container *ngIf="isNew;else codxImage_n_3">
-                  <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail ||file_img_video[3].data " />
-                </ng-container>
-                <ng-template #codxImage_n_3>
+                <ng-container *ngIf="file_img_video[3].recID;else Image_n_3">
                   <codx-img 
                     [recId]="file_img_video[3].recID" 
                     [objectId]="file_img_video[3].objectID" 
@@ -359,6 +355,9 @@
                     [cssClass]="'pic'"
                     imageType="square">
                   </codx-img>
+                </ng-container>
+                <ng-template #Image_n_3>
+                  <img class="w-100 rounded h-150px" [src]="file_img_video[3].thumbnail ||file_img_video[3].data " />
                 </ng-template>
               </ng-container>
               <ng-template #video_n_3>
@@ -372,10 +371,7 @@
             </div>
             <div class="position-relative mt-2">
               <ng-container *ngIf="file_img_video[4].referType == FILE_REFERTYPE.IMAGE; else video_n_4">
-                <ng-container *ngIf="isNew;else codxImage_n_4">
-                  <img class="w-100 rounded h-150px" [src]="file_img_video[4].thumbnail || file_img_video[4].data" />
-                </ng-container>
-                <ng-template #codxImage_n_4>
+                <ng-container *ngIf="file_img_video[4].recID;else Image_n_4">
                   <codx-img 
                     [recId]="file_img_video[4].recID" 
                     [objectId]="file_img_video[4].objectID" 
@@ -383,6 +379,9 @@
                     [cssClass]="'pic'"
                     imageType="square">
                   </codx-img>
+                </ng-container>
+                <ng-template #Image_n_4>
+                  <img class="w-100 rounded h-150px" [src]="file_img_video[4].thumbnail || file_img_video[4].data" />
                 </ng-template>
               </ng-container>
               <ng-template #video_n_4>
@@ -416,8 +415,28 @@
       </ng-container>
     </div>
   </ng-container>
-</div>
-
+</ng-container>
+<ng-template #single let-file>
+  <ng-container [ngSwitch]="file.referType">
+    <div class="row mt-3 d-flex position-relative">
+      <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
+          <img class="file-view" [src]="file.thumbnail || file.data" alt="">
+      </ng-container>
+      <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
+          <video controls class="h-100px">
+            <source [src]="file.srcVideo || file.data" type="video/mp4">
+          </video>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+          <codx-temp-full 
+            imageSrc="{{file.extension | avtFile}}" 
+            imgCss="w-20px me-3 cursor-pointer"
+            title="{{file.fileName}}" [descLine]="1">
+          </codx-temp-full>
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-template>
 <ng-template #removeFile let-file>
   <div class="remove-file">
     <a href="javascript:void(0)" class="h-100" (click)="removeFiles(file)">

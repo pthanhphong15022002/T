@@ -36,7 +36,7 @@ import { PopupUpdateProgressComponent } from './popup-update-progress/popup-upda
 import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
 @Component({
-  selector: 'test-views',
+  selector: 'codx-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -80,7 +80,6 @@ export class TasksComponent extends UIComponent {
   param: TM_Parameter;
   paramModule: any;
   dataObj: any;
-  iterationID: string = '';
   listTaskResousce = [];
   searchField = '';
   listTaskResousceSearch = [];
@@ -99,6 +98,9 @@ export class TasksComponent extends UIComponent {
   gridViewSetup: any;
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
+  dataTree = [];
+  iterationID = '';
+  @Input() projectID?: any;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
 
@@ -164,6 +166,7 @@ export class TasksComponent extends UIComponent {
       id: 'btnAdd',
     };
     this.getParams();
+    // if(this.sprints)this.projectID = this.sprints?.projectID ;
   }
 
   ngAfterViewInit(): void {
@@ -303,7 +306,7 @@ export class TasksComponent extends UIComponent {
         'ERM.Business.CM',
         'ParametersBusiness',
         'GetOneField',
-        ['TM_Parameters', null, 'CalendarID']
+        ['TMParameters', null, 'CalendarID']
       )
       .subscribe((res) => {
         if (res) {
@@ -340,6 +343,8 @@ export class TasksComponent extends UIComponent {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
+      if (this.projectID)
+        this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [this.view.dataService.dataSelected, 'add', this.isAssignTask],
@@ -545,18 +550,18 @@ export class TasksComponent extends UIComponent {
     return true;
   }
 
-  assignTask(moreFunc ,data) {
+  assignTask(moreFunc, data) {
     this.view.dataService.dataSelected = data;
     var vllControlShare = 'TM003';
     var vllRose = 'TM001';
-    var title = moreFunc.customName ;
+    var title = moreFunc.customName;
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
-    option.Width = '800px';
+    option.Width = '550px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose,title],
+      [this.view.dataService.dataSelected, vllControlShare, vllRose, title],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -604,10 +609,6 @@ export class TasksComponent extends UIComponent {
         });
     }
   }
-  selectedChange(val: any) {
-    this.itemSelected = val?.data;
-    this.detectorRef.detectChanges();
-  }
 
   //update Status of Tasks
   changeStatusTask(moreFunc, taskAction) {
@@ -632,13 +633,13 @@ export class TasksComponent extends UIComponent {
       if (this.paramModule.ReOpenDays) {
         var time =
           moment(new Date()).toDate().getTime() -
-          Number.parseFloat(this.paramModule.ReOpenDays) * 3600000;  
+          Number.parseFloat(this.paramModule.ReOpenDays) * 3600000;
         var timeCompletedOn = moment(new Date(taskAction.completedOn))
           .toDate()
           .getTime();
         if (time > timeCompletedOn) {
           this.notiService.notifyCode('TM053');
-          return ;
+          return;
         }
       }
       this.notiService.alertCode('TM054').subscribe((confirm) => {
@@ -650,7 +651,7 @@ export class TasksComponent extends UIComponent {
   }
 
   confirmUpdateStatus(moreFunc, taskAction) {
-    const fieldName = 'UpdateControl';
+    // const fieldName = 'UpdateControl';
     if (taskAction.taskGroupID) {
       this.api
         .execSv<any>(
@@ -662,27 +663,43 @@ export class TasksComponent extends UIComponent {
         )
         .subscribe((res) => {
           if (res) {
-            this.actionUpdateStatus(res[fieldName], moreFunc, taskAction);
+            this.actionUpdateStatus(
+              moreFunc,
+              taskAction,
+              res?.updateControl,
+              res?.maxHoursControl,
+              res?.maxHours
+            );
           } else {
             this.actionUpdateStatus(
-              this.paramModule[fieldName],
               moreFunc,
-              taskAction
+              taskAction,
+              this.paramModule.UpdateControl,
+              this.paramModule.MaxHoursControl,
+              this.paramModule.MaxHours
             );
           }
         });
     } else {
       this.actionUpdateStatus(
-        this.paramModule[fieldName],
         moreFunc,
-        taskAction
+        taskAction,
+        this.paramModule.UpdateControl,
+        this.paramModule.MaxHoursControl,
+        this.paramModule.MaxHours
       );
     }
   }
 
-  actionUpdateStatus(fieldValue, moreFunc, taskAction) {
-    if (fieldValue != '0') {
-      this.openPopupUpdateStatus(fieldValue, moreFunc, taskAction);
+  actionUpdateStatus(
+    moreFunc,
+    taskAction,
+    updateControl,
+    maxHoursControl,
+    maxHours
+  ) {
+    if (updateControl != '0') {
+      this.openPopupUpdateStatus(moreFunc, taskAction,updateControl,maxHoursControl,maxHours);
     } else {
       var completedOn = moment(new Date()).toDate();
       var completed = '0';
@@ -729,12 +746,14 @@ export class TasksComponent extends UIComponent {
         });
     }
   }
-  openPopupUpdateStatus(fieldValue, moreFunc, taskAction) {
+  openPopupUpdateStatus(moreFunc, taskAction,updateControl,maxHoursControl,maxHours) {
     let obj = {
-      fieldValue: fieldValue,
       moreFunc: moreFunc,
       taskAction: taskAction,
       funcID: this.funcID,
+      updateControl : updateControl,
+      maxHoursControl:maxHoursControl,
+      maxHours:maxHours
     };
     this.dialog = this.callfc.openForm(
       UpdateStatusPopupComponent,
@@ -754,6 +773,14 @@ export class TasksComponent extends UIComponent {
       this.detectorRef.detectChanges();
     });
   }
+
+  //codx-view select
+
+  selectedChange(val: any) {
+    this.itemSelected = val?.data;
+    this.loadTreeView();
+    this.detectorRef.detectChanges();
+  }
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);
   }
@@ -765,7 +792,7 @@ export class TasksComponent extends UIComponent {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleWithCategoryAsync',
-        ['TM_Parameters', '1']
+        ['TMParameters', '1']
       )
       .subscribe((res) => {
         if (res) {
@@ -1107,7 +1134,7 @@ export class TasksComponent extends UIComponent {
         this.sendemail(data);
         break;
       case 'TMT02015':
-        this.assignTask(e.data,data);
+        this.assignTask(e.data, data);
         break;
       case 'TMT02016':
       case 'TMT02017':
@@ -1187,6 +1214,22 @@ export class TasksComponent extends UIComponent {
         option
       );
     }
+  }
+  //#endregion
+
+  //#region  tree
+  loadTreeView() {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTasksTreeAsync',
+        this.itemSelected?.taskID
+      )
+      .subscribe((res) => {
+        if (res) this.dataTree = res;
+      });
   }
   //#endregion
 }

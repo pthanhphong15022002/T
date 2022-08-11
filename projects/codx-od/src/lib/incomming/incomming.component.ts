@@ -237,10 +237,7 @@ export class IncommingComponent
     });
     //formName: string, gridName: string
   }
-
-
-
-
+  
   //Mở form
   openFormUploadFile() {
     this.attachment.openPopup();

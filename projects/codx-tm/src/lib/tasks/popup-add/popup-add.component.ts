@@ -85,6 +85,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   idUserSelected: any;
   viewTask = false;
   taskType ='1' ;
+  formModel :any ;
+  gridViewSetup :any ;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -156,6 +158,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.getParam();
+    // this.formModel = this.dialog.dataService?.formModel ;
+    // this.gridViewSetup = this.formModel?.gridViewSetup ;
     this.task = {
       ...this.task,
       ...dt?.data[0],
@@ -194,7 +198,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       } else {
         this.task.category = '1';
       }
-      this.titleAction = 'Copy';
+      this.titleAction = 'Sao chép';
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
       this.titleAction = this.action == 'edit' ? 'Chỉnh sửa' : 'Xem chi tiết';
@@ -205,6 +209,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openInfo(this.task.taskID, this.action);
     }
+  }
+
+  setTitle(e: any) {
+    this.title = this.titleAction + ' ' +  e.charAt(0).toLocaleLowerCase() + e.slice(1);;
+    this.changeDetectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -246,7 +255,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleWithCategoryAsync',
-        ['TM_Parameters', '1']
+        ['TMParameters', '1']
       )
       .subscribe((res) => {
         if (res) {
@@ -404,6 +413,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM027');
       return;
     }
+    if (this.task.estimated < 0) {
+      this.notiService.notifyCode('TM033');
+      return;
+    } 
+    if (this.param?.MaxHoursControl != '0' && this.task.estimated > Number.parseFloat(this.param?.MaxHours)) {
+      this.notiService.notifyCode('TM058')  ///truyền có tham số
+      return;
+     }  
     if (
       this.showAssignTo &&
       (this.task.assignTo == '' || this.task.assignTo == null)
@@ -612,16 +629,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     //   return;
     // }
     if (num < 0) {
-      //  this.notiService.notifyCode("can cai code o day đang gan tam")
       this.notiService.notifyCode('TM033');
-      this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
-      this.changeDetectorRef.detectChanges();
+      // this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       return;
     }
-    if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
-      num = this.param?.MaxHours;
-    }
-    this.task[data.field] = num;
+    this.task[data.field] = num
+   
     //xử lý nhập estimated thay đổi thời gian
     // if (data.data && num) {
     //   this.task[data.field] = data.data;
@@ -669,7 +682,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           3600000
         ).toFixed(2);
         this.task.estimated = Number.parseFloat(time);
-        this.crrEstimated = this.task.estimated;
+        // this.crrEstimated = this.task.estimated;
       }
     }
   }
@@ -842,7 +855,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (event.field) {
       this.task[event.field] = event?.data ? event?.data : '';
     }
-    this.changeDetectorRef.detectChanges;
+    this.changeDetectorRef.detectChanges();
   }
   changeMemo2(e, id) {
     var message = e?.data;
@@ -879,12 +892,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.crrIndex = i;
     p.open();
     this.popover = p;
-  }
-
-  setTitle(e: any) {
-    this.title = this.titleAction + ' ' + e;
-    this.changeDetectorRef.detectChanges();
-    console.log(e);
   }
 
   buttonClick(e: any) {

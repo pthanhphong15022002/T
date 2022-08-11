@@ -121,3 +121,45 @@
 #kt_aside_menu_header {
   margin-bottom: 15px;
 }
+
+codx-treeview .aside-menu {
+  padding: 15px;
+}
+
+.aside-menu codx-temp-full .fw-bold {
+  font-weight: 400 !important;
+}
+
+.aside-menu .collapse-conent {
+  padding-left: 6px;
+  width: 20px;
+  height: 20px;
+}
+
+.aside-menu codx-temp-full {
+  width: 100%;
+}
+
+.aside-menu .has-action-menu codx-mfunc {
+  box-shadow: none;
+  top: -7px;
+}
+
+codx-view-tree-detail .e-static-pane,
+codx-view-tree-detail .e-static-pane+.e-pane {
+  border-radius: 0;
+}
+
+codx-view-tree-detail .e-static-pane+.e-pane {
+  margin-left: 0px;
+  border-left: 1px #e5e6ee solid;
+}
+
+codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
+  padding: 15px;
+  padding-left: 25px;
+}
+
+.dms-card-row .card-img-center[src*="/assets/codx/dms/"] {
+  padding: 15px;
+}

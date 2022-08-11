@@ -3,8 +3,8 @@
         <div class="offcanvas-content">
             <div class="offcanvas-wrapper">
                 <div class="form-group">
-                    <label for="foldername">
-                        <app-custombreadcumb end="2" start="0" max="4"></app-custombreadcumb>
+                    <label for="foldername">                      
+                        <codx-breadcumb end="2" start="0" max="4"></codx-breadcumb>
                     </label>
                     <div class="d-flex">
                         <div class="w-100">
@@ -56,7 +56,7 @@
                                     <ng-container *ngFor="let perm of fileEditing.permissions; index as i;">
                                         <ng-container
                                             *ngIf="perm.isActive != false && ((!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
-                                            <div class="dms-mini-item">
+                                            <div class="user-mini-item">
                                                 <div class="d-flex align-items-center">
                                                     <div class="symbol symbol-30 symbol-circle me-2">
                                                         <div

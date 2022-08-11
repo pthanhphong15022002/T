@@ -1,0 +1,25 @@
+<codx-views
+  #view
+  [views]="views"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [className]="className"
+  [method]="method"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  (viewChanged)="viewChanged($event, view)"
+>
+</codx-views>
+
+<ng-template #morefunction let-data>
+  <div class="has-action-menu">
+    <div class="action-menu">
+      <codx-mfunc
+        [dataItem]="data"
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+      ></codx-mfunc>
+    </div>
+  </div>
+</ng-template>

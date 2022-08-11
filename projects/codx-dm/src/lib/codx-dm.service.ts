@@ -13,6 +13,8 @@ import { CreateFolderComponent } from "./createFolder/createFolder.component";
 import { ViewFileDialogComponent } from "projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component";
 import { PropertiesComponent } from "./properties/properties.component";
 import { MoveComponent } from "./move/move.component";
+import { VersionComponent } from "./version/version.component";
+import { ShareComponent } from "./share/share.component";
 
 @Injectable({
     providedIn: 'root'
@@ -77,6 +79,7 @@ export class CodxDMService {
     public listFolder = [];
     public listFiles = [];
     itemRight: ItemRight;
+    path: string;
     // public confirmationDialogService: ConfirmationDialogService;
     public ChangeData = new BehaviorSubject<boolean>(null);
     isChangeData = this.ChangeData.asObservable();
@@ -295,6 +298,19 @@ export class CodxDMService {
         }
 
         this.setRight.next(true);
+    }
+
+    
+    formatBytes(bytes, decimals = 2) {
+      if (bytes === 0) return '0 Bytes';
+  
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
     getAvatar(ext: string) {
@@ -619,6 +635,7 @@ export class CodxDMService {
 
     clickMF($event, data: any) {        
         var type =  this.getType(data, "name");
+        let option = new SidebarModel();
 
         switch($event.functionID) {
           case "DMT0210": //view file
@@ -672,15 +689,14 @@ export class CodxDMService {
              });
             break;
             
-          case "DMT0222": // properties file
-            let opt = new SidebarModel();
-            opt.DataService = this.dataService;
-            opt.FormModel = this.formModel;
-            opt.Width = '550px';
+          case "DMT0222": // properties file         
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
+            option.Width = '550px';
             // let data = {} as any;
             data.title = this.titleUpdateFolder;
             data.id =  data.recID;            
-            this.callfc.openSide(PropertiesComponent, data, opt);            
+            this.callfc.openSide(PropertiesComponent, data, option);            
             break;
 
           case "DMT0206":  // xoa thu muc
@@ -690,7 +706,7 @@ export class CodxDMService {
 
           case "DMT0202": // chinh sua thu muc  
           case "DMT0209":          
-            let option = new SidebarModel();
+           
             option.DataService = this.dataService;
             option.FormModel = this.formModel;
             option.Width = '550px';
@@ -732,6 +748,35 @@ export class CodxDMService {
             this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, false], "");   
             break;
 
+          case "DMT0218": /// version file
+            this.callfc.openForm(VersionComponent, "", 650, 600, "", [FormModel, data], "");   
+            break;   
+
+          //request permisssion  
+          case "DMT0221":
+          case "DMT0208":
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
+            option.Width = '550px';
+          
+           // let data = {} as any;
+            data.title = this.titleUpdateFolder;
+            data.id =  data.recID;            
+            this.callfc.openSide(ShareComponent, [type, data, false], option);      
+            break;
+            break;  
+          // share
+          case "DMT0201":   
+          case "DMT0212":          
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
+            option.Width = '550px';
+          
+           // let data = {} as any;
+            data.title = this.titleUpdateFolder;
+            data.id =  data.recID;            
+            this.callfc.openSide(ShareComponent, [type, data, true], option);      
+            break;
           default:
             break;    
         }  
@@ -744,6 +789,31 @@ export class CodxDMService {
       }
       else 
         return '';
+    }
+
+    setFullHtmlNode(folder, text) {
+      var item1 = '';
+      var item2 = '';
+  
+      if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
+        item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
+      else {
+        if (folder.icon.indexOf('.') == -1)
+          item1 = `<i class="${folder.icon}" role="presentation"></i>`;
+        else {
+          var path = `${this.path}/${folder.icon}`;
+          item1 = `<img class="h-15px " src="${path}">`;
+        }
+      }
+  
+      if (!folder.read)
+        item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
+      var fullText = `${item1}
+                      ${item2}
+                      <span class="mytree_node  me-2"></span>
+                      ${text}`;
+  
+      return fullText;
     }
 
     checkUserForder(folder) {

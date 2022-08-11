@@ -1,76 +1,90 @@
 <codx-form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="bodyPopup"
   [footer]="footer" [data]="{}" [formModel]="formModel" [formGroup]="dialogAutoNum" *ngIf="isAfterRender">
   <ng-template #bodyPopup>
-    <div class="row mt-3">
+    <div class="row">
       <div class="col-6">
-        <codx-label fiedName="StringFormat" [formModel]="formModel" default="Định dạng số tự động">
-        </codx-label>
-        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogAutoNum.value.stringFormat"
-          [refValue]="cbxName['StringFormat']" field="stringFormat" (valueChange)="valueChange($event)">
-        </codx-input>
+        <div class="form-group">
+          <codx-label fiedName="StringFormat" [formModel]="formModel" default="Định dạng số tự động">
+          </codx-label>
+          <codx-input type="valuelist" name="valuelist" [crrValue]="dialogAutoNum.value.stringFormat"
+            [refValue]="cbxName['StringFormat']" field="stringFormat" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="MaxLength" default="Chiều dài tối đa" formName="AutoNumbers"
-          gridViewName="grvAutoNumbers">
-        </codx-label>
-        <codx-input type="number" name="number" placeholder="0" [crrValue]="prarseInt(dialogAutoNum.value.maxLength)"
-          min="0" max="100" field="maxLength" (valueChange)="valueChange($event)" [showSpinButton]="false">
-        </codx-input>
-      </div>
-    </div>
-
-    <div class="row mt-3">
-      <div class="col-4">
-        <codx-label fiedName="FixedString" [formModel]="formModel" default="Chuỗi kí tự">
-        </codx-label>
-        <codx-input type="text" name="text" [Group]="dialogAutoNum" ControlName="fixedString"
-          (valueChange)="valueChange($event, 'fixedString')">
-        </codx-input>
-      </div>
-      <div class=" col-4">
-        <codx-label fiedName="Separator" default="Dấu phân cách" [formModel]="formModel">
-        </codx-label>
-        <codx-input type="valuelist" field="separator" [crrValue]="dialogAutoNum.value.separator"
-          [refValue]="cbxName['Separator']" (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-      <div class="col-4">
-        <codx-label fiedName="DateFormat" default="Định dạng ngày" [formModel]="formModel">
-        </codx-label>
-        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogAutoNum.value.dateFormat"
-          [refValue]="cbxName['DateFormat']" field="dateFormat" (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="mt-3">
-      <codx-label name="lblReview" default="Xem trước" [formModel]="formModel">
-      </codx-label>
-      <div class="d-flex">
-        <div class="w-100">
-          <codx-input type="text" name="text" cssClass="form-control" [crrValue]="viewAutoNumber" [disabled]="true">
+        <div class="form-group">
+          <codx-label fiedName="MaxLength" default="Chiều dài tối đa" formName="AutoNumbers"
+            gridViewName="grvAutoNumbers">
+          </codx-label>
+          <codx-input type="number" placeholder="0" [crrValue]="prarseInt(dialogAutoNum.value.maxLength)" min="0"
+            max="100" field="maxLength" (valueChange)="valueChange($event)" [showSpinButton]="false">
           </codx-input>
         </div>
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row ">
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label fiedName="FixedString" [formModel]="formModel" default="Chuỗi kí tự">
+          </codx-label>
+          <codx-input type="text" [crrValue]="dialogAutoNum.value.fixedString" field="fixedString"
+            (valueChange)="valueChange($event, 'fixedString')">
+          </codx-input>
+        </div>
+
+      </div>
+      <div class=" col-4">
+        <div class="form-group">
+          <codx-label fiedName="Separator" default="Dấu phân cách" [formModel]="formModel">
+          </codx-label>
+          <codx-input type="valuelist" field="separator" [crrValue]="dialogAutoNum.value.separator"
+            [refValue]="cbxName['Separator']" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label fiedName="DateFormat" default="Định dạng ngày" [formModel]="formModel">
+          </codx-label>
+          <codx-input type="valuelist" name="valuelist" [crrValue]="dialogAutoNum.value.dateFormat"
+            [refValue]="cbxName['DateFormat']" field="dateFormat" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label name="lblReview" default="Xem trước" [formModel]="formModel">
+      </codx-label>
+      <codx-input type="text" name="text" cssClass="form-control" [crrValue]="viewAutoNumber" [disabled]="true">
+      </codx-input>
+    </div>
+    <div class="row ">
       <div class="col-7">
-        <codx-input type="checkbox" label="Tự động reset theo" labelPosition="after" field="autoReset"
-          class="test-check" (valueChange)="valueChange($event)" [crrValue]="dialogAutoNum.value.autoReset">
-        </codx-input>
+        <div class="form-group">
+          <codx-input type="checkbox" labelPosition="after" field="autoReset" class="test-check"
+            (valueChange)="valueChange($event)" [crrValue]="dialogAutoNum.value.autoReset">
+          </codx-input>
+          <codx-label class="ms-2" fiedName="autoReset" [formModel]="dialog.formModel" default="Tự động cập nhật theo">
+          </codx-label>
+        </div>
       </div>
       <div class="col-5">
         <!-- <codx-label fiedName="Interval" [formModel]="formModel" default="Chu kỳ reset ">
         </codx-label> -->
-        <codx-input type="valuelist" name="valuelist" [crrValue]="dialogAutoNum.value.interval"
-          [refValue]="cbxName['Interval']" field="interval" (valueChange)="valueChange($event)"
-          [disabled]="!dialogAutoNum.value.autoReset"></codx-input>
+        <div class="form-group">
+          <codx-input type="valuelist" name="valuelist" [crrValue]="dialogAutoNum.value.interval"
+            [refValue]="cbxName['Interval']" field="interval" (valueChange)="valueChange($event)"
+            [disabled]="!dialogAutoNum.value.autoReset"></codx-input>
+        </div>
       </div>
     </div>
   </ng-template>
 
   <ng-template #footer>
+
     <div class="d-flex justify-content-end">
-      <button class="btn btn-light-primary" (click)="onSaveForm()">
+      <button class="btn btn-primary" (click)="onSaveForm()">
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
       </button>
     </div>

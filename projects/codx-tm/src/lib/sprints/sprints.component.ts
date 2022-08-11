@@ -201,10 +201,10 @@ export class SprintsComponent extends UIComponent {
         break;
       case 'TMT03011': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
         if (data.iterationID != this.user.userID)
-          this.shareBoard(e, data);
+          this.shareBoard(e.data, data);
         break;
       case 'TMT03012': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
-        this.viewBoard(e, data);
+        this.viewBoard(e.data, data);
         break;
       default:
         break;
@@ -227,6 +227,8 @@ export class SprintsComponent extends UIComponent {
       var obj = {
         boardAction: data,
         listUserDetail: listUserDetail,
+        title : e?.customName,
+        vllShare : 'TM003'
       };
       this.api
         .execSv<any>(
@@ -254,7 +256,8 @@ export class SprintsComponent extends UIComponent {
   }
 
   viewBoard(e, data) {
-    this.urlView = e?.url;
+    // this.urlView = e?.url;
+    this.urlView = "tm/sprintdetails/TMT03011";
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
     // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
@@ -274,5 +277,16 @@ export class SprintsComponent extends UIComponent {
     // }
   }
   //#endregion
-
+  changeDataMF(e, data) {
+    if (e) {
+      e.forEach((x) => {
+        if (
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03' || x.functionID=='SYS04') &&
+          data.iterationID == this.user.userID 
+        ) {
+          x.disabled = true;
+        }
+      });
+    }
+  }
 }

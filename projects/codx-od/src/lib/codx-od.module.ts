@@ -31,8 +31,9 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { SearchingComponent } from './incomming/searching/searching.component';
 import { TabsComponent } from './incomming/tab/tabs.component';
-import { ApprovalComponent } from './approval/approval.component';
-import { ApprovalViewDetailComponent } from './approval/view-detail/view-detail.component';
+import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
+import { ODApprovelComponent } from './incomming/approvel/approvel.component';
+import { ODTestDetailComponent } from './incomming/test/test.component';
 
 const routes: Routes = [
   {
@@ -47,14 +48,22 @@ const routes: Routes = [
         path: 'dispatches/:funcID',
         component: IncommingComponent
       },  
+     /*  {
+        path: 'dispatches/:funcID/detail',
+        //outlet : "test1",
+        component: ODTestDetailComponent
+      },    */
       {
         path: 'searching/:funcID',
         component: SearchingComponent
-      },   
+      },
       {
-        path: 'approvalfiles/:funcID',
-        component: ApprovalComponent
-      }, 
+        path: 'approvals/:funcID',
+        loadChildren: () =>
+        import('projects/codx-od/src/lib/codx-approvel.module').then(
+          (m) => m.ApprovelModule
+        ),
+      },
       {
         path: '',
         redirectTo: 'home',
@@ -90,8 +99,7 @@ const routes: Routes = [
     FolderComponent,
     SearchingComponent,
     TabsComponent,
-    ApprovalComponent,
-    ApprovalViewDetailComponent
+    ODApprovelComponent,
   ],
   imports: [RouterModule.forChild(routes),
   CodxCoreModule.forRoot({ environment }),
