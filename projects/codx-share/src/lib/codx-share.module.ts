@@ -132,17 +132,17 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
   exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule {
-  public static forRoot(
-    config?: EnvironmentConfig
-  ): ModuleWithProviders<CodxCoreModule> {
-    return {
-      ngModule: CodxCoreModule,
-      providers: [
-        HttpClientModule,
-        { provide: EnvironmentConfig, useValue: config },
-      ],
-    };
-  }
+  // public static forRoot(
+  //   config?: EnvironmentConfig
+  // ): ModuleWithProviders<CodxCoreModule> {
+  //   return {
+  //     ngModule: CodxCoreModule,
+  //     providers: [
+  //       HttpClientModule,
+  //       { provide: EnvironmentConfig, useValue: config },
+  //     ],
+  //   };
+  // }
 }
 // const T_Moudule: Type<any>[] = [
 //   CommonModule,
