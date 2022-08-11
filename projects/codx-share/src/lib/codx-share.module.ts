@@ -33,8 +33,8 @@ import { FileImage } from './pipe/fileImage.pipe';
 import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { PopupVoteComponent } from './components/treeview-comment/popup-vote/popup-vote.component';
-import { LayoutNoAsideComponent } from './_layoutNoAside/layoutNoAside.component';
-import { LayoutOnlyHeaderComponent } from './_layoutOnlyHeader/layoutOnlyHeader.component';
+import { LayoutNoAsideComponent } from './_layout/_noAside/_noAside.component';
+import { LayoutOnlyHeaderComponent } from './_layout/_onlyHeader/_onlyHeader.component';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { SharedModule } from '@shared/shared.module';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
@@ -65,6 +65,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
+import { LayoutNoAsideToolbarFluidComponent } from './_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -90,6 +91,7 @@ const T_Component: Type<any>[] = [
   CalendarDateComponent,
   LayoutNoAsideComponent,
   LayoutOnlyHeaderComponent,
+  LayoutNoAsideToolbarFluidComponent,
   QuickLinksInnerComponent,
   UserInnerComponent,
   CodxReportComponent,

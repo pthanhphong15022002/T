@@ -66,7 +66,7 @@ import { PopupUpdateProgressComponent } from './tasks/popup-update-progress/popu
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
 import { TemplateComponent } from './tmmeetings/template/template.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
 
 export const routes: Routes = [
@@ -89,7 +89,6 @@ export const routes: Routes = [
       {
         path: 'meeting/:funcID',
         component: TMMeetingsComponent,
-
       },
       {
         path: 'meetingdetails/:funcID',
@@ -228,7 +227,7 @@ const T_Component: Type<any>[] = [
   MeetingDetailComponent,
   TaskExtendsComponent,
   TemplateComponent,
-  SprintDetailsComponent
+  SprintDetailsComponent,
 ];
 @NgModule({
   imports: [
@@ -248,7 +247,7 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
-    SplitterModule
+    SplitterModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,

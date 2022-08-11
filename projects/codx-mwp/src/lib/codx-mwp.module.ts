@@ -2,7 +2,12 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  NgModule,
+  Type,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
@@ -21,7 +26,11 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { AddUpdateNoteBookComponent } from './personals/note-books/add-update-note-book/add-update-note-book.component';
 import { PostsComponent } from './personals/posts/posts.component';
 import { PopupAddUpdate } from './personals/note-books/detail/popup-add-update/popup-add-update.component';
-import { AccumulationChartModule, ChartAllModule, ChartModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartModule,
+  ChartAllModule,
+  ChartModule,
+} from '@syncfusion/ej2-angular-charts';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { SidebarModule, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
@@ -47,9 +56,8 @@ import { EditExperenceComponent } from './employeeinfomation/edit-experence/edit
 import { EditRelationComponent } from './employeeinfomation/edit-relation/edit-relation.component';
 import { EditSkillComponent } from './employeeinfomation/edit-skill/edit-skill.component';
 import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-skill/pop-add-skill.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layoutNoAside/layoutNoAside.component';
-import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layoutOnlyHeader/layoutOnlyHeader.component';
 import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 
 export const routes: Routes = [
   {
@@ -121,11 +129,9 @@ const Component: Type<any>[] = [
     SidebarModule,
     AccumulationChartModule,
     TabModule,
-    NgbModule
+    NgbModule,
   ],
-  exports: [
-    RouterModule,
-  ],
+  exports: [RouterModule],
   declarations: [Component, EditSkillComponent, PopAddSkillComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

@@ -1,20 +1,106 @@
-<codx-views #view service="TM" entityName="TM_Sprints" idField="iterationID" assemblyName="ERM.Business.TM"
-  className="SprintsBusiness" method="GetListSprintAsync" [views]="views" [button]="button" [autoLoad]="true"
-  (buttonClick)="click($event)" >
+<div class="d-flex">
+  <div class="row m-0 bg-body rounded-2 mb-3 p-3 sprints-task-header">
+    <div class="col-8">
+      <div class="d-flex">
+        <div class="text-dark fw-bolder my-1 fs-3 p-3">
+          {{ sprints?.iterationName }}
+        </div>
+        <div class="d-status p-3">
+          <div class="badge badge-danger me-2 label-status">Nội bộ</div>
+        </div>
+        <div class="p-3">
+          <span #createdOn> {{ sprints?.createdOn | date: "dd/MM/yyyy" }}</span>
+        </div>
+        <div class="p-3">
+          {{ sprints?.createdByName }}
+        </div>
+      </div>
+      <div>
+        <div class="d-flex">
+          <ng-container *ngFor="let item of tabControl; let i = index">
+            <a
+              [class]="
+                'm-3 text-gray-800 text-hover-primary btn-light-primary' +
+                ' ' +
+                (item.isActive ? 'text-primary' : '')
+              "
+            >
+              <codx-label
+                [name]="'lbl' + item.name"
+                [formName]="'SYS'"
+                [default]="item.textDefault"
+                (click)="clickMenu(item)"
+              >
+              </codx-label>
+            </a>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-imgs
+        style="float: right"
+        [objectId]="sprints?.resources"
+        objectType="AD_Users"
+        [numberImages]="7"
+        [width]="40"
+        (mouseenter)="popoverEmpList(popoverList)"
+        [ngbPopover]="popEmpList"
+        popoverClass="empPopoverClass"
+        #popoverList="ngbPopover"
+        placement="bottom"
+        container="body"
+        autoClose="outside"
+        [openDelay]="500"
+      ></codx-imgs>
+    </div>
+  </div>
+</div>
+<codx-views
+  #view
+  service="TM"
+  entityName="TM_Sprints"
+  idField="iterationID"
+  assemblyName="ERM.Business.TM"
+  className="SprintsBusiness"
+  method="GetListSprintAsync"
+  [views]="views"
+  [button]="button"
+  [autoLoad]="true"
+  (buttonClick)="click($event)"
+>
 </codx-views>
 
 <ng-template #itemViewBoard let-data>
-  <ng-container >
-    <codx-card-center cardCss="border h-100 w-225px" [formModel]="view.formModel"
-      [iconCss]="data.sharedByOther?'icon-share':' '" [iconColorCss]="'blue'" [imageId]="data.iterationID" [imageObjType]="view.formModel.entityName" 
-      [imageWidth]="55" [title]="data.iterationName" [icoDescCss]="'icon-assignment'" [desc]="data.projectName"
-      [desc2]="data.memo" [footer]="cardImgFooter" (clickMF)="clickMF($event, data)" (changeDataMF)=" changeDataMF($event, data)" [dataItem]="data">
+  <ng-container>
+    <codx-card-center
+      cardCss="border h-100 w-225px"
+      [formModel]="view.formModel"
+      [iconCss]="data.sharedByOther ? 'icon-share' : ' '"
+      [iconColorCss]="'blue'"
+      [imageId]="data.iterationID"
+      [imageObjType]="view.formModel.entityName"
+      [imageWidth]="55"
+      [title]="data.iterationName"
+      [icoDescCss]="'icon-assignment'"
+      [desc]="data.projectName"
+      [desc2]="data.memo"
+      [footer]="cardImgFooter"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      [dataItem]="data"
+    >
     </codx-card-center>
-  </ng-container> 
+  </ng-container>
 </ng-template>
 <ng-template #cardImgFooter let-data>
   <div *ngIf="data.resources" class="d-flex flex-center flex-wrap">
-    <codx-imgs [width]="30" [objectId]="data.resources" objectType="AD_Users" [numberImages]="4">
+    <codx-imgs
+      [width]="30"
+      [objectId]="data.resources"
+      objectType="AD_Users"
+      [numberImages]="4"
+    >
     </codx-imgs>
   </div>
 </ng-template>

@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HoverPreloadStrategy } from 'ngx-hover-preload';
 import { AuthGuard } from 'codx-core';
 import { SosComponent } from '@pages/sos/sos.component';
-import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layoutOnlyHeader/layoutOnlyHeader.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 export const routes: Routes = [
   {
     path: ':tenant',
