@@ -1,4 +1,7 @@
-import { CO_Content, CO_MeetingTemplates } from './../../models/CO_MeetingTemplates.model';
+import {
+  CO_Content,
+  CO_MeetingTemplates,
+} from './../../models/CO_MeetingTemplates.model';
 import { CO_Meetings, CO_Resources } from './../../models/CO_Meetings.model';
 import {
   ChangeDetectorRef,
@@ -49,11 +52,13 @@ export class PopupAddMeetingComponent implements OnInit {
   action: any;
   linkURL = '';
   resources: CO_Resources[] = [];
-  template= new CO_MeetingTemplates();
+  template = new CO_MeetingTemplates();
   listRoles: any;
   idUserSelected: any;
   popover: any;
-  dialog1: DialogRef
+  dialog1: DialogRef;
+  fromDateSeconds: any;
+  toDateSeconds: any;
   templateName: any;
   selectedDate = new Date();
   constructor(
@@ -71,14 +76,17 @@ export class PopupAddMeetingComponent implements OnInit {
     this.meeting = this.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
+
     this.action = dt.data;
+    if(this.action === 'add'){
+      this.getListUser(this.user.userID);
+
+    }
     this.functionID = this.dialog.formModel.funcID;
-    // if (this.meeting.startDate) {
-    //   this.selectedDate = this.meeting.startDate;
-    // }
+
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
-        console.log(res.datas)
+        console.log(res.datas);
         this.listRoles = res.datas;
       }
     });
@@ -89,20 +97,52 @@ export class PopupAddMeetingComponent implements OnInit {
     if (this.action == 'add') {
       this.title = 'Thêm họp định kì';
       this.meeting.meetingType = '1';
+      this.meeting.startDate = new Date(Date.now());
     } else if (this.action == 'edit') {
       this.title = 'Chỉnh sửa họp định kì';
+      this.setTimeEdit();
     }
-    this.isFullDay = false;
-    if(this.meeting.templateID){
-      this.api.execSv<any>('CO','CO','MeetingTemplatesBusiness','GetTemplateByMeetingAsync',this.meeting.templateID).subscribe(res=>{
-        if(res){
-          this.template = res;
-          this.templateName = this.template.templateName;
-        }
-      })
+    if (this.meeting.templateID) {
+      this.api
+        .execSv<any>(
+          'CO',
+          'CO',
+          'MeetingTemplatesBusiness',
+          'GetTemplateByMeetingAsync',
+          this.meeting.templateID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.template = res;
+            this.templateName = this.template.templateName;
+          }
+        });
     }
-
   }
+
+
+  setTimeEdit() {
+    var getStartTime = new Date(this.meeting.startDate);
+    var current =
+      this.padTo2Digits(getStartTime.getHours()) +
+      ':' +
+      this.padTo2Digits(getStartTime.getMinutes());
+    this.startTime = current;
+    var getEndTime = new Date(this.meeting.endDate);
+    var current1 =
+      this.padTo2Digits(getEndTime.getHours()) +
+      ':' +
+      this.padTo2Digits(getEndTime.getMinutes());
+    this.endTime = current1;
+    if (this.startTime == '00:00' && this.endTime == '23:59') {
+      this.isFullDay = true;
+    }
+  }
+
+  padTo2Digits(num) {
+    return String(num).padStart(2, '0');
+  }
+
   getParam(callback = null) {
     this.api
       .execSv<any>(
@@ -123,12 +163,12 @@ export class PopupAddMeetingComponent implements OnInit {
   beforeSave(op) {
     var data = [];
     if (this.action == 'add') {
-      op.method = 'AddMeetingsAsync';
+      op.methodName = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       this.meeting.meetingType = '1';
       data = [this.meeting, this.functionID];
     } else if (this.action == 'edit') {
-      op.method = 'UpdateMeetingsAsync';
+      op.methodName = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
       data = [this.meeting];
     }
@@ -142,7 +182,7 @@ export class PopupAddMeetingComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.save) {
-          this.dialog.dataService.setDataSelected(res.save);
+          this.dialog.dataService.setDataSelected(res.save[0]);
           this.dialog.dataService.afterSave.next(res);
           this.changDetec.detectChanges();
         }
@@ -210,16 +250,49 @@ export class PopupAddMeetingComponent implements OnInit {
     this.changDetec.detectChanges();
   }
 
-
-
   valueDateChange(event: any) {
-    if(event.field == 'startDate'){ // cái field này đề e biết nó change ở ô nào
+    var now = Date.now();
+    if (event.field == 'startDate' || event.field == 'endDate') {
       this.selectedDate = event.data.fromDate;
-      if (this.selectedDate) this.meeting[event.field] = this.selectedDate;
-      this.setDate();
-    }
-    else{
-      this.meeting[event.field] = event.data.fromDate;
+      var startDate = this.selectedDate.getTime();
+      if (startDate - now < 0) {
+        this.notiService.notifyCode(
+          'Vui lòng chọn Ngày Lớn hơn hoặc bằng ngày hiện tại'
+        );
+      } else {
+        if (this.selectedDate) this.meeting[event.field] = this.selectedDate;
+      }
+    } else {
+      var date = event.data.fromDate;
+
+      if (event.field == 'fromDate') {
+        var fromSeconds = date.getTime();
+        this.fromDateSeconds = fromSeconds;
+        if (now - this.fromDateSeconds < 0) {
+          this.notiService.notifyCode(
+            'Vui lòng chọn Ngày bắt đầu nhỏ hơn ngày hiện tại'
+          );
+        } else {
+          this.meeting.fromDate = event.data.fromDate;
+        }
+      }
+      if (event.field == 'toDate') {
+        var toSeconds = date.getTime();
+        this.toDateSeconds = toSeconds;
+        if (now - this.toDateSeconds < 0) {
+          this.notiService.notifyCode(
+            'Vui lòng chọn Ngày kết thúc nhỏ hơn ngày hiện tại'
+          );
+        } else {
+          if (this.toDateSeconds - this.fromDateSeconds < 0) {
+            this.notiService.notifyCode(
+              'Vui lòng chọn Ngày kết thúc lớn hơn ngày bắt đầu'
+            );
+          } else {
+            this.meeting.toDate = event.data.fromDate;
+          }
+        }
+      }
     }
   }
 
@@ -277,21 +350,36 @@ export class PopupAddMeetingComponent implements OnInit {
   }
 
   openPopupTemplate(item: any) {
-    this.dialog1 = this.callFuncService.openForm(TemplateComponent, '', 1200, 700, '', item);
-    this.dialog1.closed.subscribe(e => {
+    this.dialog1 = this.callFuncService.openForm(
+      TemplateComponent,
+      '',
+      1200,
+      700,
+      '',
+      item
+    );
+    this.dialog1.closed.subscribe((e) => {
       if (e?.event) {
         console.log(e);
         this.meeting.templateID = e.event;
-        if(this.meeting.templateID){
-          this.api.execSv<any>('CO','CO','MeetingTemplatesBusiness','GetTemplateByMeetingAsync',this.meeting.templateID).subscribe(res=>{
-            if(res){
-              this.template = res;
-              this.templateName = this.template.templateName;
-            }
-          })
+        if (this.meeting.templateID) {
+          this.api
+            .execSv<any>(
+              'CO',
+              'CO',
+              'MeetingTemplatesBusiness',
+              'GetTemplateByMeetingAsync',
+              this.meeting.templateID
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.template = res;
+                this.templateName = this.template.templateName;
+              }
+            });
         }
       }
-    })
+    });
   }
 
   changeLink(event) {
@@ -313,7 +401,9 @@ export class PopupAddMeetingComponent implements OnInit {
       resourceID = resourceID.substring(0, resourceID.length - 1);
     }
     this.valueUser(resourceID);
-    if (this.resources != null) this.meeting.resources = this.resources;
+    if (this.resources != null)
+      this.meeting.resources = this.resources;
+
   }
 
   valueUser(resourceID) {
@@ -361,11 +451,21 @@ export class PopupAddMeetingComponent implements OnInit {
           for (var i = 0; i < res.length; i++) {
             let emp = res[i];
             var tmpResource = new CO_Resources();
-            tmpResource.resourceID = emp?.userID;
-            tmpResource.resourceName = emp?.userName;
-            tmpResource.positionName = emp?.positionName;
-            tmpResource.roleType = 'P';
-            this.meeting.resources.push(tmpResource);
+            if (emp.userID == this.user.userID) {
+              tmpResource.resourceID = emp?.userID;
+              tmpResource.resourceName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.roleType = 'A';
+              this.resources.push(tmpResource);
+            } else {
+              tmpResource.resourceID = emp?.userID;
+              tmpResource.resourceName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.roleType = 'P';
+              this.resources.push(tmpResource);
+            }
+
+            console.log(this.meeting.resources);
           }
         }
       });
@@ -391,7 +491,4 @@ export class PopupAddMeetingComponent implements OnInit {
 
     this.popover.close();
   }
-
-
-
 }

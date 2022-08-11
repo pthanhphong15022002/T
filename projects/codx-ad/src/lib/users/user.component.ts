@@ -9,6 +9,7 @@ import {
   SidebarModel,
   CallFuncService,
   CodxTempFullComponent,
+  RequestOption,
 } from 'codx-core';
 import {
   Component,
@@ -131,7 +132,7 @@ export class UserComponent extends UIComponent {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
-        type: 'add',
+        formType: 'add',
       };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -157,7 +158,7 @@ export class UserComponent extends UIComponent {
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         var obj = {
-          type: 'edit',
+          formType: 'edit',
         };
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
@@ -176,6 +177,22 @@ export class UserComponent extends UIComponent {
           this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true);
         }
       });
+    // this.view.dataService
+    // .edit((opt: any) => this.beforeSave(opt))
+    // .subscribe((res: any) => {
+    //   if (res.update) {
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // });
+    this.dialog.close();
+  }
+
+  beforeSave(op: RequestOption) {
+    // var data = [];
+    //   op.methodName = 'UpdateUserAsync';
+    //   data = [this.adUser, false, this.viewChooseRole];
+    // op.data = data;
+    // return true;
   }
 
   //#region Functions

@@ -17,41 +17,43 @@ export class PopupADRComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.data = dt.data[0];
+    this.data = dt.data;
   }
-
-  title = 'Duyệt';
-  subTitle = 'Comment khi duyệt';
+  okClick = false;
+  data;
+  title;
+  subTitle;
+  mode;
+  funcID;
+  recID;
 
   dialog;
-  data;
+  approvalTrans: any = {};
 
   formModel: FormModel;
   dialogSignFile: FormGroup;
+  controlName;
 
-  funcID;
+  noteData;
   cbxName;
 
   onInit(): void {
-    console.log(this.data);
-
+    this.title = this.data.title;
+    this.subTitle = this.data.subTitle;
+    this.mode = this.data.mode;
     this.funcID = this.data.funcID;
-    console.log(this.funcID);
-
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      console.log('res', res);
-
-      this.esService
-        .getComboboxName(res.formName, res.gridViewName)
-        .then((res) => {
-          if (res) {
-            this.cbxName = res;
-          }
-        });
-    });
+    this.recID = this.data.signfileID;
+    this.formModel = this.data.formModel;
+    this.formModel.currentData = this.approvalTrans;
+    this.dialogSignFile = this.data.formGroup;
+    this.controlName = this.mode == 2 ? 'redoControl' : 'rejectControl';
+    this.detectorRef.detectChanges();
   }
 
-  valueChange(e) {}
+  getfileCount(event) {}
+
+  changeReason(e) {}
+
   saveDialog() {
     this.dialog.close();
   }

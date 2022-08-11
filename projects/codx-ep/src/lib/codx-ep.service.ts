@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { APICONSTANT } from '@shared/constant/api-const';
-import { ApiHttpService, AuthStore, CacheService, NotificationsService, UploadFile, UserModel } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, FormModel, NotificationsService, UploadFile, UserModel } from 'codx-core';
 
 export class ModelPage {
   functionID = '';
@@ -32,6 +32,23 @@ export class CodxEpService {
     private notificationsService: NotificationsService
   ) {}
 
+  //#region Get from FunctionList
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
+      this.cache.functionList(functionID).subscribe((funcList) => {
+        var formModel = new FormModel();
+        if (funcList) {
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
+        }
+        resolve(formModel);
+      });
+    });
+  }
+  
   getModelPage(functionID): Promise<ModelPage> {
     return new Promise<ModelPage>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {
