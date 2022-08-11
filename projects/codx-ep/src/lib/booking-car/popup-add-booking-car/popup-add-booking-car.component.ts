@@ -10,7 +10,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   ApiHttpService,
@@ -20,6 +20,7 @@ import {
   DialogRef,
   NotificationsService,
   UIComponent,
+  FormModel,
 } from 'codx-core';
 import { CodxEpService, ModelPage } from '../../codx-ep.service';
 export class Device {
@@ -33,19 +34,26 @@ export class Device {
   styleUrls: ['popup-add-booking-car.component.scss'],
 })
 export class PopupAddBookingCarComponent extends UIComponent {
+  
+  @ViewChild('popupDevice', { static: true }) popupDevice;
+
   @Input() editResources: any;
   @Input() isAdd = true;
-  @Input() data = {};
-  @ViewChild('popupDevice', { static: true }) popupDevice;
+  @Input() data!: any;
+
+  @Output() closeEdit = new EventEmitter();
+  @Output() onDone = new EventEmitter();
 
   isAfterRender = false;
   dialogAddBookingCar: FormGroup;
+  formModel: FormModel;
   devices: any;
   modelPage: ModelPage;
   CbxName: any;
   vllDevices = [];
-  lstDeviceRoom = [];
+  lstDeviceCar = [];
   tmplstDevice = []
+
   headerText: Object = [
     { text: 'Thông tin chung', iconCss: 'icon-info' },
     { text: 'Người đi cùng', iconCss: 'icon-person_add' },
@@ -56,67 +64,81 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
   constructor(
     private injector: Injector,
-    private notiService: NotificationsService,
     private epService: CodxEpService,
+    private cacheSv: CacheService,
+    private callFuncService: CallFuncService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {
+  ) {    
     super(injector);
-    this.data = dt?.data;
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
     this.dialog = dialog;
-  }
+    this.formModel = this.dialog.formModel;
+  }  
+  
 
   onInit(): void {
-    this.epService.getModelPage('EPT2').then((res) => {
-      if (res) this.modelPage = res;
 
-      this.initForm();
-      this.cache.valueList('EP012').subscribe((res) => {
-        this.vllDevices = res.datas;
-      });
-      this.cache.valueList('EP012').subscribe((res) => {
+    this.epService.getModelPage('EPT2').then((res) => {
+      if (res) {
+        this.modelPage = res;
+      }      
+      this.cacheSv.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
           let device = new Device();
           device.id = item.value;
           device.text = item.text;
-          this.lstDeviceRoom.push(device);
+          this.lstDeviceCar.push(device);
         });
-        this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+        this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceCar));
       });
+      
       this.epService
-        .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
-        .then((res) => {
-          this.CbxName = res;
-        });
+      .getComboboxName(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .then((res) => {
+        this.CbxName = res;
+        console.log('cbx', this.CbxName);
+      });      
 
-      this.cache.functionList('EPT2').subscribe(res => {
-        this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
+      this.cacheSv.functionList('EPT2').subscribe(res => {
+        this.cacheSv.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
           console.log('Test', res)
         })
       })
-
+      
+      this.initForm();
     });
   }
 
-  ngAfterViewInit(): void {
-    if (this.dialog) {
-      if (!this.isSaveSuccess) {
-        this.dialog.closed.subscribe((res: any) => {
-          this.dialog.dataService.saveFailed.next(null);
-        });
-      }
-    }
-  }
-
-  initForm() {
+  initForm() {  
     this.epService
       .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
       .then((item) => {
         this.dialogAddBookingCar = item;
         this.isAfterRender = true;
+        if (!this.isAdd) {
+          this.dialogAddBookingCar && this.dialogAddBookingCar.patchValue(this.data);
+        }
       });
   }
+
+  // ngAfterViewInit(): void {
+  //   if (this.dialog) {
+  //     if (!this.isSaveSuccess) {
+  //       this.dialog.closed.subscribe((res: any) => {
+  //         this.dialog.dataService.saveFailed.next(null);
+  //       });
+  //     }
+  //   }
+  // }
+
+  
 
   onSaveForm() {
     // if (this.dialogAddBookingCar.invalid == true) {
@@ -147,7 +169,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     //   }
     // }
     // let equipments = '';
-    // this.lstDeviceRoom.forEach((element) => {
+    // this.lstDeviceCar.forEach((element) => {
     //   if (element.isSelected) {
     //     if (equipments == '') {
     //       equipments += element.id;
@@ -188,9 +210,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     debugger;
     if (event?.field) {
       if (event.data instanceof Object) {
-        this.dialogAddBookingCar.patchValue({
-          [event['field']]: event.data.value,
-        });
+        this.dialogAddBookingCar.patchValue({[event['field']]: event.data.value, });
       } else {
         this.dialogAddBookingCar.patchValue({ [event['field']]: event.data });
       }
@@ -198,14 +218,18 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 430);
-    this.detectorRef.detectChanges();
+    var dialog = this.callFuncService.openForm(template, '', 550, 430);
+    this.changeDetectorRef.detectChanges();
   }
 
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
     if (index != -1) {
-      this.tmplstDevice[index].isSelected = event.target.checked;
+      this.tmplstDevice[index].isSelected = event.data;
     }
+  }
+  closeFormEdit(data) {
+    this.initForm();
+    this.closeEdit.emit(data);
   }
 }

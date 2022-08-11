@@ -143,7 +143,7 @@
           default="Đơn vị"
         >
         </codx-label>
-        <codx-input
+        <!-- <codx-input
           service="OD"
           refValue="AgencyNames"
           type="combobox"
@@ -151,8 +151,8 @@
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
-        </codx-input>
-        <!-- <codx-input
+        </codx-input> -->
+        <codx-input
           service="SYS"
           type="combobox"
           refValue="Companies"
@@ -160,7 +160,7 @@
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
         >
-        </codx-input> -->
+        </codx-input>
       </div>
     </div>
 
@@ -174,11 +174,9 @@
         </codx-label>   
         <!-- <codx-input 
           type="combobox"
-          service="EP" 
-          refValue="EP_Drivers"
+          [refValue]="'EP_Drivers'"
           field="linkID" 
           placeholder="Chọn lái xe"
-          ngDefaultControl
           [pageSize]="5"
           (valueChange)="valueCbxDriverChange($event)">
         </codx-input>      -->
@@ -310,7 +308,7 @@
         <div class="text-dark-50">
           <codx-label
             name="lblChooseEquipments"
-            default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+            default="Chọn các thiết bị đã tích hợp sẵn trong xe"
             [formModel]="dialog.formModel"
           ></codx-label>
         </div>
@@ -322,7 +320,7 @@
           <div class="d-flex">
             <span class="text-dark me-2 p-1" [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']">
             </span>
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column justify-content-center">
               <span href="#" class="text-dark fw-bolder">{{
                 item.text
               }}</span>
