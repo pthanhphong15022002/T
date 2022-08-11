@@ -27,6 +27,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   @Input() view: ViewsComponent; 
   @Input() getDataDispatch : Function;
   @Input() dataItem:any;
+  @Input() pfuncID: any;
   @Input() hideFooter:boolean = false;
   @Input() hideMF:boolean = false;
   @Output() uploaded = new EventEmitter<string>();
@@ -47,7 +48,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   name: any;
   ms020: any;
   ms021: any;
-  pfuncID: any;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
