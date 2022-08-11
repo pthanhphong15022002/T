@@ -33,4 +33,8 @@ export class HR_Employees {
     public siRegisterNo: string;
     public siRegisterOn: Date;
     public personalEmail: string;
+    public companyName: string;
+    public roleName: string;
+    public fromDate: Date;
+    public toDate: Date;
 }

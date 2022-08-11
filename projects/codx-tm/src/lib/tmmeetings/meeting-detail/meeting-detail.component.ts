@@ -1,3 +1,4 @@
+import { CO_MeetingTemplates, CO_Content } from './../../models/CO_MeetingTemplates.model';
 import { formatDate } from '@angular/common';
 import { CO_Meetings } from './../../models/CO_Meetings.model';
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
@@ -33,6 +34,8 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
   day: any;
   startTime: any;
   meeting = new CO_Meetings();
+  template = new CO_MeetingTemplates();
+  content1 : CO_Content[] = [];
   constructor(
     private injector: Injector,
     private TMService: CodxTMService,
@@ -60,6 +63,16 @@ export class MeetingDetailComponent extends UIComponent implements OnDestroy {
         if (res) {
           this.data = res;
           this.meeting = this.data;
+          if(this.meeting.templateID !=null){
+            this.api.execSv<any>('CO','CO','MeetingTemplatesBusiness','GetTemplateByMeetingAsync',this.meeting.templateID).subscribe(res=>{
+              if(res){
+                this.template = res;
+                if(this.template.content){
+                  this.content1 = this.template.content;
+                }
+              }
+            })
+          }
         }
       });
     }

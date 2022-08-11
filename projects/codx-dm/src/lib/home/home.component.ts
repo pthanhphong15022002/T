@@ -55,8 +55,8 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
-  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('attachment1') attachment1: AttachmentComponent;
+  @ViewChild('attachment2') attachment2: AttachmentComponent;
   @ViewChild('view') codxview!: any;
   currView?: TemplateRef<any>;
   path: string;
@@ -88,6 +88,52 @@ export class HomeComponent extends UIComponent {
   ) {
     super(inject);
   }
+  
+  openItem(data: any) {
+    alert(1);
+  }
+
+  onLoading($event): void {  
+    this.views.forEach(item => {
+      if (this.view.funcID === 'DMT02' || this.view.funcID === 'DMT03') {
+        if (item.id === "1") {
+          item.hide = false;
+          if (item.text === "Card")
+            item.active = true;
+          else 
+            item.active = false;
+        }          
+        else 
+          item.hide = true;          
+      }      
+      else {
+        //"DMT06"  "DMT07"
+        if (item.id === "2") {
+          if (this.view.funcID === 'DMT06' || this.view.funcID === 'DMT06')
+          {
+            if (item.text === "List") {
+              item.active = true;
+              item.hide = false;
+            }              
+            else  {
+              item.active = false;
+              item.hide = true;
+            }              
+          }
+          else {
+            item.hide = false;
+            if (item.text === "Card")
+              item.active = true;
+            else 
+              item.active = false;
+          }            
+        }          
+        else 
+          item.hide = true;  
+      }
+    });
+    this.changeDetectorRef.detectChanges();
+  }
 
   onInit(): void {
     this.user = this.auth.get();
@@ -114,9 +160,9 @@ export class HomeComponent extends UIComponent {
     });
   }
 
-  identifyData(index, data) {
-    return data;
-  }
+  // identifyData(index, data) {
+  //   return data;
+  // }
 
   addFile($event) {  
     var data = new DialogAttachmentType();
@@ -141,23 +187,29 @@ export class HomeComponent extends UIComponent {
   }
 
   fileAdded($event) {
-    console.log($event);
-    // this.data = event.stopImmediatePropagation;
+    console.log($event);    
   }
 
-  saveFile() {
-    this.attachment.saveFilesObservable().subscribe((item) => {
+  saveFile1() {
+    this.attachment1.saveFilesObservable().subscribe((item) => {
       console.log(item);
     });
     //  this.attachment.saveFiles();
   }
 
-  openFile() {
-    this.attachment.uploadFile();
+  saveFile2() {
+    this.attachment2.saveFilesObservable().subscribe((item) => {
+      console.log(item);
+    });
+    //  this.attachment.saveFiles();
   }
 
   openFile1() {
     this.attachment1.uploadFile();
+  }
+
+  openFile2() {
+    this.attachment2.uploadFile();
   }
 
   getPath() {
@@ -196,39 +248,44 @@ export class HomeComponent extends UIComponent {
   //   return fullText;
   // }
 
-  onSelectionChanged($data) {
-    //  console.log($data.data);
-    // alert(1);
-    //let data = $event.data;
+  onSelectionChanged($data) {    
     ScrollComponent.reinitialization();
-    if ($data == null || $data.data == null) return;
+    if ($data == null || $data.data == null) {
+   //   this.data = [];
+   //   this.dmSV.listFolder = [];
+  //    this.dmSV.listFiles = [];
+ //     this.dmSV.folderId.next("");
+   //   this.dmSV.ChangeData.next(true);
+      return;
+    }
 
     let id = $data.data.recID;
     let item = $data.data;
     if (item.read) {
-      // var breadcumb = [];
-      // var breadcumbLink = [];
-      // var list = this.tree.getBreadCumb(id);
-      // this.dmSV.folderName = item.folderName;
-      // this.dmSV.parentFolderId = item.parentId;
-      // this.dmSV.level = item.level;
+      var breadcumb = [];
+      var breadcumbLink = [];
+      this.codxview.currentView.currentComponent.treeView.textField = "folderName";
+      var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
+      this.dmSV.folderName = item.folderName;
+      this.dmSV.parentFolderId = item.parentId;
+      this.dmSV.level = item.level;
       // this.dmSV.disableInput.next(false);
       // if (this.dmSV.currentDMIndex.getValue() == "3")
       //   this.dmSV.changeTemplate("0");
       // // this.dmSV.level = data.node.data;
       // //this.dmSV.parentFolderId = data.node.parent;
       // this.dmSV.parentFolder.next(item);
-      // this.dmSV.getRight(item);
+      this.dmSV.getRight(item);
       // console.log(list);
 
-      // breadcumb.push(this.dmSV.menuActive.getValue());
-      // breadcumbLink.push(this.dmSV.idMenuActive);
-      // for (var i = list.length - 1; i >= 0; i--) {
-      //   breadcumb.push(list[i].text);
-      //   breadcumbLink.push(list[i].id);
-      // }
-      // this.dmSV.breadcumbLink = breadcumbLink;
-      // this.dmSV.breadcumb.next(breadcumb);
+      breadcumb.push(this.dmSV.menuActive.getValue());
+      breadcumbLink.push(this.dmSV.idMenuActive);
+      for (var i = list.length - 1; i >= 0; i--) {
+        breadcumb.push(list[i].text);
+        breadcumbLink.push(list[i].id);
+      }
+      this.dmSV.breadcumbLink = breadcumbLink;
+      this.dmSV.breadcumb.next(breadcumb);
       // this.dmSV.currentNode = id;
       // this.dmSV.currentNode = id;
       this.data = [];
@@ -277,24 +334,23 @@ export class HomeComponent extends UIComponent {
     } else {
       this.dmSV.disableInput.next(true);
      // this.notificationsService.notify(this.titleAccessDenied);
-    }
-    
+    }    
   }
 
-  // checkUserForder(data) {
-  //   return false;
-  // }
+  loading() {
+
+  }
 
   ngAfterViewInit(): void {
     // this.button.nativeElement.disabled = true;
     // this.view.button.disabled = true;
-
+   
     this.views = [
       {
         id: '1',
         icon: 'icon-appstore',
         text: 'Card',
-        type: ViewType.treedetail,
+        type:  ViewType.treedetail,
         active: true,
         sameData: true,
         model: {
@@ -308,7 +364,7 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-apps',
         text: 'Small Card',
-        type: ViewType.treedetail,
+        type:  ViewType.treedetail,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -321,8 +377,50 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-format_list_bulleted',
         text: 'List',
-        type: ViewType.treedetail,
+        type:  ViewType.treedetail,
         sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateList,
+          resizable: true,
+        },
+      },{
+        id: '2',
+        icon: 'icon-appstore',
+        text: 'Card',
+        hide:true,
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateCard,
+          resizable: true,
+        },
+      },
+      {
+        id: '2',
+        icon: 'icon-apps',
+        text: 'Small Card',
+        type: ViewType.content,
+        sameData: true,
+        hide:true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSmallCard,
+          resizable: true,
+        },
+      },
+      {
+        id: '2',
+        icon: 'icon-format_list_bulleted',
+        text: 'List',
+        type: ViewType.content,
+        sameData: true,
+        hide:true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
@@ -335,52 +433,19 @@ export class HomeComponent extends UIComponent {
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
     this.changeDetectorRef.detectChanges();
-    console.log(this.button);
+ //   console.log(this.button);
   }
 
   changeView(event) {
     this.currView = null;
-    this.currView = event.view.model.template2;
-  //  ScrollComponent.reinitialization("[data-kt-scroll='true']");
-   // ScrollComponent.resize();
-    // if (this.dmSV.folderType != this.view.funcID) {
-    //   this.data = [];
-    //   this.dmSV.folderType = this.view.funcID;
-    //   this.dmSV.idMenuActive = this.view.funcID;
-    //   this.changeDetectorRef.detectChanges();
-    // }
-    // this.folderService.options.funcID = this.view.funcID;
-    // if (this.dmSV.folderType != this.view.funcID) {
-    //   this.data = [...this.data, ...this.view.dataService.dataSelected];
-    //   this.dmSV.listFolder = this.view.dataService.dataSelected;
-    //   this.dmSV.loadedFolder = true;
-    //   this.changeDetectorRef.detectChanges();      
-    // }
-      
-    // this.dmSV.folderType = this.view.funcID;
-    // this.dmSV.idMenuActive = this.view.funcID;
-    // this.dmSV.loadedFile = false;
-    // this.dmSV.folderId.next("");  
-    // this.dmSV.loadedFolder = true;
-    // this.changeDetectorRef.detectChanges();
-    // this.fileService.options.funcID = this.view.funcID;
-    // this.fileService
-    //   .getListActiveFiles('', this.view.funcID)
-    //   .subscribe(async (res) => {
-    //     if (res != null) {            
-    //       this.data = [...this.data, ...res];
-    //       this.dmSV.listFiles = res;
-    //       this.dmSV.loadedFile = true;
-    //       this.changeDetectorRef.detectChanges();
-    //     }
-    //   });
+    this.currView = event.view.model.template2; 
   }
 
-  requestEnded(e: any){
+  requestEnded(e: any) {
       if(e.type === "read"){ 
         this.data = [];    
       this.folderService.options.funcID = this.view.funcID;
-      if (this.dmSV.folderType != this.view.funcID) {
+      if (this.dmSV.idMenuActive != this.view.funcID) {
         this.data = [...this.data, ...e.data];
         this.dmSV.listFolder = e.data;
         this.dmSV.loadedFolder = true;       
@@ -390,8 +455,13 @@ export class HomeComponent extends UIComponent {
       this.dmSV.idMenuActive = this.view.funcID;
       this.dmSV.loadedFile = false;
       this.dmSV.folderId.next('');
-      this.dmSV.loadedFolder = true;
-     // this.changeDetectorRef.detectChanges();
+      this.dmSV.loadedFolder = true;      
+      this.dmSV.menuIdActive.next(this.view.funcID);
+      this.dmSV.idMenuActive = this.view.funcID;;
+      var breadcumb = [];      
+      breadcumb.push(this.view.function.customName);
+      this.dmSV.menuActive.next(this.view.function.customName);
+      this.dmSV.breadcumb.next(breadcumb);    
       this.fileService.options.funcID = this.view.funcID;
       this.fileService
         .getListActiveFiles('', this.view.funcID)
@@ -403,7 +473,6 @@ export class HomeComponent extends UIComponent {
             this.changeDetectorRef.detectChanges();
           }
         });        
-    }
-  //  this.changeDetectorRef.detectChanges();     
+    }    
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { HR_Employees } from '../../model/HR_Employees.model';
 
@@ -15,10 +15,12 @@ export class UpdateStatusComponent implements OnInit {
   title: string = 'Cập nhật tình trạng';
   employee: HR_Employees = new HR_Employees();
   @Input() view: any;
+  // moreFunc: any;
 
   constructor(
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private detectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -26,6 +28,8 @@ export class UpdateStatusComponent implements OnInit {
     this.employee = this.data;
     this.dialog = dialog;
     this.funcID = this.data.funcID
+    // this.moreFunc = this.data.moreFunc;
+    // this.title = this.moreFunc.customName;
   }
 
   ngOnInit(): void {
@@ -33,7 +37,7 @@ export class UpdateStatusComponent implements OnInit {
 
   beforeSave(op: any) {
     var data = [];
-    op.method = 'UpdateStatusAsync';
+    op.methodName = 'UpdateStatusAsync';
     op.methodName = 'UpdateStatusAsync';
 
     data = [
@@ -48,11 +52,7 @@ export class UpdateStatusComponent implements OnInit {
       .execSv<any>("HR","ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", this.employee)
       .subscribe(
       );
-    // if (this.employStatus.status == "90") {
-    //   this.view.removeHandler(this.employStatus, "employeeID");
-    // } else {
-    //   this.view.addHandler(this.employStatus, false, "employeeID");
-    // }
+    this.detectorRef.detectChanges();
     this.dialog.close();
   }
 

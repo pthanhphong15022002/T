@@ -13,10 +13,12 @@ import { FormControl, FormGroup } from '@angular/forms';
 import {
   CallFuncService,
   CodxService,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../../codx-es.service';
@@ -30,8 +32,6 @@ import { PopupSignatureComponent } from '../popup-signature/popup-signature.comp
 export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   @Output() closeSidebar = new EventEmitter();
   @ViewChildren('attachment') attachment: AttachmentComponent;
-  // @ViewChild('attachment', { static: false }) attachment: AttachmentComponent;
-  // @ViewChild(AttachmentComponent) attachment: AttachmentComponent;
   @ViewChild('content') content;
 
   isAdd = true;
@@ -64,8 +64,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = data?.data[0];
-    this.isAdd = data?.data[1];
+    this.data = dialog?.dataService?.dataSelected;
+    this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
     if (!this.isAdd) this.headerText = 'Chỉnh sửa chữ ký số';
   }
@@ -87,7 +87,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         this.cbxName = res;
       });
 
-    this.initForm();
+    //this.initForm();
 
     this.codxService
       .getAutoNumber(
@@ -105,20 +105,21 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogSignature = item;
-        this.dialogSignature.patchValue({
-          signatureType: '1',
-          supplier: '1',
-          oTPControl: '0',
-          spanTime: 0,
-          stop: false,
-        });
         this.dialogSignature.addControl('id', new FormControl(this.data?.id));
         this.dialogSignature.addControl(
           'recID',
           new FormControl(this.data?.recID)
         );
+        this.dialogSignature.patchValue(this.data);
+
         if (!this.isAdd) {
-          this.dialogSignature.patchValue(this.data);
+          this.dialogSignature.patchValue({
+            signatureType: '1',
+            supplier: '1',
+            oTPControl: '0',
+            spanTime: 0,
+            stop: false,
+          });
         } else {
           this.dialogSignature.addControl(
             'recID',
@@ -135,24 +136,28 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   valueChange(event: any) {
     if (event?.field && event?.component) {
       if (event?.field == 'userID') {
-        this.dialogSignature.patchValue({
-          [event['field']]: event?.data.value[0],
-        });
-        this.dialogSignature.patchValue({
-          fullName: event?.data.dataSelected[0].text,
-        });
+        this.data[event['field']] = event?.data.value[0];
+        this.data.fullName = event?.data.dataSelected[0].text;
+        // this.dialogSignature.patchValue({
+        //   [event['field']]: event?.data.value[0],
+        // });
+        // this.dialogSignature.patchValue({
+        //   fullName: event?.data.dataSelected[0].text,
+        // });
       } else if (event?.data === Object(event?.data))
         this.dialogSignature.patchValue({ [event['field']]: event.data.value });
       else this.dialogSignature.patchValue({ [event['field']]: event.data });
+      this.cr.detectChanges();
     }
   }
 
-  beforeSave(option: any) {
-    let itemData = this.dialogSignature.value;
+  beforeSave(option: RequestOption) {
+    //let itemData = this.dialogSignature.value;
+    let itemData = this.data;
     if (this.isAdd) {
-      option.method = 'AddNewAsync';
+      option.methodName = 'AddNewAsync';
     } else {
-      option.method = 'EditAsync';
+      option.methodName = 'EditAsync';
     }
 
     option.data = [itemData, this.isAdd];
@@ -165,15 +170,19 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    console.log(this.dialogSignature.value);
-
-    this.dialog.dataService.dataSelected = this.dialogSignature.value;
+    //this.dialog.dataService.dataSelected = this.dialogSignature.value;
+    this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.update || res.save) {
           this.isSaveSuccess = true;
           console.log(res);
+          if (res.update) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+          }
           this.dialog && this.dialog.close();
         }
       });
@@ -189,6 +198,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     let data = {
       dialog: this.dialog,
       model: this.dialogSignature,
+      data: this.data,
     };
     this.cfService.openForm(
       PopupSignatureComponent,

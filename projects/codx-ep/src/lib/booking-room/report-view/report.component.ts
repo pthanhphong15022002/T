@@ -7,7 +7,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ApiHttpService, CacheService, LangPipe, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, LangPipe, NotificationsService } from 'codx-core';
 
 @Component({
   selector: 'report',
@@ -28,6 +28,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
   param: any = {
 
   };
+  user: any;
   print: boolean = false;
 
   constructor(
@@ -55,6 +56,7 @@ export class ReportComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadParams();
+
   }
 
   changeValueDate(evt: any, dependenceChange?:any) {
@@ -141,6 +143,13 @@ export class ReportComponent implements OnInit, AfterViewInit {
   }
 
   apply(){
+    this.lstParamsNotGroup.forEach((item:any)=>{
+      if(item.dependences){
+        if(!this.objParam[item.dependences]){
+          delete this.objParam[item.controlName]
+        }
+      }
+    })
     this.param = undefined;
     this.param = {...this.objParam};
 

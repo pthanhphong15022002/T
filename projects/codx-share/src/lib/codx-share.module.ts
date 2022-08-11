@@ -1,6 +1,6 @@
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
@@ -26,17 +26,14 @@ import {
   DateRangePickerModule,
 } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
-import {
-  UploaderComponent,
-  UploaderModule,
-} from '@syncfusion/ej2-angular-inputs';
+import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { FileImage } from './pipe/fileImage.pipe';
 import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { PopupVoteComponent } from './components/treeview-comment/popup-vote/popup-vote.component';
-import { LayoutNoAsideComponent } from './_layoutNoAside/layoutNoAside.component';
-import { LayoutOnlyHeaderComponent } from './_layoutOnlyHeader/layoutOnlyHeader.component';
+import { LayoutNoAsideComponent } from './_layout/_noAside/_noAside.component';
+import { LayoutOnlyHeaderComponent } from './_layout/_onlyHeader/_onlyHeader.component';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { SharedModule } from '@shared/shared.module';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
@@ -61,25 +58,11 @@ import '@boldreports/global/l10n/ej.localetexts.vi-VN.min.js';
 import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
 import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
-import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
+//import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
-import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
-export const routes: Routes = [
-  {
-    path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'settings/:funcID',
-        component: DynamicSettingParamaterComponent,
-      },
-    ],
-  },
-];
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
-import { CodxFilesComponent } from './components/codx-files/codx-files.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -105,6 +88,7 @@ const T_Component: Type<any>[] = [
   CalendarDateComponent,
   LayoutNoAsideComponent,
   LayoutOnlyHeaderComponent,
+  LayoutNoAsideToolbarFluidComponent,
   QuickLinksInnerComponent,
   UserInnerComponent,
   CodxReportComponent,
@@ -114,7 +98,6 @@ const T_Component: Type<any>[] = [
   CodxApprovalComponent,
   CodxCommentsComponent,
   DynamicSettingParamaterComponent,
-  CodxFilesComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -129,7 +112,6 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     InlineSVGModule.forRoot(),
     CodxCoreModule,
     CalendarModule,
-    RouterModule.forChild(routes),
     DateRangePickerModule,
     TabModule,
     UploaderModule,
