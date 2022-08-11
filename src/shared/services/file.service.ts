@@ -72,6 +72,10 @@ export class FileService implements OnDestroy {
         return this.api.exec<FileInfo>("DM", "FileBussiness", "BookmarkFileAsync", id);
     }
 
+    getAllowSizeUpload(): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "GetAllowSizeUploadAsync", [""]);
+    }
+
     getFile(id: string, isHistory: boolean = true): Observable<any> {
         return this.api.exec<FileInfo>("DM", "FileBussiness", "GetFileAsync", [id, isHistory]);
     }

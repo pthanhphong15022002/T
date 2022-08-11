@@ -61,18 +61,15 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       this.convertFile();
     }
   }
-  getFiles(){
-    return this.files =this.file_img_video.concat(this.file_application);
-  }
   getFileByObjectID() {
     this.api.execSv(
         "DM","ERM.Business.DM",
         "FileBussiness",
         "GetFilesByIbjectIDAsync",
         this.objectID)
-      .subscribe((files:any[]) => {
-        if(files.length > 0){
-          files.forEach((f:any) => {
+      .subscribe((result:any[]) => {
+        if(result.length > 0){
+          result.forEach((f:any) => {
             if(f.referType == this.FILE_REFERTYPE.IMAGE){
               this.file_img_video.push(f);
             }
@@ -83,8 +80,9 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
             else{
               this.file_application.push(f);
             }
-          }); 
-        this.dt.detectChanges();
+          });
+          this.files = result; 
+          this.dt.detectChanges();
         }
       })
   }
@@ -108,18 +106,18 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   }
 
   removeFiles(file:any){
-    switch(file.referType){
-      case this.FILE_REFERTYPE.APPLICATION:
-        for (let i = 0; i < this.file_application.length; i++) {
-          if(this.file_application[i].fileName == file.fileName)
-          {
-            this.file_application.splice(i,1);
-            break;
+    if(this.multiple){
+      switch(file.referType){
+        case this.FILE_REFERTYPE.APPLICATION:
+          for (let i = 0; i < this.file_application.length; i++) {
+            if(this.file_application[i].fileName == file.fileName)
+            {
+              this.file_application.splice(i,1);
+              break;
+            };
           };
-        };
         break;
       default:
-        
         for (let i = 0; i < this.file_img_video.length; i++) {
           if(this.file_img_video[i].fileName == file.fileName)
           {
@@ -128,12 +126,17 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
           };
         }; 
         break;
+      }
     }
-      this.filesDelete.push(file);
-      this.removeFile.emit(file);
-      this.dt.detectChanges();
+    else
+    {
+      this.files = [];
+    }
+    this.files = this.files.filter((f:any) => f.fileName != file.fileName);
+    this.filesDelete.push(file);
+    this.removeFile.emit(file);
+    this.dt.detectChanges();
   }
-
   addFiles(files:any[]){
     files.map(f => {
       if(f.mimeType.indexOf("image") >= 0 ){
@@ -156,7 +159,8 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
         this.file_application.push(f);
       }
     });
-    this.filesAdd.concat(files);
+    this.filesAdd =  this.filesAdd.concat(files);
+    this.files = this.files.concat(files);
     this.addFile.emit(files);
     this.dt.detectChanges();
   }

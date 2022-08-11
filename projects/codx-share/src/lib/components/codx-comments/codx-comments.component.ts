@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService } from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import { ImageGridComponent } from '../image-grid/image-grid.component';
+import { CodxFilesComponent } from '../codx-files/codx-files.component';
 import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.component';
 
 @Component({
@@ -17,22 +19,12 @@ export class CodxCommentsComponent implements OnInit {
   @Input() objectType:string;
   @Input() formModel:any;
   @Input() rootData: any;
-  @Input() dataComment: any;
   @Output() pushComment = new EventEmitter;
-  @ViewChild('codxATM') codxATM :AttachmentComponent;
-  @ViewChild('codxFile') codxFile : ImageGridComponent;
+  @ViewChild('codxATM') codxATM: AttachmentComponent;
 
-  crrId = '';
-  checkValueInput = false;
+  fileUpload:any[] = [];
   lstData: any;
   lstUserVoted: any;
-  countVote_Like: number;
-  countVote_Amazing: number;
-  countVote_Happy: number;
-  countVote_Sad: number;
-  countVote_Angry: number;
-  votedTypeUpdated: string;
-  pennant = 0;
   checkVoted = false;
   comments = "";
   repComment = "";
@@ -41,19 +33,22 @@ export class CodxCommentsComponent implements OnInit {
   votes: any;
   lstUserVote: any;
   dataSelected: any[];
+  attachement?: AttachmentComponent;
+  codxFile?: CodxFilesComponent;
   constructor(
     private dt: ChangeDetectorRef,
-    private signalRApi: WPService,
     private cache: CacheService,
     private api: ApiHttpService,
     private auth: AuthService,
     private notifySvr: NotificationsService,
     private callFuc: CallFuncService,
+    private dmSV:CodxDMService
   ) {
     
   }
 
   ngOnInit(): void {
+    console.log(this.rootData)
     this.user = this.auth.userValue;
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
@@ -73,10 +68,10 @@ export class CodxCommentsComponent implements OnInit {
       })
   }
   replyComment(post: any, value: any) {
-    if (!value.trim()) {
-      this.notifySvr.notifyCode('E0315');
-      return;
-    }
+    // if (!value.trim() ) {
+    //   this.notifySvr.notifyCode('E0315');
+    //   return;
+    // }
     if (post.recID) {
       var type = "WP_Comments";
       this.api
@@ -85,27 +80,46 @@ export class CodxCommentsComponent implements OnInit {
           'ERM.Business.WP',
           'CommentsBusiness',
           'PublishCommentAsync',
-          [post.recID, value, this.dataComment.recID, type]
+          [post.recID, value, this.rootData.recID, type]
         )
         .subscribe((res) => {
           if (res) {
-            this.dataComment.totalComment += 1;
+            if(this.codxFile?.fileUpload.length > 0){
+              this.codxFile.objectID = res.recID;
+              this.codxFile.saveFiles().subscribe((result:any)=>{
+                if(result){
+                    this.comments = "";
+                    this.repComment = "";
+                    this.rootData.totalComment += 1;
+                    post.showReply = false;
+                    this.dicDatas[res["recID"]] = res;
+                    this.codxFile.fileUpload = [];
+                    this.setNodeTree(res);
+                    this.dt.detectChanges();
+                    this.notifySvr.notifyCode("SYS006");
+
+                    }
+              })
+            }
+            else{
+              this.rootData.totalComment += 1;
             this.comments = "";
             this.repComment = "";
             post.showReply = false;
-            this.crrId = "";
             this.setNodeTree(res);
             this.dt.detectChanges();
+            this.notifySvr.notifyCode("SYS006");
+
+            } 
           }
         });
     }
   }
-
   sendComment(post: any, value: any) {
-    if (!value.trim() && this.fileUpload.length == 0) {
-      this.notifySvr.notifyCode('E0315');
-      return;
-    }
+    // if (!value.trim()) {
+    //   this.notifySvr.notifyCode('E0315');
+    //   return;
+    // }
       var type = "WP_Comments";
       this.api
         .execSv<any>(
@@ -117,42 +131,42 @@ export class CodxCommentsComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            if(this.fileUpload.length > 0){
-              this.codxATM.objectId = res.recID;
-              this.codxATM.saveFilesObservable().subscribe((result:any)=>{
+            if(this.codxFile?.fileUpload?.length > 0){
+              this.codxFile.objectID = res.recID;
+              this.codxFile.saveFiles().subscribe((result:any)=>{
                 if(result){
-                  this.comments = "";
-                  this.repComment = "";
-                  this.dataComment.totalComment += 1;
-                  post.showReply = false;
-                  this.crrId = "";
-                  this.dicDatas[res["recID"]] = res;
-                  this.setNodeTree(res);
-                  this.dt.detectChanges();
-                }
+                    this.comments = "";
+                    this.repComment = "";
+                    this.rootData.totalComment += 1;
+                    post.showReply = false;
+                    this.dicDatas[res["recID"]] = res;
+                    this.codxFile.fileUpload = [];
+                    this.setNodeTree(res);
+                    this.dt.detectChanges();
+                    this.notifySvr.notifyCode("SYS006");
+                    }
               })
             }
             else{
               this.comments = "";
               this.repComment = "";
-              this.dataComment.totalComment += 1;
+              this.rootData.totalComment += 1;
               post.showReply = false;
-              this.crrId = "";
               this.dicDatas[res["recID"]] = res;
               this.setNodeTree(res);
               this.dt.detectChanges();
+              this.notifySvr.notifyCode("SYS006");
+
             }
           }
         });
     
   }
-
   replyTo(data) {
-    this.crrId = data.cm;
     data.showReply = !data.showReply;
+
     this.dt.detectChanges();
   }
-
   votePost(data: any, voteType = null) {
     this.api.execSv(
       "WP",
@@ -180,8 +194,6 @@ export class CodxCommentsComponent implements OnInit {
 
       });
   }
-
-
   voteComment(data: any) {
     if (!data.recID) return;
     this.api
@@ -200,7 +212,6 @@ export class CodxCommentsComponent implements OnInit {
         }
       });
   }
-
   loadSubComment(data) {
     data.isShowComment = !data.isShowComment;
     this.api.execSv(
@@ -216,11 +227,6 @@ export class CodxCommentsComponent implements OnInit {
       this.dt.detectChanges();
     })
   }
-
-
-
-
-
   showComments(post: any) {
     if (post.isShowComment) {
       post.isShowComment = false;
@@ -242,7 +248,6 @@ export class CodxCommentsComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
-
   setDicData(data) {
     this.dicDatas[data["recID"]] = data;
   }
@@ -257,12 +262,11 @@ export class CodxCommentsComponent implements OnInit {
     if (parent) {
       this.addNode(parent, newNode, id);
     } else {
-      this.addNode(this.dataComment, newNode, id);
+      this.addNode(this.rootData, newNode, id);
     }
 
     this.dt.detectChanges();
   }
-
   addNode(dataNode: any, newNode: any, id: string) {
     var t = this;
     if (!dataNode) {
@@ -293,7 +297,6 @@ export class CodxCommentsComponent implements OnInit {
       }
     }
   }
-
   removeNodeTree(id: string) {
     if (!id) return;
     var data = this.dicDatas[id],
@@ -306,8 +309,8 @@ export class CodxCommentsComponent implements OnInit {
           return element["recID"] != id;
         });
       } else {
-        if (!this.dataComment) return;
-        this.dataComment.listComment = this.dataComment.listComment.filter(function (element: any, index: any) {
+        if (!this.rootData) return;
+        this.rootData.listComment = this.rootData.listComment.filter(function (element: any, index: any) {
           return element["recID"] != id;
         });
       }
@@ -316,18 +319,20 @@ export class CodxCommentsComponent implements OnInit {
     }
     this.dt.detectChanges();
   }
-
-
-  deleteComment(comment: any) {
-    if (!comment) return;
+  deleteComment(data: any) {
+    if (!data) return;
     else {
       this.notifySvr.alertCode('Xóa bình luận?').subscribe((res) => {
         if (res.event.status == "Y") {
-          this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "DeletePostAsync", comment)
-            .subscribe((res: number) => {
+          this.api.execSv("WP", 
+          "ERM.Business.WP",
+           "CommentsBusiness",
+           "DeletePostAsync", 
+           data).subscribe((res: number) => 
+           {
               if (res) {
-                this.removeNodeTree(comment.recID);
-                this.dataComment.totalComment = this.dataComment.totalComment - res;
+                this.removeNodeTree(data.recID);
+                this.rootData.totalComment = this.rootData.totalComment - res;
                 this.notifySvr.notifyCode('SYS008');
               }
             });
@@ -335,26 +340,25 @@ export class CodxCommentsComponent implements OnInit {
       });
     }
   }
-  clickEditComment(comment: any) {
-    comment.isEditComment = true;
+  clickEditComment(data: any) {
+    data.isEditComment = !data.isEditComment;
     this.dt.detectChanges();
   }
-
-  valueChangeComment(event: any, comment: any) {
-    comment.content = event.data
+  valueChangeComment(event: any, data: any) {
+    data.content = event.data
     this.dt.detectChanges();
   }
-  editComment(value: string, comment: any) {
-    comment.content = value;
+  editComment(value: string, data: any) {
+    data.content = value;
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
       "CommentsBusiness",
       "UpdateCommentPostAsync",
-      [comment.recID, value])
+      [data.recID, value])
       .subscribe((res: boolean) => {
         if (res) {
-          comment.isEditComment = false;
+          data.isEditComment = false;
           this.notifySvr.notifyCode("SYS007");
           this.dt.detectChanges();
         }
@@ -364,29 +368,28 @@ export class CodxCommentsComponent implements OnInit {
       })
   }
 
+
   upLoadFile(){
-    this.codxATM.uploadFile();
+    this.attachement.uploadFile();
   }
-  fileUpload:any[] = [];
-  fileCount(files:any){
-    if(files && files.data.length > 0){
-      this.fileUpload = files.data;
-      this.codxFile.addFiles(this.fileUpload);
+  getFileCount(event:any){
+    if(event.data.length > 0){
+      this.fileUpload = event.data;
       this.dt.detectChanges();
     }
   }
 
-  addFile(files: any) {
-    if (this.fileUpload.length == 0) {
-      this.fileUpload = files;
-    }
-    else {
-      this.fileUpload.concat(files);
-    }
-    this.dt.detectChanges();
+  getFile(event:any,data:any){
+    data.files = event;
   }
-  removeFile(file: any) {
-    this.fileUpload = this.fileUpload.filter((f: any) => { return f.fileName != file.fileName });
-    this.dt.detectChanges();
+  fileAfterInit(event: any){
+    this.attachement = event.codxATM;
+    this.codxFile = event.codxFile;
+  }
+
+  getFileUpload(event:any){
+    if(this.codxFile){
+      this.codxFile.fileUpload = event;
+    }
   }
 }
