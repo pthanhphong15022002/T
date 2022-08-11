@@ -12,6 +12,7 @@
   [button]="button"
   (buttonClick)="addFile($event)"
   (viewChanged)="changeView($event)"
+  (onLoading)="onLoading($event)"
   (requestEnded)="requestEnded($event)"
 ></codx-views>
 
@@ -59,16 +60,16 @@
 </ng-template>
 
 <ng-template #templateCard>
-  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile()">
+  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">
     <i class="icon-add"></i>
     <span class="font-size-lg">Open File</span>
   </button>
-  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="saveFile()">
+  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="saveFile1()">
     <i class="icon-add"></i>
     <span class="font-size-lg">save Files</span>
   </button> 
   <codx-attachment  
-      #attachment  
+      #attachment1  
       [objectType]="'OD_Dispatches'" 
       [objectId]="'965e692f-8230-4ad1-b1be-ee68ce010b6f'" 
       hideFolder="1"  
@@ -87,7 +88,36 @@
       displayThumb="simple"
     > 
   </codx-attachment>
-   -->
+
+  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile2()">
+    <i class="icon-add"></i>
+    <span class="font-size-lg">Open File</span>
+  </button>
+  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="saveFile2()">
+    <i class="icon-add"></i>
+    <span class="font-size-lg">save Files</span>
+  </button> 
+  <codx-attachment  
+      #attachment2
+      [objectType]="'OD_Dispatches'" 
+      [objectId]="'965e692f-8230-4ad1-b1be-ee68ce010b6f'" 
+      hideFolder="1"  
+      hideUploadBtn="0"   
+      hideDes="0" 
+      type="inline"
+      hideImageUpload="0"
+      allowExtensions=".jpg,.png"
+      allowMultiFile="1"
+      idBrowse="btn2"
+
+      [formModel]="view.formModel"
+      [functionID]="'ODT3'" 
+      (fileAdded)="fileAdded($event)" 
+      (fileCount)="getfileCount($event)" 
+      displayThumb="simple"
+    > 
+  </codx-attachment>
+  
   <!-- <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
    attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">     -->
   <div class="d-flex flex-wrap dms-card-row">
@@ -96,7 +126,7 @@
 </ng-template>
 <ng-template #templateSmallCard>  
   <div class="d-flex flex-wrap dms-card-row"> 
-    <codx-temp-full *ngFor="let item of data" class="float-start" [imageSrc]="dmSV.getImage(item)"
+    <codx-temp-full (dblclick)="dmSV.openItem(data)" *ngFor="let item of data" class="float-start" [imageSrc]="dmSV.getImage(item)"
       imgCss="card-item img-folder me-4" (clickMF)="dmSV.clickMF($event, item)"
       [title]="item.folderName != undefined ? item.folderName : item.fileName" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
       [formModel]="view.formModel" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(item)"
@@ -133,10 +163,10 @@
           <span [className]="dmSV.getBookmarksClass(item)"></span>
         </td>
         <td>
-          <codx-temp-full
+          <codx-temp-full (dblclick)="dmSV.openItem(item)"
             class="float-start"
             [imageSrc]="dmSV.getImage(item)"
-            imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+            imgCss="w-20px me-3 cursor-pointer symbol-25"
             [title]="
               item.folderName != undefined ? item.folderName : item.fileName
             "
@@ -145,7 +175,7 @@
           </codx-temp-full>
         </td>
         <td>
-          <codx-temp-full
+          <codx-temp-full 
             [imageId]="item.createdBy"
             imageObjType="AD_Users"
             imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"

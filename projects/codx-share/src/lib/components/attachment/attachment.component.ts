@@ -49,12 +49,14 @@ export class AttachmentComponent implements OnInit {
   disableSave = false;
   breadcumb: string[];
   breadcumbLink = [];
+  codeMaxFileSize = "DM057";
   codetitle = 'DM059';
   codetitle2 = 'DM058';
   titleDialog = "Thêm file";
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
   titleUpload = 'Upload';
+  titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   interval: ItemInterval[];
   intervalCount = 0;
   fileUploadList: FileUpload[];
@@ -64,7 +66,9 @@ export class AttachmentComponent implements OnInit {
   isFileList = false;
   fileEditing: FileUpload;
   fileEditingTemp: FileUpload;
-
+  maxFileSizeUpload = 0;
+  maxFileSizeUploadMB = 0;
+  referType: string;
   @Input() formModel: any;
   @Input() allowExtensions: string;
   @Input() allowMultiFile = "1";
@@ -265,6 +269,19 @@ export class AttachmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFolderPath();
+    this.fileService.getAllowSizeUpload().subscribe(item => {
+      if (item != null) {
+        this.maxFileSizeUploadMB = item.len;        
+        this.maxFileSizeUpload = item.len * 1014 * 1024;        
+      }
+    });
+
+    this.cache.message(this.codeMaxFileSize).subscribe(item => {
+      if (item != null) {
+        this.titleMaxFileSiate = item.defaultName;
+      }
+    });
+
     this.atSV.isSetDisableSave.subscribe(res => {
       this.disableSave = res;
       this.changeDetectorRef.detectChanges();
@@ -272,13 +289,13 @@ export class AttachmentComponent implements OnInit {
 
     this.cache.message(this.codetitle).subscribe(item => {
       if (item != null) {
-        this.title = item;
+        this.title = item.defaultName;
       }
     });
 
     this.cache.message(this.codetitle2).subscribe(item => {
       if (item != null) {
-        this.title2 = item;
+        this.title2 = item.defaultName;
       }
     });
 
@@ -1053,7 +1070,8 @@ export class AttachmentComponent implements OnInit {
 
 
   uploadFile() {
-    var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
+    //var ctrl = document.querySelector("[idbutton='" + this.idBrowse + "']") as HTMLElement;
+    var ctrl = this.uploadObj!.element as HTMLElement;
     if (ctrl != null)
       ctrl.click();
   }
@@ -1766,7 +1784,15 @@ export class AttachmentComponent implements OnInit {
     this.getFolderPath();
     //console.log(files);
     var addedList = [];
+    
     for (var i = 0; i < files.length; i++) {
+      if (files[i].size >= this.maxFileSizeUpload &&  this.maxFileSizeUpload != 0) {
+        var mess = this.titleMaxFileSiate.replace("{0}", files[i].name);
+        mess = this.titleMaxFileSiate.replace("{1}", this.maxFileSizeUploadMB.toString());
+        this.notificationsService.notify(mess);
+        break;
+      }
+
       let index = this.fileUploadList.findIndex(d => d.fileName.toString() === files[i].name.toString()); //find index in your array
       if (index == -1) {
         var data = await this.convertBlobToBase64(files[i].rawFile);
@@ -1790,6 +1816,7 @@ export class AttachmentComponent implements OnInit {
         fileUpload.fileName = files[i].name;
         fileUpload.funcId = this.functionID;
         fileUpload.folderType = this.folderType;
+        fileUpload.referType = this.referType;
         fileUpload.reWrite = false;
         fileUpload.data = data.toString();
         fileUpload.item = files[i];
@@ -1810,7 +1837,7 @@ export class AttachmentComponent implements OnInit {
     }
     //   this.fileAdded.emit({ data: this.fileUploadList });
     //  this.fileCount.emit(data: addedList);
-    this.fileCount.emit({ data: this.fileUploadList });
+    this.fileCount.emit({ data: addedList });
     files = null;
     if (this.file)
       this.file.nativeElement.value = "";

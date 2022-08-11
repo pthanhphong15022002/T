@@ -31,6 +31,8 @@ export class CodxDMService {
     titleTrashmessage = 'Bạn có muốn cho {0} vào thùng rác không ?';
     titleDeleteeMessage = 'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
     titleNoRight = "Bạn không có quyền download file này";
+    restoreFilemessage = '{0} đã có bạn có muốn ghi đè lên không ?';
+    restoreFoldermessage = '{0} đã có bạn có muốn ghi đè lên không ?';
     isData = this.data.asObservable();   
     public modeStore = "0";
     public hideTree = false;
@@ -397,6 +399,36 @@ export class CodxDMService {
         return bytes;
     }
       
+    openItem(data: any) {
+      if (data.fileName == undefined) 
+      {
+        // open folder
+        let option = new SidebarModel();
+        option.DataService = this.dataService;
+        option.FormModel = this.formModel;
+        option.Width = '550px';
+        // let data = {} as any;
+        data.title = this.titleUpdateFolder;
+        data.id =  data.recID;            
+        this.callfc.openSide(CreateFolderComponent, data, option);    
+      }
+      else {
+        // open file
+        this.fileService.getFile(data.recID).subscribe(data => {
+          this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+          var files = this.listFiles;
+          if (files != null) {
+            let index = files.findIndex(d => d.recID.toString() === data.recID);
+            if (index != -1) {
+              files[index] = data;
+            }
+            this.listFiles = files;                    
+            this.ChangeData.next(true);                
+          }
+      });
+      }
+    } 
+
     checkDeleteRight(data: any) {    
         if (data.isSystem && data.folderName != null) {          
             return false;
@@ -524,12 +556,82 @@ export class CodxDMService {
 
     filterMoreFunction(e: any, data: any) {    
       var type = this.getType(data, "entity");
+      var bookmark = this.isBookmark(data);
+      var list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
       if (e) {          
         for(var i=0; i<e.length; i++) {       
           if (e[i].data != null && e[i].data.entityName == type)
             e[i].disabled = false;     
           else
-            e[i].disabled = true;     
+            e[i].disabled = true;  
+         
+          // khong phai cho duyet
+          if (this.idMenuActive != "DMT06" && this.idMenuActive != "DMT07") {
+            if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
+              e[i].disabled = true;  
+            }
+          } 
+          else {
+            list = "DMT0226;DMT0227;DMT0230;DMT0231";
+
+            if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
+              e[i].disabled = true;  
+            }
+
+            // if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) { 
+            //   e[i].disabled = true;  
+            // }
+          }
+
+          if (type == 'DM_FolderInfo') {
+            // function in 
+            if (e[i].data != null && e[i].data.functionID == 'DMT0224') {
+              e[i].disabled = true;     
+            }
+            // bookmark va unbookmark         
+            if (bookmark) {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0205') {
+                e[i].disabled = true;     
+              }
+            }
+            else {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0223') {
+                e[i].disabled = true;     
+              }
+            }  
+
+            // phuc hoi khong phai trong thung rac  
+            if (this.idMenuActive != "DMT08" && e[i].data != null && e[i].data.functionID == 'DMT0234') { 
+              e[i].disabled = true;  
+            }
+            
+            // thung rac  (view, phuc hoi, xoa)
+            if (this.idMenuActive == "DMT08"  && e[i].data != null && e[i].data.functionID != 'DMT0206' && e[i].data.functionID != 'DMT0234') { 
+              e[i].disabled = true;  
+            }
+          } 
+          else {
+              // bookmark va unbookmark 
+            if (bookmark) {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0217') {
+                e[i].disabled = true;     
+              }
+            }
+            else {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0225') {
+                e[i].disabled = true;     
+              }
+            }     
+            // thung tac
+            if (this.idMenuActive == "DMT08" && e[i].data != null && e[i].data.functionID != 'DMT0210' && e[i].data.functionID != 'DMT0219' && e[i].data.functionID != 'DMT0235') { 
+              e[i].disabled = true;  
+            }
+
+            // phuc hoi     
+            if (this.idMenuActive != "DMT08"  && e[i].data != null && e[i].data.functionID == 'DMT0235') { 
+              e[i].disabled = true;  
+            }
+          } 
         }      
       }
     }
@@ -552,6 +654,22 @@ export class CodxDMService {
       else
         return true;
     }
+
+    isBookmark(data: any) {
+      var ret = false;
+      if (data.bookmarks != null) {        
+        data.bookmarks.forEach(item => {
+          if (item.objectID == this.user.userID) {
+            ret = true;
+          }
+        });        
+      }  
+      return ret;
+    }
+  
+    // checkBookmark() {
+    //   return this.isBookmark;
+    // }
 
     getBookmarksClass(item) {
       if (this.showBookmark(item))
@@ -633,154 +751,364 @@ export class CodxDMService {
       return type;
     }
 
-    clickMF($event, data: any) {        
-        var type =  this.getType(data, "name");
-        let option = new SidebarModel();
-
-        switch($event.functionID) {
-          case "DMT0210": //view file
-            this.fileService.getFile(data.recID).subscribe(data => {
-                this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
-                var files = this.listFiles;
-                if (files != null) {
-                  let index = files.findIndex(d => d.recID.toString() === data.recID);
-                  if (index != -1) {
-                    files[index] = data;
-                  }
-                  this.listFiles = files;                    
-                  this.ChangeData.next(true);                
-                }
-            });
-            break;
-
-          case "DMT0211": // download
-            this.fileService.getFile(data.recID).subscribe(file => {      
-                var id = file.recID;
-                var that = this;
-                if (this.checkDownloadRight(file)) {
-                this.fileService.downloadFile(id).subscribe(async res => {
-                    if (res && res.content != null) {
-                      let json = JSON.parse(res.content);
-                      var bytes = that.base64ToArrayBuffer(json);
-                      let blob = new Blob([bytes], { type: res.mimeType });
-                      let url = window.URL.createObjectURL(blob);
-                      var link = document.createElement("a");
-                      link.setAttribute("href", url);
-                      link.setAttribute("download", res.fileName);
-                      link.style.display = "none";
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                    }
-                    var files = this.listFiles;
-                    if (files != null) {
-                      let index = files.findIndex(d => d.recID.toString() === id);
-                      if (index != -1) {
-                        files[index].countDownload = files[index].countDownload + 1;
-                      }
-                      this.listFiles = files;                    
-                      this.ChangeData.next(true);                
-                    }
-                });
-                }
-                else {
-                this.notificationsService.notify(this.titleNoRight);
-                }
-             });
-            break;
-            
-          case "DMT0222": // properties file         
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            option.Width = '550px';
-            // let data = {} as any;
-            data.title = this.titleUpdateFolder;
-            data.id =  data.recID;            
-            this.callfc.openSide(PropertiesComponent, data, option);            
-            break;
-
-          case "DMT0206":  // xoa thu muc
-          case "DMT0219": // xoa file
-             this.deleteFile(data, type);            
-            break;
-
-          case "DMT0202": // chinh sua thu muc  
-          case "DMT0209":          
-           
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            option.Width = '550px';
-           // let data = {} as any;
-            data.title = this.titleUpdateFolder;
-            data.id =  data.recID;            
-            this.callfc.openSide(CreateFolderComponent, data, option);            
-            break;
-
-        case "DMT0213":  // chinh sua file   
-            this.callfc.openForm(EditFileComponent, "", 800, 800, "", ["", data], "");
-            break;
-
-          case "DMT0207":  // permission
-          case "DMT0220":
-            this.dataFileEditing = data;            
-            this.callfc.openForm(RolesComponent, "", 950, 650, "", [""], "");
-            break;
-
-          case "DMT0205":  // bookmark
-          case "DMT0217":
-            this.setBookmark(data, type);
-            break;
-
-          case "DMT0204": // di chuyen
-          case "DMT0216": // di chuyen
-            var title = `${this.titleCopy} ${type}`;
-            this.callfc.openForm(MoveComponent, "", 450, 400, "", [type, data, title, true], "");   
-            break;  
-
-          case "DMT0214": //"copy": // copy file hay thu muc
-            var title = `${this.titleCopy} ${type}`;
-            this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, true], "");   
-            break;
-    
-          case "DMT0203": //"rename": // copy file hay thu muc
-          case "DMT0215":
-            var title = `${this.titleRename} ${type}`;
-            this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, false], "");   
-            break;
-
-          case "DMT0218": /// version file
-            this.callfc.openForm(VersionComponent, "", 650, 600, "", [FormModel, data], "");   
-            break;   
-
-          //request permisssion  
-          case "DMT0221":
-          case "DMT0208":
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            option.Width = '550px';
-          
-           // let data = {} as any;
-            data.title = this.titleUpdateFolder;
-            data.id =  data.recID;            
-            this.callfc.openSide(ShareComponent, [type, data, false], option);      
-            break;
-            break;  
-          // share
-          case "DMT0201":   
-          case "DMT0212":          
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            option.Width = '550px';
-          
-           // let data = {} as any;
-            data.title = this.titleUpdateFolder;
-            data.id =  data.recID;            
-            this.callfc.openSide(ShareComponent, [type, data, true], option);      
-            break;
-          default:
-            break;    
-        }  
+    setRequest(type: string, recId: string, id: string, status: string, isActive: boolean) {
+    //  debugger;
+      if (type == "file") {
+        this.fileService.UpdateRequestAsync(recId, id, status, isActive).subscribe(async res => {
+          let list = this.listFiles;
+          var idTemplate = this.idMenuActive;
+          //if (idTemplate == "11" || idTemplate == "12" || idTemplate == "13")
+          if (idTemplate == "DMT07" || idTemplate == "12" || idTemplate == "13")
+            id = recId;
+  
+          if (this.idMenuActive != '10' && this.idMenuActive != '13') {
+            let index = list.findIndex(d => d.id.toString() === id.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);//remove element from array
+              // this.dmSV.changeData(null, list, id);   
+           //   this.listFiles.next(list);
+              this.listFiles = list;
+              //this.changeDetectorRef.detectChanges();
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+          else {
+            // xet duyet huy
+            //if (this.idMenuActive == '13' && (status == "7" || status == "8")) {
+            if (this.idMenuActive == '13' && (status == "7" || status == "8")) {
+              let index = list.findIndex(d => d.id.toString() === id.toString()); //find index in your array
+              if (index > -1) {
+                list.splice(index, 1);//remove element from array
+                this.listFiles = list;
+             //   this.changeDetectorRef.detectChanges();
+                //this.changeDetectorRef.detectChanges();
+                this.notificationsService.notify(res.message);
+                this.ChangeData.next(true);
+              }
+            }
+            else {
+              var files = this.listFiles;
+              let index = files.findIndex(d => d.id.toString() === id.toString());
+              if (index != -1) {
+                files[index].fileName = res.data.fileName;
+                files[index] = res.data;
+              }
+           //   this.dmSV.listFiles.next(files);
+              this.listFiles = files;
+             // this.changeDetectorRef.detectChanges();
+              //this.changeDetectorRef.detectChanges();
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+        });
       }
+      else {
+        this.folderService.UpdateRequestAsync(recId, id, status, isActive).subscribe(async res => {
+          let list = this.listFolder;
+          var idTemplate = this.idMenuActive;
+       //   if (idTemplate == "11" || idTemplate == "12" || idTemplate == "13")
+          if (idTemplate == "DMT07" || idTemplate == "12" || idTemplate == "13")
+            id = recId;
+  
+          //if (this.idMenuActive != '10' && this.idMenuActive != '13') {
+          if (this.idMenuActive != '10' && this.idMenuActive != '13') {
+            let index = list.findIndex(d => d.id.toString() === id.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);//remove element from array
+              // this.dmSV.changeData(null, list, id);   
+        
+              this.listFolder = list;
+              //this.changeDetectorRef.detectChanges();
+              //this.changeDetectorRef.detectChanges();
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+          else {
+            // xet duyet huy
+            if (this.idMenuActive == '13' && (status == "7" || status == "8")) {
+              let index = list.findIndex(d => d.id.toString() === id); //find index in your array
+              if (index > -1) {
+                list.splice(index, 1);//remove element from array
+                // this.dmSV.changeData(null, list, id);   
+               
+                this.listFolder = list;
+              //  this.changeDetectorRef.detectChanges();
+                // this.refresh();
+                // this.changeDetectorRef.detectChanges();
+                this.notificationsService.notify(res.message);
+                this.ChangeData.next(true);
+              }              
+            }
+            else {
+              var folder = this.listFolder;
+              let index = folder.findIndex(d => d.id.toString() === id.toString());
+              if (index != -1) {
+                folder[index] = res.data;
+              }
+              //this.dmSV.listFolder.next(folder);
+              this.listFolder = folder;
+              //this.changeDetectorRef.detectChanges();
+              // this.refresh();
+              //this.changeDetectorRef.detectChanges();
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+        });
+      }
+    }
+    
+   clickMF($event, data: any) {        
+      var type =  this.getType(data, "name");
+      let option = new SidebarModel();
+
+      switch($event.functionID) {
+        case "DMT0210": //view file
+          this.fileService.getFile(data.recID).subscribe(data => {
+              this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+              var files = this.listFiles;
+              if (files != null) {
+                let index = files.findIndex(d => d.recID.toString() === data.recID);
+                if (index != -1) {
+                  files[index] = data;
+                }
+                this.listFiles = files;                    
+                this.ChangeData.next(true);                
+              }
+          });
+          break;
+        // DMT0226;DMT0227;DMT0230;DMT0231
+        case "DMT0226": // xet duyet thu muc
+          break;
+
+        case "DMT0227": // tu choi thu muc
+          break;
+
+        case "DMT0230": // xet duyet file
+          break;
+
+        case "DMT0231":  // tu choi file
+          break;
+
+        case "DMT0211": // download
+          this.fileService.getFile(data.recID).subscribe(file => {      
+              var id = file.recID;
+              var that = this;
+              if (this.checkDownloadRight(file)) {
+              this.fileService.downloadFile(id).subscribe(async res => {
+                  if (res && res.content != null) {
+                    let json = JSON.parse(res.content);
+                    var bytes = that.base64ToArrayBuffer(json);
+                    let blob = new Blob([bytes], { type: res.mimeType });
+                    let url = window.URL.createObjectURL(blob);
+                    var link = document.createElement("a");
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", res.fileName);
+                    link.style.display = "none";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }
+                  var files = this.listFiles;
+                  if (files != null) {
+                    let index = files.findIndex(d => d.recID.toString() === id);
+                    if (index != -1) {
+                      files[index].countDownload = files[index].countDownload + 1;
+                    }
+                    this.listFiles = files;                    
+                    this.ChangeData.next(true);                
+                  }
+              });
+              }
+              else {
+              this.notificationsService.notify(this.titleNoRight);
+              }
+            });
+          break;
+          
+        case "DMT0222": // properties file         
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id =  data.recID;            
+          this.callfc.openSide(PropertiesComponent, data, option);            
+          break;
+
+        case "DMT0234": // khoi phuc thu muc
+        case "DMT0235": // khoi phuc file
+          this.restoreFile(data, type); 
+          break;   
+
+        case "DMT0206":  // xoa thu muc
+        case "DMT0219": // xoa file
+            this.deleteFile(data, type);            
+          break;
+
+        case "DMT0202": // chinh sua thu muc  
+        case "DMT0209":          
+          
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id =  data.recID;            
+          this.callfc.openSide(CreateFolderComponent, data, option);            
+          break;
+
+      case "DMT0213":  // chinh sua file   
+          this.callfc.openForm(EditFileComponent, "", 800, 800, "", ["", data], "");
+          break;
+
+        case "DMT0207":  // permission
+        case "DMT0220":
+          this.dataFileEditing = data;            
+          this.callfc.openForm(RolesComponent, "", 950, 650, "", [""], "");
+          break;
+
+        case "DMT0205": // bookmark folder
+        case "DMT0223": // unbookmark folder
+        case "DMT0217": // bookmark file
+        case "DMT0225":
+          this.setBookmark(data, type);
+          break;
+
+        case "DMT0204": // di chuyen
+        case "DMT0216": // di chuyen
+          var title = `${this.titleCopy} ${type}`;
+          this.callfc.openForm(MoveComponent, "", 450, 400, "", [type, data, title, true], "");   
+          break;  
+
+        case "DMT0214": //"copy": // copy file hay thu muc
+          var title = `${this.titleCopy} ${type}`;
+          this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, true], "");   
+          break;
+  
+        case "DMT0203": //"rename": // copy file hay thu muc
+        case "DMT0215":
+          var title = `${this.titleRename} ${type}`;
+          this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, false], "");   
+          break;
+
+        case "DMT0218": /// version file
+          this.callfc.openForm(VersionComponent, "", 650, 600, "", [FormModel, data], "");   
+          break;   
+
+        //request permisssion  
+        case "DMT0221":
+        case "DMT0208":
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+        
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id =  data.recID;            
+          this.callfc.openSide(ShareComponent, [type, data, false], option);      
+          break;
+          
+        // share
+        case "DMT0201":   
+        case "DMT0212":          
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+        
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id =  data.recID;            
+          this.callfc.openSide(ShareComponent, [type, data, true], option);      
+          break;
+
+        default:
+          break;    
+      }  
+   }
+
+    async restoreFile(data: any, type: string): Promise<void> {        
+      if (type === 'file') {
+        this.fileService.restoreFile(data.recID, data.fileName).subscribe(async res => {
+          if (res.status == 0) {
+            let list = this.listFiles;            
+            let index = list.findIndex(d => d.recID.toString() === data.recID.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);//remove element from array                
+              this.listFiles = list;              
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+
+          if (res.status == 6) {                
+            var config = new AlertConfirmInputConfig();
+            config.type = "YesNo";
+            this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
+              if(x.event.status == "Y") {
+                this.fileService.restoreFile(data.recID, res.data.fileName, "1").subscribe(async item => {
+                  if (item.status == 0) {
+                    let list = this.listFiles;                    
+                    let index = list.findIndex(d => d.recID.toString() === data.recID.toString()); //find index in your array
+                    if (index > -1) {
+                      list.splice(index, 1);//remove element from array                
+                      this.listFiles = list;                        
+                      this.notificationsService.notify(item.message);
+                      this.ChangeData.next(true);
+                    }
+                  }
+                });
+              }
+            });           
+          }
+          else {
+            this.notificationsService.notify(res.message);         
+          }
+        });
+      }
+      else {
+        this.folderService.restoreFolder(data.recID).subscribe(async res => {
+          if (res.status == 0) {
+            let list = this.listFolder;
+            //list = list.filter(item => item.recID != id);
+            let index = list.findIndex(d => d.recID.toString() === data.recID.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);
+              this.listFolder = list;
+              this.ChangeData.next(true);
+              //this.dmSV.nodeDeleted.next(id);
+              //this.changeDetectorRef.detectChanges();
+            }
+          }
+
+          if (res.status == 2) {            
+           var config = new AlertConfirmInputConfig();
+           config.type = "YesNo";
+           this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
+             if(x.event.status == "Y") {
+              this.folderService.copyFolder(data.recID.id, data.folderName, "", 1, 1).subscribe(async item => {
+                if (item.status == 0) {
+                  let list = this.listFolder;                  
+                  let index = list.findIndex(d => d.recID.toString() === data.recID.id.toString()); //find index in your array
+                  if (index > -1) {
+                    list.splice(index, 1);
+                    this.listFolder = list;
+                    this.ChangeData.next(true);
+                  }
+                }
+              });
+             }
+            });
+          }
+          else {
+            this.notificationsService.notify(res.message);            
+          }
+        });
+      }
+    }
 
     getSizeKB(item: any) {
       if (item.fileSize != undefined) {
