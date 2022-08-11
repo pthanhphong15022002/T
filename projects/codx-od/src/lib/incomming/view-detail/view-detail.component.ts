@@ -450,7 +450,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           let option = new SidebarModel();
           option.DataService = this.view?.dataService;
           option.FormModel = this.view?.formModel;
-          option.Width = '800px';
+          option.Width = '550px';
           this.dialog = this.callfunc.openSide(
             AssignInfoComponent,
             [task, vllControlShare, vllRose, title],
