@@ -15,13 +15,13 @@
       </div>
     </div>
     <div>
-      <div class="d-flex">
+      <div class="d-flex" >
         <ng-container *ngFor="let item of tabControl; let i = index">
           <a [class]="
               'm-3 text-gray-800 text-hover-primary btn-light-primary' +
               ' ' +
               (item.isActive ? 'text-primary' : '')
-            ">
+            " style="cursor: pointer; ">
             <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
               (click)="clickMenu(item)">
             </codx-label>

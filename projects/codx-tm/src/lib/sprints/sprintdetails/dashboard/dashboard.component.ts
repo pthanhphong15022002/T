@@ -6,6 +6,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
@@ -16,6 +17,7 @@ import { StatusTask } from '../../../models/enum/enum';
   selector: 'codx-sprintdetails-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DashboardComponent
   extends UIComponent
@@ -50,10 +52,11 @@ export class DashboardComponent
   piedata: any;
   dataBarChart: any = {};
   rateDoneTaskOnTime: number = 0;
+  rateDoneTask:number = 0;
   qtyTasks: number = 0;
   vlWork = [];
   hrWork = [];
- 
+  
 
   rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -193,28 +196,35 @@ export class DashboardComponent
   }
   ngAfterViewInit(): void {
     this.model = new DataRequest();
+    this.model.pageLoading = false;
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
-    this.model.pageLoading = false;
-    this.model.predicates =
-      '(Category=@0 or Category=@1)and @2.Contains(outerIt.Owner) and ProjectID=@3';
     var projectID = this.projectID ? this.projectID : null;
-    var resources = this.resources.replaceAll(';', ',');
-    this.model.dataValues = '1;2;[' + resources + '];' + projectID;
+    var resources = this.resources  //replaceAll(';', ',');
+    if (projectID == null) {
+      this.model.predicates =
+        '(Category=@0 or Category=@1)and @2.Contains(outerIt.Owner) and ProjectID = null';
+      this.model.dataValues = '1;2;[' + resources + ']';
+    } else {
+      this.model.predicates =
+        '(Category=@0 or Category=@1)and @2.Contains(outerIt.Owner) and ProjectID=@3';
+      this.model.dataValues = '1;2;[' + resources + '];' + projectID;
+    }
     this.getGeneralData();
   }
 
   private getGeneralData() {
-    this.tmService.getTeamDBData(this.model).subscribe((res: any) => {
+    this.tmService.getResourceAndProjectDBData(this.model).subscribe((res: any) => {
       if (res) {
         const {
-          efficiency,
-          tasksByGroup,
           status,
-          dataBarChart,
-          rateDoneTaskOnTime,
+          efficiency,
           qtyTasks,
+          rateDoneTaskOnTime,
+          rateDoneTask,
+          tasksByGroup,
+          dataBarChart,
           vltasksByEmp,
           hoursByEmp,
         } = res;
@@ -227,6 +237,7 @@ export class DashboardComponent
         this.status = status;
         this.dataBarChart = dataBarChart;
         this.rateDoneTaskOnTime = rateDoneTaskOnTime.toFixed(2);
+        this.rateDoneTask = rateDoneTask.toFixed(2);
         this.qtyTasks = qtyTasks;
         this.piedata = [
           {

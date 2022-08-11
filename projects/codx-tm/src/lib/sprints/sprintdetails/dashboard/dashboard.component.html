@@ -1,6 +1,6 @@
 <div class="page-content d-flex flex-row">
   <div class="w-100 me-4 scroll-y h-100">
-    <div class="row m-0 bg-body rounded-2 mb-3">
+    <div class="row m-0 bg-body rounded-2 mb-3 mt-5">
       <div class="col-2 px-2">
         <div class="d-flex justify-content-between p-3" style="background-color: #f08795">
           <div class="d-flex justify-content-between">
@@ -250,6 +250,8 @@
             <p class="text-center fs-7 text-gray-500">Đánh giá</p>
           </div>
         </div> -->
+
+        <!-- ti lệ -->
       <div class="col-4 row ">
         <div class="col-7 align-items-top">
           <ejs-circulargauge style="display: block" centerY="40%" width="100%" height="100%">
@@ -262,7 +264,7 @@
                 </e-ranges>
                 <e-pointers>
                   <e-pointer type="RangeBar" roundedCornerRadius="10" radius="90%" color="#04DEB7" pointerWidth="12"
-                    [value]="data?.rateDoneTaskOnTime">
+                    [value]="rateDoneTaskOnTime">
                   </e-pointer>
                 </e-pointers>
               </e-axis>
@@ -274,7 +276,7 @@
                 </e-ranges>
                 <e-pointers>
                   <e-pointer type="RangeBar" roundedCornerRadius="10" radius="115%" color="#5465FF" markerWidth="12"
-                    pointerWidth="12" [value]="data?.rateDoneTask">
+                    pointerWidth="12" [value]="rateDoneTask">
                   </e-pointer>
                 </e-pointers>
               </e-axis>
@@ -288,7 +290,7 @@
               <div class="d-flex flex-column">
                 <div>Tỷ lệ hoàn thành công việc</div>
                 <div class="text-dark fs-3 fw-bold">
-                  {{ data?.rateDoneTask.toFixed(2) }}%
+                  {{ rateDoneTask}}%
                 </div>
               </div>
             </div>
@@ -297,13 +299,15 @@
               <div class="d-flex flex-column">
                 <div>Tỷ lệ hoàn thành công việc đúng hạn</div>
                 <div class="text-dark fs-3 fw-bold">
-                  {{ data?.rateDoneTaskOnTime.toFixed(2) }}%
+                  {{rateDoneTaskOnTime}}%
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+
       <div class="col-lg-4" style="position: relative; height: 250px">
         <ejs-circulargauge style="display: block" centerY="50%" width="250" height="250">
           <e-axes>
