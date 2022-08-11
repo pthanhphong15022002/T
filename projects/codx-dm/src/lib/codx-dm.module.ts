@@ -42,10 +42,19 @@ export const routes: Routes = [
       //   path: '',
       //   component: HomeComponent
       // },
+     
+      // {
+      //   path: 'DMT02',
+      //   component: HomeComponent
+      // },  
+      // {
+      //   path: 'DMT03',
+      //   component: HomeComponent
+      // },  
       {
         path: ':funcID',
         component: HomeComponent
-      },   
+      },  
       {
         path: ':funcID/:fileID',
         component: ViewFileDialogComponent
@@ -65,7 +74,7 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-  HomeComponent,
+  HomeComponent,  
   CardComponent,
   DetailComponent,
   CreateFolderComponent,

@@ -20,141 +20,141 @@ import { ShareComponent } from "./share/share.component";
   providedIn: 'root'
 })
 
-export class CodxDMService {
-  public dataTree: NodeTree[];
-  public data = new BehaviorSubject<any>(null);
-  title = 'Thông báo';
-  titleCopy = 'Sao chép';
-  titleRename = 'Thay đổi tên';
-  titleUpdateFolder = 'Cập nhật thư mục';
-  titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
-  titleTrashmessage = 'Bạn có muốn cho {0} vào thùng rác không ?';
-  titleDeleteeMessage = 'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
-  titleNoRight = "Bạn không có quyền download file này";
-  isData = this.data.asObservable();
-  public modeStore = "0";
-  public hideTree = false;
-  public parentApproval = false;
-  public parentPhysical = false;
-  public parentCopyrights: any;
-  public parentCopyrightsControl: any;
-  public parentApprovers: string;
-  public parentRevisionNote: string;
-  public parentLocation: string;
-  public isSearch = false;
-  public parentFull = true;
-  public parentCreate = true;
-  public parentRead = true;
-  public parentUpdate = true;
-  public parentShare = true;
-  public parentDownload = true;
-  public parentUpload = true;
-  public parentAssign = true;
-  public parentDelete = true;
-  public loading = false;
-  public parentRevision = false;
-  public thumbnail: string;
-  public folderName: string;
-  public parentFolderName: string;
-  public parentFolderId: string;
-  public isTree = false;
-  public level: string;
-  public folderType: any;
-  public idMenuActive: string;
-  public confirmAll: boolean;
-  public checkedDone: boolean;
-  public checkedSaveDone: boolean;
-  public user: any;
-  public currentOldDMIndex: string;
-  public breadcumbLink: string[];
-  public fileID: string;
-  public folderID: string;
-  public type: string;
-  public currentNode: string;
-  public listDialog = [];
-  public loadedFile: boolean;
-  public loadedFolder: boolean;
-  public fileUploadList: FileUpload[];
-  public dataFileEditing: FileUpload;
-  public listFolder = [];
-  public listFiles = [];
-  itemRight: ItemRight;
-  path: string;
-  // public confirmationDialogService: ConfirmationDialogService;
-  public ChangeData = new BehaviorSubject<boolean>(null);
-  isChangeData = this.ChangeData.asObservable();
+export class CodxDMService {    
+    public dataTree: NodeTree[];
+    public data = new BehaviorSubject<any>(null);
+    title = 'Thông báo';
+    titleCopy = 'Sao chép';
+    titleRename = 'Thay đổi tên';
+    titleUpdateFolder = 'Cập nhật thư mục';
+    titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
+    titleTrashmessage = 'Bạn có muốn cho {0} vào thùng rác không ?';
+    titleDeleteeMessage = 'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
+    titleNoRight = "Bạn không có quyền download file này";
+    isData = this.data.asObservable();   
+    public modeStore = "0";
+    public hideTree = false;
+    public parentApproval = false;
+    public parentPhysical = false;
+    public parentCopyrights: any;
+    public parentCopyrightsControl: any;
+    public parentApprovers: string;
+    public parentRevisionNote: string;
+    public parentLocation: string;
+    public isSearch = false;
+    public parentFull = true;
+    public parentCreate = true;
+    public parentRead = true;
+    public parentUpdate = true;
+    public parentShare = true;
+    public parentDownload = true;
+    public parentUpload = true;
+    public parentAssign = true;
+    public parentDelete = true;
+    public loading = false;
+    public parentRevision = false;
+    public thumbnail: string;
+    public folderName: string;
+    public parentFolderName: string;
+    public parentFolderId: string;
+    public isTree = false;
+    public level: string;
+    public folderType: any;
+    public idMenuActive: string;
+    public confirmAll: boolean;
+    public checkedDone: boolean;
+    public checkedSaveDone: boolean;
+    public user: any;
+    public currentOldDMIndex: string;
+    public breadcumbLink: string[];
+    public fileID: string;
+    public folderID: string;
+    public type: string;
+    public currentNode: string;
+    public listDialog = [];
+    public loadedFile: boolean;
+    public loadedFolder: boolean;
+    public fileUploadList: FileUpload[];
+    public dataFileEditing: FileUpload;
+    public listFolder = [];
+    public listFiles = [];
+    itemRight: ItemRight;
+    path: string;
+    // public confirmationDialogService: ConfirmationDialogService;
+    public ChangeData = new BehaviorSubject<boolean>(null);
+    isChangeData = this.ChangeData.asObservable();
 
-  public EmptyTrashData = new BehaviorSubject<boolean>(null);
-  isEmptyTrashData = this.EmptyTrashData.asObservable();
+    public EmptyTrashData = new BehaviorSubject<boolean>(null);
+    isEmptyTrashData = this.EmptyTrashData.asObservable();
 
-  public Location = new BehaviorSubject<string>(null);
-  isLocation = this.Location.asObservable();
+    public Location = new BehaviorSubject<string>(null);
+    isLocation = this.Location.asObservable();
 
-  public ListSubFolder = new BehaviorSubject<SubFolder[]>(null);
-  isListSubFolder = this.ListSubFolder.asObservable();
+    public ListSubFolder = new BehaviorSubject<SubFolder[]>(null);
+    isListSubFolder = this.ListSubFolder.asObservable();
 
-  public HideTree = new BehaviorSubject<boolean>(null);
-  isHideTree = this.HideTree.asObservable();
+    public HideTree = new BehaviorSubject<boolean>(null);
+    isHideTree = this.HideTree.asObservable();
 
-  public updateHDD = new BehaviorSubject<string>(null);
-  isUpdateHDD = this.updateHDD.asObservable();
+    public updateHDD = new BehaviorSubject<string>(null);
+    isUpdateHDD = this.updateHDD.asObservable();
 
-  public openFileDialog = new BehaviorSubject<boolean>(null);
-  isOpenFile = this.openFileDialog.asObservable();
+    public openFileDialog = new BehaviorSubject<boolean>(null);
+    isOpenFile = this.openFileDialog.asObservable();
 
-  public setRight = new BehaviorSubject<boolean>(null);
-  isSetRight = this.setRight.asObservable();
+    public setRight = new BehaviorSubject<boolean>(null);
+    isSetRight = this.setRight.asObservable();
 
-  public sortColumn = new BehaviorSubject<string>(null);
-  isSortColumn = this.sortColumn.asObservable();
+    public sortColumn = new BehaviorSubject<string>(null);
+    isSortColumn = this.sortColumn.asObservable();
 
-  public sortDirecttion = new BehaviorSubject<string>(null);
-  isSortDirecttion = this.sortDirecttion.asObservable();
+    public sortDirecttion = new BehaviorSubject<string>(null);
+    isSortDirecttion = this.sortDirecttion.asObservable();
 
-  public parentFolder = new BehaviorSubject<FolderInfo>(null);
-  isParentFolder = this.parentFolder.asObservable();
+    public parentFolder = new BehaviorSubject<FolderInfo>(null);
+    isParentFolder = this.parentFolder.asObservable();
 
-  public breadcumb = new BehaviorSubject<string[]>(null);
-  isBreadcum = this.breadcumb.asObservable();
+    public breadcumb = new BehaviorSubject<string[]>(null);
+    isBreadcum = this.breadcumb.asObservable();
 
-  public breadcumbTree = new BehaviorSubject<string[]>(null);
-  isBreadcumTree = this.breadcumbTree.asObservable();
+    public breadcumbTree = new BehaviorSubject<string[]>(null);
+    isBreadcumTree = this.breadcumbTree.asObservable();
 
-  public listPermission = new BehaviorSubject<Permission[]>(null);
-  isListPermission = this.listPermission.asObservable();
+    public listPermission = new BehaviorSubject<Permission[]>(null);
+    isListPermission = this.listPermission.asObservable();
 
-  public listTags = new BehaviorSubject<any>(null);
-  isListTags = this.listTags.asObservable();
+    public listTags = new BehaviorSubject<any>(null);
+    isListTags = this.listTags.asObservable();
 
-  public percentUpload = new BehaviorSubject<string>(null);
-  isPercentUpload = this.percentUpload.asObservable();
+    public percentUpload = new BehaviorSubject<string>(null);
+    isPercentUpload = this.percentUpload.asObservable();
 
-  public hideShowBoxLicense = new BehaviorSubject<boolean>(null);
-  isHideShowBoxLicense = this.hideShowBoxLicense.asObservable();
+    public hideShowBoxLicense = new BehaviorSubject<boolean>(null);
+    isHideShowBoxLicense = this.hideShowBoxLicense.asObservable();
 
-  public addNodeTree = new BehaviorSubject<any>(null);
-  isAddNodeTree = this.addNodeTree.asObservable();
+    public addNodeTree = new BehaviorSubject<any>(null);
+    isAddNodeTree = this.addNodeTree.asObservable();
 
-  public hideShowBoxInfo = new BehaviorSubject<boolean>(null);
-  isHideShowBoxInfo = this.hideShowBoxInfo.asObservable();
+    public hideShowBoxInfo = new BehaviorSubject<boolean>(null);
+    isHideShowBoxInfo = this.hideShowBoxInfo.asObservable();
 
-  public fileEditing = new BehaviorSubject<FileUpload>(null);
-  isFileEditing = this.fileEditing.asObservable();
+    public fileEditing = new BehaviorSubject<FileUpload>(null);
+    isFileEditing = this.fileEditing.asObservable();
 
-  public fileUploadListAdd = new BehaviorSubject<boolean>(null);
-  isFileUploadListAdd = this.fileUploadListAdd.asObservable();
+    public fileUploadListAdd = new BehaviorSubject<boolean>(null);
+    isFileUploadListAdd = this.fileUploadListAdd.asObservable();
 
-  public setDisableSave = new BehaviorSubject<boolean>(null);
-  isSetDisableSave = this.setDisableSave.asObservable();
+    public setDisableSave = new BehaviorSubject<boolean>(null);
+    isSetDisableSave = this.setDisableSave.asObservable();
 
-  public setOpenDialog = new BehaviorSubject<DataItem>(null);
-  isSetOpenDialog = this.setOpenDialog.asObservable();
+    public setOpenDialog = new BehaviorSubject<DataItem>(null);
+    isSetOpenDialog = this.setOpenDialog.asObservable();
 
-  public menuIdActive = new BehaviorSubject<string>(null);
-  isMenuIdActive = this.menuIdActive.asObservable();
+    public menuIdActive = new BehaviorSubject<string>(null);
+    isMenuIdActive = this.menuIdActive.asObservable();
 
-  public menuActive = new BehaviorSubject<string>(null);
-  isMenuActive = this.menuActive.asObservable();
+    public menuActive = new BehaviorSubject<string>(null);
+    isMenuActive = this.menuActive.asObservable();
 
   public changeList = new BehaviorSubject<boolean>(null);
   isChangeList = this.changeList.asObservable();
@@ -564,41 +564,41 @@ export class CodxDMService {
     return name;
   }
 
-  showBookmark(item) {
-    if (item.bookmarks != null) {
-      var list = item.bookmarks.filter(x => x.objectID == this.user.userID.toString());
-      if (list.length > 0)
-        return true;
-      else
-        return false;
+    showBookmark(item) {
+      if (item.bookmarks != null) {
+        var list = item.bookmarks.filter(x => x.objectID == this.user.userID.toString());
+        if (list.length > 0)
+          return true;
+        else
+          return false;
+      }
+      return false;
     }
-    return false;
-  }
 
   checkView(read: boolean) {
     return read;
   }
 
-  getRating(data: View[]) {
-    let _sum = 0;
-    var totalViews = 0;
-    if (data != null) {
-      var list = data.filter(x => x.rating > 0);
-      totalViews = list.length;
-      //res.views.forEach(item => {
-      for (var i = 0; i < list.length; i++) {
-        _sum = _sum + list[i].rating;
+    getRating(data: View[]) {
+      let _sum = 0;
+      var totalViews = 0;
+      if (data != null) {
+        var list = data.filter(x => x.rating > 0);
+        totalViews = list.length;
+        //res.views.forEach(item => {
+        for (var i = 0; i < list.length; i++) {
+          _sum = _sum + list[i].rating;
+        }
       }
+  
+      var totalRating = 0;
+      if (totalViews != 0) {
+        totalRating = _sum / totalViews;
+      }
+     
+      totalRating = parseFloat(totalRating.toFixed(2));
+      return totalRating;    
     }
-
-    var totalRating = 0;
-    if (totalViews != 0) {
-      totalRating = _sum / totalViews;
-    }
-
-    totalRating = parseFloat(totalRating.toFixed(2));
-    return totalRating;
-  }
 
   showDownloadCount(download) {
     if (download === null || download === undefined)
@@ -652,51 +652,51 @@ export class CodxDMService {
         });
         break;
 
-      case "DMT0211": // download
-        this.fileService.getFile(data.recID).subscribe(file => {
-          var id = file.recID;
-          var that = this;
-          if (this.checkDownloadRight(file)) {
-            this.fileService.downloadFile(id).subscribe(async res => {
-              if (res && res.content != null) {
-                let json = JSON.parse(res.content);
-                var bytes = that.base64ToArrayBuffer(json);
-                let blob = new Blob([bytes], { type: res.mimeType });
-                let url = window.URL.createObjectURL(blob);
-                var link = document.createElement("a");
-                link.setAttribute("href", url);
-                link.setAttribute("download", res.fileName);
-                link.style.display = "none";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }
-              var files = this.listFiles;
-              if (files != null) {
-                let index = files.findIndex(d => d.recID.toString() === id);
-                if (index != -1) {
-                  files[index].countDownload = files[index].countDownload + 1;
+          case "DMT0211": // download
+            this.fileService.getFile(data.recID).subscribe(file => {      
+                var id = file.recID;
+                var that = this;
+                if (this.checkDownloadRight(file)) {
+                this.fileService.downloadFile(id).subscribe(async res => {
+                    if (res && res.content != null) {
+                      let json = JSON.parse(res.content);
+                      var bytes = that.base64ToArrayBuffer(json);
+                      let blob = new Blob([bytes], { type: res.mimeType });
+                      let url = window.URL.createObjectURL(blob);
+                      var link = document.createElement("a");
+                      link.setAttribute("href", url);
+                      link.setAttribute("download", res.fileName);
+                      link.style.display = "none";
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }
+                    var files = this.listFiles;
+                    if (files != null) {
+                      let index = files.findIndex(d => d.recID.toString() === id);
+                      if (index != -1) {
+                        files[index].countDownload = files[index].countDownload + 1;
+                      }
+                      this.listFiles = files;                    
+                      this.ChangeData.next(true);                
+                    }
+                });
                 }
-                this.listFiles = files;
-                this.ChangeData.next(true);
-              }
-            });
-          }
-          else {
-            this.notificationsService.notify(this.titleNoRight);
-          }
-        });
-        break;
-
-      case "DMT0222": // properties file         
-        option.DataService = this.dataService;
-        option.FormModel = this.formModel;
-        option.Width = '550px';
-        // let data = {} as any;
-        data.title = this.titleUpdateFolder;
-        data.id = data.recID;
-        this.callfc.openSide(PropertiesComponent, data, option);
-        break;
+                else {
+                this.notificationsService.notify(this.titleNoRight);
+                }
+             });
+            break;
+            
+          case "DMT0222": // properties file         
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
+            option.Width = '550px';
+            // let data = {} as any;
+            data.title = this.titleUpdateFolder;
+            data.id =  data.recID;            
+            this.callfc.openSide(PropertiesComponent, data, option);            
+            break;
 
       case "DMT0206":  // xoa thu muc
       case "DMT0219": // xoa file
@@ -790,30 +790,30 @@ export class CodxDMService {
       return '';
   }
 
-  setFullHtmlNode(folder, text) {
-    var item1 = '';
-    var item2 = '';
-
-    if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
-    else {
-      if (folder.icon.indexOf('.') == -1)
-        item1 = `<i class="${folder.icon}" role="presentation"></i>`;
+    setFullHtmlNode(folder, text) {
+      var item1 = '';
+      var item2 = '';
+  
+      if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
+        item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
       else {
-        var path = `${this.path}/${folder.icon}`;
-        item1 = `<img class="h-15px " src="${path}">`;
+        if (folder.icon.indexOf('.') == -1)
+          item1 = `<i class="${folder.icon}" role="presentation"></i>`;
+        else {
+          var path = `${this.path}/${folder.icon}`;
+          item1 = `<img class="h-15px " src="${path}">`;
+        }
       }
-    }
-
-    if (!folder.read)
-      item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
-    var fullText = `${item1}
+  
+      if (!folder.read)
+        item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
+      var fullText = `${item1}
                       ${item2}
                       <span class="mytree_node  me-2"></span>
                       ${text}`;
-
-    return fullText;
-  }
+  
+      return fullText;
+    }
 
   checkUserForder(folder) {
     // return true;
@@ -931,33 +931,33 @@ export class CodxDMService {
         //                     if (item.status == 0)
         //                         this.updateHDD.next(item.messageHddUsed);
 
-        //                 }
-        //                 that.notificationsService.notify(item.message);
-        //             });
-        //         }
-        //     })
-        //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));                      
-      }
-      else {
-        this.notificationsService.notify(res.message);
-      }
-    })
-  }
+                //                 }
+                //                 that.notificationsService.notify(item.message);
+                //             });
+                //         }
+                //     })
+                //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));                      
+            }
+            else {
+                this.notificationsService.notify(res.message);
+            }
+        })
+    }
 
-  copyFolderTo(id, fullName, toselectId) {
-    var that = this;
-    this.folderService.copyFolder(id, fullName, toselectId, 1).subscribe(async res => {
-      if (res.status == 0) {
-        let list = this.listFolder;
-        this.nodeDeleted.next(id);
-        //list = list.filter(item => item.recID != id);
-        let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
-        if (index > -1) {
-          list.splice(index, 1);//remove element from array
-          this.listFolder = list;
-          this.ChangeData.next(true);
-        }
-      }
+    copyFolderTo(id, fullName, toselectId) {
+        var that = this;
+        this.folderService.copyFolder(id, fullName, toselectId, 1).subscribe(async res => {
+            if (res.status == 0) {
+                let list = this.listFolder;
+                this.nodeDeleted.next(id);
+                //list = list.filter(item => item.recID != id);
+                let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+                if (index > -1) {
+                    list.splice(index, 1);//remove element from array
+                    this.listFolder = list;                    
+                    this.ChangeData.next(true);
+                }
+            }
 
       if (res.status == 2) {
         // this.confirmationDialogService.confirm(this.titlemessage, res.message + this.copymessage)
