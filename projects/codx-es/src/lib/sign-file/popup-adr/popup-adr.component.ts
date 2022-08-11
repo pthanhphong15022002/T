@@ -1,6 +1,13 @@
-import { Component, Injector, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { UIComponent, DialogData, DialogRef, FormModel } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../codx-es.service';
 
 @Component({
@@ -9,6 +16,8 @@ import { CodxEsService } from '../../codx-es.service';
   styleUrls: ['./popup-adr.component.scss'],
 })
 export class PopupADRComponent extends UIComponent {
+  @ViewChild('attachment') attachment: AttachmentComponent;
+
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
@@ -46,7 +55,7 @@ export class PopupADRComponent extends UIComponent {
     this.formModel = this.data.formModel;
     this.formModel.currentData = this.approvalTrans;
     this.dialogSignFile = this.data.formGroup;
-    this.controlName = this.mode == 2 ? 'redoControl' : 'rejectControl';
+    this.controlName = this.mode == 2 ? 'rejectControl' : 'redoControl';
     this.detectorRef.detectChanges();
   }
 
@@ -55,6 +64,10 @@ export class PopupADRComponent extends UIComponent {
   changeReason(e) {}
 
   saveDialog() {
-    this.dialog.close();
+    this.dialog.close('ok');
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
   }
 }

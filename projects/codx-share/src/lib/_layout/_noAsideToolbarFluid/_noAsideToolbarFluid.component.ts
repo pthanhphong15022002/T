@@ -1,4 +1,4 @@
-import { CodxShareService } from './../codx-share.service';
+import { CodxShareService } from '../../codx-share.service';
 import { Component, OnInit, Injector } from '@angular/core';
 import {
   CallFuncService,
@@ -7,17 +7,17 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { Observable } from 'rxjs';
-import { NoteDrawerComponent } from '../layout/drawers/note-drawer/note-drawer.component';
+import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawer.component';
 @Component({
   selector: 'lib-layoutNoAside',
-  templateUrl: './layoutNoAside.component.html',
-  styleUrls: ['./layoutNoAside.component.css'],
+  templateUrl: './_noAsideToolbarFluid.component.html',
+  styleUrls: ['./_noAsideToolbarFluid.component.css'],
 })
-export class LayoutNoAsideComponent extends LayoutBaseComponent {
+export class LayoutNoAsideToolbarFluidComponent extends LayoutBaseComponent {
   module = '';
   override aside = false;
   dialog!: DialogRef;
-  //override asideFixed = true;
+  override asideFixed = true;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   //override toolbar = false;
   constructor(

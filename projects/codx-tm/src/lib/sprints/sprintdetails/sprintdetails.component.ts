@@ -23,6 +23,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   tabControl: TabModelSprints[] = [];
   name = 'Công việc';
   projectID: any;
+  resources: any;
   searchField = '';
   listTaskResousceSearch = [];
   listTaskResousce = [];
@@ -57,6 +58,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         if (res) {    
           this.sprints = res;
           this.projectID = this.sprints?.projectID;
+          this.resources= this.sprints?.resources ;
           if(this.sprints?.resources!=null){
             // this.api
             // .execSv<any>(
@@ -71,7 +73,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
               'ERM.Business.HR',
               'EmployeesBusiness',
               'GetListEmployeesByUserIDAsync',
-             JSON.stringify(this.sprints?.resources.split(';')) )
+             JSON.stringify(this.resources.split(';')) )
             .subscribe((data) => {
               if (data) {
                 this.listTaskResousce = data;

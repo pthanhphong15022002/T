@@ -93,7 +93,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
       }
     );
     this.dialog.closed.subscribe((res) => {
-      console.log('data', this.dialogSignFile.value);
+      if (res.event == 'ok') {
+        console.log('run');
+
+        this.pdfView.renderQRFile();
+      }
     });
   }
 
