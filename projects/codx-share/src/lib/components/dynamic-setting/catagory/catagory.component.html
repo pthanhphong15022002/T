@@ -136,7 +136,15 @@
         [field]="data.fieldName"
       >
       </codx-input>
-      <a href="/default/standard/setting2" *ngIf="data.displayMode === '1'"
+      <a
+        [routerLink]="
+          data.reference ? '../../../../' + data.reference : '/detail'
+        "
+        [state]="{
+          setting: setting | group: data.recID:'2',
+          function: function
+        }"
+        *ngIf="data.displayMode === '1'"
         ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span
       ></a>
       <a href="/default/standard/setting2" *ngIf="data.displayMode === '2'"

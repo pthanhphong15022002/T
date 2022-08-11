@@ -18,6 +18,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../../codx-es.service';
@@ -31,8 +32,6 @@ import { PopupSignatureComponent } from '../popup-signature/popup-signature.comp
 export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   @Output() closeSidebar = new EventEmitter();
   @ViewChildren('attachment') attachment: AttachmentComponent;
-  // @ViewChild('attachment', { static: false }) attachment: AttachmentComponent;
-  // @ViewChild(AttachmentComponent) attachment: AttachmentComponent;
   @ViewChild('content') content;
 
   isAdd = true;
@@ -88,7 +87,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         this.cbxName = res;
       });
 
-    this.initForm();
+    //this.initForm();
 
     this.codxService
       .getAutoNumber(
@@ -137,14 +136,14 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   valueChange(event: any) {
     if (event?.field && event?.component) {
       if (event?.field == 'userID') {
-        // this.data[event['field']] = event?.data.value[0];
-        // this.data.fullName = event?.data.dataSelected[0].text;
-        this.dialogSignature.patchValue({
-          [event['field']]: event?.data.value[0],
-        });
-        this.dialogSignature.patchValue({
-          fullName: event?.data.dataSelected[0].text,
-        });
+        this.data[event['field']] = event?.data.value[0];
+        this.data.fullName = event?.data.dataSelected[0].text;
+        // this.dialogSignature.patchValue({
+        //   [event['field']]: event?.data.value[0],
+        // });
+        // this.dialogSignature.patchValue({
+        //   fullName: event?.data.dataSelected[0].text,
+        // });
       } else if (event?.data === Object(event?.data))
         this.dialogSignature.patchValue({ [event['field']]: event.data.value });
       else this.dialogSignature.patchValue({ [event['field']]: event.data });
@@ -152,13 +151,13 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beforeSave(option: any) {
-    let itemData = this.dialogSignature.value;
-    //let itemData = this.data;
+  beforeSave(option: RequestOption) {
+    //let itemData = this.dialogSignature.value;
+    let itemData = this.data;
     if (this.isAdd) {
-      option.method = 'AddNewAsync';
+      option.methodName = 'AddNewAsync';
     } else {
-      option.method = 'EditAsync';
+      option.methodName = 'EditAsync';
     }
 
     option.data = [itemData, this.isAdd];
@@ -171,8 +170,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.dialog.dataService.dataSelected = this.dialogSignature.value;
-    //this.dialog.dataService.dataSelected = this.data;
+    //this.dialog.dataService.dataSelected = this.dialogSignature.value;
+    this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {

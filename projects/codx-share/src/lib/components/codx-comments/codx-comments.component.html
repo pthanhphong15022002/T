@@ -1,6 +1,6 @@
 <div class="d-flex align-items-center justify-content-between mt-3 mb-3">
     <div class="d-flex align-items-center ms-1">
-        <ng-container *ngIf="dataComment.totalVote == 0;else Vote">
+        <ng-container *ngIf="rootData.totalVote == 0;else Vote">
             <div class="flex align-items-center">
                 <span class="me-2">
                     <img src="assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
@@ -10,27 +10,27 @@
         </ng-container>
         <ng-template #Vote>
             <div class="flex align-items-center">
-                <div *ngFor="let votedType of dataComment.listVoteType">
-                    <a class="me-2" (click)="showVotes(dataComment)">
+                <div *ngFor="let votedType of rootData.listVoteType">
+                    <a class="me-2" (click)="showVotes(rootData)">
                         <img src="/assets/themes/wp/default/img/{{(votedType | vll:'L1480':'icon' | async)}}"
                             alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
                     </a>
                 </div>
             </div>
         </ng-template>
-        <span>{{dataComment.totalVote}}</span>
+        <span>{{rootData.totalVote}}</span>
     </div>
-    <div class="d-flex align-items-center text-hover-underline me-1" (click)="showComments(dataComment)">
-        <span>{{dataComment.totalComment}}</span>
+    <div class="d-flex align-items-center text-hover-underline me-1" (click)="showComments(rootData)">
+        <span>{{rootData.totalComment}}</span>
         <span class="text-gray-800 ms-2">
-            <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+            <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
         </span>
     </div>
 </div>
 <div class="row m-0 btn-comment py-2 border-top">
     <div class="col-6 p-0">
         <div class="btn-like delay-500">
-            <div *ngIf="!dataComment.myVotedType;else myVoted">
+            <div *ngIf="!rootData.myVotedType;else myVoted">
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
                     <span class="fw-bold ms-2" style="color: gray;">
                         <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
@@ -39,18 +39,18 @@
             </div>
             <div class="d-flex mod icon-like">
                 <ng-container *ngFor="let item of lstData">
-                    <a class="mod-icon" (click)="votePost(dataComment, item.value)">
+                    <a class="mod-icon" (click)="votePost(rootData, item.value)">
                         <img src="/assets/themes/wp/default/img/{{item.icon}}" alt="Kiwi standing on oval"></a>
                 </ng-container>
             </div>
             <ng-template #myVoted>
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <img src="/assets/themes/wp/default/img/{{(dataComment.myVotedType | vll:'L1480':'icon' | async)}}"
+                    <img src="/assets/themes/wp/default/img/{{(rootData.myVotedType | vll:'L1480':'icon' | async)}}"
                         alt="Kiwi standing on oval" style="width: 18px; height: 18px">
                     <div>
                         <span class="fw-bold ms-2"
-                            [style.color]="dataComment.myVotedType | vll:'L1480':'textColor' | async">
-                            {{dataComment.myVotedType | vll:'L1480':'text' | async}}
+                            [style.color]="rootData.myVotedType | vll:'L1480':'textColor' | async">
+                            {{rootData.myVotedType | vll:'L1480':'text' | async}}
                         </span>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
 
     </div>
     <div class="col-6 p-0">
-        <div class="btn-com" (click)="showComments(dataComment)">
+        <div class="btn-com" (click)="showComments(rootData)">
             <div class="d-flex align-items-center justify-content-center text-hover-primary">
                 <span class="icon-chat_bubble_outline icon-18"></span>
                 <span class="text-dark fw-bold ms-2">
@@ -69,340 +69,372 @@
         </div>
     </div>
 </div>
-<div class="isHiden border-top" [class.isShow]="dataComment.isShowComment">
-    <div class="position-relative cmt c1 feed-box my-3">
-        <div>
+<div class="isHiden border-top" [class.isShow]="rootData.isShowComment">
+    <div >
+        <div class="position-relative cmt c1 feed-box my-3">
             <codx-input 
                 class="border-0 bg-transparent" 
                 type="text" placeholder="Bình luận" 
                 [crrValue]="comments"
-                (keyup.enter)="sendComment(dataComment,comments)"
+                (keyup.enter)="sendComment(rootData,comments)"
                 (valueChange)="valueChange($event,'comments')">
             </codx-input>
-            
-        </div>
-        <div class="feed-icon btn-send">
-            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
-                (click)="sendComment(dataComment,comments)">
-                <span class="icon-send icon-18"></span>
-            </span>
-        </div>
+            <div class="feed-icon btn-send">
+                <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                    (click)="upLoadFile()">
+                    <span class="icon-attach_file icon-18"></span>
+                </span>
+                <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                    (click)="sendComment(rootData,comments)">
+                    <span class="icon-send icon-18"></span>
+                </span>
+            </div>
+        </div>   
+        <ng-container *ngTemplateOutlet="upload; context: { $implicit: []}">
+        </ng-container>
     </div>
-    <ng-container *ngFor="let cm of dataComment.listComment">
-        <ng-container *ngTemplateOutlet="parentComment; context: { $implicit: cm }">
+    <ng-container *ngFor="let cm of rootData.listComment">
+        <ng-container *ngTemplateOutlet="cmt; context: { $implicit: cm }">
         </ng-container>
     </ng-container>
-    <ng-template #parentComment let-data>
-        <div class="d-flex pt-4" [attr.dt]="setDicData(data)" id="{{data.recID}}">
-            <div class="me-4">
-                <codx-img [width]="35" objectType="AD_Users" [objectId]="data?.createdBy">
-                </codx-img>
-            </div>
-            <div class="d-flex flex-column w-100">
-                <div class="d-flex justify-content-between comments">
-                    <div class=" comment-content level-1 w-100">
-                        <div class="d-flex align-items-center flex-wrap">
-                            <div class="d-flex">
-                                <a href="javascript:void(0)" class="text-dark fw-bolder">
-                                    {{data.createdName}}</a>
-                            </div>
-                            <div class="d-flex ms-4">
-                                <span class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip"
-                                    title="{{data.createdOn | date:'dd/MM/yyyy'}}">
-                                    {{data.createdOn | date:'dd/MM/yyyy'}}
-                                </span>
-                            </div>
-                        </div>
-                        <ng-container *ngIf="data.isEditComment;else comment">
-                            <div class="edit-comment position-relative w-100 mt-1">
-                                <div class="text-dark text-comment w-100">
-                                    <codx-input type="text" format="ed3" [crrValue]="data.content"
-                                        (valueChange)="valueChangeComment($event,data)"></codx-input>
+    
+</div>
+<!-- comments lv1  -->
+<ng-template #cmt let-data>
+    <div class="d-flex pt-4" [attr.dt]="setDicData(data)" id="{{data.recID}}">
+        <div class="me-4">
+            <codx-img [width]="35" objectType="AD_Users" [objectId]="data?.createdBy">
+            </codx-img>
+        </div>
+        <div class="d-flex flex-column w-100">
+            <div class="d-flex justify-content-between">
+                <div class="comment-content w-100">
+                    <div>
+                        <div class="comments">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="d-flex">
+                                    <a href="javascript:void(0)" class="text-dark fw-bolder">
+                                        {{data.createdName}}</a>
                                 </div>
-                                <div class="feed-icon btn-send" style="position: absolute; top:3px; right:5px">
-                                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
-                                        (click)="editComment(data.content,data)">
-                                        <span class="icon-send icon-18"></span>
+                                <div class="d-flex ms-4">
+                                    <span class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                                        {{data.createdOn | timefrom}}
                                     </span>
                                 </div>
                             </div>
-                        </ng-container>
-                        <ng-template #comment>
-                            <div class="text-dark text-comment" [innerHTML]="data.content"></div>
-                        </ng-template>
-                        <ng-container *ngIf="data.totalVote==0;else dataVote">
-                            <div class="d-flex align-items-center comment-thumb">
-                                <span class="icon-thumb_up icon-16 text-hover-primary"></span>
-                                <span class="ms-1">{{data.totalVote}}</span>
-                            </div>
-                        </ng-container>
-                        <ng-template #dataVote>
-                            <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
-                                <div *ngFor="let vote of data.votes">
-                                    <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
-                                        alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
+                            <div class="edit-comment position-relative w-100 mt-1">
+                                <div class="text-dark text-comment w-100">
+                                    <codx-input type="text" [disabled]="!data.isEditComment"
+                                        format="ed3" [crrValue]="data.content"
+                                        (valueChange)="valueChangeComment($event,data)">
+                                    </codx-input>
                                 </div>
-                                <div>
-                                    <span class="ms-2">{{data.totalVote}}</span>
-                                </div>
-                            </div>
-                        </ng-template>
-                    </div>
-                    <ng-container *ngIf="user.userID == data.createdBy">
-                        <div class="more">
-                            <div ngbDropdown class="dropdown">
-                                <a href="javascript:void(0)"
-                                    class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
-                                    id="dropdownMenuButton1" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </a>
-                                <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                    <li *ngIf="data.write">
-                                        <a (click)="clickEditComment(data)" ngbDropdownItem href="javascript:void(0)">
-                                            <span class="icon-edit icon-16 me-2"></span>
-                                            <codx-label formName="Comments" name="lblEdit_comments" default="Chỉnh sửa">
-                                            </codx-label>
-                                        </a>
-                                    </li>
-                                    <li *ngIf="data.delete">
-                                        <a (click)="deleteComment(data)" ngbDropdownItem href="javascript:void(0)">
-                                            <span class="icon-delete icon-16 me-2"></span>
-                                            <codx-label formName="Comments" name="lblDelete_comments" default="Xóa">
-                                            </codx-label>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
-                <div class="mt-2 d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-grow-1">
-                        <span class="text-gray-400 fs-7 text-hover-primary ">
-                            <div class="btn-like delay-500">
-                                <div *ngIf="!data.myVotedType;else dataMyVoted">
-                                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                        <span class="fs-7 text-gray-400 ms-2">
-                                            <codx-label formName="WP_Comments" name="lblLike" default="Thích">
-                                            </codx-label>
+                                <ng-container *ngIf="data.isEditComment">
+                                    <div class="feed-icon btn-send" style="position: absolute; top:3px; right:5px">
+                                        <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary" 
+                                        (click)="upLoadFile()">
+                                            <span class="icon-attach_file icon-18"></span>
+                                        </span>
+                                        <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
+                                            (click)="editComment(data.content,data)">
+                                            <span class="icon-send icon-18"></span>
                                         </span>
                                     </div>
-                                </div>
-                                <div class="d-flex mod icon-like">
-                                    <ng-container *ngFor="let item of lstData">
-                                        <a class="mod-icon" (click)="votePost(data, item.value)">
-                                            <img src="/assets/themes/wp/default/img/{{item.icon}}"
-                                                alt="Kiwi standing on oval"></a>
-                                    </ng-container>
-                                </div>
-                                <ng-template #dataMyVoted>
-                                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                        <div>
-                                            <span class="fw-bold ms-2"
-                                                [style.color]="data.myVotedType | vll:'L1480':'textColor' | async">
-                                                {{data.myVotedType | vll:'L1480':'text' | async}}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </ng-template>
+                                </ng-container>
+                                
                             </div>
-                        </span>
-                        <span class="d-flex align-items-center text-gray-400 fs-7 text-hover-primary ms-2"
-                            (click)="replyTo(data)">
-                            <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời"></codx-label>
-                        </span>
-                    </div>
-
-                </div>
-                <ng-container *ngFor="let item of data.listComment">
-                    <ng-container *ngTemplateOutlet="childComment context: { $implicit: item }">
-                    </ng-container>
-                </ng-container>
-                <ng-container *ngIf="data.showReply">
-                    <div class="d-flex align-items-center mt-4">
-                        <div class="me-3">
-                            <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="35"></codx-img>
                         </div>
-                        <div class="position-relative cmt feed-box cmt-cmt c3 w-100"
-                            (keyup.enter)="replyComment(data,repComment)">
-                            <codx-input type="text" placeholder="Trả lời" [crrValue]="repComment"
-                                (valueChange)="valueChange($event,'repComment')">
-                            </codx-input>
-                            <div class="feed-icon btn-send">
-                                <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
-                                    (click)="replyComment(data,repComment)">
-                                    <span class="icon-send icon-18"></span>
-                                </span>
+                        <ng-container *ngTemplateOutlet="viewUpload; context: { $implicit: data.files, id: data.recID, edit:data.isEditComment }">
+                        </ng-container>
+                    </div>
+                    <ng-container *ngIf="data.totalVote==0;else dataVote">
+                        <div class="d-flex align-items-center comment-thumb">
+                            <span class="icon-thumb_up icon-16 text-hover-primary"></span>
+                            <span class="ms-1">{{data.totalVote}}</span>
+                        </div>
+                    </ng-container>
+                    <ng-template #dataVote>
+                        <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
+                            <div *ngFor="let vote of data.votes">
+                                <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                                    alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
                             </div>
+                            <div>
+                                <span class="ms-2">{{data.totalVote}}</span>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-container *ngIf="user.userID == data.createdBy">
+                    <div class="more">
+                        <div ngbDropdown class="dropdown">
+                            <a href="javascript:void(0)"
+                                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
+                                id="dropdownMenuButton1" aria-expanded="false">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </a>
+                            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                                <li *ngIf="data.write">
+                                    <a (click)="clickEditComment(data)" ngbDropdownItem href="javascript:void(0)">
+                                        <span class="icon-edit icon-16 me-2"></span>
+                                        <codx-label [formModel]="formModel" name="lblEdit_comments" default="Chỉnh sửa">
+                                        </codx-label>
+                                    </a>
+                                </li>
+                                <li *ngIf="data.delete">
+                                    <a (click)="deleteComment(data)" ngbDropdownItem href="javascript:void(0)">
+                                        <span class="icon-delete icon-16 me-2"></span>
+                                        <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa">
+                                        </codx-label>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </ng-container>
             </div>
-        </div>
-    </ng-template>
-    <!-- comments lv2  -->
-    <ng-template #childComment let-childData>
-        <div class="d-flex mt-2" [attr.dt]="setDicData(childData)">
-            <div class="me-3">
-                <codx-img [width]="40" objectType="AD_Users" [objectId]="childData?.createdBy">
-                </codx-img>
-            </div>
-            <div class="d-flex flex-column w-100 ms-4">
-                <div class="d-flex justify-content-between comments">
-                    <div class="comment-content level-1">
-                        <div class="d-flex align-items-center flex-wrap">
-                            <div class="d-flex">
-                                <a href="javascript:void(0)" class="text-dark fw-bolder">
-                                    {{childData.createdName}}</a>
-                            </div>
-                            <div class="d-flex ms-4">
-                                <span class="text-gray-400 fw-normal flex-grow-1 fs-7" childData-toggle="tooltip"
-                                    title="{{childData.createdOn | date:'dd/MM/yyyy'}}">
-                                    {{childData.createdOn | date:'dd/MM/yyyy'}}
-                                </span>
-                            </div>
-                        </div>
-                        <ng-container *ngIf="childData.isEditComment;else comment">
-                            <div class="text-dark text-comment">
-                                <codx-input type="text" format="ed3" [crrValue]="childData.content"
-                                    (valueChange)="valueChangeComment($event,childData)"></codx-input>
-                            </div>
-                            <div class="feed-icon btn-send">
-                                <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
-                                    (click)="editComment(childData.content,childData)">
-                                    <span class="icon-send icon-18"></span>
-                                </span>
-                            </div>
-                        </ng-container>
-                        <ng-template #comment>
-                            <div class="text-dark text-comment" [innerHTML]="childData.content"></div>
-                        </ng-template>
-                        <ng-container *ngIf="childData.totalVote==0;else childDataVote">
-                            <div class="d-flex align-items-center comment-thumb">
-                                <span class="icon-thumb_up icon-16 text-hover-primary"></span>
-                                <span class="ms-1">{{childData.totalVote}}</span>
-                            </div>
-                        </ng-container>
-                        <ng-template #childDataVote>
-                            <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(childData)">
-                                <div *ngFor="let vote of childData.votes">
-                                    <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
-                                        alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
-                                </div>
-                                <div>
-                                    <span class="ms-2">{{childData.totalVote}}</span>
-                                </div>
-                            </div>
-                        </ng-template>
-                        <div class="d-flex mod icon-like">
-                            <ng-container *ngFor="let item of lstData">
-                                <a class="mod-icon" (click)="votePost(childData, item.value)">
-                                    <img src="/assets/themes/wp/default/img/{{item.icon}}"
-                                        alt="Kiwi standing on oval"></a>
-                            </ng-container>
-                        </div>
-
-                    </div>
-                    <ng-container *ngIf="user.userID == childData.createdBy">
-                        <div class="more">
-                            <div ngbDropdown class="dropdown">
-                                <a href="javascript:void(0)"
-                                    class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
-                                    id="dropdownMenuButton1" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </a>
-                                <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                    <li *ngIf="childData.write">
-                                        <a (click)="clickEditComment(childData)" ngbDropdownItem
-                                            href="javascript:void(0)">
-                                            <span class="icon-edit icon-16 me-2"></span>
-                                            <codx-label formName="Comments" name="lblEdit_comments" default="Chỉnh sửa">
-                                            </codx-label>
-                                        </a>
-                                    </li>
-                                    <li *ngIf="childData.delete">
-                                        <a (click)="deleteComment(childData)" ngbDropdownItem href="javascript:void(0)">
-                                            <span class="icon-delete icon-16 me-2"></span>
-                                            <codx-label formName="Comments" name="lblDelete_comments" default="Xóa">
-                                            </codx-label>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
-                <div class="mt-2 d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-grow-1 align-items-center">
+            <div class="mt-2 d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-grow-1">
+                    <span class="text-gray-400 fs-7 text-hover-primary ">
                         <div class="btn-like delay-500">
-                            <div *ngIf="!childData.myVotedType;else childMyVoted">
+                            <div *ngIf="!data.myVotedType;else dataMyVoted">
                                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                    <span class="fw-bold ms-2" style="color: gray;">
-                                        <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
+                                    <span class="fs-7 text-gray-400 ms-2">
+                                        <codx-label [formModel]="formModel" name="lblLike" default="Thích">
+                                        </codx-label>
                                     </span>
                                 </div>
                             </div>
                             <div class="d-flex mod icon-like">
                                 <ng-container *ngFor="let item of lstData">
-                                    <a class="mod-icon" (click)="votePost(childData, item.value)">
+                                    <a class="mod-icon" (click)="votePost(data, item.value)">
                                         <img src="/assets/themes/wp/default/img/{{item.icon}}"
                                             alt="Kiwi standing on oval"></a>
                                 </ng-container>
                             </div>
-                            <ng-template #childMyVoted>
+                            <ng-template #dataMyVoted>
                                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
                                     <div>
                                         <span class="fw-bold ms-2"
-                                            [style.color]="childData.myVotedType | vll:'L1480':'textColor' | async">
-                                            {{childData.myVotedType | vll:'L1480':'text' | async}}
+                                            [style.color]="data.myVotedType | vll:'L1480':'textColor' | async">
+                                            {{data.myVotedType | vll:'L1480':'text' | async}}
                                         </span>
                                     </div>
                                 </div>
                             </ng-template>
                         </div>
-                        <span class="text-gray-400 fs-7 text-hover-primary ms-2" (click)="replyTo(childData)">
-                            <codx-label formName="WP_Comments" name="lblReply" default="Trả lời"></codx-label>
-                        </span>
+                    </span>
+                    <span class="d-flex align-items-center text-gray-400 fs-7 text-hover-primary ms-2"
+                        (click)="replyTo(data)">
+                        <codx-label [formModel]="formModel" name="lblReply" default="Trả lời"></codx-label>
+                    </span>
+                </div>
+
+            </div>
+            <ng-container *ngFor="let item of data.listComment">
+                <ng-container *ngTemplateOutlet="subCmt context: { $implicit: item }">
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="data.showReply">
+                <div class="d-flex align-items-center mt-4">
+                    <div class="me-3">
+                        <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="35"></codx-img>
+                    </div>
+                    <div class="position-relative cmt feed-box cmt-cmt c3 w-100">
+                        <codx-input type="text" (keyup.enter)="replyComment(data,repComment)" placeholder="Trả lời" [crrValue]="repComment"
+                            (valueChange)="valueChange($event,'repComment')">
+                        </codx-input>
+                        <div class="feed-icon btn-send">
+                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary" 
+                            (click)="upLoadFile()">
+                                <span class="icon-attach_file icon-18"></span>
+                            </span>
+                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                                (click)="replyComment(data,repComment)">
+                                <span class="icon-send icon-18"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <ng-container *ngIf="childData.totalRecord > 0">
-                    <div class="align-items-center" [class]="childData.isShowComment?'isHiden':'isShow'">
-                        <span (click)="loadSubComment(childData)" type="button" class="btn btn-icon btn-sm rotate-180">
-                            <span class="icon-reply icon-16"></span>
-                        </span>
-                        <span class="text-gray-800" (click)="loadSubComment(childData)">
-                            {{childData.totalRecord}}
-                            <codx-label [formModel]="formModel" name="lblReply" default="Trả lời"></codx-label>
-                        </span>
-                    </div>
+                <ng-container *ngTemplateOutlet="upload; context: { $implicit: [] }">
                 </ng-container>
-                <ng-container *ngFor="let item of childData.listComment">
-                    <ng-container *ngTemplateOutlet="parentComment context: { $implicit: item }">
-                    </ng-container>
-                </ng-container>
-                <ng-container *ngIf="childData.showReply">
-                    <div class="d-flex align-items-center">
-                        <div class="me-3">
-                            <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="35"></codx-img>
-                        </div>
-                        <div class="position-relative cmt feed-box cmt-cmt mt-4 c3 w-100"
-                            (keyup.enter)="replyComment(childData,repComment)">
-                            <codx-input type="text" placeholder="Trả lời" [crrValue]="repComment"
-                                (valueChange)="valueChange($event,'repComment')">
-                            </codx-input>
-                            <div class="feed-icon btn-send">
-                                <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
-                                    (click)="replyComment(childData,repComment)">
-                                    <span class="icon-send icon-18"></span>
-                                </span>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+<!-- comments lv2  -->
+<ng-template #subCmt let-data>
+    <div class="d-flex mt-2" [attr.dt]="setDicData(data)">
+        <div class="me-3">
+            <codx-img [width]="40" objectType="AD_Users" [objectId]="data?.createdBy">
+            </codx-img>
+        </div>
+        <div class="d-flex flex-column w-100 ms-4">
+            <div class="d-flex justify-content-between">
+                <div class="comment-content w-100">
+                    <div>
+                        <div class="comments">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="d-flex">
+                                    <a href="javascript:void(0)" class="text-dark fw-bolder">
+                                        {{data.createdName}}</a>
+                                </div>
+                                <div class="d-flex ms-4">
+                                    <span class="text-gray-400 fw-normal flex-grow-1 fs-7">
+                                        {{data.createdOn | timefrom}}
+                                    </span>
+                                </div>
                             </div>
+                            <div class="edit-comment position-relative w-100 mt-1">
+                                <div class="text-dark text-comment w-100">
+                                    <codx-input type="text" [disabled]="!data.isEditComment"
+                                        format="ed3" [crrValue]="data.content"
+                                        (valueChange)="valueChangeComment($event,data)">
+                                    </codx-input>
+                                </div>
+                                <ng-container *ngIf="data.isEditComment">
+                                    <div class="feed-icon btn-send" style="position: absolute; top:3px; right:5px">
+                                        <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
+                                            (click)="editComment(data.content,data)">
+                                            <span class="icon-send icon-18"></span>
+                                        </span>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="viewUpload; context: { $implicit: data.files, id: data.recID, edit: data.isEditComment }">
+                        </ng-container>
+                    </div>
+                    <ng-container *ngIf="data.totalVote==0;else dataVote">
+                        <div class="d-flex align-items-center comment-thumb">
+                            <span class="icon-thumb_up icon-16 text-hover-primary"></span>
+                            <span class="ms-1">{{data.totalVote}}</span>
+                        </div>
+                    </ng-container>
+                    <ng-template #dataVote>
+                        <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
+                            <div *ngFor="let vote of data.votes">
+                                <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                                    alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
+                            </div>
+                            <div>
+                                <span class="ms-2">{{data.totalVote}}</span>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <div class="d-flex mod icon-like">
+                        <ng-container *ngFor="let item of lstData">
+                            <a class="mod-icon" (click)="votePost(data, item.value)">
+                                <img src="/assets/themes/wp/default/img/{{item.icon}}"
+                                    alt="Kiwi standing on oval"></a>
+                        </ng-container>
+                    </div>
+
+                </div>
+                <ng-container *ngIf="user.userID == data.createdBy">
+                    <div class="more">
+                        <div ngbDropdown class="dropdown">
+                            <a href="javascript:void(0)"
+                                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
+                                id="dropdownMenuButton1" aria-expanded="false">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </a>
+                            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                                <li *ngIf="data.write">
+                                    <a (click)="clickEditComment(data)" ngbDropdownItem
+                                        href="javascript:void(0)">
+                                        <span class="icon-edit icon-16 me-2"></span>
+                                        <codx-label [formModel]="formModel" name="lblEdit_comments" default="Chỉnh sửa">
+                                        </codx-label>
+                                    </a>
+                                </li>
+                                <li *ngIf="data.delete">
+                                    <a (click)="deleteComment(data)" ngbDropdownItem href="javascript:void(0)">
+                                        <span class="icon-delete icon-16 me-2"></span>
+                                        <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa">
+                                        </codx-label>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </ng-container>
             </div>
+            <div class="mt-2 d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-grow-1 align-items-center">
+                    <div class="btn-like delay-500">
+                        <div *ngIf="!data.myVotedType;else childMyVoted">
+                            <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                                <span class="fw-bold ms-2" style="color: gray;">
+                                    <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex mod icon-like">
+                            <ng-container *ngFor="let item of lstData">
+                                <a class="mod-icon" (click)="votePost(data, item.value)">
+                                    <img src="/assets/themes/wp/default/img/{{item.icon}}"
+                                        alt="Kiwi standing on oval"></a>
+                            </ng-container>
+                        </div>
+                        <ng-template #childMyVoted>
+                            <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                                <div>
+                                    <span class="fw-bold ms-2"
+                                        [style.color]="data.myVotedType | vll:'L1480':'textColor' | async">
+                                        {{data.myVotedType | vll:'L1480':'text' | async}}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <span class="text-gray-400 fs-7 text-hover-primary ms-2" (click)="replyTo(data)">
+                        <codx-label [formModel]="formModel" name="lblReply" default="Trả lời"></codx-label>
+                    </span>
+                </div>
+            </div>
+            <ng-container *ngIf="data.totalRecord > 0">
+                <div class="align-items-center" [class]="data.isShowComment?'isHiden':'isShow'">
+                    <span (click)="loadSubComment(data)" type="button" class="btn btn-icon btn-sm rotate-180">
+                        <span class="icon-reply icon-16"></span>
+                    </span>
+                    <span class="text-gray-800" (click)="loadSubComment(data)">
+                        {{data.totalRecord}}
+                        <codx-label [formModel]="formModel" name="lblReply" default="Trả lời"></codx-label>
+                    </span>
+                </div>
+            </ng-container>
+            <ng-container *ngFor="let item of data.listComment">
+                <ng-container *ngTemplateOutlet="cmt context: { $implicit: item }">
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="data.showReply">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="35"></codx-img>
+                    </div>
+                    <div class="position-relative cmt feed-box cmt-cmt mt-4 c3 w-100">
+                        <codx-input type="text" (keyup.enter)="replyComment(data,repComment)" placeholder="Trả lời" [crrValue]="repComment"
+                            (valueChange)="valueChange($event,'repComment')">
+                        </codx-input>
+                        <div class="feed-icon btn-send">
+                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary" 
+                            (click)="upLoadFile()">
+                                <span class="icon-attach_file icon-18"></span>
+                            </span>
+                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                                (click)="replyComment(data,repComment)">
+                                <span class="icon-send icon-18"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngTemplateOutlet="upload; context: { $implicit: [] }">
+                </ng-container>
+            </ng-container>
         </div>
-    </ng-template>
-</div>
+    </div>
+</ng-template>
 <ng-template #popContentListVoted let-dialog>
     <codx-form headerText="Danh sách" [body]="body" [dialog]="dialog">
     </codx-form>
@@ -415,18 +447,18 @@
                             <div class="flex">
                                 <div class="" style="margin-left: 5px">
                                     <span class="nav-text d-block h-20px">
-                                        <codx-label formName="Comments" name="lblTotal" default="Tất cả"></codx-label>
+                                        <codx-label [formModel]="formModel" name="lblTotal" default="Tất cả"></codx-label>
                                     </span>
                                 </div>
                                 <div class="" style="margin-left: 5px">
-                                    <span class="nav-text d-block h-20px">{{dataComment.totalVote}}</span>
+                                    <span class="nav-text d-block h-20px">{{rootData.totalVote}}</span>
                                 </div>
                             </div>
                         </a>
                     </li>
 
                     <li *ngFor="let vote of votes" class="nav-item"
-                        (click)="getUserVotes(dataComment.recID,vote.voteType)">
+                        (click)="getUserVotes(rootData.recID,vote.voteType)">
                         <a class="nav-link" data-toggle="tab">
                             <div class="flex">
                                 <div class="">
@@ -435,7 +467,7 @@
                                 </div>
                                 <div class="" style="margin-left: 5px">
                                     <span class="nav-text d-block h-20px">
-                                        <codx-label formName="Comments" name="lblLike"
+                                        <codx-label [formModel]="formModel" name="lblLike"
                                             [default]="vote.voteType | vll:'L1480':'text' | async"></codx-label>
                                     </span>
                                 </div>
@@ -469,4 +501,27 @@
         </div>
     </ng-template>
 </ng-template>
-
+<ng-template #upload let-data let-objectID="id">
+    <codx-files
+        [funcID]="funcID"
+        [objectID]="objectID"
+        [fileUpload]="data" 
+        [type]="'single'" 
+        [edit]="true"
+        (getFile)="!objectID && getFileUpload($event)"
+        [objectType]="objectType"
+        (onAfterViewInit)="!objectID && fileAfterInit($event)">
+    </codx-files> 
+</ng-template>
+<ng-template #viewUpload let-data let-objectID="id" let-edit="edit">
+    <codx-files
+        [funcID]="funcID"
+        [objectID]="objectID"
+        [fileUpload]="data" 
+        [type]="'single'" 
+        [edit]="edit"
+        (getFile)="!objectID && getFileUpload($event)"
+        [objectType]="objectType"
+        (onAfterViewInit)="!objectID && fileAfterInit($event)">
+    </codx-files> 
+</ng-template>

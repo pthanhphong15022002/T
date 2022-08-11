@@ -1,6 +1,13 @@
-import { Component, Injector, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { UIComponent, DialogData, DialogRef, FormModel } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../codx-es.service';
 
 @Component({
@@ -9,6 +16,8 @@ import { CodxEsService } from '../../codx-es.service';
   styleUrls: ['./popup-adr.component.scss'],
 })
 export class PopupADRComponent extends UIComponent {
+  @ViewChild('attachment') attachment: AttachmentComponent;
+
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
@@ -17,42 +26,48 @@ export class PopupADRComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.data = dt.data[0];
+    this.data = dt.data;
   }
-
-  title = 'Duyệt';
-  subTitle = 'Comment khi duyệt';
+  okClick = false;
+  data;
+  title;
+  subTitle;
+  mode;
+  funcID;
+  recID;
 
   dialog;
-  data;
+  approvalTrans: any = {};
 
   formModel: FormModel;
   dialogSignFile: FormGroup;
+  controlName;
 
-  funcID;
+  noteData;
   cbxName;
 
   onInit(): void {
-    console.log(this.data);
-
+    this.title = this.data.title;
+    this.subTitle = this.data.subTitle;
+    this.mode = this.data.mode;
     this.funcID = this.data.funcID;
-    console.log(this.funcID);
-
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      console.log('res', res);
-
-      this.esService
-        .getComboboxName(res.formName, res.gridViewName)
-        .then((res) => {
-          if (res) {
-            this.cbxName = res;
-          }
-        });
-    });
+    this.recID = this.data.signfileID;
+    this.formModel = this.data.formModel;
+    this.formModel.currentData = this.approvalTrans;
+    this.dialogSignFile = this.data.formGroup;
+    this.controlName = this.mode == 2 ? 'rejectControl' : 'redoControl';
+    this.detectorRef.detectChanges();
   }
 
-  valueChange(e) {}
+  getfileCount(event) {}
+
+  changeReason(e) {}
+
   saveDialog() {
-    this.dialog.close();
+    this.dialog.close('ok');
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
   }
 }

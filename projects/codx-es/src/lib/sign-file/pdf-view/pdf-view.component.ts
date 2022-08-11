@@ -38,6 +38,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   actionCollection: any;
   actionCollectionsChange: any;
+  approveStatus;
 
   saveToDBQueueChange: any;
 
@@ -90,7 +91,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
   hideThumbnail: boolean = true;
-  hideActions: boolean = true;
+  hideActions: boolean = false;
 
   saveAnnoQueue: Map<string, any>;
 
@@ -152,11 +153,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
       .subscribe((res: any) => {
-        console.log(res);
+        console.log('sf', res);
 
         let sf = res?.signFile;
 
         if (sf) {
+          this.approveStatus = sf.approveStatus;
           sf.files.forEach((file) => {
             this.lstFiles.push({
               fileName: file.fileName,
@@ -194,8 +196,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         }
       );
     }
-    this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
-    this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    this.thumbnailEle =
+      this.pdfviewerControl.thumbnailViewModule?.thumbnailView;
+    if (this.thumbnailEle) {
+      this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    }
+
     this.pdfviewerControl.zoomValue = 50;
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,
@@ -219,8 +225,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         if (res) {
           this.lstRenderAnnotation = res;
           this.lstRenderAnnotation.forEach((item: any) => {
-            console.log('item', item);
-
             let anno = {
               annotationId: item.recID,
               annotationSelectorSettings: {
@@ -295,7 +299,15 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
                   break;
                 }
                 case '8': {
-                  anno.stampAnnotationPath = '';
+                  switch (this.approveStatus) {
+                    case '1':
+                      anno.stampAnnotationPath = qr;
+                      break;
+                    case '3':
+                    case '5':
+                      anno.stampAnnotationPath = '';
+                      break;
+                  }
                   break;
                 }
               }
@@ -335,9 +347,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       Pages: ${this.pdfviewerControl.pageCount}
     `;
     let barcode = new QRCodeGenerator({
-      width: '500px',
-      height: '500px',
-      mode: 'SVG',
+      width: '250px',
+      height: '250px',
+      mode: 'Canvas',
       displayText: { visibility: false },
       value: text,
     });
@@ -355,6 +367,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.fileInfo = e.itemData;
     this.pdfviewerControl.load(e.itemData.fileID, '');
     this.cannotAct = false;
+    console.log(e.itemData);
+
     this.detectorRef.detectChanges();
   }
 
@@ -1154,18 +1168,39 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       return annot.customData.split(':')[1] == '8';
     });
 
-    if (qrAnnot) {
-      for (let i = 0; i < this.pdfviewerControl.pageCount - 1; i++) {
-        let cloneQR = { ...qrAnnot };
-        cloneQR.pageNumber = i;
-        this.pdfviewerControl.addAnnotation(cloneQR);
-      }
-      console.log('pdf', this.pdfviewerControl.annotationCollection);
+    this.genFileQR(this.fileInfo.fileName, this.fileInfo.fileRefNum, '').then(
+      (value: string) => {
+        qrAnnot.stampAnnotationPath = value;
+        if (qrAnnot) {
+          this.pdfviewerControl.annotationModule.deleteAnnotationById(
+            qrAnnot.annotationId
+          );
+          this.saveAnnoQueue.set(
+            qrAnnot.annotationId,
+            setTimeout(
+              this.saveAnnoToDB.bind(this),
+              10,
+              this.esService,
+              { ...qrAnnot },
+              this.fileInfo,
+              this.user
+            )
+          );
+          for (let i = 0; i < this.pdfviewerControl.pageCount - 1; i++) {
+            let cloneQR = { ...qrAnnot };
+            cloneQR.annotationId = Guid.newGuid();
+            cloneQR.pageNumber = i;
+            this.pdfviewerControl.addAnnotation(cloneQR);
+          }
 
-      this.pdfviewerControl
-        .exportAnnotationsAsBase64String(annotationDataFormat)
-        .then((res) => {});
-    }
+          this.pdfviewerControl
+            .exportAnnotationsAsBase64String(annotationDataFormat)
+            .then((res) => {
+              console.log('base64 new pdf', res);
+            });
+        }
+      }
+    );
   }
 
   cancelPrint(e: any) {}
