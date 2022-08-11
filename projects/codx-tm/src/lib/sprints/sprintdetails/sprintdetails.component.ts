@@ -58,13 +58,20 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.sprints = res;
           this.projectID = this.sprints?.projectID;
           if(this.sprints?.resources!=null){
+            // this.api
+            // .execSv<any>(
+            //   'TM',
+            //   'ERM.Business.TM',
+            //   'SprintsBusiness',
+            //   'GetListUserDetailByResourcesAsync',
+            //   this.sprints?.resources)
             this.api
             .execSv<any>(
-              'TM',
-              'ERM.Business.TM',
-              'SprintsBusiness',
-              'GetListUserDetailByResourcesAsync',
-              this.sprints?.resources)
+              'HR',
+              'ERM.Business.HR',
+              'EmployeesBusiness',
+              'GetListEmployeesByUserIDAsync',
+             JSON.stringify(this.sprints?.resources.split(';')) )
             .subscribe((data) => {
               if (data) {
                 this.listTaskResousce = data;
