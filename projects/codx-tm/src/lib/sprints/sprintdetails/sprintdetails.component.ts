@@ -23,6 +23,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   tabControl: TabModelSprints[] = [];
   name = 'Công việc';
   projectID: any;
+  resources: any;
   searchField = '';
   listTaskResousceSearch = [];
   listTaskResousce = [];
@@ -57,14 +58,22 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         if (res) {    
           this.sprints = res;
           this.projectID = this.sprints?.projectID;
+          this.resources= this.sprints?.resources ;
           if(this.sprints?.resources!=null){
+            // this.api
+            // .execSv<any>(
+            //   'TM',
+            //   'ERM.Business.TM',
+            //   'SprintsBusiness',
+            //   'GetListUserDetailByResourcesAsync',
+            //   this.sprints?.resources)
             this.api
             .execSv<any>(
-              'TM',
-              'ERM.Business.TM',
-              'SprintsBusiness',
-              'GetListUserDetailByResourcesAsync',
-              this.sprints?.resources)
+              'HR',
+              'ERM.Business.HR',
+              'EmployeesBusiness',
+              'GetListEmployeesByUserIDAsync',
+             JSON.stringify(this.resources.split(';')) )
             .subscribe((data) => {
               if (data) {
                 this.listTaskResousce = data;
@@ -110,11 +119,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
   //popoverCrr
-  popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
-    this.countResource = 0;
+  popoverEmpList(p: any) {
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+      p.open();
+      this.popoverCrr = p ;
     }
   }
 
@@ -126,7 +135,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
       return;
     }
     this.listTaskResousce.forEach((res) => {
-      var name = res.resourceName;
+      var name = res.employeeName;
       if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
         listTaskResousceSearch.push(res);
       }

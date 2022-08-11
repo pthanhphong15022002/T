@@ -129,14 +129,13 @@ export class PopupAddDriversComponent implements OnInit {
   valueCbxCarChange(event: any) {
     if (event.data != '') {
       var cbxCar = event.component.dataService.data;
-      cbxCar.forEach((element) => {
-        if (element.RecID == event.component.valueSelected) {
-          this.dialogAddDriver.patchValue({ code: element.Code });
+      cbxCar.forEach(element => {
+        if(element.ResourceID == event.component.valueSelected) {
+          this.dialogAddDriver.patchValue({code : element.Code}); 
           this.changeDetectorRef.detectChanges();
         }
       });
-    }
-    debugger;
+    }  
   }
   openPopupDevice(template: any) {
     var dialog = this.callFuncService.openForm(template, '', 550, 430);
@@ -144,16 +143,14 @@ export class PopupAddDriversComponent implements OnInit {
   }
 
   onSaveForm() {
+    debugger
     if (this.dialogAddDriver.invalid == true) {
       console.log(this.dialogAddDriver);
       return;
-    }
-    this.dialogAddDriver.value.bUID = this.dialogAddDriver.value.bUID[0];
-    this.dialogAddDriver.value.companyID =
-      this.dialogAddDriver.value.companyID[0];
-    this.dialogAddDriver.value.linkID =
-      this.dialogAddDriver.value.resourceID[0];
-    this.dialogAddDriver.value.resourceID = null;
+    }    
+    this.dialogAddDriver.value.companyID = this.dialogAddDriver.value.companyID[0];
+    // this.dialogAddDriver.value.linkID = this.dialogAddDriver.value.resourceID[0];
+    // this.dialogAddDriver.value.resourceID = null;         
     if (!this.dialogAddDriver.value.linkType) {
       this.dialogAddDriver.value.linkType = '2';
     }

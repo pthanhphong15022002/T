@@ -1,21 +1,8 @@
-import { I } from '@angular/cdk/keycodes';
-import {
-  ChangeDetectorRef,
-  Component,
-  Injector,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  ApiHttpService,
   AuthStore,
   ButtonModel,
-  CallFuncService,
-  CodxListviewComponent,
-  CodxService,
-  CRUDService,
   DataRequest,
   DialogRef,
   NotificationsService,
@@ -24,10 +11,8 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { CodxTMService } from '../codx-tm.service';
 import { TM_Sprints } from '../models/TM_Sprints.model';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
 import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sprints.component';
@@ -53,8 +38,6 @@ export class SprintsComponent extends UIComponent {
   user: any;
   sprintDefaut = new TM_Sprints();
 
-  // @ViewChild('lstViewBoard') lstViewBoard: CodxListviewComponent;
-  // @ViewChild('lstProjectBoard') lstProjectBoard: CodxListviewComponent;
   @ViewChild('itemViewBoard') itemViewBoard: TemplateRef<any>;
   @ViewChild('templetSprints') templetSprints: TemplateRef<any>;
   urlShare = '';
@@ -81,7 +64,6 @@ export class SprintsComponent extends UIComponent {
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.params['funcID'];
   }
-
 
   //#region Init
   onInit(): void {
@@ -166,9 +148,9 @@ export class SprintsComponent extends UIComponent {
       .delete([this.view.dataService.dataSelected], true, (opt) =>
         this.beforeDel(opt)
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         if (res) this.notiService.notifyCode('TM004');
-      })
+      });
   }
 
   beforeDel(opt: RequestOption) {
@@ -177,6 +159,7 @@ export class SprintsComponent extends UIComponent {
     return true;
   }
   //#endregion
+
   //#region More function
   clickMF(e: any, data: any) {
     this.itemSelected = data;
@@ -185,23 +168,19 @@ export class SprintsComponent extends UIComponent {
         this.add();
         break;
       case 'SYS02':
-        if (data.iterationID != this.user.userID)
-          this.delete(data);
+        if (data.iterationID != this.user.userID) this.delete(data);
         break;
       case 'SYS03':
-        if (data.iterationID != this.user.userID)
-          this.edit(data);
+        if (data.iterationID != this.user.userID) this.edit(data);
         break;
       case 'SYS04':
-        if (data.iterationID != this.user.userID)
-          this.copy(data);
+        if (data.iterationID != this.user.userID) this.copy(data);
         break;
       case 'sendemail':
         this.sendemail(data);
         break;
       case 'TMT03011': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
-        if (data.iterationID != this.user.userID)
-          this.shareBoard(e.data, data);
+        if (data.iterationID != this.user.userID) this.shareBoard(e.data, data);
         break;
       case 'TMT03012': /// cái này cần hỏi lại để lấy 1 cái cố định gắn vào không được gán thế này, trong database chưa có biến cố định
         this.viewBoard(e.data, data);
@@ -218,8 +197,9 @@ export class SprintsComponent extends UIComponent {
     }
   }
   //#endregion
+
   //#region Event
-  sendemail(data) { }
+  sendemail(data) {}
 
   shareBoard(e, data) {
     var listUserDetail = [];
@@ -227,8 +207,8 @@ export class SprintsComponent extends UIComponent {
       var obj = {
         boardAction: data,
         listUserDetail: listUserDetail,
-        title : e?.customName,
-        vllShare : 'TM003'
+        title: e?.customName,
+        vllShare: 'TM003',
       };
       this.api
         .execSv<any>(
@@ -257,13 +237,13 @@ export class SprintsComponent extends UIComponent {
 
   viewBoard(e, data) {
     // this.urlView = e?.url;
-    this.urlView = "tm/sprintdetails/TMT03011";
+    this.urlView = 'tm/sprintdetails/TMT03011';
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
     // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
     // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
 
-    this.codxService.navigate('', this.urlView)
+    this.codxService.navigate('', this.urlView);
   }
 
   changeView(evt: any) {
@@ -281,8 +261,10 @@ export class SprintsComponent extends UIComponent {
     if (e) {
       e.forEach((x) => {
         if (
-          (x.functionID == 'SYS02' || x.functionID == 'SYS03' || x.functionID=='SYS04') &&
-          data.iterationID == this.user.userID 
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
+          data.iterationID == this.user.userID
         ) {
           x.disabled = true;
         }
