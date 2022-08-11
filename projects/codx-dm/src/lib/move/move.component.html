@@ -8,29 +8,27 @@
           </div>
         </div>
       </div>
-      <div class="container">
-        <div class="row">
-          <div class="col col-3">
-            <codx-input name="group" class="test-check" type="radio" style="width:100%"
-              [checked]="selection == 0 ? true : false" [label]="titleCopyTo"
-              (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
-          </div>
-          <div class="col col-3">
-            <codx-input name="group" class="test-check" type="radio" style="width:100%"
-              [checked]="selection == 1 ? true : false" [label]="titleMove"
-              (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
-          </div>
+      <div class="row">
+        <div class="col col-3">
+          <codx-input name="group" class="test-check" type="radio" style="width:100%"
+            [checked]="selection == 0 ? true : false" [label]="titleCopyTo"
+            (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
         </div>
-      </div>    
-      <div class="mt-6 moveto">
+        <div class="col col-3">
+          <codx-input name="group" class="test-check" type="radio" style="width:100%"
+            [checked]="selection == 1 ? true : false" [label]="titleMove"
+            (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
+        </div>
+      </div>
+      <div class="mt-2x moveto ms-n4">
         <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeMove"
           entityName="DM_FolderInfo" service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false
           idField="recID" parentIdField="parentId" (selectionChange)="onSelectionAddChanged($event, treeAdd)"
           [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
         </codx-treeview>
         <ng-template #templatetree let-data>
-          <div  class="d-flex align-items-center px-3 pt-3 pb-2" #item>
-            <div [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
+          <div class="d-flex align-items-center px-2 py-2" #item>
+            <div class="d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
           </div>
         </ng-template>
       </div>
