@@ -333,7 +333,7 @@ export class HomeComponent extends UIComponent {
       });
     } else {
       this.dmSV.disableInput.next(true);
-     // this.notificationsService.notify(this.titleAccessDenied);
+      this.notificationsService.notify(this.titleAccessDenied);
     }    
   }
 
