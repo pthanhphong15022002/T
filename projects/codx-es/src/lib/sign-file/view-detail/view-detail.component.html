@@ -96,9 +96,13 @@
       </div>
     </div>
     <div class="mb-2">
-      <codx-attachment #attachment [objectType]="'OD_Dispatches'" hideFolder="1" hideUploadBtn="1" hideDes="1"
-        type="inline" [functionID]="'ODT3'" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)">
+      <codx-attachment #attachment [objectType]="formModel.entityName" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+        hideDes="1" [functionID]="" [objectId]="itemDetail?.recID" [allowMultiFile]="1" [functionID]="formModel.funcID">
       </codx-attachment>
+      <!-- <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0"
+      [objectId]="dialogSignFile.value.recID" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
+      [functionID]="formModel.funcID" type="inline" (fileCount)="getfileCount($event)">
+    </codx-attachment> -->
     </div>
 
     <div class="codx_e-header mb-2" [class.active]="true">

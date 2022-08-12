@@ -68,18 +68,23 @@
         <a href="#" class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4">Từ chối</a>
         <a href="#" class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4">Làm lại</a>
         <a href="#" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4">Ký</a> -->
-        <div class="form-group">
-          <codx-input type="checkbox" labelPosition="after" field="autoReset" class="test-check"
-            (valueChange)="valueChange($event)" [crrValue]="">
-          </codx-input>
-          <codx-label class="ms-2" fiedName="autoReset" [formModel]="dialog.formModel" default="Lưu thành mẫu">
-          </codx-label>
-        </div>
+        <ng-container *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+          <div class="me-2 mb-2" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+            <codx-input type="checkbox" labelPosition="after" field="autoReset" class="test-check"
+              (valueChange)="valueChange($event)" [crrValue]="">
+            </codx-input>
+            <codx-label class="ms-2" Name="lblIsTemplate" [formModel]="dialog.formModel" default="Lưu thành mẫu">
+            </codx-label>
+          </div>
 
-        <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-          (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
-          <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
-        </button>
+          <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+            (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+            <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
+          </button>
+          <a class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4">
+            <codx-label name="lblSign" [formModel]="formModel" default="Ký"></codx-label>
+          </a>
+        </ng-container>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18" (click)="close(templateClose)"></i>
         </div>
