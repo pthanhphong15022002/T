@@ -24,7 +24,30 @@
         }
     
         .codx-stepper {
+            .stepper-item::before {
+                content: "";
+                // background-color: #dbdbdb;
+                border-top: 0.5px dashed #6C757D;
+                height: 1px;               
+                position: absolute;
+                top: 15px;
+                left: 0;               
+                right: 0;              
+                display: block;
+            }
+           
+            .stepper-item:first-child:before {     
+                left: 50%;
+               
+            }
+            .stepper-item:last-child:before {     
+                 right: 50%;        
+               
+            }
             .stepper-item {
+                padding-left: 20px;
+                padding-right: 20px;
+                position: relative;
                 .stepper-default {
                     display: block;
                 }

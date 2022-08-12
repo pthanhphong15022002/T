@@ -10,52 +10,56 @@
         <div class="stepper-nav flex-center flex-wrap" #status>
           <div class="stepper-item active" data-kt-stepper-element="nav" data-kt-stepper-action="step"
             ngbTooltip="Upload file" (click)="clickTab(0)">
-            <div class="stepper-wrapper d-flex align-items-center">
-              <div class="stepper-icon">
+            <div class="stepper-wrapper d-flex align-items-center flex-column">
+              <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
+              <div class="stepper-label">Upload file</div>
             </div>
-            <div class="stepper-line w-35px mx-1"></div>
+            <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
           <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)"
-            ngbTooltip="Bổ sung thông tin tài liệu">
-            <div class="stepper-wrapper d-flex align-items-center">
-              <div class="stepper-icon">
+            ngbTooltip="Thông tin tài liệu">
+            <div class="stepper-wrapper d-flex align-items-center flex-column">
+              <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
+              <div class="stepper-label">Thông tin tài liệu</div>
             </div>
-            <div class="stepper-line w-35px mx-1"></div>
+            <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
           <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(2)"
             ngbTooltip="Quy trình duyệt">
-            <div class="stepper-wrapper d-flex align-items-center">
-              <div class="stepper-icon">
+            <div class="stepper-wrapper d-flex align-items-center flex-column">
+              <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
+              <div class="stepper-label">Quy trình duyệt</div>
             </div>
-            <div class="stepper-line w-35px mx-1"></div>
+            <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
           <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(3)"
-            ngbTooltip="Đánh dấu chữ ký">
-            <div class="stepper-wrapper d-flex align-items-center">
-              <div class="stepper-icon">
+            ngbTooltip="Thiết lập vùng ký">
+            <div class="stepper-wrapper d-flex align-items-center flex-column">
+              <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
+              <div class="stepper-label">Thiết lập vùng ký</div>
             </div>
           </div>
         </div>
