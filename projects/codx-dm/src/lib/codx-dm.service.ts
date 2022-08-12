@@ -33,6 +33,7 @@ export class CodxDMService {
     titleNoRight = "Bạn không có quyền download file này";
     restoreFilemessage = '{0} đã có bạn có muốn ghi đè lên không ?';
     restoreFoldermessage = '{0} đã có bạn có muốn ghi đè lên không ?';
+    titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
     isData = this.data.asObservable();   
     public modeStore = "0";
     public hideTree = false;
@@ -401,16 +402,53 @@ export class CodxDMService {
       
     openItem(data: any) {
       if (data.fileName == undefined) 
-      {
-        // open folder
-        let option = new SidebarModel();
-        option.DataService = this.dataService;
-        option.FormModel = this.formModel;
-        option.Width = '550px';
-        // let data = {} as any;
-        data.title = this.titleUpdateFolder;
-        data.id =  data.recID;            
-        this.callfc.openSide(CreateFolderComponent, data, option);    
+      {       
+        if (!data.read) {
+          this.notificationsService.notify(this.titleAccessDenied);
+          return;
+        }
+
+        if (this.idMenuActive == "DMT08")
+          return;
+       
+        this.loadedFile = false;
+        this.loadedFolder = false;
+        this.level = data.level;
+        if (this.level == "1")
+          this.parentFolderId = "000000000000000000000000";
+        else
+          this.parentFolderId = data.parentId;
+
+        this.isTree = false;
+        this.folderName = data.folderName;
+        this.currentNode = '';
+        this.folderId.next(data.recID);
+        this.disableInput.next(false);
+
+        this.folderService.getFolder(data.recID).subscribe(async res => {
+          if (res != null) {
+            this.parentFolder.next(res);
+            this.getRight(res);
+            this.folderName = res.folderName;
+            this.parentFolderId = res.parentId;
+            this.add.next(true);      
+          }
+        });
+      
+        this.folderService.options.funcID = this.idMenuActive;
+        this.folderService.getFolders(data.recID).subscribe(async res => {     
+          this.isTree = true;        
+          this.listFolder = res[0];
+          this.listFiles = [];
+          this.loadedFolder = true;
+          this.ChangeData.next(true);      
+        });
+
+        this.fileService.GetFiles(data.recID, this.idMenuActive).subscribe(async res => {        
+          this.listFiles = res;
+          this.loadedFile = true;
+          this.ChangeData.next(true);        
+        });      
       }
       else {
         // open file
