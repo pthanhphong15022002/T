@@ -2,6 +2,7 @@
   <button
     type="button"
     class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+    [disabled]="!canOpenSubPopup"
     (click)="clickOpenPopupADR(1)"
   >
     <codx-label
@@ -13,6 +14,7 @@
   <button
     type="button"
     class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
+    [disabled]="!canOpenSubPopup"
     (click)="clickOpenPopupADR(2)"
   >
     <codx-label
@@ -24,6 +26,7 @@
   <button
     type="button"
     class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
+    [disabled]="!canOpenSubPopup"
     (click)="clickOpenPopupADR(3)"
   >
     <codx-label
@@ -33,5 +36,10 @@
     ></codx-label>
   </button>
 </div>
-<lib-pdf-view #pdfView [isApprover]="isApprover" [recID]="recID">
+<lib-pdf-view
+  #pdfView
+  [isApprover]="isApprover"
+  [recID]="recID"
+  (isActiveToSign)="changeActiveOpenPopup($event)"
+>
 </lib-pdf-view>

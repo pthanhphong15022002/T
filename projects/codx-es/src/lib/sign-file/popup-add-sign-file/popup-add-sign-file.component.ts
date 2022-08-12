@@ -220,7 +220,7 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  getfileCount(event) { }
+  getfileCount(event) {}
 
   valueChange(event) {
     if (event?.field && event?.component) {
@@ -277,7 +277,7 @@ export class PopupAddSignFileComponent implements OnInit {
               });
             }
             if (this.currentTab == 1) {
-              this.upDateNodeStatus(this.oldNode, this.newNode);
+              this.updateNodeStatus(this.oldNode, this.newNode);
               this.currentTab++;
               this.processTab++;
             }
@@ -289,7 +289,7 @@ export class PopupAddSignFileComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             if (this.currentTab == 1) {
-              this.upDateNodeStatus(this.oldNode, this.newNode);
+              this.updateNodeStatus(this.oldNode, this.newNode);
               this.currentTab++;
             }
           }
@@ -332,8 +332,8 @@ export class PopupAddSignFileComponent implements OnInit {
         });
       }
     } else {
-      this.esService.editApprovalStep().subscribe((res) => { });
-      this.esService.deleteApprovalStep().subscribe((res) => { });
+      this.esService.editApprovalStep().subscribe((res) => {});
+      this.esService.deleteApprovalStep().subscribe((res) => {});
     }
   }
 
@@ -342,15 +342,16 @@ export class PopupAddSignFileComponent implements OnInit {
   //#region Change Tab
 
   clickTab(tabNo) {
-    let newNo = tabNo * 2;
-
-    let oldNo = this.currentTab * 2;
-    if (tabNo < this.currentTab) {
-      oldNo++;
-    }
+    // let newNo = tabNo * 2;
+    let newNo = tabNo;
+    let oldNo = this.currentTab;
+    // let oldNo = this.currentTab * 2;
+    // if (tabNo < this.currentTab) {
+    //   oldNo++;
+    // }
 
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      this.upDateNodeStatus(oldNo, newNo);
+      this.updateNodeStatus(oldNo, newNo);
       this.currentTab = tabNo;
     }
   }
@@ -358,8 +359,10 @@ export class PopupAddSignFileComponent implements OnInit {
   continue(currentTab) {
     if (this.currentTab > 3) return;
 
-    let oldNode = currentTab * 2;
-    let newNode = oldNode + 2;
+    //let oldNode = currentTab * 2;
+    let oldNode = currentTab;
+    let newNode = oldNode + 1;
+    // let newNode = oldNode + 2;
 
     switch (currentTab) {
       case 0:
@@ -367,7 +370,7 @@ export class PopupAddSignFileComponent implements OnInit {
           this.attachment.fileUploadList.length > 0 ||
           this.dialogSignFile.value.files?.length > 0
         ) {
-          this.upDateNodeStatus(oldNode, newNode);
+          this.updateNodeStatus(oldNode, newNode);
           this.currentTab++;
           this.processTab == 0 && this.processTab++;
         } else {
@@ -383,7 +386,7 @@ export class PopupAddSignFileComponent implements OnInit {
           this.oldNode = oldNode;
           this.onSaveSignFile();
         } else {
-          this.upDateNodeStatus(oldNode, newNode);
+          this.updateNodeStatus(oldNode, newNode);
           this.processTab == 1 && this.processTab++;
           this.currentTab++;
         }
@@ -391,7 +394,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
       case 2:
         this.saveProcessStep();
-        this.upDateNodeStatus(oldNode, newNode);
+        this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
         this.processTab == 2 && this.processTab++;
         break;
@@ -405,11 +408,11 @@ export class PopupAddSignFileComponent implements OnInit {
   previous(currentTab) {
     let oldNode = currentTab * 2;
     let newNode = oldNode - 2;
-    this.upDateNodeStatus(oldNode, newNode);
+    this.updateNodeStatus(oldNode, newNode);
     this.currentTab--;
   }
 
-  upDateNodeStatus(oldNode: number, newNode: number) {
+  updateNodeStatus(oldNode: number, newNode: number) {
     let nodes = Array.from(
       (this.status.nativeElement as HTMLElement).childNodes
     );

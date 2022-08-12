@@ -30,7 +30,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
   @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
   @ViewChild('moreFunction', { static: true }) moreFunction: TemplateRef<any>;
-  
+
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
@@ -49,7 +49,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-  dataObj:any = {};
+  dataObj: any = {};
   itemSelected: any;
   moreFuncs = [
     {
@@ -79,7 +79,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       {
         field: 'resourceName',
         headerText: 'Tên xe',
-      },{
+      }, {
         field: 'code',
         headerText: 'Biển số xe',
       },
@@ -117,7 +117,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   lstDevices = [];
   tmplstDevice = [];
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -148,22 +148,21 @@ export class CarsComponent implements OnInit, AfterViewInit {
   }
 
   edit(evt?) {
-    let item = this.viewBase.dataService.dataSelected;
     if (evt) {
-      item = evt;
+      this.viewBase.dataService.dataSelected = evt;
+      this.viewBase.dataService.edit(this.viewBase.dataService.dataSelected).subscribe((res) => {
+        this.dataSelected = this.viewBase.dataService.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '800px';
+        option.DataService = this.viewBase?.currentView?.dataService;
+        option.FormModel = this.viewBase?.currentView?.formModel;
+        this.dialog = this.callFunc.openSide(
+          PopupAddCarsComponent,
+          [this.viewBase.dataService.dataSelected, false],
+          option
+        );
+      });
     }
-    this.viewBase.dataService.edit(item).subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callFunc.openSide(
-        PopupAddCarsComponent,
-        [item, false],
-        option
-      );
-    });
   }
 
   delete(evt?) {
@@ -176,10 +175,10 @@ export class CarsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSelect(evt:any){
-    console.log(evt);    
+  onSelect(evt: any) {
+    console.log(evt);
   }
- 
+
 
   clickMF(event, data) {
     console.log(event)

@@ -336,7 +336,7 @@ export class DetailComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     });
 
-    this.fileService.getListActiveFiles(id, "").subscribe(async res => {
+    this.fileService.GetFiles(id, "").subscribe(async res => {
       //  this.dmSV.changeData(null, res, id);
       // console.log(res);
       // this.dmSV.listFiles.next(res);
