@@ -99,7 +99,7 @@ export class CodxDMService {
     public HideTree = new BehaviorSubject<boolean>(null);
     isHideTree = this.HideTree.asObservable();
 
-    public updateHDD = new BehaviorSubject<string>(null);
+    public updateHDD = new BehaviorSubject<any>(null);
     isUpdateHDD = this.updateHDD.asObservable();
 
     public openFileDialog = new BehaviorSubject<boolean>(null);
@@ -507,7 +507,7 @@ export class CodxDMService {
                     }
     
                     this.fileService.getTotalHdd().subscribe(i => {
-                      this.updateHDD.next(i.messageHddUsed);
+                      this.updateHDD.next(i);
                    //   this.changeDetectorRef.detectChanges();
                     })
                   });
@@ -528,7 +528,7 @@ export class CodxDMService {
                     }
     
                     this.fileService.getTotalHdd().subscribe(i => {
-                      this.updateHDD.next(i.messageHddUsed);
+                      this.updateHDD.next(i);
                     //  this.changeDetectorRef.detectChanges();
                     })
                   });
@@ -1248,7 +1248,7 @@ export class CodxDMService {
             //  this.listFiles.next(null);
             //  this.listFolder.next(null);
               this.fileService.getTotalHdd().subscribe(i => {
-                  this.updateHDD.next(i.messageHddUsed);
+                  this.updateHDD.next(i);
               })
               this.EmptyTrashData.next(true);
           });

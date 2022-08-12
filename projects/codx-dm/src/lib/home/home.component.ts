@@ -140,7 +140,7 @@ export class HomeComponent extends UIComponent {
     this.path = this.getPath();
     this.button = {
       id: 'btnUpload',
-    };
+    };   
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
