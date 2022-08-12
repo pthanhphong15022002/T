@@ -203,6 +203,8 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
   height: 16px;
   background-repeat: no-repeat;
   position: relative;
-  top: 2px;
+  top: 0;
   width: 16px;
+  margin-left: -16px;
+  margin-right: 0 !important;
 }
