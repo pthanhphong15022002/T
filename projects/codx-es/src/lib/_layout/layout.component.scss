@@ -1,25 +1,5 @@
-:host{
-/***ES-Trinh ky****/
-.codx-card-custom{
-    height: 100%;
-    .codx-stepper{
-      height: 100%;
-    }
-    .stepper-header{
-      height: 60px;
-    }
-    .h2-title{
-      font-family: 'Roboto';
-      font-style: normal;
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 16px;
-      color: #3E4347;
-    }
-    .stepper-body{
-      height: calc(100% - 60px);
-    }
-}
+:host ::ng-deep{
+
 
 /****************/
 .step-title {
