@@ -17,11 +17,7 @@
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-<<<<<<< HEAD
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" (clickMF)="clickMF($event, data)"
-=======
-  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="clickMF($event, data)"
->>>>>>> a1ec83d11c1dbca000d645e3ca71dc5499285e28
     (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" [iconCss]="
       'icon-notifications' + ' ' + (data.isTimeOut ? 'expired' : 'unexpired')
     " [icoStatus2]="data?.priority" [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" [imageWidth]="35"
