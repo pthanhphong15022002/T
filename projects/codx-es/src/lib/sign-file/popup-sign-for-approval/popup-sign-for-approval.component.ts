@@ -40,7 +40,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
-  recID = '3edd24a3-1941-11ed-9446-00155d035517';
+  recID = '3ef30bc0-195e-11ed-b72c-f8b15698c607';
   funcID;
   cbxName;
 

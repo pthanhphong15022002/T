@@ -10,6 +10,8 @@ import {
   CallFuncService,
   CodxTempFullComponent,
   RequestOption,
+  AlertConfirmInputConfig,
+  NotificationsService,
 } from 'codx-core';
 import {
   Component,
@@ -55,6 +57,7 @@ export class UserComponent extends UIComponent {
     private changeDetectorRef: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private codxAdService: CodxAdService,
+    private notifySvr: NotificationsService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -93,11 +96,12 @@ export class UserComponent extends UIComponent {
       case 'SYS03':
         this.edit(data);
         break;
-      case 'SYS02':
-        this.delete(data);
+      case 'ADS0501':
+        this.stop(data);
         break;
     }
   }
+  // ADS0501
 
   click(evt: ButtonModel) {
     switch (evt.id) {
@@ -139,15 +143,24 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      // this.dialog.closed.subscribe((x) => {
-      //   if (x.event == null)
-      //     this.view.dataService
-      //       .remove(this.view.dataService.dataSelected)
-      //       .subscribe(x => {
-      //         this.dt.detectChanges();
-      //       });
-      // });
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event) {
+          debugger;
+          this.delete(e?.event);
+        }
+      });
     });
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe((res: any) => {
+        if (res.data) {
+          this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true);
+        }
+      });
   }
 
   edit(data?) {
@@ -168,31 +181,22 @@ export class UserComponent extends UIComponent {
       });
   }
 
-  delete(data: any) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected])
-      .subscribe((res: any) => {
-        if (res.data) {
-          this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true);
-        }
-      });
-    // this.view.dataService
-    // .edit((opt: any) => this.beforeSave(opt))
-    // .subscribe((res: any) => {
-    //   if (res.update) {
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // });
-    this.dialog.close();
-  }
-
-  beforeSave(op: RequestOption) {
-    // var data = [];
-    //   op.methodName = 'UpdateUserAsync';
-    //   data = [this.adUser, false, this.viewChooseRole];
-    // op.data = data;
-    // return true;
+  stop(data: any) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notifySvr.alertCode('AD009', config).subscribe((x) => {
+      if (x.event.status == 'Y') {
+        data.stop = true;
+        this.codxAdService
+          .stopUser(data, false, null, data.stop)
+          .subscribe((res) => {
+            if (res) {
+              this.view.dataService.remove(res).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+      }
+    });
   }
 
   //#region Functions

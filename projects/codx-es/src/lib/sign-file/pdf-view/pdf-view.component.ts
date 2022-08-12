@@ -13,6 +13,16 @@ import {
   AnnotationAddEventArgs,
   AnnotationDataFormat,
   PdfViewerComponent,
+  LinkAnnotationService,
+  BookmarkViewService,
+  MagnificationService,
+  ThumbnailViewService,
+  ToolbarService,
+  NavigationService,
+  TextSearchService,
+  TextSelectionService,
+  PrintService,
+  AnnotationService,
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { AuthStore, UIComponent } from 'codx-core';
 import { CodxEsService } from '../../codx-es.service';
@@ -21,11 +31,22 @@ import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { qr } from './model/mode';
-
 @Component({
   selector: 'lib-pdf-view',
   templateUrl: './pdf-view.component.html',
   styleUrls: ['./pdf-view.component.scss'],
+  providers: [
+    LinkAnnotationService,
+    BookmarkViewService,
+    MagnificationService,
+    ThumbnailViewService,
+    ToolbarService,
+    NavigationService,
+    TextSearchService,
+    TextSelectionService,
+    PrintService,
+    AnnotationService,
+  ],
 })
 export class PdfViewComponent extends UIComponent implements AfterViewInit {
   public service: string = environment.pdfUrl;
@@ -196,8 +217,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         }
       );
     }
-    this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
-    this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    this.thumbnailEle =
+      this.pdfviewerControl.thumbnailViewModule?.thumbnailView;
+    if (this.thumbnailEle) {
+      this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    }
+
     this.pdfviewerControl.zoomValue = 50;
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,

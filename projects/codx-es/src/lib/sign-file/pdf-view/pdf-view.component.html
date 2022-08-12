@@ -169,6 +169,7 @@
           [enableAnnotationToolbar]="false"
           [enableThumbnail]="true"
           (created)="onCreated($event)"
+          [enableAnnotation]="true"
           (documentUnload)="changeCanActState(true)"
           (annotationAdd)="addAnnoEvent($event)"
           (annotationMove)="resetTime($event)"

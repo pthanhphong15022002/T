@@ -53,6 +53,7 @@ export class SprintsComponent extends UIComponent {
   dialog!: DialogRef;
   itemSelected: any;
   funcID = '';
+  valuelist={}
   constructor(
     inject: Injector,
     private notiService: NotificationsService,
@@ -240,10 +241,34 @@ export class SprintsComponent extends UIComponent {
     this.urlView = 'tm/sprintdetails/TMT03011';
     if (data.iterationID != this.user.userID)
       this.urlView += '/' + data.iterationID;
+      this.codxService.navigate('', this.urlView)
     // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
     // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
+   
+    // var state = {
+    //   iterationID: data?.iterationID,
+    // };
 
-    this.codxService.navigate('', this.urlView);
+    // this.codxService.navigate('', this.urlView,null,state);
+  }
+
+  navigate(evt: any, data,url) {
+    var res = this.valuelist as any;
+    if (res && res.datas) {
+      var state = {
+       iterationID: data?.iterationID,
+      };
+      const ds = (res.datas as any[]).find((item) => item.value == data?.iterationID);
+      var path = window.location.pathname;
+      if (path.endsWith('/' + ds.default)) {
+        history.pushState(state, '', path);
+      } else {
+        url += '/' + ds.default;
+        this.codxService.navigate('', url, null, state);
+      }
+    }
+    this.detectorRef.detectChanges()
+    console.log(evt);
   }
 
   changeView(evt: any) {

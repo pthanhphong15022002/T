@@ -135,6 +135,13 @@ export class TasksComponent extends UIComponent {
     } else {
       this.vllStatus = this.vllStatusTasks;
     }
+    // this.activedRouter.params.subscribe((routeParams) => {
+    //   var state = history.state;
+    //   if (state) {
+    //     this.iterationID = state.iterationID || '';
+    //   }
+    // });
+
     this.activedRouter.firstChild?.params.subscribe(
       (data) => (this.iterationID = data.id)
     );
@@ -699,7 +706,13 @@ export class TasksComponent extends UIComponent {
     maxHours
   ) {
     if (updateControl != '0') {
-      this.openPopupUpdateStatus(moreFunc, taskAction,updateControl,maxHoursControl,maxHours);
+      this.openPopupUpdateStatus(
+        moreFunc,
+        taskAction,
+        updateControl,
+        maxHoursControl,
+        maxHours
+      );
     } else {
       var completedOn = moment(new Date()).toDate();
       var completed = '0';
@@ -746,14 +759,20 @@ export class TasksComponent extends UIComponent {
         });
     }
   }
-  openPopupUpdateStatus(moreFunc, taskAction,updateControl,maxHoursControl,maxHours) {
+  openPopupUpdateStatus(
+    moreFunc,
+    taskAction,
+    updateControl,
+    maxHoursControl,
+    maxHours
+  ) {
     let obj = {
       moreFunc: moreFunc,
       taskAction: taskAction,
       funcID: this.funcID,
-      updateControl : updateControl,
-      maxHoursControl:maxHoursControl,
-      maxHours:maxHours
+      updateControl: updateControl,
+      maxHoursControl: maxHoursControl,
+      maxHours: maxHours,
     };
     this.dialog = this.callfc.openForm(
       UpdateStatusPopupComponent,
