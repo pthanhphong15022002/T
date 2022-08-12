@@ -140,7 +140,7 @@ export class HomeComponent extends UIComponent {
     this.path = this.getPath();
     this.button = {
       id: 'btnUpload',
-    };
+    };   
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
@@ -333,7 +333,7 @@ export class HomeComponent extends UIComponent {
       });
     } else {
       this.dmSV.disableInput.next(true);
-     // this.notificationsService.notify(this.titleAccessDenied);
+      this.notificationsService.notify(this.titleAccessDenied);
     }    
   }
 
@@ -458,7 +458,7 @@ export class HomeComponent extends UIComponent {
 
       this.dmSV.folderType = this.view.funcID;
       this.dmSV.idMenuActive = this.view.funcID;
-      this.dmSV.loadedFile = false;
+     // this.dmSV.loadedFile = false;
       this.dmSV.folderId.next('');
       this.dmSV.loadedFolder = true;      
       this.dmSV.menuIdActive.next(this.view.funcID);
@@ -469,17 +469,17 @@ export class HomeComponent extends UIComponent {
       this.dmSV.breadcumb.next(breadcumb);    
       this.fileService.options.funcID = this.view.funcID;
       this.dmSV.listFiles = [];
+      this.dmSV.loadedFile = false;  
       this.fileService
         .GetFiles('', this.view.funcID)
         .subscribe(async (res) => {
           if (res != null) {
             this.data = [...this.data, ...res];
-            this.dmSV.listFiles = res;
-            this.dmSV.loadedFile = true;           
+            this.dmSV.listFiles = res;           
           }
-      //    this.changeDetectorRef.detectChanges();
-        });    
-      //this.changeDetectorRef.detectChanges();      
+          this.dmSV.loadedFile = true;           
+          this.changeDetectorRef.detectChanges();
+        });          
     }    
   }
 }

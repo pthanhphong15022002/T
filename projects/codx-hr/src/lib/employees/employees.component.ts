@@ -253,12 +253,6 @@ export class EmployeesComponent implements OnInit {
 
   viewEmployeeInfo(data) {
     this.codxService.navigate('', this.urlDetail, { employeeID: data.employeeID });
-
-    // this.urlView = e?.url;
-    // if (data.iterationID != this.user.userID)
-    //   this.urlView += '/' + data.iterationID;
-
-    // this.codxService.navigate('',this.urlView)
   }
 
   clickMF(e: any, data?: any) {
