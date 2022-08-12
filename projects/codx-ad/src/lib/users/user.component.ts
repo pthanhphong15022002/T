@@ -38,7 +38,6 @@ export class UserComponent extends UIComponent {
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
-
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
@@ -139,14 +138,20 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      // this.dialog.closed.subscribe((x) => {
-      //   if (x.event == null)
-      //     this.view.dataService
-      //       .remove(this.view.dataService.dataSelected)
-      //       .subscribe(x => {
-      //         this.dt.detectChanges();
-      //       });
-      // });
+      this.dialog.closed.subscribe((x) => {
+        if (x.event)
+        {
+          debugger;
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+          this.changeDetectorRef.detectChanges()
+        }
+         /*  this.view.dataService
+            .remove(this.view.dataService.dataSelected)
+            .subscribe(x => {
+              this.dt.detectChanges();
+            }); */
+      });
     });
   }
 
