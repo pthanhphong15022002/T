@@ -54,11 +54,18 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.activedRouter.firstChild?.params.subscribe(
       (data) => (this.iterationID = data.id)
     );
+    // this.activedRouter.params.subscribe((routeParams) => {
+    //   var state = history.state;
+    //   if (state) {
+    //     this.iterationID = state.iterationID || '';
+    //   }
+    // });
     if (this.iterationID != '') {
       this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
         if (res) {
           this.sprints = res;
           this.projectID = this.sprints?.projectID;
+          this.resources =  this.sprints.resources ;
           if (this.sprints?.resources != null) {
             // this.api
             // .execSv<any>(

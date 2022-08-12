@@ -40,7 +40,6 @@ export class UserComponent extends UIComponent {
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
-
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
@@ -143,24 +142,15 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event) {
-          debugger;
-          this.delete(e?.event);
-        }
-      });
+      // this.dialog.closed.subscribe((x) => {
+      //   if (x.event == null)
+      //     this.view.dataService
+      //       .remove(this.view.dataService.dataSelected)
+      //       .subscribe(x => {
+      //         this.dt.detectChanges();
+      //       });
+      // });
     });
-  }
-
-  delete(data: any) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected])
-      .subscribe((res: any) => {
-        if (res.data) {
-          this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true);
-        }
-      });
   }
 
   edit(data?) {

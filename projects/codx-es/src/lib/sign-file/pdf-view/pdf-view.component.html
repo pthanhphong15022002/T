@@ -100,6 +100,7 @@
             [dataSource]="lstFiles"
             [fields]="file"
             (change)="changeSignFile($event)"
+            [(value)]="curFileID"
           ></ejs-dropdownlist>
         </div>
         <div
@@ -159,7 +160,7 @@
         </div>
       </div>
 
-      <div class="h-100 pdfviewer_Space">
+      <div class="h-100 pdfviewer_Space w-100 flex-row-fluid">
         <ejs-pdfviewer
           #pdfviewer
           id="pdfViewer"
@@ -169,6 +170,7 @@
           [enableAnnotationToolbar]="false"
           [enableThumbnail]="true"
           (created)="onCreated($event)"
+          [enableAnnotation]="true"
           (documentUnload)="changeCanActState(true)"
           (annotationAdd)="addAnnoEvent($event)"
           (annotationMove)="resetTime($event)"
@@ -177,6 +179,7 @@
           (annotationSelect)="selectedAnnotation($event)"
           (annotationPropertiesChange)="resetTime($event)"
           (printEnd)="cancelPrint($event)"
+          [enableCommentPanel]="false"
           (documentLoad)="loadingAnnot($event)"
           (pageChange)="pageChange($event)"
           [zoomValue]="zoomValue"
@@ -228,6 +231,7 @@
                     (change)="changeSigner($event)"
                     [itemTemplate]="signer"
                     [valueTemplate]="signer"
+                    [(value)]="curSignerID"
                   >
                     <ng-template #signer let-approver>
                       <codx-temp-full
@@ -349,7 +353,12 @@
       </div>
     </div>
   </div>
-  <div class="row invisible" #qrCode id="qrCode"></div>
+  <img
+    class="row position-absolute invisible"
+    style="width: 100px !important; height: 100px !important"
+    #qrCode
+    id="qrCode"
+  />
 </div>
 <ng-template #footer let-data>
   <codx-vll

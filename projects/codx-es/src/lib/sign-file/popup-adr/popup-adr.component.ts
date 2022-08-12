@@ -64,6 +64,11 @@ export class PopupADRComponent extends UIComponent {
   changeReason(e) {}
 
   saveDialog() {
+    this.esService
+      .updateSignFileTrans([this.recID, this.mode])
+      .subscribe((res) => {
+        console.log('res');
+      });
     this.dialog.close('ok');
   }
 
