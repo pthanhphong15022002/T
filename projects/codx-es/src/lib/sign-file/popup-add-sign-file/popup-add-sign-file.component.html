@@ -18,7 +18,7 @@
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
-              <div class="stepper-label">
+              <div class="stepper-label fw-bold">
                 <codx-label name="lblUploadFile" default="Tải tài liệu" [formModel]="formModel"></codx-label>
               </div>
             </div>
@@ -35,7 +35,7 @@
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
-              <div class="stepper-label">
+              <div class="stepper-label fw-bold">
                 <codx-label name="lblFileInfo" default="Thông tin tài liệu" [formModel]="formModel"></codx-label>
 
               </div>
@@ -53,7 +53,7 @@
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
-              <div class="stepper-label">
+              <div class="stepper-label fw-bold">
                 <codx-label name="lblApprovalStep" default="Quy trình duyệt" [formModel]="formModel"></codx-label>
               </div>
             </div>
@@ -68,7 +68,7 @@
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
-              <div class="stepper-label">
+              <div class="stepper-label fw-bold">
                 <codx-label name="lblSignArea" default="Thiết lập vùng ký" [formModel]="formModel"></codx-label>
               </div>
 
@@ -107,8 +107,8 @@
         </div>
       </div>
     </div>
-    <div class="stepper-body p-2 w-100">
-      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100" *ngIf="currentTab < 3">
+    <div class="stepper-body p-2 w-100" *ngIf="currentTab < 3">
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100">
         <div class="mb-10 mt-10 text-center tab-pane-header">
           <h2 class="h2-title">
             <codx-label *ngIf="currentTab == 0" name="lblUploadFile" [formModel]="formModel" default="Upload file">
@@ -236,8 +236,10 @@
           </button>
         </div>
       </div>
-      <lib-pdf-view *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0" [isApprover]="false"
-        [recID]="dialogSignFile.value.recID">
+
+    </div>
+    <div class="stepper-body no-header p-2 w-100" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+      <lib-pdf-view [recID]="dialogSignFile.value.recID" [isApprover]="false">
       </lib-pdf-view>
     </div>
 
