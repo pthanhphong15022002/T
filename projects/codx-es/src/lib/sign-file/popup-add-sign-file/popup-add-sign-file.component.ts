@@ -220,7 +220,7 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  getfileCount(event) {}
+  getfileCount(event) { }
 
   valueChange(event) {
     if (event?.field && event?.component) {
@@ -332,8 +332,8 @@ export class PopupAddSignFileComponent implements OnInit {
         });
       }
     } else {
-      this.esService.editApprovalStep().subscribe((res) => {});
-      this.esService.deleteApprovalStep().subscribe((res) => {});
+      this.esService.editApprovalStep().subscribe((res) => { });
+      this.esService.deleteApprovalStep().subscribe((res) => { });
     }
   }
 
@@ -500,7 +500,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.dialog && this.dialog.close();
     }
     if (this.processTab > 0) {
-      this.callfuncService.openForm(dialogClose, '', 650, 280);
+      this.callfuncService.openForm(dialogClose, '', 550, 250);
     }
   }
 
