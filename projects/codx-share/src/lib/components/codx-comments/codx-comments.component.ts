@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
+import { Post } from '@shared/models/post';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
@@ -21,19 +22,23 @@ export class CodxCommentsComponent implements OnInit {
   @Input() funcID:string ="";
   @Input() objectID:string ="";
   @Input() objectType:string = "";
+  @Input() formModel:any;
   @Input() new:boolean = false;
   @Output() evtReplyTo = new EventEmitter;
   @Output() evtSendComment = new EventEmitter;
+  @Output() evtDeleteComment = new EventEmitter;
+
 
 
   //
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   user:any
   message:string ="";
-  subMessage:string = "";
   fileUpload:any = null;
+  fileDelete:any = null;
   checkVoted = false
   lstData: any;
+  edit:boolean = false;
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
@@ -55,7 +60,7 @@ export class CodxCommentsComponent implements OnInit {
       }
     });
     if(!this.new && this.data){
-      this.message = this.data.comments;
+      this.message = this.data.content;
       this.getFileByObjectID();
     }
   }
@@ -66,9 +71,9 @@ export class CodxCommentsComponent implements OnInit {
       "GetFilesByIbjectIDAsync",
       this.data.recID)
     .subscribe((result:any[]) => {
-      if(result){
+      if(result.length > 0){
         let file = result[0];
-        if(file.referType == this.REFERTYPE.VIDEO)
+        if(file && file.referType == this.REFERTYPE.VIDEO)
         {
           file['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${file.recID}?access_token=${this.user.token}`;
         }
@@ -83,47 +88,78 @@ export class CodxCommentsComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
-  valueChangeSub(value:any){
-    let text = value.data.toString().trim();
-    if(text){
-      this.subMessage = text;
-      this.dt.detectChanges();
-    }
-  }
+
   sendComment(){
     if (!this.message.trim() && !this.fileUpload) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-      let type = "WP_Comments";
-      let parentID = "";
-      let refID = this.refID;
-      if(this.parentID){
-        parentID = this.parentID;
-      }
-      else {
-        parentID = refID;
-      }
-      this.api
-        .execSv<any>(
-          'WP',
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'PublishCommentAsync',
-          [refID, this.message, parentID, type]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.message = "";
-            this.dt.detectChanges();
+    let tmpPost = new Post()
+    if(this.data){
+      tmpPost = this.data;
+    }
+    tmpPost.content = this.message;
+    tmpPost.refType = "WP_Comments";
+    tmpPost.refID = this.refID;
+    if(this.parentID){
+      tmpPost.parentID = this.parentID;
+    }
+    else {
+      tmpPost.parentID = tmpPost.refID;
+    }
+    this.api
+      .execSv<any>(
+        'WP',
+        'ERM.Business.WP',
+        'CommentsBusiness',
+        'PublishCommentAsync',
+        [tmpPost]
+      )
+      .subscribe((res) => {
+        if (res) {
+          if(this.data && this.edit){ // chỉnh sửa
+            this.data = res;
+            this.new = !this.new;
+            if(this.fileDelete){
+              this.api.execSv("DM",
+              "ERM.Business.DM",
+              "FileBussiness",
+              "DeleteByObjectIDAsync",
+              [this.data.recID.toString(), 'WP_Comments', true]).subscribe((result:any) => {
+                if(result)
+                {
+                  if(this.fileUpload){
+                    this.codxATM.objectId = res.recID;
+                    let files = [];
+                    files.push(this.fileUpload);
+                    this.codxATM.fileUploadList = files;
+                    this.codxATM.objectType = this.objectType;
+                    this.codxATM.saveFilesObservable().subscribe((result:any)=>{
+                      if(result){
+                        this.fileUpload = result.data;
+                        this.dt.detectChanges();
+                        this.evtSendComment.emit(res);
+                        this.notifySvr.notifyCode("SYS006");
+                      }
+                    });
+                  }
+                }
+              });
+            }
+            
+          }
+          else{ // thêm mới
             if(this.fileUpload){
               this.codxATM.objectId = res.recID;
               let files = [];
               files.push(this.fileUpload);
               this.codxATM.fileUploadList = files;
+              this.codxATM.objectType = this.objectType;
               this.codxATM.saveFilesObservable().subscribe((result:any)=>{
                 if(result){
+                  this.message = "";
                   this.fileUpload = null;
+                  this.dt.detectChanges();
                   this.evtSendComment.emit(res);
                   this.notifySvr.notifyCode("SYS006");
                 }
@@ -131,11 +167,41 @@ export class CodxCommentsComponent implements OnInit {
             }
             else
             {
+              this.message = "";
+              this.dt.detectChanges();
               this.evtSendComment.emit(res);
               this.notifySvr.notifyCode("SYS006");
             }
           }
-        });
+        }
+      });
+  }
+
+  editComment(){
+    this.edit = true;
+    this.new = true;
+    this.message = this.data.content;
+    this.data.isEditComment = true;
+    this.dt.detectChanges();
+  }
+
+  deleteComment(){
+    this.notifySvr.alertCode('Xóa bình luận?').subscribe((res) => {
+      if (res.event.status == "Y") {
+        this.api.execSv(
+          "WP", 
+          "ERM.Business.WP", 
+          "CommentsBusiness", 
+          "DeletePostAsync", 
+          this.data).subscribe((res: number) => {if(res) { 
+            let obj = {
+              data: this.data,
+              total: res
+            }
+            this.evtDeleteComment.emit(obj);
+           }});
+      }
+    });
   }
   uploadFile(){
     this.codxATM.uploadFile();
@@ -160,7 +226,9 @@ export class CodxCommentsComponent implements OnInit {
   }
 
   removeFile(){
+    this.fileDelete = this.fileUpload;
     this.fileUpload = null;
+    this.dt.detectChanges();
   }
 
   replyTo(data) {
