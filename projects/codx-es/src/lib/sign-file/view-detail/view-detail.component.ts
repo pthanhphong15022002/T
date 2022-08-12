@@ -78,11 +78,13 @@ export class ViewDetailComponent implements OnInit {
           gridModels.gridViewName = fmApprovalStep.gridViewName;
           gridModels.pageSize = 20;
 
-          this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-            if (res && res?.length >= 0) {
-              this.lstStep = res;
-            }
-          });
+          if (gridModels.dataValue != null) {
+            this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+              if (res && res?.length >= 0) {
+                this.lstStep = res;
+              }
+            });
+          }
         }
       });
     }
@@ -188,6 +190,14 @@ export class ViewDetailComponent implements OnInit {
 
   openFile() {
     this.attachment.uploadFile();
+  }
+
+  setStyles(color): any {
+    let styles = {
+      backgroundColor: color,
+      color: 'white',
+    };
+    return styles;
   }
 
   fileAdded($event) {}

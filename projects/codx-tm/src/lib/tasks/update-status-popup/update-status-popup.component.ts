@@ -69,6 +69,10 @@ export class UpdateStatusPopupComponent implements OnInit {
       ).toFixed(2);
       this.completed = Number.parseFloat(time).toFixed(2);
     }
+    if (this.data?.maxHoursControl != '0' && this.completed > this.data?.maxHours) {
+      this.notiService.notifyCode('TM058')  ///truyền có tham số
+      return;
+     }  
     // this.crrCompleted = this.completed;
   }
   changeTime(data) {

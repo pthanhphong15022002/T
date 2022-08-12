@@ -37,10 +37,9 @@
     </div>
 
     <div class="attachment" *ngIf="mode == 1">
-      <codx-attachment
+      <!-- <codx-attachment
         #attachment
         objectType="ES_SignFiles"
-        hideImageUpload="0"
         [objectId]="recID"
         hideBtnSave="1"
         hideFolder="1"
@@ -49,6 +48,21 @@
         [functionID]="funcID"
         type="inline"
         (fileCount)="getfileCount($event)"
+      >
+      </codx-attachment> -->
+      <codx-attachment
+        #attachment
+        [objectType]="'ES_SignFiles'"
+        hideBtnSave="1"
+        hideFolder="1"
+        hideUploadBtn="1"
+        hideDes="1"
+        hideImageUpload="0"
+        hideImageThumb="1"
+        [functionID]="funcID"
+        [objectId]="recID"
+        [allowMultiFile]="1"
+        [idBrowse]="'add'"
       >
       </codx-attachment>
     </div>
@@ -62,7 +76,12 @@
           : 'justify-content-end card-footer d-flex'
       "
     >
-      <button *ngIf="mode == 1" type="button" class="btn btn-primary">
+      <button
+        *ngIf="mode == 1"
+        type="button"
+        class="btn btn-primary"
+        (click)="popupUploadFile()"
+      >
         <codx-label
           name="lblAttachFiles"
           default="Đính kèm"

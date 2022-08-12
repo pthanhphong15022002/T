@@ -1,18 +1,30 @@
+<<<<<<< HEAD
 <codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel"  [body]="body" [footer]="!hideFooter?footer:null" [hideMF]="hideMF" (clickMF)="openFormFuncID($event)" class="h-100">
+=======
+<!-- <codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel"  [body]="body" [footer]="!hideFooter?footer:null" [hideMF]="hideMF" (clickMF)="openFormFuncID($event)" class="h-100"> -->
+<codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel" [body]="body"
+  [footer]="!hideFooter ? footer : null" (clickMF)="openFormFuncID($event)" class="h-100">
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
   <ng-template #header>
     <div class="d-flex justify-content-between">
       <div class="w-100">
         <div>
+<<<<<<< HEAD
           <codx-temp-full 
             [title]="extractContent(data?.title)"
             [desc]="convertHtmlAgency(data?.agencyName,data?.txtLstAgency)"
             [bookmark]="false"
             [titleLine]="2"
           >
+=======
+          <codx-temp-full [title]="extractContent(data?.title)"
+            [desc]="convertHtmlAgency(data?.agencyName, data?.txtLstAgency)" [bookmark]="false" [titleLine]="2">
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
           </codx-temp-full>
         </div>
         <div class="d-flex flex-wrap mt-2">
           <div class="d-flex align-items-center me-5 mb-3">
+<<<<<<< HEAD
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="Category" class="me-2 fw-bold"></codx-label>
             <codx-vll
               [formModel]="formModel"
@@ -34,10 +46,24 @@
               [showIcon]="true"
               class="text-gray-600 d-flex"
             >
+=======
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
+              fiedName="Category" class="me-2 fw-bold"></codx-label>
+            <codx-vll [formModel]="formModel" [field]="'Category'" [value]="data?.category" [showText]="true"
+              [showBgColor]="true" class="text-gray-600">
+            </codx-vll>
+          </div>
+          <div class="d-flex align-items-center me-5 mb-3">
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="Urgency"
+              [ngClass]="'me-1 fw-bold'"></codx-label>
+            <codx-vll [formModel]="formModel" [field]="'Urgency'" [value]="data?.urgency" [showText]="true"
+              [showIcon]="true" class="text-gray-600 d-flex">
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
             </codx-vll>
             <!-- icon-flag -->
           </div>
           <div class="d-flex align-items-center me-5 mb-3">
+<<<<<<< HEAD
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="Security" [ngClass]="'me-1 fw-bold'"></codx-label>
             <codx-vll
               [formModel]="formModel"
@@ -70,11 +96,64 @@
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefDate" ngClass="me-2 fw-bold"></codx-label>
 <!--             <span class="text-gray-600">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
             <span class="text-gray-600">{{data?.refDate ? (data?.refDate | date:'dd/MM/yyyy') : gridViewSetup?.RefDate?.headerText}}</span>
+=======
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
+              fiedName="Security" [ngClass]="'me-1 fw-bold'"></codx-label>
+            <codx-vll [formModel]="formModel" [field]="'Security'" [value]="data?.security" [showText]="true"
+              [showIcon]="true" class="text-gray-600 d-flex">
+            </codx-vll>
+          </div>
+          <div class="d-flex align-items-center me-5 mb-3">
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
+              fiedName="CreatedOn" ngClass="me-2 fw-bold"></codx-label>
+            <span class="text-gray-600">{{
+              data?.createdOn
+              ? (data?.createdOn | date: "dd/MM/yyyy")
+              : gridViewSetup?.CreatedOn?.headerText
+              }}</span>
+          </div>
+          <div class="d-flex align-items-center me-5 mb-3">
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
+              fiedName="DispatchOn" ngClass="me-2 fw-bold"></codx-label>
+            <span class="text-gray-600">{{
+              data?.dispatchOn
+              ? (data?.dispatchOn | date: "dd/MM/yyyy")
+              : gridViewSetup?.DispatchOn?.headerText
+              }}</span>
+            <!-- <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-600"></codx-label> -->
+          </div>
+          <div class="d-flex align-items-center me-5 mb-3">
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
+              fiedName="Deadline" ngClass="me-2 fw-bold"></codx-label>
+            <span class="text-gray-600">{{
+              data?.deadline
+              ? (data?.deadline | date: "dd/MM/yyyy")
+              : gridViewSetup?.Deadline?.headerText
+              }}</span>
+          </div>
+          <div class="d-flex align-items-center me-5 mb-3">
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefNo"
+              ngClass="me-2 fw-bold"></codx-label>
+            <span class="text-gray-600">{{
+              data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
+              }}</span>
+          </div>
+          <div class="d-flex align-items-center me-5 mb-3">
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefDate"
+              ngClass="me-2 fw-bold"></codx-label>
+            <!--             <span class="text-gray-600">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
+            <span class="text-gray-600">{{
+              data?.refDate
+              ? (data?.refDate | date: "dd/MM/yyyy")
+              : gridViewSetup?.RefDate?.headerText
+              }}</span>
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
           </div>
         </div>
       </div>
       <div class="d-flex flex-column justify-content-start w-100px pt-2">
         <div class="d-flex justify-content-end">
+<<<<<<< HEAD
           <codx-vll 
             [showText]="true" 
             [showBgColor]="true"
@@ -86,6 +165,14 @@
         </div>
         <div class="d-flex justify-content-end mt-2">
           <codx-imgs [objectId]="data?.lstUserID" [numberImages]="3" [width]="30" [mode]="false" ></codx-imgs>
+=======
+          <codx-vll [showText]="true" [showBgColor]="true" [formModel]="formModel" [field]="'Status'"
+            [value]="data?.status" class="badge badge-light badge-square badge-md fs-7">
+          </codx-vll>
+        </div>
+        <div class="d-flex justify-content-end mt-2">
+          <codx-imgs [objectId]="data?.lstUserID" [numberImages]="3" [width]="30" [mode]="false"></codx-imgs>
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
         </div>
       </div>
      
@@ -102,12 +189,15 @@
     <div class="tab-horizone h-od-tab  ">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active"  class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink><codx-label default="Nơi nhận"></codx-label></a>
+          <a ngbNavLink>
+            <codx-label default="Nơi nhận"></codx-label>
+          </a>
           <ng-template ngbNavContent>
             <ng-container *ngFor="let item of data?.listInformationRel">
               <div class="list-item has-action-menu-1 mb-6">
                 <div class="d-flex align-items-center">
                   <div class="w-120px me-6">
+<<<<<<< HEAD
                     <div class="text-primary d-flex justify-content-center fw-bold fs-4">{{(item.date ? item.date : item.createdOn) | date:'shortTime'}}</div>
                     <div class="text-dark d-flex justify-content-center text-gray-400 fs-6">{{(item.date ? item.date : item.createdOn) | date :  "dd/MM/yyyy"}}</div>
                   </div>
@@ -127,6 +217,47 @@
                   </div>
                   <ng-container *ngIf="item.relationType != '1' && !item.reCall && item.userID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
                     <div class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer" (click)="openFormFuncID({functionID:'recallUser',relID: item.recID})"><!--  -->
+=======
+                    <div class="text-primary d-flex justify-content-center fw-bold fs-4">
+                      {{
+                      (item.date ? item.date : item.createdOn)
+                      | date: "shortTime"
+                      }}
+                    </div>
+                    <div class="text-dark d-flex justify-content-center text-gray-400 fs-6">
+                      {{
+                      (item.date ? item.date : item.createdOn)
+                      | date: "dd/MM/yyyy"
+                      }}
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <codx-temp-full [imageId]="item?.userID" [imageObjType]="'AD_Users'" [title]="item?.employeeName"
+                      [subTitle]="item?.positionName" [desc]="
+                        getSubTitle(
+                          item.relationType,
+                          data?.agencyName,
+                          item?.shareBy
+                        )
+                      " [descLine]="1" [dataItem]="item" [baseHeaderRightTmp]="baseTmpRight"
+                      [cardCss]="'justify-content-center align-items-center'">
+                    </codx-temp-full>
+                  </div>
+                  <ng-container *ngIf="
+                      item.relationType != '1' &&
+                      !item.reCall &&
+                      item.userID != data?.owner &&
+                      formModel.userPermission?.refer != 0 &&
+                      (checkUserPer?.created || checkUserPer?.owner)
+                    ">
+                    <div class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer" (click)="
+                        openFormFuncID({
+                          functionID: 'recallUser',
+                          relID: item.recID
+                        })
+                      ">
+                      <!--  -->
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
                       <i class="icon-redo text-primary icon-18"></i>
                     </div>
                   </ng-container>
@@ -139,9 +270,16 @@
         <li [ngbNavItem]="2">
           <a ngbNavLink>Công việc</a>
           <ng-template ngbNavContent>
+<<<<<<< HEAD
             <ng-container *ngIf="data?.tasks[0].length>0">
               <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
             </ng-container> 
+=======
+            <ng-container *ngIf="data?.tasks[0].length > 0">
+              <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false"
+                [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
+            </ng-container>
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
           </ng-template>
         </li>
         <li [ngbNavItem]="3">
@@ -186,6 +324,7 @@
                 </div>
             </div>
           </div> -->
+<<<<<<< HEAD
           <codx-temp-full
             [imageId]="data?.userID" 
             [imageObjType]="'AD_Users'"
@@ -197,15 +336,31 @@
             [footer]="footerTask"         
           >
           </codx-temp-full>
+=======
+        <codx-temp-full [imageId]="data?.userID" [imageObjType]="'AD_Users'" [title]="data?.userName" [titleLine]="2"
+          [subTitle]="data?.positionNameCreate" [desc]="data?.taskName" [dataItem]="data" [footer]="footerTask">
+        </codx-temp-full>
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
       </div>
       <div class="mt-5 ms-5 justify-content-end w-120px text-center" *ngIf="data?.items.length == 0">
         <codx-vll [name]="'L0614'" [value]="data?.status" [showText]="true" [showBgColor]="false"></codx-vll>
         <div class="progress h-6px w-100 mt-2">
+<<<<<<< HEAD
           <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="data?.percentage" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div class="d-flex mt-2">
           <span class="icon-schedule icon-16 text-gray-600"></span>
           <span class="ms-2 text-dark">{{data?.dueDate | date: "dd/MM/yyyy"}}</span>
+=======
+          <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="data?.percentage" aria-valuenow="50"
+            aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="d-flex mt-2">
+          <span class="icon-schedule icon-16 text-gray-600"></span>
+          <span class="ms-2 text-dark">{{
+            data?.dueDate | date: "dd/MM/yyyy"
+            }}</span>
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
         </div>
       </div>
     </div>
@@ -220,8 +375,16 @@
 <ng-template #footerTask let-data>
   <div class="d-flex align-items-center mt-2" [style.marginLeft.px]="50">
     <div class="d-flex align-items-center">
+<<<<<<< HEAD
         <span class="icon-person me-1" [class.text-muted]="data?.items.length == 0" [class.text-primary]="data?.items.length > 0"></span>
         <span class="text-dark" *ngIf="data?.items.length > 0">{{data?.items.length}}</span>
+=======
+      <span class="icon-person me-1" [class.text-muted]="data?.items.length == 0"
+        [class.text-primary]="data?.items.length > 0"></span>
+      <span class="text-dark" *ngIf="data?.items.length > 0">{{
+        data?.items.length
+        }}</span>
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
     </div>
     <div class="d-flex align-items-center ms-6">
         <span class="icon-chat_bubble_outline me-1 text-muted"></span>
@@ -234,6 +397,7 @@
 </div>
 </ng-template>
 <ng-template #baseTmpRight let-data>
+<<<<<<< HEAD
   <codx-vll 
     [showText]="true"
     [showBgColor]="true" 
@@ -248,6 +412,14 @@
       [name]="'OD010'"
       [value]="data?.reCall" 
       class="badge badge-light badge-md fs-7 ">
+=======
+  <codx-vll [showText]="true" [showBgColor]="true" [name]="'OD009'" [value]="data?.status"
+    class="badge badge-light badge-md fs-7 ms-2">
+  </codx-vll>
+  <ng-container *ngIf="data?.reCall">
+    <codx-vll [showText]="true" [showBgColor]="true" [name]="'OD010'" [value]="data?.reCall"
+      class="badge badge-light badge-md fs-7">
+>>>>>>> 042f1f2e9bdb474a871419fd5941162bd3a09d06
     </codx-vll>
   </ng-container>
 </ng-template>

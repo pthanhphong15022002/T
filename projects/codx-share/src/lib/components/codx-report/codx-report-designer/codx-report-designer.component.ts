@@ -1,6 +1,7 @@
 /// <reference types="@boldreports/types/reports.all" />
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BoldReportDesignerComponent } from '@boldreports/angular-reporting-components/reportdesigner.component';
+import { AuthStore } from 'codx-core';
 
 @Component({
   selector: 'codx-report-designer',
@@ -17,8 +18,9 @@ export class CodxReportDesignerComponent implements OnInit, AfterViewInit {
   @Input() showToolbar: boolean = true;
   @Input() locale!: string;
   @Input() permissionSettings!: any ;
-
-  constructor() {
+  private _user: any;
+  constructor(private auth : AuthStore) {
+    this._user = this.auth.get();
   }
   ngOnInit(): void {
     if(!this.toolbarDesignSettings || Object.keys(this.toolbarDesignSettings).length == 0){
@@ -75,12 +77,13 @@ onToolbarDesignerClick(args:any) {
     console.log(args);
 
       if (args.event.click === 'Save') {
-        args.event.cancel = true;
-        args.designerInst.widget.saveReport();
+        // args.event.cancel = true;
+        // args.designerInst.widget.saveReport();
       }
 }
 
-onAjaxBeforeLoad(args:any):void {
+onAjaxBeforeLoad(args:any) {
+    args.headers.push({ Key: 'lvtk', Value: this._user.token });
     args.data = JSON.stringify({ reportType: "RDL" });
 }
 

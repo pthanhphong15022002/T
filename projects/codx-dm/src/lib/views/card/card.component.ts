@@ -66,7 +66,7 @@ export class CardComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.auth.get();   
   }
-
+  
   print() {
     //this.view.print();
     window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');

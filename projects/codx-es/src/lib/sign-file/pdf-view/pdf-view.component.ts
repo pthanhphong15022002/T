@@ -13,6 +13,16 @@ import {
   AnnotationAddEventArgs,
   AnnotationDataFormat,
   PdfViewerComponent,
+  LinkAnnotationService,
+  BookmarkViewService,
+  MagnificationService,
+  ThumbnailViewService,
+  ToolbarService,
+  NavigationService,
+  TextSearchService,
+  TextSelectionService,
+  PrintService,
+  AnnotationService,
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { AuthStore, UIComponent } from 'codx-core';
 import { CodxEsService } from '../../codx-es.service';
@@ -21,11 +31,22 @@ import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { qr } from './model/mode';
-
 @Component({
   selector: 'lib-pdf-view',
   templateUrl: './pdf-view.component.html',
   styleUrls: ['./pdf-view.component.scss'],
+  providers: [
+    LinkAnnotationService,
+    BookmarkViewService,
+    MagnificationService,
+    ThumbnailViewService,
+    ToolbarService,
+    NavigationService,
+    TextSearchService,
+    TextSelectionService,
+    PrintService,
+    AnnotationService,
+  ],
 })
 export class PdfViewComponent extends UIComponent implements AfterViewInit {
   public service: string = environment.pdfUrl;
@@ -196,8 +217,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         }
       );
     }
-    this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
-    this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    this.thumbnailEle =
+      this.pdfviewerControl.thumbnailViewModule?.thumbnailView;
+    if (this.thumbnailEle) {
+      this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+    }
+
     this.pdfviewerControl.zoomValue = 50;
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,
@@ -343,9 +368,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       Pages: ${this.pdfviewerControl.pageCount}
     `;
     let barcode = new QRCodeGenerator({
-      width: '500px',
-      height: '500px',
-      mode: 'SVG',
+      width: '250px',
+      height: '250px',
+      mode: 'Canvas',
       displayText: { visibility: false },
       value: text,
     });
@@ -363,6 +388,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.fileInfo = e.itemData;
     this.pdfviewerControl.load(e.itemData.fileID, '');
     this.cannotAct = false;
+    console.log(e.itemData);
+
     this.detectorRef.detectChanges();
   }
 
@@ -1162,20 +1189,39 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       return annot.customData.split(':')[1] == '8';
     });
 
-    if (qrAnnot) {
-      for (let i = 0; i < this.pdfviewerControl.pageCount - 1; i++) {
-        let cloneQR = { ...qrAnnot };
-        cloneQR.pageNumber = i;
-        this.pdfviewerControl.addAnnotation(cloneQR);
-      }
-      console.log('pdf', this.pdfviewerControl.annotationCollection);
+    this.genFileQR(this.fileInfo.fileName, this.fileInfo.fileRefNum, '').then(
+      (value: string) => {
+        qrAnnot.stampAnnotationPath = value;
+        if (qrAnnot) {
+          this.pdfviewerControl.annotationModule.deleteAnnotationById(
+            qrAnnot.annotationId
+          );
+          this.saveAnnoQueue.set(
+            qrAnnot.annotationId,
+            setTimeout(
+              this.saveAnnoToDB.bind(this),
+              10,
+              this.esService,
+              { ...qrAnnot },
+              this.fileInfo,
+              this.user
+            )
+          );
+          for (let i = 0; i < this.pdfviewerControl.pageCount - 1; i++) {
+            let cloneQR = { ...qrAnnot };
+            cloneQR.annotationId = Guid.newGuid();
+            cloneQR.pageNumber = i;
+            this.pdfviewerControl.addAnnotation(cloneQR);
+          }
 
-      this.pdfviewerControl
-        .exportAnnotationsAsBase64String(annotationDataFormat)
-        .then((res) => {
-          console.log('base64 new pdf', res);
-        });
-    }
+          this.pdfviewerControl
+            .exportAnnotationsAsBase64String(annotationDataFormat)
+            .then((res) => {
+              console.log('base64 new pdf', res);
+            });
+        }
+      }
+    );
   }
 
   cancelPrint(e: any) {}

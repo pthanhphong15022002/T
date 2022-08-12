@@ -1,3 +1,4 @@
+import { CodxAdService } from './../../codx-ad.service';
 import { AD_User } from './../../models/AD_User.models';
 import {
   Component,
@@ -57,14 +58,18 @@ export class AddUserComponent extends UIComponent implements OnInit {
   countListViewChooseRoleApp: Number = 0;
   countListViewChooseRoleService: Number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
+  viewChooseRoleTemp: tmpformChooseRole[] = [];
   formModel: FormModel;
   formType: any;
   formGroupAdd: FormGroup;
+  gridViewSetup: any = [];
+  checkBtnAdd = false;
 
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
     private auth: AuthStore,
+    private adService: CodxAdService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -73,11 +78,20 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.data = dialog.dataService!.dataSelected;
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
+      this.viewChooseRoleTemp = JSON.parse(
+        JSON.stringify(this.data?.chooseRoles)
+      );
       this.countListViewChoose();
     }
     this.adUser = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
+
+    this.cache.gridViewSetup('Users', 'grvUsers').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -98,6 +112,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   openPopup(item: any) {
+    this.onAdd();
     var option = new DialogModel();
     option.FormModel = this.form.formModel;
     var obj = {
@@ -139,6 +154,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   beforeSave(op: RequestOption) {
     var data = [];
+    var checkDifference =
+      JSON.stringify(this.viewChooseRoleTemp) ===
+      JSON.stringify(this.viewChooseRole);
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
@@ -147,13 +165,22 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      data = [this.adUser, this.isAddMode, this.viewChooseRole];
+      if (checkDifference == true)
+        data = [this.adUser, this.isAddMode, this.viewChooseRole];
+      else
+        data = [
+          this.adUser,
+          this.isAddMode,
+          this.viewChooseRole,
+          checkDifference,
+        ];
     }
     op.data = data;
     return true;
   }
 
   onAdd() {
+    this.checkBtnAdd = true;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -170,7 +197,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           //this.changeDetector.detectChanges();
         }
       });
-   
+    this.dialog.close();
   }
 
   onUpdate() {
@@ -196,7 +223,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   onSave() {
-    if (this.isAddMode) return this.onAdd();
+    if (this.isAddMode) {
+      if (this.checkBtnAdd == false) return this.onAdd();
+      else this.dialog.close();
+    }
     return this.onUpdate();
   }
 
@@ -225,6 +255,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.loadUserRole(data.data);
     }
   }
+
   valueBU(data) {
     if (data.data) {
       this.adUser[data.field] = data.data;
