@@ -1,3 +1,4 @@
+import { identifierName } from '@angular/compiler';
 import {
   Component,
   TemplateRef,
@@ -675,7 +676,8 @@ export class TasksComponent extends UIComponent {
               taskAction,
               res?.updateControl,
               res?.maxHoursControl,
-              res?.maxHours
+              res?.maxHours,
+              res?.completedControl
             );
           } else {
             this.actionUpdateStatus(
@@ -683,7 +685,8 @@ export class TasksComponent extends UIComponent {
               taskAction,
               this.paramModule.UpdateControl,
               this.paramModule.MaxHoursControl,
-              this.paramModule.MaxHours
+              this.paramModule.MaxHours,
+              this.paramModule.CompletedControl
             );
           }
         });
@@ -693,12 +696,62 @@ export class TasksComponent extends UIComponent {
         taskAction,
         this.paramModule.UpdateControl,
         this.paramModule.MaxHoursControl,
-        this.paramModule.MaxHours
+        this.paramModule.MaxHours,
+        this.paramModule.CompletedControl
       );
     }
   }
 
   actionUpdateStatus(
+    moreFunc,
+    taskAction,
+    updateControl,
+    maxHoursControl,
+    maxHours,
+    completedControl
+  ) {
+    var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
+    if (status == '90' && completedControl != '0') {
+      var isCheck = false;
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskBusiness',
+          'GetListTaskChildDetailAsync',
+          taskAction.taskID
+        )
+        .subscribe((res) => {
+          if (res) {
+            res.forEach((obj) => {
+              if (obj.status != '90' && obj.status != '80') {
+                isCheck = true;
+                return;
+              }
+            });
+            if (isCheck) {
+              this.notiService.notifyCode('TM008');
+            } else
+              this.updatStatusAfterCheck(
+                moreFunc,
+                taskAction,
+                updateControl,
+                maxHoursControl,
+                maxHours
+              );
+          }
+        });
+    } else
+      this.updatStatusAfterCheck(
+        moreFunc,
+        taskAction,
+        updateControl,
+        maxHoursControl,
+        maxHours
+      );
+  }
+
+  updatStatusAfterCheck(
     moreFunc,
     taskAction,
     updateControl,
@@ -1177,6 +1230,10 @@ export class TasksComponent extends UIComponent {
       case 'TMT02012':
       case 'TMT02013':
       case 'TMT02014':
+      case 'TMT02031':
+      case 'TMT02032':
+      case 'TMT02033':
+      case 'TMT02044':
         this.changeStatusTask(e.data, data);
         break;
       case 'TMT02019':
