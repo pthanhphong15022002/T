@@ -53,7 +53,7 @@ export class ViewWorkComponent implements OnInit {
 
   loadData(){
     // if (this.meetingID != null) {
-      this.tmService.getMeetingID('MEET2208-0257').subscribe((res) => {
+      this.tmService.getMeetingID(this.meetingID).subscribe((res) => {
         if (res) {
           this.data = res;
           this.meeting = this.data;

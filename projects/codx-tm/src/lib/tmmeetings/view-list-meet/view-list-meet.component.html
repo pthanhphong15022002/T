@@ -1,13 +1,17 @@
 <div class="d-flex flex-row align-items-center p-2 border-bottom">
   <td class="w-15">
-    <div class="a" >
-      <div >
+    <div class="badge badge-danger me-2 label-status a" [style.background-color]="
+    ('1' | vll: 'CO004':'textColor' | async) +
+    '30'" >
+      <div class="text-dark">
         Tháng {{month }}
       </div>
-      <div class="a2">
-        {{day}}
+      <div class="a2" [style.color]="
+      '1' | vll: 'CO004':'textColor' | async
+      ">
+        {{day }}
       </div>
-      <div class="a3">
+      <div class="a3 text-dark">
         {{startTime}}
       </div>
     </div>
@@ -17,29 +21,31 @@
       {{data.meetingName}}
     </div>
     <div class=" justify-content-start" style="margin-top: 10px;">
-      <codx-temp-full cardCss="card-template"  [imageId]="data.userID"
-        imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data"
-       >
+      <codx-temp-full cardCss="card-template" [imageId]="data.userID" imageObjType="AD_Users" [titleTmp]="titleTmp"
+        [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data">
       </codx-temp-full>
     </div>
   </td>
   <td class="w-25">
-    <div [innerHTML]="data.memo" >
-     </div>
+    <div [innerHTML]="data.memo">
+    </div>
   </td>
   <td class="w-15">
     <div *ngIf="data.tags">
       <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data.tags">
-      </codx-tag></div>
+      </codx-tag>
+    </div>
   </td>
   <td class="w-10">
-    <div >
+    <div>
       <codx-imgs [objectId]="resourceID" objectType="AD_Users" [numberImages]="4">
 
-      </codx-imgs></div>
+      </codx-imgs>
+    </div>
   </td>
   <td class=" w-5">
-    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" [dataItem]="data" type="hover">
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" [dataItem]="data"
+      type="hover">
     </codx-mfunc>
   </td>
 </div>

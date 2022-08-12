@@ -28,12 +28,14 @@
     [formModel]="view?.formModel"
     [dataItem]="data"
     [typeMF]="'hover'"
+    (clickMF)="clickMF($event,data)"
+    (changeDataMF)="changeMF($event,data)"
   >
   </codx-temp-full>
   <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
 <ng-template #panelRightRef>
-  <codx-detail-tmp [header]="header"  [dataItem]="dataItem" [formModel]="view?.formModel"  [body]="body" [footer]="footer" (clickMF)="openFormFuncID($event)" class="h-100"></codx-detail-tmp>
+  <codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="view?.formModel" (changeDataMF)="changeMF($event)"  [body]="body" [footer]="footer"  (clickMF)="openFormFuncID($event)" class="h-100"></codx-detail-tmp>
   <ng-template #header>
 
   </ng-template>

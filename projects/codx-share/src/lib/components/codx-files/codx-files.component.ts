@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Data } from '@syncfusion/ej2-grids';
+import { change, Data } from '@syncfusion/ej2-grids';
 import { ApiHttpService, AuthService, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { Observable, of } from 'rxjs';
@@ -14,16 +14,15 @@ import { AttachmentComponent } from '../attachment/attachment.component';
 
 })
 export class CodxFilesComponent implements OnInit, OnChanges {
-  @Input() funcID
-  @Input() id :string = "";
+  @Input() funcID:string  = "";
+  @Input() upload:boolean = true;
   @Input() objectID:string = "";
   @Input() objectType:string = "";
-  @Input() type: 'multiple' | 'single' = 'single';
   @Input() fileUpload: any[] = [];
   @Input() edit:boolean = false;
   @Input() field:string = "";
   @Output() getFile = new EventEmitter;
-  @Output() onAfterViewInit = new EventEmitter;
+  // @Output() onAfterViewInit = new EventEmitter;
   @ViewChild("codxATM") codxATM:AttachmentComponent;
   REFERTYPE = {
     IMAGE: "image",
@@ -47,6 +46,7 @@ export class CodxFilesComponent implements OnInit, OnChanges {
     this.user = this.auth.userValue;
   }
   ngOnChanges(changes: SimpleChanges): void {
+
   }
 
   ngOnInit(): void {
@@ -61,9 +61,9 @@ export class CodxFilesComponent implements OnInit, OnChanges {
     } 
   }
 
-  ngAfterViewInit(){
-this.onAfterViewInit.emit({codxATM: this.codxATM, codxFile: this});
-  }
+  // ngAfterViewInit(){
+  //   this.onAfterViewInit.emit({codxATM: this.codxATM, codxFile: this});
+  // }
 
 
 
@@ -148,57 +148,28 @@ this.onAfterViewInit.emit({codxATM: this.codxATM, codxFile: this});
   }
 
   addFiles(files:any){
-    if(this.type == 'multiple'){
-      files.forEach((f:any) => {
-        if(f.mimeType.indexOf("image") >= 0 ){
-          f['referType'] = this.REFERTYPE.IMAGE;
-          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
-          if(a) return;
-          this.file_img_video.push(f);
-        }
-        else if(f.mimeType.indexOf("video") >= 0)
-        {
-          f['referType'] = this.REFERTYPE.VIDEO;
-          let a = this.file_img_video.find(f2 => f2.fileName == f.fileName);
-          if(a) return;
-          this.file_img_video.push(f);
-        }
-        else{
-          f['referType'] = this.REFERTYPE.APPLICATION;
-          let a = this.file_application.find(f2 => f2.fileName == f.fileName);
-          if(a) return;
-          this.file_application.push(f);
-        }
-      });
-      this.lstFileAdd = this.lstFileAdd.concat(files);
-      this.fileUpload = this.fileUpload.concat(files);
+    if(files[0].mimeType.indexOf("image") >= 0 ){
+      files[0]['referType'] = this.REFERTYPE.IMAGE;
+      let a = this.file_img_video.find(f => f.fileName == files[0].fileName);
+      if(a) return;
+      this.file_img_video.push(files[0]);
     }
-    else 
+    else if(files[0].mimeType.indexOf("video") >= 0)
     {
-      if(files[0].mimeType.indexOf("image") >= 0 ){
-        files[0]['referType'] = this.REFERTYPE.IMAGE;
-        let a = this.file_img_video.find(f => f.fileName == files[0].fileName);
-        if(a) return;
-        this.file_img_video.push(files[0]);
-      }
-      else if(files[0].mimeType.indexOf("video") >= 0)
-      {
-        files[0]['referType'] = this.REFERTYPE.VIDEO;
-        let a = this.file_img_video.find(f => f.fileName == files[0].fileName);
-        if(a) return;
-        this.file_img_video.push(files[0]);
-      }
-      else{
-        files[0]['referType'] = this.REFERTYPE.APPLICATION;
-        let a = this.file_application.find(f => f.fileName == files[0].fileName);
-        if(a) return;
-        this.file_application.push(files[0]);
-      }
-      this.lstFileAdd = files;
-      this.fileUpload = files;
+      files[0]['referType'] = this.REFERTYPE.VIDEO;
+      let a = this.file_img_video.find(f => f.fileName == files[0].fileName);
+      if(a) return;
+      this.file_img_video.push(files[0]);
     }
+    else{
+      files[0]['referType'] = this.REFERTYPE.APPLICATION;
+      let a = this.file_application.find(f => f.fileName == files[0].fileName);
+      if(a) return;
+      this.file_application.push(files[0]);
+    }
+    this.lstFileAdd = files;
+    this.fileUpload = files;
     this.dt.detectChanges();
-
     this.getFile.emit(this.fileUpload);
   }
 
