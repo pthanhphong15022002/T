@@ -113,50 +113,60 @@ export class TreeviewCommentComponent implements OnInit {
     }
   }
 
-  sendComment(post: any, value: any) {
-    if (!value.trim() && this.fileUpload.length == 0) {
-      this.notifySvr.notifyCode('E0315');
-      return;
-    }
-      var type = "WP_Comments";
-      this.api
-        .execSv<any>(
-          'WP',
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'PublishCommentAsync',
-          [post.recID, value, post.recID, type]
-        )
-        .subscribe((res) => {
-          if (res) {
-            if(this.fileUpload.length > 0){
-              this.codxATM.objectId = res.recID;
-              this.codxATM.saveFilesObservable().subscribe((result:any)=>{
-                if(result){
-                  this.comments = "";
-                  this.repComment = "";
-                  this.dataComment.totalComment += 1;
-                  post.showReply = false;
-                  this.crrId = "";
-                  this.dicDatas[res["recID"]] = res;
-                  this.setNodeTree(res);
-                  this.dt.detectChanges();
-                }
-              })
-            }
-            else{
-              this.comments = "";
-              this.repComment = "";
-              this.dataComment.totalComment += 1;
-              post.showReply = false;
-              this.crrId = "";
-              this.dicDatas[res["recID"]] = res;
-              this.setNodeTree(res);
-              this.dt.detectChanges();
-            }
-          }
-        });
-    
+  // sendComment(post: any, value: any) {
+  //   if (!value.trim() && this.fileUpload.length == 0) {
+  //     this.notifySvr.notifyCode('E0315');
+  //     return;
+  //   }
+  //     var type = "WP_Comments";
+  //     this.api
+  //       .execSv<any>(
+  //         'WP',
+  //         'ERM.Business.WP',
+  //         'CommentsBusiness',
+  //         'PublishCommentAsync',
+  //         [post.recID, value, post.recID, type]
+  //       )
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           if(this.fileUpload.length > 0){
+  //             this.codxATM.objectId = res.recID;
+  //             this.codxATM.saveFilesObservable().subscribe((result:any)=>{
+  //               if(result){
+  //                 this.comments = "";
+  //                 this.repComment = "";
+  //                 this.dataComment.totalComment += 1;
+  //                 post.showReply = false;
+  //                 this.crrId = "";
+  //                 this.dicDatas[res["recID"]] = res;
+  //                 this.setNodeTree(res);
+  //                 this.dt.detectChanges();
+  //               }
+  //             })
+  //           }
+  //           else{
+  //             this.comments = "";
+  //             this.repComment = "";
+  //             this.dataComment.totalComment += 1;
+  //             post.showReply = false;
+  //             this.crrId = "";
+  //             this.dicDatas[res["recID"]] = res;
+  //             this.setNodeTree(res);
+  //             this.dt.detectChanges();
+  //           }
+  //         }
+  //       });
+  // }
+
+  sendComment(event:any){
+    this.comments = "";
+    this.repComment = "";
+    this.dataComment.totalComment += 1;
+    event.showReply = false;
+    this.crrId = "";
+    this.dicDatas[event["recID"]] = event;
+    this.setNodeTree(event);
+    this.dt.detectChanges();
   }
 
   replyTo(data) {

@@ -61,7 +61,6 @@ import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.co
 //import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
 import { HttpClientModule } from '@angular/common/http';
-
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 import { LayoutNoAsideToolbarFluidComponent } from './_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
