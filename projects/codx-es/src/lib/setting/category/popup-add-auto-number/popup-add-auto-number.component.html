@@ -16,8 +16,8 @@
           <codx-label fiedName="MaxLength" default="Chiều dài tối đa" formName="AutoNumbers"
             gridViewName="grvAutoNumbers">
           </codx-label>
-          <codx-input type="number" placeholder="0" [crrValue]="prarseInt(dialogAutoNum.value.maxLength)" min="0"
-            max="100" field="maxLength" (valueChange)="valueChange($event)" [showSpinButton]="false">
+          <codx-input type="number" [crrValue]="prarseInt(dialogAutoNum.value.maxLength)" min="0" max="100"
+            field="maxLength" (valueChange)="valueChange($event)" [showSpinButton]="false">
           </codx-input>
         </div>
       </div>

@@ -7,6 +7,7 @@ import {
   ElementRef,
   AfterViewInit,
   TemplateRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -34,6 +35,7 @@ import { TM_TaskGroups } from '../../models/TM_TaskGroups.model';
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
   styleUrls: ['./popup-add.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PopupAddComponent implements OnInit, AfterViewInit {
   STATUS_TASK_GOAL = StatusTaskGoal;
@@ -84,9 +86,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   listUserDetailSearch: any[] = [];
   idUserSelected: any;
   viewTask = false;
-  taskType ='1' ;
-  formModel :any ;
-  gridViewSetup :any ;
+  taskType = '1';
+  formModel: any;
+  gridViewSetup: any;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -212,7 +214,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   setTitle(e: any) {
-    this.title = this.titleAction + ' ' +  e.charAt(0).toLocaleLowerCase() + e.slice(1);;
+    this.title =
+      this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -261,7 +264,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         if (res) {
           var param = JSON.parse(res.dataValue);
           this.param = param;
-          this.taskType = param?.TaskType ;
+          this.taskType = param?.TaskType;
           //  this.paramModule = param;
         }
       });
@@ -416,11 +419,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.task.estimated < 0) {
       this.notiService.notifyCode('TM033');
       return;
-    } 
-    if (this.param?.MaxHoursControl != '0' && this.task.estimated > Number.parseFloat(this.param?.MaxHours)) {
-      this.notiService.notifyCode('TM058')  ///truyền có tham số
+    }
+    if (
+      this.param?.MaxHoursControl != '0' &&
+      this.task.estimated > Number.parseFloat(this.param?.MaxHours)
+    ) {
+      this.notiService.notifyCode('TM058'); ///truyền có tham số
       return;
-     }  
+    }
     if (
       this.showAssignTo &&
       (this.task.assignTo == '' || this.task.assignTo == null)
@@ -439,7 +445,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM029');
       return;
     }
-    if (this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)) {
+    if (
+      this.param?.PlanControl == '2' &&
+      (!this.task.startDate || !this.task.endDate)
+    ) {
       this.notiService.notifyCode('TM030');
       return;
     }
@@ -448,7 +457,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.task.taskGroupID) {
-      if (this.taskGroup?.checkListControl != '0' && this.listTodo.length == 0) {
+      if (
+        this.taskGroup?.checkListControl != '0' &&
+        this.listTodo.length == 0
+      ) {
         this.notiService.notifyCode('TM032');
         return;
       }
@@ -477,7 +489,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   actionSave(id) {
-    this.task.taskType = this.taskType;
+    if (this.taskType) this.task.taskType = this.taskType;
+    else this.task.taskType = '1';
     if (this.isHaveFile) this.attachment.saveFiles();
     if (this.action == 'edit') this.updateTask();
     else this.addTask();
@@ -633,8 +646,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       // this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       return;
     }
-    this.task[data.field] = num
-   
+    this.task[data.field] = num;
+
     //xử lý nhập estimated thay đổi thời gian
     // if (data.data && num) {
     //   this.task[data.field] = data.data;
@@ -678,7 +691,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (data.field == 'startDate' || data.field == 'endDate') {
       if (this.task.startDate && this.task.endDate) {
         var time = (
-          (this.task.endDate.getTime() - this.task.startDate.getTime()) /
+          (this.task?.endDate.getTime() - this.task?.startDate.getTime()) /
           3600000
         ).toFixed(2);
         this.task.estimated = Number.parseFloat(time);
@@ -968,8 +981,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.param.VerifyByType = taskGroup.verifyByType;
     this.param.VerifyControl = taskGroup.verifyControl;
     this.param.DueDateControl = taskGroup.dueDateControl;
-    this.param.ExtendControl = taskGroup.extendControl ;
-    this.param.ExtendBy = taskGroup.extendBy ;
+    this.param.ExtendControl = taskGroup.extendControl;
+    this.param.ExtendBy = taskGroup.extendBy;
     this.param.CompletedControl = taskGroup.completedControl;
   }
 }

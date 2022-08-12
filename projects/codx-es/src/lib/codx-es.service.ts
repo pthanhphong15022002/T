@@ -805,6 +805,16 @@ export class CodxEsService {
       data
     );
   }
+
+  updateSignFileTrans(data){
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UpdateApprovalTransStatusAsync',
+      data
+    )
+  }
   //#endregion
 }
 export class LayoutModel {

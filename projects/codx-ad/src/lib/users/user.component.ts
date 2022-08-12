@@ -40,7 +40,6 @@ export class UserComponent extends UIComponent {
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
-
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;

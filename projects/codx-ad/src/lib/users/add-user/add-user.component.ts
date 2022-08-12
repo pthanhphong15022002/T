@@ -208,11 +208,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
+                this.dialog.close(res.save);
               }
             });
           res.save['chooseRoles'] = res.save?.functions;
-          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
-          this.changeDetector.detectChanges();
+          //this.changeDetector.detectChanges();
         }
       });
       this.dialog.close();

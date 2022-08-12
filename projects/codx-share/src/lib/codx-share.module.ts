@@ -61,7 +61,6 @@ import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.co
 //import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
 import { HttpClientModule } from '@angular/common/http';
-
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 import { LayoutNoAsideToolbarFluidComponent } from './_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
@@ -132,17 +131,17 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
   exports: [T_Component, T_Pipe],
 })
 export class CodxShareModule {
-  public static forRoot(
-    config?: EnvironmentConfig
-  ): ModuleWithProviders<CodxCoreModule> {
-    return {
-      ngModule: CodxCoreModule,
-      providers: [
-        HttpClientModule,
-        { provide: EnvironmentConfig, useValue: config },
-      ],
-    };
-  }
+  // public static forRoot(
+  //   config?: EnvironmentConfig
+  // ): ModuleWithProviders<CodxCoreModule> {
+  //   return {
+  //     ngModule: CodxCoreModule,
+  //     providers: [
+  //       HttpClientModule,
+  //       { provide: EnvironmentConfig, useValue: config },
+  //     ],
+  //   };
+  // }
 }
 // const T_Moudule: Type<any>[] = [
 //   CommonModule,

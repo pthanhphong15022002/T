@@ -4,9 +4,9 @@
   [subHeaderText]="subHeaderText"
   [body]="body"
   [footer]="footer"
-  [dialog]="dialog"
+  [dialog]="dialogRef"
   [formModel]="formModel"
-  [formControl]="dialogAddDriver"
+  [formControl]="fGroupAddDriver"
   *ngIf="isAfterRender"
 >
 <ng-template #body>
@@ -15,7 +15,7 @@
     <div class="col-6 form-group">
       <codx-label
         fiedName="Category"
-        [formModel]="dialog.formModel"
+        [formModel]="dialogRef.formModel"
         default="Nguồn"
       >
       </codx-label>      
@@ -23,7 +23,7 @@
           type="valuelist"
           name="valuelist"
           ngDefaultControl
-          [crrValue]="dialogAddDriver.value.category"
+          [crrValue]="fGroupAddDriver.value.category"
           refValue="VL005"
           field="category"
           (valueChange)="valueChange($event)"
@@ -33,27 +33,28 @@
     <div class="col-6 form-group">
       <codx-label
         fiedName="CompanyID"
-        [formModel]="dialog.formModel"
+        [formModel]="dialogRef.formModel"
         default="Đơn vị"
         >
       </codx-label>
 
       <codx-input
-        service="OD"
         refValue="AgencyNames"
         type="combobox"
+        [Group]="fGroupAddDriver"
         ControlName="companyID"
         [formModel]="form.formModel"
-        [Group]="dialogAddDriver"
+        (valueChange)="valueChange($event)"  
+        [multiple]="false" 
       >
       </codx-input> 
     </div>
   </div>
   <div class="row">
-    <div class="col-10 form-group">
+    <div class="col-6 form-group">
       <codx-label
         fiedName="ResourceName"
-        [formModel]="dialog.formModel"
+        [formModel]="dialogRef.formModel"
         default="Tên lái xe"
       >
       </codx-label>
@@ -62,54 +63,65 @@
         type="text"
         ControlName="resourceName"
         [formModel]="form.formModel"
-        [Group]="dialogAddDriver"
+        [Group]="fGroupAddDriver"
       >
       </codx-input>
     </div>
     
-    <div class="col-1 form-group">
-      <codx-label default="" [formModel]="dialog.formModel"> </codx-label>
-      <button type="button" class="btn btn-primary">Icon</button>
-    </div>
-    <div>
-      <!-- <div class="room-icon" >
-        <codx-input
-          type="vllicon"
-          refValue="L1470"
-          field="icon"
-          class="btn btn-primary dropdown-toggle"
+    <div class="col-5 form-group">
+      <codx-label default="" [formModel]="dialogRef.formModel"> </codx-label>
+      <div class="d-flex flex-row justify-content-between">
+        <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button>
+        <codx-attachment
+          #attachment
+          [objectType]="'ES_SignFiles'"
+          [functionID]="dialogRef.formModel.funcID"
+          [objectId]="fGroupAddDriver.value.recID"
+          hideBtnSave="1"
+          hideFolder="1"
+          hideUploadBtn="1"
+          hideDes="1"
+          hideImageUpload="0"
+          hideImageThumb="1"
+          [allowMultiFile]="0"
+          [idBrowse]="'add'"
+          allowExtensions=".svg"
+          type="inline" 
+          (fileCount)="fileCount($event)"
+          (fileAdded)="fileAdded($event)"
         >
-        </codx-input>
-        <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
-                </select-icon>
-      </div> -->
+        </codx-attachment> 
+      </div>
+      
     </div>
   </div>
 
   <div class="row">
     <div class="col-8 form-group">
-      <codx-label default="Xe" [formModel]="dialog.formModel" ></codx-label>
+      <codx-label default="Xe" [formModel]="dialogRef.formModel" ></codx-label>
       <codx-input
-          service="EP"
-          type="combobox"
-          refValue="EP_Cars"
-          field="linkID"
-          [crrValue]="dialogAddDriver.value.linkID"
-          (valueChange)="valueCbxCarChange($event)"
+        type="combobox"
+        refValue="EP_Cars"
+        placeholder="Chọn xe tham chiếu"
+        field="linkID"        
+        ngDefaultControl
+        [crrValue]="this.fGroupAddDriver.value.linkID"
+        (valueChange)="valueCbxCarChange($event)" 
+        [multiple]="false" 
         >
-      </codx-input>
-
+      </codx-input>      
     </div>
     <div class="col-3 form-group">
-      <codx-label default="Biển số" fiedName="Code" [formModel]="dialog.formModel">
+      <codx-label default="Biển số" fiedName="Code" [formModel]="dialogRef.formModel">
       </codx-label>
       <codx-input
         type="text"
         ControlName="code"
         placeholder="Biển số"
         [formModel]="form.formModel"
-        [Group]="dialogAddDriver"
-        [crrValue]="dialogAddDriver.value.code"
+        [Group]="fGroupAddDriver"
+        [crrValue]="fGroupAddDriver.value.code"
+        (valueChange)="valueChange($event)"  
       >
       </codx-input>
     </div>
@@ -117,29 +129,30 @@
 
   <div class="row">
     <div class="form-group">
-      <codx-label default="Người điều phối" fiedName="" [formModel]="dialog.formModel">
+      <codx-label default="Người điều phối" fiedName="" [formModel]="dialogRef.formModel">
       </codx-label>
-      <!-- <codx-input
-          service="OD"
-          type="combobox"
-          refValue="Approvers"
-          ControlName="approvers"
-          [formModel]="form.formModel"
-          [Group]="dialogAddDriver"
-        >
-        </codx-input>     -->
+
+      <codx-input
+        type="combobox"
+        refValue="Users"
+        ControlName="owner"
+        [Group]="fGroupAddDriver"
+        [formModel]="form.formModel"
+        (valueChange)="valueChange($event)"  
+      >
+      </codx-input>  
     </div>
   </div>
 
   <div class="row">
     <div class="form-group">
-      <codx-label default="Mô tả" fiedName="Note" [formModel]="dialog.formModel"></codx-label>      
+      <codx-label default="Mô tả" fiedName="Note" [formModel]="dialogRef.formModel"></codx-label>      
       <codx-input      
         type="textarea"
         rows="3"
         ControlName="note"
         [formModel]="form.formModel"
-        [Group]="dialogAddDriver"
+        [Group]="fGroupAddDriver"
       >
       </codx-input>
     </div>
@@ -154,7 +167,7 @@
       <codx-label
         name="lblSave"
         default="Lưu"
-        [formModel]="dialog.formModel"
+        [formModel]="dialogRef.formModel"
       ></codx-label>
     </button>
   </div>

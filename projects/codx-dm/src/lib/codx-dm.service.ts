@@ -33,6 +33,7 @@ export class CodxDMService {
     titleNoRight = "Bạn không có quyền download file này";
     restoreFilemessage = '{0} đã có bạn có muốn ghi đè lên không ?';
     restoreFoldermessage = '{0} đã có bạn có muốn ghi đè lên không ?';
+    titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
     isData = this.data.asObservable();   
     public modeStore = "0";
     public hideTree = false;
@@ -98,7 +99,7 @@ export class CodxDMService {
     public HideTree = new BehaviorSubject<boolean>(null);
     isHideTree = this.HideTree.asObservable();
 
-    public updateHDD = new BehaviorSubject<string>(null);
+    public updateHDD = new BehaviorSubject<any>(null);
     isUpdateHDD = this.updateHDD.asObservable();
 
     public openFileDialog = new BehaviorSubject<boolean>(null);
@@ -401,16 +402,53 @@ export class CodxDMService {
       
     openItem(data: any) {
       if (data.fileName == undefined) 
-      {
-        // open folder
-        let option = new SidebarModel();
-        option.DataService = this.dataService;
-        option.FormModel = this.formModel;
-        option.Width = '550px';
-        // let data = {} as any;
-        data.title = this.titleUpdateFolder;
-        data.id =  data.recID;            
-        this.callfc.openSide(CreateFolderComponent, data, option);    
+      {       
+        if (!data.read) {
+          this.notificationsService.notify(this.titleAccessDenied);
+          return;
+        }
+
+        if (this.idMenuActive == "DMT08")
+          return;
+       
+        this.loadedFile = false;
+        this.loadedFolder = false;
+        this.level = data.level;
+        if (this.level == "1")
+          this.parentFolderId = "000000000000000000000000";
+        else
+          this.parentFolderId = data.parentId;
+
+        this.isTree = false;
+        this.folderName = data.folderName;
+        this.currentNode = '';
+        this.folderId.next(data.recID);
+        this.disableInput.next(false);
+
+        this.folderService.getFolder(data.recID).subscribe(async res => {
+          if (res != null) {
+            this.parentFolder.next(res);
+            this.getRight(res);
+            this.folderName = res.folderName;
+            this.parentFolderId = res.parentId;
+            this.add.next(true);      
+          }
+        });
+      
+        this.folderService.options.funcID = this.idMenuActive;
+        this.folderService.getFolders(data.recID).subscribe(async res => {     
+          this.isTree = true;        
+          this.listFolder = res[0];
+          this.listFiles = [];
+          this.loadedFolder = true;
+          this.ChangeData.next(true);      
+        });
+
+        this.fileService.GetFiles(data.recID, this.idMenuActive).subscribe(async res => {        
+          this.listFiles = res;
+          this.loadedFile = true;
+          this.ChangeData.next(true);        
+        });      
       }
       else {
         // open file
@@ -469,7 +507,7 @@ export class CodxDMService {
                     }
     
                     this.fileService.getTotalHdd().subscribe(i => {
-                      this.updateHDD.next(i.messageHddUsed);
+                      this.updateHDD.next(i);
                    //   this.changeDetectorRef.detectChanges();
                     })
                   });
@@ -490,7 +528,7 @@ export class CodxDMService {
                     }
     
                     this.fileService.getTotalHdd().subscribe(i => {
-                      this.updateHDD.next(i.messageHddUsed);
+                      this.updateHDD.next(i);
                     //  this.changeDetectorRef.detectChanges();
                     })
                   });
@@ -572,9 +610,17 @@ export class CodxDMService {
             }
           } 
           else {
-            list = "DMT0226;DMT0227;DMT0230;DMT0231";
-
+            //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
+            //list = "DMT0226;DMT0227;DMT0230;DMT0231";
+            if (type == 'DM_FolderInfo') {
+              list = "DMT0226;DMT0227";                
+            }
+            else 
+              list = "DMT0230;DMT0231";    
             if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
+              e[i].disabled = false;  
+            }
+            else {
               e[i].disabled = true;  
             }
 
@@ -582,6 +628,7 @@ export class CodxDMService {
             //   e[i].disabled = true;  
             // }
           }
+          // ""         
 
           if (type == 'DM_FolderInfo') {
             // function in 
@@ -866,6 +913,14 @@ export class CodxDMService {
       let option = new SidebarModel();
 
       switch($event.functionID) {
+        case "DMT0226": // xet duyet thu muc        
+        case "DMT0230": // xet duyet file
+          this.setRequest(type, data.recID, data.perm[0].id, this.idMenuActive == 'DMT06' ?  '5' : '6', true);
+          break;
+        case "DMT0227": // tu choi xet duyet thu muc
+        case "DMT0231": // tu choi xet duyet file
+          this.setRequest(type, data.recID, data.perm[0].id, this.idMenuActive == 'DMT06' ?  '4' : '8', false);         
+          break;
         case "DMT0210": //view file
           this.fileService.getFile(data.recID).subscribe(data => {
               this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
@@ -880,19 +935,6 @@ export class CodxDMService {
               }
           });
           break;
-        // DMT0226;DMT0227;DMT0230;DMT0231
-        case "DMT0226": // xet duyet thu muc
-          break;
-
-        case "DMT0227": // tu choi thu muc
-          break;
-
-        case "DMT0230": // xet duyet file
-          break;
-
-        case "DMT0231":  // tu choi file
-          break;
-
         case "DMT0211": // download
           this.fileService.getFile(data.recID).subscribe(file => {      
               var id = file.recID;
@@ -1206,7 +1248,7 @@ export class CodxDMService {
             //  this.listFiles.next(null);
             //  this.listFolder.next(null);
               this.fileService.getTotalHdd().subscribe(i => {
-                  this.updateHDD.next(i.messageHddUsed);
+                  this.updateHDD.next(i);
               })
               this.EmptyTrashData.next(true);
           });

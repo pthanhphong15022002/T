@@ -1,0 +1,34 @@
+@import "/node_modules/codx-core/assets/sass/init";
+:host ::ng-deep{
+  
+
+/****************/
+.step-title {
+text-transform: uppercase;
+}
+.symbol-vllicon{
+
+}
+.symbol-vllicon .btn.select-icon { 
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;   
+min-width: 32px!important;
+width: 32px!important;
+height: 32px!important;  
+background: rgba(201, 201, 212, 0.4)!important;
+border-radius: 32px!important;
+border: 0!important;
+}
+.e-templatecell .rounded-circle{
+border-radius: 50% !important;
+width: 35px!important;
+height: 35px!important;
+vertical-align: middle;
+text-align: center;
+font-size: 16px!important;
+
+}
+
+}

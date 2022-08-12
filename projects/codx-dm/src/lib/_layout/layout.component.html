@@ -29,11 +29,11 @@
           <div class="progress mx-6 mt-2" style="height: 6px">
             <div
               role="progressbar"
-              aria-valuenow="25"
+              attr.aria-valuenow="{{percentUsed}}"
               aria-valuemin="0"
               aria-valuemax="100"
               class="progress-bar"
-              style="width: 40%"
+              attr.style="width: {{percentUsed}}%"
             ></div>
           </div>
           <div class="mt-2 mx-6 text-light fw-normal fs-7">
@@ -43,10 +43,10 @@
         <div class="progress-circle px-4">
           <div
             role="progressbar"
-            aria-valuenow="40"
+            attr.aria-valuenow="{{percentUsed}}"
             aria-valuemin="0"
             aria-valuemax="100"
-            style="--value: 40"
+            attr.style="--value: {{percentUsed}}"
           ></div>
         </div>
       </ng-template>

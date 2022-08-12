@@ -5,22 +5,22 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css'],
+  styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  
+
   module = 'ES';
   dialog: DialogRef;
 
   constructor(inject: Injector,
     private callfc: CallFuncService,
-    ) {
+  ) {
     super(inject);
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
-  onAfterViewInit(): void {}
+  onAfterViewInit(): void { }
 
   openFormNoteDrawer() {
     let option = new SidebarModel();
