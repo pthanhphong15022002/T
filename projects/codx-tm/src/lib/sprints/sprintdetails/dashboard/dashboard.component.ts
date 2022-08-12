@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../../codx-tm.service';
@@ -7,10 +16,16 @@ import { StatusTask } from '../../../models/enum/enum';
 @Component({
   selector: 'codx-sprintdetails-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class DashboardComponent extends UIComponent implements OnInit,AfterViewInit {
+export class DashboardComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  @Input() projectID?: any;
+  @Input() resources?: any;
   funcID: string;
   model: DataRequest;
   daySelected: Date;
@@ -37,11 +52,11 @@ export class DashboardComponent extends UIComponent implements OnInit,AfterViewI
   piedata: any;
   dataBarChart: any = {};
   rateDoneTaskOnTime: number = 0;
+  rateDoneTask:number = 0;
   qtyTasks: number = 0;
   vlWork = [];
   hrWork = [];
-  @Input() projectID?: any;
-  @Input() resources?: any;
+  
 
   rangeColors: RangeColorModel[] = [
     { start: 0, end: 50, color: 'red' },
@@ -126,8 +141,7 @@ export class DashboardComponent extends UIComponent implements OnInit,AfterViewI
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
-  closeTooltip() {
-  }
+  closeTooltip() {}
 
   //#region chartcolumn
   columnXAxis: Object = {
@@ -182,27 +196,35 @@ export class DashboardComponent extends UIComponent implements OnInit,AfterViewI
   }
   ngAfterViewInit(): void {
     this.model = new DataRequest();
+    this.model.pageLoading = false;
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
-    this.model.pageLoading = false;
-    this.model.predicate = 'ProjectID=@0 and @1.Contains(outerIt.Owner)' ;
-    var projectID = this.projectID ?this.projectID:'null'
-    var resources = this.resources.replaceAll(';',',')
-    this.model.dataValue = projectID+';['+resources+']';
+    var projectID = this.projectID ? this.projectID : null;
+    var resources = this.resources  //replaceAll(';', ',');
+    if (projectID == null) {
+      this.model.predicates =
+        '(Category=@0 or Category=@1)and @2.Contains(outerIt.Owner) and ProjectID = null';
+      this.model.dataValues = '1;2;[' + resources + ']';
+    } else {
+      this.model.predicates =
+        '(Category=@0 or Category=@1)and @2.Contains(outerIt.Owner) and ProjectID=@3';
+      this.model.dataValues = '1;2;[' + resources + '];' + projectID;
+    }
     this.getGeneralData();
   }
 
   private getGeneralData() {
-    this.tmService.getTeamDBData(this.model).subscribe((res: any) => {
+    this.tmService.getResourceAndProjectDBData(this.model).subscribe((res: any) => {
       if (res) {
         const {
-          efficiency,
-          tasksByGroup,
           status,
-          dataBarChart,
-          rateDoneTaskOnTime,
+          efficiency,
           qtyTasks,
+          rateDoneTaskOnTime,
+          rateDoneTask,
+          tasksByGroup,
+          dataBarChart,
           vltasksByEmp,
           hoursByEmp,
         } = res;
@@ -215,6 +237,7 @@ export class DashboardComponent extends UIComponent implements OnInit,AfterViewI
         this.status = status;
         this.dataBarChart = dataBarChart;
         this.rateDoneTaskOnTime = rateDoneTaskOnTime.toFixed(2);
+        this.rateDoneTask = rateDoneTask.toFixed(2);
         this.qtyTasks = qtyTasks;
         this.piedata = [
           {

@@ -11,7 +11,7 @@
 >
   <ng-template #body>
     <div class="row">
-      <div class="col-10 form-group">
+      <div class="col-5 form-group">
         <codx-label
           fiedName="ResourceName"
           [formModel]="dialog.formModel"
@@ -27,18 +27,33 @@
         </codx-input>
       </div>
       
-      <div class="col-1 form-group">
+      <div class="col-5 form-group">
         <codx-label default="" [formModel]="dialog.formModel"> </codx-label>
-        <button type="button" class="btn btn-primary">Icon</button>
-      </div>
-      <!-- <div class="">        
-        <div class="ms-2 room-icon">
-          <codx-input type="vllicon" refValue="L1470" field="icon" class="btn btn-primary dropdown-toggle">
-          </codx-input>
-          <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
-                    </select-icon>
+        <div class="d-flex flex-row justify-content-between">
+          <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button>
+          <codx-attachment
+            #attachment
+            [objectType]="'ES_SignFiles'"
+            [functionID]="dialog.formModel.funcID"
+            [objectId]="dialogAddCar.value.recID"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            hideImageUpload="0"
+            hideImageThumb="1"
+            [allowMultiFile]="0"
+            [idBrowse]="'add'"
+            allowExtensions=".svg"
+            type="inline" 
+            (fileCount)="fileCount($event)"
+            (fileAdded)="fileAdded($event)"
+          >
+          </codx-attachment> 
         </div>
-      </div> -->
+        
+      </div>
+      
     </div>
 
     <div class="row">
@@ -72,6 +87,7 @@
           ControlName="capacity"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -87,25 +103,12 @@
           type="valuelist"
           name="ranking"
           ngDefaultControl
-          [crrValue]="dialogAddCar.value?.ranking"
+          [crrValue]="dialogAddCar.value.ranking"
           refValue="EP005"
           field="ranking"
           (valueChange)="valueChange($event)"
         >
-        </codx-input>
-        
-        <!-- <codx-input
-          type="valuelist"
-          name="valuelist"
-          refValue="EP005"
-          ControlName="ranking"
-          ngDefaultControl
-          [crrValue]="dialogAddCar.value.ranking"
-          [formModel]="form.formModel"
-          [Group]="dialogAddCar"
-        >
-        </codx-input> -->
-        
+        </codx-input>     
       </div>
     </div>
 
@@ -126,15 +129,7 @@
           field="category"
           (valueChange)="valueChange($event)"
         >
-        </codx-input>
-        <!-- <codx-input
-          type="valuelist"
-          refValue="VL005"
-          ControlName="category"
-          [formModel]="form.formModel"
-          [Group]="dialogAddCar"
-        >
-        </codx-input> -->
+        </codx-input>        
       </div>
       <div class="col-6 form-group">
         <codx-label
@@ -143,24 +138,15 @@
           default="Đơn vị"
         >
         </codx-label>
-        <!-- <codx-input
-          service="OD"
+        <codx-input
           refValue="AgencyNames"
           type="combobox"
           ControlName="companyID"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
+          [multiple]="false" 
         >
-        </codx-input> -->
-        <codx-input
-          service="SYS"
-          type="combobox"
-          refValue="Companies"
-          ControlName="companyID"
-          [formModel]="form.formModel"
-          [Group]="dialogAddCar"
-        >
-        </codx-input>
+        </codx-input>        
       </div>
     </div>
 
@@ -171,23 +157,16 @@
           [formModel]="dialog.formModel"
           default="Tài xế"
         >
-        </codx-label>   
-        <!-- <codx-input 
-          type="combobox"
-          [refValue]="'EP_Drivers'"
-          field="linkID" 
-          placeholder="Chọn lái xe"
-          [pageSize]="5"
-          (valueChange)="valueCbxDriverChange($event)">
-        </codx-input>      -->
+        </codx-label>          
+
         <codx-input
-          service="EP"
           type="combobox"
           refValue="EP_Drivers"
-          ControlName="resourceID"
-          [formModel]="form.formModel"
-          [Group]="dialogAddCar"
-          (valueChange)="valueCbxDriverChange($event)"  
+          field="linkID"
+          placeholder="Chọn lái xe tham chiếu"
+          [crrValue]="this.dialogAddCar.value.linkID"
+          (valueChange)="valueCbxChange($event)"  
+          [multiple]="false" 
         >
         </codx-input>
       </div>
@@ -196,18 +175,18 @@
     <div class="row">
       <div class="form-group">
         <codx-label
-          fiedName="BUID"
+          fiedName="Users"
           [formModel]="dialog.formModel"
           default="Người điều phối"
         >
         </codx-label>
         <codx-input
-          service="OD"
           type="combobox"
-          refValue="BusinessUnits"
-          ControlName="bUID"
+          refValue="Users"
+          ControlName="owner"
           [formModel]="form.formModel"
           [Group]="dialogAddCar"
+          [multiple]="false" 
         >
         </codx-input>    
         
