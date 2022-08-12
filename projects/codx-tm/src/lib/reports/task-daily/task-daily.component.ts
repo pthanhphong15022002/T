@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ViewModel, ViewType } from 'codx-core';
+import { ActivatedRoute } from '@angular/router';
+import { AuthStore, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'lib-task-daily',
@@ -15,7 +16,17 @@ export class TaskDailyComponent implements OnInit {
   @ViewChild("itemMemo", { static: true }) itemMemo: TemplateRef<any>;
   @ViewChild("itemCompletedOn", { static: true }) itemCompletedOn: TemplateRef<any>;
   @ViewChild("itemActive", { static: true }) itemActive: TemplateRef<any>;
-  constructor() { }
+
+  user: any;
+  funcID: any;
+
+  constructor(
+    private authStore: AuthStore,
+    private activedRouter: ActivatedRoute,
+  ) {
+    this.user = this.authStore.get();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+   }
 
   columnsGrid = [];
   views: Array<ViewModel> = [];
@@ -59,4 +70,4 @@ export class TaskDailyComponent implements OnInit {
     else
       p.close();
   }
-} 
+}

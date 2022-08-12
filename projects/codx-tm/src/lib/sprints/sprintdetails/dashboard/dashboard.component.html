@@ -1,0 +1,541 @@
+<div class="page-content d-flex flex-row">
+  <div class="w-100 me-4 scroll-y h-100">
+    <div class="row m-0 bg-body rounded-2 mb-3 mt-5">
+      <div class="col-2 px-2">
+        <div class="d-flex justify-content-between p-3" style="background-color: #f08795">
+          <div class="d-flex justify-content-between">
+            <div class="icon-28 icon-access_time me-2" style="color: rgb(194, 18, 26)"></div>
+            <div>
+              <div class="text-gray-600">
+                <codx-label name="lblTask" default="Công việc"></codx-label>
+              </div>
+              <div class="text-dark fw-bold">
+                <codx-label name="lblOverdueTask" default="Đã quá hạn"></codx-label>
+              </div>
+            </div>
+          </div>
+          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+            {{ data?.status.overdueTasks }}
+          </div>
+        </div>
+      </div>
+      <div class="col-2 px-2">
+        <div class="d-flex justify-content-between p-3" style="background-color: #e3e7ec">
+          <div class="d-flex justify-content-between">
+            <div class="icon-28 icon-access_time me-2" style="color: rgb(176, 188, 201)"></div>
+            <div>
+              <div class="text-gray-600">
+                <codx-label name="lblTask" default="Công việc"></codx-label>
+              </div>
+              <div class="text-dark fw-bold">
+                <codx-label name="lblNewTask" default="Chưa thực hiện"></codx-label>
+              </div>
+            </div>
+          </div>
+          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+            {{ data?.status.newTasks }}
+          </div>
+        </div>
+      </div>
+      <div class="col-2 px-2">
+        <div class="d-flex justify-content-between p-3" style="background-color: #5578da">
+          <div class="d-flex justify-content-between">
+            <div class="icon-28 icon-access_time me-2" style="color: rgb(26, 23, 177)"></div>
+            <div>
+              <div class="text-gray-600">
+                <codx-label name="lblTask" default="Công việc"></codx-label>
+              </div>
+              <div class="text-dark fw-bold">
+                <codx-label name="lblProcessingTask" default="Đang thực hiện"></codx-label>
+              </div>
+            </div>
+          </div>
+          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+            {{ data?.status.processingTasks }}
+          </div>
+        </div>
+      </div>
+      <div class="col-2 px-2">
+        <div class="d-flex justify-content-between p-3" style="background-color: #7be79c">
+          <div class="d-flex justify-content-between">
+            <div class="icon-28 icon-access_time me-2" style="color: rgb(18, 122, 58)"></div>
+            <div>
+              <div class="text-gray-600">
+                <codx-label name="lblTask" default="Công việc"></codx-label>
+              </div>
+              <div class="text-dark fw-bold">
+                <codx-label name="lblCompletedTask" default="Hoàn tất"></codx-label>
+              </div>
+            </div>
+          </div>
+          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+            {{ data?.status.overdueTasks }}
+          </div>
+        </div>
+      </div>
+      <div class="col-2 px-2">
+        <div class="d-flex justify-content-between p-3" style="background-color: #fff8e6">
+          <div class="d-flex justify-content-between">
+            <div class="icon-28 icon-access_time me-2" style="color: rgb(255, 128, 8)"></div>
+            <div>
+              <div class="text-gray-600">
+                <codx-label name="lblTask" default="Công việc"></codx-label>
+              </div>
+              <div class="text-dark fw-bold">
+                <codx-label name="lblPostponeTask" default="Hoãn lại"></codx-label>
+              </div>
+            </div>
+          </div>
+          <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
+            {{ data?.status.canceledTasks }}
+          </div>
+        </div>
+      </div>
+      <!-- <div class="fs-4 fw-bold mt-4">Đánh giá hiệu quả làm việc</div>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-sm align-self-end" (mouseenter)="openTooltip()"
+            (mouseleave)="closeTooltip()">
+            <i class="icon-info text-dark"></i>
+          </button>
+        </div>
+        <div class="col-lg-3 col-sm-6 p-0" style="position: relative; height: 200px">
+          <ejs-circulargauge style="display: block" centerY="50%" width="150" height="150">
+            <e-axes>
+              <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
+                [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+                <e-ranges>
+                  <e-range start="0" end="150" radius="100%" roundedCornerRadius="10"
+                    [linearGradient]="rangeLinearGradient1" startWidth="10" endWidth="10">
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer type="Marker" [value]="availability" markerShape="Image"
+                    imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                  </e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
+          <div style="
+              position: absolute;
+              top: 36%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            ">
+            <div class="text-center fs-8 text-gray-600 text-nowrap">Availability (%)</div>
+            <div class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+              {{ availability }}
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 p-0" style="position: relative; height: 200px">
+          <ejs-circulargauge style="display: block" centerY="50%" width="150" height="150">
+            <e-axes>
+              <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
+                [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+                <e-ranges>
+                  <e-range start="0" end="150" radius="100%" roundedCornerRadius="10"
+                    [linearGradient]="rangeLinearGradient1" startWidth="10" endWidth="10">
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer type="Marker" [value]="performance" markerShape="Image"
+                    imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                  </e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
+          <div style="
+              position: absolute;
+              top: 36%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            ">
+            <div class="text-center fs-8 text-gray-600 text-nowrap">Performance (%)</div>
+            <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+              {{ performance }}
+            </p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 p-0" style="position: relative; height: 200px">
+          <ejs-circulargauge style="display: block" centerY="50%" width="150" height="150">
+            <e-axes>
+              <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
+                [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+                <e-ranges>
+                  <e-range start="0" end="150" radius="100%" roundedCornerRadius="10"
+                    [linearGradient]="rangeLinearGradient1" startWidth="10" endWidth="10">
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer type="Marker" [value]="quality" markerShape="Image"
+                    imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                  </e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
+          <div style="
+              position: absolute;
+              top: 36%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            ">
+            <div class="text-center fs-8 text-gray-600 text-nowrap">Quality (%)</div>
+            <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+              {{ quality }}
+            </p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 p-0" style="position: relative; height: 200px">
+          <ejs-circulargauge style="display: block" centerY="50%" width="150" height="150">
+            <e-axes>
+              <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
+                [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+                <e-ranges>
+                  <e-range start="0" end="150" radius="100%" roundedCornerRadius="10"
+                    [linearGradient]="rangeLinearGradient2" startWidth="10" endWidth="10">
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer type="Marker" [value]="kpi" markerShape="Image"
+                    imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                  </e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
+          <div style="
+              position: absolute;
+              top: 36%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            ">
+            <div class="text-center fs-8 text-gray-600 text-nowrap">KPI (%)</div>
+            <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+              {{ kpi }}
+            </p>
+          </div>
+        </div> -->
+    </div>
+    <div class="row m-0 bg-body rounded-2 mb-3">
+      <div class="fs-4 fw-bold mt-4">Thống kê theo nhóm công việc</div>
+      <div class="col-lg-4" style="height: 250px">
+        <ejs-accumulationchart id="chart-group-task" width="100%" height="250"
+          [legendSettings]="legendRateDoneSettings">
+          <e-accumulation-series-collection>
+            <e-accumulation-series [dataSource]="tasksByGroup ? tasksByGroup : {}" xName="taskGroupName"
+              yName="percentage" innerRadius="82%">
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+      <!-- <div class="col-lg-6" style="position: relative; height: 250px">
+          <ejs-accumulationchart id="chart-rate-done" width="100%" height="250" [legendSettings]="legendRateDoneSettings">
+            <e-accumulation-series-collection>
+              <e-accumulation-series [dataSource]="piedata ? piedata : {}" xName="x" yName="y" innerRadius="80%">
+              </e-accumulation-series>
+            </e-accumulation-series-collection>
+          </ejs-accumulationchart>
+          <div style="
+              position: absolute;
+              top: 36%;
+              left: 40%;
+              transform: translate(-50%, -50%);
+            ">
+            <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+              {{ qtyTasks }}
+            </p>
+            <p class="text-center fs-7 text-gray-500">Đánh giá</p>
+          </div>
+        </div> -->
+
+        <!-- ti lệ -->
+      <div class="col-4 row ">
+        <div class="col-7 align-items-top">
+          <ejs-circulargauge style="display: block" centerY="40%" width="100%" height="100%">
+            <e-axes>
+              <e-axis radius="100%" startAngle="0" endAngle="360" minimum="0" maximum="150" [lineStyle]="lineStyle"
+                [labelStyle]="labelStyle2" [majorTicks]="majorTicks2" [minorTicks]="minorTicks">
+                <e-ranges>
+                  <e-range start="0" end="150" radius="90%" startWidth="12" endWidth="12" color="#F0F0F0">
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer type="RangeBar" roundedCornerRadius="10" radius="90%" color="#04DEB7" pointerWidth="12"
+                    [value]="rateDoneTaskOnTime">
+                  </e-pointer>
+                </e-pointers>
+              </e-axis>
+              <e-axis radius="80%" startAngle="0" endAngle="360" minimum="0" maximum="150" [lineStyle]="lineStyle"
+                [labelStyle]="labelStyle2" [majorTicks]="majorTicks2" [minorTicks]="minorTicks">
+                <e-ranges>
+                  <e-range start="0" end="150" radius="115%" startWidth="12" endWidth="12" color="#F0F0F0">
+                  </e-range>
+                </e-ranges>
+                <e-pointers>
+                  <e-pointer type="RangeBar" roundedCornerRadius="10" radius="115%" color="#5465FF" markerWidth="12"
+                    pointerWidth="12" [value]="rateDoneTask">
+                  </e-pointer>
+                </e-pointers>
+              </e-axis>
+            </e-axes>
+          </ejs-circulargauge>
+        </div>
+        <div class="col-5">
+          <div class="pt-12  align-items-center">
+            <div class="d-flex">
+              <div class="label1"></div>
+              <div class="d-flex flex-column">
+                <div>Tỷ lệ hoàn thành công việc</div>
+                <div class="text-dark fs-3 fw-bold">
+                  {{ rateDoneTask}}%
+                </div>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="label2"></div>
+              <div class="d-flex flex-column">
+                <div>Tỷ lệ hoàn thành công việc đúng hạn</div>
+                <div class="text-dark fs-3 fw-bold">
+                  {{rateDoneTaskOnTime}}%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-lg-4" style="position: relative; height: 250px">
+        <ejs-circulargauge style="display: block" centerY="50%" width="250" height="250">
+          <e-axes>
+            <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
+              [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+              <e-ranges>
+                <e-range start="0" end="150" radius="100%" roundedCornerRadius="10" fill="#da8c33"
+                  [linearGradient]="rangeLinearGradient2" startWidth="10" endWidth="10">
+                </e-range>
+              </e-ranges>
+              <e-pointers>
+                <e-pointer type="Marker" [value]="kpi" markerShape="Image"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                </e-pointer>
+              </e-pointers>
+            </e-axis>
+          </e-axes>
+        </ejs-circulargauge>
+        <div style="
+              position: absolute;
+              top: 50%;
+              left: 25%;
+              transform: translate(-50%, -50%);
+            ">
+          <div class="text-center fs-8 text-gray-600 text-nowrap">KPI</div>
+          <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+            {{ kpi }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row m-0 bg-body mb-2">
+      <div class="fs-4 fw-bold mt-4">
+        Thống kê công việc hoàn thành và số giờ thực hiện
+      </div>
+      <ejs-chart style="display: block" background="transparent" [chartArea]="chartArea" width="100%" [align]="'center'"
+        id="chartbar" [primaryXAxis]="columnXAxis" [primaryYAxis]="columnYAxis" [legendSettings]="legendSettings">
+        <e-axes>
+          <e-axis rowIndex="0" name="WorkHours" opposedPosition="true" title="" labelFormat="" [minimum]="0"
+            [maximum]="100" [interval]="4">
+          </e-axis>
+        </e-axes>
+        <e-series-collection>
+          <e-series fill="#005DC7" [dataSource]="dataBarChart?.barChart" type="Column" name="Tasks" xName="label"
+            yName="value" [cornerRadius]="radius">
+          </e-series>
+          <e-series fill="#F9D923" [dataSource]="dataBarChart?.lineChart" type="Line" name="WorkHours" yName="value"
+            xName="label" yAxisName="WorkHours">
+          </e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </div>
+  </div>
+  <div class="w-350px min-w-350px">
+    <div class="rounded-2 bg-body mb-3">
+      <div class="d-flex justify-content-start border-bottom p-5">
+        <div class="bg-light-primary p-3 rounded-1 me-3">
+          <span class="icon-check-correct icon-24"></span>
+        </div>
+        <div class="d-flex flex-column">
+          <h1 class="mb-0">{{ status?.doneTasks }}</h1>
+          <div class="text-gray-600">Công việc đã hoàn tất</div>
+        </div>
+      </div>
+      <div class="d-flex py-3">
+        <div class="w-50 p-3 border-right">
+          <div class="fs-7 text-nowrap text-center">
+            Tỷ lệ hoàn thành đúng hạn
+          </div>
+          <div class="text-primary fw-bolder fs-header text-center mt-2">
+            {{ rateDoneTaskOnTime }} %
+          </div>
+        </div>
+        <div class="w-50 p-3">
+          <div class="fs-7 text-nowrap text-center">Công việc trễ hạn</div>
+          <div class="text-primary fw-bolder fs-header text-center mt-2">
+            {{ status?.overdueTasks }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rounded-2 bg-body mb-3">
+      <div class="text-dark text-center fw-bold pt-5 mb-3">
+        Danh sách nhân viên thực hiện công việc
+      </div>
+      <div style="position: relative" class="px-5">
+        <button class="btn btn-icon btn-light btn-sortby" style="z-index: 99" (click)="sort()">
+          <div *ngIf="isDesc; then Desc; else Asc"></div>
+          <ng-template #Desc><span class="text-right icon-sort_Z-A"></span></ng-template>
+          <ng-template #Asc>
+            <span class="text-right icon-sort_A-Z"></span>
+          </ng-template>
+        </button>
+        <ejs-tab id="element">
+          <e-tabitems>
+            <e-tabitem [header]="headerText[0]" [content]="volumeWork"></e-tabitem>
+            <e-tabitem [header]="headerText[1]" [content]="workHours"></e-tabitem>
+          </e-tabitems>
+        </ejs-tab>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Khối lượng công việc -->
+<ng-template #volumeWork>
+  <div class="d-flex flex-column" *ngFor="let item of vlWork">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center justify-content-end">
+        <span class="me-3">{{ item?.id }}</span>
+        <codx-img [width]="25" [objectId]="item?.id" [objectName]="item?.id" [objectType]="'AD_Users'"></codx-img>
+      </div>
+      <div class="d-flex align-items-center mb-5">
+        <span class="fw-bold w-50px me-3 text-end">{{ item?.qtyTasks }}</span>
+        <div class="progress w-100">
+          <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="item?.status?.done"></div>
+          <div class="progress-bar progress-bar-processing" role="progressbar" [style.backgroundColor]=""
+            [style.width.%]="item?.status?.processing"></div>
+          <div class="progress-bar progress-bar-postpone" role="progressbar" [style.width.%]="item?.status?.postpone">
+          </div>
+          <div class="progress-bar progress-bar-cancel" role="progressbar" [style.width.%]="item?.status?.cancel"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Thời gian thực hiện -->
+<ng-template #workHours>
+  <div class="d-flex flex-column" *ngFor="let item of hrWork">
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center justify-content-end">
+        <span class="me-3">{{ item?.id }}</span>
+        <codx-img [width]="25" [objectId]="item?.id" [objectName]="item?.id" [objectType]="'AD_Users'"></codx-img>
+      </div>
+      <div class="d-flex align-items-center mb-5">
+        <span class="fw-bold w-50px me-3 text-end">{{ item?.completed }}</span>
+        <div class="progress w-100">
+          <div class="progress-bar progress-bar-processing" role="progressbar" [style.width.%]="item?.percentage"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #tooltip let-dialog>
+  <div class="modal-header" style="border-bottom: none">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between">
+          <span style="margin-right: 20px">
+            <i class="icon-info" style="color: #005dc7"></i></span>
+          <h2 id="modal-basic-title">
+            <codx-label name="lblEvaluateWorkEfficiency" default="Đánh giá hiệu quả làm việc"
+              [formModel]="dialog.formModel"></codx-label>
+          </h2>
+        </div>
+        <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+          (click)="dialog.close()">
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">Availability (%)</p>
+      <p class="">Tỷ lệ thời gian làm việc = <strong>(1)/(2)</strong></p>
+      <p style="margin: 0px 0px 0px 20px">
+        (1) Số giờ chấm công thực tế của nhân viên
+      </p>
+      <p style="
+            font-style: italic;
+            font-size: 12px;
+            font-weight: 200;
+            margin: 0px 0px 0px 30px;
+            color: rgb(0, 0, 0, 0.5);
+          ">
+        (* Nếu chưa tích hợp chấm công sẽ bằng giờ công chuẩn)
+      </p>
+      <p style="margin: 0px 0px 0px 20px">
+        (2) Số giờ công chuẩn theo lịch làm việc của công ty
+      </p>
+    </div>
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">Performance (%)</p>
+      <p>Hiệu suất làm việc = <strong>(3)/(4)</strong></p>
+      <p style="margin: 0px 0px 0px 20px">
+        (3) Tổng số giờ hoàn thành công việc thực tế
+      </p>
+      <p style="margin: 0px 0px 0px 20px">
+        (4) Tổng giờ công thực tế có điều chỉnh
+      </p>
+    </div>
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">Quality (%)</p>
+      <p>Chất lượng công việc = <strong>(5)/(6)</strong></p>
+      <p style="margin: 0px 0px 0px 20px">
+        (5) Tổng số giờ hoàn thành công việc thực tế được duyệt
+      </p>
+      <p style="
+            font-style: italic;
+            font-size: 12px;
+            font-weight: 200;
+            margin: 0px 0px 0px 30px;
+            color: rgb(0, 0, 0, 0.5);
+          ">
+        (* Nếu không sử dụng quy trình xét duyệt thì số giờ sẽ bằng số giờ thực
+        tế)
+      </p>
+      <p style="margin: 0px 0px 0px 20px">
+        (6) Tổng số giờ hoàn thành công việc thực tế
+      </p>
+    </div>
+    <div style="margin-bottom: 20px">
+      <p style="font-weight: 700; margin: 0px">KPI (%)</p>
+      <p>Năng suất tương đương</p>
+      <p style="
+            margin-left: 100px;
+            padding-bottom: 10px;
+            width: fit-content;
+            box-sizing: bor-box;
+            border-bottom: 1px solid #000;
+            text-align: center;
+          ">
+        Availability (%) * Performance (%) * Quality (%)
+      </p>
+      <p style="text-align: center">1000</p>
+    </div>
+  </div>
+</ng-template>

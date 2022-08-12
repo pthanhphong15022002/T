@@ -5,21 +5,13 @@
     <div class="vmd-detail">
       <div class="d-flex justify-content-between flex-grow-1 mb-2">
         <div class="d-flex align-items-center">
-          <codx-temp-full [icoCss]="itemDetail?.icon" [title]="itemDetail?.title" imageObjType="AD_Users">
+
+          <codx-temp-full [title]="itemDetail?.title"
+            [icoCss]="'w-30px h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-2 ' +itemDetail?.icon"
+            [icoStyle]="setStyles(itemDetail?.color)">
           </codx-temp-full>
         </div>
         <div class="d-flex align-self-center">
-          <!-- <span class="badge badge-square badge-md" [style.color]="'black'" [style.background-color]="
-              itemDetail
-                ? (itemDetail?.approveStatus | vll: 'ES003':'color' | async)
-                : 'lightblue'
-            ">
-            {{
-            itemDetail
-            ? (itemDetail?.approveStatus | vll: "ES003":"text" | async)
-            : ""
-            }}
-          </span> -->
           <codx-vll [showText]="true" [formModel]="formModel" [field]="'ApproveStatus'"
             [value]="itemDetail?.approveStatus" class="badge badge-light badge-square badge-md fs-7">
           </codx-vll>
@@ -52,10 +44,10 @@
         </span>
       </div>
       <div class="d-flex me-6">
-        <codx-label name="lblDateExpire" [formModel]="itemDetailTemplate.formModel" default="Ngày hết hạn:"
+        <codx-label field="DateExpire" [formModel]="itemDetailTemplate.formModel" default="Ngày hết hạn"
           class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">
-          {{
+          : {{
           itemDetail?.permission
           ? (itemDetail?.permissions?.expiredOn | date: "dd/MM/yyyy")
           : "dd/MM/yyyy"
@@ -85,17 +77,17 @@
     </div>
     <div class="d-flex mb-2">
       <div class="d-flex me-6">
-        <codx-label name="lblRefNumber" [formModel]="itemDetailTemplate.formModel" default="Số tham chiếu:"
-          class="fw-bold me-1"></codx-label>
+        <codx-label field="RefNo" [formModel]="itemDetailTemplate.formModel" default="Số văn bản" class="fw-bold me-1">
+        </codx-label>
         <span class="text-gray-600">
-          {{ itemDetail ? itemDetail?.refNo : "" }}
+          : {{ itemDetail ? itemDetail?.refNo : "" }}
         </span>
       </div>
       <div class="d-flex me-6">
-        <codx-label name="lblRefDate" [formModel]="itemDetailTemplate.formModel" default="Ngày tham chiếu:"
+        <codx-label field="RefDate" [formModel]="itemDetailTemplate.formModel" default="Ngày tham chiếu"
           class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">
-          {{
+          : {{
           itemDetail
           ? (itemDetail?.refDate | date: "dd/MM/yyyy")
           : "dd/MM/yyyy"
@@ -104,9 +96,13 @@
       </div>
     </div>
     <div class="mb-2">
-      <codx-attachment #attachment [objectType]="'OD_Dispatches'" hideFolder="1" hideUploadBtn="1" hideDes="1"
-        type="inline" [functionID]="'ODT3'" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)">
+      <codx-attachment #attachment [objectType]="formModel.entityName" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+        hideDes="1" [functionID]="" [objectId]="itemDetail?.recID" [allowMultiFile]="1" [functionID]="formModel.funcID">
       </codx-attachment>
+      <!-- <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0"
+      [objectId]="dialogSignFile.value.recID" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
+      [functionID]="formModel.funcID" type="inline" (fileCount)="getfileCount($event)">
+    </codx-attachment> -->
     </div>
 
     <div class="codx_e-header mb-2" [class.active]="true">

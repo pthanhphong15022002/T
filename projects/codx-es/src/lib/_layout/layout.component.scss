@@ -1,0 +1,53 @@
+:host{
+/***ES-Trinh ky****/
+.codx-card-custom{
+    height: 100%;
+    .codx-stepper{
+      height: 100%;
+    }
+    .stepper-header{
+      height: 60px;
+    }
+    .h2-title{
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 16px;
+      color: #3E4347;
+    }
+    .stepper-body{
+      height: calc(100% - 60px);
+    }
+}
+
+/****************/
+.step-title {
+text-transform: uppercase;
+}
+.symbol-vllicon{
+
+}
+.symbol-vllicon .btn.select-icon { 
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;   
+min-width: 32px!important;
+width: 32px!important;
+height: 32px!important;  
+background: rgba(201, 201, 212, 0.4)!important;
+border-radius: 32px!important;
+border: 0!important;
+}
+.e-templatecell .rounded-circle{
+border-radius: 50% !important;
+width: 35px!important;
+height: 35px!important;
+vertical-align: middle;
+text-align: center;
+font-size: 16px!important;
+
+}
+
+}

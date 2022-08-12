@@ -8,10 +8,12 @@
       </div>
       <div class="d-flex align-items-center stepper">
         <div class="stepper-nav flex-center flex-wrap" #status>
-          <div class="stepper-item active" data-kt-stepper-element="nav" data-kt-stepper-action="step"
-            ngbTooltip="Upload file" (click)="clickTab(0)">
-            <div class="stepper-wrapper d-flex align-items-center flex-column">
-              <div class="stepper-icon h-30px">
+          <div [ngClass]="
+              isAddNew ? 'stepper-item active' : 'stepper-item approve'
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" ngbTooltip="Upload file"
+            (click)="clickTab(0)">
+            <div class="stepper-wrapper d-flex align-items-center">
+              <div class="stepper-icon">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
@@ -22,10 +24,12 @@
             <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
-          <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)"
-            ngbTooltip="Thông tin tài liệu">
-            <div class="stepper-wrapper d-flex align-items-center flex-column">
-              <div class="stepper-icon h-30px">
+          <div [ngClass]="
+              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)"
+            ngbTooltip="Bổ sung thông tin tài liệu">
+            <div class="stepper-wrapper d-flex align-items-center">
+              <div class="stepper-icon">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
@@ -36,10 +40,12 @@
             <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
-          <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(2)"
+          <div [ngClass]="
+              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(2)"
             ngbTooltip="Quy trình duyệt">
-            <div class="stepper-wrapper d-flex align-items-center flex-column">
-              <div class="stepper-icon h-30px">
+            <div class="stepper-wrapper d-flex align-items-center">
+              <div class="stepper-icon">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
@@ -50,10 +56,12 @@
             <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
-          <div class="stepper-item" data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(3)"
-            ngbTooltip="Thiết lập vùng ký">
-            <div class="stepper-wrapper d-flex align-items-center flex-column">
-              <div class="stepper-icon h-30px">
+          <div [ngClass]="
+              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(3)"
+            ngbTooltip="Đánh dấu chữ ký">
+            <div class="stepper-wrapper d-flex align-items-center">
+              <div class="stepper-icon">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
@@ -72,11 +80,20 @@
         <a href="#" class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4">Từ chối</a>
         <a href="#" class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4">Làm lại</a>
         <a href="#" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4">Ký</a> -->
+        <ng-container *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+          <div class="me-2 mb-2" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+            <codx-input type="checkbox" labelPosition="after" field="autoReset" class="test-check"
+              (valueChange)="valueChange($event)" [crrValue]="">
+            </codx-input>
+            <codx-label class="ms-2" Name="lblIsTemplate" [formModel]="dialog.formModel" default="Lưu thành mẫu">
+            </codx-label>
+          </div>
 
-        <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-          (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
-          <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
-        </button>
+          <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+            (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+            <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
+          </button>
+        </ng-container>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18" (click)="close(templateClose)"></i>
         </div>
@@ -99,7 +116,7 @@
         <div class="card-body hover-scroll-overlay-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
           data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
           data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
-          <div class="tab-content ">
+          <div class="tab-content">
             <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
               <div class="text-center">
                 <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0"
@@ -188,12 +205,11 @@
 
         <div class="d-flex flex-stack justify-content-between card-footer border-0">
           <div class="left">
-            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0"
-              (click)="previous(currentTab)">
+            <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0" (click)="previous(currentTab)">
               <codx-label name="lblBack" [formModel]="formModel" default="Quay lại">
               </codx-label>
             </button>
-            <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0"
+            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0"
               (click)="openPopup(processTemplate)">
               <codx-label name="" [formModel]="formModel" class="" default="Quy trình mẫu" class="">
               </codx-label>
@@ -262,7 +278,7 @@
 
 <ng-template #templateClose let-dialogClose>
   <!--begin::Alert-->
-  <div class="card-alert alert alert-dismissible  d-flex flex-column  mw-650px mx-auto p-10">
+  <div class="card-alert alert alert-dismissible d-flex flex-column mw-650px mx-auto p-10">
     <!--begin::Close-->
     <button type="button" class="position-absolute top-0 end-0 m-2 btn btn-icon" (click)="closeDialogTmp(dialogClose)">
       <span class="icon-close icon-18"></span>
@@ -281,10 +297,9 @@
               default="Bạn có muốn lưu quy trình đã đã chỉnh sửa"></codx-label>
           </div>
           <!--begin::Content-->
-          <span class="mb-4">Chương trình sẽ thực hiện ghi đè file trùng tên hiện có trên hệ thống. Quá trình này không
-            thể khôi phục
-            lại
-            như trước khi ghi đè, bạn có muốn thực hiện không?</span>
+          <span class="mb-4">Chương trình sẽ thực hiện ghi đè file trùng tên hiện có trên hệ
+            thống. Quá trình này không thể khôi phục lại như trước khi ghi đè,
+            bạn có muốn thực hiện không?</span>
           <!--end::Content-->
           <!-- <div class="d-flex ">
             <codx-input type="checkbox" label="Apply to all" [checked]="false" labelPosition="After"></codx-input>
@@ -299,7 +314,7 @@
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
         </codx-label>
       </a>
-      <a *ngIf="isAddNew" class="btn btn-light-primary me-2 " (click)="clickIsSave(false, dialogClose)">
+      <a *ngIf="isAddNew" class="btn btn-light-primary me-2" (click)="clickIsSave(false, dialogClose)">
         <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
         </codx-label>
       </a>
@@ -307,7 +322,6 @@
         <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
         </codx-label>
       </a>
-
     </div>
     <!--end::Buttons-->
   </div>
