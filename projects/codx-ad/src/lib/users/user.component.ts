@@ -96,6 +96,9 @@ export class UserComponent extends UIComponent {
       case 'SYS03':
         this.edit(data);
         break;
+      case 'SYS02':
+        this.delete(data);
+        break;
       case 'ADS0501':
         this.stop(data);
         break;
@@ -145,7 +148,6 @@ export class UserComponent extends UIComponent {
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
-          debugger;
           this.delete(e?.event);
         }
       });
