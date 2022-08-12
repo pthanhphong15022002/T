@@ -897,19 +897,6 @@ export class CodxDMService {
               }
           });
           break;
-        // DMT0226;DMT0227;DMT0230;DMT0231
-        case "DMT0226": // xet duyet thu muc
-          break;
-
-        case "DMT0227": // tu choi thu muc
-          break;
-
-        case "DMT0230": // xet duyet file
-          break;
-
-        case "DMT0231":  // tu choi file
-          break;
-
         case "DMT0211": // download
           this.fileService.getFile(data.recID).subscribe(file => {      
               var id = file.recID;
