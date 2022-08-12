@@ -1,4 +1,3 @@
-
 // .e-tab{
 //     height: 100%!important;    
 // }
@@ -42,12 +41,12 @@
 // }
 // .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap .nav-link{
 //     color: #2b2c30;
-    
+
 // }
 // .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text, .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
 //     color: #005DC7;
 //     font-weight: 500;
-  
+
 // }
 // .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
 //     height: 54px;
@@ -82,14 +81,20 @@
 //     transition: all .15s ease;
 //     color: #3f4254;
 // }
-.footer-upload{
+.footer-upload {
     margin: -13px -20px -12px -15px;
-    padding: 13px 20px 12px 15px;     
+    padding: 13px 20px 12px 15px;
     width: 559px;
     margin-left: auto;
     border-width: 0 1px 0 0;
     border-color: #3333330f;
     border-style: solid;
-    box-shadow: -2px 2px 4px RGBA(150,152,154,.2);
+    box-shadow: -2px 2px 4px RGBA(150, 152, 154, .2);
 }
- 
+
+.tm-desc ejs-richtexteditor .e-content,
+.tm-desc ejs-richtexteditor .e-rte-content {
+    height: calc(100vh - 240px) !important;
+    border-bottom: 0 !important;
+    box-sizing: content-box;
+}
