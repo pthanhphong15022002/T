@@ -107,8 +107,8 @@
         </div>
       </div>
     </div>
-    <div class="stepper-body p-2 w-100" *ngIf="currentTab < 3">
-      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100">
+    <div class="stepper-body p-2 w-100">
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100" *ngIf="currentTab < 3">
         <div class="mb-10 mt-10 text-center tab-pane-header">
           <h2 class="h2-title">
             <codx-label *ngIf="currentTab == 0" name="lblUploadFile" [formModel]="formModel" default="Upload file">
@@ -236,10 +236,11 @@
           </button>
         </div>
       </div>
+      <lib-pdf-view *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0" [isApprover]="false"
+        [recID]="dialogSignFile.value.recID">
+      </lib-pdf-view>
     </div>
-    <lib-pdf-view class="p-2" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0" [isApprover]="false"
-      [recID]="dialogSignFile.value.recID">
-    </lib-pdf-view>
+
   </div>
 </div>
 

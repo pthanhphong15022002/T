@@ -95,7 +95,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   signerInfo: any;
   fileInfo: any = {};
-  zoomValue: number = 75;
+  zoomValue: number = 100;
   holding: number = 0;
 
   tmpLstSigners: Array<Object> = [];
@@ -111,7 +111,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   autoSignState: boolean = false;
 
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
-  hideThumbnail: boolean = true;
+  hideThumbnail: boolean = false;
   hideActions: boolean = false;
 
   saveAnnoQueue: Map<string, any>;
