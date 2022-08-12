@@ -325,7 +325,7 @@ export class HomeComponent extends UIComponent {
         //this.dmSV.isTree = false;
       }
 
-      this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
+      this.fileService.GetFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
         ///this.dmSV.listFiles.next(res);
         this.data = [...this.data, ...res];
         this.dmSV.listFiles = res;  
@@ -333,7 +333,7 @@ export class HomeComponent extends UIComponent {
       });
     } else {
       this.dmSV.disableInput.next(true);
-     // this.notificationsService.notify(this.titleAccessDenied);
+      this.notificationsService.notify(this.titleAccessDenied);
     }    
   }
 
@@ -446,14 +446,19 @@ export class HomeComponent extends UIComponent {
         this.data = [];    
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
-        this.data = [...this.data, ...e.data];
-        this.dmSV.listFolder = e.data;
+        if (e.data != null) {
+          this.data = [...this.data, ...e.data];
+          this.dmSV.listFolder = e.data;
+        }
+        else 
+          this.dmSV.listFolder = [];  
+        
         this.dmSV.loadedFolder = true;       
       }
 
       this.dmSV.folderType = this.view.funcID;
       this.dmSV.idMenuActive = this.view.funcID;
-      this.dmSV.loadedFile = false;
+     // this.dmSV.loadedFile = false;
       this.dmSV.folderId.next('');
       this.dmSV.loadedFolder = true;      
       this.dmSV.menuIdActive.next(this.view.funcID);
@@ -463,16 +468,18 @@ export class HomeComponent extends UIComponent {
       this.dmSV.menuActive.next(this.view.function.customName);
       this.dmSV.breadcumb.next(breadcumb);    
       this.fileService.options.funcID = this.view.funcID;
+      this.dmSV.listFiles = [];
+      this.dmSV.loadedFile = false;  
       this.fileService
-        .getListActiveFiles('', this.view.funcID)
+        .GetFiles('', this.view.funcID)
         .subscribe(async (res) => {
           if (res != null) {
             this.data = [...this.data, ...res];
-            this.dmSV.listFiles = res;
-            this.dmSV.loadedFile = true;
-            this.changeDetectorRef.detectChanges();
+            this.dmSV.listFiles = res;           
           }
-        });        
+          this.dmSV.loadedFile = true;           
+          this.changeDetectorRef.detectChanges();
+        });          
     }    
   }
 }

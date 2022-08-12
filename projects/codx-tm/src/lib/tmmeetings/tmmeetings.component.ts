@@ -6,6 +6,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectorRef,
+  Input,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -67,6 +68,8 @@ export class TMMeetingsComponent extends UIComponent {
   dataValue = '';
   formName = '';
   gridViewName = '';
+  @Input() calendarID: string;
+
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -86,14 +89,24 @@ export class TMMeetingsComponent extends UIComponent {
     this.dataValue = this.user?.userID;
   }
 
+
+
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
+    this.getParams();
+
+    this.modelResource = new ResourceModel();
+    this.modelResource.assemblyName = 'CO';
+    this.modelResource.className = 'MeetingsBusiness';
+    this.modelResource.service = 'CO';
+    this.modelResource.method = 'GetListMeetingsAsync';
   }
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
+
   }
 
   ngAfterViewInit(): void {
@@ -107,11 +120,14 @@ export class TMMeetingsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.content,
+        type: ViewType.schedule,
         active: false,
         sameData: true,
         model: {
-          panelLeftRef: this.templateLeft,
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
         },
       },
       {
@@ -131,6 +147,92 @@ export class TMMeetingsComponent extends UIComponent {
 
     this.dt.detectChanges();
   }
+
+  //#region schedule
+
+  fields = {
+    id: 'meetingID',
+    subject: { name: 'meetingName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resources: { name: 'resources' },
+  };
+  resourceField = {
+    Name: 'Resources',
+    Field: 'resourceID',
+    IdField: 'resourceID',
+    TextField: 'resourceName',
+    Title: 'Resources',
+  };
+
+  getCellContent(evt: any) {
+    if (this.dayoff.length > 0) {
+      for (let i = 0; i < this.dayoff.length; i++) {
+        let day = new Date(this.dayoff[i].startDate);
+        if (
+          day &&
+          evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()
+        ) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.backgroundColor = this.dayoff[i].color;
+            });
+          }
+          return (
+            '<icon class="' +
+            this.dayoff[i].symbol +
+            '"></icon>' +
+            '<span>' +
+            this.dayoff[i].note +
+            '</span>'
+          );
+        }
+      }
+    }
+
+    return ``;
+  }
+
+  getParams() {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        ['TMParameters', null, 'CalendarID']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = res.fieldValue;
+          this.getDayOff(this.calendarID);
+        }
+      });
+  }
+
+  getDayOff(id = null) {
+    if (id) this.calendarID = id;
+    this.api
+      .execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'CalendarsBusiness',
+        'GetDayWeekAsync',
+        [this.calendarID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          res.forEach((ele) => {
+            this.dayoff = res;
+          });
+        }
+      });
+  }
+  //#endregion schedule
 
   convertHtmlAgency(resourceID: any) {
     var desc = '<div class="d-flex">';

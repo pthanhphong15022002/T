@@ -572,9 +572,17 @@ export class CodxDMService {
             }
           } 
           else {
-            list = "DMT0226;DMT0227;DMT0230;DMT0231";
-
+            //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
+            //list = "DMT0226;DMT0227;DMT0230;DMT0231";
+            if (type == 'DM_FolderInfo') {
+              list = "DMT0226;DMT0227";                
+            }
+            else 
+              list = "DMT0230;DMT0231";    
             if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
+              e[i].disabled = false;  
+            }
+            else {
               e[i].disabled = true;  
             }
 
@@ -582,6 +590,7 @@ export class CodxDMService {
             //   e[i].disabled = true;  
             // }
           }
+          // ""         
 
           if (type == 'DM_FolderInfo') {
             // function in 
@@ -866,6 +875,14 @@ export class CodxDMService {
       let option = new SidebarModel();
 
       switch($event.functionID) {
+        case "DMT0226": // xet duyet thu muc        
+        case "DMT0230": // xet duyet file
+          this.setRequest(type, data.recID, data.perm[0].id, this.idMenuActive == 'DMT06' ?  '5' : '6', true);
+          break;
+        case "DMT0227": // tu choi xet duyet thu muc
+        case "DMT0231": // tu choi xet duyet file
+          this.setRequest(type, data.recID, data.perm[0].id, this.idMenuActive == 'DMT06' ?  '4' : '8', false);         
+          break;
         case "DMT0210": //view file
           this.fileService.getFile(data.recID).subscribe(data => {
               this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
@@ -880,19 +897,6 @@ export class CodxDMService {
               }
           });
           break;
-        // DMT0226;DMT0227;DMT0230;DMT0231
-        case "DMT0226": // xet duyet thu muc
-          break;
-
-        case "DMT0227": // tu choi thu muc
-          break;
-
-        case "DMT0230": // xet duyet file
-          break;
-
-        case "DMT0231":  // tu choi file
-          break;
-
         case "DMT0211": // download
           this.fileService.getFile(data.recID).subscribe(file => {      
               var id = file.recID;

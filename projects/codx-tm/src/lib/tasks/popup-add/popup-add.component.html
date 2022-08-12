@@ -149,9 +149,9 @@
       </ng-container>
     </div>
   </ng-container>
-  <div class="d-flex align-items-center justify-content-between mt-6" *ngIf="isHaveFile">
-    <div class="d-flex align-items-center mb-3">
-      <span class="icon-attach_file icon-24 me-2 text-primary"></span>
+  <div class="d-flex align-items-center justify-content-between mt-4" *ngIf="isHaveFile">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-attach_file icon-18 me-2 text-primary"></span>
       <div class="fw-bold fs-6 text-primary">
         <codx-label fiedName="Attachments" [formModel]="form.formModel" default="Tài liệu đính kèm">
         </codx-label>
@@ -169,12 +169,12 @@
 
 
 <ng-template #tabJob>
-  <div class="form-group mt-3">
+  <div class="tm-desc mt-3">
     <div class="d-flex align-items-center justify-content-between">
       <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả chi tiết">
       </codx-label>
     </div>
-    <codx-input type="textarea" headerposition="none" field="memo" [crrValue]="task?.memo" format="ed" height="650"
+    <codx-input type="textarea" headerposition="none" field="memo" [crrValue]="task?.memo" format="ed"
       (valueChange)="changeMemo($event)" [disabled]="readOnly"></codx-input>
   </div>
 </ng-template>
@@ -382,11 +382,9 @@
 
 <ng-template #deleteToDo>
   <ng-container>
-    <a class="" (click)="onDeleteTodo(crrIndex)" style="cursor: pointer">
-      <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
-      <span>
-        <codx-label name="Delete" formName="Tasks" default="Xóa"></codx-label>
-      </span>
+    <a class="d-flex align-item-center" (click)="onDeleteTodo(crrIndex)" style="cursor: pointer">
+      <span class="icon-close icon-16 text-danger me-1"></span>
+      <codx-label class="text-danger" name="Delete" formName="Tasks" default="Xóa"></codx-label>
     </a>
   </ng-container>
 </ng-template>
