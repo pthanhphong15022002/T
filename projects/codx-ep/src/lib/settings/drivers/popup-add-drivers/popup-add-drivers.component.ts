@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -6,6 +7,7 @@ import {
   OnInit,
   Optional,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -16,6 +18,7 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 import { CodxEpService } from '../../../codx-ep.service';
 
@@ -24,19 +27,21 @@ import { CodxEpService } from '../../../codx-ep.service';
   templateUrl: 'popup-add-drivers.component.html',
   styleUrls: ['popup-add-drivers.component.scss'],
 })
-export class PopupAddDriversComponent implements OnInit {
+export class PopupAddDriversComponent implements OnInit ,AfterViewInit{
   @Input() editResources: any;
   @Input() isAdd = true;
   @Input() data: any;
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
+
+  @ViewChild('attachment') attachment : AttachmentComponent 
   cacheGridViewSetup: any;
   CbxName: any;
   dialogAddDriver: FormGroup;
 
   formModel: FormModel;
   dialog: any;
-  headerText = 'Thêm mới lái xe';
+  headerText = '';
   subHeaderText = 'Tạo & upload file văn bản';
 
   constructor(
@@ -55,6 +60,9 @@ export class PopupAddDriversComponent implements OnInit {
       console.log(res);
     });
   }
+  ngAfterViewInit(): void {
+  this.dialog && this.dialog.closed.subscribe(res=>{});
+}
 
   isAfterRender = false;
   ngOnInit(): void {
@@ -72,18 +80,22 @@ export class PopupAddDriversComponent implements OnInit {
   }
 
   initForm() {
-    this.cacheSv
-      .gridViewSetup('Resources', 'EP_Resources')
-      .subscribe((item) => {
-        this.editResources = item;
-        this.dialogAddDriver.patchValue({
-          code: '',
-          ranking: '1',
-          category: '1',
-          owner: '',
-        });
-      });
-
+    // this.cacheSv
+    //   .gridViewSetup('Resources', 'EP_Resources')
+    //   .subscribe((item) => {
+    //     this.editResources = item;
+    //     this.dialogAddDriver.patchValue({
+    //       ranking: '1',
+    //       category: '1',
+    //       owner: '',
+    //     });
+    //   });
+    if(this.isAdd){      
+      this.headerText = "Thêm mới lái xe"
+    }
+    else{
+      this.headerText = "Sửa thông tin lái xe"
+    }
     this.bookingService
       .getFormGroup('Resources', 'grvResources')
       .then((item) => {
@@ -128,6 +140,11 @@ export class PopupAddDriversComponent implements OnInit {
   }
   valueCbxCarChange(event: any) {
     if (event.data != '') {
+      if (event.data instanceof Object) {
+        this.dialogAddDriver.patchValue({ [event['field']]: event.data.value });
+      } else {
+        this.dialogAddDriver.patchValue({ [event['field']]: event.data });
+      }
       var cbxCar = event.component.dataService.data;
       cbxCar.forEach(element => {
         if(element.ResourceID == event.component.valueSelected) {
@@ -143,14 +160,14 @@ export class PopupAddDriversComponent implements OnInit {
   }
 
   onSaveForm() {
-    debugger
     if (this.dialogAddDriver.invalid == true) {
       console.log(this.dialogAddDriver);
       return;
     }    
+    
     this.dialogAddDriver.value.companyID = this.dialogAddDriver.value.companyID[0];
-    // this.dialogAddDriver.value.linkID = this.dialogAddDriver.value.resourceID[0];
-    // this.dialogAddDriver.value.resourceID = null;         
+    this.dialogAddDriver.value.owner = this.dialogAddDriver.value.owner[0];
+
     if (!this.dialogAddDriver.value.linkType) {
       this.dialogAddDriver.value.linkType = '2';
     }
@@ -158,10 +175,25 @@ export class PopupAddDriversComponent implements OnInit {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();
+    this.attachment.saveFilesObservable().subscribe(res=>{})
   }
 
+  fileCount(event){
+    this.dialogAddDriver.value.icon= event.data[0].data;
+    
+  }
+  fileAdded(event){debugger}
+  
+  popupUploadFile() {
+    this.attachment.uploadFile();
+  } 
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);
+
   }
+	
+ 
+ 
+
 }

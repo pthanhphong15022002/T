@@ -71,8 +71,7 @@ export class DriversComponent  implements OnInit, AfterViewInit {
         this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
 
-  ngOnInit(): void {
-    this.dialogAddDriver.addControl('code',new FormControl('')  ); }
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
@@ -111,6 +110,7 @@ export class DriversComponent  implements OnInit, AfterViewInit {
 
     this.views = [            
       {
+        id : '0',
         sameData: true,
         type: ViewType.grid,
         active: true,
@@ -123,11 +123,7 @@ export class DriversComponent  implements OnInit, AfterViewInit {
       id: 'btnAdd',
     };
 
-    this.epService.getFormModel(this.funcID).then((formModel) => {
-      this.dialogAddDriver.addControl(
-        'code',
-        new FormControl(this.data.code)
-      );  
+    this.epService.getFormModel(this.funcID).then((formModel) => {      
       
     });
     this.moreFuncs = [

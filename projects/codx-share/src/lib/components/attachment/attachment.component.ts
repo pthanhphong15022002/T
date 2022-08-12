@@ -84,7 +84,7 @@ export class AttachmentComponent implements OnInit {
   @Input() hideFolder = "0";
   @Input() hideDes = "0";
   @Input() hideImageUpload = "0";
-  @Input() hideImageThumb = "1";
+  @Input() hideImageThumb = "0";
   @Input() showMessage = "1";
   @Input() displayThumb: string;
   @Output() fileAdded = new EventEmitter();
