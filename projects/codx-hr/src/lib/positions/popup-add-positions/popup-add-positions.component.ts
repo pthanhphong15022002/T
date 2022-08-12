@@ -10,7 +10,7 @@ import { HR_Positions } from '../../model/HR_Positions.module';
 export class PopupAddPositionsComponent implements OnInit {
   title = 'Thêm mới';
   dialog: any;
-  isNew: false;
+  isNew: boolean = true;
   user: any;
   functionID: string;
   action = '';
@@ -18,7 +18,7 @@ export class PopupAddPositionsComponent implements OnInit {
   data: any;
 
   constructor(
-    private df: ChangeDetectorRef,
+    private detectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private authStore: AuthStore,
     @Optional() dialog?: DialogRef,
@@ -36,6 +36,7 @@ export class PopupAddPositionsComponent implements OnInit {
 
     if (this.action === 'edit') {
       this.title = 'Chỉnh sửa';
+      this.isNew = false;
     }
     if (this.action === 'copy') {
       this.title = 'Sao chép';
@@ -89,7 +90,12 @@ export class PopupAddPositionsComponent implements OnInit {
   beforeSave(op: any) {
     var data = [];
     op.methodName = 'UpdateAsync';
-    op.className = 'EmployeesBusiness';
+    op.className = 'PositionsBusiness';
+    if (this.action === 'add') {
+      this.isNew = true;
+    } else if (this.action === 'edit') {
+      this.isNew = false;
+    }
     data = [
       this.position,
       this.isNew
@@ -99,13 +105,19 @@ export class PopupAddPositionsComponent implements OnInit {
   }
 
   OnSaveForm() {
-    this.dialog.dataService
+    // this.dialog.dataService
+    //   .save((option: any) => this.beforeSave(option))
+    //   .subscribe((res) => {
+    //     if (res.save) {
+    //       this.dialog.close();
+    //     }
+    //   });
+
+      this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        if (res.save) {
-          this.dialog.close();
-        }
-      });
+      .subscribe();
+    this.detectorRef.detectChanges();
+    this.dialog.close();
   }
 
   addPosition() {
