@@ -289,7 +289,7 @@
 
 <ng-template #templateClose let-dialogClose>
   <!--begin::Alert-->
-  <div class="card-alert alert alert-dismissible d-flex flex-column mw-650px mx-auto p-10">
+  <div class="card-alert alert alert-dismissible d-flex flex-column  ">
     <!--begin::Close-->
     <button type="button" class="position-absolute top-0 end-0 m-2 btn btn-icon" (click)="closeDialogTmp(dialogClose)">
       <span class="icon-close icon-18"></span>
@@ -297,7 +297,7 @@
 
     <!--end::Close-->
     <!--begin::Item-->
-    <div class="d-flex flex-stack my-10">
+    <div class="d-flex flex-stack my-7 ">
       <div class="d-flex">
         <span class="icon-help_outline me-5 icon-56 text-primary"></span>
         <div class="d-flex flex-column">
@@ -320,7 +320,7 @@
     </div>
     <!--end::Item-->
     <!--begin::Buttons-->
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end ">
       <a class="btn btn-primary me-2" (click)="clickIsSave(true, dialogClose)">
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
         </codx-label>

@@ -193,3 +193,18 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
 .sm-card:hover {
   background-color: rgba(221, 238, 255, 0.25);
 }
+
+.icon-per.no-permission {
+  background-image: url("/assets/themes/dm/default/img/folder-security.svg") !important;
+  background-position: right bottom !important;
+  background-size: 8px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  position: relative;
+  top: 0;
+  width: 16px;
+  margin-left: -16px;
+  margin-right: 0 !important;
+}

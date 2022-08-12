@@ -140,7 +140,7 @@ export class HomeComponent extends UIComponent {
     this.path = this.getPath();
     this.button = {
       id: 'btnUpload',
-    };
+    };   
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
@@ -333,7 +333,7 @@ export class HomeComponent extends UIComponent {
       });
     } else {
       this.dmSV.disableInput.next(true);
-     // this.notificationsService.notify(this.titleAccessDenied);
+      this.notificationsService.notify(this.titleAccessDenied);
     }    
   }
 
