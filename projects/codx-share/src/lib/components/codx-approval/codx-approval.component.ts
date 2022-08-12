@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiHttpService, ButtonModel, CacheService, CodxService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { iif } from 'rxjs';
 import { formatDtDis } from '../../../../../codx-od/src/lib/function/default.function';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
@@ -45,7 +46,8 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
      *
      */
     constructor(
-      private router: Router, 
+      private router: Router,
+      private api: ApiHttpService, 
       private cache: CacheService,  
       private odService :DispatchService, 
       private detectorRef : ChangeDetectorRef,
@@ -145,10 +147,47 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
       }); */
       //formName: string, gridName: string
     }
-    public setStyles(bg:any): any {
+    setStyles(bg:any): any {
       let styles = {            
           'backgroundColor': bg
       };      
       return styles;
-  }
+    }
+    changeMF(data:any , value:object=null)
+    {
+      var datas = this.dataItem;
+      if(value) datas = value;
+      if(datas)
+      {
+        var list = data.filter(x =>x.data!=null && x.data.formName == "Approvals" && x.functionID != "SYS206" && x.functionID != "SYS205");
+        for(var i=0; i<list.length ; i++)
+        {
+          list[i].disabled = true
+          if(((datas?.stepType == "S1" || datas?.stepType == "S2") && list[i].functionID == "SYS202") ||
+            ((datas?.stepType == "A1" || datas?.stepType == "R" || datas?.stepType == "C" ) && list[i].functionID == "SYS203") ||
+            (datas?.stepType == "S3" && list[i].functionID == "SYS204") ||
+            (datas?.stepType == "A2" && list[i].functionID == "SYS201")
+          )
+          {
+            list[i].disabled = false;
+            //list[i].isbookmark = true
+          }
+            
+        }
+      }
+    }
+    clickMF(e:any,data:any)
+    {
+      alert(e?.functionID)
+      /* this.api
+      .execSv(
+        'ES',
+        'ERM.Business.ES',
+        'ApprovalTransBusiness',
+        'ApproveAsync',
+        [data?.recID,"[Status]","",""]
+      ).subscribe((res2) =>
+      {
+      }); */
+    }
 }
