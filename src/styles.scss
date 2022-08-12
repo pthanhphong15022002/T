@@ -4,7 +4,7 @@
 
 .e-device .e-dlg-content,
 .e-device .e-dlg-content * {
-    font-size: inherit;
+  font-size: inherit;
 }
 
 //codx core
@@ -31,107 +31,116 @@ $primary-lighter: if(isDarkMode(), #EAF0FE, #EAF0FF);
 $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 
 :root {
-    ///
-    --primary-active: #187DE4;
-    --primary-inverse: #FFFFFF;
+  ///
+  --primary-active: #187DE4;
+  --primary-inverse: #FFFFFF;
 
-    --bs-body-line-height: 1.4;
+  --bs-body-line-height: 1.4;
 
-    /////
+  /////
 
-    --text-primary: #005dc7;
-    --text-primary-dark: #0078FF;
-    --text-primary-darker: #005dc7;
-    --text-primary-light:#D3E8FF;
-    --text-dark: #1d1f1f;
-    --gray-800: #28292b;
-    --gray-700: #3f4144;
-    --gray-600: #5d6061;
-    --gray-500: #8f9596;
-    --gray-400: #a4a9ac;
-    --gray-300: #c2c8ca;
-    --gray-200: #ebf0f1;
+  --text-primary: #005dc7;
+  --text-primary-dark: #0078FF;
+  --text-primary-darker: #005dc7;
+  --text-primary-light: #D3E8FF;
+  --text-dark: #1d1f1f;
+  --gray-800: #28292b;
+  --gray-700: #3f4144;
+  --gray-600: #5d6061;
+  --gray-500: #8f9596;
+  --gray-400: #a4a9ac;
+  --gray-300: #c2c8ca;
+  --gray-200: #ebf0f1;
+
+  //////
+  --h7: 12px;
+
 }
 
 .text-primary {
-    color: var(--text-primary) !important;
+  color: var(--text-primary) !important;
 }
 
 /***END Khong duoc xoa***/
-.user-mini-icon{
-    width: 36px;
-    min-width: 36px;
-    height: 36px;
-    line-height: 36px;
-    text-align: center;
-    border-radius: 50%;
-    background-color: #f1f1fa;
+.user-mini-icon {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: #f1f1fa;
 }
+
 .rounded {
-    border-radius: 0.475rem !important;
-  }
-  
-  .rounded-0 {
-    border-radius: 0 !important;
-  }
-  
-  .rounded-1 {
-    border-radius: 0.425rem !important;
-  }
-  
-  .rounded-2 {
-    border-radius: 0.475rem !important;
-  }
-  
-  .rounded-3 {
-    border-radius: 0.625rem !important;
-  }
-  
-  .rounded-4 {
-    border-radius: 1rem !important;
-  }
-  
-  .rounded-circle {
-    border-radius: 50% !important;
-  }
-  
-  .rounded-pill {
-    border-radius: 50rem !important;
-  }
-  
-  .rounded-top {
-    border-top-left-radius: var(--bs-border-radius) !important;
-    border-top-right-radius: var(--bs-border-radius) !important;
-  }
-  
-  .rounded-end {
-    border-top-right-radius: var(--bs-border-radius) !important;
-    border-bottom-right-radius: var(--bs-border-radius) !important;
-  }
-  
-  .rounded-bottom {
-    border-bottom-right-radius: var(--bs-border-radius) !important;
-    border-bottom-left-radius: var(--bs-border-radius) !important;
-  }
-  
-  .rounded-start {
-    border-bottom-left-radius: var(--bs-border-radius) !important;
-    border-top-left-radius: var(--bs-border-radius) !important;
-  }
-  .fs-5{
-    font-size: 14px!important;
-  }
-  
+  border-radius: 0.475rem !important;
+}
+
+.rounded-0 {
+  border-radius: 0 !important;
+}
+
+.rounded-1 {
+  border-radius: 0.425rem !important;
+}
+
+.rounded-2 {
+  border-radius: 0.475rem !important;
+}
+
+.rounded-3 {
+  border-radius: 0.625rem !important;
+}
+
+.rounded-4 {
+  border-radius: 1rem !important;
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+}
+
+.rounded-pill {
+  border-radius: 50rem !important;
+}
+
+.rounded-top {
+  border-top-left-radius: var(--bs-border-radius) !important;
+  border-top-right-radius: var(--bs-border-radius) !important;
+}
+
+.rounded-end {
+  border-top-right-radius: var(--bs-border-radius) !important;
+  border-bottom-right-radius: var(--bs-border-radius) !important;
+}
+
+.rounded-bottom {
+  border-bottom-right-radius: var(--bs-border-radius) !important;
+  border-bottom-left-radius: var(--bs-border-radius) !important;
+}
+
+.rounded-start {
+  border-bottom-left-radius: var(--bs-border-radius) !important;
+  border-top-left-radius: var(--bs-border-radius) !important;
+}
+
+.fs-5 {
+  font-size: 14px !important;
+}
+
 /***ES-Trinh ky****/
-.codx-card-custom{
+.codx-card-custom {
   height: 100%;
-  .codx-stepper{
+
+  .codx-stepper {
     height: 100%;
   }
-  .stepper-header{
+
+  .stepper-header {
     height: 60px;
   }
-  .h2-title{
+
+  .h2-title {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 500;
@@ -139,7 +148,8 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
     line-height: 16px;
     color: #3E4347;
   }
-  .stepper-body{
+
+  .stepper-body {
     height: calc(100% - 60px);
   }
 }
