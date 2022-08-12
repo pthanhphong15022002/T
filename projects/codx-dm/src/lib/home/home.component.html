@@ -39,8 +39,9 @@
     data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
     data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="empty"></ng-container>
+    <ng-container *ngTemplateOutlet="currView"></ng-container>    
     <ng-container *ngTemplateOutlet="nodata"></ng-container>
-    <ng-container *ngTemplateOutlet="currView"></ng-container>
+    <ng-container *ngTemplateOutlet="loading"></ng-container>
   </div>
 </ng-template>
 
@@ -197,20 +198,24 @@
   </ng-container>
 </ng-template>
 <ng-template #nodata>     
-  <div *ngIf="data === undefined || !data || data.length <= 0" class="w-100 align-items-center mt-20">
-    <div class="text-center">
-      <img class="mh-200px" src="../../../assets/codx/dms/data-empty.png" />
+  <ng-container *ngIf="this.dmSV.loadedFile && this.dmSV.loadedFolder && (data === undefined || !data || data.length <= 0)">
+    <div  class="w-100 align-items-center mt-20">
+      <div class="text-center">
+        <img class="mh-200px" src="../../../assets/codx/dms/data-empty.png" />
+      </div>
+      <div class="text-center">
+        <h5 class="text-dark mt-6">{{ dmSV.titleNodaTa }}</h5>
+        <div class="mt-3">{{ dmSV.titleNodaTaFolder }}</div>
+      </div>
     </div>
-    <div class="text-center">
-      <h5 class="text-dark mt-6">{{ dmSV.titleNodaTa }}</h5>
-      <div class="mt-3">{{ dmSV.titleNodaTaFolder }}</div>
-    </div>
-  </div>
+  </ng-container>  
 </ng-template>
 <ng-template #loading>
-  <div class="w-100 align-items-center mt-20">
-    <div class="text-center">
-      <img class="mh-200px" src="../../../assets/img/loader.gif" />
+  <ng-container *ngIf="!this.dmSV.loadedFile || !this.dmSV.loadedFolder">
+    <div class="w-100 align-items-center mt-20">
+      <div class="text-center">
+        <img class="mh-200px" src="../../../assets/img/loader.gif" />
+      </div>
     </div>
-  </div>
+  </ng-container>  
 </ng-template>
