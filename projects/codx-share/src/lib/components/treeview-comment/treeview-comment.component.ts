@@ -113,56 +113,15 @@ export class TreeviewCommentComponent implements OnInit {
     }
   }
 
-  // sendComment(post: any, value: any) {
-  //   if (!value.trim() && this.fileUpload.length == 0) {
-  //     this.notifySvr.notifyCode('E0315');
-  //     return;
-  //   }
-  //     var type = "WP_Comments";
-  //     this.api
-  //       .execSv<any>(
-  //         'WP',
-  //         'ERM.Business.WP',
-  //         'CommentsBusiness',
-  //         'PublishCommentAsync',
-  //         [post.recID, value, post.recID, type]
-  //       )
-  //       .subscribe((res) => {
-  //         if (res) {
-  //           if(this.fileUpload.length > 0){
-  //             this.codxATM.objectId = res.recID;
-  //             this.codxATM.saveFilesObservable().subscribe((result:any)=>{
-  //               if(result){
-  //                 this.comments = "";
-  //                 this.repComment = "";
-  //                 this.dataComment.totalComment += 1;
-  //                 post.showReply = false;
-  //                 this.crrId = "";
-  //                 this.dicDatas[res["recID"]] = res;
-  //                 this.setNodeTree(res);
-  //                 this.dt.detectChanges();
-  //               }
-  //             })
-  //           }
-  //           else{
-  //             this.comments = "";
-  //             this.repComment = "";
-  //             this.dataComment.totalComment += 1;
-  //             post.showReply = false;
-  //             this.crrId = "";
-  //             this.dicDatas[res["recID"]] = res;
-  //             this.setNodeTree(res);
-  //             this.dt.detectChanges();
-  //           }
-  //         }
-  //       });
-  // }
 
-  sendComment(event:any){
+  sendComment(event:any,data:any = null){
     this.comments = "";
     this.repComment = "";
     this.dataComment.totalComment += 1;
     event.showReply = false;
+    if(data){
+      data.showReply = false;
+    }
     this.crrId = "";
     this.dicDatas[event["recID"]] = event;
     this.setNodeTree(event);
@@ -340,22 +299,14 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
 
-  deleteComment(comment: any) {
-    if (!comment) return;
-    else {
-      this.notifySvr.alertCode('Xóa bình luận?').subscribe((res) => {
-        if (res.event.status == "Y") {
-          this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "DeletePostAsync", comment)
-            .subscribe((res: number) => {
-              if (res) {
-                this.removeNodeTree(comment.recID);
-                this.dataComment.totalComment = this.dataComment.totalComment - res;
-                this.notifySvr.notifyCode('SYS008');
-              }
-            });
-        }
-      });
+  deleteComment(event: any) {
+    this.removeNodeTree(event.data.recID);
+    this.dataComment.totalComment = this.dataComment.totalComment - event.total;
+    if(this.dataComment.totalComment < 0){
+      this.dataComment.totalComment = 0;
     }
+    this.dt.detectChanges();
+    this.notifySvr.notifyCode('SYS008');
   }
   clickEditComment(comment: any) {
     comment.isEditComment = true;

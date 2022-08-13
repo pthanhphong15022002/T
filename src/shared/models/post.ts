@@ -33,20 +33,15 @@ export class Post {
   listImage: any[];
   totalGift: number = 0;
   totalPoint: number = 0;
-  pageIndex: number = 0;
+  parentID:string ="";
   totalRecord: number = 0;
-  pageSize: number = 10;
-  tag: number = 0;
   tags: string;
   shares:any;
   shared: number = 0;
   card: any;
   shareMode: any[];
-  isUpload:boolean;
   files: any[];
-  isPortTal: boolean
   isPortal:boolean;
-  tmp: any;
   share: any;
   shareIcon:string;
   shareText:string;
@@ -58,7 +53,6 @@ export class Post {
   constructor(){
     this.createdOn = new Date();
     this.permissions = [];
-    this.isUpload = false;
     this.files = [];
     this.listComment = [];
 
