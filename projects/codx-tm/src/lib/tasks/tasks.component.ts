@@ -876,7 +876,7 @@ export class TasksComponent extends UIComponent {
       });
   }
 
-  getTaskGroup(idTasKGroup) {
+  getTaskGroup(idTasKGroup,e,data) {
     this.api
       .execSv<any>(
         'TM',
@@ -889,6 +889,10 @@ export class TasksComponent extends UIComponent {
         if (res) {
           this.taskGroup = res;
           this.convertParameterByTaskGroup(res);
+          this.clickMFAfterParameter(e,data)
+        }else{
+          this.param = this.paramModule;
+          this.clickMFAfterParameter(e,data)
         }
       });
   }
@@ -1143,55 +1147,123 @@ export class TasksComponent extends UIComponent {
     if (data.extendStatus == '1') {
       this.notiService.alertCode('TM055').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
-          if (data.createdBy != data.owner)
-            this.taskExtend.extendApprover = data.createdBy;
-          else this.taskExtend.extendApprover = data.verifyBy;
-          this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
-          this.taskExtend.reason = '';
-          this.taskExtend.taskID = data?.taskID;
-          this.taskExtend.extendDate = moment(new Date()).toDate();
-          this.api
-            .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-              this.taskExtend.extendApprover,
-            ])
-            .subscribe((res) => {
-              if (res) {
-                this.taskExtend.extendApproverName = res.userName;
-
-                var obj = {
-                  moreFunc: moreFunc,
-                  data: this.taskExtend,
-                  funcID: this.funcID,
-                };
-                this.dialogExtends = this.callfc.openForm(
-                  PopupExtendComponent,
-                  '',
-                  500,
-                  350,
-                  '',
-                  obj
-                );
-                this.dialogExtends.closed.subscribe((e) => {
-                  if (e?.event && e?.event != null) {
-                    e?.event.forEach((obj) => {
-                      this.view.dataService.update(obj).subscribe();
-                    });
-                    this.itemSelected = e?.event[0];
-                  }
-                  this.detectorRef.detectChanges();
-                });
-              }
-            });
+         this.confirmExtend(data,moreFunc)
         }
       });
+    }else{
+      this.confirmExtend(data,moreFunc)
     }
+  }
+  confirmExtend(data,moreFunc){
+    if (data.createdBy != data.owner)
+    this.taskExtend.extendApprover = data.createdBy;
+  else this.taskExtend.extendApprover = data.verifyBy;
+  this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
+  this.taskExtend.reason = '';
+  this.taskExtend.taskID = data?.taskID;
+  this.taskExtend.extendDate = moment(new Date()).toDate();
+  this.api
+    .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+      this.taskExtend.extendApprover,
+    ])
+    .subscribe((res) => {
+      if (res) {
+        this.taskExtend.extendApproverName = res.userName;
+
+        var obj = {
+          moreFunc: moreFunc,
+          data: this.taskExtend,
+          funcID: this.funcID,
+        };
+        this.dialogExtends = this.callfc.openForm(
+          PopupExtendComponent,
+          '',
+          500,
+          400,
+          '',
+          obj
+        );
+        this.dialogExtends.closed.subscribe((e) => {
+          if (e?.event && e?.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = e?.event[0];
+          }
+          this.detectorRef.detectChanges();
+        });
+      }
+    });
   }
   //#endregion
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
-    if (data.taskGroupID) this.getTaskGroup(data.taskGroupID);
-    else this.param = this.paramModule;
+    if (data.taskGroupID) this.getTaskGroup(data.taskGroupID,e,data);
+    else {
+      this.param = this.paramModule;
+      this.clickMFAfterParameter(e,data)
+    }
+    // switch (e.functionID) {
+    //   case 'SYS02':
+    //     this.delete(data);
+    //     break;
+    //   case 'SYS03':
+    //     this.edit(data);
+    //     break;
+    //   case 'SYS04':
+    //     this.copy(data);
+    //     break;
+    //   case 'sendemail':
+    //     this.sendemail(data);
+    //     break;
+    //   case 'TMT02015':
+    //     this.assignTask(e.data, data);
+    //     break;
+    //   case 'TMT02016':
+    //   case 'TMT02017':
+    //     this.openConfirmStatusPopup(e.data, data);
+    //     break;
+    //   case 'TMT04021':
+    //   case 'TMT04022':
+    //   case 'TMT04023':
+    //     this.openApproveStatusPopup(e.data, data); //danh gia kết qua
+    //     break;
+    //   case 'TMT04031':
+    //   case 'TMT04032':
+    //     this.openVerifyStatusPopup(e.data, data);
+    //     break;
+    //   case 'TMT02018':
+    //   case 'TMT02026':
+    //   case 'TMT02035':
+    //     this.openUpdateProgress(e.data, data);
+    //     break;
+    //   case 'TMT02011':
+    //   case 'TMT02012':
+    //   case 'TMT02013':
+    //   case 'TMT02014':
+    //   case 'TMT02031':
+    //   case 'TMT02032':
+    //   case 'TMT02033':
+    //   case 'TMT02044':
+    //     this.changeStatusTask(e.data, data);
+    //     break;
+    //   case 'TMT02019':
+    //     this.openExtendsAction(e.data, data);
+    //     break;
+    //   case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
+    //     //Chung làm
+    //     break;
+    //   case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
+    //     //Chung làm
+    //     break;
+    //   case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
+    //     //???? chắc làm sau ??
+    //     break;
+    // }
+  }
+ 
+  clickMFAfterParameter(e,data){
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -1250,6 +1322,7 @@ export class TasksComponent extends UIComponent {
         break;
     }
   }
+
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
