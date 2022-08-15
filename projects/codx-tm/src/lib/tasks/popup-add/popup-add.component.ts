@@ -780,9 +780,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.taskGroup = res;
+
           if (res.checkList != null) {
             var toDo = res.checkList.split(';');
             // this.countTodoByGroup = toDo.length ;
+            this.listTodo=[] ;
             toDo.forEach((tx) => {
               var taskG = new TaskGoal();
               taskG.status = this.STATUS_TASK_GOAL.NotChecked;
