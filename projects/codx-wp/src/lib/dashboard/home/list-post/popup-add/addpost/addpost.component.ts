@@ -423,7 +423,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
-            this.dmSV.fileUploadList = [...this.listFileUpload];
+            this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
             this.atmCreate.saveFilesObservable().subscribe((res:any)=>{
               if(res){
@@ -472,7 +472,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     ).subscribe((res: any) => {
       if (res) {
         this.dataEdit = res;
-        this.dataEdit.files = this.codxFileEdit.getFiles();
+        this.dataEdit.files = this.codxFileEdit.files;
         (this.dialogRef.dataService as CRUDService).update(this.dataEdit).subscribe();
         this.notifySvr.notifyCode('SYS007');
         this.dialogRef.close(this.dataEdit);

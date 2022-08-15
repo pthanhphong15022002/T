@@ -8,30 +8,53 @@ import {
   ViewChildren,
   QueryList,
   AfterViewInit,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import {
   AnnotationAddEventArgs,
   AnnotationDataFormat,
   PdfViewerComponent,
+  LinkAnnotationService,
+  BookmarkViewService,
+  MagnificationService,
+  ThumbnailViewService,
+  ToolbarService,
+  NavigationService,
+  TextSearchService,
+  TextSelectionService,
+  PrintService,
+  AnnotationService,
 } from '@syncfusion/ej2-angular-pdfviewer';
-import { AuthStore, UIComponent } from 'codx-core';
+import { AuthStore, ScrollComponent, UIComponent } from 'codx-core';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { qr } from './model/mode';
-
 @Component({
   selector: 'lib-pdf-view',
   templateUrl: './pdf-view.component.html',
   styleUrls: ['./pdf-view.component.scss'],
+  providers: [
+    LinkAnnotationService,
+    BookmarkViewService,
+    MagnificationService,
+    ThumbnailViewService,
+    ToolbarService,
+    NavigationService,
+    TextSearchService,
+    TextSelectionService,
+    PrintService,
+    AnnotationService,
+  ],
 })
 export class PdfViewComponent extends UIComponent implements AfterViewInit {
   public service: string = environment.pdfUrl;
   @Input() recID = '';
   @Input() isApprover;
-  isActiveToSign: boolean = false;
+  @Output() isActiveToSign = new EventEmitter();
 
   user?: any;
   url: string = '';
@@ -64,17 +87,15 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   @ViewChild('fileUpload') fileUpload!: ElementRef;
-  @ViewChildren('pdfviewer')
-  pdfviewerControls: QueryList<PdfViewerComponent>;
+  @ViewChild('pdfviewer') pdfviewerControl: PdfViewerComponent;
   @ViewChild('inputAuthor') inputAuthor!: ElementRef | any;
   @ViewChild('thumbnailTab') thumbnailTab!: ElementRef;
   @ViewChild('qrCode') qrCode!: ElementRef;
-  pdfviewerControl: PdfViewerComponent;
   thumbnailEle!: Element;
 
   signerInfo: any;
   fileInfo: any = {};
-  zoomValue: number = 75;
+  zoomValue: number = 100;
   holding: number = 0;
 
   tmpLstSigners: Array<Object> = [];
@@ -90,7 +111,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   autoSignState: boolean = false;
 
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
-  hideThumbnail: boolean = true;
+  hideThumbnail: boolean = false;
   hideActions: boolean = false;
 
   saveAnnoQueue: Map<string, any>;
@@ -102,6 +123,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   formatForAreas: Array<any> = [];
 
   cannotAct = false;
+  curFileID;
+  curSignerID;
 
   public headerRightName = [
     { text: 'Công cụ' },
@@ -140,16 +163,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       ],
     };
 
-    // this.tmpLstSigners.push({
-    //   authorSignature: signature,
-    //   authorStamp: stamp,
-    //   authorName: 'Buu',
-    //   type: '1',
-    //   authorID: 'ADMIN',
-    //   authorPosition: 'Giám đốc',
-    //   fileQRCode: qr,
-    // });
-
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
       .subscribe((res: any) => {
@@ -171,6 +184,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           if (this.isApprover) {
             this.signerInfo = res?.approvers;
           }
+          this.curFileID = sf?.files[0]?.fileID;
+          this.curSignerID = res.approvers[0]?.authorID;
         }
         this.detectorRef.detectChanges();
       });
@@ -180,25 +195,18 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  ngDoCheck() {}
+  ngDoCheck() { }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { ScrollComponent.reinitialization(); }
 
   onCreated(evt: any) {
-    if (this.pdfviewerControls.first) {
-      this.pdfviewerControl = this.pdfviewerControls.first;
-    } else {
-      this.pdfviewerControls.changes.subscribe(
-        (comps: QueryList<PdfViewerComponent>) => {
-          this.pdfviewerControl = comps.first;
-
-          this.detectorRef.detectChanges();
-        }
-      );
+    this.thumbnailEle =
+      this.pdfviewerControl.thumbnailViewModule?.thumbnailView;
+    if (this.thumbnailEle) {
+      this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
     }
-    this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
-    this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
-    this.pdfviewerControl.zoomValue = 50;
+
+    this.pdfviewerControl.zoomValue = 100;
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,
     ];
@@ -206,7 +214,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   loadingAnnot(e: any) {
-    this.pdfviewerControl.zoomValue = 50;
     this.esService.getSignFormat().subscribe((res) => {
       console.log('res', res);
     });
@@ -345,11 +352,15 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     let barcode = new QRCodeGenerator({
       width: '500px',
       height: '500px',
-      mode: 'SVG',
+      mode: 'Canvas',
       displayText: { visibility: false },
       value: text,
     });
+    console.log(this.qrCode.nativeElement.src);
+
     barcode.appendTo('#qrCode');
+    console.log(this.qrCode.nativeElement.src);
+
     let barCodeUrl = '';
     await barcode.exportAsBase64Image('PNG').then((value) => {
       barCodeUrl = value;
@@ -359,15 +370,22 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   changeSignFile(e: any) {
+    console.log('change sf');
+
     this.lstSigners = e.itemData.signers;
     this.fileInfo = e.itemData;
+    this.curFileID = this.fileInfo.fileID;
     this.pdfviewerControl.load(e.itemData.fileID, '');
     this.cannotAct = false;
+
+    let active = this.fileInfo ? true : false;
+    this.isActiveToSign.emit(active);
     this.detectorRef.detectChanges();
   }
 
   changeSigner(e: any) {
     this.signerInfo = e.itemData;
+    this.curSignerID = this.signerInfo.authorID;
     this.detectorRef.detectChanges();
   }
 
@@ -455,7 +473,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             this.fileInfo.fileID,
             annot.annotationId,
           ])
-          .subscribe((res) => {});
+          .subscribe((res) => { });
         clearTimeout(this.saveAnnoQueue.get(annot.annotationId));
         this.saveAnnoQueue.delete(annot.annotationId);
       });
@@ -664,17 +682,17 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
               //duoi
               (anno.bounds.top >= suggestLocation.top &&
                 anno.bounds.top <=
-                  suggestLocation.top + suggestLocation.height))) ||
+                suggestLocation.top + suggestLocation.height))) ||
             //conflit ben phai
             (anno.bounds.left >= suggestLocation.left &&
               anno.bounds.left <=
-                suggestLocation.left + suggestLocation.width &&
+              suggestLocation.left + suggestLocation.width &&
               //tren
               ((suggestLocation.top >= anno.bounds.top &&
                 suggestLocation.top <= anno.bounds.top + anno.bounds.height) ||
                 (anno.bounds.top >= suggestLocation.top &&
                   anno.bounds.top <=
-                    suggestLocation.top + suggestLocation.height))))
+                  suggestLocation.top + suggestLocation.height))))
         );
       }
     );
@@ -1044,7 +1062,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
     this.esService
       .deleteAreaById([this.recID, this.fileInfo.fileID, e.annotationId])
-      .subscribe((res) => {});
+      .subscribe((res) => { });
 
     this.pdfviewerControl.annotationCollection =
       this.pdfviewerControl.annotationCollection.filter((annot) => {
@@ -1153,7 +1171,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.pdfviewerControl.download();
   }
 
-  clickPrint(args) {}
+  clickPrint(args) { }
 
   renderQRFile() {
     let annotationDataFormat: AnnotationDataFormat;
@@ -1162,23 +1180,40 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       return annot.customData.split(':')[1] == '8';
     });
 
-    if (qrAnnot) {
-      for (let i = 0; i < this.pdfviewerControl.pageCount - 1; i++) {
-        let cloneQR = { ...qrAnnot };
-        cloneQR.pageNumber = i;
-        this.pdfviewerControl.addAnnotation(cloneQR);
+    this.genFileQR(this.fileInfo.fileName, this.fileInfo.fileRefNum, '').then(
+      (value: string) => {
+        qrAnnot.stampAnnotationPath = value;
+        if (qrAnnot) {
+          this.saveAnnoQueue.set(
+            qrAnnot.annotationId,
+            setTimeout(
+              this.saveAnnoToDB.bind(this),
+              0,
+              this.esService,
+              { ...qrAnnot },
+              this.fileInfo,
+              this.user
+            )
+          );
+          if (this.pdfviewerControl.pageCount != 1) {
+            for (let i = 0; i < this.pdfviewerControl.pageCount - 1; i++) {
+              let cloneQR = { ...qrAnnot };
+              cloneQR.annotationId = Guid.newGuid();
+              cloneQR.pageNumber = i;
+              this.pdfviewerControl.addAnnotation(cloneQR);
+            }
+          }
+          this.pdfviewerControl
+            .exportAnnotationsAsBase64String(annotationDataFormat)
+            .then((res) => {
+              console.log('base64 new pdf', res);
+            });
+        }
       }
-      console.log('pdf', this.pdfviewerControl.annotationCollection);
-
-      this.pdfviewerControl
-        .exportAnnotationsAsBase64String(annotationDataFormat)
-        .then((res) => {
-          console.log('base64 new pdf', res);
-        });
-    }
+    );
   }
 
-  cancelPrint(e: any) {}
+  cancelPrint(e: any) { }
 
   show(e: any) {
     console.log('collection', this.pdfviewerControl.annotationCollection);

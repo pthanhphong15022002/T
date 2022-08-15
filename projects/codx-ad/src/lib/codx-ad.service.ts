@@ -68,4 +68,44 @@ export class CodxAdService {
       )
       .subscribe();
   }
+
+  stopUser(data, isAdd, lstURoles, stop) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'UpdateUserAsync',
+      [data, isAdd, lstURoles, stop]
+    );
+  }
+
+  deleteUserBeforeDone(data) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'DeleteUserTempAsync',
+      data?.userID
+    );
+  }
+
+  addUserBeforeDone(data) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'AddUserAsync',
+      [data, null, false]
+    );
+  }
+
+  addUserRole(itemUser, lstURoles) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UserRolesBusiness',
+      'SaveAsync',
+      [itemUser, lstURoles]
+    );
+  }
 }

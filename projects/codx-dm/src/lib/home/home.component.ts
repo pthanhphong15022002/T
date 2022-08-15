@@ -55,8 +55,8 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
-  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('attachment1') attachment1: AttachmentComponent;
+  @ViewChild('attachment2') attachment2: AttachmentComponent;
   @ViewChild('view') codxview!: any;
   currView?: TemplateRef<any>;
   path: string;
@@ -88,13 +88,59 @@ export class HomeComponent extends UIComponent {
   ) {
     super(inject);
   }
+  
+  openItem(data: any) {
+    alert(1);
+  }
+
+  onLoading($event): void {  
+    this.views.forEach(item => {
+      if (this.view.funcID === 'DMT02' || this.view.funcID === 'DMT03') {
+        if (item.id === "1") {
+          item.hide = false;
+          if (item.text === "Card")
+            item.active = true;
+          else 
+            item.active = false;
+        }          
+        else 
+          item.hide = true;          
+      }      
+      else {
+        //"DMT06"  "DMT07"
+        if (item.id === "2") {
+          if (this.view.funcID === 'DMT06' || this.view.funcID === 'DMT06')
+          {
+            if (item.text === "List") {
+              item.active = true;
+              item.hide = false;
+            }              
+            else  {
+              item.active = false;
+              item.hide = true;
+            }              
+          }
+          else {
+            item.hide = false;
+            if (item.text === "Card")
+              item.active = true;
+            else 
+              item.active = false;
+          }            
+        }          
+        else 
+          item.hide = true;  
+      }
+    });
+    this.changeDetectorRef.detectChanges();
+  }
 
   onInit(): void {
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
       id: 'btnUpload',
-    };
+    };   
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
@@ -114,9 +160,9 @@ export class HomeComponent extends UIComponent {
     });
   }
 
-  identifyData(index, data) {
-    return data;
-  }
+  // identifyData(index, data) {
+  //   return data;
+  // }
 
   addFile($event) {  
     var data = new DialogAttachmentType();
@@ -141,23 +187,29 @@ export class HomeComponent extends UIComponent {
   }
 
   fileAdded($event) {
-    console.log($event);
-    // this.data = event.stopImmediatePropagation;
+    console.log($event);    
   }
 
-  saveFile() {
-    this.attachment.saveFilesObservable().subscribe((item) => {
+  saveFile1() {
+    this.attachment1.saveFilesObservable().subscribe((item) => {
       console.log(item);
     });
     //  this.attachment.saveFiles();
   }
 
-  openFile() {
-    this.attachment.uploadFile();
+  saveFile2() {
+    this.attachment2.saveFilesObservable().subscribe((item) => {
+      console.log(item);
+    });
+    //  this.attachment.saveFiles();
   }
 
   openFile1() {
     this.attachment1.uploadFile();
+  }
+
+  openFile2() {
+    this.attachment2.uploadFile();
   }
 
   getPath() {
@@ -198,7 +250,14 @@ export class HomeComponent extends UIComponent {
 
   onSelectionChanged($data) {    
     ScrollComponent.reinitialization();
-    if ($data == null || $data.data == null) return;
+    if ($data == null || $data.data == null) {
+   //   this.data = [];
+   //   this.dmSV.listFolder = [];
+  //    this.dmSV.listFiles = [];
+ //     this.dmSV.folderId.next("");
+   //   this.dmSV.ChangeData.next(true);
+      return;
+    }
 
     let id = $data.data.recID;
     let item = $data.data;
@@ -266,7 +325,7 @@ export class HomeComponent extends UIComponent {
         //this.dmSV.isTree = false;
       }
 
-      this.fileService.getListActiveFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
+      this.fileService.GetFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
         ///this.dmSV.listFiles.next(res);
         this.data = [...this.data, ...res];
         this.dmSV.listFiles = res;  
@@ -274,20 +333,24 @@ export class HomeComponent extends UIComponent {
       });
     } else {
       this.dmSV.disableInput.next(true);
-     // this.notificationsService.notify(this.titleAccessDenied);
+      this.notificationsService.notify(this.titleAccessDenied);
     }    
+  }
+
+  loading() {
+
   }
 
   ngAfterViewInit(): void {
     // this.button.nativeElement.disabled = true;
     // this.view.button.disabled = true;
-
+   
     this.views = [
       {
         id: '1',
         icon: 'icon-appstore',
         text: 'Card',
-        type: ViewType.treedetail,
+        type:  ViewType.treedetail,
         active: true,
         sameData: true,
         model: {
@@ -301,7 +364,7 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-apps',
         text: 'Small Card',
-        type: ViewType.treedetail,
+        type:  ViewType.treedetail,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -314,8 +377,50 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-format_list_bulleted',
         text: 'List',
-        type: ViewType.treedetail,
+        type:  ViewType.treedetail,
         sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateList,
+          resizable: true,
+        },
+      },{
+        id: '2',
+        icon: 'icon-appstore',
+        text: 'Card',
+        hide:true,
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateCard,
+          resizable: true,
+        },
+      },
+      {
+        id: '2',
+        icon: 'icon-apps',
+        text: 'Small Card',
+        type: ViewType.content,
+        sameData: true,
+        hide:true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSmallCard,
+          resizable: true,
+        },
+      },
+      {
+        id: '2',
+        icon: 'icon-format_list_bulleted',
+        text: 'List',
+        type: ViewType.content,
+        sameData: true,
+        hide:true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
@@ -328,7 +433,7 @@ export class HomeComponent extends UIComponent {
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
     this.changeDetectorRef.detectChanges();
-    console.log(this.button);
+ //   console.log(this.button);
   }
 
   changeView(event) {
@@ -336,19 +441,24 @@ export class HomeComponent extends UIComponent {
     this.currView = event.view.model.template2; 
   }
 
-  requestEnded(e: any){
+  requestEnded(e: any) {
       if(e.type === "read"){ 
         this.data = [];    
       this.folderService.options.funcID = this.view.funcID;
-      if (this.dmSV.folderType != this.view.funcID) {
-        this.data = [...this.data, ...e.data];
-        this.dmSV.listFolder = e.data;
+      if (this.dmSV.idMenuActive != this.view.funcID) {
+        if (e.data != null) {
+          this.data = [...this.data, ...e.data];
+          this.dmSV.listFolder = e.data;
+        }
+        else 
+          this.dmSV.listFolder = [];  
+        
         this.dmSV.loadedFolder = true;       
       }
 
       this.dmSV.folderType = this.view.funcID;
       this.dmSV.idMenuActive = this.view.funcID;
-      this.dmSV.loadedFile = false;
+     // this.dmSV.loadedFile = false;
       this.dmSV.folderId.next('');
       this.dmSV.loadedFolder = true;      
       this.dmSV.menuIdActive.next(this.view.funcID);
@@ -358,17 +468,18 @@ export class HomeComponent extends UIComponent {
       this.dmSV.menuActive.next(this.view.function.customName);
       this.dmSV.breadcumb.next(breadcumb);    
       this.fileService.options.funcID = this.view.funcID;
+      this.dmSV.listFiles = [];
+      this.dmSV.loadedFile = false;  
       this.fileService
-        .getListActiveFiles('', this.view.funcID)
+        .GetFiles('', this.view.funcID)
         .subscribe(async (res) => {
           if (res != null) {
             this.data = [...this.data, ...res];
-            this.dmSV.listFiles = res;
-            this.dmSV.loadedFile = true;
-            this.changeDetectorRef.detectChanges();
+            this.dmSV.listFiles = res;           
           }
-        });        
-    }
-    
+          this.dmSV.loadedFile = true;           
+          this.changeDetectorRef.detectChanges();
+        });          
+    }    
   }
 }

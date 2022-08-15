@@ -81,23 +81,21 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.esService
-      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        this.cbxName = res;
-      });
-
+    // this.esService
+    //   .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((res) => {
+    //     this.cbxName = res;
+    //   });
     //this.initForm();
-
-    this.codxService
-      .getAutoNumber(
-        this.formModel.funcID,
-        this.formModel.entityName,
-        'CategoryID'
-      )
-      .subscribe((dt: any) => {
-        this.objectIDFile = dt;
-      });
+    // this.codxService
+    //   .getAutoNumber(
+    //     this.formModel.funcID,
+    //     this.formModel.entityName,
+    //     'CategoryID'
+    //   )
+    //   .subscribe((dt: any) => {
+    //     this.objectIDFile = dt;
+    //   });
   }
 
   initForm() {
@@ -165,10 +163,10 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   onSaveForm() {
-    if (this.dialogSignature.invalid == true) {
-      this.notification.notifyCode('E0016');
-      return;
-    }
+    // if (this.dialogSignature.invalid == true) {
+    //   this.notification.notifyCode('E0016');
+    //   return;
+    // }
 
     //this.dialog.dataService.dataSelected = this.dialogSignature.value;
     this.dialog.dataService.dataSelected = this.data;

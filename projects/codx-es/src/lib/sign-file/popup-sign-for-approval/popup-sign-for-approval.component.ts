@@ -8,6 +8,7 @@ import {
 import { FormGroup } from '@angular/forms';
 import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
 import { UIComponent, DialogData, DialogRef, FormModel } from 'codx-core';
+import { threadId } from 'worker_threads';
 import { CodxEsService } from '../../codx-es.service';
 import { PdfViewComponent } from '../pdf-view/pdf-view.component';
 import { PopupADRComponent } from '../popup-adr/popup-adr.component';
@@ -40,11 +41,14 @@ export class PopupSignForApprovalComponent extends UIComponent {
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
-  recID = '10642368-1864-11ed-a50e-d89ef34bb550';
+  recID = '1dd72dd0-19f0-11ed-978d-509a4c39550b';
   funcID;
   cbxName;
 
+  canOpenSubPopup;
+
   onInit(): void {
+    this.canOpenSubPopup = false;
     this.funcID = this.data.funcID;
 
     this.cache.functionList(this.funcID).subscribe((res) => {
@@ -93,11 +97,17 @@ export class PopupSignForApprovalComponent extends UIComponent {
       }
     );
     this.dialog.closed.subscribe((res) => {
-      console.log('data', this.dialogSignFile.value);
+      if (res.event == 'ok') {
+        console.log('run');
+
+        this.pdfView.renderQRFile();
+      }
     });
   }
 
-  valueChange(e) {}
+  changeActiveOpenPopup(e) {
+    this.canOpenSubPopup = e;
+  }
   saveDialog() {
     this.dialog.close();
   }

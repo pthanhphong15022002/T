@@ -1,3 +1,4 @@
+import { CodxAdService } from './../../codx-ad.service';
 import { AD_User } from './../../models/AD_User.models';
 import {
   Component,
@@ -24,6 +25,7 @@ import {
   CRUDService,
   UIComponent,
   DialogModel,
+  NotificationsService,
 } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
@@ -57,14 +59,22 @@ export class AddUserComponent extends UIComponent implements OnInit {
   countListViewChooseRoleApp: Number = 0;
   countListViewChooseRoleService: Number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
+  viewChooseRoleTemp: tmpformChooseRole[] = [];
   formModel: FormModel;
   formType: any;
   formGroupAdd: FormGroup;
+  gridViewSetup: any = [];
+  checkBtnAdd = false;
+  saveSuccess = false;
+  dataAfterSave: any;
+  countOpenPopRoles = 0;
 
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
     private auth: AuthStore,
+    private adService: CodxAdService,
+    private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -73,11 +83,20 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.data = dialog.dataService!.dataSelected;
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
+      this.viewChooseRoleTemp = JSON.parse(
+        JSON.stringify(this.data?.chooseRoles)
+      );
       this.countListViewChoose();
     }
     this.adUser = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
+
+    this.cache.gridViewSetup('Users', 'grvUsers').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -95,35 +114,57 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.dialog.closed.subscribe((res) => {
+      if (!this.saveSuccess) {
+        if (this.dataAfterSave && this.dataAfterSave.userID) {
+          this.adService.deleteUserBeforeDone(this.dataAfterSave).subscribe();
+        }
+      }
+    });
   }
 
   openPopup(item: any) {
-    var option = new DialogModel();
-    option.FormModel = this.form.formModel;
-    var obj = {
-      formType: this.formType,
-      data: item,
-    };
-    this.dialogRole = this.callfc.openForm(
-      PopRolesComponent,
-      '',
-      1200,
-      700,
-      '',
-      obj,
-      '',
-      option
-    );
-    this.dialogRole.closed.subscribe((e) => {
-      if (e?.event) {
-        this.viewChooseRole = e?.event;
-        this.countListViewChoose();
-        this.viewChooseRole.forEach((dt) => {
-          dt['module'] = dt.functionID;
-          dt['roleID'] = dt.recIDofRole;
-          dt.userID = this.adUser.userID;
-        });
-        this.changeDetector.detectChanges();
+    if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
+      this.notification.notify('Vui lòng nhập thông tin user');
+    } else {
+      this.countOpenPopRoles++;
+      if (this.countOpenPopRoles > 0) this.addUserTemp();
+      var option = new DialogModel();
+      option.FormModel = this.form.formModel;
+      var obj = {
+        formType: this.formType,
+        data: item,
+      };
+      this.dialogRole = this.callfc.openForm(
+        PopRolesComponent,
+        '',
+        1200,
+        700,
+        '',
+        obj,
+        '',
+        option
+      );
+      this.dialogRole.closed.subscribe((e) => {
+        if (e?.event) {
+          this.viewChooseRole = e?.event;
+          this.countListViewChoose();
+          this.viewChooseRole.forEach((dt) => {
+            dt['module'] = dt.functionID;
+            dt['roleID'] = dt.recIDofRole;
+            dt.userID = this.adUser.userID;
+          });
+          this.changeDetector.detectChanges();
+        }
+      });
+    }
+  }
+
+  addUserTemp() {
+    this.checkBtnAdd = true;
+    this.adService.addUserBeforeDone(this.adUser).subscribe((res) => {
+      if (res) {
+        this.dataAfterSave = res;
       }
     });
   }
@@ -139,15 +180,19 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   beforeSave(op: RequestOption) {
     var data = [];
+    var checkDifference =
+      JSON.stringify(this.viewChooseRoleTemp) ===
+      JSON.stringify(this.viewChooseRole);
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUser, this.isAddMode, this.viewChooseRole];
+      data = [this.adUser, this.viewChooseRole, true];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      data = [this.adUser, this.isAddMode, this.viewChooseRole];
+      if (checkDifference == true) data = [this.adUser, this.viewChooseRole];
+      else data = [this.adUser, this.viewChooseRole, checkDifference];
     }
     op.data = data;
     return true;
@@ -163,14 +208,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
+                this.dialog.close(res.save);
               }
             });
           res.save['chooseRoles'] = res.save?.functions;
-          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
-          this.changeDetector.detectChanges();
+          //this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
+      this.dialog.close();
   }
 
   onUpdate() {
@@ -196,8 +241,39 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   onSave() {
-    if (this.isAddMode) return this.onAdd();
-    return this.onUpdate();
+    this.saveSuccess = true;
+    if (
+      this.countListViewChooseRoleApp == 0 &&
+      this.countListViewChooseRoleService == 0
+    ) {
+      this.dialog.close();
+      this.notification.notifyCode('SYS006');
+      (this.dialog.dataService as CRUDService)
+        .add(this.dataAfterSave)
+        .subscribe();
+      this.changeDetector.detectChanges();
+    } else {
+      if (this.isAddMode) {
+        if (this.checkBtnAdd == false) return this.onAdd();
+        else {
+          if (
+            this.countListViewChooseRoleApp > 0 ||
+            this.countListViewChooseRoleService > 0
+          ) {
+            this.adService
+              .addUserRole(this.dataAfterSave, this.viewChooseRole)
+              .subscribe();
+          }
+          this.dialog.close();
+          this.notification.notifyCode('SYS006');
+          (this.dialog.dataService as CRUDService)
+            .add(this.dataAfterSave)
+            .subscribe((res) => {
+              this.changeDetector.detectChanges();
+            });
+        }
+      } else this.onUpdate();
+    }
   }
 
   reloadAvatar(data: any): void {
@@ -225,6 +301,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.loadUserRole(data.data);
     }
   }
+
   valueBU(data) {
     if (data.data) {
       this.adUser[data.field] = data.data;

@@ -137,12 +137,20 @@
       >
       </codx-input>
       <a
-        [routerLink]="data.reference ? '../../../../' + data.reference : ''"
-        [state]="data"
+        [routerLink]="
+          data.reference ? '../../../../' + data.reference : '/detail'
+        "
+        [state]="{
+          setting: setting | group: data.recID:'2',
+          function: function
+        }"
         *ngIf="data.displayMode === '1'"
         ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span
       ></a>
-      <a href="/default/standard/setting2" *ngIf="data.displayMode === '2'"
+      <a
+        href="javascript:void(0)"
+        (click)="openPopup($event, data.reference)"
+        *ngIf="data.displayMode === '2'"
         ><span class="icon-edit icon-20 ml-6"></span
       ></a>
       <a href="/default/standard/setting2" *ngIf="data.displayMode === '3'"

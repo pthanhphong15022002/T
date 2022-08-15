@@ -1,24 +1,3 @@
-<codx-views
-  #view
-  [views]="views"
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entity"
-  [views]="views"
-  [button]="button"
-  [moreFuncs]="moreFunc"
-  [idField]="idField"
-  [className]="className"
-  [selectedFirst]="true"
-  (selectedChange)="changeItemDetail($event)"
-  [autoLoad]="autoLoad"
-  [button]="button"
-  (buttonClick)="click($event)"
-  (requestEnded)="closeAddForm($event)"
->
-</codx-views>
-
 <ng-template #itemTemplate let-data>
   <codx-temp-full
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
@@ -52,66 +31,6 @@
   </codx-temp-full>
 </ng-template>
 
-<ng-template #paneLeft>
-  <div class="codx_e-main codx_left">
-    <div class="codx_e-header">
-      <div class="d-flex align-items-center btn-tabs">
-        <div
-          class="d-flex align-items-center me-1 cursor-pointer p-2"
-          [class.div-active]="taskViewStt == '1'"
-          [class.text-primary]="taskViewStt == '1'"
-          (click)="clickChangeTaskViewStatus('1')"
-        >
-          <i class="icon-format_list_numbered icon-16 text-warning"></i>
-          <span class="ms-2 fw-bold fs-7">
-            <codx-label
-              name="lblTitleNew"
-              [formModel]="view.formModel"
-              default="Mới tạo"
-              class="ms-2 fw-bold"
-            >
-            </codx-label>
-          </span>
-        </div>
-        <div
-          class="d-flex align-items-center me-1 cursor-pointer p-2"
-          [class.div-active]="taskViewStt == '2'"
-          [class.text-primary]="taskViewStt == '2'"
-          (click)="clickChangeTaskViewStatus('2')"
-        >
-          <i class="icon-spellcheck icon-16"></i>
-          <span class="ms-2 fw-bold fs-7">
-            <codx-label
-              name="lblTitlePending"
-              [formModel]="view.formModel"
-              default="Chờ duyệt"
-              class="ms-2 fw-bold"
-            >
-            </codx-label>
-          </span>
-        </div>
-        <div
-          class="d-flex align-items-center me-1 cursor-pointer p-2"
-          [class.div-active]="taskViewStt == '3'"
-          [class.text-primary]="taskViewStt == '3'"
-          (click)="clickChangeTaskViewStatus('3')"
-        >
-          <i class="icon-download_done icon-16 text-success"></i>
-          <span class="ms-2 fw-bold fs-7">
-            <codx-label
-              name="lblTitleDone"
-              [formModel]="view.formModel"
-              default="Hoàn tất"
-              class="ms-2 fw-bold"
-            >
-            </codx-label>
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
 <ng-template #paneRight>
   <lib-view-detail
     #viewdetail
@@ -119,6 +38,23 @@
     [funcID]="funcID"
     [formModel]="view?.currentView?.formModel"
     [view]="view"
+    (uploaded)="getDetailSignFile($event)"
   >
   </lib-view-detail>
 </ng-template>
+<codx-views
+  #view
+  [views]="views"
+  (buttonClick)="click($event)"
+  [button]="button"
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entity"
+  [className]="className"
+  (selectedChange)="changeItemDetail($event)"
+  [selectedFirst]="true"
+  [idField]="idField"
+  (requestEnded)="closeAddForm($event)"
+>
+</codx-views>

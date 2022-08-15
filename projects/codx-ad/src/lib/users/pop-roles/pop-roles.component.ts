@@ -229,7 +229,6 @@ export class PopRolesComponent implements OnInit {
     if (this.CheckListUserRoles() === this.optionFirst) {
       this.notiService.notifyCode('AD006');
     } else if (this.CheckListUserRoles() === this.optionSecond) {
-      this.notiService.notifyCode('Lưu thành công');
       this.dialogSecond.close(this.listChooseRole);
       this.changeDec.detectChanges();
     } else {

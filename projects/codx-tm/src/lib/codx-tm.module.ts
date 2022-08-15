@@ -70,6 +70,8 @@ import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
+import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
+import { DashboardMeetingComponent } from './tmmeetings/view-work/dashboard-meeting/dashboard-meeting.component';
 
 export const routes: Routes = [
   {
@@ -95,6 +97,10 @@ export const routes: Routes = [
       {
         path: 'meetingdetails/:funcID',
         component: MeetingDetailComponent,
+      },
+      {
+        path: 'sprintdetails/:funcID',
+        component: ViewWorkComponent,
       },
       {
         path: 'mydashboard/:funcID',
@@ -230,7 +236,9 @@ const T_Component: Type<any>[] = [
   TaskExtendsComponent,
   TemplateComponent,
   SprintDetailsComponent,
+  ViewWorkComponent,
   DashboardComponent,
+  DashboardMeetingComponent
 ];
 @NgModule({
   imports: [

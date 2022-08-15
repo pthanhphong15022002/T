@@ -345,6 +345,16 @@ export class CodxTMService {
     );
   }
 
+  getResourceAndProjectDBData(model: Object) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetDataSprintsDetailsDashboardAsync',
+      [model]
+    );
+  }
+
   getTeamDBData(model: Object) {
     return this.api.execSv(
       'TM',
