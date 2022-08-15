@@ -67,6 +67,7 @@ import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-se
 import { CodxFilesComponent } from './components/codx-files/codx-files.component';
 import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
 import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
+import { NotifyDrawerComponent } from './layout/drawers/notify-drawer/notify-drawer.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -105,6 +106,7 @@ const T_Component: Type<any>[] = [
   CodxFilesComponent,
   ApprovalTabsComponent,
   CodxApprovalStepComponent,
+  NotifyDrawerComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

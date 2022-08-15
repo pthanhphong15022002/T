@@ -181,8 +181,8 @@ export class CodxDMService {
   public changeList = new BehaviorSubject<boolean>(null);
   isChangeList = this.changeList.asObservable();
 
-  public disableInput = new BehaviorSubject<boolean>(null);
-  isDisableInput = this.disableInput.asObservable();
+    public disableInput = new BehaviorSubject<boolean>(null);
+    isDisableInput = this.disableInput.asObservable();
 
   public openCreateFolder = new BehaviorSubject<boolean>(null);
   isOpenCreateFolder = this.openCreateFolder.asObservable();
@@ -563,190 +563,264 @@ export class CodxDMService {
                   this.fileService.getTotalHdd().subscribe((i) => {
                     this.updateHDD.next(i);
                     //  this.changeDetectorRef.detectChanges();
+                    })
                   });
-                });
+                }
+                }
             }
-          }
-        }
-      });
-  }
-
-  setBookmark(data: FileInfo, type: string) {
-    var id = data.recID;
-    var that = this;
-    if (type === 'file') {
-      this.fileService.bookmarkFile(id).subscribe(async (res) => {
-        if (res) {
-          let list = that.listFiles;
-          let index = list.findIndex(
-            (d) => d.recID.toString() === id.toString()
-          ); //find index in your array
-
-          if (that.idMenuActive == 'DMT04') {
-            if (index > -1) {
-              list.splice(index, 1); //remove element from array
-            }
-          } else {
-            list[index] = res;
-          }
-          //  this.isBookmark = !this.isBookmark;
-          this.listFiles = list;
-          this.ChangeData.next(true);
-          //   that.changeDetectorRef.detectChanges();
-        }
-      });
-    } else {
-      // folder
-      // alert('bookmarks');
-      this.folderService.bookmarkFolder(id).subscribe(async (res) => {
-        if (res) {
-          let list = that.listFolder;
-          let index = list.findIndex(
-            (d) => d.recID.toString() === id.toString()
-          ); //find index in your array
-          if (that.idMenuActive == 'DMT04') {
-            if (index > -1) {
-              if (
-                list[index].isBookmark == false ||
-                list[index].isBookmark == 'false'
-              ) {
-                that.nodeDeleted.next(id);
-              }
-              list.splice(index, 1); //remove element from array
-            }
-          } else {
-            list[index] = res;
-            if (that.idMenuActive == 'DMT02' || that.idMenuActive == 'DMT02') {
-              that.nodeChange.next(list[index]);
-            }
-          }
-          // this.isBookmark = !this.isBookmark;
-          this.listFolder = list;
-          this.ChangeData.next(true);
-          //that.changeDetectorRef.detectChanges();
-        }
-      });
+        });
     }
-  }
-
-  filterMoreFunction(e: any, data: any) {
-    var type = this.getType(data, 'entity');
-    var bookmark = this.isBookmark(data);
-    var list =
-      'DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233';
-    if (e) {
-      for (var i = 0; i < e.length; i++) {
-        if (e[i].data != null && e[i].data.entityName == type)
-          e[i].disabled = false;
-        else e[i].disabled = true;
-
-        // khong phai cho duyet
-        if (this.idMenuActive != 'DMT06' && this.idMenuActive != 'DMT07') {
-          if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
-            e[i].disabled = true;
-          }
-        } else {
-          //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
-          //list = "DMT0226;DMT0227;DMT0230;DMT0231";
-          if (type == 'DM_FolderInfo') {
-            list = 'DMT0226;DMT0227';
-          } else list = 'DMT0230;DMT0231';
-          if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
-            e[i].disabled = false;
-          } else {
-            e[i].disabled = true;
-          }
-
-          // if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) {
-          //   e[i].disabled = true;
-          // }
+     
+    setBookmark(data: FileInfo, type: string) {
+        var id = data.recID;
+        var that = this;       
+        if (type === 'file') {
+          this.fileService.bookmarkFile(id).subscribe(async res => {
+            if (res) {
+              let list = that.listFiles;
+              let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+    
+              if (that.idMenuActive == "DMT04") {
+                if (index > -1) {
+                  list.splice(index, 1);//remove element from array            
+                }
+              }
+              else {
+                list[index] = res;
+              }
+            //  this.isBookmark = !this.isBookmark;
+              this.listFiles = list;
+              this.ChangeData.next(true);
+           //   that.changeDetectorRef.detectChanges();
+            }
+          });
         }
-        // ""
-
-        if (type == 'DM_FolderInfo') {
-          // function in
-          if (e[i].data != null && e[i].data.functionID == 'DMT0224') {
-            e[i].disabled = true;
-          }
-          // bookmark va unbookmark
-          if (bookmark) {
-            if (e[i].data != null && e[i].data.functionID == 'DMT0205') {
-              e[i].disabled = true;
+        else {
+          // folder
+          // alert('bookmarks');
+          this.folderService.bookmarkFolder(id).subscribe(async res => {
+            if (res) {
+              let list = that.listFolder;
+              let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+              if (that.idMenuActive == "DMT04") {
+                if (index > -1) {
+                  if (list[index].isBookmark == false || list[index].isBookmark == "false") {
+                    that.nodeDeleted.next(id);
+                  }
+                  list.splice(index, 1);//remove element from array            
+                }
+              }
+              else {
+                list[index] = res;
+                if (that.idMenuActive == "DMT02" || that.idMenuActive == "DMT02") {
+                  that.nodeChange.next(list[index]);
+                }
+              }
+             // this.isBookmark = !this.isBookmark;
+              this.listFolder = list;
+              this.ChangeData.next(true);
+              //that.changeDetectorRef.detectChanges();
             }
-          } else {
-            if (e[i].data != null && e[i].data.functionID == 'DMT0223') {
-              e[i].disabled = true;
-            }
-          }
-
-          // phuc hoi khong phai trong thung rac
-          if (
-            this.idMenuActive != 'DMT08' &&
-            e[i].data != null &&
-            e[i].data.functionID == 'DMT0234'
-          ) {
-            e[i].disabled = true;
-          }
-
-          // thung rac  (view, phuc hoi, xoa)
-          if (
-            this.idMenuActive == 'DMT08' &&
-            e[i].data != null &&
-            e[i].data.functionID != 'DMT0206' &&
-            e[i].data.functionID != 'DMT0234'
-          ) {
-            e[i].disabled = true;
-          }
-        } else {
-          // bookmark va unbookmark
-          if (bookmark) {
-            if (e[i].data != null && e[i].data.functionID == 'DMT0217') {
-              e[i].disabled = true;
-            }
-          } else {
-            if (e[i].data != null && e[i].data.functionID == 'DMT0225') {
-              e[i].disabled = true;
-            }
-          }
-          // thung tac
-          if (
-            this.idMenuActive == 'DMT08' &&
-            e[i].data != null &&
-            e[i].data.functionID != 'DMT0210' &&
-            e[i].data.functionID != 'DMT0219' &&
-            e[i].data.functionID != 'DMT0235'
-          ) {
-            e[i].disabled = true;
-          }
-
-          // phuc hoi
-          if (
-            this.idMenuActive != 'DMT08' &&
-            e[i].data != null &&
-            e[i].data.functionID == 'DMT0235'
-          ) {
-            e[i].disabled = true;
-          }
+          });
         }
       }
+
+    filterMoreFunction(e: any, data: any) {    
+      var type = this.getType(data, "entity");
+      var bookmark = this.isBookmark(data);
+      var list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
+      if (e) {          
+        for(var i=0; i<e.length; i++) {       
+          if (e[i].data != null && e[i].data.entityName == type)
+            e[i].disabled = false;     
+          else
+            e[i].disabled = true;  
+         
+          // khong phai cho duyet
+          if (this.idMenuActive != "DMT06" && this.idMenuActive != "DMT07") {
+            if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
+              e[i].disabled = true;  
+            }
+          } 
+          else {
+            //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
+            //list = "DMT0226;DMT0227;DMT0230;DMT0231";
+            if (type == 'DM_FolderInfo') {
+              list = "DMT0226;DMT0227";                
+            }
+            else 
+              list = "DMT0230;DMT0231";    
+            if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
+              e[i].disabled = false;  
+            }
+            else {
+              e[i].disabled = true;  
+            }
+
+            // if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) { 
+            //   e[i].disabled = true;  
+            // }
+          }
+          // ""         
+
+          if (type == 'DM_FolderInfo') {
+            // function in 
+            if (e[i].data != null && e[i].data.functionID == 'DMT0224') {
+              e[i].disabled = true;     
+            }
+            // bookmark va unbookmark         
+            if (bookmark) {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0205') {
+                e[i].disabled = true;     
+              }
+            }
+            else {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0223') {
+                e[i].disabled = true;     
+              }
+            }  
+
+            // phuc hoi khong phai trong thung rac  
+            if (this.idMenuActive != "DMT08" && e[i].data != null && e[i].data.functionID == 'DMT0234') { 
+              e[i].disabled = true;  
+            }
+            
+            // thung rac  (view, phuc hoi, xoa)
+            if (this.idMenuActive == "DMT08"  && e[i].data != null && e[i].data.functionID != 'DMT0206' && e[i].data.functionID != 'DMT0234') { 
+              e[i].disabled = true;  
+            }
+          } 
+          else {
+              // bookmark va unbookmark 
+            if (bookmark) {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0217') {
+                e[i].disabled = true;     
+              }
+            }
+            else {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0225') {
+                e[i].disabled = true;     
+              }
+            }     
+            // thung tac
+            if (this.idMenuActive == "DMT08" && e[i].data != null && e[i].data.functionID != 'DMT0210' && e[i].data.functionID != 'DMT0219' && e[i].data.functionID != 'DMT0235') { 
+              e[i].disabled = true;  
+            }
+
+            // phuc hoi     
+            if (this.idMenuActive != "DMT08"  && e[i].data != null && e[i].data.functionID == 'DMT0235') { 
+              e[i].disabled = true;  
+            }                   
+          } 
+          // xet quyetn
+          if (e[i].data) {
+            e[i].isblur = false; // duoc view
+            switch(e[i].data.functionID) {           
+              // folder
+              case "DMT0201": // share thu muc    
+              case "DMT0212": // chia se file  
+                if (!data.share) 
+                  e[i].isblur = true; // duoc view                            
+                break;          
+              case "DMT0202": // chinh sua thu muc    
+              case "DMT0213": // chinh sua file
+              case "DMT0203": // Thay đổi tên thu muc    
+              case "DMT0215": // thay doi ten file           
+                if (!data.write) 
+                   e[i].isblur = true; // duoc view
+                break;              
+              case "DMT0204": // di chuyen thu muc 
+              case "DMT0216": // di chuyen file   
+                if (!data.moveable) 
+                  e[i].isblur = true; // duoc view              
+                break;                                
+              case "DMT0206": //delete   
+              case "DMT0219": // xoa file
+                if (!data.delete || data.isSystem) 
+                  e[i].isblur = true; // duoc view              
+                break;                    
+              // case "DMT0207": //permission   
+              //   break;  
+              // case "DMT0208": //yeu cau cap quyen   
+              //   break;  
+              case "DMT0209": //properties  
+              case "DMT0222": //properties file   
+                if (!data.read) 
+                  e[i].isblur = true; // duoc view
+                break;                    
+              // case "DMT0224": // in folder
+              //   break;  
+              // case "DMT0226": // xet duyet  
+              //   break;
+              // case "DMT0227": // tu choi
+              //   break;
+              // case "DMT0228": // huy
+              //   break;
+              // case "DMT0229": // lay lay quyen
+              //   break;   
+              case "DMT0233": // restore folder
+              case "DMT0235": // restore file
+                if (!data.delete) 
+                  e[i].isblur = true; // duoc view              
+                break;                    
+              // file  
+              case "DMT0210": //xem file
+                if (!data.read) 
+                  e[i].isblur = true; // duoc view
+                break;
+              case "DMT0211": // download
+                if (!data.download) 
+                  e[i].isblur = true; // duoc view              
+                break;    
+              case "DMT0214": // Sao chép file
+                if (!data.create) 
+                  e[i].isblur = true; // duoc view              
+                break;           
+              case "DMT0218": // quan ly version
+                if (!data.write || !this.revision) 
+                  e[i].isblur = true; // duoc view              
+                break;           
+                           
+              // case "DMT0220": // persmission file
+              //   break;    
+              // case "DMT0221": //yeu cau cap quyen file   
+              //   break;                           
+              // case "DMT0230": // xet duyet  
+              //   break;
+              // case "DMT0231": // tu choi
+              //   break;
+              // case "DMT0232": // huy
+              //   break;              
+              // case "DMT0234": // lay lay quyen
+              //   break;                
+
+              default:
+                e[i].isblur = false; // duoc view
+                break;
+            }  
+          }      
+        }      
+      }
     }
-  }
 
-  getImage(data) {
-    if (data.folderName != undefined)
-      return '../../../assets/codx/dms/folder.svg';
-    else return this.getThumbnail(data.thumbnail, data.extension);
-  }
+    getImage(data) {
+      if (data.folderName != undefined)
+        return '../../../assets/codx/dms/folder.svg';
+      else
+        return this.getThumbnail(data.thumbnail, data.extension);
+    }
 
-  getSvg(icon) {
-    var path = window.location.origin;
-    return `${path}/${icon}`;
-  }
+    getSvg(icon) {
+      var path = window.location.origin;
+      return `${path}/${icon}`;
+    }
 
-  checkIconFolder(folder) {
-    if (folder.icon.indexOf('.') == -1) return false;
-    else return true;
-  }
+    checkIconFolder(folder) {
+      if (folder.icon.indexOf('.') == -1)
+        return false;
+      else
+        return true;
+    }
 
   isBookmark(data: any) {
     var ret = false;
@@ -963,102 +1037,81 @@ export class CodxDMService {
             }
           }
         });
+      }
     }
-  }
+    
+   clickMF($event, data: any) {        
+      var type =  this.getType(data, "name");
+      let option = new SidebarModel();
 
-  clickMF($event, data: any) {
-    var type = this.getType(data, 'name');
-    let option = new SidebarModel();
-
-    switch ($event.functionID) {
-      case 'DMT0226': // xet duyet thu muc
-      case 'DMT0230': // xet duyet file
-        this.setRequest(
-          type,
-          data.recID,
-          data.perm[0].id,
-          this.idMenuActive == 'DMT06' ? '5' : '6',
-          true
-        );
-        break;
-      case 'DMT0227': // tu choi xet duyet thu muc
-      case 'DMT0231': // tu choi xet duyet file
-        this.setRequest(
-          type,
-          data.recID,
-          data.perm[0].id,
-          this.idMenuActive == 'DMT06' ? '4' : '8',
-          false
-        );
-        break;
-      case 'DMT0210': //view file
-        this.fileService.getFile(data.recID).subscribe((data) => {
-          this.callfc.openForm(
-            ViewFileDialogComponent,
-            data.fileName,
-            1000,
-            800,
-            '',
-            data,
-            ''
-          );
-          var files = this.listFiles;
-          if (files != null) {
-            let index = files.findIndex(
-              (d) => d.recID.toString() === data.recID
-            );
-            if (index != -1) {
-              files[index] = data;
-            }
-            this.listFiles = files;
-            this.ChangeData.next(true);
-          }
-        });
-        break;
-      case 'DMT0211': // download
-        this.fileService.getFile(data.recID).subscribe((file) => {
-          var id = file.recID;
-          var that = this;
-          if (this.checkDownloadRight(file)) {
-            this.fileService.downloadFile(id).subscribe(async (res) => {
-              if (res && res.content != null) {
-                let json = JSON.parse(res.content);
-                var bytes = that.base64ToArrayBuffer(json);
-                let blob = new Blob([bytes], { type: res.mimeType });
-                let url = window.URL.createObjectURL(blob);
-                var link = document.createElement('a');
-                link.setAttribute('href', url);
-                link.setAttribute('download', res.fileName);
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }
+      switch($event.functionID) {
+        case "DMT0226": // xet duyet thu muc        
+        case "DMT0230": // xet duyet file
+          this.setRequest(type, data.recID, data.perm[0].id, this.idMenuActive == 'DMT06' ?  '5' : '6', true);
+          break;
+        case "DMT0227": // tu choi xet duyet thu muc
+        case "DMT0231": // tu choi xet duyet file
+          this.setRequest(type, data.recID, data.perm[0].id, this.idMenuActive == 'DMT06' ?  '4' : '8', false);         
+          break;
+        case "DMT0210": //view file
+          this.fileService.getFile(data.recID).subscribe(data => {
+              this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
               var files = this.listFiles;
               if (files != null) {
-                let index = files.findIndex((d) => d.recID.toString() === id);
+                let index = files.findIndex(d => d.recID.toString() === data.recID);
                 if (index != -1) {
-                  files[index].countDownload = files[index].countDownload + 1;
+                  files[index] = data;
                 }
-                this.listFiles = files;
-                this.ChangeData.next(true);
+                this.listFiles = files;                    
+                this.ChangeData.next(true);                
+              }
+          });
+          break;
+        case "DMT0211": // download
+          this.fileService.getFile(data.recID).subscribe(file => {      
+              var id = file.recID;
+              var that = this;
+              if (this.checkDownloadRight(file)) {
+              this.fileService.downloadFile(id).subscribe(async res => {
+                  if (res && res.content != null) {
+                    let json = JSON.parse(res.content);
+                    var bytes = that.base64ToArrayBuffer(json);
+                    let blob = new Blob([bytes], { type: res.mimeType });
+                    let url = window.URL.createObjectURL(blob);
+                    var link = document.createElement("a");
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", res.fileName);
+                    link.style.display = "none";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }
+                  var files = this.listFiles;
+                  if (files != null) {
+                    let index = files.findIndex(d => d.recID.toString() === id);
+                    if (index != -1) {
+                      files[index].countDownload = files[index].countDownload + 1;
+                    }
+                    this.listFiles = files;                    
+                    this.ChangeData.next(true);                
+                  }
+              });
+              }
+              else {
+              this.notificationsService.notify(this.titleNoRight);
               }
             });
-          } else {
-            this.notificationsService.notify(this.titleNoRight);
-          }
-        });
-        break;
-
-      case 'DMT0222': // properties file
-        option.DataService = this.dataService;
-        option.FormModel = this.formModel;
-        option.Width = '550px';
-        // let data = {} as any;
-        data.title = this.titleUpdateFolder;
-        data.id = data.recID;
-        this.callfc.openSide(PropertiesComponent, data, option);
-        break;
+          break;
+          
+        case "DMT0222": // properties file         
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id =  data.recID;            
+          this.callfc.openSide(PropertiesComponent, data, option);            
+          break;
 
       case 'DMT0234': // khoi phuc thu muc
       case 'DMT0235': // khoi phuc file
