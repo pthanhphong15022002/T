@@ -20,15 +20,15 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { AddUserComponent } from '../users/add-user/add-user.component';
 import { ViewUsersComponent } from '../users/view-users/view-users.component';
+import { AddUserGroupsComponent } from './add-user-groups/add-user-groups.component';
 
 @Component({
-  selector: 'lib-group-users',
-  templateUrl: './group-users.component.html',
-  styleUrls: ['./group-users.component.css'],
+  selector: 'lib-user-group',
+  templateUrl: './user-group.component.html',
+  styleUrls: ['./user-group.component.css'],
 })
-export class GroupUsersComponent extends UIComponent {
+export class UserGroupsComponent extends UIComponent {
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   itemSelected: any;
@@ -124,11 +124,14 @@ export class GroupUsersComponent extends UIComponent {
 
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
+      var obj = {
+        userType: 'userGroup',
+      }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(AddUserComponent, null, option);
+      this.dialog = this.callfunc.openSide(AddUserGroupsComponent, obj, option);
 
     });
   }
@@ -138,11 +141,14 @@ export class GroupUsersComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      var obj = {
+        userType: 'userGroup',
+      }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(AddUserComponent, null, option);
+      this.dialog = this.callfunc.openSide(AddUserGroupsComponent, obj, option);
     });
   }
 
@@ -157,7 +163,6 @@ export class GroupUsersComponent extends UIComponent {
     var t = this;
   }
 
-
   selectedChange(val: any) {
     console.log(val);
     this.itemSelected = val.data;
@@ -170,6 +175,4 @@ export class GroupUsersComponent extends UIComponent {
     //this.tableView.addHandler(dataItem, false, "taskGroupID");
   }
   //#endregion
-
-
 }

@@ -26,6 +26,8 @@ import {
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { isBuffer } from 'util';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
@@ -1201,6 +1203,44 @@ export class TasksComponent extends UIComponent {
       }
     });
   }
+
+  //region
+     //Import file
+    importFile()
+      {
+        var gridModel = new DataRequest();
+        gridModel.formName = this.view.formModel.formName;
+        gridModel.entityName = this.view.formModel.entityName;
+        gridModel.funcID = this.view.formModel.funcID;
+        gridModel.gridViewName = this.view.formModel.gridViewName;
+        gridModel.page = this.view.dataService.request.page;
+        gridModel.pageSize = this.view.dataService.request.pageSize;
+        gridModel.predicate = this.view.dataService.request.predicates;
+        gridModel.dataValue = this.view.dataService.request.dataValues;
+        gridModel.entityPermission = this.view.formModel.entityPer;
+        //
+        //Chưa có group
+        gridModel.groupFields = "createdBy";
+        this.callfc.openForm(CodxImportComponent,null,null,800,"",[gridModel,this.itemSelected.taskID],null);
+      }
+    //Export file
+    exportFile()
+      {
+        var gridModel = new DataRequest();
+        gridModel.formName = this.view.formModel.formName;
+        gridModel.entityName = this.view.formModel.entityName;
+        gridModel.funcID = this.view.formModel.funcID;
+        gridModel.gridViewName = this.view.formModel.gridViewName;
+        gridModel.page = this.view.dataService.request.page;
+        gridModel.pageSize = this.view.dataService.request.pageSize;
+        gridModel.predicate = this.view.dataService.request.predicates;
+        gridModel.dataValue = this.view.dataService.request.dataValues;
+        gridModel.entityPermission = this.view.formModel.entityPer;
+        //
+        //Chưa có group
+        gridModel.groupFields = "createdBy";
+        this.callfc.openForm(CodxExportComponent,null,null,800,"",[gridModel,this.itemSelected.taskID],null)
+      }
   //#endregion
 
   clickMF(e: any, data?: any) {
@@ -1210,65 +1250,8 @@ export class TasksComponent extends UIComponent {
       this.param = this.paramModule;
       this.clickMFAfterParameter(e,data)
     }
-    // switch (e.functionID) {
-    //   case 'SYS02':
-    //     this.delete(data);
-    //     break;
-    //   case 'SYS03':
-    //     this.edit(data);
-    //     break;
-    //   case 'SYS04':
-    //     this.copy(data);
-    //     break;
-    //   case 'sendemail':
-    //     this.sendemail(data);
-    //     break;
-    //   case 'TMT02015':
-    //     this.assignTask(e.data, data);
-    //     break;
-    //   case 'TMT02016':
-    //   case 'TMT02017':
-    //     this.openConfirmStatusPopup(e.data, data);
-    //     break;
-    //   case 'TMT04021':
-    //   case 'TMT04022':
-    //   case 'TMT04023':
-    //     this.openApproveStatusPopup(e.data, data); //danh gia kết qua
-    //     break;
-    //   case 'TMT04031':
-    //   case 'TMT04032':
-    //     this.openVerifyStatusPopup(e.data, data);
-    //     break;
-    //   case 'TMT02018':
-    //   case 'TMT02026':
-    //   case 'TMT02035':
-    //     this.openUpdateProgress(e.data, data);
-    //     break;
-    //   case 'TMT02011':
-    //   case 'TMT02012':
-    //   case 'TMT02013':
-    //   case 'TMT02014':
-    //   case 'TMT02031':
-    //   case 'TMT02032':
-    //   case 'TMT02033':
-    //   case 'TMT02044':
-    //     this.changeStatusTask(e.data, data);
-    //     break;
-    //   case 'TMT02019':
-    //     this.openExtendsAction(e.data, data);
-    //     break;
-    //   case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
-    //     //Chung làm
-    //     break;
-    //   case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
-    //     //Chung làm
-    //     break;
-    //   case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
-    //     //???? chắc làm sau ??
-    //     break;
-    // }
   }
- 
+
   clickMFAfterParameter(e,data){
     switch (e.functionID) {
       case 'SYS02':
@@ -1319,9 +1302,11 @@ export class TasksComponent extends UIComponent {
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
+        this.importFile()
         break;
       case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
+        this.exportFile()
         break;
       case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
         //???? chắc làm sau ??

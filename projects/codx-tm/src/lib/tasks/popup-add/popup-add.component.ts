@@ -732,23 +732,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // checkLogicWithTaskGroup() {
-  //   if (this.isCheckCheckListControl) {
-  //     this.isCheckCheckListTrue =
-  //       this.isCheckCheckListControl && this.listTodo.length > 0;
-  //   } else this.isCheckCheckListTrue = true;
-
-  //   if (this.param?.ProjectControl != '0') {
-  //     if (this.isCheckProjectControl) {
-  //       this.isCheckProjectTrue =
-  //         this.task.projectID && this.isCheckProjectControl;
-  //     } else this.isCheckProjectTrue = true;
-  //   }
-  //   if (this.isCheckAttachmentControl) {
-  //     this.isCheckAttachmentTrue =
-  //       this.isCheckAttachmentControl && this.isHaveFile;
-  //   } else this.isCheckAttachmentTrue = true;
-  // }
 
   logicTaskGroup(idTaskGroup) {
     this.api
