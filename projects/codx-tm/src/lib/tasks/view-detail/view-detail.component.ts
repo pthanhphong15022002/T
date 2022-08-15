@@ -44,13 +44,33 @@ export class ViewDetailComponent implements OnInit,AfterViewInit {
   ngOnInit(): void {
   }
   ngAfterViewInit(): void {
-  
   }
 
   clickMF(e: any, dt?: any) {
     if(this.taskExtends) return  this.clickMoreFunction.emit({e:e,data:this.taskExtends})
     this.clickMoreFunction.emit({e:e,data:dt})
   }
+  
+  changeDataMF(e, data) {
+    if (e) {
+      e.forEach((x) => {
+        if (
+          (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
+          data.confirmControl == '0'
+        ) {
+          x.disabled = true;
+        }
+        if (
+          x.functionID == 'TMT02019' &&
+          data.verifyControl == '0' &&
+          data.category == '1'
+        ) {
+          x.disabled = true;
+        }
+      });
+    }
+  }
+
   openViewListTaskResource(data){
     this.dialog = this.callfc.openForm(
       PopupViewTaskResourceComponent,

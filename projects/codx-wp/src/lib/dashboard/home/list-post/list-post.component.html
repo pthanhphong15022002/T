@@ -268,7 +268,6 @@
         *ngTemplateOutlet="containTemplate; context: { $implicit: item }"
       ></ng-container>
     </ng-template>
-
     <!-- commemt -->
     <treeview-comment 
       [funcID]="codxViews.formModel.funcID" 
@@ -286,7 +285,7 @@
       <ng-container *ngIf="item.files; else get">
         <div>
           <codx-file
-            [lstFile]="item.files"
+            [files]="item.files"
             (evtGetFiles)="getFiles($event, item)"
             (viewDetail)="clickViewDetail($event)"
           ></codx-file>
@@ -469,7 +468,6 @@
   </div>
 </ng-template>
 <!-- tooltip -->
-
 <!-- tooltip for user shared -->
 <ng-template #popContentOfShare style="width: fit-content; height: fit-content">
   <div *ngIf="show()">
