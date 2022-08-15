@@ -47,3 +47,63 @@ codx-home {
 codx-home .home-left {
     min-width: 620px;
 }
+
+.pic-feed-img codx-img,
+.pic-feed-img codx-img div,
+.pic-feed-img codx-img div img {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.pic-feed-img codx-img.h-75px,
+.pic-feed-img codx-img.h-75px div,
+.pic-feed-img codx-img.h-75px div img {
+    height: 75px !important;
+}
+
+.pic-feed-img codx-img.h-100px,
+.pic-feed-img codx-img.h-100px div,
+.pic-feed-img codx-img.h-100px div img {
+    height: 100px !important;
+}
+
+.pic-feed-img codx-img.h-125px,
+.pic-feed-img codx-img.h-125px div,
+.pic-feed-img codx-img.h-125px div img {
+    height: 125px !important;
+}
+
+.pic-feed-img codx-img.h-150px,
+.pic-feed-img codx-img.h-150px div,
+.pic-feed-img codx-img.h-150px div img {
+    height: 150px !important;
+}
+
+.pic-feed-img codx-img.h-175px,
+.pic-feed-img codx-img.h-175px div,
+.pic-feed-img codx-img.h-175px div img {
+    height: 175px !important;
+}
+
+.pic-feed-img codx-img.h-200px,
+.pic-feed-img codx-img.h-200px div,
+.pic-feed-img codx-img.h-200px div img {
+    height: 200px !important;
+}
+
+
+/*** 1 - 5 pic ***/
+.feed-5pic .col-xl-5.pl-0 div+div {
+    margin-top: 3px;
+}
+
+.feed-img-more {
+    margin-top: -175px !important;
+    height: 175px;
+    position: relative;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
