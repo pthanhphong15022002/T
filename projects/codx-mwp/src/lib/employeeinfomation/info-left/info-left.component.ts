@@ -17,7 +17,7 @@ export class InfoLeftComponent implements OnInit {
     dataRoot: {},
     employeeInfo: {},
   };
-  hideEdit = false;
+  hideEdit = true;
   employeeID: any = '';
   editMode: boolean = false;
   employeeMyTeam: any = null;
@@ -29,7 +29,7 @@ export class InfoLeftComponent implements OnInit {
     private auth: AuthStore
   ) {
     this.user = this.auth.get();
-    this.codxMwpService.InfoLeftComponent = this;
+    this.codxMwpService.infoLeftComponent = this;
     this.routeActive.queryParams.subscribe((params) => {
       debugger
       if (params.employeeID || this.user.userID) {
