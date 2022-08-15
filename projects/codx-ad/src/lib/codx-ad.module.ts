@@ -25,11 +25,12 @@ import { PopupPersonalComponent } from './company-setting/popup-personal/popup-p
 import { PopRolesComponent } from './users/pop-roles/pop-roles.component';
 import { CompanySettingComponent } from './company-setting/company-setting.component';
 import { SharedModule } from '@shared/shared.module';
-import { GroupUsersComponent } from './group-users/group-users.component';
 import { RolesComponent } from './Roles/home/home.component';
 import { RoleEditComponent } from './Roles/role-edit/role-edit.component';
 import { RoleDetailComponent } from './Roles/detail/detail.component';
 import { AsideroledetailComponent } from './_layout/asideroledetail/asideroledetail.component';
+import { UserGroupsComponent } from './user-groups/user-group.component';
+import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
 
 export const routes: Routes = [
   {
@@ -57,7 +58,7 @@ export const routes: Routes = [
       }
       ,{
         path: 'groupusers/:funcID',
-        component: GroupUsersComponent
+        component: UserGroupsComponent
       }
       ,{
         path: 'roles/:funcID',
@@ -81,11 +82,12 @@ const T_Component: Type<any>[] = [
   AddUserComponent,
   PopupPersonalComponent,
   PopRolesComponent,
-  GroupUsersComponent,
+  UserGroupsComponent,
   RolesComponent,
   RoleEditComponent,
   RoleDetailComponent,
   AsideroledetailComponent,
+  AddUserGroupsComponent,
 ];
 @NgModule({
   imports: [
