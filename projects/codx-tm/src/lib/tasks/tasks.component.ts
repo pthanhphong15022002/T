@@ -57,6 +57,7 @@ export class TasksComponent extends UIComponent {
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   model?: DataRequest;
+  request: ResourceModel;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
   resourceTree: ResourceModel;
@@ -116,7 +117,7 @@ export class TasksComponent extends UIComponent {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     // cmt truyền động để chạy debug cho nhanh
-    // this.cache.functionList(this.funcID).subscribe(res=>{
+    // this.cache.functionList(this.funcID).subscribe(res=
     //   if(res){
     //     this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(result => {
     //       if (result){
@@ -170,11 +171,17 @@ export class TasksComponent extends UIComponent {
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
 
+    this.request = new ResourceModel();
+    this.request.service = 'TM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'DataBusiness';
+    this.request.method = 'LoadDataAsync';
+    this.request.idField = 'taskID';
+
     this.button = {
       id: 'btnAdd',
     };
     this.getParams();
-    // if(this.sprints)this.projectID = this.sprints?.projectID ;
   }
 
   ngAfterViewInit(): void {
@@ -185,7 +192,6 @@ export class TasksComponent extends UIComponent {
         sameData: true,
         model: {
           template: this.itemViewList,
-          // groupBy: 'fieldGroup', Thương kêu gắng sau
         },
       },
       {
@@ -195,13 +201,13 @@ export class TasksComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
-          // groupBy: 'fieldGroup', Thương kêu gắng sau
         },
       },
       {
         type: ViewType.kanban,
         active: false,
-        sameData: true,
+        sameData: false,
+        request: this.request,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
