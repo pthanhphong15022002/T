@@ -7,7 +7,7 @@ import { CodxEsService, GridModels } from '../../codx-es.service';
   styleUrls: ['./view-approval-process.component.scss'],
 })
 export class ViewApprovalProcessComponent implements OnInit {
-  @Input() transID: string = '358624aa-13e1-11ed-9785-509a4c39550b';
+  @Input() transID: string = '';
   @Input() approveStatus: string = '';
 
   process;
@@ -42,13 +42,11 @@ export class ViewApprovalProcessComponent implements OnInit {
           }
         });
       } else {
-        this.esService
-          .getApprovalTrans('358624aa-13e1-11ed-9785-509a4c39550b')
-          .subscribe((res) => {
-            if (res) {
-              this.process = res;
-            }
-          });
+        this.esService.getApprovalTrans(this.transID).subscribe((res) => {
+          if (res) {
+            this.process = res;
+          }
+        });
       }
     }
   }

@@ -80,6 +80,12 @@ export class ES_SignFile {
   ModifiedBy: string;
 }
 
+export class tmpApprovalTrans {
+  transID;
+  approver;
+  comment;
+  mode; //Approve - 1 || Reject - 2 || Redo - 3
+}
 interface cbxObj {
   [key: string]: any;
 }
@@ -694,7 +700,7 @@ export class CodxEsService {
 
   //#region ES_ApprovalTrans
 
-  release(oSignFile: any, entityName: string, funcID: string) {
+  release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.CM',
@@ -717,7 +723,7 @@ export class CodxEsService {
       'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
-      'GetByTransIDAsync',
+      'GetViewByTransIDAsync',
       [recID]
     );
   }
@@ -822,7 +828,7 @@ export class CodxEsService {
 
   updateSignFileTrans(data) {
     return this.api.execSv(
-      'ES',
+      'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UpdateApprovalTransStatusAsync',
