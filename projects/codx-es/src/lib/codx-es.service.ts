@@ -80,6 +80,12 @@ export class ES_SignFile {
   ModifiedBy: string;
 }
 
+export class tmpApprovalTrans {
+  transID;
+  approver;
+  comment;
+  mode; //Approve - 1 || Reject - 2 || Redo - 3
+}
 interface cbxObj {
   [key: string]: any;
 }
@@ -822,7 +828,7 @@ export class CodxEsService {
 
   updateSignFileTrans(data) {
     return this.api.execSv(
-      'ES',
+      'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UpdateApprovalTransStatusAsync',

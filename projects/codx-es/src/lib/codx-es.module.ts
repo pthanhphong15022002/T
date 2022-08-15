@@ -53,6 +53,7 @@ import { PdfViewComponent } from './sign-file/pdf-view/pdf-view.component';
 import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
 import { PopupSignForApprovalComponent } from './sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { ViewApprovalProcessComponent } from './setting/view-approval-process/view-approval-process.component';
+import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 
 const routes: Routes = [
   {
@@ -137,6 +138,7 @@ const routes: Routes = [
     TabModule,
     CodxShareModule,
     PdfViewerAllModule,
+    ListViewAllModule,
   ],
   exports: [CodxEsComponent],
   providers: [
