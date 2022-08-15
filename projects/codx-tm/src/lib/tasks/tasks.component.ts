@@ -56,6 +56,7 @@ export class TasksComponent extends UIComponent {
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   model?: DataRequest;
+  request: ResourceModel;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
   resourceTree: ResourceModel;
@@ -115,7 +116,7 @@ export class TasksComponent extends UIComponent {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     // cmt truyền động để chạy debug cho nhanh
-    // this.cache.functionList(this.funcID).subscribe(res=>{
+    // this.cache.functionList(this.funcID).subscribe(res=
     //   if(res){
     //     this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(result => {
     //       if (result){
@@ -162,11 +163,17 @@ export class TasksComponent extends UIComponent {
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
 
+    this.request = new ResourceModel();
+    this.request.service = 'TM';
+    this.request.assemblyName = 'CM';
+    this.request.className = 'DataBusiness';
+    this.request.method = 'LoadDataAsync';
+    this.request.idField = 'taskID';
+
     this.button = {
       id: 'btnAdd',
     };
     this.getParams();
-    // if(this.sprints)this.projectID = this.sprints?.projectID ;
   }
 
   ngAfterViewInit(): void {
@@ -177,7 +184,6 @@ export class TasksComponent extends UIComponent {
         sameData: true,
         model: {
           template: this.itemViewList,
-          // groupBy: 'fieldGroup', Thương kêu gắng sau
         },
       },
       {
@@ -187,13 +193,13 @@ export class TasksComponent extends UIComponent {
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
-          // groupBy: 'fieldGroup', Thương kêu gắng sau
         },
       },
       {
         type: ViewType.kanban,
         active: false,
-        sameData: true,
+        sameData: false,
+        request: this.request,
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
@@ -699,7 +705,13 @@ export class TasksComponent extends UIComponent {
     maxHours
   ) {
     if (updateControl != '0') {
-      this.openPopupUpdateStatus(moreFunc, taskAction,updateControl,maxHoursControl,maxHours);
+      this.openPopupUpdateStatus(
+        moreFunc,
+        taskAction,
+        updateControl,
+        maxHoursControl,
+        maxHours
+      );
     } else {
       var completedOn = moment(new Date()).toDate();
       var completed = '0';
@@ -746,14 +758,20 @@ export class TasksComponent extends UIComponent {
         });
     }
   }
-  openPopupUpdateStatus(moreFunc, taskAction,updateControl,maxHoursControl,maxHours) {
+  openPopupUpdateStatus(
+    moreFunc,
+    taskAction,
+    updateControl,
+    maxHoursControl,
+    maxHours
+  ) {
     let obj = {
       moreFunc: moreFunc,
       taskAction: taskAction,
       funcID: this.funcID,
-      updateControl : updateControl,
-      maxHoursControl:maxHoursControl,
-      maxHours:maxHours
+      updateControl: updateControl,
+      maxHoursControl: maxHoursControl,
+      maxHours: maxHours,
     };
     this.dialog = this.callfc.openForm(
       UpdateStatusPopupComponent,
