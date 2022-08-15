@@ -4,6 +4,7 @@ export class HR_Employees {
     public gender: string;
     public birthday: Date;
     public birthPlace: string;
+    public organizationID: string;
     public organizationName: string;
     public departmentName: string;
     public divisionName: string;
