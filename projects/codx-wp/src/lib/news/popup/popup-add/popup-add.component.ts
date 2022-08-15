@@ -107,8 +107,11 @@ export class PopupAddComponent implements OnInit {
   }
 
 
-
+  messageImage:string ="";
   ngOnInit(): void {
+    this.cache.message('WP017').subscribe((mssg:any) => {
+      if (mssg) this.messageImage = Util.stringFormat(mssg.defaultName);
+    })
     this.setDataDefault();
   }
 
@@ -579,24 +582,10 @@ export class PopupAddComponent implements OnInit {
   clickClosePopup(){
     this.dialogRef.close();
   }
-
-  fileCount(files){
-    if(this.isUpload == "image"){
-      this.addImage(files);
-    }
-    else{
-      this.addVideo(files);
-    }
-  }
-  isUpload:string = 'image'  // check upload imgae or video
   clickUploadImage(){
-    this.isUpload = "image";
-    this.changedt.detectChanges();
     this.codxATMImage.uploadFile();
   }
   clickUploadVideo(){
-    this.isUpload = "video";
-    this.changedt.detectChanges();
-    this.codxATMImage.uploadFile();
+    this.codxATMVideo.uploadFile();
   }
 }

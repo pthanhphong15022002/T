@@ -122,7 +122,7 @@
         <button class="btn btn-white text-dark me-1" [class.active]="itemDetailStt == '3'"
           (click)="clickChangeItemViewStatus('3', itemDetail?.recID)">
           <i class="icon-people_alt icon-16"></i>
-          <codx-label name="lblApprovalTrans" [formModel]="itemDetailTemplate.formModel" default="Qui trình duyệt"
+          <codx-label name="lblApprovalTrans" [formModel]="itemDetailTemplate.formModel" default="Quy trình duyệt"
             class="ms-1 fw-bold"></codx-label>
         </button>
       </div>
@@ -142,40 +142,8 @@
         </ng-container>
       </div>
       <div *ngIf="itemDetailStt == '3'" class="mb-2">
-        <div class="codx-approval mt-3" *ngIf="lstStep?.length > 0">
-          <ng-container *ngFor="let item of lstStep, let index = index">
-            <div class="codx-approval-step step-test pb-1">
-              <div class="codx-approval-header d-flex align-items-center">
-                <div class="step-number">{{item.stepNo}}</div>
-                <div class="step-title text-gray-800 fw-bold fs-5">{{item.stepName}}</div>
-              </div>
-              <div class="codx-approval-content ms-17">
-                <ng-container *ngFor="let approver of item.approvers">
-                  <div class="d-flex align-items-top justify-content-between mb-2">
-                    <codx-temp-full *ngIf="approver.roleType?.length == 1" [imageId]="approver.approver"
-                      [imageObjType]="'AD_Users'" [imageWidth]="35"
-                      [title]="approver.approverName ?? (approver.approver |vll: 'ES014': 'text'|async)"
-                      [desc]="approver.positionName ?? 'Vị trí công việc'">
-                    </codx-temp-full>
-                    <codx-temp-full *ngIf="approver.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
-                    (item.icon ? item.icon : 'share_default.svg')" imgCss="w-30px p-3 me-3 user-mini-icon"
-                      [imageWidth]="20" [title]="(approver.approver |vll: 'ES014': 'text'|async)"
-                      [desc]="approver.approver |vll: 'ES014': 'text'|async">
-                    </codx-temp-full>
+        <lib-view-approval-process [transID]="transID"></lib-view-approval-process>
 
-                    <div class="d-flex align-items-center text-center">
-                      <div class="ms-6 d-flex">
-                        <span class="text-dark">{{item.leadtime}} giờ</span>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-
-              </div>
-            </div>
-            <div class="codx-approval-step step-signature-temp pb-3" *ngIf="index == lstStep.length-1"></div>
-          </ng-container>
-        </div>
         <div class="row w-100" *ngFor="let part of process; let index = index">
           <div class="col-12">
             <div class="codx-approval">

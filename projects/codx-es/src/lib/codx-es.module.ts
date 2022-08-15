@@ -52,6 +52,7 @@ import { SettingComponent } from './setting/setting.component';
 import { PdfViewComponent } from './sign-file/pdf-view/pdf-view.component';
 import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
 import { PopupSignForApprovalComponent } from './sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
+import { ViewApprovalProcessComponent } from './setting/view-approval-process/view-approval-process.component';
 
 const routes: Routes = [
   {
@@ -122,6 +123,7 @@ const routes: Routes = [
     PdfViewComponent,
     PopupADRComponent,
     PopupSignForApprovalComponent,
+    ViewApprovalProcessComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

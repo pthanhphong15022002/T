@@ -29,7 +29,7 @@
 </ng-template>
 <ng-template #tabInfo0>
   <div class="row">
-    <div class="col-6 ">
+    <div class="col-4 ">
       <div class="form-group">
         <codx-label default="Hành động" fiedName="StepType" [formModel]="formModel">
         </codx-label>
@@ -44,6 +44,15 @@
         </codx-label>
         <codx-input type="number" field="leadtime" [Group]="dialogApprovalStep" (valueChange)="valueChange($event)"
           [min]="0" placeholder="0" [crrValue]="dialogApprovalStep.value?.leadtime ?? 0" [showSpinButton]="false">
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class=" form-group">
+        <codx-label default="Loại chữ ký" fiedName="SignatureType" [formModel]="formModel">
+        </codx-label>
+        <codx-input type="valuelist" name="valuelist" [refValue]="cbxName['SignatureType']" field="signatureType"
+          (valueChange)="valueChange($event)" [crrValue]="dialogApprovalStep.value.signatureType">
         </codx-input>
       </div>
     </div>

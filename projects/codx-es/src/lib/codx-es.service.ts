@@ -315,23 +315,6 @@ export class CodxEsService {
     );
   }
 
-  getApprovalTrans(recID: string) {
-    // let data = new DataRequest();
-    // data.formName = 'ApprovalTrans';
-    // data.gridViewName = 'grvSignFiles';
-    // data.entityName = 'ES_ApprovalTrans';
-    // data.predicate = 'ProcessID=@0';
-    // data.dataValue = recID;
-    // data.pageLoading = false;
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'GetByProcessIDAsync',
-      [recID]
-    );
-  }
-
   getApprovedSignatures(recID, userID) {
     return this.api.execSv(
       'es',
@@ -629,7 +612,6 @@ export class CodxEsService {
   //#endregion
 
   //#region ES_SignFiles
-
   getAutoNumberByCategory(categoryID): Observable<any> {
     return this.api.exec(
       'ERM.Business.AD',
@@ -704,6 +686,38 @@ export class CodxEsService {
       'ERM.Business.ES',
       'SignFilesBusiness',
       'DeleteSignFileAsync',
+      [recID]
+    );
+  }
+
+  //#endregion
+
+  //#region ES_ApprovalTrans
+
+  release(oSignFile: any, entityName: string, funcID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.CM',
+      'DataBusiness',
+      'ReleaseAsync',
+      [
+        oSignFile?.recID,
+        oSignFile.approveControl == '1'
+          ? oSignFile?.recID
+          : oSignFile?.processID,
+        entityName,
+        funcID,
+        '<div>' + oSignFile.title + '</div>',
+      ]
+    );
+  }
+
+  getApprovalTrans(recID: string) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetByTransIDAsync',
       [recID]
     );
   }
@@ -806,14 +820,14 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(data){
+  updateSignFileTrans(data) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UpdateApprovalTransStatusAsync',
       data
-    )
+    );
   }
   //#endregion
 }
