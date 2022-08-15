@@ -142,7 +142,8 @@
         </ng-container>
       </div>
       <div *ngIf="itemDetailStt == '3'" class="mb-2">
-        <lib-view-approval-process [transID]="transID"></lib-view-approval-process>
+        <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
+        </lib-view-approval-process>
 
         <div class="row w-100" *ngFor="let part of process; let index = index">
           <div class="col-12">
