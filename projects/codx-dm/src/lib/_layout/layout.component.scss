@@ -122,7 +122,7 @@
   margin-bottom: 15px;
 }
 
-codx-treeview .aside-menu {
+.e-pane codx-treeview .aside-menu {
   padding: 10px;
 }
 
@@ -192,6 +192,11 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
 .dms-list:hover,
 .sm-card:hover {
   background-color: rgba(221, 238, 255, 0.25);
+}
+
+.sm-card .text-gray-700.line-clamp {
+  font-size: var(--fs-7);
+  color: var(--gray-500);
 }
 
 .icon-per.no-permission {
