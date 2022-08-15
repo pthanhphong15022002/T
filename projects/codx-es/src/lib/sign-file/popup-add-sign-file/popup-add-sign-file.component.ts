@@ -509,4 +509,16 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   //#endregion
+
+  approve() {
+    this.esService
+      .release(
+        this.dialogSignFile.value,
+        this.formModel.entityName,
+        this.formModel.funcID
+      )
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
 }
