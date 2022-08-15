@@ -95,7 +95,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   signerInfo: any;
   fileInfo: any;
-  zoomValue: number = 75;
+  zoomValue: number = 50;
   holding: number = 0;
 
   tmpLstSigners: Array<Object> = [];
@@ -128,6 +128,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   public headerRightName = [
     { text: 'Công cụ' },
+    { text: 'Vùng ký' },
     { text: 'History' },
     { text: 'Comment' },
   ];
@@ -135,6 +136,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
 
   ajaxSetting: any;
+
+  public fields: Object = { groupBy: 'pageNumber' };
 
   onInit() {
     this.saveAnnoQueue = new Map();
@@ -166,7 +169,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.esService
       .getSFByID([this.recID, this.user?.userID, this.isApprover])
       .subscribe((res: any) => {
-        console.log('sf', res);
+        console.table('sf', res);
 
         let sf = res?.signFile;
 
@@ -206,7 +209,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
     }
 
-    this.pdfviewerControl.zoomValue = 100;
+    this.pdfviewerControl.zoomValue = 50;
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,
     ];
@@ -341,6 +344,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       });
   }
 
+  getAreaOwnerName(authorID) {
+    return this.lstSigners.find((signer) => {
+      return signer.authorID == authorID;
+    }).authorName;
+  }
+
   async genFileQR(fileName, fileRefNo, companyID) {
     let text = `
       File Name: ${fileName}\n
@@ -350,9 +359,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       Pages: ${this.pdfviewerControl.pageCount}
     `;
     let barcode = new QRCodeGenerator({
-      width: '500px',
-      height: '500px',
-      mode: 'Canvas',
+      width: '250px',
+      height: '250px',
+      mode: 'SVG',
       displayText: { visibility: false },
       value: text,
     });
@@ -366,6 +375,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       barCodeUrl = value;
       this.qrCode.nativeElement.firstChild.remove();
     });
+    console.log('barcode', barCodeUrl);
+
     return barCodeUrl;
   }
 
@@ -1130,13 +1141,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     // });
   }
 
-  testFunc(e: any) {
-    this.esService
-      .toPDF(['62ea2856d263513fc83fcfc1', '.xls'])
-      .subscribe((res) => {
-        console.log(res);
-      });
-  }
+  testFunc(e: any) {}
 
   selectedAnnotation(e: any) {
     console.log(e);
@@ -1182,22 +1187,22 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
     this.genFileQR(this.fileInfo.fileName, this.fileInfo.fileRefNum, '').then(
       (value: string) => {
-        qrAnnot.stampAnnotationPath = value;
         if (qrAnnot) {
+          let cloneQR = { ...qrAnnot };
+          cloneQR.stampAnnotationPath = value;
           this.saveAnnoQueue.set(
-            qrAnnot.annotationId,
+            cloneQR.annotationId,
             setTimeout(
               this.saveAnnoToDB.bind(this),
               0,
               this.esService,
-              { ...qrAnnot },
+              cloneQR,
               this.fileInfo,
               this.user
             )
           );
           if (this.pdfviewerControl.pageCount != 1) {
             for (let i = 0; i < this.pdfviewerControl.pageCount - 1; i++) {
-              let cloneQR = { ...qrAnnot };
               cloneQR.annotationId = Guid.newGuid();
               cloneQR.pageNumber = i;
               this.pdfviewerControl.addAnnotation(cloneQR);

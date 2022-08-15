@@ -80,6 +80,12 @@ export class ES_SignFile {
   ModifiedBy: string;
 }
 
+export class tmpApprovalTrans {
+  transID;
+  approver;
+  comment;
+  mode; //Approve - 1 || Reject - 2 || Redo - 3
+}
 interface cbxObj {
   [key: string]: any;
 }
@@ -755,65 +761,14 @@ export class CodxEsService {
     );
   }
 
-  renderQRFile(
-    docId,
-    eleId,
-    freeTextAnnotation,
-    hashId,
-    inkSignatureData,
-    measureShapeAnnotations,
-    shapeAnnotations,
-    signatureData,
-    stampAnnotations,
-    stickyNotesAnnotation,
-    textMarkupAnnotations,
-    uniqueId
-  ): Observable<number> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    };
-    return this.http.post<any>(
-      environment.pdfUrl + '/RenderQRFile',
-      {
-        action: 'Download',
-        documentId: docId,
-        elementId: eleId,
-        fieldsData: undefined,
-        freeTextAnnotation: freeTextAnnotation,
-        hashId: hashId,
-        inkSignatureData: inkSignatureData,
-        measureShapeAnnotations: measureShapeAnnotations,
-        shapeAnnotations: shapeAnnotations,
-        signatureData: signatureData,
-        stampAnnotations: stampAnnotations,
-        stickyNotesAnnotation: stickyNotesAnnotation,
-        textMarkupAnnotations: textMarkupAnnotations,
-        uniqueId: uniqueId,
-      },
-      httpOptions
-    );
-  }
-
-  toPDF(data) {
+  updateSignFileTrans(data) {
     return this.api.execSv(
-      'ES',
-      'ERM.Business.ES',
-      'SignFilesBusiness',
-      'ToPDFAsync',
-      data
-    );
-  }
-
-  updateSignFileTrans(data){
-    return this.api.execSv(
-      'ES',
+      'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UpdateApprovalTransStatusAsync',
       data
-    )
+    );
   }
   //#endregion
 }

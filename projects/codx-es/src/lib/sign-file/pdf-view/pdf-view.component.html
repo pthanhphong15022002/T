@@ -335,16 +335,63 @@
               </ng-template>
             </e-tabitem>
 
-            <e-tabitem *ngIf="isApprover">
+            <!-- <e-tabitem>
               <ng-template #headerText>
                 {{ headerRightName[1].text }}
+              </ng-template>
+              <ng-template #content>
+                <div class="position-relative">
+                  <div class="control-section">
+                    <ejs-listview
+                      id="sample-list-group"
+                      [dataSource]="this.pdfviewerControl?.annotationCollection"
+                      [fields]="fields"
+                    >
+                      <ng-template #template let-dataSource>
+                        <codx-temp-full
+                          cardCss="icon-30 mb-1 {{
+                            dataSource.customData.split(':')[1]
+                              | vll: 'ES015':'icon'
+                              | async
+                          }}"
+                          [imageObjType]="'AD_Users'"
+                          [imageWidth]="35"
+                          imgCss="me-2"
+                          [title]="
+                            (dataSource.customData.split(':')[1]
+                              | vll: 'ES015':'text'
+                              | async) +
+                            ' - ' +
+                            getAreaOwnerName(dataSource.author)
+                          "
+                          [subTitle]=""
+                          [dataItem]="dataSource"
+                        >
+                        </codx-temp-full>
+                      </ng-template>
+                      <ng-template #groupTemplate let-dataSource>
+                        <div class="e-list-wrapper">
+                          <span class="e-list-item-content">{{
+                            dataSource.items[0].pageNumber
+                          }}</span>
+                        </div>
+                      </ng-template>
+                    </ejs-listview>
+                  </div>
+                </div>
+              </ng-template>
+            </e-tabitem> -->
+
+            <e-tabitem *ngIf="isApprover">
+              <ng-template #headerText>
+                {{ headerRightName[2].text }}
               </ng-template>
               <ng-template #content></ng-template>
             </e-tabitem>
 
             <e-tabitem *ngIf="isApprover">
               <ng-template #headerText>
-                {{ headerRightName[2].text }}
+                {{ headerRightName[3].text }}
               </ng-template>
               <ng-template #content></ng-template>
             </e-tabitem>
@@ -355,7 +402,7 @@
   </div>
   <img
     class="row position-absolute invisible"
-    style="width: 100px !important; height: 100px !important"
+    style="width: 250px !important; height: 250px !important"
     #qrCode
     id="qrCode"
   />
