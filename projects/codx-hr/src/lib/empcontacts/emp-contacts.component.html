@@ -30,8 +30,8 @@
 </ng-template>
 
 <ng-template #cardTemp let-data>
-  <codx-card-center cardCss="border w-250px h-100" [imageId]="data.employeeID"
-    [title]="data.employeeName" [subTitle]="(data.positionName || 'Bộ phận')" [dataItem]="data"
+  <codx-card-center cardCss="border w-250px h-100 emp-card" [imageId]="data.employeeID" [title]="data.employeeName"
+    [subTitle]="(data.positionName || 'Bộ phận')" [dataItem]="data"
     [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'" [footer]="footer">
   </codx-card-center>
 </ng-template>
@@ -54,9 +54,8 @@
 
 
 <ng-template #itemEmployee let-data>
-  <div class="d-flex align-items-center">
-    <codx-img class="symbol symbol-30 symbol-circle me-3" [width]="40" [objectId]="data.employeeID"
-      objectType="HR_Employees">
+  <div class="d-flex align-items-center emp-list">
+    <codx-img class="me-3" [width]="30" [objectId]="data.employeeID" objectType="HR_Employees">
     </codx-img>
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex align-items-center">
@@ -70,7 +69,7 @@
           </codx-label>
         </div> -->
 
-        <span class="text-dark-75 font-size-sm">
+        <span class="text-gray-600 fs-7">
           <span #positionName>{{ data.positionName | formatvalue: view.formModel:"positionName":positionName | async
             }}</span>
         </span>
@@ -88,7 +87,7 @@
 <ng-template #itemBirthDay let-data>
   <div class="d-flex flex-column employee-info">
     <div class="d-flex align-items-center1">
-      <span class="text-dark-75">
+      <span class="text-gray-600">
         <span #birthday>{{ data.birthday | formatvalue: view.formModel:"birthday":birthday | async
           }}</span>
       </span>
@@ -98,7 +97,7 @@
 
 <ng-template #itemJoinOn let-data>
   <div class="d-flex align-items-center">
-    <span class="text-dark-75">
+    <span class="text-gray-600">
       <span #joinedOn>{{ data.joinedOn | formatvalue: view.formModel:"joinedOn":joinedOn | async
         }}</span>
     </span>
@@ -108,7 +107,7 @@
 <ng-template #itemPhone let-data>
   <div class="d-flex align-items-center employee-add">
     <span class="icon-phone_android icon-16 me-2"></span>
-    <span class="text-dark-75">
+    <span class="text-gray-600">
       <span #phone>{{ data.phone | formatvalue: view.formModel:"phone":phone | async
         }}</span>
     </span>
@@ -118,7 +117,7 @@
 <ng-template #itemEmail let-data>
   <div class="d-flex align-items-center employee-email">
     <span class="icon-email icon-16 me-2"></span>
-    <span class="text-dark-75">
+    <span class="text-gray-600">
       <span #email>{{ data.email | formatvalue: view.formModel:"email":email | async
         }}</span>
     </span>

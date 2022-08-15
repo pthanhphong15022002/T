@@ -94,8 +94,6 @@ export class SignFileComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.view.dataService.methodDelete = 'DeleteSignFileAsync';
-    this.view.dataService.dataValue = '1';
-    this.view.dataService.predicate = 'ApproveStatus=@0';
     this.views = [
       {
         type: ViewType.listdetail,

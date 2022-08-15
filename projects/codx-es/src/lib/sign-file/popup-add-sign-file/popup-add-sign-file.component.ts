@@ -1,4 +1,3 @@
-import { I } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -220,7 +219,7 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  getfileCount(event) { }
+  getfileCount(event) {}
 
   valueChange(event) {
     if (event?.field && event?.component) {
@@ -332,8 +331,8 @@ export class PopupAddSignFileComponent implements OnInit {
         });
       }
     } else {
-      this.esService.editApprovalStep().subscribe((res) => { });
-      this.esService.deleteApprovalStep().subscribe((res) => { });
+      this.esService.editApprovalStep().subscribe((res) => {});
+      this.esService.deleteApprovalStep().subscribe((res) => {});
     }
   }
 
@@ -509,4 +508,28 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   //#endregion
+
+  approve() {
+    this.esService
+      .release(
+        this.dialogSignFile.value,
+        this.formModel.entityName,
+        this.formModel.funcID
+      )
+      .subscribe((res) => {
+        if (res?.msgCodeError == null && res?.rowCount) {
+          this.dialogSignFile.patchValue({ approveStatus: '3' });
+          this.esService
+            .editSignFile(this.dialogSignFile.value)
+            .subscribe((result) => {
+              if (res) {
+                this.notify.notifyCode('Gửi duyệt thành công!');
+                this.dialog && this.dialog.close();
+              }
+            });
+        } else {
+          this.notify.notifyCode(res?.msgCodeError);
+        }
+      });
+  }
 }

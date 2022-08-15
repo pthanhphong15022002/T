@@ -42,7 +42,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   isEdited = false;
 
   currentStepNo = 1;
-  dialog: DialogRef;
+  dialogApproval: DialogRef;
   formModel: FormModel;
   approvers = [];
   lstStep: any;
@@ -64,7 +64,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       this.type = dialogData?.data.type;
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
-      this.dialog = dialog;
+      this.dialogApproval = dialog;
     } else {
       this.type = '1';
     }
@@ -86,7 +86,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   close() {
-    this.dialog && this.dialog.close();
+    this.dialogApproval && this.dialogApproval.close();
   }
 
   initForm() {
@@ -134,7 +134,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
     this.esService.setApprovalStep(this.lstStep);
     this.esService.setLstDeleteStep(this.lstDeleteStep);
     this.model.patchValue({ countStep: this.lstStep.length });
-    this.dialog && this.dialog.close();
+    this.dialogApproval && this.dialogApproval.close();
   }
 
   saveStep() {
@@ -221,7 +221,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       if (res) {
         var model = new DialogModel();
         model.FormModel = res;
-        this.dialog = this.cfService.openForm(
+        this.dialogApproval = this.cfService.openForm(
           PopupAddApprovalStepComponent,
           '',
           850,
@@ -232,7 +232,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
           model
         );
 
-        this.dialog.closed.subscribe((res) => {
+        this.dialogApproval.closed.subscribe((res) => {
           if (res?.event) {
             this.isEdited = true;
           }

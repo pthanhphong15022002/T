@@ -37,7 +37,14 @@
     left: 20px;
     right: 20px;
     bottom: 65px;
-    padding: 5px 10px;
+}
+
+.note-action>.d-flex {
+    padding: 5px;
+}
+
+.note-action>codx-input {
+    border-left: 1px #ddd solid;
 }
 
 .note-action .e-input-group {

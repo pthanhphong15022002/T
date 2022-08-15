@@ -3,7 +3,7 @@
         <div class="offcanvas-content">
             <div class="offcanvas-wrapper">
                 <div class="form-group">
-                    <label for="foldername">                      
+                    <label for="foldername">
                         <codx-breadcumb end="2" start="0" max="4"></codx-breadcumb>
                     </label>
                     <div class="d-flex">
@@ -11,7 +11,7 @@
                             <codx-input [placeholder]="titleFolderName" [class]="validate('folderName')" type="text"
                                 [crrValue]="folderName" (valueChange)="changeValue($event, 'folderName')"></codx-input>
                         </div>
-                        <div class="ms-2 icon-document">
+                        <div class="ms-1 h-32px icon-document">
                             <codx-valuelist [name]="'L1470'" [iconOnly]="true"
                                 (valueChange)="valueChange($event, 'icon')"></codx-valuelist>
                         </div>
