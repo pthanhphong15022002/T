@@ -144,8 +144,6 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             if (today) {
               today.click();
             }
-          } else if (type == 'edit-save-note') {
-            (this.lstView.dataService as CRUDService).remove(data).subscribe();
           } else {
             (this.lstView.dataService as CRUDService)
               .update(data)

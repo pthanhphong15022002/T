@@ -81,11 +81,16 @@ export class CodxDMService {
     public dataFileEditing: FileUpload;
     public listFolder = [];
     public listFiles = [];
+    revision: boolean;
+    moveable = false;
     itemRight: ItemRight;
     path: string;
     // public confirmationDialogService: ConfirmationDialogService;
     public ChangeData = new BehaviorSubject<boolean>(null);
     isChangeData = this.ChangeData.asObservable();
+
+    public ChangeDataViewFile = new BehaviorSubject<any>(null);
+    isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
 
     public EmptyTrashData = new BehaviorSubject<boolean>(null);
     isEmptyTrashData = this.EmptyTrashData.asObservable();
@@ -558,6 +563,7 @@ export class CodxDMService {
             //  this.isBookmark = !this.isBookmark;
               this.listFiles = list;
               this.ChangeData.next(true);
+              this.ChangeDataViewFile.next(res);
            //   that.changeDetectorRef.detectChanges();
             }
           });
@@ -592,7 +598,7 @@ export class CodxDMService {
         }
       }
 
-    filterMoreFunction(e: any, data: any) {    
+    filterMoreFunction(e: any, data: any, modeView = false) {    
       var type = this.getType(data, "entity");
       var bookmark = this.isBookmark(data);
       var list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
@@ -635,6 +641,7 @@ export class CodxDMService {
             if (e[i].data != null && e[i].data.functionID == 'DMT0224') {
               e[i].disabled = true;     
             }
+            // data?.isblur = true 
             // bookmark va unbookmark         
             if (bookmark) {
               if (e[i].data != null && e[i].data.functionID == 'DMT0205') {
@@ -658,7 +665,17 @@ export class CodxDMService {
             }
           } 
           else {
-              // bookmark va unbookmark 
+            if (modeView) {
+              list = "DMT0212;DMT0217;DMT0225;DMT0222";
+              if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) { 
+                e[i].disabled = true;  
+              }
+              else {
+                e[i].disabled = false;  
+              }
+            }    
+
+            // bookmark va unbookmark 
             if (bookmark) {
               if (e[i].data != null && e[i].data.functionID == 'DMT0217') {
                 e[i].disabled = true;     
@@ -677,8 +694,95 @@ export class CodxDMService {
             // phuc hoi     
             if (this.idMenuActive != "DMT08"  && e[i].data != null && e[i].data.functionID == 'DMT0235') { 
               e[i].disabled = true;  
-            }
+            }                   
           } 
+          // xet quyetn
+          if (e[i].data) {
+            e[i].isblur = false; // duoc view
+            switch(e[i].data.functionID) {           
+              // folder
+              case "DMT0201": // share thu muc    
+              case "DMT0212": // chia se file  
+                if (!data.share) 
+                  e[i].isblur = true; // duoc view                            
+                break;          
+              case "DMT0202": // chinh sua thu muc    
+              case "DMT0213": // chinh sua file
+              case "DMT0203": // Thay đổi tên thu muc    
+              case "DMT0215": // thay doi ten file           
+                if (!data.write) 
+                   e[i].isblur = true; // duoc view
+                break;              
+              case "DMT0204": // di chuyen thu muc 
+              case "DMT0216": // di chuyen file   
+                if (!data.moveable) 
+                  e[i].isblur = true; // duoc view              
+                break;                                
+              case "DMT0206": //delete   
+              case "DMT0219": // xoa file
+                if (!data.delete || data.isSystem) 
+                  e[i].isblur = true; // duoc view              
+                break;                    
+              // case "DMT0207": //permission   
+              //   break;  
+              // case "DMT0208": //yeu cau cap quyen   
+              //   break;  
+              case "DMT0209": //properties  
+              case "DMT0222": //properties file   
+                if (!data.read) 
+                  e[i].isblur = true; // duoc view
+                break;                    
+              // case "DMT0224": // in folder
+              //   break;  
+              // case "DMT0226": // xet duyet  
+              //   break;
+              // case "DMT0227": // tu choi
+              //   break;
+              // case "DMT0228": // huy
+              //   break;
+              // case "DMT0229": // lay lay quyen
+              //   break;   
+              case "DMT0233": // restore folder
+              case "DMT0235": // restore file
+                if (!data.delete) 
+                  e[i].isblur = true; // duoc view              
+                break;                    
+              // file  
+              case "DMT0210": //xem file
+                if (!data.read) 
+                  e[i].isblur = true; // duoc view
+                break;
+              case "DMT0211": // download
+                if (!data.download) 
+                  e[i].isblur = true; // duoc view              
+                break;    
+              case "DMT0214": // Sao chép file
+                if (!data.create) 
+                  e[i].isblur = true; // duoc view              
+                break;           
+              case "DMT0218": // quan ly version
+                if (!data.write || !this.revision) 
+                  e[i].isblur = true; // duoc view              
+                break;           
+                           
+              // case "DMT0220": // persmission file
+              //   break;    
+              // case "DMT0221": //yeu cau cap quyen file   
+              //   break;                           
+              // case "DMT0230": // xet duyet  
+              //   break;
+              // case "DMT0231": // tu choi
+              //   break;
+              // case "DMT0232": // huy
+              //   break;              
+              // case "DMT0234": // lay lay quyen
+              //   break;                
+
+              default:
+                e[i].isblur = false; // duoc view
+                break;
+            }  
+          }      
         }      
       }
     }
@@ -923,7 +1027,7 @@ export class CodxDMService {
           break;
         case "DMT0210": //view file
           this.fileService.getFile(data.recID).subscribe(data => {
-              this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+              this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data,  this.formModel], "");
               var files = this.listFiles;
               if (files != null) {
                 let index = files.findIndex(d => d.recID.toString() === data.recID);
