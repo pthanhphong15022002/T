@@ -1,11 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ApiHttpService, ButtonModel, CodxListviewComponent, DataRequest, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { catchError, map, Observable, of, finalize, Subscription } from 'rxjs';
 
 @Component({
   selector: 'lib-emp-contacts',
   templateUrl: './emp-contacts.component.html',
-  styleUrls: ['./emp-contacts.component.css']
+  styleUrls: ['./emp-contacts.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class EmpContactsComponent implements OnInit {
 
@@ -31,13 +32,13 @@ export class EmpContactsComponent implements OnInit {
   @ViewChild('itemPhone', { static: true }) itemPhone: TemplateRef<any>;
   @ViewChild('itemEmail', { static: true }) itemEmail: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
-  
+
   views: Array<ViewModel> = [];
   buttons: Array<ButtonModel> = [];
   constructor(
     private api: ApiHttpService,
     private changedt: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
 
@@ -79,7 +80,7 @@ export class EmpContactsComponent implements OnInit {
         id: '1',
         type: ViewType.grid,
         active: false,
-        sameData:true,
+        sameData: true,
         model: {
           resources: this.columnsGrid,
           panelLeftRef: this.panelLeftRef,
@@ -89,12 +90,12 @@ export class EmpContactsComponent implements OnInit {
         id: '2',
         type: ViewType.card,
         active: true,
-        sameData:true,
+        sameData: true,
         model: {
           template: this.cardTemp,
         }
       },
-     
+
     ];
     this.changedt.detectChanges();
   }
@@ -164,5 +165,5 @@ export class EmpContactsComponent implements OnInit {
 
   }
 
-  
+
 }

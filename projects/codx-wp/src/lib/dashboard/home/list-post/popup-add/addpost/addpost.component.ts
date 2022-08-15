@@ -423,7 +423,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
-            this.dmSV.fileUploadList = [...this.listFileUpload];
+            this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
             this.atmCreate.saveFilesObservable().subscribe((res:any)=>{
               if(res){
@@ -518,6 +518,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
+  width = 420;
+  height = window.innerHeight;
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
@@ -603,7 +605,39 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
+  showCBB=false;
+  tagWith:string ='';
+  saveAddUser(value:any){
+    let data = value.dataSelected;
+    data.forEach((x: any) => {
+      let p = new Permission();
+      p.objectType = 'U'
+      p.objectID = x.UserID;
+      p.objectName = x.UserName;
+      p.memberType = this.MEMBERTYPE.TAGS;
+      p.read = true;
+      p.share = true;
+      p.isActive = true;
+      p.createdBy = this.user.userID;
+      p.createdOn = new Date();
+      this.permissions.push(p);
+    });
+    if (data.length > 1) {
+      this.cache.message('WP019').subscribe((mssg: any) => {
+        if (mssg)
+          this.tagWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>', data.length - 1, this.shareText);
+      });
+    }
+    else {
+      this.cache.message('WP018').subscribe((mssg: any) => {
+        if (mssg)
+          this.tagWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>');
+      });
+    }
+    this.showCBB = !this.showCBB;
+  }
+
   tagUser(){
-    
+    this.showCBB = !this.showCBB;
   }
 }

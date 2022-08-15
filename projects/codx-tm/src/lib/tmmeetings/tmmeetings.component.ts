@@ -6,6 +6,8 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectorRef,
+  Input,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -25,11 +27,11 @@ import { CO_Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
 
 @Component({
-  selector: 'lib-tmmeetings',
+  selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
   styleUrls: ['./tmmeetings.component.css'],
 })
-export class TMMeetingsComponent extends UIComponent {
+export class TMMeetingsComponent extends UIComponent implements OnInit, AfterViewInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
@@ -67,6 +69,11 @@ export class TMMeetingsComponent extends UIComponent {
   dataValue = '';
   formName = '';
   gridViewName = '';
+  @Input() calendarID: string;
+  @Input() projectID:any;  //view meeting to sprint_details
+  @Input() iterationID:any
+  dataObj :any ;
+
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -82,18 +89,31 @@ export class TMMeetingsComponent extends UIComponent {
         this.urlDetail = res[0].url;
       }
     });
-
+    // view meeting to sprint_details
+    var dataObj = { projectID: this.projectID? this.projectID : '' ,iterationID : this.iterationID? this.iterationID: ''}
+    this.dataObj = JSON.stringify(dataObj);
+    //
     this.dataValue = this.user?.userID;
   }
+
+
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
+    this.getParams();
+
+    this.modelResource = new ResourceModel();
+    this.modelResource.assemblyName = 'CO';
+    this.modelResource.className = 'MeetingsBusiness';
+    this.modelResource.service = 'CO';
+    this.modelResource.method = 'GetListMeetingsAsync';
   }
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
+
   }
 
   ngAfterViewInit(): void {
@@ -107,11 +127,14 @@ export class TMMeetingsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.content,
+        type: ViewType.schedule,
         active: false,
         sameData: true,
         model: {
-          panelLeftRef: this.templateLeft,
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
         },
       },
       {
@@ -128,9 +151,104 @@ export class TMMeetingsComponent extends UIComponent {
     this.view.dataService.methodSave = 'AddMeetingsAsync';
     this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
-
+    if(this.funcID="TMT03011" && (this.projectID || this.iterationID)){
+      this.model = new DataRequest();
+      this.model.pageLoading = false;
+      this.model.formName = 'Tasks';
+      this.model.gridViewName = 'grvTasks';
+      this.model.entityName = 'TM_Tasks';
+     this.model.predicate = "RefID==@0 or RefID==@1" ;
+      this.funcID ="" ;
+      this.model.dataValue = this.projectID + ";" +this.iterationID ;
+    }
     this.dt.detectChanges();
   }
+
+  //#region schedule
+
+  fields = {
+    id: 'meetingID',
+    subject: { name: 'meetingName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resources: { name: 'resources' },
+  };
+  resourceField = {
+    Name: 'Resources',
+    Field: 'resourceID',
+    IdField: 'resourceID',
+    TextField: 'resourceName',
+    Title: 'Resources',
+  };
+
+  getCellContent(evt: any) {
+    if (this.dayoff.length > 0) {
+      for (let i = 0; i < this.dayoff.length; i++) {
+        let day = new Date(this.dayoff[i].startDate);
+        if (
+          day &&
+          evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()
+        ) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.backgroundColor = this.dayoff[i].color;
+            });
+          }
+          return (
+            '<icon class="' +
+            this.dayoff[i].symbol +
+            '"></icon>' +
+            '<span>' +
+            this.dayoff[i].note +
+            '</span>'
+          );
+        }
+      }
+    }
+
+    return ``;
+  }
+
+  getParams() {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        ['TMParameters', null, 'CalendarID']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = res.fieldValue;
+          this.getDayOff(this.calendarID);
+        }
+      });
+  }
+
+  getDayOff(id = null) {
+    if (id) this.calendarID = id;
+    this.api
+      .execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'CalendarsBusiness',
+        'GetDayWeekAsync',
+        [this.calendarID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          res.forEach((ele) => {
+            this.dayoff = res;
+          });
+        }
+      });
+  }
+  //#endregion schedule
 
   convertHtmlAgency(resourceID: any) {
     var desc = '<div class="d-flex">';

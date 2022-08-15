@@ -26,7 +26,7 @@ import {
   PrintService,
   AnnotationService,
 } from '@syncfusion/ej2-angular-pdfviewer';
-import { AuthStore, UIComponent } from 'codx-core';
+import { AuthStore, ScrollComponent, UIComponent } from 'codx-core';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
@@ -111,7 +111,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   autoSignState: boolean = false;
 
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
-  hideThumbnail: boolean = true;
+  hideThumbnail: boolean = false;
   hideActions: boolean = false;
 
   saveAnnoQueue: Map<string, any>;
@@ -200,7 +200,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   ngDoCheck() {}
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    ScrollComponent.reinitialization();
+  }
 
   onCreated(evt: any) {
     this.thumbnailEle =

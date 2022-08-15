@@ -99,7 +99,7 @@ export const routes: Routes = [
         component: MeetingDetailComponent,
       },
       {
-        path: 'viewwork/:funcID',
+        path: 'sprintdetails/:funcID',
         component: ViewWorkComponent,
       },
       {

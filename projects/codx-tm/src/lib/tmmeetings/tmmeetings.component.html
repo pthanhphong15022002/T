@@ -1,5 +1,5 @@
 <codx-views #view [funcID]="funcID" service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings" [views]="views"
-  [button]="button" className="MeetingsBusiness" method="GetListMeetingsAsync" (buttonClick)="click($event)"
+  [button]="button" className="MeetingsBusiness" method="GetListMeetingsAsync" (buttonClick)="click($event)" 
   [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID">
 </codx-views>
 
@@ -10,13 +10,19 @@
 
 <ng-template #cardKanban let-data>
   <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [title]="getDate(data)"
-    [subTitle]="data.meetingName" [dataItem]="data"  [descTmp]="descTmp" [footer]="footer"
+    [subTitle]="data.meetingName" [dataItem]="data"  [descTmp]="" [footer]="footer"
     [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
   </codx-card-center>
 </ng-template>
 
-<ng-template #descTmp let-data>
-  aaaa
+<ng-template #cellTemplate let-data>
+  <div [innerHtml]="getCellContent(data.date)"></div>
+</ng-template>
+
+<ng-template #eventTemplate let-data>
+  <div>
+    <div>{{ data.meetingName }}</div>
+  </div>
 </ng-template>
 
 <ng-template #footer let-data>

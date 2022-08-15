@@ -11,6 +11,7 @@
   (buttonClick)="click($event)"
   [idField]="idField"
   [className]="className"
+  [moreFuncs]="moreFunc"
   [method]="method"
   (selectedChange)="onSelect($event)"
   (requestEnded)="closeDialog($event)"
@@ -31,21 +32,13 @@
 
 <ng-template #categoryCol let-data>
   <div class="has-action-menu">
-    {{ data.category | vll: "VL005":"text" | async }}    
-    <!-- <div class="action-menu">
-      <codx-mfunc        
-        [dataItem]="data"
-        [formModel]="viewBase.formModel"
-        click="clickMF($event, data)"
-        type="hover"
-      ></codx-mfunc> 
-    </div> -->
+    {{ data.category | vll: "VL005":"text" | async }} 
       <codx-mfunc [formModel]="viewBase.formModel" 
       (clickMF)="clickMF($event,data)" 
       type="hover" [dataItem]="data">
       </codx-mfunc>
   </div>
-   
+  
 </ng-template>
 
 

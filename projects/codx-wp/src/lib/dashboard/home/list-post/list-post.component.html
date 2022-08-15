@@ -268,24 +268,16 @@
         *ngTemplateOutlet="containTemplate; context: { $implicit: item }"
       ></ng-container>
     </ng-template>
-
-    <!-- <treeview-comment
-      [funcID]="codxViews.formModel.funcID"
-      [objectType]="codxViews.formModel.entityName"
-      [rootData]="item.listComment"
-      [dataComment]="item"
-      (pushComment)="pushComment($event)"
-    >
-    </treeview-comment> -->
-    <codx-comments
-      [funcID]="codxViews.formModel.funcID"
-      [objectType]="codxViews.formModel.entityName"
-      [rootData]="item"
-      (pushComment)="pushComment($event)">
-    </codx-comments>
+    <!-- commemt -->
+    <treeview-comment 
+      [funcID]="codxViews.formModel.funcID" 
+      [fromModel]="codxViews.formModel"
+      [objectType]="'WP_Comments'" 
+      [dataComment]="item">
+    </treeview-comment>
+    <!-- end comment -->
   </div>
 </ng-template>
-
 <!-- content body -->
 <ng-template #containTemplate let-item>
   <ng-container *ngIf="!item.isPortal; else category2">
@@ -293,7 +285,7 @@
       <ng-container *ngIf="item.files; else get">
         <div>
           <codx-file
-            [lstFile]="item.files"
+            [files]="item.files"
             (evtGetFiles)="getFiles($event, item)"
             (viewDetail)="clickViewDetail($event)"
           ></codx-file>
@@ -476,7 +468,6 @@
   </div>
 </ng-template>
 <!-- tooltip -->
-
 <!-- tooltip for user shared -->
 <ng-template #popContentOfShare style="width: fit-content; height: fit-content">
   <div *ngIf="show()">

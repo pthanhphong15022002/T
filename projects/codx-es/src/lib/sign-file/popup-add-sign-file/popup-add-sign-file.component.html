@@ -10,8 +10,7 @@
         <div class="stepper-nav flex-center flex-wrap" #status>
           <div [ngClass]="
               isAddNew ? 'stepper-item active' : 'stepper-item approve'
-            " data-kt-stepper-element="nav" data-kt-stepper-action="step" ngbTooltip="Upload file"
-            (click)="clickTab(0)">
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(0)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
@@ -19,15 +18,16 @@
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
-              <div class="stepper-label">Upload file</div>
+              <div class="stepper-label fw-bold">
+                <codx-label name="lblUploadFile" default="Tải tài liệu" [formModel]="formModel"></codx-label>
+              </div>
             </div>
             <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
           <div [ngClass]="
               isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
-            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)"
-            ngbTooltip="Thông tin tài liệu">
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
@@ -35,15 +35,17 @@
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
-              <div class="stepper-label">Thông tin tài liệu</div>
+              <div class="stepper-label fw-bold">
+                <codx-label name="lblFileInfo" default="Thông tin tài liệu" [formModel]="formModel"></codx-label>
+
+              </div>
             </div>
             <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
           <div [ngClass]="
               isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
-            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(2)"
-            ngbTooltip="Quy trình duyệt">
+            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(2)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
@@ -51,15 +53,14 @@
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
-              <div class="stepper-label">Quy trình duyệt</div>
+              <div class="stepper-label fw-bold">
+                <codx-label name="lblApprovalStep" default="Quy trình duyệt" [formModel]="formModel"></codx-label>
+              </div>
             </div>
             <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
-
-          <div [ngClass]="
-              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
-            " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(3)"
-            ngbTooltip="Thiết lập vùng ký">
+          <div [ngClass]="isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'" data-kt-stepper-element="nav"
+            data-kt-stepper-action="step" (click)="clickTab(3)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
@@ -67,7 +68,10 @@
                 <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
                 <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
               </div>
-              <div class="stepper-label">Thiết lập vùng ký</div>
+              <div class="stepper-label fw-bold">
+                <codx-label name="lblSignArea" default="Thiết lập vùng ký" [formModel]="formModel"></codx-label>
+              </div>
+
             </div>
           </div>
         </div>
@@ -81,18 +85,22 @@
         <a href="#" class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4">Làm lại</a>
         <a href="#" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4">Ký</a> -->
         <ng-container *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
-          <div class="me-2 mb-2" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+          <!-- <div class="me-2 mb-2" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
             <codx-input type="checkbox" labelPosition="after" field="autoReset" class="test-check"
               (valueChange)="valueChange($event)" [crrValue]="">
             </codx-input>
             <codx-label class="ms-2" Name="lblIsTemplate" [formModel]="dialog.formModel" default="Lưu thành mẫu">
             </codx-label>
-          </div>
+          </div> -->
 
           <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
             (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
             <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
           </button>
+          <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4">
+            <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Gửi duyệt"></codx-label>
+          </a>
+
         </ng-container>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18" (click)="close(templateClose)"></i>
@@ -228,10 +236,13 @@
           </button>
         </div>
       </div>
+
     </div>
-    <lib-pdf-view *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0" [isApprover]="false"
-      [recID]="dialogSignFile.value.recID">
-    </lib-pdf-view>
+    <div class="stepper-body no-header p-2 w-100" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+      <lib-pdf-view [recID]="dialogSignFile.value.recID" [isApprover]="false">
+      </lib-pdf-view>
+    </div>
+
   </div>
 </div>
 
@@ -278,7 +289,7 @@
 
 <ng-template #templateClose let-dialogClose>
   <!--begin::Alert-->
-  <div class="card-alert alert alert-dismissible d-flex flex-column mw-650px mx-auto p-10">
+  <div class="card-alert alert alert-dismissible d-flex flex-column  ">
     <!--begin::Close-->
     <button type="button" class="position-absolute top-0 end-0 m-2 btn btn-icon" (click)="closeDialogTmp(dialogClose)">
       <span class="icon-close icon-18"></span>
@@ -286,7 +297,7 @@
 
     <!--end::Close-->
     <!--begin::Item-->
-    <div class="d-flex flex-stack my-10">
+    <div class="d-flex flex-stack my-7 ">
       <div class="d-flex">
         <span class="icon-help_outline me-5 icon-56 text-primary"></span>
         <div class="d-flex flex-column">
@@ -309,7 +320,7 @@
     </div>
     <!--end::Item-->
     <!--begin::Buttons-->
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end ">
       <a class="btn btn-primary me-2" (click)="clickIsSave(true, dialogClose)">
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
         </codx-label>

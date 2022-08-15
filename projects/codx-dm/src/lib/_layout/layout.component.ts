@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { FileUpload } from '@shared/models/file.model';
+import { FileService } from '@shared/services/file.service';
 import { AuthService, CacheService, CallFuncService, CodxService, DialogRef, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { Observable, of } from 'rxjs';
@@ -23,10 +24,13 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   disableInput = true;
   module = 'DM';
   dialog: DialogRef;
+  percentUsed: any;
+  itemHdd: any;
+ // totalUsed: string;
 
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
-  public titleHddUsed = 'Đã sử dụng 203.63MB trong tổng số 50.00 GB';
+  public titleHddUsed = 'Đã sử dụng 0MB trong tổng số 50.00 GB';
 
   @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
   @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
@@ -51,6 +55,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     private callfc: CallFuncService,
     private dmSV: CodxDMService,
     private changeDetectorRef: ChangeDetectorRef,
+    private fileService: FileService,
   ) {
     this.codxService.init('DM');
     //  this.funcs$= this.codxService.getFuncs('OD');
@@ -74,6 +79,41 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
       this.changeDetectorRef.detectChanges();
     });
+
+    this.dmSV.isUpdateHDD.subscribe(item => {     
+      this.getHDDInformaton(item);        
+    });
+    
+    this.fileService.getTotalHdd().subscribe(item => {
+      //  totalUsed: any;
+      // totalHdd: any;
+      this.getHDDInformaton(item);      
+    })
+
+  }
+
+  getHDDInformaton(item: any) {
+    if (item != null) {
+      this.itemHdd = item;
+      this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
+      if (item.unit == 'MB')
+        this.percentUsed = this.percentUsed / 1024;
+      this.percentUsed = this.percentUsed.toFixed(0);
+      //console.log(this.percentUsed);
+      this.titleHddUsed = item.messageHddUsed;
+      this.changeDetectorRef.detectChanges();
+    }    
+  }
+
+  getPercentClass() {
+    if (this.itemHdd != null) {
+      if (this.percentUsed >= 90)
+        return "progress-bar bg-danger";
+      else
+        return "progress-bar";
+    }
+    else
+      return "progress-bar";
   }
 
   ngAfterViewInit(): void {
