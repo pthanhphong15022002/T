@@ -83,6 +83,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.isAddNew = data?.data.isAddNew;
     this.option = data?.data.option;
     if (!this.isAddNew) {
+      this.data = data?.data.dataSelected;
       this.processTab = 4;
     }
   }

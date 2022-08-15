@@ -64,9 +64,11 @@ export class ViewDetailComponent implements OnInit {
             this.df.detectChanges();
           }
         });
-
       this.transID = this.itemDetail.processID;
-      if (this.itemDetail?.approveControl == '1') {
+      if (
+        this.itemDetail?.approveControl == '1' ||
+        this.itemDetail?.approveStatus != '0'
+      ) {
         this.transID = this.itemDetail.recID;
       }
 
