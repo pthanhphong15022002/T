@@ -19,6 +19,7 @@
                 </span>
             </div>
             <span class="icon-close icon-20 btn btn-icon btn-active-light-primary position-relative"
+               
                 (click)="close()"></span>
         </div>
     </div>
@@ -106,13 +107,13 @@
     <div class="d-flex note-action border align-items-center justify-content-between">
         <div class="d-flex">
             <div [class.active]="noteType.text">
-                <span (click)="onType('text')" class="icon-font_download icon-20 me-1 btn btn-icon btn-white"></span>
+                <span (click)="onType('text')" class="icon-font_download icon-20 btn btn-icon btn-white"></span>
             </div>
             <div [class.active]="noteType.list">
-                <span (click)="onType('list')" class="icon-list_alt icon-20 me-1 btn btn-icon btn-white"></span>
+                <span (click)="onType('list')" class="icon-list_alt icon-20 btn btn-icon btn-white"></span>
             </div>
             <div [class.active]="noteType.check">
-                <span (click)="onType('check')" class="icon-check_box icon-20 me-1 btn btn-icon btn-white"></span>
+                <span (click)="onType('check')" class="icon-check_box icon-20 btn btn-icon btn-white"></span>
             </div>
             <span class="icon-image icon-20 btn btn-icon btn-white" (click)="popupFile()">
             </span>
