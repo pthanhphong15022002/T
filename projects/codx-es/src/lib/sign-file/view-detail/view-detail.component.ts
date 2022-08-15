@@ -43,6 +43,7 @@ export class ViewDetailComponent implements OnInit {
   itemDetailDataStt;
   dialog: DialogRef;
   lstStep = [];
+  transID: string;
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   ngOnInit(): void {
@@ -62,16 +63,16 @@ export class ViewDetailComponent implements OnInit {
           }
         });
 
-      let transID = this.itemDetail.processID;
+      this.transID = this.itemDetail.processID;
       if (this.itemDetail?.approveControl == '1') {
-        transID = this.itemDetail.recID;
+        this.transID = this.itemDetail.recID;
       }
 
       this.esService.getFormModel('EST04').then((res) => {
         if (res) {
           let fmApprovalStep = res;
           let gridModels = new GridModels();
-          gridModels.dataValue = transID;
+          gridModels.dataValue = this.transID;
           gridModels.predicate = 'TransID=@0';
           gridModels.funcID = fmApprovalStep.funcID;
           gridModels.entityName = fmApprovalStep.entityName;

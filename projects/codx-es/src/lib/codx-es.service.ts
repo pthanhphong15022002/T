@@ -321,23 +321,6 @@ export class CodxEsService {
     );
   }
 
-  getApprovalTrans(recID: string) {
-    // let data = new DataRequest();
-    // data.formName = 'ApprovalTrans';
-    // data.gridViewName = 'grvSignFiles';
-    // data.entityName = 'ES_ApprovalTrans';
-    // data.predicate = 'ProcessID=@0';
-    // data.dataValue = recID;
-    // data.pageLoading = false;
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'GetByProcessIDAsync',
-      [recID]
-    );
-  }
-
   getApprovedSignatures(recID, userID) {
     return this.api.execSv(
       'es',
@@ -635,7 +618,6 @@ export class CodxEsService {
   //#endregion
 
   //#region ES_SignFiles
-
   getAutoNumberByCategory(categoryID): Observable<any> {
     return this.api.exec(
       'ERM.Business.AD',
@@ -715,6 +697,38 @@ export class CodxEsService {
   }
 
   //#endregion
+
+  //#region ES_ApprovalTrans
+
+  release(oSignFile: any, entityName: string, funcID: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.CM',
+      'DataBusiness',
+      'ReleaseAsync',
+      [
+        oSignFile?.recID,
+        oSignFile.approveControl == '1'
+          ? oSignFile?.recID
+          : oSignFile?.processID,
+        entityName,
+        funcID,
+        '<div>' + oSignFile.title + '</div>',
+      ]
+    );
+  }
+
+  getApprovalTrans(recID: string) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetByTransIDAsync',
+      [recID]
+    );
+  }
+
+  //#endregion
   addOrEditSignArea(data: any): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -758,6 +772,57 @@ export class CodxEsService {
         pageIndex: pageNumber - 1,
       },
       httpOptions
+    );
+  }
+
+  renderQRFile(
+    docId,
+    eleId,
+    freeTextAnnotation,
+    hashId,
+    inkSignatureData,
+    measureShapeAnnotations,
+    shapeAnnotations,
+    signatureData,
+    stampAnnotations,
+    stickyNotesAnnotation,
+    textMarkupAnnotations,
+    uniqueId
+  ): Observable<number> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+    return this.http.post<any>(
+      environment.pdfUrl + '/RenderQRFile',
+      {
+        action: 'Download',
+        documentId: docId,
+        elementId: eleId,
+        fieldsData: undefined,
+        freeTextAnnotation: freeTextAnnotation,
+        hashId: hashId,
+        inkSignatureData: inkSignatureData,
+        measureShapeAnnotations: measureShapeAnnotations,
+        shapeAnnotations: shapeAnnotations,
+        signatureData: signatureData,
+        stampAnnotations: stampAnnotations,
+        stickyNotesAnnotation: stickyNotesAnnotation,
+        textMarkupAnnotations: textMarkupAnnotations,
+        uniqueId: uniqueId,
+      },
+      httpOptions
+    );
+  }
+
+  toPDF(data) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'ToPDFAsync',
+      data
     );
   }
 
