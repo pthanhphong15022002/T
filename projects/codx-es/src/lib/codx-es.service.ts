@@ -694,7 +694,7 @@ export class CodxEsService {
 
   //#region ES_ApprovalTrans
 
-  release(oSignFile: any, entityName: string, funcID: string) {
+  release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.CM',
@@ -717,7 +717,7 @@ export class CodxEsService {
       'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
-      'GetByTransIDAsync',
+      'GetViewByTransIDAsync',
       [recID]
     );
   }
