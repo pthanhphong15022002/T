@@ -27,7 +27,6 @@ export class CatagoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    debugger;
     this.route.params.subscribe((routeParams) => {
       var state = history.state;
       if (state) {

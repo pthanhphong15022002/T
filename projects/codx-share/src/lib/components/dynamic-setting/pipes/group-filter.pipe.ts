@@ -5,7 +5,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class GroupPipe implements PipeTransform {
   transform(items: any[], groupName: string, lineType: string = '1'): any[] {
     if (!items || !groupName) return [];
-    if (lineType == '2') debugger;
     var dt = items.filter(
       (x) => x.refLineID === groupName && x.lineType === lineType
     );
