@@ -194,6 +194,11 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
   background-color: rgba(221, 238, 255, 0.25);
 }
 
+.sm-card .text-gray-700.line-clamp {
+  font-size: var(--fs-7);
+  color: var(--gray-500);
+}
+
 .icon-per.no-permission {
   background-image: url("/assets/themes/dm/default/img/folder-security.svg") !important;
   background-position: right bottom !important;
