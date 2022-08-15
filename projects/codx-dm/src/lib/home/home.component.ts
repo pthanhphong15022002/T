@@ -90,7 +90,7 @@ export class HomeComponent extends UIComponent {
   }
   
   openItem(data: any) {
-    alert(1);
+  //  alert(1);
   }
 
   onLoading($event): void {  

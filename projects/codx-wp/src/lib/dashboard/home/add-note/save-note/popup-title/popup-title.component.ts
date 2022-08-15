@@ -67,8 +67,6 @@ export class PopupTitleComponent extends UIComponent implements OnInit {
           this.dialog.close();
           if (this.dialogRef != undefined) this.dialogRef.close();
           this.notificationsService.notifyCode('E0528');
-          var object = [{ data: res, type: 'edit-save-note' }];
-          this.noteService.data.next(object);
           this.changeDetectorRef.detectChanges();
         }
       });
