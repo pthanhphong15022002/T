@@ -1,0 +1,150 @@
+<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
+    [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" (setTitle)="setTitle($event)">
+</codx-layout-add>
+
+<ng-template #tabDescription>
+    <div class="form-group">
+        <div class="form-group row mt-3">
+            <codx-label fiedName="lblUserGroupID" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Mã nhóm người dùng">
+            </codx-label>
+            <codx-input field="userGroupID" type="text" [disabled]="formType == 'edit' ? true : false"
+                [crrValue]="adUserGroup.userID">
+            </codx-input>
+        </div>
+
+        <div class="form-group mt-3">
+            <codx-label name="lblUserGroupName" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Tên nhóm người dùng">
+            </codx-label>
+            <codx-input type="text" field="userGroupName" [crrValue]="adUserGroup.userName"
+                (valueChange)="valueChangeU($event)">
+            </codx-input>
+        </div>
+        <div class="form-group row mt-3">
+            <codx-label fiedName="lblDescription" [formName]="formModel?.formName"
+                [gridViewName]="formModel?.gridViewName" default="Mô tả">
+            </codx-label>
+            <codx-input type="text" field="description" [crrValue]="adUserGroup.buid" (valueChange)="valueBU($event)">
+            </codx-input>
+        </div>
+        <div class="form-group row mt-3">
+            <codx-label fiedName="Email" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
+                default="Email nhóm">
+            </codx-label>
+            <codx-input field="email" type="text" [crrValue]="adUserGroup.email" (valueChange)="valueChangeM($event)">
+            </codx-input>
+        </div>
+        <div class="form-group row mt-3">
+            <div class="form-group col-2 active">
+                <span class="icon-person icon-18"></span>
+            </div>
+            <div class="form-group col-4 active">
+                <codx-label fiedName="lblUsers" [formName]="formModel?.formName"
+                    [gridViewName]="formModel?.gridViewName" default="Danh sách người dùng">
+                </codx-label>
+            </div>
+            <div class="form-group col-4 active">
+                <span class="icon-person_add icon-18" (click)="openPopupCbb()">
+                </span>
+            </div>
+        </div>
+    </div>
+    <ng-container *ngIf="isPopupCbb">
+        <codx-combobox-popup [comboboxName]="'Users'" [field]="'cbbUser'" [multiple]=""
+            [gridViewName]="formModel?.gridViewName" [formName]="formModel?.formName" [width]="" [height]="" [value]=""
+            [formModel]="formModel" (clickSave)="addUser($event)">
+        </codx-combobox-popup>
+    </ng-container>
+</ng-template>
+<ng-template #tabRoles>
+    <div class="form-group mt-3">
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" (click)="openPopup(viewChooseRole)">Chỉnh sửa
+                quyền</button>
+        </div>
+        <div class="form-group py-5 px-5" *ngIf="countListViewChooseRoleApp > 0">
+            <div class="row">
+                <div class="col-12">
+                    <span class="d-flex flex-column align-items-start">
+                        <span class="fw-bolder">
+                            <codx-label name="titleUserRoles" formName="UserRoles" default="Ứng dụng được phần quyền ">
+                            </codx-label>({{countListViewChooseRoleApp}})
+                        </span>
+                        <hr>
+                    </span>
+                </div>
+
+                <div class="col-12 " *ngFor="let item of viewChooseRole; let i = index">
+                    <div class="row" *ngIf="!item.isPortal">
+                        <div class="col-6 text-start">
+                            <div class="row">
+                                <div class="col-2">
+                                    <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
+                                </div>
+                                <div class="col-10 space_row">
+                                    <div class="fw-bold" style="font-weight: bold">
+                                        {{item.customName}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <div class="text-end">
+                                <div [style.color]="item.color">
+                                    {{item.roleName}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group py-5 px-5" *ngIf="countListViewChooseRoleService > 0">
+            <div class="row">
+                <div class="col-12">
+                    <span class="d-flex flex-column align-items-start">
+                        <span class="fw-bolder">
+                            <codx-label name="titleUserRoles" formName="UserRoles"
+                                default="Dịch vụ nhân viên được phân quyền">
+                            </codx-label>({{countListViewChooseRoleService}})
+                        </span>
+                        <hr>
+                    </span>
+                </div>
+                <div class="col-12 " *ngFor="let item of viewChooseRole; let i = index">
+                    <div class="row" *ngIf="item.isPortal">
+                        <div class="col-6 text-start">
+                            <div class="row">
+                                <div class="col-2">
+                                    <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
+                                </div>
+                                <div class="col-10 space_row">
+                                    <div class="fw-bold" style="font-weight: bold">
+                                        {{item.customName}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <div class="text-end">
+                                <div [style.color]="item.color">
+                                    {{item.roleName}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="onSave()">
+            <codx-label fiedName="lblSave" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
+                default="Lưu"></codx-label>
+        </button>
+    </div>
+</ng-template>

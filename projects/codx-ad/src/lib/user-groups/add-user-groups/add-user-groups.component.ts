@@ -1,58 +1,30 @@
-import { CodxAdService } from './../../codx-ad.service';
-import { AD_User } from './../../models/AD_User.models';
-import {
-  Component,
-  OnInit,
-  Optional,
-  ChangeDetectorRef,
-  ViewChild,
-  Output,
-  EventEmitter,
-  Injector,
-} from '@angular/core';
-import {
-  DialogData,
-  DialogRef,
-  CallFuncService,
-  AuthStore,
-  ImageViewerComponent,
-  CodxService,
-  ViewsComponent,
-  SidebarModel,
-  FormModel,
-  CacheService,
-  RequestOption,
-  CRUDService,
-  UIComponent,
-  DialogModel,
-  NotificationsService,
-} from 'codx-core';
-import { PopRolesComponent } from '../pop-roles/pop-roles.component';
-import { throws } from 'assert';
-import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AnyRecordWithTtl } from 'dns';
-import { AD_Roles } from '../../models/AD_Roles.models';
+import { Component, OnInit, Injector, ChangeDetectorRef, Optional, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { AuthStore, CRUDService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent } from 'codx-core';
+import { CodxAdService } from '../../codx-ad.service';
+import { AD_Roles } from '../../models/AD_User.models';
+import { AD_UserGroups } from '../../models/AD_UserGroups.models';
 import { AD_UserRoles } from '../../models/AD_UserRoles.models';
+import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
+import { PopRolesComponent } from '../../users/pop-roles/pop-roles.component';
 
 @Component({
-  selector: 'lib-add-user',
-  templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.css'],
+  selector: 'lib-add-user-groups',
+  templateUrl: './add-user-groups.component.html',
+  styleUrls: ['./add-user-groups.component.css']
 })
-export class AddUserComponent extends UIComponent implements OnInit {
-  @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
+export class AddUserGroupsComponent extends UIComponent implements OnInit {
+
   @ViewChild('form') form: any;
-  @Output() loadData = new EventEmitter();
+
 
   title = '';
   dialog!: DialogRef;
   dialogRole: DialogRef;
   data: any;
-  readOnly = false;
   isAddMode = true;
   user: any;
-  adUser = new AD_User();
+  adUserGroup = new AD_UserGroups();
   adRoles: AD_Roles = new AD_Roles();
   adUserRoles: AD_UserRoles = new AD_UserRoles();
   countListViewChooseRoleApp: Number = 0;
@@ -67,18 +39,20 @@ export class AddUserComponent extends UIComponent implements OnInit {
   saveSuccess = false;
   dataAfterSave: any;
   countOpenPopRoles = 0;
-
-  constructor(
-    private injector: Injector,
+  userType: any;
+  isUserGroup = false;
+  isPopupCbb = false;
+  
+  constructor(private injector: Injector,
     private changeDetector: ChangeDetectorRef,
     private auth: AuthStore,
     private adService: CodxAdService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
-    @Optional() dt?: DialogData
-  ) {
+    @Optional() dt?: DialogData) {
     super(injector);
     this.formType = dt?.data?.formType;
+    this.userType = dt?.data?.userType;
     this.data = dialog.dataService!.dataSelected;
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
@@ -87,7 +61,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       );
       this.countListViewChoose();
     }
-    this.adUser = JSON.parse(JSON.stringify(this.data));
+    this.adUserGroup = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
 
@@ -96,19 +70,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.gridViewSetup = res;
       }
     });
-  }
+   }
 
   onInit(): void {
     if (this.formType == 'edit') {
-      this.title = 'Cập nhật người dùng';
+      this.title = 'Cập nhật nhóm người dùng';
       this.isAddMode = false;
     } else this.title = this.form?.title;
-    this.formGroupAdd = new FormGroup({
-      userName: new FormControl('', Validators.required),
-      buid: new FormControl('', Validators.required),
-      email: new FormControl('', Validators.required),
-      phone: new FormControl('', Validators.required),
-    });
   }
 
   ngAfterViewInit() {
@@ -123,7 +91,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
+    if (this.adUserGroup?.employeeID == '' || this.adUserGroup?.employeeID == null) {
       this.notification.notify('Vui lòng nhập thông tin nhóm người dùng');
     } else {
       this.countOpenPopRoles++;
@@ -151,7 +119,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.viewChooseRole.forEach((dt) => {
             dt['module'] = dt.functionID;
             dt['roleID'] = dt.recIDofRole;
-            dt.userID = this.adUser.userID;
+            dt.userID = this.adUserGroup.userID;
           });
           this.changeDetector.detectChanges();
         }
@@ -161,7 +129,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   addUserTemp() {
     this.checkBtnAdd = true;
-    this.adService.addUserBeforeDone(this.adUser).subscribe((res) => {
+    this.adService.addUserBeforeDone(this.adUserGroup, this.isUserGroup).subscribe((res) => {
       if (res) {
         this.dataAfterSave = res;
       }
@@ -185,13 +153,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUser, this.viewChooseRole, true];
+      data = [this.adUserGroup, this.viewChooseRole, true];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true) data = [this.adUser, this.viewChooseRole];
-      else data = [this.adUser, this.viewChooseRole, checkDifference];
+      if (checkDifference == true) data = [this.adUserGroup, this.viewChooseRole];
+      else data = [this.adUserGroup, this.viewChooseRole, checkDifference];
     }
     op.data = data;
     return true;
@@ -202,14 +170,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
-          this.imageUpload
-            .updateFileDirectReload(res.save.userID)
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-                this.dialog.close(res.save);
-              }
-            });
           res.save['chooseRoles'] = res.save?.functions;
           //this.changeDetector.detectChanges();
         }
@@ -222,13 +182,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.update) {
-          this.imageUpload
-            .updateFileDirectReload(res.update.userID)
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-              }
-            });
           res.update['chooseRoles'] = res.update?.functions;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
@@ -241,7 +194,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
+    if (this.adUserGroup?.employeeID == '' || this.adUserGroup?.employeeID == null) {
       this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
     } else {
       if (
@@ -279,35 +232,31 @@ export class AddUserComponent extends UIComponent implements OnInit {
     }
   }
 
-  reloadAvatar(data: any): void {
-    this.imageUpload?.reloadImageWhenUpload();
-  }
-
   valueChangeM(data) {
-    this.adUser[data.field] = data.data;
+    this.adUserGroup[data.field] = data.data;
   }
   valueChangeU(data) {
-    this.adUser[data.field] = data.data;
+    this.adUserGroup[data.field] = data.data;
   }
   valueChangeP(data) {
-    this.adUser[data.field] = data.data;
+    this.adUserGroup[data.field] = data.data;
   }
 
   valueEmp(data) {
-    this.adUser.employeeID = data.data;
-    this.getEmployee(this.adUser.employeeID);
+    this.adUserGroup.employeeID = data.data;
+    this.getEmployee(this.adUserGroup.employeeID);
   }
 
   valueUG(data) {
     if (data.data) {
-      this.adUser.userGroup = data.data;
+      this.adUserGroup.userGroup = data.data;
       this.loadUserRole(data.data);
     }
   }
 
   valueBU(data) {
     if (data.data) {
-      this.adUser[data.field] = data.data;
+      this.adUserGroup[data.field] = data.data;
     }
   }
 
@@ -316,12 +265,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .exec<any>('ERM.Business.HR', 'HRBusiness', 'GetModelEmp', [employeeID])
       .subscribe((employee) => {
         if (employee) {
-          this.adUser.employeeID = employeeID;
-          this.adUser.userName = employee.employeeName;
-          // this.adUser.positionID = employee.positionID,
-          this.adUser.buid = employee.organizationID;
-          this.adUser.email = employee.email;
-          this.adUser.phone = employee.phone;
+          this.adUserGroup.employeeID = employeeID;
+          this.adUserGroup.userName = employee.employeeName;
+          // this.adUserGroup.positionID = employee.positionID,
+          this.adUserGroup.buid = employee.organizationID;
+          this.adUserGroup.email = employee.email;
+          this.adUserGroup.phone = employee.phone;
           // this.formGroupAdd.controls['userName'].setValue(employee.employeeName);
           // this.formGroupAdd.controls['buid'].setValue(employee.organizationID);
           // this.formGroupAdd.controls['email'].setValue(employee.email);
@@ -342,7 +291,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.viewChooseRole.forEach((dt) => {
             dt['module'] = dt.functionID;
             dt['roleID'] = dt.recIDofRole;
-            dt.userID = this.adUser.userID;
+            dt.userID = this.adUserGroup.userID;
           });
           this.countListViewChooseRoleApp = this.viewChooseRole.length;
           this.changeDetector.detectChanges();
@@ -360,48 +309,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  buttonClick(e: any) {}
+  addUser(event) {
 
-  // getFormGroup(formName, gridView): Promise<FormGroup> {
-  //   return new Promise<FormGroup>((resolve, reject) => {
-  //     this.cache.gridViewSetup(formName, gridView).subscribe(gv => {
-  //       var model = {};
-  //       if (gv) {
-  //         const user = this.auth.get();
-  //         for (const key in gv) {
-  //           var b = false;
-  //           if (Object.prototype.hasOwnProperty.call(gv, key)) {
-  //             const element = gv[key];
-  //             element.fieldName = element.fieldName.charAt(0).toLowerCase() + element.fieldName.slice(1);
-  //             model[element.fieldName] = [];
+  }
 
-  //             if (element.fieldName == "owner") {
-  //               model[element.fieldName].push(user.userID);
-  //             }
-  //             if (element.fieldName == "createdOn") {
-  //               model[element.fieldName].push(new Date());
-  //             }
-  //             else if (element.fieldName == "stop") {
-  //               model[element.fieldName].push(false);
-  //             }
-  //             else if (element.fieldName == "orgUnitID") {
-  //               model[element.fieldName].push(user['buid']);
-  //             }
-  //             else if (element.dataType == "Decimal" || element.dataType == "Int") {
-  //               model[element.fieldName].push(0);
-  //             }
-  //             else if (element.dataType == "Bool" || element.dataType == "Boolean")
-  //               model[element.fieldName].push(false);
-  //             else if (element.fieldName == "createdBy") {
-  //               model[element.fieldName].push(user.userID);
-  //             } else {
-  //               model[element.fieldName].push(null);
-  //             }
-  //           }
-  //         }
-  //       }
-  //       resolve(this.fb.group(model, { updateOn: 'blur' }));
-  //     });
-  //   });
-  // }
+  openPopupCbb() {
+    this.isPopupCbb = true;
+    this.changeDetector.detectChanges();
+  }
 }
