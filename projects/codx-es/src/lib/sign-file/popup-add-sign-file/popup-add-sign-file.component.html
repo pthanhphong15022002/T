@@ -145,7 +145,8 @@
                 <div class="form-group">
                   <codx-label fiedName="Title" default="Tên tài liệu" [formModel]="formModel">
                   </codx-label>
-                  <codx-input type="text" name="text" field="title" [Group]="dialogSignFile">
+                  <codx-input type="text" name="text" field="title" [crrValue]="dialogSignFile.value?.title"
+                    (valueChange)="valueChange($event)">
                   </codx-input>
                 </div>
                 <div class="row">
