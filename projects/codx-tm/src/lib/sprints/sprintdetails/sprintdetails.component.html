@@ -7,11 +7,12 @@
       <div class="d-status p-3">
         <div class="badge badge-danger me-2 label-status">Nội bộ</div>
       </div>
-      <div class="p-3">
+      <div class="p-3"><span class="icon-calendar_today icon-18"></span>
         <span #createdOn> {{ sprints?.createdOn | date: "dd/MM/yyyy" }}</span>
       </div>
       <div class="p-3">
-        {{ sprints?.createdByName }}
+        <span class="icon-person icon-18"></span>
+        <span>{{ sprints?.createdByName }}</span>
       </div>
     </div>
     <div>
@@ -60,7 +61,7 @@
       </ng-container>
       <ng-container *ngIf="name == 'Họp định kì'">
         <!-- <ng-container> This is mettings... </ng-container> -->
-        <lib-tmmeetings></lib-tmmeetings>
+        <codx-tmmeetings [projectID]="projectID" [iterationID]="iterationID"></codx-tmmeetings>
       </ng-container>
     </div>
   </div>

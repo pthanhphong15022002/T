@@ -7,6 +7,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
   Input,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -26,11 +27,11 @@ import { CO_Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
 
 @Component({
-  selector: 'lib-tmmeetings',
+  selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
   styleUrls: ['./tmmeetings.component.css'],
 })
-export class TMMeetingsComponent extends UIComponent {
+export class TMMeetingsComponent extends UIComponent implements OnInit, AfterViewInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
@@ -69,6 +70,9 @@ export class TMMeetingsComponent extends UIComponent {
   formName = '';
   gridViewName = '';
   @Input() calendarID: string;
+  @Input() projectID:any;  //view meeting to sprint_details
+  @Input() iterationID:any
+  dataObj :any ;
 
   constructor(
     inject: Injector,
@@ -85,7 +89,10 @@ export class TMMeetingsComponent extends UIComponent {
         this.urlDetail = res[0].url;
       }
     });
-
+    // view meeting to sprint_details
+    var dataObj = { projectID: this.projectID? this.projectID : '' ,iterationID : this.iterationID? this.iterationID: ''}
+    this.dataObj = JSON.stringify(dataObj);
+    //
     this.dataValue = this.user?.userID;
   }
 
@@ -144,7 +151,16 @@ export class TMMeetingsComponent extends UIComponent {
     this.view.dataService.methodSave = 'AddMeetingsAsync';
     this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
-
+    if(this.funcID="TMT03011" && (this.projectID || this.iterationID)){
+      this.model = new DataRequest();
+      this.model.pageLoading = false;
+      this.model.formName = 'Tasks';
+      this.model.gridViewName = 'grvTasks';
+      this.model.entityName = 'TM_Tasks';
+     this.model.predicate = "RefID==@0 or RefID==@1" ;
+      this.funcID ="" ;
+      this.model.dataValue = this.projectID + ";" +this.iterationID ;
+    }
     this.dt.detectChanges();
   }
 

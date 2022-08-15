@@ -71,11 +71,14 @@
 </div>
 <div class="isHiden border-top" [class.isShow]="dataComment.isShowComment">
     <codx-comments 
-    [funcID]="funcID" 
-    [new]="true" 
-    (evtSendComment)="sendComment($event)" 
-    [parentID]="dataComment.recID" 
-    [refID]="dataComment.recID"></codx-comments>
+        [funcID]="funcID"
+        [objectType]="objectType" 
+        [new]="true" 
+        [formModel]="fromModel"
+        (evtSendComment)="sendComment($event)" 
+        [parentID]="dataComment.recID" 
+        [refID]="dataComment.recID">
+    </codx-comments>
     <ng-container *ngFor="let cm of dataComment.listComment">
         <ng-container *ngTemplateOutlet="cmt; context: { $implicit: cm }">
         </ng-container>
@@ -85,10 +88,13 @@
     <div class="c1" [attr.dt]="setDicData(data)" id="{{data.recID}}">
         <codx-comments 
             [funcID]="funcID" 
+            [objectType]="objectType"
             [data]="data" 
             [parentID]="data.parentID" 
             [refID]="data.recID"
             [new]="false" 
+            [formModel]="fromModel"
+            (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)">
         </codx-comments>
         <div class="c2 ms-10" *ngFor="let item of data.listComment">
@@ -96,7 +102,15 @@
             </ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
-          <codx-comments [funcID]="funcID" (evtSendComment)="sendComment($event)" [new]="true" [parentID]="data.parentID" [refID]="data.recID"></codx-comments>
+          <codx-comments 
+            [funcID]="funcID" 
+            [objectType]="objectType"
+            (evtDeleteComment)="deleteComment($event)"
+            (evtSendComment)="sendComment($event,data)" 
+            [new]="true" [parentID]="data.parentID" 
+            [refID]="data.recID"
+            [formModel]="fromModel">
+            </codx-comments>
         </ng-container>
       </div>
 </ng-template>

@@ -554,7 +554,7 @@ export class AssignInfoComponent implements OnInit {
           this.taskGroup = res;
           if (res.checkList != null) {
             var toDo = res.checkList.split(';');
-            // this.countTodoByGroup = toDo.length ;
+            this.listTodo = [] ;
             toDo.forEach((tx) => {
               var taskG = new TaskGoal();
               taskG.status = this.STATUS_TASK_GOAL.NotChecked;
