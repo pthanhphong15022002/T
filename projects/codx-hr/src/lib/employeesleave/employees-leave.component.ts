@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { CallFuncService, CodxService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { CodxHrService } from '../codx-hr.service';
 import { PopupAddEmployeesComponent } from '../employees/popup-add-employees/popup-add-employees.component';
 
 @Component({
@@ -15,6 +16,7 @@ export class EmployeesLeaveComponent implements OnInit {
   currentEmployee: boolean = false;
   itemSelected: any;
   dialog!: DialogRef;
+  urlDetail = '';
 
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
@@ -29,16 +31,23 @@ export class EmployeesLeaveComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfunc: CallFuncService,
-  ) { }
+    private codxService: CodxService,
+    private hrService: CodxHrService,
+  ) {
+    this.hrService.getMoreFunction(['HRT04', null, null]).subscribe((res) => {
+      if (res) {
+        this.urlDetail = res[1].url;
+      }
+    });
+   }
 
   ngOnInit(): void {
     this.columnsGrid = [
-      // { field: '', headerText: '', width: 20 },
+      { field: '', headerText: '', width: 20, template: this.itemAction },
       { field: 'employeeID', headerText: 'Nhân viên', width: 300, template: this.itemEmployee },
-      { field: 'email', headerText: 'Liên hệ', width: 200, template: this.itemContact },
+      { field: 'email', headerText: 'Liên hệ', width: 300, template: this.itemContact },
       { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
       { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
-      // { headerText: 'Hành động', width: 100, template: this.itemAction },
     ];
   }
 
@@ -106,13 +115,14 @@ export class EmployeesLeaveComponent implements OnInit {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS02':
-        // this.delete(data);
+      case 'HR0032':
+        this.viewEmployeeInfo(data);
         break;
     }
+  }
+
+  viewEmployeeInfo(data) {
+    this.codxService.navigate('', this.urlDetail, { employeeID: data.employeeID });
   }
 
   requestEnded(event) { }

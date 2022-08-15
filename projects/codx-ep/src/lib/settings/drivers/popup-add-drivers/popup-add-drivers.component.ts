@@ -27,52 +27,46 @@ import { CodxEpService } from '../../../codx-ep.service';
   templateUrl: 'popup-add-drivers.component.html',
   styleUrls: ['popup-add-drivers.component.scss'],
 })
-export class PopupAddDriversComponent implements OnInit ,AfterViewInit{
+export class PopupAddDriversComponent implements OnInit, AfterViewInit {
+  @ViewChild('attachment') attachment: AttachmentComponent
+
   @Input() editResources: any;
   @Input() isAdd = true;
   @Input() data: any;
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
 
-  @ViewChild('attachment') attachment : AttachmentComponent 
-  cacheGridViewSetup: any;
-  CbxName: any;
-  dialogAddDriver: FormGroup;
-
-  formModel: FormModel;
-  dialog: any;
   headerText = '';
   subHeaderText = 'Tạo & upload file văn bản';
 
+  fGroupAddDriver: FormGroup;
+  formModel: FormModel;
+  dialogRef: DialogRef;
+
+  CbxName: any;
+  isAfterRender = false;
+
   constructor(
-    private cacheSv: CacheService,
-    private bookingService: CodxEpService,
     private callFuncService: CallFuncService,
+    private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
-    @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
+    private codxEpService: CodxEpService,
+    @Optional() dialogData?: DialogData,
+    @Optional() dialogRef?: DialogRef
   ) {
-    this.data = dt?.data[0];
-    this.isAdd = dt?.data[1];
-    this.dialog = dialog;
-    this.formModel = this.dialog.formModel;
-    this.cacheSv.valueList('VL005').subscribe((res) => {
-      console.log(res);
-    });
+    this.data = dialogData?.data[0];
+    this.isAdd = dialogData?.data[1];
+    this.dialogRef = dialogRef;
+    this.formModel = this.dialogRef.formModel;
   }
   ngAfterViewInit(): void {
-  this.dialog && this.dialog.closed.subscribe(res=>{});
-}
+  }
 
-  isAfterRender = false;
   ngOnInit(): void {
     this.initForm();
 
-    this.bookingService
-      .getComboboxName(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
+    this.codxEpService
+      .getComboboxName(this.dialogRef.formModel.formName, this.dialogRef.formModel.gridViewName)
       .then((res) => {
         this.CbxName = res;
         console.log('cbx', this.CbxName);
@@ -80,30 +74,20 @@ export class PopupAddDriversComponent implements OnInit ,AfterViewInit{
   }
 
   initForm() {
-    // this.cacheSv
-    //   .gridViewSetup('Resources', 'EP_Resources')
-    //   .subscribe((item) => {
-    //     this.editResources = item;
-    //     this.dialogAddDriver.patchValue({
-    //       ranking: '1',
-    //       category: '1',
-    //       owner: '',
-    //     });
-    //   });
-    if(this.isAdd){      
+    if (this.isAdd) {
       this.headerText = "Thêm mới lái xe"
     }
-    else{
+    else {
       this.headerText = "Sửa thông tin lái xe"
     }
-    this.bookingService
-      .getFormGroup('Resources', 'grvResources')
+    this.codxEpService
+      .getFormGroup(this.dialogRef.formModel.formName, this.dialogRef.formModel.gridViewName)
       .then((item) => {
-        this.dialogAddDriver = item;
+        this.fGroupAddDriver = item;
         if (this.data) {
-          this.dialogAddDriver.patchValue(this.data);
+          this.fGroupAddDriver.patchValue(this.data);
         }
-        this.dialogAddDriver.addControl(
+        this.fGroupAddDriver.addControl(
           'code',
           new FormControl(this.data.code)
         );
@@ -112,88 +96,80 @@ export class PopupAddDriversComponent implements OnInit ,AfterViewInit{
   }
 
   valueChange(event: any) {
-    if (event?.field != null) {
+    if (event?.field != null && event?.field != '') {
       if (event.data instanceof Object) {
-        this.dialogAddDriver.patchValue({ [event['field']]: event.data.value });
+        this.fGroupAddDriver.patchValue({ [event['field']]: event.data.value });
       } else {
-        this.dialogAddDriver.patchValue({ [event['field']]: event.data });
+        this.fGroupAddDriver.patchValue({ [event['field']]: event.data });
       }
+    }
+  }
+
+  // valueChangeFGroup(event: any) {
+  //   if (event?.data != '') {
+  //     if (event.data instanceof Object) {
+  //       this.fGroupAddDriver.patchValue({ [event.component.ControlName]: event.data.value });
+  //     } else {
+  //       this.fGroupAddDriver.patchValue({ [event.component.ControlName]: event.data });
+  //     }
+  //   }
+  // }
+
+  valueCbxCarChange(event: any) {
+    if (event.data != '') {
+      if (event.data instanceof Object) {
+        this.fGroupAddDriver.patchValue({ [event['field']]: event.data.value });
+      } else {
+        this.fGroupAddDriver.patchValue({ [event['field']]: event.data });
+      }
+      var cbxCar = event.component.dataService.data;
+      cbxCar.forEach(element => {
+        if (element.ResourceID == event.component.valueSelected) {
+          this.fGroupAddDriver.patchValue({ code: element.Code });
+          this.changeDetectorRef.detectChanges();
+        }
+      });
     }
   }
 
   beforeSave(option: any) {
-    let itemData = this.dialogAddDriver.value;
+    let itemData = this.fGroupAddDriver.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
-
     return true;
   }
 
-  valueCbxChange(event: any) {
-    if (event?.field != null) {
-      if (event.data instanceof Object) {
-        this.dialogAddDriver.patchValue({ [event['field']]: event.data.value });
-      } else {
-        this.dialogAddDriver.patchValue({ [event['field']]: event.data });
-      }
-    }
-  }
-  valueCbxCarChange(event: any) {
-    if (event.data != '') {
-      if (event.data instanceof Object) {
-        this.dialogAddDriver.patchValue({ [event['field']]: event.data.value });
-      } else {
-        this.dialogAddDriver.patchValue({ [event['field']]: event.data });
-      }
-      var cbxCar = event.component.dataService.data;
-      cbxCar.forEach(element => {
-        if(element.ResourceID == event.component.valueSelected) {
-          this.dialogAddDriver.patchValue({code : element.Code}); 
-          this.changeDetectorRef.detectChanges();
-        }
-      });
-    }  
-  }
-  openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 550, 430);
-    this.changeDetectorRef.detectChanges();
-  }
-
   onSaveForm() {
-    if (this.dialogAddDriver.invalid == true) {
-      console.log(this.dialogAddDriver);
+    if (this.fGroupAddDriver.invalid == true) {
+      console.log(this.fGroupAddDriver);
       return;
-    }    
-    
-    this.dialogAddDriver.value.companyID = this.dialogAddDriver.value.companyID[0];
-    this.dialogAddDriver.value.owner = this.dialogAddDriver.value.owner[0];
-
-    if (!this.dialogAddDriver.value.linkType) {
-      this.dialogAddDriver.value.linkType = '2';
     }
-    this.dialogAddDriver.value.resourceType = '3';
-    this.dialog.dataService
+    this.fGroupAddDriver.value.companyID = this.fGroupAddDriver.value.companyID[0];
+    this.fGroupAddDriver.value.owner = this.fGroupAddDriver.value.owner[0];
+    this.fGroupAddDriver.value.resourceType = '3';
+
+    if (!this.fGroupAddDriver.value.linkType) {
+      this.fGroupAddDriver.value.linkType = '2';
+    }
+    this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();
-    this.attachment.saveFilesObservable().subscribe(res=>{})
+    this.attachment.saveFilesObservable().subscribe(res => { })
   }
 
-  fileCount(event){
-    this.dialogAddDriver.value.icon= event.data[0].data;
-    
+  fileCount(event) {
+    this.fGroupAddDriver.value.icon = event.data[0].data;
   }
-  fileAdded(event){debugger}
-  
+
+  fileAdded(event) {
+  }
+
   popupUploadFile() {
     this.attachment.uploadFile();
-  } 
+  }
+
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);
-
   }
-	
- 
- 
-
 }
