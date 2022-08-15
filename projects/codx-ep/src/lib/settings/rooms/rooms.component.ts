@@ -1,9 +1,4 @@
-import {
-  Component,
-  TemplateRef,
-  ViewChild,
-  Injector,
-} from '@angular/core';
+import { Component, TemplateRef, ViewChild, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
   ButtonModel,
@@ -28,10 +23,9 @@ export class RoomsComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
-  moreFuncs: Array<ButtonModel> = [];
   devices: any;
   dataSelected: any;
-  columnGrids: any;
+  columnsGrid: any;
   addEditForm: FormGroup;
   isAdd = false;
   dialog!: DialogRef;
@@ -48,13 +42,10 @@ export class RoomsComponent extends UIComponent {
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
 
-  constructor(
-    private injector: Injector,
-  ) {
+  constructor(private injector: Injector) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }
-
 
   onInit(): void {
     this.cache.valueList('EP012').subscribe((res) => {
@@ -121,11 +112,7 @@ export class RoomsComponent extends UIComponent {
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callfc.openSide(
-        PopupAddRoomsComponent,
-        item,
-        option
-      );
+      this.dialog = this.callfc.openSide(PopupAddRoomsComponent, item, option);
     });
   }
 

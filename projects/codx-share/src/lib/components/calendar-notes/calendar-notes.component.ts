@@ -126,10 +126,7 @@ export class CalendarNotesComponent
             (this.lstView.dataService as CRUDService).update(data).subscribe();
           } else if (type == 'edit') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
-          } else if (type == 'edit-save-note') {
-            (this.lstView.dataService as CRUDService).remove(data).subscribe();
-            this.WP_Notes = this.WP_Notes.filter((x) => x.recID != data.recID);
-          } else if (type == 'add-note-drawer') {
+          }  else if (type == 'add-note-drawer') {
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'edit-note-drawer') {
