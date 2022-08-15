@@ -11,14 +11,15 @@
             <codx-label name="lblNote" formName="WP_Notes" default="Tạo ghi chú"></codx-label>
         </div>
         <div class="d-flex align-items-center note-btn">
-            <div class="pw-save ms-2" (click)="formType == 'edit' ? openFormNoteBooks() : ''" [ngbPopover]="'Lưu ghi chú vào sổ tay'"
-                triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'" container="body"
-                >
-                <span class="icon-menu_book icon-20 btn btn-icon btn-active-light-primary position-relative"
-                    [class]="formType == 'add' ? 'disabled' : ''" type="button">
+            <div class="pw-save ms-2" (click)="formType == 'edit' ? openFormNoteBooks() : ''"
+                [ngbPopover]="'Lưu ghi chú vào sổ tay'" triggers="mouseenter:mouseleave" placement="bottom"
+                [autoClose]="'outside'" container="body" *ngIf="formType == 'edit'">
+                <span class="icon-assignment_returned icon-20 btn btn-icon btn-active-light-primary position-relative"
+                    type="button">
                 </span>
             </div>
-            <span class="icon-close icon-20 btn btn-icon btn-active-light-primary position-relative" (click)="close()"></span>
+            <span class="icon-close icon-20 btn btn-icon btn-active-light-primary position-relative"
+                (click)="close()"></span>
         </div>
     </div>
     <div class="note-text">

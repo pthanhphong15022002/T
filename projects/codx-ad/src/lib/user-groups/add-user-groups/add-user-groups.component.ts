@@ -1,6 +1,23 @@
-import { Component, OnInit, Injector, ChangeDetectorRef, Optional, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Injector,
+  ChangeDetectorRef,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AuthStore, CRUDService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, UIComponent } from 'codx-core';
+import {
+  AuthStore,
+  CRUDService,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  RequestOption,
+  UIComponent,
+} from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_Roles } from '../../models/AD_User.models';
 import { AD_UserGroups } from '../../models/AD_UserGroups.models';
@@ -11,12 +28,10 @@ import { PopRolesComponent } from '../../users/pop-roles/pop-roles.component';
 @Component({
   selector: 'lib-add-user-groups',
   templateUrl: './add-user-groups.component.html',
-  styleUrls: ['./add-user-groups.component.css']
+  styleUrls: ['./add-user-groups.component.css'],
 })
 export class AddUserGroupsComponent extends UIComponent implements OnInit {
-
   @ViewChild('form') form: any;
-
 
   title = '';
   dialog!: DialogRef;
@@ -42,14 +57,17 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   userType: any;
   isUserGroup = false;
   isPopupCbb = false;
-  
-  constructor(private injector: Injector,
+  dataUserCbb: any = [];
+
+  constructor(
+    private injector: Injector,
     private changeDetector: ChangeDetectorRef,
     private auth: AuthStore,
     private adService: CodxAdService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
-    @Optional() dt?: DialogData) {
+    @Optional() dt?: DialogData
+  ) {
     super(injector);
     this.formType = dt?.data?.formType;
     this.userType = dt?.data?.userType;
@@ -70,7 +88,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         this.gridViewSetup = res;
       }
     });
-   }
+  }
 
   onInit(): void {
     if (this.formType == 'edit') {
@@ -91,7 +109,10 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    if (this.adUserGroup?.employeeID == '' || this.adUserGroup?.employeeID == null) {
+    if (
+      this.adUserGroup?.employeeID == '' ||
+      this.adUserGroup?.employeeID == null
+    ) {
       this.notification.notify('Vui lòng nhập thông tin nhóm người dùng');
     } else {
       this.countOpenPopRoles++;
@@ -129,11 +150,13 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   addUserTemp() {
     this.checkBtnAdd = true;
-    this.adService.addUserBeforeDone(this.adUserGroup, this.isUserGroup).subscribe((res) => {
-      if (res) {
-        this.dataAfterSave = res;
-      }
-    });
+    this.adService
+      .addUserBeforeDone(this.adUserGroup, this.isUserGroup)
+      .subscribe((res) => {
+        if (res) {
+          this.dataAfterSave = res;
+        }
+      });
   }
 
   countListViewChoose() {
@@ -158,7 +181,8 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true) data = [this.adUserGroup, this.viewChooseRole];
+      if (checkDifference == true)
+        data = [this.adUserGroup, this.viewChooseRole];
       else data = [this.adUserGroup, this.viewChooseRole, checkDifference];
     }
     op.data = data;
@@ -194,7 +218,10 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    if (this.adUserGroup?.employeeID == '' || this.adUserGroup?.employeeID == null) {
+    if (
+      this.adUserGroup?.employeeID == '' ||
+      this.adUserGroup?.employeeID == null
+    ) {
       this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
     } else {
       if (
@@ -309,12 +336,19 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  addUser(event) {
-
+  getDataUserInCbb(event) {
+    if (event?.dataSelected) {
+      this.dataUserCbb = event?.dataSelected;
+      this.changeDetector.detectChanges();
+    }
   }
 
   openPopupCbb() {
-    this.isPopupCbb = true;
+    this.isPopupCbb = !this.isPopupCbb;
+  }
+
+  deleteUserCbb(index) {
+    this.dataUserCbb.splice(index, 1);
     this.changeDetector.detectChanges();
   }
 }
