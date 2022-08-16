@@ -1,7 +1,17 @@
-import { Component, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  OnInit,
+  HostListener,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NotificationsFCMService, NotificationsService, TenantService } from 'codx-core';
+import {
+  NotificationsFCMService,
+  NotificationsService,
+  TenantService,
+} from 'codx-core';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 
 @Component({
@@ -19,8 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private tenant: TenantService,
     // private angularFireMessaging: AngularFireMessaging,
     private ns: NotificationsFCMService,
-    private notify: NotificationsService,
-  ) { }
+    private notify: NotificationsService
+  ) {}
 
   ngOnInit() {
     this.unsubscribe.push(this.tenant.init(this.router));
@@ -47,5 +57,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
+  }
+
+  @HostListener('window:load', ['$event'])
+  hashChangeHandler(e) {
+    this.closeDialog(); // close dialog khi back của browser
+  }
+
+  closeDialog() {
+    var dialogContain = document.querySelector('.codx-dialog-container');
+    dialogContain.innerHTML = '';
+    var dialog = document.querySelectorAll('.e-dialog');
+    dialog.forEach((box) => {
+      if (box.tagName.toLowerCase() !== 'ejs-dialog') box = box.parentElement;
+      box.remove();
+    });
   }
 }
