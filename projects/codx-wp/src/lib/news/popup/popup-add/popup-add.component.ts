@@ -245,7 +245,7 @@ export class PopupAddComponent implements OnInit {
                   this.initForm();
                   this.shareControl = this.SHARECONTROLS.EVERYONE;
                   this.notifSV.notifyCode('E0026');
-                  this.dialogRef.close();
+                  this.dialogRef.close(res);
                   this.insertWPComment(data);
                 }
               }
