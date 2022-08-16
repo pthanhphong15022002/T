@@ -1318,7 +1318,7 @@ export class TasksComponent
   }
   //#endregion
   change() {
-    this.view.dataService.setPredicates(['Status=@0'], ['1']);
+    this.view.dataService.setPredicates(['Status=@0'], ['10']);
   }
 
   //#region schedule
