@@ -94,12 +94,6 @@ export class TMMeetingsComponent
      if (this.funcID == "TMT03011") {
       this.funcID= "TMT0501";
     };
-    this.activedRouter.firstChild?.params.subscribe(
-      (data) => (this.iterationID = data.id)
-    );
-     var dataObj = { projectID: this.projectID? this.projectID : '' ,iterationID : this.iterationID? this.iterationID: ''}
-     this.dataObj = JSON.stringify(dataObj);
-     //
     this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
       if (res) {
         this.urlDetail = res[0].url;

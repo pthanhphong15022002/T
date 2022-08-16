@@ -43,6 +43,7 @@ import { ViewDetailComponent } from './view-detail/view-detail.component';
 })
 export class TasksComponent extends UIComponent {
   //#region Constructor
+  @Input()dataObj?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -79,7 +80,6 @@ export class TasksComponent extends UIComponent {
   isAssignTask = false;
   param: TM_Parameter;
   paramModule: any;
-  dataObj: any;
   listTaskResousce = [];
   searchField = '';
   listTaskResousceSearch = [];
@@ -146,14 +146,14 @@ export class TasksComponent extends UIComponent {
     //   (data) => (this.iterationID = data.id)
     // );
 
-     this.activedRouter.queryParams.subscribe((params) => {
-      if (params) {
-        this.meetingID = params?.meetingID;
-        this.iterationID = params?.iterationID
-      }
-    });
-    var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
-    this.dataObj = JSON.stringify(dataObj);
+    //  this.activedRouter.queryParams.subscribe((params) => {
+    //   if (params) {
+    //     this.meetingID = params?.meetingID;
+    //     this.iterationID = params?.iterationID
+    //   }
+    // });
+    // var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
+    // this.dataObj = JSON.stringify(dataObj);
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
