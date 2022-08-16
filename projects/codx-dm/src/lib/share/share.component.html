@@ -270,10 +270,10 @@
             <div class="row mt-3">
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="form-group row">
-                        <label class="col-4 pr-0 col-form-label">
+                        <div class="col-4 pt-2">
                             <codx-label name="lblFromDate" [formModel]="formModel" default="Từ ngày"
-                                class="ms-1 fw-bold"></codx-label>
-                        </label>
+                                class="text-dark fw-bold"></codx-label>
+                        </div>
                         <div class="col-8">
                             <codx-input placeholder="startDate..." class="form-control test-datetime" type="datetime"
                                 style="width:100%" format="d" [crrValue]="startDate"
@@ -283,10 +283,10 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="form-group row">
-                        <label class="col-4 pr-0 col-form-label">
+                        <div class="col-4 pt-2">
                             <codx-label name="lblToDate" [formModel]="formModel" default="Đến ngày"
-                                class="ms-1 fw-bold"></codx-label>
-                        </label>
+                                class="text-dark fw-bold"></codx-label>
+                        </div>
                         <div class="col-8">
                             <codx-input placeholder="endDate..." class="form-control test-datetime" type="datetime"
                                 style="width:100%;" format="d" [crrValue]="endDate"
@@ -302,12 +302,12 @@
         <div class="d-flex align-items-center justify-content-between">
             <div class="checkbox-inline d-flex align-items-center">
                 <ng-container *ngIf="isShare">
-                    <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="sentEmail"
-                        field="sentEmail" (valueChange)="txtValue($event, 'sentemail')"></codx-input>
+                    <codx-input class="test-check" type="checkbox" [checked]="sentEmail" field="sentEmail"
+                        (valueChange)="txtValue($event, 'sentemail')"></codx-input>
                     <codx-label name="lblSendEmail" [formModel]="formModel" default="Gửi mail" class="ms-2 fw-bold">
                     </codx-label>
-                    <codx-input class="test-check ms-5" type="checkbox" style="width:100%" [checked]="postblog"
-                        field="postblog" (valueChange)="txtValue($event, 'postblog')"></codx-input>
+                    <codx-input class="test-check ms-5" type="checkbox" [checked]="postblog" field="postblog"
+                        (valueChange)="txtValue($event, 'postblog')"></codx-input>
                     <span></span>
                     <codx-label name="lblCreatePost" [formModel]="formModel" default="Tạo bài viết"
                         class="ms-2 fw-bold"></codx-label>

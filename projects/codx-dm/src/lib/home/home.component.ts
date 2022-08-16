@@ -320,7 +320,7 @@ export class HomeComponent extends UIComponent {
 
   fileUploadDropped($event) { 
     if (this.dmSV.idMenuActive == "DMT02" || this.dmSV.idMenuActive == "DMT03") {
-
+      this.addFile($event);
       // var data = new DataItem();
       // data.recID = "";
       // data.type = "file";
@@ -339,9 +339,9 @@ export class HomeComponent extends UIComponent {
 
   addFile($event) {  
     var data = new DialogAttachmentType();
-    data.objectType = 'WP_Notes';
-    data.objectId = '628c326c590addf224627f42';
-    data.functionID = 'ODT3';
+    // data.objectType = 'WP_Notes';
+    // data.objectId = '628c326c590addf224627f42';
+    // data.functionID = 'ODT3';
     data.type = 'popup';
 
     let option = new SidebarModel();
