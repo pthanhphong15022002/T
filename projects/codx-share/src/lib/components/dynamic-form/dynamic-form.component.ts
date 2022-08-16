@@ -30,16 +30,15 @@ export class DynamicFormComponent extends UIComponent {
   @Input() service: string;
   @Input() assemblyName: string;
   @Input() entityName: string;
+  @Input() predicate: string;
+  @Input() dataValue: string;
   views: Array<ViewModel> = [];
   columnsGrid = [];
   data = [];
-  templateList = [];
   dialog: DialogRef;
   buttons: ButtonModel;
   formGroup: FormGroup;
   funcID: string;
-  @Input() predicate: string;
-  @Input() dataValue: string;
   idField: string = 'recID';
   dataSelected: any;
 
@@ -60,10 +59,9 @@ export class DynamicFormComponent extends UIComponent {
         .gridViewSetup(res.formName, res.gridViewName)
         .subscribe((res) => {
           this.data = Object.values(res) as any[];
-          this.data = this.data.filter((res, index) => {
+          this.data = this.data.filter((res) => {
             if (res.isVisible) {
               res['field'] = this.camelize(res.fieldName);
-              this.templateList.push(res.viewTemplate);
             }
             return res;
           });
@@ -74,6 +72,9 @@ export class DynamicFormComponent extends UIComponent {
 
           this.columnsGrid[this.columnsGrid.length - 1].template =
             this.morefunction;
+
+          //Để tạm vì nhỏ quá morefc k hiện hết
+          this.columnsGrid[this.columnsGrid.length - 1].width = '300';
 
           this.views = [
             {
@@ -92,7 +93,7 @@ export class DynamicFormComponent extends UIComponent {
   viewChanged(evt: any, view: ViewsComponent) {
     this.cache
       .gridViewSetup(view.function.formName, view.function.gridViewName)
-      .subscribe((res) => {});
+      .subscribe(() => {});
   }
 
   clickMF(evt?: any, data?: any) {
@@ -117,7 +118,7 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   private addNew() {
-    this.viewBase.dataService.addNew().subscribe((res) => {
+    this.viewBase.dataService.addNew().subscribe(() => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
@@ -138,7 +139,7 @@ export class DynamicFormComponent extends UIComponent {
   private edit(evt?) {
     this.dataSelected = this.viewBase.dataService.dataSelected;
     if (evt) this.dataSelected = evt;
-    this.viewBase.dataService.edit(this.dataSelected).subscribe((res) => {
+    this.viewBase.dataService.edit(this.dataSelected).subscribe(() => {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
@@ -152,11 +153,6 @@ export class DynamicFormComponent extends UIComponent {
         },
         option
       );
-      // this.dialog = this.callfc.openSide(
-      //   CodxFormDynamicComponent,
-      //   option.FormModel,
-      //   option
-      // );
     });
   }
 

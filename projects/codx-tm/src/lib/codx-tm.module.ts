@@ -98,10 +98,6 @@ export const routes: Routes = [
         component: MeetingDetailComponent,
       },
       {
-        path: 'sprintdetails/:funcID',
-        component: ViewWorkComponent,
-      },
-      {
         path: 'mydashboard/:funcID',
         component: MyDashboardComponent,
       },
@@ -178,20 +174,10 @@ export const routes: Routes = [
       {
         path: 'sprintdetails/:funcID',
         component: SprintDetailsComponent,
-        children: [
-          {
-            path: ':id',
-            component: SprintDetailsComponent,
-          },
-        ],
       },
       {
         path: 'meetingdetails/:funcID',
         component: MeetingDetailComponent,
-      },
-      {
-        path: 'sprintdetails/:funcID',
-        component: ViewWorkComponent,
       },
     ],
   },
