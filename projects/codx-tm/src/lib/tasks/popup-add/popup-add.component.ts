@@ -424,7 +424,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.param?.MaxHoursControl != '0' &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
-      this.notiService.notifyCode('TM058'); ///truyền có tham số
+      this.notiService.notifyCode('TM058',0,[this.param?.MaxHours])
       return;
     }
     if (
