@@ -126,7 +126,7 @@
                 <codx-img [cssClass]="'image-200 w-100'" [width]="300" imageType="square" [objectId]="item.recID"
                   objectType="WP_News">
                 </codx-img>
-                <div class="fs-5 mt-2 fw-bold">{{item.subject | maxlenght:200 }}</div>
+                <div class="fs-5 mt-2 fw-bold news-title">{{item.subject | maxlenght:200 }}</div>
               </div>
             </div>
           </div>
@@ -151,7 +151,7 @@
                   [resourceObjType]="entityName" 
                   cardCss="h-125px"  
                   [title]="item.subject" 
-                  [titleCss]="'cursor-pointer'"
+                  [titleCss]="'cursor-pointer news-title'"
                   [desc]="item.subContent" 
                   [date]="item.createdOn" 
                   [bookmark]="false">
