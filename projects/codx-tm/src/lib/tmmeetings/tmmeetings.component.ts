@@ -31,9 +31,13 @@ import { MeetingDetailComponent } from './meeting-detail/meeting-detail.componen
   templateUrl: './tmmeetings.component.html',
   styleUrls: ['./tmmeetings.component.css'],
 })
-export class TMMeetingsComponent extends UIComponent implements OnInit, AfterViewInit {
-  @Input() projectID?:any;  //view meeting to sprint_details
-  @Input() iterationID?:any
+export class TMMeetingsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
+  @Input()dataObj?: any;
+  @Input() projectID?: any; //view meeting to sprint_details
+  @Input() iterationID?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
@@ -73,7 +77,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   formName = '';
   gridViewName = '';
   @Input() calendarID: string;
-  dataObj :any ;
+
 
   constructor(
     inject: Injector,
@@ -105,8 +109,6 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     this.dataValue = this.user?.userID;
   }
 
-
-
   onInit(): void {
     this.button = {
       id: 'btnAdd',
@@ -122,7 +124,6 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
-
   }
 
   ngAfterViewInit(): void {
@@ -272,7 +273,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     var resources = [];
     resources = data.resources;
     var id = '';
-    if(resources!=null){
+    if (resources != null) {
       resources.forEach((e) => {
         id += e.resourceID + ';';
       });
@@ -405,6 +406,8 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   }
 
   viewDetail(data) {
-    this.codxService.navigate('', this.urlDetail, {meetingID: data.meetingID});
+    this.codxService.navigate('', this.urlDetail, {
+      meetingID: data.meetingID,
+    });
   }
 }

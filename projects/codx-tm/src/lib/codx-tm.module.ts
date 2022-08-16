@@ -93,8 +93,14 @@ export const routes: Routes = [
         path: 'meeting/:funcID',
         component: TMMeetingsComponent,
       },
-
-
+      {
+        path: 'meetingdetails/:funcID',
+        component: MeetingDetailComponent,
+      },
+      {
+        path: 'sprintdetails/:funcID',
+        component: ViewWorkComponent,
+      },
       {
         path: 'mydashboard/:funcID',
         component: MyDashboardComponent,

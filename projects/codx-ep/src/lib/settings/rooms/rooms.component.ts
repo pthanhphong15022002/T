@@ -54,7 +54,8 @@ export class RoomsComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    if(this.viewBase)
+      this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.buttons = {
       id: 'btnAdd',
     };
