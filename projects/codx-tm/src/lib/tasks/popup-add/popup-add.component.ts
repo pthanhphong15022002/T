@@ -783,7 +783,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   onDeleteUser(item) {
     if (item?.status && item.status != '00' && item.status != '10') {
-      this.notiService.notifyCode('TM012');
+      this.notiService.notifyCode('TM012',0,[item?.resourceName]);
       return;
     }
     var userID = item.resourceID;
