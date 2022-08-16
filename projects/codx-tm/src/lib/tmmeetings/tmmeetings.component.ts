@@ -34,7 +34,8 @@ import { MeetingDetailComponent } from './meeting-detail/meeting-detail.componen
 export class TMMeetingsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
-{
+{ 
+  @Input()dataObj?: any;
   @Input() projectID?: any; //view meeting to sprint_details
   @Input() iterationID?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -75,7 +76,7 @@ export class TMMeetingsComponent
   formName = '';
   gridViewName = '';
   @Input() calendarID: string;
-  dataObj: any;
+
 
   constructor(
     inject: Injector,
@@ -91,24 +92,6 @@ export class TMMeetingsComponent
     if (this.funcID == 'TMT03011') {
       this.funcID = 'TMT0501';
     }
-    this.activedRouter.firstChild?.params.subscribe(
-      (data) => (this.iterationID = data.id)
-    );
-    if (this.iterationID != '') {
-      this.tmService.getSprintsDetails(this.iterationID).subscribe((res) => {
-        if (res) {
-          if (this.projectID) this.projectID = ';' + res?.projectID;
-          else this.projectID = res.projectID;
-          var dataObj = {
-            projectID: this.projectID ? this.projectID : '',
-            iterationID: this.iterationID ? this.iterationID : '',
-          };
-          this.dataObj = JSON.stringify(dataObj);
-        }
-      });
-    }
-
-    //
     this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
       if (res) {
         this.urlDetail = res[0].url;

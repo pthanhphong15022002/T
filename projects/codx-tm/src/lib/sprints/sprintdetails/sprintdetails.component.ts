@@ -19,6 +19,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   active = 1;
   sprints: any;
   iterationID: any;
+  dataObj :any ;
   user: any;
   funcID: any;
   tabControl: TabModelSprints[] = [];
@@ -66,14 +67,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.sprints = res;
           this.projectID = this.sprints?.projectID;
           this.resources =  this.sprints.resources ;
+          this.dataObj = {
+                    projectID: this.projectID ? this.projectID : '',
+                    iterationID: this.iterationID ? this.iterationID : '',
+                  };
           if (this.sprints?.resources != null) {
-            // this.api
-            // .execSv<any>(
-            //   'TM',
-            //   'ERM.Business.TM',
-            //   'SprintsBusiness',
-            //   'GetListUserDetailByResourcesAsync',
-            //   this.sprints?.resources)
             this.api
               .execSv<any>(
                 'HR',
