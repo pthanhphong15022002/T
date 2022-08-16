@@ -1,4 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
@@ -10,22 +17,24 @@ import { CodxTMService } from '../../codx-tm.service';
 import { TabModelSprints } from '../../models/TM_Sprints.model';
 
 @Component({
-  selector: 'lib-sprintdetails',
+  selector: 'codx-sprintdetails',
   templateUrl: './sprintdetails.component.html',
   styleUrls: ['./sprintdetails.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class SprintDetailsComponent implements OnInit, AfterViewInit {
+  @Input() projectID?: any;
+  @Input() resources?: any;
   active = 1;
   sprints: any;
   iterationID: any;
-  dataObj :any ;
+  dataObj: any;
   user: any;
   funcID: any;
   tabControl: TabModelSprints[] = [];
   name = 'Công việc';
-  projectID: any;
-  resources: any;
+  // projectID: any;
+  // resources: any;
   searchField = '';
   listTaskResousceSearch = [];
   listTaskResousce = [];
@@ -52,6 +61,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.funcID == 'TMT03012') this.all = ['Dashboard', 'Công việc'];
     this.activedRouter.firstChild?.params.subscribe(
       (data) => (this.iterationID = data.id)
     );
@@ -66,31 +76,33 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         if (res) {
           this.sprints = res;
           this.projectID = this.sprints?.projectID;
-          this.resources =  this.sprints.resources ;
+          this.resources = this.sprints.resources;
           this.dataObj = {
-                    projectID: this.projectID ? this.projectID : '',
-                    iterationID: this.iterationID ? this.iterationID : '',
-                  };
+            projectID: this.projectID ? this.projectID : '',
+            iterationID: this.iterationID ? this.iterationID : '',
+          };
           if (this.sprints?.resources != null) {
-            this.api
-              .execSv<any>(
-                'HR',
-                'ERM.Business.HR',
-                'EmployeesBusiness',
-                'GetListEmployeesByUserIDAsync',
-                JSON.stringify(this.sprints?.resources.split(';')))
-              .subscribe((data) => {
-                if (data) {
-                  this.listTaskResousce = data;
-                  this.listTaskResousceSearch = data;
-                  this.countResource = data.length;
-                  this.changeDetectorRef.detectChanges();
-                }
-              });
+            this.getListUserByResource(this.sprints?.resources);
+            // this.api
+            //   .execSv<any>(
+            //     'HR',
+            //     'ERM.Business.HR',
+            //     'EmployeesBusiness',
+            //     'GetListEmployeesByUserIDAsync',
+            //     JSON.stringify(this.sprints?.resources.split(';'))
+            //   )
+            //   .subscribe((data) => {
+            //     if (data) {
+            //       this.listTaskResousce = data;
+            //       this.listTaskResousceSearch = data;
+            //       this.countResource = data.length;
+            //       this.changeDetectorRef.detectChanges();
+            //     }
+            //   });
           }
         }
       });
-    }
+    } else if (this.resources) this.getListUserByResource(this.resources);
   }
   ngOnInit(): void {
     if (this.tabControl.length == 0) {
@@ -108,9 +120,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     }
     this.changeDetectorRef.detectChanges();
   }
-  ngAfterViewInit(): void {
-
-  }
+  ngAfterViewInit(): void {}
 
   clickMenu(item) {
     this.name = item.name;
@@ -148,19 +158,21 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.listTaskResousceSearch = listTaskResousceSearch;
   }
 
-  getListUserByResource(sprints) {
+  getListUserByResource(resources) {
     this.api
       .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'SprintsBusiness',
-        'GetListUserDetailByResourcesAsync',
-        sprints.resources)
-      .subscribe((res) => {
-        if (res) {
-          this.listTaskResousce = res;
-          this.listTaskResousceSearch = res;
-          this.countResource = res.length;
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(resources.split(';'))
+      )
+      .subscribe((data) => {
+        if (data) {
+          this.listTaskResousce = data;
+          this.listTaskResousceSearch = data;
+          this.countResource = data.length;
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
