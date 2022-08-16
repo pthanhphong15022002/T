@@ -6,7 +6,7 @@
   <td class=" w-5">
 
     <div class="align-items-center">
-      <span [ngClass]="'icon-notifications' +' ' + (data?.isTimeOut?'expired':'unexpired')"></span>
+      <span [ngClass]="data?.isTimeOut?'icon-notifications expired':''"></span>
       <span [class]="data?.priority | vll: 'L0186':'icon' | async" [style.color]="
                   data?.priority | vll: 'L0186':'textColor' | async
                     ">
@@ -15,13 +15,13 @@
   </td>
   <td class=" w-10">
     <div class="badge badge-danger label-status" [style.border-color]="
-                    (data?.status | vll: 'L0614':'textColor' | async) +
+                    (data?.status | vll: vllStatus :'textColor' | async) +
                     '30'
                   " [style.background-color]="
-                    (data?.status | vll: 'L0614':'textColor' | async) +
+                    (data?.status | vll: vllStatus :'textColor' | async) +
                     '30'
                   " [style.color]="
-                  data?.status | vll: 'L0614':'textColor' | async
+                  data?.status | vll: vllStatus :'textColor' | async
                   " style="border: none">
       {{ data?.status | vll: "L0614":"text" | async }}
     </div>
@@ -101,7 +101,7 @@
     </div>
   </td>
   <td class=" w-5">
-    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" [dataItem]="data"
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)"  [isBookMark]="false" [dataItem]="data"
       type="hover">
     </codx-mfunc>
   </td>
