@@ -15,6 +15,7 @@ export class ViewListComponent implements OnInit {
   dialog : any
   @Input() data?: any
   @Input() formModel?: FormModel;
+  @Input() vllStatus?:any;
 
   @Output() clickMoreFunction = new EventEmitter<any>();
 
