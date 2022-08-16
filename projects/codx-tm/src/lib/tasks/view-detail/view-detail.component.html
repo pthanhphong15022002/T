@@ -1,7 +1,10 @@
-<div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
-<ng-container *ngIf="itemSelected?.taskID">
+<ng-container *ngIf="!taskID">
+<div class="empty-data"></div>
+</ng-container>
+<ng-container *ngIf="taskID">
   <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer"
-    (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeDataMF($event, itemSelected)" [dataItem]="itemSelected">
+    (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeDataMF($event, itemSelected)"
+    [dataItem]="itemSelected">
     <ng-template #header>
       <div class="container_detail mt-4">
         <div class="d-flex flex-grow-1 mb-3">
