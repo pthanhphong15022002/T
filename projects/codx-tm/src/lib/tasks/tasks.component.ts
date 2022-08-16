@@ -5,6 +5,8 @@ import {
   Injector,
   Input,
   ViewEncapsulation,
+  OnInit,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -41,10 +43,12 @@ import { ViewDetailComponent } from './view-detail/view-detail.component';
   styleUrls: ['./tasks.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TasksComponent extends UIComponent {
+export class TasksComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() dataObj?: any;
-  @Input() projectID?: any;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -104,7 +108,7 @@ export class TasksComponent extends UIComponent {
   dataTree = [];
   iterationID = '';
   meetingID = '';
- 
+  projectID?: any;
 
   constructor(
     inject: Injector,
@@ -137,6 +141,7 @@ export class TasksComponent extends UIComponent {
     } else {
       this.vllStatus = this.vllStatusTasks;
     }
+
     // this.activedRouter.params.subscribe((routeParams) => {
     //   var state = history.state;
     //   if (state) {
@@ -160,6 +165,38 @@ export class TasksComponent extends UIComponent {
         this.listRoles = res.datas;
       }
     });
+    // this.activedRouter.queryParams.subscribe((params) => {
+    //   if (params) {
+    //     this.meetingID = params?.meetingID;
+    //     this.iterationID = params?.iterationID;
+    //   }
+    // });
+
+    // if (this.iterationID != '') {
+    //   this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
+    //     if (res) {
+    //       this.projectID = res?.projectID;
+    //       var resources = res.resources;
+    //       this.dataObj = {
+    //         projectID: this.projectID ? this.projectID : '',
+    //         resources: resources ? resources : '',
+    //         iterationID: this.iterationID ? this.iterationID : '',
+    //       };
+    //     }
+    //   });
+    // }
+    // if (this.meetingID) {
+    //   this.tmSv.getMeetingID(this.meetingID).subscribe((res) => {
+    //     if (res) {
+    //       this.projectID = res?.projectID;
+    //       var resources = res.resources;
+    //       this.dataObj = {
+    //         projectID: this.projectID ? this.projectID : '',
+    //         resources: resources ? resources : '',
+    //       };
+    //     }
+    //   });
+    // }
   }
   //#endregion
 
@@ -191,6 +228,7 @@ export class TasksComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
+    this.projectID = this.dataObj?.projectID;
     this.views = [
       {
         type: ViewType.list,
@@ -750,7 +788,7 @@ export class TasksComponent extends UIComponent {
   //codx-view select
 
   selectedChange(task: any) {
-    this.itemSelected = task?.data;
+    this.itemSelected = task?.data ?task?.data : task;
     this.loadTreeView();
     this.detectorRef.detectChanges();
   }
