@@ -73,6 +73,7 @@ export class DynamicFormComponent extends UIComponent {
           this.columnsGrid[this.columnsGrid.length - 1].template =
             this.morefunction;
 
+          //Để tạm vì nhỏ quá morefc k hiện hết
           this.columnsGrid[this.columnsGrid.length - 1].width = '300';
 
           this.views = [
@@ -143,7 +144,6 @@ export class DynamicFormComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
-      console.log('Data', this.dataSelected);
       this.dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
         {
