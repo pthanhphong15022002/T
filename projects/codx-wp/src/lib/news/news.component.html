@@ -54,7 +54,8 @@
                   </codx-img>
                 <div class="position-absolute bottom-0 end-0">
                   <span class="badge badge-danger">
-                    <codx-label formName="News" name="lblCategory" [default]="lstHotNew[1].category"></codx-label>
+                    <!-- <codx-label formName="News" name="lblCategory" [default]="lstHotNew[1].category"></codx-label> -->
+                    {{lstHotNew[1].category | vll:'WP002' | async}}
                   </span>
                 </div>
               </div>
@@ -76,7 +77,9 @@
                   [objectType]="entityName"></codx-img>
                 <div class="position-absolute bottom-0 end-0">
                   <span class="badge badge-danger">
-                    <codx-label formName="News" name="lblCategory" [default]="lstHotNew[2].category"></codx-label>
+                    <!-- <codx-label formName="News" name="lblCategory" [default]="lstHotNew[2].category"></codx-label> -->
+                    {{lstHotNew[2].category | vll:'WP002' | async}}
+                  
                   </span>
                 </div>
               </div>
@@ -98,7 +101,9 @@
                   [objectType]="entityName"></codx-img>
                 <div class="position-absolute bottom-0 end-0">
                   <span class="badge badge-danger">
-                    <codx-label formName="News" name="lblCategory" [default]="lstHotNew[3].category"></codx-label>
+                    <!-- <codx-label formName="News" name="lblCategory" [default]="lstHotNew[3].category"></codx-label> -->
+                    {{lstHotNew[3].category | vll:'WP002' | async}}
+                  
                   </span>
                 </div>
               </div>
