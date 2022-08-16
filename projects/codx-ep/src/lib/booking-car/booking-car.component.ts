@@ -66,10 +66,10 @@ export class BookingCarComponent extends UIComponent {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
     this.modelPage = {
-      entity: 'EP_Bookings',
-      formName: 'Bookings',
-      gridViewName: 'grvBookings',
-      functionID: 'EP2',
+      entity: 'EP_BookingCars',
+      formName: 'BookingCars',
+      gridViewName: 'grvBookingCars',
+      functionID: 'EPT2',
     };
   }
 
@@ -128,8 +128,6 @@ export class BookingCarComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
-    this.viewBase.dataService.methodSave = 'AddNewAsync';
-    this.viewBase.dataService.methodUpdate = 'EditAsync';
     this.views = [
       {
         sameData: true,
@@ -147,6 +145,7 @@ export class BookingCarComponent extends UIComponent {
         },
       },
 
+      
       {
         sameData: true,
         id: '3',
@@ -157,7 +156,6 @@ export class BookingCarComponent extends UIComponent {
         },
       },
     ];
-
     this.detectorRef.detectChanges();
   }
 
@@ -182,9 +180,10 @@ export class BookingCarComponent extends UIComponent {
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddBookingCarComponent,
-        this.dataSelected,
+        [this.dataSelected, true],
         option
       );
     });
@@ -198,6 +197,7 @@ export class BookingCarComponent extends UIComponent {
         let option = new SidebarModel();
         option.Width = '800px';
         option.DataService = this.viewBase?.currentView?.dataService;
+        option.FormModel = this.viewBase?.formModel;
         this.dialog = this.callfc.openSide(
           PopupAddBookingCarComponent,
           this.viewBase.dataService.dataSelected,

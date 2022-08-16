@@ -90,7 +90,7 @@ export class HomeComponent extends UIComponent {
   }
   
   openItem(data: any) {
-    alert(1);
+  //  alert(1);
   }
 
   onLoading($event): void {  
@@ -141,6 +141,76 @@ export class HomeComponent extends UIComponent {
     this.button = {
       id: 'btnUpload',
     };   
+
+    this.dmSV.isDisableUpload.subscribe((res) => {
+      if (res != null) {
+        this.button.disabled = res;
+        this.changeDetectorRef.detectChanges();
+      }      
+    });
+
+    this.dmSV.isNodeSelect.subscribe(res => {
+      if (res != null) {
+        //var tree = this.codxview.currentView.currentComponent.treeView;
+       // tree.getCurrentNode(res.recID);
+        //that.dmSV.currentNode = '';
+        var tree = this.codxview.currentView.currentComponent.treeView;
+        var data = {} as any;
+        data.data = res;
+        tree.getCurrentNode(res.recID);
+        //data.data.items = [];
+        this.onSelectionChanged(data);
+      //  var tree = this.codxview.currentView.currentComponent.treeView;
+      //  tree.getCurrentNode(res.recID);
+      //  this.dmSV.folderId.next(res.recID);
+      }
+    });
+
+    this.dmSV.isNodeDeleted.subscribe(res => {
+      if (res != null) {
+        var tree = this.codxview.currentView.currentComponent.treeView;
+        tree.removeNodeTree(res)
+        //that._beginDrapDrop();
+      }
+    });
+
+    this.dmSV.isNodeChange.subscribe(res => {
+      if (res) {
+        var tree = this.codxview.currentView.currentComponent.treeView;
+        tree.setNodeTree(res);
+        //  that.dmSV.folderId.next(res.recID);
+      }
+    });
+
+    this.dmSV.isAddFolder.subscribe(res => {
+      if (res != null) {
+        var tree = this.codxview.currentView.currentComponent.treeView;
+        tree.setNodeTree(res);
+        this.changeDetectorRef.detectChanges();
+      };
+      //that._beginDrapDrop();
+    });
+
+    this.dmSV.isFolderId.subscribe(res => {
+      if (res != null && this.codxview != null) {
+        //var tree = this.codxview.currentView.currentComponent.treeView.textField = "folderName";
+       // var tree = this.codxview.currentView.currentComponent.treeView;
+       // if (tree) {
+          //var item = {};
+          //item.data = 
+         // var data = tree.getCurrentNode(res);
+          //console.log(data);
+       // }
+          
+      //  if (res.length > 1 && res != this.dmSV.currentNode) {
+          //this.tree.getCurrentNode(res);
+     //   }
+        // else  {
+        //   that.dmSV.listFolder.next(that.tree.data);   
+        // }          
+      }
+
+    });
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
@@ -223,39 +293,9 @@ export class HomeComponent extends UIComponent {
     }
   }
 
-  // setFullHtmlNode(folder, text) {
-  //   var item1 = '';
-  //   var item2 = '';
-
-  //   if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-  //     item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
-  //   else {
-  //     if (folder.icon.indexOf('.') == -1)
-  //       item1 = `<i class="${folder.icon}" role="presentation"></i>`;
-  //     else {
-  //       var path = `${this.path}/${folder.icon}`;
-  //       item1 = `<img class="h-15px " src="${path}">`;
-  //     }
-  //   }
-
-  //   if (!folder.read)
-  //     item2 = `<i class="icon-per no-permission me-2" role="presentation"></i>`;
-  //   var fullText = `${item1}
-  //                   ${item2}
-  //                   <span class="mytree_node  me-2"></span>
-  //                   ${text}`;
-
-  //   return fullText;
-  // }
-
   onSelectionChanged($data) {    
     ScrollComponent.reinitialization();
     if ($data == null || $data.data == null) {
-   //   this.data = [];
-   //   this.dmSV.listFolder = [];
-  //    this.dmSV.listFiles = [];
- //     this.dmSV.folderId.next("");
-   //   this.dmSV.ChangeData.next(true);
       return;
     }
 
@@ -456,7 +496,18 @@ export class HomeComponent extends UIComponent {
         this.dmSV.loadedFolder = true;       
       }
 
-      this.dmSV.folderType = this.view.funcID;
+      if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
+        this.dmSV.deniedRight();
+        this.dmSV.disableInput.next(true);
+        this.dmSV.disableUpload.next(true);        
+      }
+      else {
+        this.dmSV.disableInput.next(false);
+        this.dmSV.disableUpload.next(false);        
+      }
+
+      this.changeDetectorRef.detectChanges();     
+     // this.dmSV.folderType = this.view.funcID;
       this.dmSV.idMenuActive = this.view.funcID;
      // this.dmSV.loadedFile = false;
       this.dmSV.folderId.next('');

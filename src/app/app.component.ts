@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { TenantService } from 'codx-core';
+import { NotificationsFCMService, NotificationsService, TenantService } from 'codx-core';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 
 @Component({
@@ -12,11 +12,14 @@ import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
-  // private angularFireMessaging: AngularFireMessaging;
+  private angularFireMessaging: AngularFireMessaging;
 
   constructor(
     private router: Router,
     private tenant: TenantService,
+    // private angularFireMessaging: AngularFireMessaging,
+    private ns: NotificationsFCMService,
+    private notify: NotificationsService,
   ) { }
 
   ngOnInit() {
@@ -35,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
     //   (payload: any) => {
     //     console.log("new message received. ", payload);
     //     this.ns.get().subscribe(async res => {
-    //       //this.notificationMessages = res;
+    //       console.log('res: ',res)
     //       this.ns.changeData(res);
     //     });
     //     this.notify.notify(payload.notification.body);

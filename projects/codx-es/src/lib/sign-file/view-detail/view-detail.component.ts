@@ -14,6 +14,8 @@ import {
   SidebarModel,
   ViewsComponent,
 } from 'codx-core';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 
@@ -62,9 +64,11 @@ export class ViewDetailComponent implements OnInit {
             this.df.detectChanges();
           }
         });
-
       this.transID = this.itemDetail.processID;
-      if (this.itemDetail?.approveControl == '1') {
+      if (
+        this.itemDetail?.approveControl == '1' ||
+        this.itemDetail?.approveStatus != '0'
+      ) {
         this.transID = this.itemDetail.recID;
       }
 
@@ -135,6 +139,32 @@ export class ViewDetailComponent implements OnInit {
       case 'SYS02':
         this.delete(datas);
         break;
+      case 'SYS04':
+        this.assign(datas);
+        break;
+    }
+  }
+
+  assign(datas) {
+    if (this.checkOpenForm(this.funcID)) {
+      var task = new TM_Tasks();
+      task.refID = datas?.recID;
+      task.refType = this.view?.formModel.entityName;
+      var vllControlShare = 'TM003';
+      var vllRose = 'TM002';
+      var title = 'Giao việc';
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(
+        AssignInfoComponent,
+        [task, vllControlShare, vllRose, title],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        console.log(e);
+      });
     }
   }
 
@@ -179,6 +209,15 @@ export class ViewDetailComponent implements OnInit {
         if (item) {
         }
       });
+  }
+
+  checkOpenForm(val: any) {
+    // if(val == "ODT108" && this.checkUserPer?.created) return true;
+    // else if((val == "ODT109" || val == "ODT110") && this.checkUserPer?.read) return true;
+    // else if(this.checkUserPer?.created || this.checkUserPer?.owner) return true;
+    // else this.notifySvr.notify("Bạn không có quyền thực hiện chức năng này.")
+    // return false;
+    return true;
   }
 
   clickMF(e) {

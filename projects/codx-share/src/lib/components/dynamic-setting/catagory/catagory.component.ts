@@ -55,6 +55,32 @@ export class CatagoryComponent implements OnInit {
     this.callfc.openForm(component);
   }
 
+  collapseItem(evt: any, recID: string) {
+    // var eleItem = document.querySelectorAll(
+    //   '.list-item[data-group="' + recID + '"]'
+    // );
+    // if (eleItem && eleItem.length > 0) {
+    //   eleItem.forEach((element) => {
+    //     var ele = element as HTMLElement;
+    //     var classlist = ele.classList;
+    //     if (classlist.contains('d-none')) classlist.remove('d-none');
+    //     else classlist.add('d-none');
+    //   });
+    // }
+    // var btn = document.querySelector(
+    //   '.button-collapse[data-id="' + recID + '"]'
+    // ) as HTMLElement;
+    // if (btn) {
+    //   if (btn.classList.contains('icon-keyboard_arrow_right')) {
+    //     btn.classList.remove('icon-keyboard_arrow_right');
+    //     btn.classList.add('icon-keyboard_arrow_down');
+    //   } else {
+    //     btn.classList.remove('icon-keyboard_arrow_down');
+    //     btn.classList.add('icon-keyboard_arrow_right');
+    //   }
+    // }
+  }
+
   loadSettingValue(formName: string) {
     // this.api
     //   .execSv<any>('SYS', 'SYS', 'SettingsBusiness', 'GetSettingByFormAsync', [

@@ -31,7 +31,13 @@ import { MeetingDetailComponent } from './meeting-detail/meeting-detail.componen
   templateUrl: './tmmeetings.component.html',
   styleUrls: ['./tmmeetings.component.css'],
 })
-export class TMMeetingsComponent extends UIComponent implements OnInit, AfterViewInit {
+export class TMMeetingsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
+  @Input()dataObj?: any;
+  @Input() projectID?: any; //view meeting to sprint_details
+  @Input() iterationID?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
@@ -55,6 +61,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   dayoff = [];
   month: any;
   day: any;
+  tag = 'Tag';
   startTime: any;
   eventStatus: any;
   itemSelected: any;
@@ -70,9 +77,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   formName = '';
   gridViewName = '';
   @Input() calendarID: string;
-  @Input() projectID:any;  //view meeting to sprint_details
-  @Input() iterationID:any
-  dataObj :any ;
+
 
   constructor(
     inject: Injector,
@@ -84,19 +89,19 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+     // view meeting to sprint_details
+     //this.iterationID ="SPR2208-0073" ;
+     if (this.funcID == "TMT03011") {
+      this.funcID= "TMT0501";
+    };
     this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
       if (res) {
         this.urlDetail = res[0].url;
       }
     });
-    // view meeting to sprint_details
-    var dataObj = { projectID: this.projectID? this.projectID : '' ,iterationID : this.iterationID? this.iterationID: ''}
-    this.dataObj = JSON.stringify(dataObj);
-    //
+
     this.dataValue = this.user?.userID;
   }
-
-
 
   onInit(): void {
     this.button = {
@@ -113,7 +118,6 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
-
   }
 
   ngAfterViewInit(): void {
@@ -127,7 +131,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
         },
       },
       {
-        type: ViewType.schedule,
+        type: ViewType.calendar,
         active: false,
         sameData: true,
         model: {
@@ -151,16 +155,6 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     this.view.dataService.methodSave = 'AddMeetingsAsync';
     this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
-    if(this.funcID="TMT03011" && (this.projectID || this.iterationID)){
-      this.model = new DataRequest();
-      this.model.pageLoading = false;
-      this.model.formName = 'Tasks';
-      this.model.gridViewName = 'grvTasks';
-      this.model.entityName = 'TM_Tasks';
-     this.model.predicate = "RefID==@0 or RefID==@1" ;
-      this.funcID ="" ;
-      this.model.dataValue = this.projectID + ";" +this.iterationID ;
-    }
     this.dt.detectChanges();
   }
 
@@ -250,22 +244,30 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   }
   //#endregion schedule
 
-  convertHtmlAgency(resourceID: any) {
-    var desc = '<div class="d-flex">';
-    if (resourceID)
-      desc +=
-        '<codx-imgs [objectId]="getResourceID(' +
-        resourceID +
-        ')" objectType="AD_Users" [numberImages]="4"></codx-imgs>';
+  convertHtmlAgency(data: any) {
+    var date = data.startDate;
+    var desc = '<div class="d-flex align-items-top" >';
+    var day = '';
+    var toDay = '<div class="d-flex flex-column me-2" >';
+    if(date){
+      let date1 = new Date(date);
+      let month = date1.getMonth() + 1;
+      let myDay = this.addZero(date1.getDate());
+      let year = date1.getFullYear();
+      let day1 = date1.getDay() + 1;
+      day += '<div class="text-dark fw-bolder fs-1 text " style="font-size: 50px;">' + myDay +'</div>';
+      toDay += '<div class="text-dark fw-bold">'+ 'Thứ ' + day1+'</div>' +
+      '<div class="fw-lighter">'+ 'Tháng ' + month+', ' +year+'</div></div>'
+    }
 
-    return desc + '</div>';
+    return desc + day + toDay + '</div>';
   }
 
   getResourceID(data) {
     var resources = [];
     resources = data.resources;
     var id = '';
-    if(resources!=null){
+    if (resources != null) {
       resources.forEach((e) => {
         id += e.resourceID + ';';
       });
@@ -398,6 +400,8 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   }
 
   viewDetail(data) {
-    this.codxService.navigate('', this.urlDetail, {meetingID: data.meetingID});
+    this.codxService.navigate('', this.urlDetail, {
+      meetingID: data.meetingID,
+    });
   }
 }

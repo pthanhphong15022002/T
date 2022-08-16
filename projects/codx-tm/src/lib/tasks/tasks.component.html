@@ -1,6 +1,5 @@
-<!-- view listdetail -->
 <ng-template #panelRight>
-  <app-view-detail [formModel]="view.formModel" [param]="param" [itemSelected]="itemSelected" [dataTree]="dataTree"
+  <app-view-detail [taskID]="itemSelected?.taskID" [formModel]="view.formModel" [param]="param" [dataTree]="dataTree"
     [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus" [vllExtendStatus]="vllExtendStatus"
     [popoverCrr]="popoverCrr" [vllStatus]="vllStatus" (clickMoreFunction)="receiveMF($event)"
     (hoverPopover)="hoverPopover($event)">
@@ -11,6 +10,7 @@
   <lib-view-list [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
   </lib-view-list>
 </ng-template>
+
 <ng-template #treeView let-data>
   <lib-tree-view [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
   </lib-tree-view>
@@ -18,11 +18,11 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" (clickMF)="clickMF($event, data)"
-    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" [iconCss]="
-      'icon-notifications' + ' ' + (data.isTimeOut ? 'expired' : 'unexpired')
-    " [icoStatus2]="data?.priority" [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" [imageWidth]="35"
-    imgCss="me-3" imageObjType="AD_Users" [title]="data.userNameCreate" [subTitle]="data.positionNameCreate"
-    [content]="data.taskName" [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">
+    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
+    [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" [imageWidth]="35" imgCss="me-3" imageObjType="AD_Users"
+    [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.taskName"
+    [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 
@@ -110,33 +110,6 @@
       <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3" [openDelay]="500">
       </codx-imgs>
     </div>
-    <!-- <div *ngIf="(data.category == '1' || data.category == '2') && data.owner != user.userID" class="">
-      <codx-imgs [objectId]="data?.owner" objectType="AD_Users" [numberImages]="3">
-      </codx-imgs>
-    </div> -->
-    <!-- <div *ngIf="data.category=='1'||data.category=='2'">
-        <codx-img [width]="30" [objectId]="data.owner" objectType="AD_Users">
-        </codx-img>
-      </div>
-      <div *ngIf="data.category=='3'|| data.category=='4'" (click)="openViewListTaskResource(data)">
-
-          <div *ngIf="data.assignTo.split(';').length <= 3">
-            <ng-container *ngFor="let item of data.assignTo.split(';')">
-              <codx-img [width]="30" [objectId]="item" objectType="AD_Users">
-              </codx-img>
-            </ng-container>
-          </div>
-          <div *ngIf="data.assignTo.split(';').length > 3">
-            <ng-container *ngFor="let item of data.assignTo.split(';'); index as i">
-              <codx-img *ngIf="i < 2" [width]="30" [objectId]="item" objectType="AD_Users">
-              </codx-img>
-              <div *ngIf="i == 2" class="symbol symbol-30px symbol-circle">
-                <span class="symbol-label fs-4"
-                  style="background-color : #d0e41c;">+{{data.assignTo.split(';')?.length-2}}</span>
-              </div>
-            </ng-container>
-          </div>
-      </div>    -->
   </div>
 </ng-template>
 
@@ -194,7 +167,7 @@
     </div>
   </div>
 </ng-template>
-<div cl></div>
+
 <codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
   (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"

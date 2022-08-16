@@ -33,7 +33,8 @@
     <div class="m-0 bg-body rounded-2" >
       <ng-container *ngIf="name == 'Dashboard'">
         <ng-container >
-          <lib-dashboard-meeting [meeting]="meeting"></lib-dashboard-meeting> </ng-container>
+          <codx-sprintdetails-dashboard  [resources]="resources"></codx-sprintdetails-dashboard>
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
         <ng-container> This is Work... </ng-container>

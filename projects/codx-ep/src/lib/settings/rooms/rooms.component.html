@@ -1,45 +1,9 @@
-<!-- <codx-views
-  #view
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
-  [views]="views"
-  [button]="buttons"
-  (buttonClick)="click($event)"
-  [moreFuncs]="moreFuncs"
-  [idField]="idField"
-  [className]="className"
-  [method]="method"
-  (requestEnded)="closeDialog($event)"
->
-</codx-views>
-
-<ng-template #statusCol let-data>
-  <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-    data.status | vll: "EP002":"text" | async
-  }}</span>
-</ng-template>
-
-<ng-template #rankingCol let-data>
-  <div class="has-action-menu">
-    {{ data.ranking | vll: "EP005":"text" | async }}
-    <div class="action-menu">
-      <codx-mfunc
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-      ></codx-mfunc>
-    </div>
-  </div>
-</ng-template> -->
-
-<!-- <codx-dynamic-form
+<codx-dynamic-form
   [service]="'EP'"
   [assemblyName]="'EP'"
+  [entityName]="'EP_Resources'"
   [className]="'ResourcesBusiness'"
   [method]="'GetListAsync'"
-></codx-dynamic-form> -->
-<!-- a comment lại rồi nha tự mở ra mà chạy nha e. kí tên: Quang -->
+  [predicate]="'ResourceType=@0'"
+  [dataValue]="1"
+></codx-dynamic-form>

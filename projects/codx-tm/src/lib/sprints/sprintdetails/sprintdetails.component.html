@@ -2,17 +2,17 @@
   <div class="col-8">
     <div class="d-flex">
       <div class="text-dark fw-bolder my-1 fs-3 p-3">
-        {{ sprints?.iterationName }}
+        {{ nameObj }}
       </div>
       <div class="d-status p-3">
         <div class="badge badge-danger me-2 label-status">Nội bộ</div>
       </div>
       <div class="p-3"><span class="icon-calendar_today icon-18"></span>
-        <span #createdOn> {{ sprints?.createdOn | date: "dd/MM/yyyy" }}</span>
+        <span #createdOn> {{data?.createdOn | date: "dd/MM/yyyy" }}</span>
       </div>
       <div class="p-3">
         <span class="icon-person icon-18"></span>
-        <span>{{ sprints?.createdByName }}</span>
+        <span>{{createdByName }}</span>
       </div>
     </div>
     <div>
@@ -32,7 +32,7 @@
     </div>
   </div>
   <div class="col-4">
-    <codx-imgs style="float: right" [objectId]="sprints?.resources" objectType="AD_Users" [numberImages]="7"
+    <codx-imgs style="float: right" [objectId]="resources" objectType="AD_Users" [numberImages]="7"
       [width]="40" (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
       #popoverList="ngbPopover" placement="bottom" container="body" autoClose="outside" [openDelay]="500"></codx-imgs>
   </div>
@@ -47,7 +47,7 @@
         <codx-sprintdetails-dashboard [projectID]="projectID" [resources]="resources"></codx-sprintdetails-dashboard>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
-        <codx-tasks [projectID]="projectID"></codx-tasks>
+        <codx-tasks  [dataObj]="dataObj" ></codx-tasks>
       </ng-container>
       <ng-container *ngIf="name == 'Lịch sử'">
         <ng-container>
@@ -57,11 +57,11 @@
       <ng-container *ngIf="name == 'Bình luận'">
         <ng-container>
           <ng-container> This is comment... </ng-container>
+          <!-- <codx-comments [funcID]="funcID" [ObjetcType]="" ></codx-comments> -->
         </ng-container>
       </ng-container>
       <ng-container *ngIf="name == 'Họp định kì'">
-        <!-- <ng-container> This is mettings... </ng-container> -->
-        <codx-tmmeetings [projectID]="projectID" [iterationID]="iterationID"></codx-tmmeetings>
+        <codx-tmmeetings [dataObj]="dataObj"></codx-tmmeetings>
       </ng-container>
     </div>
   </div>
