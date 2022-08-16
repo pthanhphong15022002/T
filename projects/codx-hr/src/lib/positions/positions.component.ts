@@ -20,11 +20,18 @@ export class PositionsComponent implements OnInit {
   posInfo: any = {};
   employees: any = [];
   itemSelected: any;
+  countResource = 0;
+  listEmployeeSearch = [];
 
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
   @ViewChild('p') public popover: NgbPopover;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
+  popoverCrr: any;
+  allRoles: any;
+  lstRoles: any;
+  searchField: any;
+  listEmployee = [];
 
   constructor(
     private changedt: ChangeDetectorRef,
@@ -43,19 +50,32 @@ export class PositionsComponent implements OnInit {
     this.button = {
       id: 'btnAdd',
     };
-    // this.moreFuncs = [
-    //   {
-    //     id: 'edit',
-    //     icon: 'icon-list-checkbox',
-    //     text: 'Sửa',
-    //   },
-    //   {
-    //     id: 'copy',
-    //     icon: 'icon-list-checkbox',
-    //     text: 'Sao chép',
-    //   },
-    // ];
   }
+
+  popoverEmpList(p: any) {
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+      p.open();
+      this.popoverCrr = p;
+    }
+  }
+
+  searchName(e) {
+    var listEmployeeSearch = [];
+    this.searchField = e;
+    if (this.searchField.trim() == '') {
+      this.listEmployeeSearch = this.listEmployee;
+      return;
+    }
+    this.listEmployee.forEach((res) => {
+      var name = res.employeeName;
+      if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
+        listEmployeeSearch.push(res);
+      }
+    });
+    this.listEmployeeSearch = listEmployeeSearch;
+   }
+
 
   ngAfterViewInit(): void {
     this.views = [
