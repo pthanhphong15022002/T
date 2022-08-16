@@ -67,7 +67,7 @@ export class ViewDetailComponent implements OnInit {
       this.transID = this.itemDetail.processID;
       if (
         this.itemDetail?.approveControl == '1' ||
-        this.itemDetail?.approveStatus != '0'
+        this.itemDetail?.approveStatus != '1'
       ) {
         this.transID = this.itemDetail.recID;
       }
@@ -150,6 +150,7 @@ export class ViewDetailComponent implements OnInit {
       var task = new TM_Tasks();
       task.refID = datas?.recID;
       task.refType = this.view?.formModel.entityName;
+      task.dueDate = datas?.expiredOn;
       var vllControlShare = 'TM003';
       var vllRose = 'TM002';
       var title = 'Giao việc';
