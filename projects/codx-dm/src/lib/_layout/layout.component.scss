@@ -62,7 +62,7 @@
 }
 
 .progress-circle div[role="progressbar"] {
-  --size: 48px;
+  --size: 40px;
   --fg: #003c79;
   --bg: #def;
   --pgPercentage: var(--value);
@@ -216,4 +216,12 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
 
 .line-clamp-2 {
   word-break: break-all;
+}
+
+codx-toolbar .flex-stack.container-fluid {
+  padding: 0 22px;
+}
+
+home {
+  padding: 0 8px;
 }
