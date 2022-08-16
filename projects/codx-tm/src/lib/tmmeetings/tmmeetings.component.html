@@ -32,6 +32,15 @@
   </div>
 </ng-template>
 
+<ng-template #template7 let-data>
+  <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [numberImages]="3">
+  </codx-imgs>
+  <div class="d-flex justify-content-end row" style="padding-top: 30px;">
+    <a class="btn btn-xs btn-flat btn-info" (click)="edit(data)"><i class="fa fa-edit text-primary"></i></a>
+    <a class="btn btn-xs btn-flat btn-danger" (click)="delete(data)"><i class="fa fa-remove "></i></a>
+  </div>
+</ng-template>
+
 
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
