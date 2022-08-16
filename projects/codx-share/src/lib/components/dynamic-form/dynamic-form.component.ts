@@ -125,7 +125,11 @@ export class DynamicFormComponent extends UIComponent {
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
-        { formModel: option.FormModel },
+        {
+          formModel: option.FormModel,
+          data: this.dataSelected,
+          dataService: this.viewBase.dataService,
+        },
         option
       );
     });
@@ -141,9 +145,18 @@ export class DynamicFormComponent extends UIComponent {
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
-        option.FormModel,
+        {
+          formModel: option.FormModel,
+          data: this.dataSelected,
+          dataService: this.viewBase.dataService,
+        },
         option
       );
+      // this.dialog = this.callfc.openSide(
+      //   CodxFormDynamicComponent,
+      //   option.FormModel,
+      //   option
+      // );
     });
   }
 
