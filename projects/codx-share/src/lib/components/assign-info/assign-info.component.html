@@ -266,9 +266,10 @@
         <div class="d-flex align-items-top">
           <!-- <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
           </codx-img> -->
-          <div style=" position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
-            placement="bottom" #p="ngbPopover" (mouseenter)="showPopover(p,item.resourceID)" autoClose="outside">
-            <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
+          <div style=" position: relative" class="h-30px" popoverClass="userPopoverClass"
+            [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
+            (mouseenter)="showPopover(p,item.resourceID)" autoClose="outside">
+            <codx-img [width]="30" [objectId]="item?.resourceID" objectType="AD_Users">
             </codx-img>
             <div style="position: absolute; right: 0px;bottom: 0px">
               <ng-container *ngFor="let role of listRoles">
