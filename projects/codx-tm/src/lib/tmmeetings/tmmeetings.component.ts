@@ -25,6 +25,7 @@ import {
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
 import { CO_Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
+import { APICONSTANT } from '@shared/constant/api-const';
 
 @Component({
   selector: 'codx-tmmeetings',
@@ -35,7 +36,7 @@ export class TMMeetingsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  @Input()dataObj?: any;
+  @Input() dataObj?: any;
   @Input() projectID?: any; //view meeting to sprint_details
   @Input() iterationID?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -77,7 +78,8 @@ export class TMMeetingsComponent
   formName = '';
   gridViewName = '';
   @Input() calendarID: string;
-
+  @Input() viewPreset: string = 'weekAndDay';
+  dayWeek = [];
 
   constructor(
     inject: Injector,
@@ -89,11 +91,10 @@ export class TMMeetingsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-     // view meeting to sprint_details
-     //this.iterationID ="SPR2208-0073" ;
-     if (this.funcID == "TMT03011") {
-      this.funcID= "TMT0501";
-    };
+    if (this.funcID == 'TMT03011') {
+      this.funcID = 'TMT0501';
+    }
+
     this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
       if (res) {
         this.urlDetail = res[0].url;
@@ -101,13 +102,14 @@ export class TMMeetingsComponent
     });
 
     this.dataValue = this.user?.userID;
+    this.getParams();
+
   }
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
-    this.getParams();
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'CO';
@@ -176,6 +178,7 @@ export class TMMeetingsComponent
   };
 
   getCellContent(evt: any) {
+    console.log(evt);
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
         let day = new Date(this.dayoff[i].startDate);
@@ -210,16 +213,35 @@ export class TMMeetingsComponent
   getParams() {
     this.api
       .execSv<any>(
-        'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
+        APICONSTANT.SERVICES.SYS,
+        APICONSTANT.ASSEMBLY.CM,
+        APICONSTANT.BUSINESS.CM.Parameters,
         'GetOneField',
         ['TMParameters', null, 'CalendarID']
       )
       .subscribe((res) => {
         if (res) {
+          this.param = res;
           this.calendarID = res.fieldValue;
+          this.getDayWeek(this.calendarID);
           this.getDayOff(this.calendarID);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  getDayWeek(id) {
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.Calendars,
+        'GetDayWeekAsync',
+        [id]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dayWeek = res;
         }
       });
   }
@@ -249,15 +271,27 @@ export class TMMeetingsComponent
     var desc = '<div class="d-flex align-items-top" >';
     var day = '';
     var toDay = '<div class="d-flex flex-column me-2" >';
-    if(date){
+    if (date) {
       let date1 = new Date(date);
       let month = date1.getMonth() + 1;
       let myDay = this.addZero(date1.getDate());
       let year = date1.getFullYear();
       let day1 = date1.getDay() + 1;
-      day += '<div class="text-dark fw-bolder fs-1 text " style="font-size: 50px;">' + myDay +'</div>';
-      toDay += '<div class="text-dark fw-bold">'+ 'Thứ ' + day1+'</div>' +
-      '<div class="fw-lighter">'+ 'Tháng ' + month+', ' +year+'</div></div>'
+      day +=
+        '<div class="text-dark fw-bolder fs-1 text " style="font-size: 50px;">' +
+        myDay +
+        '</div>';
+      toDay +=
+        '<div class="text-dark fw-bold">' +
+        'Thứ ' +
+        day1 +
+        '</div>' +
+        '<div class="fw-lighter">' +
+        'Tháng ' +
+        month +
+        ', ' +
+        year +
+        '</div></div>';
     }
 
     return desc + day + toDay + '</div>';

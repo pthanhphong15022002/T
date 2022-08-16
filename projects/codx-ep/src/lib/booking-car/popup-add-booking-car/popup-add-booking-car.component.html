@@ -23,13 +23,12 @@
           }}</span>
         </div>
         <codx-input
-            type="combobox"
-            refValue="EP_Cars"
-            field="resourceID"
-            placeholder="Chọn xe"
-            [crrValue]="this.fGroupAddBookingCar.value.resourceID"
-            (valueChange)="valueChange($event)"  
-            [multiple]="false" 
+          type="combobox"
+          refValue="EP_Cars"
+          [multiple]="false"
+          ControlName="resourceID"          
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingCar"
         >
         </codx-input>
       </div>
@@ -73,6 +72,7 @@
           <codx-input
             type="datetime"
             format="f"
+            class="test-datetime"
             placeholder="Ngày bắt đầu"
             field="startDate"
             [crrValue]="fGroupAddBookingCar.value.startDate"
@@ -217,8 +217,9 @@
               [ngClass]="'w-100'" 
               (valueChange)="valueChange($event)">
             </codx-input>
+            
     
-            <codx-input 
+            <!-- <codx-input 
               type="Combobox" 
               name="User"
               [refValue]="'Users'" 
@@ -228,7 +229,15 @@
               field="popup" 
               [ngClass]="'w-100'" 
               (valueChange)="valueChange($event)">
-            </codx-input>        
+            </codx-input>         -->
+            <codx-input type="Combobox" 
+              name="combobox" 
+              [refValue]="'Users'" 
+              refType="P" 
+              field="userID" 
+              [showInput]="false"
+            (valueChange)="valueChange($event)">
+          </codx-input>
           </div>
         </div>
 
