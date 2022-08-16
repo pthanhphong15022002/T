@@ -48,12 +48,12 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     'Bình luận',
     'Họp định kì',
   ];
-  // dataView =   {
-  //   nameObj : '',
-  //   projectCategory :'' ,
-  //   createOn : 
-  //   createByName :''
-  // }
+ 
+   nameObj : any
+   projectCategory : any
+   createdOn : any
+   createdByName :any
+  
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -84,9 +84,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     if (this.iterationID != '') {
       this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
         if (res) {
-          this.data = res;
-          this.projectID = this.data?.projectID;
-          this.resources = this.data.resources;
+          this.createdByName = res.userName ;
+          this.createdOn = res.createdOn ;
+          this.nameObj = res.iterationName ;
+          this.projectID = res?.projectID;
+          this.resources = res.resources;
           this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
             iterationID: this.iterationID ? this.iterationID : '',
@@ -100,10 +102,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     if (this.meetingID) {
       this.tmSv.getMeetingID(this.meetingID).subscribe((res) => {
         if (res) {
-          this.data = res;
-          // this.startDateMeeting = this.data.startDate;
-          this.projectID = this.data?.projectID;
-          this.resources = this.data.avataResource;
+          this.createdByName = res.userName ;
+          this.createdOn = res.createdOn ;
+          this.nameObj = res.meetingName ;
+          this.projectID = res?.projectID;
+          this.resources = res.avataResource;
           if (this.resources != null) {
             this.getListUserByResource(this.resources);
           }
