@@ -179,12 +179,12 @@ export const routes: Routes = [
       {
         path: 'sprintdetails/:funcID',
         component: SprintDetailsComponent,
-        children: [
-          {
-            path: ':id',
-            component: SprintDetailsComponent,
-          },
-        ],
+        // children: [
+        //   {
+        //     path: ':id',
+        //     component: SprintDetailsComponent,
+        //   },
+        // ],
       },
     ],
   },
