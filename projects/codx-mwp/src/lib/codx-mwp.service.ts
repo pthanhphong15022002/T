@@ -11,7 +11,7 @@ export class CodxMwpService {
   user: any;
   employeeID: any = "";
   EmployeeInfomation: EmployeeInfomationComponent;
-  InfoLeftComponent: InfoLeftComponent;
+  infoLeftComponent: InfoLeftComponent;
   employeeComponent: any;
   currentSection: any = "InfoPersonal";
   private id = new BehaviorSubject<string>(null);

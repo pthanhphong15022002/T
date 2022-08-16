@@ -45,6 +45,7 @@ export class ViewApprovalProcessComponent implements OnInit {
         this.esService.getApprovalTrans(this.transID).subscribe((res) => {
           if (res) {
             this.process = res;
+            console.log(this.process);
           }
         });
       }

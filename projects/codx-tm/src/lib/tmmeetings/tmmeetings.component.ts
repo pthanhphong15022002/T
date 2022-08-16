@@ -32,6 +32,8 @@ import { MeetingDetailComponent } from './meeting-detail/meeting-detail.componen
   styleUrls: ['./tmmeetings.component.css'],
 })
 export class TMMeetingsComponent extends UIComponent implements OnInit, AfterViewInit {
+  @Input() projectID?:any;  //view meeting to sprint_details
+  @Input() iterationID?:any
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
@@ -70,8 +72,6 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   formName = '';
   gridViewName = '';
   @Input() calendarID: string;
-  @Input() projectID:any;  //view meeting to sprint_details
-  @Input() iterationID:any
   dataObj :any ;
 
   constructor(
@@ -84,15 +84,22 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+     // view meeting to sprint_details
+     if (this.funcID == "TMT03011") { 
+      this.funcID= "TMT0501"; 
+    };
+    this.activedRouter.firstChild?.params.subscribe(
+      (data) => (this.iterationID = data.id)
+    );
+     var dataObj = { projectID: this.projectID? this.projectID : '' ,iterationID : this.iterationID? this.iterationID: ''}
+     this.dataObj = JSON.stringify(dataObj);
+     //
     this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
       if (res) {
         this.urlDetail = res[0].url;
       }
     });
-    // view meeting to sprint_details
-    var dataObj = { projectID: this.projectID? this.projectID : '' ,iterationID : this.iterationID? this.iterationID: ''}
-    this.dataObj = JSON.stringify(dataObj);
-    //
+    
     this.dataValue = this.user?.userID;
   }
 
@@ -151,16 +158,6 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     this.view.dataService.methodSave = 'AddMeetingsAsync';
     this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
-    if(this.funcID="TMT03011" && (this.projectID || this.iterationID)){
-      this.model = new DataRequest();
-      this.model.pageLoading = false;
-      this.model.formName = 'Tasks';
-      this.model.gridViewName = 'grvTasks';
-      this.model.entityName = 'TM_Tasks';
-     this.model.predicate = "RefID==@0 or RefID==@1" ;
-      this.funcID ="" ;
-      this.model.dataValue = this.projectID + ";" +this.iterationID ;
-    }
     this.dt.detectChanges();
   }
 

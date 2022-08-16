@@ -1,19 +1,32 @@
 <codx-views #view [funcID]="funcID" service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings" [views]="views"
-  [button]="button" className="MeetingsBusiness" method="GetListMeetingsAsync" (buttonClick)="click($event)" 
-  [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID">
+  [button]="button" className="MeetingsBusiness" method="GetListMeetingsAsync" (buttonClick)="click($event)"
+  [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID">
 </codx-views>
 
 <ng-template #itemViewList let-data>
-  <lib-view-list-meet [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)" [itemSelected]="itemSelected">
+  <lib-view-list-meet [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)"
+    [itemSelected]="itemSelected">
   </lib-view-list-meet>
 </ng-template>
 
 <ng-template #cardKanban let-data>
-  <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [title]="getDate(data)"
-    [subTitle]="data.meetingName" [dataItem]="data"  [descTmp]="" [footer]="footer"
+  <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [headerTmp]="headerTmp"
+    [title]="getDate(data)" [subTitle]="data.meetingName" [dataItem]="data" [descTmp]="" [footer]="footer"
     [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
   </codx-card-center>
 </ng-template>
+
+<ng-template #headerTmp let-data>
+  <div class="d-flex">
+    <div class="justify-content-start">
+      cccc
+    </div>
+    <div class="justify-content-end">
+      bbbbbb
+    </div>
+  </div>
+</ng-template>
+
 
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
@@ -29,8 +42,9 @@
   <div class="justify-content-center" style="margin-bottom: 15px; ">
     <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [numberImages]="4">
 
-    </codx-imgs></div>
-  <div class = "row">
+    </codx-imgs>
+  </div>
+  <div class="row">
     <div class="justify-content-start col-9" *ngIf="data.tags">
       <codx-tag [entityName]="view.formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data?.tags">
       </codx-tag>
