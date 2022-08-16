@@ -71,7 +71,6 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
 import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
-import { DashboardMeetingComponent } from './tmmeetings/view-work/dashboard-meeting/dashboard-meeting.component';
 
 export const routes: Routes = [
   {
@@ -94,14 +93,8 @@ export const routes: Routes = [
         path: 'meeting/:funcID',
         component: TMMeetingsComponent,
       },
-      {
-        path: 'meetingdetails/:funcID',
-        component: MeetingDetailComponent,
-      },
-      {
-        path: 'sprintdetails/:funcID',
-        component: ViewWorkComponent,
-      },
+
+
       {
         path: 'mydashboard/:funcID',
         component: MyDashboardComponent,
@@ -186,6 +179,14 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'meetingdetails/:funcID',
+        component: MeetingDetailComponent,
+      },
+      {
+        path: 'sprintdetails/:funcID',
+        component: ViewWorkComponent,
+      },
     ],
   },
 ];
@@ -238,7 +239,6 @@ const T_Component: Type<any>[] = [
   SprintDetailsComponent,
   ViewWorkComponent,
   DashboardComponent,
-  DashboardMeetingComponent
 ];
 @NgModule({
   imports: [

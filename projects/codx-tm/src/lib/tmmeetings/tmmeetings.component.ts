@@ -57,6 +57,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   dayoff = [];
   month: any;
   day: any;
+  tag = 'Tag';
   startTime: any;
   eventStatus: any;
   itemSelected: any;
@@ -86,8 +87,8 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     this.funcID = this.activedRouter.snapshot.params['funcID'];
      // view meeting to sprint_details
      //this.iterationID ="SPR2208-0073" ;
-     if (this.funcID == "TMT03011") { 
-      this.funcID= "TMT0501"; 
+     if (this.funcID == "TMT03011") {
+      this.funcID= "TMT0501";
     };
     this.activedRouter.firstChild?.params.subscribe(
       (data) => (this.iterationID = data.id)
@@ -100,7 +101,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
         this.urlDetail = res[0].url;
       }
     });
-    
+
     this.dataValue = this.user?.userID;
   }
 
@@ -135,7 +136,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
         },
       },
       {
-        type: ViewType.schedule,
+        type: ViewType.calendar,
         active: false,
         sameData: true,
         model: {
@@ -248,15 +249,23 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   }
   //#endregion schedule
 
-  convertHtmlAgency(resourceID: any) {
-    var desc = '<div class="d-flex">';
-    if (resourceID)
-      desc +=
-        '<codx-imgs [objectId]="getResourceID(' +
-        resourceID +
-        ')" objectType="AD_Users" [numberImages]="4"></codx-imgs>';
+  convertHtmlAgency(data: any) {
+    var date = data.startDate;
+    var desc = '<div class="d-flex align-items-top" >';
+    var day = '';
+    var toDay = '<div class="d-flex flex-column me-2" >';
+    if(date){
+      let date1 = new Date(date);
+      let month = date1.getMonth() + 1;
+      let myDay = this.addZero(date1.getDate());
+      let year = date1.getFullYear();
+      let day1 = date1.getDay() + 1;
+      day += '<div class="text-dark fw-bolder fs-1 text " style="font-size: 50px;">' + myDay +'</div>';
+      toDay += '<div class="text-dark fw-bold">'+ 'Thứ ' + day1+'</div>' +
+      '<div class="fw-lighter">'+ 'Tháng ' + month+', ' +year+'</div></div>'
+    }
 
-    return desc + '</div>';
+    return desc + day + toDay + '</div>';
   }
 
   getResourceID(data) {
