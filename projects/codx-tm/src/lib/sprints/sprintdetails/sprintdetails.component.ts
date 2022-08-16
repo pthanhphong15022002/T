@@ -95,7 +95,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.data =res ;
           this.createdByName = res.userName;
           this.nameObj = res.meetingName;
-          this.projectID = res?.projectID;
+          this.projectID = res.projectID;
           this.resources = res.avataResource;
           this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
