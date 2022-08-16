@@ -544,10 +544,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   onFolderSave() {
-    if (
-      this.approval &&
-      (this.approvers == '' || this.approvers == undefined)
-    ) {
+    if (this.approval && (this.approvers == '' || this.approvers == undefined)) {
       this.notificationsService.notify(this.titleApprovalName);
       return;
     }

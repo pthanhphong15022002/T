@@ -253,34 +253,33 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       });
   }
 
-  getShareUser(shareControl, commentID) {
-    if (shareControl == '1') {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'GetShareOwnerListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res) this.tagUsers = res;
-          console.log('CHECK TAG USER LIST', this.tagUsers.orgUnitName);
-        });
-    } else {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'GetShareUserListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.tagUsers = res;
-            console.log('CHECK TAG USER LIST', this.tagUsers);
-          }
-        });
-    }
+  getShareUser(item) {
+    // if (shareControl == '1') {
+    //   this.api
+    //     .exec<any>(
+    //       'ERM.Business.WP',
+    //       'CommentsBusiness',
+    //       'GetShareOwnerListAsync',
+    //       [commentID]
+    //     )
+    //     .subscribe((res) => {
+    //       if (res) this.tagUsers = res;
+    //     });
+    // } else {
+    //   this.api
+    //     .exec<any>(
+    //       'ERM.Business.WP',
+    //       'CommentsBusiness',
+    //       'GetShareUserListAsync',
+    //       [commentID]
+    //     )
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         this.tagUsers = res;
+    //       }
+    //     });
+    // }
+    this
   }
 
   naviagte(data: any) {

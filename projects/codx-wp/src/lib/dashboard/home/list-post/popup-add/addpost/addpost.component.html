@@ -24,7 +24,7 @@
                                 <span class="me-2" [innerHTML]="shareWith"></span>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -43,7 +43,8 @@
             </div>
             <div class="d-flex justify-content-between align-items-center body-function">
                 <div class="text-gray-500 fw-bold">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblInsertPost" default="Thêm vào bài viết"></codx-label>
+                    <codx-label [formModel]="dialogRef.formModel" name="lblInsertPost" default="Thêm vào bài viết">
+                    </codx-label>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-emoji">
@@ -59,7 +60,8 @@
                         </ng-container>
                     </div>
                     <div>
-                        <button (click)="tagUser()" type="button" data-toggle="tooltip" class="btn btn-icon btn-md ms-2">
+                        <button (click)="tagUser()" type="button" data-toggle="tooltip"
+                            class="btn btn-icon btn-md ms-2">
                             <i class="icon-local_offer icon-24 text-primary"></i>
                         </button>
                     </div>
@@ -75,7 +77,7 @@
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-between">
-            <button type="button" class="btn btn-primary btn-post" (click)="Submit()">
+            <button type="button" class="btn btn-primary btn-post" (click)="click()">
                 <codx-label formName="WP_Comments" name="lblSubmit"
                     [default]="dialogData.status == STATUS.EDIT? 'Lưu':'Đăng'"></codx-label>
             </button>
@@ -89,25 +91,14 @@
         </codx-input>
     </div>
     <div>
-        <codx-file 
-            #codxFileCreated 
-            [isNew]="true"
-            [funcID]="dialogRef.formModel.funcID" 
-            (removeFile)="removeFile($event)"
-            (addFile)="addFile($event)" [edit]='true'>
+        <codx-file #codxFileCreated [isNew]="true" [funcID]="dialogRef.formModel.funcID"
+            (removeFile)="removeFile($event)" (addFile)="addFile($event)" [edit]='true'>
         </codx-file>
     </div>
     <div class="d-none">
-        <codx-attachment #atmCreate 
-            objectType="WP_Comments" 
-            hideFolder="1" hideUploadBtn="1" 
-            hideDes="1" type="inline"
-            allowExtensions=".jpg,.png" 
-            allowMultiFile="1" 
-            [showMessage]="0"
-            (fileCount)="getfileCount($event)" 
-            idBrowse="atmCreate"
-            [functionID]="dialogRef.formModel.funcID">
+        <codx-attachment #atmCreate objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline"
+            allowExtensions=".jpg,.png" allowMultiFile="1" [showMessage]="0" (fileCount)="getfileCount($event)"
+            idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
         </codx-attachment>
     </div>
 </ng-template>
@@ -116,34 +107,18 @@
     <ng-container *ngIf="dataEdit">
         <div class="row my-3">
             <div>
-                <codx-input format="ed3" 
-                [class]="'border-none'" 
-                type="textarea" 
-                [crrValue]="message"
-                [placeholder]="title"
-                (valueChange)="valueChange($event)">
+                <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message"
+                    [placeholder]="title" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
             <div>
-                <codx-file #codxFileEdit 
-                [objectID]="dataEdit.recID" 
-                [edit]='true' 
-                (addFile)="addFile($event)"
-                (removeFile)="removeFile($event)"></codx-file>
+                <codx-file #codxFileEdit [objectID]="dataEdit.recID" [edit]='true' (addFile)="addFile($event)"
+                    (removeFile)="removeFile($event)"></codx-file>
             </div>
             <div class="d-none">
-                <codx-attachment #atmEdit 
-                    objectType="WP_Comments" 
-                    hideFolder="1" 
-                    hideUploadBtn="1" 
-                    hideDes="1"
-                    type="inline" 
-                    [showMessage]="0"
-                    allowExtensions=".jpg,.png" 
-                    allowMultiFile="1" 
-                    (fileCount)="getfileCount($event)"
-                    idBrowse="atmEdit" 
-                    [functionID]="dialogRef.formModel.funcID">
+                <codx-attachment #atmEdit objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1"
+                    type="inline" [showMessage]="0" allowExtensions=".jpg,.png" allowMultiFile="1"
+                    (fileCount)="getfileCount($event)" idBrowse="atmEdit" [functionID]="dialogRef.formModel.funcID">
                 </codx-attachment>
             </div>
         </div>
@@ -162,21 +137,12 @@
         </codx-file>
     </div>
     <div class="d-none">
-        <codx-attachment #atmCreate 
-            objectType="WP_Comments" 
-            hideFolder="1" 
-            hideUploadBtn="1" 
-            hideDes="1" 
-            type="inline"
-            allowExtensions=".jpg,.png" 
-            [showMessage]="0"
-            allowMultiFile="1" 
-            (fileCount)="getfileCount($event)" 
-            idBrowse="atmCreate"
-            [functionID]="dialogRef.formModel.funcID">
+        <codx-attachment #atmCreate objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline"
+            allowExtensions=".jpg,.png" [showMessage]="0" allowMultiFile="1" (fileCount)="getfileCount($event)"
+            idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
         </codx-attachment>
     </div>
-    <div class="ndchiase p-4 mt-3">
+    <div class="ndchiase">
         <div [class.border]="listFileUpload.length > 0">
             <ng-container *ngIf="!dataShare?.isPortal;else category2">
                 <div class="pic-feed">
@@ -265,19 +231,12 @@
         </codx-share>
     </ng-container>
     <ng-template #creat_share>
-        <codx-share [dialog]="dialog" [multiple]="false" listName="WP001"  (eventApply)="eventApply($event)">
+        <codx-share [dialog]="dialog" [multiple]="false" listName="WP001" (eventApply)="eventApply($event)">
         </codx-share>
     </ng-template>
 </ng-template>
 <ng-container #controlTag *ngIf="showCBB">
-    <codx-combobox-popup
-    [comboboxName]="'Users'"
-    [field]="'tagUser'"
-    [multiple]="true"
-    [width]="width"
-    [height]="height"
-    [value]="''"
-    (clickSave)="saveAddUser($event)"
-  >
-  </codx-combobox-popup>
+    <codx-combobox-popup [comboboxName]="'Users'" [field]="'tagUser'" [multiple]="true" [width]="width"
+        [height]="height" [value]="''" (clickSave)="saveAddUser($event)">
+    </codx-combobox-popup>
 </ng-container>

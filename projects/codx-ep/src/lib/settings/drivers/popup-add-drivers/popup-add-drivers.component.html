@@ -5,7 +5,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialogRef"
-  [formModel]="formModel"
+  [formModel]="dialogRef.formModel"
   [formControl]="fGroupAddDriver"
   *ngIf="isAfterRender"
 >
@@ -22,7 +22,6 @@
       <codx-input
           type="valuelist"
           name="valuelist"
-          ngDefaultControl
           [crrValue]="fGroupAddDriver.value.category"
           refValue="VL005"
           field="category"
@@ -44,7 +43,6 @@
         [Group]="fGroupAddDriver"
         ControlName="companyID"
         [formModel]="form.formModel"
-        (valueChange)="valueChange($event)"  
         [multiple]="false" 
       >
       </codx-input> 
@@ -106,7 +104,6 @@
         field="linkID"        
         ngDefaultControl
         [crrValue]="this.fGroupAddDriver.value.linkID"
-        (valueChange)="valueCbxCarChange($event)" 
         [multiple]="false" 
         >
       </codx-input>      

@@ -128,8 +128,6 @@ export class BookingCarComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
-    this.viewBase.dataService.methodSave = 'AddNewAsync';
-    this.viewBase.dataService.methodUpdate = 'EditAsync';
     this.views = [
       {
         sameData: true,
@@ -147,6 +145,7 @@ export class BookingCarComponent extends UIComponent {
         },
       },
 
+      
       {
         sameData: true,
         id: '3',
@@ -157,7 +156,6 @@ export class BookingCarComponent extends UIComponent {
         },
       },
     ];
-
     this.detectorRef.detectChanges();
   }
 

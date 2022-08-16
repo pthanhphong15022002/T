@@ -31,9 +31,7 @@
       </div>
     </div>
   </ng-container>
-  <div
-    
-  >
+  <div>
     <div id="newfeed">
       <codx-listview
         [emptyTemplate]="empty"
@@ -105,7 +103,7 @@
             </span>
           </span>
 
-          <ng-container *ngIf="item.shareName">
+          <ng-container *ngIf="item.shareName" >
             <span class="ms-2 me-2" [innerHTML]="item.shareName"></span>
           </ng-container>
         </div>
@@ -426,8 +424,7 @@
 
 <!-- tooltip for tagUser -->
 <ng-template #popContent style="width: fit-content; height: fit-content">
-  <div *ngIf="show()">
-    <div *ngFor="let tagUser of tagUsers">
+    <div *ngFor="let tagUser of tagUsers | filter: searchField:'objectName'">
       <div class="d-flex algin-items-center my-3">
         <codx-img
           class="me-3"
@@ -438,11 +435,10 @@
         </codx-img>
         <div class="d-flex flex-column">
           <div class="text-dark fs-6 me-2">{{ tagUser.objectName }}</div>
-          <div class="text-gray-800">{{ tagUser.positionName }}</div>
+          <!-- <div class="text-gray-800">{{ tagUser.positionName }}</div> -->
         </div>
       </div>
     </div>
-  </div>
 </ng-template>
 <ng-template #popTitle>
   <div class="text-dark mb-2 fs-6">
@@ -464,19 +460,14 @@
 <!-- tooltip -->
 <!-- tooltip for user shared -->
 <ng-template #popContentOfShare style="width: fit-content; height: fit-content">
-  <div *ngIf="show()">
     <div *ngFor="let tagUser of tagUsers | filter: searchField:'objectName'">
-      <div *ngIf="tagUser.orgUnitName == undefined">
-        <div
-          class="row"
-          style="margin-top: 10px; margin-bottom: 10px; margin-left: -10px"
-        >
+        <div class="row" style="margin-top: 10px; margin-bottom: 10px; margin-left: -10px">
           <div class="col-md-2">
             <codx-img
               class="me-3"
               [width]="40"
-              [objectId]="tagUser.userID"
-              objectType=" HR_Employees"
+              [objectId]="tagUser.objectID"
+              objectType="AD_Users"
             >
             </codx-img>
           </div>
@@ -484,16 +475,14 @@
             <div class="text-dark pb-1" style="font-weight: BOLD">
               {{ tagUser.objectName }}
             </div>
-            <div class="row" style="margin-left: -10px">
+            <!-- <div class="row" style="margin-left: -10px">
               <div class="text-gray-600 col-md-12">
                 {{ tagUser?.positionName }}
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
-      </div>
     </div>
-  </div>
 </ng-template>
 <ng-template #popTitleOfShare>
   <div class="text-dark mb-2">
