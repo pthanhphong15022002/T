@@ -23,8 +23,6 @@ import { TabModelSprints } from '../../models/TM_Sprints.model';
   encapsulation: ViewEncapsulation.None,
 })
 export class SprintDetailsComponent implements OnInit, AfterViewInit {
-  @Input() projectID?: any;
-  @Input() resources?: any;
   active = 1;
   sprints: any;
   iterationID: any;
@@ -33,8 +31,8 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   funcID: any;
   tabControl: TabModelSprints[] = [];
   name = 'Công việc';
-  // projectID: any;
-  // resources: any;
+  projectID: any;
+  resources: any;
   searchField = '';
   listTaskResousceSearch = [];
   listTaskResousce = [];
@@ -102,7 +100,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           }
         }
       });
-    } else if (this.resources) this.getListUserByResource(this.resources);
+    } 
   }
   ngOnInit(): void {
     if (this.tabControl.length == 0) {
