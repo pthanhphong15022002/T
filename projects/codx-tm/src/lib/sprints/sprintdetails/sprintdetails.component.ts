@@ -60,7 +60,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.funcID == 'TMT03012') this.all = ['Dashboard', 'Công việc'];
+   
     this.activedRouter.queryParams.subscribe((params) => {
       if (params) {
         this.iterationID = params?.iterationID;
@@ -105,6 +105,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         }
       });
     }
+    if (this.meetingID) this.all = ['Dashboard', 'Công việc'];
   }
   ngOnInit(): void {
     if (this.tabControl.length == 0) {
