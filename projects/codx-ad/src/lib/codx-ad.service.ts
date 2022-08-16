@@ -89,7 +89,7 @@ export class CodxAdService {
     );
   }
 
-  addUserBeforeDone(data, isUserGroup = true) {
+  addUserBeforeDone(data, isUserGroup = false) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',
