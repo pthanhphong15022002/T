@@ -100,6 +100,7 @@ export class TasksComponent extends UIComponent {
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
   dataTree = [];
   iterationID = '';
+  meetingID = '';
   @Input() projectID?: any;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
@@ -141,10 +142,16 @@ export class TasksComponent extends UIComponent {
     //     this.iterationID = state.iterationID || '';
     //   }
     // });
+    // this.activedRouter.firstChild?.params.subscribe(
+    //   (data) => (this.iterationID = data.id)
+    // );
 
-    this.activedRouter.firstChild?.params.subscribe(
-      (data) => (this.iterationID = data.id)
-    );
+     this.activedRouter.queryParams.subscribe((params) => {
+      if (params) {
+        this.meetingID = params?.meetingID;
+        this.iterationID = params?.iterationID
+      }
+    });
     var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
     this.dataObj = JSON.stringify(dataObj);
     this.cache.valueList(this.vllRole).subscribe((res) => {

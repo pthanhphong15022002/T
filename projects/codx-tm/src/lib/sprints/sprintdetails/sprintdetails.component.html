@@ -2,17 +2,17 @@
   <div class="col-8">
     <div class="d-flex">
       <div class="text-dark fw-bolder my-1 fs-3 p-3">
-        {{ data?.iterationName }}
+        {{ nameObj }}
       </div>
       <div class="d-status p-3">
         <div class="badge badge-danger me-2 label-status">Nội bộ</div>
       </div>
       <div class="p-3"><span class="icon-calendar_today icon-18"></span>
-        <span #createdOn> {{ data?.createdOn | date: "dd/MM/yyyy" }}</span>
+        <span #createdOn> {{data.createdOn | date: "dd/MM/yyyy" }}</span>
       </div>
       <div class="p-3">
         <span class="icon-person icon-18"></span>
-        <span>{{ data?.createdByName }}</span>
+        <span>{{createdByName }}</span>
       </div>
     </div>
     <div>

@@ -237,14 +237,15 @@ export class SprintsComponent extends UIComponent {
   }
 
   viewBoard(e, data) {
-    // this.urlView = e?.url;
-    this.urlView = 'tm/sprintdetails/TMT03011';
-    if (data.iterationID != this.user.userID)
-      // this.urlView += '/' + data.iterationID;
-      // this.codxService.navigate('', this.urlView)
-      this.codxService.navigate('', this.urlView, {
-        iterationID: data.iterationID,
-      });
+    this.urlView = e?.url;
+    this.urlView = 'tm/sprintdetails/TMT03011' ///gán cứng chứ thương chưa đổi
+    this.codxService.navigate('', this.urlView, {
+      iterationID: data.iterationID,
+    });
+   // this.urlView = 'tm/sprintdetails/TMT03011';
+    // if (data.iterationID != this.user.userID)
+    //   this.urlView += '/' + data.iterationID;
+    //   this.codxService.navigate('', this.urlView)
     // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
     // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
 
@@ -253,27 +254,6 @@ export class SprintsComponent extends UIComponent {
     // };
     // this.codxService.navigate('', this.urlView,null,state);
   }
-
-  // navigate(evt: any, data, url) {
-  //   var res = this.valuelist as any;
-  //   if (res && res.datas) {
-  //     var state = {
-  //       iterationID: data?.iterationID,
-  //     };
-  //     const ds = (res.datas as any[]).find(
-  //       (item) => item.value == data?.iterationID
-  //     );
-  //     var path = window.location.pathname;
-  //     if (path.endsWith('/' + ds.default)) {
-  //       history.pushState(state, '', path);
-  //     } else {
-  //       url += '/' + ds.default;
-  //       this.codxService.navigate('', url, null, state);
-  //     }
-  //   }
-  //   this.detectorRef.detectChanges();
-  //   console.log(evt);
-  // }
 
   changeView(evt: any) {
     console.log('evt: ', evt);
