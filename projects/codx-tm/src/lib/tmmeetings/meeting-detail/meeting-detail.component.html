@@ -54,9 +54,12 @@
         </div>
       </div>
       <div class="col-4">
-        <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="meeting.avataResource"
+        <div class="d-flex justify-content-end">
+          <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="meeting.avataResource"
           objectType="AD_Users" [numberImages]="6">
         </codx-imgs>
+        </div>
+
         <div class="d-flex justify-content-end" style="padding-top: 40px;">
           <codx-label class="text-gray-800 text-primary" default="Xem công việc >>" (click)="viewDetail(meeting)">
           </codx-label>
