@@ -31,7 +31,13 @@ import { MeetingDetailComponent } from './meeting-detail/meeting-detail.componen
   templateUrl: './tmmeetings.component.html',
   styleUrls: ['./tmmeetings.component.css'],
 })
-export class TMMeetingsComponent extends UIComponent implements OnInit, AfterViewInit {
+export class TMMeetingsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{ 
+  @Input()dataObj?: any;
+  @Input() projectID?: any; //view meeting to sprint_details
+  @Input() iterationID?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
@@ -70,9 +76,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   formName = '';
   gridViewName = '';
   @Input() calendarID: string;
-  @Input() projectID:any;  //view meeting to sprint_details
-  @Input() iterationID:any
-  dataObj :any ;
+
 
   constructor(
     inject: Injector,
@@ -84,19 +88,18 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // view meeting to sprint_details
+    if (this.funcID == 'TMT03011') {
+      this.funcID = 'TMT0501';
+    }
     this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
       if (res) {
         this.urlDetail = res[0].url;
       }
     });
-    // view meeting to sprint_details
-    var dataObj = { projectID: this.projectID? this.projectID : '' ,iterationID : this.iterationID? this.iterationID: ''}
-    this.dataObj = JSON.stringify(dataObj);
-    //
+
     this.dataValue = this.user?.userID;
   }
-
-
 
   onInit(): void {
     this.button = {
@@ -113,7 +116,6 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
-
   }
 
   ngAfterViewInit(): void {
@@ -151,16 +153,6 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     this.view.dataService.methodSave = 'AddMeetingsAsync';
     this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
-    if(this.funcID="TMT03011" && (this.projectID || this.iterationID)){
-      this.model = new DataRequest();
-      this.model.pageLoading = false;
-      this.model.formName = 'Tasks';
-      this.model.gridViewName = 'grvTasks';
-      this.model.entityName = 'TM_Tasks';
-     this.model.predicate = "RefID==@0 or RefID==@1" ;
-      this.funcID ="" ;
-      this.model.dataValue = this.projectID + ";" +this.iterationID ;
-    }
     this.dt.detectChanges();
   }
 
@@ -265,7 +257,7 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     var resources = [];
     resources = data.resources;
     var id = '';
-    if(resources!=null){
+    if (resources != null) {
       resources.forEach((e) => {
         id += e.resourceID + ';';
       });
@@ -398,6 +390,8 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
   }
 
   viewDetail(data) {
-    this.codxService.navigate('', this.urlDetail, {meetingID: data.meetingID});
+    this.codxService.navigate('', this.urlDetail, {
+      meetingID: data.meetingID,
+    });
   }
 }
