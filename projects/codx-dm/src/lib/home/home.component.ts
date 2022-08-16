@@ -320,7 +320,7 @@ export class HomeComponent extends UIComponent {
 
   fileUploadDropped($event) { 
     if (this.dmSV.idMenuActive == "DMT02" || this.dmSV.idMenuActive == "DMT03") {
-
+      this.addFile($event);
       // var data = new DataItem();
       // data.recID = "";
       // data.type = "file";
