@@ -80,6 +80,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.resources = res.resources;
           this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
+            resources : this.resources? this.resources:'' ,
             iterationID: this.iterationID ? this.iterationID : '',
           };
           if (this.resources != null) {
@@ -96,6 +97,10 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.nameObj = res.meetingName;
           this.projectID = res?.projectID;
           this.resources = res.avataResource;
+          this.dataObj = {
+            projectID: this.projectID ? this.projectID : '',
+            resources : this.resources? this.resources:'' ,
+          };
           if (this.resources != null) {
             this.getListUserByResource(this.resources);
           }
