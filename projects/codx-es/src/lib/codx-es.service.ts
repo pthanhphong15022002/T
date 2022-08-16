@@ -147,8 +147,9 @@ export class CodxEsService {
 
               if (element.fieldName == 'owner') {
                 model[element.fieldName].push(user.userID);
-              }
-              if (element.fieldName == 'createdOn') {
+              } else if (element.fieldName == 'bUID') {
+                model[element.fieldName].push(user['buid']);
+              } else if (element.fieldName == 'createdOn') {
                 model[element.fieldName].push(new Date());
               } else if (element.fieldName == 'stop') {
                 model[element.fieldName].push(false);
@@ -826,7 +827,8 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(data) {
+  updateSignFileTrans(userID, sfID, mode, comment) {
+    let data = [userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
@@ -836,6 +838,18 @@ export class CodxEsService {
     );
   }
   //#endregion
+
+  //region CA
+  createLocalCertificatePFX(mail, pass) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignaturesBusiness',
+      'CreateLocalCertificatePFXAsync',
+      [mail, pass]
+    );
+  }
+  //
 }
 export class LayoutModel {
   isChange: boolean = false;

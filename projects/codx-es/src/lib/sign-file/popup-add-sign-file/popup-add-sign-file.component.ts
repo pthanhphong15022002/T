@@ -54,6 +54,7 @@ export class PopupAddSignFileComponent implements OnInit {
   processID: String = '';
   transID: String = '';
   isSaved = false;
+  gvSetup: any;
 
   dialog: DialogRef;
   data;
@@ -96,6 +97,13 @@ export class PopupAddSignFileComponent implements OnInit {
       .then((res) => {
         if (res) this.cbxName = res;
       });
+
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((res) => {
+        this.gvSetup = res;
+        console.log(res);
+      });
   }
 
   ngAfterViewInit() {
@@ -112,11 +120,15 @@ export class PopupAddSignFileComponent implements OnInit {
 
           this.dialogSignFile.patchValue(this.data);
           if (this.isAddNew) {
+            debugger;
             this.dialogSignFile.patchValue({
               priority: '1',
               approveStatus: '1',
               employeeID: user.employee?.employeeID,
               orgUnitID: user.employee?.orgUnitID,
+              deptID: user.employee?.departmentID,
+              divisionID: user.employee?.divisionID,
+              companyID: user.employee?.companyID,
             });
             this.dialogSignFile.addControl(
               'approveControl',
@@ -241,6 +253,7 @@ export class PopupAddSignFileComponent implements OnInit {
       }
 
       if (event.field == 'employeeID') {
+        this.dialogSignFile.patchValue({});
         if (event.component?.itemsSelected[0]?.OrgUnitID) {
           this.dialogSignFile.patchValue({
             orgUnitID: event.component?.itemsSelected[0]?.OrgUnitID,
@@ -249,6 +262,7 @@ export class PopupAddSignFileComponent implements OnInit {
         }
       }
     }
+    this.cr.detectChanges();
   }
 
   //#region Methods Save
@@ -379,7 +393,14 @@ export class PopupAddSignFileComponent implements OnInit {
         break;
       case 1:
         if (this.dialogSignFile.invalid) {
-          break;
+          const invalid = [];
+          const controls = this.dialogSignFile.controls;
+          for (const name in controls) {
+            if (controls[name].invalid) {
+              invalid.push(name);
+            }
+          }
+          console.log(invalid);
         }
         if (this.isAddNew) {
           this.newNode = newNode;
