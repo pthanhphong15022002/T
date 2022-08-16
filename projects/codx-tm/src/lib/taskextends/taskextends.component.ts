@@ -32,7 +32,7 @@ export class TaskExtendsComponent
   views: Array<ViewModel> = [];
   user: any;
   funcID: any;
-  itemSelected: any;
+  // itemSelected: any;
   taskExtends: any;
   dialogExtendsStatus!: DialogRef;
   vllExtendStatus = 'TM010'; 
@@ -68,9 +68,9 @@ export class TaskExtendsComponent
   }
 
   selectedChange(val: any) {
-    // this.taskExtends = val?.data
+     this.taskExtends = val?.data
     // this.itemSelected = val?.data?.task ;
-    this.taskExtends = val
+    // this.taskExtends = val
     this.detectorRef.detectChanges();
   }
   requestEnded(e) {}
@@ -96,7 +96,6 @@ export class TaskExtendsComponent
         var taskExtends = e?.event
         this.view.dataService.update(taskExtends).subscribe();
         this.taskExtends = taskExtends
-        this.itemSelected = taskExtends.task;
         this.detectorRef.detectChanges();
       }
     })
