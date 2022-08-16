@@ -142,6 +142,13 @@ export class HomeComponent extends UIComponent {
       id: 'btnUpload',
     };   
 
+    this.dmSV.isDisableUpload.subscribe((res) => {
+      if (res != null) {
+        this.button.disabled = res;
+        this.changeDetectorRef.detectChanges();
+      }      
+    });
+
     this.dmSV.isNodeSelect.subscribe(res => {
       if (res != null) {
         //var tree = this.codxview.currentView.currentComponent.treeView;
@@ -489,7 +496,18 @@ export class HomeComponent extends UIComponent {
         this.dmSV.loadedFolder = true;       
       }
 
-      this.dmSV.folderType = this.view.funcID;
+      if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
+        this.dmSV.deniedRight();
+        this.dmSV.disableInput.next(true);
+        this.dmSV.disableUpload.next(true);        
+      }
+      else {
+        this.dmSV.disableInput.next(false);
+        this.dmSV.disableUpload.next(false);        
+      }
+
+      this.changeDetectorRef.detectChanges();     
+     // this.dmSV.folderType = this.view.funcID;
       this.dmSV.idMenuActive = this.view.funcID;
      // this.dmSV.loadedFile = false;
       this.dmSV.folderId.next('');

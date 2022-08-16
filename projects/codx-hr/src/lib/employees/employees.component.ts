@@ -46,7 +46,6 @@ export class EmployeesComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private api: ApiHttpService,
-    private df: ChangeDetectorRef,
     private codxService: CodxService,
     private hrService: CodxHrService,
   ) {
@@ -167,7 +166,7 @@ export class EmployeesComponent implements OnInit {
         }
       }
       );
-    this.df.detectChanges();
+    this.changedt.detectChanges();
   }
 
   async onSelectionChanged($event) {
@@ -249,7 +248,7 @@ export class EmployeesComponent implements OnInit {
         });
         this.itemSelected = e?.event[0];
       }
-      this.df.detectChanges();
+      this.changedt.detectChanges();
     });
   }
 
