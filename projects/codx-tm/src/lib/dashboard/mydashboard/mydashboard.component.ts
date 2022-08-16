@@ -142,7 +142,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   private getGeneralData() {
     this.tmService.getMyDBData(this.model).subscribe((res) => {
       this.data = res;
-      console.log(this.data)
       this.detectorRef.detectChanges();
     });
   }
