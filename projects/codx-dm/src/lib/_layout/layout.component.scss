@@ -196,7 +196,7 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
 
 .sm-card .text-gray-700.line-clamp {
   font-size: var(--fs-7);
-  color: var(--gray-500);
+  color: var(--gray-500) !important;
 }
 
 .icon-per.no-permission {
