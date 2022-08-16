@@ -98,10 +98,10 @@ export const routes: Routes = [
         path: 'meetingdetails/:funcID',
         component: MeetingDetailComponent,
       },
-      {
-        path: 'sprintdetails/:funcID',
-        component: ViewWorkComponent,
-      },
+      // {
+      //   path: 'sprintdetails/:funcID',
+      //   component: ViewWorkComponent,
+      // },
       {
         path: 'mydashboard/:funcID',
         component: MyDashboardComponent,

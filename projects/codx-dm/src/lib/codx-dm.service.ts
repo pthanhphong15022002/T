@@ -428,6 +428,7 @@ export class CodxDMService {
         this.folderName = data.folderName;
         this.currentNode = '';
         this.folderId.next(data.recID);
+        this.nodeSelect.next(data);
         this.disableInput.next(false);
 
         this.folderService.getFolder(data.recID).subscribe(async res => {
