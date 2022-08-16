@@ -35,6 +35,26 @@ export class ViewListComponent implements OnInit {
     this.clickMoreFunction.emit({e:e,data:dt})
   }
 
+  changeDataMF(e, data) {
+    if (e) {
+      e.forEach((x) => {
+        if (
+          (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
+          data.confirmControl == '0'
+        ) {
+          x.disabled = true;
+        }
+        if (
+          x.functionID == 'TMT02019' &&
+          data.verifyControl == '0' &&
+          data.category == '1'
+        ) {
+          x.disabled = true;
+        }
+      });
+    }
+  }
+
   PopoverDetail(p: any, emp) {
     if (emp != null) {
       this.popoverList?.close();
