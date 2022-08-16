@@ -82,6 +82,7 @@ export class PopupAddBookingCarComponent implements OnInit {
   vllDevices = [];
   lstDeviceCar = [];
   tmplstDevice = [];
+  lstPeople=[];
 
   constructor(
     
@@ -196,36 +197,36 @@ export class PopupAddBookingCarComponent implements OnInit {
         resourceType: '2',
       });
 
-    
-      this.fGroupAddBookingCar.value.resourceID = 'd6ac6857-d778-11ec-b612-e454e8919646';
-      
       var date = new Date(this.fGroupAddBookingCar.value.startDate);
       this.fGroupAddBookingCar.value.bookingOn = new Date(
         date.setHours(0, 0, 0, 0)
       );
     }
-    // this.dialogRef.dataService
-    //   .save((opt: any) => this.beforeSave(opt))
-    //   .subscribe(
-    //     res => {
-    //       if (res.update) {
-    //         (this.dialogRef.dataService as CRUDService)
-    //           .update(res.update)
-    //           .subscribe();
-    //       }
-    //       this.changeDetectorRef.detectChanges();
-    //     }
-    //   ); 
-    this.apiHttpService
-      .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
-        this.fGroupAddBookingCar.value,
-        this.isAdd,
-        '',
-      ])
-      .subscribe((res) => {
-        this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-        this.closeFormEdit(res);
-      });
+    this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];
+    this.fGroupAddBookingCar.value.resourceID=this.fGroupAddBookingCar.value.resourceID[0];
+    this.fGroupAddBookingCar.value.reasonID='reasonID';
+    this.dialogRef.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe(
+        res => {
+          if (res.update) {
+            (this.dialogRef.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+          }
+          this.changeDetectorRef.detectChanges();
+        }
+      ); 
+    // this.apiHttpService
+    //   .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
+    //     this.fGroupAddBookingCar.value,
+    //     this.isAdd,
+    //     '',
+    //   ])
+    //   .subscribe((res) => {
+    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
+    //     this.closeFormEdit(res);
+    //   });
     //console.log(this.fGroupAddBookingCar.value);
   }
   buttonClick(e: any) {
@@ -239,8 +240,17 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.fGroupAddBookingCar.patchValue({ [event['field']]: event.data });
       }
     }
-    var cbxCar = event.component.dataService.data;
   }
+  valueCbxCarChange(event) {
+    if (event?.field) {
+      if (event.data instanceof Object) {
+        this.fGroupAddBookingCar.patchValue({[event['field']]: event.data.value, });
+      } else {
+        this.fGroupAddBookingCar.patchValue({ [event['field']]: event.data });
+      }
+    }
+  }
+
   changeTime(data) {
     if (!data.field || !data.data) return;
     this.fGroupAddBookingCar.patchValue({ [data['field']]: data.data.fromDate });
