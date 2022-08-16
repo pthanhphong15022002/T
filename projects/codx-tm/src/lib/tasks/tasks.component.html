@@ -7,7 +7,7 @@
 </ng-template>
 
 <ng-template #itemViewList let-data>
-  <lib-view-list [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
+  <lib-view-list [formModel]="view.formModel" [vllStatus]="vllStatus" [data]="data" (clickMoreFunction)="receiveMF($event)">
   </lib-view-list>
 </ng-template>
 
@@ -27,7 +27,7 @@
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)" [typeMF]="'hover'"
+  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)"  (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
     [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" [subTitle]="data.positionName"
     [content]="data.memo || 'memo'" [status]="data.status" [statusVll]="vllStatus" [date]="data.dueDate"
     [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel" [setting]="setting"
@@ -116,7 +116,7 @@
 <ng-template #popEmpList>
   <div class="fw-bold mb-1">
     <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho"></codx-label>
-    <span class="text-danger">{{ "(" + countResource + ")" }}</span>
+    <span class="">{{ "(" + countResource + ")" }}</span>
   </div>
   <div>
     <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>

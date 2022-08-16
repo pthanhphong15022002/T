@@ -15,6 +15,7 @@ export class ViewListComponent implements OnInit {
   dialog : any
   @Input() data?: any
   @Input() formModel?: FormModel;
+  @Input() vllStatus?:any;
 
   @Output() clickMoreFunction = new EventEmitter<any>();
 
@@ -32,6 +33,26 @@ export class ViewListComponent implements OnInit {
 
   clickMF(e: any, dt?: any) {
     this.clickMoreFunction.emit({e:e,data:dt})
+  }
+
+  changeDataMF(e, data) {
+    if (e) {
+      e.forEach((x) => {
+        if (
+          (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
+          data.confirmControl == '0'
+        ) {
+          x.disabled = true;
+        }
+        if (
+          x.functionID == 'TMT02019' &&
+          data.verifyControl == '0' &&
+          data.category == '1'
+        ) {
+          x.disabled = true;
+        }
+      });
+    }
   }
 
   PopoverDetail(p: any, emp) {

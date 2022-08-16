@@ -92,7 +92,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
           this.columnsGrid = [
             {
               field: 'resourceID',
-              headerText: 'Mã xe',//gv['resourceID'].headerText,
+               headerText: 'Tên lái xe'//gv['resourceID'].headerText,
             },
             // {
             //   field: 'icon',
@@ -101,14 +101,14 @@ export class CarsComponent implements OnInit, AfterViewInit {
             // },
             {
               field: 'resourceName',
-              headerText: 'Tên xe',
+              headerText: 'Tên lái xe',
             },
             {
               field: 'code',
               headerText: 'Biển số',
             },   
             {
-              headerText: 'Tình trạng',
+              headerText: 'Trạng thái',
               template: this.statusCol,
             },
             {
@@ -123,9 +123,10 @@ export class CarsComponent implements OnInit, AfterViewInit {
 
           this.views = [            
             {
+              id:'1',
               sameData: true,
               type: ViewType.grid,
-              active: false,
+              active: true,
               model: {
                 resources: this.columnsGrid,
               },
