@@ -34,8 +34,6 @@ export class AppComponent implements OnInit, OnDestroy {
     //   }
     // );
 
-
-    console.log(this.angularFireMessaging);
     // this.angularFireMessaging.messages.subscribe(
     //   (payload: any) => {
     //     console.log("new message received. ", payload);
