@@ -217,8 +217,9 @@
               [ngClass]="'w-100'" 
               (valueChange)="valueChange($event)">
             </codx-input>
+            
     
-            <codx-input 
+            <!-- <codx-input 
               type="Combobox" 
               name="User"
               [refValue]="'Users'" 
@@ -228,7 +229,15 @@
               field="popup" 
               [ngClass]="'w-100'" 
               (valueChange)="valueChange($event)">
-            </codx-input>        
+            </codx-input>         -->
+            <codx-input type="Combobox" 
+              name="combobox" 
+              [refValue]="'Users'" 
+              refType="P" 
+              field="userID" 
+              [showInput]="false"
+            (valueChange)="valueChange($event)">
+          </codx-input>
           </div>
         </div>
 

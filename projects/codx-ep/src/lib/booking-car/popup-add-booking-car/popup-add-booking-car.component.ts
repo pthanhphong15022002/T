@@ -49,11 +49,6 @@ export class PopupAddBookingCarComponent implements OnInit {
 
   titleAction = 'Thêm mới';
   title="đặt xe";
-  // headerText: Object = [
-  //   { text: 'Thông tin chung', iconCss: 'icon-info' },
-  //   { text: 'Người đi cùng', iconCss: 'icon-person_add' },
-  //   { text: 'Thông tin khác', iconCss: 'icon-tune' },
-  // ];
   tabInfo: any[] = [
     {
       icon: 'icon-info',
@@ -105,10 +100,11 @@ export class PopupAddBookingCarComponent implements OnInit {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
   }  
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.codxEpService.getModelPage('EPT2').then((res) => {
       if (res) {
         this.modelPage = res;
+        console.log('EPT2',res);
       }
       this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
@@ -119,7 +115,6 @@ export class PopupAddBookingCarComponent implements OnInit {
           this.lstDeviceCar.push(device);
         });
         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceCar));
-        console.log('Device: ', this.lstDeviceCar);
       });
 
       this.codxEpService
@@ -129,14 +124,15 @@ export class PopupAddBookingCarComponent implements OnInit {
       )
       .then((res) => {
         this.CbxName = res;
-        console.log('cbx', this.CbxName);
+        console.log('cbxEPT', this.CbxName);
       });
 
       this.cacheService.functionList('EPT2').subscribe(res => {
         this.cacheService.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
-          //console.log('Test', res)
+          console.log('grvEPT', res)
         })
       })
+      
 
       this.initForm();
     });
@@ -149,14 +145,14 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.fGroupAddBookingCar = item;
         this.isAfterRender = true;
         if (this.data) {
+          console.log('fgroupEPT2', this.data)
           this.fGroupAddBookingCar.patchValue(this.data);
         }
-      });      
+      });
   }
   setTitle(e: any) {
     this.title = this.titleAction + ' ' + e.toString().toLowerCase();
-    this.changeDetectorRef.detectChanges();
-    console.log(e);
+    this.changeDetectorRef.detectChanges();    
   }
 
   beforeSave(option: RequestOption) {
@@ -170,24 +166,13 @@ export class PopupAddBookingCarComponent implements OnInit {
     if (this.fGroupAddBookingCar.invalid == true) {
       return;
     }
-    if (
-      this.fGroupAddBookingCar.value.endDate -
-      this.fGroupAddBookingCar.value.startDate <=
-      0
-    ) {
+    if (this.fGroupAddBookingCar.value.endDate - this.fGroupAddBookingCar.value.startDate <= 0 ) {
       this.notificationsService.notifyCode('EP003');
     }
-    if (
-      this.fGroupAddBookingCar.value.startDate &&
-      this.fGroupAddBookingCar.value.endDate
-    ) {
+    if ( this.fGroupAddBookingCar.value.startDate && this.fGroupAddBookingCar.value.endDate ) {
       let hours = parseInt(
         (
-          (this.fGroupAddBookingCar.value.endDate -
-            this.fGroupAddBookingCar.value.startDate) /
-          1000 /
-          60 /
-          60
+          (this.fGroupAddBookingCar.value.endDate - this.fGroupAddBookingCar.value.startDate)/1000/60/60
         ).toFixed()
       );
       if (!isNaN(hours) && hours > 0) {
@@ -210,10 +195,10 @@ export class PopupAddBookingCarComponent implements OnInit {
         status: '1',
         resourceType: '2',
       });
-      // if (!this.fGroupAddBookingCar.value.resourceID) {
-      //   this.fGroupAddBookingCar.value.resourceID =
-      //     'd6ac6857-d778-11ec-b612-e454e8919646';
-      // }
+
+    
+      this.fGroupAddBookingCar.value.resourceID = 'd6ac6857-d778-11ec-b612-e454e8919646';
+      
       var date = new Date(this.fGroupAddBookingCar.value.startDate);
       this.fGroupAddBookingCar.value.bookingOn = new Date(
         date.setHours(0, 0, 0, 0)
@@ -241,10 +226,10 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.onDone.emit([res.msgBodyData[0], this.isAdd]);
         this.closeFormEdit(res);
       });
-    console.log(this.fGroupAddBookingCar.value);
+    //console.log(this.fGroupAddBookingCar.value);
   }
   buttonClick(e: any) {
-    console.log(e);
+    //console.log(e);
   }
   valueChange(event) {
     if (event?.field) {
