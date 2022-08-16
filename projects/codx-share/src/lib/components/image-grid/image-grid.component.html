@@ -1,16 +1,18 @@
-<ng-container *ngIf="multiple;else single">
+
   <ng-container *ngIf="file_img_video.length > 0">
     <div [ngSwitch]="file_img_video.length" class="position-relative1">
       <ng-container *ngSwitchCase="1">
         <div class="feed-1pic position-relative" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">
             <ng-container *ngIf="file_img_video[0].recID;else image_1_0">
-              <codx-img [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID" [width]="600"
+              <codx-img [recId]="file_img_video[0].recID" 
+                [objectId]="file_img_video[0].objectID" [width]="600"
+                [objectType]="file_img_video[0].objectType"
                 cssClass="pic" imageType="square">
               </codx-img>
             </ng-container>
             <ng-template #image_1_0>
-              <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].thumbnail || file_img_video[0].data" />
+              <img class="w-100 rounded min-h-250px" [src]="file_img_video[0].data" />
             </ng-template>
           </ng-container>
           <ng-template #video_1_0>
@@ -355,37 +357,6 @@
       </ng-container>
     </div>
   </ng-container>
-</ng-container>
-
-<ng-template #single>
-  <ng-container *ngIf="files.length > 0">
-    <ng-container [ngSwitch]="files[0].referType">
-      <div class="row mt-3 d-flex position-relative">
-        <ng-container *ngSwitchCase="'image'">
-          <ng-container *ngIf="files[0].recID;else Img">
-            <codx-img [recId]="files[0].recID" [objectType]="files[0].objectType" [width]="100"></codx-img>
-          </ng-container>
-          <ng-template #Img>
-            <img class="file-view" [src]="files[0].thumbnail || files[0].data" alt="">
-          </ng-template>
-        </ng-container>
-        <ng-container *ngSwitchCase="'video'">
-          <video controls class="h-100px">
-            <source [src]="files[0].srcVideo || files[0].data" type="video/mp4">
-          </video>
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-          <codx-temp-full [imageSrc]="files[0].extension | avtFile" imgCss="w-20px me-3 cursor-pointer"
-            title="{{files[0].fileName}}" [descLine]="1">
-          </codx-temp-full>
-        </ng-container>
-        <ng-container *ngIf="edit">
-          <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: files[0] }"></ng-container>
-        </ng-container>
-      </div>
-    </ng-container>
-  </ng-container>
-</ng-template>
 <ng-template #removeFile let-file>
   <div class="remove-file">
     <a href="javascript:void(0)" class="h-100" (click)="removeFiles(file)">
