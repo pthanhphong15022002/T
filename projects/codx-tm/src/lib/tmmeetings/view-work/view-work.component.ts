@@ -15,6 +15,7 @@ export class ViewWorkComponent implements OnInit {
   startDateMeeting: any;
   name= '';
   meetingID: any;
+  resources: any;
   private all = ['Dashboard', 'Công việc'];
   tabControl: TabControl[] = [];
   funcID: any;
@@ -58,7 +59,7 @@ export class ViewWorkComponent implements OnInit {
           this.data = res;
           this.meeting = this.data;
           this.startDateMeeting = this.meeting.startDate;
-
+          this.resources = this.meeting.avataResource;
         // }
       }
     });
