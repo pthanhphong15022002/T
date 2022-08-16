@@ -68,8 +68,9 @@ export class TaskExtendsComponent
   }
 
   selectedChange(val: any) {
-    this.taskExtends = val?.data
-    this.itemSelected = val?.data?.task ;
+    // this.taskExtends = val?.data
+    // this.itemSelected = val?.data?.task ;
+    this.taskExtends = val
     this.detectorRef.detectChanges();
   }
   requestEnded(e) {}
@@ -108,7 +109,6 @@ export class TaskExtendsComponent
 
   clickMF(e, data) {
     this.taskExtends = data ;
-    this.itemSelected = data.task;
     switch (e.functionID) {
       case 'TMT04011':
       case 'TMT04012':
