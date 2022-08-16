@@ -24,8 +24,9 @@ import { TabModelSprints } from '../../models/TM_Sprints.model';
 })
 export class SprintDetailsComponent implements OnInit, AfterViewInit {
   active = 1;
-  sprints: any;
+  data: any;
   iterationID: any;
+  meetingID: any;
   dataObj: any;
   user: any;
   funcID: any;
@@ -60,9 +61,15 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.funcID == 'TMT03012') this.all = ['Dashboard', 'Công việc'];
-    this.activedRouter.firstChild?.params.subscribe(
-      (data) => (this.iterationID = data.id)
-    );
+    this.activedRouter.queryParams.subscribe((params) => {
+      if (params) {
+        this.iterationID = params?.iterationID;
+        this.meetingID = params?.meetingID;
+      }
+    });
+    // this.activedRouter.firstChild?.params.subscribe(
+    //   (data) => (this.iterationID = data.id)
+    // );
     // this.activedRouter.params.subscribe((routeParams) => {
     //   var state = history.state;
     //   if (state) {
@@ -72,35 +79,32 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     if (this.iterationID != '') {
       this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
         if (res) {
-          this.sprints = res;
-          this.projectID = this.sprints?.projectID;
-          this.resources = this.sprints.resources;
+          this.data = res;
+          this.projectID = this.data?.projectID;
+          this.resources = this.data.resources;
           this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
             iterationID: this.iterationID ? this.iterationID : '',
           };
-          if (this.sprints?.resources != null) {
-            this.getListUserByResource(this.sprints?.resources);
-            // this.api
-            //   .execSv<any>(
-            //     'HR',
-            //     'ERM.Business.HR',
-            //     'EmployeesBusiness',
-            //     'GetListEmployeesByUserIDAsync',
-            //     JSON.stringify(this.sprints?.resources.split(';'))
-            //   )
-            //   .subscribe((data) => {
-            //     if (data) {
-            //       this.listTaskResousce = data;
-            //       this.listTaskResousceSearch = data;
-            //       this.countResource = data.length;
-            //       this.changeDetectorRef.detectChanges();
-            //     }
-            //   });
+          if (this.resources != null) {
+            this.getListUserByResource(this.resources);
           }
         }
       });
-    } 
+    }
+    if (this.meetingID) {
+      this.tmSv.getMeetingID(this.meetingID).subscribe((res) => {
+        if (res) {
+          this.data = res;
+          // this.startDateMeeting = this.data.startDate;
+          this.projectID = this.data?.projectID;
+          this.resources = this.data.avataResource;
+          if (this.resources != null) {
+            this.getListUserByResource(this.resources);
+          }
+        }
+      });
+    }
   }
   ngOnInit(): void {
     if (this.tabControl.length == 0) {
