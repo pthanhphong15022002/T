@@ -460,6 +460,8 @@ export class TasksComponent extends UIComponent {
               this.view.dataService.update(obj).subscribe();
             });
             this.itemSelected = e?.event[0];
+            this.detail.taskID = this.itemSelected.taskID;
+            this.detail.getTaskDetail();
           }
           this.detectorRef.detectChanges();
         });
