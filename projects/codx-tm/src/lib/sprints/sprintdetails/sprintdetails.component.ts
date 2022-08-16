@@ -24,8 +24,8 @@ import { TabModelSprints } from '../../models/TM_Sprints.model';
 })
 export class SprintDetailsComponent implements OnInit, AfterViewInit {
   active = 1;
-  data: any;
   iterationID: any;
+  data:any;
   meetingID: any;
   dataObj: any;
   user: any;
@@ -48,6 +48,12 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     'Bình luận',
     'Họp định kì',
   ];
+ 
+   nameObj : any
+   projectCategory : any
+   createdOn : any
+   createdByName :any
+  
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -63,13 +69,12 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
    
     this.activedRouter.queryParams.subscribe((params) => {
       if (params) {
-        this.iterationID = params?.iterationID;
         this.meetingID = params?.meetingID;
       }
     });
-    // this.activedRouter.firstChild?.params.subscribe(
-    //   (data) => (this.iterationID = data.id)
-    // );
+    this.activedRouter.firstChild?.params.subscribe(
+      (data) => (this.iterationID = data.id)
+    );
     // this.activedRouter.params.subscribe((routeParams) => {
     //   var state = history.state;
     //   if (state) {
@@ -79,9 +84,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     if (this.iterationID != '') {
       this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
         if (res) {
-          this.data = res;
-          this.projectID = this.data?.projectID;
-          this.resources = this.data.resources;
+          this.createdByName = res.userName ;
+          this.createdOn = res.createdOn ;
+          this.nameObj = res.iterationName ;
+          this.projectID = res?.projectID;
+          this.resources = res.resources;
           this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
             iterationID: this.iterationID ? this.iterationID : '',
@@ -95,10 +102,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     if (this.meetingID) {
       this.tmSv.getMeetingID(this.meetingID).subscribe((res) => {
         if (res) {
-          this.data = res;
-          // this.startDateMeeting = this.data.startDate;
-          this.projectID = this.data?.projectID;
-          this.resources = this.data.avataResource;
+          this.createdByName = res.userName ;
+          this.createdOn = res.createdOn ;
+          this.nameObj = res.meetingName ;
+          this.projectID = res?.projectID;
+          this.resources = res.avataResource;
           if (this.resources != null) {
             this.getListUserByResource(this.resources);
           }
