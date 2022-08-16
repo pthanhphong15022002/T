@@ -237,14 +237,14 @@ export class SprintsComponent extends UIComponent {
   }
 
   viewBoard(e, data) {
-    // this.urlView = e?.url;
-    this.urlView = 'tm/sprintdetails/TMT03011';
+    this.urlView = e?.url;
+   // this.urlView = 'tm/sprintdetails/TMT03011';
     if (data.iterationID != this.user.userID)
-      // this.urlView += '/' + data.iterationID;
-      // this.codxService.navigate('', this.urlView)
-      this.codxService.navigate('', this.urlView, {
-        iterationID: data.iterationID,
-      });
+      this.urlView += '/' + data.iterationID;
+      this.codxService.navigate('', this.urlView)
+    // this.codxService.navigate('', this.urlView, {
+    //   iterationID: data.iterationID,
+    // });
     // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
     // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
 

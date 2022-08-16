@@ -89,11 +89,12 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   convertFile(){
     if(this.files){
       this.files.forEach((f:any) => {
-        if(f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO  ){
-          this.file_img_video.push(f);
-        }
-        else{
+        if(f.referType == this.FILE_REFERTYPE.APPLICATION){
           this.file_application.push(f);
+        }
+        else
+        {
+          this.file_img_video.push(f);
         }
       });
       this.dt.detectChanges();
