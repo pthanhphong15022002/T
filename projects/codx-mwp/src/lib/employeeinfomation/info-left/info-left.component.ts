@@ -19,6 +19,7 @@ export class InfoLeftComponent implements OnInit {
   };
   hideEdit = false;
   employeeID: any = '';
+  funcID: any = '';
   editMode: boolean = false;
   employeeMyTeam: any = null;
   constructor(
@@ -48,7 +49,11 @@ export class InfoLeftComponent implements OnInit {
           });
       }
 
-      if (params.funcID == 'POR004') this.hideEdit = true;
+      
+    });
+
+    this.routeActive.params.subscribe((params) => {
+      if (params.funcID == 'MWP002') this.hideEdit = true;
       else this.hideEdit = false;
     });
   }
