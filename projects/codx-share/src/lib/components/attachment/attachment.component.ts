@@ -155,7 +155,8 @@ export class AttachmentComponent implements OnInit {
     }
 
     this.fileUploadList = [];
-    if (this.folderType == null || this.folderType == '') this.folderType = '3';
+    if (this.folderType == null || this.folderType == "")
+      this.folderType = "3";
 
     if (this.type == null || this.type == '') this.type = 'center';
 
