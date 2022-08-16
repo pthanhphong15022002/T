@@ -147,8 +147,9 @@ export class CodxEsService {
 
               if (element.fieldName == 'owner') {
                 model[element.fieldName].push(user.userID);
-              }
-              if (element.fieldName == 'createdOn') {
+              } else if (element.fieldName == 'bUID') {
+                model[element.fieldName].push(user['buid']);
+              } else if (element.fieldName == 'createdOn') {
                 model[element.fieldName].push(new Date());
               } else if (element.fieldName == 'stop') {
                 model[element.fieldName].push(false);
