@@ -24,8 +24,8 @@ import { TabModelSprints } from '../../models/TM_Sprints.model';
 })
 export class SprintDetailsComponent implements OnInit, AfterViewInit {
   active = 1;
-  data: any;
   iterationID: any;
+  data:any;
   meetingID: any;
   dataObj: any;
   user: any;
@@ -48,6 +48,12 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     'Bình luận',
     'Họp định kì',
   ];
+  // dataView =   {
+  //   nameObj : '',
+  //   projectCategory :'' ,
+  //   createOn : 
+  //   createByName :''
+  // }
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -63,13 +69,12 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
    
     this.activedRouter.queryParams.subscribe((params) => {
       if (params) {
-        this.iterationID = params?.iterationID;
         this.meetingID = params?.meetingID;
       }
     });
-    // this.activedRouter.firstChild?.params.subscribe(
-    //   (data) => (this.iterationID = data.id)
-    // );
+    this.activedRouter.firstChild?.params.subscribe(
+      (data) => (this.iterationID = data.id)
+    );
     // this.activedRouter.params.subscribe((routeParams) => {
     //   var state = history.state;
     //   if (state) {
