@@ -826,7 +826,8 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(data) {
+  updateSignFileTrans(userID, sfID, mode, comment) {
+    let data = [userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
@@ -836,6 +837,18 @@ export class CodxEsService {
     );
   }
   //#endregion
+
+  //region CA
+  createLocalCertificatePFX(mail, pass) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignaturesBusiness',
+      'CreateLocalCertificatePFXAsync',
+      [mail, pass]
+    );
+  }
+  //
 }
 export class LayoutModel {
   isChange: boolean = false;
