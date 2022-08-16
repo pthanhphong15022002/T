@@ -115,7 +115,7 @@ export class DriversComponent  implements OnInit, AfterViewInit {
             {
               sameData: true,
               type: ViewType.grid,
-              active: false,
+              active: true,
               model: {
                 resources: this.columnsGrid,
               },
@@ -145,7 +145,7 @@ export class DriversComponent  implements OnInit, AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callFuncService.openSide(
@@ -162,7 +162,7 @@ export class DriversComponent  implements OnInit, AfterViewInit {
       this.viewBase.dataService.edit(this.viewBase.dataService.dataSelected).subscribe((res) => {
         this.dataSelected = this.viewBase.dataService.dataSelected;
         let option = new SidebarModel();
-        option.Width = '800px';
+        option.Width = '550px';
         option.DataService = this.viewBase?.currentView?.dataService;
         option.FormModel = this.viewBase?.currentView?.formModel;
         this.dialog = this.callFuncService.openSide(
