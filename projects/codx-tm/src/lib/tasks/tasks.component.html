@@ -116,7 +116,7 @@
 <ng-template #popEmpList>
   <div class="fw-bold mb-1">
     <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho"></codx-label>
-    <span class="text-danger">{{ "(" + countResource + ")" }}</span>
+    <span class="">{{ "(" + countResource + ")" }}</span>
   </div>
   <div>
     <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
