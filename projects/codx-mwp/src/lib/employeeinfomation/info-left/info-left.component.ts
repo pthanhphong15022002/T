@@ -17,7 +17,7 @@ export class InfoLeftComponent implements OnInit {
     dataRoot: {},
     employeeInfo: {},
   };
-  hideEdit = true;
+  hideEdit = false;
   employeeID: any = '';
   editMode: boolean = false;
   employeeMyTeam: any = null;
@@ -31,7 +31,6 @@ export class InfoLeftComponent implements OnInit {
     this.user = this.auth.get();
     this.codxMwpService.infoLeftComponent = this;
     this.routeActive.queryParams.subscribe((params) => {
-      debugger
       if (params.employeeID || this.user.userID) {
         this.codxMwpService
           .LoadData(params.employeeID, this.user.userID, '0')
@@ -39,11 +38,11 @@ export class InfoLeftComponent implements OnInit {
             if (response) {
               this.dataEmployee.dataRoot = response.Employee;
               this.dataEmployee.employeeInfo = response.InfoPersonal;
-              this.codxMwpService.appendID(params.id);
+              this.codxMwpService.appendID(params.employeeID);
               this.codxMwpService.empInfo.next(response);
               this.dt.detectChanges();
               setTimeout(() => {
-                this.imageAvatar?.getFormServer();
+                this.imageAvatar.getFormServer();
               }, 100);
             }
           });

@@ -68,8 +68,10 @@ export class TaskExtendsComponent
   }
 
   selectedChange(val: any) {
-    this.taskExtends = val?.data
-    this.itemSelected = val?.data?.task ;
+    // this.taskExtends = val?.data
+    // this.itemSelected = val?.data?.task ;
+    // this.taskExtends = val
+    this.itemSelected = val;
     this.detectorRef.detectChanges();
   }
   requestEnded(e) {}
