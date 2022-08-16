@@ -85,7 +85,6 @@ export class TMMeetingsComponent extends UIComponent implements OnInit, AfterVie
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
      // view meeting to sprint_details
-     //this.iterationID ="SPR2208-0073" ;
      if (this.funcID == "TMT03011") { 
       this.funcID= "TMT0501"; 
     };
