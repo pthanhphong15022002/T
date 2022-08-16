@@ -170,7 +170,7 @@ export class HomeComponent extends UIComponent {
       if (res != null) {
         var tree = this.codxview.currentView.currentComponent.treeView;
         tree.removeNodeTree(res)
-        //that._beginDrapDrop();
+      //  this._beginDrapDrop();
       }
     });
 
@@ -188,7 +188,7 @@ export class HomeComponent extends UIComponent {
         tree.setNodeTree(res);
         this.changeDetectorRef.detectChanges();
       };
-      //that._beginDrapDrop();
+     // this._beginDrapDrop();
     });
 
     this.dmSV.isFolderId.subscribe(res => {
@@ -230,15 +230,118 @@ export class HomeComponent extends UIComponent {
     });
   }
 
+  classFile(item, className) {
+    if (item.folderName != null)
+      return className;
+    else  
+      return `${className} noDrop`;  
+  }
+
+  // _beginDrapDrop() {
+  //   var that = this;
+  //   setTimeout(() => {
+  //     for (let index = 0; index < $("#jstree").find("a").length; index++) {
+  //       that.initDrapDropFileFolder($($("#jstree").find("a")[index]));
+  //     }
+  //   }, 1000);
+  // }
+
+  // initDrapDropFileFolder(element) {
+  //   var that = this;
+  //   if (element && !element.data("_drapdrop")) {
+  //     element.data("_drapdrop", "1");
+  //     var ondragstart = function (event) {
+  //       var j = JSON.stringify(
+  //         {
+  //           "folderName": element.text(),
+  //           "recID": element[0].id.replace("_anchor", ""),
+
+  //         });
+  //       console.log(j);
+  //       event.originalEvent.dataTransfer.setData('data', j);
+  //       event.originalEvent.dataTransfer["simple"] = "filefolder";
+  //       event.originalEvent.dataTransfer.effectAllowed = "move";
+  //     };
+  //     var ondragover = (event) => {
+  //       event.preventDefault();
+  //       event.stopPropagation();
+  //       $(event.currentTarget).css("border-style", "dashed");
+  //       $(event.currentTarget).css("border-color", "#7e8299");
+  //       $(event.currentTarget).css("border-width", "1px");
+  //     };
+  //     var ondragleave = (event) => {
+  //       event.preventDefault();
+  //       event.stopPropagation();
+  //       $(event.currentTarget).css("border-style", "none");
+  //     };
+  //     var ondrop = (event) => {
+
+  //       event.preventDefault();
+  //       event.stopPropagation();
+  //       $(event.currentTarget).css("border-style", "none");
+  //       var s = event.originalEvent.dataTransfer.getData("data");
+  //       if (s) {
+  //         var obj = JSON.parse(s);
+  //         if (obj.recID != event.currentTarget.id.replace("_anchor", "")) {
+  //           if (obj.fileName) {
+  //             that.dmSV.copyFileTo(obj.recID, obj.fileName, event.currentTarget.id.replace("_anchor", ""));
+  //           }
+  //           else {
+  //             that.dmSV.copyFolderTo(obj.recID, obj.folderName, event.currentTarget.id.replace("_anchor", ""));
+  //           }
+  //         }
+  //       }
+
+  //     };
+
+  //     element.off("dragstart", ondragstart);
+  //     element.off("dragover", ondragover);
+  //     element.off("dragleave", ondragleave);
+  //     element.off("drop", ondrop);
+
+  //     element.on("dragstart", ondragstart);
+  //     element.on("dragover", ondragover);
+  //     element.on("dragleave", ondragleave);
+  //     element.on("drop", ondrop);
+
+  //   }
+  // }
+
+  fileFolderDropped($event) {
+    if ($event.source.recID != $event.target.recID) {
+      if ($event.source.fileName) {
+        this.dmSV.copyFileTo($event.source.recID, $event.source.fileName, $event.target.recID);
+      }
+      else {
+        this.dmSV.copyFolderTo($event.source.recID, $event.source.folderName, $event.target.recID);
+      }
+    }
+  }
+
+  fileUploadDropped($event) { 
+    if (this.dmSV.idMenuActive == "DMT02" || this.dmSV.idMenuActive == "DMT03") {
+      this.addFile($event);
+      // var data = new DataItem();
+      // data.recID = "";
+      // data.type = "file";
+      // data.fullName = "";
+      // data.copy = false;
+      // data.dialog = "autoupload";
+      // data.id_to = "";
+      // data.files = $event;
+      // this.dmSV.setOpenDialog.next(data);
+    }
+  }
+
   // identifyData(index, data) {
   //   return data;
   // }
 
   addFile($event) {  
     var data = new DialogAttachmentType();
-    data.objectType = 'WP_Notes';
-    data.objectId = '628c326c590addf224627f42';
-    data.functionID = 'ODT3';
+    // data.objectType = 'WP_Notes';
+    // data.objectId = '628c326c590addf224627f42';
+    // data.functionID = 'ODT3';
     data.type = 'popup';
 
     let option = new SidebarModel();
