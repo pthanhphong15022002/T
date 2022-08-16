@@ -21,7 +21,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   headerLeft: string = 'menu';
   asideDisplay: boolean = false;
   asideCSSClasses?: string;
-  disableInput = true;
+  disableInput = false;
   module = 'DM';
   dialog: DialogRef;
   percentUsed: any;
@@ -69,15 +69,22 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.headerCSSClasses = this.layout.getStringCSSClasses('header');
     this.headerLeft = this.layout.getProp('header.left') as string;
     this.user = this.auth.userValue;
-    this.dmSV.isSetRight.subscribe(res => {
-      //if (this.dmSV.parentFull || this.dmSV.parentCreate) {
-      if (this.dmSV.parentCreate) {
-        this.disableInput = false;
-      }
-      else
-        this.disableInput = true;
 
-      this.changeDetectorRef.detectChanges();
+    // this.dmSV.isSetRight.subscribe(res => {      
+    //   if (this.dmSV.parentCreate) {
+    //     this.disableInput = false;
+    //   }
+    //   else
+    //     this.disableInput = true;
+
+    //   this.changeDetectorRef.detectChanges();
+    // });
+
+    this.dmSV.isDisableInput.subscribe(res => {    
+      if (res != null) {
+        this.disableInput = res;
+        this.changeDetectorRef.detectChanges();
+      }      
     });
 
     this.dmSV.isUpdateHDD.subscribe(item => {     

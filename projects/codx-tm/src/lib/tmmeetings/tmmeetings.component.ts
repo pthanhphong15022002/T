@@ -34,7 +34,7 @@ import { MeetingDetailComponent } from './meeting-detail/meeting-detail.componen
 export class TMMeetingsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
-{ 
+{
   @Input()dataObj?: any;
   @Input() projectID?: any; //view meeting to sprint_details
   @Input() iterationID?: any;
@@ -61,6 +61,7 @@ export class TMMeetingsComponent
   dayoff = [];
   month: any;
   day: any;
+  tag = 'Tag';
   startTime: any;
   eventStatus: any;
   itemSelected: any;
@@ -88,10 +89,11 @@ export class TMMeetingsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // view meeting to sprint_details
-    if (this.funcID == 'TMT03011') {
-      this.funcID = 'TMT0501';
-    }
+     // view meeting to sprint_details
+     //this.iterationID ="SPR2208-0073" ;
+     if (this.funcID == "TMT03011") {
+      this.funcID= "TMT0501";
+    };
     this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
       if (res) {
         this.urlDetail = res[0].url;
@@ -129,7 +131,7 @@ export class TMMeetingsComponent
         },
       },
       {
-        type: ViewType.schedule,
+        type: ViewType.calendar,
         active: false,
         sameData: true,
         model: {
@@ -242,15 +244,23 @@ export class TMMeetingsComponent
   }
   //#endregion schedule
 
-  convertHtmlAgency(resourceID: any) {
-    var desc = '<div class="d-flex">';
-    if (resourceID)
-      desc +=
-        '<codx-imgs [objectId]="getResourceID(' +
-        resourceID +
-        ')" objectType="AD_Users" [numberImages]="4"></codx-imgs>';
+  convertHtmlAgency(data: any) {
+    var date = data.startDate;
+    var desc = '<div class="d-flex align-items-top" >';
+    var day = '';
+    var toDay = '<div class="d-flex flex-column me-2" >';
+    if(date){
+      let date1 = new Date(date);
+      let month = date1.getMonth() + 1;
+      let myDay = this.addZero(date1.getDate());
+      let year = date1.getFullYear();
+      let day1 = date1.getDay() + 1;
+      day += '<div class="text-dark fw-bolder fs-1 text " style="font-size: 50px;">' + myDay +'</div>';
+      toDay += '<div class="text-dark fw-bold">'+ 'Thứ ' + day1+'</div>' +
+      '<div class="fw-lighter">'+ 'Tháng ' + month+', ' +year+'</div></div>'
+    }
 
-    return desc + '</div>';
+    return desc + day + toDay + '</div>';
   }
 
   getResourceID(data) {
