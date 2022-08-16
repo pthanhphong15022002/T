@@ -1,13 +1,13 @@
 <div class="d-flex flex-row align-items-center p-2 border-bottom">
   <td class="w-15">
     <div class="badge badge-danger me-2 label-status a" [style.background-color]="
-    ('1' | vll: 'CO004':'textColor' | async) +
+    (data.status | vll: 'CO004':'textColor' | async) +
     '30'" >
       <div class="text-dark">
         Tháng {{month }}
       </div>
       <div class="a2" [style.color]="
-      '1' | vll: 'CO004':'textColor' | async
+      data.status | vll: 'CO004':'textColor' | async
       ">
         {{day }}
       </div>
