@@ -23,17 +23,28 @@ import { ShareComponent } from "./share/share.component";
 export class CodxDMService {    
     public dataTree: NodeTree[];
     public data = new BehaviorSubject<any>(null);
-    title = 'Thông báo';
-    titleCopy = 'Sao chép';
-    titleRename = 'Thay đổi tên';
-    titleUpdateFolder = 'Cập nhật thư mục';
-    titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
-    titleTrashmessage = 'Bạn có muốn cho {0} vào thùng rác không ?';
-    titleDeleteeMessage = 'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
-    titleNoRight = "Bạn không có quyền download file này";
-    restoreFilemessage = '{0} đã có bạn có muốn ghi đè lên không ?';
-    restoreFoldermessage = '{0} đã có bạn có muốn ghi đè lên không ?';
-    titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
+    public title = 'Thông báo';
+    public titleCopy = 'Sao chép';
+    public titleRename = 'Thay đổi tên';
+    public titleUpdateFolder = 'Cập nhật thư mục';
+    public titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
+    public titleTrashmessage = 'Bạn có muốn cho {0} vào thùng rác không ?';
+    public titleDeleteeMessage = 'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
+    public titleNoRight = "Bạn không có quyền download file này";
+    public restoreFilemessage = '{0} đã có bạn có muốn ghi đè lên không ?';
+    public restoreFoldermessage = '{0} đã có bạn có muốn ghi đè lên không ?';
+    public titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
+    public titleMessage = 'Thông báo';
+    public titleCopymessage = 'Bạn có muốn lưu lên không ?';
+    public titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
+    public FOLDER_NAME = "DM";//"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
+    public titleEmptyTrash30 = "Các mục trong thùng rác sẽ xóa vĩnh viễn trong 30 ngày";
+    public titleEmptyAction = 'Dọn sạch thùng rác';
+    public titleNodaTa = 'Không có tài liệu';
+    public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
+    public formModel: FormModel;    
+    public dataService: any;
+
     isData = this.data.asObservable();   
     public modeStore = "0";
     public hideTree = false;
@@ -238,16 +249,7 @@ export class CodxDMService {
 
     public currentDMIndex = new BehaviorSubject<string>(null);
     isCurrentDMIndex = this.currentDMIndex.asObservable();
-    private titleMessage = 'Thông báo';
-    private titleCopymessage = 'Bạn có muốn lưu lên không ?';
-    private titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
-    private FOLDER_NAME = "DM";//"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
-    public titleEmptyTrash30 = "Các mục trong thùng rác sẽ xóa vĩnh viễn trong 30 ngày";
-    public titleEmptyAction = 'Dọn sạch thùng rác';
-    public titleNodaTa = 'Không có tài liệu';
-    public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
-    public formModel: FormModel;    
-    public dataService: any;
+   
     constructor(
         private domSanitizer: DomSanitizer,
         private auth: AuthService,
@@ -282,6 +284,7 @@ export class CodxDMService {
         else
             this.parentRevision = false;
 
+        this.revision = this.parentRevision;
         this.parentApproval = folder.approval;
         this.parentPhysical = folder.physical;
         this.parentCopyrights = folder.copyrights;
@@ -289,7 +292,7 @@ export class CodxDMService {
         this.parentRevisionNote = folder.revisionNote;
         this.parentLocation = folder.location;
 
-        if (this.idMenuActive == "4" || this.idMenuActive == "3" || this.idMenuActive == "6" || this.idMenuActive == "7") {
+        if (this.idMenuActive == "DMT03" || this.idMenuActive == "DMT02" || this.idMenuActive == "DMT05" || this.idMenuActive == "7") {
 
             if (folder.isSystem && (folder.folderName.trim().toLocaleLowerCase() == this.FOLDER_NAME.trim().toLocaleLowerCase() || folder.folderName.trim().toLocaleLowerCase() == this.user.userID.trim().toLocaleLowerCase()) && (folder.level == "1" || folder.level == "2")) {
                 this.disableUpload.next(true);
@@ -304,8 +307,7 @@ export class CodxDMService {
             this.disableUpload.next(true);
             this.disableInput.next(true);
         }
-
-        this.setRight.next(true);
+       // this.setRight.next(true);
     }
 
     
@@ -597,7 +599,7 @@ export class CodxDMService {
             }
           });
         }
-      }
+    }
 
     filterMoreFunction(e: any, data: any, modeView = false) {    
       var type = this.getType(data, "entity");
@@ -1337,21 +1339,12 @@ export class CodxDMService {
         this.currentDMIndex.next(index);
     }
 
-    // edit folder
-    // changeData(folders: any, files: any, folderId: any) {      
-    //   this.listFolder = folders;        
-    //   this.listFiles = files;        
-    //   this.ChangeData.next(true);
-    // }
-
     emptyTrash() {
       var config = new AlertConfirmInputConfig();
       config.type = "YesNo";
       this.notificationsService.alert(this.title, this.titleDeleteeMessage, config).closed.subscribe(x=>{
           if(x.event.status == "Y") {
-            this.folderService.emptyTrash("").subscribe(async res => {
-            //  this.listFiles.next(null);
-            //  this.listFolder.next(null);
+            this.folderService.emptyTrash("").subscribe(async res => {            
               this.fileService.getTotalHdd().subscribe(i => {
                   this.updateHDD.next(i);
               })
@@ -1359,20 +1352,6 @@ export class CodxDMService {
           });
           }
       });
-
-      // this.confirmationDialogService.confirm(this.titlemessage, "Bạn co muốn xóa tất cả trong thùng rác ?")
-      //     .then((confirmed) => {
-      //         if (confirmed) {
-      //             this.folderService.emptyTrash("").subscribe(async res => {
-      //                 this.listFiles.next(null);
-      //                 this.listFolder.next(null);
-      //                 this.fileService.getTotalHdd().subscribe(i => {
-      //                     this.updateHDD.next(i.messageHddUsed);
-      //                 })
-      //             });                  
-      //         }
-      //     })
-      //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));       
     }
 
     copyFileTo(id, fullName, toselectId) {
@@ -1392,27 +1371,28 @@ export class CodxDMService {
 
             if (res.status == 6) {
                 let newNameMessage = this.titelRenamemessage.replace("{0}", res.data.fileName);
-                // this.confirmationDialogService.confirm(this.titlemessage, res.data.fileName + newNameMessage)
-                //     .then((confirmed) => {
-                //         if (confirmed) {
-                //             that.fileService.copyFile(id, res.data.fileName, toselectId, 1).subscribe(async item => {
-                //                 if (item.status == 0) {
-                //                     let list = this.listFiles.getValue();
-                //                     // move                                    
-                //                     let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
-                //                     if (index > -1) {
-                //                         list.splice(index, 1);//remove element from array             
-                //                         this.listFiles.next(list);
-                //                     }
-                //                     if (item.status == 0)
-                //                         this.updateHDD.next(item.messageHddUsed);
+                var config = new AlertConfirmInputConfig();
+                config.type = "YesNo";
+                this.notificationsService.alert(this.title, res.data.fileName + newNameMessage, config).closed.subscribe(x=>{
+                    if(x.event.status == "Y") { 
+                      this.fileService.copyFile(id, res.data.fileName, toselectId, 1).subscribe(async item => {
+                          if (item.status == 0) {
+                              let list = this.listFiles;
+                              // move                                    
+                              let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+                              if (index > -1) {
+                                  list.splice(index, 1);//remove element from array             
+                                  this.listFiles= list;
+                                  this.ChangeData.next(true);
+                              }
+                              if (item.status == 0)
+                                  this.updateHDD.next(item.messageHddUsed);
 
-                //                 }
-                //                 that.notificationsService.notify(item.message);
-                //             });
-                //         }
-                //     })
-                //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));                      
+                          }
+                          that.notificationsService.notify(item.message);
+                      });
+                    }
+                });                                  
             }
             else {
                 this.notificationsService.notify(res.message);
@@ -1421,7 +1401,7 @@ export class CodxDMService {
     }
 
     copyFolderTo(id, fullName, toselectId) {
-        var that = this;
+      //  var that = this;
         this.folderService.copyFolder(id, fullName, toselectId, 1).subscribe(async res => {
             if (res.status == 0) {
                 let list = this.listFolder;
@@ -1436,28 +1416,29 @@ export class CodxDMService {
             }
 
             if (res.status == 2) {
-                // this.confirmationDialogService.confirm(this.titlemessage, res.message + this.copymessage)
-                //     .then((confirmed) => {
-                //         if (confirmed) {
-                //             this.folderService.copyFolder(id, fullName, toselectId, 1, 1).subscribe(async item => {
-                //                 if (item.status == 0) {
-                //                     let list = this.listFolder.getValue();
-                //                     this.nodeDeleted.next(id);
-                //                     //list = list.filter(item => item.recID != id);
-                //                     let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
-                //                     if (index > -1) {
-                //                         list.splice(index, 1);//remove element from array
-                //                         this.listFolder.next(list);
-                //                     }
-                //                     this.fileService.getTotalHdd().subscribe(i => {
-                //                         this.updateHDD.next(i.messageHddUsed);
-                //                     })
-                //                 }
-                //                 this.notificationsService.notify(item.message);
-                //             });
-                //         }
-                //     })
-                //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));                      
+              var config = new AlertConfirmInputConfig();
+              config.type = "YesNo";
+              this.notificationsService.alert(this.title, res.message + this.titleCopymessage, config).closed.subscribe(x=>{
+                if(x.event.status == "Y") { 
+                  this.folderService.copyFolder(id, fullName, toselectId, 1, 1).subscribe(async item => {
+                      if (item.status == 0) {
+                          let list = this.listFolder;
+                          this.nodeDeleted.next(id);
+                          //list = list.filter(item => item.recID != id);
+                          let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+                          if (index > -1) {
+                              list.splice(index, 1);//remove element from array
+                              this.listFolder = list;
+                              this.ChangeData.next(true);
+                          }
+                          this.fileService.getTotalHdd().subscribe(i => {
+                              this.updateHDD.next(i.messageHddUsed);
+                          })
+                      }
+                      this.notificationsService.notify(item.message);
+                  });
+                }
+              });                             
             }
             else {
                 this.notificationsService.notify(res.message);
