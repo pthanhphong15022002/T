@@ -6,18 +6,15 @@ import { DialogData, DialogRef, UIComponent } from 'codx-core';
   templateUrl: './notify-drawer.component.html',
 })
 export class NotifyDrawerComponent extends UIComponent implements OnInit {
-  
-  dialog:any ;
+  dialog: any;
   constructor(
-    private inject:Injector,
+    private inject: Injector,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
-  ) 
-  { super(inject);
+  ) {
+    super(inject);
     this.dialog = dialog;
   }
 
-  onInit(): void {
-    
-  }
+  onInit(): void {}
 }

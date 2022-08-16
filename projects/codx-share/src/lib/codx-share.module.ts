@@ -69,6 +69,8 @@ import { CodxFilesComponent } from './components/codx-files/codx-files.component
 import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
 import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
 import { NotifyDrawerComponent } from './layout/drawers/notify-drawer/notify-drawer.component';
+import { MessengerDrawerComponent } from './layout/drawers/messenger-drawer/messenger-drawer.component';
+import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner/chat-inner.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -108,7 +110,9 @@ const T_Component: Type<any>[] = [
   CodxFilesComponent,
   ApprovalTabsComponent,
   CodxApprovalStepComponent,
-  NotifyDrawerComponent
+  NotifyDrawerComponent,
+  MessengerDrawerComponent,
+  ChatInnerComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
