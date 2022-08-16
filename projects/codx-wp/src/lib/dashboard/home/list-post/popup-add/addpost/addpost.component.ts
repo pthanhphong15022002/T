@@ -450,7 +450,11 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     if (this.listFileUpload.length > 0) {
       this.atmEdit.objectId = this.dataEdit.recID;
       this.dmSV.fileUploadList = this.listFileUpload;
-      this.atmEdit.saveFilesObservable().subscribe();
+      this.atmEdit.saveFilesObservable().subscribe((res:any) => {
+        if(res){
+          console.log(res);
+        }
+      });
     }
     if (this.codxFileEdit.filesDelete.length > 0) {
       let filesDeleted = this.codxFileEdit.filesDelete;
