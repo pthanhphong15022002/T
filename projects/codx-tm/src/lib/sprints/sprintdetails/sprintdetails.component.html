@@ -47,7 +47,7 @@
         <codx-sprintdetails-dashboard [projectID]="projectID" [resources]="resources"></codx-sprintdetails-dashboard>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
-        <codx-tasks [projectID]="projectID"></codx-tasks>
+        <codx-tasks ></codx-tasks>
       </ng-container>
       <ng-container *ngIf="name == 'Lịch sử'">
         <ng-container>
@@ -57,6 +57,7 @@
       <ng-container *ngIf="name == 'Bình luận'">
         <ng-container>
           <ng-container> This is comment... </ng-container>
+          <!-- <codx-comments [funcID]="funcID" [ObjetcType]="" ></codx-comments> -->
         </ng-container>
       </ng-container>
       <ng-container *ngIf="name == 'Họp định kì'">
