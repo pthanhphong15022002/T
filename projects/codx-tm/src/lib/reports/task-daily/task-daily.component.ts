@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ViewModel, ViewType, ApiHttpService } from 'codx-core';
 
 @Component({
   selector: 'lib-task-daily',
@@ -23,6 +23,7 @@ export class TaskDailyComponent implements OnInit {
   constructor(
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
+    private api: ApiHttpService,
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -45,6 +46,7 @@ export class TaskDailyComponent implements OnInit {
       { field: 'active', headerText: 'Hoạt động', template: this.itemActive, width: 150 },
       { field: 'buid', headerText: 'Bộ phận người thực hiện', width: 140 }
     ];
+    this.loadData();
   }
 
   ngAfterViewInit(): void {
@@ -56,6 +58,14 @@ export class TaskDailyComponent implements OnInit {
         resources: this.columnsGrid,
       }
     }];
+  }
+
+  loadData(){
+    this.api.callSv('TM','TM','ReportBusiness','ListReportTasksAsync').subscribe(res=>{
+      if(res){
+        console.log(res);
+      }
+    })
   }
 
   popoverList: any;

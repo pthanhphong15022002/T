@@ -190,8 +190,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true) data = [this.adUser, this.viewChooseRole];
-      else data = [this.adUser, this.viewChooseRole, checkDifference];
+      data = [this.adUser, this.viewChooseRole, checkDifference];
     }
     op.data = data;
     return true;
@@ -212,10 +211,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
               }
             });
           res.save['chooseRoles'] = res.save?.functions;
-          //this.changeDetector.detectChanges();
+          res.save['buName'] = res.save?.buid;
+          this.changeDetector.detectChanges();
         }
       });
-    //this.dialog.close();
+    this.dialog.close();
   }
 
   onUpdate() {
@@ -232,6 +232,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
               }
             });
           res.update['chooseRoles'] = res.update?.functions;
+          res.update['buName'] = res.update?.buid;
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
         }
       });
   }
@@ -245,7 +249,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.countListViewChooseRoleApp == 0 &&
         this.countListViewChooseRoleService == 0
       ) {
-        debugger;
         this.dialog.close();
         this.notification.notifyCode('SYS006');
         (this.dialog.dataService as CRUDService)
@@ -335,7 +338,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.api
       .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRoles', [userID])
       .subscribe((res) => {
-        if (res && res.msgBodyData) {
+        if (res && res.msgBodyData[0]) {
           this.viewChooseRole = res.msgBodyData[0];
           this.viewChooseRole.forEach((dt) => {
             dt['module'] = dt.functionID;
