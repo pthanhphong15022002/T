@@ -85,7 +85,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         return;
       } else this.router.navigate([`/${tenant}`]);
     }
-    debugger;
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {
         this.api
@@ -94,7 +93,6 @@ export class LoginComponent implements OnInit, OnDestroy {
           ])
           .subscribe((res) => {
             if (res && res.msgBodyData[0]) {
-              debugger;
               this.sessionID = params.sk;
               this.email = res.msgBodyData[0].email;
               if (res.msgBodyData[0].lastLogin == null) {

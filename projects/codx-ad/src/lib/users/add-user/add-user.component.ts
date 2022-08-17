@@ -211,6 +211,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
             });
           res.save['chooseRoles'] = res.save?.functions;
           res.save['buName'] = res.save?.buid;
+          debugger;
           this.changeDetector.detectChanges();
         }
       });
