@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { PopupAddEmployeesComponent } from 'projects/codx-hr/src/lib/employees/popup-add-employees/popup-add-employees.component';
 import { CodxMwpService } from '../codx-mwp.service';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
 import { EditHobbyComponent } from './edit-hobby/edit-hobby.component';
@@ -411,6 +412,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(EditInfoComponent, 'edit', option);
     });
+    this.dt.detectChanges();
   }
 
   editExperences(data?) {
@@ -424,6 +426,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(EditExperenceComponent, 'edit', option);
     });
+    this.dt.detectChanges();
   }
 
   editDataEdu(data) {
@@ -443,6 +446,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(EditRelationComponent, 'edit', option);
     });
+    this.dt.detectChanges();
   }
 
   addExperences() {
@@ -456,6 +460,7 @@ export class EmployeeInfomationComponent implements OnInit {
         console.log(e);
       })
     });
+    this.dt.detectChanges();
   }
 
   addRelation() {
@@ -469,6 +474,7 @@ export class EmployeeInfomationComponent implements OnInit {
         console.log(e);
       })
     });
+    this.dt.detectChanges();
   }
 
   popupAddHobbi(item: any) {

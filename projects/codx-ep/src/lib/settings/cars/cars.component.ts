@@ -39,7 +39,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
 
   @Input() data!: any;
-  
+
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -55,9 +55,9 @@ export class CarsComponent implements OnInit, AfterViewInit {
 
   dialog!: DialogRef;
   isAdd = true;
-  funcID: string;  
+  funcID: string;
   columnsGrid: any;
-  
+
   dataSelected: any;
   devices: any;
   tmplstDevice = [];
@@ -67,17 +67,15 @@ export class CarsComponent implements OnInit, AfterViewInit {
     private activedRouter: ActivatedRoute,
     private codxEpService: CodxEpService,
     private cacheService: CacheService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
-    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
 
     this.buttons = {
       id: 'btnAdd',
@@ -92,7 +90,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
           this.columnsGrid = [
             {
               field: 'resourceID',
-               headerText: 'Tên lái xe'//gv['resourceID'].headerText,
+              headerText: 'Tên lái xe', //gv['resourceID'].headerText,
             },
             // {
             //   field: 'icon',
@@ -101,18 +99,18 @@ export class CarsComponent implements OnInit, AfterViewInit {
             // },
             {
               field: 'resourceName',
-              headerText: 'Tên lái xe',
+              headerText: gv['ResourceName'].headerText,
             },
             {
               field: 'code',
               headerText: 'Biển số',
-            },   
+            },
             {
-              headerText: 'Trạng thái',
+              headerText: gv['Status'].headerText,
               template: this.statusCol,
             },
             {
-              headerText: 'Xếp hạng',
+              headerText: gv['Ranking'].headerText,
               template: this.rankingCol,
             },
             {
@@ -121,9 +119,9 @@ export class CarsComponent implements OnInit, AfterViewInit {
             },
           ];
 
-          this.views = [            
+          this.views = [
             {
-              id:'1',
+              id: '1',
               sameData: true,
               type: ViewType.grid,
               active: true,
@@ -136,7 +134,6 @@ export class CarsComponent implements OnInit, AfterViewInit {
         });
     });
   }
-
 
   click(event: ButtonModel) {
     switch (event.id) {
@@ -170,37 +167,37 @@ export class CarsComponent implements OnInit, AfterViewInit {
   edit(obj?) {
     if (obj) {
       this.viewBase.dataService.dataSelected = obj;
-      this.viewBase.dataService.edit(this.viewBase.dataService.dataSelected).subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '800px';
-        option.DataService = this.viewBase?.currentView?.dataService;
-        option.FormModel = this.viewBase?.currentView?.formModel;
-        this.dialog = this.callFuncService.openSide(
-          PopupAddCarsComponent,
-          [this.viewBase.dataService.dataSelected, false],
-          option
-        );
-      });
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = this.viewBase?.currentView?.dataService;
+          option.FormModel = this.viewBase?.currentView?.formModel;
+          this.dialog = this.callFuncService.openSide(
+            PopupAddCarsComponent,
+            [this.viewBase.dataService.dataSelected, false],
+            option
+          );
+        });
     }
   }
 
-  delete(obj?) {    
+  delete(obj?) {
     if (obj) {
-      this.viewBase.dataService.delete([obj], true)
-      .subscribe((res) => {
+      this.viewBase.dataService.delete([obj], true).subscribe((res) => {
         console.log(res);
       });
-    }    
+    }
   }
 
   onSelect(obj: any) {
     console.log(obj);
   }
 
-
   clickMF(event, data) {
-    console.log(event)
+    console.log(event);
     switch (event?.functionID) {
       case 'SYS03':
         this.edit(data);

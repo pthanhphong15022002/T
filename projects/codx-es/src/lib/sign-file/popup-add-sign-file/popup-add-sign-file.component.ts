@@ -110,6 +110,7 @@ export class PopupAddSignFileComponent implements OnInit {
     ScrollComponent.reinitialization();
   }
 
+  orgUnitID;
   initForm() {
     const user = this.auth.get();
     this.esService
@@ -130,10 +131,13 @@ export class PopupAddSignFileComponent implements OnInit {
               divisionID: user.employee?.divisionID,
               companyID: user.employee?.companyID,
             });
+            this.orgUnitID = user.employee?.orgUnitID;
             this.dialogSignFile.addControl(
               'approveControl',
               new FormControl('3')
             );
+            this.dialogSignFile.addControl('icon', new FormControl(null));
+            this.dialogSignFile.addControl('color', new FormControl(null));
 
             this.codxService
               .getAutoNumber(
@@ -253,16 +257,24 @@ export class PopupAddSignFileComponent implements OnInit {
       }
 
       if (event.field == 'employeeID') {
-        this.dialogSignFile.patchValue({});
-        if (event.component?.itemsSelected[0]?.OrgUnitID) {
+        let employee = event.component?.itemsSelected[0];
+        this.dialogSignFile.patchValue({
+          deptID: employee?.departmentID,
+          divisionID: employee?.divisionID,
+          companyID: employee?.companyID,
+        });
+        if (employee?.OrgUnitID != null) {
+          this.orgUnitID = employee?.OrgUnitID;
           this.dialogSignFile.patchValue({
-            orgUnitID: event.component?.itemsSelected[0]?.OrgUnitID,
+            orgUnitID: employee?.OrgUnitID,
           });
-          this.cr.detectChanges();
         }
       }
+
+      if (event.field == 'categoryID') {
+      }
+      this.cr.detectChanges();
     }
-    this.cr.detectChanges();
   }
 
   //#region Methods Save
