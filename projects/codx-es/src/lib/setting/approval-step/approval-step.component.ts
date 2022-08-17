@@ -48,6 +48,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   lstStep: any;
   lstDeleteStep = [];
   isDeleteAll = false;
+  justView = false;
 
   model: any;
 
@@ -65,6 +66,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
       this.dialogApproval = dialog;
+      this.justView = dialogData?.data.justView ?? false;
     } else {
       this.type = '1';
     }

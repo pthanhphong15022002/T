@@ -1,4 +1,4 @@
-<codx-views #view entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
+<codx-views #view [funcID]="funcID" entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
   method="GetListTaskGroupsAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (selectedChange)="selectedChange($event)"
   idField="taskGroupID" [pageSize]="100" [selectedFirst]="true">
@@ -31,7 +31,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.projectControl!='0'">
-        <div class="badge badge-danger me-2" [style.border-color]="
+        <div  [style.border-color]="
         (data?.projectControl | vll: 'TM012':'color' | async) + '30'
       " [style.background-color]="
         (data?.projectControl | vll: 'TM012':'color' | async) + '30'
@@ -42,7 +42,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.locationControl">
-        <div class="badge badge-danger me-2" [style.border-color]="
+        <div  [style.border-color]="
         (data?.locationControl | vll: 'TM012':'color' | async) + '30'
       " [style.background-color]="
         (data?.locationControl | vll: 'TM012':'color' | async) + '30'
@@ -53,7 +53,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.planControl">
-        <div class="badge badge-danger me-2" [style.border-color]="
+        <div  [style.border-color]="
         (data?.planControl | vll: 'TM012':'color' | async) + '30'
       " [style.background-color]="
         (data?.planControl | vll: 'TM012':'color' | async) + '30'
@@ -64,7 +64,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.updateControl">
-        <div class="badge badge-danger me-2" [style.border-color]="
+        <div  [style.border-color]="
         (data?.updateControl | vll: 'TM013':'color' | async) + '30'
       " [style.background-color]="
         (data?.updateControl | vll: 'TM013':'color' | async) + '30'
@@ -76,7 +76,7 @@
     <td class="rowphoto">
       <div class="padding" *ngIf="data.checkListControl">
         <div class="d-flex align-items-center" style="padding-right: 30px;">
-          <div class="badge badge-danger me-2" [style.border-color]="
+          <div  [style.border-color]="
           (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
         " [style.background-color]="
           (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
@@ -102,7 +102,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.verifyControl == '1'">
-        <div class="badge badge-danger me-2" [style.border-color]="
+        <div  [style.border-color]="
         (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
       " [style.background-color]="
         (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
@@ -117,7 +117,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.approveControl == '1'">
-        <div class="badge badge-danger me-2" [style.border-color]="
+        <div  [style.border-color]="
         (data?.approveBy | vll: 'TM014':'color' | async) + '30'
       " [style.background-color]="
         (data?.approveBy | vll: 'TM014':'color' | async) + '30'
