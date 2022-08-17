@@ -701,6 +701,16 @@ export class CodxEsService {
 
   //#region ES_ApprovalTrans
 
+  getTask(recID: string): Observable<any> {
+    return this.api.execSv(
+      'TM',
+      'ERM.Business.TM',
+      'TaskBusiness',
+      'GetListTaskTreeByRefIDAsync',
+      recID
+    );
+  }
+
   release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
     return this.api.execSv(
       'ES',
