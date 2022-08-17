@@ -119,4 +119,15 @@ export class TaskExtendsComponent
         break;
     }
   }
+  changeDataMF(e, data) {
+    if (e) {
+      e.forEach((x) => {
+        if (
+          x.functionID == 'SYS04' 
+        ) {
+          x.disabled = true;
+        }
+      });
+    }
+  }
 }
