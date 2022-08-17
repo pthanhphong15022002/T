@@ -59,7 +59,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.fieldDefault =
       fieldDefault.charAt(0).toLocaleLowerCase() + fieldDefault.slice(1);
     this.valueDefault = UrlUtil.getUrl('defaultValue', this.url);
-    if(this.action='extend') {
+    if(this.action=='extend') {
       this.taskExtends = this.data?.data;
       this.taskExtends[this.fieldDefault] = this.valueDefault 
     }
