@@ -85,18 +85,21 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   ) {
     
   }
-
+  lstData:any;
   ngOnInit() {
     this.user = this.authStore.get();
+    this.cache.valueList('L1480').subscribe((res) => {
+      if (res) {
+        this.lstData = res.datas;
+      }
+    });
     this.cache.valueList('L1901').subscribe((res: any) => {
       if (res) {
         this.dataVll = res.datas;
-        this.dt.detectChanges();
       }
     });
     this.cache.message('WP011').subscribe((mssg: any) => {
       this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
-      this.dt.detectChanges();
     });
 
   }
@@ -250,34 +253,33 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       });
   }
 
-  getShareUser(shareControl, commentID) {
-    if (shareControl == '1') {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'GetShareOwnerListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res) this.tagUsers = res;
-          console.log('CHECK TAG USER LIST', this.tagUsers.orgUnitName);
-        });
-    } else {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'GetShareUserListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.tagUsers = res;
-            console.log('CHECK TAG USER LIST', this.tagUsers);
-          }
-        });
-    }
+  getShareUser(item) {
+    // if (shareControl == '1') {
+    //   this.api
+    //     .exec<any>(
+    //       'ERM.Business.WP',
+    //       'CommentsBusiness',
+    //       'GetShareOwnerListAsync',
+    //       [commentID]
+    //     )
+    //     .subscribe((res) => {
+    //       if (res) this.tagUsers = res;
+    //     });
+    // } else {
+    //   this.api
+    //     .exec<any>(
+    //       'ERM.Business.WP',
+    //       'CommentsBusiness',
+    //       'GetShareUserListAsync',
+    //       [commentID]
+    //     )
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         this.tagUsers = res;
+    //       }
+    //     });
+    // }
+    this
   }
 
   naviagte(data: any) {
@@ -298,7 +300,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   getFiles(event: any, data: any) {
     data.files = event;
   }
-
   clickViewDetail(file:any){
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
@@ -306,5 +307,18 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     option.IsFull = true;
     this.callfc.openForm(PopupDetailComponent,'',0,0,'',file,'',option);
   }
-
+  clickShowComment(data:any){
+    data.isShowComment = !data.isShowComment;
+    this.dt.detectChanges();
+  }
+  replyTo(data:any) {
+    data.showReply = !data.showReply;
+    this.dt.detectChanges();
+  }
+  replyComment(data:any) {
+    
+  }
+  sendComment(data:any){
+    
+  }
 }

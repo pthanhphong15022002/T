@@ -1,7 +1,7 @@
 <div class="empty-data" *ngIf="!itemSelected?.taskID"></div>
 <ng-container *ngIf="itemSelected?.taskID">
   <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer"
-    (clickMF)="clickMF($event, itemSelected)" [dataItem]="itemSelected">
+    (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeDataMF($event, itemSelected)" [dataItem]="itemSelected">
     <ng-template #header>
       <div class="container_detail mt-4">
         <div class="d-flex flex-grow-1 mb-3">
@@ -49,7 +49,7 @@
                   </div>
                 </div>
               </div>
-              <div class="d-status flex">
+              <div class="d-flex flex-column">
                 <div *ngIf="itemSelected?.extendStatus!=null &&itemSelected?.extendStatus>='3' && vllExtendStatus"
                   class="badge badge-danger me-2 label-status" [style.border-color]="
                     (itemSelected?.extendStatus  | vll: vllExtendStatus:'textColor' | async) +
@@ -235,7 +235,7 @@
           </codx-imgs>
         </div>-->
         <div *ngIf="itemSelected.category == '3'" class="user-groups">
-          <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="10"
+          <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="5"
             (mouseenter)="popoverEmpList(popoverList,itemSelected)" [ngbPopover]="popEmpList"
             popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" container="body"
             autoClose="outside" [openDelay]="500">
@@ -243,7 +243,7 @@
         </div>
 
         <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="">
-          <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="10">
+          <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="5">
           </codx-imgs>
         </div>
 
@@ -285,12 +285,12 @@
           <codx-label name="lblMemo2" formName="Tasks" default="Ghi chú phân công">
           </codx-label>:
         </span>
-        <span class="text-gray-700"   [innerHTML]="itemSelected?.memo2"></span>
+        <span class="text-gray-700" [innerHTML]="itemSelected?.memo2"></span>
       </div>
-    
+
       <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
         <!-- <div class="text-primary fw-bold"> -->
-          <!-- <div class="text-gray-700">
+        <!-- <div class="text-gray-700">
           <codx-label name="lblListTaskBoard" formName="Tasks" default="Danh sách việc cần làm"></codx-label>:
         </div> -->
         <div class="checkbox-list mt-2 ms-6 text-dark">
@@ -298,10 +298,10 @@
             <div class="mb-2">
               <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
                 [crrValue]="item.status == '90'" [disabled]="true"></codx-input> -->
-                <codx-input type="checkbox" class="me-2"
-                [crrValue]="item.status == '90'" [disabled]="true"></codx-input><span class="text-gray-700">
-                  {{ item.memo }}
-                </span>
+              <codx-input type="checkbox" class="me-2" [crrValue]="item.status == '90'" [disabled]="true"></codx-input>
+              <span class="text-gray-700">
+                {{ item.memo }}
+              </span>
             </div>
           </ng-container>
         </div>

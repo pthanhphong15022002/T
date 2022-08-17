@@ -2,9 +2,10 @@
 /***Khong duoc xoa***/
 @import "/node_modules/codx-core/assets/sass/init";
 
+
 .e-device .e-dlg-content,
 .e-device .e-dlg-content * {
-    font-size: inherit;
+  font-size: inherit;
 }
 
 //codx core
@@ -31,90 +32,251 @@ $primary-lighter: if(isDarkMode(), #EAF0FE, #EAF0FF);
 $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 
 :root {
-    ///
-    --primary-active: #187DE4;
-    --primary-inverse: #FFFFFF;
+  ///
+  --primary-active: #187DE4;
+  --primary-inverse: #FFFFFF;
 
-    --bs-body-line-height: 1.4;
+  --bs-body-line-height: 1.4;
 
-    /////
+  /////
 
-    --text-primary: #005dc7;
-    --text-primary-dark: #0078FF;
-    --text-primary-darker: #005dc7;
-    --text-primary-light:#D3E8FF;
-    --text-dark: #1d1f1f;
-    --gray-800: #28292b;
-    --gray-700: #3f4144;
-    --gray-600: #5d6061;
-    --gray-500: #8f9596;
-    --gray-400: #a4a9ac;
-    --gray-300: #c2c8ca;
-    --gray-200: #ebf0f1;
+  --text-primary: #005dc7;
+  --text-primary-dark: #0078FF;
+  --text-primary-darker: #005dc7;
+  --text-primary-light: #D3E8FF;
+  --text-dark: #1d1f1f;
+  --gray-800: #28292b;
+  --gray-700: #3f4144;
+  --gray-600: #6f7475;
+  --gray-500: #8f9596;
+  --gray-400: #a4a9ac;
+  --gray-300: #c2c8ca;
+  --gray-200: #ebf0f1;
 }
 
 .text-primary {
-    color: var(--text-primary) !important;
+  color: var(--text-primary) !important;
 }
 
 /***END Khong duoc xoa***/
-.user-mini-icon{
-    width: 36px;
-    min-width: 36px;
-    height: 36px;
-    line-height: 36px;
-    text-align: center;
-    border-radius: 50%;
-    background-color: #f1f1fa;
+.user-mini-icon {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: #f1f1fa;
 }
+
 .rounded {
-    border-radius: 0.475rem !important;
+  border-radius: 0.475rem !important;
+}
+
+.rounded-0 {
+  border-radius: 0 !important;
+}
+
+.rounded-1 {
+  border-radius: 0.425rem !important;
+}
+
+.rounded-2 {
+  border-radius: 0.475rem !important;
+}
+
+.rounded-3 {
+  border-radius: 0.625rem !important;
+}
+
+.rounded-4 {
+  border-radius: 1rem !important;
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+}
+
+.rounded-pill {
+  border-radius: 50rem !important;
+}
+
+.rounded-top {
+  border-top-left-radius: var(--bs-border-radius) !important;
+  border-top-right-radius: var(--bs-border-radius) !important;
+}
+
+.rounded-end {
+  border-top-right-radius: var(--bs-border-radius) !important;
+  border-bottom-right-radius: var(--bs-border-radius) !important;
+}
+
+.rounded-bottom {
+  border-bottom-right-radius: var(--bs-border-radius) !important;
+  border-bottom-left-radius: var(--bs-border-radius) !important;
+}
+
+.rounded-start {
+  border-bottom-left-radius: var(--bs-border-radius) !important;
+  border-top-left-radius: var(--bs-border-radius) !important;
+}
+
+.fs-5 {
+  font-size: 14px !important;
+}
+
+.icon-56 {
+  font-size: 56px !important;
+}
+
+/***ES-Trinh ky****/
+.codx-card-custom {
+  height: 100%;
+
+  .codx-stepper {
+    height: 100%;
   }
-  
-  .rounded-0 {
-    border-radius: 0 !important;
+
+  .stepper-header {
+    height: 60px;
   }
-  
-  .rounded-1 {
-    border-radius: 0.425rem !important;
+
+  .h2-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 16px;
+    color: #3E4347;
   }
-  
-  .rounded-2 {
-    border-radius: 0.475rem !important;
+
+  .stepper-body {
+    background: rgba(229, 229, 229, 0.67);
+    box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
+    height: calc(100% - 60px);
   }
-  
-  .rounded-3 {
-    border-radius: 0.625rem !important;
+
+  .stepper-body.no-header {
+    height: calc(100% - 0px);
   }
-  
-  .rounded-4 {
-    border-radius: 1rem !important;
+
+  .codx-stepper {
+    .stepper-item::before {
+      content: "";
+      //  background-color: #dbdbdb;
+      border-top: 0.5px dashed #dbdbdb;
+      height: 1px;
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      z-index: 1;
+    }
+
+    .stepper-item:first-child:before {
+      left: 50%;
+    }
+
+    .stepper-item:last-child:before {
+      right: 50%;
+    }
+
+    .stepper-item:last-child:hover::before {
+      right: 50%;
+    }
+
+    .stepper-item:last-child:focus:before {
+      right: 50%;
+    }
+
+    .stepper-item {
+      padding-left: 20px;
+      padding-right: 20px;
+      position: relative;
+
+      .stepper-default {
+        display: block;
+      }
+
+      .stepper-active {
+        display: none;
+      }
+
+      .stepper-approve {
+        display: none;
+      }
+
+      .stepper-approve-disabled {
+        display: none;
+      }
+    }
+
+    .stepper-item.active {
+      .stepper-default {
+        display: none;
+      }
+
+      .stepper-active {
+        display: block;
+      }
+
+      .stepper-approve {
+        display: none;
+      }
+
+      .stepper-approve-disabled {
+        display: none;
+      }
+    }
+
+    .stepper-item.approve-disabled {
+      .stepper-default {
+        display: none;
+      }
+
+      .stepper-active {
+        display: none;
+      }
+
+      .stepper-approve {
+        display: none;
+      }
+
+      .stepper-approve-disabled {
+        display: block;
+      }
+    }
+
+    .stepper-item.approve {
+      .stepper-default {
+        display: none;
+      }
+
+      .stepper-active {
+        display: none;
+      }
+
+      .stepper-approve {
+        display: block;
+      }
+
+      .stepper-approve-disabled {
+        display: none;
+      }
+    }
+
+    .stepper-item .stepper-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, background-color 0.2s ease;
+      margin: 0;
+      border-radius: 0;
+      width: auto;
+      height: auto;
+      background-color: white;
+      z-index: 10;
+    }
+
   }
-  
-  .rounded-circle {
-    border-radius: 50% !important;
-  }
-  
-  .rounded-pill {
-    border-radius: 50rem !important;
-  }
-  
-  .rounded-top {
-    border-top-left-radius: var(--bs-border-radius) !important;
-    border-top-right-radius: var(--bs-border-radius) !important;
-  }
-  
-  .rounded-end {
-    border-top-right-radius: var(--bs-border-radius) !important;
-    border-bottom-right-radius: var(--bs-border-radius) !important;
-  }
-  
-  .rounded-bottom {
-    border-bottom-right-radius: var(--bs-border-radius) !important;
-    border-bottom-left-radius: var(--bs-border-radius) !important;
-  }
-  
-  .rounded-start {
-    border-bottom-left-radius: var(--bs-border-radius) !important;
-    border-top-left-radius: var(--bs-border-radius) !important;
-  }
+}

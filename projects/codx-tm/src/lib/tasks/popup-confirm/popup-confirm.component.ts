@@ -171,7 +171,14 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   }
 
   saveVerifyStatus() {
-    // this.task.verifyComment = this.comment;
+    this.task.verifyComment = this.comment;
+    if (
+      this.task.verifyStatus == '3' &&
+      (this.task.verifyComment ==null || this.task.verifyComment.trim() == '')
+    ) {
+      this.notiService.notifyCode('TM019');
+      return;
+    }
     ///xu ly save
     this.api
       .execSv<any>('TM', 'TM', 'TaskBusiness', 'VerifyStatusTaskAsync', [

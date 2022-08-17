@@ -29,13 +29,14 @@ import { PopupAddDriversComponent } from './popup-add-drivers/popup-add-drivers.
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss']
 })
-export class DriversComponent  implements OnInit, AfterViewInit {  
-  @Input() data!: any;
-
+export class DriversComponent  implements OnInit, AfterViewInit { 
   @ViewChild('view') viewBase: ViewsComponent;  
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
-  @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
+  @ViewChild('categoryCol') categoryCol: TemplateRef<any>;  
+  @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
+ 
+  @Input() data!: any;
 
   service = 'EP';
   assemblyName = 'EP';
@@ -46,108 +47,88 @@ export class DriversComponent  implements OnInit, AfterViewInit {
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
 
-  funcID: string;
-  columnGrids: any;
-  columnsGrid;
-
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   buttons: ButtonModel;
 
-  itemSelected: any;
+  funcID: string;
+  columnsGrid;
   dataSelected: any;
-
   dialog!: DialogRef;
-  dialogAddDriver: FormGroup;
 
   constructor(  
-    private cacheSv: CacheService,
-    private cr: ChangeDetectorRef,
-    private callfunc: CallFuncService,
+    private cacheService: CacheService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private callFuncService: CallFuncService,
     private activedRouter: ActivatedRoute,
-    private callFunc: CallFuncService,
-    private epService: CodxEpService
+    private codxEpService: CodxEpService
     ) {
-        this.funcID = this.activedRouter.snapshot.params['funcID'];
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
 
-  ngOnInit(): void {
-    this.dialogAddDriver.addControl('code',new FormControl('')  ); }
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-    // this.viewBase.dataService.methodSave = 'AddNewAsync';
-    // this.viewBase.dataService.methodUpdate = 'EditResourceAsync';
-    this.cacheSv
-        .gridViewSetup('Resources', 'grvResources')
-        .subscribe((gv) => {
-          console.log(gv);          
-        });
-    this.columnsGrid = [
-      {
-        field: 'resourceID',
-        headerText: 'Mã lái xe',
-        template: '',
-      },
-      {
-        field: 'resourceName',
-        headerText: 'Tên lái xe',
-        template: '',
-      },
-      {
-        headerText: 'Trạng thái',
-        template: this.statusCol,
-      },      
-      {
-        headerText: 'Xếp hạng',
-        template: this.rankingCol,
-      },
-      {
-        headerText: 'Nguồn',
-        template: this.categoryCol,
-      },
+    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
+    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
 
-    ];
-
-    this.views = [            
-      {
-        sameData: true,
-        type: ViewType.grid,
-        active: true,
-        model: {
-          resources: this.columnsGrid,
-        },
-      },
-    ];
     this.buttons = {
       id: 'btnAdd',
     };
 
-    this.epService.getFormModel(this.funcID).then((formModel) => {
-      this.dialogAddDriver.addControl(
-        'code',
-        new FormControl(this.data.code)
-      );  
-      
+    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
+      this.cacheService
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          console.log(gv);
+
+          this.columnsGrid = [
+            {
+              field: 'resourceID',
+              headerText: 'Mã lái xe',//gv['resourceID'].headerText,
+            },
+            // {
+            //   field: 'icon',
+            //   headerText: "Ảnh đại diện",
+            //   template: this.icon,
+            // },
+            {
+              field: 'resourceName',
+              headerText: 'Tên lái xe',
+            }, 
+            {
+              headerText: 'Tình trạng',
+              template: this.statusCol,
+            },
+            {
+              headerText: 'Xếp hạng',
+              template: this.rankingCol,
+            },
+            {
+              headerText: 'Nguồn',
+              template: this.categoryCol,
+            },
+          ];
+
+          this.views = [            
+            {
+              sameData: true,
+              type: ViewType.grid,
+              active: true,
+              model: {
+                resources: this.columnsGrid,
+              },
+            },
+          ];
+          this.changeDetectorRef.detectChanges();
+        });
     });
-    this.moreFuncs = [
-      {
-        id: 'btnEdit',
-        icon: 'icon-list-checkbox',
-        text: 'Chỉnh sửa',
-      },
-      {
-        id: 'btnDelete',
-        icon: 'icon-list-checkbox',
-        text: 'Xóa',
-      },
-    ];
   }
 
-  onInit(): void { }
 
-  click(evt: ButtonModel) {
-    switch (evt.id) {
+  click(event: ButtonModel) {
+    switch (event.id) {
       case 'btnAdd':
         this.addNew();
         break;
@@ -164,10 +145,10 @@ export class DriversComponent  implements OnInit, AfterViewInit {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '800px';
+      option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callFunc.openSide(
+      this.dialog = this.callFuncService.openSide(
         PopupAddDriversComponent,
         [this.dataSelected, true],
         option
@@ -175,33 +156,31 @@ export class DriversComponent  implements OnInit, AfterViewInit {
     });
   }
 
-  edit(evt?) {
-    let item = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      item = evt;
+  edit(obj?) {
+    if (obj) {
+      this.viewBase.dataService.dataSelected = obj;
+      this.viewBase.dataService.edit(this.viewBase.dataService.dataSelected).subscribe((res) => {
+        this.dataSelected = this.viewBase.dataService.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.viewBase?.currentView?.dataService;
+        option.FormModel = this.viewBase?.currentView?.formModel;
+        this.dialog = this.callFuncService.openSide(
+          PopupAddDriversComponent,
+          [this.viewBase.dataService.dataSelected, false],
+          option
+        );
+      });
     }
-    this.viewBase.dataService.edit(item).subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callFunc.openSide(
-        PopupAddDriversComponent,
-        [item, false],
-        option
-      );
-    });
   }
 
-  delete(evt?) {
-    let deleteItem = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
-    }
-    this.viewBase.dataService.delete([deleteItem], true).subscribe((res) => {
-      console.log(res);
-    });
+  delete(obj?) {    
+    if (obj) {
+      this.viewBase.dataService.delete([obj], true)
+      .subscribe((res) => {
+        console.log(res);
+      });
+    }    
   }
 
   clickMF(event, data) {

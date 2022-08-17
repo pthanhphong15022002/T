@@ -78,9 +78,8 @@ export class PopupAddMeetingComponent implements OnInit {
     this.user = this.authStore.get();
 
     this.action = dt.data;
-    if(this.action === 'add'){
+    if (this.action === 'add') {
       this.getListUser(this.user.userID);
-
     }
     this.functionID = this.dialog.formModel.funcID;
 
@@ -119,7 +118,6 @@ export class PopupAddMeetingComponent implements OnInit {
         });
     }
   }
-
 
   setTimeEdit() {
     var getStartTime = new Date(this.meeting.startDate);
@@ -257,7 +255,7 @@ export class PopupAddMeetingComponent implements OnInit {
       var startDate = this.selectedDate.getTime();
       if (startDate - now < 0) {
         this.notiService.notifyCode(
-          'Vui lòng chọn Ngày Lớn hơn hoặc bằng ngày hiện tại'
+          'Vui lòng chọn "Ngày" lớn hơn hoặc bằng ngày hiện tại'
         );
       } else {
         if (this.selectedDate) this.meeting[event.field] = this.selectedDate;
@@ -270,7 +268,11 @@ export class PopupAddMeetingComponent implements OnInit {
         this.fromDateSeconds = fromSeconds;
         if (now - this.fromDateSeconds < 0) {
           this.notiService.notifyCode(
-            'Vui lòng chọn Ngày bắt đầu nhỏ hơn ngày hiện tại'
+            'Vui lòng chọn "Ngày bắt đầu" nhỏ hơn ngày hiện tại'
+          );
+        } else if (this.toDateSeconds - this.fromDateSeconds < 0) {
+          this.notiService.notifyCode(
+            'Vui lòng chọn "Ngày kết thúc" lớn hơn ngày bắt đầu'
           );
         } else {
           this.meeting.fromDate = event.data.fromDate;
@@ -281,12 +283,12 @@ export class PopupAddMeetingComponent implements OnInit {
         this.toDateSeconds = toSeconds;
         if (now - this.toDateSeconds < 0) {
           this.notiService.notifyCode(
-            'Vui lòng chọn Ngày kết thúc nhỏ hơn ngày hiện tại'
+            'Vui lòng chọn "Ngày kết thúc" nhỏ hơn ngày hiện tại'
           );
         } else {
           if (this.toDateSeconds - this.fromDateSeconds < 0) {
             this.notiService.notifyCode(
-              'Vui lòng chọn Ngày kết thúc lớn hơn ngày bắt đầu'
+              'Vui lòng chọn "Ngày kết thúc" lớn hơn ngày bắt đầu'
             );
           } else {
             this.meeting.toDate = event.data.fromDate;
@@ -401,9 +403,7 @@ export class PopupAddMeetingComponent implements OnInit {
       resourceID = resourceID.substring(0, resourceID.length - 1);
     }
     this.valueUser(resourceID);
-    if (this.resources != null)
-      this.meeting.resources = this.resources;
-
+    if (this.resources != null) this.meeting.resources = this.resources;
   }
 
   valueUser(resourceID) {
@@ -426,8 +426,7 @@ export class PopupAddMeetingComponent implements OnInit {
         if (arrayNew.length > 0) {
           resourceID = arrayNew.join(';');
           id += ';' + resourceID;
-          if(this.action === 'edit')
-            this.getListUser(id);
+          if (this.action === 'edit') this.getListUser(id);
           this.getListUser(resourceID);
         }
       } else {

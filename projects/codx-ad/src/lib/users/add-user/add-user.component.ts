@@ -25,6 +25,7 @@ import {
   CRUDService,
   UIComponent,
   DialogModel,
+  NotificationsService,
 } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
@@ -43,7 +44,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
   @ViewChild('form') form: any;
   @Output() loadData = new EventEmitter();
-  @ViewChild('view') codxView!: any;
 
   title = '';
   dialog!: DialogRef;
@@ -64,17 +64,21 @@ export class AddUserComponent extends UIComponent implements OnInit {
   formGroupAdd: FormGroup;
   gridViewSetup: any = [];
   checkBtnAdd = false;
+  saveSuccess = false;
+  dataAfterSave: any;
+  countOpenPopRoles = 0;
 
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
     private auth: AuthStore,
     private adService: CodxAdService,
+    private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
     super(injector);
-    this.formType = dt?.data.formType;
+    this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
@@ -109,36 +113,57 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.dialog.closed.subscribe((res) => {
+      if (!this.saveSuccess) {
+        if (this.dataAfterSave && this.dataAfterSave.userID) {
+          this.adService.deleteUserBeforeDone(this.dataAfterSave).subscribe();
+        }
+      }
+    });
   }
 
   openPopup(item: any) {
-    this.onAdd();
-    var option = new DialogModel();
-    option.FormModel = this.form.formModel;
-    var obj = {
-      formType: this.formType,
-      data: item,
-    };
-    this.dialogRole = this.callfc.openForm(
-      PopRolesComponent,
-      '',
-      1200,
-      700,
-      '',
-      obj,
-      '',
-      option
-    );
-    this.dialogRole.closed.subscribe((e) => {
-      if (e?.event) {
-        this.viewChooseRole = e?.event;
-        this.countListViewChoose();
-        this.viewChooseRole.forEach((dt) => {
-          dt['module'] = dt.functionID;
-          dt['roleID'] = dt.recIDofRole;
-          dt.userID = this.adUser.userID;
-        });
-        this.changeDetector.detectChanges();
+    if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
+      this.notification.notify('Vui lòng nhập thông tin nhóm người dùng');
+    } else {
+      this.countOpenPopRoles++;
+      if (this.countOpenPopRoles > 0) this.addUserTemp();
+      var option = new DialogModel();
+      option.FormModel = this.form.formModel;
+      var obj = {
+        formType: this.formType,
+        data: item,
+      };
+      this.dialogRole = this.callfc.openForm(
+        PopRolesComponent,
+        '',
+        1200,
+        700,
+        '',
+        obj,
+        '',
+        option
+      );
+      this.dialogRole.closed.subscribe((e) => {
+        if (e?.event) {
+          this.viewChooseRole = e?.event;
+          this.countListViewChoose();
+          this.viewChooseRole.forEach((dt) => {
+            dt['module'] = dt.functionID;
+            dt['roleID'] = dt.recIDofRole;
+            dt.userID = this.adUser.userID;
+          });
+          this.changeDetector.detectChanges();
+        }
+      });
+    }
+  }
+
+  addUserTemp() {
+    this.checkBtnAdd = true;
+    this.adService.addUserBeforeDone(this.adUser).subscribe((res) => {
+      if (res) {
+        this.dataAfterSave = res;
       }
     });
   }
@@ -160,27 +185,19 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUser, this.isAddMode, this.viewChooseRole];
+      data = [this.adUser, this.viewChooseRole, true];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true)
-        data = [this.adUser, this.isAddMode, this.viewChooseRole];
-      else
-        data = [
-          this.adUser,
-          this.isAddMode,
-          this.viewChooseRole,
-          checkDifference,
-        ];
+      if (checkDifference == true) data = [this.adUser, this.viewChooseRole];
+      else data = [this.adUser, this.viewChooseRole, checkDifference];
     }
     op.data = data;
     return true;
   }
 
   onAdd() {
-    this.checkBtnAdd = true;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -219,11 +236,43 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   onSave() {
-    if (this.isAddMode) {
-      if (this.checkBtnAdd == false) return this.onAdd();
-      else this.dialog.close();
+    this.saveSuccess = true;
+    if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
+      this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
+    } else {
+      if (
+        this.countListViewChooseRoleApp == 0 &&
+        this.countListViewChooseRoleService == 0
+      ) {
+        this.dialog.close();
+        this.notification.notifyCode('SYS006');
+        (this.dialog.dataService as CRUDService)
+          .add(this.dataAfterSave)
+          .subscribe();
+        this.changeDetector.detectChanges();
+      } else {
+        if (this.isAddMode) {
+          if (this.checkBtnAdd == false) return this.onAdd();
+          else {
+            if (
+              this.countListViewChooseRoleApp > 0 ||
+              this.countListViewChooseRoleService > 0
+            ) {
+              this.adService
+                .addUserRole(this.dataAfterSave, this.viewChooseRole)
+                .subscribe();
+            }
+            this.dialog.close();
+            this.notification.notifyCode('SYS006');
+            (this.dialog.dataService as CRUDService)
+              .add(this.dataAfterSave)
+              .subscribe((res) => {
+                this.changeDetector.detectChanges();
+              });
+          }
+        } else this.onUpdate();
+      }
     }
-    return this.onUpdate();
   }
 
   reloadAvatar(data: any): void {

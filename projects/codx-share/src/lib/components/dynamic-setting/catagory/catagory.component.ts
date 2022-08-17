@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Type } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService } from 'codx-core';
 
 @Component({
   selector: 'lib-catagory',
@@ -8,6 +8,10 @@ import { ApiHttpService, CacheService } from 'codx-core';
   styleUrls: ['./catagory.component.css'],
 })
 export class CatagoryComponent implements OnInit {
+  private components = {
+    cpnAutoNumber: null,
+    DocketComponent: null,
+  };
   category = '';
   title = '';
   listName = 'SYS001';
@@ -18,7 +22,8 @@ export class CatagoryComponent implements OnInit {
     private route: ActivatedRoute,
     private cacheService: CacheService,
     private api: ApiHttpService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private callfc: CallFuncService
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +48,37 @@ export class CatagoryComponent implements OnInit {
       });
       this.changeDetectorRef.detectChanges();
     });
+  }
+
+  openPopup(evt: any, reference: any) {
+    var component = this.components[reference] as Type<any>;
+    this.callfc.openForm(component);
+  }
+
+  collapseItem(evt: any, recID: string) {
+    // var eleItem = document.querySelectorAll(
+    //   '.list-item[data-group="' + recID + '"]'
+    // );
+    // if (eleItem && eleItem.length > 0) {
+    //   eleItem.forEach((element) => {
+    //     var ele = element as HTMLElement;
+    //     var classlist = ele.classList;
+    //     if (classlist.contains('d-none')) classlist.remove('d-none');
+    //     else classlist.add('d-none');
+    //   });
+    // }
+    // var btn = document.querySelector(
+    //   '.button-collapse[data-id="' + recID + '"]'
+    // ) as HTMLElement;
+    // if (btn) {
+    //   if (btn.classList.contains('icon-keyboard_arrow_right')) {
+    //     btn.classList.remove('icon-keyboard_arrow_right');
+    //     btn.classList.add('icon-keyboard_arrow_down');
+    //   } else {
+    //     btn.classList.remove('icon-keyboard_arrow_down');
+    //     btn.classList.add('icon-keyboard_arrow_right');
+    //   }
+    // }
   }
 
   loadSettingValue(formName: string) {

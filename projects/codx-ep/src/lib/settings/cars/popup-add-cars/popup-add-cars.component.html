@@ -4,17 +4,17 @@
   [subHeaderText]="subHeaderText"
   [body]="body"
   [footer]="footer"
-  [dialog]="dialog"
+  [dialog]="dialogRef"
   [formModel]="formModel"
-  [formControl]="dialogAddCar"
+  [formControl]="fGroupAddCar"
   *ngIf="isAfterRender"
 >
   <ng-template #body>
     <div class="row">
-      <div class="col-10 form-group">
+      <div class="col-5 form-group">
         <codx-label
           fiedName="ResourceName"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
           default="Tên xe"
         >
         </codx-label>
@@ -22,30 +22,45 @@
           type="text"
           ControlName="resourceName"
           [formModel]="form.formModel"
-          [Group]="dialogAddCar"
+          [Group]="fGroupAddCar"
         >
         </codx-input>
       </div>
       
-      <div class="col-1 form-group">
-        <codx-label default="" [formModel]="dialog.formModel"> </codx-label>
-        <button type="button" class="btn btn-primary">Icon</button>
-      </div>
-      <!-- <div class="">        
-        <div class="ms-2 room-icon">
-          <codx-input type="vllicon" refValue="L1470" field="icon" class="btn btn-primary dropdown-toggle">
-          </codx-input>
-          <select-icon (valueChange)="valueChangeIcon($event)" field="icon" [itemSelected]="icon">
-                    </select-icon>
+      <div class="col-5 form-group">
+        <codx-label default="" [formModel]="dialogRef.formModel"> </codx-label>
+        <div class="d-flex flex-row justify-content-between">
+          <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button>
+          <codx-attachment
+            #attachment
+            [objectType]="'ES_SignFiles'"
+            [functionID]="dialogRef.formModel.funcID"
+            [objectId]="fGroupAddCar.value.recID"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            hideImageUpload="0"
+            hideImageThumb="1"
+            [allowMultiFile]="0"
+            [idBrowse]="'add'"
+            allowExtensions=".svg"
+            type="inline" 
+            (fileCount)="fileCount($event)"
+            (fileAdded)="fileAdded($event)"
+          >
+          </codx-attachment> 
         </div>
-      </div> -->
+        
+      </div>
+      
     </div>
 
     <div class="row">
       <div class="col-3 form-group">
         <codx-label
           fiedName="Code"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
           default="Biển số"
         >
         </codx-label>
@@ -54,7 +69,7 @@
           ControlName="code"
           placeholder="Biển số"
           [formModel]="form.formModel"
-          [Group]="dialogAddCar"
+          [Group]="fGroupAddCar"
         >
         </codx-input>
       </div>
@@ -62,7 +77,7 @@
       <div class="col-3 form-group">
         <codx-label
           fiedName="Capacity"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
           default="Số chỗ"
         >
         </codx-label>
@@ -71,7 +86,8 @@
           [min]="0"
           ControlName="capacity"
           [formModel]="form.formModel"
-          [Group]="dialogAddCar"
+          [Group]="fGroupAddCar"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -79,7 +95,7 @@
       <div class="col-6 form-group">
         <codx-label
           fiedName="Ranking"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
           default="Phân loại"
         >
         </codx-label>        
@@ -87,25 +103,12 @@
           type="valuelist"
           name="ranking"
           ngDefaultControl
-          [crrValue]="dialogAddCar.value?.ranking"
+          [crrValue]="fGroupAddCar.value.ranking"
           refValue="EP005"
           field="ranking"
           (valueChange)="valueChange($event)"
         >
-        </codx-input>
-        
-        <!-- <codx-input
-          type="valuelist"
-          name="valuelist"
-          refValue="EP005"
-          ControlName="ranking"
-          ngDefaultControl
-          [crrValue]="dialogAddCar.value.ranking"
-          [formModel]="form.formModel"
-          [Group]="dialogAddCar"
-        >
-        </codx-input> -->
-        
+        </codx-input>     
       </div>
     </div>
 
@@ -113,7 +116,7 @@
       <div class="col-6 form-group">
         <codx-label
           fiedName="Category"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
           default="Nguồn"
         >
         </codx-label>
@@ -121,46 +124,29 @@
           type="valuelist"
           name="valuelist"
           ngDefaultControl
-          [crrValue]="dialogAddCar.value.category"
+          [crrValue]="fGroupAddCar.value.category"
           refValue="VL005"
           field="category"
           (valueChange)="valueChange($event)"
         >
-        </codx-input>
-        <!-- <codx-input
-          type="valuelist"
-          refValue="VL005"
-          ControlName="category"
-          [formModel]="form.formModel"
-          [Group]="dialogAddCar"
-        >
-        </codx-input> -->
+        </codx-input>        
       </div>
       <div class="col-6 form-group">
         <codx-label
           fiedName="CompanyID"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
           default="Đơn vị"
         >
         </codx-label>
-        <!-- <codx-input
-          service="OD"
+        <codx-input
           refValue="AgencyNames"
           type="combobox"
           ControlName="companyID"
           [formModel]="form.formModel"
-          [Group]="dialogAddCar"
+          [Group]="fGroupAddCar"
+          [multiple]="false" 
         >
-        </codx-input> -->
-        <codx-input
-          service="SYS"
-          type="combobox"
-          refValue="Companies"
-          ControlName="companyID"
-          [formModel]="form.formModel"
-          [Group]="dialogAddCar"
-        >
-        </codx-input>
+        </codx-input>        
       </div>
     </div>
 
@@ -168,26 +154,19 @@
       <div class="form-group">
         <codx-label
           fiedName="LinkID"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
           default="Tài xế"
         >
-        </codx-label>   
-        <!-- <codx-input 
-          type="combobox"
-          [refValue]="'EP_Drivers'"
-          field="linkID" 
-          placeholder="Chọn lái xe"
-          [pageSize]="5"
-          (valueChange)="valueCbxDriverChange($event)">
-        </codx-input>      -->
+        </codx-label>          
+
         <codx-input
-          service="EP"
           type="combobox"
           refValue="EP_Drivers"
-          ControlName="resourceID"
-          [formModel]="form.formModel"
-          [Group]="dialogAddCar"
-          (valueChange)="valueCbxDriverChange($event)"  
+          field="linkID"
+          placeholder="Chọn lái xe tham chiếu"
+          [crrValue]="this.fGroupAddCar.value.linkID"
+          (valueChange)="valueCbxChange($event)"  
+          [multiple]="false" 
         >
         </codx-input>
       </div>
@@ -196,18 +175,18 @@
     <div class="row">
       <div class="form-group">
         <codx-label
-          fiedName="BUID"
-          [formModel]="dialog.formModel"
+          fiedName="Users"
+          [formModel]="dialogRef.formModel"
           default="Người điều phối"
         >
         </codx-label>
         <codx-input
-          service="OD"
           type="combobox"
-          refValue="BusinessUnits"
-          ControlName="bUID"
+          refValue="Users"
+          ControlName="owner"
           [formModel]="form.formModel"
-          [Group]="dialogAddCar"
+          [Group]="fGroupAddCar"
+          [multiple]="false" 
         >
         </codx-input>    
         
@@ -217,7 +196,7 @@
       <div class="form-group">
         <codx-label
           fiedName="Note"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
           default="Mô tả"
         ></codx-label>
         <codx-input
@@ -225,7 +204,7 @@
           rows="3"
           ControlName="note"
           [formModel]="form.formModel"
-          [Group]="dialogAddCar"
+          [Group]="fGroupAddCar"
         >
         </codx-input>
       </div>
@@ -236,7 +215,7 @@
       <codx-label
         name="lblEqiupment"
         default="Thiết bị"
-        [formModel]="dialog.formModel"
+        [formModel]="dialogRef.formModel"
       ></codx-label>
 
       <span class="text-end align-items-end">
@@ -277,13 +256,13 @@
         <codx-label
           name="lblSave"
           default="Lưu"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
         ></codx-label>
       </button>
     </div>
   </ng-template>
 
-  <ng-template #popupDevice let-dialog>
+  <ng-template #popupDevice let-dialogRef>
     <div class="modal-header">
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
@@ -291,14 +270,14 @@
             <codx-label
               name="lblEquipment"
               default="Thiết bị"
-              [formModel]="dialog.formModel"
+              [formModel]="dialogRef.formModel"
             ></codx-label>
           </h2>
           <button
             type="button"
             class="btn btn-xs btn-icon btn-light btn-hover-primary"
             aria-label="Close"
-            (click)="dialog.close()"
+            (click)="dialogRef.close()"
           >
             <span
               class="icon-close icon-20 text-dark text-hover-primary"
@@ -309,7 +288,7 @@
           <codx-label
             name="lblChooseEquipments"
             default="Chọn các thiết bị đã tích hợp sẵn trong xe"
-            [formModel]="dialog.formModel"
+            [formModel]="dialogRef.formModel"
           ></codx-label>
         </div>
       </div>
@@ -341,12 +320,12 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer" (click)="dialog.close()">
+    <div class="modal-footer" (click)="dialogRef.close()">
       <button type="button" class="btn btn-primary">
         <codx-label
           name="lblSave"
           default="Lưu"
-          [formModel]="dialog.formModel"
+          [formModel]="dialogRef.formModel"
         ></codx-label>
       </button>
     </div>

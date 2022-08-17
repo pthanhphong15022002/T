@@ -17,6 +17,7 @@ import {
 } from 'codx-core';
 import { CodxTMService } from '../codx-tm.service';
 import { PopupConfirmComponent } from '../tasks/popup-confirm/popup-confirm.component';
+import { ViewDetailComponent } from '../tasks/view-detail/view-detail.component';
 
 @Component({
   selector: 'lib-taskextends',
@@ -29,10 +30,11 @@ export class TaskExtendsComponent
 {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   user: any;
   funcID: any;
-  itemSelected: any;
+  // itemSelected: any;
   taskExtends: any;
   dialogExtendsStatus!: DialogRef;
   vllExtendStatus = 'TM010'; 
@@ -68,8 +70,9 @@ export class TaskExtendsComponent
   }
 
   selectedChange(val: any) {
-    this.taskExtends = val?.data
-    this.itemSelected = val?.data?.task ;
+     this.taskExtends = val?.data ?val?.data:val ;
+    // this.itemSelected = val?.data?.task ;
+    // this.taskExtends = val
     this.detectorRef.detectChanges();
   }
   requestEnded(e) {}
@@ -95,7 +98,8 @@ export class TaskExtendsComponent
         var taskExtends = e?.event
         this.view.dataService.update(taskExtends).subscribe();
         this.taskExtends = taskExtends
-        this.itemSelected = taskExtends.task;
+        this.detail.taskID = this.taskExtends.taskID;
+        this.detail.getTaskDetail();
         this.detectorRef.detectChanges();
       }
     })
@@ -108,7 +112,6 @@ export class TaskExtendsComponent
 
   clickMF(e, data) {
     this.taskExtends = data ;
-    this.itemSelected = data.task;
     switch (e.functionID) {
       case 'TMT04011':
       case 'TMT04012':

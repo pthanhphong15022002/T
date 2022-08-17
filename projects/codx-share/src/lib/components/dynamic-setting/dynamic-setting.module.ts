@@ -21,12 +21,10 @@ export const routes: Routes = [
       {
         path: ':catagory',
         component: CatagoryComponent,
-        children: [
-          {
-            path: 'detail',
-            component: CatagoryComponent,
-          },
-        ],
+      },
+      {
+        path: ':catagory/detail',
+        component: CatagoryComponent,
       },
     ],
   },

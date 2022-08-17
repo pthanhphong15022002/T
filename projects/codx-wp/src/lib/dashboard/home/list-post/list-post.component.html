@@ -31,15 +31,7 @@
       </div>
     </div>
   </ng-container>
-  <div
-    class="hover-scroll-overlay-y"
-    data-kt-scroll="true"
-    data-kt-scroll-activate="true"
-    data-kt-scroll-height="auto"
-    data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
-    data-kt-scroll-wrappers=".codx-wrapper, .wrapper,#newfeed, .pw-content"
-    data-kt-scroll-offset="0"
-  >
+  <div>
     <div id="newfeed">
       <codx-listview
         [emptyTemplate]="empty"
@@ -111,7 +103,7 @@
             </span>
           </span>
 
-          <ng-container *ngIf="item.shareName">
+          <ng-container *ngIf="item.shareName" >
             <span class="ms-2 me-2" [innerHTML]="item.shareName"></span>
           </ng-container>
         </div>
@@ -268,24 +260,16 @@
         *ngTemplateOutlet="containTemplate; context: { $implicit: item }"
       ></ng-container>
     </ng-template>
-
-    <!-- <treeview-comment
-      [funcID]="codxViews.formModel.funcID"
-      [objectType]="codxViews.formModel.entityName"
-      [rootData]="item.listComment"
-      [dataComment]="item"
-      (pushComment)="pushComment($event)"
-    >
-    </treeview-comment> -->
-    <codx-comments
-      [funcID]="codxViews.formModel.funcID"
-      [objectType]="codxViews.formModel.entityName"
-      [rootData]="item"
-      (pushComment)="pushComment($event)">
-    </codx-comments>
+    <!-- commemt -->
+    <treeview-comment 
+      [funcID]="codxViews.formModel.funcID" 
+      [fromModel]="codxViews.formModel"
+      [objectType]="'WP_Comments'" 
+      [dataComment]="item">
+    </treeview-comment>
+    <!-- end comment -->
   </div>
 </ng-template>
-
 <!-- content body -->
 <ng-template #containTemplate let-item>
   <ng-container *ngIf="!item.isPortal; else category2">
@@ -293,7 +277,7 @@
       <ng-container *ngIf="item.files; else get">
         <div>
           <codx-file
-            [lstFile]="item.files"
+            [files]="item.files"
             (evtGetFiles)="getFiles($event, item)"
             (viewDetail)="clickViewDetail($event)"
           ></codx-file>
@@ -440,8 +424,7 @@
 
 <!-- tooltip for tagUser -->
 <ng-template #popContent style="width: fit-content; height: fit-content">
-  <div *ngIf="show()">
-    <div *ngFor="let tagUser of tagUsers">
+    <div *ngFor="let tagUser of tagUsers | filter: searchField:'objectName'">
       <div class="d-flex algin-items-center my-3">
         <codx-img
           class="me-3"
@@ -452,11 +435,10 @@
         </codx-img>
         <div class="d-flex flex-column">
           <div class="text-dark fs-6 me-2">{{ tagUser.objectName }}</div>
-          <div class="text-gray-800">{{ tagUser.positionName }}</div>
+          <!-- <div class="text-gray-800">{{ tagUser.positionName }}</div> -->
         </div>
       </div>
     </div>
-  </div>
 </ng-template>
 <ng-template #popTitle>
   <div class="text-dark mb-2 fs-6">
@@ -476,22 +458,16 @@
   </div>
 </ng-template>
 <!-- tooltip -->
-
 <!-- tooltip for user shared -->
 <ng-template #popContentOfShare style="width: fit-content; height: fit-content">
-  <div *ngIf="show()">
     <div *ngFor="let tagUser of tagUsers | filter: searchField:'objectName'">
-      <div *ngIf="tagUser.orgUnitName == undefined">
-        <div
-          class="row"
-          style="margin-top: 10px; margin-bottom: 10px; margin-left: -10px"
-        >
+        <div class="row" style="margin-top: 10px; margin-bottom: 10px; margin-left: -10px">
           <div class="col-md-2">
             <codx-img
               class="me-3"
               [width]="40"
-              [objectId]="tagUser.userID"
-              objectType=" HR_Employees"
+              [objectId]="tagUser.objectID"
+              objectType="AD_Users"
             >
             </codx-img>
           </div>
@@ -499,16 +475,14 @@
             <div class="text-dark pb-1" style="font-weight: BOLD">
               {{ tagUser.objectName }}
             </div>
-            <div class="row" style="margin-left: -10px">
+            <!-- <div class="row" style="margin-left: -10px">
               <div class="text-gray-600 col-md-12">
                 {{ tagUser?.positionName }}
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
-      </div>
     </div>
-  </div>
 </ng-template>
 <ng-template #popTitleOfShare>
   <div class="text-dark mb-2">

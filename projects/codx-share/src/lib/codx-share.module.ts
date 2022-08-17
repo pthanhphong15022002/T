@@ -61,13 +61,17 @@ import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.co
 //import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
 import { HttpClientModule } from '@angular/common/http';
-
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 import { LayoutNoAsideToolbarFluidComponent } from './_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 import { CodxFilesComponent } from './components/codx-files/codx-files.component';
 import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
 import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
+import { NotifyDrawerComponent } from './layout/drawers/notify-drawer/notify-drawer.component';
+import { MessengerDrawerComponent } from './layout/drawers/messenger-drawer/messenger-drawer.component';
+import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner/chat-inner.component';
+import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
 import { CodxImportAddTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-template.component';
 import { CodxImportAddMappingComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping.component';
 
@@ -105,9 +109,14 @@ const T_Component: Type<any>[] = [
   CodxApprovalComponent,
   CodxCommentsComponent,
   DynamicSettingComponent,
+  DynamicFormComponent,
   CodxFilesComponent,
   ApprovalTabsComponent,
   CodxApprovalStepComponent,
+  NotifyDrawerComponent,
+  MessengerDrawerComponent,
+  ChatInnerComponent,
+  CodxReferencesComponent
   CodxImportAddTemplateComponent,
   CodxImportAddMappingComponent
 ];
