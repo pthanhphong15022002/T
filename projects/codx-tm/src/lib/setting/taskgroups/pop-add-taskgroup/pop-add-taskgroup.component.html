@@ -111,7 +111,7 @@
     <div class="col-4 row">
       <div class="col-6">
         <codx-input name="verifyControl" type="switch" class="test-switch" field="verifyControl"
-          [crrValue]="taskGroups.verifyControl === '1' ? true : false" (valueChange)="valueWitch($event)" [refValue]="gridViewSetup.VerifyControl.referedValue">
+          [checked]="taskGroups.verifyControl === '1'"(valueChange)="valueWitch($event)" [refValue]="gridViewSetup.VerifyControl.referedValue">
         </codx-input>
       </div>
       <div class="col-6">

@@ -5,18 +5,19 @@
   (changeDataMF)="dmSV.filterMoreFunction($event, data)">
 </codx-card-img>
 <ng-template #cardImgFooter let-data let-setting="setting">
-  <div [title]="data.folderName != undefined ? data.folderName : data.fileName" class="d-flex align-items-start w-100">
+  <div [title]="data.folderName != undefined ? data.folderName : data.fileName"
+    class="d-flex align-items-start w-100 dms-card-icon">
     <div *ngIf="(data.folderName != undefined) then folder else file"></div>
     <ng-template #folder>
       <div *ngIf="(data.icon != null && data.icon != '') then showicon2 else noshowicon2"></div>
       <ng-template #showicon2>
-        <div *ngIf="(dmSV.checkIconFolder(data)) then showsvg2 else noshowsvg2">
+        <div class="icon-16 me2" *ngIf="(dmSV.checkIconFolder(data)) then showsvg2 else noshowsvg2">
         </div>
         <ng-template #showsvg2>
           <img alt="" class="mh-15px me-2" src="{{dmSV.getSvg(data.icon)}}">
         </ng-template>
         <ng-template #noshowsvg2>
-          <span [className]="dmSV.getFolderClass(data.icon)"></span>
+          <span class="icon-16 me2" [className]="dmSV.getFolderClass(data.icon)"></span>
         </ng-template>
       </ng-template>
       <ng-template #noshowicon2>

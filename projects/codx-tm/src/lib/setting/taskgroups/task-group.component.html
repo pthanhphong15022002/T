@@ -1,4 +1,4 @@
-<codx-views #view entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
+<codx-views #view [funcID]="funcID" entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM" className="TaskGroupBusiness"
   method="GetListTaskGroupsAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
   (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (selectedChange)="selectedChange($event)"
   idField="taskGroupID" [pageSize]="100" [selectedFirst]="true">
