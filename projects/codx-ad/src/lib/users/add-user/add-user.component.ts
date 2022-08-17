@@ -244,12 +244,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.countListViewChooseRoleApp == 0 &&
         this.countListViewChooseRoleService == 0
       ) {
-        this.dialog.close();
-        this.notification.notifyCode('SYS006');
-        (this.dialog.dataService as CRUDService)
-          .add(this.dataAfterSave)
-          .subscribe();
-        this.changeDetector.detectChanges();
+        if (this.checkBtnAdd == true) {
+          this.dialog.close();
+          this.notification.notifyCode('SYS006');
+          (this.dialog.dataService as CRUDService)
+            .add(this.dataAfterSave)
+            .subscribe();
+          this.changeDetector.detectChanges();
+        } else this.onAdd();
       } else {
         if (this.isAddMode) {
           if (this.checkBtnAdd == false) return this.onAdd();
@@ -333,7 +335,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.api
       .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRoles', [userID])
       .subscribe((res) => {
-        if (res && res.msgBodyData) {
+        if (res && res.msgBodyData[0]) {
           this.viewChooseRole = res.msgBodyData[0];
           this.viewChooseRole.forEach((dt) => {
             dt['module'] = dt.functionID;

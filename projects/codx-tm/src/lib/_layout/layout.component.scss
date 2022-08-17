@@ -23,3 +23,7 @@
 .user-hover:hover {
   opacity: .75;
 }
+
+codx-mfunc>.dropdown>.d-flex.align-items-center .cursor-pointer:hover span {
+  color: var(--text-primary);
+}
