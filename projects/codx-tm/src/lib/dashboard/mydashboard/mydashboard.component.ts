@@ -8,6 +8,8 @@ import {
   Injector,
 } from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
+import { ViewModel } from 'codx-core';
+import { ViewType } from 'codx-core';
 
 @Component({
   selector: 'mydashboard',
@@ -17,6 +19,8 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 })
 export class MyDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  @ViewChild('content') content: TemplateRef<any>;
+
   model: DataRequest;
   funcID: string;
   user: any;
@@ -31,6 +35,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   month: number;
   beginMonth: Date;
   endMonth: Date;
+  views: Array<ViewModel> = [];
 
   //#region gauge
 
@@ -139,10 +144,23 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     this.getGeneralData();
   }
 
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.content,
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
+  }
+
   private getGeneralData() {
     this.tmService.getMyDBData(this.model).subscribe((res) => {
       this.data = res;
-      console.log(this.data)
       this.detectorRef.detectChanges();
     });
   }

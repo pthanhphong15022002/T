@@ -1,46 +1,78 @@
 <codx-views #view [funcID]="funcID" service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings" [views]="views"
-  [button]="button" className="MeetingsBusiness" method="GetListMeetingsAsync" (buttonClick)="click($event)" 
-  [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID">
+  [button]="button" className="MeetingsBusiness" method="GetListMeetingsAsync" (buttonClick)="click($event)"
+  [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID">
 </codx-views>
 
 <ng-template #itemViewList let-data>
-  <lib-view-list-meet [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)" [itemSelected]="itemSelected">
+  <lib-view-list-meet [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)"
+    [itemSelected]="itemSelected">
   </lib-view-list-meet>
 </ng-template>
 
 <ng-template #cardKanban let-data>
-  <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [title]="getDate(data)"
-    [subTitle]="data.meetingName" [dataItem]="data"  [descTmp]="" [footer]="footer"
+  <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [headerTmp]="headerTmp"
+    [title]="getDate(data)" [subTitle]="data.meetingName" [dataItem]="data" [descTmp]="" [footer]="footer"
     [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
   </codx-card-center>
 </ng-template>
+
+<ng-template #headerTmp let-data>
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-top" >
+      <div class="badge badge-danger me-2 label-status a" [style.background-color]="
+    (data.status | vll: 'CO004':'textColor' | async)">|
+      </div>
+      <div [innerHtml]="convertHtmlAgency(data)">
+      </div>
+
+    </div>
+    <div *ngIf="data?.isOnline">
+      <i class="icon-insert_link text-primary text-hover-primary-dark icon-24"></i>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #template7 let-data>
+  <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [numberImages]="3">
+  </codx-imgs>
+  <div class="d-flex justify-content-end row" style="padding-top: 30px;">
+    <a class="btn btn-xs btn-flat btn-info" (click)="edit(data)"><i class="fa fa-edit text-primary"></i></a>
+    <a class="btn btn-xs btn-flat btn-danger" (click)="delete(data)"><i class="fa fa-remove "></i></a>
+  </div>
+</ng-template>
+
 
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <div>
-    <div>{{ data.meetingName }}</div>
+  <div class="text-start" >
+    <div class="text-dark fw-bold" [innerHtml]="getDate(data)"></div>
+    <div class="text-dark fw-bolder">{{ data.meetingName }}</div>
   </div>
 </ng-template>
 
 <ng-template #footer let-data>
-  <div class="justify-content-center" style="margin-bottom: 15px; ">
-    <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [numberImages]="4">
-
-    </codx-imgs></div>
-  <div class = "row">
-    <div class="justify-content-start col-9" *ngIf="data.tags">
+  <div class="d-flex justify-content-center" style="margin-bottom: 30px; ">
+    <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [numberImages]="3">
+    </codx-imgs>
+  </div>
+  <div class="d-flex align-items-center justify-content-between">
+    <div *ngIf="data.tags">
       <codx-tag [entityName]="view.formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data?.tags">
       </codx-tag>
     </div>
-    <div class="justify-content-start col-6" *ngIf="!data.tags">
-      <codx-tag [entityName]="view.formModel.entityName" [disabled]="true" [isEdit]="false" [value]="'Tag'">
-      </codx-tag>
+    <div class="badge badge-light" *ngIf="!data.tags">
+      <codx-label name="tag" default="Tag" [disabled]="true">
+      </codx-label>
     </div>
-    <div class=" justify-content-end col-3">
-      <span class="icon-attach_file icon-16"></span>
+    <div style=" position: relative">
+      <span class="icon-attach_file icon-16">
+      </span>
+      <div style="position: absolute; right: 0px;top: 0px; ">
+        {{data.attachments}}
+      </div>
     </div>
   </div>
 

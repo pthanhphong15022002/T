@@ -5,10 +5,13 @@ import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { LayoutComponent } from './_layout/layout.component';
 import { IncommingComponent } from './incomming/incomming.component';
-import { CommonModule } from '@angular/common'
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartsComponent } from './charts/charts.component';
-import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartAllModule,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
 import { SharedModule } from '@shared/shared.module';
 import { DepartmentComponent } from './incomming/department/department.component';
 import { ForwardComponent } from './incomming/forward/forward.component';
@@ -25,19 +28,14 @@ import { SendEmailComponent } from './incomming/sendemail/sendemail.component';
 import { ViewDetailComponent } from './incomming/view-detail/view-detail.component';
 import { IncommingAddComponent } from './incomming/incomming-add/incomming-add.component';
 import { FolderComponent } from './incomming/folder/folder.component';
-import { ThumbnailComponent } from 'projects/codx-share/src/lib/components/thumbnail/thumbnail.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { SearchingComponent } from './incomming/searching/searching.component';
 import { TabsComponent } from './incomming/tab/tabs.component';
-import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 import { ODApprovelComponent } from './incomming/approvel/approvel.component';
-import { ODTestDetailComponent } from './incomming/test/test.component';
 
 const routes: Routes = [
   {
-    path: '', 
+    path: '',
     component: LayoutComponent,
     children: [
       {
@@ -46,23 +44,23 @@ const routes: Routes = [
       },
       {
         path: 'dispatches/:funcID',
-        component: IncommingComponent
-      },  
-     /*  {
+        component: IncommingComponent,
+      },
+      /*  {
         path: 'dispatches/:funcID/detail',
         //outlet : "test1",
         component: ODTestDetailComponent
       },    */
       {
         path: 'searching/:funcID',
-        component: SearchingComponent
+        component: SearchingComponent,
       },
       {
         path: 'approvals/:funcID',
         loadChildren: () =>
-        import('projects/codx-od/src/lib/codx-approvel.module').then(
-          (m) => m.ApprovelModule
-        ),
+          import('projects/codx-od/src/lib/codx-approvel.module').then(
+            (m) => m.ApprovelModule
+          ),
       },
       {
         path: '',
@@ -74,23 +72,23 @@ const routes: Routes = [
         redirectTo: 'error/404',
       },
     ],
-  },
+  }
 ];
 
 @NgModule({
   declarations: [
     LayoutComponent,
     HomeComponent,
-    IncommingComponent, 
+    IncommingComponent,
     CodxOdComponent,
-    UpdateExtendComponent, 
-    ChartsComponent,     
+    UpdateExtendComponent,
+    ChartsComponent,
     AgencyComponent,
-    DepartmentComponent, 
+    DepartmentComponent,
     ForwardComponent,
     ExtendDeadlineComponent,
     SharingComponent,
-    AssignTaskComponent,    
+    AssignTaskComponent,
     AssignSubMenuComponent,
     AddLinkComponent,
     SendEmailComponent,
@@ -101,19 +99,18 @@ const routes: Routes = [
     TabsComponent,
     ODApprovelComponent,
   ],
-  imports: [RouterModule.forChild(routes),
-  CodxCoreModule.forRoot({ environment }),
-  CommonModule , 
-  FormsModule , 
-  ReactiveFormsModule, 
-  ChartAllModule, 
-  AccumulationChartAllModule , 
-  SharedModule,
-  CodxShareModule
-  // NgbModule
-  
+  imports: [
+    RouterModule.forChild(routes),
+    CodxCoreModule.forRoot({ environment }),
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ChartAllModule,
+    AccumulationChartAllModule,
+    SharedModule,
+    CodxShareModule,
+    // NgbModule
   ],
   exports: [RouterModule],
 })
-export class CodxODModule { }  
- 
+export class CodxODModule {}

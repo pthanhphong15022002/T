@@ -1,12 +1,12 @@
-import { identifierName } from '@angular/compiler';
 import {
   Component,
   TemplateRef,
   ViewChild,
-  ChangeDetectorRef,
   Injector,
   Input,
   ViewEncapsulation,
+  OnInit,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -22,13 +22,11 @@ import {
   UrlUtil,
   NotificationsService,
   UIComponent,
-  DialogModel,
 } from 'codx-core';
 import * as moment from 'moment';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
-import { isBuffer } from 'util';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
 import { TM_Parameter, TM_TaskExtends } from '../models/TM_Tasks.model';
@@ -38,13 +36,21 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { PopupUpdateProgressComponent } from './popup-update-progress/popup-update-progress.component';
 import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
 import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
+import { ViewDetailComponent } from './view-detail/view-detail.component';
 @Component({
   selector: 'codx-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TasksComponent extends UIComponent {
+export class TasksComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
+  //#region Constructor
+  @Input() dataObj?: any;
+  @Input() calendarID: string;
+  @Input() viewPreset: string = 'weekAndDay';
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -53,9 +59,7 @@ export class TasksComponent extends UIComponent {
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('treeView') treeView: TemplateRef<any>;
-
-  // @ViewChild("schedule") schedule: CodxScheduleComponent;
-  //#region Constructor
+  @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   model?: DataRequest;
@@ -81,9 +85,8 @@ export class TasksComponent extends UIComponent {
   funcID: string;
   gridView: any;
   isAssignTask = false;
-  param: TM_Parameter;
+  param: TM_Parameter = new TM_Parameter();;
   paramModule: any;
-  dataObj: any;
   listTaskResousce = [];
   searchField = '';
   listTaskResousceSearch = [];
@@ -104,9 +107,8 @@ export class TasksComponent extends UIComponent {
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
   dataTree = [];
   iterationID = '';
-  @Input() projectID?: any;
-  @Input() calendarID: string;
-  @Input() viewPreset: string = 'weekAndDay';
+  meetingID = '';
+  projectID?: any;
 
   constructor(
     inject: Injector,
@@ -139,18 +141,7 @@ export class TasksComponent extends UIComponent {
     } else {
       this.vllStatus = this.vllStatusTasks;
     }
-    // this.activedRouter.params.subscribe((routeParams) => {
-    //   var state = history.state;
-    //   if (state) {
-    //     this.iterationID = state.iterationID || '';
-    //   }
-    // });
-
-    this.activedRouter.firstChild?.params.subscribe(
-      (data) => (this.iterationID = data.id)
-    );
-    var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
-    this.dataObj = JSON.stringify(dataObj);
+    this.projectID = this.dataObj?.projectID;
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -227,15 +218,6 @@ export class TasksComponent extends UIComponent {
           template3: this.cellTemplate,
         },
       },
-      // {
-      //   type: ViewType.treedetail,
-      //   active: false,
-      //   sameData: true,
-      //   // request2: this.resourceTree,
-      //   model: {
-      //     template: this.treeView,
-      //   },
-      // },
     ];
 
     this.view.dataService.methodSave = 'AddTaskAsync';
@@ -244,114 +226,7 @@ export class TasksComponent extends UIComponent {
     this.getParam();
     this.detectorRef.detectChanges();
   }
-  //#region Init
-
-  change() {
-    this.view.dataService.setPredicates(['Status=@0'], ['1']);
-  }
-
-  //#region schedule
-
-  fields = {
-    id: 'taskID',
-    subject: { name: 'taskName' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-    resourceId: { name: 'userID' },
-  };
-  resourceField = {
-    Name: 'Resources',
-    Field: 'userID',
-    IdField: 'userID',
-    TextField: 'userName',
-    Title: 'Resources',
-  };
-
-  viewChange(evt: any) {
-    let fied = this.gridView?.dateControl || 'DueDate';
-    console.log(evt);
-    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
-    this.startDate = evt?.fromDate;
-    this.endDate = evt?.toDate;
-    //Thêm vào option predicate
-    this.model.filter = {
-      logic: 'and',
-      filters: [
-        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
-        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
-      ],
-    };
-  }
-
-  getCellContent(evt: any) {
-    if (this.dayoff.length > 0) {
-      for (let i = 0; i < this.dayoff.length; i++) {
-        let day = new Date(this.dayoff[i].startDate);
-        if (
-          day &&
-          evt.getFullYear() == day.getFullYear() &&
-          evt.getMonth() == day.getMonth() &&
-          evt.getDate() == day.getDate()
-        ) {
-          var time = evt.getTime();
-          var ele = document.querySelectorAll('[data-date="' + time + '"]');
-          if (ele.length > 0) {
-            ele.forEach((item) => {
-              (item as any).style.backgroundColor = this.dayoff[i].color;
-            });
-          }
-          return (
-            '<icon class="' +
-            this.dayoff[i].symbol +
-            '"></icon>' +
-            '<span>' +
-            this.dayoff[i].note +
-            '</span>'
-          );
-        }
-      }
-    }
-
-    return ``;
-  }
-
-  getParams() {
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
-        'GetOneField',
-        ['TMParameters', null, 'CalendarID']
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = res.fieldValue;
-          this.getDayOff(this.calendarID);
-        }
-      });
-  }
-
-  getDayOff(id = null) {
-    if (id) this.calendarID = id;
-    this.api
-      .execSv<any>(
-        'BS',
-        'ERM.Business.BS',
-        'CalendarsBusiness',
-        'GetDayWeekAsync',
-        [this.calendarID]
-      )
-      .subscribe((res) => {
-        if (res) {
-          res.forEach((ele) => {
-            this.dayoff = res;
-          });
-        }
-      });
-  }
-  //#endregion schedule
-
+  //#endregion
   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
@@ -501,70 +376,6 @@ export class TasksComponent extends UIComponent {
         }
       });
   }
-  //#endregion
-
-  sendemail(data) {}
-
-  editConfirm(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = 'Auto';
-        this.dialog = this.callfc.openSide(
-          PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
-          }
-          this.detectorRef.detectChanges();
-        });
-      });
-  }
-
-  deleteConfirm(data) {
-    this.notiService.alertCode('TM003').subscribe((confirm) => {
-      if (confirm?.event && confirm?.event?.status == 'Y') {
-        this.tmSv.deleteTask(data.taskID).subscribe((res) => {
-          if (res) {
-            var listTaskDelete = res[0];
-            var parent = res[1];
-            listTaskDelete.forEach((x) => {
-              this.view.dataService.remove(x).subscribe();
-            });
-            this.notiService.notifyCode('TM004');
-            if (parent) {
-              this.view.dataService.update(parent).subscribe();
-            }
-            this.itemSelected = this.view.dataService.data[0];
-            this.detectorRef.detectChanges();
-          }
-        });
-      }
-    });
-  }
-
-  beforDelete(opt: RequestOption) {
-    opt.methodName = 'DeleteTaskAsync';
-    opt.data = this.itemSelected.taskID;
-    return true;
-  }
 
   assignTask(moreFunc, data) {
     this.view.dataService.dataSelected = data;
@@ -605,33 +416,73 @@ export class TasksComponent extends UIComponent {
       }
     });
   }
+  //#endregion
 
-  changeView(evt: any) {}
-
-  requestEnded(evt: any) {
-    // if (evt.type == 'read') {
-    //   console.log(this.view.dataService.data);
-    // }
-    // this.view.currentView;
+  //#region Function
+  editConfirm(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfc.openSide(
+          PopupAddComponent,
+          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+          if (e?.event && e?.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.itemSelected = e?.event[0];
+            this.detail.taskID = this.itemSelected.taskID;
+            this.detail.getTaskDetail();
+          }
+          this.detectorRef.detectChanges();
+        });
+      });
   }
-  onDragDrop(e: any) {
-    if (e.type == 'drop') {
-      this.api
-        .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data)
-        .subscribe((res) => {
+
+  deleteConfirm(data) {
+    this.notiService.alertCode('TM003').subscribe((confirm) => {
+      if (confirm?.event && confirm?.event?.status == 'Y') {
+        this.tmSv.deleteTask(data.taskID).subscribe((res) => {
           if (res) {
-            this.view.dataService.update(e.data);
+            var listTaskDelete = res[0];
+            var parent = res[1];
+            listTaskDelete.forEach((x) => {
+              this.view.dataService.remove(x).subscribe();
+            });
+            this.notiService.notifyCode('TM004');
+            if (parent) {
+              this.view.dataService.update(parent).subscribe();
+            }
+            this.itemSelected = this.view.dataService.data[0];
+            this.detectorRef.detectChanges();
           }
         });
-    }
+      }
+    });
   }
 
-  //update Status of Tasks
+  beforDelete(opt: RequestOption) {
+    opt.methodName = 'DeleteTaskAsync';
+    opt.data = this.itemSelected.taskID;
+    return true;
+  }
+
   changeStatusTask(moreFunc, taskAction) {
-    // if (taskAction.owner != this.user.userID) {
-    //   this.notiService.notifyCode('TM026');
-    //   return;
-    // }
     if (taskAction.status == '05') {
       this.notiService.notifyCode('TM020');
       return;
@@ -820,6 +671,7 @@ export class TasksComponent extends UIComponent {
         });
     }
   }
+
   openPopupUpdateStatus(
     moreFunc,
     taskAction,
@@ -853,14 +705,34 @@ export class TasksComponent extends UIComponent {
       this.detectorRef.detectChanges();
     });
   }
+  //#endregion
+  //#region Event
+  changeView(evt: any) {}
+
+  requestEnded(evt: any) {}
+
+  onDragDrop(e: any) {
+    if (e.type == 'drop') {
+      this.api
+        .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data)
+        .subscribe((res) => {
+          if (res) {
+            this.view.dataService.update(e.data);
+          }
+        });
+    }
+  }
+
+  //update Status of Tasks
 
   //codx-view select
 
-  selectedChange(val: any) {
-    this.itemSelected = val?.data;
+  selectedChange(task: any) {
+    this.itemSelected = task?.data ?task?.data : task;
     this.loadTreeView();
     this.detectorRef.detectChanges();
   }
+
   receiveMF(e: any) {
     this.clickMF(e.e, this.itemSelected);
   }
@@ -884,7 +756,7 @@ export class TasksComponent extends UIComponent {
       });
   }
 
-  getTaskGroup(idTasKGroup,e,data) {
+  getTaskGroup(idTasKGroup, e, data) {
     this.api
       .execSv<any>(
         'TM',
@@ -897,10 +769,10 @@ export class TasksComponent extends UIComponent {
         if (res) {
           this.taskGroup = res;
           this.convertParameterByTaskGroup(res);
-          this.clickMFAfterParameter(e,data)
-        }else{
+          this.clickMFAfterParameter(e, data);
+        } else {
           this.param = this.paramModule;
-          this.clickMFAfterParameter(e,data)
+          this.clickMFAfterParameter(e, data);
         }
       });
   }
@@ -1155,104 +1027,118 @@ export class TasksComponent extends UIComponent {
     if (data.extendStatus == '1') {
       this.notiService.alertCode('TM055').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
-         this.confirmExtend(data,moreFunc)
+          this.confirmExtend(data, moreFunc);
         }
       });
-    }else{
-      this.confirmExtend(data,moreFunc)
+    } else {
+      this.confirmExtend(data, moreFunc);
     }
   }
-  confirmExtend(data,moreFunc){
+  confirmExtend(data, moreFunc) {
     if (data.createdBy != data.owner)
-    this.taskExtend.extendApprover = data.createdBy;
-  else this.taskExtend.extendApprover = data.verifyBy;
-  this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
-  this.taskExtend.reason = '';
-  this.taskExtend.taskID = data?.taskID;
-  this.taskExtend.extendDate = moment(new Date()).toDate();
-  this.api
-    .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-      this.taskExtend.extendApprover,
-    ])
-    .subscribe((res) => {
-      if (res) {
-        this.taskExtend.extendApproverName = res.userName;
+      this.taskExtend.extendApprover = data.createdBy;
+    else this.taskExtend.extendApprover = data.verifyBy;
+    this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
+    this.taskExtend.reason = '';
+    this.taskExtend.taskID = data?.taskID;
+    this.taskExtend.extendDate = moment(new Date()).toDate();
+    this.api
+      .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+        this.taskExtend.extendApprover,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.taskExtend.extendApproverName = res.userName;
 
-        var obj = {
-          moreFunc: moreFunc,
-          data: this.taskExtend,
-          funcID: this.funcID,
-        };
-        this.dialogExtends = this.callfc.openForm(
-          PopupExtendComponent,
-          '',
-          500,
-          400,
-          '',
-          obj
-        );
-        this.dialogExtends.closed.subscribe((e) => {
-          if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
-          }
-          this.detectorRef.detectChanges();
-        });
-      }
-    });
+          var obj = {
+            moreFunc: moreFunc,
+            data: this.taskExtend,
+            funcID: this.funcID,
+          };
+          this.dialogExtends = this.callfc.openForm(
+            PopupExtendComponent,
+            '',
+            500,
+            400,
+            '',
+            obj
+          );
+          this.dialogExtends.closed.subscribe((e) => {
+            if (e?.event && e?.event != null) {
+              e?.event.forEach((obj) => {
+                this.view.dataService.update(obj).subscribe();
+              });
+              this.itemSelected = e?.event[0];
+            }
+            this.detectorRef.detectChanges();
+          });
+        }
+      });
   }
 
   //region
-     //Import file
-    importFile()
-      {
-        var gridModel = new DataRequest();
-        gridModel.formName = this.view.formModel.formName;
-        gridModel.entityName = this.view.formModel.entityName;
-        gridModel.funcID = this.view.formModel.funcID;
-        gridModel.gridViewName = this.view.formModel.gridViewName;
-        gridModel.page = this.view.dataService.request.page;
-        gridModel.pageSize = this.view.dataService.request.pageSize;
-        gridModel.predicate = this.view.dataService.request.predicates;
-        gridModel.dataValue = this.view.dataService.request.dataValues;
-        gridModel.entityPermission = this.view.formModel.entityPer;
-        //
-        //Chưa có group
-        gridModel.groupFields = "createdBy";
-        this.callfc.openForm(CodxImportComponent,null,null,800,"",[gridModel,this.itemSelected.taskID],null);
-      }
-    //Export file
-    exportFile()
-      {
-        var gridModel = new DataRequest();
-        gridModel.formName = this.view.formModel.formName;
-        gridModel.entityName = this.view.formModel.entityName;
-        gridModel.funcID = this.view.formModel.funcID;
-        gridModel.gridViewName = this.view.formModel.gridViewName;
-        gridModel.page = this.view.dataService.request.page;
-        gridModel.pageSize = this.view.dataService.request.pageSize;
-        gridModel.predicate = this.view.dataService.request.predicates;
-        gridModel.dataValue = this.view.dataService.request.dataValues;
-        gridModel.entityPermission = this.view.formModel.entityPer;
-        //
-        //Chưa có group
-        gridModel.groupFields = "createdBy";
-        this.callfc.openForm(CodxExportComponent,null,null,800,"",[gridModel,this.itemSelected.taskID],null)
-      }
+  //Import file
+  importFile() {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfc.openForm(
+      CodxImportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.itemSelected.taskID],
+      null
+    );
+  }
+  //Export file
+  exportFile() {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.itemSelected.taskID],
+      null
+    );
+  }
   //#endregion
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
-    if (data.taskGroupID) this.getTaskGroup(data.taskGroupID,e,data);
+    if (data.taskGroupID) this.getTaskGroup(data.taskGroupID, e, data);
     else {
       this.param = this.paramModule;
-      this.clickMFAfterParameter(e,data)
+      this.clickMFAfterParameter(e, data);
     }
   }
 
-  clickMFAfterParameter(e,data){
+  clickMFAfterParameter(e, data) {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -1264,7 +1150,6 @@ export class TasksComponent extends UIComponent {
         this.copy(data);
         break;
       case 'sendemail':
-        this.sendemail(data);
         break;
       case 'TMT02015':
         this.assignTask(e.data, data);
@@ -1302,11 +1187,11 @@ export class TasksComponent extends UIComponent {
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
-        this.importFile()
+       // this.importFile();
         break;
       case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
-        this.exportFile()
+        //this.exportFile();
         break;
       case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
         //???? chắc làm sau ??
@@ -1372,4 +1257,109 @@ export class TasksComponent extends UIComponent {
       });
   }
   //#endregion
+  change() {
+    this.view.dataService.setPredicates(['Status=@0'], ['10']);
+  }
+
+  //#region schedule
+
+  fields = {
+    id: 'taskID',
+    subject: { name: 'taskName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resourceId: { name: 'userID' },
+  };
+  resourceField = {
+    Name: 'Resources',
+    Field: 'userID',
+    IdField: 'userID',
+    TextField: 'userName',
+    Title: 'Resources',
+  };
+
+  viewChange(evt: any) {
+    let fied = this.gridView?.dateControl || 'DueDate';
+    console.log(evt);
+    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
+    this.startDate = evt?.fromDate;
+    this.endDate = evt?.toDate;
+    //Thêm vào option predicate
+    this.model.filter = {
+      logic: 'and',
+      filters: [
+        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
+        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
+      ],
+    };
+  }
+
+  getCellContent(evt: any) {
+    if (this.dayoff.length > 0) {
+      for (let i = 0; i < this.dayoff.length; i++) {
+        let day = new Date(this.dayoff[i].startDate);
+        if (
+          day &&
+          evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()
+        ) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.backgroundColor = this.dayoff[i].color;
+            });
+          }
+          return (
+            '<icon class="' +
+            this.dayoff[i].symbol +
+            '"></icon>' +
+            '<span>' +
+            this.dayoff[i].note +
+            '</span>'
+          );
+        }
+      }
+    }
+
+    return ``;
+  }
+
+  getParams() {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        ['TMParameters', null, 'CalendarID']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = res.fieldValue;
+          this.getDayOff(this.calendarID);
+        }
+      });
+  }
+
+  getDayOff(id = null) {
+    if (id) this.calendarID = id;
+    this.api
+      .execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'CalendarsBusiness',
+        'GetDayWeekAsync',
+        [this.calendarID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          res.forEach((ele) => {
+            this.dayoff = res;
+          });
+        }
+      });
+  }
+  //#endregion schedule
 }

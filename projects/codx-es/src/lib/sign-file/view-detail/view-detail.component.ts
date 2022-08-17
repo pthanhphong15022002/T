@@ -64,9 +64,11 @@ export class ViewDetailComponent implements OnInit {
             this.df.detectChanges();
           }
         });
-
       this.transID = this.itemDetail.processID;
-      if (this.itemDetail?.approveControl == '1') {
+      if (
+        this.itemDetail?.approveControl == '1' ||
+        this.itemDetail?.approveStatus != '1'
+      ) {
         this.transID = this.itemDetail.recID;
       }
 
@@ -148,13 +150,14 @@ export class ViewDetailComponent implements OnInit {
       var task = new TM_Tasks();
       task.refID = datas?.recID;
       task.refType = this.view?.formModel.entityName;
+      task.dueDate = datas?.expiredOn;
       var vllControlShare = 'TM003';
       var vllRose = 'TM002';
       var title = 'Giao việc';
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = '550px';
       this.dialog = this.callfunc.openSide(
         AssignInfoComponent,
         [task, vllControlShare, vllRose, title],

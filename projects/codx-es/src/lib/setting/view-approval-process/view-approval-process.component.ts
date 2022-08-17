@@ -36,6 +36,7 @@ export class ViewApprovalProcessComponent implements OnInit {
               this.esService.getApprovalSteps(gridModels).subscribe((res) => {
                 if (res && res?.length >= 0) {
                   this.lstStep = res;
+                  this.process = [];
                 }
               });
             }
@@ -45,6 +46,8 @@ export class ViewApprovalProcessComponent implements OnInit {
         this.esService.getApprovalTrans(this.transID).subscribe((res) => {
           if (res) {
             this.process = res;
+            this.lstStep = [];
+            console.log(this.process);
           }
         });
       }
