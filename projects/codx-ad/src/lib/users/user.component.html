@@ -70,11 +70,6 @@
         <span class=" icon-account_box  icon-14 me-1"></span>
         {{data.employeeID}}
       </div>
-      <div class="badge badge-light-primary  d-flex align-items-center me-2" *ngIf="!data.employeeID"><span
-          class="icon-account_box icon-14 me-1"></span>
-        <codx-label name="lblEmployeeID" formName="Users" default="Mã nhân viên">
-        </codx-label>
-      </div>
       <div class="badge badge-light-primary  d-flex align-items-center me-2 " *ngIf="data.groupName"><span
           class="icon-group icon-14 me-1"></span><span>{{data.groupName}}</span>
       </div>
@@ -82,7 +77,7 @@
   </div>
 </ng-template>
 <ng-template #footer let-data>
-  <div class="d-flex flex-wrap  ms-17">
+  <div class="d-flex flex-wrap ms-13">
     <div class="d-flex align-items-center me-4" *ngIf="data.email"><span class="icon-email icon-16 me-1"></span>
       <div class="">{{data.email}}</div>
     </div>

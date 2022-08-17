@@ -190,8 +190,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true) data = [this.adUser, this.viewChooseRole];
-      else data = [this.adUser, this.viewChooseRole, checkDifference];
+      data = [this.adUser, this.viewChooseRole, checkDifference];
     }
     op.data = data;
     return true;
@@ -211,10 +210,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
               }
             });
           res.save['chooseRoles'] = res.save?.functions;
-          //this.changeDetector.detectChanges();
+          res.save['buName'] = res.save?.buid;
+          this.changeDetector.detectChanges();
         }
       });
-    //this.dialog.close();
+    this.dialog.close();
   }
 
   onUpdate() {
@@ -231,6 +231,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
               }
             });
           res.update['chooseRoles'] = res.update?.functions;
+          res.update['buName'] = res.update?.buid;
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
         }
       });
   }
@@ -240,40 +244,38 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
       this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
     } else {
-      if (
-        this.countListViewChooseRoleApp == 0 &&
-        this.countListViewChooseRoleService == 0
-      ) {
-        if (this.checkBtnAdd == true) {
+      //   if (this.checkBtnAdd == true) {
+      //     this.dialog.close();
+      //     this.notification.notifyCode('SYS006');
+      //     (this.dialog.dataService as CRUDService)
+      //       .add(this.dataAfterSave)
+      //       .subscribe();
+      //     this.changeDetector.detectChanges();
+      //   } else this.onAdd();
+      // } else {
+      if (this.isAddMode) {
+        if (this.checkBtnAdd == false) return this.onAdd();
+        else {
+          if (
+            this.countListViewChooseRoleApp > 0 ||
+            this.countListViewChooseRoleService > 0
+          ) {
+            this.adService
+              .addUserRole(this.dataAfterSave, this.viewChooseRole)
+              .subscribe((res: any) => {
+                if (res) {
+                  this.dataAfterSave['chooseRoles'] = res?.functions;
+                }
+              });
+          }
           this.dialog.close();
           this.notification.notifyCode('SYS006');
           (this.dialog.dataService as CRUDService)
             .add(this.dataAfterSave)
             .subscribe();
           this.changeDetector.detectChanges();
-        } else this.onAdd();
-      } else {
-        if (this.isAddMode) {
-          if (this.checkBtnAdd == false) return this.onAdd();
-          else {
-            if (
-              this.countListViewChooseRoleApp > 0 ||
-              this.countListViewChooseRoleService > 0
-            ) {
-              this.adService
-                .addUserRole(this.dataAfterSave, this.viewChooseRole)
-                .subscribe();
-            }
-            this.dialog.close();
-            this.notification.notifyCode('SYS006');
-            (this.dialog.dataService as CRUDService)
-              .add(this.dataAfterSave)
-              .subscribe((res) => {
-                this.changeDetector.detectChanges();
-              });
-          }
-        } else this.onUpdate();
-      }
+        }
+      } else this.onUpdate();
     }
   }
 
