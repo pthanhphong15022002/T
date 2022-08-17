@@ -244,7 +244,7 @@ export class AssignInfoComponent implements OnInit {
       this.param?.MaxHoursControl != '0' &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
-      this.notiService.notifyCode('TM058'); ///cần truyền tham số
+      this.notiService.notifyCode('TM058',0,[this.param?.MaxHours])
       return;
     }
     if (this.task.estimated < 0) {

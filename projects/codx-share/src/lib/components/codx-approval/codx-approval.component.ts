@@ -5,7 +5,6 @@ import {
   AfterViewInit,
   OnChanges,
   SimpleChanges,
-  Injector,
   OnInit,
   ChangeDetectorRef,
   Input,
@@ -13,17 +12,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  ApiHttpService,
-  ButtonModel,
-  CacheService,
-  CodxService,
-  ViewModel,
-  ViewsComponent,
-  ViewType,
-} from 'codx-core';
-import { iif } from 'rxjs';
-import { formatDtDis } from '../../../../../codx-od/src/lib/function/default.function';
+import { ApiHttpService, ButtonModel, CacheService, CodxService, NotificationsService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
 @Component({
@@ -31,49 +20,57 @@ import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatc
   templateUrl: './codx-approval.component.html',
   styleUrls: ['./codx-approval.component.scss'],
 })
-export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
-  @ViewChild('view') view!: ViewsComponent;
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
-  @Input() tmpHeader?: TemplateRef<any>;
-  @Input() tmpBody?: TemplateRef<any>;
-  @Input() tmpDetail?: TemplateRef<any>;
-  @Output() selectedChange = new EventEmitter<any>();
-  funcID: any;
-  transID: any;
-  views: Array<ViewModel> | any = [];
-  button?: ButtonModel;
-  gridViewSetup: any;
-  dvlApproval: any;
-  dataItem: any;
-  lstDtDis: any;
-  lstUserID: any;
-  /**
-   *
-   */
-  constructor(
-    private router: Router,
-    private api: ApiHttpService,
-    private cache: CacheService,
-    private odService: DispatchService,
-    private detectorRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private codxService: CodxService
-  ) {}
-  ngOnChanges(changes: SimpleChanges): void {}
-  ngOnInit(): void {}
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.listdetail,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.template,
-          //panelLeftRef: this.panelLeft,
-          panelRightRef: this.panelRight,
-          contextMenu: '',
-        },
+export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
+  {
+    @ViewChild('view') view!: ViewsComponent;
+    @ViewChild('itemTemplate') template!: TemplateRef<any>;
+    @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
+    @Input() tmpHeader?: TemplateRef<any>;
+    @Input() tmpBody?: TemplateRef<any>;
+    @Input() tmpDetail?: TemplateRef<any>;
+    @Output() selectedChange = new EventEmitter<any>(); 
+    funcID: any;
+    transID:any;
+    views: Array<ViewModel> | any = [];
+    button?: ButtonModel;
+    gridViewSetup: any;
+    dvlApproval : any;
+    dataItem: any;
+    lstDtDis: any;
+    lstUserID: any;
+    /**
+     *
+     */
+    constructor(
+      private router: Router,
+      private api: ApiHttpService, 
+      private cache: CacheService,  
+      private odService :DispatchService, 
+      private detectorRef : ChangeDetectorRef,
+      private route:ActivatedRoute,
+      private codxService: CodxService,
+      private notifySvr: NotificationsService
+      ) {
+      
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+      
+    }
+    ngOnInit(): void {
+     
+    }
+    ngAfterViewInit(): void {
+      this.views = [
+        {
+          type: ViewType.listdetail,
+          active: true,
+          sameData: true,
+          model: {
+            template: this.template,
+            //panelLeftRef: this.panelLeft,
+            panelRightRef: this.panelRight,
+            contextMenu: '',
+          },
       },
     ];
     this.button = {
@@ -176,17 +173,28 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       }
     }
   }
-  clickMF(e: any, data: any) {
-    alert(e?.functionID);
-    /* this.api
-      .execSv(
+    clickMF(e:any,data:any)
+    {
+      //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
+      var funcID = e?.functionID;
+      var status;
+      if(funcID == "SYS201" || funcID == "SYS202" || funcID == "SYS203" || funcID == "SYS204") status = "5"
+      else if(funcID == "SYS205") status = "4"
+      else if(funcID == "SYS206") status = "6"
+      this.api.execSv(
         'ES',
         'ERM.Business.ES',
         'ApprovalTransBusiness',
         'ApproveAsync',
-        [data?.recID,"[Status]","",""]
-      ).subscribe((res2) =>
+        [data?.recID,status,"",""]
+      ).subscribe((res2:any) =>
       {
-      }); */
+        if(!res2?.msgCodeError)
+        {
+          this.view.dataService.update(data).subscribe();
+          this.notifySvr.notifyCode("SYS007");
+        }
+        else this.notifySvr.notify(res2?.msgCodeError);
+      })
   }
 }

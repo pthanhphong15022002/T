@@ -20,7 +20,7 @@
             (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
         </div>
       </div>
-      <div class="mt-2x moveto ms-n4">
+      <div class="mt-2 moveto ms-n4">
         <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeMove"
           entityName="DM_FolderInfo" service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false
           idField="recID" parentIdField="parentId" (selectionChange)="onSelectionAddChanged($event, treeAdd)"

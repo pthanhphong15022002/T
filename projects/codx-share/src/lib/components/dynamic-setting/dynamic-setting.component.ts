@@ -131,7 +131,6 @@ export class DynamicSettingComponent implements OnInit {
             }
           }
         });
-        console.log(res);
       });
   }
 }

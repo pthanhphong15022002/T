@@ -48,6 +48,7 @@ export class TMMeetingsComponent
   @ViewChild('itemTemplate') template!: TemplateRef<any> | null;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('template7') template7: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -141,6 +142,7 @@ export class TMMeetingsComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+          template7: this.template7
         },
       },
       {
@@ -278,7 +280,7 @@ export class TMMeetingsComponent
       let year = date1.getFullYear();
       let day1 = date1.getDay() + 1;
       day +=
-        '<div class="text-dark fw-bolder fs-1 text " style="font-size: 50px;">' +
+        '<div class="text-dark fw-bolder fs-1 text " style="font-size: 800px;">' +
         myDay +
         '</div>';
       toDay +=

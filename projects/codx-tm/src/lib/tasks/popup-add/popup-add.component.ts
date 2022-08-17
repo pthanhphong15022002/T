@@ -47,7 +47,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   listTaskResources: tmpTaskResource[] = [];
   todoAddText: any;
   grvSetup: any;
-  param: TM_Parameter;
+  param: TM_Parameter = new TM_Parameter();
   taskGroup: TM_TaskGroups;
   paramModule: TM_Parameter;
   functionID: string;
@@ -159,7 +159,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.getParam();
     // this.formModel = this.dialog.dataService?.formModel ;
     // this.gridViewSetup = this.formModel?.gridViewSetup ;
     this.task = {
@@ -168,7 +167,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     };
     if (this.task.taskGroupID != null) {
       this.logicTaskGroup(this.task.taskGroupID);
-    }
+    }else this.getParam();
 
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
@@ -424,7 +423,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.param?.MaxHoursControl != '0' &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
-      this.notiService.notifyCode('TM058'); ///truyền có tham số
+      this.notiService.notifyCode('TM058',0,[this.param?.MaxHours])
       return;
     }
     if (
@@ -783,7 +782,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   onDeleteUser(item) {
     if (item?.status && item.status != '00' && item.status != '10') {
-      this.notiService.notifyCode('TM012');
+      this.notiService.notifyCode('TM012',0,[item?.resourceName]);
       return;
     }
     var userID = item.resourceID;

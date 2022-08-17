@@ -9,8 +9,7 @@ import { ApiHttpService, CacheService, CallFuncService } from 'codx-core';
 })
 export class CatagoryComponent implements OnInit {
   private components = {
-    cpnAutoNumber: null,
-    DocketComponent: null,
+    cpnAutoNumbers: null,
   };
   category = '';
   title = '';
@@ -32,9 +31,11 @@ export class CatagoryComponent implements OnInit {
       if (state) {
         this.setting = state.setting || [];
         this.function = state.function || [];
-        this.groupSetting = this.setting.filter(
-          (x) => x.controlType.toLowerCase() === 'groupcontrol'
-        );
+        this.groupSetting = this.setting.filter((x) => {
+          return (
+            x.controlType && x.controlType.toLowerCase() === 'groupcontrol'
+          );
+        });
       }
       var catagory = routeParams.catagory;
       this.cacheService.valueList(this.listName).subscribe((res) => {

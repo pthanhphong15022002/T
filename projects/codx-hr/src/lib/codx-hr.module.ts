@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
@@ -163,6 +164,8 @@ const T_Component: Type<any>[] = [
     RouterModule.forChild(routes),
     CodxShareModule,
     ChartAllModule,
+    NgbModule,
+
   ],
   exports: [RouterModule],
   declarations: T_Component,

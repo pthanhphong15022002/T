@@ -5,7 +5,7 @@ import {
   OnInit,
   HostListener,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
   NotificationsFCMService,
@@ -29,7 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private tenant: TenantService,
     // private angularFireMessaging: AngularFireMessaging,
     private ns: NotificationsFCMService,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -59,18 +60,22 @@ export class AppComponent implements OnInit, OnDestroy {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
 
-  @HostListener('window:load', ['$event'])
-  hashChangeHandler(e) {
-    this.closeDialog(); // close dialog khi back của browser
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+    // sự kiện khi ấn nút back của trình duyệt
+    this.closeDialog();
   }
 
   closeDialog() {
+    debugger
     var dialogContain = document.querySelector('.codx-dialog-container');
     dialogContain.innerHTML = '';
     var dialog = document.querySelectorAll('.e-dialog');
-    dialog.forEach((box) => {
-      if (box.tagName.toLowerCase() !== 'ejs-dialog') box = box.parentElement;
-      box.remove();
-    });
+    if (dialog && dialog.length > 0) {
+      dialog.forEach((box) => {
+        if (box.tagName.toLowerCase() !== 'ejs-dialog') box = box.parentElement;
+        box.remove();
+      });
+    }
   }
 }

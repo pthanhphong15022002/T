@@ -44,13 +44,15 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   itemSelected: any;
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
+  firstLoad = true ;
 
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {}
+  ) {
+  }
   //#endregion
   //#region Init
   ngOnInit(): void {}
@@ -58,11 +60,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['taskID'] && changes['taskID'].currentValue) {
+    if (changes['taskID'] && changes['taskID'].currentValue && !this.firstLoad) {
       if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
     }
+    this.firstLoad = false ;
   }
   //#region
   //#region Method
