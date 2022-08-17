@@ -158,6 +158,7 @@ export class EmployeesComponent implements OnInit {
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'copy', option);
     });
+    this.changedt.detectChanges();
   }
 
   delete(data: any) {
