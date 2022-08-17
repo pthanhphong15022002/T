@@ -5,7 +5,6 @@ import {
   AfterViewInit,
   OnChanges,
   SimpleChanges,
-  Injector,
   OnInit,
   ChangeDetectorRef,
   Input,
@@ -14,8 +13,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiHttpService, ButtonModel, CacheService, CodxService, NotificationsService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { iif } from 'rxjs';
-import { formatDtDis } from '../../../../../codx-od/src/lib/function/default.function';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
 @Component({
