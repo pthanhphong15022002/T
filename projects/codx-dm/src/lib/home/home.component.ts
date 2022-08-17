@@ -243,8 +243,9 @@ export class HomeComponent extends UIComponent {
 
   initDrapDropFileFolder(element) {
     var that = this;
-    if (element) {
+    if (element && !element.getAttribute("_drapdrop")) {
      // element.data("_drapdrop", "1");
+      element.setAttribute("_drapdrop", "1");
       var ondragstart = function (event) {
         var j = JSON.stringify(
           {
