@@ -154,7 +154,7 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();
-    this.attachment.saveFilesObservable().subscribe(res => { })
+    //this.attachment.saveFilesObservable().subscribe(res => { })
   }
 
   fileCount(event) {

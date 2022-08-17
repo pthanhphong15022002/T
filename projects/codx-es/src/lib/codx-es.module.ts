@@ -54,6 +54,7 @@ import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
 import { PopupSignForApprovalComponent } from './sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { ViewApprovalProcessComponent } from './setting/view-approval-process/view-approval-process.component';
 import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 
 const routes: Routes = [
   {
@@ -70,14 +71,6 @@ const routes: Routes = [
         component: PopupSignForApprovalComponent,
       },
 
-      {
-        path: 'signatures/:funcID',
-        component: SignatureComponent,
-      },
-      {
-        path: 'categories/:funcID',
-        component: DocCategoryComponent,
-      },
       {
         path: 'home/:funcID',
         component: DashboardComponent,
@@ -103,6 +96,20 @@ const routes: Routes = [
       {
         path: '**',
         redirectTo: 'error/404',
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'signatures/:funcID',
+        component: SignatureComponent,
+      },
+      {
+        path: 'categories/:funcID',
+        component: DocCategoryComponent,
       },
     ],
   },

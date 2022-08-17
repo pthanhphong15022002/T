@@ -11,8 +11,8 @@
     </div>
   </ng-template>
   <ng-template #context>
-    <div appDragDropFileFolder [dataDrapDrop]="data" class="d-flex align-items-center px-3 py-1">
-      <div class="leaf d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, '')"></div>
+    <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)" class="d-flex align-items-center px-3 py-1 home">
+      <div [attr.id]="data.recID" class="leaf d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, '')"></div>
       <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data)"
         (changeDataMF)="dmSV.filterMoreFunction($event, data)" [title]="data.folderName" [formModel]="view.formModel"
         [typeMF]="'hover'">
@@ -93,27 +93,27 @@
 
   <!-- <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
    attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">     -->
-  <div class="d-flex flex-wrap dms-card p-4">
+  <div class="d-flex flex-wrap dms-card p-5">
     <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
       *ngFor="let item of data" [class]="classFile(item, 'pe-6 pb-6')" [data]="item" [formModel]="view.formModel">
     </card>
   </div>
 </ng-template>
 <ng-template #templateSmallCard>
-  <div class="d-flex flex-wrap dms-card-sm p-4">
+  <div class="d-flex flex-wrap dms-card-sm p-5">
     <codx-temp-full appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
       *ngFor="let item of data" [class]="classFile(item, 'float-start')" [imageSrc]="dmSV.getImage(item)"
       imgCss="card-item img-folder me-3" (clickMF)="dmSV.clickMF($event, item)"
       [title]="item.folderName != undefined ? item.folderName : item.fileName"
       (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
       [bookmark]="dmSV.showBookmark(item)" subTitle="{{item.createdOn | date : 'dd/MM/yyyy'}} | {{item.userName}}"
-      cardCss="card-item card-template w-300px sm-card rounded-2 p-2 mb-4 me-4">
+      cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3">
     </codx-temp-full>
   </div>
 </ng-template>
 <ng-template #templateList>
   <ng-container *ngIf="data && data.length > 0">
-    <div class="p-4">
+    <div class="p-5">
       <table class="table">
         <thead>
           <tr>
@@ -143,7 +143,7 @@
                 (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
                 [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3 cursor-pointer" [title]="
                 item.folderName != undefined ? item.folderName : item.fileName
-              " cardCss="w-225px">
+              " cardCss="w-250px">
               </codx-temp-full>
             </td>
             <td>
@@ -205,17 +205,16 @@
     </div>
   </ng-container>
 </ng-template>
-<!-- <ng-template #attach>
-  <codx-attachment  
-  #attachment  
-  hideFolder="1"  
-  hideUploadBtn="0"   
-  hideDes="0" 
-  type="inline"
-  hideImageUpload="1"  
-  allowMultiFile="1"
-  idBrowse="btn2"
-  [formModel]="view.formModel"  
-  displayThumb="simple"> 
+<codx-attachment  
+#attachment  
+hideFolder="1"  
+hideUploadBtn="1"   
+hideDes="0" 
+type="inline"
+hideImageUpload="1"  
+hideImageThumb="1"
+allowMultiFile="1"
+idBrowse="btn2"
+[formModel]="view.formModel"  
+displayThumb="simple"> 
 </codx-attachment>
-</ng-template> -->

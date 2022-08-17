@@ -2464,7 +2464,7 @@ export class AttachmentComponent implements OnInit {
     }
   }
 
-  async handleFileInput(files: FileInfo[]) {
+  public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
@@ -2488,7 +2488,15 @@ export class AttachmentComponent implements OnInit {
         (d) => d.fileName.toString() === files[i].name.toString()
       ); //find index in your array
       if (index == -1) {
-        var data = await this.convertBlobToBase64(files[i].rawFile);
+        var data: any;
+        if (drag) {
+          data = await files[i].arrayBuffer();
+          data = this.arrayBufferToBase64(data);
+        }
+        else {
+          data = await this.convertBlobToBase64(files[i].rawFile);
+        }
+          
         var fileUpload = new FileUpload();
         fileUpload.order = count;
         fileUpload.fileName = files[i].name;

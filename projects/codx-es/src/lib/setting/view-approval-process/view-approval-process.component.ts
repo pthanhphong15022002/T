@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
+import { last } from 'rxjs';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 
 @Component({
@@ -12,7 +19,10 @@ export class ViewApprovalProcessComponent implements OnInit {
 
   process;
   lstStep;
-  constructor(private esService: CodxEsService) {}
+  constructor(
+    private esService: CodxEsService,
+    private cr: ChangeDetectorRef
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.initForm();
@@ -37,6 +47,7 @@ export class ViewApprovalProcessComponent implements OnInit {
                 if (res && res?.length >= 0) {
                   this.lstStep = res;
                   this.process = [];
+                  this.cr.detectChanges();
                 }
               });
             }
@@ -47,6 +58,7 @@ export class ViewApprovalProcessComponent implements OnInit {
           if (res) {
             this.process = res;
             this.lstStep = [];
+            this.cr.detectChanges();
             console.log(this.process);
           }
         });
@@ -58,12 +70,17 @@ export class ViewApprovalProcessComponent implements OnInit {
     this.initForm();
   }
 
-  getHour(date, leadtime) {
-    //
+  getHour(date, leadtime: number) {
     var res = new Date(date);
-    console.log('time', res);
+    let hour = res.getHours();
+    let minute = res.getMinutes();
 
-    res.setHours(res.getHours() + leadtime);
+    let lastTime = new Date(date);
+    lastTime.setHours(res.getHours() + leadtime);
+    let hour2 = lastTime.getHours();
+    let minute2 = lastTime.getMinutes();
+
+    res.setHours(hour2, minute2);
     return res;
   }
 }
