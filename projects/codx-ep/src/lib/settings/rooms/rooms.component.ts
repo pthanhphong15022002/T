@@ -1,15 +1,8 @@
-import { Component, TemplateRef, ViewChild, Injector } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, ViewChild, Injector } from '@angular/core';
 import {
-  ButtonModel,
-  DialogRef,
-  SidebarModel,
   UIComponent,
-  ViewModel,
   ViewsComponent,
-  ViewType,
 } from 'codx-core';
-import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
 @Component({
   selector: 'setting-rooms',
   templateUrl: 'rooms.component.html',
