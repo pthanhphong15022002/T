@@ -148,11 +148,12 @@ export class UserComponent extends UIComponent {
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
+          debugger;
           e.event.modifiedOn = new Date();
           this.view.dataService.update(e.event).subscribe(item=>{
             //this.view.dataService.add(x.event,0).subscribe();
           });
-          this.delete(e?.event);
+          //this.delete(e?.event);
         }
       });
     });

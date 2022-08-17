@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
+  Injector,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -16,18 +17,22 @@ import {
   DialogRef,
   RequestOption,
   SidebarModel,
+  UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { PopAddTaskgroupComponent } from './pop-add-taskgroup/pop-add-taskgroup.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-task-group',
   templateUrl: './task-group.component.html',
   styleUrls: ['./task-group.component.css'],
 })
-export class TaskGroupComponent implements OnInit {
+export class TaskGroupComponent extends UIComponent
+implements OnInit {
+
   @ViewChild('main') main: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
   @ViewChild('itemTaskGroupID', { static: true })
@@ -69,14 +74,23 @@ export class TaskGroupComponent implements OnInit {
 
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
 
-  @ViewChild('view') view!: ViewsComponent;
+  // @ViewChild('view') view!: ViewsComponent;
 
   constructor(
+    inject: Injector,
     private dt: ChangeDetectorRef,
     private callfunc: CallFuncService,
+    private authStore: AuthStore,
+    private activedRouter: ActivatedRoute,
     private tmService: CodxTMService
-  ) {}
+  ) {
+    super(inject);
+    this.user = this.authStore.get();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+  }
 
+  user: any;
+  funcID: any;
   views: Array<ViewModel> = [];
   formName = '';
   gridViewName = '';
@@ -101,7 +115,7 @@ export class TaskGroupComponent implements OnInit {
     lineHeight: 1.4,
   };
 
-  ngOnInit(): void {
+  onInit(): void {
     this.columnsGrid = [
       { headerTemplate: this.itemTaskGroupID, width: 150 },
       { headerTemplate: this.itemTaskGroupName, width: 200 },
@@ -276,6 +290,15 @@ export class TaskGroupComponent implements OnInit {
           'edit',
           option
         );
+        this.dialog.closed.subscribe((e) =>{
+          console.log(e);
+          if(e && e.event !=null){
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.detectorRef.detectChanges();
+          }
+        })
       });
   }
 

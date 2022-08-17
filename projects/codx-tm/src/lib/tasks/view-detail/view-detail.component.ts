@@ -61,7 +61,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['taskID'] && changes['taskID'].currentValue && !this.firstLoad) {
-      if (changes['taskID'].currentValue === this.id) return;
+     if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
     }
