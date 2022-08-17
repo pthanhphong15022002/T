@@ -1,5 +1,5 @@
 <ng-template #panelRight>
-  <app-view-detail [taskID]="itemSelected?.taskID" [formModel]="view.formModel" [param]="param" [dataTree]="dataTree"
+  <app-view-detail #detail [taskID]="itemSelected?.taskID" [formModel]="view.formModel" [param]="param" [dataTree]="dataTree"
     [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus" [vllExtendStatus]="vllExtendStatus"
     [popoverCrr]="popoverCrr" [vllStatus]="vllStatus" (clickMoreFunction)="receiveMF($event)"
     (hoverPopover)="hoverPopover($event)">

@@ -141,6 +141,13 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         ) {
           x.disabled = true;
         }
+        //danh cho taskExtend
+        if (
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03'|| x.functionID == 'SYS04') &&
+          this.taskExtends
+        ) {
+          x.disabled = true;
+        }
       });
     }
   }

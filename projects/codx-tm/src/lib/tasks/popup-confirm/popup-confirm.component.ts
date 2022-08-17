@@ -123,7 +123,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dialog.close(res);
-          this.notiService.notify('Xác nhận công việc thành công !');
+          this.notiService.notifyCode('SYS007')
+         // this.notiService.notify('Xác nhận công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
@@ -138,14 +139,9 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       ])
       .subscribe((res) => {
         if (res) {
-          if(res.extendStatus=='5'){
-            this.taskExtends.task.dueDate = res.extendDate ;
-            this.taskExtends.task.extends = this.taskExtends.task.extends + 1 ;
-          }
-          this.taskExtends.task.extendStatus = res.extendStatus ;
-          this.taskExtends.extendComment =  this.comment,
-          this.dialog.close(this.taskExtends);
-          this.notiService.notify('Duyệt gia hạn công việc thành công !');
+          this.dialog.close(res);
+          this.notiService.notifyCode('SYS007')
+         // this.notiService.notify('Duyệt gia hạn công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
@@ -164,7 +160,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dialog.close(res);
-          this.notiService.notify('Đánh giá kết quả công việc thành công !');
+          this.notiService.notifyCode('SYS007')
+         // this.notiService.notify('Đánh giá kết quả công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
@@ -190,7 +187,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dialog.close(res);
-          this.notiService.notify('Duyệt công việc thành công !');
+          this.notiService.notifyCode('SYS007')
+          //this.notiService.notify('Duyệt công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
