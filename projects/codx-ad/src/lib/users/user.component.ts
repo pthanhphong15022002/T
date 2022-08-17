@@ -88,6 +88,7 @@ export class UserComponent extends UIComponent {
   }
 
   clickMF(e: any, data?: any) {
+    debugger;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -142,14 +143,29 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      // this.dialog.closed.subscribe((x) => {
-      //   if (x.event == null)
-      //     this.view.dataService
-      //       .remove(this.view.dataService.dataSelected)
-      //       .subscribe(x => {
-      //         this.dt.detectChanges();
-      //       });
-      // });
+      this.dialog.closed.subscribe((x) => {
+        if (x.event)
+        {
+          debugger;
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe(item=>{
+            //this.view.dataService.add(x.event,0).subscribe();
+          });
+          //x.event.modifiedOn = new Date();
+         /*  let data = x.event;
+          this.view.dataService.remove(data).subscribe(item=>{
+            debugger;
+            this.tempFull.vtmpBase.vTempImg.updateFileDirectReload(data?.userID).subscribe(item2=>{
+              this.view.dataService.add(data,0).subscribe();
+            })
+          }) */
+          
+         /*  this.view.dataService.remove(x.event).subscribe(item=>{
+            debugger;
+            this.view.dataService.data.push(x.event);
+          }); */
+        }
+      });
     });
   }
 
@@ -168,6 +184,28 @@ export class UserComponent extends UIComponent {
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+        this.dialog.closed.subscribe((x) => {
+          if (x.event)
+          {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe(item=>{
+              //this.view.dataService.add(x.event,0).subscribe();
+            });
+            //x.event.modifiedOn = new Date();
+           /*  let data = x.event;
+            this.view.dataService.remove(data).subscribe(item=>{
+              debugger;
+              this.tempFull.vtmpBase.vTempImg.updateFileDirectReload(data?.userID).subscribe(item2=>{
+                this.view.dataService.add(data,0).subscribe();
+              })
+            }) */
+            
+           /*  this.view.dataService.remove(x.event).subscribe(item=>{
+              debugger;
+              this.view.dataService.data.push(x.event);
+            }); */
+          }
+        });
       });
   }
 

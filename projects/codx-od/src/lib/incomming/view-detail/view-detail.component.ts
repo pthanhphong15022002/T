@@ -571,6 +571,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
       //Bookmark
       case "ODT110":
       case "ODT209":
+      case "ODT111":
         {
           this.odService.bookMark(datas.recID).subscribe((item) => {
             if (item.status == 0)
@@ -634,7 +635,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
           //
           //Chưa có group
           gridModel.groupFields = "createdBy";
-          this.callfunc.openForm(CodxImportComponent,null,null,800,"",[gridModel,datas.recID],null);
+          this.callfunc.openForm(CodxImportComponent,null,null,500,"",[gridModel,datas.recID],null);
           break;
         }
       //Export file
@@ -650,8 +651,7 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
           gridModel.predicate = this.view.dataService.request.predicates;
           gridModel.dataValue = this.view.dataService.request.dataValues;
           gridModel.entityPermission = this.formModel.entityPer;
-          //
-          //Chưa có group
+          //Chưa có group 
           gridModel.groupFields = "createdBy";
           this.callfunc.openForm(CodxExportComponent,null,null,800,"",[gridModel,datas.recID],null);
           break;
@@ -665,7 +665,11 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
             'ERM.Business.CM',
             'DataBusiness',
             'ReleaseAsync',
-            [datas?.recID,"3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",this.view.formModel.entityName,this.formModel.funcID,'<div>'+datas?.title+'</div>']
+            [datas?.recID,
+            "3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",
+            this.view.formModel.entityName,
+            this.formModel.funcID,
+            '<div>'+datas?.title+'</div>']
           ).subscribe((res2:any) =>
           {
             if(res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError)
@@ -713,5 +717,21 @@ export class ViewDetailComponent  implements OnInit , OnChanges  {
       return object.recID == data?.recID;
     });
     this.view.dataService.data[index] = data
+  }
+  changeDataMF(e:any,data:any)
+  {
+    var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
+    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111');
+    if(data?.isBookmark) 
+    {
+      bm[0].disabled = true;
+      unbm[0].disabled = false;
+    }
+    else
+    {
+      unbm[0].disabled = true;
+      bm[0].disabled = false;
+    }
+    //data?.isblur = true
   }
 }

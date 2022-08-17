@@ -68,6 +68,8 @@ import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-se
 import { CodxFilesComponent } from './components/codx-files/codx-files.component';
 import { ApprovalTabsComponent } from './components/codx-approval/tab/tabs.component';
 import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-approval-step.component';
+import { CodxImportAddTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-template.component';
+import { CodxImportAddMappingComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -106,6 +108,8 @@ const T_Component: Type<any>[] = [
   CodxFilesComponent,
   ApprovalTabsComponent,
   CodxApprovalStepComponent,
+  CodxImportAddTemplateComponent,
+  CodxImportAddMappingComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

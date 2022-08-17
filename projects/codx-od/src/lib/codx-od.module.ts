@@ -74,7 +74,7 @@ const routes: Routes = [
         redirectTo: 'error/404',
       },
     ],
-  },
+  }
 ];
 
 @NgModule({

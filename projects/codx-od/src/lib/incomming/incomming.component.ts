@@ -167,7 +167,23 @@ export class IncommingComponent
       });
     });
   }
-
+  changeDataMF(e:any,data:any)
+  {
+    var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
+    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111');
+   /*  var blur =  e.filter((x: { functionID: string }) => x.functionID == 'ODT108');
+    blur[0].isblur = true; */
+    if(data?.isBookmark) 
+    {
+      bm[0].disabled = true;
+      unbm[0].disabled = false;
+    }
+    else
+    {
+      unbm[0].disabled = true;
+      bm[0].disabled = false;
+    }
+  }
   aaaa(e:any)
   {
     if(e)
