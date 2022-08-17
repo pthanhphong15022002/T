@@ -243,17 +243,14 @@ export class HomeComponent extends UIComponent {
 
   initDrapDropFileFolder(element) {
     var that = this;
-    if (element && !element.getAttribute("_drapdrop")) {
-     // element.data("_drapdrop", "1");
+    if (element && !element.getAttribute("_drapdrop")) {     
       element.setAttribute("_drapdrop", "1");
       var ondragstart = function (event) {
         var j = JSON.stringify(
           {
             "folderName": element.innerText,
-            "recID": element.querySelector("a").classList[0] //element[0].id.replace("_anchor", ""),
-
-          });
-      //  console.log(j);
+            "recID": element.querySelector("a").classList[0] 
+          });      
         event.originalEvent.dataTransfer.setData('data', j);
         event.originalEvent.dataTransfer["simple"] = "filefolder";
         event.originalEvent.dataTransfer.effectAllowed = "move";
@@ -293,7 +290,6 @@ export class HomeComponent extends UIComponent {
       element.removeEventListener("ondragover", ondragover);
       element.removeEventListener("ondragleave", ondragleave);
       element.removeEventListener("ondrop", ondrop);
-
       element.addEventListener("ondragstart", ondragstart);
       element.addEventListener("ondragover", ondragover);
       element.addEventListener("ondragleave", ondragleave);
