@@ -116,7 +116,7 @@ const T_Component: Type<any>[] = [
   NotifyDrawerComponent,
   MessengerDrawerComponent,
   ChatInnerComponent,
-  CodxReferencesComponent
+  CodxReferencesComponent,
   CodxImportAddTemplateComponent,
   CodxImportAddMappingComponent
 ];
