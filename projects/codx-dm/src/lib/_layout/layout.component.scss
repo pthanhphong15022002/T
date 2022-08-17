@@ -121,10 +121,15 @@
     justify-content: center !important;
     padding-left: 0 !important;
   }
+
+  .aside-light .menu .menu-title {
+    display: none;
+  }
 }
 
 #kt_aside_menu_header {
   margin-bottom: 15px;
+  white-space: nowrap;
 }
 
 
