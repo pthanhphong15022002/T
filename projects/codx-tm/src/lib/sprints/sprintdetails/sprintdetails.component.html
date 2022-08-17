@@ -47,7 +47,7 @@
         <codx-sprintdetails-dashboard [projectID]="projectID" [resources]="resources"></codx-sprintdetails-dashboard>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
-        <codx-tasks  [dataObj]="dataObj"  ></codx-tasks>
+        <codx-tasks *ngIf="dataObj"  [dataObj]="dataObj"  ></codx-tasks>
       </ng-container>
       <ng-container *ngIf="name == 'Lịch sử'">
         <ng-container>
