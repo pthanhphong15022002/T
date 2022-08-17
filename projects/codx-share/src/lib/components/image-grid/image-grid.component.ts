@@ -132,6 +132,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     this.dt.detectChanges();
   }
   addFiles(files:any[]){
+    debugger;
     files.map(f => {
       if(f.mimeType.indexOf("image") >= 0 ){
         f['referType'] = this.FILE_REFERTYPE.IMAGE;

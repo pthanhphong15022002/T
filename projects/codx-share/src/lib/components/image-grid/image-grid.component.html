@@ -5,10 +5,13 @@
         <div class="feed-1pic position-relative" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">
             <ng-container *ngIf="file_img_video[0].recID;else image_1_0">
-              <codx-img [recId]="file_img_video[0].recID" 
-                [objectId]="file_img_video[0].objectID" [width]="600"
-                [objectType]="file_img_video[0].objectType"
-                cssClass="pic" imageType="square">
+              <codx-img 
+                [recId]="file_img_video[0].recID" 
+                [objectId]="file_img_video[0].objectID" 
+                [width]="600"
+                cssClass="pic"
+                imageType="square"
+                >
               </codx-img>
             </ng-container>
             <ng-template #image_1_0>
