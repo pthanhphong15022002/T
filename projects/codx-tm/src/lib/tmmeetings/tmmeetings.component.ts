@@ -23,7 +23,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
-import { CO_Resources } from '../models/CO_Meetings.model';
+import { CO_Meetings, CO_Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
 import { APICONSTANT } from '@shared/constant/api-const';
 
@@ -35,7 +35,8 @@ import { APICONSTANT } from '@shared/constant/api-const';
 export class TMMeetingsComponent
   extends UIComponent
   implements OnInit, AfterViewInit
-{
+{  @Input() meeting = new CO_Meetings();
+
   @Input() dataObj?: any;
   @Input() projectID?: any; //view meeting to sprint_details
   @Input() iterationID?: any;
@@ -371,14 +372,36 @@ export class TMMeetingsComponent
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
         'add',
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+          if (e?.event && e?.event != null) {
+            var objectData = this.view.dataService.data;
+            var object = {};
+            for(var i=0; i< objectData.length; i++){
+              if(objectData[i][i]!==undefined) {
+                object[i] = objectData[i][i];
+                objectData[i] = object[i];
+              }
+            }
+            this.view.dataService.data = e?.event.concat(
+              objectData
+            );
+            this.meeting = objectData[0];
+            this.detectorRef.detectChanges();
+          }
+      });
     });
   }
   edit(data) {
@@ -404,10 +427,10 @@ export class TMMeetingsComponent
               false
             );
           if (e?.event && e?.event != null) {
-            // e?.event.forEach((obj) => {
-            //   this.view.dataService.update(obj).subscribe();
-            // });
-            this.itemSelected = e?.event;
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.meeting = e?.event;
           }
           this.detectorRef.detectChanges();
         });
