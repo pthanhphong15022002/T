@@ -728,8 +728,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.taskGroup = res;
-
-          if (res.checkList != null) {
+          if (res.checkList != null && res.checkList.trim()!="") {
             var toDo = res.checkList.split(';');
             // this.countTodoByGroup = toDo.length ;
             this.listTodo = [];
