@@ -113,6 +113,9 @@ export class AttachmentComponent implements OnInit {
   @Input('viewBase') viewBase: ViewsComponent;
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileGet = new EventEmitter<any>();
+  //tbchung thêm vào để xử lý bên import template
+  @Output() filePrimitive = new EventEmitter<any>();
+  /////////////////////////////////////////////
   @ViewChild('templateupload') public uploadObj: UploaderComponent;
   // @Input('openFolder') openFolder: ViewsComponent;
   public uploadWrapper: HTMLElement = document.getElementsByClassName(
@@ -2537,6 +2540,9 @@ export class AttachmentComponent implements OnInit {
     }
     //   this.fileAdded.emit({ data: this.fileUploadList });
     //  this.fileCount.emit(data: addedList);
+    //tbchung thêm vào để xử lý bên import template
+    this.filePrimitive.emit(files);
+    //////////////////////////////////
     this.fileCount.emit({ data: addedList });
     files = null;
     if (this.file) this.file.nativeElement.value = '';

@@ -202,6 +202,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
+          debugger;
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
@@ -244,6 +245,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.countListViewChooseRoleApp == 0 &&
         this.countListViewChooseRoleService == 0
       ) {
+        debugger;
         this.dialog.close();
         this.notification.notifyCode('SYS006');
         (this.dialog.dataService as CRUDService)
