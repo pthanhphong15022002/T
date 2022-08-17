@@ -98,7 +98,7 @@ export class TaskExtendsComponent
         var taskExtends = e?.event
         this.view.dataService.update(taskExtends).subscribe();
         this.taskExtends = taskExtends
-        this.detail.taskID = this.taskExtends.taskID;
+        this.detail.taskID = taskExtends.taskID;
         this.detail.getTaskDetail();
         this.detectorRef.detectChanges();
       }
