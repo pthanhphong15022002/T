@@ -1187,11 +1187,11 @@ export class TasksComponent
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
-       // this.importFile();
+       this.importFile();
         break;
       case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
-        //this.exportFile();
+        this.exportFile();
         break;
       case 'SYS003': // cái này phải xem lại , nên có biến gì đó để xét
         //???? chắc làm sau ??
