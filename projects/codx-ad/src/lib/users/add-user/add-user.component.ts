@@ -201,6 +201,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
+          debugger;
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
@@ -244,38 +245,38 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
       this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
     } else {
-      //   if (this.checkBtnAdd == true) {
-      //     this.dialog.close();
-      //     this.notification.notifyCode('SYS006');
-      //     (this.dialog.dataService as CRUDService)
-      //       .add(this.dataAfterSave)
-      //       .subscribe();
-      //     this.changeDetector.detectChanges();
-      //   } else this.onAdd();
-      // } else {
-      if (this.isAddMode) {
-        if (this.checkBtnAdd == false) return this.onAdd();
-        else {
-          if (
-            this.countListViewChooseRoleApp > 0 ||
-            this.countListViewChooseRoleService > 0
-          ) {
-            this.adService
-              .addUserRole(this.dataAfterSave, this.viewChooseRole)
-              .subscribe((res: any) => {
-                if (res) {
-                  this.dataAfterSave['chooseRoles'] = res?.functions;
-                }
+      if (
+        this.countListViewChooseRoleApp == 0 &&
+        this.countListViewChooseRoleService == 0
+      ) {
+        this.dialog.close();
+        this.notification.notifyCode('SYS006');
+        (this.dialog.dataService as CRUDService)
+          .add(this.dataAfterSave)
+          .subscribe();
+        this.changeDetector.detectChanges();
+      } else {
+        if (this.isAddMode) {
+          if (this.checkBtnAdd == false) return this.onAdd();
+          else {
+            if (
+              this.countListViewChooseRoleApp > 0 ||
+              this.countListViewChooseRoleService > 0
+            ) {
+              this.adService
+                .addUserRole(this.dataAfterSave, this.viewChooseRole)
+                .subscribe();
+            }
+            this.dialog.close();
+            this.notification.notifyCode('SYS006');
+            (this.dialog.dataService as CRUDService)
+              .add(this.dataAfterSave)
+              .subscribe((res) => {
+                this.changeDetector.detectChanges();
               });
           }
-          this.dialog.close();
-          this.notification.notifyCode('SYS006');
-          (this.dialog.dataService as CRUDService)
-            .add(this.dataAfterSave)
-            .subscribe();
-          this.changeDetector.detectChanges();
-        }
-      } else this.onUpdate();
+        } else this.onUpdate();
+      }
     }
   }
 
