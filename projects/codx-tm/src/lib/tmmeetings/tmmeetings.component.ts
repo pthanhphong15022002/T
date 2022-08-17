@@ -280,7 +280,7 @@ export class TMMeetingsComponent
       let year = date1.getFullYear();
       let day1 = date1.getDay() + 1;
       day +=
-        '<div class="text-dark fw-bolder fs-1 text " style="font-size: 50px;">' +
+        '<div class="text-dark fw-bolder fs-1 text " style="font-size: 800px;">' +
         myDay +
         '</div>';
       toDay +=
