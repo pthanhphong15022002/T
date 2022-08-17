@@ -81,6 +81,6 @@ export class EditExperenceComponent implements OnInit {
           this.notiService.notifyCode("SYS021");
         }
       });
-    // this.dialog.close(this.dataBind);
+    this.dialog.close(this.dataBind);
   }
 }

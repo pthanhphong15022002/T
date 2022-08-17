@@ -71,6 +71,9 @@ import { CodxApprovalStepComponent } from './components/codx-approval-step/codx-
 import { NotifyDrawerComponent } from './layout/drawers/notify-drawer/notify-drawer.component';
 import { MessengerDrawerComponent } from './layout/drawers/messenger-drawer/messenger-drawer.component';
 import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner/chat-inner.component';
+import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
+import { CodxImportAddTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-template.component';
+import { CodxImportAddMappingComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -113,6 +116,9 @@ const T_Component: Type<any>[] = [
   NotifyDrawerComponent,
   MessengerDrawerComponent,
   ChatInnerComponent,
+  CodxReferencesComponent,
+  CodxImportAddTemplateComponent,
+  CodxImportAddMappingComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

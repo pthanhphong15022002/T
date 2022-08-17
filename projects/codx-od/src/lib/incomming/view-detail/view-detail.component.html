@@ -1,5 +1,4 @@
-<!-- <codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel"  [body]="body" [footer]="!hideFooter?footer:null" [hideMF]="hideMF" (clickMF)="openFormFuncID($event)" class="h-100"> -->
-  <codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel"  [body]="body" [footer]="!hideFooter?footer:null"  (clickMF)="openFormFuncID($event)" class="h-100">
+<codx-detail-tmp [header]="header" [dataItem]="dataItem" [formModel]="formModel"  [body]="body" [footer]="!hideFooter?footer:null" [hideMF]="hideMF" (clickMF)="openFormFuncID($event)" (changeDataMF)="changeDataMF($event,dataItem)" class="h-100" >
   <ng-template #header>
     <div class="d-flex justify-content-between">
       <div class="w-100">

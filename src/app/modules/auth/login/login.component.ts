@@ -1,8 +1,29 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { map, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiHttpService, AuthService, AuthStore, NotificationsService, TenantStore, UrlUtil } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthService,
+  AuthStore,
+  NotificationsService,
+  TenantStore,
+  UrlUtil,
+} from 'codx-core';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +34,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   @ViewChild('Error') error: ElementRef;
   defaultAuth: any = {
     email: '', // 'admin@demo.com',
-    password: '' // 'demo'
+    password: '', // 'demo'
   };
   loginForm: FormGroup;
   changePassForm: FormGroup;
@@ -36,41 +57,52 @@ export class LoginComponent implements OnInit, OnDestroy {
     private api: ApiHttpService,
     private routeActive: ActivatedRoute,
     private dt: ChangeDetectorRef,
-    private auth: AuthStore,
+    private auth: AuthStore
   ) {
     const tenant = this.tenantStore.getName();
     // redirect to home if already logged in
     if (this.authService.checkUserStatus()) {
-      this.returnUrl = UrlUtil.getUrl('returnUrl') || "";;
+      this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
       if (this.returnUrl) {
         this.returnUrl = decodeURIComponent(this.returnUrl);
       }
-      if (this.returnUrl.indexOf("http://") == 0 || this.returnUrl.indexOf("https://") == 0) {
-        this.api.get(`auth/GetInfoToken?token=${this.auth.get().token}`).pipe(
-          map((data) => {
-            if (data && data.userID) {
-              document.location.href = this.returnUrl + "&token=" + this.auth.get().token;
-            }
-          })).subscribe();
+      if (
+        this.returnUrl.indexOf('http://') == 0 ||
+        this.returnUrl.indexOf('https://') == 0
+      ) {
+        this.api
+          .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
+          .pipe(
+            map((data) => {
+              if (data && data.userID) {
+                document.location.href =
+                  this.returnUrl + '&token=' + this.auth.get().token;
+              }
+            })
+          )
+          .subscribe();
 
         return;
-      }
-      else
-        this.router.navigate([`/${tenant}`]);
+      } else this.router.navigate([`/${tenant}`]);
     }
-
-    this.routeActive.queryParams.subscribe(params => {
+    debugger;
+    this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {
-        this.api.call("ERM.Business.AD", "UsersBusiness", "GetUserBySessionAsync", [params.sk]).subscribe(res => {
-          if (res && res.msgBodyData[0]) {
-            this.sessionID = params.sk;
-            this.email = res.msgBodyData[0].email;
-            if (res.msgBodyData[0].lastLogin == null) {
-              this.mode = 'changepass';
-              dt.detectChanges();
+        this.api
+          .call('ERM.Business.AD', 'UsersBusiness', 'GetUserBySessionAsync', [
+            params.sk,
+          ])
+          .subscribe((res) => {
+            if (res && res.msgBodyData[0]) {
+              debugger;
+              this.sessionID = params.sk;
+              this.email = res.msgBodyData[0].email;
+              if (res.msgBodyData[0].lastLogin == null) {
+                this.mode = 'changepass';
+                dt.detectChanges();
+              }
             }
-          }
-        })
+          });
       }
       if (params.mode) this.mode = params.mode;
     });
@@ -91,11 +123,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     return this.changePassForm.controls;
   }
 
-  checkPasswords: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  checkPasswords: ValidatorFn = (
+    group: AbstractControl
+  ): ValidationErrors | null => {
     let pass = group.get('password').value;
-    let confirmPass = group.get('confirmPassword').value
-    return pass === confirmPass ? null : { notSame: true }
-  }
+    let confirmPass = group.get('confirmPassword').value;
+    return pass === confirmPass ? null : { notSame: true };
+  };
 
   forgotPass() {
     const tenant = this.tenantStore.getName();
@@ -123,40 +157,41 @@ export class LoginComponent implements OnInit, OnDestroy {
       ],
     });
 
-    this.changePassForm = this.fb.group({
-      email: [
-        //this.defaultAuth.email,
-        "",
-        Validators.compose([
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(320)
-        ])
-      ],
-      password: [
-        //this.defaultAuth.password,
-        "",
-        Validators.compose([
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ]),
-      ],
-      confirmPassword: [
-        //this.defaultAuth.password,
-        "",
-        Validators.compose([
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ]),
-      ]
-    }, { validators: this.checkPasswords })
+    this.changePassForm = this.fb.group(
+      {
+        email: [
+          //this.defaultAuth.email,
+          '',
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(320),
+          ]),
+        ],
+        password: [
+          //this.defaultAuth.password,
+          '',
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ]),
+        ],
+        confirmPassword: [
+          //this.defaultAuth.password,
+          '',
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ]),
+        ],
+      },
+      { validators: this.checkPasswords }
+    );
   }
 
-  valueChange(e) {
-
-  }
+  valueChange(e) {}
 
   submit() {
     //$(this.error.nativeElement).html('');
@@ -167,29 +202,34 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         if (data) {
           if (!data.isError) {
-            this.returnUrl = UrlUtil.getUrl('returnUrl') || "";;
+            this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
             if (this.returnUrl) {
               this.returnUrl = decodeURIComponent(this.returnUrl);
             }
-            
-            if (this.returnUrl.indexOf("http://") == 0 || this.returnUrl.indexOf("https://") == 0) {
-              this.api.get(`auth/GetInfoToken?token=${this.auth.get().token}`).pipe(
-                map((data) => {
-                  if (data && data.userID) {
-                    document.location.href = this.returnUrl + "&token=" + this.auth.get().token;
-                  }
-                })).subscribe();
+
+            if (
+              this.returnUrl.indexOf('http://') == 0 ||
+              this.returnUrl.indexOf('https://') == 0
+            ) {
+              this.api
+                .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
+                .pipe(
+                  map((data) => {
+                    if (data && data.userID) {
+                      document.location.href =
+                        this.returnUrl + '&token=' + this.auth.get().token;
+                    }
+                  })
+                )
+                .subscribe();
 
               return;
-            }
-            else {
+            } else {
               if (this.returnUrl.indexOf(data.tenant) > 0)
                 this.router.navigate([`${this.returnUrl}`]);
-              else
-                this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
+              else this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
             }
-          } 
-          else {
+          } else {
             // this.alerttext = data.error;
             //$(this.error.nativeElement).html(data.error);
             this.notificationsService.notify(data.error);
@@ -207,7 +247,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   submitChangePass() {
     if (this.c.email.value.toString().trim() != this.email.trim()) {
-      this.notificationsService.notify("Email không phù hợp!");
+      this.notificationsService.notify('Email không phù hợp!');
       return;
     }
     //$(this.error.nativeElement).html('');
@@ -233,12 +273,11 @@ export class LoginComponent implements OnInit, OnDestroy {
               }
             });
           this.unsubscribe.push(loginSubscr);
-        }
-        else {
+        } else {
           //$(this.error.nativeElement).html(data1.error);
           this.notificationsService.notify(data1.error);
         }
-      })
+      });
   }
 
   ngOnDestroy() {

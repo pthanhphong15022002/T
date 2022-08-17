@@ -1,4 +1,25 @@
-.z-index-10100
+.nav-import .nav-link
 {
-  z-index: 10100 !important;
+  color: black;
+}
+.nav-import .nav-item
+{
+  min-width: 150px;
+  border-radius: 10px;
+}
+.nav-import .active
+{
+  background-color: #F4F7FF;
+}
+.card-body
+{
+  height: 100%;
+}
+.btn-mgl{
+  margin-left: 166px;
+}
+.hideAttachment
+{
+  background-color: #F5F8FA;
+  min-height: 35px;
 }

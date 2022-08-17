@@ -70,6 +70,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         this.iterationID = params?.iterationID;
       }
     });
+   
     if (this.iterationID != '') {
       this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
         if (res) {
@@ -78,12 +79,12 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.nameObj = res.iterationName;
           this.projectID = res?.projectID;
           this.resources = res.resources;
-          var dataObj = {
+          this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
             resources : this.resources? this.resources:'' ,
             iterationID: this.iterationID ? this.iterationID : '',
           };
-          this.dataObj = JSON.stringify(dataObj);
+        
           if (this.resources != null) {
             this.getListUserByResource(this.resources);
           }
@@ -98,11 +99,10 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.nameObj = res.meetingName;
           this.projectID = res.projectID;
           this.resources = res.avataResource;
-          var dataObj = {
+          this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
             resources : this.resources? this.resources:'' ,
           };
-          this.dataObj = JSON.stringify(dataObj);
           if (this.resources != null) {
             this.getListUserByResource(this.resources);
           }
@@ -112,6 +112,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     if (this.meetingID) this.all = ['Dashboard', 'Công việc'];
   }
   ngOnInit(): void {
+   this.loadTabView() ;
+  }
+  ngAfterViewInit(): void {  
+  }
+  loadTabView(){
     if (this.tabControl.length == 0) {
       this.all.forEach((res, index) => {
         var tabModel = new TabModelSprints();
@@ -127,7 +132,6 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     }
     this.changeDetectorRef.detectChanges();
   }
-  ngAfterViewInit(): void {}
 
   clickMenu(item) {
     this.name = item.name;

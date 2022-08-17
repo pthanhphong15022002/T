@@ -55,8 +55,9 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
-  @ViewChild('attachment1') attachment1: AttachmentComponent;
-  @ViewChild('attachment2') attachment2: AttachmentComponent;
+//  @ViewChild('attachment1') attachment1: AttachmentComponent;
+//  @ViewChild('attachment2') attachment2: AttachmentComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('view') codxview!: any;
   currView?: TemplateRef<any>;
   path: string;
@@ -155,11 +156,11 @@ export class HomeComponent extends UIComponent {
        // tree.getCurrentNode(res.recID);
         //that.dmSV.currentNode = '';
         var tree = this.codxview.currentView.currentComponent.treeView;
-        var data = {} as any;
-        data.data = res;
+        //var data = {} as any;
+      //  data.data = res;
         tree.getCurrentNode(res.recID);
         //data.data.items = [];
-        this.onSelectionChanged(data);
+      //  this.onSelectionChanged(data);
       //  var tree = this.codxview.currentView.currentComponent.treeView;
       //  tree.getCurrentNode(res.recID);
       //  this.dmSV.folderId.next(res.recID);
@@ -170,7 +171,7 @@ export class HomeComponent extends UIComponent {
       if (res != null) {
         var tree = this.codxview.currentView.currentComponent.treeView;
         tree.removeNodeTree(res)
-        //that._beginDrapDrop();
+        this._beginDrapDrop();
       }
     });
 
@@ -188,7 +189,7 @@ export class HomeComponent extends UIComponent {
         tree.setNodeTree(res);
         this.changeDetectorRef.detectChanges();
       };
-      //that._beginDrapDrop();
+      this._beginDrapDrop();
     });
 
     this.dmSV.isFolderId.subscribe(res => {
@@ -230,16 +231,109 @@ export class HomeComponent extends UIComponent {
     });
   }
 
-  // identifyData(index, data) {
-  //   return data;
-  // }
+  classFile(item, className) {
+    if (item.folderName != null)
+      return className;
+    else  
+      return `${className} noDrop`;  
+  }
+
+  _beginDrapDrop() {
+    var that = this;
+    setTimeout(() => {
+      for (let index = 0; index < $("#jstree").find("a").length; index++) {
+        that.initDrapDropFileFolder($($("#jstree").find("a")[index]));
+      }
+    }, 1000);
+  }
+
+  initDrapDropFileFolder(element) {
+    var that = this;
+    if (element && !element.data("_drapdrop")) {
+      element.data("_drapdrop", "1");
+      var ondragstart = function (event) {
+        var j = JSON.stringify(
+          {
+            "folderName": element.text(),
+            "recID": element[0].id.replace("_anchor", ""),
+
+          });
+        console.log(j);
+        event.originalEvent.dataTransfer.setData('data', j);
+        event.originalEvent.dataTransfer["simple"] = "filefolder";
+        event.originalEvent.dataTransfer.effectAllowed = "move";
+      };
+      var ondragover = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        $(event.currentTarget).css("border-style", "dashed");
+        $(event.currentTarget).css("border-color", "#7e8299");
+        $(event.currentTarget).css("border-width", "1px");
+      };
+      var ondragleave = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        $(event.currentTarget).css("border-style", "none");
+      };
+      var ondrop = (event) => {
+
+        event.preventDefault();
+        event.stopPropagation();
+        $(event.currentTarget).css("border-style", "none");
+        var s = event.originalEvent.dataTransfer.getData("data");
+        if (s) {
+          var obj = JSON.parse(s);
+          if (obj.recID != event.currentTarget.id.replace("_anchor", "")) {
+            if (obj.fileName) {
+              that.dmSV.copyFileTo(obj.recID, obj.fileName, event.currentTarget.id.replace("_anchor", ""));
+            }
+            else {
+              that.dmSV.copyFolderTo(obj.recID, obj.folderName, event.currentTarget.id.replace("_anchor", ""));
+            }
+          }
+        }
+
+      };
+
+      element.off("dragstart", ondragstart);
+      element.off("dragover", ondragover);
+      element.off("dragleave", ondragleave);
+      element.off("drop", ondrop);
+
+      element.on("dragstart", ondragstart);
+      element.on("dragover", ondragover);
+      element.on("dragleave", ondragleave);
+      element.on("drop", ondrop);
+
+    }
+  }
+
+  fileFolderDropped($event) {
+    if ($event.source.recID != $event.target.recID) {
+      if ($event.source.fileName) {
+        this.dmSV.copyFileTo($event.source.recID, $event.source.fileName, $event.target.recID);
+      }
+      else {
+        this.dmSV.copyFolderTo($event.source.recID, $event.source.folderName, $event.target.recID);
+      }
+    }
+  }
+
+  fileUploadDropped($event) { 
+    if (this.dmSV.idMenuActive == "DMT02" || this.dmSV.idMenuActive == "DMT03") {   
+      this.attachment.fileUploadList = [];   
+      this.attachment.handleFileInput($event, true).then(r => {
+        this.attachment.onMultiFileSave();
+      });      
+    }
+  }
 
   addFile($event) {  
     var data = new DialogAttachmentType();
-    data.objectType = 'WP_Notes';
-    data.objectId = '628c326c590addf224627f42';
-    data.functionID = 'ODT3';
     data.type = 'popup';
+    // data.objectType = 'WP_Notes';
+    // data.objectId = '628c326c590addf224627f42';
+    // data.functionID = 'ODT3';
 
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
@@ -261,25 +355,25 @@ export class HomeComponent extends UIComponent {
   }
 
   saveFile1() {
-    this.attachment1.saveFilesObservable().subscribe((item) => {
-      console.log(item);
-    });
+    // this.attachment1.saveFilesObservable().subscribe((item) => {
+    //   console.log(item);
+    // });
     //  this.attachment.saveFiles();
   }
 
   saveFile2() {
-    this.attachment2.saveFilesObservable().subscribe((item) => {
-      console.log(item);
-    });
+    // this.attachment2.saveFilesObservable().subscribe((item) => {
+    //   console.log(item);
+    // });
     //  this.attachment.saveFiles();
   }
 
   openFile1() {
-    this.attachment1.uploadFile();
+    // this.attachment1.uploadFile();
   }
 
   openFile2() {
-    this.attachment2.uploadFile();
+    // this.attachment2.uploadFile();
   }
 
   getPath() {
