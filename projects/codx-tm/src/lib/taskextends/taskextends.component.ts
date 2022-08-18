@@ -17,6 +17,7 @@ import {
 } from 'codx-core';
 import { CodxTMService } from '../codx-tm.service';
 import { PopupConfirmComponent } from '../tasks/popup-confirm/popup-confirm.component';
+import { ViewDetailComponent } from '../tasks/view-detail/view-detail.component';
 
 @Component({
   selector: 'lib-taskextends',
@@ -25,18 +26,18 @@ import { PopupConfirmComponent } from '../tasks/popup-confirm/popup-confirm.comp
 })
 export class TaskExtendsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   user: any;
   funcID: any;
-  itemSelected: any;
+  // itemSelected: any;
   taskExtends: any;
   dialogExtendsStatus!: DialogRef;
-  vllExtendStatus = 'TM010'; 
-  vllStatus ='TM004'
+  vllExtendStatus = 'TM010';
+  vllStatus = 'TM004'
   constructor(
     inject: Injector,
     private authStore: AuthStore,
@@ -47,10 +48,10 @@ export class TaskExtendsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-   
+
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -61,18 +62,19 @@ export class TaskExtendsComponent
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
-        // groupBy: 'fieldGroup', Thương kêu gắng sau 
+          // groupBy: 'fieldGroup', Thương kêu gắng sau 
         },
       },
     ];
   }
 
   selectedChange(val: any) {
-    this.taskExtends = val?.data
-    this.itemSelected = val?.data?.task ;
+    this.taskExtends = val?.data ? val?.data : val;
+    // this.itemSelected = val?.data?.task ;
+    // this.taskExtends = val
     this.detectorRef.detectChanges();
   }
-  requestEnded(e) {}
+  requestEnded(e) { }
 
   //#region extends
   openExtendStatusPopup(moreFunc, data) {
@@ -91,11 +93,12 @@ export class TaskExtendsComponent
       obj
     );
     this.dialogExtendsStatus.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) { 
+      if (e?.event && e?.event != null) {
         var taskExtends = e?.event
         this.view.dataService.update(taskExtends).subscribe();
         this.taskExtends = taskExtends
-        this.itemSelected = taskExtends.task;
+        this.detail.taskID = taskExtends.taskID;
+        this.detail.getTaskDetail();
         this.detectorRef.detectChanges();
       }
     })
@@ -107,13 +110,27 @@ export class TaskExtendsComponent
   }
 
   clickMF(e, data) {
-    this.taskExtends = data ;
-    this.itemSelected = data.task;
+    this.taskExtends = data;
     switch (e.functionID) {
       case 'TMT04011':
       case 'TMT04012':
         this.openExtendStatusPopup(e.data, data);
         break;
+    }
+  }
+  changeDataMF(e, data) {
+    if (e) {
+      e.forEach((x) => {
+        if (
+          x.functionID == 'SYS04'
+        ) {
+          x.disabled = true;
+        }
+        if((x.functionID == 'TMT04011' ||  x.functionID == 'TMT04012') && data.status !='3' ){
+          x.disabled = true;
+        }
+
+      });
     }
   }
 }

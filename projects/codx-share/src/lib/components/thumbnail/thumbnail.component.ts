@@ -39,7 +39,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
   ngOnInit(): void {
     // this.files = JSON.parse(this.data);
-    this.changeDetectorRef.detectChanges();
+   // this.changeDetectorRef.detectChanges();
     this.dmSV.isFileEditing.subscribe(item => {
       if (item != undefined) {
         if (this.files.length > 0) {

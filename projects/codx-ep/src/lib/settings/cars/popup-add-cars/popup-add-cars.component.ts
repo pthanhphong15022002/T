@@ -1,15 +1,18 @@
 import {
-  ChangeDetectorRef,  Component,  EventEmitter,  Input,  OnInit,  Optional,  Output,
+  ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import {
   CacheService,
   CallFuncService,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
+  RequestOption,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { Device } from '../../../booking-car/popup-add-booking-car/popup-add-booking-car.component';
 
 import { CodxEpService } from '../../../codx-ep.service';
@@ -20,58 +23,70 @@ import { CodxEpService } from '../../../codx-ep.service';
   styleUrls: ['popup-add-cars.component.scss'],
 })
 export class PopupAddCarsComponent implements OnInit {
+  @ViewChild('attachment') attachment : AttachmentComponent; 
+
   @Input() editResources: any;
   @Input() isAdd = true;
   @Input() data!: any;
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
 
-  cacheGridViewSetup: any;
-  CbxName: any;
-  dialogAddCar: FormGroup;
-  formModel: FormModel;
-  dialog: any;
-  headerText ="Thêm mới xe"
+  headerText='';
   subHeaderText = 'Tạo & upload file văn bản';
-  isAfterRender = false;
+
+  fGroupAddCar: FormGroup;
+  formModel: FormModel;
+  dialogRef: DialogRef;
+
+  CbxName: any;
+  isAfterRender = false;  
+
   vllDevices = [];
   lstDeviceCar = [];
   tmplstDevice = [];
 
-  constructor(
-    private cacheSv: CacheService,
-    private epService: CodxEpService,
+  constructor(    
     private callFuncService: CallFuncService,
+    private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
-    @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
+    private codxEpService: CodxEpService,
+    @Optional() dialogData?: DialogData,
+    @Optional() dialogRef?: DialogRef
   ) {
-    this.data = dt?.data[0];
-    this.isAdd = dt?.data[1];
-    this.dialog = dialog;
-    this.formModel = this.dialog.formModel;
+    this.data = dialogData?.data[0];
+    this.isAdd = dialogData?.data[1];
+    this.dialogRef = dialogRef;
+    this.formModel = this.dialogRef.formModel;    
   }
 
+  ngAfterViewInit(): void {
+  }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.initForm();
-    this.cacheSv.valueList('EP012').subscribe((res) => {
-      console.log('Res: ', res);
-
-      this.vllDevices = res.datas;
+    this.cacheService.valueList('EP012').subscribe((res) => {      
+      this.vllDevices = res.datas;      
       this.vllDevices.forEach((item) => {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
-        this.lstDeviceCar.push(device);
-      });
-      this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceCar));
-    });
-    
-    this.epService
+        if(!this.isAdd)
+        {          
+          this.data.equipments.split(";").forEach((item)=>{
+            if(item == device.id){
+              device.isSelected = true;
+            }
+          }); 
+        }
+        this.lstDeviceCar.push(device);          
+        this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceCar));
+      });       
+    }); 
+
+    this.codxEpService
       .getComboboxName(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
+        this.dialogRef.formModel.formName,
+        this.dialogRef.formModel.gridViewName
       )
       .then((res) => {
         this.CbxName = res;
@@ -80,77 +95,70 @@ export class PopupAddCarsComponent implements OnInit {
   }
 
   initForm() {
-    this.cacheSv
-      .gridViewSetup('Resources', 'EP_Resources')
-      .subscribe((item) => {
-        this.editResources = item;
-        this.dialogAddCar.patchValue({
-          ranking: '1',
-          category: '1',
-          owner: '',
-        });        
-      });
-
-    this.epService
+    if(this.isAdd){      
+      this.headerText = "Thêm mới xe"
+    }
+    else{
+      this.headerText = "Sửa thông tin xe"
+    }
+    this.codxEpService
       .getFormGroup('Resources', 'grvResources')
       .then((item) => {
-        this.dialogAddCar = item;
+        this.fGroupAddCar = item;
         if (this.data) {
-          this.dialogAddCar.patchValue(this.data);
-        } 
-        this.dialogAddCar.addControl(
+          this.fGroupAddCar.patchValue(this.data);
+        }
+        this.fGroupAddCar.addControl(
           'code',
           new FormControl(this.data.code)
-        );       
+        );
         this.isAfterRender = true;
       });
   }
-
-  valueChange(event: any) {
-    if (event?.field != null) {
-      if (event.data instanceof Object) {
-        this.dialogAddCar.patchValue({ [event['field']]: event.data.value });
-      } else {
-        this.dialogAddCar.patchValue({ [event['field']]: event.data });
-      }
-    }
-  }
-
-  beforeSave(option: any) {
-    let itemData = this.dialogAddCar.value;
-    option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd];
-    return true;
-  }
-  
-  valueCbxChange(event: any) {
-    if (event?.field != null) {
-      if (event.data instanceof Object) {
-        this.dialogAddCar.patchValue({ [event['field']]: event.data.value });
-      } else {
-        this.dialogAddCar.patchValue({ [event['field']]: event.data });
-      }
-    }
-  }
-  valueCbxDriverChange(event: any) {   
-  }
-  openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 550, 430);
-    this.changeDetectorRef.detectChanges();
-  }
-
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
     if (index != -1) {
       this.tmplstDevice[index].isSelected = event.data;
     }
   }
+
+  openPopupDevice(template: any) {
+    var dialog = this.callFuncService.openForm(template, '', 550, 430);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  valueChange(event: any) {
+    if (event?.field != null) {
+      if (event.data instanceof Object) {
+        this.fGroupAddCar.patchValue({ [event['field']]: event.data.value });
+      } else {
+        this.fGroupAddCar.patchValue({ [event['field']]: event.data });
+      }
+    }
+  }
+
+  valueCbxChange(event: any) {
+    if (event?.field != null) {
+      if (event.data instanceof Object) {
+        this.fGroupAddCar.patchValue({ [event['field']]: event.data.value });
+      } else {
+        this.fGroupAddCar.patchValue({ [event['field']]: event.data });
+      }
+    }
+  }
+  
+  beforeSave(option: RequestOption) {
+    let itemData = this.fGroupAddCar.value;
+    option.methodName = 'AddEditItemAsync';
+    option.data = [itemData, this.isAdd];
+    return true;
+  }
+
   onSaveForm() {
-    if (this.dialogAddCar.invalid == true) {
-      console.log(this.dialogAddCar);
+    if (this.fGroupAddCar.invalid == true) {
+      console.log(this.fGroupAddCar);
       return;
     }
-    
     let equipments = '';
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
@@ -160,20 +168,38 @@ export class PopupAddCarsComponent implements OnInit {
           equipments += ';' + element.id;
         }
       }
-    });       
-    this.dialogAddCar.value.equipments = equipments;
-    this.dialogAddCar.value.bUID = this.dialogAddCar.value.bUID[0];
-    this.dialogAddCar.value.companyID = this.dialogAddCar.value.companyID[0];
-    this.dialogAddCar.value.linkID = this.dialogAddCar.value.resourceID[0];
-    this.dialogAddCar.value.resourceID = null;         
-    if (!this.dialogAddCar.value.linkType) {
-      this.dialogAddCar.value.linkType = '3';
+    });
+    this.fGroupAddCar.value.equipments = equipments;
+    this.fGroupAddCar.value.companyID = this.fGroupAddCar.value.companyID[0];
+    this.fGroupAddCar.value.owner = this.fGroupAddCar.value.owner[0];
+
+    if (!this.fGroupAddCar.value.linkType) {
+      this.fGroupAddCar.value.linkType = '3';
     }
-    this.dialogAddCar.value.resourceType = '2';    
-    this.dialog.dataService
+    this.fGroupAddCar.value.resourceType = '2';
+    this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe();
+      .subscribe(
+        res => {
+          if (res.update) {
+            (this.dialogRef.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+          }
+          this.changeDetectorRef.detectChanges();
+        }
+      );      
+    //this.attachment.saveFilesObservable().subscribe(res=>{})
   }
+
+  fileCount(event){
+    this.fGroupAddCar.value.icon= event.data[0].data;    
+  }
+  fileAdded(event){debugger}
+  
+  popupUploadFile() {
+    this.attachment.uploadFile();
+  } 
 
   closeFormEdit(data) {
     this.initForm();

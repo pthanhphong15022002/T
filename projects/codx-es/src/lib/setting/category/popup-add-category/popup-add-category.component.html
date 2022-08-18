@@ -1,19 +1,17 @@
 <codx-form #form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [subHeader]="subHeader"
   [body]="body" [footer]="footer" *ngIf="isAfterRender">
   <ng-template #subHeader>
-    <div class="">
-      <div class="fw-bold codx-label">
-        <codx-label default="Icon & màu sắc" name="lblIconColor" [formModel]="form.formModel"></codx-label>
-      </div>
-      <div class="d-flex">
-        <codx-input class="mt-1 me-3 user-mini-icon w-30px me-5" type="vllicon" refValue="L1470" field="icon"
-          [crrValue]="dialogCategory.value.icon" (valueChange)="valueChange($event)">
+    <div class="d-flex">
+      <div class="symbol symbol-circle symbol-30px symbol-vllicon">
+        <codx-input class="" type="vllicon" refValue="L1470" field="icon" [crrValue]="dialogCategory.value.icon"
+          (valueChange)="valueChange($event)">
         </codx-input>
-        <div class="ms-4">
-          <codx-input class="ms-4" type="colorpicker" [showText]="false" [modeSwitcher]="false"
-            [crrValue]="dialogCategory.value.color" field="color" (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
+      </div>
+
+      <div class="ms-4">
+        <codx-input class="ms-4" type="colorpicker" [showText]="false" [modeSwitcher]="false"
+          [crrValue]="dialogCategory.value.color" field="color" (valueChange)="valueChange($event)">
+        </codx-input>
       </div>
     </div>
   </ng-template>
@@ -21,7 +19,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <codx-label default="Tên phân loại" fiedName="CategoryName" [formModel]="form.formModel">
+          <codx-label default="Tên phân loại" fiedName="CategoryName" [formModel]="formModel">
           </codx-label>
           <codx-input type="text" name="text" field="categoryName" [crrValue]="dialogCategory.value.categoryName"
             (valueChange)="valueChange($event)">
@@ -30,7 +28,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <codx-label default="Mã phân loại" fiedName="CategoryID" [formModel]="form.formModel">
+          <codx-label default="Mã phân loại" fiedName="CategoryID" [formModel]="formModel">
           </codx-label>
           <codx-input type="text" name="text" field="categoryID" [crrValue]="dialogCategory.value.categoryID"
             disabled="true">
@@ -43,13 +41,13 @@
         field="eSign" class="test-switch" (valueChange)="valueChange($event)">
       </codx-input>
       <label class="ms-2">
-        <codx-label fiedName="ESign" default="Chữ ký số" [formModel]="form.formModel"></codx-label>
+        <codx-label fiedName="ESign" default="Chữ ký số" [formModel]="formModel"></codx-label>
       </label>
     </div>
     <div class="row ">
       <div class="col-md-6">
         <div class="form-group">
-          <codx-label default="Loại chữ kí" fiedName="SignatureType" [formModel]="form.formModel">
+          <codx-label default="Loại chữ kí" fiedName="SignatureType" [formModel]="formModel">
           </codx-label>
           <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="cbxName['SignatureType']"
             [crrValue]="dialogCategory.value.signatureType" field="signatureType" (valueChange)="valueChange($event)">
@@ -62,7 +60,7 @@
       </div>
     </div>
     <div class="form-group">
-      <codx-label default="Ghi chú" fiedName="Memo" [formModel]="form.formModel">
+      <codx-label default="Ghi chú" fiedName="Memo" [formModel]="formModel">
       </codx-label>
       <codx-input type="textarea" format="ed2" rows="3" class="form-control" field="memo" ControlName="memo"
         (valueChange)="valueChange($event)" ngDefaultControl [crrValue]="dialogCategory.value.memo??''">
@@ -70,8 +68,8 @@
     </div>
     <div class="row ">
       <div class="d-flex flex-stack mb-4">
-        <codx-label class="text-primary fw-bold" default="Đánh số văn bản" fiedName="AutoNumber"
-          [formModel]="form.formModel">
+        <codx-label class="text-primary fw-bold fs-5" default="Đánh số văn bản" fiedName="AutoNumber"
+          [formModel]="formModel">
         </codx-label>
         <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
           (click)="openAutoNumPopup()">
@@ -80,7 +78,7 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <codx-label default="Định dạng" fiedName="AutoNumber" [formModel]="form.formModel">
+          <codx-label default="Định dạng" fiedName="AutoNumber" [formModel]="formModel">
           </codx-label>
           <codx-input type="text" name="text" [crrValue]="viewAutoNumber" disabled="true">
           </codx-input>
@@ -88,8 +86,8 @@
       </div>
     </div>
     <div class="d-flex flex-stack mb-4">
-      <codx-label class="text-primary fw-bold" default="Qui trình duyệt" fiedName="ProcessID"
-        [formModel]="form.formModel">
+      <codx-label class="text-primary fw-bold fs-5" default="Qui trình duyệt" fiedName="ProcessID"
+        [formModel]="formModel">
       </codx-label>
       <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
         (click)="openPopupApproval()">
@@ -100,19 +98,19 @@
     <div class="codx-approval" *ngIf="lstStep?.length > 0">
       <ng-container *ngFor="let item of lstStep, let index = index">
         <div class="codx-approval-step">
-          <div class="codx-approval-header d-flex align-items-center">
+          <div class="codx-approval-header d-flex align-items-center mb-2">
             <div class="step-number">{{item.stepNo}}</div>
             <div class="step-title text-dark fw-bold fs-5">{{item.stepName}}</div>
           </div>
-          <div class="codx-approval-content ms-18">
+          <div class="codx-approval-content ms-17">
             <ng-container *ngFor="let approver of item.approvers">
               <div class="d-flex align-items-top justify-content-between ">
-                <codx-temp-full cardCss="mb-4" *ngIf="approver.roleType?.length == 1" [imageId]="approver.approver"
+                <codx-temp-full cardCss="mb-2" *ngIf="approver.roleType?.length == 1" [imageId]="approver.approver"
                   [imageObjType]="'AD_Users'" [imageWidth]="35" imgCss="me-3"
                   [title]="approver.approverName ?? (approver.approver |vll: 'ES014': 'text'|async)"
                   [desc]="approver.positionName ?? 'Vị trí công việc'">
                 </codx-temp-full>
-                <codx-temp-full cardCss="mb-4" *ngIf="approver.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
+                <codx-temp-full cardCss="mb-2" *ngIf="approver.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
                 (item.icon ? item.icon : 'share_default.svg')" imgCss="w-35px  w-35px p-3 me-3 user-mini-icon"
                   [imageWidth]="20" [title]="(approver.approver |vll: 'ES014': 'text'|async)"
                   [desc]="approver.approver |vll: 'ES014': 'text'|async">
@@ -133,7 +131,7 @@
   </ng-template>
   <ng-template #footer>
     <button class="btn btn-primary justify-content-end" (click)="onSaveForm()">
-      <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
+      <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
     </button>
   </ng-template>
 </codx-form>

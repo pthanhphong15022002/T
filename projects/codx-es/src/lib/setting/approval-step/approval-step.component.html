@@ -58,7 +58,7 @@
               <div class="timeline timeline-3">
                 <div class="timeline-items">
                   <ng-container *ngFor="let item of lstStep; let index=index">
-                    <div class="timeline-item has-action-menu">
+                    <div class="timeline-item " [ngClass]="justView ? '': 'has-action-menu' ">
                       <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
                         <div class=" timeline-media w-40px h-40px me-4">
                           <span class="stepper-number">{{item.stepNo}}</span>
@@ -107,9 +107,9 @@
                         </div>
                       </div>
                     </div>
-                    <div class="timeline-item" *ngIf="index==lstStep.length-1">
+                    <div class="timeline-item" *ngIf="index==lstStep.length-1 && !justView">
                       <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
-                        <div class="step-add cursor-pointer w-30px h-30px " ngbTooltip="Thêm mới" (click)="add()">
+                        <div class="step-add cursor-pointer w-30px h-30px" ngbTooltip="Thêm mới" (click)="add()">
                           <span class="stepper-number">+</span>
                         </div>
                       </div>
@@ -120,11 +120,11 @@
             </div>
           </div>
         </div>
-        <div class="d-flex flex-stack justify-content-end card-footer tab-pane-footer border-0">
+        <div class="d-flex flex-stack justify-content-end card-footer tab-pane-footer border-0" *ngIf="!justView">
           <div class="left">
             <button type="button" class="btn btn-primary" (click)="onSaveForm()"
               *ngIf="lstStep?.length > 0 || isDeleteAll">
-              <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
+              <codx-label name="lblSave" default="Lưu" [formModel]="dialogApproval.formModel"></codx-label>
             </button>
           </div>
         </div>

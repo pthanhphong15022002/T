@@ -9,11 +9,13 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { PopupAddEmployeesComponent } from './employees/popup-add-employees/popup-add-employees.component';
@@ -160,7 +162,10 @@ const T_Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),
+    CodxShareModule,
     ChartAllModule,
+    NgbModule,
+
   ],
   exports: [RouterModule],
   declarations: T_Component,

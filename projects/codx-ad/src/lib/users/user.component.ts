@@ -40,7 +40,6 @@ export class UserComponent extends UIComponent {
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
-
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
@@ -96,6 +95,9 @@ export class UserComponent extends UIComponent {
       case 'SYS03':
         this.edit(data);
         break;
+      case 'SYS02':
+        this.delete(data);
+        break;
       case 'ADS0501':
         this.stop(data);
         break;
@@ -145,8 +147,11 @@ export class UserComponent extends UIComponent {
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
-          debugger;
-          this.delete(e?.event);
+          e.event.modifiedOn = new Date();
+          this.view.dataService.update(e.event).subscribe(item=>{
+            //this.view.dataService.add(x.event,0).subscribe();
+          });
+          //this.delete(e?.event);
         }
       });
     });
@@ -178,6 +183,28 @@ export class UserComponent extends UIComponent {
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+        this.dialog.closed.subscribe((x) => {
+          if (x.event)
+          {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe(item=>{
+              //this.view.dataService.add(x.event,0).subscribe();
+            });
+            //x.event.modifiedOn = new Date();
+           /*  let data = x.event;
+            this.view.dataService.remove(data).subscribe(item=>{
+              debugger;
+              this.tempFull.vtmpBase.vTempImg.updateFileDirectReload(data?.userID).subscribe(item2=>{
+                this.view.dataService.add(data,0).subscribe();
+              })
+            }) */
+            
+           /*  this.view.dataService.remove(x.event).subscribe(item=>{
+              debugger;
+              this.view.dataService.data.push(x.event);
+            }); */
+          }
+        });
       });
   }
 

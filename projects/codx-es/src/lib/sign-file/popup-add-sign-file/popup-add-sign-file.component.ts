@@ -23,8 +23,6 @@ import {
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { iif } from 'rxjs';
-import { isBuffer } from 'util';
 import { File } from '../../codx-es.model';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
@@ -56,6 +54,7 @@ export class PopupAddSignFileComponent implements OnInit {
   processID: String = '';
   transID: String = '';
   isSaved = false;
+  gvSetup: any;
 
   dialog: DialogRef;
   data;
@@ -84,6 +83,10 @@ export class PopupAddSignFileComponent implements OnInit {
     this.data = data?.data.option.DataService.dataSelected;
     this.isAddNew = data?.data.isAddNew;
     this.option = data?.data.option;
+    if (!this.isAddNew) {
+      this.data = data?.data.dataSelected;
+      this.processTab = 4;
+    }
   }
 
   ngOnInit(): void {
@@ -94,12 +97,20 @@ export class PopupAddSignFileComponent implements OnInit {
       .then((res) => {
         if (res) this.cbxName = res;
       });
+
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((res) => {
+        this.gvSetup = res;
+        console.log(res);
+      });
   }
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
   }
 
+  orgUnitID;
   initForm() {
     const user = this.auth.get();
     this.esService
@@ -115,11 +126,17 @@ export class PopupAddSignFileComponent implements OnInit {
               approveStatus: '1',
               employeeID: user.employee?.employeeID,
               orgUnitID: user.employee?.orgUnitID,
+              deptID: user.employee?.departmentID,
+              divisionID: user.employee?.divisionID,
+              companyID: user.employee?.companyID,
             });
+            this.orgUnitID = user.employee?.orgUnitID;
             this.dialogSignFile.addControl(
               'approveControl',
               new FormControl('3')
             );
+            this.dialogSignFile.addControl('icon', new FormControl(null));
+            this.dialogSignFile.addControl('color', new FormControl(null));
 
             this.codxService
               .getAutoNumber(
@@ -239,20 +256,34 @@ export class PopupAddSignFileComponent implements OnInit {
       }
 
       if (event.field == 'employeeID') {
-        if (event.component?.itemsSelected[0]?.OrgUnitID) {
+        let employee = event.component?.itemsSelected[0];
+        this.dialogSignFile.patchValue({
+          deptID: employee?.departmentID,
+          divisionID: employee?.divisionID,
+          companyID: employee?.companyID,
+        });
+        if (employee?.OrgUnitID != null) {
+          this.orgUnitID = employee?.OrgUnitID;
           this.dialogSignFile.patchValue({
-            orgUnitID: event.component?.itemsSelected[0]?.OrgUnitID,
+            orgUnitID: employee?.OrgUnitID,
           });
-          this.cr.detectChanges();
         }
       }
+
+      if (event.field == 'categoryID') {
+      }
+      this.cr.detectChanges();
     }
   }
 
   //#region Methods Save
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
-      this.notify.notifyCode('E0016');
+      this.esService.notifyInvalid(
+        this.dialogSignFile,
+        this.formModel,
+        this.gvSetup
+      );
       return;
     }
 
@@ -275,7 +306,7 @@ export class PopupAddSignFileComponent implements OnInit {
               });
             }
             if (this.currentTab == 1) {
-              this.upDateNodeStatus(this.oldNode, this.newNode);
+              this.updateNodeStatus(this.oldNode, this.newNode);
               this.currentTab++;
               this.processTab++;
             }
@@ -287,7 +318,7 @@ export class PopupAddSignFileComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             if (this.currentTab == 1) {
-              this.upDateNodeStatus(this.oldNode, this.newNode);
+              this.updateNodeStatus(this.oldNode, this.newNode);
               this.currentTab++;
             }
           }
@@ -337,18 +368,37 @@ export class PopupAddSignFileComponent implements OnInit {
 
   //#endregion
 
+  // notifyInvalid(formGroup: FormGroup, gridViewSetup: any) {
+  //   const invalid = [];
+  //   const controls = formGroup.controls;
+  //   for (const name in controls) {
+  //     if (controls[name].invalid) {
+  //       invalid.push(name);
+  //     }
+  //   }
+  //   console.log(invalid);
+  //   let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+  //   this.notify.notifyCode(
+  //     'E0005',
+  //     0,
+  //     '"' + gridViewSetup[fieldName].headerText + '"'
+  //   );
+  //   console.log(gridViewSetup);
+  // }
+
   //#region Change Tab
 
   clickTab(tabNo) {
-    let newNo = tabNo * 2;
-
-    let oldNo = this.currentTab * 2;
-    if (tabNo < this.currentTab) {
-      oldNo++;
-    }
+    // let newNo = tabNo * 2;
+    let newNo = tabNo;
+    let oldNo = this.currentTab;
+    // let oldNo = this.currentTab * 2;
+    // if (tabNo < this.currentTab) {
+    //   oldNo++;
+    // }
 
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      this.upDateNodeStatus(oldNo, newNo);
+      this.updateNodeStatus(oldNo, newNo);
       this.currentTab = tabNo;
     }
   }
@@ -356,8 +406,10 @@ export class PopupAddSignFileComponent implements OnInit {
   continue(currentTab) {
     if (this.currentTab > 3) return;
 
-    let oldNode = currentTab * 2;
-    let newNode = oldNode + 2;
+    //let oldNode = currentTab * 2;
+    let oldNode = currentTab;
+    let newNode = oldNode + 1;
+    // let newNode = oldNode + 2;
 
     switch (currentTab) {
       case 0:
@@ -365,33 +417,32 @@ export class PopupAddSignFileComponent implements OnInit {
           this.attachment.fileUploadList.length > 0 ||
           this.dialogSignFile.value.files?.length > 0
         ) {
-          this.upDateNodeStatus(oldNode, newNode);
+          this.updateNodeStatus(oldNode, newNode);
           this.currentTab++;
-          this.processTab++;
+          this.processTab == 0 && this.processTab++;
         } else {
           this.notify.notifyCode('ES006');
         }
         break;
       case 1:
         if (this.dialogSignFile.invalid) {
-          break;
         }
         if (this.isAddNew) {
           this.newNode = newNode;
           this.oldNode = oldNode;
           this.onSaveSignFile();
         } else {
-          this.upDateNodeStatus(oldNode, newNode);
-          this.processTab == this.currentTab && this.processTab++;
+          this.updateNodeStatus(oldNode, newNode);
+          this.processTab == 1 && this.processTab++;
           this.currentTab++;
         }
         break;
 
       case 2:
         this.saveProcessStep();
-        this.upDateNodeStatus(oldNode, newNode);
+        this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
-        if (this.processTab == 1) this.processTab++;
+        this.processTab == 2 && this.processTab++;
         break;
       case 3:
         if (this.esService.getApprovalStep) break;
@@ -403,16 +454,16 @@ export class PopupAddSignFileComponent implements OnInit {
   previous(currentTab) {
     let oldNode = currentTab * 2;
     let newNode = oldNode - 2;
-    this.upDateNodeStatus(oldNode, newNode);
+    this.updateNodeStatus(oldNode, newNode);
     this.currentTab--;
   }
 
-  upDateNodeStatus(oldNode: number, newNode: number) {
+  updateNodeStatus(oldNode: number, newNode: number) {
     let nodes = Array.from(
       (this.status.nativeElement as HTMLElement).childNodes
     );
 
-    let newClassName = (nodes[newNode] as HTMLElement).className.toString();
+    let newClassName = (nodes[newNode] as HTMLElement).className;
     switch (newClassName) {
       case 'stepper-item':
         (nodes[newNode] as HTMLElement).classList.add('active');
@@ -424,7 +475,7 @@ export class PopupAddSignFileComponent implements OnInit {
         break;
     }
 
-    let oldClassName = (nodes[oldNode] as HTMLElement).className.toString();
+    let oldClassName = (nodes[oldNode] as HTMLElement).className;
     switch (oldClassName) {
       case 'stepper-item approve':
         (nodes[oldNode] as HTMLElement).classList.remove('approve');
@@ -433,7 +484,10 @@ export class PopupAddSignFileComponent implements OnInit {
         (nodes[oldNode] as HTMLElement).classList.remove('active');
         break;
     }
-    (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
+    if (oldNode > newNode && this.currentTab == this.processTab) {
+    } else {
+      (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
+    }
   }
   //#endregion
 
@@ -492,7 +546,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.dialog && this.dialog.close();
     }
     if (this.processTab > 0) {
-      this.callfuncService.openForm(dialogClose, '', 400, 250);
+      this.callfuncService.openForm(dialogClose, '', 550, 250);
     }
   }
 
@@ -501,4 +555,28 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   //#endregion
+
+  approve() {
+    this.esService
+      .release(
+        this.dialogSignFile.value,
+        this.formModel.entityName,
+        this.formModel.funcID
+      )
+      .subscribe((res) => {
+        if (res?.msgCodeError == null && res?.rowCount) {
+          this.dialogSignFile.patchValue({ approveStatus: '3' });
+          this.esService
+            .editSignFile(this.dialogSignFile.value)
+            .subscribe((result) => {
+              if (res) {
+                this.notify.notifyCode('Gửi duyệt thành công!');
+                this.dialog && this.dialog.close();
+              }
+            });
+        } else {
+          this.notify.notifyCode(res?.msgCodeError);
+        }
+      });
+  }
 }

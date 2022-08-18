@@ -80,6 +80,12 @@ export class ES_SignFile {
   ModifiedBy: string;
 }
 
+export class tmpApprovalTrans {
+  transID;
+  approver;
+  comment;
+  mode; //Approve - 1 || Reject - 2 || Redo - 3
+}
 interface cbxObj {
   [key: string]: any;
 }
@@ -103,7 +109,51 @@ export class CodxEsService {
     private http: HttpClient
   ) {}
 
+  notifyInvalid(
+    formGroup: FormGroup,
+    formModel: FormModel,
+    gridViewSetup: any = null
+  ) {
+    const invalid = [];
+    const controls = formGroup.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        break;
+      }
+    }
+    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+    if (gridViewSetup == null) {
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            gridViewSetup = res;
+            this.notificationsService.notifyCode(
+              'E0001',
+              0,
+              '"' + gridViewSetup[fieldName].headerText + '"'
+            );
+          }
+        });
+    } else {
+      this.notificationsService.notifyCode(
+        'E0005',
+        0,
+        '"' + gridViewSetup[fieldName].headerText + '"'
+      );
+    }
+  }
+
   //#region Get from FunctionList
+  getDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv('ES', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      funcID,
+      entityName,
+      idField,
+    ]);
+  }
+
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {
@@ -141,8 +191,9 @@ export class CodxEsService {
 
               if (element.fieldName == 'owner') {
                 model[element.fieldName].push(user.userID);
-              }
-              if (element.fieldName == 'createdOn') {
+              } else if (element.fieldName == 'bUID') {
+                model[element.fieldName].push(user['buid']);
+              } else if (element.fieldName == 'createdOn') {
                 model[element.fieldName].push(new Date());
               } else if (element.fieldName == 'stop') {
                 model[element.fieldName].push(false);
@@ -165,9 +216,9 @@ export class CodxEsService {
               }
 
               let modelValidator = [];
-              // if (element.isRequire) {
-              //   modelValidator.push(Validators.required);
-              // }
+              if (element.isRequire) {
+                modelValidator.push(Validators.required);
+              }
               if (element.fieldName == 'email') {
                 modelValidator.push(Validators.email);
               }
@@ -312,23 +363,6 @@ export class CodxEsService {
       'SignFilesBusiness',
       'GetDocsGByDayAsync',
       [model, month]
-    );
-  }
-
-  getApprovalTrans(recID: string) {
-    // let data = new DataRequest();
-    // data.formName = 'ApprovalTrans';
-    // data.gridViewName = 'grvSignFiles';
-    // data.entityName = 'ES_ApprovalTrans';
-    // data.predicate = 'ProcessID=@0';
-    // data.dataValue = recID;
-    // data.pageLoading = false;
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'GetByProcessIDAsync',
-      [recID]
     );
   }
 
@@ -629,7 +663,6 @@ export class CodxEsService {
   //#endregion
 
   //#region ES_SignFiles
-
   getAutoNumberByCategory(categoryID): Observable<any> {
     return this.api.exec(
       'ERM.Business.AD',
@@ -704,6 +737,48 @@ export class CodxEsService {
       'ERM.Business.ES',
       'SignFilesBusiness',
       'DeleteSignFileAsync',
+      [recID]
+    );
+  }
+
+  //#endregion
+
+  //#region ES_ApprovalTrans
+
+  getTask(recID: string): Observable<any> {
+    return this.api.execSv(
+      'TM',
+      'ERM.Business.TM',
+      'TaskBusiness',
+      'GetListTaskTreeByRefIDAsync',
+      recID
+    );
+  }
+
+  release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.CM',
+      'DataBusiness',
+      'ReleaseAsync',
+      [
+        oSignFile?.recID,
+        oSignFile.approveControl == '1'
+          ? oSignFile?.recID
+          : oSignFile?.processID,
+        entityName,
+        funcID,
+        '<div>' + oSignFile.title + '</div>',
+      ]
+    );
+  }
+
+  getApprovalTrans(recID: string) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetViewByTransIDAsync',
       [recID]
     );
   }
@@ -805,7 +880,30 @@ export class CodxEsService {
       data
     );
   }
+
+  updateSignFileTrans(userID, sfID, mode, comment) {
+    let data = [userID, sfID, mode, comment];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UpdateApprovalTransStatusAsync',
+      data
+    );
+  }
   //#endregion
+
+  //region CA
+  createLocalCertificatePFX(mail, pass) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignaturesBusiness',
+      'CreateLocalCertificatePFXAsync',
+      [mail, pass]
+    );
+  }
+  //
 }
 export class LayoutModel {
   isChange: boolean = false;

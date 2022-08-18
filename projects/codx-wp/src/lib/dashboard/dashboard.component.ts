@@ -2,6 +2,8 @@ import { DialogRef } from 'codx-core/public-api';
 import { Component, OnInit, Injector } from '@angular/core';
 import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
+import { NotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/notify-drawer.component';
+
 @Component({
   selector: 'lib-layout',
   templateUrl: './dashboard.component.html',
@@ -32,4 +34,9 @@ export class DashboardComponent extends LayoutBaseComponent {
     this.dialog.closed.subscribe()
   }
 
+  openFormNotify(){
+    let option = new SidebarModel();
+    option.Width = '550px';
+    this.dialog = this.callfc.openSide(NotifyDrawerComponent, '', option);
+  }
 }

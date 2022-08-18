@@ -105,10 +105,10 @@
     </div>
   </ng-container>
   <ng-container *ngIf="showAssignTo">
-    <div class="d-flex align-items-center justify-content-between mt-6">
+    <div class="d-flex align-items-center justify-content-between mt-4">
       <div class="d-flex align-items-center mb-3">
-        <span class="icon-person icon-24 me-2 text-primary"></span>
-        <div class="fw-bold fs-6 text-primary">
+        <span class="icon-person icon-18 me-2 text-primary"></span>
+        <div class="fw-bold text-primary mt-1">
           <codx-label fiedName="AssignTo" [formModel]="form.formModel" default="Phân công cho">
           </codx-label>
         </div>
@@ -149,10 +149,10 @@
       </ng-container>
     </div>
   </ng-container>
-  <div class="d-flex align-items-center justify-content-between mt-6" *ngIf="isHaveFile">
-    <div class="d-flex align-items-center mb-3">
-      <span class="icon-attach_file icon-24 me-2 text-primary"></span>
-      <div class="fw-bold fs-6 text-primary">
+  <div class="d-flex align-items-center justify-content-between mt-4" *ngIf="isHaveFile">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+      <div class="fw-bold text-primary">
         <codx-label fiedName="Attachments" [formModel]="form.formModel" default="Tài liệu đính kèm">
         </codx-label>
       </div>
@@ -169,12 +169,12 @@
 
 
 <ng-template #tabJob>
-  <div class="form-group mt-3">
+  <div class="tm-desc form-group mb-0 mt-3">
     <div class="d-flex align-items-center justify-content-between">
       <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả chi tiết">
       </codx-label>
     </div>
-    <codx-input type="textarea" headerposition="none" field="memo" [crrValue]="task?.memo" format="ed" height="650"
+    <codx-input type="textarea" headerposition="none" field="memo" [crrValue]="task?.memo" format="ed"
       (valueChange)="changeMemo($event)" [disabled]="readOnly"></codx-input>
   </div>
 </ng-template>
@@ -186,14 +186,14 @@
     <ng-container *ngFor="let item of listRoles">
       <div class="d-flex align-items-center ms-4">
         <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
-        <div class="fs-8 text-gray-500">{{item.text}}</div>
+        <div class="fs-7 ms-1 text-gray-500">{{item.text}}</div>
       </div>
     </ng-container>
   </div>
   <div class="d-flex align-items-center justify-content-between mt-4">
     <div class="d-flex align-items-center">
-      <span class="icon-person icon-16 me-2 text-primary"></span>
-      <div class="fw-bold fs-6 text-primary">
+      <span class="icon-person icon-18 me-2 text-primary"></span>
+      <div class="fw-bold text-primary mt-1">
         <codx-label fiedName="AssignTo" [formModel]="form.formModel" default="Phân công cho">
         </codx-label>
       </div>
@@ -208,8 +208,9 @@
         <div class="d-flex align-items-top">
           <!-- <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
           </codx-img> -->
-          <div style=" position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
-            placement="bottom" #p="ngbPopover" (mouseenter)="showPopover(p,item.resourceID)" autoClose="outside">
+          <div class="h-30px" style=" position: relative" popoverClass="userPopoverClass"
+            [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
+            (mouseenter)="showPopover(p,item.resourceID)" autoClose="outside">
             <codx-img [width]="30" class="" [objectId]="item?.resourceID" objectType="AD_Users">
             </codx-img>
             <div style="position: absolute; right: 0px;bottom: 0px">
@@ -259,7 +260,7 @@
   <div class="d-flex align-items-center justify-content-between mt-4">
     <div class="d-flex align-items-center">
       <span class="icon-playlist_add_check icon-16 me-2 text-primary"></span>
-      <div class="fw-bold fs-6 text-primary">
+      <div class="fw-bold text-primary">
         <codx-label fiedName="lblListTaskBoard" formName="TM_Tasks" default="Công việc cần làm">
         </codx-label>
       </div>
@@ -329,10 +330,10 @@
 <ng-template #tabReference>
   <div class="form-group mt-3" *ngIf="param?.ProjectControl != '0'">
     <div>
-      <codx-label fiedName="ProjectID" [formModel]="form.formModel" default="Dự án">
+      <codx-label fiedName="ProjectName" [formModel]="form.formModel" default="Dự án">
       </codx-label>
     </div>
-    <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án" ngDefaultControl
+    <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án"  [multiple]="false"
       refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
       [crrValue]="task?.projectID" [disabled]="readOnly">
     </codx-input>
@@ -382,11 +383,9 @@
 
 <ng-template #deleteToDo>
   <ng-container>
-    <a class="" (click)="onDeleteTodo(crrIndex)" style="cursor: pointer">
-      <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
-      <span>
-        <codx-label name="Delete" formName="Tasks" default="Xóa"></codx-label>
-      </span>
+    <a class="d-flex align-item-center" (click)="onDeleteTodo(crrIndex)" style="cursor: pointer">
+      <span class="icon-close icon-16 text-danger me-1"></span>
+      <codx-label class="text-danger" name="Delete" formName="Tasks" default="Xóa"></codx-label>
     </a>
   </ng-container>
 </ng-template>
@@ -397,7 +396,7 @@
       <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4"
         (click)="selectRoseType(idUserSelected,item.value)" style="cursor: pointer;">
         <span><img src="/assets/themes/tm/default/img/{{item.icon}}" alt=""></span>
-        <div class="fs-8 text-gray-500">{{item.text}}</div>
+        <div class="fs-7 ms-1 text-gray-500">{{item.text}}</div>
       </div>
     </ng-container>
   </div>

@@ -32,7 +32,7 @@ export class EditInfoComponent implements OnInit {
       name: 'tabInfoLaw',
     },
   ];
-  titleAction = 'Thêm';
+  titleAction = 'Sửa';
   currentSection = "InfoPersonal";
   dialog: any;
   data: any;
@@ -114,6 +114,7 @@ export class EditInfoComponent implements OnInit {
         }
       }
     });
+    this.dialog.close();
   }
 
   scrollTo(session) {

@@ -8,115 +8,94 @@
     [data]="data"
 ></codx-form>
 <ng-template popup adde #body>
-    <div class="d-flex flex-column justify-content-between my-7">
-        <div class="d-flex flex-column">
-            <div class="d-flex justify-content-between mb-3">
-              <div class="d-flex align-items-start">
-                <div class="w-30px mt-1">
-                    <codx-input 
-                        type="radio" 
-                        name="format"  
-                        [Group]="exportGroup"
-                        ControlName="format"
-                        crrValue="pivot"
-                        [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
+    <div class="d-flex justify-content-start h-100">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-import h-100" orientation="vertical">
+          <li ngbNavItem="1">
+            <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-excel fs-1 me-2 " style="color:#347442"></i><codx-label [formModel]="formModel" [fiedName]="'Excel'" class="fw-bold"></codx-label></div></a>
+            <ng-template ngbNavContent>
+                <div class="d-flex align-items-center justify-content-between">
+                    <codx-temp-full
+                        [title]="'Excel'"
+                        [subTitle]="'Import dữ liệu từ file Excel'"
                     >
-                    </codx-input>
+                    </codx-temp-full>
+                    <a class="d-flex align-items-center">
+                        <span class="icon-download"></span>
+                        <codx-label [formModel]="formModel" [fiedName]="'downloadTemplate'" default="Tải template mẫu"></codx-label>
+                    </a>
                 </div>
-                <div class="d-flex flex-column flex-grow-1">
-                    <div class="codx_title_sub"><codx-label default="Excel"></codx-label></div>
-                    <div class="codx_des"><i class="text-gray-400"><codx-label default="Xuất dữ liệu được chọn thành file excel có định dạng pivot table"></codx-label></i></div>
-                    <div class="codx_des cursor-pointer"><i class="text-gray-400"><codx-label default="Xuất file template mẫu" class="text-primary"></codx-label></i></div>
-                    <div class="codx_des">
-                        <codx-attachment 
-                            #attachment 
-                            hideBtnSave="1"  
-                            hideFolder="1" 
-                            hideUploadBtn="1"  
-                            hideDes="1"
-                            objectType="AD_ExcelTemplates"
-                            [functionID]="formModel?.funcID"
-                            idBrowse="2"
+                <div class="d-flex align-items-center justify-content-between py-1">
+                  <div class="hideAttachment w-100 me-2">
+                    <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                      hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
+                      [objectId]="null" [allowMultiFile]="0" [idBrowse]="'addImport'">
+                    </codx-attachment>
+                  </div>
+                  <button type="button" class="btn btn-outline-primary" style="width: 100px;" (click)="openFormUploadFile()">
+                    <codx-label [formModel]="formModel" [fiedName]="'selectedFile'" [default]="'Chọn File'"></codx-label>
+                  </button>
+                </div>
+                <div class="py-2">
+                  <ng-container *ngIf="dt_AD_IEConnections">
+                    <div class="d-flex align-items-center justify-content-between mb-3" *ngFor="let item of dt_AD_IEConnections">
+                      <div class="d-flex align-items-center justify-content-start">
+                        <codx-input
+                          type="radio"
+                          name="dataImport"
+                          [Group]="importGroup"
+                          ControlName="dataImport"
+                          [crrValue]="item.recID"
+                          [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
+                          style="margin-top:-15px;width:30px"
                         >
-                        </codx-attachment>
-                    </div>
-                </div>
-              </div>
-              <div class="d-flex align-items-start ms-6 mt-2">
-                <button type="button"
-                  class=" btn btn-sm btn-outline  btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1" (click)="openFormUploadFile()">
-                  <codx-label default="Chọn file"></codx-label>
-                </button>
-            </div>
-            </div>
-        </div>
-    </div>
-    <div class="separator my-2"></div>
-    <div class="my-7">
-        <div class="d-flex align-items-start mb-3">
-            <div class="d-flex flex-column flex-grow-1">
-                <div class="codx_title_sub">
-                    <codx-label default="Excel Template"></codx-label>
-                </div>
-                <div class="codx_des">
-                    <i class="text-gray-400"><codx-label default="Xuất dữ liệu được chọn thành file excel theo template đã định dạng trước"></codx-label></i>
-                </div>
-            </div>
-            <div class="d-flex align-items-start ms-6 ">
-                <button type="button"
-                    class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1"
-                    (click)="openForm('add',null,'excel')"
-                >
-                <codx-label default="Thêm"></codx-label>
-              </button>
-            </div>
-          </div>
-          <div (scroll)="onScroll($event)" style="max-height:100px;overflow:auto">
-            <div class="d-flex align-items-start mb-3" *ngFor="let item of dataEx"  >
-                <div class="w-30px mt-1">
-                    <codx-input 
-                        type="radio" 
-                        name="format"  
-                        [Group]="exportGroup"
-                        ControlName="format"
-                        [crrValue]="'excelTemp_'+item.recID"
-                        [ngClass]="{'is-invalid': submitted && f.format.errors }"
-                    >
-                    </codx-input>
-                </div>
-                <div class="d-flex flex-column flex-grow-1">
-                <div class="codx_title_sub">{{item.templateName}}</div>
-                <div class="codx_des"> <i class="text-gray-400">{{item.description}}</i></div>
-                </div>
-                <div class="d-flex align-items-start ms-6 ">
-                <div ngbDropdown class="dropdown ms-6" [container]="'body'" >
-                    <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-haspopup="true" aria-expanded="false">
-                        <span class="icon-more_vert icon-18"></span>
-                    </button>
-                    <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
-                        <a ngbDropdownItem class="dropdown-item">
-                            <div class="d-flex align-items-center cursor-pointer" (click)="openForm('edit',item,'excel')">
-                                <span class="icon-edit text-primary icon-16"></span>
-                                <span class="ms-2">Chỉnh sửa</span>
+                        </codx-input>
+                        <span>{{item.description}}</span>
+                      </div>
+                      <div>
+                        <button
+                          type="button"
+                          class="btn btn-outline-secondary"
+                          triggers="click"
+                          [autoClose]="true"
+                          [ngbTooltip]="tool"
+                          ngClass="border-0"
+                        >
+                          <span class="icon-more_vert icon-18"></span>
+                        </button>
+                        <ng-template #tool >
+                          <ng-container *ngFor="let x of moreFunction" >
+                            <div class="d-flex p-2 cursor-pointer" (click)="openForm(x?.id, item, 'excel')">
+                              <span class="icon-16 me-2" [ngClass]="x?.icon" [style.color]="x?.textColor"></span>
+                              <codx-label [formModel]="formModel" [fiedName]="x?.text"></codx-label>
                             </div>
-                        </a>
-                        <a ngbDropdownItem class="dropdown-item" >
-                            <div class="d-flex align-items-center cursor-pointer" (click)="openForm('delete',item,'excel')">
-                                <span class="icon-delete text-danger icon-16"></span>
-                                <span class="ms-2">Xóa</span>
-                            </div>
-                        </a>
+                          </ng-container>
+                        </ng-template>
+                      </div>
                     </div>
+                  </ng-container>
                 </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="2">
+            <a ngbNavLink><div class="d-flex align-items-center py-2"><i class="fa-solid fa-file-csv fs-1 me-2" style="color:#FFAC33"></i><codx-label [formModel]="formModel" [fiedName]="'CSV'" class="fw-bold"></codx-label></div></a>
+            <ng-template ngbNavContent>
+              <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
+                farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
+                ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar
+                helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson
+                8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester
+                stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="ms-4 w-100"></div>
+      </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
-    <button class="btn btn-light-primary" (click)="onSave()">
-        Import
-    </button>
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-primary btn-mgl" (click)="openFormAddTemplate()"><codx-label [formModel]="formModel" [fiedName]="'addTemplate'" [default]="'Thêm template'"></codx-label></button>
+      <button class="btn btn-primary " (click)="onSave()">
+        <codx-label [formModel]="formModel" [fiedName]="'importFile'" [default]="'Import File'"></codx-label>
+      </button>
     </div>
 </ng-template>

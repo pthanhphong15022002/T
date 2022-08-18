@@ -225,6 +225,12 @@ export class FileService implements OnDestroy {
         return this.api.execSv<string>("DM", "DM", "FileBussiness", "CreateChunkFileAsync", file);
     }
 
+    GetPathServer(path): Observable<any> {
+        //  var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);        
+        return this.api.execSv<string>("DM", "DM", "FileBussiness", "GetPathServerAsync", path);
+    }
+
     //Observable<any>
     addFile(file: FileUpload): Observable<any> {
         //  var bytes = new Int8Array(data as ArrayBuffer); 
@@ -252,7 +258,7 @@ export class FileService implements OnDestroy {
         return this.api.exec<DataReturn>("DM", "FileBussiness", "AddFileAsync", [folderID, objectID, objectType, cate, item, fileName]);
     }
 
-    getListActiveFiles(parentId: string, folderType: any): Observable<any> {
+    GetFiles(parentId: string, folderType: any): Observable<any> {
         /* const request = {
              IsJson: true,
              Data: parentId,
@@ -270,7 +276,7 @@ export class FileService implements OnDestroy {
         //return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", parentId);
         var data = this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", [this.options, folderType, parentId]);
         // var fileIbfo = data[0]
-        console.log(data);
+      //  console.log(data);
         return data;
     }
 }

@@ -4,18 +4,19 @@ export class HR_Employees {
     public gender: string;
     public birthday: Date;
     public birthPlace: string;
+    public organizationID: string;
     public organizationName: string;
+    public departmentID: string;
     public departmentName: string;
+    public divisionID: string;
     public divisionName: string;
     public phone: string;
+    public positionID: string;
     public positionName: string
     public email: string;
     public street: string;
     public fullAddress: string;
-    public positionID: string;
     public orgUnitID: string;
-    public departmentID: string;
-    public divisionID: string;
     public joinedOn: Date;
     public hiredOn: Date;
     public idCardNo: string;

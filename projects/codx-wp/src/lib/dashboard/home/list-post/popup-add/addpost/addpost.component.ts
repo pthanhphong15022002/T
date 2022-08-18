@@ -12,20 +12,15 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from '@shared/models/post';
 import 'lodash';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile, Util } from 'codx-core';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import * as mime from 'mime-types'
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { Observable, of, Subscriber } from 'rxjs';
-import { Observer } from '@syncfusion/ej2-base';
-import { A } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-addpost',
@@ -197,9 +192,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     this.dt.detectChanges();
   }
-  Submit() {
-    if (this.isClick) return;
-    this.isClick = true;
+  click() {
     switch (this.dialogData.status) {
       case this.STATUS.EDIT:
         this.editPost();
@@ -216,14 +209,18 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   valueChange(e: any) {
     if (e.data) {
       this.message = e.data;
-      this.dt.detectChanges();
+    }else
+    {
+      this.message = "";
     }
+    this.dt.detectChanges();
   }
 
   eventApply(event: any) {
     if (!event) {
       return;
     }
+    this.permissions = [];
     let data = event[0];
     this.shareControl = data.objectType;
     this.shareIcon = data.icon;
@@ -245,6 +242,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         evrPermission.createdBy = this.user.userID;
         evrPermission.createdOn = new Date();
         this.shareWith = "";
+        this.permissions.push(this.myPermission);
+        this.permissions.push(this.adminPermission);
         this.permissions.push(evrPermission);
         break;
       case this.SHARECONTROLS.MYGROUP:
@@ -261,6 +260,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         permission.createdBy = this.user.userID;
         permission.createdOn = new Date();
         this.shareWith = "";
+        this.permissions.push(this.myPermission);
+        this.permissions.push(this.adminPermission);
         this.permissions.push(permission);
         break;
       case this.SHARECONTROLS.OGRHIERACHY:
@@ -276,6 +277,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           p.isActive = true;
           p.createdBy = this.user.userID;
           p.createdOn = new Date();
+          this.permissions.push(this.myPermission);
+          this.permissions.push(this.adminPermission);
           this.permissions.push(p);
         });
         if (countPermission > 1) {
@@ -303,6 +306,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           p.isActive = true;
           p.createdBy = this.user.userID;
           p.createdOn = new Date();
+          this.permissions.push(this.myPermission);
+          this.permissions.push(this.adminPermission);
           this.permissions.push(p);
 
         });
@@ -331,6 +336,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           p.isActive = true;
           p.createdBy = this.user.userID;
           p.createdOn = new Date();
+          this.permissions.push(this.myPermission);
+          this.permissions.push(this.adminPermission);
           this.permissions.push(p);
         });
         if (countPermission > 1) {
@@ -386,6 +393,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           p.isActive = true;
           p.createdBy = this.user.userID;
           p.createdOn = new Date();
+          this.permissions.push(this.myPermission);
+          this.permissions.push(this.adminPermission);
           this.permissions.push(p);
         });
         if (countPermission > 1) {
@@ -407,7 +416,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   }
 
   publishPost() {
-    if (!this.message && this.listFileUpload.length < 0) {
+    if (!this.message && this.listFileUpload.length <= 0) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
@@ -417,13 +426,13 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.category = this.CATEGORY.POST;
     post.approveControl = "0";
     post.refType = this.entityName;
-    post.permissions = this.permissions;
+    post.permissions = this.permissions.concat(this.tags);
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((result: any) => {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
-            this.dmSV.fileUploadList = [...this.listFileUpload];
+            this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
             this.atmCreate.saveFilesObservable().subscribe((res:any)=>{
               if(res){
@@ -442,7 +451,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   }
 
   editPost() {
-    if (!this.message) {
+    if (!this.message && this.dataEdit.files.length <= 0 && this.listFileUpload.length <= 0) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
@@ -455,7 +464,11 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     if (this.listFileUpload.length > 0) {
       this.atmEdit.objectId = this.dataEdit.recID;
       this.dmSV.fileUploadList = this.listFileUpload;
-      this.atmEdit.saveFilesObservable().subscribe();
+      this.atmEdit.saveFilesObservable().subscribe((res:any) => {
+        if(res){
+          console.log(res);
+        }
+      });
     }
     if (this.codxFileEdit.filesDelete.length > 0) {
       let filesDeleted = this.codxFileEdit.filesDelete;
@@ -483,7 +496,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
 
   sharePost() {
-    if (!this.message && this.listFileUpload.length < 0) {
+    if (!this.message && this.listFileUpload.length <= 0) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
@@ -518,6 +531,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
+  width = 420;
+  height = window.innerHeight;
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
@@ -603,7 +618,52 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
+  showCBB=false;
+  tagWith:string ='';
+  tags:any[] = [];
+  saveAddUser(value:any){
+    this.tags = [];
+    let data = value.dataSelected;
+    if(data && data.length > 0){
+      this.lstTagUser = data;
+      data.forEach((x: any) => {
+        let p = new Permission();
+        p.objectType = 'U'
+        p.objectID = x.UserID;
+        p.objectName = x.UserName;
+        p.memberType = this.MEMBERTYPE.TAGS;
+        p.read = true;
+        p.share = true;
+        p.isActive = true;
+        p.createdBy = this.user.userID;
+        p.createdOn = new Date();
+        this.tags.push(p);
+      });
+      if (data.length > 1) {
+        this.cache.message('WP019').subscribe((mssg: any) => {
+          if (mssg)
+            this.tagWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].UserName + '</b>', data.length - 1, this.shareText);
+        });
+      }
+      else {
+        this.cache.message('WP018').subscribe((mssg: any) => {
+          if (mssg)
+            this.tagWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].UserName + '</b>');
+        });
+      }
+    }
+    this.showCBB = !this.showCBB;
+    this.dt.detectChanges();
+  }
+
   tagUser(){
-    
+    this.showCBB = !this.showCBB;
+  }
+  lstTagUser:any[] = [];
+  searchTagUser:string ="";
+  clickShowTag(){
+
+  }
+  getTagUser() {
   }
 }

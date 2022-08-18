@@ -125,21 +125,6 @@ ejs-listview .e-ul>li {
 }
 
 
-/*** 1 - 5 pic ***/
-.feed-5pic .col-xl-5.pl-0 div+div {
-    margin-top: 3px;
-}
-
-.feed-img-more {
-    margin-top: -150px !important;
-    height: 150px;
-    position: relative;
-    z-index: 99;
-    background-color: rgba(0, 0, 0, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .text-number {
     font-size: 24px;
@@ -177,4 +162,120 @@ ejs-listview .e-ul>li {
 .position-relative:hover .remove-file {
     //visibility: visible;
     opacity: 1;
+}
+
+////////////////////////////////////////////////////////////
+.contentediter {
+    height: 36px;
+    overflow-y: scroll;
+    color: #161719;
+}
+
+.flex {
+    display: flex;
+}
+
+.mod-icon {
+    padding: 6px 6px;
+}
+
+.comments {
+    background-color: #adb5bd26;
+    padding: 10px 15px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.comment-thumb {
+    position: absolute;
+    background-color: #fff;
+    right: 20px;
+    bottom: -14px;
+    padding: 6px 10px;
+    border-radius: 18px;
+    box-shadow: 0px 0px 6px 0px rgb(76 87 125 / 12%);
+}
+
+.btn-send {
+    position: absolute;
+    top: 0;
+    right: 8px;
+}
+
+.isHiden {
+    display: none;
+}
+
+.isShow {
+    display: block;
+}
+
+.feed-box input.codx-text {
+    border: 0;
+    padding-left: 0;
+    background-color: #f5f5f5;
+}
+
+.btn-like,
+.btn-com {
+    height: 30px;
+    line-height: 30px;
+}
+
+.btn-like {
+
+    position: relative;
+}
+
+.mod-icon img {
+    width: 30px;
+    height: auto;
+}
+
+
+
+.icon-like {
+    visibility: hidden;
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    margin-left: -50px;
+    background-color: #ffffff;
+    box-shadow: 0px 10px 20px 0px rgb(82 63 105 / 10%);
+    padding: 5px;
+    border-radius: 6px;
+}
+
+.btn-like:hover .icon-like {
+    visibility: visible;
+}
+
+.feed-box .e-float-input {
+    background-color: transparent;
+    padding-left: 0;
+    padding-right: 20px;
+}
+
+.feed-box {
+    border: 0;
+    height: 36px;
+    line-height: 33px;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 2px 20px;
+}
+
+.edit-comment .e-float-input {
+    border-radius: 30px !important;
+}
+
+.edit-comment .form-control {
+    border-radius: 30px !important;
+    padding-right: 20px;
+}
+.tmpshare{
+    background-color: #fff;
+    right: -10px;
+    padding: 8px;
+    z-index: 99;
 }

@@ -1,4 +1,4 @@
-<codx-views #view [funcID]="funcID" entityName="TM_Tasks" service="TM" assemblyName="ERM.Business.TM" className="ReportBusiness"
+<codx-views #view [funcID]="funcID" entityName="TM_sprTaskDaily" service="TM" assemblyName="ERM.Business.TM" className="ReportBusiness"
   method="ListReportTasksAsync" [views]="views" idField="taskID" [pageSize]="100" [selectedFirst]="true">
 </codx-views>
 
@@ -54,7 +54,7 @@
   <div class="d-flex align-items-center" #itemOwner>
     <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="data.owner" objectType="AD_Users">
     </codx-img>
-    <div class="text-dark font-size-lg" style="margin-left: 20px;">{{data.owner}}</div>
+    <div class="text-dark font-size-lg" style="margin-left: 20px;">{{data.userName}}</div>
   </div>
 </ng-template>
 <ng-template #itemDueDate let-data>

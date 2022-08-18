@@ -9,14 +9,14 @@
       ">
       <div class="d-flex align-items-center avatar">
         <codx-img class="me-4" #imageAvatar [width]="100" [objectId]="employeeInfo?.employeeID"
-          [objectName]="employeeInfo?.employeeName" objectType="HR_Employees">
+           objectType="HR_Employees" isAllowEdit="true" updateDirect="true">
         </codx-img>
         <div class="d-flex flex-column">
           <div class="fw-bold text-dark fs-5 mb-1">
             {{ employeeInfo?.employeeName }}
           </div>
-          <div class="text-dark">{{ employeeInfo?.positionName }}</div>
-          <div class="text-gray-700">{{ employeeInfo?.organizationName }}</div>
+          <div class="text-dark" #positionName>{{ employeeInfo?.positionName | formatvalue: view.formModel:"positionID":positionName | async  }}</div>
+          <div class="text-gray-700" #organizationName>{{ employeeInfo?.organizationName | formatvalue: view.formModel:"orgUnitID":organizationName | async  }}</div>
         </div>
       </div>
     </div>
