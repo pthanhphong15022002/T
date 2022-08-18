@@ -16,6 +16,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  RequestOption,
   Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -167,7 +168,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     };
     if (this.task.taskGroupID != null) {
       this.logicTaskGroup(this.task.taskGroupID);
-    }else this.getParam();
+    } else this.getParam();
 
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
@@ -423,7 +424,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.param?.MaxHoursControl != '0' &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
-      this.notiService.notifyCode('TM058',0,[this.param?.MaxHours])
+      this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours])
       return;
     }
     if (
@@ -521,19 +522,27 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    this.tmSv
-      .addTask([
-        this.task,
-        this.functionID,
-        this.listTaskResources,
-        this.listTodo,
-      ])
-      .subscribe((res) => {
-        if (res && res.length > 0) {
-          this.dialog.dataService.addDatas.clear();
-          this.dialog.close(res);
-        }
-      });
+    // this.tmSv
+    //   .addTask([
+    //     this.task,
+    //     this.functionID,
+    //     this.listTaskResources,
+    //     this.listTodo,
+    //   ])
+    //   .subscribe((res) => {
+    //     if (res && res.length > 0) {
+    //       this.dialog.dataService.onAction.next({ type: 'create', data: res });
+    //       this.dialog.dataService.addDatas.clear();
+    //       this.dialog.close(res);
+    //     }
+    //   });
+    this.dialog.dataService.save((opt: RequestOption) => {
+      opt.methodName = 'AddTaskAsync';
+      opt.data = [this.task, this.functionID, this.listTaskResources, this.listTodo];
+      return true;
+    }).subscribe(res => {
+      this.dialog.close(res);
+    })
   }
 
   updateTask() {
@@ -728,7 +737,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.taskGroup = res;
-          if (res.checkList != null && res.checkList.trim()!="") {
+          if (res.checkList != null && res.checkList.trim() != "") {
             var toDo = res.checkList.split(';');
             // this.countTodoByGroup = toDo.length ;
             this.listTodo = [];
@@ -781,7 +790,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   onDeleteUser(item) {
     if (item?.status && item.status != '00' && item.status != '10') {
-      this.notiService.notifyCode('TM012',0,[item?.resourceName]);
+      this.notiService.notifyCode('TM012', 0, [item?.resourceName]);
       return;
     }
     var userID = item.resourceID;

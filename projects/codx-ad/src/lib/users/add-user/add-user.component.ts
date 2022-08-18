@@ -163,6 +163,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   addUserTemp() {
     this.checkBtnAdd = true;
+
     this.adService.addUserBeforeDone(this.adUser).subscribe((res) => {
       if (res) {
         this.dataAfterSave = res;
@@ -214,7 +215,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 this.dialog.close(res.save);
               }
             });
-            debugger;
+          debugger;
           res.save['chooseRoles'] = res.save?.functions;
           res.save['buName'] = res.save?.buid;
           this.changeDetector.detectChanges();
@@ -354,7 +355,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  buttonClick(e: any) {}
+  buttonClick(e: any) { }
 
   // getFormGroup(formName, gridView): Promise<FormGroup> {
   //   return new Promise<FormGroup>((resolve, reject) => {
