@@ -211,7 +211,7 @@
                                 type="switch"
                                 [field]="child.controlName"
                                 [crrValue]="
-                                child.defaultValue ? child.defaultValue : false
+                                child.defaultValue == true ? child.defaultValue : false
                                 "
                                 (valueChange)="valueChange($event,true,'switch')"
                               ></codx-input>
@@ -229,7 +229,7 @@
                                 type="checkBox"
                                 [field]="child.controlName"
                                 [crrValue]="
-                                child.defaultValue ? child.defaulValue : false
+                                child.defaultValue == true ? child.defaultValue : false
                                 "
                                 (valueChange)="valueChange($event,true,'checkbox')"
                               ></codx-input>
