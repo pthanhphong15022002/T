@@ -35,25 +35,33 @@ export class UpdateStatusComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  beforeSave(op: any) {
-    var data = [];
-    op.methodName = 'UpdateStatusAsync';
-    op.methodName = 'UpdateStatusAsync';
+  // beforeSave(op: any) {
+  //   var data = [];
+  //   op.methodName = 'UpdateStatusAsync';
 
-    data = [
-      this.employee,
-    ];
-    op.data = data;
-    return true;
-  }
+  //   data = [
+  //     this.employee,
+  //   ];
+  //   op.data = data;
+  //   return true;
+  // }
 
   updateStatus() {
     this.api
       .execSv<any>("HR","ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", this.employee)
-      .subscribe(
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          this.dialog.close(res)
+          // this.notiService.notifyCode('TM009');
+        } else {
+          this.dialog.close()
+          // this.notiService.notifyCode('TM008');
+        }
+      }
       );
-    this.detectorRef.detectChanges();
+    
     this.dialog.close();
+    this.detectorRef.detectChanges();
   }
 
   valueChange(e) {

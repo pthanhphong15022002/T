@@ -68,7 +68,7 @@ export class SignFileComponent extends UIComponent {
   entity = 'ES_SignFiles';
   className = 'SignFilesBusiness';
   method = 'GetAsync';
-  idField = 'idField';
+  idField = 'recID';
 
   dataSelected;
   SidebarModel;
@@ -76,8 +76,6 @@ export class SignFileComponent extends UIComponent {
   dialog: DialogRef;
 
   buttons: Array<ButtonModel> = [];
-  moreFunc: Array<ButtonModel> = [];
-
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
 
   onInit(): void {
@@ -96,8 +94,6 @@ export class SignFileComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.view.dataService.methodDelete = 'DeleteSignFileAsync';
-    this.view.dataService.dataValue = '1';
-    this.view.dataService.predicate = 'ApproveStatus=@0';
     this.views = [
       {
         type: ViewType.listdetail,
@@ -129,33 +125,23 @@ export class SignFileComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
-  editSignFile(e) {
-    console.log(this.itemDetail);
-  }
-
-  viewDetailSignFile(e) {
-    console.log(this.itemDetail);
-  }
-
-  removeSignFile(e) {
-    console.log(this.itemDetail);
+  getDetailSignFile(id: any) {
+    this.esService
+      .getDetailSignFile(this.itemDetail?.recID)
+      .subscribe((res) => {
+        if (res) {
+          this.itemDetail = res;
+          this.df.detectChanges();
+        }
+      });
   }
 
   sendToApprove() {
     console.log(this.itemDetail);
   }
 
-  checkStep(current, isChange) {
-    if (current == this.preStepNo) {
-      return false;
-    } else {
-      if (isChange) this.preStepNo = current;
-      return true;
-    }
-  }
-
   closeAddForm(event) {
-    this.dialog && this.dialog.close();
+    //this.dialog && this.dialog.close();
   }
 
   click(evt: ButtonModel) {
@@ -168,7 +154,6 @@ export class SignFileComponent extends UIComponent {
 
   addNew(evt?) {
     this.view.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.view?.currentView?.dataService;
@@ -190,6 +175,15 @@ export class SignFileComponent extends UIComponent {
         '',
         dialogModel
       );
+      // this.dialog = this.callfunc.openSide(
+      //   PopupAddSignFileComponent,
+      //   {
+      //     isAddNew: true,
+      //     formModel: this.view?.currentView?.formModel,
+      //     option: option,
+      //   },
+      //   option
+      // );
       this.dialog.closed.subscribe((x) => {
         if (x.event) {
           delete x.event._uuid;

@@ -114,7 +114,7 @@ export class DetailComponent implements OnInit {
 
   getBookmarksClass(item) {
     if (this.showBookmark(item))
-      return "icon-bookmark text-warning icon-20";
+      return "icon-bookmark text-warning icon-18";
     else
       return "text-warning icon-20";
   }
@@ -336,7 +336,7 @@ export class DetailComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     });
 
-    this.fileService.getListActiveFiles(id, "").subscribe(async res => {
+    this.fileService.GetFiles(id, "").subscribe(async res => {
       //  this.dmSV.changeData(null, res, id);
       // console.log(res);
       // this.dmSV.listFiles.next(res);
@@ -381,7 +381,7 @@ export class DetailComponent implements OnInit {
         document.body.removeChild(link);
       }
     });
-  }  
+  }
 
   fileFolderDropped($event) {
     if ($event.source.recID != $event.target.recID) {

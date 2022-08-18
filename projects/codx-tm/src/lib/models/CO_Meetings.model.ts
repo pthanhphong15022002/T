@@ -34,7 +34,6 @@ export class CO_Meetings{
     online: boolean;
     avataResource: string;
     userName: string;
-
 }
 
 export class CO_Resources{
@@ -51,6 +50,12 @@ export class CO_Resources{
     modifiedOn: Date;
     modifiedBy: string;
     positionName: string;
+}
+
+export class TabControl{
+  name: 'Bình luận' | 'Họp định kì' | 'Dashboard' | 'Công việc' |string;
+  textDefault: string;
+  isActive: boolean;
 }
 
 

@@ -11,14 +11,15 @@
             <codx-label name="lblNote" formName="WP_Notes" default="Tạo ghi chú"></codx-label>
         </div>
         <div class="d-flex align-items-center note-btn">
-            <div class="pw-save ms-2" (click)="formType == 'edit' ? openFormNoteBooks() : ''" [ngbPopover]="'Lưu ghi chú vào sổ tay'"
-                triggers="mouseenter:mouseleave" placement="bottom" [autoClose]="'outside'" container="body"
-                >
-                <span class="icon-menu_book icon-20 btn btn-icon btn-active-light-primary position-relative"
-                    [class]="formType == 'add' ? 'disabled' : ''" type="button">
+            <div class="pw-save ms-2" (click)="formType == 'edit' ? openFormNoteBooks() : ''"
+                [ngbPopover]="'Lưu ghi chú vào sổ tay'" triggers="mouseenter:mouseleave" placement="bottom"
+                [autoClose]="'outside'" container="body" *ngIf="formType == 'edit'">
+                <span class="icon-assignment_returned icon-20 btn btn-icon btn-active-light-primary position-relative"
+                    type="button">
                 </span>
             </div>
-            <span class="icon-close icon-20 btn btn-icon btn-active-light-primary position-relative" (click)="close()"></span>
+            <span class="icon-close icon-20 btn btn-icon btn-active-light-primary position-relative"
+                (click)="close()"></span>
         </div>
     </div>
     <div class="note-text">
@@ -105,13 +106,13 @@
     <div class="d-flex note-action border align-items-center justify-content-between">
         <div class="d-flex">
             <div [class.active]="noteType.text">
-                <span (click)="onType('text')" class="icon-font_download icon-20 me-1 btn btn-icon btn-white"></span>
+                <span (click)="onType('text')" class="icon-font_download icon-20 btn btn-icon btn-white"></span>
             </div>
             <div [class.active]="noteType.list">
-                <span (click)="onType('list')" class="icon-list_alt icon-20 me-1 btn btn-icon btn-white"></span>
+                <span (click)="onType('list')" class="icon-list_alt icon-20 btn btn-icon btn-white"></span>
             </div>
             <div [class.active]="noteType.check">
-                <span (click)="onType('check')" class="icon-check_box icon-20 me-1 btn btn-icon btn-white"></span>
+                <span (click)="onType('check')" class="icon-check_box icon-20 btn btn-icon btn-white"></span>
             </div>
             <span class="icon-image icon-20 btn btn-icon btn-white" (click)="popupFile()">
             </span>

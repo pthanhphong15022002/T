@@ -59,10 +59,11 @@ export class AssignInfoComponent implements OnInit {
   listRoles = [];
   isHaveFile = false;
   taskParent: any;
-  refID = "";
-  refType = "";
+  refID = '';
+  refType = '';
+  dueDate: Date;
   taskType = '1';
-  vllPriority = "TM005";
+  vllPriority = 'TM005';
 
   constructor(
     private authStore: AuthStore,
@@ -74,13 +75,14 @@ export class AssignInfoComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.getParam()
+    this.getParam();
     this.task = {
       ...this.task,
       ...dt?.data[0],
-    }; 
+    };
     this.refID = this.task?.refID;
     this.refType = this.task?.refType;
+    this.dueDate = this.task?.dueDate;
     if (this.task?.taskID) this.taskParent = this.task;
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
     this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
@@ -127,14 +129,17 @@ export class AssignInfoComponent implements OnInit {
   }
 
   openInfo() {
-    this.task.dueDate = moment(new Date())
-      .set({ hour: 23, minute: 59, second: 59 })
-      .toDate();
+    if (this.dueDate && !this.taskParent) {
+      this.task.dueDate = moment(new Date(this.dueDate)).toDate();
+    } else
+      this.task.dueDate = moment(new Date())
+        .set({ hour: 23, minute: 59, second: 59 })
+        .toDate();
     this.listUser = [];
     this.listTaskResources = [];
-    this.task.category = "3"
-    this.task.status = "10";
-    this.task.refID = this.refID
+    this.task.category = '3';
+    this.task.status = '10';
+    this.task.refID = this.refID;
     this.task.refType = this.refType;
     if (this.taskParent) {
       this.task.taskName = this.taskParent.taskName;
@@ -147,8 +152,8 @@ export class AssignInfoComponent implements OnInit {
       this.task.refID = this.taskParent.refID;
       this.task.refNo = this.taskParent.refNo;
       this.task.taskType = this.taskParent.taskType;
-      if(this.taskParent.listTaskGoals.length>0){
-        var toDos = this.taskParent.listTaskGoals
+      if (this.taskParent.listTaskGoals.length > 0) {
+        var toDos = this.taskParent.listTaskGoals;
         toDos.forEach((obj) => {
           var taskG = new TaskGoal();
           taskG.status = this.STATUS_TASK_GOAL.NotChecked;
@@ -157,12 +162,12 @@ export class AssignInfoComponent implements OnInit {
           this.listTodo.push(taskG);
         });
       }
-     if(this.taskParent?.taskGroupID) this.logicTaskGroup(this.taskParent?.taskGroupID);
+      if (this.taskParent?.taskGroupID)
+        this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
 
     this.changeDetectorRef.detectChanges();
   }
-
 
   changText(e) {
     this.task.taskName = e.data;
@@ -224,8 +229,7 @@ export class AssignInfoComponent implements OnInit {
     }
   }
 
-  changeVLL(e) { }
-
+  changeVLL(e) {}
 
   saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
@@ -234,6 +238,21 @@ export class AssignInfoComponent implements OnInit {
     }
     if (this.task.assignTo == null || this.task.assignTo == '') {
       this.notiService.notifyCode('TM011');
+      return;
+    }
+    if (this.task.estimated < 0) {
+      this.notiService.notifyCode('TM033');
+      return ;
+    }
+    if (
+      this.param?.MaxHoursControl != '0' &&
+      this.task.estimated > Number.parseFloat(this.param?.MaxHours)
+    ) {
+      this.notiService.notifyCode('TM058',0,[this.param?.MaxHours])
+      return;
+    }
+    if (this.task.estimated < 0) {
+      this.notiService.notifyCode('TM033');
       return;
     }
     if (this.param?.ProjectControl == '2' && !this.task.projectID) {
@@ -247,7 +266,10 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('TM029');
       return;
     }
-    if (this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)) {
+    if (
+      this.param?.PlanControl == '2' &&
+      (!this.task.startDate || !this.task.endDate)
+    ) {
       this.notiService.notifyCode('TM030');
       return;
     }
@@ -256,16 +278,24 @@ export class AssignInfoComponent implements OnInit {
       return;
     }
     if (this.task.taskGroupID) {
-      if (this.taskGroup?.checkListControl != '0' && this.listTodo.length == 0) {
+      if (
+        this.taskGroup?.checkListControl != '0' &&
+        this.listTodo.length == 0
+      ) {
         this.notiService.notifyCode('TM032');
         return;
       }
     }
-    if (this.isHaveFile)
-      this.attachment.saveFiles();
+    if (this.isHaveFile) this.attachment.saveFiles();
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
     this.tmSv
-      .saveAssign([this.task, this.functionID, this.listTaskResources, this.listTodo, taskIDParent])
+      .saveAssign([
+        this.task,
+        this.functionID,
+        this.listTaskResources,
+        this.listTodo,
+        taskIDParent,
+      ])
       .subscribe((res) => {
         if (res[0]) {
           this.notiService.notifyCode('TM006');
@@ -311,7 +341,6 @@ export class AssignInfoComponent implements OnInit {
   //   } else this.task.assignTo = '';
   // }
   onDeleteUser(item) {
-
     var userID = item.resourceID;
     var listUser = [];
     var listTaskResources = [];
@@ -356,7 +385,8 @@ export class AssignInfoComponent implements OnInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
   }
   eventApply(e: any) {
     var assignTo = '';
@@ -484,10 +514,8 @@ export class AssignInfoComponent implements OnInit {
   //     });
   // }
   showPopover(p, userID) {
-    if (this.popover)
-      this.popover.close();
-    if (userID)
-      this.idUserSelected = userID;
+    if (this.popover) this.popover.close();
+    if (userID) this.idUserSelected = userID;
     p.open();
     this.popover = p;
   }
@@ -496,11 +524,10 @@ export class AssignInfoComponent implements OnInit {
   }
 
   selectRoseType(idUserSelected, value) {
-
-    this.listTaskResources.forEach(res => {
+    this.listTaskResources.forEach((res) => {
       if (res.resourceID == idUserSelected) res.roleType = value;
-    })
-    this.changeDetectorRef.detectChanges()
+    });
+    this.changeDetectorRef.detectChanges();
 
     this.popover.close();
   }
@@ -521,10 +548,14 @@ export class AssignInfoComponent implements OnInit {
   valueChangeEstimated(data) {
     if (!data.data) return;
     var num = data.data;
-    if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
-      num = this.param?.MaxHours;
+    if (num < 0) {
+      this.notiService.notifyCode('TM033');
     }
+    // if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
+    //   this.task[data.field] = this.param?.MaxHours;
+    // }else
     this.task[data.field] = num;
+
     this.changeDetectorRef.detectChanges();
   }
 
@@ -542,7 +573,7 @@ export class AssignInfoComponent implements OnInit {
           this.taskGroup = res;
           if (res.checkList != null) {
             var toDo = res.checkList.split(';');
-            // this.countTodoByGroup = toDo.length ;
+            this.listTodo = [];
             toDo.forEach((tx) => {
               var taskG = new TaskGoal();
               taskG.status = this.STATUS_TASK_GOAL.NotChecked;

@@ -45,13 +45,16 @@ import {
   PrintService,
   AnnotationService,
   FormFieldsService,
-  PdfViewerModule,
+  PdfViewerAllModule,
 } from '@syncfusion/ej2-angular-pdfviewer';
 import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { SettingComponent } from './setting/setting.component';
 import { PdfViewComponent } from './sign-file/pdf-view/pdf-view.component';
 import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
 import { PopupSignForApprovalComponent } from './sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
+import { ViewApprovalProcessComponent } from './setting/view-approval-process/view-approval-process.component';
+import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 
 const routes: Routes = [
   {
@@ -68,14 +71,6 @@ const routes: Routes = [
         component: PopupSignForApprovalComponent,
       },
 
-      {
-        path: 'signatures/:funcID',
-        component: SignatureComponent,
-      },
-      {
-        path: 'categories/:funcID',
-        component: DocCategoryComponent,
-      },
       {
         path: 'home/:funcID',
         component: DashboardComponent,
@@ -104,6 +99,20 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'signatures/:funcID',
+        component: SignatureComponent,
+      },
+      {
+        path: 'categories/:funcID',
+        component: DocCategoryComponent,
+      },
+    ],
+  },
 ];
 @NgModule({
   declarations: [
@@ -122,6 +131,7 @@ const routes: Routes = [
     PdfViewComponent,
     PopupADRComponent,
     PopupSignForApprovalComponent,
+    ViewApprovalProcessComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -134,7 +144,8 @@ const routes: Routes = [
     SharedModule,
     TabModule,
     CodxShareModule,
-    PdfViewerModule,
+    PdfViewerAllModule,
+    ListViewAllModule,
   ],
   exports: [CodxEsComponent],
   providers: [
@@ -148,7 +159,7 @@ const routes: Routes = [
     StackingColumnSeriesService,
     LegendService,
     TooltipService,
-    //pdfService (NQBuu)
+    //pdfService (NHBuu)
     LinkAnnotationService,
     BookmarkViewService,
     MagnificationService,

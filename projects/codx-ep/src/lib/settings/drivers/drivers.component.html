@@ -34,15 +34,16 @@
 </ng-template>
 
 <ng-template #categoryCol let-data>
-  <div class="has-action-menu">
+  
+  <div class="has-action-menu">    
     {{ data.category | vll: "VL005":"text" | async }}    
-    <div class="action-menu">
-      <codx-mfunc        
-        [dataItem]="data"
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-      ></codx-mfunc> 
-    </div>
+    <codx-mfunc      
+      [dataItem]="data"
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
   </div>  
 </ng-template>
+
+

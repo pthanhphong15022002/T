@@ -11,6 +11,7 @@ import {
   CacheService,
   CallFuncService,
   CodxGridviewComponent,
+  DialogModel,
   DialogRef,
   RequestOption,
   SidebarModel,
@@ -22,6 +23,7 @@ import { PopupAddCategoryComponent } from './popup-add-category/popup-add-catego
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
+import { ApprovalStepComponent } from '../approval-step/approval-step.component';
 
 export class defaultRecource {}
 @Component({
@@ -100,12 +102,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               template: '',
               width: 180,
             },
-            {
-              field: 'parentID',
-              headerText: gv['ParentID'].headerText,
-              template: this.parentID,
-              width: 120,
-            },
+            // {
+            //   field: 'parentID',
+            //   headerText: gv['ParentID'].headerText,
+            //   template: this.parentID,
+            //   width: 120,
+            // },
             {
               field: 'icon',
               headerText: gv['Icon'].headerText,
@@ -172,29 +174,31 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddCategoryComponent,
-        [this.viewBase.dataService.dataSelected, true],
+        { data: this.viewBase.dataService.dataSelected, isAdd: true },
         option
       );
     });
   }
 
   edit(evt?) {
-    let item = this.viewBase.dataService.dataSelected;
     if (evt) {
-      item = evt;
+      this.viewBase.dataService.dataSelected = evt;
+
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.viewBase?.currentView?.dataService;
+          option.FormModel = this.viewBase?.currentView?.formModel;
+          this.dialog = this.callfunc.openSide(
+            PopupAddCategoryComponent,
+            { data: evt, isAdd: false },
+            option
+          );
+        });
     }
-    this.viewBase.dataService.edit(item).subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callfunc.openSide(
-        PopupAddCategoryComponent,
-        [item, false],
-        option
-      );
-    });
   }
 
   delete(evt?) {
@@ -228,5 +232,32 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       lstNumber.push(i + 1);
     }
     return lstNumber;
+  }
+
+  viewDetail(oCategory) {
+    let transID = oCategory.recID;
+    let data = {
+      type: '0',
+      transID: transID,
+      justView: true,
+    };
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+
+    this.callfunc.openForm(
+      ApprovalStepComponent,
+      '',
+      screen.width,
+      screen.height,
+      '',
+      data,
+      '',
+      dialogModel
+    );
+  }
+
+  contentTooltip() {
+    return 'Xem chi tiết';
   }
 }

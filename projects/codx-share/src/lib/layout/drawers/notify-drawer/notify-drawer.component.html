@@ -1,4 +1,17 @@
-<div id="kt_drawer_notify" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="notify"
+<codx-form [body]="body" [dialog]="dialog">
+</codx-form>
+<ng-template  #body>
+  <div>
+    <div class="d-flex justify-content-between">
+      <div></div>
+      <div>
+        <button class="btn" (click)="clickShowAlert()">
+          <i class="icon-more_vert"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- <div id="kt_drawer_notify" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="notify"
   data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}"
   data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_drawer_notify_toggle"
   data-kt-drawer-close="#kt_drawer_notify_close">
@@ -29,4 +42,5 @@
     </div>
     <codx-chat-inner [isDrawer]="true"></codx-chat-inner>
   </div>
-</div>
+  </div> -->
+</ng-template>

@@ -13,6 +13,7 @@ import {
   UrlUtil,
 } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
+import { TM_TaskExtends, TM_Tasks } from '../../models/TM_Tasks.model';
 
 @Component({
   selector: 'lib-popup-confirm',
@@ -22,8 +23,8 @@ import { CodxTMService } from '../../codx-tm.service';
 export class PopupConfirmComponent implements OnInit, AfterViewInit {
   data: any;
   dialog: any;
-  task: any;
-  taskExtends: any;
+  task: TM_Tasks = new TM_Tasks();
+  taskExtends: TM_TaskExtends =new TM_TaskExtends();
   url: string;
   status: string;
   title: string = 'Xác nhận ';
@@ -59,9 +60,10 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.fieldDefault =
       fieldDefault.charAt(0).toLocaleLowerCase() + fieldDefault.slice(1);
     this.valueDefault = UrlUtil.getUrl('defaultValue', this.url);
-    if(this.action='extend') {
+    if(this.action=='extend') {
       this.taskExtends = this.data?.data;
-      this.taskExtends[this.fieldDefault] = this.valueDefault 
+      this.task[this.fieldDefault] = this.valueDefault ;
+      this.taskExtends.status = this.task[this.fieldDefault]
     }
     else {this.task = this.data?.data;
       this.task[this.fieldDefault] = this.valueDefault 
@@ -123,7 +125,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dialog.close(res);
-          this.notiService.notify('Xác nhận công việc thành công !');
+          this.notiService.notifyCode('SYS007')
+         // this.notiService.notify('Xác nhận công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
@@ -133,19 +136,14 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.api
       .execSv<any>('TM', 'TM', 'TaskExtendsBusiness', 'ExtendStatusTaskAsync', [
         this.taskExtends.taskID,
-        this.taskExtends.extendStatus,
+        this.taskExtends.status,
         this.comment,
       ])
       .subscribe((res) => {
         if (res) {
-          if(res.extendStatus=='5'){
-            this.taskExtends.task.dueDate = res.extendDate ;
-            this.taskExtends.task.extends = this.taskExtends.task.extends + 1 ;
-          }
-          this.taskExtends.task.extendStatus = res.extendStatus ;
-          this.taskExtends.extendComment =  this.comment,
-          this.dialog.close(this.taskExtends);
-          this.notiService.notify('Duyệt gia hạn công việc thành công !');
+          this.dialog.close(res);
+          this.notiService.notifyCode('SYS007')
+         // this.notiService.notify('Duyệt gia hạn công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
@@ -164,14 +162,22 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dialog.close(res);
-          this.notiService.notify('Đánh giá kết quả công việc thành công !');
+          this.notiService.notifyCode('SYS007')
+         // this.notiService.notify('Đánh giá kết quả công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
   }
 
   saveVerifyStatus() {
-    // this.task.verifyComment = this.comment;
+    this.task.verifyComment = this.comment;
+    if (
+      this.task.verifyStatus == '3' &&
+      (this.task.verifyComment ==null || this.task.verifyComment.trim() == '')
+    ) {
+      this.notiService.notifyCode('TM019');
+      return;
+    }
     ///xu ly save
     this.api
       .execSv<any>('TM', 'TM', 'TaskBusiness', 'VerifyStatusTaskAsync', [
@@ -183,7 +189,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dialog.close(res);
-          this.notiService.notify('Duyệt công việc thành công !');
+          this.notiService.notifyCode('SYS007')
+          //this.notiService.notify('Duyệt công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });

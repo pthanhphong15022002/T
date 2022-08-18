@@ -65,14 +65,6 @@ export class EditExperenceComponent implements OnInit {
   // }
 
   OnSaveForm() {
-    // this.dialog.dataService
-    // .save((option: any) => this.beforeSave(option))
-    // .subscribe((res) => {
-    //   if (res.save) {
-    //     this.dialog.close();
-    //     this.notiService.notifyCode('MWP00201');
-    //   }
-    // });
     // this.isSaving = true;
     this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
       .subscribe((res: any) => {
@@ -89,6 +81,6 @@ export class EditExperenceComponent implements OnInit {
           this.notiService.notifyCode("SYS021");
         }
       });
-    // this.dialog.close(this.dataBind);
+    this.dialog.close(this.dataBind);
   }
 }

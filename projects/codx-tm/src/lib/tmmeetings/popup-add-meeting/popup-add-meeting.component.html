@@ -76,8 +76,8 @@
         </div>
       </div>
     </div>
-    <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150"
-     [crrValue]="meeting?.memo" (valueChange)="valueChange($event)">
+    <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150" [crrValue]="meeting?.memo"
+      (valueChange)="valueChange($event)">
     </codx-input>
     <div class="d-flex justify-content-end " *ngIf="meeting.templateID">
       <div class="font-italic">
@@ -140,12 +140,12 @@
           </codx-label>
         </div>
       </div>
-      <codx-input type="Share" refValue="TM003"  (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
+      <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
         multiple="true" [showInput]="false">
       </codx-input>
     </div>
     <div class="row">
-      <ng-container *ngFor="let item of meeting.resources">
+      <ng-container *ngFor="let item of resources">
         <div class="col-4">
           <div>
             <codx-img class=" flex symbol-40px " [objectId]="item.resourceID" objectType="AD_Users"></codx-img>
@@ -154,7 +154,7 @@
           <div>
             <a (click)="onDeleteUser(item)" style="cursor: pointer">
               <span class="icon-close icon-16 text-danger me-2"></span>
-          </a>
+            </a>
           </div>
 
         </div>
@@ -199,7 +199,7 @@
       <codx-label fiedName="refID" formName="TMMeetings" gridViewName="grvTMMeetings" default="Dự án">
       </codx-label>
       <codx-input type="combobox" field="refID" refValue="PM_Projects" [multiple]="false" loadFull="true"
-      [crrValue]="meeting.refID"  (valueChange)="valueChange($event)">
+        [crrValue]="meeting.refID" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
   </ng-container>
@@ -223,24 +223,25 @@
         </codx-label>
       </div>
     </div>
-    <codx-input type="Share" refValue="TM003" field="resources" (valueChange)="eventApply($event)" [dataShared]="[]" multiple="true" [showInput]="false">
+    <codx-input type="Share" refValue="TM003" field="resources" (valueChange)="eventApply($event)" [dataShared]="[]"
+      multiple="true" [showInput]="false">
     </codx-input>
   </div>
-  <ng-container *ngFor="let item of meeting.resources">
+  <ng-container *ngFor="let item of resources">
     <div class="d-flex py-2 border-bottom justify-content-between list-title">
       <div class="d-flex align-items-top">
         <div style=" position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
-            placement="bottom" #p="ngbPopover" (mouseenter)="showPopover(p,item.resourceID)" autoClose="outside">
-        <codx-img class="" [objectId]="item.resourceID" objectType="AD_Users">
-        </codx-img>
-        <div style="position: absolute; right: 0px;bottom: 0px">
-          <ng-container *ngFor="let role of listRoles">
-            <ng-container *ngIf="role.value == item.roleType">
-              <span inlineSVG="./assets/themes/co/default/img/{{role.icon}}"></span>
+          placement="right" #p="ngbPopover" (mouseenter)="showPopover(p,item.resourceID)" autoClose="outside">
+          <codx-img class="" [objectId]="item.resourceID" objectType="AD_Users">
+          </codx-img>
+          <div style="position: absolute; right: 0px;bottom: 0px">
+            <ng-container *ngFor="let role of listRoles">
+              <ng-container *ngIf="role.value == item.roleType">
+                <span inlineSVG="./assets/themes/co/default/img/{{role.icon}}"></span>
+              </ng-container>
             </ng-container>
-          </ng-container>
+          </div>
         </div>
-      </div>
         <div class="d-flex flex-column me-2 ">
           <div class="text-dark fw-bold fs-6">
             {{item.resourceName}}

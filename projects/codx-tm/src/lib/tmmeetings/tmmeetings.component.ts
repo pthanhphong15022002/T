@@ -6,6 +6,8 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectorRef,
+  Input,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -21,15 +23,23 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
-import { CO_Resources } from '../models/CO_Meetings.model';
+import { CO_Meetings, CO_Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
+import { APICONSTANT } from '@shared/constant/api-const';
 
 @Component({
-  selector: 'lib-tmmeetings',
+  selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
-  styleUrls: ['./tmmeetings.component.css'],
+  styleUrls: ['./tmmeetings.component.scss'],
 })
-export class TMMeetingsComponent extends UIComponent {
+export class TMMeetingsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit {
+  @Input() meeting = new CO_Meetings();
+
+  @Input() dataObj?: any;
+  @Input() projectID?: any; //view meeting to sprint_details
+  @Input() iterationID?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
@@ -39,6 +49,7 @@ export class TMMeetingsComponent extends UIComponent {
   @ViewChild('itemTemplate') template!: TemplateRef<any> | null;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('template7') template7: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -53,6 +64,7 @@ export class TMMeetingsComponent extends UIComponent {
   dayoff = [];
   month: any;
   day: any;
+  tag = 'Tag';
   startTime: any;
   eventStatus: any;
   itemSelected: any;
@@ -67,6 +79,10 @@ export class TMMeetingsComponent extends UIComponent {
   dataValue = '';
   formName = '';
   gridViewName = '';
+  @Input() calendarID: string;
+  @Input() viewPreset: string = 'weekAndDay';
+  dayWeek = [];
+
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -77,6 +93,10 @@ export class TMMeetingsComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.funcID == 'TMT03011') {
+      this.funcID = 'TMT0501';
+    }
+
     this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
       if (res) {
         this.urlDetail = res[0].url;
@@ -84,12 +104,20 @@ export class TMMeetingsComponent extends UIComponent {
     });
 
     this.dataValue = this.user?.userID;
+    this.getParams();
+
   }
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
+
+    this.modelResource = new ResourceModel();
+    this.modelResource.assemblyName = 'CO';
+    this.modelResource.className = 'MeetingsBusiness';
+    this.modelResource.service = 'CO';
+    this.modelResource.method = 'GetListMeetingsAsync';
   }
 
   receiveMF(e: any) {
@@ -107,11 +135,15 @@ export class TMMeetingsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.content,
+        type: ViewType.calendar,
         active: false,
         sameData: true,
         model: {
-          panelLeftRef: this.templateLeft,
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
+          template7: this.template7
         },
       },
       {
@@ -128,26 +160,151 @@ export class TMMeetingsComponent extends UIComponent {
     this.view.dataService.methodSave = 'AddMeetingsAsync';
     this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
-
     this.dt.detectChanges();
   }
 
-  convertHtmlAgency(resourceID: any) {
-    var desc = '<div class="d-flex">';
-    if (resourceID)
-      desc +=
-        '<codx-imgs [objectId]="getResourceID(' +
-        resourceID +
-        ')" objectType="AD_Users" [numberImages]="4"></codx-imgs>';
+  //#region schedule
 
-    return desc + '</div>';
+  fields = {
+    id: 'meetingID',
+    subject: { name: 'meetingName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resources: { name: 'resources' },
+  };
+  resourceField = {
+    Name: 'Resources',
+    Field: 'resourceID',
+    IdField: 'resourceID',
+    TextField: 'resourceName',
+    Title: 'Resources',
+  };
+
+  getCellContent(evt: any) {
+    console.log(evt);
+    if (this.dayoff.length > 0) {
+      for (let i = 0; i < this.dayoff.length; i++) {
+        let day = new Date(this.dayoff[i].startDate);
+        if (
+          day &&
+          evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()
+        ) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.backgroundColor = this.dayoff[i].color;
+            });
+          }
+          return (
+            '<icon class="' +
+            this.dayoff[i].symbol +
+            '"></icon>' +
+            '<span>' +
+            this.dayoff[i].note +
+            '</span>'
+          );
+        }
+      }
+    }
+
+    return ``;
+  }
+
+  getParams() {
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.SYS,
+        APICONSTANT.ASSEMBLY.CM,
+        APICONSTANT.BUSINESS.CM.Parameters,
+        'GetOneField',
+        ['TMParameters', null, 'CalendarID']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.param = res;
+          this.calendarID = res.fieldValue;
+          this.getDayWeek(this.calendarID);
+          this.getDayOff(this.calendarID);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  getDayWeek(id) {
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.Calendars,
+        'GetDayWeekAsync',
+        [id]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dayWeek = res;
+        }
+      });
+  }
+
+  getDayOff(id = null) {
+    if (id) this.calendarID = id;
+    this.api
+      .execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'CalendarsBusiness',
+        'GetDayWeekAsync',
+        [this.calendarID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          res.forEach((ele) => {
+            this.dayoff = res;
+          });
+        }
+      });
+  }
+  //#endregion schedule
+
+  convertHtmlAgency(data: any) {
+    var date = data.startDate;
+    var desc = '<div class="d-flex align-items-center ms-1" >';
+    var day = '';
+    var toDay = '<div class="d-flex flex-column me-2" >';
+    if (date) {
+      let date1 = new Date(date);
+      let month = date1.getMonth() + 1;
+      let myDay = this.addZero(date1.getDate());
+      let year = date1.getFullYear();
+      let day1 = date1.getDay() + 1;
+      day +=
+        '<div class="fs-3hx fw-bold text-gray-800 me-2 lh-1">' +
+        myDay +
+        '</div>';
+      toDay +=
+        '<div class="text-dark fw-bold">' +
+        'Thứ ' +
+        day1 +
+        '</div>' +
+        '<div class="fw-lighter">' +
+        'Tháng ' +
+        month +
+        ', ' +
+        year +
+        '</div></div>';
+    }
+
+    return desc + day + toDay + '</div>';
   }
 
   getResourceID(data) {
     var resources = [];
     resources = data.resources;
     var id = '';
-    if(resources!=null){
+    if (resources != null) {
       resources.forEach((e) => {
         id += e.resourceID + ';';
       });
@@ -215,14 +372,36 @@ export class TMMeetingsComponent extends UIComponent {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
         'add',
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+        if (e?.event && e?.event != null) {
+          var objectData = this.view.dataService.data;
+          var object = {};
+          for (var i = 0; i < objectData.length; i++) {
+            if (objectData[i][i] !== undefined) {
+              object[i] = objectData[i][i];
+              objectData[i] = object[i];
+            }
+          }
+          this.view.dataService.data = e?.event.concat(
+            objectData
+          );
+          this.meeting = objectData[0];
+          this.detectorRef.detectChanges();
+        }
+      });
     });
   }
   edit(data) {
@@ -248,16 +427,16 @@ export class TMMeetingsComponent extends UIComponent {
               false
             );
           if (e?.event && e?.event != null) {
-            // e?.event.forEach((obj) => {
-            //   this.view.dataService.update(obj).subscribe();
-            // });
-            this.itemSelected = e?.event;
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.meeting = e?.event;
           }
           this.detectorRef.detectChanges();
         });
       });
   }
-  copy(data) {}
+  copy(data) { }
   delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -280,6 +459,8 @@ export class TMMeetingsComponent extends UIComponent {
   }
 
   viewDetail(data) {
-    this.codxService.navigate('', this.urlDetail, {meetingID: data.meetingID});
+    this.codxService.navigate('', this.urlDetail, {
+      meetingID: data.meetingID,
+    });
   }
 }

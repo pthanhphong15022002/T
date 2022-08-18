@@ -77,10 +77,8 @@ export class PopRolesComponent implements OnInit {
     this.adService.getListAppByUserRoles(this.choose1).subscribe((res) => {
       if (res) {
         this.lstFunc = res[0];
-        console.log('check lstFunc', this.lstFunc);
         this.listRoles = res[1];
         this.lstEmp = res[2];
-        console.log('check lstEmp', this.lstEmp);
         this.getListLoadDataApp();
         this.getListLoadDataService();
         this.changeDec.detectChanges();
@@ -100,8 +98,7 @@ export class PopRolesComponent implements OnInit {
       for (var i = 0; i < this.lstFunc.length; i++) {
         for (var j = 0; j < this.listChooseRole.length; j++) {
           if (
-            this.listChooseRole[j].functionID === this.lstFunc[i].functionID &&
-            this.lstFunc[i].isPortal == false
+            this.listChooseRole[j].functionID === this.lstFunc[i].functionID
           ) {
             this.lstFunc[i].ischeck = true;
             this.lstFunc[i].recIDofRole = this.listChooseRole[j].recIDofRole;
@@ -120,10 +117,7 @@ export class PopRolesComponent implements OnInit {
     if (this.listChooseRole.length > 0) {
       for (var i = 0; i < this.lstEmp.length; i++) {
         for (var j = 0; j < this.listChooseRole.length; j++) {
-          if (
-            this.listChooseRole[j].functionID === this.lstEmp[i].functionID &&
-            this.lstEmp[i].isPortal == true
-          ) {
+          if (this.listChooseRole[j].functionID === this.lstEmp[i].functionID) {
             this.lstEmp[i].ischeck = true;
             this.lstEmp[i].recIDofRole = this.listChooseRole[j].recIDofRole;
             this.countService++;
@@ -136,8 +130,7 @@ export class PopRolesComponent implements OnInit {
   onChange(event, item?: any) {
     if (item.ischeck) {
       event.target.checked = true;
-    }
-    else {
+    } else {
       event.target.checked = false;
     }
     if (!item.isPortal) {
@@ -147,7 +140,7 @@ export class PopRolesComponent implements OnInit {
         for (var i = 0; i < this.lstFunc.length; i++) {
           if (item.functionID === this.lstFunc[i].functionID) {
             this.lstFunc[i].recIDofRole = null;
-            this.lstFunc[i].recRoleName = null;
+            this.lstFunc[i].roleName = null;
             this.lstFunc[i].color = null;
           }
         }
@@ -182,7 +175,7 @@ export class PopRolesComponent implements OnInit {
         for (var i = 0; i < this.lstEmp.length; i++) {
           if (item.functionID === this.lstEmp[i].functionID) {
             this.lstEmp[i].recIDofRole = null;
-            this.lstEmp[i].recRoleName = null;
+            this.lstEmp[i].roleName = null;
             this.lstEmp[i].color = null;
           }
         }
@@ -206,7 +199,7 @@ export class PopRolesComponent implements OnInit {
           }
         });
         if (checkExist) {
-          item.recIDofRole = ''
+          item.recIDofRole = '';
           this.listChooseRole.push(item);
         }
         item.ischeck = true;
@@ -216,14 +209,13 @@ export class PopRolesComponent implements OnInit {
   }
   onCbx(event, item?: any) {
     if (event.data) {
-      item.recIDofRole = event.data[0];
+      item.recIDofRole = event.data;
       this.listRoles.forEach((element) => {
         if (element.recID == item.recIDofRole) {
-          item.recRoleName = element.roleName;
+          item.roleName = element.roleName;
           item.color = element.color;
         }
       });
-      console.log("check role", this.listRoles);
     }
   }
   checkClickValueOfUserRoles(value?: any) {
@@ -237,7 +229,6 @@ export class PopRolesComponent implements OnInit {
     if (this.CheckListUserRoles() === this.optionFirst) {
       this.notiService.notifyCode('AD006');
     } else if (this.CheckListUserRoles() === this.optionSecond) {
-      this.notiService.notifyCode('Lưu thành công');
       this.dialogSecond.close(this.listChooseRole);
       this.changeDec.detectChanges();
     } else {

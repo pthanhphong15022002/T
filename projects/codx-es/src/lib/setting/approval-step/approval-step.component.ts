@@ -12,6 +12,7 @@ import {
   AlertConfirmInputConfig,
   ApiHttpService,
   ButtonModel,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogModel,
@@ -41,12 +42,14 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   isEdited = false;
 
   currentStepNo = 1;
-  dialog: DialogRef;
+  dialogApproval: DialogRef;
   formModel: FormModel;
   approvers = [];
   lstStep: any;
   lstDeleteStep = [];
   isDeleteAll = false;
+  justView = false;
+  isAddNew: boolean = true;
 
   model: any;
 
@@ -55,6 +58,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notifySvr: NotificationsService,
+    private cache: CacheService,
     @Optional() dialogData: DialogData,
     @Optional() dialog: DialogRef
   ) {
@@ -62,13 +66,16 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       this.type = dialogData?.data.type;
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
-      this.dialog = dialog;
+      this.dialogApproval = dialog;
+      this.justView = dialogData?.data.justView ?? false;
+      this.isAddNew = dialogData?.data?.isAddNew ?? true;
     } else {
       this.type = '1';
     }
   }
 
   ngOnInit(): void {
+    this.cache.message('').subscribe((res) => {});
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
@@ -83,7 +90,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   close() {
-    this.dialog && this.dialog.close();
+    this.dialogApproval && this.dialogApproval.close();
   }
 
   initForm() {
@@ -131,7 +138,8 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
     this.esService.setApprovalStep(this.lstStep);
     this.esService.setLstDeleteStep(this.lstDeleteStep);
     this.model.patchValue({ countStep: this.lstStep.length });
-    this.dialog && this.dialog.close();
+    this.updateApprovalStep(this.isAddNew);
+    this.dialogApproval && this.dialogApproval.close();
   }
 
   saveStep() {
@@ -218,7 +226,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       if (res) {
         var model = new DialogModel();
         model.FormModel = res;
-        this.dialog = this.cfService.openForm(
+        this.dialogApproval = this.cfService.openForm(
           PopupAddApprovalStepComponent,
           '',
           850,
@@ -229,12 +237,29 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
           model
         );
 
-        this.dialog.closed.subscribe((res) => {
+        this.dialogApproval.closed.subscribe((res) => {
           if (res?.event) {
             this.isEdited = true;
           }
         });
       }
     });
+  }
+
+  updateApprovalStep(isAddNew) {
+    if (!isAddNew) {
+      this.esService.editApprovalStep().subscribe((res) => {
+        console.log('result edit appp', res);
+      });
+
+      this.esService.deleteApprovalStep().subscribe((res) => {
+        console.log('result delete aaappppp', res);
+      });
+    } else {
+      //Them moi
+      this.esService.addNewApprovalStep().subscribe((res) => {
+        console.log('result add new appp', res);
+      });
+    }
   }
 }

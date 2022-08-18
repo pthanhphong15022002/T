@@ -1,15 +1,491 @@
-<codx-form
+<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="dialogRef.formModel" [subHeader]=""
+  [footer]="footer" [dialog]="dialogRef" [openMore]="true" (buttonClick)="buttonClick($event)"
+  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabMoreInfo]" (setTitle)="setTitle($event)" [data]="data" 
+  [formControl]="fGroupAddBookingCar"
+  >
+  <ng-template #tabGeneralInfo>
+    <div id="GeneralInfo">
+        <codx-label class="mb-3 fs-5 fw-bold" name="lblGeneralInfo" default="Thông tin chung">
+        </codx-label>
+    </div>
+      <div class="form-group mb-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <codx-label
+            default="Xe"
+            fieldName="ResourceID"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
+          <span class="label-status text-primary">{{
+            fGroupAddBookingCar.value.status
+              | vll: CbxName["Status"]:"text"
+              | async
+          }}</span>
+        </div>
+        <!-- <codx-input
+          type="combobox"
+          name="cbxCar"
+          refValue="EP_Cars"
+          field="resourceID"
+          [formModel]="form.formModel"
+          [crrValue]="fGroupAddBookingCar.value.resourceID"         
+          (valueChange)="valueCbxCarChange($event)"
+        >
+        </codx-input> -->
+        <codx-input
+          type="combobox"
+          name="cbxCar"
+          refValue="EP_Cars"
+          ControlName="resourceID"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingCar"       
+          (valueChange)="valueCbxCarChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="row">
+        
+        <div class="d-flex flex-row justify-content-between">
+          <div class="d-flex justify-content-start">
+            <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
+              <span
+                class="d-flex align-items-center me-2"
+                [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
+              >
+                <span
+                class="me-1 ps-2"
+                [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']"
+              >
+                </span
+                >{{ item.text }}
+              </span>
+            </div>
+          </div>
+          <span class="text-end">
+            <button
+              type="button"
+              class="btn btn-clean btn-sm btn-icon btn-icon-md"
+              data-dismiss="modal"
+              (click)="openPopupDevice(popupDevice)"
+            >
+              <i
+                class="icon-select_all text-primary text-hover-primary-dark icon-24"
+              ></i>
+            </button>
+          </span>   
+         
+        </div>     
+      </div>
+
+
+      <div class="row">
+        <div class="col-6 form-group">
+          <codx-label
+            default="Từ ngày"
+            fiedName="StartDate"
+            [formModel]="dialogRef.formModel"
+          >
+          </codx-label>
+          <codx-input
+            type="datetime"
+            format="f"
+            class="test-datetime"
+            field="startDate"
+            [crrValue]="fGroupAddBookingCar.value.startDate"
+            (valueChange)="changeTime($event)" 
+          >
+          </codx-input>
+        </div>
+        <div class="col-6 form-group">
+          <codx-label
+            default="Đến ngày"
+            fiedName="EndDate"
+            [formModel]="dialogRef.formModel"
+          >
+          </codx-label>
+          <codx-input
+            type="datetime"
+            format="f"
+            class="test-datetime"
+            field="endDate"
+            [crrValue]="fGroupAddBookingCar.value.endDate"
+            (valueChange)="changeTime($event)"            
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group">        
+        <codx-label
+          default="Mục đích sử dụng"
+          fiedName="ReasonID"
+          [formModel]="dialogRef.formModel"
+        >
+        </codx-label>        
+        <codx-input
+          type="combobox"
+          refValue="EP_BookingCars"
+          [multiple]="false"
+          ControlName="reasonID"          
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingCar"
+        >
+        </codx-input>
+      </div>
+
+      <div class="form-group">        
+        <codx-label
+          default="Tiêu đề"
+          fiedName="Title"
+          [formModel]="dialogRef.formModel"
+        >
+        </codx-label>        
+        <codx-input
+          type="text"
+          ControlName="title"         
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingCar"
+        ></codx-input>
+      </div>
+
+      <div class="form-group">        
+        <codx-label
+          default="Khách hàng"
+          fiedName="AgencyName"
+          [formModel]="dialogRef.formModel"
+        >
+        </codx-label>        
+        <codx-input
+          type="combobox"
+          [multiple]="false"
+          refValue="AgencyNames"
+          ControlName="agencyName"         
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingCar"
+        >
+        </codx-input>
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          default="Địa chỉ"
+          fiedName="Address"
+          [formModel]="dialogRef.formModel"
+        >
+        </codx-label>
+        <codx-input
+          type="text"
+          ControlName="address"         
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingCar"
+        >
+        </codx-input>
+      </div>
+
+      <div class="row">
+        <div class="col-7 form-group">
+          <codx-label
+            default="Người liên hệ"
+            fiedName="ContactName"
+            [formModel]="dialogRef.formModel"
+          >
+          </codx-label>
+          <codx-input
+            type="text"            
+            ControlName="contactName"         
+            [formModel]="form.formModel"
+            [Group]="fGroupAddBookingCar"
+          ></codx-input>
+        </div>
+        <div class="col-5 form-group">
+          <codx-label
+            default="Số điện thoại"
+            fiedName="Phone"
+            [formModel]="dialogRef.formModel"
+          >
+          </codx-label>
+          <codx-input
+          type="text"            
+          ControlName="phone"         
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingCar"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column mb-8">
+        <div class="d-flex justify-content-between align-items-center mb-2 form-group">          
+          <codx-label
+            default="Lái xe & người đi cùng"
+            fiedName="Note"
+          >
+          </codx-label>          
+          <div class="d-flex flex-row text-end align-items-end">
+            <span class="mx-2">
+              <codx-input 
+                type="combobox" 
+                name="combobox"
+                [refValue]="'EP_Drivers'"           
+                [multiple]="false"
+                [showInput]="false" 
+                refType="P" 
+                field="popup" 
+                (valueChange)="valueCbxDriverChange($event)">
+              </codx-input>
+            </span>                    
+            <span class="mx-2">
+              <codx-input
+                type="combobox" 
+                name="combobox"
+                [refValue]="'Users'" 
+                [multiple]="true"
+                [showInput]="false" 
+                refType="P" 
+                field="popup" 
+                (valueChange)="valueCbxUserChange($event)">
+              </codx-input>          
+            </span>      
+          </div>
+
+        </div>        
+
+          <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
+            <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngIf="driver!=null">
+              <div class="symbol symbol-35px symbol-circle">
+              <codx-img
+                  [objectId]="'driver.id'"
+                  [objectName]="'driver.objectName'"
+                  objectType="driver.objectType"
+              ></codx-img>   
+              <span class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"></span>
+              </div>
+            </div>
+            <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngFor="let item of smallListPeople">
+              <div class="symbol symbol-35px symbol-circle">
+                <codx-img
+                  [objectId]="'item.id'"
+                  [objectName]="'item.objectName'"
+                  objectType="Users"
+                  ></codx-img>
+                <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
+              </div>   
+          </div> 
+
+          <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngIf="lstPeople.length >= 3">          
+            <span href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
+              <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{lstPeople.length-2}}</span>
+            </span>
+          </div>
+          
+        </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #tabPeopleInfo>
+    <div class="d-flex justify-content-between align-items-center mb-2" id="PeopleInfo">
+      <div class="mb-3 fs-5 fw-bold">
+        <codx-label name="lblPeopleInfo" default="Người đi cùng">
+        </codx-label>
+      </div>
+      <div class="d-flex flex-row text-end align-items-end ">        
+        <span class="mx-2">
+          <codx-input 
+            type="combobox" 
+            name="combobox"
+            [refValue]="'EP_Drivers'"           
+            [multiple]="false"
+            [showInput]="false" 
+            refType="P" 
+            field="popup" 
+            (valueChange)="valueCbxDriverChange($event)">
+          </codx-input>
+        </span>                    
+        <span class="mx-2">
+          <codx-input
+            type="combobox" 
+            name="combobox"
+            [refValue]="'Users'" 
+            [multiple]="true"
+            [showInput]="false" 
+            refType="P" 
+            field="popup" 
+            (valueChange)="valueCbxUserChange($event)">
+          </codx-input>          
+        </span>             
+      </div>
+    </div>
+    <div class="d-flex align-items-center mb-4" *ngIf="driver!=null">    
+      <div class="symbol symbol-35px symbol-circle me-4">
+        <codx-img
+          [objectId]="'driver.id'"
+          [objectName]="'driver.objectName'"
+          objectType="driver.objectType"
+        ></codx-img>
+
+        <span
+          class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
+          >D</span
+        >
+      </div>
+
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6 fw-bolder">
+          {{ driver.text }}
+        </div>
+        <span class="text-muted fw-bold">Lái xe</span>
+      </div>
+
+      <div class="d-flex flex-column justify-content-end">
+        <span class="badge badge-light-success fs-7 fw-bold mb-1"
+          >Chưa xác định</span
+        >
+        <span class="text-muted fw-bold text-center">
+          1 ngày trước
+        </span>
+      </div>  
+    </div>
+
+    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">    
+      <div class="symbol symbol-35px symbol-circle me-4">
+        <codx-img
+          [objectId]="'item.id'"
+          [objectName]="'item.objectName'"
+          objectType="item.objectType"
+        ></codx-img>
+        <span
+          class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
+          >P</span >
+      </div>
+
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6 fw-bolder">
+          {{ item.text }}
+        </div>
+        <span class="text-muted fw-bold">Người đi cùng</span>
+      </div>
+
+      <div class="d-flex flex-column justify-content-end">
+        <span class="badge badge-light-success fs-7 fw-bold mb-1"
+          >Chưa xác định</span
+        >
+        <span class="text-muted fw-bold text-center">
+          1 ngày trước
+        </span>
+      </div>  
+    </div>
+  </ng-template>
+  
+  <ng-template #tabMoreInfo>
+    <div id="MoreInfo">
+      <div class="mb-3 fs-5 fw-bold">
+        <codx-label name="lblMoreInfo" default="Thông tin khác">
+        </codx-label>
+      </div>
+    </div>    
+      <div class="form-group">
+        <codx-label
+          default="Ghi chú"
+          fiedName="Note"
+        >
+        </codx-label>
+        <codx-input
+          type="textarea"
+          ControlName="note"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingCar"
+        >
+        </codx-input>
+      </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>
+    </div>
+  </ng-template>
+</codx-layout-add>
+
+<ng-template #popupDevice let-dialog>
+  <div class="modal-header">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 id="modal-basic-title">
+          <codx-label
+            name="lblEquipment"
+            default="Thiết bị"
+            [formModel]="dialog.formModel"
+          ></codx-label>
+        </h2>
+        <button
+          type="button"
+          class="btn btn-xs btn-icon btn-light btn-hover-primary"
+          aria-label="Close"
+          (click)="dialog.close()"
+        >
+          <span
+            class="icon-close icon-20 text-dark text-hover-primary"
+          ></span>
+        </button>
+      </div>
+      <div class="text-dark-50">
+        <codx-label
+          name="lblChooseEquipments"
+          default="Chọn các thiết bị đã tích hợp sẵn trong xe"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="py-2" *ngFor="let item of tmplstDevice">
+      <div class="d-flex flex-stack">
+        <div class="d-flex">
+          <span class="text-dark me-2 p-1" [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']">
+          </span>
+          <div class="d-flex flex-column justify-content-center">
+            <span href="#" class="text-dark fw-bolder">{{
+              item.text
+            }}</span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="form-check form-check-solid form-switch">
+            <codx-input
+              class="form-check-input w-35px h-20px"
+              type="switch"
+              id="googleswitch"
+              [checked]="item.isSelected"
+              (valueChange)="checkedChange($event, item)"
+            ></codx-input>
+            <label class="form-check-label" for="googleswitch"></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer" (click)="dialog.close()">
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="lblSave"
+        default="Lưu"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<!-- <codx-form 
   #form
-  headerText="Đặt xe"
-  subHeaderText="Đặt xe công tác"
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
   [body]="body"
   [footer]="footer"
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
+  [dialog]="dialogRef"
+  [formModel]="formModel"
+  [formControl]="fGroupAddBookingCar"
+  *ngIf="isAfterRender"
 >
   <ng-template popup #body>
     <div class="tab-content">
-      <!-- Render the Tab Component -->
       <ejs-tab
         id="tab_orientation"
         #orientationTab
@@ -22,11 +498,8 @@
             <ng-template #content>
               <div id="rome" class="tabpanel">
                 <div class="tab-content">
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
+                  <div class="row form-group">
+                    <div class="d-flex justify-content-between align-items-center">
                       <codx-label
                         class="fw-bold"
                         default="Xe"
@@ -35,285 +508,55 @@
                         gridViewName="grvBookingCars"
                       >
                       </codx-label>
-                      <!-- <span class="label-status text-primary">Sẵn sàng</span> -->
+                      <span class="label-status text-muted">Chờ duyệt</span>
                       <span class="label-status text-primary">{{
-                        dialogAddBookingCar.value.status
+                        fGroupAddBookingCar.value.status
                           | vll: CbxName["Status"]:"text"
                           | async
                       }}</span>
                     </div>
-                    <!--end::Label-->
                     <codx-input
+                      service="EP"
+                      refValue="EP_Cars"
                       type="combobox"
-                      field="resourceID"
-                      [refValue]="'EP_Cars'"
-                      [crrValue]=""
-                      [multiple]="false"
-                      (valueChange)="valueChange($event)"
-                    ></codx-input>
-                  </div>
-                  <div
-                    class="d-flex flex-wrap align-items-center justify-content-between"
-                  >
-                    <div class="d-flex" *ngFor="let item of vllDevices">
-                      <span
-                        class="d-flex align-items-center text-muted me-2 mb-2"
-                      >
-                        <span class="icon-wifi me-1"> </span>{{ item.text }}
-                      </span>
-                    </div>
-                    <span class="text-end align-items-end">
-                      <button
-                        type="button"
-                        class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                        data-dismiss="modal"
-                        (click)="openPopupDevice(popupDevice)"
-                      >
-                        <i
-                          class="icon-select_all text-primary text-hover-primary-dark icon-24"
-                        ></i>
-                      </button>
-                    </span>
-                  </div>
-                  <div class="d-flex row align-items-center mb-4">
-                    <div class="col-6">
-                      <codx-label
-                        class="fw-bold"
-                        default="Từ ngày"
-                        fiedName="StartDate"
-                      >
-                      </codx-label>
-                      <!--begin::Input-->
-                      <codx-input
-                        type="datetime"
-                        field="startDate"
-                        format="f"
-                        [crrValue]="dialogAddBookingCar.value.startDate"
-                        (valueChange)="valueChange($event)"
-                      >
-                      </codx-input>
-                      <!--end::Input-->
-                    </div>
-                    <div class="col-6">
-                      <codx-label
-                        class="fw-bold"
-                        default="Đến ngày"
-                        fiedName="EndDate"
-                      >
-                      </codx-label>
-                      <!--begin::Input-->
-                      <codx-input
-                        type="datetime"
-                        class="form-control test-datetime"
-                        field="endDate"
-                        [crrValue]="dialogAddBookingCar.value.endDate"
-                        format="f"
-                        (valueChange)="valueChange($event)"
-                      >
-                      </codx-input>
-                      <!--end::Input-->
-                    </div>
-                  </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <codx-label
-                      class="fw-bold"
-                      default="Mục đích sử dụng"
-                      fiedName="ReasonID"
-                    >
-                    </codx-label>
-                    <!--end::Label-->
-                    <codx-input
-                      service="BS"
-                      type="combobox"
-                      field="reasonID"
-                      [refValue]="CbxName['ReasonID']"
-                      [crrValue]=""
-                      [multiple]="false"
-                      (valueChange)="valueChange($event)"
+                      ControlName="resourceID"
+                      [formModel]="form.formModel"
+                      [Group]="fGroupAddBookingCar"
                     >
                     </codx-input>
                   </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <codx-label
-                      class="fw-bold"
-                      default="Tiêu đề"
-                      fiedName="Title"
-                    >
-                    </codx-label>
-                    <!--end::Label-->
-                    <codx-input
-                      type="text"
-                      field="title"
-                      [crrValue]="dialogAddBookingCar.value.title"
-                      (valueChange)="valueChange($event)"
-                    ></codx-input>
-                  </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <codx-label
-                      class="fw-bold"
-                      default="Đơn vị/Tổ chức"
-                      fiedName="AgencyName"
-                    >
-                    </codx-label>
-                    <!--end::Label-->
-                    <codx-input
-                      type="text"
-                      field="agencyName"
-                      [crrValue]="dialogAddBookingCar.value.agencyName"
-                      (valueChange)="valueChange($event)"
-                    >
-                    </codx-input>
-                  </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <codx-label
-                      class="fw-bold"
-                      default="Địa chỉ"
-                      fiedName="Title"
-                    >
-                    </codx-label>
-                    <!--end::Label-->
-                    <codx-input
-                      type="text"
-                      field="address"
-                      class="form-control"
-                      [crrValue]="dialogAddBookingCar.value.address"
-                      (valueChange)="valueChange($event)"
-                    >
-                    </codx-input>
-                  </div>
-
-                  <div class="d-flex row align-items-center mb-4">
-                    <div class="col-7">
-                      <codx-label
-                        class="fw-bold"
-                        default="Người liên hệ"
-                        fiedName="ContactName"
-                      >
-                      </codx-label>
-                      <!--begin::Input-->
-                      <codx-input
-                        type="text"
-                        field="contactName"
-                        [crrValue]="dialogAddBookingCar.value.contactName"
-                        (valueChange)="valueChange($event)"
-                      ></codx-input>
-                      <!--end::Input-->
-                    </div>
-                    <div class="col-5">
-                      <codx-label
-                        class="fw-bold"
-                        default="Số điện thoại"
-                        fiedName="Phone"
-                      >
-                      </codx-label>
-                      <!--begin::Input-->
-                      <codx-input
-                        type="text"
-                        field="phone"
-                        [crrValue]="dialogAddBookingCar.value.phone"
-                        (valueChange)="valueChange($event)"
-                      ></codx-input>
-                      <!--end::Input-->
-                    </div>
-                  </div>
-
-                  <div class="d-flex flex-column mb-8">
-                    <!--begin::Title-->
-                    <div
-                      class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                      <h4 class="fw-bolder text-gray-800 d-block">
-                        <codx-label
-                          default="Lái xe & người đi cùng"
-                          fiedName="Note"
+                  <div class="row">
+                    <div class="col-12 form-group d-flex justify-content-between">
+                      <div class="d-flex" *ngFor="let item of tmplstDevice">
+                        <span
+                          class="d-flex align-items-center me-2 mb-2"
+                          [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
                         >
-                        </codx-label>
-                      </h4>
-                      <!--begin: btn-icon-->
+                          <span
+                          class="me-1"
+                          [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']"
+                        >
+                          </span
+                          >{{ item.text }}
+                        </span>
+                      </div>
                       <span class="text-end align-items-end">
                         <button
                           type="button"
                           class="btn btn-clean btn-sm btn-icon btn-icon-md"
                           data-dismiss="modal"
+                          (click)="openPopupDevice(popupDevice)"
                         >
                           <i
-                            class="icon-group_add text-primary text-hover-primary-dark icon-24"
+                            class="icon-select_all text-primary text-hover-primary-dark icon-24"
                           ></i>
                         </button>
                       </span>
-                      <!--end: btn-icon-->
                     </div>
-                    <!--end::Title-->
-                    <!--begin::Users group-->
-                    <div
-                      class="symbol-group symbol-group-check symbol-hover flex-nowrap"
-                    >
-                      <div
-                        class="symbol symbol-35px symbol-circle"
-                        data-bs-toggle="tooltip"
-                        title=""
-                        data-bs-original-title="Alan Warden"
-                      >
-                        <span
-                          class="symbol-label bg-warning text-inverse-warning fw-bolder"
-                          >A</span
-                        >
-                        <span
-                          class="symbol-badge badge badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"
-                        ></span>
-                      </div>
-                      <div
-                        class="symbol symbol-35px symbol-circle"
-                        data-bs-toggle="tooltip"
-                        title=""
-                        data-bs-original-title="Michael Eberon"
-                      >
-                        <img
-                          alt="Pic"
-                          src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                        />
-                        <span
-                          class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"
-                        ></span>
-                      </div>
-                      <div
-                        class="symbol symbol-35px symbol-circle"
-                        data-bs-toggle="tooltip"
-                        title=""
-                        data-bs-original-title="Melody Macy"
-                      >
-                        <img
-                          alt="Pic"
-                          src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                        />
-                        <span
-                          class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"
-                        ></span>
-                      </div>
-
-                      <a
-                        href="#"
-                        class="symbol symbol-35px symbol-circle"
-                        data-bs-toggle="modal"
-                        data-bs-target="#kt_modal_view_users"
-                      >
-                        <span
-                          class="symbol-label bg-light-primary text-primary fs-8 fw-bolder"
-                          >+3</span
-                        >
-                      </a>
-                    </div>
-                    <!--end::Users group-->
+                    
                   </div>
                 </div>
+                
               </div>
             </ng-template>
           </e-tabitem>
@@ -374,14 +617,12 @@
                     ></codx-label>
                   </div>
                   <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
                     <codx-label
                       class="fw-bold"
                       default="Ghi chú"
                       fiedName="Note"
                     >
                     </codx-label>
-                    <!--end::Label-->
                     <codx-input
                       type="textarea"
                       class="test-textarea"
@@ -390,7 +631,7 @@
                       ControlName="note"
                       (valueChange)="valueChange($event)"
                       ngDefaultControl
-                      [crrValue]="dialogAddBookingCar.value.note"
+                      [crrValue]="fGroupAddBookingCar.value.note"
                     >
                     </codx-input>
                   </div>
@@ -410,73 +651,4 @@
   </ng-template>
 </codx-form>
 
-<ng-template #popupDevice let-dialog>
-  <!--begin::Card body-->
-  <div class="modal-header">
-    <div class="d-flex flex-column flex-grow-1">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2 id="modal-basic-title">
-          <codx-label
-            name="lblEquipment"
-            default="Thiết bị"
-            [formModel]="dialog.formModel"
-          ></codx-label>
-        </h2>
-        <button
-          type="button"
-          class="btn btn-xs btn-icon btn-light btn-hover-primary"
-          aria-label="Close"
-          (click)="dialog.close()"
-        >
-          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
-        </button>
-      </div>
-      <div class="text-dark-50">
-        <codx-label
-          name="lblChooseEquipments"
-          default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
-          [formModel]="dialog.formModel"
-        ></codx-label>
-      </div>
-    </div>
-  </div>
-  <div class="modal-body">
-    <div class="py-2" *ngFor="let item of tmplstDevice">
-      <!--begin::Item-->
-      <div class="d-flex flex-stack">
-        <div class="d-flex">
-          <span class="text-dark icon-wifi me-2 p-1"></span>
-          <div class="d-flex flex-column">
-            <a href="#" class="text-dark text-hover-primary fw-bolder">{{
-              item.text
-            }}</a>
-          </div>
-        </div>
-        <div class="d-flex justify-content-end">
-          <div class="form-check form-check-solid form-switch">
-            <codx-input
-              class="form-check-input w-35px h-20px"
-              type="switch"
-              id="googleswitch"
-              [checked]="item.isSelected"
-              (change)="checkedChange($event, item)"
-            ></codx-input>
-            <label class="form-check-label" for="googleswitch"></label>
-          </div>
-        </div>
-      </div>
-      <!--end::Item-->
-      <!-- <div class="separator separator-dashed my-5"></div> -->
-    </div>
-    <!--end::Card body-->
-  </div>
-  <div class="modal-footer" (click)="dialog.close()">
-    <button type="button" class="btn btn-primary">
-      <codx-label
-        name="lblSave"
-        default="Lưu"
-        [formModel]="dialog.formModel"
-      ></codx-label>
-    </button>
-  </div>
-</ng-template>
+ -->

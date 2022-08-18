@@ -1,19 +1,27 @@
 <codx-views
   #view
+  *ngIf="entityName"
   [views]="views"
-  [funcID]="funcID"
   [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
+  [entityName]="entityName" 
   [predicate]="predicate"
   [dataValue]="dataValue"
-  [views]="views"
   [idField]="idField"
-  [className]="className"
-  [method]="method"
+  [button]="buttons"
+  (buttonClick)="click($event)"
+  (viewChanged)="viewChanged($event, view)"
 >
 </codx-views>
 
-<ng-template #template>
-  <p>dynamic-form works!</p>
+<ng-template #morefunction let-data>
+  <div class="has-action-menu" style="height: 30px;">
+    <!-- <div class="action-menu"> -->
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
+    <!-- </div> -->
+  </div>
 </ng-template>

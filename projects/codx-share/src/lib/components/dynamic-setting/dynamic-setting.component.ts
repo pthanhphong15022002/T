@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ApiHttpService,
   CacheService,
@@ -27,6 +27,7 @@ export class DynamicSettingComponent implements OnInit {
   dataSetting = {};
   itemMenu = [];
   catagory = '';
+  valuelist = {};
   view: ViewsComponent;
   loaded = false;
   @ViewChild('template') template: TemplateRef<any>;
@@ -35,8 +36,7 @@ export class DynamicSettingComponent implements OnInit {
     private cacheService: CacheService,
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
-    private codxService: CodxService,
-    private router: Router
+    private codxService: CodxService
   ) {}
 
   ngOnInit(): void {}
@@ -55,29 +55,31 @@ export class DynamicSettingComponent implements OnInit {
   }
 
   navigate(evt: any, catagory: string) {
-    this.catagory = catagory;
-    var url = this.view?.function?.url;
-    //this.settingService.setting = this.dataSetting[this.catagory];
-    this.cacheService.valueList(this.listName).subscribe((res) => {
-      debugger;
-      if (res && res.datas) {
-        const ds = (res.datas as any[]).find((item) => item.value == catagory);
+    this.loaded = false;
+    var res = this.valuelist as any;
+    if (res && res.datas) {
+      this.catagory = catagory;
+      var url = this.view?.function?.url;
+      var state = {
+        setting: this.dataSetting[this.catagory],
+        function: this.view.function,
+        valuelist: this.valuelist,
+      };
+      const ds = (res.datas as any[]).find((item) => item.value == catagory);
+      var path = window.location.pathname;
+      if (path.endsWith('/' + ds.default)) {
+        history.pushState(state, '', path);
+      } else {
         url += '/' + ds.default;
-        console.log(ds);
-        //this.router.navigateByUrl(url, { state: this.settingService });
-        // this.codxService.navigate('', url, null, {
-        //   setting: this.dataSetting[this.catagory],
-        //   function: this.view.function,
-        // });
-        this.loaded = true;
+        this.codxService.navigate('', url, null, state);
       }
-    });
+      this.loaded = true;
+    }
     this.changeDetectorRef.detectChanges();
     console.log(evt);
   }
 
   viewChanged(evt: any, view: ViewsComponent) {
-    debugger;
     this.view = view;
     var module = view.function!.module;
     var formName = view.function!.formName;
@@ -100,20 +102,36 @@ export class DynamicSettingComponent implements OnInit {
         formName
       )
       .subscribe((res) => {
-        debugger;
         if (res) {
           this.dataSetting = res;
           this.itemMenu = Object.keys(res);
         }
         this.changeDetectorRef.detectChanges();
-        var items = document.querySelectorAll(
-          '.aside-menu .menu-item[data-id]'
-        );
-        if (items) {
-          var item = items[0] as HTMLElement;
-          item.click();
-        }
-        console.log(res);
+
+        var path = window.location.pathname;
+        var arrPath = path.split('/');
+        var catagory = arrPath[arrPath.length - 1];
+        this.cacheService.valueList(this.listName).subscribe((res) => {
+          if (res && res.datas) {
+            this.valuelist = res;
+            const ds = (res.datas as any[]).find(
+              (item) => item.default == catagory
+            );
+            if (ds) {
+              var ele = document.querySelector(
+                '.aside-menu .menu-item[data-id="' + ds.value + '"]'
+              );
+              var e = ele as HTMLElement;
+              e.click();
+            } else {
+              var items = document.querySelectorAll(
+                '.aside-menu .menu-item[data-id]'
+              );
+              var item = items[0] as HTMLElement;
+              item.click();
+            }
+          }
+        });
       });
   }
 }

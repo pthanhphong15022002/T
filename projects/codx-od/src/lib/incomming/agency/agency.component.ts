@@ -1,4 +1,13 @@
-import { Component, OnInit, TemplateRef, ViewChild, AfterViewInit, ChangeDetectorRef, Input, Optional } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Input,
+  Optional,
+} from '@angular/core';
 
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { CodxService, DialogData, NotificationsService } from 'codx-core';
@@ -8,7 +17,7 @@ import { agency } from '../../models/agency.model';
 @Component({
   selector: 'app-od-agency',
   templateUrl: './agency.component.html',
-  styleUrls: ['./agency.component.scss']
+  styleUrls: ['./agency.component.scss'],
 })
 export class AgencyComponent implements OnInit {
   @Input() dialog;
@@ -21,31 +30,29 @@ export class AgencyComponent implements OnInit {
     jobTitle: new FormControl(),
     phone: new FormControl(),
     email: new FormControl(),
+    fax: new FormControl(),
   });
   public dtAgency = new agency();
   constructor(
-    private agService: AgencyService , 
+    private agService: AgencyService,
     private codxService: CodxService,
-    private notifySvr: NotificationsService,
-    ) {
-     }
+    private notifySvr: NotificationsService
+  ) {}
   ngOnInit(): void {
     //this.formdata = new FormGroup({});
   }
-  changeValueCategory(event:any)
-  {
-    this.dtAgency.Category = event
+  changeValueCategory(event: any) {
+    this.dtAgency.Category = event;
   }
-  onSave()
-  {
-    debugger;
-    this.codxService.getAutoNumber("ODT3","OD_Agencies","AgencyID").subscribe((dt:any)=>{
+  onSave() {
+    this.codxService
+      .getAutoNumber('ODT3', 'OD_Agencies', 'AgencyID')
+      .subscribe((dt: any) => {
         this.agencyForm.value.agencyID = dt;
-        this.agService.SaveAgency(this.agencyForm.value).subscribe(item=>{
-          if(item.status == 0) this.dialog.close();
+        this.agService.SaveAgency(this.agencyForm.value).subscribe((item) => {
+          if (item.status == 0) this.dialog.close();
           this.notifySvr.notify(item.message);
-        })
-    });
-   
+        });
+      });
   }
 }

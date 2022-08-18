@@ -6,7 +6,10 @@ var api: ApiHttpService;
 function extractContent(s:any) {
   var span = document.createElement('span');
   if(s)
+  {
     span.innerHTML = s;
+    span.classList.add("fs-6")
+  }
   else
   {
     span.classList.add("text-gray-300")
@@ -84,11 +87,26 @@ function convertHtmlAgency(agencyName: any , headerText: any) {
   } 
   return divE.outerHTML  || divE.innerText;
 }
+function convertHtmlAgency2(agencyName,txtLstAgency:any)
+{
+  if(!agencyName && !txtLstAgency)
+    return '<div><span class="tex-gray-300">Tên công ty</span></div>';
+  var desc = '<div class="d-flex">';
+  if(agencyName)
+    desc += '<div class="d-flex align-items-center me-2"><span class="icon-apartment icon-20"></span><span class="ms-1">' +agencyName+'</span></div>';
+  if(txtLstAgency)
+    desc +='<div class="d-flex align-items-center me-6"><span class="me-2">| Phòng :</span><span class="ms-1">'+txtLstAgency+'</span></div>';
+  return desc + '</div>';
+}
 function getIdUser(createdBy: any, owner: any) {
   var arr = [];
   if (createdBy) arr.push(createdBy);
   if (owner && createdBy != owner) arr.push(owner);
   return arr.join(";");
+}
+//Chữ đầu thành chữ thường
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toLowerCase() + string.slice(1);
 }
 export{
   extractContent,
@@ -98,5 +116,7 @@ export{
   getJSONString,
   formatDtDis,
   getIdUser,
-  convertHtmlAgency
+  convertHtmlAgency,
+  convertHtmlAgency2,
+  capitalizeFirstLetter
 }

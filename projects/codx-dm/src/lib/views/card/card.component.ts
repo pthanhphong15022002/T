@@ -66,6 +66,13 @@ export class CardComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.auth.get();   
   }
+  
+  classRating(rating) {    
+    var ret = "icon-star text-warning icon-16";
+    if (rating == 0)
+      ret = ret + " text-muted";
+    return ret;
+  }
 
   print() {
     //this.view.print();

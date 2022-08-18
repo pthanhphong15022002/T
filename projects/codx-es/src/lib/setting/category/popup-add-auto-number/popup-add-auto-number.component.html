@@ -16,8 +16,8 @@
           <codx-label fiedName="MaxLength" default="Chiều dài tối đa" formName="AutoNumbers"
             gridViewName="grvAutoNumbers">
           </codx-label>
-          <codx-input type="number" name="number" placeholder="0" [crrValue]="prarseInt(dialogAutoNum.value.maxLength)"
-            min="0" max="100" field="maxLength" (valueChange)="valueChange($event)" [showSpinButton]="false">
+          <codx-input type="number" [crrValue]="prarseInt(dialogAutoNum.value.maxLength)" min="0" max="100"
+            field="maxLength" (valueChange)="valueChange($event)" [showSpinButton]="false">
           </codx-input>
         </div>
       </div>
@@ -27,7 +27,7 @@
         <div class="form-group">
           <codx-label fiedName="FixedString" [formModel]="formModel" default="Chuỗi kí tự">
           </codx-label>
-          <codx-input type="text" name="text" [Group]="dialogAutoNum" ControlName="fixedString"
+          <codx-input type="text" [crrValue]="dialogAutoNum.value.fixedString" field="fixedString"
             (valueChange)="valueChange($event, 'fixedString')">
           </codx-input>
         </div>
@@ -62,9 +62,11 @@
     <div class="row ">
       <div class="col-7">
         <div class="form-group">
-          <codx-input type="checkbox" label="Tự động reset theo" labelPosition="after" field="autoReset"
-            class="test-check" (valueChange)="valueChange($event)" [crrValue]="dialogAutoNum.value.autoReset">
+          <codx-input type="checkbox" labelPosition="after" field="autoReset" class="test-check"
+            (valueChange)="valueChange($event)" [crrValue]="dialogAutoNum.value.autoReset">
           </codx-input>
+          <codx-label class="ms-2" fiedName="autoReset" [formModel]="dialog.formModel" default="Tự động cập nhật theo">
+          </codx-label>
         </div>
       </div>
       <div class="col-5">

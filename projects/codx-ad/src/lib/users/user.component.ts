@@ -9,6 +9,9 @@ import {
   SidebarModel,
   CallFuncService,
   CodxTempFullComponent,
+  RequestOption,
+  AlertConfirmInputConfig,
+  NotificationsService,
 } from 'codx-core';
 import {
   Component,
@@ -37,7 +40,6 @@ export class UserComponent extends UIComponent {
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
-
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
@@ -54,6 +56,7 @@ export class UserComponent extends UIComponent {
     private changeDetectorRef: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private codxAdService: CodxAdService,
+    private notifySvr: NotificationsService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -95,8 +98,12 @@ export class UserComponent extends UIComponent {
       case 'SYS02':
         this.delete(data);
         break;
+      case 'ADS0501':
+        this.stop(data);
+        break;
     }
   }
+  // ADS0501
 
   click(evt: ButtonModel) {
     switch (evt.id) {
@@ -131,40 +138,23 @@ export class UserComponent extends UIComponent {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
-        type: 'add',
+        formType: 'add',
       };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      // this.dialog.closed.subscribe((x) => {
-      //   if (x.event == null)
-      //     this.view.dataService
-      //       .remove(this.view.dataService.dataSelected)
-      //       .subscribe(x => {
-      //         this.dt.detectChanges();
-      //       });
-      // });
-    });
-  }
-
-  edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        var obj = {
-          type: 'edit',
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = 'Auto';
-        this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event) {
+          e.event.modifiedOn = new Date();
+          this.view.dataService.update(e.event).subscribe(item=>{
+            //this.view.dataService.add(x.event,0).subscribe();
+          });
+          //this.delete(e?.event);
+        }
       });
+    });
   }
 
   delete(data: any) {
@@ -176,6 +166,64 @@ export class UserComponent extends UIComponent {
           this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true);
         }
       });
+  }
+
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+        this.dialog.closed.subscribe((x) => {
+          if (x.event)
+          {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe(item=>{
+              //this.view.dataService.add(x.event,0).subscribe();
+            });
+            //x.event.modifiedOn = new Date();
+           /*  let data = x.event;
+            this.view.dataService.remove(data).subscribe(item=>{
+              debugger;
+              this.tempFull.vtmpBase.vTempImg.updateFileDirectReload(data?.userID).subscribe(item2=>{
+                this.view.dataService.add(data,0).subscribe();
+              })
+            }) */
+            
+           /*  this.view.dataService.remove(x.event).subscribe(item=>{
+              debugger;
+              this.view.dataService.data.push(x.event);
+            }); */
+          }
+        });
+      });
+  }
+
+  stop(data: any) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notifySvr.alertCode('AD009', config).subscribe((x) => {
+      if (x.event.status == 'Y') {
+        data.stop = true;
+        this.codxAdService
+          .stopUser(data, false, null, data.stop)
+          .subscribe((res) => {
+            if (res) {
+              this.view.dataService.remove(res).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+      }
+    });
   }
 
   //#region Functions

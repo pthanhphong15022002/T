@@ -77,7 +77,7 @@ export class PopAddTaskgroupComponent implements OnInit {
   ) {
     this.data = dialog.dataService!.dataSelected;
     this.taskGroups = this.data;
-    this.action = dt.data[1];
+    this.action = dt.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -315,6 +315,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     }
     else{
       this.listCombobox = {
+        U: 'Share_Users_Sgl',
         P: 'Share_Positions_Sgl',
         R: 'Share_UserRoles_Sgl',
       };
@@ -351,12 +352,12 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   beforeSave(op: any) {
     var data = [];
-    if (this.isAddMode) {
+    if (this.action === 'add') {
       op.method = 'AddTaskGroupsAsync';
-      data = [this.taskGroups, this.isAddMode];
-    } else {
-      op.method = 'UpdateTaskGroupsAsync';
-      data = [this.taskGroups, this.isAddMode];
+      data = [this.taskGroups];
+    } else if(this.action === 'edit'){
+      op.method= 'UpdateTaskGroupsAsync';
+      data = [this.taskGroups];
     }
 
     op.data = data;
@@ -367,22 +368,22 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
+        this.dialog.dataService.addDatas.clear();
         if (res.save) {
-          this.dialog.dataService.setDataSelected(res.save);
-          this.dialog.dataService.afterSave.next(res);
-          this.changDetec.detectChanges();
+
+          this.dialog.close(res.save);
         }
       });
-    this.closePanel();
   }
 
   updateRow() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
+        this.dialog.dataService.addDatas.clear();
         if (res.update) {
-          this.dialog.dataService.setDataSelected(res.update[0]);
-          this.dialog.close();
+          // this.dialog.dataService.setDataSelected(res.update[0]);
+          this.dialog.close(res.update);
         }
       });
   }
@@ -402,7 +403,7 @@ export class PopAddTaskgroupComponent implements OnInit {
       this.taskGroups.checkList = null;
     }
 
-    if (this.isAddMode) {
+    if (this.action === 'add') {
       return this.addRow();
     }
     return this.updateRow();

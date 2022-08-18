@@ -24,34 +24,30 @@
           data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
           data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
           <div *ngIf="lstStep?.length == 0">
-            <div class="container">
-              <div class="list-empty">
-                <div class="nondata-container">
-                  <div class="align-items-center mt-20">
-                    <div class="text-center">
-                      <img class="max-h-200px" src="../../../assets/demos/svg/data-empty.png" />
-                    </div>
 
-                    <div class="text-center">
-                      <div class="mt-3 text-dark-50">
-                        <codx-label name="lblSubEmpty" default="Chưa có dữ liệu phát sinh" [formModel]="formModel">
-                        </codx-label>
-                      </div>
-
-                      <div class="text-dark-50">
-                        <codx-label name="lblContentEmpty" default="Vui lòng chọn '''Thêm''' để nhập dữ liệu!"
-                          [formModel]="formModel"></codx-label>
-                      </div>
-
-                      <div class="d-flex justify-content-center">
-                        <a class=" btn btn-primary fw-bold" (click)="add()">
-                          <codx-label name="lblAdd" default="Thêm" [formModel]="formModel"></codx-label>
-                        </a>
-                      </div>
-
-                    </div>
-
-                  </div>
+            <div class="d-flex flex-column flex-center text-center justify-content-between">
+              <div class="list-empty ">
+                <!--begin::img-->
+                <div class="mb-4">
+                  <img src="../../../assets/demos/svg/data-empty.png" class="mw-100 mh-300px theme-light-show" alt="">
+                </div>
+                <!--end::img-->
+                <div class="mb-2">
+                  <codx-label class="fs-3 text-gray-400 fw-bold" name="lblSubEmpty" default="Không có dữ liệu"
+                    [formModel]="formModel">
+                  </codx-label>
+                </div>
+                <!-- <div class="mb-4">
+                  <codx-label class="fs-6 text-gray-500" name="lblContentEmpty"
+                    default="Vui lòng chọn '''Thêm''' để nhập dữ liệu!" [formModel]="formModel"></codx-label>
+                </div> -->
+                <div class="fs-6 text-gray-600 mb-8">Chưa có dữ liệu phát sinh.
+                  <br>Vui lòng chọn 'Thêm' để nhập dữ liệu!
+                </div>
+                <div class="mb-0">
+                  <a class=" btn btn-primary fw-bold" (click)="add()">
+                    <codx-label name="lblAdd" default="Thêm" [formModel]="formModel"></codx-label>
+                  </a>
                 </div>
               </div>
             </div>
@@ -62,17 +58,18 @@
               <div class="timeline timeline-3">
                 <div class="timeline-items">
                   <ng-container *ngFor="let item of lstStep; let index=index">
-                    <div class="timeline-item has-action-menu">
+                    <div class="timeline-item " [ngClass]="justView ? '': 'has-action-menu' ">
                       <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
                         <div class=" timeline-media w-40px h-40px me-4">
                           <span class="stepper-number">{{item.stepNo}}</span>
                         </div>
                         <div class="stepper-label">
-                          <h3 class="stepper-title line-clamp  line-clamp-3">
-                            {{item.stepName}}
+                          <h3 class="stepper-title line-clamp line-clamp-3">
+                            {{(item.stepType | vll:'ES002':'text'|async)}}
                           </h3>
                           <div class="stepper-desc">
-                            {{(item.stepType | vll:'ES002':'text'|async)}}
+                            {{item.stepName}}
+
                           </div>
                           <div class="action-menu">
                             <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover"
@@ -110,9 +107,9 @@
                         </div>
                       </div>
                     </div>
-                    <div class="timeline-item" *ngIf="index==lstStep.length-1">
+                    <div class="timeline-item" *ngIf="index==lstStep.length-1 && !justView">
                       <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
-                        <div class="step-add cursor-pointer w-30px h-30px " ngbTooltip="Thêm mới" (click)="add()">
+                        <div class="step-add cursor-pointer w-30px h-30px" ngbTooltip="Thêm mới" (click)="add()">
                           <span class="stepper-number">+</span>
                         </div>
                       </div>
@@ -123,11 +120,11 @@
             </div>
           </div>
         </div>
-        <div class="d-flex flex-stack justify-content-end card-footer tab-pane-footer border-0">
+        <div class="d-flex flex-stack justify-content-end card-footer tab-pane-footer border-0" *ngIf="!justView">
           <div class="left">
             <button type="button" class="btn btn-primary" (click)="onSaveForm()"
               *ngIf="lstStep?.length > 0 || isDeleteAll">
-              <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
+              <codx-label name="lblSave" default="Lưu" [formModel]="dialogApproval.formModel"></codx-label>
             </button>
           </div>
         </div>
@@ -177,10 +174,10 @@
                   </div>
                   <div class="stepper-label">
                     <h3 class="stepper-title line-clamp  line-clamp-3">
-                      {{item.stepName}}
+                      {{(item.stepType | vll:'ES002':'text'|async)}}
                     </h3>
                     <div class="stepper-desc">
-                      {{(item.stepType | vll:'ES002':'text'|async)}}
+                      {{item.stepName}}
                     </div>
                     <div class="action-menu">
                       <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover"
@@ -249,10 +246,10 @@
                 </div>
                 <div class="stepper-label">
                   <h3 class="stepper-title line-clamp  line-clamp-3">
-                    {{item.stepName}}
+                    {{(item.stepType | vll:'ES002':'text'|async)}}
                   </h3>
                   <div class="stepper-desc">
-                    {{(item.stepType | vll:'ES002':'text'|async)}}
+                    {{item.stepName}}
                   </div>
                   <div class="action-menu">
                     <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event,item)" type="hover" [dataItem]="item">

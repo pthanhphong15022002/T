@@ -15,6 +15,8 @@ import {
 import { Router, Params } from '@angular/router';
 import { BoldReportDesignerComponent } from '@boldreports/angular-reporting-components/reportdesigner.component';
 import { BoldReportViewerComponent } from '@boldreports/angular-reporting-components/reportviewer.component';
+import { ApiHttpService, AuthStore, CallFuncService, DataRequest } from 'codx-core';
+import { CodxExportComponent } from '../../codx-export/codx-export.component';
 
 @Component({
   selector: 'codx-report-viewer',
@@ -30,7 +32,7 @@ export class CodxReportViewerComponent
   @Input() parameters: any = {};
   @Input() paramRequest: any = [{}];
   @Input() reportUUID: any = '';
-  @Input() locale!: string;
+  @Input() locale: string = 'vi-VN';
   @Input() print: boolean = false;
   @Output() editReport = new EventEmitter<any>();
   @ViewChild('viewer') viewer!: BoldReportViewerComponent;
@@ -40,9 +42,14 @@ export class CodxReportViewerComponent
   public isAdmin = true;
   public exportSettings: any = {};
   oldParam: any = {};
-
+  private _user: any;
   protected changeDetectorRef!: ChangeDetectorRef;
-  constructor() {
+  constructor(
+    private auth : AuthStore,
+    private api: ApiHttpService,
+    private callfunc: CallFuncService,
+  ) {
+    this._user = this.auth.get();
     if (
       !this.toolbarViewSettings ||
       Object.keys(this.toolbarViewSettings).length == 0
@@ -77,12 +84,12 @@ export class CodxReportViewerComponent
         {
           index: 7,
           cssClass: '',
-          value: 'A',
+          value: 'Excel Template',
         },
         {
           index: 8,
           cssClass: '',
-          value: 'B',
+          value: 'PDF Template',
         },
       ],
     };
@@ -101,7 +108,15 @@ export class CodxReportViewerComponent
       this.viewer && (this.viewer.widget as any).print();
     }
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    window['$divouter'] = undefined;
+    window['$spanTag'] = undefined;
+
+  }
+
+  onAjaxRequest(event:any) {
+    event.headers.push({ Key: 'lvtk', Value: this._user.token });
+  }
 
   loaded(evt:any){
     console.log(evt);
@@ -123,11 +138,32 @@ export class CodxReportViewerComponent
   //Export click event handler
   onExportItemClick(event: any) {
     if (event.value === 'Excel Template') {
-      //Implement the code to export report as Text
-      alert('Text File export option clicked');
+      let reportItem;
+      this.api.exec("SYS",
+      "ReportBusiness",
+      "GetReportInfoAsync",
+       this.reportUUID).subscribe(res => {
+        reportItem = res;
+        let gridModel = new DataRequest();
+        gridModel.formName = "";
+        gridModel.entityName = reportItem.entityName;
+        gridModel.funcID = "";
+        gridModel.gridViewName = "";
+        gridModel.page = 0;
+        gridModel.pageSize = 5000;
+        //Chưa có group
+        gridModel.groupFields = "createdBy";
+        this.callfunc.openForm(CodxExportComponent,null,null,800,"",[gridModel,reportItem.recID],null);
+      })
+
+
+
+
     } else if (event.value === 'PDF Template') {
       //Implement the code to export report as DOT
-      alert('DOT export option clicked');
+      alert('PDF export option clicked');
+      console.log(this.reportUUID);
+
     }
   }
 }

@@ -37,9 +37,6 @@ import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-
   styleUrls: ['./popup-add-category.component.scss'],
 })
 export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
-  @Output() closeForm = new EventEmitter();
-  @Output() openAsideForm = new EventEmitter();
-
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('editApprovalStep') editApprovalStep: TemplateRef<any>;
 
@@ -78,7 +75,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.data = dialog?.dataService?.dataSelected;
-    this.isAdd = data?.data[1];
+    this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
   }
 
@@ -131,6 +128,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
+          this.dialogCategory = res;
           this.dialogCategory.addControl(
             'countStep',
             new FormControl(this.data.countStep ?? 0)
@@ -146,7 +144,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           this.dialogCategory.patchValue(this.data);
           this.dialogCategory = res;
           this.dialogCategory.patchValue({
-            eSign: true,
             signatureType: '1',
             icon: 'icon-text_snippet',
             color: '#0078FF',
@@ -228,6 +225,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   onSaveForm() {
     if (this.dialogCategory.invalid == true) {
+      this.esService.notifyInvalid(this.dialogCategory, this.formModel);
       return;
     }
     this.dialog.dataService.dataSelected = this.dialogCategory.value;
@@ -279,15 +277,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.cfService.openForm(
       PopupAddAutoNumberComponent,
       '',
-      (screen.width * 35) / 100,
+      550,
       (screen.width * 40) / 100,
       '',
-      [
-        {
-          formModel: this.dialog.formModel,
-          autoNoCode: this.dialogCategory.value.categoryID,
-        },
-      ]
+      {
+        formModel: this.dialog.formModel,
+        autoNoCode: this.dialogCategory.value.categoryID,
+      }
     );
   }
 
@@ -297,6 +293,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       type: '0',
       transID: transID,
       model: this.dialogCategory,
+      isAddNew: this.isAdd,
     };
 
     let dialogModel = new DialogModel();

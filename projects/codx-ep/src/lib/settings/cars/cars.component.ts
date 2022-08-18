@@ -4,18 +4,23 @@ import {
   TemplateRef,
   ViewChild,
   AfterViewInit,
+  ChangeDetectorRef,
+  Input,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
+  CacheService,
   CallFuncService,
+  CodxGridviewComponent,
   DialogRef,
   SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component';
 
 @Component({
@@ -25,22 +30,16 @@ import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component
 })
 export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('gridView') gridView: CodxGridviewComponent;
+  @ViewChild('gridTemplate') grid: TemplateRef<any>;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
   @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
-  @ViewChild('moreFunction', { static: true }) moreFunction: TemplateRef<any>;
-  
-  views: Array<ViewModel> = [];
-  buttons: ButtonModel;
-  moreFunc: Array<ButtonModel> = [];
-  devices: any;
-  dataSelected: any;
-  columnGrids: any;
-  dialog!: DialogRef;
-  isAdd = true;
-  columnsGrid;
-  funcID: string;
+  @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
+
+  @Input() data!: any;
+
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -49,77 +48,95 @@ export class CarsComponent implements OnInit, AfterViewInit {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-  dataObj:any = {};
-  itemSelected: any;
-  moreFuncs = [
-    {
-      id: 'btnEdit',
-      icon: 'icon-list-checkbox',
-      text: 'Chỉnh sửa',
-    },
-    {
-      id: 'btnDelete',
-      icon: 'icon-list-checkbox',
-      text: 'Xóa',
-    },
-  ];
+
+  views: Array<ViewModel> = [];
+  buttons: ButtonModel;
+  moreFunc: Array<ButtonModel> = [];
+
+  dialog!: DialogRef;
+  isAdd = true;
+  funcID: string;
+  columnsGrid: any;
+
+  dataSelected: any;
+  devices: any;
+  tmplstDevice = [];
+
   constructor(
-    private callFunc: CallFuncService,
-    private activedRouter: ActivatedRoute
+    private callFuncService: CallFuncService,
+    private activedRouter: ActivatedRoute,
+    private codxEpService: CodxEpService,
+    private cacheService: CacheService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
+
+  ngOnInit(): void {}
+
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-    this.columnGrids = [
-      {
-        field: 'resourceID',
-        headerText: 'Mã xe',
-      },
-      {
-        field: 'resourceName',
-        headerText: 'Tên xe',
-      },{
-        field: 'code',
-        headerText: 'Biển số xe',
-      },
-      {
-        headerText: 'Tình trạng',
-        template: this.statusCol,
-      },
-      {
-        headerText: 'Xếp hạng',
-        template: this.rankingCol,
-      },
-      {
-        headerText: 'Nguồn',
-        template: this.categoryCol,
-      },
-    ];
-    this.views = [
-      {
-        id: '1',
-        text: 'Danh mục xe',
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          resources: this.columnGrids,
-        },
-      },
-    ];
+
     this.buttons = {
       id: 'btnAdd',
     };
+
+    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
+      this.cacheService
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          console.log(gv);
+
+          this.columnsGrid = [
+            {
+              field: 'resourceID',
+              headerText: 'Tên lái xe', //gv['resourceID'].headerText,
+            },
+            // {
+            //   field: 'icon',
+            //   headerText: "Ảnh đại diện",
+            //   template: this.icon,
+            // },
+            {
+              field: 'resourceName',
+              headerText: gv['ResourceName'].headerText,
+            },
+            {
+              field: 'code',
+              headerText: 'Biển số',
+            },
+            {
+              headerText: gv['Status'].headerText,
+              template: this.statusCol,
+            },
+            {
+              headerText: gv['Ranking'].headerText,
+              template: this.rankingCol,
+            },
+            {
+              headerText: 'Nguồn',
+              template: this.categoryCol,
+            },
+          ];
+
+          this.views = [
+            {
+              id: '1',
+              sameData: true,
+              type: ViewType.grid,
+              active: true,
+              model: {
+                resources: this.columnsGrid,
+              },
+            },
+          ];
+          this.changeDetectorRef.detectChanges();
+        });
+    });
   }
 
-  vllDevices = [];
-  lstDevices = [];
-  tmplstDevice = [];
-
-  ngOnInit(): void {}
-  click(evt: ButtonModel) {
-    switch (evt.id) {
+  click(event: ButtonModel) {
+    switch (event.id) {
       case 'btnAdd':
         this.addNew();
         break;
@@ -139,7 +156,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callFunc.openSide(
+      this.dialog = this.callFuncService.openSide(
         PopupAddCarsComponent,
         [this.dataSelected, true],
         option
@@ -147,49 +164,46 @@ export class CarsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  edit(evt?) {
-    this.dataSelected = this.viewBase.dataService.dataSelected;
-    if (evt) this.dataSelected = evt;
-    this.viewBase.dataService.edit(this.dataSelected).subscribe((res) => {
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callFunc.openSide(
-        PopupAddCarsComponent,
-        [this.dataSelected, true],
-        option
-      );
-    });
+  edit(obj?) {
+    if (obj) {
+      this.viewBase.dataService.dataSelected = obj;
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = this.viewBase?.currentView?.dataService;
+          option.FormModel = this.viewBase?.currentView?.formModel;
+          this.dialog = this.callFuncService.openSide(
+            PopupAddCarsComponent,
+            [this.viewBase.dataService.dataSelected, false],
+            option
+          );
+        });
+    }
   }
-  onSelect(evt:any){
-    console.log(evt);
-    
-  }
-  delete(evt?) {
-    debugger
-    console.log(this.dataObj);
-    
-    let delItem = this.viewBase.dataService.dataSelected;
-    if (evt) delItem = evt;
-    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
-      this.dataSelected = res;
-    });
-  }
-  // delete(data: any) {
-  //   this.viewBase.dataService.dataSelected = data;
-  //   this.viewBase.dataService.delete([this.viewBase.dataService.dataSelected]).subscribe();
-  // };
 
-  clickMF(evt?: any, data?: any) {
-    switch (evt.functionID) {
-      case 'edit':
+  delete(obj?) {
+    if (obj) {
+      this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+        console.log(res);
+      });
+    }
+  }
+
+  onSelect(obj: any) {
+    console.log(obj);
+  }
+
+  clickMF(event, data) {
+    console.log(event);
+    switch (event?.functionID) {
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
-        break;
-      default:
         break;
     }
   }

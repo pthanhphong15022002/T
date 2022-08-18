@@ -1,6 +1,7 @@
 /// <reference types="@boldreports/types/reports.all" />
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BoldReportDesignerComponent } from '@boldreports/angular-reporting-components/reportdesigner.component';
+import { AuthStore } from 'codx-core';
 
 @Component({
   selector: 'codx-report-designer',
@@ -15,10 +16,12 @@ export class CodxReportDesignerComponent implements OnInit, AfterViewInit {
   @Input()  reportUUID: any = '';;
   @Input() isAdmin: boolean = true;
   @Input() showToolbar: boolean = true;
-  @Input() locale!: string;
+  @Input() locale: string = 'vi-VN';
   @Input() permissionSettings!: any ;
-
-  constructor() {
+  @Output() viewerMode = new EventEmitter<any>();
+  private _user: any;
+  constructor(private auth : AuthStore) {
+    this._user = this.auth.get();
   }
   ngOnInit(): void {
     if(!this.toolbarDesignSettings || Object.keys(this.toolbarDesignSettings).length == 0){
@@ -68,19 +71,29 @@ onToolbarDesignerRendering(args:any): void {
     //     //args.target.find('ul:first').append(openButton.append(openIcon));
     //     args.target.find('ul:first').append(saveButton.append(saveIcon));
     //   }
+
+    if ($(args.target).hasClass('e-rptdesigner-toolbarcontainer')) {
+          const viewButton = (ej as any).buildTag('li.e-rptdesigner-toolbarli e-designer-toolbar-align e-tooltxt', '', {}, {});
+          const viewIcon = (ej as any).buildTag('span.e-rptdesigner-toolbar-icon e-toolbarfonticonbasic e-rptdesigner-toolbar-preview e-li-item',
+            '', {}, { title: 'Xem báo cáo' });
+          //args.target.find('ul:first').append(openButton.append(openIcon));
+          args.target.find('ul:eq(9)').append(viewButton.append(viewIcon));
+      }
 }
 
 onToolbarDesignerClick(args:any) {
-    if(this.isAdmin == false)
-    console.log(args);
 
       if (args.event.click === 'Save') {
         args.event.cancel = true;
         args.designerInst.widget.saveReport();
       }
+      if(args.event.click === 'External'){
+        this,this.viewerMode.emit(true);
+      }
 }
 
-onAjaxBeforeLoad(args:any):void {
+onAjaxBeforeLoad(args:any) {
+    args.headers.push({ Key: 'lvtk', Value: this._user.token });
     args.data = JSON.stringify({ reportType: "RDL" });
 }
 

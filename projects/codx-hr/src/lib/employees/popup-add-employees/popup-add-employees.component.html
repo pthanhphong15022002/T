@@ -127,11 +127,11 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="PositionName" default="Chức danh công việc">
+          <codx-label fiedName="PositionID" default="Chức danh công việc">
           </codx-label>
           <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.positionID"
-            field="positionName" refValue="Positions" service="HR" [virtual]="{itemHeight:100}" placeholder="Chức danh công việc"
-            [popupSettings]="{ width: '300px' }" loadFull="true" (valueChange)="dataChange($event, 'positionName')">
+            field="positionID" refValue="Positions" service="HR" [virtual]="{itemHeight:100}" placeholder="Chức danh công việc"
+            [popupSettings]="{ width: '300px' }" loadFull="true" (valueChange)="dataChange($event, 'positionID')">
           </codx-input>
         </div>
       </div>
@@ -139,11 +139,11 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="OrganizationName" default="Bộ phận">
+          <codx-label fiedName="OrganizationID" default="Bộ phận">
           </codx-label>
-          <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.organizationName"
-            field="organizationName" refValue="OrganizationUnits" service="HR" placeholder="Bộ phận"
-            (valueChange)="dataChange($event, 'organizationName')" loadFull="true" [disabled]="isDisable">
+          <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.organizationID"
+            field="organizationID" refValue="OrganizationUnits" service="HR" placeholder="Bộ phận"
+            (valueChange)="dataChange($event, 'organizationID')" loadFull="true" [disabled]="isDisable">
           </codx-input>
         </div>
       </div>
@@ -151,11 +151,11 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="DepartmentName" default="Phòng ban">
+          <codx-label fiedName="DepartmentID" default="Phòng ban">
           </codx-label>
-          <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.departmentName"
-            field="departmentName" refValue="HRDepartments" service="HR" placeholder="Phòng ban"
-            (valueChange)="dataChange($event, 'departmentName')" loadFull="true" [disabled]="isDisable">
+          <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.departmentID"
+            field="departmentID" refValue="HRDepartments" service="HR" placeholder="Phòng ban"
+            (valueChange)="dataChange($event, 'departmentID')" loadFull="true" [disabled]="isDisable">
           </codx-input>
         </div>
       </div>
@@ -163,10 +163,10 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="DivisionName" default="Khối">
+          <codx-label fiedName="DivisionID" default="Khối">
           </codx-label>
-          <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.divisionName" placeholder="khối"
-            field="divisionName" refValue="HRDivisions" service="HR" (valueChange)="dataChange($event, 'divisionName')"
+          <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.divisionID" placeholder="khối"
+            field="divisionID" refValue="HRDivisions" service="HR" (valueChange)="dataChange($event, 'divisionID')"
             loadFull="true" [disabled]="isDisable">
           </codx-input>
         </div>

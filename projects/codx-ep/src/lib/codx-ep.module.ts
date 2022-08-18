@@ -34,9 +34,10 @@ import { PopupDeviceStationeryComponent } from './settings/stationery/popup-add-
 import { PopupColorStationeryComponent } from './settings/stationery/popup-add-stationery/popup-color-stationery/popup-color-stationery.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
-import { ReportComponent } from './booking-room/report-view/report.component';
 import { DriversComponent } from './settings/drivers/drivers.component';
 import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/popup-add-drivers.component';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
+import { CodxReportModule } from 'projects/codx-report/src/public-api';
 const routes: Route[] = [
   {
     path: '',
@@ -113,7 +114,7 @@ const Components: Type<any>[] = [
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,
-  ReportComponent
+  DynamicFormComponent
 ];
 
 @NgModule({
@@ -130,6 +131,7 @@ const Components: Type<any>[] = [
     ProgressBarAllModule,
     TabModule,
     CodxShareModule,
+    CodxReportModule
   ],
   exports: [RouterModule],
 })

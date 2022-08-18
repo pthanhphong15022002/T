@@ -23,14 +23,28 @@ import { ShareComponent } from "./share/share.component";
 export class CodxDMService {    
     public dataTree: NodeTree[];
     public data = new BehaviorSubject<any>(null);
-    title = 'Thông báo';
-    titleCopy = 'Sao chép';
-    titleRename = 'Thay đổi tên';
-    titleUpdateFolder = 'Cập nhật thư mục';
-    titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
-    titleTrashmessage = 'Bạn có muốn cho {0} vào thùng rác không ?';
-    titleDeleteeMessage = 'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
-    titleNoRight = "Bạn không có quyền download file này";
+    public title = 'Thông báo';
+    public titleCopy = 'Sao chép';
+    public titleRename = 'Thay đổi tên';
+    public titleUpdateFolder = 'Cập nhật thư mục';
+    public titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
+    public titleTrashmessage = 'Bạn có muốn cho {0} vào thùng rác không ?';
+    public titleDeleteeMessage = 'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
+    public titleNoRight = "Bạn không có quyền download file này";
+    public restoreFilemessage = '{0} đã có bạn có muốn ghi đè lên không ?';
+    public restoreFoldermessage = '{0} đã có bạn có muốn ghi đè lên không ?';
+    public titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
+    public titleMessage = 'Thông báo';
+    public titleCopymessage = 'Bạn có muốn lưu lên không ?';
+    public titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
+    public FOLDER_NAME = "DM";//"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
+    public titleEmptyTrash30 = "Các mục trong thùng rác sẽ xóa vĩnh viễn trong 30 ngày";
+    public titleEmptyAction = 'Dọn sạch thùng rác';
+    public titleNodaTa = 'Không có tài liệu';
+    public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
+    public formModel: FormModel;    
+    public dataService: any;
+
     isData = this.data.asObservable();   
     public modeStore = "0";
     public hideTree = false;
@@ -78,11 +92,16 @@ export class CodxDMService {
     public dataFileEditing: FileUpload;
     public listFolder = [];
     public listFiles = [];
+    revision: boolean;
+    moveable = false;
     itemRight: ItemRight;
     path: string;
     // public confirmationDialogService: ConfirmationDialogService;
     public ChangeData = new BehaviorSubject<boolean>(null);
     isChangeData = this.ChangeData.asObservable();
+
+    public ChangeDataViewFile = new BehaviorSubject<any>(null);
+    isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
 
     public EmptyTrashData = new BehaviorSubject<boolean>(null);
     isEmptyTrashData = this.EmptyTrashData.asObservable();
@@ -96,7 +115,7 @@ export class CodxDMService {
     public HideTree = new BehaviorSubject<boolean>(null);
     isHideTree = this.HideTree.asObservable();
 
-    public updateHDD = new BehaviorSubject<string>(null);
+    public updateHDD = new BehaviorSubject<any>(null);
     isUpdateHDD = this.updateHDD.asObservable();
 
     public openFileDialog = new BehaviorSubject<boolean>(null);
@@ -230,16 +249,7 @@ export class CodxDMService {
 
     public currentDMIndex = new BehaviorSubject<string>(null);
     isCurrentDMIndex = this.currentDMIndex.asObservable();
-    private titleMessage = 'Thông báo';
-    private titleCopymessage = 'Bạn có muốn lưu lên không ?';
-    private titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
-    private FOLDER_NAME = "DM";//"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
-    public titleEmptyTrash30 = "Các mục trong thùng rác sẽ xóa vĩnh viễn trong 30 ngày";
-    public titleEmptyAction = 'Dọn sạch thùng rác';
-    public titleNodaTa = 'Không có tài liệu';
-    public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
-    public formModel: FormModel;    
-    public dataService: any;
+   
     constructor(
         private domSanitizer: DomSanitizer,
         private auth: AuthService,
@@ -274,6 +284,7 @@ export class CodxDMService {
         else
             this.parentRevision = false;
 
+        this.revision = this.parentRevision;
         this.parentApproval = folder.approval;
         this.parentPhysical = folder.physical;
         this.parentCopyrights = folder.copyrights;
@@ -281,7 +292,7 @@ export class CodxDMService {
         this.parentRevisionNote = folder.revisionNote;
         this.parentLocation = folder.location;
 
-        if (this.idMenuActive == "4" || this.idMenuActive == "3" || this.idMenuActive == "6" || this.idMenuActive == "7") {
+        if (this.idMenuActive == "DMT03" || this.idMenuActive == "DMT02" || this.idMenuActive == "DMT05" || this.idMenuActive == "7") {
 
             if (folder.isSystem && (folder.folderName.trim().toLocaleLowerCase() == this.FOLDER_NAME.trim().toLocaleLowerCase() || folder.folderName.trim().toLocaleLowerCase() == this.user.userID.trim().toLocaleLowerCase()) && (folder.level == "1" || folder.level == "2")) {
                 this.disableUpload.next(true);
@@ -296,8 +307,7 @@ export class CodxDMService {
             this.disableUpload.next(true);
             this.disableInput.next(true);
         }
-
-        this.setRight.next(true);
+       // this.setRight.next(true);
     }
 
     
@@ -397,6 +407,74 @@ export class CodxDMService {
         return bytes;
     }
       
+    openItem(data: any) {
+      if (data.fileName == undefined) 
+      {       
+        if (!data.read) {
+          this.notificationsService.notify(this.titleAccessDenied);
+          return;
+        }
+
+        if (this.idMenuActive == "DMT08")
+          return;
+       
+        this.loadedFile = false;
+        this.loadedFolder = false;
+        this.level = data.level;
+        if (this.level == "1")
+          this.parentFolderId = "000000000000000000000000";
+        else
+          this.parentFolderId = data.parentId;
+
+        this.isTree = false;
+        this.folderName = data.folderName;
+        this.currentNode = '';
+        this.folderId.next(data.recID);
+        this.nodeSelect.next(data);
+        this.disableInput.next(false);
+
+        this.folderService.getFolder(data.recID).subscribe(async res => {
+          if (res != null) {
+            this.parentFolder.next(res);
+            this.getRight(res);
+            this.folderName = res.folderName;
+            this.parentFolderId = res.parentId;
+            this.add.next(true);      
+          }
+        });
+      
+        this.folderService.options.funcID = this.idMenuActive;
+        this.folderService.getFolders(data.recID).subscribe(async res => {     
+          this.isTree = true;        
+          this.listFolder = res[0];
+          this.listFiles = [];
+          this.loadedFolder = true;
+          this.ChangeData.next(true);      
+        });
+
+        this.fileService.GetFiles(data.recID, this.idMenuActive).subscribe(async res => {        
+          this.listFiles = res;
+          this.loadedFile = true;
+          this.ChangeData.next(true);        
+        });      
+      }
+      else {
+        // open file
+        this.fileService.getFile(data.recID).subscribe(data => {
+          this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+          var files = this.listFiles;
+          if (files != null) {
+            let index = files.findIndex(d => d.recID.toString() === data.recID);
+            if (index != -1) {
+              files[index] = data;
+            }
+            this.listFiles = files;                    
+            this.ChangeData.next(true);                
+          }
+      });
+      }
+    } 
+
     checkDeleteRight(data: any) {    
         if (data.isSystem && data.folderName != null) {          
             return false;
@@ -437,7 +515,7 @@ export class CodxDMService {
                     }
     
                     this.fileService.getTotalHdd().subscribe(i => {
-                      this.updateHDD.next(i.messageHddUsed);
+                      this.updateHDD.next(i);
                    //   this.changeDetectorRef.detectChanges();
                     })
                   });
@@ -458,7 +536,7 @@ export class CodxDMService {
                     }
     
                     this.fileService.getTotalHdd().subscribe(i => {
-                      this.updateHDD.next(i.messageHddUsed);
+                      this.updateHDD.next(i);
                     //  this.changeDetectorRef.detectChanges();
                     })
                   });
@@ -488,6 +566,7 @@ export class CodxDMService {
             //  this.isBookmark = !this.isBookmark;
               this.listFiles = list;
               this.ChangeData.next(true);
+              this.ChangeDataViewFile.next(res);
            //   that.changeDetectorRef.detectChanges();
             }
           });
@@ -520,16 +599,193 @@ export class CodxDMService {
             }
           });
         }
-      }
+    }
 
-    filterMoreFunction(e: any, data: any) {    
+    filterMoreFunction(e: any, data: any, modeView = false) {    
       var type = this.getType(data, "entity");
+      var bookmark = this.isBookmark(data);
+      var list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
       if (e) {          
         for(var i=0; i<e.length; i++) {       
           if (e[i].data != null && e[i].data.entityName == type)
             e[i].disabled = false;     
           else
-            e[i].disabled = true;     
+            e[i].disabled = true;  
+         
+          // khong phai cho duyet
+          if (this.idMenuActive != "DMT06" && this.idMenuActive != "DMT07") {
+            if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
+              e[i].disabled = true;  
+            }
+          } 
+          else {
+            //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
+            //list = "DMT0226;DMT0227;DMT0230;DMT0231";
+            if (type == 'DM_FolderInfo') {
+              list = "DMT0226;DMT0227";                
+            }
+            else 
+              list = "DMT0230;DMT0231";    
+            if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
+              e[i].disabled = false;  
+            }
+            else {
+              e[i].disabled = true;  
+            }
+
+            // if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) { 
+            //   e[i].disabled = true;  
+            // }
+          }
+          // ""         
+
+          if (type == 'DM_FolderInfo') {
+            // function in 
+            if (e[i].data != null && e[i].data.functionID == 'DMT0224') {
+              e[i].disabled = true;     
+            }
+            // data?.isblur = true 
+            // bookmark va unbookmark         
+            if (bookmark) {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0205') {
+                e[i].disabled = true;     
+              }
+            }
+            else {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0223') {
+                e[i].disabled = true;     
+              }
+            }  
+
+            // phuc hoi khong phai trong thung rac  
+            if (this.idMenuActive != "DMT08" && e[i].data != null && e[i].data.functionID == 'DMT0234') { 
+              e[i].disabled = true;  
+            }
+            
+            // thung rac  (view, phuc hoi, xoa)
+            if (this.idMenuActive == "DMT08"  && e[i].data != null && e[i].data.functionID != 'DMT0206' && e[i].data.functionID != 'DMT0234') { 
+              e[i].disabled = true;  
+            }
+          } 
+          else {
+            if (modeView) {
+              list = "DMT0212;DMT0217;DMT0225;DMT0222";
+              if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) { 
+                e[i].disabled = true;  
+              }
+              else {
+                e[i].disabled = false;  
+              }
+            }    
+
+            // bookmark va unbookmark 
+            if (bookmark) {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0217') {
+                e[i].disabled = true;     
+              }
+            }
+            else {
+              if (e[i].data != null && e[i].data.functionID == 'DMT0225') {
+                e[i].disabled = true;     
+              }
+            }     
+            // thung tac
+            if (this.idMenuActive == "DMT08" && e[i].data != null && e[i].data.functionID != 'DMT0210' && e[i].data.functionID != 'DMT0219' && e[i].data.functionID != 'DMT0235') { 
+              e[i].disabled = true;  
+            }
+
+            // phuc hoi     
+            if (this.idMenuActive != "DMT08"  && e[i].data != null && e[i].data.functionID == 'DMT0235') { 
+              e[i].disabled = true;  
+            }                   
+          } 
+          // xet quyetn
+          if (e[i].data) {
+            e[i].isblur = false; // duoc view
+            switch(e[i].data.functionID) {           
+              // folder
+              case "DMT0201": // share thu muc    
+              case "DMT0212": // chia se file  
+                if (!data.share) 
+                  e[i].isblur = true; // duoc view                            
+                break;          
+              case "DMT0202": // chinh sua thu muc    
+              case "DMT0213": // chinh sua file
+              case "DMT0203": // Thay đổi tên thu muc    
+              case "DMT0215": // thay doi ten file           
+                if (!data.write) 
+                   e[i].isblur = true; // duoc view
+                break;              
+              case "DMT0204": // di chuyen thu muc 
+              case "DMT0216": // di chuyen file   
+                if (!data.moveable) 
+                  e[i].isblur = true; // duoc view              
+                break;                                
+              case "DMT0206": //delete   
+              case "DMT0219": // xoa file
+                if (!data.delete || data.isSystem) 
+                  e[i].isblur = true; // duoc view              
+                break;                    
+              // case "DMT0207": //permission   
+              //   break;  
+              // case "DMT0208": //yeu cau cap quyen   
+              //   break;  
+              case "DMT0209": //properties  
+              case "DMT0222": //properties file   
+                if (!data.read) 
+                  e[i].isblur = true; // duoc view
+                break;                    
+              // case "DMT0224": // in folder
+              //   break;  
+              // case "DMT0226": // xet duyet  
+              //   break;
+              // case "DMT0227": // tu choi
+              //   break;
+              // case "DMT0228": // huy
+              //   break;
+              // case "DMT0229": // lay lay quyen
+              //   break;   
+              case "DMT0233": // restore folder
+              case "DMT0235": // restore file
+                if (!data.delete) 
+                  e[i].isblur = true; // duoc view              
+                break;                    
+              // file  
+              case "DMT0210": //xem file
+                if (!data.read) 
+                  e[i].isblur = true; // duoc view
+                break;
+              case "DMT0211": // download
+                if (!data.download) 
+                  e[i].isblur = true; // duoc view              
+                break;    
+              case "DMT0214": // Sao chép file
+                if (!data.create) 
+                  e[i].isblur = true; // duoc view              
+                break;           
+              case "DMT0218": // quan ly version
+                if (!data.write || !this.revision) 
+                  e[i].isblur = true; // duoc view              
+                break;           
+                           
+              // case "DMT0220": // persmission file
+              //   break;    
+              // case "DMT0221": //yeu cau cap quyen file   
+              //   break;                           
+              // case "DMT0230": // xet duyet  
+              //   break;
+              // case "DMT0231": // tu choi
+              //   break;
+              // case "DMT0232": // huy
+              //   break;              
+              // case "DMT0234": // lay lay quyen
+              //   break;                
+
+              default:
+                e[i].isblur = false; // duoc view
+                break;
+            }  
+          }      
         }      
       }
     }
@@ -552,6 +808,22 @@ export class CodxDMService {
       else
         return true;
     }
+
+    isBookmark(data: any) {
+      var ret = false;
+      if (data.bookmarks != null) {        
+        data.bookmarks.forEach(item => {
+          if (item.objectID == this.user.userID) {
+            ret = true;
+          }
+        });        
+      }  
+      return ret;
+    }
+  
+    // checkBookmark() {
+    //   return this.isBookmark;
+    // }
 
     getBookmarksClass(item) {
       if (this.showBookmark(item))
@@ -633,154 +905,359 @@ export class CodxDMService {
       return type;
     }
 
-    clickMF($event, data: any) {        
-        var type =  this.getType(data, "name");
-        let option = new SidebarModel();
-
-        switch($event.functionID) {
-          case "DMT0210": //view file
-            this.fileService.getFile(data.recID).subscribe(data => {
-                this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
-                var files = this.listFiles;
-                if (files != null) {
-                  let index = files.findIndex(d => d.recID.toString() === data.recID);
-                  if (index != -1) {
-                    files[index] = data;
-                  }
-                  this.listFiles = files;                    
-                  this.ChangeData.next(true);                
-                }
-            });
-            break;
-
-          case "DMT0211": // download
-            this.fileService.getFile(data.recID).subscribe(file => {      
-                var id = file.recID;
-                var that = this;
-                if (this.checkDownloadRight(file)) {
-                this.fileService.downloadFile(id).subscribe(async res => {
-                    if (res && res.content != null) {
-                      let json = JSON.parse(res.content);
-                      var bytes = that.base64ToArrayBuffer(json);
-                      let blob = new Blob([bytes], { type: res.mimeType });
-                      let url = window.URL.createObjectURL(blob);
-                      var link = document.createElement("a");
-                      link.setAttribute("href", url);
-                      link.setAttribute("download", res.fileName);
-                      link.style.display = "none";
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                    }
-                    var files = this.listFiles;
-                    if (files != null) {
-                      let index = files.findIndex(d => d.recID.toString() === id);
-                      if (index != -1) {
-                        files[index].countDownload = files[index].countDownload + 1;
-                      }
-                      this.listFiles = files;                    
-                      this.ChangeData.next(true);                
-                    }
-                });
-                }
-                else {
-                this.notificationsService.notify(this.titleNoRight);
-                }
-             });
-            break;
-            
-          case "DMT0222": // properties file         
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            option.Width = '550px';
-            // let data = {} as any;
-            data.title = this.titleUpdateFolder;
-            data.id =  data.recID;            
-            this.callfc.openSide(PropertiesComponent, data, option);            
-            break;
-
-          case "DMT0206":  // xoa thu muc
-          case "DMT0219": // xoa file
-             this.deleteFile(data, type);            
-            break;
-
-          case "DMT0202": // chinh sua thu muc  
-          case "DMT0209":          
-           
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            option.Width = '550px';
-           // let data = {} as any;
-            data.title = this.titleUpdateFolder;
-            data.id =  data.recID;            
-            this.callfc.openSide(CreateFolderComponent, data, option);            
-            break;
-
-        case "DMT0213":  // chinh sua file   
-            this.callfc.openForm(EditFileComponent, "", 800, 800, "", ["", data], "");
-            break;
-
-          case "DMT0207":  // permission
-          case "DMT0220":
-            this.dataFileEditing = data;            
-            this.callfc.openForm(RolesComponent, "", 950, 650, "", [""], "");
-            break;
-
-          case "DMT0205":  // bookmark
-          case "DMT0217":
-            this.setBookmark(data, type);
-            break;
-
-          case "DMT0204": // di chuyen
-          case "DMT0216": // di chuyen
-            var title = `${this.titleCopy} ${type}`;
-            this.callfc.openForm(MoveComponent, "", 450, 400, "", [type, data, title, true], "");   
-            break;  
-
-          case "DMT0214": //"copy": // copy file hay thu muc
-            var title = `${this.titleCopy} ${type}`;
-            this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, true], "");   
-            break;
-    
-          case "DMT0203": //"rename": // copy file hay thu muc
-          case "DMT0215":
-            var title = `${this.titleRename} ${type}`;
-            this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, false], "");   
-            break;
-
-          case "DMT0218": /// version file
-            this.callfc.openForm(VersionComponent, "", 650, 600, "", [FormModel, data], "");   
-            break;   
-
-          //request permisssion  
-          case "DMT0221":
-          case "DMT0208":
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            option.Width = '550px';
-          
-           // let data = {} as any;
-            data.title = this.titleUpdateFolder;
-            data.id =  data.recID;            
-            this.callfc.openSide(ShareComponent, [type, data, false], option);      
-            break;
-            break;  
-          // share
-          case "DMT0201":   
-          case "DMT0212":          
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            option.Width = '550px';
-          
-           // let data = {} as any;
-            data.title = this.titleUpdateFolder;
-            data.id =  data.recID;            
-            this.callfc.openSide(ShareComponent, [type, data, true], option);      
-            break;
-          default:
-            break;    
-        }  
+    setRequest(type: string, recId: string, id: string, status: string, isActive: boolean) {
+    //  debugger;
+      if (type == "file") {
+        this.fileService.UpdateRequestAsync(recId, id, status, isActive).subscribe(async res => {
+          let list = this.listFiles;
+          var idTemplate = this.idMenuActive;
+          //if (idTemplate == "11" || idTemplate == "12" || idTemplate == "13")
+          if (idTemplate == "DMT07" || idTemplate == "12" || idTemplate == "13")
+            id = recId;
+  
+          if (this.idMenuActive != '10' && this.idMenuActive != '13') {
+            let index = list.findIndex(d => d.id.toString() === id.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);//remove element from array
+              // this.dmSV.changeData(null, list, id);   
+           //   this.listFiles.next(list);
+              this.listFiles = list;
+              //this.changeDetectorRef.detectChanges();
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+          else {
+            // xet duyet huy
+            //if (this.idMenuActive == '13' && (status == "7" || status == "8")) {
+            if (this.idMenuActive == '13' && (status == "7" || status == "8")) {
+              let index = list.findIndex(d => d.id.toString() === id.toString()); //find index in your array
+              if (index > -1) {
+                list.splice(index, 1);//remove element from array
+                this.listFiles = list;
+             //   this.changeDetectorRef.detectChanges();
+                //this.changeDetectorRef.detectChanges();
+                this.notificationsService.notify(res.message);
+                this.ChangeData.next(true);
+              }
+            }
+            else {
+              var files = this.listFiles;
+              let index = files.findIndex(d => d.id.toString() === id.toString());
+              if (index != -1) {
+                files[index].fileName = res.data.fileName;
+                files[index] = res.data;
+              }
+           //   this.dmSV.listFiles.next(files);
+              this.listFiles = files;
+             // this.changeDetectorRef.detectChanges();
+              //this.changeDetectorRef.detectChanges();
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+        });
       }
+      else {
+        this.folderService.UpdateRequestAsync(recId, id, status, isActive).subscribe(async res => {
+          let list = this.listFolder;
+          var idTemplate = this.idMenuActive;
+       //   if (idTemplate == "11" || idTemplate == "12" || idTemplate == "13")
+          if (idTemplate == "DMT07" || idTemplate == "12" || idTemplate == "13")
+            id = recId;
+  
+          //if (this.idMenuActive != '10' && this.idMenuActive != '13') {
+          if (this.idMenuActive != '10' && this.idMenuActive != '13') {
+            let index = list.findIndex(d => d.id.toString() === id.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);//remove element from array
+              // this.dmSV.changeData(null, list, id);   
+        
+              this.listFolder = list;
+              //this.changeDetectorRef.detectChanges();
+              //this.changeDetectorRef.detectChanges();
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+          else {
+            // xet duyet huy
+            if (this.idMenuActive == '13' && (status == "7" || status == "8")) {
+              let index = list.findIndex(d => d.id.toString() === id); //find index in your array
+              if (index > -1) {
+                list.splice(index, 1);//remove element from array
+                // this.dmSV.changeData(null, list, id);   
+               
+                this.listFolder = list;
+              //  this.changeDetectorRef.detectChanges();
+                // this.refresh();
+                // this.changeDetectorRef.detectChanges();
+                this.notificationsService.notify(res.message);
+                this.ChangeData.next(true);
+              }              
+            }
+            else {
+              var folder = this.listFolder;
+              let index = folder.findIndex(d => d.id.toString() === id.toString());
+              if (index != -1) {
+                folder[index] = res.data;
+              }
+              //this.dmSV.listFolder.next(folder);
+              this.listFolder = folder;
+              //this.changeDetectorRef.detectChanges();
+              // this.refresh();
+              //this.changeDetectorRef.detectChanges();
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+        });
+      }
+    }
+    
+   clickMF($event, data: any) {        
+      var type =  this.getType(data, "name");
+      let option = new SidebarModel();
+
+      switch($event.functionID) {
+        case "DMT0226": // xet duyet thu muc        
+        case "DMT0230": // xet duyet file
+          this.setRequest(type, data.recID, data.perm[0].id, this.idMenuActive == 'DMT06' ?  '5' : '6', true);
+          break;
+        case "DMT0227": // tu choi xet duyet thu muc
+        case "DMT0231": // tu choi xet duyet file
+          this.setRequest(type, data.recID, data.perm[0].id, this.idMenuActive == 'DMT06' ?  '4' : '8', false);         
+          break;
+        case "DMT0210": //view file
+          this.fileService.getFile(data.recID).subscribe(data => {
+              this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data,  this.formModel], "");
+              var files = this.listFiles;
+              if (files != null) {
+                let index = files.findIndex(d => d.recID.toString() === data.recID);
+                if (index != -1) {
+                  files[index] = data;
+                }
+                this.listFiles = files;                    
+                this.ChangeData.next(true);                
+              }
+          });
+          break;
+        case "DMT0211": // download
+          this.fileService.getFile(data.recID).subscribe(file => {      
+              var id = file.recID;
+              var that = this;
+              if (this.checkDownloadRight(file)) {
+              this.fileService.downloadFile(id).subscribe(async res => {
+                  if (res && res.content != null) {
+                    let json = JSON.parse(res.content);
+                    var bytes = that.base64ToArrayBuffer(json);
+                    let blob = new Blob([bytes], { type: res.mimeType });
+                    let url = window.URL.createObjectURL(blob);
+                    var link = document.createElement("a");
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", res.fileName);
+                    link.style.display = "none";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }
+                  var files = this.listFiles;
+                  if (files != null) {
+                    let index = files.findIndex(d => d.recID.toString() === id);
+                    if (index != -1) {
+                      files[index].countDownload = files[index].countDownload + 1;
+                    }
+                    this.listFiles = files;                    
+                    this.ChangeData.next(true);                
+                  }
+              });
+              }
+              else {
+              this.notificationsService.notify(this.titleNoRight);
+              }
+            });
+          break;
+          
+        case "DMT0222": // properties file         
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id =  data.recID;            
+          this.callfc.openSide(PropertiesComponent, data, option);            
+          break;
+
+        case "DMT0234": // khoi phuc thu muc
+        case "DMT0235": // khoi phuc file
+          this.restoreFile(data, type); 
+          break;   
+
+        case "DMT0206":  // xoa thu muc
+        case "DMT0219": // xoa file
+            this.deleteFile(data, type);            
+          break;
+
+        case "DMT0202": // chinh sua thu muc  
+        case "DMT0209":          
+          
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id =  data.recID;            
+          this.callfc.openSide(CreateFolderComponent, data, option);            
+          break;
+
+      case "DMT0213":  // chinh sua file   
+          this.callfc.openForm(EditFileComponent, "", 800, 800, "", ["", data], "");
+          break;
+
+        case "DMT0207":  // permission
+        case "DMT0220":
+          this.dataFileEditing = data;            
+          this.callfc.openForm(RolesComponent, "", 950, 650, "", [""], "");
+          break;
+
+        case "DMT0205": // bookmark folder
+        case "DMT0223": // unbookmark folder
+        case "DMT0217": // bookmark file
+        case "DMT0225":
+          this.setBookmark(data, type);
+          break;
+
+        case "DMT0204": // di chuyen
+        case "DMT0216": // di chuyen
+          var title = `${this.titleCopy} ${type}`;
+          this.callfc.openForm(MoveComponent, "", 450, 400, "", [type, data, title, true], "");   
+          break;  
+
+        case "DMT0214": //"copy": // copy file hay thu muc
+          var title = `${this.titleCopy} ${type}`;
+          this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, true], "");   
+          break;
+  
+        case "DMT0203": //"rename": // copy file hay thu muc
+        case "DMT0215":
+          var title = `${this.titleRename} ${type}`;
+          this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, false], "");   
+          break;
+
+        case "DMT0218": /// version file
+          this.callfc.openForm(VersionComponent, "", 650, 600, "", [FormModel, data], "");   
+          break;   
+
+        //request permisssion  
+        case "DMT0221":
+        case "DMT0208":
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+        
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id =  data.recID;            
+          this.callfc.openSide(ShareComponent, [type, data, false], option);      
+          break;
+          
+        // share
+        case "DMT0201":   
+        case "DMT0212":          
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+        
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id =  data.recID;            
+          this.callfc.openSide(ShareComponent, [type, data, true], option);      
+          break;
+
+        default:
+          break;    
+      }  
+   }
+
+    async restoreFile(data: any, type: string): Promise<void> {        
+      if (type === 'file') {
+        this.fileService.restoreFile(data.recID, data.fileName).subscribe(async res => {
+          if (res.status == 0) {
+            let list = this.listFiles;            
+            let index = list.findIndex(d => d.recID.toString() === data.recID.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);//remove element from array                
+              this.listFiles = list;              
+              this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
+          }
+
+          if (res.status == 6) {                
+            var config = new AlertConfirmInputConfig();
+            config.type = "YesNo";
+            this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
+              if(x.event.status == "Y") {
+                this.fileService.restoreFile(data.recID, res.data.fileName, "1").subscribe(async item => {
+                  if (item.status == 0) {
+                    let list = this.listFiles;                    
+                    let index = list.findIndex(d => d.recID.toString() === data.recID.toString()); //find index in your array
+                    if (index > -1) {
+                      list.splice(index, 1);//remove element from array                
+                      this.listFiles = list;                        
+                      this.notificationsService.notify(item.message);
+                      this.ChangeData.next(true);
+                    }
+                  }
+                });
+              }
+            });           
+          }
+          else {
+            this.notificationsService.notify(res.message);         
+          }
+        });
+      }
+      else {
+        this.folderService.restoreFolder(data.recID).subscribe(async res => {
+          if (res.status == 0) {
+            let list = this.listFolder;
+            //list = list.filter(item => item.recID != id);
+            let index = list.findIndex(d => d.recID.toString() === data.recID.toString()); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1);
+              this.listFolder = list;
+              this.ChangeData.next(true);
+              //this.dmSV.nodeDeleted.next(id);
+              //this.changeDetectorRef.detectChanges();
+            }
+          }
+
+          if (res.status == 2) {            
+           var config = new AlertConfirmInputConfig();
+           config.type = "YesNo";
+           this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
+             if(x.event.status == "Y") {
+              this.folderService.copyFolder(data.recID.id, data.folderName, "", 1, 1).subscribe(async item => {
+                if (item.status == 0) {
+                  let list = this.listFolder;                  
+                  let index = list.findIndex(d => d.recID.toString() === data.recID.id.toString()); //find index in your array
+                  if (index > -1) {
+                    list.splice(index, 1);
+                    this.listFolder = list;
+                    this.ChangeData.next(true);
+                  }
+                }
+              });
+             }
+            });
+          }
+          else {
+            this.notificationsService.notify(res.message);            
+          }
+        });
+      }
+    }
 
     getSizeKB(item: any) {
       if (item.fileSize != undefined) {
@@ -862,42 +1339,19 @@ export class CodxDMService {
         this.currentDMIndex.next(index);
     }
 
-    // edit folder
-    // changeData(folders: any, files: any, folderId: any) {      
-    //   this.listFolder = folders;        
-    //   this.listFiles = files;        
-    //   this.ChangeData.next(true);
-    // }
-
     emptyTrash() {
       var config = new AlertConfirmInputConfig();
       config.type = "YesNo";
       this.notificationsService.alert(this.title, this.titleDeleteeMessage, config).closed.subscribe(x=>{
           if(x.event.status == "Y") {
-            this.folderService.emptyTrash("").subscribe(async res => {
-            //  this.listFiles.next(null);
-            //  this.listFolder.next(null);
+            this.folderService.emptyTrash("").subscribe(async res => {            
               this.fileService.getTotalHdd().subscribe(i => {
-                  this.updateHDD.next(i.messageHddUsed);
+                  this.updateHDD.next(i);
               })
               this.EmptyTrashData.next(true);
           });
           }
       });
-
-      // this.confirmationDialogService.confirm(this.titlemessage, "Bạn co muốn xóa tất cả trong thùng rác ?")
-      //     .then((confirmed) => {
-      //         if (confirmed) {
-      //             this.folderService.emptyTrash("").subscribe(async res => {
-      //                 this.listFiles.next(null);
-      //                 this.listFolder.next(null);
-      //                 this.fileService.getTotalHdd().subscribe(i => {
-      //                     this.updateHDD.next(i.messageHddUsed);
-      //                 })
-      //             });                  
-      //         }
-      //     })
-      //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));       
     }
 
     copyFileTo(id, fullName, toselectId) {
@@ -912,41 +1366,42 @@ export class CodxDMService {
                     this.listFiles = list;
                     this.ChangeData.next(true);
                 }
-                this.notificationsService.notify(res.message);
+               // this.notificationsService.notify(res.message);
             }
 
             if (res.status == 6) {
                 let newNameMessage = this.titelRenamemessage.replace("{0}", res.data.fileName);
-                // this.confirmationDialogService.confirm(this.titlemessage, res.data.fileName + newNameMessage)
-                //     .then((confirmed) => {
-                //         if (confirmed) {
-                //             that.fileService.copyFile(id, res.data.fileName, toselectId, 1).subscribe(async item => {
-                //                 if (item.status == 0) {
-                //                     let list = this.listFiles.getValue();
-                //                     // move                                    
-                //                     let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
-                //                     if (index > -1) {
-                //                         list.splice(index, 1);//remove element from array             
-                //                         this.listFiles.next(list);
-                //                     }
-                //                     if (item.status == 0)
-                //                         this.updateHDD.next(item.messageHddUsed);
+                var config = new AlertConfirmInputConfig();
+                config.type = "YesNo";
+                this.notificationsService.alert(this.title, res.data.fileName + newNameMessage, config).closed.subscribe(x=>{
+                    if(x.event.status == "Y") { 
+                      this.fileService.copyFile(id, res.data.fileName, toselectId, 1).subscribe(async item => {
+                          if (item.status == 0) {
+                              let list = this.listFiles;
+                              // move                                    
+                              let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+                              if (index > -1) {
+                                  list.splice(index, 1);//remove element from array             
+                                  this.listFiles= list;
+                                  this.ChangeData.next(true);
+                              }
+                              if (item.status == 0)
+                                  this.updateHDD.next(item.messageHddUsed);
 
-                //                 }
-                //                 that.notificationsService.notify(item.message);
-                //             });
-                //         }
-                //     })
-                //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));                      
+                          }
+                          that.notificationsService.notify(item.message);
+                      });
+                    }
+                });                                  
             }
-            else {
+            else {               
                 this.notificationsService.notify(res.message);
             }
         })
     }
 
     copyFolderTo(id, fullName, toselectId) {
-        var that = this;
+      //  var that = this;
         this.folderService.copyFolder(id, fullName, toselectId, 1).subscribe(async res => {
             if (res.status == 0) {
                 let list = this.listFolder;
@@ -961,28 +1416,29 @@ export class CodxDMService {
             }
 
             if (res.status == 2) {
-                // this.confirmationDialogService.confirm(this.titlemessage, res.message + this.copymessage)
-                //     .then((confirmed) => {
-                //         if (confirmed) {
-                //             this.folderService.copyFolder(id, fullName, toselectId, 1, 1).subscribe(async item => {
-                //                 if (item.status == 0) {
-                //                     let list = this.listFolder.getValue();
-                //                     this.nodeDeleted.next(id);
-                //                     //list = list.filter(item => item.recID != id);
-                //                     let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
-                //                     if (index > -1) {
-                //                         list.splice(index, 1);//remove element from array
-                //                         this.listFolder.next(list);
-                //                     }
-                //                     this.fileService.getTotalHdd().subscribe(i => {
-                //                         this.updateHDD.next(i.messageHddUsed);
-                //                     })
-                //                 }
-                //                 this.notificationsService.notify(item.message);
-                //             });
-                //         }
-                //     })
-                //     .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));                      
+              var config = new AlertConfirmInputConfig();
+              config.type = "YesNo";
+              this.notificationsService.alert(this.title, res.message + this.titleCopymessage, config).closed.subscribe(x=>{
+                if(x.event.status == "Y") { 
+                  this.folderService.copyFolder(id, fullName, toselectId, 1, 1).subscribe(async item => {
+                      if (item.status == 0) {
+                          let list = this.listFolder;
+                          this.nodeDeleted.next(id);
+                          //list = list.filter(item => item.recID != id);
+                          let index = list.findIndex(d => d.recID.toString() === id.toString()); //find index in your array
+                          if (index > -1) {
+                              list.splice(index, 1);//remove element from array
+                              this.listFolder = list;
+                              this.ChangeData.next(true);
+                          }
+                          this.fileService.getTotalHdd().subscribe(i => {
+                              this.updateHDD.next(i.messageHddUsed);
+                          })
+                      }
+                      this.notificationsService.notify(item.message);
+                  });
+                }
+              });                             
             }
             else {
                 this.notificationsService.notify(res.message);
