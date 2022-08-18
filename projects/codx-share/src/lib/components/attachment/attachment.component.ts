@@ -2553,11 +2553,13 @@ export class AttachmentComponent implements OnInit {
     //////////////////////////////////
     this.fileCount.emit({ data: addedList });
     files = null;
-    const input = document.getElementsByName('UploadFiles')[0] as HTMLInputElement | null;
-
-    if (input != null) {
-      input.value = "";      
-    }
+   
+    for (var i=0; i<document.getElementsByName('UploadFiles').length; i++) {
+      const input = document.getElementsByName('UploadFiles')[i] as HTMLInputElement | null;
+      if (input != null) {
+        input.value = "";      
+      }
+    }   
    
     //  this.fileUploadList.next(this.fileUploadList);
     // this.fileAdded.emit({ data: this.fileUploadList });
