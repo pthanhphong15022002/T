@@ -215,7 +215,6 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
         }
       });
   }
-  aaa(e: any) {}
   pagingLayout(count: any) {
     this.arrayPaging = [];
     this.pageTotal = Math.ceil(Number(count / this.pageSize));
