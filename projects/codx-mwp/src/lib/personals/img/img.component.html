@@ -26,7 +26,8 @@
       <codx-card-img
         cardCss="border rounded-4 w-200px"
         (click)="openImg(item)"
-        [imageId]="item.objectID"
+        [imageRecId]="item.recID"
+        [imgOn]="item?.modifiedOn" 
         [imageObjType]="item.objectType"
         imageWidth="200"
         imgCss="h-150px"

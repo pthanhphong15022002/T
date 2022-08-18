@@ -1,13 +1,9 @@
 import { CodxTMService } from '../../codx-tm.service';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  TemplateRef,
-  Injector,
-} from '@angular/core';
+import { Component, ViewChild, TemplateRef, Injector } from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
+import { ViewModel } from 'codx-core';
+import { ViewType } from 'codx-core';
 
 @Component({
   selector: 'mydashboard',
@@ -15,8 +11,10 @@ import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
   styleUrls: ['./mydashboard.component.scss'],
   providers: [GradientService],
 })
-export class MyDashboardComponent extends UIComponent implements OnInit {
+export class MyDashboardComponent extends UIComponent {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  @ViewChild('content') content: TemplateRef<any>;
+
   model: DataRequest;
   funcID: string;
   user: any;
@@ -31,6 +29,7 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   month: number;
   beginMonth: Date;
   endMonth: Date;
+  views: Array<ViewModel> = [];
 
   //#region gauge
 
@@ -139,6 +138,20 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
     this.getGeneralData();
   }
 
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.content,
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
+  }
+
   private getGeneralData() {
     this.tmService.getMyDBData(this.model).subscribe((res) => {
       this.data = res;
@@ -149,8 +162,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   openTooltip() {
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
-
-  closeTooltip() {}
 
   onChangeValueSelectedWeek(data) {
     this.fromDate = this.toDate = data?.toDate;

@@ -109,7 +109,51 @@ export class CodxEsService {
     private http: HttpClient
   ) {}
 
+  notifyInvalid(
+    formGroup: FormGroup,
+    formModel: FormModel,
+    gridViewSetup: any = null
+  ) {
+    const invalid = [];
+    const controls = formGroup.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        break;
+      }
+    }
+    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+    if (gridViewSetup == null) {
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            gridViewSetup = res;
+            this.notificationsService.notifyCode(
+              'E0005',
+              0,
+              '"' + gridViewSetup[fieldName].headerText + '"'
+            );
+          }
+        });
+    } else {
+      this.notificationsService.notifyCode(
+        'E0005',
+        0,
+        '"' + gridViewSetup[fieldName].headerText + '"'
+      );
+    }
+  }
+
   //#region Get from FunctionList
+  getDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv('ES', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      funcID,
+      entityName,
+      idField,
+    ]);
+  }
+
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {
@@ -172,9 +216,9 @@ export class CodxEsService {
               }
 
               let modelValidator = [];
-              // if (element.isRequire) {
-              //   modelValidator.push(Validators.required);
-              // }
+              if (element.isRequire) {
+                modelValidator.push(Validators.required);
+              }
               if (element.fieldName == 'email') {
                 modelValidator.push(Validators.email);
               }
@@ -700,6 +744,16 @@ export class CodxEsService {
   //#endregion
 
   //#region ES_ApprovalTrans
+
+  getTask(recID: string): Observable<any> {
+    return this.api.execSv(
+      'TM',
+      'ERM.Business.TM',
+      'TaskBusiness',
+      'GetListTaskTreeByRefIDAsync',
+      recID
+    );
+  }
 
   release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
     return this.api.execSv(

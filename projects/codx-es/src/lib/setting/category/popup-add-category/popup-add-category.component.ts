@@ -37,9 +37,6 @@ import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-
   styleUrls: ['./popup-add-category.component.scss'],
 })
 export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
-  @Output() closeForm = new EventEmitter();
-  @Output() openAsideForm = new EventEmitter();
-
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('editApprovalStep') editApprovalStep: TemplateRef<any>;
 
@@ -229,7 +226,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   onSaveForm() {
     if (this.dialogCategory.invalid == true) {
-      return;
+      this.esService.notifyInvalid(this.dialogCategory, this.formModel);
     }
     this.dialog.dataService.dataSelected = this.dialogCategory.value;
     this.dialog.dataService
@@ -254,7 +251,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   updateAutonumber() {
     this.esService.isSetupAutoNumber.subscribe((res) => {
       if (res != null) {
-        this.esService.addEditAutoNumbers(res, true).subscribe((res) => { });
+        this.esService.addEditAutoNumbers(res, true).subscribe((res) => {});
       }
     });
   }
@@ -283,12 +280,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       550,
       (screen.width * 40) / 100,
       '',
-      [
-        {
-          formModel: this.dialog.formModel,
-          autoNoCode: this.dialogCategory.value.categoryID,
-        },
-      ]
+      {
+        formModel: this.dialog.formModel,
+        autoNoCode: this.dialogCategory.value.categoryID,
+      }
     );
   }
 

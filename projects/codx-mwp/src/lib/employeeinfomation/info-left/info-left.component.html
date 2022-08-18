@@ -24,11 +24,11 @@
     <codx-label class="text-gray-600" fiedName="phoneExt" formName="Employees" gridViewName="grvEmployees"
       default="MSVN:">
     </codx-label>
-    <span #employeeID>{{
-      dataEmployee.employeeInfo?.employeeID
-      | formatvalue: formModel:"employeeID":employeeID
-      | async
-      }}</span>
+      <span #employeeID>{{
+        dataEmployee.employeeInfo?.employeeID
+        | formatvalue: formModel:"employeeID":employeeID
+        | async
+        }}</span>
   </div>
   <div class="d-flex justify-content-between pb-2">
     <codx-label class="text-gray-600" fiedName="status" formName="Employees" gridViewName="grvEmployees"
@@ -42,9 +42,13 @@
     <codx-label class="text-gray-600" fiedName="joinedOn" formName="Employees" gridViewName="grvEmployees"
       default="Ngày vào làm:">
     </codx-label>
-    <span class="text-dark">{{
+    <!-- <span class="text-dark">{{
       dataEmployee.employeeInfo?.joinedOn | date: "dd/MM/yyyy"
-      }}</span>
+      }}</span> -->
+      <span #joinedOn>{{
+        dataEmployee.employeeInfo?.joinedOn | formatvalue: formModel:"joinedOn":hiredOn
+        | async
+        }}</span>
   </div>
   <div class="d-flex justify-content-between pb-2">
     <codx-label class="text-gray-600" fiedName="hiredOn" formName="Employees" gridViewName="grvEmployees"

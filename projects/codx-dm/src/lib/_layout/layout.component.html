@@ -4,7 +4,7 @@
       <codx-aside *ngIf="asideDisplay" [asideMenuHeader]="header" [asideMenuFooter]="footer" [hasSecond]="false">
       </codx-aside>
       <ng-template #header>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-start ps-6">
           <a class="btn-add without-sub" href="javascript:;">
             <button [disabled]="disableInput" (click)="AddFolder()" class="btn btn-outline-primary btn-pill btn-lg"
               id="kt_demo_panel_toggle" data-toggle="tooltip">

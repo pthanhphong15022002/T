@@ -18,27 +18,27 @@
                     <div class="d-flex align-items-top flex-grow-1">
                         <div class="w-50px">
                             <codx-label name="lblFromDate" [formModel]="formModel" [default]="isShare ? 'Đến' : 'Cho'"
-                                class="ms-1 fw-bold"></codx-label>:
+                                class="fw-bold"></codx-label>:
                         </div>
                         <div class="send-group">
                             <ng-container *ngFor="let perm of toPermission; index as i;">
                                 <div class="user-mini-item">
                                     <div class="d-flex align-items-center">
-                                        <div class="symbol symbol-30 symbol-circle me-2">
+                                        <div class="me-2">
                                             <div
                                                 *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
                                             </div>
                                             <ng-template #thenAvatar1>
                                                 <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg"
-                                                    [imageWidth]="25"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+                                                    [imageWidth]="20"
+                                                    imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
                                                     [title]="perm.objectName" [descLine]="1">
                                                 </codx-temp-full>
                                             </ng-template>
                                             <ng-template #elsethenAvatar1>
                                                 <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                                    [imageWidth]="25" [title]="perm.objectName">
+                                                    imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
+                                                    [imageWidth]="20" [title]="perm.objectName">
                                                 </codx-temp-full>
                                             </ng-template>
                                         </div>
@@ -60,7 +60,7 @@
                 <div *ngIf="!isShare" class="d-flex justify-content-between border-bottom mb-2 p-2">
                     <div class="d-flex align-items-top flex-grow-1">
                         <div class="w-50px">
-                            <codx-label name="lblFromDate" [formModel]="formModel" default="Đến" class="ms-1 fw-bold">
+                            <codx-label name="lblFromDate" [formModel]="formModel" default="Đến" class="fw-bold">
                             </codx-label>:
                         </div>
                         <div class="send-group">
@@ -73,15 +73,15 @@
                                             </div>
                                             <ng-template #thenAvatar1>
                                                 <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg"
-                                                    [imageWidth]="25"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+                                                    [imageWidth]="20"
+                                                    imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
                                                     [title]="perm.objectName" [descLine]="1">
                                                 </codx-temp-full>
                                             </ng-template>
                                             <ng-template #elsethenAvatar1>
                                                 <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                                    [imageWidth]="25" [title]="perm.objectName">
+                                                    imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
+                                                    [imageWidth]="20" [title]="perm.objectName">
                                                 </codx-temp-full>
                                             </ng-template>
                                         </div>
@@ -99,7 +99,7 @@
                 <div class="d-flex justify-content-between border-bottom mb-2 p-2">
                     <div class="d-flex align-items-top flex-grow-1">
                         <div class="w-50px">
-                            <codx-label name="lblFromDate" [formModel]="formModel" default="Cc" class="ms-1 fw-bold">
+                            <codx-label name="lblFromDate" [formModel]="formModel" default="Cc" class="fw-bold">
                             </codx-label>:
                         </div>
                         <div class="send-group">
@@ -112,15 +112,15 @@
                                             </div>
                                             <ng-template #thenAvatar1>
                                                 <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg"
-                                                    [imageWidth]="25"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+                                                    [imageWidth]="20"
+                                                    imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
                                                     [title]="perm.objectName" [descLine]="1">
                                                 </codx-temp-full>
                                             </ng-template>
                                             <ng-template #elsethenAvatar1>
                                                 <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                                    [imageWidth]="25" [title]="perm.objectName">
+                                                    imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
+                                                    [imageWidth]="20" [title]="perm.objectName">
                                                 </codx-temp-full>
                                             </ng-template>
                                         </div>
@@ -139,7 +139,7 @@
                 <div *ngIf="!isShare" class="d-flex justify-content-between border-bottom mb-2 p-2">
                     <div class="d-flex align-items-top flex-grow-1">
                         <div class="w-50px">
-                            <codx-label name="lblFromDate" [formModel]="formModel" default="Bcc" class="ms-1 fw-bold">
+                            <codx-label name="lblFromDate" [formModel]="formModel" default="Bcc" class="fw-bold">
                             </codx-label>:
                         </div>
                         <div class="send-group">
@@ -152,15 +152,15 @@
                                             </div>
                                             <ng-template #thenAvatar1>
                                                 <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg"
-                                                    [imageWidth]="25"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
+                                                    [imageWidth]="20"
+                                                    imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
                                                     [title]="perm.objectName" [descLine]="1">
                                                 </codx-temp-full>
                                             </ng-template>
                                             <ng-template #elsethenAvatar1>
                                                 <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                                    [imageWidth]="25" [title]="perm.objectName">
+                                                    imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
+                                                    [imageWidth]="20" [title]="perm.objectName">
                                                 </codx-temp-full>
                                             </ng-template>
                                         </div>
@@ -270,10 +270,10 @@
             <div class="row mt-3">
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="form-group row">
-                        <label class="col-4 pr-0 col-form-label">
+                        <div class="col-4 pt-2">
                             <codx-label name="lblFromDate" [formModel]="formModel" default="Từ ngày"
-                                class="ms-1 fw-bold"></codx-label>
-                        </label>
+                                class="text-dark fw-bold"></codx-label>
+                        </div>
                         <div class="col-8">
                             <codx-input placeholder="startDate..." class="form-control test-datetime" type="datetime"
                                 style="width:100%" format="d" [crrValue]="startDate"
@@ -283,10 +283,10 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="form-group row">
-                        <label class="col-4 pr-0 col-form-label">
+                        <div class="col-4 pt-2">
                             <codx-label name="lblToDate" [formModel]="formModel" default="Đến ngày"
-                                class="ms-1 fw-bold"></codx-label>
-                        </label>
+                                class="text-dark fw-bold"></codx-label>
+                        </div>
                         <div class="col-8">
                             <codx-input placeholder="endDate..." class="form-control test-datetime" type="datetime"
                                 style="width:100%;" format="d" [crrValue]="endDate"
@@ -302,12 +302,12 @@
         <div class="d-flex align-items-center justify-content-between">
             <div class="checkbox-inline d-flex align-items-center">
                 <ng-container *ngIf="isShare">
-                    <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="sentEmail"
-                        field="sentEmail" (valueChange)="txtValue($event, 'sentemail')"></codx-input>
+                    <codx-input class="test-check" type="checkbox" [checked]="sentEmail" field="sentEmail"
+                        (valueChange)="txtValue($event, 'sentemail')"></codx-input>
                     <codx-label name="lblSendEmail" [formModel]="formModel" default="Gửi mail" class="ms-2 fw-bold">
                     </codx-label>
-                    <codx-input class="test-check ms-5" type="checkbox" style="width:100%" [checked]="postblog"
-                        field="postblog" (valueChange)="txtValue($event, 'postblog')"></codx-input>
+                    <codx-input class="test-check ms-5" type="checkbox" [checked]="postblog" field="postblog"
+                        (valueChange)="txtValue($event, 'postblog')"></codx-input>
                     <span></span>
                     <codx-label name="lblCreatePost" [formModel]="formModel" default="Tạo bài viết"
                         class="ms-2 fw-bold"></codx-label>

@@ -19,7 +19,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <codx-label default="Tên phân loại" fiedName="CategoryName" [formModel]="form.formModel">
+          <codx-label default="Tên phân loại" fiedName="CategoryName" [formModel]="formModel">
           </codx-label>
           <codx-input type="text" name="text" field="categoryName" [crrValue]="dialogCategory.value.categoryName"
             (valueChange)="valueChange($event)">
@@ -28,7 +28,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <codx-label default="Mã phân loại" fiedName="CategoryID" [formModel]="form.formModel">
+          <codx-label default="Mã phân loại" fiedName="CategoryID" [formModel]="formModel">
           </codx-label>
           <codx-input type="text" name="text" field="categoryID" [crrValue]="dialogCategory.value.categoryID"
             disabled="true">
@@ -41,13 +41,13 @@
         field="eSign" class="test-switch" (valueChange)="valueChange($event)">
       </codx-input>
       <label class="ms-2">
-        <codx-label fiedName="ESign" default="Chữ ký số" [formModel]="form.formModel"></codx-label>
+        <codx-label fiedName="ESign" default="Chữ ký số" [formModel]="formModel"></codx-label>
       </label>
     </div>
     <div class="row ">
       <div class="col-md-6">
         <div class="form-group">
-          <codx-label default="Loại chữ kí" fiedName="SignatureType" [formModel]="form.formModel">
+          <codx-label default="Loại chữ kí" fiedName="SignatureType" [formModel]="formModel">
           </codx-label>
           <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="cbxName['SignatureType']"
             [crrValue]="dialogCategory.value.signatureType" field="signatureType" (valueChange)="valueChange($event)">
@@ -60,7 +60,7 @@
       </div>
     </div>
     <div class="form-group">
-      <codx-label default="Ghi chú" fiedName="Memo" [formModel]="form.formModel">
+      <codx-label default="Ghi chú" fiedName="Memo" [formModel]="formModel">
       </codx-label>
       <codx-input type="textarea" format="ed2" rows="3" class="form-control" field="memo" ControlName="memo"
         (valueChange)="valueChange($event)" ngDefaultControl [crrValue]="dialogCategory.value.memo??''">
@@ -69,7 +69,7 @@
     <div class="row ">
       <div class="d-flex flex-stack mb-4">
         <codx-label class="text-primary fw-bold fs-5" default="Đánh số văn bản" fiedName="AutoNumber"
-          [formModel]="form.formModel">
+          [formModel]="formModel">
         </codx-label>
         <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
           (click)="openAutoNumPopup()">
@@ -78,7 +78,7 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <codx-label default="Định dạng" fiedName="AutoNumber" [formModel]="form.formModel">
+          <codx-label default="Định dạng" fiedName="AutoNumber" [formModel]="formModel">
           </codx-label>
           <codx-input type="text" name="text" [crrValue]="viewAutoNumber" disabled="true">
           </codx-input>
@@ -87,7 +87,7 @@
     </div>
     <div class="d-flex flex-stack mb-4">
       <codx-label class="text-primary fw-bold fs-5" default="Qui trình duyệt" fiedName="ProcessID"
-        [formModel]="form.formModel">
+        [formModel]="formModel">
       </codx-label>
       <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
         (click)="openPopupApproval()">
@@ -131,7 +131,7 @@
   </ng-template>
   <ng-template #footer>
     <button class="btn btn-primary justify-content-end" (click)="onSaveForm()">
-      <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
+      <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
     </button>
   </ng-template>
 </codx-form>

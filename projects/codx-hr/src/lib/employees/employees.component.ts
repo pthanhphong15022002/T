@@ -115,8 +115,10 @@ export class EmployeesComponent implements OnInit {
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, this.view.dataService.dataSelected, option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
+        this.changedt.detectChanges();
       })
     });
+    
   }
 
   senioritydate(value: string) {
@@ -142,6 +144,7 @@ export class EmployeesComponent implements OnInit {
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
     });
+    this.changedt.detectChanges();
   }
 
   copy(data) {
@@ -155,6 +158,7 @@ export class EmployeesComponent implements OnInit {
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'copy', option);
     });
+    this.changedt.detectChanges();
   }
 
   delete(data: any) {
