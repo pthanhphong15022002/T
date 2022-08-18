@@ -427,10 +427,12 @@ export class HomeComponent extends UIComponent {
         this.changeDetectorRef.detectChanges();        
       }
 
-      this.fileService.GetFiles(id, this.dmSV.idMenuActive).subscribe(async res => {        
-        this.data = [...this.data, ...res];
-        this.dmSV.listFiles = res;  
-        this.changeDetectorRef.detectChanges();
+      this.fileService.GetFiles(id, this.dmSV.idMenuActive).subscribe(async res => {   
+        if (res != null) {
+          this.data = [...this.data, ...res];
+          this.dmSV.listFiles = res;  
+          this.changeDetectorRef.detectChanges();
+        }             
       });
     } else {
       this.dmSV.disableInput.next(true);
