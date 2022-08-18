@@ -5,9 +5,10 @@
     [dataItem]="itemSelected">
     <ng-template #header>
       <div class="container_detail mt-3">
-        <div class="d-flex flex-grow-1 mb-3">
+        <div class="d-flex flex-grow-1 mb-4">
           <div class="symbol symbol-60px symbol-circle me-4">
-            <codx-img [objectId]="taskExtends ?itemSelected.userID :itemSelected?.createdBy" objectType="AD_Users" [width]="60">
+            <codx-img [objectId]="taskExtends ?itemSelected.userID :itemSelected?.createdBy" objectType="AD_Users"
+              [width]="60">
             </codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">
@@ -85,7 +86,7 @@
                     </div>
                   </div>
                 </ng-container>
-                
+
               </div>
               <div class="d-flex flex-row align-items-start">
                 <div *ngIf="itemSelected?.extendStatus!=null &&itemSelected?.extendStatus>='3' && vllExtendStatus"
@@ -133,44 +134,47 @@
         <div class="d-flex flex-column">
           <div class="task-info">
             <div class="float-left">
-              <div *ngIf="taskExtends" class="w-100  margin-left" style="border:2px solid black;border-radius: 10px;">
-                <div class="mt-6 mb-3 text-dark fw-bold ">
+              <div *ngIf="taskExtends" class="w-100 border border-gray-300 rounded-2 p-4 mb-5">
+                <div class="mb-3 text-dark fw-bold ">
                   <codx-label name="lblExtends" formName="Tasks" default="Yêu cầu gia hạn">
                   </codx-label>
                 </div>
                 <div class="row">
-                  <div class="col-6">      
-                    <span class="fw-bold me-1">
-                      <codx-label fiedName="DueDate" formName="TaskExtends" gridViewName="grvTaskExtends" default="Ngày hết hạn hiện hành">
+                  <div class="col-6">
+                    <span class="text-dark me-1">
+                      <codx-label fiedName="DueDate" formName="TaskExtends" gridViewName="grvTaskExtends"
+                        default="Ngày hết hạn hiện hành">
                       </codx-label>:
                     </span>
-                    <span *ngIf="taskExtends.dueDate " class="text-gray-700">{{
+                    <span *ngIf="taskExtends.dueDate " class="text-gray-600">{{
                       taskExtends.dueDate | date: "dd/MM/yyyy"
                       }}</span>
                     <span #dueDate *ngIf="!taskExtends?.dueDate ">{{ taskExtends.dueDate | formatvalue:
                       formModel:"dueDate":dueDate :"TaskExtends":"grvTaskExtends"| async }}</span>
                   </div>
-                  <div class="col-6">      
-                    <span class="fw-bold me-1">
-                      <codx-label fiedName="ExtendDate" formName="TaskExtends" gridViewName="grvTaskExtends" default="Ngày gia hạn">
+                  <div class="col-6">
+                    <span class="text-dark me-1">
+                      <codx-label fiedName="ExtendDate" formName="TaskExtends" gridViewName="grvTaskExtends"
+                        default="Ngày gia hạn">
                       </codx-label>:
                     </span>
-                    <span *ngIf="taskExtends.extendDate" class="text-gray-700">{{
+                    <span *ngIf="taskExtends.extendDate" class="text-gray-600">{{
                       taskExtends.extendDate | date: "dd/MM/yyyy"
                       }}</span>
                     <span #extendDate *ngIf="!taskExtends.extendDate ">{{ taskExtends.extendDate | formatvalue:
                       formModel:"extendDate":extendDate :"TaskExtends":"grvTaskExtends"| async }}</span>
                   </div>
                 </div>
-                 <div>
-                  <div class="fw-bold me-1">
-                    <codx-label fiedName="Reason" formName="TaskExtends" gridViewName="grvTaskExtends" default="Lý do yêu cầu">
+                <div class="mt-1">
+                  <span class="text-dark me-1">
+                    <codx-label fiedName="Reason" formName="TaskExtends" gridViewName="grvTaskExtends"
+                      default="Lý do yêu cầu">
                     </codx-label>:
-                  </div>
-                  <span #reason >{{ taskExtends.reason | formatvalue:
+                  </span>
+                  <span class="text-gray-600" #reason>{{ taskExtends.reason | formatvalue:
                     formModel:"reason":reason :"TaskExtends":"grvTaskExtends"| async }}</span>
-                 </div>
-                
+                </div>
+
               </div>
               <div class="d-flex me-6">
                 <div class="fw-bold me-1">
@@ -337,7 +341,7 @@
           </codx-label>
         </div>
         <div class="d-flex">
-          <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users" >
+          <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users">
           </codx-img>
         </div>
       </ng-container>

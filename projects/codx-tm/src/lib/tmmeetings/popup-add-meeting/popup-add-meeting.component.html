@@ -145,7 +145,7 @@
       </codx-input>
     </div>
     <div class="row">
-      <ng-container *ngFor="let item of meeting.resources">
+      <ng-container *ngFor="let item of resources">
         <div class="col-4">
           <div>
             <codx-img class=" flex symbol-40px " [objectId]="item.resourceID" objectType="AD_Users"></codx-img>
@@ -227,7 +227,7 @@
       multiple="true" [showInput]="false">
     </codx-input>
   </div>
-  <ng-container *ngFor="let item of meeting.resources">
+  <ng-container *ngFor="let item of resources">
     <div class="d-flex py-2 border-bottom justify-content-between list-title">
       <div class="d-flex align-items-top">
         <div style=" position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"

@@ -97,9 +97,13 @@ export class PopupAddMeetingComponent implements OnInit {
       this.title = 'Thêm họp định kì';
       this.meeting.meetingType = '1';
       this.meeting.startDate = new Date(Date.now());
+      this.resources = [];
+
     } else if (this.action == 'edit') {
       this.title = 'Chỉnh sửa họp định kì';
       this.setTimeEdit();
+      this.resources = this.meeting.resources;
+
     }
     if (this.meeting.templateID) {
       this.api
@@ -117,6 +121,7 @@ export class PopupAddMeetingComponent implements OnInit {
           }
         });
     }
+
   }
 
   setTimeEdit() {
@@ -399,13 +404,12 @@ export class PopupAddMeetingComponent implements OnInit {
       resourceID = resourceID.substring(0, resourceID.length - 1);
     }
     this.valueUser(resourceID);
-    if (this.resources != null) this.meeting.resources = this.resources;
   }
 
   valueUser(resourceID) {
     if (resourceID != '') {
-      if (this.meeting.resources != null) {
-        var user = this.meeting.resources;
+      if (this.resources != null) {
+        var user = this.resources;
         var array = resourceID.split(';');
         var id = '';
         var arrayNew = [];
@@ -422,7 +426,6 @@ export class PopupAddMeetingComponent implements OnInit {
         if (arrayNew.length > 0) {
           resourceID = arrayNew.join(';');
           id += ';' + resourceID;
-          if (this.action === 'edit') this.getListUser(id);
           this.getListUser(resourceID);
         }
       } else {
@@ -461,17 +464,16 @@ export class PopupAddMeetingComponent implements OnInit {
               tmpResource.roleType = 'P';
               this.resources.push(tmpResource);
             }
-
-            console.log(this.meeting.resources);
+            this.meeting.resources = this.resources;
           }
         }
       });
   }
 
   onDeleteUser(item) {
-    const index: number = this.meeting.resources.indexOf(item);
+    const index: number = this.resources.indexOf(item);
     if (index !== -1) {
-      this.meeting.resources.splice(index, 1);
+      this.resources.splice(index, 1);
     }
     this.changDetec.detectChanges();
   }

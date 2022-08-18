@@ -255,3 +255,19 @@ codx-temp-full {
 ejs-switch .form-control {
   border: 0;
 }
+
+.menu-item.progress-line {
+  height: 65px;
+  padding-top: 5px;
+  padding-right: 20px;
+
+}
+
+.menu-item.progress-line .fw-normal.fs-7 {
+  color: #ffffffc2 !important;
+  font-weight: 300 !important;
+}
+
+.dms-listview .table>thead {
+  background-color: var(--gray-100);
+}

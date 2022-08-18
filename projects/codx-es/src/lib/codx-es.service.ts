@@ -805,7 +805,8 @@ export class CodxEsService {
     );
   }
 
-  getSignAreas(data): Observable<any> {
+  getSignAreas(sfID, fileID, isApprover, userID): Observable<any> {
+    let data = [sfID, fileID, isApprover, userID];
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
