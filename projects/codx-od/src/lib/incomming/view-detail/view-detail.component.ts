@@ -780,6 +780,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
+    debugger;
     if (relationType == '1')
       return Util.stringFormat(
         this.ms020?.customName,

@@ -474,8 +474,6 @@ export class PopupAddMeetingComponent implements OnInit {
     const index: number = this.resources.indexOf(item);
     if (index !== -1) {
       this.resources.splice(index, 1);
-      // this.resources = this.meeting.resources;
-      console.log(this.meeting.resources);
     }
     this.changDetec.detectChanges();
   }

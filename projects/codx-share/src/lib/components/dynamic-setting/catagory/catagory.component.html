@@ -56,6 +56,11 @@
       </div>
       <div class="d-flex align-items-center ml-4">
         <codx-input
+          [style]="
+            data.controlType == 'TextBox' || data.controlType == 'Combobox'
+              ? 'width: 200px'
+              : ''
+          "
           *ngIf="data.controlType && data.controlType != 'GroupControl'"
           [type]="data.controlType"
           [name]="data.controlType"
@@ -65,6 +70,8 @@
           [refValue]="data.referedValue || data.referdValue"
           [loadFull]="true"
           [field]="data.fieldName"
+          [crrValue]="dataValue[data.fieldName] || ''"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
         <a
@@ -73,7 +80,8 @@
           "
           [state]="{
             setting: setting | group: data.recID:'2',
-            function: function
+            function: function,
+            dataValue: dataValue[data.fieldName]
           }"
           *ngIf="data.displayMode === '1'"
           ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span
