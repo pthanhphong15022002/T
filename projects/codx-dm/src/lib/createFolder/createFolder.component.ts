@@ -577,8 +577,8 @@ export class CreateFolderComponent implements OnInit {
         if (res.status == 0) {
           var folders = this.dmSV.listFolder;
           if (folders == null) folders = [];
-          if ((res.data.level != '1' && this.dmSV.idMenuActive == 'DMT02') ||
-            (res.data.level != '3' && this.dmSV.idMenuActive == 'DMT03'))
+        //  if ((res.data.level != '1' && this.dmSV.idMenuActive == 'DMT02') ||
+        //    (res.data.level != '3' && this.dmSV.idMenuActive == 'DMT03'))
           //that.dmSV.isTree = true;
           folders.push(Object.assign({}, res.data));
           that.dmSV.listFolder = folders;
