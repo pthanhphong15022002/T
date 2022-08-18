@@ -134,16 +134,16 @@
           <div class="task-info">
             <div class="float-left">
               <div *ngIf="taskExtends" class="w-100  margin-left" style="border:2px solid black;border-radius: 10px;">
-                <div class="mt-6 mb-3 text-dark fw-bold">
+                <div class="mt-6 mb-3 text-dark fw-bold ">
                   <codx-label name="lblExtends" formName="Tasks" default="Yêu cầu gia hạn">
                   </codx-label>
                 </div>
                 <div class="row">
                   <div class="col-6">      
-                    <div class="fw-bold me-1">
+                    <span class="fw-bold me-1">
                       <codx-label fiedName="DueDate" formName="TaskExtends" gridViewName="grvTaskExtends" default="Ngày hết hạn hiện hành">
                       </codx-label>:
-                    </div>
+                    </span>
                     <span *ngIf="taskExtends.dueDate " class="text-gray-700">{{
                       taskExtends.dueDate | date: "dd/MM/yyyy"
                       }}</span>
@@ -151,10 +151,10 @@
                       formModel:"dueDate":dueDate :"TaskExtends":"grvTaskExtends"| async }}</span>
                   </div>
                   <div class="col-6">      
-                    <div class="fw-bold me-1">
+                    <span class="fw-bold me-1">
                       <codx-label fiedName="ExtendDate" formName="TaskExtends" gridViewName="grvTaskExtends" default="Ngày gia hạn">
                       </codx-label>:
-                    </div>
+                    </span>
                     <span *ngIf="taskExtends.extendDate" class="text-gray-700">{{
                       taskExtends.extendDate | date: "dd/MM/yyyy"
                       }}</span>
@@ -167,9 +167,6 @@
                     <codx-label fiedName="Reason" formName="TaskExtends" gridViewName="grvTaskExtends" default="Lý do yêu cầu">
                     </codx-label>:
                   </div>
-                  <!-- <span *ngIf="taskExtends.dueDate " class="text-gray-700">{{
-                    taskExtends.dueDate | date: "dd/MM/yyyy"
-                    }}</span> -->
                   <span #reason >{{ taskExtends.reason | formatvalue:
                     formModel:"reason":reason :"TaskExtends":"grvTaskExtends"| async }}</span>
                  </div>
@@ -191,13 +188,6 @@
                   <codx-label fiedName="Priority" formName="Tasks" gridViewName="grvTasks" default="Ưu tiên">
                   </codx-label>:
                 </div>
-                <!--<span [class]="itemSelected?.priority | vll: 'L0186':'icon' | async" [style.color]="
-              itemSelected?.priority | vll: 'L0186':'textColor' | async
-            ">
-          </span>
-          <span class="text-gray-700">{{
-            itemSelected?.priority | vll: "L0186":"text" | async
-            }}</span> -->
                 <div *ngIf="itemSelected?.priority">
                   <span class="icon-14 me-1" [class]="itemSelected?.priority | vll: 'L0186':'icon' | async"
                     [style.color]="
@@ -232,10 +222,6 @@
                   <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks">
                   </codx-label>:
                 </div>
-                <!-- <span [ngClass]="
-                  itemSelected?.startDate ? 'text-gray-700' : 'text-gray-400'
-                ">{{ itemSelected?.startDate ? (itemSelected?.startDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span> -->
-
                 <span *ngIf="itemSelected?.startDate" class="text-gray-700">{{itemSelected?.startDate | date:
                   "dd/MM/yyyy"}}</span>
                 <span #startDate *ngIf="!itemSelected?.startDate">{{itemSelected?.startDate| formatvalue :
@@ -246,9 +232,6 @@
                   <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
                   </codx-label>:
                 </div>
-                <!-- <span [ngClass]="
-              itemSelected?.endDate ? 'text-gray-700' : 'text-gray-400'
-            ">{{ itemSelected?.endDate ? (itemSelected?.endDate | date: "dd/MM/yyyy") : "dd/mm/yyyy"}}</span> -->
                 <span *ngIf="itemSelected?.endDate" class="text-gray-700">{{itemSelected?.endDate | date:
                   "dd/MM/yyyy"}}</span>
                 <span #endDate *ngIf="!itemSelected?.endDate">{{itemSelected?.endDate| formatvalue : formModel:"endDate"
@@ -260,13 +243,6 @@
                   <codx-label fiedName="CompletedOn" formName="Tasks" gridViewName="grvTasks" default="Ngày hoàn tất">
                   </codx-label>:
                 </div>
-                <!-- <span [ngClass]="
-                  itemSelected?.completedOn ? 'text-gray-700' : 'text-gray-400'
-                ">{{ itemSelected?.completedOn ?(itemSelected?.completedOn| date: "dd/MM/yyyy"): "dd/mm/yyyy"}}
-                {{ " | " + (itemSelected?.completed?itemSelected?.completed : 0 ) +" h "}}</span>-->
-                <!-- <span #completedOn class="text-gray-700">{{itemSelected?.completedOn? (itemSelected?.completedOn| date:
-                "dd/MM/yyyy" +' | ' + itemSelected?.completed + 'h') :(itemSelected?.completedOn| formatvalue :
-                formModel:"completedOn" : completedOn|async )}}</span> -->
                 <span *ngIf="itemSelected?.completedOn" class="text-gray-700">{{itemSelected?.completedOn| date:
                   "dd/MM/yyyy" }} | {{itemSelected.completed}} <span>h</span> </span>
                 <span *ngIf="!itemSelected?.completedOn" #completedOn>{{itemSelected?.completedOn| formatvalue :

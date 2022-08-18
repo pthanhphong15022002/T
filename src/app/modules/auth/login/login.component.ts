@@ -95,14 +95,17 @@ export class LoginComponent implements OnInit, OnDestroy {
             if (res && res.msgBodyData[0]) {
               this.sessionID = params.sk;
               this.email = res.msgBodyData[0].email;
-              if (res.msgBodyData[0].lastLogin == null) {
-                this.mode = 'changepass';
+              if (
+                res.msgBodyData[0].lastLogin == null ||
+                (params.id && params.id == 'forget')
+              ) {
+                this.mode = 'firstlogin';
                 dt.detectChanges();
               }
             }
           });
       }
-      if (params.mode) this.mode = params.mode;
+      if (params.id && params.id == 'changepass') this.mode = params.id;
     });
   }
 

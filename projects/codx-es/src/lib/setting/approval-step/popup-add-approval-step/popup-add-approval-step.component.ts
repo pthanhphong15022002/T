@@ -9,6 +9,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { iframeMouseDown } from '@syncfusion/ej2-angular-richtexteditor';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -160,15 +161,27 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   initForm() {
+    let dataDefault = null;
+    this.esService
+      .getDataDefault('EST04', this.formModel.entityName, 'recID')
+      .subscribe((res) => {
+        if (res) {
+          dataDefault = res;
+          console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', dataDefault);
+        }
+      });
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogApprovalStep = item;
+
         console.log(this.dialogApprovalStep.value);
-        this.dialogApprovalStep.addControl('delete', new FormControl(true));
-        this.dialogApprovalStep.addControl('share', new FormControl(true));
-        this.dialogApprovalStep.addControl('write', new FormControl(true));
-        this.dialogApprovalStep.addControl('assign', new FormControl(true));
+        console.log('dataDefault', dataDefault);
+
+        // this.dialogApprovalStep.addControl('delete', new FormControl(true));
+        // this.dialogApprovalStep.addControl('share', new FormControl(true));
+        // this.dialogApprovalStep.addControl('write', new FormControl(true));
+        // this.dialogApprovalStep.addControl('assign', new FormControl(true));
 
         this.isAfterRender = true;
         if (this.isAdd) {
@@ -177,7 +190,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             approveMode: '1',
             approveControl: '0',
             rejectControl: '1',
-            rsedoControl: '1',
+            redoControl: '1',
             redoStep: 0,
             recallControl: '1',
             cancelControl: '1',
@@ -233,11 +246,21 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   onSaveForm() {
     this.isSaved = true;
     if (this.dialogApprovalStep.invalid == true) {
-      this.notifySvr.notifyCode('E0016');
+      this.esService.notifyInvalid(this.dialogApprovalStep, this.formModel);
       return;
     }
     if (this.lstApprover.length == 0) {
-      this.notifySvr.notifyCode('E0016');
+      this.cache
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            this.notifySvr.notifyCode(
+              'E0005',
+              0,
+              '"' + res['Approvers'].headerText + '"'
+            );
+          }
+        });
       return;
     }
     this.dialogApprovalStep.patchValue({
