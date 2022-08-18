@@ -45,18 +45,18 @@ export class CodxAdService {
     }
     let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
     // if (gridViewSetup == null) {
-    this.cache
-      .gridViewSetup(formModel.formName, formModel.gridViewName)
-      .subscribe((res) => {
-        if (res) {
-          gridViewSetup = res;
-          this.notificationsService.notifyCode(
-            'E0005',
-            0,
-            '"' + gridViewSetup[fieldName].headerText + '"'
-          );
-        }
-      });
+    // this.cache
+    //   .gridViewSetup(formModel.formName, formModel.gridViewName)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       gridViewSetup = res;
+    //       this.notificationsService.notifyCode(
+    //         'E0005',
+    //         0,
+    //         '"' + gridViewSetup[fieldName].headerText + '"'
+    //       );
+    //     }
+    //   });
     // } else {
     //   this.notificationsService.notifyCode(
     //     'E0005',

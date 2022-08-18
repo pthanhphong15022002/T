@@ -1211,9 +1211,10 @@ export class TasksComponent
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
+           //tắt duyệt confirm
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          data.confirmControl == '0'
+          (data.confirmControl == '0' || data.confirmStatus != '1')
         ) {
           x.disabled = true;
         }
@@ -1224,6 +1225,22 @@ export class TasksComponent
         ) {
           x.disabled = true;
         }
+        //tắt duyệt xác nhận
+        if (
+          (x.functionID == 'TMT04032' || x.functionID == 'TMT04031') &&
+          data.verifyStatus != '1'
+        ) {
+          x.disabled = true;
+        }
+         //tắt duyệt đánh giá
+         if (
+          (x.functionID == 'TMT04021' || x.functionID == 'TMT04022'  || x.functionID == 'TMT04023') &&
+          data.approveStatus != '3'
+        ) {
+          x.disabled = true;
+        }
+     
+       
       });
     }
   }

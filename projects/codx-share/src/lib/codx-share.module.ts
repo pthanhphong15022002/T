@@ -73,6 +73,7 @@ import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner
 import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
 import { CodxImportAddTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-template.component';
 import { CodxImportAddMappingComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping.component';
+import { CodxAlertComponent } from './components/codx-alert/codx-alert.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -116,7 +117,8 @@ const T_Component: Type<any>[] = [
   ChatInnerComponent,
   CodxReferencesComponent,
   CodxImportAddTemplateComponent,
-  CodxImportAddMappingComponent
+  CodxImportAddMappingComponent,
+  CodxAlertComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

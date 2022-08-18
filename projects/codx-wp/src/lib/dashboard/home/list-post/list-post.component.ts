@@ -252,36 +252,27 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         if (res) this.tagUsers = res;
       });
   }
-
-  getShareUser(item) {
-    // if (shareControl == '1') {
-    //   this.api
-    //     .exec<any>(
-    //       'ERM.Business.WP',
-    //       'CommentsBusiness',
-    //       'GetShareOwnerListAsync',
-    //       [commentID]
-    //     )
-    //     .subscribe((res) => {
-    //       if (res) this.tagUsers = res;
-    //     });
-    // } else {
-    //   this.api
-    //     .exec<any>(
-    //       'ERM.Business.WP',
-    //       'CommentsBusiness',
-    //       'GetShareUserListAsync',
-    //       [commentID]
-    //     )
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         this.tagUsers = res;
-    //       }
-    //     });
-    // }
-    this
+  lstUserShare:any[] = [];
+  getShareUser(item:any) {
+    if(item.shareControl=='U' ||
+      item.shareControl=='G' || item.shareControl=='R' ||
+      item.shareControl=='P' || item.shareControl=='D' ||
+      item.shareControl=='O')
+      {
+        item.isShowShare = !item.isShowShare;
+        this.lstUserShare = item.permissions.filter((p:any) => {
+          return p.memberType == "2";
+        });
+        this.dt.detectChanges();
+    }
   }
 
+
+  closeListShare(item:any){
+    if(item.isShowShare){
+      item.isShowShare = false;
+    }
+  }
   naviagte(data: any) {
     this.api
       .execSv(

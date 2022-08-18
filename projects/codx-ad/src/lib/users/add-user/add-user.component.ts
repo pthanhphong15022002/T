@@ -129,7 +129,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.notification.notify('Vui lòng nhập thông tin nhóm người dùng');
     } else {
       this.countOpenPopRoles++;
-      if (this.countOpenPopRoles > 0) this.addUserTemp();
+      if (this.formType == 'add') {
+        if (this.countOpenPopRoles == 1) this.addUserTemp();
+      }
       var option = new DialogModel();
       option.FormModel = this.form.formModel;
       var obj = {
@@ -163,11 +165,20 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   addUserTemp() {
     this.checkBtnAdd = true;
-    this.adService.addUserBeforeDone(this.adUser).subscribe((res) => {
-      if (res) {
-        this.dataAfterSave = res;
-      }
-    });
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSaveTemp(opt))
+      .subscribe((res) => {
+        if (res.save) {
+          this.imageUpload
+            .updateFileDirectReload(res.save.userID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
+              }
+            });
+          this.dataAfterSave = res.save;
+        }
+      });
   }
 
   countListViewChoose() {
@@ -200,23 +211,28 @@ export class AddUserComponent extends UIComponent implements OnInit {
     return true;
   }
 
+  beforeSaveTemp(op: RequestOption) {
+    var data = [];
+    this.isAddMode = true;
+    op.methodName = 'AddUserAsync';
+    data = [this.adUser, null, false, false];
+    op.data = data;
+    return true;
+  }
+
   onAdd() {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
-          debugger;
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-                //this.dialog.close(res.save);
               }
             });
-            debugger;
-          res.save['chooseRoles'] = res.save?.functions;
-          res.save['buName'] = res.save?.buid;
+          res.save.chooseRoles = res.save?.functions;
           this.changeDetector.detectChanges();
         }
       });
@@ -233,16 +249,15 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-                this.dialog.close(res.update);
               }
             });
           res.update['chooseRoles'] = res.update?.functions;
-          res.update['buName'] = res.update?.buid;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
         }
       });
+    this.dialog.close();
   }
 
   onSave() {
@@ -259,15 +274,18 @@ export class AddUserComponent extends UIComponent implements OnInit {
           ) {
             this.adService
               .addUserRole(this.dataAfterSave, this.viewChooseRole)
-              .subscribe();
+              .subscribe((res: any) => {
+                if (res) {
+                  res.chooseRoles = res?.functions;
+                  (this.dialog.dataService as CRUDService)
+                    .update(res)
+                    .subscribe();
+                  this.changeDetector.detectChanges();
+                }
+              });
           }
           this.dialog.close();
           this.notification.notifyCode('SYS006');
-          (this.dialog.dataService as CRUDService)
-            .add(this.dataAfterSave)
-            .subscribe((res) => {
-              this.changeDetector.detectChanges();
-            });
         }
       } else this.onUpdate();
     }
