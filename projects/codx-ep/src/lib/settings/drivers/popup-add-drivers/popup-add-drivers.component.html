@@ -104,7 +104,8 @@
         field="linkID"        
         ngDefaultControl
         [crrValue]="this.fGroupAddDriver.value.linkID"
-        [multiple]="false" 
+        [multiple]="false"         
+        (valueChange)="valueCbxCarChange($event)"  
         >
       </codx-input>      
     </div>
