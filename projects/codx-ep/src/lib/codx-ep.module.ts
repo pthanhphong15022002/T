@@ -38,7 +38,6 @@ import { ReportComponent } from './booking-room/report-view/report.component';
 import { DriversComponent } from './settings/drivers/drivers.component';
 import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/popup-add-drivers.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 const routes: Route[] = [
   {
     path: '',
@@ -88,16 +87,6 @@ const routes: Route[] = [
       {
         path: '**',
         redirectTo: 'error/404',
-      },
-    ],
-  },
-  {
-    path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'roomsdynamic/:funcID',
-        component: DynamicFormComponent,
       },
     ],
   },
