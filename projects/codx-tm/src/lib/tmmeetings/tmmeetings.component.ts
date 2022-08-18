@@ -30,12 +30,12 @@ import { APICONSTANT } from '@shared/constant/api-const';
 @Component({
   selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
-  styleUrls: ['./tmmeetings.component.css'],
+  styleUrls: ['./tmmeetings.component.scss'],
 })
 export class TMMeetingsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{  @Input() meeting = new CO_Meetings();
+  implements OnInit, AfterViewInit {
+  @Input() meeting = new CO_Meetings();
 
   @Input() dataObj?: any;
   @Input() projectID?: any; //view meeting to sprint_details
@@ -271,7 +271,7 @@ export class TMMeetingsComponent
 
   convertHtmlAgency(data: any) {
     var date = data.startDate;
-    var desc = '<div class="d-flex align-items-top" >';
+    var desc = '<div class="d-flex align-items-center ms-1" >';
     var day = '';
     var toDay = '<div class="d-flex flex-column me-2" >';
     if (date) {
@@ -281,7 +281,7 @@ export class TMMeetingsComponent
       let year = date1.getFullYear();
       let day1 = date1.getDay() + 1;
       day +=
-        '<div class="text-dark fw-bolder fs-1 text " style="font-size: 800px;">' +
+        '<div class="fs-3hx fw-bold text-gray-800 me-2 lh-1">' +
         myDay +
         '</div>';
       toDay +=
@@ -386,21 +386,21 @@ export class TMMeetingsComponent
             [this.view.dataService.dataSelected],
             false
           );
-          if (e?.event && e?.event != null) {
-            var objectData = this.view.dataService.data;
-            var object = {};
-            for(var i=0; i< objectData.length; i++){
-              if(objectData[i][i]!==undefined) {
-                object[i] = objectData[i][i];
-                objectData[i] = object[i];
-              }
+        if (e?.event && e?.event != null) {
+          var objectData = this.view.dataService.data;
+          var object = {};
+          for (var i = 0; i < objectData.length; i++) {
+            if (objectData[i][i] !== undefined) {
+              object[i] = objectData[i][i];
+              objectData[i] = object[i];
             }
-            this.view.dataService.data = e?.event.concat(
-              objectData
-            );
-            this.meeting = objectData[0];
-            this.detectorRef.detectChanges();
           }
+          this.view.dataService.data = e?.event.concat(
+            objectData
+          );
+          this.meeting = objectData[0];
+          this.detectorRef.detectChanges();
+        }
       });
     });
   }
@@ -436,7 +436,7 @@ export class TMMeetingsComponent
         });
       });
   }
-  copy(data) {}
+  copy(data) { }
   delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService

@@ -73,7 +73,7 @@ export class CatagoryComponent implements OnInit {
     });
   }
 
-  openPopup(evt: any, reference: any) {
+  openPopup(evt: any, reference: any, value: any) {
     if (!reference) return;
     var component = this.components[reference] as Type<any>;
     var width = 0,
@@ -85,23 +85,46 @@ export class CatagoryComponent implements OnInit {
       dialogModel = new DialogModel();
     switch (reference.toLowerCase()) {
       case 'cpnautonumbers':
-        data['autoNoCode'] = '';
-        width = (screen.width * 40) / 100;
-        height = 550;
+        this.api
+          .execSv(
+            'SYS',
+            'ERM.Business.AD',
+            'AutoNumberDefaultsBusiness',
+            'GetByFuncNEntityAsync',
+            [value]
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              data['autoNoCode'] = res.autoNumber;
+              width = (screen.width * 40) / 100;
+              height = 550;
+              this.callfc.openForm(
+                component,
+                title,
+                width,
+                height,
+                funcID,
+                data,
+                cssClass,
+                dialogModel
+              );
+            }
+          });
+
         break;
       case 'cpnCalendar':
         break;
     }
-    this.callfc.openForm(
-      component,
-      title,
-      width,
-      height,
-      funcID,
-      data,
-      cssClass,
-      dialogModel
-    );
+    // this.callfc.openForm(
+    //   component,
+    //   title,
+    //   width,
+    //   height,
+    //   funcID,
+    //   data,
+    //   cssClass,
+    //   dialogModel
+    // );
   }
 
   collapseItem(evt: any, recID: string) {
@@ -161,5 +184,10 @@ export class CatagoryComponent implements OnInit {
     }
   }
 
-  valueChange(evt: any) {}
+  valueChange(evt: any) {
+    var field = evt.field;
+    var value = evt.data;
+    if (!value) return;
+    if (this.category == '1') this.dataValue[field] = value;
+  }
 }

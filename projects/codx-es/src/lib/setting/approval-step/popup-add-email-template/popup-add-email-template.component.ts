@@ -1,8 +1,11 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
+  ElementRef,
   OnInit,
   Optional,
+  Renderer2,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -28,6 +31,9 @@ import { CodxEsService } from '../../../codx-es.service';
 export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('combobox', { static: false }) itemCombobox: ElementRef;
+  @ViewChild('textarea', { static: false }) textarea: ElementRef;
+
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
   dialog: DialogRef;
@@ -57,6 +63,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     private callFunc: CallFuncService,
     private auth: AuthStore,
     private dmSV: CodxDMService,
+    private cr: ChangeDetectorRef,
+    private renderer: Renderer2,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -132,8 +140,9 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
                   this.lstFrom.push(defaultFrom);
                 }
+                this.isAfterRender = true;
               }
-              this.isAfterRender = true;
+              this.cr.detectChanges();
             });
         }
       });
@@ -174,7 +183,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           if (i >= 0) {
             emailTemplates[i].templateID = res.recID;
 
-            if (this.dmSV.fileUploadList.length > 0) {
+            if (this.attachment.fileUploadList.length > 0) {
               this.attachment.objectId = res.recID;
               console.log(this.dmSV.fileUploadList);
               this.attachment.saveFiles();
@@ -201,6 +210,12 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       } else {
         this.dialogETemplate.patchValue({ [event['field']]: event.data });
       }
+      // const childTwoElement =
+      //   this.textarea.nativeElement.getElementsByClassName('message')[0];
+      // let width =
+      //   (this.textarea.nativeElement as HTMLElement).offsetWidth -
+      //   (this.itemCombobox.nativeElement as HTMLElement).offsetWidth;
+      // this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
     }
   }
 

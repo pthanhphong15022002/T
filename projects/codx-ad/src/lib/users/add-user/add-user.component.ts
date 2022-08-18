@@ -68,6 +68,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   saveSuccess = false;
   dataAfterSave: any;
   countOpenPopRoles = 0;
+  formUser: FormGroup;
 
   constructor(
     private injector: Injector,
@@ -113,7 +114,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log('check form', this.form);
     this.formModel = this.form?.formModel;
     this.dialog.closed.subscribe((res) => {
       if (!this.saveSuccess) {
@@ -122,6 +122,17 @@ export class AddUserComponent extends UIComponent implements OnInit {
         }
       }
     });
+    this.initForm();
+  }
+
+  initForm() {
+    this.adService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((dt) => {
+        if (dt) {
+          this.formUser = dt;
+        }
+      });
   }
 
   openPopup(item: any) {
@@ -236,7 +247,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
+    //this.dialog.close();
   }
 
   onUpdate() {
@@ -262,8 +273,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
-      this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
+    this.formUser.patchValue(this.adUser);
+    if (this.formUser.invalid) {
+      this.adService.notifyInvalid(this.formUser, this.formModel);
+      return;
     } else {
       if (this.isAddMode) {
         if (this.checkBtnAdd == false) return this.onAdd();

@@ -86,12 +86,10 @@ export class BookingRoomComponent extends UIComponent {
     let fu: any;
     this.cacheSv.functionList("TMT0201").subscribe(res=>{
       if(res){
-        debugger
         fu = res;
       }
     });
     this.cacheSv.gridViewSetup("MyTasks", "grvMyTasks").subscribe(res=> {
-      debugger
     });
   }
 
@@ -153,7 +151,7 @@ export class BookingRoomComponent extends UIComponent {
         sameData: true,
         id: '2',
         type: ViewType.schedule,
-        active: false,
+        active: true,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -181,7 +179,7 @@ export class BookingRoomComponent extends UIComponent {
         type: ViewType.content,
         showButton: false,
         showFilter: false,
-        active: true,
+        active: false,
         text: 'Report',
         icon: 'icon-assignment',
         toolbarTemplate: this.pined,

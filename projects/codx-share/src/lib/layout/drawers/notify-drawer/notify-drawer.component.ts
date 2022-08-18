@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, DialogData, DialogRef, UIComponent } from 'codx-core';
+import { ApiHttpService, AuthService, CallFuncService, DialogData, DialogRef, SidebarModel, UIComponent } from 'codx-core';
+import { CodxAlertComponent } from '../../../components/codx-alert/codx-alert.component';
 
 @Component({
   selector: 'codx-notify-drawer',
@@ -21,9 +22,14 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.api.execSv("Background","ERM.Business.Background","NotificationBusinesss","GetAsync",[this.auth.userValue.userID,this.tenant])
-    .subscribe((res:any) => {
-      console.log(res);
-    })
+    // this.api.execSv("Background","ERM.Business.Background","NotificationBusinesss","GetAsync",[this.auth.userValue.userID,this.tenant])
+    // .subscribe((res:any) => {
+    //   console.log(res);
+    // })
+  }
+  clickShowAlert(){
+    let optionSide = new SidebarModel();
+    optionSide.Width = '550px';
+    this.callfc.openSide(CodxAlertComponent,'',optionSide);
   }
 }
