@@ -267,3 +267,7 @@ ejs-switch .form-control {
   color: #ffffffc2 !important;
   font-weight: 300 !important;
 }
+
+.dms-listview .table>thead {
+  background-color: var(--gray-100);
+}

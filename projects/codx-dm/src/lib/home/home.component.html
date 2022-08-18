@@ -11,8 +11,10 @@
     </div>
   </ng-template>
   <ng-template #context>
-    <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)" class="d-flex align-items-center px-3 py-1 home">
-      <div [attr.id]="data.recID" class="leaf d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, '')"></div>
+    <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)"
+      class="d-flex align-items-center px-3 py-1 home">
+      <div [attr.id]="data.recID" class="leaf d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, '')">
+      </div>
       <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data)"
         (changeDataMF)="dmSV.filterMoreFunction($event, data)" [title]="data.folderName" [formModel]="view.formModel"
         [typeMF]="'hover'">
@@ -113,9 +115,9 @@
 </ng-template>
 <ng-template #templateList>
   <ng-container *ngIf="data && data.length > 0">
-    <div class="p-5">
+    <div class="dms-listview p-2">
       <table class="table">
-        <thead>
+        <thead class="border-top">
           <tr>
             <th class="px-0" scope="col"></th>
             <th scope="col">
@@ -148,7 +150,7 @@
             </td>
             <td>
               <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
-                [imageWidth]="25" [title]="item.userName">
+                [imageWidth]="25" [subTitle]="item.userName">
               </codx-temp-full>
             </td>
             <td>
@@ -205,16 +207,6 @@
     </div>
   </ng-container>
 </ng-template>
-<codx-attachment  
-#attachment  
-hideFolder="1"  
-hideUploadBtn="1"   
-hideDes="0" 
-type="inline"
-hideImageUpload="1"  
-hideImageThumb="1"
-allowMultiFile="1"
-idBrowse="btn2"
-[formModel]="view.formModel"  
-displayThumb="simple"> 
+<codx-attachment #attachment hideFolder="1" hideUploadBtn="1" hideDes="0" type="inline" hideImageUpload="1"
+  hideImageThumb="1" allowMultiFile="1" idBrowse="btn2" [formModel]="view.formModel" displayThumb="simple">
 </codx-attachment>
