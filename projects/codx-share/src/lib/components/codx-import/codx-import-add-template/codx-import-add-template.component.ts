@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostListener,
@@ -19,7 +20,7 @@ import { AlertConfirmInputConfig, ApiHttpService, CacheService, CallFuncService,
 import { Observable, finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
-
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'codx-import-add-template',
   templateUrl: './codx-import-add-template.component.html',
@@ -39,6 +40,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   columnsGrid: any;
   editSettings: any;
   dataIEConnecttions: any;
+  sheet:any;
   @ViewChild('attachment') attachment: AttachmentComponent
   @ViewChild('gridView') gridView: CodxGridviewComponent
   constructor(
@@ -48,6 +50,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
     private codxService: CodxService,
+    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -96,10 +99,29 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) { }
  
   fileAdded(event: any) {
-    if (event?.data) this.hideThumb = true;
+    if (event?.data)
+    {
+      debugger;
+    };
   }
   getfileCount(e: any) {
     this.fileCount = e.data.length;
+    
+  }
+  getfilePrimitive(e:any)
+  {
+    var dt = e[0]?.rawFile;
+    if(dt)
+    {
+      const reader: FileReader = new FileReader();
+      reader.readAsBinaryString(dt);
+      reader.onload = (e: any) => {
+        /* create workbook */
+        const binarystr: string = e.target.result;
+        const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
+        this.sheet = wb.SheetNames;
+      };
+    }
   }
   onSave()
   {
@@ -157,7 +179,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           }
           var dataIEMapping = {};
           var dataIEFieldMapping = {};
-          this.gridView.dataService.data.push(this.dataIEConnecttions);
+          this.gridView.dataService.data.push(this.dataIEConnecttions,this.dataIEConnecttions);
         });
        
         //this.gridView.addHandler(sdata,true,"recID")

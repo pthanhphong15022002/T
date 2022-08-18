@@ -61,7 +61,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['taskID'] && changes['taskID'].currentValue && !this.firstLoad) {
-      if (changes['taskID'].currentValue === this.id) return;
+     if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
     }
@@ -138,6 +138,13 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           x.functionID == 'TMT02019' &&
           data.verifyControl == '0' &&
           data.category == '1'
+        ) {
+          x.disabled = true;
+        }
+        //danh cho taskExtend
+        if (
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03'|| x.functionID == 'SYS04') &&
+          this.taskExtends
         ) {
           x.disabled = true;
         }

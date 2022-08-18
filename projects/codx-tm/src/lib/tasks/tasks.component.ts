@@ -262,7 +262,7 @@ export class TasksComponent
   }
 
   edit(data?) {
-    if (data && !'00,07,09,10'.includes(data.status)) {
+    if (data && !'00,07,09,10,20'.includes(data.status)) {
       this.notiService.notifyCode('TM013');
       return;
     } else if (
@@ -442,10 +442,12 @@ export class TasksComponent
               false
             );
           if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
+            // e?.event.forEach((obj) => {
+            //   this.view.dataService.update(obj).subscribe();
+            // });
+           // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+            this.view.dataService.update( e?.event).subscribe();
+            this.itemSelected = e?.event;
             this.detail.taskID = this.itemSelected.taskID;
             this.detail.getTaskDetail();
           }
@@ -700,7 +702,11 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+        // this.itemSelected = e?.event[0];
+          // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+          this.itemSelected = e?.event;
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -892,7 +898,10 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+          // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+          this.itemSelected = e?.event;
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -927,7 +936,10 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+         // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+         this.itemSelected = e?.event;
+         this.detail.taskID = this.itemSelected.taskID;
+         this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -955,7 +967,10 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+         // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+         this.itemSelected = e?.event;
+         this.detail.taskID = this.itemSelected.taskID;
+         this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1001,7 +1016,10 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+         // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+         this.itemSelected = e?.event;
+         this.detail.taskID = this.itemSelected.taskID;
+         this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1068,7 +1086,10 @@ export class TasksComponent
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });
-              this.itemSelected = e?.event[0];
+               // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+            this.itemSelected = e?.event;
+            this.detail.taskID = this.itemSelected.taskID;
+            this.detail.getTaskDetail();
             }
             this.detectorRef.detectChanges();
           });

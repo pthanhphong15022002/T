@@ -190,8 +190,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true) data = [this.adUser, this.viewChooseRole];
-      else data = [this.adUser, this.viewChooseRole, checkDifference];
+      data = [this.adUser, this.viewChooseRole, checkDifference];
     }
     op.data = data;
     return true;
@@ -202,6 +201,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
+          debugger;
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
@@ -211,10 +211,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
               }
             });
           res.save['chooseRoles'] = res.save?.functions;
-          //this.changeDetector.detectChanges();
+          res.save['buName'] = res.save?.buid;
+          debugger;
+          this.changeDetector.detectChanges();
         }
       });
-    //this.dialog.close();
+    this.dialog.close();
   }
 
   onUpdate() {
@@ -231,6 +233,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
               }
             });
           res.update['chooseRoles'] = res.update?.functions;
+          res.update['buName'] = res.update?.buid;
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
         }
       });
   }
@@ -244,14 +250,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.countListViewChooseRoleApp == 0 &&
         this.countListViewChooseRoleService == 0
       ) {
-        if (this.checkBtnAdd == true) {
-          this.dialog.close();
-          this.notification.notifyCode('SYS006');
-          (this.dialog.dataService as CRUDService)
-            .add(this.dataAfterSave)
-            .subscribe();
-          this.changeDetector.detectChanges();
-        } else this.onAdd();
+        this.dialog.close();
+        this.notification.notifyCode('SYS006');
+        (this.dialog.dataService as CRUDService)
+          .add(this.dataAfterSave)
+          .subscribe();
+        this.changeDetector.detectChanges();
       } else {
         if (this.isAddMode) {
           if (this.checkBtnAdd == false) return this.onAdd();

@@ -1,12 +1,6 @@
 import { CodxTMService } from '../../codx-tm.service';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  TemplateRef,
-  Injector,
-} from '@angular/core';
+import { Component, ViewChild, TemplateRef, Injector } from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { ViewModel } from 'codx-core';
 import { ViewType } from 'codx-core';
@@ -17,7 +11,7 @@ import { ViewType } from 'codx-core';
   styleUrls: ['./mydashboard.component.scss'],
   providers: [GradientService],
 })
-export class MyDashboardComponent extends UIComponent implements OnInit {
+export class MyDashboardComponent extends UIComponent {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
   @ViewChild('content') content: TemplateRef<any>;
 
@@ -168,8 +162,6 @@ export class MyDashboardComponent extends UIComponent implements OnInit {
   openTooltip() {
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
-
-  closeTooltip() {}
 
   onChangeValueSelectedWeek(data) {
     this.fromDate = this.toDate = data?.toDate;
