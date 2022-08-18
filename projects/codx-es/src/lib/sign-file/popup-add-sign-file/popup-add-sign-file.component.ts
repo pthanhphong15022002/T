@@ -121,7 +121,6 @@ export class PopupAddSignFileComponent implements OnInit {
 
           this.dialogSignFile.patchValue(this.data);
           if (this.isAddNew) {
-            debugger;
             this.dialogSignFile.patchValue({
               priority: '1',
               approveStatus: '1',
@@ -280,7 +279,11 @@ export class PopupAddSignFileComponent implements OnInit {
   //#region Methods Save
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
-      this.notify.notifyCode('E0016');
+      this.esService.notifyInvalid(
+        this.dialogSignFile,
+        this.formModel,
+        this.gvSetup
+      );
       return;
     }
 
@@ -365,6 +368,24 @@ export class PopupAddSignFileComponent implements OnInit {
 
   //#endregion
 
+  // notifyInvalid(formGroup: FormGroup, gridViewSetup: any) {
+  //   const invalid = [];
+  //   const controls = formGroup.controls;
+  //   for (const name in controls) {
+  //     if (controls[name].invalid) {
+  //       invalid.push(name);
+  //     }
+  //   }
+  //   console.log(invalid);
+  //   let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+  //   this.notify.notifyCode(
+  //     'E0005',
+  //     0,
+  //     '"' + gridViewSetup[fieldName].headerText + '"'
+  //   );
+  //   console.log(gridViewSetup);
+  // }
+
   //#region Change Tab
 
   clickTab(tabNo) {
@@ -405,14 +426,6 @@ export class PopupAddSignFileComponent implements OnInit {
         break;
       case 1:
         if (this.dialogSignFile.invalid) {
-          const invalid = [];
-          const controls = this.dialogSignFile.controls;
-          for (const name in controls) {
-            if (controls[name].invalid) {
-              invalid.push(name);
-            }
-          }
-          console.log(invalid);
         }
         if (this.isAddNew) {
           this.newNode = newNode;

@@ -1,15 +1,5 @@
-import { Component, TemplateRef, ViewChild, Injector } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import {
-  ButtonModel,
-  DialogRef,
-  SidebarModel,
-  UIComponent,
-  ViewModel,
-  ViewsComponent,
-  ViewType,
-} from 'codx-core';
-import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
+import { Component, ViewChild, Injector } from '@angular/core';
+import { UIComponent, ViewsComponent } from 'codx-core';
 @Component({
   selector: 'setting-rooms',
   templateUrl: 'rooms.component.html',
@@ -18,13 +8,6 @@ import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.compon
 export class RoomsComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   funcID: string;
-  service: string = 'EP';
-  assemblyName: string = 'EP';
-  entityName: string = 'EP_Resources';
-  className: string = 'ResourcesBusiness';
-  method: string = 'GetListAsync';
-  predicate: string = 'ResourceType=@0';
-  dataValue: string = '1';
 
   constructor(private injector: Injector) {
     super(injector);

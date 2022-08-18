@@ -9,13 +9,7 @@ import {
   CodxFormDynamicComponent,
   ButtonModel,
 } from 'codx-core';
-import {
-  Component,
-  Injector,
-  Input,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -25,13 +19,10 @@ import {
 export class DynamicFormComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('morefunction') morefunction: TemplateRef<any>;
-  @Input() className: string;
-  @Input() method: string;
-  @Input() service: string;
-  @Input() assemblyName: string;
-  @Input() entityName: string;
-  @Input() predicate: string;
-  @Input() dataValue: string;
+  service: string;
+  entityName: string;
+  predicate: string;
+  dataValue: string;
   views: Array<ViewModel> = [];
   columnsGrid = [];
   data = [];
@@ -51,10 +42,24 @@ export class DynamicFormComponent extends UIComponent {
     this.buttons = {
       id: 'btnAdd',
     };
-  }
-
-  ngAfterViewInit(): void {
     this.cache.functionList(this.funcID).subscribe((res) => {
+      this.predicate = res.predicate;
+      this.dataValue = res.dataValue;
+      this.api
+        .callSv('SYS', 'SYS', 'EntitiesBusiness', 'GetCacheEntityAsync', [
+          res.entityName,
+        ])
+        .subscribe((res: any) => {
+          if (res && res.msgBodyData) {
+            var entities = res.msgBodyData[0];
+            this.entityName = entities.tableName;
+            var arr = entities.tableName.split('_') as any[];
+            if (arr.length > 0) {
+              this.service = arr[0];
+            }
+            this.detectorRef.detectChanges();
+          }
+        }); // hàm này để tạm do chưa có cache entities trên UI
       this.cache
         .gridViewSetup(res.formName, res.gridViewName)
         .subscribe((res) => {
@@ -74,7 +79,7 @@ export class DynamicFormComponent extends UIComponent {
             this.morefunction;
 
           //Để tạm vì nhỏ quá morefc k hiện hết
-          this.columnsGrid[this.columnsGrid.length - 1].width = '300';
+          this.columnsGrid[this.columnsGrid.length - 1].width = '200';
 
           this.views = [
             {
@@ -89,6 +94,8 @@ export class DynamicFormComponent extends UIComponent {
         });
     });
   }
+
+  ngAfterViewInit(): void {}
 
   viewChanged(evt: any, view: ViewsComponent) {
     this.cache
