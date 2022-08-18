@@ -1,32 +1,38 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Injector } from '@angular/core';
-import { CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
+import { Observable } from 'rxjs';
+import { Component, ViewChild, ElementRef, Injector, ViewEncapsulation } from '@angular/core';
+import {
+  CallFuncService,
+  DialogRef,
+  LayoutBaseComponent, SidebarModel
+} from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
-import { Observable, of } from 'rxjs';
 
 @Component({
-  selector: 'lib-layout',
+  selector: 'codx-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LayoutComponent extends LayoutBaseComponent {
-
-  module = "EP";
+  module = 'TM';
   dialog!: DialogRef;
 
-  constructor(
-    inject: Injector,
-    private callfc: CallFuncService,
-  ) {
+  constructor(inject: Injector,
+    private callfc: CallFuncService) {
     super(inject);
   }
-  onInit(): void {
 
+  onInit(): void {
+    // this.funcs$.subscribe(res => {
+    //   console.log(res);
+
+    // })
   }
 
   onAfterViewInit(): void {
 
   }
-
+ override toolbar: boolean = false;
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
