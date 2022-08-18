@@ -85,8 +85,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         return;
       } else this.router.navigate([`/${tenant}`]);
     }
-    debugger;
-
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {
         this.api
