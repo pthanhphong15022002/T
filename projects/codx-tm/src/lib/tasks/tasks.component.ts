@@ -996,8 +996,8 @@ export class TasksComponent
     this.dialogProgess = this.callfc.openForm(
       PopupUpdateProgressComponent,
       '',
-      500,
-      350,
+      560,
+      360,
       '',
       obj
     );
