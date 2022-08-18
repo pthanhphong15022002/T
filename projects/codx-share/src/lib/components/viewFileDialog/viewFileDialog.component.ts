@@ -229,21 +229,20 @@ export class ViewFileDialogComponent implements OnInit {
     this.tenant = this.auth.userValue.tenant;
     this.access_token = this.auth.userValue.token;
     //alert(1);
-    if ( this.srcVideo == "" && this.linkViewImage == "") { 
-      this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
-        this.src = `${environment.librOfficeUrl}?WOPISrc=${item}`;
-  
-      });
-    }   
+    // if ( this.srcVideo == "" && this.linkViewImage == "") { 
+    //   this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
+    //     this.src = `${environment.librOfficeUrl}?WOPISrc=${item}`;  
+    //   });
+    // }   
 
-    // this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
-    // if ( this.srcVideo == "" && this.linkViewImage == "") {
-    //   setTimeout(() => {
-    //     (        
-    //         document.getElementById("frmFile") as HTMLFormElement).submit();
-    //         //$("#viewfiledalog").find("form")[0]["submit"]();
-    //   }, 100);
-    // }
+    this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
+    if ( this.srcVideo == "" && this.linkViewImage == "") {
+      setTimeout(() => {
+        (        
+            document.getElementById("frmFile") as HTMLFormElement).submit();
+            //$("#viewfiledalog").find("form")[0]["submit"]();
+      }, 100);
+    }
   }
 
   _animalOpen(name, num, callback?) {

@@ -41,7 +41,7 @@ import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { qr } from './model/mode';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 @Component({
   selector: 'lib-pdf-view',
   templateUrl: './pdf-view.component.html',
@@ -116,6 +116,13 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   lstZoomValue: Array<number> = [25, 30, 50, 75, 90, 100];
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
 
+  lstAnnotFontStyle = ['Helvetica', 'Arial'];
+  curAnnotFontStyle = 'Helvetica';
+  lstAnnotFontSize = [10, 11, 12, 13];
+  curAnnotFontSize = 13;
+  lstAnnotDateFormat = ['DD/mm/YYYY', 'mm/YYYY'];
+  curAnnotDateFormat = 'DD/mm/YYYY';
+
   file: Object = { text: 'fileName', value: 'fileID' };
   person: Object = { text: 'authorName', value: 'authorID' };
 
@@ -146,7 +153,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   predicate = 'recID=@0';
   dataValue;
   formModel: FormModel;
-  dialogAnnot: FormGroup;
+  formAnnot: FormGroup;
 
   public fields: Object = { text: 'Name', groupBy: 'location.pageNumber' };
   public cssClass: string = 'e-list-template';
@@ -222,6 +229,13 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
     this.cache.valueList('ES015').subscribe((res) => {
       this.vllActions = res.datas;
+    });
+
+    this.formAnnot = new FormGroup({
+      content: new FormControl(),
+      fontStyle: new FormControl(this.curAnnotFontStyle),
+      fontSize: new FormControl(this.curAnnotFontSize),
+      dateFormat: new FormControl(this.curAnnotDateFormat),
     });
   }
 
@@ -372,7 +386,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       }
 
       this.pdfviewerControl.addAnnotation(anno);
-      console.log(this.pdfviewerControl.annotationCollection);
     });
   }
 
@@ -397,10 +410,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       displayText: { visibility: false },
       value: text,
     });
-    console.log(this.qrCode.nativeElement.src);
 
     barcode.appendTo('#qrCode');
-    console.log(this.qrCode.nativeElement.src);
 
     let barCodeUrl = '';
     await barcode.exportAsBase64Image('PNG').then((value) => {
@@ -421,8 +432,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
     let active = this.fileInfo ? true : false;
     this.isActiveToSign.emit(active);
-    //add sign areas into pdf
-    this.lstAreas = this.fileInfo.areas;
+    //add sign areas into sign area tab
+    this.renderAnnotPanel();
 
     this.dataValue = this.recID;
     this.detectorRef.detectChanges();
@@ -432,7 +443,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.signerInfo = e.itemData;
     this.curSignerID = this.signerInfo.authorID;
     this.detectorRef.detectChanges();
-    console.log(this.signerInfo);
   }
 
   changeSuggestState(e: any) {
@@ -546,6 +556,20 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   changeZoomValue(e: any) {
     this.zoomValue = e.zoomValue;
+  }
+
+  changeFontStyle(e) {
+    console.log('font style', e);
+  }
+
+  changeFontSize(e) {
+    console.log('font size', e);
+  }
+
+  changeAnnotPro(type, recID) {
+    console.log(type, recID);
+
+    console.log('form group', this.formAnnot.value);
   }
 
   changeAnnotationItem(type: number) {
@@ -1120,6 +1144,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             tmpCollections.forEach((curAnnotation) => {
               this.pdfviewerControl.addAnnotation(curAnnotation);
             });
+
+            //reload annot panel
+            this.renderAnnotPanel();
           }
         }
       });
@@ -1201,7 +1228,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   testFunc(e: any) {}
 
   selectedAnnotation(e: any) {
-    console.log(e);
+    console.log('select annot event', e);
 
     this.curSelectedAnno = this.pdfviewerControl.annotationCollection.find(
       (anno) => {
@@ -1235,6 +1262,20 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   clickPrint(args) {}
 
+  renderAnnotPanel() {
+    this.esService
+      .getSignAreas(
+        this.recID,
+        this.fileInfo.fileID,
+        this.isApprover,
+        this.user.userID
+      )
+      .subscribe((res) => {
+        this.lstAreas = res;
+
+        this.detectorRef.detectChanges();
+      });
+  }
   renderQRFile() {
     let annotationDataFormat: AnnotationDataFormat;
 
