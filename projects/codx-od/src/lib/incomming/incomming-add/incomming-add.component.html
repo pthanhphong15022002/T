@@ -19,16 +19,16 @@
   </div>
   <div class="tab-horizone">
     <div class="d-flex align-items-center mb-1">
-      <codx-label class="me-2 cursor-pointer fw-bold" default="Đơn vị" [class.text-primary]="activeDiv == 'dv'"
+      <codx-label class="me-2 cursor-pointer fw-bold" [formModel]="formModel" [fiedName]="'agencyName'" [class.text-primary]="activeDiv == 'dv'"
         (click)="hideDept('dv')">
       </codx-label>
       <ng-container *ngIf="!hidepb">
-        <codx-label class="me-2 " default="|"></codx-label>
+        <span class="me-2">|</span>
         <codx-label class="cursor-pointer text-primary fw-bold" [class.text-primary]="activeDiv == 'pb'" default="Phòng ban"
           (click)="hideDept('pb')"></codx-label>
       </ng-container>
     </div>
-    <div class="align-items-center" style="display:flex" [hidden]="showAgency">
+    <div class="align-items-start" style="display:flex"  [hidden]="showAgency">
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="agencyName" style="width:100%"
         (valueChange)="changeValueAgency($event)">
       </codx-input>
@@ -43,7 +43,7 @@
       </codx-input> -->
       <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')">Add</span>
     </div>
-    <div class="align-items-center" style="display:flex" [hidden]="!showAgency">
+    <div class="align-items-start" style="display:flex" [hidden]="!showAgency">
       <codx-combobox refValue="AgencyDepts" type="combobox" placeholder="Phòng ban" [value]="dispatch?.agencyID"
         style="width:100%" (valueChange)="changeValueDept($event)" field="agencyName">
       </codx-combobox>
@@ -94,61 +94,61 @@
       <span class="btn btn-primary ms-3">Add</span>
     </div>
   </div>  -->
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="col-6">
-      <codx-label [gridViewName]="form.formModel.gridViewName" [formName]="form.formModel.formName" fiedName="Category"></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Category"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="category">
       </codx-input>
     </div>
     <div class="col-6">
-      <codx-label default='Nguồn'></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Source"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="source">
       </codx-input>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="col-4">
-      <codx-label default='Số văn bản'></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="RefNo"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refNo" ControlName="refNo">
       </codx-input>
     </div>
     <div class="col-4">
-      <codx-label default='Ngày văn bản'></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="RefDate"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate">
       </codx-input>
     </div>
     <div class="col-2">
-      <codx-label default='Số trang'></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Pages"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="pages" [min]="0"
         [showSpinButton]="false">
       </codx-input>
     </div>
     <div class="col-2">
-      <codx-label default='Số bản'></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Copies"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="copies" [min]="0"
         [showSpinButton]="false">
       </codx-input>
     </div>
   </div>
-  <div class="form-group">
-    <codx-label default='Trích yếu'></codx-label>
+  <div class="form-group mt-3">
+    <codx-label [formModel]="form.formModel" fiedName="Title"></codx-label>
     <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="title">
     </codx-input>
   </div>
   <div class="form-group row mt-3">
     <div class="col-6">
-      <codx-label default='Mức độ khẩn'></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Urgency"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="urgency">
       </codx-input>
     </div>
     <div class="col-6">
-      <codx-label default='Cấp bảo mật'></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Security"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="security">
       </codx-input>
     </div>
   </div>
   <div class="form-group">
-    <codx-label default='Nơi nhận'></codx-label>
+    <codx-label [formModel]="form.formModel" fiedName="DeptID"></codx-label>
     <div class="d-flex">
       <codx-input type="Combobox" name="combobox"
         [refValue]="gridViewSetup!=null?gridViewSetup['DeptID']['referedValue']:null" refType="P" field="deptID"
@@ -157,23 +157,23 @@
     </div>
   </div>
   <div class="form-group row mt-3">
-    <div class="col-6">
-      <codx-label default='Hình thức nhận'></codx-label>
+    <div class="col-4">
+      <codx-label [formModel]="form.formModel" fiedName="SendMode"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="sendMode"></codx-input>
     </div>
     <div class="col-3">
-      <codx-label default='Ngày nhận'></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="DispatchOn"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn">
       </codx-input>
     </div>
-    <div class="col-3">
-      <codx-label default='Thời hạn xử lý'></codx-label>
+    <div class="col-5">
+      <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline">
       </codx-input>
     </div>
   </div>
   <div class="form-group">
-    <codx-label default='Người chịu trách nhiệm'></codx-label>
+    <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
     <div class="d-flex">
       <codx-input type="Combobox" name="combobox"
         [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null" [multiple]="false" [crrValue]="this.dispatch.owner"

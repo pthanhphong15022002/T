@@ -80,7 +80,8 @@
           "
           [state]="{
             setting: setting | group: data.recID:'2',
-            function: function
+            function: function,
+            dataValue: dataValue[data.fieldName]
           }"
           *ngIf="data.displayMode === '1'"
           ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span

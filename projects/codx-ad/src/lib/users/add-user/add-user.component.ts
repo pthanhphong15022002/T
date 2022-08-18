@@ -236,7 +236,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
+    //this.dialog.close();
   }
 
   onUpdate() {

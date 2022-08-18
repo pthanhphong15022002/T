@@ -161,5 +161,10 @@ export class CatagoryComponent implements OnInit {
     }
   }
 
-  valueChange(evt: any) {}
+  valueChange(evt: any) {
+    var field = evt.field;
+    var value = evt.data;
+    if (!value) return;
+    if (this.category == '1') this.dataValue[field] = value;
+  }
 }

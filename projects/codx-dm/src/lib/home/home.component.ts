@@ -153,14 +153,16 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isNodeSelect.subscribe(res => {
       if (res != null) {      
         var tree = this.codxview.currentView.currentComponent.treeView;        
-        tree.getCurrentNode(res.recID);        
+        if (tree != null) 
+          tree.getCurrentNode(res.recID);        
       }
     });
 
     this.dmSV.isNodeDeleted.subscribe(res => {
       if (res != null) {
         var tree = this.codxview.currentView.currentComponent.treeView;
-        tree.removeNodeTree(res)
+        if (tree != null)  
+          tree.removeNodeTree(res)
         this._beginDrapDrop();
       }
     });
@@ -168,7 +170,8 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isNodeChange.subscribe(res => {
       if (res) {
         var tree = this.codxview.currentView.currentComponent.treeView;
-        tree.setNodeTree(res);
+        if (tree != null) 
+          tree.setNodeTree(res);
         //  that.dmSV.folderId.next(res.recID);
       }
     });
@@ -176,7 +179,8 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isAddFolder.subscribe(res => {
       if (res != null) {
         var tree = this.codxview.currentView.currentComponent.treeView;
-        tree.setNodeTree(res);
+        if (tree != null)  
+          tree.setNodeTree(res);
         this.changeDetectorRef.detectChanges();
       };
       this._beginDrapDrop();
