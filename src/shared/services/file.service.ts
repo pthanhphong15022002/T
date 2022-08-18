@@ -76,6 +76,10 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "GetAllowSizeUploadAsync", [""]);
     }
 
+    getFileContent(id: string): Observable<any> {
+        return this.api.exec<any>("DM", "LibrOfficeBusiness", "GetFileContentAsync", [id]);
+    }
+
     getFile(id: string, isHistory: boolean = true): Observable<any> {
         return this.api.exec<FileInfo>("DM", "FileBussiness", "GetFileAsync", [id, isHistory]);
     }
@@ -223,6 +227,12 @@ export class FileService implements OnDestroy {
         //  var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);        
         return this.api.execSv<string>("DM", "DM", "FileBussiness", "CreateChunkFileAsync", file);
+    }
+
+    GetPathServer(path): Observable<any> {
+        //  var bytes = new Int8Array(data as ArrayBuffer); 
+        //  var item = this.arrayBufferToBase64(data);        
+        return this.api.execSv<string>("DM", "DM", "FileBussiness", "GetPathServerAsync", path);
     }
 
     //Observable<any>

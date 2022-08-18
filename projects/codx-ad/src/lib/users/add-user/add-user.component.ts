@@ -232,10 +232,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 this.loadData.emit();
               }
             });
-          res.save['chooseRoles'] = res.save?.functions;
+          res.save.chooseRoles = res.save?.functions;
           this.changeDetector.detectChanges();
         }
       });
+    this.dialog.close();
   }
 
   onUpdate() {
@@ -275,7 +276,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .addUserRole(this.dataAfterSave, this.viewChooseRole)
               .subscribe((res: any) => {
                 if (res) {
-                  res['chooseRoles'] = res?.functions;
+                  res.chooseRoles = res?.functions;
                   (this.dialog.dataService as CRUDService)
                     .update(res)
                     .subscribe();
@@ -285,11 +286,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
           }
           this.dialog.close();
           this.notification.notifyCode('SYS006');
-          // (this.dialog.dataService as CRUDService)
-          //   .add(this.dataAfterSave)
-          //   .subscribe((res) => {
-          //     this.changeDetector.detectChanges();
-          //   });
         }
       } else this.onUpdate();
     }

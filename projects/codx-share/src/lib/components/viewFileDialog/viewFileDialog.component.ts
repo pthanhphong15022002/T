@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataItem } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
+import { Sorting } from '@syncfusion/ej2-pivotview';
 import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { PropertiesComponent } from 'projects/codx-dm/src/lib/properties/properties.component';
@@ -30,6 +31,7 @@ export class ViewFileDialogComponent implements OnInit {
   user: any;
   titleDialog = "";
   formModel: any;
+  pathVideo: string;
   @Input() id: string;
   @Input() ext: string;
   @Input('viewBase') viewBase: ViewsComponent;
@@ -227,6 +229,12 @@ export class ViewFileDialogComponent implements OnInit {
     this.tenant = this.auth.userValue.tenant;
     this.access_token = this.auth.userValue.token;
     //alert(1);
+    // if ( this.srcVideo == "" && this.linkViewImage == "") { 
+    //   this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
+    //     this.src = `${environment.librOfficeUrl}?WOPISrc=${item}`;  
+    //   });
+    // }   
+
     this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
     if ( this.srcVideo == "" && this.linkViewImage == "") {
       setTimeout(() => {
@@ -302,7 +310,8 @@ export class ViewFileDialogComponent implements OnInit {
       || this.ext == ".jpg"
       || this.ext == ".bmp"
     ) {
-      this.linkViewImage = this.data.thumbnail;//`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
+      // this.data.thumbnail;//
+      this.linkViewImage = this.data.thumbnail; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
 
     this.viewFile(this.id);

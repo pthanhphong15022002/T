@@ -19,11 +19,12 @@ export class LayoutComponent extends LayoutBaseComponent {
   ) {
     super(inject);
   }
-
   onInit(): void {
+
   }
 
   onAfterViewInit(): void {
+
   }
 
   openFormNoteDrawer() {

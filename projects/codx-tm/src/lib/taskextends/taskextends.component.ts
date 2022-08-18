@@ -12,10 +12,12 @@ import {
   DialogRef,
   NotificationsService,
   UIComponent,
+  UrlUtil,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { CodxTMService } from '../codx-tm.service';
+import { TM_TaskExtends } from '../models/TM_Tasks.model';
 import { PopupConfirmComponent } from '../tasks/popup-confirm/popup-confirm.component';
 import { ViewDetailComponent } from '../tasks/view-detail/view-detail.component';
 
@@ -26,7 +28,8 @@ import { ViewDetailComponent } from '../tasks/view-detail/view-detail.component'
 })
 export class TaskExtendsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
@@ -34,10 +37,10 @@ export class TaskExtendsComponent
   user: any;
   funcID: any;
   // itemSelected: any;
-  taskExtends: any;
+  taskExtends: TM_TaskExtends;
   dialogExtendsStatus!: DialogRef;
   vllExtendStatus = 'TM010';
-  vllStatus = 'TM004'
+  vllStatus = 'TM004';
   constructor(
     inject: Injector,
     private authStore: AuthStore,
@@ -48,10 +51,9 @@ export class TaskExtendsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
   }
 
-  onInit(): void { }
+  onInit(): void {}
 
   ngAfterViewInit(): void {
     this.views = [
@@ -62,7 +64,7 @@ export class TaskExtendsComponent
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
-          // groupBy: 'fieldGroup', Thương kêu gắng sau 
+          // groupBy: 'fieldGroup', Thương kêu gắng sau
         },
       },
     ];
@@ -74,10 +76,35 @@ export class TaskExtendsComponent
     // this.taskExtends = val
     this.detectorRef.detectChanges();
   }
-  requestEnded(e) { }
+  requestEnded(e) {}
 
   //#region extends
   openExtendStatusPopup(moreFunc, data) {
+    var valueDefault = UrlUtil.getUrl('defaultValue', moreFunc.url);
+    if (valueDefault == '5') {
+      this.api
+        .execSv<any>(
+          'TM',
+          'TM',
+          'TasksBusiness',
+          'GetTaskParentByTaskIDAsync',
+          data.taskID
+        )
+        .subscribe((res) => {
+          if (res) {
+            if (res.dueDate < data.extendDate) {
+              this.notiService.alertCode('TM059').subscribe((confirm) => {
+                if (confirm?.event && confirm?.event?.status == 'Y') {
+                  this.confirmExtends(moreFunc, data);
+                }
+              });
+            } else this.confirmExtends(moreFunc, data);
+          }
+        });
+    } else this.confirmExtends(moreFunc, data);
+  }
+
+  confirmExtends(moreFunc, data) {
     var obj = {
       moreFunc: moreFunc,
       data: data,
@@ -94,16 +121,16 @@ export class TaskExtendsComponent
     );
     this.dialogExtendsStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        var taskExtends = e?.event
+        var taskExtends = e?.event;
         this.view.dataService.update(taskExtends).subscribe();
-        this.taskExtends = taskExtends
+        this.taskExtends = taskExtends;
         this.detail.taskID = taskExtends.taskID;
         this.detail.getTaskDetail();
         this.detectorRef.detectChanges();
       }
-    })
-
+    });
   }
+  //#endregion
 
   receiveMF(e: any) {
     this.clickMF(e.e, this.taskExtends);
@@ -121,8 +148,12 @@ export class TaskExtendsComponent
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
+        if (x.functionID == 'SYS04') {
+          x.disabled = true;
+        }
         if (
-          x.functionID == 'SYS04'
+          (x.functionID == 'TMT04011' || x.functionID == 'TMT04012') &&
+          data.status != '3'
         ) {
           x.disabled = true;
         }
