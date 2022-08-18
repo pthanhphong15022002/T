@@ -90,6 +90,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   taskType = '1';
   formModel: any;
   gridViewSetup: any;
+  changTimeCount = 0;
+  check = true;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -211,6 +213,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openInfo(this.task.taskID, this.action);
     }
+    if(this.task.startDate && this.task.endDate)this.check = false;
   }
 
   setTitle(e: any) {
@@ -424,7 +427,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.param?.MaxHoursControl != '0' &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
+<<<<<<< HEAD
       this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours])
+=======
+      this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours]);
+>>>>>>> 58657e749da2b113dd498c4f553f16960dd618e8
       return;
     }
     if (
@@ -640,11 +647,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
   }
   valueChangeEstimated(data) {
-    if (!data.data) return;
     var num = data.data;
     if (num < 0) {
       this.notiService.notifyCode('TM033');
-      // this.task.estimated = this.crrEstimated ? this.crrEstimated : 0;
       return;
     }
     this.task[data.field] = num;
@@ -672,13 +677,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
       if (this.task.startDate && this.task.endDate) {
-        var time = (
-          (this.task?.endDate.getTime() - this.task?.startDate.getTime()) /
-          3600000
-        ).toFixed(2);
-        this.task.estimated = Number.parseFloat(time);
-        // this.crrEstimated = this.task.estimated;
-      }
+        //  if(this.check){
+          var time = (
+            (this.task.endDate.getTime() - this.task.startDate.getTime()) /
+            3600000
+          ).toFixed(2);
+          this.task.estimated = Number.parseFloat(time);
+        //  }
+        //  this.check = true ;
+        }
     }
   }
 
@@ -737,7 +744,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.taskGroup = res;
+<<<<<<< HEAD
           if (res.checkList != null && res.checkList.trim() != "") {
+=======
+          if (res.checkList != null && res.checkList.trim() != '') {
+>>>>>>> 58657e749da2b113dd498c4f553f16960dd618e8
             var toDo = res.checkList.split(';');
             // this.countTodoByGroup = toDo.length ;
             this.listTodo = [];
@@ -797,7 +808,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUser = [];
     var listTaskResources = [];
     var listUserDetail = [];
-    for (var i = 0; i < this.listUserDetail.length; i++) {
+    var totalUser = this.listUser.length ;
+    for (var i = 0; i < totalUser; i++) {
       if (this.listUser[i] != userID) {
         listUser.push(this.listUser[i]);
       }

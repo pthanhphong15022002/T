@@ -130,7 +130,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       e.forEach((x) => {
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          data.confirmControl == '0'
+          (data.confirmControl == '0' || data.confirmStatus != '1')
         ) {
           x.disabled = true;
         }
@@ -148,6 +148,23 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         ) {
           x.disabled = true;
         }
+        if((x.functionID == 'TMT04011' ||  x.functionID == 'TMT04012') &&  this.taskExtends.status !='3' ){
+          x.disabled = true;
+        }
+        //tắt duyệt xác nhận
+        if (
+          (x.functionID == 'TMT04032' || x.functionID == 'TMT04031') &&
+          data.verifyStatus != '1'
+        ) {
+          x.disabled = true;
+        }
+           //tắt duyệt đánh giá
+           if (
+            (x.functionID == 'TMT04021' || x.functionID == 'TMT04022'  || x.functionID == 'TMT04023') &&
+            data.approveStatus != '3'
+          ) {
+            x.disabled = true;
+          }
       });
     }
   }

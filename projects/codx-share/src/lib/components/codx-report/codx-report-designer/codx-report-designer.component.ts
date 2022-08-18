@@ -1,5 +1,5 @@
 /// <reference types="@boldreports/types/reports.all" />
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BoldReportDesignerComponent } from '@boldreports/angular-reporting-components/reportdesigner.component';
 import { AuthStore } from 'codx-core';
 
@@ -16,8 +16,9 @@ export class CodxReportDesignerComponent implements OnInit, AfterViewInit {
   @Input()  reportUUID: any = '';;
   @Input() isAdmin: boolean = true;
   @Input() showToolbar: boolean = true;
-  @Input() locale!: string;
+  @Input() locale: string = 'vi-VN';
   @Input() permissionSettings!: any ;
+  @Output() viewerMode = new EventEmitter<any>();
   private _user: any;
   constructor(private auth : AuthStore) {
     this._user = this.auth.get();
@@ -70,15 +71,24 @@ onToolbarDesignerRendering(args:any): void {
     //     //args.target.find('ul:first').append(openButton.append(openIcon));
     //     args.target.find('ul:first').append(saveButton.append(saveIcon));
     //   }
+
+    if ($(args.target).hasClass('e-rptdesigner-toolbarcontainer')) {
+          const viewButton = (ej as any).buildTag('li.e-rptdesigner-toolbarli e-designer-toolbar-align e-tooltxt', '', {}, {});
+          const viewIcon = (ej as any).buildTag('span.e-rptdesigner-toolbar-icon e-toolbarfonticonbasic e-rptdesigner-toolbar-preview e-li-item',
+            '', {}, { title: 'Xem báo cáo' });
+          //args.target.find('ul:first').append(openButton.append(openIcon));
+          args.target.find('ul:eq(9)').append(viewButton.append(viewIcon));
+      }
 }
 
 onToolbarDesignerClick(args:any) {
-    if(this.isAdmin == false)
-    console.log(args);
 
       if (args.event.click === 'Save') {
-        // args.event.cancel = true;
-        // args.designerInst.widget.saveReport();
+        args.event.cancel = true;
+        args.designerInst.widget.saveReport();
+      }
+      if(args.event.click === 'External'){
+        this,this.viewerMode.emit(true);
       }
 }
 

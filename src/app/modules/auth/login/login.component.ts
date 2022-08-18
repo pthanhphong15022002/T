@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   alerttext: string;
   sessionID = null;
   email = null;
-  mode: string = 'firstlogin';
+  mode: string = 'login';
 
   // private fields
   private unsubscribe: Subscription[] = [];
@@ -99,13 +99,13 @@ export class LoginComponent implements OnInit, OnDestroy {
                 res.msgBodyData[0].lastLogin == null ||
                 (params.id && params.id == 'forget')
               ) {
-                this.mode = 'firstlogin';
+                this.mode = 'firstLogin';
                 dt.detectChanges();
               }
             }
           });
       }
-      if (params.id && params.id == 'changepass') this.mode = params.id;
+      if (params.id && params.id == 'changePass') this.mode = params.id;
     });
   }
 
@@ -141,12 +141,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loginForm = this.fb.group({
       email: [
         this.defaultAuth.email,
-        Validators.compose([
-          Validators.required,
-          //Validators.email,
-          Validators.minLength(3),
-          Validators.maxLength(320),
-        ]),
+        Validators.compose([Validators.required, Validators.email]),
       ],
       password: [
         this.defaultAuth.password,
@@ -163,11 +158,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         email: [
           //this.defaultAuth.email,
           '',
-          Validators.compose([
-            Validators.required,
-            Validators.minLength(3),
-            Validators.maxLength(320),
-          ]),
+          Validators.compose([Validators.required, Validators.email]),
         ],
         password: [
           //this.defaultAuth.password,
