@@ -17,6 +17,7 @@ import {
 } from 'codx-core';
 import { CodxTMService } from '../codx-tm.service';
 import { PopupConfirmComponent } from '../tasks/popup-confirm/popup-confirm.component';
+import { ViewDetailComponent } from '../tasks/view-detail/view-detail.component';
 
 @Component({
   selector: 'lib-taskextends',
@@ -29,6 +30,7 @@ export class TaskExtendsComponent
 {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   user: any;
   funcID: any;
@@ -68,7 +70,7 @@ export class TaskExtendsComponent
   }
 
   selectedChange(val: any) {
-     this.taskExtends = val?.data
+     this.taskExtends = val?.data ?val?.data:val ;
     // this.itemSelected = val?.data?.task ;
     // this.taskExtends = val
     this.detectorRef.detectChanges();
@@ -96,6 +98,8 @@ export class TaskExtendsComponent
         var taskExtends = e?.event
         this.view.dataService.update(taskExtends).subscribe();
         this.taskExtends = taskExtends
+        this.detail.taskID = taskExtends.taskID;
+        this.detail.getTaskDetail();
         this.detectorRef.detectChanges();
       }
     })
@@ -113,6 +117,17 @@ export class TaskExtendsComponent
       case 'TMT04012':
         this.openExtendStatusPopup(e.data, data);
         break;
+    }
+  }
+  changeDataMF(e, data) {
+    if (e) {
+      e.forEach((x) => {
+        if (
+          x.functionID == 'SYS04' 
+        ) {
+          x.disabled = true;
+        }
+      });
     }
   }
 }

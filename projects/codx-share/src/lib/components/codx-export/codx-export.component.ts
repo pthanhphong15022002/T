@@ -1,31 +1,22 @@
 import {
   Component,
-  EventEmitter,
-  HostListener,
-  Injector,
-  Input,
   OnChanges,
   OnInit,
   Optional,
-  Output,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
   CallFuncService,
   DataRequest,
-  DataService,
   DialogData,
   DialogModel,
   DialogRef,
@@ -90,8 +81,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     //Tạo formGroup
     this.exportGroup = this.formBuilder.group({
-      dataExport: ['', Validators.required],
-      format: ['', Validators.required],
+      dataExport: ['all', Validators.required],
+      format: ['excel', Validators.required],
     });
     //Tạo formModel
     this.formModel = {
@@ -236,16 +227,16 @@ export class CodxExportComponent implements OnInit, OnChanges {
     if (this.exportGroup.invalid) return;
     var idTemp = null;
     var value = this.exportGroup.value;
-    var splitFormat = value.format.split('_');
+    var splitFormat = value?.format.split('_');
     switch (splitFormat[0]) {
       case 'excel':
       case 'excelTemp': {
-        if (value.dataExport == 'all') {
+        if (value?.dataExport == 'all') {
           this.gridModel.page = 1;
           this.gridModel.pageSize = -1;
           this.gridModel.predicates = null;
           this.gridModel.dataValues = null;
-        } else if (value.dataExport == 'selected') {
+        } else if (value?.dataExport == 'selected') {
           this.gridModel.predicates = 'RecID=@0';
           this.gridModel.dataValues = [this.recID].join(';');
         }

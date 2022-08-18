@@ -37,25 +37,24 @@
     <div class="codx-approval-step step-test pb-1">
       <div class="codx-approval-header d-flex align-items-center"
         [class.active]="item.isActived.lenght > 0 ? true : false">
-        <div class="step-number">{{index + 1}}</div>
-        <div class="step-title text-gray-800 fw-bold fs-5">{{item.stepName}}</div>
+        <div class="step-number">{{item.stepNo}}</div>
+        <div class="step-title text-gray-800 fw-bold fs-5">{{(item.stepType | vll:'ES002':'text'|async)}}</div>
       </div>
       <div class="codx-approval-content ms-17">
         <ng-container *ngFor="let approver of item.approvers">
           <div class="d-flex align-items-top justify-content-between mb-2">
-            <codx-temp-full *ngIf="approver.roleType?.length == 1" [imageId]="approver.approver"
-              [imageObjType]="'AD_Users'" [imageWidth]="35"
+            <codx-temp-full [imageId]="approver.approver" [imageObjType]="'AD_Users'" [imageWidth]="35"
               [title]="approver.approverName ?? (approver.approver |vll: 'ES014': 'text'|async)"
-              [desc]="approver.positionName ?? 'Vị trí công việc'">
+              [desc]="approver.approverPosition">
             </codx-temp-full>
-            <codx-temp-full *ngIf="approver.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
+            <!-- <codx-temp-full *ngIf="approver.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
             (item.icon ? item.icon : 'share_default.svg')" imgCss="w-30px p-3 me-3 user-mini-icon" [imageWidth]="20"
               [title]="(approver.approver |vll: 'ES014': 'text'|async)"
               [desc]="approver.approver |vll: 'ES014': 'text'|async">
-            </codx-temp-full>
+            </codx-temp-full> -->
 
             <div class="d-flex align-items-center text-center">
-              <div class="d-flex flex-column">
+              <!-- <div class="d-flex flex-column">
                 <div class="text-dark fw-bold">Hoàn tất</div>
                 <div class="badge badge-primary my-1">5h15 - 4h</div>
                 <div class="text-gray-600 fs-7">14/6/2022 5:09</div>
@@ -63,31 +62,38 @@
               <div class="ms-6 d-flex">
                 <span class="icon-attach_file icon-18 me-1"></span>
                 <span class="text-dark">3</span>
-              </div>
+              </div> -->
               <div class="d-flex flex-column">
                 <div class="text-dark fw-bold">
                   {{ approver.status | vll: "ES003":"text" | async }}
                 </div>
-                <div class="badge my-1 badge-primary" *ngIf="approver.duration <= approver.leadtime; else inQueue">
-                  {{ getHour("2022-07-06T00:00:00Z", 0) }}
-                  -cc
-                  {{ getHour(approver.activedOn, approver.leadtime) }}
-                </div>
-                <ng-template #inQueue>
-                  <div class="badge badge-danger">
-                    {{ approver.leadtime }}
+                <div *ngIf="approver.status == '1'">
+                  <div class="badge badge-secondary w-90px">
+                    {{ approver.leadtime }} giờ
                   </div>
-                </ng-template>
-                <div class="text-gray-600 fs-7" *ngIf="approver.approvedOn ? true : false">
-                  {{ approver.approvedOn | date: "medium" }}
                 </div>
+                <div *ngIf="approver.status == '3'">
+                  <div class="badge my-1 badge-primary" *ngIf="approver.duration <= approver.leadtime; else inQueue">
+                    {{ approver.activedOn | date: 'dd/MM/yyyy HH:mm'}}
+                    -
+                    {{ getHour(approver.activedOn, approver.leadtime)| date: 'dd/MM/yyyy HH:mm' }}
+                  </div>
+                  <ng-template #inQueue>
+                    <div class="badge badge-danger">
+                      {{ approver.leadtime }}
+                    </div>
+                  </ng-template>
+                  <div class="text-gray-600 fs-7" *ngIf="approver.approvedOn ? true : false">
+                    {{ '2022-08-15T09:49:46.721+00:00' | date: "medium" }}
+                  </div>
+                </div>
+
               </div>
-              <div class="ms-6 d-flex">
+              <div class="ms-6 d-flex" [ngClass]="approver.actived ? 'text-primary': 'text-dark'">
                 <span class="icon-attach_file icon-18 me-1"></span>
-                <span class="text-dark">
-                  {{
-                  approver.attachments ? approver.attachments : 0
-                  }}</span>
+                <span>
+                  {{ approver.attachments ? approver.attachments : 0 }}
+                </span>
               </div>
             </div>
           </div>

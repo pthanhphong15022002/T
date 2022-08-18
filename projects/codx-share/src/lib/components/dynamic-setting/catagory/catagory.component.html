@@ -56,7 +56,7 @@
       </div>
       <div class="d-flex align-items-center ml-4">
         <codx-input
-          *ngIf="data.controlType != 'GroupControl'"
+          *ngIf="data.controlType && data.controlType != 'GroupControl'"
           [type]="data.controlType"
           [name]="data.controlType"
           placeholder=""
@@ -93,6 +93,20 @@
             [attr.data-id]="data.recID"
           ></span
         ></a>
+        <ng-container
+          *ngIf="data.displayMode === '4' || data.displayMode === '5'"
+        >
+          <codx-input
+            type="Share"
+            [refValue]="data.refValue"
+            field="popup"
+            [dataShared]="[]"
+            [showInput]="false"
+            [listCombobox]="data.reference"
+            [multiple]="data.displayMode === '5'"
+          >
+          </codx-input>
+        </ng-container>
       </div>
     </div>
     <hr *ngIf="!isGroup" />

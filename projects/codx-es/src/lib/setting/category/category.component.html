@@ -6,9 +6,9 @@
 
 <ng-template #process let-data>
   <div class="has-action-menu">
-    <div class="progress-approval mt-3 mb-3" *ngIf="data?.countStep > 0">
+    <div class="progress-approval mt-3 mb-3" *ngIf="data?.countStep > 0" (click)="viewDetail(data)">
       <ng-container *ngFor="let item of getCount(data?.countStep)">
-        <div class="process-step">
+        <div class="process-step" placement="top">
           <div class="step-node" [style.color]="''" [ngStyle]="{'border': '2px solid ' + ''}">{{item}}</div>
         </div>
       </ng-container>

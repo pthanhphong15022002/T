@@ -216,8 +216,7 @@ export class PopupAddComponent implements OnInit {
     let objNews = new WP_News();
     objNews = this.formGroup.value;
     objNews.newsType = this.newsType;
-    objNews.status = '2';
-    objNews.approveControl = "0";
+    objNews.status = '1';
     objNews.shareControl = this.shareControl;
     objNews.permissions = this.permissions;
     objNews.isActive = true;
@@ -245,8 +244,8 @@ export class PopupAddComponent implements OnInit {
                   this.initForm();
                   this.shareControl = this.SHARECONTROLS.EVERYONE;
                   this.notifSV.notifyCode('E0026');
-                  this.dialogRef.close(res);
-                  this.insertWPComment(data);
+                  this.dialogRef.close();
+                  this.insertWPComment(data,"3");
                 }
               }
             );
@@ -254,7 +253,98 @@ export class PopupAddComponent implements OnInit {
         }
       });
   }
-  insertWPComment(data: WP_News){
+
+  approPost(){
+    if(!this.formGroup.controls['Category'].value){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = Util.stringFormat(mssg.defaultName,"Loại bài viết");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
+    if(!this.formGroup.controls['Subject'].value){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = Util.stringFormat(mssg.defaultName,"Tiêu đề");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
+    if(!this.formGroup.controls['SubContent'].value){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = Util.stringFormat(mssg.defaultName,"Mô tả");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
+    if(!this.formGroup.controls['Contents'].value){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = Util.stringFormat(mssg.defaultName,"Nội dung");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
+    if(this.fileUpload.length == 0){
+      this.cache.message("SYS009").subscribe((mssg:any) => {
+        if(mssg){
+          let mssgCode = "";
+          if(this.newsType == this.NEWSTYPE.POST)
+             mssgCode = Util.stringFormat(mssg.defaultName,"Hình ảnh");
+          else mssgCode = Util.stringFormat(mssg.defaultName,"Hình ảnh/Video");
+          this.notifSV.notify(mssgCode);
+        }
+      });
+      return;
+    }
+    let objNews = new WP_News();
+    objNews = this.formGroup.value;
+    objNews.newsType = this.newsType;
+    objNews.status = "2";
+    objNews.approveControl = "0";
+    objNews.shareControl = this.shareControl;
+    objNews.permissions = this.permissions;
+    objNews.isActive = true;
+    if(objNews.allowShare){
+      objNews.permissions.map((p:Permission)=>{p.share = true});
+    }
+    objNews.createdBy = this.user.userID;
+    this.api
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'InsertNewsAsync',
+        objNews
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          let data = res;
+          if(this.fileUpload.length > 0){
+            this.codxATMImage.objectId = data.recID;
+            this.codxATMImage.fileUploadList = [...this.fileUpload];
+            this.codxATMImage.saveFilesObservable().subscribe(
+              (res2:any) => {
+                if(res2){
+                  this.initForm();
+                  this.shareControl = this.SHARECONTROLS.EVERYONE;
+                  this.notifSV.notifyCode('E0026');
+                  this.dialogRef.close(res);
+                  this.insertWPComment(data,"0");
+                }
+              }
+            );
+          }
+        }
+      });
+  }
+  insertWPComment(data: WP_News,approveControl:string ){
     if(data.createPost){
       var post = new WP_Comments();
       post.category = "4";
@@ -263,7 +353,8 @@ export class PopupAddComponent implements OnInit {
       post.content = data.subject;
       post.shareControl = data.shareControl;
       post.permissions = data.permissions;
-      post.approveControl = "0";
+      post.approveControl = approveControl;
+      post.approveStatus = null;
       post.createdBy = data.createdBy;
       this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","PublishPostAsync", [post, null]).subscribe();
     }

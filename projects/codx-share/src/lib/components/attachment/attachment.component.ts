@@ -113,6 +113,9 @@ export class AttachmentComponent implements OnInit {
   @Input('viewBase') viewBase: ViewsComponent;
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileGet = new EventEmitter<any>();
+  //tbchung thêm vào để xử lý bên import template
+  @Output() filePrimitive = new EventEmitter<any>();
+  /////////////////////////////////////////////
   @ViewChild('templateupload') public uploadObj: UploaderComponent;
   // @Input('openFolder') openFolder: ViewsComponent;
   public uploadWrapper: HTMLElement = document.getElementsByClassName(
@@ -2464,7 +2467,7 @@ export class AttachmentComponent implements OnInit {
     }
   }
 
-  async handleFileInput(files: FileInfo[]) {
+  public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);
@@ -2488,7 +2491,15 @@ export class AttachmentComponent implements OnInit {
         (d) => d.fileName.toString() === files[i].name.toString()
       ); //find index in your array
       if (index == -1) {
-        var data = await this.convertBlobToBase64(files[i].rawFile);
+        var data: any;
+        if (drag) {
+          data = await files[i].arrayBuffer();
+          data = this.arrayBufferToBase64(data);
+        }
+        else {
+          data = await this.convertBlobToBase64(files[i].rawFile);
+        }
+          
         var fileUpload = new FileUpload();
         fileUpload.order = count;
         fileUpload.fileName = files[i].name;
@@ -2537,6 +2548,9 @@ export class AttachmentComponent implements OnInit {
     }
     //   this.fileAdded.emit({ data: this.fileUploadList });
     //  this.fileCount.emit(data: addedList);
+    //tbchung thêm vào để xử lý bên import template
+    this.filePrimitive.emit(files);
+    //////////////////////////////////
     this.fileCount.emit({ data: addedList });
     files = null;
     if (this.file) this.file.nativeElement.value = '';

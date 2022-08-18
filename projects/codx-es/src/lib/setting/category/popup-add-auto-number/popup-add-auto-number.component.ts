@@ -49,8 +49,8 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.formModelData = data?.data[0].formModel;
-    this.autoNoCode = data?.data[0].autoNoCode;
+    this.formModelData = data?.data?.formModel;
+    this.autoNoCode = data?.data?.autoNoCode;
   }
 
   ngAfterViewInit(): void {}

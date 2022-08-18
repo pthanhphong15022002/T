@@ -26,6 +26,7 @@ import {
   UIComponent,
   DialogModel,
   NotificationsService,
+  LayoutAddComponent,
 } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
@@ -42,7 +43,7 @@ import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 })
 export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
-  @ViewChild('form') form: any;
+  @ViewChild('form') form: LayoutAddComponent;
   @Output() loadData = new EventEmitter();
 
   title = '';
@@ -112,6 +113,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    console.log('check form', this.form);
     this.formModel = this.form?.formModel;
     this.dialog.closed.subscribe((res) => {
       if (!this.saveSuccess) {
@@ -169,12 +171,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   countListViewChoose() {
-    this.countListViewChooseRoleApp = this.viewChooseRole.filter(
-      (obj) => obj.isPortal == false
-    ).length;
-    this.countListViewChooseRoleService = this.viewChooseRole.filter(
-      (obj) => obj.isPortal == true
-    ).length;
+    if(this.viewChooseRole) {
+      this.countListViewChooseRoleApp = this.viewChooseRole.filter(
+        (obj) => obj.isPortal == false
+      ).length;
+      this.countListViewChooseRoleService = this.viewChooseRole.filter(
+        (obj) => obj.isPortal == true
+      ).length;
+    }
   }
 
   beforeSave(op: RequestOption) {
@@ -190,8 +194,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true) data = [this.adUser, this.viewChooseRole];
-      else data = [this.adUser, this.viewChooseRole, checkDifference];
+      data = [this.adUser, this.viewChooseRole, checkDifference];
     }
     op.data = data;
     return true;
@@ -202,6 +205,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
+          debugger;
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
@@ -211,7 +215,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
               }
             });
           res.save['chooseRoles'] = res.save?.functions;
-          //this.changeDetector.detectChanges();
+          res.save['buName'] = res.save?.buid;
+          debugger;
+          this.changeDetector.detectChanges();
         }
       });
     this.dialog.close();
@@ -227,16 +233,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
+                this.dialog.close(res.update);
               }
             });
           res.update['chooseRoles'] = res.update?.functions;
+          res.update['buName'] = res.update?.buid;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-          this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
   }
 
   onSave() {
@@ -244,38 +250,26 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
       this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
     } else {
-      if (
-        this.countListViewChooseRoleApp == 0 &&
-        this.countListViewChooseRoleService == 0
-      ) {
-        this.dialog.close();
-        this.notification.notifyCode('SYS006');
-        (this.dialog.dataService as CRUDService)
-          .add(this.dataAfterSave)
-          .subscribe();
-        this.changeDetector.detectChanges();
-      } else {
-        if (this.isAddMode) {
-          if (this.checkBtnAdd == false) return this.onAdd();
-          else {
-            if (
-              this.countListViewChooseRoleApp > 0 ||
-              this.countListViewChooseRoleService > 0
-            ) {
-              this.adService
-                .addUserRole(this.dataAfterSave, this.viewChooseRole)
-                .subscribe();
-            }
-            this.dialog.close();
-            this.notification.notifyCode('SYS006');
-            (this.dialog.dataService as CRUDService)
-              .add(this.dataAfterSave)
-              .subscribe((res) => {
-                this.changeDetector.detectChanges();
-              });
+      if (this.isAddMode) {
+        if (this.checkBtnAdd == false) return this.onAdd();
+        else {
+          if (
+            this.countListViewChooseRoleApp > 0 ||
+            this.countListViewChooseRoleService > 0
+          ) {
+            this.adService
+              .addUserRole(this.dataAfterSave, this.viewChooseRole)
+              .subscribe();
           }
-        } else this.onUpdate();
-      }
+          this.dialog.close();
+          this.notification.notifyCode('SYS006');
+          (this.dialog.dataService as CRUDService)
+            .add(this.dataAfterSave)
+            .subscribe((res) => {
+              this.changeDetector.detectChanges();
+            });
+        }
+      } else this.onUpdate();
     }
   }
 
@@ -337,7 +331,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.api
       .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRoles', [userID])
       .subscribe((res) => {
-        if (res && res.msgBodyData) {
+        if (res && res.msgBodyData[0]) {
           this.viewChooseRole = res.msgBodyData[0];
           this.viewChooseRole.forEach((dt) => {
             dt['module'] = dt.functionID;

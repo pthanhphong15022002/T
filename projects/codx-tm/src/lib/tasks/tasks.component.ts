@@ -5,6 +5,8 @@ import {
   Injector,
   Input,
   ViewEncapsulation,
+  OnInit,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -41,10 +43,12 @@ import { ViewDetailComponent } from './view-detail/view-detail.component';
   styleUrls: ['./tasks.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TasksComponent extends UIComponent {
+export class TasksComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() dataObj?: any;
-  @Input() projectID?: any;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -81,7 +85,7 @@ export class TasksComponent extends UIComponent {
   funcID: string;
   gridView: any;
   isAssignTask = false;
-  param: TM_Parameter;
+  param: TM_Parameter = new TM_Parameter();;
   paramModule: any;
   listTaskResousce = [];
   searchField = '';
@@ -104,7 +108,7 @@ export class TasksComponent extends UIComponent {
   dataTree = [];
   iterationID = '';
   meetingID = '';
- 
+  projectID?: any;
 
   constructor(
     inject: Injector,
@@ -137,24 +141,7 @@ export class TasksComponent extends UIComponent {
     } else {
       this.vllStatus = this.vllStatusTasks;
     }
-    // this.activedRouter.params.subscribe((routeParams) => {
-    //   var state = history.state;
-    //   if (state) {
-    //     this.iterationID = state.iterationID || '';
-    //   }
-    // });
-    // this.activedRouter.firstChild?.params.subscribe(
-    //   (data) => (this.iterationID = data.id)
-    // );
-
-    //  this.activedRouter.queryParams.subscribe((params) => {
-    //   if (params) {
-    //     this.meetingID = params?.meetingID;
-    //     this.iterationID = params?.iterationID
-    //   }
-    // });
-    // var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
-    // this.dataObj = JSON.stringify(dataObj);
+    this.projectID = this.dataObj?.projectID;
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -231,15 +218,6 @@ export class TasksComponent extends UIComponent {
           template3: this.cellTemplate,
         },
       },
-      // {
-      //   type: ViewType.treedetail,
-      //   active: false,
-      //   sameData: true,
-      //   // request2: this.resourceTree,
-      //   model: {
-      //     template: this.treeView,
-      //   },
-      // },
     ];
 
     this.view.dataService.methodSave = 'AddTaskAsync';
@@ -284,7 +262,7 @@ export class TasksComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data && !'00,07,09,10'.includes(data.status)) {
+    if (data && !'00,07,09,10,20'.includes(data.status)) {
       this.notiService.notifyCode('TM013');
       return;
     } else if (
@@ -464,10 +442,12 @@ export class TasksComponent extends UIComponent {
               false
             );
           if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
+            // e?.event.forEach((obj) => {
+            //   this.view.dataService.update(obj).subscribe();
+            // });
+           // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+            this.view.dataService.update( e?.event).subscribe();
+            this.itemSelected = e?.event;
             this.detail.taskID = this.itemSelected.taskID;
             this.detail.getTaskDetail();
           }
@@ -722,7 +702,9 @@ export class TasksComponent extends UIComponent {
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+          this.itemSelected = e?.event[0];
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -750,7 +732,7 @@ export class TasksComponent extends UIComponent {
   //codx-view select
 
   selectedChange(task: any) {
-    this.itemSelected = task?.data;
+    this.itemSelected = task?.data ?task?.data : task;
     this.loadTreeView();
     this.detectorRef.detectChanges();
   }
@@ -914,15 +896,12 @@ export class TasksComponent extends UIComponent {
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+         this.itemSelected = e?.event[0];
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
-    // }
-    // else
-    //   this.notiService.notify(
-    //     'Bạn không thể thực hiện chức năng này với công việc đang chọn !'
-    //   );
   }
 
   //#endregion
@@ -950,6 +929,8 @@ export class TasksComponent extends UIComponent {
           this.view.dataService.update(obj).subscribe();
         });
         this.itemSelected = e?.event[0];
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -978,6 +959,8 @@ export class TasksComponent extends UIComponent {
           this.view.dataService.update(obj).subscribe();
         });
         this.itemSelected = e?.event[0];
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1013,8 +996,8 @@ export class TasksComponent extends UIComponent {
     this.dialogProgess = this.callfc.openForm(
       PopupUpdateProgressComponent,
       '',
-      500,
-      350,
+      560,
+      360,
       '',
       obj
     );
@@ -1024,6 +1007,8 @@ export class TasksComponent extends UIComponent {
           this.view.dataService.update(obj).subscribe();
         });
         this.itemSelected = e?.event[0];
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1091,6 +1076,8 @@ export class TasksComponent extends UIComponent {
                 this.view.dataService.update(obj).subscribe();
               });
               this.itemSelected = e?.event[0];
+              this.detail.taskID = this.itemSelected.taskID;
+              this.detail.getTaskDetail();
             }
             this.detectorRef.detectChanges();
           });
@@ -1209,7 +1196,7 @@ export class TasksComponent extends UIComponent {
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
-        this.importFile();
+       this.importFile();
         break;
       case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
@@ -1280,7 +1267,7 @@ export class TasksComponent extends UIComponent {
   }
   //#endregion
   change() {
-    this.view.dataService.setPredicates(['Status=@0'], ['1']);
+    this.view.dataService.setPredicates(['Status=@0'], ['10']);
   }
 
   //#region schedule

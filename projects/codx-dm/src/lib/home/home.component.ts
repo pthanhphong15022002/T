@@ -55,8 +55,9 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
-  @ViewChild('attachment1') attachment1: AttachmentComponent;
-  @ViewChild('attachment2') attachment2: AttachmentComponent;
+//  @ViewChild('attachment1') attachment1: AttachmentComponent;
+//  @ViewChild('attachment2') attachment2: AttachmentComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('view') codxview!: any;
   currView?: TemplateRef<any>;
   path: string;
@@ -150,19 +151,9 @@ export class HomeComponent extends UIComponent {
     });
 
     this.dmSV.isNodeSelect.subscribe(res => {
-      if (res != null) {
-        //var tree = this.codxview.currentView.currentComponent.treeView;
-       // tree.getCurrentNode(res.recID);
-        //that.dmSV.currentNode = '';
-        var tree = this.codxview.currentView.currentComponent.treeView;
-        var data = {} as any;
-        data.data = res;
-        tree.getCurrentNode(res.recID);
-        //data.data.items = [];
-        this.onSelectionChanged(data);
-      //  var tree = this.codxview.currentView.currentComponent.treeView;
-      //  tree.getCurrentNode(res.recID);
-      //  this.dmSV.folderId.next(res.recID);
+      if (res != null) {      
+        var tree = this.codxview.currentView.currentComponent.treeView;        
+        tree.getCurrentNode(res.recID);        
       }
     });
 
@@ -170,7 +161,7 @@ export class HomeComponent extends UIComponent {
       if (res != null) {
         var tree = this.codxview.currentView.currentComponent.treeView;
         tree.removeNodeTree(res)
-        //that._beginDrapDrop();
+        this._beginDrapDrop();
       }
     });
 
@@ -188,11 +179,13 @@ export class HomeComponent extends UIComponent {
         tree.setNodeTree(res);
         this.changeDetectorRef.detectChanges();
       };
-      //that._beginDrapDrop();
+      this._beginDrapDrop();
     });
 
     this.dmSV.isFolderId.subscribe(res => {
       if (res != null && this.codxview != null) {
+        // var tree = this.codxview.currentView.currentComponent.treeView;        
+        // tree.getCurrentNode(res);   
         //var tree = this.codxview.currentView.currentComponent.treeView.textField = "folderName";
        // var tree = this.codxview.currentView.currentComponent.treeView;
        // if (tree) {
@@ -215,8 +208,7 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
         this.data = [];
-        this.changeDetectorRef.detectChanges();
-      //  this.data = [...this.data, ...this.dmSV.listFolder];
+        this.changeDetectorRef.detectChanges();      
         this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
         this.changeDetectorRef.detectChanges();
       }
@@ -230,16 +222,107 @@ export class HomeComponent extends UIComponent {
     });
   }
 
-  // identifyData(index, data) {
-  //   return data;
-  // }
+  classFile(item, className) {
+    if (item.folderName != null)
+      return className;
+    else  
+      return `${className} noDrop`;  
+  }
+
+  _beginDrapDrop() {
+    var that = this;
+    setTimeout(() => {   
+      var root =  document.getElementsByClassName("menu-nav");
+      if (root != null && root.length > 0) {
+        for (let index = 0; index < root[0].getElementsByClassName("menu-item").length; index++) {
+          that.initDrapDropFileFolder(root[0].getElementsByClassName("menu-item")[index]);          
+        }
+      }
+    }, 1000);
+  }
+
+  initDrapDropFileFolder(element) {
+    var that = this;
+    if (element && !element.getAttribute("_drapdrop")) {     
+      element.setAttribute("_drapdrop", "1");
+      var ondragstart = function (event) {
+        var j = JSON.stringify(
+          {
+            "folderName": element.innerText,
+            "recID": element.querySelector("a").classList[0] 
+          });      
+        event.originalEvent.dataTransfer.setData('data', j);
+        event.originalEvent.dataTransfer["simple"] = "filefolder";
+        event.originalEvent.dataTransfer.effectAllowed = "move";
+      };
+      var ondragover = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      //  $(event.currentTarget).css("border-style", "dashed");
+      //  $(event.currentTarget).css("border-color", "#7e8299");
+      //  $(event.currentTarget).css("border-width", "1px");
+      };
+      var ondragleave = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+     //   $(event.currentTarget).css("border-style", "none");
+      };
+      var ondrop = (event) => {
+
+        event.preventDefault();
+        event.stopPropagation();
+      //  $(event.currentTarget).css("border-style", "none");
+        var s = event.originalEvent.dataTransfer.getData("data");
+        if (s) {
+          var obj = JSON.parse(s);
+          if (obj.recID != element.querySelector("a").classList[0]) {
+            if (obj.fileName) {
+              that.dmSV.copyFileTo(obj.recID, obj.fileName, element.querySelector("a").classList[0]);
+            }
+            else {
+              that.dmSV.copyFolderTo(obj.recID, obj.folderName, element.querySelector("a").classList[0]);
+            }
+          }
+        }
+      };
+      
+      element.removeEventListener("ondragstart", ondragstart);
+      element.removeEventListener("ondragover", ondragover);
+      element.removeEventListener("ondragleave", ondragleave);
+      element.removeEventListener("ondrop", ondrop);
+      element.addEventListener("ondragstart", ondragstart);
+      element.addEventListener("ondragover", ondragover);
+      element.addEventListener("ondragleave", ondragleave);
+      element.addEventListener("ondrop", ondrop);
+    }
+  }
+
+  fileFolderDropped($event) {
+    if ($event.source.recID != $event.target.recID) {
+      if ($event.source.fileName) {
+        this.dmSV.copyFileTo($event.source.recID, $event.source.fileName, $event.target.recID);
+      }
+      else {
+        this.dmSV.copyFolderTo($event.source.recID, $event.source.folderName, $event.target.recID);
+      }
+    }
+  }
+
+  fileUploadDropped($event) { 
+    if (this.dmSV.idMenuActive == "DMT02" || this.dmSV.idMenuActive == "DMT03") {   
+      this.attachment.fileUploadList = [];   
+      this.attachment.handleFileInput($event, true).then(r => {
+        this.attachment.onMultiFileSave();
+      });      
+    }
+  }
 
   addFile($event) {  
     var data = new DialogAttachmentType();
-    data.objectType = 'WP_Notes';
-    data.objectId = '628c326c590addf224627f42';
-    data.functionID = 'ODT3';
     data.type = 'popup';
+    // data.objectType = 'WP_Notes';
+    // data.objectId = '628c326c590addf224627f42';
+    // data.functionID = 'ODT3';
 
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
@@ -261,25 +344,25 @@ export class HomeComponent extends UIComponent {
   }
 
   saveFile1() {
-    this.attachment1.saveFilesObservable().subscribe((item) => {
-      console.log(item);
-    });
+    // this.attachment1.saveFilesObservable().subscribe((item) => {
+    //   console.log(item);
+    // });
     //  this.attachment.saveFiles();
   }
 
   saveFile2() {
-    this.attachment2.saveFilesObservable().subscribe((item) => {
-      console.log(item);
-    });
+    // this.attachment2.saveFilesObservable().subscribe((item) => {
+    //   console.log(item);
+    // });
     //  this.attachment.saveFiles();
   }
 
   openFile1() {
-    this.attachment1.uploadFile();
+    // this.attachment1.uploadFile();
   }
 
   openFile2() {
-    this.attachment2.uploadFile();
+    // this.attachment2.uploadFile();
   }
 
   getPath() {
@@ -308,15 +391,8 @@ export class HomeComponent extends UIComponent {
       var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
       this.dmSV.folderName = item.folderName;
       this.dmSV.parentFolderId = item.parentId;
-      this.dmSV.level = item.level;
-      // this.dmSV.disableInput.next(false);
-      // if (this.dmSV.currentDMIndex.getValue() == "3")
-      //   this.dmSV.changeTemplate("0");
-      // // this.dmSV.level = data.node.data;
-      // //this.dmSV.parentFolderId = data.node.parent;
-      // this.dmSV.parentFolder.next(item);
-      this.dmSV.getRight(item);
-      // console.log(list);
+      this.dmSV.level = item.level;    
+      this.dmSV.getRight(item);      
 
       breadcumb.push(this.dmSV.menuActive.getValue());
       breadcumbLink.push(this.dmSV.idMenuActive);
@@ -325,48 +401,33 @@ export class HomeComponent extends UIComponent {
         breadcumbLink.push(list[i].id);
       }
       this.dmSV.breadcumbLink = breadcumbLink;
-      this.dmSV.breadcumb.next(breadcumb);
-      // this.dmSV.currentNode = id;
-      // this.dmSV.currentNode = id;
+      this.dmSV.breadcumb.next(breadcumb);      
       this.data = [];
-      this.dmSV.folderId.next(id);
-      //this.view.dataService.addDatas(id, )
-      var items = item.items;
-      //  this.dmSV.listFolder = [];
-      if (items == undefined || items.length <= 0) {
-        //     this.folderService.options.funcID =
+      this.dmSV.folderId.next(id);      
+      var items = item.items;      
+      if (items == undefined || items.length <= 0) {        
         this.folderService.options.funcID = this.view.funcID;
-        this.folderService.getFolders(id).subscribe(async (res) => {
-          //  this.dmSV.isTree = true;
-          if (res != null) {
-            //var datas = new Map<string, any>();
-            //  datas.set(id, res[0]);
-            //cdxView
-            var data = res[0];
-            // this.view.dataService.addNew(data);
+        this.folderService.getFolders(id).subscribe(async (res) => {          
+          if (res != null) {            
+            var data = res[0];            
             this.listFolders = data;
             this.data = [...this.data, ...data];
             this.dmSV.listFolder = data;
             var tree = this.codxview.currentView.currentComponent.treeView;
             item.items = [];
+           // if (tree != undefined) 
             tree.addChildNodes(item, data);
-            this.changeDetectorRef.detectChanges();
-            // this.dmSV.isTree = false;
+            this.changeDetectorRef.detectChanges();   
+            this._beginDrapDrop();         
           }
         });
-      } else {
-        //this.dmSV.isTree = true;
-        //  alert(1);
+      } else {        
         this.data = [...this.data, ...item.items];
-        this.dmSV.listFolder = item.items;
-        // this.dmSV.listFolder.next(item.items);
-        //  this.listFolders = item.items;
-        this.changeDetectorRef.detectChanges();
-        //this.dmSV.isTree = false;
+        this.dmSV.listFolder = item.items;        
+        this.changeDetectorRef.detectChanges();        
       }
 
-      this.fileService.GetFiles(id, this.dmSV.idMenuActive).subscribe(async res => {
-        ///this.dmSV.listFiles.next(res);
+      this.fileService.GetFiles(id, this.dmSV.idMenuActive).subscribe(async res => {        
         this.data = [...this.data, ...res];
         this.dmSV.listFiles = res;  
         this.changeDetectorRef.detectChanges();
@@ -382,9 +443,6 @@ export class HomeComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    // this.button.nativeElement.disabled = true;
-    // this.view.button.disabled = true;
-   
     this.views = [
       {
         id: '1',
@@ -507,9 +565,8 @@ export class HomeComponent extends UIComponent {
       }
 
       this.changeDetectorRef.detectChanges();     
-     // this.dmSV.folderType = this.view.funcID;
-      this.dmSV.idMenuActive = this.view.funcID;
-     // this.dmSV.loadedFile = false;
+      this._beginDrapDrop();        
+      this.dmSV.idMenuActive = this.view.funcID;     
       this.dmSV.folderId.next('');
       this.dmSV.loadedFolder = true;      
       this.dmSV.menuIdActive.next(this.view.funcID);

@@ -48,6 +48,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   lstStep: any;
   lstDeleteStep = [];
   isDeleteAll = false;
+  justView = false;
 
   model: any;
 
@@ -65,6 +66,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
       this.dialogApproval = dialog;
+      this.justView = dialogData?.data.justView ?? false;
     } else {
       this.type = '1';
     }
@@ -134,6 +136,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
     this.esService.setApprovalStep(this.lstStep);
     this.esService.setLstDeleteStep(this.lstDeleteStep);
     this.model.patchValue({ countStep: this.lstStep.length });
+    this.updateApprovalStep(true);
     this.dialogApproval && this.dialogApproval.close();
   }
 
@@ -239,5 +242,22 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+
+  updateApprovalStep(isAddNew) {
+    if (!isAddNew) {
+      this.esService.editApprovalStep().subscribe((res) => {
+        console.log('result edit appp', res);
+      });
+
+      this.esService.deleteApprovalStep().subscribe((res) => {
+        console.log('result delete aaappppp', res);
+      });
+    } else {
+      //Them moi
+      this.esService.addNewApprovalStep().subscribe((res) => {
+        console.log('result add new appp', res);
+      });
+    }
   }
 }

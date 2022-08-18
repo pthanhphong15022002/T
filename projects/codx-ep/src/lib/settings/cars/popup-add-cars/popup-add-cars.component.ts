@@ -189,7 +189,7 @@ export class PopupAddCarsComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
         }
       );      
-    this.attachment.saveFilesObservable().subscribe(res=>{})
+    //this.attachment.saveFilesObservable().subscribe(res=>{})
   }
 
   fileCount(event){

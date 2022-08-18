@@ -8,11 +8,13 @@
   [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
-  (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"
   [idField]="idField"
   [className]="className"
   [method]="method"
+  (buttonClick)="click($event)"
+  (selectedChange)="onSelect($event)"
+  (requestEnded)="closeDialog($event)"
 >
 </codx-views>
 
@@ -22,12 +24,13 @@
   </div>
 </ng-template>
 
+
 <ng-template #resourceHeader let-data>
   <div class="container">
     <div class="row">
       <div class="col-4">
-        <div style="width: 30px">
-          <codx-img objectId="ADMIN" [width]="30"></codx-img>
+        <div>
+          <codx-img objectId="data.resourceData.resourceID" [width]="30"></codx-img>
         </div>
       </div>
       <div class="col-8">
@@ -56,12 +59,12 @@
 <ng-template #footer let-data>
   <div class="container my-3 p-3">
     <div class="row">
-      <div style="width: 90%">
-        <span style="font-weight: 600; text-transform: uppercase">{{
+      <div >
+        <span>{{
           data.title
         }}</span>
       </div>
-      <div style="width: 10%">
+      <div>
         <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
       </div>
     </div>
@@ -70,7 +73,7 @@
         <codx-img [objectId]="data.requester" [width]="35"></codx-img>
       </div>
       <div class="col-9">
-        <span class="text-muted mt-3" style="font-weight: 500; float: left">{{
+        <span class="text-muted mt-3">{{
           data.requester
         }}</span>
       </div>
