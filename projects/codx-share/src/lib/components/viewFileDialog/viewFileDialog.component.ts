@@ -236,13 +236,13 @@ export class ViewFileDialogComponent implements OnInit {
     // }   
 
     this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
-    if ( this.srcVideo == "" && this.linkViewImage == "") {
+   // if ( this.srcVideo == "" && this.linkViewImage == "") {
       setTimeout(() => {
         (        
             document.getElementById("frmFile") as HTMLFormElement).submit();
             //$("#viewfiledalog").find("form")[0]["submit"]();
       }, 100);
-    }
+   // }
   }
 
   _animalOpen(name, num, callback?) {
@@ -313,8 +313,8 @@ export class ViewFileDialogComponent implements OnInit {
       // this.data.thumbnail;//
       this.linkViewImage = this.data.thumbnail; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
-
-    this.viewFile(this.id);
+    else 
+      this.viewFile(this.id);
     // let diaglog = this.callfc.openForm(this.contentViewFileDialog, o.fileName, 1000, 800, null, "");
     // diaglog.close(res => {
     //   this.viewFile(this.iD);
