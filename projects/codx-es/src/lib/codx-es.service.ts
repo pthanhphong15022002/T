@@ -216,9 +216,9 @@ export class CodxEsService {
               }
 
               let modelValidator = [];
-              if (element.isRequire) {
-                modelValidator.push(Validators.required);
-              }
+              // if (element.isRequire) {
+              //   modelValidator.push(Validators.required);
+              // }
               if (element.fieldName == 'email') {
                 modelValidator.push(Validators.email);
               }
