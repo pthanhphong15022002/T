@@ -55,7 +55,7 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
-//  @ViewChild('attachment1') attachment1: AttachmentComponent;
+  @ViewChild('attachment1') attachment1: AttachmentComponent;
 //  @ViewChild('attachment2') attachment2: AttachmentComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('view') codxview!: any;
@@ -208,7 +208,7 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
         this.data = [];
-        this.changeDetectorRef.detectChanges();      
+    //    this.changeDetectorRef.detectChanges();      
         this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
         this.changeDetectorRef.detectChanges();
       }
@@ -344,10 +344,10 @@ export class HomeComponent extends UIComponent {
   }
 
   saveFile1() {
-    // this.attachment1.saveFilesObservable().subscribe((item) => {
-    //   console.log(item);
-    // });
-    //  this.attachment.saveFiles();
+    this.attachment1.saveFilesObservable().subscribe((item) => {
+      console.log(item);
+    });
+     this.attachment.saveFiles();
   }
 
   saveFile2() {
@@ -358,7 +358,7 @@ export class HomeComponent extends UIComponent {
   }
 
   openFile1() {
-    // this.attachment1.uploadFile();
+    this.attachment1.uploadFile();
   }
 
   openFile2() {
@@ -560,6 +560,22 @@ export class HomeComponent extends UIComponent {
         this.dmSV.disableUpload.next(true);        
       }
       else {
+        this.dmSV.parentApproval = false;
+        this.dmSV.parentPhysical = false;
+        this.dmSV.parentCopyrights = false;
+        this.dmSV.parentApprovers = "";
+        this.dmSV.parentRevisionNote = "";
+        this.dmSV.parentLocation = "";
+        this.dmSV.parentCopyrights = false;
+        this.dmSV.parentCreate = true;
+        this.dmSV.parentFull = true;
+        this.dmSV.parentAssign = true;      
+        this.dmSV.parentDelete = true;
+        this.dmSV.parentDownload = true;
+        this.dmSV.parentRead = true;
+        this.dmSV.parentShare = true;
+        this.dmSV.parentUpload = true;
+        this.dmSV.parentUpdate = true;
         this.dmSV.disableInput.next(false);
         this.dmSV.disableUpload.next(false);        
       }

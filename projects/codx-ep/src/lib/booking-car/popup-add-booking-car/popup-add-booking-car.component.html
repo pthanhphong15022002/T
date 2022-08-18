@@ -8,7 +8,7 @@
         <codx-label class="mb-3 fs-5 fw-bold" name="lblGeneralInfo" default="Thông tin chung">
         </codx-label>
     </div>
-      <div class="form-group ">
+      <div class="form-group mb-2">
         <div class="d-flex justify-content-between align-items-center">
           <codx-label
             default="Xe"
@@ -149,6 +149,7 @@
         </codx-label>        
         <codx-input
           type="combobox"
+          [multiple]="false"
           refValue="AgencyNames"
           ControlName="agencyName"         
           [formModel]="form.formModel"
@@ -211,90 +212,98 @@
             fiedName="Note"
           >
           </codx-label>          
-          <div class="d-flex flex-row text-end align-items-end">        
-            <codx-input 
-              type="combobox" 
-              name="combobox"
-              [refValue]="'EP_Drivers'"           
-              [multiple]="false"
-              [showInput]="false" 
-              refType="P" 
-              field="popup" 
-              (valueChange)="valueCbxDriverChange($event)">
-            </codx-input>
-            
-            <codx-input 
-              type="combobox" 
-              name="combobox" 
-              [multiple]="true"
-              [refValue]="'Users'" 
-              refType="P" 
-              field="userID" 
-              [showInput]="false"
-              (valueChange)="valueCbxUserChange($event)">
-            </codx-input>
-            
-            
+          <div class="d-flex flex-row text-end align-items-end">
+            <span class="mx-2">
+              <codx-input 
+                type="combobox" 
+                name="combobox"
+                [refValue]="'EP_Drivers'"           
+                [multiple]="false"
+                [showInput]="false" 
+                refType="P" 
+                field="popup" 
+                (valueChange)="valueCbxDriverChange($event)">
+              </codx-input>
+            </span>                    
+            <span class="mx-2">
+              <codx-input
+                type="combobox" 
+                name="combobox"
+                [refValue]="'Users'" 
+                [multiple]="true"
+                [showInput]="false" 
+                refType="P" 
+                field="popup" 
+                (valueChange)="valueCbxUserChange($event)">
+              </codx-input>          
+            </span>      
           </div>
-        </div>
 
-        <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
-          <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngIf="driver!=null">
-            <codx-img
-                [objectId]="'driver.id'"
-                [objectName]="'driver.objectName'"
-                objectType="driver.objectType"
-            ></codx-img>   
-          </div>
+        </div>        
 
           <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
+            <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngIf="driver!=null">
+              <div class="symbol symbol-35px symbol-circle">
+              <codx-img
+                  [objectId]="'driver.id'"
+                  [objectName]="'driver.objectName'"
+                  objectType="driver.objectType"
+              ></codx-img>   
+              <span class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"></span>
+              </div>
+            </div>
             <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngFor="let item of smallListPeople">
-            <codx-img
-              [objectId]="'item.id'"
-              [objectName]="'item.objectName'"
-              objectType="item.objectType"
-            ></codx-img>   
+              <div class="symbol symbol-35px symbol-circle">
+                <codx-img
+                  [objectId]="'item.id'"
+                  [objectName]="'item.objectName'"
+                  objectType="Users"
+                  ></codx-img>
+                <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
+              </div>   
           </div> 
 
           <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngIf="lstPeople.length >= 3">          
             <span href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
-              <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">{{lstPeople.length-2}}</span>
+              <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{lstPeople.length-2}}</span>
             </span>
           </div>
           
-        </div>
         </div>
     </div>
   </ng-template>
   
   <ng-template #tabPeopleInfo>
-    <div class="d-flex justify-content-between align-items-center" id="PeopleInfo">
+    <div class="d-flex justify-content-between align-items-center mb-2" id="PeopleInfo">
       <div class="mb-3 fs-5 fw-bold">
         <codx-label name="lblPeopleInfo" default="Người đi cùng">
         </codx-label>
       </div>
       <div class="d-flex flex-row text-end align-items-end ">        
-        <codx-input 
-          type="combobox" 
-          name="combobox"
-          [refValue]="'EP_Drivers'"           
-          [multiple]="false"
-          [showInput]="false" 
-          refType="P" 
-          field="popup" 
-          (valueChange)="valueCbxDriverChange($event)">
-        </codx-input>
-
-        <codx-input
-          type="combobox" 
-          name="combobox"
-          [refValue]="'Users'" 
-          [multiple]="true"
-          [showInput]="false" 
-          refType="P" 
-          field="popup" 
-          (valueChange)="valueCbxUserChange($event)">
-        </codx-input>        
+        <span class="mx-2">
+          <codx-input 
+            type="combobox" 
+            name="combobox"
+            [refValue]="'EP_Drivers'"           
+            [multiple]="false"
+            [showInput]="false" 
+            refType="P" 
+            field="popup" 
+            (valueChange)="valueCbxDriverChange($event)">
+          </codx-input>
+        </span>                    
+        <span class="mx-2">
+          <codx-input
+            type="combobox" 
+            name="combobox"
+            [refValue]="'Users'" 
+            [multiple]="true"
+            [showInput]="false" 
+            refType="P" 
+            field="popup" 
+            (valueChange)="valueCbxUserChange($event)">
+          </codx-input>          
+        </span>             
       </div>
     </div>
     <div class="d-flex align-items-center mb-4" *ngIf="driver!=null">    
@@ -305,12 +314,6 @@
           objectType="driver.objectType"
         ></codx-img>
 
-        <!-- <codx-imgs 
-          className='symbol symbol-60 symbol-circle ml-1'
-          objectId="Admin;ERM_HR;tester_BS;ERM_BS;ERM_TM;" 
-          objectType="AD_Users" 
-          numberImages="4"
-        ></codx-imgs> -->
         <span
           class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
           >D</span
@@ -341,17 +344,9 @@
           [objectName]="'item.objectName'"
           objectType="item.objectType"
         ></codx-img>
-
-        <!-- <codx-imgs 
-          className='symbol symbol-60 symbol-circle ml-1'
-          objectId="Admin;ERM_HR;tester_BS;ERM_BS;ERM_TM;" 
-          objectType="AD_Users" 
-          numberImages="4"
-        ></codx-imgs> -->
         <span
           class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
-          >P</span
-        >
+          >P</span >
       </div>
 
       <div class="d-flex flex-column flex-grow-1">
@@ -394,9 +389,7 @@
         </codx-input>
       </div>
   </ng-template>
-  
-  
-  
+
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>

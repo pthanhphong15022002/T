@@ -33,21 +33,22 @@
 </ng-template>
 
 <ng-template #template7 let-data>
-  <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [numberImages]="3">
-  </codx-imgs>
-  <div class="d-flex justify-content-end row" style="padding-top: 30px;">
-    <a class="btn btn-xs btn-flat" (click)="edit(data)"><i class="fa fa-edit text-primary"></i></a>
-    <a class="btn btn-xs btn-flat " (click)="delete(data)"><i class="fa fa-remove "></i></a>
+  <div class="has-action-menu">
+    <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [numberImages]="3">
+    </codx-imgs>
+    <div class="action-menu d-flex align-items-center cursor-pointer ">
+      <i class="cursor-pointer icon-16 ms-1 me-2 icon-edit text-primary" (click)="edit(data)"></i>
+      <i class="cursor-pointer icon-16 ms-1 me-2 icon-close text-dangger" (click)="delete(data)"></i>
+    </div>
   </div>
 </ng-template>
-
 
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <div class="text-start">
+  <div class="text-start p-2">
     <div class="text-dark fw-bold" [innerHtml]="getDate(data)"></div>
     <div class="text-dark fw-bolder">{{ data.meetingName }}</div>
   </div>
