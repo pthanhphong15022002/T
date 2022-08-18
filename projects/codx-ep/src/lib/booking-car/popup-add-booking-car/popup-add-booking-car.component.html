@@ -8,7 +8,7 @@
         <codx-label class="mb-3 fs-5 fw-bold" name="lblGeneralInfo" default="Thông tin chung">
         </codx-label>
     </div>
-      <div class="row form-group">
+      <div class="form-group mb-2">
         <div class="d-flex justify-content-between align-items-center">
           <codx-label
             default="Xe"
@@ -26,28 +26,32 @@
           type="combobox"
           refValue="EP_Cars"
           [multiple]="false"
-          ControlName="resourceID"          
+          field="resourceID"          
           [formModel]="form.formModel"
-          [Group]="fGroupAddBookingCar"
+          [crrValue]="fGroupAddBookingCar.value.resourceID"         
+          (valueChange)="valueCbxCarChange($event)"
         >
         </codx-input>
       </div>
       <div class="row">
-        <div class="col-12 form-group d-flex justify-content-between">
-          <div class="d-flex" *ngFor="let item of tmplstDevice">
-            <span
-              class="d-flex align-items-center me-2"
-              [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
-            >
+        
+        <div class="d-flex flex-row justify-content-between">
+          <div class="d-flex justify-content-start">
+            <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
               <span
-              class="me-1"
-              [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']"
-            >
-              </span
-              >{{ item.text }}
-            </span>
+                class="d-flex align-items-center me-2"
+                [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
+              >
+                <span
+                class="me-1 ps-2"
+                [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']"
+              >
+                </span
+                >{{ item.text }}
+              </span>
+            </div>
           </div>
-          <span class="text-end align-items-end">
+          <span class="text-end">
             <button
               type="button"
               class="btn btn-clean btn-sm btn-icon btn-icon-md"
@@ -58,9 +62,12 @@
                 class="icon-select_all text-primary text-hover-primary-dark icon-24"
               ></i>
             </button>
-          </span>
-        </div>        
+          </span>   
+         
+        </div>     
       </div>
+
+
       <div class="row">
         <div class="col-6 form-group">
           <codx-label
@@ -142,6 +149,7 @@
         </codx-label>        
         <codx-input
           type="combobox"
+          [multiple]="false"
           refValue="AgencyNames"
           ControlName="agencyName"         
           [formModel]="form.formModel"
@@ -203,133 +211,122 @@
             default="Lái xe & người đi cùng"
             fiedName="Note"
           >
-          </codx-label>
+          </codx-label>          
+          <div class="d-flex flex-row text-end align-items-end">
+            <span class="mx-2">
+              <codx-input 
+                type="combobox" 
+                name="combobox"
+                [refValue]="'EP_Drivers'"           
+                [multiple]="false"
+                [showInput]="false" 
+                refType="P" 
+                field="popup" 
+                (valueChange)="valueCbxDriverChange($event)">
+              </codx-input>
+            </span>                    
+            <span class="mx-2">
+              <codx-input
+                type="combobox" 
+                name="combobox"
+                [refValue]="'Users'" 
+                [multiple]="true"
+                [showInput]="false" 
+                refType="P" 
+                field="popup" 
+                (valueChange)="valueCbxUserChange($event)">
+              </codx-input>          
+            </span>      
+          </div>
+
+        </div>        
+
+          <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
+            <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngIf="driver!=null">
+              <div class="symbol symbol-35px symbol-circle">
+              <codx-img
+                  [objectId]="'driver.id'"
+                  [objectName]="'driver.objectName'"
+                  objectType="driver.objectType"
+              ></codx-img>   
+              <span class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"></span>
+              </div>
+            </div>
+            <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngFor="let item of smallListPeople">
+              <div class="symbol symbol-35px symbol-circle">
+                <codx-img
+                  [objectId]="'item.id'"
+                  [objectName]="'item.objectName'"
+                  objectType="Users"
+                  ></codx-img>
+                <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
+              </div>   
+          </div> 
+
+          <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngIf="lstPeople.length >= 3">          
+            <span href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
+              <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{lstPeople.length-2}}</span>
+            </span>
+          </div>
           
-          <div class="d-flex flex-row text-end align-items-end">        
-            <codx-input 
-              type="Combobox" 
-              name="Driver"
-              [refValue]="'EP_Drivers'" 
-              [multiple]="false"
-              [showInput]="false" 
-              refType="P" 
-              field="popup" 
-              [ngClass]="'w-100'" 
-              (valueChange)="valueChange($event)">
-            </codx-input>
-            
-    
-            <!-- <codx-input 
-              type="Combobox" 
-              name="User"
-              [refValue]="'Users'" 
-              [multiple]="false"
-              [showInput]="false" 
-              refType="P" 
-              field="popup" 
-              [ngClass]="'w-100'" 
-              (valueChange)="valueChange($event)">
-            </codx-input>         -->
-            <codx-input type="Combobox" 
-              name="combobox" 
-              [refValue]="'Users'" 
-              refType="P" 
-              field="userID" 
-              [showInput]="false"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-          </div>
         </div>
-
-        <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
-          <div
-            class="symbol symbol-35px symbol-circle"
-            data-bs-toggle="tooltip"
-            title=""
-            data-bs-original-title="Alan Warden"
-          >
-            <span class="symbol-label bg-warning text-inverse-warning fw-bolder">A</span>
-            <span class="symbol-badge badge badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"></span>
-          </div>
-
-          <div
-            class="symbol symbol-35px symbol-circle"
-            data-bs-toggle="tooltip"
-            title=""
-            data-bs-original-title="Michael Eberon"
-          >
-            <img alt="Pic" src="../../../assets/themes/sys/default/light/img/avatar_default.svg" />
-            <span class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white" ></span>
-          </div>
-
-          <div
-            class="symbol symbol-35px symbol-circle"
-            data-bs-toggle="tooltip"
-            title=""
-            data-bs-original-title="Melody Macy"
-          >
-            <img alt="Pic" src="../../../assets/themes/sys/default/light/img/avatar_default.svg" />
-            <span class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white" ></span>
-          </div>
-
-          <a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
-            <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+3</span>
-          </a>
-        </div>
-      </div>
+    </div>
   </ng-template>
   
   <ng-template #tabPeopleInfo>
-    <div class="d-flex justify-content-between align-items-center" id="PeopleInfo">
+    <div class="d-flex justify-content-between align-items-center mb-2" id="PeopleInfo">
       <div class="mb-3 fs-5 fw-bold">
         <codx-label name="lblPeopleInfo" default="Người đi cùng">
         </codx-label>
       </div>
       <div class="d-flex flex-row text-end align-items-end ">        
-        <codx-input 
-          type="Combobox" 
-          name="Driver"
-          [refValue]="'EP_Drivers'" 
-          [multiple]="false"
-          [showInput]="false" 
-          refType="P" 
-          field="popup" 
-          [ngClass]="'w-100'" 
-          (valueChange)="valueChange($event)">
-        </codx-input>
-
-        <codx-input
-          type="Combobox" 
-          name="User"
-          [refValue]="'Users'" 
-          [multiple]="false"
-          [showInput]="false" 
-          refType="P" 
-          field="popup" 
-          [ngClass]="'w-100'" 
-          (valueChange)="valueChange($event)">
-        </codx-input>        
+        <span class="mx-2">
+          <codx-input 
+            type="combobox" 
+            name="combobox"
+            [refValue]="'EP_Drivers'"           
+            [multiple]="false"
+            [showInput]="false" 
+            refType="P" 
+            field="popup" 
+            (valueChange)="valueCbxDriverChange($event)">
+          </codx-input>
+        </span>                    
+        <span class="mx-2">
+          <codx-input
+            type="combobox" 
+            name="combobox"
+            [refValue]="'Users'" 
+            [multiple]="true"
+            [showInput]="false" 
+            refType="P" 
+            field="popup" 
+            (valueChange)="valueCbxUserChange($event)">
+          </codx-input>          
+        </span>             
       </div>
     </div>
-    
-    <div class="d-flex align-items-center mb-4">
+    <div class="d-flex align-items-center mb-4" *ngIf="driver!=null">    
       <div class="symbol symbol-35px symbol-circle me-4">
         <codx-img
-          [objectId]="'ADMIN'"
-          [objectName]="'ADMIN'"
-          objectType="AD_Users"
+          [objectId]="'driver.id'"
+          [objectName]="'driver.objectName'"
+          objectType="driver.objectType"
         ></codx-img>
+
         <span
           class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
-          >R</span
+          >D</span
         >
       </div>
+
       <div class="d-flex flex-column flex-grow-1">
         <div class="text-dark fw-bold fs-6 fw-bolder">
-          Trần Quốc Hoàn
+          {{ driver.text }}
         </div>
-        <span class="text-muted fw-bold">Chủ trì cuộc họp</span>
+        <span class="text-muted fw-bold">Lái xe</span>
       </div>
+
       <div class="d-flex flex-column justify-content-end">
         <span class="badge badge-light-success fs-7 fw-bold mb-1"
           >Chưa xác định</span
@@ -337,7 +334,36 @@
         <span class="text-muted fw-bold text-center">
           1 ngày trước
         </span>
+      </div>  
+    </div>
+
+    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">    
+      <div class="symbol symbol-35px symbol-circle me-4">
+        <codx-img
+          [objectId]="'item.id'"
+          [objectName]="'item.objectName'"
+          objectType="item.objectType"
+        ></codx-img>
+        <span
+          class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
+          >P</span >
       </div>
+
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6 fw-bolder">
+          {{ item.text }}
+        </div>
+        <span class="text-muted fw-bold">Người đi cùng</span>
+      </div>
+
+      <div class="d-flex flex-column justify-content-end">
+        <span class="badge badge-light-success fs-7 fw-bold mb-1"
+          >Chưa xác định</span
+        >
+        <span class="text-muted fw-bold text-center">
+          1 ngày trước
+        </span>
+      </div>  
     </div>
   </ng-template>
   
@@ -363,9 +389,7 @@
         </codx-input>
       </div>
   </ng-template>
-  
-  
-  
+
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>

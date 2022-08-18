@@ -10,6 +10,7 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
+  TemplateRef,
 } from '@angular/core';
 import {
   AnnotationAddEventArgs,
@@ -26,13 +27,21 @@ import {
   PrintService,
   AnnotationService,
 } from '@syncfusion/ej2-angular-pdfviewer';
-import { AuthStore, ScrollComponent, UIComponent } from 'codx-core';
+import {
+  AuthStore,
+  FormModel,
+  ScrollComponent,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
 import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { qr } from './model/mode';
+import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'lib-pdf-view',
   templateUrl: './pdf-view.component.html',
@@ -93,16 +102,19 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   @ViewChild('qrCode') qrCode!: ElementRef;
   thumbnailEle!: Element;
 
-  signerInfo: any;
-  fileInfo: any;
   zoomValue: number = 50;
   holding: number = 0;
+  after_X_Second: number = 3000;
 
-  tmpLstSigners: Array<Object> = [];
   lstSigners: Array<any> = [];
+  signerInfo: any;
+
   lstFiles: Array<Object> = [];
+  fileInfo: any;
+
   lstRenderAnnotation: Array<object> = [];
   lstZoomValue: Array<number> = [25, 30, 50, 75, 90, 100];
+  actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
 
   file: Object = { text: 'fileName', value: 'fileID' };
   person: Object = { text: 'authorName', value: 'authorID' };
@@ -110,7 +122,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   needSuggest: boolean = false;
   autoSignState: boolean = false;
 
-  actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
   hideThumbnail: boolean = false;
   hideActions: boolean = false;
 
@@ -118,13 +129,32 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   curSelectedAnno: any;
 
-  after_X_Second: number = 3000;
-
   formatForAreas: Array<any> = [];
 
   cannotAct = false;
   curFileID;
   curSignerID;
+
+  //vung ky
+  views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
+  codxServiceString = 'ES';
+  assemblyName = 'ES';
+  entity = 'ES_SignFiles';
+  className = 'SignFilesBusiness';
+  method = 'GetAllAreasAsync';
+  idField = 'recID';
+  predicate = 'recID=@0';
+  dataValue;
+  formModel: FormModel;
+  dialogAnnot: FormGroup;
+
+  public fields: Object = { text: 'Name', groupBy: 'location.pageNumber' };
+  public cssClass: string = 'e-list-template';
+  public lstAreas: object = [];
+  curSelectedAnnotID;
+
+  @ViewChild('paneLeft') panelLeft: TemplateRef<any>;
+  @ViewChild('itemTmpl') itemTmpl: TemplateRef<any>;
 
   public headerRightName = [
     { text: 'Công cụ' },
@@ -132,21 +162,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     { text: 'History' },
     { text: 'Comment' },
   ];
-
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
-
   ajaxSetting: any;
 
-  grouptemplatedata: any = [
-    {
-      Name: 'WI-FI',
-      content: 'Disabled',
-      id: '1',
-      class: 'wifi',
-      pageNumber: 0,
-    },
-  ];
-  public fields: Object = { groupBy: 'pageNumber' };
   onInit() {
     this.saveAnnoQueue = new Map();
     this.ajaxSetting = {
@@ -211,6 +229,19 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemTmpl,
+          panelLeftRef: this.panelLeft,
+          contextMenu: '',
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
   }
 
   onCreated(evt: any) {
@@ -348,7 +379,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   getAreaOwnerName(authorID) {
     return this.lstSigners.find((signer) => {
       return signer.authorID == authorID;
-    }).authorName;
+    })?.fullName;
   }
 
   async genFileQR(fileName, fileRefNo, companyID) {
@@ -382,8 +413,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   changeSignFile(e: any) {
-    console.log('change sf');
-
     this.lstSigners = e.itemData.signers;
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
@@ -393,9 +422,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     let active = this.fileInfo ? true : false;
     this.isActiveToSign.emit(active);
     //add sign areas into pdf
+    this.lstAreas = this.fileInfo.areas;
 
-    console.log(this.pdfviewerControl.annotationCollection);
-
+    this.dataValue = this.recID;
     this.detectorRef.detectChanges();
   }
 
@@ -403,6 +432,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.signerInfo = e.itemData;
     this.curSignerID = this.signerInfo.authorID;
     this.detectorRef.detectChanges();
+    console.log(this.signerInfo);
   }
 
   changeSuggestState(e: any) {
@@ -524,7 +554,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
       switch (type) {
         case 1:
-          this.url = this.signerInfo?.signature;
+          this.url = 'data:image/jpeg;base64,' + this.signerInfo?.signature;
           break;
 
         case 2:
@@ -927,7 +957,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   addAnnotIntoPDF(type: number) {
     let signed;
 
-    if (this.url != '')
+    if (this.url.replace('data:image/jpeg;base64,', '') != '')
       signed = this.pdfviewerControl.annotationCollection.find((annotation) => {
         return (
           annotation.customData === this.signerInfo?.authorID + ':' + type &&
@@ -936,7 +966,10 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       });
 
     if (!signed) {
-      if ([1, 2, 8].includes(type) && this.url != '') {
+      if (
+        [1, 2, 8].includes(type) &&
+        this.url.replace('data:image/jpeg;base64,', '') != ''
+      ) {
         let stamp = {
           customStampName: type.toString(),
           customStampImageSource: this.url,
@@ -1244,14 +1277,25 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   cancelPrint(e: any) {}
 
+  goToSelectedAnnotation(areaID) {
+    this.pdfviewerControl.annotationModule.selectAnnotation(areaID);
+    this.curSelectedAnnotID = areaID;
+  }
+
   show(e: any) {
     console.log('collection', this.pdfviewerControl.annotationCollection);
-    console.log('run ca');
-    this.esService
-      .createLocalCertificatePFX('ekkobuu@gmail.com', '12345678')
-      .subscribe((res) => {
-        console.log(res);
-      });
+    this.pdfviewerControl.annotationModule.selectAnnotation(
+      this.pdfviewerControl.annotationCollection[0]
+    );
+    // this.esService
+    //   .createLocalCertificatePFX('ekkobuu@gmail.com', '12345678')
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //   });
+  }
+
+  closeAddForm(event) {
+    //this.dialog && this.dialog.close();
   }
 }
 

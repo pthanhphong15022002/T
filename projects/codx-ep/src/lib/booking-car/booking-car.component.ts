@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewChild,
   Injector,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   NotificationsService,
@@ -10,6 +11,8 @@ import {
   DialogRef,
   SidebarModel,
   UIComponent,
+  CallFuncService,
+  CacheService,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -22,6 +25,7 @@ import {
 import { DataRequest } from '@shared/models/data.request';
 import { CodxEpService, ModelPage } from '../codx-ep.service';
 import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'booking-car',
   templateUrl: 'booking-car.component.html',
@@ -58,15 +62,19 @@ export class BookingCarComponent extends UIComponent {
   resourceField: any;
   funcID: string;
 
+  columnsGrid: any;
   constructor(
     private injector: Injector,
-    private notiService: NotificationsService,
-    private epService: CodxEpService
+    private callFuncService: CallFuncService,
+    private activedRouter: ActivatedRoute,
+    private codxEpService: CodxEpService,
+    private cacheService: CacheService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
     this.modelPage = {
-      entity: 'EP_BookingCars',
+      entity: 'EP_Bookings',
       formName: 'BookingCars',
       gridViewName: 'grvBookingCars',
       functionID: 'EPT2',
@@ -144,8 +152,6 @@ export class BookingCarComponent extends UIComponent {
           template7: this.footerButton
         },
       },
-
-      
       {
         sameData: true,
         id: '3',
@@ -156,7 +162,7 @@ export class BookingCarComponent extends UIComponent {
         },
       },
     ];
-    this.detectorRef.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 
 
@@ -174,14 +180,14 @@ export class BookingCarComponent extends UIComponent {
     }
   }
 
-  addNew(evt?) {
+  addNew(obj?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfc.openSide(
+      this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
         [this.dataSelected, true],
         option
@@ -189,7 +195,9 @@ export class BookingCarComponent extends UIComponent {
     });
   }
 
-  edit(evt?) {
+  edit(obj?) {
+    if (obj) {
+    this.viewBase.dataService.dataSelected = obj;
     this.viewBase.dataService
       .edit(this.viewBase.dataService.dataSelected)
       .subscribe((res) => {
@@ -197,16 +205,16 @@ export class BookingCarComponent extends UIComponent {
         let option = new SidebarModel();
         option.Width = '800px';
         option.DataService = this.viewBase?.currentView?.dataService;
-        option.FormModel = this.viewBase?.formModel;
-        this.dialog = this.callfc.openSide(
+        option.FormModel = this.viewBase?.currentView?.formModel;
+        this.dialog = this.callFuncService.openSide(
           PopupAddBookingCarComponent,
-          this.viewBase.dataService.dataSelected,
+          [this.viewBase.dataService.dataSelected, false],
           option
         );
       });
   }
-
-  delete(evt?) {
+}
+  delete(obj?) {
     this.viewBase.dataService
       .delete([this.viewBase.dataService.dataSelected])
       .subscribe((res) => {
@@ -219,5 +227,23 @@ export class BookingCarComponent extends UIComponent {
       this.dialog && this.dialog.close();
     }
   }
-
+  
+  clickMF(event, data) {
+    console.log(event);
+    switch (event?.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+    }
+  }
+  closeDialog(evt?) {
+    this.dialog && this.dialog.close();
+  }
+  
+  onSelect(obj: any) {
+    console.log(obj);
+  }
 }

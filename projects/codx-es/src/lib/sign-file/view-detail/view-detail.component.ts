@@ -40,7 +40,7 @@ export class ViewDetailComponent implements OnInit {
   openNav = false;
   canRequest;
   itemDetailStt;
-  taskViews;
+  taskViews = [];
   process;
   itemDetailDataStt;
   dialog: DialogRef;
@@ -50,11 +50,21 @@ export class ViewDetailComponent implements OnInit {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   ngOnInit(): void {
     this.itemDetailStt = 1;
-    this.taskViews = 1;
     this.itemDetailDataStt = 1;
+    this.initForm();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.initForm();
+  }
+
+  initForm() {
+    this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
+      if (res) {
+        this.taskViews = res;
+      }
+      console.log('task', res);
+    });
     if (this.itemDetail && this.itemDetail !== null) {
       this.esService
         .getDetailSignFile(this.itemDetail?.recID)
@@ -107,10 +117,7 @@ export class ViewDetailComponent implements OnInit {
   }
 
   getHour(date, leadtime) {
-    //
     var res = new Date(date);
-    console.log('time', res);
-
     res.setHours(res.getHours() + leadtime);
     return res;
   }
@@ -163,9 +170,7 @@ export class ViewDetailComponent implements OnInit {
         [task, vllControlShare, vllRose, title],
         option
       );
-      this.dialog.closed.subscribe((e) => {
-        console.log(e);
-      });
+      this.dialog.closed.subscribe((e) => {});
     }
   }
 

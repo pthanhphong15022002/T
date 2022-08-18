@@ -37,6 +37,7 @@ import { PopupAddStationeryComponent } from './settings/stationery/popup-add-sta
 import { ReportComponent } from './booking-room/report-view/report.component';
 import { DriversComponent } from './settings/drivers/drivers.component';
 import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/popup-add-drivers.component';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 const routes: Route[] = [
   {
     path: '',
@@ -77,7 +78,7 @@ const routes: Route[] = [
           import('./settings/_layout/layout.modules').then(
             (m) => m.LayoutModule
           ),
-      },
+      },   
       {
         path: '',
         redirectTo: 'home',
@@ -113,7 +114,8 @@ const Components: Type<any>[] = [
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,
-  ReportComponent
+  ReportComponent,
+  DynamicFormComponent
 ];
 
 @NgModule({

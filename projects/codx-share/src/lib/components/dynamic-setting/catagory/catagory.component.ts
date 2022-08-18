@@ -1,6 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit, Type } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService, CallFuncService } from 'codx-core';
+import { Switch } from '@syncfusion/ej2-angular-buttons';
+import {
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  DialogModel,
+} from 'codx-core';
+import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 
 @Component({
   selector: 'lib-catagory',
@@ -9,15 +16,16 @@ import { ApiHttpService, CacheService, CallFuncService } from 'codx-core';
 })
 export class CatagoryComponent implements OnInit {
   private components = {
-    cpnAutoNumber: null,
-    DocketComponent: null,
+    cpnAutoNumbers: PopupAddAutoNumberComponent,
   };
   category = '';
   title = '';
   listName = 'SYS001';
   setting = [];
+  settingValue = [];
   groupSetting = [];
-  function = {};
+  function: any = {};
+  valuelist: any = {};
   constructor(
     private route: ActivatedRoute,
     private cacheService: CacheService,
@@ -28,73 +36,111 @@ export class CatagoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((routeParams) => {
+      debugger;
       var state = history.state;
       if (state) {
         this.setting = state.setting || [];
         this.function = state.function || [];
-        this.groupSetting = this.setting.filter(
-          (x) => x.controlType.toLowerCase() === 'groupcontrol'
-        );
+        this.valuelist = state.valuelist || {};
+        this.groupSetting = this.setting.filter((x) => {
+          return (
+            x.controlType && x.controlType.toLowerCase() === 'groupcontrol'
+          );
+        });
       }
       var catagory = routeParams.catagory;
-      this.cacheService.valueList(this.listName).subscribe((res) => {
-        if (res && res.datas) {
-          const ds = (res.datas as any[]).find(
-            (item) => item.default == catagory
-          );
-          this.category = ds.value;
-          this.title = ds.text;
-        }
-      });
+      if (this.valuelist && this.valuelist.datas) {
+        const ds = (this.valuelist.datas as any[]).find(
+          (item) => item.default == catagory
+        );
+        this.category = ds.value;
+        this.title = ds.text;
+        this.loadSettingValue();
+      }
+      // this.cacheService.valueList(this.listName).subscribe((res) => {
+      //   if (res && res.datas) {
+      //     const ds = (res.datas as any[]).find(
+      //       (item) => item.default == catagory
+      //     );
+      //     this.category = ds.value;
+      //     this.title = ds.text;
+      //     this.loadSettingValue();
+      //   }
+      // });
       this.changeDetectorRef.detectChanges();
     });
   }
 
   openPopup(evt: any, reference: any) {
     var component = this.components[reference] as Type<any>;
-    this.callfc.openForm(component);
+    var width = 0,
+      height = 0,
+      title = '',
+      funcID = '',
+      data = {},
+      cssClass = '',
+      dialogModel = new DialogModel();
+    switch (reference.toLowerCase()) {
+      case 'cpnautonumbers':
+        data['autoNoCode'] = '';
+        width = (screen.width * 40) / 100;
+        height = 550;
+        break;
+    }
+    this.callfc.openForm(
+      component,
+      title,
+      height,
+      width,
+      '',
+      data,
+      cssClass,
+      dialogModel
+    );
   }
 
   collapseItem(evt: any, recID: string) {
-    // var eleItem = document.querySelectorAll(
-    //   '.list-item[data-group="' + recID + '"]'
-    // );
-    // if (eleItem && eleItem.length > 0) {
-    //   eleItem.forEach((element) => {
-    //     var ele = element as HTMLElement;
-    //     var classlist = ele.classList;
-    //     if (classlist.contains('d-none')) classlist.remove('d-none');
-    //     else classlist.add('d-none');
-    //   });
-    // }
-    // var btn = document.querySelector(
-    //   '.button-collapse[data-id="' + recID + '"]'
-    // ) as HTMLElement;
-    // if (btn) {
-    //   if (btn.classList.contains('icon-keyboard_arrow_right')) {
-    //     btn.classList.remove('icon-keyboard_arrow_right');
-    //     btn.classList.add('icon-keyboard_arrow_down');
-    //   } else {
-    //     btn.classList.remove('icon-keyboard_arrow_down');
-    //     btn.classList.add('icon-keyboard_arrow_right');
-    //   }
-    // }
+    var eleItem = document.querySelectorAll(
+      '.list-item[data-group="' + recID + '"]'
+    );
+    if (eleItem && eleItem.length > 0) {
+      eleItem.forEach((element) => {
+        var ele = element as HTMLElement;
+        var classlist = ele.classList;
+        if (classlist.contains('d-none')) classlist.remove('d-none');
+        else classlist.add('d-none');
+      });
+    }
+    var btn = document.querySelector(
+      '.button-collapse[data-id="' + recID + '"]'
+    ) as HTMLElement;
+    if (btn) {
+      if (btn.classList.contains('icon-keyboard_arrow_right')) {
+        btn.classList.remove('icon-keyboard_arrow_right');
+        btn.classList.add('icon-keyboard_arrow_down');
+      } else {
+        btn.classList.remove('icon-keyboard_arrow_down');
+        btn.classList.add('icon-keyboard_arrow_right');
+      }
+    }
   }
 
-  loadSettingValue(formName: string) {
-    // this.api
-    //   .execSv<any>('SYS', 'SYS', 'SettingsBusiness', 'GetSettingByFormAsync', [
-    //     formName,
-    //     this.category,
-    //   ])
-    //   .subscribe((res) => {
-    //
-    //     if (res) {
-    //       // this.dataSetting = res;
-    //       // this.itemMenu = Object.keys(res);
-    //     }
-    //     this.changeDetectorRef.detectChanges();
-    //     console.log(res);
-    //   });
+  loadSettingValue() {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'SYS',
+        'SettingValuesBusiness',
+        'GetListValueBySettingAsync',
+        [this.function?.formName, this.category]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.settingValue = res;
+          // this.itemMenu = Object.keys(res);
+        }
+        this.changeDetectorRef.detectChanges();
+        console.log(res);
+      });
   }
 }
