@@ -171,18 +171,13 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
         console.log(this.dialogApprovalStep.value);
         console.log('dataDefault', dataDefault);
-
-        // this.dialogApprovalStep.addControl('delete', new FormControl(true));
-        // this.dialogApprovalStep.addControl('share', new FormControl(true));
-        // this.dialogApprovalStep.addControl('write', new FormControl(true));
-        // this.dialogApprovalStep.addControl('assign', new FormControl(true));
-
         if (this.isAdd) {
           this.esService
             .getDataDefault('EST04', this.formModel.entityName, 'recID')
             .subscribe((res) => {
               if (res) {
                 this.dialogApprovalStep.patchValue(res);
+                this.dialogApprovalStep.patchValue({ transID: this.transId });
                 this.esService.getNewDefaultEmail().subscribe((res) => {
                   this.dialogApprovalStep.patchValue({ emailTemplates: res });
                 });
@@ -190,18 +185,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
                 this.isAfterRender = true;
               }
             });
-          // this.dialogApprovalStep.patchValue({
-          //   leadTime: 0,
-          //   approveMode: '1',
-          //   approveControl: '0',
-          //   rejectControl: '1',
-          //   redoControl: '1',
-          //   redoStep: 0,
-          //   recallControl: '1',
-          //   cancelControl: '1',
-          //   transID: this.transId,
-          //   stepNo: this.stepNo,
-          // });
         } else {
           this.dialogApprovalStep.patchValue(this.dataEdit);
           this.lstApprover = JSON.parse(
@@ -253,7 +236,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.notifySvr.notifyCode(
-              'E0005',
+              'E0001',
               0,
               '"' + res['Approvers'].headerText + '"'
             );

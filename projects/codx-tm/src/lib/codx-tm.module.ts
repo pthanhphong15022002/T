@@ -71,6 +71,7 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
 import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
+import { CodxReportModule } from 'projects/codx-report/src/public-api';
 
 export const routes: Routes = [
   {
@@ -139,23 +140,31 @@ export const routes: Routes = [
           },
         ],
       },
+      // {
+      //   path: 'reports',
+      //   component: ReportsComponent,
+      //   children: [
+      //     {
+      //       path: ':funcID',
+      //       component: HomeReportComponent,
+      //     },
+      //     {
+      //       path: 'taskdaily/:funcID',
+      //       component: TaskDailyComponent,
+      //     },
+      //     {
+      //       path: 'taskbyprojects/:funcID',
+      //       component: TaskByProjectsComponent,
+      //     },
+      //   ],
+      // },
       {
-        path: 'reports',
-        component: ReportsComponent,
-        children: [
-          {
-            path: ':funcID',
-            component: HomeReportComponent,
-          },
-          {
-            path: 'taskdaily/:funcID',
-            component: TaskDailyComponent,
-          },
-          {
-            path: 'taskbyprojects/:funcID',
-            component: TaskByProjectsComponent,
-          },
-        ],
+        path: 'taskdaily/:funcID',
+        component: TaskDailyComponent,
+      },
+      {
+        path: 'taskbyprojects/:funcID',
+        component: TaskByProjectsComponent,
       },
       {
         path: '**',
@@ -247,6 +256,7 @@ const T_Component: Type<any>[] = [
     FormsModule,
     NgbModule,
     SplitterModule,
+    CodxReportModule
   ],
   exports: [RouterModule],
   declarations: T_Component,

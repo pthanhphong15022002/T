@@ -32,7 +32,7 @@ export class CodxReportViewerComponent
   @Input() parameters: any = {};
   @Input() paramRequest: any = [{}];
   @Input() reportUUID: any = '';
-  @Input() locale!: string;
+  @Input() locale: string = 'vi-VN';
   @Input() print: boolean = false;
   @Output() editReport = new EventEmitter<any>();
   @ViewChild('viewer') viewer!: BoldReportViewerComponent;
