@@ -161,12 +161,12 @@ export class PopupAddMeetingComponent implements OnInit {
   beforeSave(op) {
     var data = [];
     if (this.action == 'add') {
-      op.methodName = 'AddMeetingsAsync';
+      op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       this.meeting.meetingType = '1';
       data = [this.meeting, this.functionID];
     } else if (this.action == 'edit') {
-      op.methodName = 'UpdateMeetingsAsync';
+      op.method = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
       data = [this.meeting];
     }
@@ -179,25 +179,21 @@ export class PopupAddMeetingComponent implements OnInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        if (res.save) {
-          this.dialog.dataService.setDataSelected(res.save[0]);
-          this.dialog.dataService.afterSave.next(res);
-          this.changDetec.detectChanges();
-        }
+        this.dialog.dataService.addDatas.clear();
+        this.dialog.close(res.save[0]);
       });
-    this.dialog.close();
   }
 
   onUpdate() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
+        this.dialog.dataService.addDatas.clear();
         if (res.update) {
-          this.dialog.dataService.setDataSelected(res.update[0]);
           this.meeting == res.update[0];
+          this.dialog.close(this.meeting);
         }
       });
-    this.dialog.close(this.meeting);
   }
 
   onSave() {

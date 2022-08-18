@@ -116,11 +116,22 @@
     }
 
   }
+
+  #kt_aside_menu_header .justify-content-start.ps-6 {
+    justify-content: center !important;
+    padding-left: 0 !important;
+  }
+
+  .aside-light .menu .menu-title {
+    display: none;
+  }
 }
 
 #kt_aside_menu_header {
   margin-bottom: 15px;
+  white-space: nowrap;
 }
+
 
 .e-pane codx-treeview .aside-menu {
   padding: 10px;
@@ -181,22 +192,37 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
   padding-left: 25px;
 }
 
-.dms-card-row .card-img-center[src*="/assets/codx/dms/"] {
+.dms-card .card-img-center[src*="/assets/codx/dms/"] {
   padding: 15px;
 }
+
 
 .aside-light .menu .menu-title {
   font-weight: 400;
 }
 
+.dms-card-icon span[class*="icon-"] {
+  font-size: 16px !important;
+  height: 16px !important;
+  color: var(--gray-500);
+  margin-right: 4px;
+}
+
 .dms-list:hover,
-.sm-card:hover {
+.sm-card:hover,
+.dms-card .card.codx_cardimg:hover {
   background-color: rgba(221, 238, 255, 0.25);
 }
 
 .sm-card .text-gray-700.line-clamp {
   font-size: var(--fs-7);
   color: var(--gray-500) !important;
+  margin-top: 2px;
+}
+
+.dms-card-sm .fw-bold.line-clamp {
+  max-width: 250px;
+  text-overflow: ellipsis;
 }
 
 .icon-per.no-permission {
@@ -222,6 +248,10 @@ codx-toolbar .flex-stack.container-fluid {
   padding: 0 22px;
 }
 
-home {
-  padding: 0 8px;
+codx-temp-full {
+  background-color: transparent !important;
+}
+
+ejs-switch .form-control {
+  border: 0;
 }

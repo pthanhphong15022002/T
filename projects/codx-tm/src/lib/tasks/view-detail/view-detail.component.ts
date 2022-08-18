@@ -44,13 +44,15 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   itemSelected: any;
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
+  firstLoad = true ;
 
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {}
+  ) {
+  }
   //#endregion
   //#region Init
   ngOnInit(): void {}
@@ -58,16 +60,16 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['taskID'] && changes['taskID'].currentValue) {
-      if (changes['taskID'].currentValue === this.id) return;
+    if (changes['taskID'] && changes['taskID'].currentValue && !this.firstLoad) {
+     if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
     }
+    this.firstLoad = false ;
   }
   //#region
   //#region Method
   getTaskDetail() {
-    this.itemSelected = null ;
     this.api
       .exec<any>('TM', 'TaskBusiness', 'GetTaskDetailsByTaskIDAsync', this.id)
       .subscribe((res) => {
@@ -136,6 +138,13 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           x.functionID == 'TMT02019' &&
           data.verifyControl == '0' &&
           data.category == '1'
+        ) {
+          x.disabled = true;
+        }
+        //danh cho taskExtend
+        if (
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03'|| x.functionID == 'SYS04') &&
+          this.taskExtends
         ) {
           x.disabled = true;
         }

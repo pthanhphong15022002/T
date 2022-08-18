@@ -11,6 +11,7 @@ import {
   CacheService,
   CallFuncService,
   CodxGridviewComponent,
+  DialogModel,
   DialogRef,
   RequestOption,
   SidebarModel,
@@ -22,6 +23,7 @@ import { PopupAddCategoryComponent } from './popup-add-category/popup-add-catego
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
+import { ApprovalStepComponent } from '../approval-step/approval-step.component';
 
 export class defaultRecource {}
 @Component({
@@ -100,12 +102,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               template: '',
               width: 180,
             },
-            {
-              field: 'parentID',
-              headerText: gv['ParentID'].headerText,
-              template: this.parentID,
-              width: 120,
-            },
+            // {
+            //   field: 'parentID',
+            //   headerText: gv['ParentID'].headerText,
+            //   template: this.parentID,
+            //   width: 120,
+            // },
             {
               field: 'icon',
               headerText: gv['Icon'].headerText,
@@ -230,5 +232,28 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       lstNumber.push(i + 1);
     }
     return lstNumber;
+  }
+
+  viewDetail(oCategory) {
+    let transID = oCategory.recID;
+    let data = {
+      type: '0',
+      transID: transID,
+      justView: true,
+    };
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+
+    this.callfunc.openForm(
+      ApprovalStepComponent,
+      '',
+      screen.width,
+      screen.height,
+      '',
+      data,
+      '',
+      dialogModel
+    );
   }
 }

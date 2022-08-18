@@ -85,7 +85,7 @@ export class TasksComponent
   funcID: string;
   gridView: any;
   isAssignTask = false;
-  param: TM_Parameter;
+  param: TM_Parameter = new TM_Parameter();;
   paramModule: any;
   listTaskResousce = [];
   searchField = '';
@@ -141,62 +141,12 @@ export class TasksComponent
     } else {
       this.vllStatus = this.vllStatusTasks;
     }
-
-    // this.activedRouter.params.subscribe((routeParams) => {
-    //   var state = history.state;
-    //   if (state) {
-    //     this.iterationID = state.iterationID || '';
-    //   }
-    // });
-    // this.activedRouter.firstChild?.params.subscribe(
-    //   (data) => (this.iterationID = data.id)
-    // );
-
-    //  this.activedRouter.queryParams.subscribe((params) => {
-    //   if (params) {
-    //     this.meetingID = params?.meetingID;
-    //     this.iterationID = params?.iterationID
-    //   }
-    // });
-    // var dataObj = { view: '', calendarID: '', viewBoardID: this.iterationID };
-    // this.dataObj = JSON.stringify(dataObj);
+    this.projectID = this.dataObj?.projectID;
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
     });
-    // this.activedRouter.queryParams.subscribe((params) => {
-    //   if (params) {
-    //     this.meetingID = params?.meetingID;
-    //     this.iterationID = params?.iterationID;
-    //   }
-    // });
-
-    // if (this.iterationID != '') {
-    //   this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
-    //     if (res) {
-    //       this.projectID = res?.projectID;
-    //       var resources = res.resources;
-    //       this.dataObj = {
-    //         projectID: this.projectID ? this.projectID : '',
-    //         resources: resources ? resources : '',
-    //         iterationID: this.iterationID ? this.iterationID : '',
-    //       };
-    //     }
-    //   });
-    // }
-    // if (this.meetingID) {
-    //   this.tmSv.getMeetingID(this.meetingID).subscribe((res) => {
-    //     if (res) {
-    //       this.projectID = res?.projectID;
-    //       var resources = res.resources;
-    //       this.dataObj = {
-    //         projectID: this.projectID ? this.projectID : '',
-    //         resources: resources ? resources : '',
-    //       };
-    //     }
-    //   });
-    // }
   }
   //#endregion
 
@@ -228,7 +178,6 @@ export class TasksComponent
   }
 
   ngAfterViewInit(): void {
-    this.projectID = this.dataObj?.projectID;
     this.views = [
       {
         type: ViewType.list,
@@ -269,15 +218,6 @@ export class TasksComponent
           template3: this.cellTemplate,
         },
       },
-      // {
-      //   type: ViewType.treedetail,
-      //   active: false,
-      //   sameData: true,
-      //   // request2: this.resourceTree,
-      //   model: {
-      //     template: this.treeView,
-      //   },
-      // },
     ];
 
     this.view.dataService.methodSave = 'AddTaskAsync';
@@ -322,7 +262,7 @@ export class TasksComponent
   }
 
   edit(data?) {
-    if (data && !'00,07,09,10'.includes(data.status)) {
+    if (data && !'00,07,09,10,20'.includes(data.status)) {
       this.notiService.notifyCode('TM013');
       return;
     } else if (
@@ -502,10 +442,12 @@ export class TasksComponent
               false
             );
           if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.itemSelected = e?.event[0];
+            // e?.event.forEach((obj) => {
+            //   this.view.dataService.update(obj).subscribe();
+            // });
+           // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+            this.view.dataService.update( e?.event).subscribe();
+            this.itemSelected = e?.event;
             this.detail.taskID = this.itemSelected.taskID;
             this.detail.getTaskDetail();
           }
@@ -760,7 +702,11 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+        // this.itemSelected = e?.event[0];
+          // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+          this.itemSelected = e?.event;
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -952,7 +898,10 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+          // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+          this.itemSelected = e?.event;
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -987,7 +936,10 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+         // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+         this.itemSelected = e?.event;
+         this.detail.taskID = this.itemSelected.taskID;
+         this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1015,7 +967,10 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+         // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+         this.itemSelected = e?.event;
+         this.detail.taskID = this.itemSelected.taskID;
+         this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1061,7 +1016,10 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        this.itemSelected = e?.event[0];
+         // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+         this.itemSelected = e?.event;
+         this.detail.taskID = this.itemSelected.taskID;
+         this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1128,7 +1086,10 @@ export class TasksComponent
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });
-              this.itemSelected = e?.event[0];
+               // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
+            this.itemSelected = e?.event;
+            this.detail.taskID = this.itemSelected.taskID;
+            this.detail.getTaskDetail();
             }
             this.detectorRef.detectChanges();
           });
@@ -1247,7 +1208,7 @@ export class TasksComponent
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
-        this.importFile();
+       this.importFile();
         break;
       case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
