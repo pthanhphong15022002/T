@@ -13,6 +13,7 @@ import {
   UrlUtil,
 } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
+import { TM_TaskExtends, TM_Tasks } from '../../models/TM_Tasks.model';
 
 @Component({
   selector: 'lib-popup-confirm',
@@ -22,8 +23,8 @@ import { CodxTMService } from '../../codx-tm.service';
 export class PopupConfirmComponent implements OnInit, AfterViewInit {
   data: any;
   dialog: any;
-  task: any;
-  taskExtends: any;
+  task: TM_Tasks = new TM_Tasks();
+  taskExtends: TM_TaskExtends =new TM_TaskExtends();
   url: string;
   status: string;
   title: string = 'Xác nhận ';
@@ -61,7 +62,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.valueDefault = UrlUtil.getUrl('defaultValue', this.url);
     if(this.action=='extend') {
       this.taskExtends = this.data?.data;
-      this.taskExtends[this.fieldDefault] = this.valueDefault 
+      this.task[this.fieldDefault] = this.valueDefault ;
+      this.taskExtends.status = this.task[this.fieldDefault]
     }
     else {this.task = this.data?.data;
       this.task[this.fieldDefault] = this.valueDefault 
@@ -134,7 +136,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.api
       .execSv<any>('TM', 'TM', 'TaskExtendsBusiness', 'ExtendStatusTaskAsync', [
         this.taskExtends.taskID,
-        this.taskExtends.extendStatus,
+        this.taskExtends.status,
         this.comment,
       ])
       .subscribe((res) => {

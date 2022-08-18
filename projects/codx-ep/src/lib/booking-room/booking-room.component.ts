@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import {
   ButtonModel,
+  CacheService,
   CodxGridviewComponent,
   CodxScheduleComponent,
   DataRequest,
@@ -21,6 +22,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { CodxEpService, ModelPage } from '../codx-ep.service';
 import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
 
@@ -33,10 +35,12 @@ export class BookingRoomComponent extends UIComponent {
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
+  @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  @ViewChild('pined') pined?: TemplateRef<any>;
 
 
   showToolBar = 'true';
@@ -62,11 +66,14 @@ export class BookingRoomComponent extends UIComponent {
   fields: any;
   resourceField: any;
   funcID: string;
-
+  lstPined : any = [];
+  titleCollapse: string = "Đóng hộp tham số";
+  reportUUID: any = '3cdcde9d-8d64-ec11-941d-00155d035518';
   constructor(
     private injector: Injector,
     private notiService: NotificationsService,
-    private epService: CodxEpService
+    private epService: CodxEpService,
+    private cacheSv : CacheService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -76,6 +83,16 @@ export class BookingRoomComponent extends UIComponent {
       gridViewName: 'grvBookings',
       functionID: 'EP1',
     };
+    let fu: any;
+    this.cacheSv.functionList("TMT0201").subscribe(res=>{
+      if(res){
+        debugger
+        fu = res;
+      }
+    });
+    this.cacheSv.gridViewSetup("MyTasks", "grvMyTasks").subscribe(res=> {
+      debugger
+    });
   }
 
 
@@ -136,7 +153,7 @@ export class BookingRoomComponent extends UIComponent {
         sameData: true,
         id: '2',
         type: ViewType.schedule,
-        active: true,
+        active: false,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -162,15 +179,30 @@ export class BookingRoomComponent extends UIComponent {
         sameData: true,
         id: '4',
         type: ViewType.content,
-        active: false,
+        showButton: false,
+        showFilter: false,
+        active: true,
         text: 'Report',
         icon: 'icon-assignment',
+        toolbarTemplate: this.pined,
         model: {
           panelLeftRef: this.report,
         },
       },
     ];
     this.detectorRef.detectChanges();
+  }
+
+  collapse(evt){
+    this.reportObj && this.reportObj.collapse();
+    this.titleCollapse = this.reportObj.isCollapsed ? "Mở hộp tham số" : "Đóng hộp tham số";
+  }
+  changeValueDate(evt: any){
+
+  }
+
+  valueChange(evt: any, a?: any,type?: any ){
+
   }
 
   click(evt: ButtonModel) {

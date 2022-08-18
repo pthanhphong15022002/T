@@ -384,7 +384,7 @@ export class PopAddTaskgroupComponent implements OnInit {
         this.dialog.dataService.addDatas.clear();
         if (res.update) {
           // this.dialog.dataService.setDataSelected(res.update[0]);
-          this.dialog.close(res.update[0]);
+          this.dialog.close(res.update);
         }
       });
   }
