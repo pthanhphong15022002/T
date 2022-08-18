@@ -41,7 +41,6 @@
   </div>
 </ng-template>
 
-
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
 </ng-template>
@@ -52,6 +51,7 @@
     <div class="text-dark fw-bolder">{{ data.meetingName }}</div>
   </div>
 </ng-template>
+
 
 <ng-template #footer let-data>
   <div class="d-flex justify-content-center" style="margin-bottom: 30px; ">

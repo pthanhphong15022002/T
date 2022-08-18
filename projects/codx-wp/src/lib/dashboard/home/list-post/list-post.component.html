@@ -85,26 +85,75 @@
             <span class="tag-count">{{ item.tag }}</span>
           </div>
         </div>
-        <div class="text-info-date">
-          <span class="text-gray-600 fs-7 me-2">{{
-            item.createdOn | timefrom
-          }}</span>
-          <span class="rounded-1 py-1 px-2 bg-gray-200">
-            <span class="symbol symbol-circle">
-              <img
-                class="h-13px w-13px"
-                src="assets/themes/sys/default/img/{{
-                  item.shareControl | vll: 'L1901':'icon' | async
-                }}"
-              />
+        <div class="text-info-date d-flex">
+          <div>
+            <span class="text-gray-600 fs-7 me-2">{{item.createdOn | timefrom}}</span>
+            <span class="rounded-1 py-1 px-2 bg-gray-200">
+              <span class="symbol symbol-circle">
+                <img
+                  class="h-13px w-13px"
+                  src="assets/themes/sys/default/img/{{
+                    item.shareControl | vll: 'L1901':'icon' | async
+                  }}"
+                />
+              </span>
+              <span class="fs-7">
+                {{ item.shareControl | vll: "L1901":"text" | async }}
+              </span>
             </span>
-            <span class="fs-7">
-              {{ item.shareControl | vll: "L1901":"text" | async }}
-            </span>
-          </span>
-
-          <ng-container *ngIf="item.shareName" >
-            <span class="ms-2 me-2" [innerHTML]="item.shareName"></span>
+          </div>
+          
+          <ng-container *ngIf="item.shareName">
+            <div class="position-relative">
+              <span (mouseleave)="closeListShare(item)" 
+                (mouseover)="getShareUser(item)" 
+                class="ms-2 me-2" 
+                [innerHTML]="item.shareName">
+              </span>
+              <ng-container *ngIf="item.isShowShare">
+                <ng-container *ngIf="item.shareControl=='U' ||
+                  item.shareControl=='G' || item.shareControl=='R' ||
+                  item.shareControl=='P' || item.shareControl=='D' ||
+                  item.shareControl=='O'">
+                  <div class="position-absolute tmpshare">
+                    <div class="text-dark mb-2">
+                      <codx-label
+                        formName="Comments"
+                        name="lblShare"
+                        default="Danh sách người được chia sẻ"
+                      ></codx-label>
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="searchField"
+                        placeholder="Tìm kiếm"
+                      />
+                    </div>
+                    <div>
+                      <div class="row" *ngFor="let permission of item.permissions | filter: searchField:'objectName'">
+                        <div class="col-2">
+                          <codx-img
+                            class="me-3"
+                            [width]="35"
+                            [imageType]="'square'"
+                            [objectId]="permission.objectID"
+                            objectType="AD_Users">
+                          </codx-img>
+                        </div>
+                        <div class="col-9">
+                          <div class="text-dark pb-1" style="font-weight: BOLD">
+                            {{ permission.objectName }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+                </ng-container>
+              </ng-container>
+            </div>
+            
           </ng-container>
         </div>
       </div>
@@ -460,26 +509,21 @@
 <!-- tooltip -->
 <!-- tooltip for user shared -->
 <ng-template #popContentOfShare style="width: fit-content; height: fit-content">
-    <div *ngFor="let tagUser of tagUsers | filter: searchField:'objectName'">
+    <div *ngFor="let userShare of lstUserShare | filter: searchField:'objectName'">
         <div class="row" style="margin-top: 10px; margin-bottom: 10px; margin-left: -10px">
           <div class="col-md-2">
             <codx-img
               class="me-3"
               [width]="40"
-              [objectId]="tagUser.objectID"
+              [objectId]="userShare.objectID"
               objectType="AD_Users"
             >
             </codx-img>
           </div>
           <div class="col-md-8">
             <div class="text-dark pb-1" style="font-weight: BOLD">
-              {{ tagUser.objectName }}
+              {{ userShare.objectName }}
             </div>
-            <!-- <div class="row" style="margin-left: -10px">
-              <div class="text-gray-600 col-md-12">
-                {{ tagUser?.positionName }}
-              </div>
-            </div> -->
           </div>
         </div>
     </div>

@@ -55,7 +55,7 @@ export class HomeComponent extends UIComponent {
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
   @ViewChild('templateList') templateList: TemplateRef<any>;
-//  @ViewChild('attachment1') attachment1: AttachmentComponent;
+  @ViewChild('attachment1') attachment1: AttachmentComponent;
 //  @ViewChild('attachment2') attachment2: AttachmentComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('view') codxview!: any;
@@ -344,10 +344,10 @@ export class HomeComponent extends UIComponent {
   }
 
   saveFile1() {
-    // this.attachment1.saveFilesObservable().subscribe((item) => {
-    //   console.log(item);
-    // });
-    //  this.attachment.saveFiles();
+    this.attachment1.saveFilesObservable().subscribe((item) => {
+      console.log(item);
+    });
+     this.attachment.saveFiles();
   }
 
   saveFile2() {
@@ -358,7 +358,7 @@ export class HomeComponent extends UIComponent {
   }
 
   openFile1() {
-    // this.attachment1.uploadFile();
+    this.attachment1.uploadFile();
   }
 
   openFile2() {
@@ -427,10 +427,12 @@ export class HomeComponent extends UIComponent {
         this.changeDetectorRef.detectChanges();        
       }
 
-      this.fileService.GetFiles(id, this.dmSV.idMenuActive).subscribe(async res => {        
-        this.data = [...this.data, ...res];
-        this.dmSV.listFiles = res;  
-        this.changeDetectorRef.detectChanges();
+      this.fileService.GetFiles(id, this.dmSV.idMenuActive).subscribe(async res => {   
+        if (res != null) {
+          this.data = [...this.data, ...res];
+          this.dmSV.listFiles = res;  
+          this.changeDetectorRef.detectChanges();
+        }             
       });
     } else {
       this.dmSV.disableInput.next(true);

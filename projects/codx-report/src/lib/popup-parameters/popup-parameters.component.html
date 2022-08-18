@@ -1,0 +1,49 @@
+<codx-form
+  [headerText]="headerTitle"
+  [body]="body"
+  [footer]="footer"
+  #form
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="row my-5">
+      <codx-input
+      type="text"
+      class="border py-3 rounded"
+      field="searchBox"
+      placeholder="Tìm kiếm....."
+      [crrValue]="searchText"
+      (valueChange)="valueChange($event)"
+    ></codx-input>
+    </div>
+    <div class="container overflow-auto" #switchBox>
+
+      <div class="row my-5" *ngFor="let item of lstParam">
+        <div class="col-10">{{ item.labelName }}</div>
+        <div class="col-2" >
+          <codx-input
+            #input
+            [id]="item.controlName"
+            class="float-right"
+            type="switch"
+            [field]="item.controlName"
+            [crrValue]="item.isPin"
+            (valueChange)="valueChange($event, input)"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary mr-5" (click)="onSaveForm()">
+        <codx-label
+          name="lblApply"
+          default="Áp dụng"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>
