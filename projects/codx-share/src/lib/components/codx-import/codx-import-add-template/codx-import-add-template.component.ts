@@ -44,7 +44,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   dataIETables: any;
   dataIEMapping: any;
   sheet:any;
-  mappingTemplate = "";
+  mappingTemplate:any;
   importRule :any;
   importAddTmpGroup: FormGroup;
   @ViewChild('attachment') attachment: AttachmentComponent
@@ -181,7 +181,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           this.dataIEConnecttions = 
           {
             processIndex : 1,
-            destinationTable : this.mappingTemplate,
+            destinationTable : this.mappingTemplate?.TableName,
             parentEntity: '',
             mappingTemplate: dt,
             importRule : this.importRule[0]?.value,
@@ -194,7 +194,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           {
             sessionID : 'recID của IEConnecttions',
             sourceTable : 'tự thêm vào',
-            destinationTable : this.mappingTemplate,
+            destinationTable : this.mappingTemplate?.TableName,
             mappingTemplate: dt,
             firstRowHeader: true,
             firstCell: 1,
@@ -204,7 +204,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           }
           this.dataIEMapping = 
           {
-
+            mappingName: this.mappingTemplate?.MappingName,
+            tableName : this.mappingTemplate?.TableName,
+            importRule: this.importRule[0]?.value,
+            addBatchLink: false
           }
           this.gridView.dataService.data.push(this.dataIEConnecttions);
         });
@@ -225,11 +228,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       if(item[0])
       {
         var data = JSON.parse(item[0]);
-        this.mappingTemplate = data[0]?.TableName;
-        this.importAddTmpGroup.controls['nameTmp'].setValue(this.mappingTemplate);
+        this.mappingTemplate = data[0];
+        this.importAddTmpGroup.controls['nameTmp'].setValue(this.mappingTemplate?.MappingName);
       }
     })
-    request.comboboxName = "EntityImport";
+   /*  request.comboboxName = "EntityImport";
     this.api
     .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
       if(item[0])
@@ -237,7 +240,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
        debugger;
       }
         
-    })
+    }) */
     this.cache.valueList("SYS010").subscribe((item) => {
       if (item) {
        this.importRule = item.datas
