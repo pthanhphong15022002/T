@@ -1,28 +1,29 @@
 <div class="row m-0 bg-body mb-3 p-3 sprints-task-header">
   <div class="col-8">
-    <div class="d-flex">
-      <div class="text-dark fw-bolder my-1 fs-3 p-3">
+    <div class="d-flex align-items-center">
+      <div class="text-dark fw-bolder fs-3 me-6">
         {{ nameObj }}
       </div>
-      <div class="d-status p-3">
-        <div class="badge badge-danger me-2 label-status">Nội bộ</div>
+      <div class="d-status me-6">
+        <div class="badge badge-danger label-status">Nội bộ</div>
       </div>
-      <div class="p-3"><span class="icon-calendar_today icon-18"></span>
-        <span #createdOn> {{data?.createdOn | date: "dd/MM/yyyy" }}</span>
+      <div class="me-3">
+        <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
+        <span class="text-gray-600" #createdOn> {{data?.createdOn | date: "dd/MM/yyyy" }}</span>
       </div>
-      <div class="p-3">
-        <span class="icon-person icon-18"></span>
-        <span>{{createdByName }}</span>
+      <div class="me-3">
+        <span class="icon-person icon-18 me-1 text-gray-600"></span>
+        <span class="text-gray-600">{{createdByName }}</span>
       </div>
     </div>
     <div>
-      <div class="d-flex" >
+      <div class="d-flex mt-5 tab-header">
         <ng-container *ngFor="let item of tabControl; let i = index">
           <a [class]="
-              'm-3 text-gray-800 text-hover-primary btn-light-primary' +
+              'me-5 text-gray-600 text-hover-primary cursor-pointer' +
               ' ' +
-              (item.isActive ? 'text-primary' : '')
-            " style="cursor: pointer; ">
+              (item.isActive ? 'text-primary tab-active' : '')
+            ">
             <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
               (click)="clickMenu(item)">
             </codx-label>
@@ -32,8 +33,8 @@
     </div>
   </div>
   <div class="col-4">
-    <codx-imgs style="float: right" [objectId]="resources" objectType="AD_Users" [numberImages]="7"
-      [width]="40" (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
+    <codx-imgs style="float: right" [objectId]="resources" objectType="AD_Users" [numberImages]="7" [width]="30"
+      (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
       #popoverList="ngbPopover" placement="bottom" container="body" autoClose="outside" [openDelay]="500"></codx-imgs>
   </div>
 </div>
@@ -47,7 +48,7 @@
         <codx-sprintdetails-dashboard [projectID]="projectID" [resources]="resources"></codx-sprintdetails-dashboard>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
-        <codx-tasks *ngIf="dataObj"  [dataObj]="dataObj"  ></codx-tasks>
+        <codx-tasks *ngIf="dataObj" [dataObj]="dataObj"></codx-tasks>
       </ng-container>
       <ng-container *ngIf="name == 'Lịch sử'">
         <ng-container>
