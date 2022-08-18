@@ -521,12 +521,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             600,
             400,
             null,
-            { data: this.data },
+            { data: datas },
             '',
             option
           )
           .closed.subscribe((x) => {
-            if (x.event) this.view.dataService.remove(x.event).subscribe();
+            if (x.event) this.view.dataService.update(x.event).subscribe();
           });
         break;
       }
@@ -780,7 +780,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
-    debugger;
     if (relationType == '1')
       return Util.stringFormat(
         this.ms020?.customName,
