@@ -2545,7 +2545,7 @@ export class AttachmentComponent implements OnInit {
         addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
       }
-    }
+    } 
     //   this.fileAdded.emit({ data: this.fileUploadList });
     //  this.fileCount.emit(data: addedList);
     //tbchung thêm vào để xử lý bên import template
