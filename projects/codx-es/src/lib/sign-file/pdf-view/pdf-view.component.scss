@@ -36,62 +36,62 @@
       height: 450px;
       overflow-y: scroll;
     }
-    .e-list-group-item {
-      color: #837c7c;
-      padding: 0;
-      height: inherit;
-    }
-    .icon {
-      background: transparent;
-      font-family: "e-group-list-icons";
-      color: #ff4081;
-    }
+    // .e-list-group-item {
+    //   color: #837c7c;
+    //   padding: 0;
+    //   height: inherit;
+    // }
+    // .icon {
+    //   background: transparent;
+    //   font-family: "e-group-list-icons";
+    //   color: #ff4081;
+    // }
 
-    .display {
-      &:before {
-        content: "\e704";
-        font-size: 25px;
-      }
-    }
-    .sound {
-      &:before {
-        content: "\e703";
-        font-size: 25px;
-      }
-    }
-    .battery {
-      &:before {
-        content: "\e711";
-        font-size: 25px;
-      }
-    }
-    .user {
-      &:before {
-        content: "\e707";
-        font-size: 25px;
-      }
-    }
-    .location {
-      &:before {
-        content: "\e708";
-        font-size: 25px;
-      }
-    }
-    .security {
-      &:before {
-        content: "\e709";
-        font-size: 25px;
-      }
-    }
-    .language {
-      &:before {
-        content: "\e710";
-        font-size: 25px;
-      }
-    }
-    .e-hover {
-      transition: 0.5s;
-    }
+    // .display {
+    //   &:before {
+    //     content: "\e704";
+    //     font-size: 25px;
+    //   }
+    // }
+    // .sound {
+    //   &:before {
+    //     content: "\e703";
+    //     font-size: 25px;
+    //   }
+    // }
+    // .battery {
+    //   &:before {
+    //     content: "\e711";
+    //     font-size: 25px;
+    //   }
+    // }
+    // .user {
+    //   &:before {
+    //     content: "\e707";
+    //     font-size: 25px;
+    //   }
+    // }
+    // .location {
+    //   &:before {
+    //     content: "\e708";
+    //     font-size: 25px;
+    //   }
+    // }
+    // .security {
+    //   &:before {
+    //     content: "\e709";
+    //     font-size: 25px;
+    //   }
+    // }
+    // .language {
+    //   &:before {
+    //     content: "\e710";
+    //     font-size: 25px;
+    //   }
+    // }
+    // .e-hover {
+    //   transition: 0.5s;
+    // }
   }
 }
 //   .row {
