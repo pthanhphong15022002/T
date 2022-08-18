@@ -262,7 +262,7 @@ export class TasksComponent
   }
 
   edit(data?) {
-    if (data && !'00,07,09,10'.includes(data.status)) {
+    if (data && !'00,07,09,10,20'.includes(data.status)) {
       this.notiService.notifyCode('TM013');
       return;
     } else if (
