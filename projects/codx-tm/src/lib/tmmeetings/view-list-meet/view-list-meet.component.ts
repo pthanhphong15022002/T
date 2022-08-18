@@ -19,10 +19,14 @@ export class ViewListMeetComponent implements OnInit {
   endTime: any;
   resources: CO_Resources[] = [];
   resourceID: any;
+  popoverCrr: any;
+  countResource = 0;
+
   constructor(
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
+
   }
 
   ngOnInit(): void {
@@ -74,5 +78,16 @@ export class ViewListMeetComponent implements OnInit {
     return desc + '</div>';
   }
 
+  popoverEmpList(p: any) {
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+      p.open();
+      this.popoverCrr = p;
+    }
+  }
 
+  searchName(e){
+
+  }
 }
+
