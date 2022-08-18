@@ -21,8 +21,8 @@ codx-views {
 }
 
 codx-view-list-detail {
-    padding-top: 45px;
-    padding-bottom: 60px;
+    padding-top: 55px;
+    padding-bottom: 52px;
 }
 
 .header-fixed.toolbar-fixed .toolbar {
@@ -33,9 +33,26 @@ codx-view-list-detail {
 }
 
 .e-pane.e-static-pane .card .card-body {
-    padding-bottom: 50px !important;
+    padding-bottom: 10px !important;
 }
 
 codx-view-list-detail .codx-detail-footer {
     overflow: hidden;
+}
+
+.sprints-task-detail {
+    background-color: transparent !important;
+}
+
+codx-view-list-detail .e-static-pane+.e-pane {
+    margin-left: 0;
+}
+
+.tab-active {
+    border-bottom: 2px var(--text-primary) solid;
+}
+
+.tab-header a {
+    padding: 2px;
+    display: inline-block;
 }

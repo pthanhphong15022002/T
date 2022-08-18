@@ -159,7 +159,7 @@ const routes: Routes = [
     StackingColumnSeriesService,
     LegendService,
     TooltipService,
-    //pdfService (NQBuu)
+    //pdfService (NHBuu)
     LinkAnnotationService,
     BookmarkViewService,
     MagnificationService,

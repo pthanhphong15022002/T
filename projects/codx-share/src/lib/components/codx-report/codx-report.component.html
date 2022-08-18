@@ -12,13 +12,14 @@
     ></codx-report-viewer>
   </div>
   <div *ngIf="!isViewMode">
-    <button class="btn btn-light btn-review text-dark" (click)="viewReport()">Xem lại report sau khi sửa nè !</button>
+
     <codx-report-designer
       [toolbarDesignSettings]="toolbarDesignSettings"
       [serviceDesignUrl]="serviceDesignUrl"
       [reportUUID]="reportUUID"
       [locale]="locale"
       [showToolbar]="showToolbar"
+      (viewerMode)="isViewMode = $event"
     ></codx-report-designer>
   </div>
 </div>
