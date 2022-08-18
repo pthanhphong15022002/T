@@ -109,7 +109,7 @@ export class AttachmentComponent implements OnInit {
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
-  @ViewChild('file') file: ElementRef;
+  @ViewChild('templatefileupload') file: ElementRef;
   @Input('viewBase') viewBase: ViewsComponent;
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileGet = new EventEmitter<any>();
@@ -2553,7 +2553,21 @@ export class AttachmentComponent implements OnInit {
     //////////////////////////////////
     this.fileCount.emit({ data: addedList });
     files = null;
-    if (this.file) this.file.nativeElement.value = '';
+    const input = document.getElementsByName('UploadFiles')[0] as HTMLInputElement | null;
+
+    if (input != null) {
+      input.value = "";      
+    }
+   // document.getElementsByName("UploadFiles")[0].value = ""
+   // var input = document.getElementsByName("UploadFiles")[0] as Input;
+   // input.value  = "";
+   // var list =  document.getElementsByName("UploadFiles").length;
+    // if (document.getElementsByName("UploadFiles").length > 0) {
+    //   for(var i=0; i<document.getElementsByName("UploadFiles").length; i++) {
+    //     document.getElementsByName("UploadFiles")[i].value = "";
+    //   }
+    // }
+   // if (this.file) this.file.nativeElement.value = '';
     //  this.fileUploadList.next(this.fileUploadList);
     // this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();

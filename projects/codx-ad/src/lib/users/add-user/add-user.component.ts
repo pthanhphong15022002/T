@@ -171,7 +171,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   countListViewChoose() {
-    if(this.viewChooseRole) {
+    if (this.viewChooseRole) {
       this.countListViewChooseRoleApp = this.viewChooseRole.filter(
         (obj) => obj.isPortal == false
       ).length;
@@ -214,9 +214,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 this.dialog.close(res.save);
               }
             });
+            debugger;
           res.save['chooseRoles'] = res.save?.functions;
           res.save['buName'] = res.save?.buid;
-          debugger;
           this.changeDetector.detectChanges();
         }
       });
