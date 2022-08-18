@@ -68,7 +68,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   saveSuccess = false;
   dataAfterSave: any;
   countOpenPopRoles = 0;
-  dialogUser: FormGroup;
+  formUser: FormGroup;
 
   constructor(
     private injector: Injector,
@@ -126,11 +126,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
-    this.adService.getFormGroup(this.formModel.formName, this.formModel.gridViewName).then((dt => {
-      if(dt) {
-        this.dialogUser = dt;
-      }
-    }));
+    this.adService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((dt) => {
+        if (dt) {
+          this.formUser = dt;
+        }
+      });
   }
 
   openPopup(item: any) {
@@ -271,13 +273,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    this.dialogUser.patchValue(this.adUser);
-    if(this.dialogUser.invalid){
-      this.adService.notifyInvalid(this.dialogUser, this.formModel);
-return;
-    }
-    if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
-      this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
+    this.formUser.patchValue(this.adUser);
+    if (this.formUser.invalid) {
+      this.adService.notifyInvalid(this.formUser, this.formModel);
+      return;
     } else {
       if (this.isAddMode) {
         if (this.checkBtnAdd == false) return this.onAdd();

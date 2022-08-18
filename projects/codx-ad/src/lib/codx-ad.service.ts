@@ -101,7 +101,6 @@ export class CodxAdService {
     formModel: FormModel,
     gridViewSetup: any = null
   ) {
-    debugger;
     const invalid = [];
     const controls = formGroup.controls;
     for (const name in controls) {
