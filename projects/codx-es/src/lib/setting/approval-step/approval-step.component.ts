@@ -49,6 +49,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   lstDeleteStep = [];
   isDeleteAll = false;
   justView = false;
+  isAddNew: boolean = true;
 
   model: any;
 
@@ -67,6 +68,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       this.model = dialogData?.data.model;
       this.dialogApproval = dialog;
       this.justView = dialogData?.data.justView ?? false;
+      this.isAddNew = dialogData?.data?.isAddNew ?? true;
     } else {
       this.type = '1';
     }
@@ -136,7 +138,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
     this.esService.setApprovalStep(this.lstStep);
     this.esService.setLstDeleteStep(this.lstDeleteStep);
     this.model.patchValue({ countStep: this.lstStep.length });
-    this.updateApprovalStep(true);
+    this.updateApprovalStep(this.isAddNew);
     this.dialogApproval && this.dialogApproval.close();
   }
 

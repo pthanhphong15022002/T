@@ -138,7 +138,7 @@ export class CodxEsService {
         });
     } else {
       this.notificationsService.notifyCode(
-        'E0005',
+        'E0001',
         0,
         '"' + gridViewSetup[fieldName].headerText + '"'
       );
@@ -377,7 +377,7 @@ export class CodxEsService {
   }
   //#endregion
 
-  //#region  AutoNumbers
+  //#region AD_AutoNumbers
   public setupAutoNumber = new BehaviorSubject<any>(null);
   isSetupAutoNumber = this.setupAutoNumber.asObservable();
 
@@ -491,7 +491,7 @@ export class CodxEsService {
 
   //#endregion
 
-  //#region Category
+  //#region ES_Category
   addNewCategory(data: any): Observable<any> {
     return this.api.execSv('ES', 'ES', 'CategoriesBusiness', 'AddNewAsync', [
       data,
@@ -521,7 +521,7 @@ export class CodxEsService {
   }
   //#endregion
 
-  //#region ApprovalSteps
+  //#region ES_ApprovalSteps
   public approvalStep = new BehaviorSubject<any>(null);
   isSetupApprovalStep = this.approvalStep.asObservable();
 
@@ -784,6 +784,7 @@ export class CodxEsService {
   }
 
   //#endregion
+
   addOrEditSignArea(data: any): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -893,7 +894,7 @@ export class CodxEsService {
   }
   //#endregion
 
-  //region CA
+  //#region CA
   createLocalCertificatePFX(mail, pass) {
     return this.api.execSv(
       'es',
@@ -903,7 +904,17 @@ export class CodxEsService {
       [mail, pass]
     );
   }
-  //
+  //#endregion
+
+  getFiles(funcID: string, objectId: string, objectType): Observable<any> {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesForOutsideAsync',
+      [funcID, objectId, objectType]
+    );
+  }
 }
 export class LayoutModel {
   isChange: boolean = false;
