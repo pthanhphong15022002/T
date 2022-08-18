@@ -702,9 +702,7 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-        // this.itemSelected = e?.event[0];
-          // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
-          this.itemSelected = e?.event;
+          this.itemSelected = e?.event[0];
           this.detail.taskID = this.itemSelected.taskID;
           this.detail.getTaskDetail();
       }
@@ -898,18 +896,12 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-          // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
-          this.itemSelected = e?.event;
+         this.itemSelected = e?.event[0];
           this.detail.taskID = this.itemSelected.taskID;
           this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
-    // }
-    // else
-    //   this.notiService.notify(
-    //     'Bạn không thể thực hiện chức năng này với công việc đang chọn !'
-    //   );
   }
 
   //#endregion
@@ -936,10 +928,9 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-         // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
-         this.itemSelected = e?.event;
-         this.detail.taskID = this.itemSelected.taskID;
-         this.detail.getTaskDetail();
+        this.itemSelected = e?.event[0];
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -967,10 +958,9 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-         // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
-         this.itemSelected = e?.event;
-         this.detail.taskID = this.itemSelected.taskID;
-         this.detail.getTaskDetail();
+        this.itemSelected = e?.event[0];
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1006,8 +996,8 @@ export class TasksComponent
     this.dialogProgess = this.callfc.openForm(
       PopupUpdateProgressComponent,
       '',
-      500,
-      350,
+      560,
+      360,
       '',
       obj
     );
@@ -1016,10 +1006,9 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-         // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
-         this.itemSelected = e?.event;
-         this.detail.taskID = this.itemSelected.taskID;
-         this.detail.getTaskDetail();
+        this.itemSelected = e?.event[0];
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1086,10 +1075,9 @@ export class TasksComponent
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });
-               // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
-            this.itemSelected = e?.event;
-            this.detail.taskID = this.itemSelected.taskID;
-            this.detail.getTaskDetail();
+              this.itemSelected = e?.event[0];
+              this.detail.taskID = this.itemSelected.taskID;
+              this.detail.getTaskDetail();
             }
             this.detectorRef.detectChanges();
           });
