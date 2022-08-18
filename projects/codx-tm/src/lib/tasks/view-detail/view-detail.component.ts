@@ -148,6 +148,9 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         ) {
           x.disabled = true;
         }
+        if((x.functionID == 'TMT04011' ||  x.functionID == 'TMT04012') &&  this.taskExtends.status !='3' ){
+          x.disabled = true;
+        }
       });
     }
   }

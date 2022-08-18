@@ -240,6 +240,10 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('TM011');
       return;
     }
+    if (this.task.estimated < 0) {
+      this.notiService.notifyCode('TM033');
+      return ;
+    }
     if (
       this.param?.MaxHoursControl != '0' &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
@@ -544,9 +548,9 @@ export class AssignInfoComponent implements OnInit {
   valueChangeEstimated(data) {
     if (!data.data) return;
     var num = data.data;
-    // if (num < 0) {
-    //   this.notiService.notifyCode('TM033');
-    // }
+    if (num < 0) {
+      this.notiService.notifyCode('TM033');
+    }
     // if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
     //   this.task[data.field] = this.param?.MaxHours;
     // }else

@@ -127,6 +127,10 @@ export class TaskExtendsComponent
         ) {
           x.disabled = true;
         }
+        if((x.functionID == 'TMT04011' ||  x.functionID == 'TMT04012') && data.status !='3' ){
+          x.disabled = true;
+        }
+
       });
     }
   }
