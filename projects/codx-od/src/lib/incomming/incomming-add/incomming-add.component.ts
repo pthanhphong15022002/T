@@ -76,9 +76,9 @@ export class IncommingAddComponent implements OnInit {
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
 
-    debugger;
     var user = this.auth.get();
-    
+    if(user?.userID)
+      this.dispatch.createdBy = user?.userID;
     
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
