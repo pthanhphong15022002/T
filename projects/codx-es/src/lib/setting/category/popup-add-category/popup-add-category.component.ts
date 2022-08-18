@@ -227,6 +227,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   onSaveForm() {
     if (this.dialogCategory.invalid == true) {
       this.esService.notifyInvalid(this.dialogCategory, this.formModel);
+      return;
     }
     this.dialog.dataService.dataSelected = this.dialogCategory.value;
     this.dialog.dataService

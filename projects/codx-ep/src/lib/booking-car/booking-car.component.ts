@@ -162,7 +162,7 @@ export class BookingCarComponent extends UIComponent {
         },
       },
     ];
-    this.detectorRef.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 
 
@@ -180,14 +180,14 @@ export class BookingCarComponent extends UIComponent {
     }
   }
 
-  addNew(evt?) {
+  addNew(obj?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfc.openSide(
+      this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
         [this.dataSelected, true],
         option
@@ -214,7 +214,7 @@ export class BookingCarComponent extends UIComponent {
       });
   }
 }
-  delete(evt?) {
+  delete(obj?) {
     this.viewBase.dataService
       .delete([this.viewBase.dataService.dataSelected])
       .subscribe((res) => {
@@ -227,6 +227,7 @@ export class BookingCarComponent extends UIComponent {
       this.dialog && this.dialog.close();
     }
   }
+  
   clickMF(event, data) {
     console.log(event);
     switch (event?.functionID) {

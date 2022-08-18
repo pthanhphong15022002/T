@@ -41,6 +41,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   editSettings: any;
   dataIEConnecttions: any;
   sheet:any;
+  mappingTemplate = "";
   @ViewChild('attachment') attachment: AttachmentComponent
   @ViewChild('gridView') gridView: CodxGridviewComponent
   constructor(
@@ -62,7 +63,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     this.columnsGrid = [
       {
         headerText: "ProcessIndex",
-        width: '10%',
+        width: '15%',
       },
       {
         headerText: "DestinationTable",
@@ -82,12 +83,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       },
       {
         headerText: "IsSummary",
-        width: '15%',
+        width: '10%',
       },
     ];
+    this.getDataCbb();
     this.getGridViewSetup();
-   
-   
     this.editSettings = {
       allowEditing: true,
       allowAdding: true,
@@ -139,10 +139,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         this.codxService
         .getAutoNumber(this.formModel?.funcID, this.formModel?.entityName, "recID")
         .subscribe((dt: any) => {
+          debugger;
           this.columnsGrid = [
             {
               headerText: item["ProcessIndex"]?.headerText,
-              width: '10%',
+              width: '15%',
             },
             {
               headerText: item["DestinationTable"]?.headerText,
@@ -162,13 +163,13 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
             },
             {
               headerText: item["IsSummary"]?.headerText,
-              width: '15%',
+              width: '10%',
             },
           ];
           this.dataIEConnecttions = 
           {
             processIndex : 0,
-            destinationTable : "Chưa có cbb",
+            destinationTable : this.mappingTemplate,
             parentEntity: '',
             mappingTemplate: dt,
             importRule : "Chưa có cbb",
@@ -179,7 +180,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           }
           var dataIEMapping = {};
           var dataIEFieldMapping = {};
-          this.gridView.dataService.data.push(this.dataIEConnecttions,this.dataIEConnecttions);
+          this.gridView.dataService.data.push(this.dataIEConnecttions);
         });
        
         //this.gridView.addHandler(sdata,true,"recID")
@@ -187,7 +188,29 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       
     })
   }
- 
+  getDataCbb()
+  {
+    var request = new DataRequest();
+    request.comboboxName = "MappingTemplate";
+    request.page=1;
+    request.pageSize = 5;
+    this.api
+    .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
+      if(item[0])
+        this.mappingTemplate = item[0];
+    })
+    request.comboboxName = "MappingTemplate";
+    this.api
+    .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
+      if(item[0])
+        this.mappingTemplate = item[0];
+    })
+    this.cache.valueList("SYS010").subscribe((item) => {
+      if (item) {
+       debugger;
+      }
+    });
+  }
   openFormUploadFile() {
     this.attachment.uploadFile();
   }
