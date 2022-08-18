@@ -63,6 +63,7 @@ export class DynamicSettingComponent implements OnInit {
       var state = {
         setting: this.dataSetting[this.catagory],
         function: this.view.function,
+        valuelist: this.valuelist,
       };
       const ds = (res.datas as any[]).find((item) => item.value == catagory);
       var path = window.location.pathname;
