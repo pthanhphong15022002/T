@@ -16,7 +16,7 @@ export class CodxReportDesignerComponent implements OnInit, AfterViewInit {
   @Input()  reportUUID: any = '';;
   @Input() isAdmin: boolean = true;
   @Input() showToolbar: boolean = true;
-  @Input() locale!: string;
+  @Input() locale: string = 'vi-VN';
   @Input() permissionSettings!: any ;
   @Output() viewerMode = new EventEmitter<any>();
   private _user: any;
