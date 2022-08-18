@@ -273,9 +273,11 @@ ejs-listview .e-ul>li {
     border-radius: 30px !important;
     padding-right: 20px;
 }
-.tmpshare{
+
+.tmpshare {
     background-color: #fff;
     right: -10px;
-    padding: 8px;
+    padding: 12px;
     z-index: 99;
+    box-shadow: 2px 2px 6px #444;
 }
