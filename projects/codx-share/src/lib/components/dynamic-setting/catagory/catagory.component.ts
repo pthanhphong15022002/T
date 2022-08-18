@@ -17,6 +17,7 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 export class CatagoryComponent implements OnInit {
   private components = {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
+    cpnCalendar: null,
   };
   category = '';
   title = '';
@@ -26,6 +27,7 @@ export class CatagoryComponent implements OnInit {
   groupSetting = [];
   function: any = {};
   valuelist: any = {};
+  dataValue: any = {};
   constructor(
     private route: ActivatedRoute,
     private cacheService: CacheService,
@@ -72,6 +74,7 @@ export class CatagoryComponent implements OnInit {
   }
 
   openPopup(evt: any, reference: any) {
+    if (!reference) return;
     var component = this.components[reference] as Type<any>;
     var width = 0,
       height = 0,
@@ -86,13 +89,15 @@ export class CatagoryComponent implements OnInit {
         width = (screen.width * 40) / 100;
         height = 550;
         break;
+      case 'cpnCalendar':
+        break;
     }
     this.callfc.openForm(
       component,
       title,
-      height,
       width,
-      '',
+      height,
+      funcID,
       data,
       cssClass,
       dialogModel
@@ -137,10 +142,29 @@ export class CatagoryComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.settingValue = res;
+          this.loadValue();
           // this.itemMenu = Object.keys(res);
         }
         this.changeDetectorRef.detectChanges();
         console.log(res);
       });
+  }
+
+  loadValue() {
+    switch (this.category) {
+      case '1':
+        var value = this.settingValue[0].dataValue;
+        if (value) {
+          this.dataValue = JSON.parse(value);
+        }
+        break;
+    }
+  }
+
+  valueChange(evt: any) {
+    var field = evt.field;
+    var value = evt.data;
+    if (!value) return;
+    if (this.category == '1') this.dataValue[field] = value;
   }
 }
