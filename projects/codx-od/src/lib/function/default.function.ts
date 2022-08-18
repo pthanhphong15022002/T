@@ -104,6 +104,10 @@ function getIdUser(createdBy: any, owner: any) {
   if (owner && createdBy != owner) arr.push(owner);
   return arr.join(";");
 }
+//Chữ đầu thành chữ thường
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toLowerCase() + string.slice(1);
+}
 export{
   extractContent,
   compareDate,
@@ -113,5 +117,6 @@ export{
   formatDtDis,
   getIdUser,
   convertHtmlAgency,
-  convertHtmlAgency2
+  convertHtmlAgency2,
+  capitalizeFirstLetter
 }
