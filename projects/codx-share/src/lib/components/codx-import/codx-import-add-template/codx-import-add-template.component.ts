@@ -33,15 +33,20 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   gridModel: any;
   formModel: any;
   recID: any
-  data = {}
+  data = {};
+  grd : any;
   hideThumb = false;
   fileCount = 0;
   headerText: string = "Thêm mới template"
   columnsGrid: any;
   editSettings: any;
   dataIEConnecttions: any;
+  dataIETables: any;
+  dataIEMapping: any;
   sheet:any;
-  mappingTemplate = "";
+  mappingTemplate:any;
+  importRule :any;
+  importAddTmpGroup: FormGroup;
   @ViewChild('attachment') attachment: AttachmentComponent
   @ViewChild('gridView') gridView: CodxGridviewComponent
   constructor(
@@ -59,7 +64,12 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     this.formModel = dt.data?.[0];
   }
   
+  
   ngOnInit(): void {
+     //Tạo formGroup
+     this.importAddTmpGroup = this.formBuilder.group({
+      nameTmp: ['', Validators.required],
+    });
     this.columnsGrid = [
       {
         headerText: "ProcessIndex",
@@ -97,7 +107,9 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   }
  
   ngOnChanges(changes: SimpleChanges) { }
- 
+  get f(): { [key: string]: AbstractControl } {
+    return this.importAddTmpGroup.controls;
+  }
   fileAdded(event: any) {
     if (event?.data)
     {
@@ -136,10 +148,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     this.cache.gridViewSetup("IETables","grvIETables").subscribe(item=>{
       if(item)
       {
+        this.grd = item;
         this.codxService
         .getAutoNumber(this.formModel?.funcID, this.formModel?.entityName, "recID")
         .subscribe((dt: any) => {
-          debugger;
           this.columnsGrid = [
             {
               headerText: item["ProcessIndex"]?.headerText,
@@ -168,18 +180,35 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           ];
           this.dataIEConnecttions = 
           {
-            processIndex : 0,
-            destinationTable : this.mappingTemplate,
+            processIndex : 1,
+            destinationTable : this.mappingTemplate?.TableName,
             parentEntity: '',
             mappingTemplate: dt,
-            importRule : "Chưa có cbb",
+            importRule : this.importRule[0]?.value,
             isSummary: false,
             formName: this.formModel.formName,
             gridViewName: this.formModel.gridViewName,
 
           }
-          var dataIEMapping = {};
-          var dataIEFieldMapping = {};
+          this.dataIETables = 
+          {
+            sessionID : 'recID của IEConnecttions',
+            sourceTable : 'tự thêm vào',
+            destinationTable : this.mappingTemplate?.TableName,
+            mappingTemplate: dt,
+            firstRowHeader: true,
+            firstCell: 1,
+            importRule: this.importRule[0]?.value,
+            processIndex: 1,
+            isSummary: false
+          }
+          this.dataIEMapping = 
+          {
+            mappingName: this.mappingTemplate?.MappingName,
+            tableName : this.mappingTemplate?.TableName,
+            importRule: this.importRule[0]?.value,
+            addBatchLink: false
+          }
           this.gridView.dataService.data.push(this.dataIEConnecttions);
         });
        
@@ -197,17 +226,24 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     this.api
     .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
       if(item[0])
-        this.mappingTemplate = item[0];
+      {
+        var data = JSON.parse(item[0]);
+        this.mappingTemplate = data[0];
+        this.importAddTmpGroup.controls['nameTmp'].setValue(this.mappingTemplate?.MappingName);
+      }
     })
-    request.comboboxName = "MappingTemplate";
+   /*  request.comboboxName = "EntityImport";
     this.api
     .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
       if(item[0])
-        this.mappingTemplate = item[0];
-    })
+      {
+       debugger;
+      }
+        
+    }) */
     this.cache.valueList("SYS010").subscribe((item) => {
       if (item) {
-       debugger;
+       this.importRule = item.datas
       }
     });
   }
@@ -217,5 +253,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   openFormAddTemplate()
   {
     this.callfunc.openForm(CodxImportAddMappingComponent,null,900,800,"",[this.formModel],null);
+  }
+  getTextImportRule(id:any)
+  {
+    var data = this.importRule.filter(x=>x.value == id);
+    if(data) return data[0].text;
+    return "";
   }
 }
