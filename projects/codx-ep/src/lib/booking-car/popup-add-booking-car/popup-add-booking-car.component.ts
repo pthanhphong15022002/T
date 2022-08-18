@@ -85,6 +85,7 @@ export class PopupAddBookingCarComponent implements OnInit {
   lstPeople=[];
   driver=null;
   smallListPeople=[];
+
   constructor(    
     private callFuncService: CallFuncService,
     private cacheService: CacheService,
@@ -132,9 +133,7 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.cacheService.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
           console.log('grvEPT', res)
         })
-      })
-      
-
+      })     
       this.initForm();
     });
   }
@@ -166,7 +165,7 @@ export class PopupAddBookingCarComponent implements OnInit {
   onSaveForm() {
     if (this.fGroupAddBookingCar.invalid == true) {
       return;
-    }
+    }    
     if (this.fGroupAddBookingCar.value.endDate - this.fGroupAddBookingCar.value.startDate <= 0 ) {
       this.notificationsService.notifyCode('EP003');
     }
@@ -207,7 +206,7 @@ export class PopupAddBookingCarComponent implements OnInit {
     
     this.fGroupAddBookingCar.value.equipments = equipments;
     this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];
-    this.fGroupAddBookingCar.value.reasonID='reasonID';
+    this.fGroupAddBookingCar.value.reasonID='Chưa có dữ liệu';//Cbx chưa có dữ liệu
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe(
@@ -252,6 +251,7 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.fGroupAddBookingCar.patchValue({ [event['field']]: event.data });
       }
     }
+    
     this.tmplstDevice=[];
     var cbxCar = event.component.dataService.data;
       cbxCar.forEach(element => {
@@ -271,11 +271,13 @@ export class PopupAddBookingCarComponent implements OnInit {
 
   valueCbxUserChange(event) {
     this.lstPeople = event.data.dataSelected; 
-    if(this.lstPeople.length = 1)
+    if(this.lstPeople.length == 1){      
       this.smallListPeople = this.lstPeople;
-    if(this.lstPeople.length >= 2)
+    }
+    if(this.lstPeople.length >= 2) {
+      this.smallListPeople=null;
       this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
-         
+    }         
     this.changeDetectorRef.detectChanges();
   }
 

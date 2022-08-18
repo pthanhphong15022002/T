@@ -130,7 +130,7 @@ export class CodxEsService {
           if (res) {
             gridViewSetup = res;
             this.notificationsService.notifyCode(
-              'E0005',
+              'E0001',
               0,
               '"' + gridViewSetup[fieldName].headerText + '"'
             );

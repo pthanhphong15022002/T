@@ -94,10 +94,6 @@ export const routes: Routes = [
         component: TMMeetingsComponent,
       },
       {
-        path: 'meetingdetails/:funcID',
-        component: MeetingDetailComponent,
-      },
-      {
         path: 'mydashboard/:funcID',
         component: MyDashboardComponent,
       },
