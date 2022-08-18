@@ -65,7 +65,7 @@
 </ng-template>
 <ng-template #rowTmp let-data>
   <tr class="tr-ip-add-tmp has-action-menu">
-    <td class="w-10">
+    <td class="w-15">
       <span>{{data?.processIndex}}</span>
     </td>
     <td class="w-20">
@@ -80,9 +80,9 @@
     <td class="w-15">
       <span>{{data?.importRule}}</span>
     </td>
-    <td class="w-15">
+    <td class="w-10">
       <codx-input type="switch" [checked]="data?.isSummary" [disabled]="true" class="mt-2"></codx-input>
-      <div class="action-menu d-flex justify-content-center align-items-center cursor-pointer">
+      <div class="action-menu d-flex justify-content-center align-items-center cursor-pointer mt-1">
         <i class="icon-edit text-primary icon-16 mx-1"></i>
         <i class="icon-close text-danger icon-16 mx-1"></i>
       </div>
