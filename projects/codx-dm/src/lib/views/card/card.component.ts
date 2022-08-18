@@ -67,6 +67,13 @@ export class CardComponent implements OnInit {
     this.user = this.auth.get();   
   }
   
+  classRating(rating) {    
+    var ret = "icon-star text-warning icon-16";
+    if (rating == 0)
+      ret = ret + " text-muted";
+    return ret;
+  }
+
   print() {
     //this.view.print();
     window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
