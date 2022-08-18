@@ -1,3 +1,4 @@
+import { DynamicFormComponent } from './../../projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HoverPreloadStrategy } from 'ngx-hover-preload';
@@ -127,6 +128,10 @@ export const routes: Routes = [
               import(
                 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
               ).then((m) => m.DynamicSettingModule),
+          },
+          {
+            path: 'dynamic/:funcID',
+            component: DynamicFormComponent,
           },
         ],
       },

@@ -15,9 +15,6 @@
     color: #F64E60;
 }
 
-codx-view-list-detail .codx-detail-footer {
-    overflow: hidden;
-}
 
 textarea.codx-textarea {
     border-radius: 2px !important;
@@ -50,9 +47,4 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content,
 ejs-richtexteditor .e-dialog>.e-footer-content,
 ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
     padding: 15px;
-}
-
-.list-task .text-gray-700.line-clamp {
-    color: var(--gray-500) !important;
-    font-size: var(--h7);
 }

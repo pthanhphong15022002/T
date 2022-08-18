@@ -23,7 +23,13 @@
   <div class="py-2">
     <div class="py-2">
       <codx-label [formModel]="formModel" [fiedName]="'name'" default="Tên template" class="fw-bold"></codx-label>
-      <codx-input type="text"></codx-input>
+      <codx-input 
+        type="text" 
+        [Group]="importAddTmpGroup"
+        ControlName="nameTmp"
+        [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
+      >
+      </codx-input>
     </div>
     <div class="row py-2">
       <div class="col-3">
@@ -53,7 +59,7 @@
       <codx-label [formModel]="formModel" [fiedName]="'detailImport'" default="Chi tiết import" class="text-primary fw-bold"></codx-label>
       <i class="fa-regular fa-square-plus fa-xl text-black cursor-pointer" (click)="openFormAddTemplate()"></i>
     </div>
-    <codx-gridview #gridView [columnsGrid]="columnsGrid"   [rowTmp]="rowTmp" ></codx-gridview>
+    <codx-gridview #gridView [columnsGrid]="columnsGrid"  [rowTmp]="rowTmp" ></codx-gridview>
   </div>
 </ng-template>
 <ng-template #footer>
@@ -65,7 +71,7 @@
 </ng-template>
 <ng-template #rowTmp let-data>
   <tr class="tr-ip-add-tmp has-action-menu">
-    <td class="w-10">
+    <td class="w-15">
       <span>{{data?.processIndex}}</span>
     </td>
     <td class="w-20">
@@ -78,11 +84,11 @@
       <span>{{data?.mappingTemplate}}</span>
     </td>
     <td class="w-15">
-      <span>{{data?.importRule}}</span>
+      <span>{{getTextImportRule(data?.importRule)}}</span>
     </td>
-    <td class="w-15">
+    <td class="w-10">
       <codx-input type="switch" [checked]="data?.isSummary" [disabled]="true" class="mt-2"></codx-input>
-      <div class="action-menu d-flex justify-content-center align-items-center cursor-pointer">
+      <div class="action-menu d-flex justify-content-center align-items-center cursor-pointer mt-1">
         <i class="icon-edit text-primary icon-16 mx-1"></i>
         <i class="icon-close text-danger icon-16 mx-1"></i>
       </div>

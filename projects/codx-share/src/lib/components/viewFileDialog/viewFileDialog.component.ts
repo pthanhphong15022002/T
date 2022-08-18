@@ -228,7 +228,7 @@ export class ViewFileDialogComponent implements OnInit {
     this.access_token = this.auth.userValue.token;
     //alert(1);
     this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
-    if (document.getElementById("frmFile") != null) {
+    if ( this.srcVideo == "" && this.linkViewImage == "") {
       setTimeout(() => {
         (        
             document.getElementById("frmFile") as HTMLFormElement).submit();
@@ -302,7 +302,7 @@ export class ViewFileDialogComponent implements OnInit {
       || this.ext == ".jpg"
       || this.ext == ".bmp"
     ) {
-      this.linkViewImage = `${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
+      this.linkViewImage = this.data.thumbnail;//`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
 
     this.viewFile(this.id);

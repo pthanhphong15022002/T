@@ -110,11 +110,15 @@ export class AddNoteComponent implements OnInit {
     this.component = dt.data?.component;
     if (this.component == 'note-drawer') {
       if (this.formType == 'add') this.currentDate = new Date(Date.now());
-      else this.currentDate = JSON.parse(JSON.stringify(dt.data?.dataUpdate?.createdOn));
+      else
+        this.currentDate = JSON.parse(
+          JSON.stringify(dt.data?.dataUpdate?.createdOn)
+        );
     }
     if (this.formType == 'edit') {
       this.header = 'Cập nhật sổ tay';
       this.note = JSON.parse(JSON.stringify(dt.data?.dataUpdate));
+      this.type = this.note?.noteType;
       var dtt = {
         status: this.type == 'check' ? 0 : null,
         listNote: '',
@@ -237,13 +241,11 @@ export class AddNoteComponent implements OnInit {
       ) {
         if (item?.lisNote != '') {
           if (this.formType == 'edit') this.listNote = this.note.checkList;
-          let i = 0;
-          this.listNote.forEach((data) => {
-            if (i == index) {
-              if (field == 'status') data.status = dt;
+          if (field == 'status') {
+            for (let i = 0; i < this.listNote.length; i++) {
+              if (i == index) this.listNote[i].status = dt;
             }
-            i++;
-          });
+          }
         }
       }
       if (field == 'listNote') {
@@ -265,14 +267,20 @@ export class AddNoteComponent implements OnInit {
           this.listNote.pop();
         }
         this.keyUpEnter(e);
-        var dt: any = {
+        var dt1: any = {
           status: this.tempNote.status,
           listNote: this.tempNote.listNote,
         };
         if (this.countUpdateTodo == 1 && this.formType == 'add') {
-          this.listNote.unshift(Object.assign({}, dt));
+          this.listNote.unshift(Object.assign({}, dt1));
         } else if (this.countUpdateTodo > 1 || this.formType == 'edit') {
-          this.listNote.push(dt);
+          if (index == this.listNote.length) this.listNote.push(dt1);
+          else {
+            if (e.data) {
+              this.listNote[index].listNote = e.data;
+              this.listNote[index].status = this.tempNote.status;
+            }
+          }
           var dtt = {
             status: this.type == 'check' ? 0 : null,
             listNote: '',
@@ -308,6 +316,8 @@ export class AddNoteComponent implements OnInit {
       if (this.note.memo == null || this.note.memo == '') this.checkNull = true;
       else this.checkNull = false;
     }
+    this.note.checkList;
+    debugger;
     if (this.checkNull == false) {
       this.api
         .exec<any>(
