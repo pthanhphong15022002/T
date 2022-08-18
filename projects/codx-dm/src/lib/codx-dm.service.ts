@@ -1366,7 +1366,7 @@ export class CodxDMService {
                     this.listFiles = list;
                     this.ChangeData.next(true);
                 }
-                this.notificationsService.notify(res.message);
+               // this.notificationsService.notify(res.message);
             }
 
             if (res.status == 6) {
@@ -1394,7 +1394,7 @@ export class CodxDMService {
                     }
                 });                                  
             }
-            else {
+            else {               
                 this.notificationsService.notify(res.message);
             }
         })
