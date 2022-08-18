@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ViewModel, ViewType, ApiHttpService } from 'codx-core';
+import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 
 @Component({
   selector: 'lib-task-daily',
@@ -16,10 +17,16 @@ export class TaskDailyComponent implements OnInit {
   @ViewChild("itemMemo", { static: true }) itemMemo: TemplateRef<any>;
   @ViewChild("itemCompletedOn", { static: true }) itemCompletedOn: TemplateRef<any>;
   @ViewChild("itemActive", { static: true }) itemActive: TemplateRef<any>;
+  @ViewChild('report') report: TemplateRef<any>;
+  @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
+  @ViewChild('pined') pined?: TemplateRef<any>;
 
   user: any;
   funcID: any;
-
+  lstPined : any = [];
+  isCollapsed = true;
+  titleCollapse: string = "Đóng hộp tham số";
+  reportUUID: any = '3cdcde9d-8d64-ec11-941d-00155d035518';
   constructor(
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
@@ -46,18 +53,33 @@ export class TaskDailyComponent implements OnInit {
       { field: 'active', headerText: 'Hoạt động', template: this.itemActive, width: 150 },
       { field: 'buid', headerText: 'Bộ phận người thực hiện', width: 140 }
     ];
-    this.loadData();
+   // this.loadData();
   }
 
   ngAfterViewInit(): void {
-    this.views = [{
+    this.views = [
+      {
       type: ViewType.grid,
       sameData: true,
-      active: true,
+      active: false,
       model: {
         resources: this.columnsGrid,
       }
-    }];
+    },
+     {
+      sameData: true,
+      id: '4',
+      type: ViewType.content,
+      showButton: false,
+      showFilter: false,
+      active: true,
+      text: 'Report',
+      icon: 'icon-assignment',
+      toolbarTemplate: this.pined,
+      model: {
+        panelLeftRef: this.report,
+      },
+    },];
   }
 
   loadData(){
@@ -80,4 +102,13 @@ export class TaskDailyComponent implements OnInit {
     else
       p.close();
   }
+
+  collapse(evt){
+    this.reportObj && this.reportObj.collapse();
+    this.titleCollapse = this.reportObj.isCollapsed ? "Mở hộp tham số" : "Đóng hộp tham số";
+  }
+  valueChange(evt: any, a?: any,type?: any ){
+
+  }
+
 }

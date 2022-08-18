@@ -315,6 +315,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     }
     else{
       this.listCombobox = {
+        U: 'Share_Users_Sgl',
         P: 'Share_Positions_Sgl',
         R: 'Share_UserRoles_Sgl',
       };
@@ -369,9 +370,7 @@ export class PopAddTaskgroupComponent implements OnInit {
       .subscribe((res) => {
         this.dialog.dataService.addDatas.clear();
         if (res.save) {
-          // this.dialog.dataService.setDataSelected(res.save);
-          // this.dialog.dataService.afterSave.next(res);
-          // this.changDetec.detectChanges();
+
           this.dialog.close(res.save);
         }
       });
