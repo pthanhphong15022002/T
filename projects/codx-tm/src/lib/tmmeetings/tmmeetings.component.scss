@@ -1,0 +1,16 @@
+.a{
+  margin-left: 20px;
+  font-size: xx-large;
+}
+codx-view-list-card{
+  background: white;
+}
+.footer-bottom{
+  position: absolute; 
+  bottom: 10px;
+  left: 20px;
+  right: 20px; 
+}
+.card-footer .btn:not(.btn-icon) {
+  min-width: 0px!important;
+}
