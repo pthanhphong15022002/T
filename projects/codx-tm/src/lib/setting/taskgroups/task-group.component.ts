@@ -262,15 +262,35 @@ implements OnInit {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfunc.openSide(
         PopAddTaskgroupComponent,
         'add',
         option
       );
-      this.dialog.closed.subscribe((x) => {});
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+          if (e?.event && e?.event != null) {
+            var objectData = this.view.dataService.data;
+            var object = {};
+            // for(var i=0; i< objectData.length; i++){
+            //   if(objectData[i][i]!==undefined) {
+            //     object[i] = objectData[i][i];
+            //     objectData[i] = object[i];
+            //   }
+            // }
+            this.view.dataService.data = e?.event.concat(
+              objectData
+            );
+            this.detectorRef.detectChanges();
+          }
+      });
     });
   }
 

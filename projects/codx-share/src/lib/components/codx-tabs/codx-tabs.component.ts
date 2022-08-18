@@ -26,7 +26,14 @@ export class CodxTabsComponent implements OnInit {
   @Input() allowExtensions: string = '.jpg,.png';
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
-  private all = ['Attachment', 'History', 'Comment', 'Reference', 'Approve'];
+
+  private all: TabModel[] = [
+    { name: 'attachment', textDefault: 'Đính Kèm', isActive: true },
+    { name: 'History', textDefault: 'Lịch sử', isActive: false },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    { name: 'Reference', textDefault: 'Tham chiếu', isActive: false },
+    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+  ];
   constructor(
     injector: Injector,
     private changeDetectorRef: ChangeDetectorRef
@@ -34,13 +41,14 @@ export class CodxTabsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.TabControl.length == 0) {
-      this.all.forEach((res, index) => {
-        var tabModel = new TabModel();
-        tabModel.name = tabModel.textDefault = res;
-        if (index == 0) tabModel.isActive = true;
-        else tabModel.isActive = false;
-        this.TabControl.push(tabModel);
-      });
+      this.TabControl = this.all;
+      // this.all.forEach((res, index) => {
+      //   var tabModel = new TabModel();
+      //   tabModel.name = tabModel.textDefault = res;
+      //   if (index == 0) tabModel.isActive = true;
+      //   else tabModel.isActive = false;
+      //   this.TabControl.push(tabModel);
+      // });
     } else {
       this.active = this.TabControl.findIndex(
         (x: TabModel) => x.isActive == true
