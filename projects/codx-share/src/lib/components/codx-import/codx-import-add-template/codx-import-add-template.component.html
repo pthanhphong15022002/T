@@ -11,7 +11,7 @@
   <div class="d-flex align-items-center justify-content-between py-2">
     <div class="hideAttachment w-100 me-2">
       <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-        hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
+        hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (filePrimitive)="getfilePrimitive($event)"
         [objectId]="null" [allowMultiFile]="0" [idBrowse]="'addTemplateImport'">
       </codx-attachment>
     </div>
@@ -28,7 +28,11 @@
     <div class="row py-2">
       <div class="col-3">
         <codx-label [formModel]="formModel" [fiedName]="'sheetimport'" default="Sheet import" class="fw-bold"></codx-label>
-        <codx-input type="combobox"></codx-input>
+        <select class="form-select select-sheet" aria-label="Sheet Import">
+          <ng-container *ngIf="sheet">
+            <option *ngFor="let item of sheet">{{item}}</option>
+          </ng-container>
+        </select>
       </div>
       <div class="col-3">
         <codx-label [formModel]="formModel" [fiedName]="'title'" default="Dòng tiêu đề" class="fw-bold"></codx-label>
@@ -61,28 +65,28 @@
 </ng-template>
 <ng-template #rowTmp let-data>
   <tr class="tr-ip-add-tmp has-action-menu">
-    <td class="w-10">
+    <td class="w-15">
       <span>{{data?.processIndex}}</span>
     </td>
-    <td class="w-15">
+    <td class="w-20">
       <span>{{data?.destinationTable}}</span>
     </td>
-    <td class="w-20">
+    <td class="w-15">
       <span>{{data?.parentEntity}}</span>
     </td>
-    <td class="w-15">
+    <td class="w-20">
       <span>{{data?.mappingTemplate}}</span>
     </td>
-    <td class="w-20">
+    <td class="w-15">
       <span>{{data?.importRule}}</span>
     </td>
-    <td class="w-15">
+    <td class="w-10">
       <codx-input type="switch" [checked]="data?.isSummary" [disabled]="true" class="mt-2"></codx-input>
+      <div class="action-menu d-flex justify-content-center align-items-center cursor-pointer mt-1">
+        <i class="icon-edit text-primary icon-16 mx-1"></i>
+        <i class="icon-close text-danger icon-16 mx-1"></i>
+      </div>
     </td>
-    <div class="action-menu d-flex justify-content-center align-items-center cursor-pointer">
-      <i class="icon-edit text-primary icon-16 mx-1"></i>
-      <i class="icon-close text-danger icon-16 mx-1"></i>
-    </div>
   </tr>
 </ng-template>
 

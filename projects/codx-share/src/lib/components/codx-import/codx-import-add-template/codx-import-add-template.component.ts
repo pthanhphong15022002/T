@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostListener,
@@ -19,7 +20,7 @@ import { AlertConfirmInputConfig, ApiHttpService, CacheService, CallFuncService,
 import { Observable, finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
-
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'codx-import-add-template',
   templateUrl: './codx-import-add-template.component.html',
@@ -39,6 +40,8 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   columnsGrid: any;
   editSettings: any;
   dataIEConnecttions: any;
+  sheet:any;
+  mappingTemplate = "";
   @ViewChild('attachment') attachment: AttachmentComponent
   @ViewChild('gridView') gridView: CodxGridviewComponent
   constructor(
@@ -48,6 +51,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
     private codxService: CodxService,
+    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -59,7 +63,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     this.columnsGrid = [
       {
         headerText: "ProcessIndex",
-        width: '10%',
+        width: '15%',
       },
       {
         headerText: "DestinationTable",
@@ -79,12 +83,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       },
       {
         headerText: "IsSummary",
-        width: '15%',
+        width: '10%',
       },
     ];
+    this.getDataCbb();
     this.getGridViewSetup();
-   
-   
     this.editSettings = {
       allowEditing: true,
       allowAdding: true,
@@ -96,10 +99,29 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) { }
  
   fileAdded(event: any) {
-    if (event?.data) this.hideThumb = true;
+    if (event?.data)
+    {
+      debugger;
+    };
   }
   getfileCount(e: any) {
     this.fileCount = e.data.length;
+    
+  }
+  getfilePrimitive(e:any)
+  {
+    var dt = e[0]?.rawFile;
+    if(dt)
+    {
+      const reader: FileReader = new FileReader();
+      reader.readAsBinaryString(dt);
+      reader.onload = (e: any) => {
+        /* create workbook */
+        const binarystr: string = e.target.result;
+        const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
+        this.sheet = wb.SheetNames;
+      };
+    }
   }
   onSave()
   {
@@ -117,10 +139,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         this.codxService
         .getAutoNumber(this.formModel?.funcID, this.formModel?.entityName, "recID")
         .subscribe((dt: any) => {
+          debugger;
           this.columnsGrid = [
             {
               headerText: item["ProcessIndex"]?.headerText,
-              width: '10%',
+              width: '15%',
             },
             {
               headerText: item["DestinationTable"]?.headerText,
@@ -140,13 +163,13 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
             },
             {
               headerText: item["IsSummary"]?.headerText,
-              width: '15%',
+              width: '10%',
             },
           ];
           this.dataIEConnecttions = 
           {
             processIndex : 0,
-            destinationTable : "Chưa có cbb",
+            destinationTable : this.mappingTemplate,
             parentEntity: '',
             mappingTemplate: dt,
             importRule : "Chưa có cbb",
@@ -165,7 +188,29 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       
     })
   }
- 
+  getDataCbb()
+  {
+    var request = new DataRequest();
+    request.comboboxName = "MappingTemplate";
+    request.page=1;
+    request.pageSize = 5;
+    this.api
+    .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
+      if(item[0])
+        this.mappingTemplate = item[0];
+    })
+    request.comboboxName = "MappingTemplate";
+    this.api
+    .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
+      if(item[0])
+        this.mappingTemplate = item[0];
+    })
+    this.cache.valueList("SYS010").subscribe((item) => {
+      if (item) {
+       debugger;
+      }
+    });
+  }
   openFormUploadFile() {
     this.attachment.uploadFile();
   }

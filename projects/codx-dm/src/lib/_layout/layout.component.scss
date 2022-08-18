@@ -121,10 +121,15 @@
     justify-content: center !important;
     padding-left: 0 !important;
   }
+
+  .aside-light .menu .menu-title {
+    display: none;
+  }
 }
 
 #kt_aside_menu_header {
   margin-bottom: 15px;
+  white-space: nowrap;
 }
 
 
@@ -249,4 +254,16 @@ codx-temp-full {
 
 ejs-switch .form-control {
   border: 0;
+}
+
+.menu-item.progress-line {
+  height: 65px;
+  padding-top: 5px;
+  padding-right: 20px;
+
+}
+
+.menu-item.progress-line .fw-normal.fs-7 {
+  color: #ffffffc2 !important;
+  font-weight: 300 !important;
 }

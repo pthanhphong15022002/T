@@ -256,4 +256,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       dialogModel
     );
   }
+
+  contentTooltip() {
+    return 'Xem chi tiết';
+  }
 }

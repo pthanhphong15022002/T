@@ -707,7 +707,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           //
           //Chưa có group
           gridModel.groupFields = "createdBy";
-          this.callfunc.openForm(CodxImportComponent,null,null,500,"",[gridModel,datas.recID],null);
+          this.callfunc.openForm(CodxImportComponent,null,900,800,"",[gridModel,datas.recID],null);
           break;
         }
       //Export file
