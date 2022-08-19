@@ -83,6 +83,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
             projectID: this.projectID ? this.projectID : '',
             resources : this.resources? this.resources:'' ,
             iterationID: this.iterationID ? this.iterationID : '',
+            viewMode : res.viewMode ? res.viewMode : '' 
           };
         
           if (this.resources != null) {
