@@ -11,6 +11,7 @@ import {
 import { BehaviorSubject, map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Input,
@@ -33,7 +34,7 @@ import { TM_TaskGroups } from 'projects/codx-tm/src/lib/models/TM_TaskGroups.mod
   templateUrl: './assign-info.component.html',
   styleUrls: ['./assign-info.component.scss'],
 })
-export class AssignInfoComponent implements OnInit {
+export class AssignInfoComponent implements OnInit,AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
@@ -64,7 +65,8 @@ export class AssignInfoComponent implements OnInit {
   dueDate: Date;
   taskType = '1';
   vllPriority = 'TM005';
-
+  changTimeCount = 2;
+  loadingAll = false;
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
@@ -84,6 +86,7 @@ export class AssignInfoComponent implements OnInit {
     this.refType = this.task?.refType;
     this.dueDate = this.task?.dueDate;
     if (this.task?.taskID) this.taskParent = this.task;
+
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
     this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
     this.title = dt?.data[3] ? dt?.data[3] : this.title;
@@ -99,8 +102,11 @@ export class AssignInfoComponent implements OnInit {
 
   ngOnInit(): void {
     // if (this.task.taskID) this.taskParent = this.task ;
-    this.setDefault();
+   
     // else this.openInfo();
+  }
+  ngAfterViewInit(): void {
+    this.setDefault();
   }
 
   setDefault() {
@@ -119,6 +125,7 @@ export class AssignInfoComponent implements OnInit {
           };
           response['taskID'] = response['_uuid'];
           this.task = response;
+          this.loadingAll= true
           this.openInfo();
         }
       });
@@ -142,6 +149,10 @@ export class AssignInfoComponent implements OnInit {
     this.task.refID = this.refID;
     this.task.refType = this.refType;
     if (this.taskParent) {
+      this.task.dueDate = this.taskParent.dueDate;
+      this.task.endDate = this.taskParent.endDate;
+      this.task.startDate = this.taskParent.startDate;
+      this.task.estimated = this.taskParent.estimated;
       this.task.taskName = this.taskParent.taskName;
       this.task.memo = this.taskParent.memo;
       this.task.memo2 = this.taskParent.memo2;
@@ -152,21 +163,32 @@ export class AssignInfoComponent implements OnInit {
       this.task.refID = this.taskParent.refID;
       this.task.refNo = this.taskParent.refNo;
       this.task.taskType = this.taskParent.taskType;
-      if (this.taskParent.listTaskGoals.length > 0) {
-        var toDos = this.taskParent.listTaskGoals;
-        toDos.forEach((obj) => {
-          var taskG = new TaskGoal();
-          taskG.status = this.STATUS_TASK_GOAL.NotChecked;
-          taskG.text = obj.memo;
-          taskG.recID = null;
-          this.listTodo.push(taskG);
-        });
-      }
+      // if (this.taskParent.listTaskGoals.length > 0) {
+      //   var toDos = this.taskParent.listTaskGoals;
+      //   toDos.forEach((obj) => {
+      //     var taskG = new TaskGoal();
+      //     taskG.status = this.STATUS_TASK_GOAL.NotChecked;
+      //     taskG.text = obj.memo;
+      //     taskG.recID = null;
+      //     this.listTodo.push(taskG);
+      //   });
+      // }
+      this.copyListTodo(this.taskParent.taskID)
+      if (this.task.startDate && this.task.endDate) this.changTimeCount = 0;
+      else if (this.task.startDate || this.task.endDate) this.changTimeCount = 1;
       if (this.taskParent?.taskGroupID)
         this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
 
     this.changeDetectorRef.detectChanges();
+  }
+
+  copyListTodo(id) {
+    this.api.execSv<any>("TM","TM","TaskBusiness","CopyListTodoByTaskIdAsync",id).subscribe(res=>{
+      if(res){
+        this.listTodo =res ;
+      }
+    })
   }
 
   changText(e) {
@@ -178,6 +200,7 @@ export class AssignInfoComponent implements OnInit {
   //   this.task[data.field] = data.data.fromDate;
   // }
   changeTime(data) {
+    
     if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
@@ -192,8 +215,13 @@ export class AssignInfoComponent implements OnInit {
             .toDate();
       }
     }
-    if (data.field == 'startDate' || data.field == 'endDate') {
-      if (this.task?.startDate && this.task?.endDate) {
+    if ((data.field == 'startDate' || data.field == 'endDate') &&this.loadingAll) {
+      this.changTimeCount += 1;
+      if (
+        this.task?.startDate &&
+        this.task?.endDate &&
+        this.changTimeCount > 2
+      ) {
         var time = (
           (this.task?.endDate.getTime() - this.task?.startDate.getTime()) /
           3600000
@@ -242,13 +270,13 @@ export class AssignInfoComponent implements OnInit {
     }
     if (this.task.estimated < 0) {
       this.notiService.notifyCode('TM033');
-      return ;
+      return;
     }
     if (
       this.param?.MaxHoursControl != '0' &&
       this.task.estimated > Number.parseFloat(this.param?.MaxHours)
     ) {
-      this.notiService.notifyCode('TM058',0,[this.param?.MaxHours])
+      this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours]);
       return;
     }
     if (this.task.estimated < 0) {
@@ -278,13 +306,13 @@ export class AssignInfoComponent implements OnInit {
       return;
     }
     if (this.task.taskGroupID) {
-      if (
-        this.taskGroup?.checkListControl != '0' &&
-        this.listTodo.length == 0
-      ) {
-        this.notiService.notifyCode('TM032');
-        return;
-      }
+      // if (
+      //   this.taskGroup?.checkListControl != '0' &&
+      //   this.listTodo.length == 0
+      // ) {
+      //   this.notiService.notifyCode('TM032');
+      //   return;
+      // }
     }
     if (this.isHaveFile) this.attachment.saveFiles();
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;

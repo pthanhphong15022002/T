@@ -97,7 +97,7 @@ export class PopupAddBookingCarComponent implements OnInit {
   ) {    
     
     this.data = dialogRef.dataService!.dataSelected;
-    this.isAdd = dialogData?.data?.isAdd;
+    this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
   }  
@@ -113,6 +113,9 @@ export class PopupAddBookingCarComponent implements OnInit {
           let device = new Device();
           device.id = item.value;
           device.text = item.text;
+          if(!this.isAdd){
+            
+          }
           this.lstDeviceCar.push(device);
         });
         this.lstDeviceCar = JSON.parse(JSON.stringify(this.lstDeviceCar));
@@ -148,7 +151,8 @@ export class PopupAddBookingCarComponent implements OnInit {
           this.fGroupAddBookingCar.patchValue(this.data);        
         } 
       });      
-      this.isAfterRender = true;
+      this.isAfterRender = true;      
+      this.changeDetectorRef.detectChanges();    
   }
   setTitle(e: any) {
     this.title = this.titleAction + ' ' + e.toString().toLowerCase();
@@ -163,12 +167,11 @@ export class PopupAddBookingCarComponent implements OnInit {
   }
 
   onSaveForm() {
-    if (this.fGroupAddBookingCar.invalid == true) {
+    
+    if (!this.dataValid()) {
       return;
     }  
-    if (this.fGroupAddBookingCar.value.endDate - this.fGroupAddBookingCar.value.startDate <= 0 ) {
-      this.notificationsService.notifyCode('EP003');
-    }
+    
     if ( this.fGroupAddBookingCar.value.startDate && this.fGroupAddBookingCar.value.endDate ) {
       let hours = parseInt(
         (
@@ -184,7 +187,7 @@ export class PopupAddBookingCarComponent implements OnInit {
       this.fGroupAddBookingCar.patchValue({
         category: '2',
         status: '1',
-        resourceType: '2',
+        resourceType: '2',        
       });
 
       var date = new Date(this.fGroupAddBookingCar.value.startDate);
@@ -203,17 +206,21 @@ export class PopupAddBookingCarComponent implements OnInit {
         }
       }
     });
-    
+    this.fGroupAddBookingCar.value.reasonID='Chưa có dữ liệu';//Cbx chưa có dữ liệu     
+    this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];   
     this.fGroupAddBookingCar.value.equipments = equipments;
-    this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];
-    this.fGroupAddBookingCar.value.reasonID='Chưa có dữ liệu';//Cbx chưa có dữ liệu
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe(
         res => {
           if(res.save || res.update){
             this.dialogRef && this.dialogRef.close();
-          } else this.notificationsService.notifyCode('E0011');
+          } else 
+          {
+            this.notificationsService.notifyCode('E0011');
+            return;
+          }
+          
         }        
       ); 
     // this.apiHttpService
@@ -240,25 +247,44 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.fGroupAddBookingCar.patchValue({ [event['field']]: event.data });
       }
     }
+    // if (event?.component.ControlName) {
+    //   if (event.data instanceof Object) {
+    //     this.fGroupAddBookingCar.value[event.component.ControlName] = event.data.value ;
+    //   } else {
+    //     this.fGroupAddBookingCar.value[event.component.ControlName] = event.data ;
+    //   }
+    // }
   }
+
   valueCbxCarChange(event?) {  
-    if(event?.data!=null){
+    if(event?.data!=null && event?.data !=""){
+      if (event.data instanceof Object) {
+        this.fGroupAddBookingCar.patchValue({[event['field']]: event.data.value, });
+      } else {
+        this.fGroupAddBookingCar.patchValue({ [event['field']]: event.data });
+      }
       this.tmplstDevice=[];
       var cbxCar = event.component.dataService.data;
-        cbxCar.forEach(element => {
-          if (element.ResourceID == event.data) {          
-            var carEquipments= element.Equipments.split(";");
-            carEquipments.forEach(item=>{
-              this.lstDeviceCar.forEach(device=>{
-                if(item==device.id){
-                  this.tmplstDevice.push(device);                
-                }
-              })
-            })          
-          }
-        });   
-      this.changeDetectorRef.detectChanges();
-    }    
+      cbxCar.forEach(element => {
+        if (element.ResourceID == event.data) {          
+          var carEquipments= element.Equipments.split(";");
+          carEquipments.forEach(item=>{
+            this.lstDeviceCar.forEach(device=>{
+              if(item==device.id){           
+                if(this.fGroupAddBookingCar.value.equipments!=null){
+                  this.fGroupAddBookingCar.value.equipments.split(";").forEach(equip=>{
+                    if(device.id==equip){
+                      device.isSelected=true;
+                    }
+                  });
+                }       
+                this.tmplstDevice.push(device);                
+              }              
+            })
+          })          
+        }
+      });        
+    } 
   }
 
   valueCbxUserChange(event) {
@@ -296,5 +322,48 @@ export class PopupAddBookingCarComponent implements OnInit {
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);
+  }
+  dataValid(){
+    var data = this.fGroupAddBookingCar.value;
+    if(!data.resourceID)
+    {
+      this.notificationsService.notifyCode('E0001',0,'"' + "Xe" + '"');
+      return false;
+    }
+    if (data.endDate - data.startDate <= 0 ) {
+      this.notificationsService.notifyCode('EP003');      
+      return false;
+    }
+    // if(!data.reasonID)
+    // {
+    //   this.notificationsService.notifyCode('E0001',0,'"' + "Mục đích" + '"');
+    //   return false;
+    // }
+    if(!data.title)
+    {
+      this.notificationsService.notifyCode('E0001',0,'"' + "Tiêu đề" + '"');
+      return false;
+    }
+    if(!data.agencyName)
+    {
+      this.notificationsService.notifyCode('E0001',0,'"' + "Khách hàng" + '"');
+      return false;
+    }
+    if(!data.address)
+    {
+      this.notificationsService.notifyCode('E0001',0,'"' + "Địa chỉ" + '"');
+      return false;
+    }
+    if(!data.contactName)
+    {
+      this.notificationsService.notifyCode('E0001',0,'"' + "Người liên hệ" + '"');
+      return false;
+    }
+    if(!data.phone)
+    {
+      this.notificationsService.notifyCode('E0001',0,'"' + "Số điện thoại" + '"');
+      return false;
+    }
+    return true;
   }
 }

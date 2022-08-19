@@ -21,7 +21,7 @@
     (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
     [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
     [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" [imageWidth]="35" imgCss="me-3" imageObjType="AD_Users"
-    [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.taskName"
+    [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.taskName" 
     [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
@@ -51,18 +51,19 @@
           <span class="icon-mode_comment icon-20 text-gray-400"></span>
           <span
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
-            data.comments }}</span>
+            data?.comments }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-check_box icon-20 text-gray-400"></span>
           <span
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
-            data.attachments }}</span>
+            data?.todo }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-attach_file icon-20 text-gray-400"></span>
           <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-light badge-sm mn-6">0</span>
+          class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+            data?.attachments }}</span>
         </div>
       </div>
       <div class="symbol-group symbol-hover justify-content-end"
@@ -89,7 +90,7 @@
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-1">
     <div class="d-flex align-items-end ms-14 codx-badge">
-      <div class="d-status">
+      <!-- <div class="d-status">
         <div class="badge badge-danger me-2 label-status" [style.border-color]="
             (data?.status | vll: vllStatus:'textColor' | async) + '30'
           " [style.background-color]="
@@ -97,7 +98,16 @@
           " [style.color]="data?.status | vll: vllStatus:'textColor' | async" style="border: none">
           {{ data?.status | vll: vllStatus:"text" | async }}
         </div>
-      </div>
+      </div> -->
+      <codx-vll
+      [formModel]="view.formModel"
+      [field]="'Status'"
+      [value]="data?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="text-gray-600"
+    >
+    </codx-vll>
       <span>
         <span class="fs-7 text-gray-600">{{
           data.dueDate | date: "dd/MM/yyyy"
@@ -145,7 +155,7 @@
       <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R'">
         <div class="d-flex align-items-end me-2 codx-badge">
           <span>
-            <div class="d-status">
+            <!-- <div class="d-status">
               <div class="badge badge-danger me-2 label-status" [style.border-color]="
                   (item?.status | vll: vllStatus:'textColor' | async) + '30'
                 " [style.background-color]="
@@ -155,7 +165,16 @@
                 " style="border: none">
                 {{ item?.status | vll: vllStatus:"text" | async }}
               </div>
-            </div>
+            </div> -->
+            <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="item?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="text-gray-600"
+          >
+          </codx-vll>
           </span>
           <span>
             <span class="text-gray-700">{{

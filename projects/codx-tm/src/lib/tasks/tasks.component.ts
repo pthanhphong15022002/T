@@ -166,10 +166,17 @@ export class TasksComponent
 
     this.request = new ResourceModel();
     this.request.service = 'TM';
-    this.request.assemblyName = 'CM';
-    this.request.className = 'DataBusiness';
-    this.request.method = 'LoadDataAsync';
+    this.request.assemblyName = 'TM';
+    this.request.className = 'TaskBusiness';
+    this.request.method = 'GetListDetailTasksAsync';
     this.request.idField = 'taskID';
+
+    // this.request = new ResourceModel();
+    // this.request.service = 'TM';
+    // this.request.assemblyName = 'CM';
+    // this.request.className = 'DataBusiness';
+    // this.request.method = 'LoadDataAsync';
+    // this.request.idField = 'taskID';
 
     this.button = {
       id: 'btnAdd',
@@ -1161,6 +1168,7 @@ export class TasksComponent
       case 'sendemail':
         break;
       case 'TMT02015':
+      case 'TMT02025':
         this.assignTask(e.data, data);
         break;
       case 'TMT02016':

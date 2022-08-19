@@ -7,7 +7,7 @@
         <e-tabitem *ngFor="let item of template">
           <ng-template #headerText class="">
             <div>
-              <span class="fw-bolder" (click)="toggleDocuments(item)">{{item.templateName}}</span>
+              <span class="fw-bolder text-red" (click)="toggleDocuments(item)">{{item.templateName}}</span>
             </div>
             <div><br>
               <span>{{item.descriptions}}</span>
