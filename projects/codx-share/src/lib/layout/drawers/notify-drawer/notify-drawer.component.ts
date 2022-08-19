@@ -1,14 +1,20 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, CallFuncService, DialogData, DialogRef, SidebarModel, UIComponent } from 'codx-core';
+import { ApiHttpService, AuthService, CallFuncService, DialogData, DialogRef, NotificationMessage, SidebarModel, UIComponent } from 'codx-core';
 import { CodxAlertComponent } from '../../../components/codx-alert/codx-alert.component';
 
 @Component({
   selector: 'codx-notify-drawer',
   templateUrl: './notify-drawer.component.html',
+  styleUrls: ['./notify-drawer.component.scss'],
 })
 export class NotifyDrawerComponent extends UIComponent implements OnInit {
   dialog: any;
-  tenant:string ="";
+  lstNotify:any[] = [];
+  lstNewNotify:any[] = [];
+  lstOldNotify:any[] = [];
+  funcID:string ="";
+  entityName:string = "";
+  tableName:String = "";
   constructor(
     private inject: Injector,
     private dt:ChangeDetectorRef,
@@ -18,18 +24,39 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.tenant = this.auth.userValue.tenant;
+    this.funcID = data?.data;
   }
 
   onInit(): void {
-    // this.api.execSv("Background","ERM.Business.Background","NotificationBusinesss","GetAsync",[this.auth.userValue.userID,this.tenant])
-    // .subscribe((res:any) => {
-    //   console.log(res);
-    // })
+    if(this.funcID)
+    {
+      this.cache.functionList(this.funcID).subscribe((f:any) => {
+        if(f){
+          this.entityName = f.entityName;
+          this.getAlertAsync(this.entityName);
+        }
+      });
+    }
+    // this.api.execNonDB<NotificationMessage[]>( 
+    //   'Background',
+    //   'NotificationBusinesss',
+    //   'GetAsync',
+    //   [this.auth.userValue.userID, this.auth.userValue.tenant]
+    // ).subscribe((res:any) => {
+    //   if(res){
+    //     console.log(res);
+    //     this.lstNotify = res;
+    //   }
+    // });
+
   }
-  clickShowAlert(){
-    let optionSide = new SidebarModel();
-    optionSide.Width = '550px';
-    this.callfc.openSide(CodxAlertComponent,'',optionSide);
+
+  getAlertAsync(entityName:string){
+    this.api.exec("ERM.Business.AD","AlertRulesBusiness","GetAsync",entityName)
+    .subscribe((res:any) => {
+      if(res){
+        console.log(res);
+      }
+    })
   }
 }

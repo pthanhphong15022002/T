@@ -30,6 +30,7 @@ export class AgencyComponent implements OnInit {
     jobTitle: new FormControl(),
     phone: new FormControl(),
     email: new FormControl(),
+    note: new FormControl()
   });
   public dtAgency = new agency();
   constructor(

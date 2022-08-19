@@ -13,7 +13,7 @@
           <codx-label
             default="Xe"
             fieldName="ResourceID"
-            [formModel]="dialogRef.formModel"
+            [formModel]="form.formModel"
           >
           </codx-label>
           <span class="label-status text-primary">{{
@@ -24,14 +24,24 @@
         </div>
         <codx-input
           type="combobox"
+          name="cbxCar"
           refValue="EP_Cars"
-          [multiple]="false"
-          field="resourceID"          
+          field="resourceID"
           [formModel]="form.formModel"
           [crrValue]="fGroupAddBookingCar.value.resourceID"         
           (valueChange)="valueCbxCarChange($event)"
         >
         </codx-input>
+        <!-- <codx-input
+          type="combobox"
+          name="cbxCar"
+          refValue="EP_Cars"
+          ControlName="resourceID"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingCar"       
+          (valueChange)="valueCbxCarChange($event)"
+        >
+        </codx-input> -->
       </div>
       <div class="row">
         
@@ -80,11 +90,9 @@
             type="datetime"
             format="f"
             class="test-datetime"
-            placeholder="Ngày bắt đầu"
             field="startDate"
             [crrValue]="fGroupAddBookingCar.value.startDate"
-            (valueChange)="changeTime($event)"
-            
+            (valueChange)="changeTime($event)" 
           >
           </codx-input>
         </div>
@@ -99,10 +107,9 @@
             type="datetime"
             format="f"
             class="test-datetime"
-            placeholder="Ngày kết thúc"
             field="endDate"
             [crrValue]="fGroupAddBookingCar.value.endDate"
-            (valueChange)="changeTime($event)"
+            (valueChange)="changeTime($event)"            
           >
           </codx-input>
         </div>
@@ -154,6 +161,7 @@
           ControlName="agencyName"         
           [formModel]="form.formModel"
           [Group]="fGroupAddBookingCar"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>

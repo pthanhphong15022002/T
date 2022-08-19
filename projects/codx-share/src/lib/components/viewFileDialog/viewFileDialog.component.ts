@@ -50,8 +50,12 @@ export class ViewFileDialogComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     if (data.data != null) {
-      this.data = data.data[0];
-      this.formModel = data.data[1];
+      if (data.data.length == 2) {
+        this.data = data.data[0];
+        this.formModel = data.data[1];
+      }      
+      else 
+        this.data = data.data;
     }      
     else
       this.data = data;
@@ -229,21 +233,20 @@ export class ViewFileDialogComponent implements OnInit {
     this.tenant = this.auth.userValue.tenant;
     this.access_token = this.auth.userValue.token;
     //alert(1);
-    if ( this.srcVideo == "" && this.linkViewImage == "") { 
-      this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
-        this.src = `${environment.librOfficeUrl}?WOPISrc=${item}`;
-  
-      });
-    }   
+    // if ( this.srcVideo == "" && this.linkViewImage == "") { 
+    //   this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
+    //     this.src = `${environment.librOfficeUrl}?WOPISrc=${item}`;  
+    //   });
+    // }   
 
-    // this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
-    // if ( this.srcVideo == "" && this.linkViewImage == "") {
-    //   setTimeout(() => {
-    //     (        
-    //         document.getElementById("frmFile") as HTMLFormElement).submit();
-    //         //$("#viewfiledalog").find("form")[0]["submit"]();
-    //   }, 100);
-    // }
+    this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
+   // if ( this.srcVideo == "" && this.linkViewImage == "") {
+      setTimeout(() => {
+        (        
+            document.getElementById("frmFile") as HTMLFormElement).submit();
+            //$("#viewfiledalog").find("form")[0]["submit"]();
+      }, 100);
+   // }
   }
 
   _animalOpen(name, num, callback?) {
@@ -314,8 +317,8 @@ export class ViewFileDialogComponent implements OnInit {
       // this.data.thumbnail;//
       this.linkViewImage = this.data.thumbnail; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
-
-    this.viewFile(this.id);
+    else 
+      this.viewFile(this.id);
     // let diaglog = this.callfc.openForm(this.contentViewFileDialog, o.fileName, 1000, 800, null, "");
     // diaglog.close(res => {
     //   this.viewFile(this.iD);

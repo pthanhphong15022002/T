@@ -1,7 +1,7 @@
 <ng-container *ngIf="file_img_video.length > 0">
   <div [ngSwitch]="file_img_video.length" class="imgs-grid">
     <ng-container *ngSwitchCase="1">
-      <div class="feed-1pic position-relative overflow-hidden h-250px" (click)="clickViewDetail(file_img_video[0])">
+      <div class="feed-1pic position-relative overflow-hidden h-250px">
         <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">
           <ng-container *ngIf="file_img_video[0].recID;else image_1_0">
             <codx-img class="h-auto" [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID"

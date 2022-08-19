@@ -37,10 +37,12 @@ export class ViewDetailComponent implements OnInit {
   @Input() view: ViewsComponent;
   @ViewChild('attachment') attachment;
 
+  active = 1;
   openNav = false;
   canRequest;
   itemDetailStt;
   taskViews = [];
+  files = [];
   process;
   itemDetailDataStt;
   dialog: DialogRef;
@@ -59,12 +61,24 @@ export class ViewDetailComponent implements OnInit {
   }
 
   initForm() {
-    this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
-      if (res) {
-        this.taskViews = res;
-      }
-      console.log('task', res);
-    });
+    // this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
+    //   if (res) {
+    //     this.taskViews = res;
+    //   }
+    //   console.log('task', res);
+    // });
+
+    this.esService
+      .getFiles(
+        this.formModel.funcID,
+        this.itemDetail?.recID,
+        this.formModel.entityName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.files = res;
+        }
+      });
     if (this.itemDetail && this.itemDetail !== null) {
       this.esService
         .getDetailSignFile(this.itemDetail?.recID)
@@ -177,7 +191,6 @@ export class ViewDetailComponent implements OnInit {
   edit(datas: any) {
     this.view.dataService.edit(datas).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.Width = '800px';
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
 
@@ -195,6 +208,10 @@ export class ViewDetailComponent implements OnInit {
           formModel: this.view?.currentView?.formModel,
           option: option,
         },
+        // {
+        //   oSignFile: option.DataService.dataSelected,
+        //   formModel: this.view?.currentView?.formModel,
+        // },
         '',
         dialogModel
       );

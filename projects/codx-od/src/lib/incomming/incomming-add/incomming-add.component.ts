@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  AuthStore,
   CallFuncService,
   DataRequest,
   DialogData,
@@ -23,7 +24,7 @@ import {
 } from '@angular/forms';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { DispatchService } from '../../services/dispatch.service';
-import { getJSONString } from '../../function/default.function';
+import { capitalizeFirstLetter, getJSONString } from '../../function/default.function';
 
 @Component({
   selector: 'app-imcomming-add',
@@ -56,12 +57,14 @@ export class IncommingAddComponent implements OnInit {
   hidepb = true;
   activeDiv: any;
   dataRq = new DataRequest();
+  objRequied = [];
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
+    private auth: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -73,6 +76,9 @@ export class IncommingAddComponent implements OnInit {
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
 
+    var user = this.auth.get();
+    if(user?.userID)
+      this.dispatch.createdBy = user?.userID;
     
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
@@ -97,6 +103,8 @@ export class IncommingAddComponent implements OnInit {
     } else if (this.type == 'edit') {
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
     }
+
+    this.getKeyRequied();
   }
   fileAdded(event: any) {
     if (event?.data) this.hideThumb = true;
@@ -105,12 +113,12 @@ export class IncommingAddComponent implements OnInit {
   //Mở form thêm mới đơn vị / phòng ban
   openFormAgency(action: any) {
     if (action == 'agency') {
-      this.callfunc.openForm(this.tmpagency, null, 500, 600);
+      this.callfunc.openForm(this.tmpagency, null, 500, 700);
       /*  this.callfc.openForm(DepartmentComponent, "Thêm mới phòng ban", 500, 700, null, this.idAgency).subscribe((dialog: any) => {
        dialog.close = this.closeDept;
      }); */
     } else {
-      this.callfunc.openForm(this.tmpdept, null, 500, 600);
+      this.callfunc.openForm(this.tmpdept, null, 500, 800);
       /* this.callfc.openForm(AgencyComponent, "Thêm đơn vị nhận", 500, 700, null, null).subscribe((dialog: any) => {
        dialog.close = this.closeAgency;
      }); */
@@ -165,9 +173,10 @@ export class IncommingAddComponent implements OnInit {
   }
   //Các hàm value change
   changeValueAgency(event: any) {
+    debugger;
     //ktra nếu giá trị trả vô = giá trị trả ra return null
     //if(this.dispatch.agencyName == event.data[0]) return;
-    if (!event.data) return;
+    if (!event.data) return ;
 
     if (event.data.length == 0) {
       this.hidepb = true;
@@ -205,6 +214,7 @@ export class IncommingAddComponent implements OnInit {
 
   /////// lưu/câp nhật công văn
   onSave() {
+    if(!this.checkIsRequired()) return;
     /*  this.submitted = true;
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
     if(this.dispatchForm.invalid || this.checkAgenciesErrors) return; */
@@ -223,30 +233,28 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.views = null;
         this.dispatch.percentage = 0;
       }
-      if (this.fileCount > 0) {
-        if (this.type == 'add')
-          this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
-        (this.dispatch.status = '1'),
-          (this.dispatch.approveStatus = '1'),
-          this.odService
-            .saveDispatch(this.dataRq, this.dispatch)
-            .subscribe((item) => {
-              if (item.status == 0) {
-                this.data = item;
-                this.attachment.objectId = item.data.recID;
-                this.attachment.saveFilesObservable().subscribe((item2:any)=>{
-                  if(item2?.status == 0)
-                  {
-                    this.dialog.close(item.data);
-                    this.notifySvr.notify(item.message);
-                  }
-                  else this.notifySvr.notify(item2.message);
-                });
+      if (this.type == 'add') this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
+      this.dispatch.status = '1';
+      this.dispatch.approveStatus = '1';
+      this.odService
+        .saveDispatch(this.dataRq, this.dispatch)
+        .subscribe((item) => {
+          if (item.status == 0) {
+            this.data = item;
+            this.attachment.objectId = item.data.recID;
+            this.attachment.saveFilesObservable().subscribe((item2:any)=>{
+              if(item2?.status == 0)
+              {
+                this.dialog.close(item.data);
+                this.notifySvr.notify(item.message);
               }
-              else this.notifySvr.notify(item.message);
+              else this.notifySvr.notify(item2.message);
             });
-      } else this.notifySvr.notifyCode('OD022');
-    } else if (this.type == 'edit') {
+          }
+          else this.notifySvr.notify(item.message);
+        });
+    } 
+    else if (this.type == 'edit') {
       let dltDis = true;
       if (this.fileCount == 0) dltDis = false;
       this.odService.updateDispatch(this.dispatch, dltDis).subscribe((item) => {
@@ -280,4 +288,29 @@ export class IncommingAddComponent implements OnInit {
     this.showAgency = true;
     if (val == 'dv') this.showAgency = false;
   }
+  getKeyRequied()
+  {
+    var objKey = Object.keys(this.gridViewSetup);
+    for(var i = 0 ; i<objKey.length;i++)
+    {
+      if(this.gridViewSetup[objKey[i]].isRequire)
+        this.objRequied.push(objKey[i]);
+    }
+  }
+  checkIsRequired(){
+    for(var i = 0 ; i< this.objRequied.length ; i++)
+    {
+      var field = capitalizeFirstLetter(this.objRequied[i]);
+      var data = this.dispatch[field];
+      if(!data)
+      {
+        return this.notifySvr.notifyCode('E0001', 0, field)
+      }
+    }
+    if(this.files <=0) 
+    {
+      return this.notifySvr.notifyCode('OD022');
+    }
+    return true;
+  };
 }

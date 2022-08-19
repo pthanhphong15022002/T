@@ -144,7 +144,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           this.dialogCategory.patchValue(this.data);
           this.dialogCategory = res;
           this.dialogCategory.patchValue({
-            eSign: true,
             signatureType: '1',
             icon: 'icon-text_snippet',
             color: '#0078FF',
@@ -294,6 +293,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       type: '0',
       transID: transID,
       model: this.dialogCategory,
+      isAddNew: this.isAdd,
     };
 
     let dialogModel = new DialogModel();

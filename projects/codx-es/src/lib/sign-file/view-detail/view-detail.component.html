@@ -56,18 +56,6 @@
       <div class="d-flex text-dark me-6">
         <codx-label fiedName="Priority" [formModel]="formModel" default="Ưu tiên" class="fw-bold me-1">
         </codx-label>
-        <!-- <span class="icon-flag icon-16" [style.color]="
-            itemDetail
-              ? (itemDetail?.priority | vll: 'L0186':'color' | async)
-              : ''
-          "></span>
-        <span class="text-gray-600">
-          {{
-          itemDetail
-          ? (itemDetail?.priority | vll: "L0186":"text" | async)
-          : ""
-          }}
-        </span> -->
         : <codx-vll [formModel]="formModel" [field]="'Priority'" [value]="itemDetail?.priority" [showText]="true"
           class="text-gray-600">
         </codx-vll>
@@ -94,13 +82,10 @@
       </div>
     </div>
     <div class="mb-2">
-      <codx-attachment #attachment [objectType]="formModel.entityName" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-        hideDes="1" [functionID]="" [objectId]="itemDetail?.recID" [allowMultiFile]="1" [functionID]="formModel.funcID">
-      </codx-attachment>
-      <!-- <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0"
-      [objectId]="dialogSignFile.value.recID" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
-      [functionID]="formModel.funcID" type="inline" (fileCount)="getfileCount($event)">
-    </codx-attachment> -->
+      <ng-container *ngIf="files.length > 0">
+        <codx-thumbnail [files]="files" displayThumb="simple">
+        </codx-thumbnail>
+      </ng-container>
     </div>
 
     <div class="codx_e-header mb-2" [class.active]="true">
@@ -128,19 +113,54 @@
   </ng-template>
 
   <ng-template #body>
+    <!-- <div class="tab-horizone h-od-tab ">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <codx-label name="lblAbstract" [formModel]="itemDetailTemplate.formModel" default="Mô tả ngắn gọn"
+              class="ms-1 fw-bold"></codx-label>
+            <ng-template ngbNavContent>
+              <div class="summary mt-2">
+                {{ itemDetail?.abstract }}
+              </div>
+            </ng-template>
+          </a>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>
+            <codx-label name="lblBusiness" [formModel]="itemDetailTemplate.formModel" default="Công việc"
+              class="ms-1 fw-bold"></codx-label>
+            <ng-template ngbNavContent>
+              <ng-container *ngIf="taskViews[0].length>0">
+                <codx-treeview #treeAdd id="treeAdd" [data]="taskViews[0]" [showSearch]="false"
+                  [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
+                </codx-treeview>
+              </ng-container>
+            </ng-template>
+          </a>
+        </li>
+        <li [ngbNavItem]="3">
+          <a ngbNavLink>
+            <i class="icon-people_alt icon-16"></i>
+            <codx-label name="lblApprovalTrans" [formModel]="itemDetailTemplate.formModel" default="Quy trình duyệt"
+              class="ms-1 fw-bold"></codx-label>
+            <ng-template ngbNavContent>
+              <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
+              </lib-view-approval-process>
+            </ng-template>
+          </a>
+        </li>
+      </ul>
+
+    </div> -->
     <div class="container mb-2">
       <div class="summary mt-2" *ngIf="itemDetailStt == '1'">
         {{ itemDetail?.abstract }}
       </div>
       <div class="list_Of_Jobs mb-2" *ngIf="itemDetailStt == '2'">
-        <ng-container *ngIf="taskViews[0].length>0">
+        <!-- <ng-container *ngIf="taskViews[0].length>0">
           <codx-treeview #treeAdd id="treeAdd" [data]="taskViews[0]" [showSearch]="false" [itemTemplate]="templateorg"
             [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
-        </ng-container>
-        <!-- <ng-container>
-          <codx-treeview #treeAdd id="treeAdd" [data]="taskViews" [showSearch]="false" [itemTemplate]="taskViewDetail"
-            [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
-          </codx-treeview>
         </ng-container> -->
       </div>
       <div *ngIf="itemDetailStt == '3'" class="mb-2">
@@ -178,22 +198,6 @@
                             {{ approve.leadtime }}
                           </div>
                         </div>
-                        <!-- <div class="badge my-1 badge-primary" *ngIf="
-                            approve.duration <= approve.leadtime;
-                            else inQueue
-                          ">
-                          {{ getHour("2022-07-06T00:00:00Z", 0) }}
-                          -cc
-                          {{ getHour(approve.activedOn, approve.leadtime) }}
-                        </div>
-                        <ng-template #inQueue>
-                          <div class="badge badge-danger">
-                            {{ approve.leadtime }}
-                          </div>
-                        </ng-template>
-                        <div class="text-gray-600 fs-7" *ngIf="approve.approvedOn ? true : false">
-                          {{ approve.approvedOn | date: "medium" }}
-                        </div> -->
                       </div>
                       <div class="ms-6 d-flex">
                         <span class="icon-attach_file icon-18 me-1"></span>

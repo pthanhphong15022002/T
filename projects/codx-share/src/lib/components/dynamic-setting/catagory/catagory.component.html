@@ -80,14 +80,15 @@
           "
           [state]="{
             setting: setting | group: data.recID:'2',
-            function: function
+            function: function,
+            dataValue: dataValue[data.fieldName]
           }"
           *ngIf="data.displayMode === '1'"
           ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span
         ></a>
         <a
           href="javascript:void(0)"
-          (click)="openPopup($event, data.reference)"
+          (click)="openPopup($event, data.reference, data.fieldName)"
           *ngIf="data.displayMode === '2'"
           ><span class="icon-edit icon-20 ml-6"></span
         ></a>
