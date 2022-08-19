@@ -403,7 +403,7 @@ export class TasksComponent
           [this.view.dataService.dataSelected],
           false
         );
-      if (e?.event && e?.event != null) {
+      if (e?.event && e?.event != null && e?.event[1] !=null) {
         let listTask = e?.event[1];
         let newTasks = [];
         for (var i = 0; i < listTask.length; i++) {
