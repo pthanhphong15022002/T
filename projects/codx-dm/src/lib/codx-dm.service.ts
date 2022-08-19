@@ -1188,7 +1188,7 @@ export class CodxDMService {
             if (index > -1) {
               list.splice(index, 1);//remove element from array                
               this.listFiles = list;              
-              this.notificationsService.notify(res.message);
+           //   this.notificationsService.notify(res.message);
               this.ChangeData.next(true);
             }
           }

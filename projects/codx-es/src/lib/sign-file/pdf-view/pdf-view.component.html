@@ -351,7 +351,13 @@
                     <ng-template #template let-area="">
                       <div
                         class="annotationItem"
-                        (click)="goToSelectedAnnotation(area.recID)"
+                        (click)="
+                          goToSelectedAnnotation(
+                            area.recID,
+                            area.labelValue,
+                            area.fontFormat
+                          )
+                        "
                         style="border: 1px solid black; margin-bottom: 5px"
                       >
                         <codx-temp-full
@@ -386,6 +392,20 @@
                               type="text"
                               formControlName="content"
                               class="d-block w-100"
+                              [style]="
+                                'font-size: ' +
+                                curAnnotFontSize +
+                                'px;' +
+                                'font-family: ' +
+                                curAnnotFontStyle +
+                                ';'
+                              "
+                              [ngClass]="{
+                                'fw-bold': isBold,
+                                'fst-italic': isItalic,
+                                'text-decoration-underline': isUnd
+                              }"
+                              [defaultValue]="area.labelType"
                             />
                           </div>
 
@@ -404,7 +424,6 @@
                               style="width: 100%; min-width: 70px"
                               id="fontStylesDropdownList"
                               [dataSource]="lstAnnotFontStyle"
-                              (change)="changeFontStyle($event)"
                               [(value)]="curAnnotFontStyle"
                               formControlName="fontStyle"
                             >
@@ -413,7 +432,6 @@
                               style="width: 100%; min-width: 70px"
                               id="fontSizesDropdownList"
                               [dataSource]="lstAnnotFontSize"
-                              (change)="changeFontSize($event)"
                               [(value)]="curAnnotFontSize"
                               formControlName="fontSize"
                             >
@@ -422,10 +440,12 @@
                           <div class="btn-format">
                             <button
                               type="button"
-                              class="btn btn-primary"
-                              (click)="
-                                changeAnnotPro(area.labelType, area.recID)
-                              "
+                              [ngClass]="{
+                                btn: true,
+                                'btn-secondary': !isBold,
+                                'btn-success': isBold
+                              }"
+                              (click)="changeFontWeight(1)"
                             >
                               <codx-label
                                 name="lblSave"
@@ -435,10 +455,12 @@
                             </button>
                             <button
                               type="button"
-                              class="btn btn-primary"
-                              (click)="
-                                changeAnnotPro(area.labelType, area.recID)
-                              "
+                              [ngClass]="{
+                                btn: true,
+                                'btn-secondary': !isItalic,
+                                'btn-success': isItalic
+                              }"
+                              (click)="changeFontWeight(2)"
                             >
                               <codx-label
                                 name="lblSave"
@@ -447,10 +469,12 @@
                               ></codx-label></button
                             ><button
                               type="button"
-                              class="btn btn-primary"
-                              (click)="
-                                changeAnnotPro(area.labelType, area.recID)
-                              "
+                              [ngClass]="{
+                                btn: true,
+                                'btn-secondary': !isUnd,
+                                'btn-success': isUnd
+                              }"
+                              (click)="changeFontWeight(3)"
                             >
                               <codx-label
                                 name="lblSave"

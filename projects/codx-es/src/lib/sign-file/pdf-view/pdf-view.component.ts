@@ -118,10 +118,13 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   lstAnnotFontStyle = ['Helvetica', 'Arial'];
   curAnnotFontStyle = 'Helvetica';
-  lstAnnotFontSize = [10, 11, 12, 13];
+  lstAnnotFontSize = [10, 11, 12, 13, 15, 17, 19, 23];
   curAnnotFontSize = 13;
   lstAnnotDateFormat = ['DD/mm/YYYY', 'mm/YYYY'];
   curAnnotDateFormat = 'DD/mm/YYYY';
+  isBold = false;
+  isItalic = false;
+  isUnd = false;
 
   file: Object = { text: 'fileName', value: 'fileID' };
   person: Object = { text: 'authorName', value: 'authorID' };
@@ -558,12 +561,18 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.zoomValue = e.zoomValue;
   }
 
-  changeFontStyle(e) {
-    console.log('font style', e);
-  }
-
-  changeFontSize(e) {
-    console.log('font size', e);
+  changeFontWeight(type) {
+    switch (type) {
+      case 1:
+        this.isBold = !this.isBold;
+        break;
+      case 2:
+        this.isItalic = !this.isItalic;
+        break;
+      case 3:
+        this.isUnd = !this.isUnd;
+        break;
+    }
   }
 
   changeAnnotPro(type, recID) {
@@ -1318,8 +1327,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   cancelPrint(e: any) {}
 
-  goToSelectedAnnotation(areaID) {
+  goToSelectedAnnotation(areaID, labelValue, fontFormat) {
     this.pdfviewerControl.annotationModule.selectAnnotation(areaID);
+    this.formAnnot.controls['content'].setValue(labelValue);
+    this.isBold = fontFormat?.includes('B') ? true : false;
+    this.isItalic = fontFormat?.includes('I') ? true : false;
+    this.isUnd = fontFormat?.includes('U') ? true : false;
     this.curSelectedAnnotID = areaID;
   }
 

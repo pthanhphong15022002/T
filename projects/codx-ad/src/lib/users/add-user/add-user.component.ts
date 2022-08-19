@@ -387,5 +387,5 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  buttonClick(e: any) {}
+  buttonClick(e: any) { }
 }

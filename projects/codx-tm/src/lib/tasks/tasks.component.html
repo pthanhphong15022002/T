@@ -1,13 +1,14 @@
 <ng-template #panelRight>
-  <app-view-detail #detail [taskID]="itemSelected?.taskID" [formModel]="view.formModel" [param]="param" [dataTree]="dataTree"
-    [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus" [vllExtendStatus]="vllExtendStatus"
-    [popoverCrr]="popoverCrr" [vllStatus]="vllStatus" (clickMoreFunction)="receiveMF($event)"
-    (hoverPopover)="hoverPopover($event)">
+  <app-view-detail #detail [taskID]="itemSelected?.taskID" [formModel]="view.formModel" [param]="param"
+    [dataTree]="dataTree" [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus"
+    [vllExtendStatus]="vllExtendStatus" [popoverCrr]="popoverCrr" [vllStatus]="vllStatus"
+    (clickMoreFunction)="receiveMF($event)" (hoverPopover)="hoverPopover($event)">
   </app-view-detail>
 </ng-template>
 
 <ng-template #itemViewList let-data>
-  <lib-view-list [formModel]="view.formModel" [vllStatus]="vllStatus" [data]="data" (clickMoreFunction)="receiveMF($event)">
+  <lib-view-list [formModel]="view.formModel" [vllStatus]="vllStatus" [data]="data"
+    (clickMoreFunction)="receiveMF($event)">
   </lib-view-list>
 </ng-template>
 
@@ -27,11 +28,12 @@
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)"  (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
-    [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" [subTitle]="data.positionName"
-    [content]="data.memo || 'memo'" [status]="data.status" [statusVll]="vllStatus" [date]="data.dueDate"
-    [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel" [setting]="setting"
-    [footer]="cardImgFooter" [dataItem]="data">
+  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
+    [iconCss]="data?.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'" [title]="data.userName" [subTitle]="data.positionName" [content]="data.memo || 'memo'"
+    [status]="data.status" [statusVll]="vllStatus" [date]="data.dueDate" [resources]="data.assignTo" [rootData]="data"
+    [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
 </ng-template>
 
@@ -51,24 +53,26 @@
           <span class="icon-mode_comment icon-20 text-gray-400"></span>
           <span
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
-            data.comments }}</span>
+            data?.comments }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-check_box icon-20 text-gray-400"></span>
           <span
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
-            data.attachments }}</span>
+            data?.todo }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-attach_file icon-20 text-gray-400"></span>
           <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-light badge-sm mn-6">0</span>
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+            data?.attachments }}</span>
         </div>
       </div>
       <div class="symbol-group symbol-hover justify-content-end"
         *ngIf="setting.resources && data.assignTo && data.assignTo.length">
         <codx-imgs [width]="30" [objectId]="data.assignTo" objectType="AD_Users" [numberImages]="3"
-          (click)="openViewListTaskResource(data)">
+          (mouseenter)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
+          #popoverList="ngbPopover" placement="left bottom top right" container="body" autoClose="outside">
         </codx-imgs>
       </div>
     </div>
@@ -98,15 +102,9 @@
           {{ data?.status | vll: vllStatus:"text" | async }}
         </div>
       </div> -->
-      <codx-vll
-      [formModel]="view.formModel"
-      [field]="'Status'"
-      [value]="data?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="text-gray-600"
-    >
-    </codx-vll>
+      <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
+        [showBgColor]="true" class="text-gray-600">
+      </codx-vll>
       <span>
         <span class="fs-7 text-gray-600">{{
           data.dueDate | date: "dd/MM/yyyy"
@@ -165,15 +163,9 @@
                 {{ item?.status | vll: vllStatus:"text" | async }}
               </div>
             </div> -->
-            <codx-vll
-            [formModel]="view.formModel"
-            [field]="'Status'"
-            [value]="item?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="text-gray-600"
-          >
-          </codx-vll>
+            <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="item?.status" [showText]="true"
+              [showBgColor]="true" class="text-gray-600">
+            </codx-vll>
           </span>
           <span>
             <span class="text-gray-700">{{
