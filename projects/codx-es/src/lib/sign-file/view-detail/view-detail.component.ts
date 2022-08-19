@@ -191,7 +191,6 @@ export class ViewDetailComponent implements OnInit {
   edit(datas: any) {
     this.view.dataService.edit(datas).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.Width = '800px';
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
 
@@ -203,11 +202,15 @@ export class ViewDetailComponent implements OnInit {
         700,
         650,
         this.funcID,
+        // {
+        //   isAddNew: false,
+        //   dataSelected: datas,
+        //   formModel: this.view?.currentView?.formModel,
+        //   option: option,
+        // },
         {
-          isAddNew: false,
-          dataSelected: datas,
+          oSignFile: option.DataService.dataSelected,
           formModel: this.view?.currentView?.formModel,
-          option: option,
         },
         '',
         dialogModel
