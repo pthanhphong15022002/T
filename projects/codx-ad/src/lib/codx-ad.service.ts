@@ -105,6 +105,14 @@ export class CodxAdService {
     const controls = formGroup.controls;
     for (const name in controls) {
       if (controls[name].invalid) {
+        if (name == 'Email') {
+          if (controls?.email != null || controls?.email?.value != '') {
+            var checkFormatEmail = formGroup.addValidators(Validators.email);
+            debugger;
+            // this.notificationsService.notify("Trường 'Email' không hợp lệ");
+            return;
+          }
+        }
         invalid.push(name);
         break;
       }
