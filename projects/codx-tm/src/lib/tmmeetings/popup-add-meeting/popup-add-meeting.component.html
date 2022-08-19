@@ -198,7 +198,7 @@
       <codx-label fiedName="refID" default="Dự án">
       </codx-label>
       <codx-input type="combobox" field="refID" refValue="TMProjects"
-       (valueChange)="valueChange($event)">
+       (valueChange)="valueChange($event)" [crrValue]="meeting.refID">
       </codx-input>
     </div>
   </ng-container>
