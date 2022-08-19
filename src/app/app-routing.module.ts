@@ -6,6 +6,7 @@ import { AuthGuard } from 'codx-core';
 import { SosComponent } from '@pages/sos/sos.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { CalendarComponent } from 'projects/codx-tm/src/lib/setting/calendar/calendar.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 export const routes: Routes = [
   {
     path: ':tenant',
@@ -134,6 +135,17 @@ export const routes: Routes = [
             path: 'settingcalendar/:funcID',
             component: CalendarComponent,
           },
+        ],
+      },
+      {
+        path: 'shared',
+        canActivate: [AuthGuard],
+        // loadChildren: () =>
+        //   import('projects/codx-share/src/lib/codx-share.module').then(
+        //     (m) => m.CodxShareModule
+        //   ),
+        component: LayoutNoAsideComponent,
+        children: [
           {
             path: 'dynamic/:funcID',
             component: DynamicFormComponent,
