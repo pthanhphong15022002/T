@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DialogRef, DialogData } from 'codx-core';
+import { DialogRef, DialogData, ApiHttpService, NotificationMessage, AuthService } from 'codx-core';
 
 @Component({
   selector: 'lib-codx-alert',
@@ -13,6 +13,9 @@ export class CodxAlertComponent implements OnInit {
   dialog:DialogRef = null;
   constructor(
     private route:ActivatedRoute,
+    private auth:AuthService,
+    private api:ApiHttpService,
+    private dt: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) 
