@@ -76,9 +76,9 @@ export class IncommingAddComponent implements OnInit {
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
 
-    debugger;
     var user = this.auth.get();
-    
+    if(user?.userID)
+      this.dispatch.createdBy = user?.userID;
     
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
@@ -113,12 +113,12 @@ export class IncommingAddComponent implements OnInit {
   //Mở form thêm mới đơn vị / phòng ban
   openFormAgency(action: any) {
     if (action == 'agency') {
-      this.callfunc.openForm(this.tmpagency, null, 500, 600);
+      this.callfunc.openForm(this.tmpagency, null, 500, 700);
       /*  this.callfc.openForm(DepartmentComponent, "Thêm mới phòng ban", 500, 700, null, this.idAgency).subscribe((dialog: any) => {
        dialog.close = this.closeDept;
      }); */
     } else {
-      this.callfunc.openForm(this.tmpdept, null, 500, 600);
+      this.callfunc.openForm(this.tmpdept, null, 500, 800);
       /* this.callfc.openForm(AgencyComponent, "Thêm đơn vị nhận", 500, 700, null, null).subscribe((dialog: any) => {
        dialog.close = this.closeAgency;
      }); */
@@ -307,7 +307,10 @@ export class IncommingAddComponent implements OnInit {
         return this.notifySvr.notifyCode('E0001', 0, field)
       }
     }
-    if(this.files <=0) return this.notifySvr.notifyCode('OD022');
+    if(this.files <=0) 
+    {
+      return this.notifySvr.notifyCode('OD022');
+    }
     return true;
   };
 }

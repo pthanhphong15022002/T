@@ -1161,6 +1161,7 @@ export class TasksComponent
       case 'sendemail':
         break;
       case 'TMT02015':
+      case 'TMT02025':
         this.assignTask(e.data, data);
         break;
       case 'TMT02016':

@@ -78,5 +78,6 @@
     right: 0;
     top: 56px;
     bottom: 50px;
-    overflow: auto;
+    overflow: hidden;
+    overflow-y: auto;
 }

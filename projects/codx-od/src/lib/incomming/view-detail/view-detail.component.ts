@@ -94,19 +94,16 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private ref: ChangeDetectorRef
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data) {
-      if (
-        changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
-      ) {
-        this.dataItem = changes?.dataItem?.currentValue;
-        this.userID = this.authStore.get().userID;
-        this.data = changes.data?.currentValue;
-        if (!this.data) this.data = {};
-        this.getDataValuelist();
-        this.getPermission(this.data.recID);
-        this.ref.detectChanges();
-      }
+    if (changes?.data && changes.data?.previousValue?.recID != changes.data?.currentValue?.recID) {
+      this.userID = this.authStore.get().userID;
+      this.data = changes.data?.currentValue;
+      if (!this.data) this.data = {};
+      this.getDataValuelist();
+      this.getPermission(this.data.recID);
+      this.ref.detectChanges();
     }
+    if(changes?.dataItem && changes?.dataItem?.currentValue != changes?.dataItem?.previousValue)
+      this.dataItem = changes?.dataItem?.currentValue;
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
     if (changes?.pfuncID?.currentValue != changes?.pfuncID?.previousValue) {
@@ -126,6 +123,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getDataValuelist();
+   
   }
   getGridViewSetup(funcID: any) {
     this.cache.functionList(funcID).subscribe((fuc) => {
@@ -521,12 +519,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             600,
             400,
             null,
-            { data: this.data },
+            { data: datas },
             '',
             option
           )
           .closed.subscribe((x) => {
-            if (x.event) this.view.dataService.remove(x.event).subscribe();
+            if (x.event) this.view.dataService.update(x.event).subscribe();
           });
         break;
       }
@@ -633,6 +631,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case "ODT110":
       case "ODT209":
       case "ODT111":
+      case "ODT210":
         {
           this.odService.bookMark(datas.recID).subscribe((item) => {
             if (item.status == 0)
@@ -733,19 +732,21 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         {
           this.api
           .execSv(
-            this.view.service,
-            'ERM.Business.CM',
-            'DataBusiness',
-            'ReleaseAsync',
-            [datas?.recID,
-            "3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",
-            this.view.formModel.entityName,
-            this.formModel.funcID,
-            '<div>'+datas?.title+'</div>']
+            'ES',
+            'ES',
+            'ApprovalTransBusiness',
+            'GetCategoryByProcessIDAsync',
+            "350d611b-1de0-11ed-9448-00155d035517"
           ).subscribe((res2:any) =>
           {
-            if(res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError)
-            //this.notifySvr.notify(res2?.msgCodeError)
+            //trình ký
+            if(res2 == true) 
+            {
+              //this.callfunc.openForm();
+            }
+            else if(res2 == false)
+              //xét duyệt
+              this.release(datas);
           });
         break;
       }
@@ -780,7 +781,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
-    debugger;
     if (relationType == '1')
       return Util.stringFormat(
         this.ms020?.customName,
@@ -802,7 +802,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   changeDataMF(e:any,data:any)
   {
     var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
-    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111');
+    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111' || x.functionID == 'ODT210');
     if(data?.isBookmark) 
     {
       bm[0].disabled = true;
@@ -814,5 +814,30 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       bm[0].disabled = false;
     }
     //data?.isblur = true
+  }
+  //Gửi duyệt
+  release(data:any)
+  {
+    this.api
+    .execSv(
+      this.view.service,
+      'ERM.Business.CM',
+      'DataBusiness',
+      'ReleaseAsync',
+      [data?.recID,
+      "3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",
+      this.view.formModel.entityName,
+      this.formModel.funcID,
+      '<div>'+data?.title+'</div>']
+    ).subscribe((res2:any) =>
+    {
+      if(res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError)
+      else {
+        data.status = "3";
+        this.view.dataService.update(data).subscribe();
+        this.notifySvr.notifyCode("ES007");
+      }
+      //this.notifySvr.notify(res2?.msgCodeError)
+    });
   }
 }
