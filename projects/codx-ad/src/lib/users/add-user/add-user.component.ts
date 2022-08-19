@@ -165,14 +165,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   addUserTemp() {
     this.checkBtnAdd = true;
-<<<<<<< HEAD
-
-    this.adService.addUserBeforeDone(this.adUser).subscribe((res) => {
-      if (res) {
-        this.dataAfterSave = res;
-      }
-    });
-=======
     this.dialog.dataService
       .save((opt: any) => this.beforeSaveTemp(opt))
       .subscribe((res) => {
@@ -187,7 +179,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.dataAfterSave = res.save;
         }
       });
->>>>>>> 58657e749da2b113dd498c4f553f16960dd618e8
   }
 
   countListViewChoose() {
@@ -241,13 +232,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 this.loadData.emit();
               }
             });
-<<<<<<< HEAD
-          debugger;
-          res.save['chooseRoles'] = res.save?.functions;
-          res.save['buName'] = res.save?.buid;
-=======
           res.save.chooseRoles = res.save?.functions;
->>>>>>> 58657e749da2b113dd498c4f553f16960dd618e8
           this.changeDetector.detectChanges();
         }
       });
