@@ -6,15 +6,11 @@ import {
   DialogRef,
   NotificationsService,
   Util,
-  ViewsComponent,
 } from 'codx-core';
-import { BehaviorSubject, map } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
   Optional,
   ViewChild,
@@ -34,7 +30,7 @@ import { TM_TaskGroups } from 'projects/codx-tm/src/lib/models/TM_TaskGroups.mod
   templateUrl: './assign-info.component.html',
   styleUrls: ['./assign-info.component.scss'],
 })
-export class AssignInfoComponent implements OnInit,AfterViewInit {
+export class AssignInfoComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
@@ -101,15 +97,13 @@ export class AssignInfoComponent implements OnInit,AfterViewInit {
   }
 
   ngOnInit(): void {
-    // if (this.task.taskID) this.taskParent = this.task ;
-   
-    // else this.openInfo();
   }
   ngAfterViewInit(): void {
     this.setDefault();
   }
 
   setDefault() {
+    this.task.taskID = "";
     this.api
       .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
         this.functionID,
@@ -123,9 +117,8 @@ export class AssignInfoComponent implements OnInit,AfterViewInit {
           response['isNew'] = function () {
             return response[response.taskID] != response['_uuid'];
           };
-          response['taskID'] = response['_uuid'];
           this.task = response;
-          this.loadingAll= true
+          this.loadingAll = true
           this.openInfo();
         }
       });
@@ -163,16 +156,6 @@ export class AssignInfoComponent implements OnInit,AfterViewInit {
       this.task.refID = this.taskParent.refID;
       this.task.refNo = this.taskParent.refNo;
       this.task.taskType = this.taskParent.taskType;
-      // if (this.taskParent.listTaskGoals.length > 0) {
-      //   var toDos = this.taskParent.listTaskGoals;
-      //   toDos.forEach((obj) => {
-      //     var taskG = new TaskGoal();
-      //     taskG.status = this.STATUS_TASK_GOAL.NotChecked;
-      //     taskG.text = obj.memo;
-      //     taskG.recID = null;
-      //     this.listTodo.push(taskG);
-      //   });
-      // }
       this.copyListTodo(this.taskParent.taskID)
       if (this.task.startDate && this.task.endDate) this.changTimeCount = 0;
       else if (this.task.startDate || this.task.endDate) this.changTimeCount = 1;
@@ -184,9 +167,9 @@ export class AssignInfoComponent implements OnInit,AfterViewInit {
   }
 
   copyListTodo(id) {
-    this.api.execSv<any>("TM","TM","TaskBusiness","CopyListTodoByTaskIdAsync",id).subscribe(res=>{
-      if(res){
-        this.listTodo =res ;
+    this.api.execSv<any>("TM", "TM", "TaskBusiness", "CopyListTodoByTaskIdAsync", id).subscribe(res => {
+      if (res) {
+        this.listTodo = res;
       }
     })
   }
@@ -200,7 +183,7 @@ export class AssignInfoComponent implements OnInit,AfterViewInit {
   //   this.task[data.field] = data.data.fromDate;
   // }
   changeTime(data) {
-    
+
     if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
@@ -215,7 +198,7 @@ export class AssignInfoComponent implements OnInit,AfterViewInit {
             .toDate();
       }
     }
-    if ((data.field == 'startDate' || data.field == 'endDate') &&this.loadingAll) {
+    if ((data.field == 'startDate' || data.field == 'endDate') && this.loadingAll) {
       this.changTimeCount += 1;
       if (
         this.task?.startDate &&
@@ -257,7 +240,7 @@ export class AssignInfoComponent implements OnInit,AfterViewInit {
     }
   }
 
-  changeVLL(e) {}
+  changeVLL(e) { }
 
   saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
@@ -327,7 +310,7 @@ export class AssignInfoComponent implements OnInit,AfterViewInit {
       .subscribe((res) => {
         if (res[0]) {
           this.notiService.notifyCode('TM006');
-          this.dialog.close(res[1]);
+          this.dialog.close(res);
           if (!isContinue) {
             this.closePanel();
           }

@@ -100,22 +100,32 @@
       <i style="font-size: 21px !important;font-weight:600" class="icon-tune text-muted"></i>
     </button>
     <div class="w-100 d-flex ">
-      <div class="d-flex w-275px mx-3" *ngFor="let item of lstPined">
+      <div class="d-flex  mx-3" *ngFor="let item of lstPined">
         <ng-container [ngSwitch]="item?.dataType" >
           <ng-container *ngSwitchCase="'string'">
-            <div class="w-100 mt-3" *ngIf="!item.referedType">
+            <div class="w-275px mt-3" *ngIf="!item.referedType">
               <codx-input
-                type="textarea"
+                type="text"
+                [className]="'border'"
                 [field]="item.controlName"
                 placeholder="Có chứa giá trị..."
-                format="ed2"
                 [crrValue]="item.defaultValue"
                 (valueChange)="reportObj.valueChange($event)"
               ></codx-input>
             </div>
-            <div class="w-100 mt-3" *ngIf="item.referedType == '3'">
+            <div class="w-275px mt-3" *ngIf="item.referedType == '3'">
               <codx-input
                 type="combobox"
+                [field]="item.controlName"
+                [crrValue]="item.defaultValue"
+                [refValue]="item.referedValue"
+                (valueChange)="reportObj.valueChange($event)"
+              >
+              </codx-input>
+            </div>
+            <div class="w-275px mt-3" *ngIf="item.referedType == '2'">
+              <codx-input
+                type="valuelist"
                 [field]="item.controlName"
                 [crrValue]="item.defaultValue"
                 [refValue]="item.referedValue"
@@ -128,6 +138,7 @@
             <div
               class="float-end"
               *ngIf="item.controlType == 'LVSwitch'"
+              [title]="item.controlName"
             >
               <codx-input
                 class="float-right"
@@ -165,10 +176,10 @@
             </div>
           </ng-container>
           <ng-container *ngSwitchCase="'DateTime'">
-            <div class="my-2 w-100 ">
+            <div class="my-2 ">
               <codx-dropdown-calendar
                 cssPopup="h-600px w-800px"
-                cssClass="w-100 button-radius"
+                cssClass=" button-radius"
                 (change)="reportObj.changeValueDate($event)"
               ></codx-dropdown-calendar>
             </div>

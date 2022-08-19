@@ -352,7 +352,11 @@
                       <div
                         class="annotationItem"
                         (click)="
-                          goToSelectedAnnotation(area.recID, area.labelValue)
+                          goToSelectedAnnotation(
+                            area.recID,
+                            area.labelValue,
+                            area.fontFormat
+                          )
                         "
                         style="border: 1px solid black; margin-bottom: 5px"
                       >
