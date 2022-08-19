@@ -442,6 +442,9 @@ export class CreateFolderComponent implements OnInit {
   onSaveRightChanged($event, ctrl) {
     var value = $event.data;
     switch (ctrl) {
+      case 'security':
+        this.security = value;
+        break;
       case 'checkFolder':
         this.createSubFolder = value;
         this.changeDetectorRef.detectChanges();
@@ -565,8 +568,8 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.folderId = this.dmSV.getFolderId();
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
-    this.fileEditing.checkSecurity =
-      this.security == null ? false : this.security;
+    this.fileEditing.hasSubFolder = this.createSubFolder;
+    this.fileEditing.checkSecurity = this.security == null ? false : this.security;
     this.fileEditing.approvers = this.approvers;
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;

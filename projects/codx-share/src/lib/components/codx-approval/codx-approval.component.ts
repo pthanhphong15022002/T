@@ -97,6 +97,7 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
+      debugger;
       if (fuc) {
         var params;
         if (fuc?.url) {
@@ -170,6 +171,10 @@ export class CodxApprovalComponent implements OnInit , OnChanges , AfterViewInit
           list[i].disabled = false;
           //list[i].isbookmark = true
         }
+      }
+      var list2= data.filter(x=>x.functionID == "SYS02" || x.functionID == "SYS01" ||  x.functionID == "SYS03" ||  x.functionID == "SYS04");
+      for (var i = 0; i < list2.length; i++) {
+        list2[i].disabled = true;
       }
     }
   }
