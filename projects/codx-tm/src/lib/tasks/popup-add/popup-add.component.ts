@@ -90,8 +90,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   taskType = '1';
   formModel: any;
   gridViewSetup: any;
-  changTimeCount = 0;
-  check = true;
+  changTimeCount = 2;
+
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -213,7 +213,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openInfo(this.task.taskID, this.action);
     }
-    if (this.task.startDate && this.task.endDate) this.check = false;
+    if (this.task.startDate && this.task.endDate) this.changTimeCount = 0; else if (this.task.startDate || this.task.endDate) this.changTimeCount = 1;
   }
 
   setTitle(e: any) {
@@ -672,15 +672,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
-      if (this.task.startDate && this.task.endDate) {
-        //  if(this.check){
+      this.changTimeCount += 1
+      if (this.task.startDate && this.task.endDate && this.changTimeCount > 2) {
         var time = (
           (this.task.endDate.getTime() - this.task.startDate.getTime()) /
           3600000
         ).toFixed(2);
         this.task.estimated = Number.parseFloat(time);
-        //  }
-        //  this.check = true ;
       }
     }
   }

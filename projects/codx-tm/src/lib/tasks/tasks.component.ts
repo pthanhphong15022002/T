@@ -246,16 +246,16 @@ export class TasksComponent
             [this.view.dataService.dataSelected],
             false
           );
-        if (e?.event && e?.event != null) {
-          this.view.dataService.data = e?.event.concat(
-            this.view.dataService.data
-          );
-          this.view.dataService.setDataSelected(res[0]);
-          this.view.dataService.afterSave.next(res);
-          this.notiService.notifyCode('TM005');
-          this.itemSelected = this.view.dataService.data[0];
-          this.detectorRef.detectChanges();
-        }
+        // if (e?.event && e?.event != null) {
+        //   this.view.dataService.data = e?.event.concat(
+        //     this.view.dataService.data
+        //   );
+        //   this.view.dataService.setDataSelected(res[0]);
+        //   this.view.dataService.afterSave.next(res);
+        //   this.notiService.notifyCode('TM005');
+        //   this.itemSelected = this.view.dataService.data[0];
+        //   this.detectorRef.detectChanges();
+        // }
       });
     });
   }
@@ -1207,7 +1207,7 @@ export class TasksComponent
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
-           //tắt duyệt confirm
+        //tắt duyệt confirm
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
           (data.confirmControl == '0' || data.confirmStatus != '1')
@@ -1228,15 +1228,15 @@ export class TasksComponent
         ) {
           x.disabled = true;
         }
-         //tắt duyệt đánh giá
-         if (
-          (x.functionID == 'TMT04021' || x.functionID == 'TMT04022'  || x.functionID == 'TMT04023') &&
+        //tắt duyệt đánh giá
+        if (
+          (x.functionID == 'TMT04021' || x.functionID == 'TMT04022' || x.functionID == 'TMT04023') &&
           data.approveStatus != '3'
         ) {
           x.disabled = true;
         }
-     
-       
+
+
       });
     }
   }
