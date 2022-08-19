@@ -634,6 +634,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case "ODT110":
       case "ODT209":
       case "ODT111":
+      case "ODT210":
         {
           this.odService.bookMark(datas.recID).subscribe((item) => {
             if (item.status == 0)
