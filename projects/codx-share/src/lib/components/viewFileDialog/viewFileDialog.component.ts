@@ -61,6 +61,12 @@ export class ViewFileDialogComponent implements OnInit {
       this.data = data;
 
     this.id = this.data.recID;
+    this.fileService.getFile(this.id).subscribe(item => {
+      if (item != null) {
+        this.data = item;
+      }
+    });
+    
     this.dialog = dialog;
     //  var data: any = this.auth.user$;
     // this.user = data.source.value;
