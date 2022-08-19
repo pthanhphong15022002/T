@@ -139,6 +139,10 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   font-size: 56px !important;
 }
 
+.h-105px {
+  height: 65px;
+}
+
 /***ES-Trinh ky****/
 .codx-card-custom {
   height: 100%;
@@ -289,4 +293,22 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
     }
 
   }
+}
+
+codx-aside .menu-item .menu-heading {
+  font-size: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+codx-aside .menu-item .separator {
+  margin-top: 20px;
+}
+
+codx-vll {
+  padding: 0.4em 1em;
+  font-weight: 400;
+  border-radius: 1rem;
+  font-size: 11px !important;
+  background-color: var(--gray-100);
 }

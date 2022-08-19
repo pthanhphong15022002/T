@@ -67,7 +67,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   closeDialog() {
-    debugger
     var dialogContain = document.querySelector('.codx-dialog-container');
     dialogContain.innerHTML = '';
     var dialog = document.querySelectorAll('.e-dialog');

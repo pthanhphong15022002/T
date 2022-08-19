@@ -65,10 +65,8 @@ export class DynamicFormComponent extends UIComponent {
         .subscribe((res) => {
           this.data = Object.values(res) as any[];
           this.data = this.data.filter((res) => {
-            if (res.isVisible) {
-              res['field'] = this.camelize(res.fieldName);
-            }
-            return res;
+            res['field'] = this.camelize(res.fieldName);
+            return res.isVisible;
           });
 
           this.columnsGrid = this.data.sort((a, b) => {

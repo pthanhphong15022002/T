@@ -38,6 +38,7 @@ import { DriversComponent } from './settings/drivers/drivers.component';
 import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/popup-add-drivers.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 const routes: Route[] = [
   {
     path: '',
@@ -55,22 +56,7 @@ const routes: Route[] = [
         path: 'bookingstationery/:funcID',
         component: BookingStationeryComponent,
       },
-      {
-        path: 'rooms/:funcID',
-        component: RoomsComponent,
-      },
-      {
-        path: 'cars/:funcID',
-        component: CarsComponent,
-      },
-      {
-        path: 'drivers/:funcID',
-        component: DriversComponent
-      },
-      {
-        path: 'stationery/:funcID',
-        component: StationeryComponent,
-      },
+      
       {
         path: 'settings',
         canActivate: [AuthGuard],
@@ -87,6 +73,28 @@ const routes: Route[] = [
       {
         path: '**',
         redirectTo: 'error/404',
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'rooms/:funcID',
+        component: RoomsComponent,
+      },
+      {
+        path: 'cars/:funcID',
+        component: CarsComponent,
+      },
+      {
+        path: 'drivers/:funcID',
+        component: DriversComponent
+      },
+      {
+        path: 'stationery/:funcID',
+        component: StationeryComponent,
       },
     ],
   },
