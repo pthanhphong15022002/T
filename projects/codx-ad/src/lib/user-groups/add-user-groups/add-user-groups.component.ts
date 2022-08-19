@@ -162,13 +162,19 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   addUserTemp() {
     this.checkBtnAdd = true;
-    this.adService
-      .addUserBeforeDone(this.adUserGroup, this.isUserGroup)
-      .subscribe((res) => {
-        if (res) {
-          this.dataAfterSave = res;
-        }
-      });
+    this.formUserGroup.patchValue(this.adUserGroup);
+    if (this.formUserGroup.invalid) {
+      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+      return;
+    } else {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSaveTemp(opt))
+        .subscribe((res) => {
+          if (res.save) {
+            this.dataAfterSave = res.save;
+          }
+        });
+    }
   }
 
   countListViewChoose() {
@@ -188,7 +194,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUserGroup, this.viewChooseRole, true];
+      data = [this.adUserGroup, this.viewChooseRole, true, true];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
@@ -201,13 +207,21 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     return true;
   }
 
+  beforeSaveTemp(op: RequestOption) {
+    var data = [];
+    this.isAddMode = true;
+    op.methodName = 'AddUserAsync';
+    data = [this.adUserGroup, null, false, true];
+    op.data = data;
+    return true;
+  }
+
   onAdd() {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
-          res.save['chooseRoles'] = res.save?.functions;
-          //this.changeDetector.detectChanges();
+          res.save.chooseRoles = res.save?.functions;
         }
       });
     this.dialog.close();
@@ -244,15 +258,18 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           ) {
             this.adService
               .addUserRole(this.dataAfterSave, this.viewChooseRole)
-              .subscribe();
+              .subscribe((res: any) => {
+                if (res) {
+                  res.chooseRoles = res?.functions;
+                  (this.dialog.dataService as CRUDService)
+                    .update(res)
+                    .subscribe();
+                  this.changeDetector.detectChanges();
+                }
+              });
           }
           this.dialog.close();
           this.notification.notifyCode('SYS006');
-          (this.dialog.dataService as CRUDService)
-            .add(this.dataAfterSave)
-            .subscribe((res) => {
-              this.changeDetector.detectChanges();
-            });
         }
       } else this.onUpdate();
     }
@@ -293,7 +310,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         if (employee) {
           this.adUserGroup.employeeID = employeeID;
           this.adUserGroup.userName = employee.employeeName;
-          // this.adUserGroup.positionID = employee.positionID,
           this.adUserGroup.buid = employee.organizationID;
           this.adUserGroup.email = employee.email;
           this.adUserGroup.phone = employee.phone;
