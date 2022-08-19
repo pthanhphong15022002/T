@@ -136,9 +136,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    if (this.adUser?.employeeID == '' || this.adUser?.employeeID == null) {
-      this.notification.notify('Vui lòng nhập thông tin nhóm người dùng');
-    } else {
+    // this.formUser.patchValue(this.adUser);
+    // if (this.formUser.invalid) {
+    //   this.adService.notifyInvalid(this.formUser, this.formModel);
+    //   return;
+    // } else {
       this.countOpenPopRoles++;
       if (this.formType == 'add') {
         if (this.countOpenPopRoles == 1) this.addUserTemp();
@@ -171,7 +173,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.changeDetector.detectChanges();
         }
       });
-    }
+    // }
   }
 
   addUserTemp() {
@@ -182,7 +184,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       return;
     } else {
       this.dialog.dataService
-        .save((opt: any) => this.beforeSaveTemp(opt))
+        .save((opt: any) => this.beforeSaveTemp(opt), 0)
         .subscribe((res) => {
           if (res.save) {
             this.imageUpload
@@ -239,7 +241,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   onAdd() {
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.save) {
           this.imageUpload
@@ -253,7 +255,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.changeDetector.detectChanges();
         }
       });
-    //this.dialog.close();
+    this.dialog.close();
   }
 
   onUpdate() {
@@ -284,7 +286,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adService.notifyInvalid(this.formUser, this.formModel);
       return;
     } else {
-      if (this.isAddMode) {  
+      if (this.isAddMode) {
         if (this.checkBtnAdd == false) return this.onAdd();
         else {
           if (

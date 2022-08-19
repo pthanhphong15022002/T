@@ -59,6 +59,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   isPopupCbb = false;
   dataUserCbb: any = [];
   formUserGroup: FormGroup;
+  lstUser: any;
 
   constructor(
     private injector: Injector,
@@ -83,7 +84,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     this.adUserGroup = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
-
     this.cache.gridViewSetup('Users', 'grvUsers').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -96,10 +96,16 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       this.title = 'Cập nhật nhóm người dùng';
       this.isAddMode = false;
     } else this.title = this.form?.title;
+    this.adService.getListUser().subscribe((res) => {
+      if (res) {
+        this.lstUser = res;
+      }
+    });
   }
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.initForm();
     this.dialog.closed.subscribe((res) => {
       if (!this.saveSuccess) {
         if (this.dataAfterSave && this.dataAfterSave.userID) {
@@ -107,7 +113,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         }
       }
     });
-    this.initForm();
   }
 
   initForm() {
@@ -121,14 +126,15 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    if (
-      this.adUserGroup?.employeeID == '' ||
-      this.adUserGroup?.employeeID == null
-    ) {
-      this.notification.notify('Vui lòng nhập thông tin nhóm người dùng');
+    this.formUserGroup.patchValue(this.adUserGroup);
+    if (this.formUserGroup.invalid) {
+      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+      return;
     } else {
       this.countOpenPopRoles++;
-      if (this.countOpenPopRoles > 0) this.addUserTemp();
+      if (this.formType == 'add') {
+        if (this.countOpenPopRoles == 1) this.addUserTemp();
+      }
       var option = new DialogModel();
       option.FormModel = this.form.formModel;
       var obj = {
@@ -168,7 +174,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       return;
     } else {
       this.dialog.dataService
-        .save((opt: any) => this.beforeSaveTemp(opt))
+        .save((opt: any) => this.beforeSaveTemp(opt), 0)
         .subscribe((res) => {
           if (res.save) {
             this.dataAfterSave = res.save;
@@ -199,9 +205,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true)
-        data = [this.adUserGroup, this.viewChooseRole];
-      else data = [this.adUserGroup, this.viewChooseRole, checkDifference];
+      data = [this.adUserGroup, this.viewChooseRole, checkDifference];
     }
     op.data = data;
     return true;
@@ -218,7 +222,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   onAdd() {
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.save) {
           res.save.chooseRoles = res.save?.functions;
@@ -244,35 +248,65 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    this.formUserGroup.patchValue(this.adUserGroup);
-    if (this.formUserGroup.invalid) {
-      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
-      return;
-    } else {
-      if (this.isAddMode) {
-        if (this.checkBtnAdd == false) return this.onAdd();
-        else {
-          if (
-            this.countListViewChooseRoleApp > 0 ||
-            this.countListViewChooseRoleService > 0
-          ) {
-            this.adService
-              .addUserRole(this.dataAfterSave, this.viewChooseRole)
-              .subscribe((res: any) => {
-                if (res) {
-                  res.chooseRoles = res?.functions;
-                  (this.dialog.dataService as CRUDService)
-                    .update(res)
-                    .subscribe();
-                  this.changeDetector.detectChanges();
-                }
-              });
-          }
-          this.dialog.close();
-          this.notification.notifyCode('SYS006');
+    // this.formUserGroup.patchValue(this.adUserGroup);
+    // if (this.formUserGroup.invalid) {
+    //   this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+    //   return;
+    // } else {
+    //   if (this.isAddMode) {
+    //     if (this.checkBtnAdd == false) return this.onAdd();
+    //     else {
+    //       if (
+    //         this.countListViewChooseRoleApp > 0 ||
+    //         this.countListViewChooseRoleService > 0
+    //       ) {
+    //         this.adService
+    //           .addUserRole(this.dataAfterSave, this.viewChooseRole)
+    //           .subscribe((res: any) => {
+    //             if (res) {
+    //               res.chooseRoles = res?.functions;
+    //               (this.dialog.dataService as CRUDService)
+    //                 .update(res)
+    //                 .subscribe();
+    //               this.changeDetector.detectChanges();
+    //             }
+    //           });
+    //       }
+    //       this.dialog.close();
+    //       this.notification.notifyCode('SYS006');
+    //     }
+    //   } else this.onUpdate();
+    // }
+    var lstUserGroup = [];
+    this.dataUserCbb.forEach((res) => {
+      this.lstUser.forEach((dt) => {
+        if (res.UserID == dt.userID) {
+          lstUserGroup.push(dt);
         }
-      } else this.onUpdate();
-    }
+      });
+    });
+    var userGroupName;
+    lstUserGroup.forEach((res) => {
+      if (res.userGroup != null) {
+        this.dialog.dataService.data?.forEach((dt) => {
+          if (dt.userID == res.userGroup) {
+            userGroupName = dt.userName;
+          }
+        });
+        this.notification
+          .alertCode(
+            'AD004',
+            null,
+            "'" + res.userName + "'",
+            "'" + userGroupName + "'"
+          )
+          .subscribe((x) => {
+            if (x.event.status == 'Y') {
+            } else {
+            }
+          });
+      }
+    });
   }
 
   valueChangeM(data) {
