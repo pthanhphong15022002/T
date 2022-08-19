@@ -138,10 +138,11 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 .icon-56 {
   font-size: 56px !important;
 }
-.h-105px
-{
-    height: 65px;
+
+.h-105px {
+  height: 65px;
 }
+
 /***ES-Trinh ky****/
 .codx-card-custom {
   height: 100%;
@@ -302,4 +303,11 @@ codx-aside .menu-item .menu-heading {
 
 codx-aside .menu-item .separator {
   margin-top: 20px;
+}
+
+codx-vll {
+  padding: 0.432em 1em;
+  font-weight: 400;
+  border-radius: 1rem;
+  font-size: 11.5px !important;
 }
