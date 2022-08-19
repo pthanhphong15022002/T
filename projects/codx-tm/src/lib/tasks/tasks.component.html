@@ -1,107 +1,49 @@
 <ng-template #panelRight>
-  <app-view-detail
-    #detail
-    [taskID]="itemSelected?.taskID"
-    [formModel]="view.formModel"
-    [param]="param"
-    [dataTree]="dataTree"
-    [listRoles]="listRoles"
-    [vllApproveStatus]="vllApproveStatus"
-    [vllExtendStatus]="vllExtendStatus"
-    [popoverCrr]="popoverCrr"
-    [vllStatus]="vllStatus"
-    (clickMoreFunction)="receiveMF($event)"
-    (hoverPopover)="hoverPopover($event)"
-  >
+  <app-view-detail #detail [taskID]="itemSelected?.taskID" [formModel]="view.formModel" [param]="param" [dataTree]="dataTree"
+    [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus" [vllExtendStatus]="vllExtendStatus"
+    [popoverCrr]="popoverCrr" [vllStatus]="vllStatus" (clickMoreFunction)="receiveMF($event)"
+    (hoverPopover)="hoverPopover($event)">
   </app-view-detail>
 </ng-template>
 
 <ng-template #itemViewList let-data>
-  <lib-view-list
-    [formModel]="view.formModel"
-    [vllStatus]="vllStatus"
-    [data]="data"
-    (clickMoreFunction)="receiveMF($event)"
-  >
+  <lib-view-list [formModel]="view.formModel" [vllStatus]="vllStatus" [data]="data" (clickMoreFunction)="receiveMF($event)">
   </lib-view-list>
 </ng-template>
 
 <ng-template #treeView let-data>
-  <lib-tree-view
-    [formModel]="view.formModel"
-    [data]="data"
-    (clickMoreFunction)="receiveMF($event)"
-  >
+  <lib-tree-view [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)">
   </lib-tree-view>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full
-    cardCss="card-template border-bottom p-3 list-task"
-    (clickMF)="clickMF($event, data)"
-    (changeDataMF)="changeDataMF($event, data)"
-    [typeMF]="'hover'"
-    [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
-    [icoStatus2]="data?.priority"
-    [icoStatusVll2]="'L0186'"
-    [imageId]="data.createdBy"
-    [imageWidth]="35"
-    imgCss="me-3"
-    imageObjType="AD_Users"
-    [title]="data.userNameCreate"
-    [subTitle]="data.positionNameCreate"
-    [content]="data.taskName"
-    [formModel]="view.formModel"
-    [footer]="footerList"
-    [dataItem]="data"
-  >
+  <codx-temp-full cardCss="card-template border-bottom p-3 list-task" (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
+    [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" [imageWidth]="35" imgCss="me-3" imageObjType="AD_Users"
+    [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.taskName" 
+    [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img
-    cardCss="border h-100"
-    imageObjType="AD_Users"
-    (clickMF)="clickMF($event, data)"
-    (changeDataMF)="changeDataMF($event, data)"
-    [typeMF]="'hover'"
-    [iconCss]="data.isOverdue ? 'icon-notifications expired' : ''"
-    [statusVll]="vllStatus"
-    [icoStatus]="data.priority"
-    icoStatusVll="L0186"
-    [title]="data.userName"
-    [subTitle]="data.positionName"
-    [content]="data.memo || 'memo'"
-    [status]="data.status"
-    [date]="data.dueDate"
-    [resources]="data.assignTo"
-    [rootData]="data"
-    [formModel]="view.formModel"
-    [setting]="setting"
-    [footer]="cardImgFooter"
-    [dataItem]="data"
-  >
+  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)"  (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
+    [iconCss]="data?.isTimeOut ? 'icon-notifications expired' : ''"   [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'" [title]="data.userName" [subTitle]="data.positionName"
+    [content]="data.memo || 'memo'" [status]="data.status" [statusVll]="vllStatus" [date]="data.dueDate"
+    [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel" [setting]="setting"
+    [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
 </ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">
   <div class="d-flex flex-column flex-grow-1 mt-2">
     <div class="d-flex align-items-center mb-2">
-      <codx-tag
-        [entityName]="view.formModel.entityName"
-        [disabled]="true"
-        [value]="data.tags"
-      ></codx-tag>
+      <codx-tag [entityName]="view.formModel.entityName" [disabled]="true" [value]="data.tags"></codx-tag>
     </div>
     <div class="progress h-5px w-100 my-2" *ngIf="setting?.processBar">
-      <div
-        class="progress-bar"
-        role="progressbar"
-        style="width: 75%"
-        aria-valuenow="75"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      ></div>
+      <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0"
+        aria-valuemax="100"></div>
     </div>
     <!--begin::Item-->
     <div class="d-flex justify-content-between align-items-end mt-2">
@@ -109,36 +51,26 @@
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-mode_comment icon-20 text-gray-400"></span>
           <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
-            >{{ data.comments }}</span
-          >
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+            data?.comments }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-check_box icon-20 text-gray-400"></span>
           <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
-            >{{ data.attachments }}</span
-          >
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+            data?.todo }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-attach_file icon-20 text-gray-400"></span>
           <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-light badge-sm mn-6"
-            >0</span
-          >
+          class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+            data?.attachments }}</span>
         </div>
       </div>
-      <div
-        class="symbol-group symbol-hover justify-content-end"
-        *ngIf="setting.resources && data.assignTo && data.assignTo.length"
-      >
-        <codx-imgs
-          [width]="30"
-          [objectId]="data.assignTo"
-          objectType="AD_Users"
-          [numberImages]="3"
-          (click)="openViewListTaskResource(data)"
-        >
+      <div class="symbol-group symbol-hover justify-content-end"
+        *ngIf="setting.resources && data.assignTo && data.assignTo.length">
+        <codx-imgs [width]="30" [objectId]="data.assignTo" objectType="AD_Users" [numberImages]="3"
+          (click)="openViewListTaskResource(data)">
         </codx-imgs>
       </div>
     </div>
@@ -159,39 +91,34 @@
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-1">
     <div class="d-flex align-items-end ms-14 codx-badge">
+      <!-- <div class="d-status">
+        <div class="badge badge-danger me-2 label-status" [style.border-color]="
+            (data?.status | vll: vllStatus:'textColor' | async) + '30'
+          " [style.background-color]="
+            (data?.status | vll: vllStatus:'textColor' | async) + '30'
+          " [style.color]="data?.status | vll: vllStatus:'textColor' | async" style="border: none">
+          {{ data?.status | vll: vllStatus:"text" | async }}
+        </div>
+      </div> -->
       <codx-vll
-        [formModel]="view.formModel"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="text-gray-600"
-      >
-      </codx-vll>
+      [formModel]="view.formModel"
+      [field]="'Status'"
+      [value]="data?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="text-gray-600"
+    >
+    </codx-vll>
       <span>
         <span class="fs-7 text-gray-600">{{
           data.dueDate | date: "dd/MM/yyyy"
-        }}</span>
+          }}</span>
       </span>
     </div>
-    <div
-      *ngIf="data.category == '3'"
-      class=""
-      (mouseenter)="popoverEmpList(popoverList, data)"
-      [ngbPopover]="popEmpList"
-      popoverClass="empPopoverClass"
-      #popoverList="ngbPopover"
-      placement="right bottom"
-      container="body"
-      autoClose="outside"
-    >
-      <codx-imgs
-        [width]="25"
-        [objectId]="data?.assignTo"
-        objectType="AD_Users"
-        [numberImages]="3"
-        [openDelay]="500"
-      >
+    <div *ngIf="data.category == '3'" class="" (mouseenter)="popoverEmpList(popoverList, data)"
+      [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom"
+      container="body" autoClose="outside">
+      <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3" [openDelay]="500">
       </codx-imgs>
     </div>
   </div>
@@ -199,39 +126,21 @@
 
 <ng-template #popEmpList>
   <div class="fw-bold mb-1">
-    <codx-label
-      name="AssignmentList"
-      formName="Tasks"
-      default="Danh sách phân công cho"
-    ></codx-label>
+    <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho"></codx-label>
     <span class="">{{ "(" + countResource + ")" }}</span>
   </div>
   <div>
-    <codx-searchbar
-      *ngIf="countResource > 0"
-      (searchEvent)="searchName($event)"
-    ></codx-searchbar>
+    <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div>
-  <div
-    class="d-flex align-items-start user-card py-3"
-    *ngFor="let item of listTaskResousceSearch"
-  >
+  <div class="d-flex align-items-start user-card py-3" *ngFor="let item of listTaskResousceSearch">
     <div class="me-3">
       <div style="position: relative">
-        <codx-img
-          [width]="30"
-          [objectId]="item?.resourceID"
-          objectType="AD_Users"
-        >
+        <codx-img [width]="30" [objectId]="item?.resourceID" objectType="AD_Users">
         </codx-img>
         <div style="position: absolute; right: 0px; bottom: 0px">
           <ng-container *ngFor="let role of listRoles">
             <ng-container *ngIf="role.value == item.roleType">
-              <span
-                ><img
-                  src="/assets/themes/tm/default/img/{{ role.icon }}"
-                  alt=""
-              /></span>
+              <span><img src="/assets/themes/tm/default/img/{{ role.icon }}" alt="" /></span>
             </ng-container>
           </ng-container>
         </div>
@@ -247,20 +156,31 @@
       <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R'">
         <div class="d-flex align-items-end me-2 codx-badge">
           <span>
+            <!-- <div class="d-status">
+              <div class="badge badge-danger me-2 label-status" [style.border-color]="
+                  (item?.status | vll: vllStatus:'textColor' | async) + '30'
+                " [style.background-color]="
+                  (item?.status | vll: vllStatus:'textColor' | async) + '30'
+                " [style.color]="
+                  item?.status | vll: vllStatus:'textColor' | async
+                " style="border: none">
+                {{ item?.status | vll: vllStatus:"text" | async }}
+              </div>
+            </div> -->
             <codx-vll
-              [formModel]="view.formModel"
-              [field]="'Status'"
-              [value]="item?.status"
-              [showText]="true"
-              [showBgColor]="true"
-              class="text-gray-600"
-            >
-            </codx-vll>
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="item?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="text-gray-600"
+          >
+          </codx-vll>
           </span>
           <span>
             <span class="text-gray-700">{{
               item.dueDate | date: "dd/MM/yyyy"
-            }}</span>
+              }}</span>
           </span>
         </div>
       </div>
@@ -268,24 +188,9 @@
   </div>
 </ng-template>
 
-<codx-views
-  #view
-  service="TM"
-  entityName="TM_Tasks"
-  idField="taskID"
-  assemblyName="ERM.Business.TM"
-  className="TaskBusiness"
-  method="GetListDetailTasksAsync"
-  [views]="views"
-  [button]="button"
-  (buttonClick)="click($event)"
-  (viewChanged)="changeView($event)"
-  (requestEnded)="requestEnded($event)"
-  [dataObj]="dataObj"
-  (selectedChange)="selectedChange($event)"
-  (onDragDrop)="onDragDrop($event)"
-  (onActions)="onActions($event)"
-  [selectedFirst]="true"
-  [autoLoad]="true"
->
+<codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
+  className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
+  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
+  [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
+  (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
