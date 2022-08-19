@@ -306,8 +306,9 @@ codx-aside .menu-item .separator {
 }
 
 codx-vll {
-  padding: 0.432em 1em;
+  padding: 0.4em 1em;
   font-weight: 400;
   border-radius: 1rem;
-  font-size: 11.5px !important;
+  font-size: 11px !important;
+  background-color: var(--gray-100);
 }
