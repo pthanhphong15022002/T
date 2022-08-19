@@ -61,9 +61,7 @@ export class PopAddTaskgroupComponent implements OnInit {
   isAddMode = true;
   listName = '';
   fieldValue = '';
-  listCombobox = {
-
-  };
+  listCombobox = {};
 
   constructor(
     private authStore: AuthStore,
@@ -207,13 +205,13 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.taskGroups.checkListControl = data.data;
   }
 
-  valueCbx(e ,  fieldValue) {
+  valueCbx(e, fieldValue) {
     console.log(e);
     var verifyByType = '';
     var verifyBy = '';
     var approveBy = '';
     var approves = '';
-    if(fieldValue== 'verifyByType'){
+    if (fieldValue == 'verifyByType') {
       switch (e[0].objectType) {
         case 'U':
           verifyByType += e[0].objectType;
@@ -233,8 +231,7 @@ export class PopAddTaskgroupComponent implements OnInit {
       }
       if (verifyByType) this.taskGroups.verifyByType = verifyByType;
       if (verifyBy) this.taskGroups.verifyBy = verifyBy;
-    }
-    else{
+    } else {
       switch (e[0].objectType) {
         case 'S':
           approveBy += e[0].objectType;
@@ -250,6 +247,10 @@ export class PopAddTaskgroupComponent implements OnInit {
         case 'TL':
           approveBy += e[0].objectType;
           break;
+        case 'U':
+          approveBy += e[0].objectType;
+          approves += e[0].id;
+          break;
       }
       if (approveBy) {
         this.taskGroups.approveBy = approveBy;
@@ -260,8 +261,6 @@ export class PopAddTaskgroupComponent implements OnInit {
 
   valueCbx1(e) {
     console.log(e);
-
-
   }
 
   closePanel() {
@@ -303,7 +302,7 @@ export class PopAddTaskgroupComponent implements OnInit {
   }
 
   openShare(share: any, isOpen) {
-    if(isOpen == true){
+    if (isOpen == true) {
       this.listCombobox = {
         U: 'Share_Users_Sgl',
         P: 'Share_Positions_Sgl',
@@ -312,14 +311,13 @@ export class PopAddTaskgroupComponent implements OnInit {
       this.listName = 'TM006';
       this.fieldValue = 'verifyByType';
       this.callfc.openForm(share, '', 420, window.innerHeight);
-    }
-    else{
+    } else {
       this.listCombobox = {
         U: 'Share_Users_Sgl',
         P: 'Share_Positions_Sgl',
         R: 'Share_UserRoles_Sgl',
       };
-      this.listName = 'TM014'
+      this.listName = 'TM014';
       this.fieldValue = 'approveBy';
       this.callfc.openForm(share, '', 420, window.innerHeight);
     }
@@ -355,8 +353,8 @@ export class PopAddTaskgroupComponent implements OnInit {
     if (this.action === 'add') {
       op.method = 'AddTaskGroupsAsync';
       data = [this.taskGroups];
-    } else if(this.action === 'edit'){
-      op.method= 'UpdateTaskGroupsAsync';
+    } else if (this.action === 'edit') {
+      op.method = 'UpdateTaskGroupsAsync';
       data = [this.taskGroups];
     }
 
@@ -370,7 +368,6 @@ export class PopAddTaskgroupComponent implements OnInit {
       .subscribe((res) => {
         this.dialog.dataService.addDatas.clear();
         if (res.save) {
-
           this.dialog.close(res.save);
         }
       });
@@ -394,7 +391,7 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.lstSavecheckList = [];
     if (this.taskGroups.checkListControl == '2') {
       for (let item of this.listTodo) {
-          this.lstSavecheckList.push(item.text);
+        this.lstSavecheckList.push(item.text);
       }
 
       this.taskGroups.checkList = this.lstSavecheckList.join(';');
