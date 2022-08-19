@@ -194,7 +194,7 @@ export class IncommingComponent
   changeDataMF(e:any,data:any)
   {
     var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
-    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111');
+    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111' || x.functionID == 'ODT210');
    /*  var blur =  e.filter((x: { functionID: string }) => x.functionID == 'ODT108');
     blur[0].isblur = true; */
     if(data?.isBookmark) 
