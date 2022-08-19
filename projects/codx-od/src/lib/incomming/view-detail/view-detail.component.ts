@@ -741,7 +741,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             "350d611b-1de0-11ed-9448-00155d035517"
           ).subscribe((res2:any) =>
           {
-            var xs = this.data;
             let dialogModel = new DialogModel();
             dialogModel.IsFull = true;
             //trình ký
@@ -755,6 +754,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               {
                 for(var i = 0 ; i< this.data?.files.length ; i++)
                 {
+                  //Biến recID nha Hòa : recID= this.data?.recID
                   var file = new File();
                   //file.recID = this.data?.files[i].recID;
                   file.fileID = this.data?.files[i].recID;
