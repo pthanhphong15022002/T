@@ -251,7 +251,9 @@
       <div>
         <a style="cursor: pointer">
           <div class="d-flex align-item-center">
-            <span class="icon-check_box icon-24 me-2"></span>
+            <codx-input type="checkbox" name="taskControl" class="check-sys d-block text-right"
+              ngDefaultControl field="taskControl" (valueChange)="valueCbx($event)" [crrValue]="item.taskControl">
+            </codx-input>
           </div>
         </a>
       </div>

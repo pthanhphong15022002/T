@@ -58,6 +58,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   isUserGroup = false;
   isPopupCbb = false;
   dataUserCbb: any = [];
+  formUserGroup: FormGroup;
 
   constructor(
     private injector: Injector,
@@ -106,6 +107,17 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         }
       }
     });
+    this.initForm();
+  }
+
+  initForm() {
+    this.adService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) {
+          this.formUserGroup = res;
+        }
+      });
   }
 
   openPopup(item: any) {
@@ -150,13 +162,19 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   addUserTemp() {
     this.checkBtnAdd = true;
-    this.adService
-      .addUserBeforeDone(this.adUserGroup, this.isUserGroup)
-      .subscribe((res) => {
-        if (res) {
-          this.dataAfterSave = res;
-        }
-      });
+    this.formUserGroup.patchValue(this.adUserGroup);
+    if (this.formUserGroup.invalid) {
+      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+      return;
+    } else {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSaveTemp(opt))
+        .subscribe((res) => {
+          if (res.save) {
+            this.dataAfterSave = res.save;
+          }
+        });
+    }
   }
 
   countListViewChoose() {
@@ -176,7 +194,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUserGroup, this.viewChooseRole, true];
+      data = [this.adUserGroup, this.viewChooseRole, true, true];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
@@ -189,13 +207,21 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     return true;
   }
 
+  beforeSaveTemp(op: RequestOption) {
+    var data = [];
+    this.isAddMode = true;
+    op.methodName = 'AddUserAsync';
+    data = [this.adUserGroup, null, false, true];
+    op.data = data;
+    return true;
+  }
+
   onAdd() {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
-          res.save['chooseRoles'] = res.save?.functions;
-          //this.changeDetector.detectChanges();
+          res.save.chooseRoles = res.save?.functions;
         }
       });
     this.dialog.close();
@@ -218,44 +244,34 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    if (
-      this.adUserGroup?.employeeID == '' ||
-      this.adUserGroup?.employeeID == null
-    ) {
-      this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
+    this.formUserGroup.patchValue(this.adUserGroup);
+    if (this.formUserGroup.invalid) {
+      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+      return;
     } else {
-      if (
-        this.countListViewChooseRoleApp == 0 &&
-        this.countListViewChooseRoleService == 0
-      ) {
-        this.dialog.close();
-        this.notification.notifyCode('SYS006');
-        (this.dialog.dataService as CRUDService)
-          .add(this.dataAfterSave)
-          .subscribe();
-        this.changeDetector.detectChanges();
-      } else {
-        if (this.isAddMode) {
-          if (this.checkBtnAdd == false) return this.onAdd();
-          else {
-            if (
-              this.countListViewChooseRoleApp > 0 ||
-              this.countListViewChooseRoleService > 0
-            ) {
-              this.adService
-                .addUserRole(this.dataAfterSave, this.viewChooseRole)
-                .subscribe();
-            }
-            this.dialog.close();
-            this.notification.notifyCode('SYS006');
-            (this.dialog.dataService as CRUDService)
-              .add(this.dataAfterSave)
-              .subscribe((res) => {
-                this.changeDetector.detectChanges();
+      if (this.isAddMode) {
+        if (this.checkBtnAdd == false) return this.onAdd();
+        else {
+          if (
+            this.countListViewChooseRoleApp > 0 ||
+            this.countListViewChooseRoleService > 0
+          ) {
+            this.adService
+              .addUserRole(this.dataAfterSave, this.viewChooseRole)
+              .subscribe((res: any) => {
+                if (res) {
+                  res.chooseRoles = res?.functions;
+                  (this.dialog.dataService as CRUDService)
+                    .update(res)
+                    .subscribe();
+                  this.changeDetector.detectChanges();
+                }
               });
           }
-        } else this.onUpdate();
-      }
+          this.dialog.close();
+          this.notification.notifyCode('SYS006');
+        }
+      } else this.onUpdate();
     }
   }
 
@@ -294,15 +310,9 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         if (employee) {
           this.adUserGroup.employeeID = employeeID;
           this.adUserGroup.userName = employee.employeeName;
-          // this.adUserGroup.positionID = employee.positionID,
           this.adUserGroup.buid = employee.organizationID;
           this.adUserGroup.email = employee.email;
           this.adUserGroup.phone = employee.phone;
-          // this.formGroupAdd.controls['userName'].setValue(employee.employeeName);
-          // this.formGroupAdd.controls['buid'].setValue(employee.organizationID);
-          // this.formGroupAdd.controls['email'].setValue(employee.email);
-          // this.formGroupAdd.controls['phone'].setValue(employee.phone);
-          // this.formGroupAdd.patchValue({ [employee['field']]: employee });
           this.changeDetector.detectChanges();
         }
       });

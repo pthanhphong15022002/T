@@ -94,7 +94,7 @@
           </div> -->
 
           <button type="button" class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-            (click)="continue(currentTab)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
+            (click)="clickIsSave(true, null)" *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0">
             <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
           </button>
           <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" (click)="approve()">
@@ -155,7 +155,7 @@
                       <codx-label fiedName="CategoryID" [formModel]="formModel" default="Phân loại">
                       </codx-label>
                       <codx-input type="combobox" name="combobox" [refValue]="cbxName['CategoryID']" field="categoryID"
-                        (valueChange)="valueChange($event)" [crrValue]="dialogSignFile.value?.categoryID">
+                        (valueChange)="valueChange($event)">
                       </codx-input>
                     </div>
                   </div>

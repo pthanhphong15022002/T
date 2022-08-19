@@ -150,7 +150,7 @@
         >
           <div class="d-flex">
             <div class="w-100">
-              <codx-label [name]="group"></codx-label>
+              <codx-label [name]="group" default="Nhóm tham số {{group}}"></codx-label>
             </div>
             <div><i class="icon-keyboard_arrow_down text-primary"></i></div>
           </div>
@@ -211,7 +211,7 @@
                                 type="switch"
                                 [field]="child.controlName"
                                 [crrValue]="
-                                child.defaultValue ? child.defaultValue : false
+                                child.defaultValue == true ? child.defaultValue : false
                                 "
                                 (valueChange)="valueChange($event,true,'switch')"
                               ></codx-input>
@@ -229,7 +229,7 @@
                                 type="checkBox"
                                 [field]="child.controlName"
                                 [crrValue]="
-                                child.defaultValue ? child.defaulValue : false
+                                child.defaultValue == true ? child.defaultValue : false
                                 "
                                 (valueChange)="valueChange($event,true,'checkbox')"
                               ></codx-input>
