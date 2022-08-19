@@ -159,22 +159,6 @@
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-1">
     <div class="d-flex align-items-end ms-14 codx-badge">
-      <div class="d-status">
-        <div
-          class="badge badge-danger me-2 label-status"
-          [style.border-color]="
-            (data?.status | vll: vllStatus:'textColor' | async) + '30'
-          "
-          [style.background-color]="
-            (data?.status | vll: vllStatus:'textColor' | async) + '30'
-          "
-          [style.color]="data?.status | vll: vllStatus:'textColor' | async"
-          style="border: none"
-        >
-          {{ data?.status | vll: vllStatus:"text" | async }}
-        </div>
-      </div>
-      -->
       <codx-vll
         [formModel]="view.formModel"
         [field]="'Status'"
@@ -263,24 +247,6 @@
       <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R'">
         <div class="d-flex align-items-end me-2 codx-badge">
           <span>
-            <div class="d-status">
-              <div
-                class="badge badge-danger me-2 label-status"
-                [style.border-color]="
-                  (item?.status | vll: vllStatus:'textColor' | async) + '30'
-                "
-                [style.background-color]="
-                  (item?.status | vll: vllStatus:'textColor' | async) + '30'
-                "
-                [style.color]="
-                  item?.status | vll: vllStatus:'textColor' | async
-                "
-                style="border: none"
-              >
-                {{ item?.status | vll: vllStatus:"text" | async }}
-              </div>
-            </div>
-            -->
             <codx-vll
               [formModel]="view.formModel"
               [field]="'Status'"
