@@ -126,6 +126,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getDataValuelist();
+   
   }
   getGridViewSetup(funcID: any) {
     this.cache.functionList(funcID).subscribe((fuc) => {
@@ -733,19 +734,21 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         {
           this.api
           .execSv(
-            this.view.service,
-            'ERM.Business.CM',
-            'DataBusiness',
-            'ReleaseAsync',
-            [datas?.recID,
-            "3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",
-            this.view.formModel.entityName,
-            this.formModel.funcID,
-            '<div>'+datas?.title+'</div>']
+            'ES',
+            'ES',
+            'ApprovalTransBusiness',
+            'GetCategoryByProcessIDAsync',
+            "350d611b-1de0-11ed-9448-00155d035517"
           ).subscribe((res2:any) =>
           {
-            if(res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError)
-            //this.notifySvr.notify(res2?.msgCodeError)
+            //trình ký
+            if(res2 == true) 
+            {
+              //this.callfunc.openForm();
+            }
+            else if(res2 == false)
+              //xét duyệt
+              this.release(datas);
           });
         break;
       }
@@ -813,5 +816,30 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       bm[0].disabled = false;
     }
     //data?.isblur = true
+  }
+  //Gửi duyệt
+  release(data:any)
+  {
+    this.api
+    .execSv(
+      this.view.service,
+      'ERM.Business.CM',
+      'DataBusiness',
+      'ReleaseAsync',
+      [data?.recID,
+      "3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",
+      this.view.formModel.entityName,
+      this.formModel.funcID,
+      '<div>'+data?.title+'</div>']
+    ).subscribe((res2:any) =>
+    {
+      if(res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError)
+      else {
+        data.status = "3";
+        this.view.dataService.update(data).subscribe();
+        this.notifySvr.notifyCode("ES007");
+      }
+      //this.notifySvr.notify(res2?.msgCodeError)
+    });
   }
 }
