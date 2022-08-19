@@ -94,19 +94,16 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private ref: ChangeDetectorRef
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data) {
-      if (
-        changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
-      ) {
-        this.dataItem = changes?.dataItem?.currentValue;
-        this.userID = this.authStore.get().userID;
-        this.data = changes.data?.currentValue;
-        if (!this.data) this.data = {};
-        this.getDataValuelist();
-        this.getPermission(this.data.recID);
-        this.ref.detectChanges();
-      }
+    if (changes?.data && changes.data?.previousValue?.recID != changes.data?.currentValue?.recID) {
+      this.userID = this.authStore.get().userID;
+      this.data = changes.data?.currentValue;
+      if (!this.data) this.data = {};
+      this.getDataValuelist();
+      this.getPermission(this.data.recID);
+      this.ref.detectChanges();
     }
+    if(changes?.dataItem && changes?.dataItem?.currentValue != changes?.dataItem?.previousValue)
+      this.dataItem = changes?.dataItem?.currentValue;
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
     if (changes?.pfuncID?.currentValue != changes?.pfuncID?.previousValue) {
