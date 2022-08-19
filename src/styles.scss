@@ -293,3 +293,13 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 
   }
 }
+
+codx-aside .menu-item .menu-heading {
+  font-size: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+codx-aside .menu-item .separator {
+  margin-top: 20px;
+}

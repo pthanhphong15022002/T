@@ -65,10 +65,10 @@
                 <iframe *ngIf="!isVideo && !linkViewImage" #viewfileframe class="viewfileiframe" frameBorder="0"
                     name="my_frame">
                 </iframe>
-                <video *ngIf="isVideo" preload="auto" controls class="viewfileiframe" autoplay style="width: 100%;">
+                <video *ngIf="isVideo" preload="auto" controls class="viewfileiframe" autoplay style="width: 100%;     height: 650px;">
                     <source src="{{srcVideo}}" type="video/mp4" />
                 </video>
-                <img *ngIf="linkViewImage" src="{{linkViewImage}}" style="max-height: 100%;" />
+                <img *ngIf="linkViewImage" src="{{linkViewImage}}" style="max-height: 100%; height: 650px;" />
             </div>
             <div id="output"></div>
         </div>

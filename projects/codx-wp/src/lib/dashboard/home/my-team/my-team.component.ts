@@ -188,7 +188,6 @@ export class MyTeamComponent implements OnInit {
       if (emp) {
         this.imployeeInfo = this.listEmpInfo.find(e => e.employeeID === emp.employeeID);
         p.open();
-  
       }
       else {
         p.close();
