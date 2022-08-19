@@ -94,19 +94,16 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private ref: ChangeDetectorRef
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data) {
-      if (
-        changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
-      ) {
-        this.dataItem = changes?.dataItem?.currentValue;
-        this.userID = this.authStore.get().userID;
-        this.data = changes.data?.currentValue;
-        if (!this.data) this.data = {};
-        this.getDataValuelist();
-        this.getPermission(this.data.recID);
-        this.ref.detectChanges();
-      }
+    if (changes?.data && changes.data?.previousValue?.recID != changes.data?.currentValue?.recID) {
+      this.userID = this.authStore.get().userID;
+      this.data = changes.data?.currentValue;
+      if (!this.data) this.data = {};
+      this.getDataValuelist();
+      this.getPermission(this.data.recID);
+      this.ref.detectChanges();
     }
+    if(changes?.dataItem && changes?.dataItem?.currentValue != changes?.dataItem?.previousValue)
+      this.dataItem = changes?.dataItem?.currentValue;
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
     if (changes?.pfuncID?.currentValue != changes?.pfuncID?.previousValue) {
@@ -634,6 +631,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case "ODT110":
       case "ODT209":
       case "ODT111":
+      case "ODT210":
         {
           this.odService.bookMark(datas.recID).subscribe((item) => {
             if (item.status == 0)
@@ -804,7 +802,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   changeDataMF(e:any,data:any)
   {
     var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
-    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111');
+    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111' || x.functionID == 'ODT210');
     if(data?.isBookmark) 
     {
       bm[0].disabled = true;

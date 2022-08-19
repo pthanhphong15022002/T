@@ -5,19 +5,19 @@
 <ng-template #tabDescription>
     <div class="form-group">
         <div class="form-group row mt-3">
-            <codx-label fiedName="lblUserGroupID" [formName]="formModel?.formName"
+            <codx-label fiedName="UserID" [formName]="formModel?.formName"
                 [gridViewName]="formModel?.gridViewName" default="Mã nhóm người dùng">
             </codx-label>
-            <codx-input field="userGroupID" type="text" [disabled]="formType == 'edit' ? true : false"
+            <codx-input field="userID" type="text" [disabled]="formType == 'edit' ? true : false"
                 [crrValue]="adUserGroup.userID">
             </codx-input>
         </div>
 
         <div class="form-group mt-3">
-            <codx-label name="lblUserGroupName" [formName]="formModel?.formName"
+            <codx-label fiedName="UserName" [formName]="formModel?.formName"
                 [gridViewName]="formModel?.gridViewName" default="Tên nhóm người dùng">
             </codx-label>
-            <codx-input type="text" field="userGroupName" [crrValue]="adUserGroup.userName"
+            <codx-input type="text" field="userName" [crrValue]="adUserGroup.userName"
                 (valueChange)="valueChangeU($event)">
             </codx-input>
         </div>
@@ -25,7 +25,7 @@
             <codx-label fiedName="lblDescription" [formName]="formModel?.formName"
                 [gridViewName]="formModel?.gridViewName" default="Mô tả">
             </codx-label>
-            <codx-input type="text" field="description" [crrValue]="adUserGroup.buid" (valueChange)="valueBU($event)">
+            <codx-input type="text" field="description" [crrValue]="adUserGroup.description" (valueChange)="valueBU($event)">
             </codx-input>
         </div>
         <div class="form-group row mt-3">
