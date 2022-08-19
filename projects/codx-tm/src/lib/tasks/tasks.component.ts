@@ -1265,7 +1265,7 @@ export class TasksComponent
       option.Width = 'Auto';
       this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'view', this.isAssignTask],
+        [e.data, 'view', this.isAssignTask],
         option
       );
     }
