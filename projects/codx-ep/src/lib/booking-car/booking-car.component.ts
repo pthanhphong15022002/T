@@ -182,7 +182,7 @@ export class BookingCarComponent extends UIComponent {
     }
   }
 
-  addNew(obj?) {
+  addNew(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();

@@ -26,8 +26,10 @@
           type="combobox"
           name="cbxCar"
           refValue="EP_Cars"
-          field="resourceID"
-          [formModel]="form.formModel"
+          ControlName="resourceID"
+          [formModel]="form.formModel"   
+          [multiple]="false"     
+          [Group]="fGroupAddBookingCar"
           [crrValue]="fGroupAddBookingCar.value.resourceID"         
           (valueChange)="valueCbxCarChange($event)"
         >
