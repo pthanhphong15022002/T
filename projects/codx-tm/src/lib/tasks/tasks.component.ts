@@ -404,12 +404,12 @@ export class TasksComponent
           false
         );
       if (e?.event && e?.event != null) {
-        let listTask = e?.event;
+        let listTask = e?.event[1];
         let newTasks = [];
         for (var i = 0; i < listTask.length; i++) {
           if (listTask[i].taskID == data.taskID) {
             this.view.dataService.update(listTask[i]).subscribe();
-            this.view.dataService.setDataSelected(e?.event[0]);
+            this.view.dataService.setDataSelected(listTask[i]);
           } else newTasks.push(listTask[i]);
         }
         if (newTasks.length > 0) {
