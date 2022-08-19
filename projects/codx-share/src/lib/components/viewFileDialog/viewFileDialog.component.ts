@@ -50,8 +50,12 @@ export class ViewFileDialogComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     if (data.data != null) {
-      this.data = data.data[0];
-      this.formModel = data.data[1];
+      if (data.data.length == 2) {
+        this.data = data.data[0];
+        this.formModel = data.data[1];
+      }      
+      else 
+        this.data = data.data;
     }      
     else
       this.data = data;

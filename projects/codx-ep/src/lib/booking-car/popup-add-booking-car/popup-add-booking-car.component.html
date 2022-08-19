@@ -22,7 +22,7 @@
               | async
           }}</span>
         </div>
-        <!-- <codx-input
+        <codx-input
           type="combobox"
           name="cbxCar"
           refValue="EP_Cars"
@@ -31,8 +31,8 @@
           [crrValue]="fGroupAddBookingCar.value.resourceID"         
           (valueChange)="valueCbxCarChange($event)"
         >
-        </codx-input> -->
-        <codx-input
+        </codx-input>
+        <!-- <codx-input
           type="combobox"
           name="cbxCar"
           refValue="EP_Cars"
@@ -41,7 +41,7 @@
           [Group]="fGroupAddBookingCar"       
           (valueChange)="valueCbxCarChange($event)"
         >
-        </codx-input>
+        </codx-input> -->
       </div>
       <div class="row">
         
@@ -161,6 +161,7 @@
           ControlName="agencyName"         
           [formModel]="form.formModel"
           [Group]="fGroupAddBookingCar"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
