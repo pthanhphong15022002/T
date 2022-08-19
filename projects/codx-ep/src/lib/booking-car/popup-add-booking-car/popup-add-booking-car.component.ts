@@ -84,7 +84,8 @@ export class PopupAddBookingCarComponent implements OnInit {
   lstPeople=[];
   driver=null;
   smallListPeople=[];
-
+  editCarDevice=null;
+  tempArray=[];
   constructor(    
     private callFuncService: CallFuncService,
     private cacheService: CacheService,
@@ -107,17 +108,38 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.modelPage = res;
         console.log('EPT2',res);
       }
+      
       this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
           let device = new Device();
           device.id = item.value;
           device.text = item.text;
-          if(!this.isAdd){
-            
-          }
           this.lstDeviceCar.push(device);
-        });
+        });        
+        if(!this.isAdd && this.fGroupAddBookingCar.value.equipments!=null){
+          
+            let deviceArray=this.fGroupAddBookingCar.value.equipments.split("|");
+            let availableDevice= deviceArray[0];
+            let pickedDevice= deviceArray[1];
+            
+            this.lstDeviceCar.forEach(device =>{
+              availableDevice.split(";").forEach(equip=>{
+                if(device.id==equip){               
+                  this.tempArray.push(device); 
+                }
+              });     
+            })
+            this.tempArray.forEach(device=>{
+              pickedDevice.split(";").forEach(equip=>{
+                if(device.id==equip){               
+                  device.isSelected=true;
+                }
+              });  
+            })            
+                   
+          this.tmplstDevice = JSON.parse(JSON.stringify(this.tempArray)); 
+        } 
         this.lstDeviceCar = JSON.parse(JSON.stringify(this.lstDeviceCar));
       });
       
@@ -196,22 +218,28 @@ export class PopupAddBookingCarComponent implements OnInit {
       );
     }
 
-    let equipments = '';
+    let pickedEquip = '';
+    let availableEquip='';
     this.tmplstDevice.forEach((element) => {
+      if (availableEquip == '') {
+        availableEquip += element.id;
+      } else {
+        availableEquip += ';' + element.id;
+      }
       if (element.isSelected) {
-        if (equipments == '') {
-          equipments += element.id;
+        if (pickedEquip == '') {
+          pickedEquip += element.id;
         } else {
-          equipments += ';' + element.id;
+          pickedEquip += ';' + element.id;
         }
       }
     });
     this.fGroupAddBookingCar.value.reasonID='Chưa có dữ liệu';//Cbx chưa có dữ liệu     
     this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];   
-    this.fGroupAddBookingCar.value.equipments = equipments;
+    this.fGroupAddBookingCar.value.equipments = availableEquip+'|'+pickedEquip;
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe(
+      .subscribe(             
         res => {
           if(res.save || res.update){
             this.dialogRef && this.dialogRef.close();
@@ -270,14 +298,8 @@ export class PopupAddBookingCarComponent implements OnInit {
           var carEquipments= element.Equipments.split(";");
           carEquipments.forEach(item=>{
             this.lstDeviceCar.forEach(device=>{
-              if(item==device.id){           
-                if(this.fGroupAddBookingCar.value.equipments!=null){
-                  this.fGroupAddBookingCar.value.equipments.split(";").forEach(equip=>{
-                    if(device.id==equip){
-                      device.isSelected=true;
-                    }
-                  });
-                }       
+              if(item==device.id){ 
+                device.isSelected=false;
                 this.tmplstDevice.push(device);                
               }              
             })
