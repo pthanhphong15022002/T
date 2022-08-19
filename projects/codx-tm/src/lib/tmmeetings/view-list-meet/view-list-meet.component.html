@@ -62,9 +62,9 @@
     <codx-label name="Resouces" [formModel]="formModel" default="Danh sách phân công cho"></codx-label>
     <span>{{ "(" + data.resources.length + ")" }}</span>
   </div>
-  <div>
+  <!-- <div>
     <codx-searchbar *ngIf="data.resources.length > 0" (searchEvent)="searchName($event)"></codx-searchbar>
-  </div>
+  </div> -->
   <div class="d-flex align-items-start user-card p-3" *ngFor="let item of data.resources">
     <div class="me-3">
       <div>

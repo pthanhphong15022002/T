@@ -71,8 +71,8 @@ export class EditExperenceComponent implements OnInit {
         // this.isSaving = false;
         // console.log(res);
         if (res) {
-          res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
-          res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
+          // res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
+          // res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
 
           this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
           this.dialog.close(this.dataBind);
@@ -81,6 +81,6 @@ export class EditExperenceComponent implements OnInit {
           this.notiService.notifyCode("SYS021");
         }
       });
-    this.dialog.close(this.dataBind);
+    this.dialog.close();
   }
 }
