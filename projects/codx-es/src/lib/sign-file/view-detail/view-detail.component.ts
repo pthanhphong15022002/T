@@ -202,16 +202,16 @@ export class ViewDetailComponent implements OnInit {
         700,
         650,
         this.funcID,
-        // {
-        //   isAddNew: false,
-        //   dataSelected: datas,
-        //   formModel: this.view?.currentView?.formModel,
-        //   option: option,
-        // },
         {
-          oSignFile: option.DataService.dataSelected,
+          isAddNew: false,
+          dataSelected: datas,
           formModel: this.view?.currentView?.formModel,
+          option: option,
         },
+        // {
+        //   oSignFile: option.DataService.dataSelected,
+        //   formModel: this.view?.currentView?.formModel,
+        // },
         '',
         dialogModel
       );
