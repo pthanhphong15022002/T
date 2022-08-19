@@ -52,12 +52,12 @@
       </div>
       <!-- <codx-input type="Share" [refValue]="vllShare" field="Resources" [dataShared]="[]" multiple="true" [showInput]="false"
         (valueChange)="eventApply($event)"></codx-input> -->
-      <!-- <codx-input type="Combobox" name="combobox" [refValue]="gridViewSetup!=null?gridViewSetup['Resources']['referedValue']:null" multiple="true"
-         [showInput]="false" [refType]="gridViewSetup!=null?gridViewSetup['Resources']['referedType']:null" (valueChange)="changeUser($event)">
-      </codx-input> -->
-      <codx-input type="Combobox" name="combobox" [refValue]="'Users'" multiple="true"
-         [showInput]="false" refType="P" (valueChange)="changeUser($event)">
+      <codx-input type="Combobox" name="combobox" [refValue]="gridViewSetup!=null?gridViewSetup['Resources']['referedValue']:null" multiple="true"
+         [showInput]="false" [refType]="gridViewSetup!=null?gridViewSetup['Resources']['referedType']:'P'" (valueChange)="changeUser($event)">
       </codx-input>
+      <!-- <codx-input type="Combobox" name="combobox" [refValue]="'Users'" multiple="true"
+         [showInput]="false" refType="P" (valueChange)="changeUser($event)">
+      </codx-input> -->
     </div>
     <div class="mt-3">
       <ng-container *ngFor="let item of listUserDetail; index as i">

@@ -237,4 +237,13 @@ export class CodxAdService {
       [itemUser, lstURoles]
     );
   }
+
+  getListUser() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserTempAsync',
+    );
+  }
 }
