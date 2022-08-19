@@ -45,8 +45,7 @@ import { ViewDetailComponent } from './view-detail/view-detail.component';
 })
 export class TasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() dataObj?: any;
   @Input() calendarID: string;
@@ -238,8 +237,8 @@ export class TasksComponent
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
@@ -254,16 +253,16 @@ export class TasksComponent
             [this.view.dataService.dataSelected],
             false
           );
-        if (e?.event && e?.event != null) {
-          this.view.dataService.data = e?.event.concat(
-            this.view.dataService.data
-          );
-          this.view.dataService.setDataSelected(res[0]);
-          this.view.dataService.afterSave.next(res);
-          this.notiService.notifyCode('TM005');
-          this.itemSelected = this.view.dataService.data[0];
-          this.detectorRef.detectChanges();
-        }
+        // if (e?.event && e?.event != null) {
+        //   this.view.dataService.data = e?.event.concat(
+        //     this.view.dataService.data
+        //   );
+        //   this.view.dataService.setDataSelected(res[0]);
+        //   this.view.dataService.afterSave.next(res);
+        //   this.notiService.notifyCode('TM005');
+        //   this.itemSelected = this.view.dataService.data[0];
+        //   this.detectorRef.detectChanges();
+        // }
       });
     });
   }
@@ -315,8 +314,8 @@ export class TasksComponent
     if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
@@ -434,8 +433,8 @@ export class TasksComponent
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
@@ -449,11 +448,7 @@ export class TasksComponent
               false
             );
           if (e?.event && e?.event != null) {
-            // e?.event.forEach((obj) => {
-            //   this.view.dataService.update(obj).subscribe();
-            // });
-           // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
-            this.view.dataService.update( e?.event).subscribe();
+            this.view.dataService.update(e?.event).subscribe();
             this.itemSelected = e?.event;
             this.detail.taskID = this.itemSelected.taskID;
             this.detail.getTaskDetail();
@@ -473,6 +468,7 @@ export class TasksComponent
             listTaskDelete.forEach((x) => {
               this.view.dataService.remove(x).subscribe();
             });
+            this.view.dataService.onAction.next({ type: 'delete', data: data });
             this.notiService.notifyCode('TM004');
             if (parent) {
               this.view.dataService.update(parent).subscribe();
@@ -645,8 +641,8 @@ export class TasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -709,18 +705,18 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-          this.itemSelected = e?.event[0];
-          this.detail.taskID = this.itemSelected.taskID;
-          this.detail.getTaskDetail();
+        this.itemSelected = e?.event[0];
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
   }
   //#endregion
   //#region Event
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -739,7 +735,7 @@ export class TasksComponent
   //codx-view select
 
   selectedChange(task: any) {
-    this.itemSelected = task?.data ?task?.data : task;
+    this.itemSelected = task?.data ? task?.data : task;
     this.loadTreeView();
     this.detectorRef.detectChanges();
   }
@@ -903,9 +899,9 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-         this.itemSelected = e?.event[0];
-          this.detail.taskID = this.itemSelected.taskID;
-          this.detail.getTaskDetail();
+        this.itemSelected = e?.event[0];
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -966,8 +962,8 @@ export class TasksComponent
           this.view.dataService.update(obj).subscribe();
         });
         this.itemSelected = e?.event[0];
-          this.detail.taskID = this.itemSelected.taskID;
-          this.detail.getTaskDetail();
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1204,7 +1200,7 @@ export class TasksComponent
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
-       this.importFile();
+        this.importFile();
         break;
       case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
@@ -1219,7 +1215,7 @@ export class TasksComponent
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
-           //tắt duyệt confirm
+        //tắt duyệt confirm
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
           (data.confirmControl == '0' || data.confirmStatus != '1')
@@ -1240,15 +1236,15 @@ export class TasksComponent
         ) {
           x.disabled = true;
         }
-         //tắt duyệt đánh giá
-         if (
-          (x.functionID == 'TMT04021' || x.functionID == 'TMT04022'  || x.functionID == 'TMT04023') &&
+        //tắt duyệt đánh giá
+        if (
+          (x.functionID == 'TMT04021' || x.functionID == 'TMT04022' || x.functionID == 'TMT04023') &&
           data.approveStatus != '3'
         ) {
           x.disabled = true;
         }
-     
-       
+
+
       });
     }
   }

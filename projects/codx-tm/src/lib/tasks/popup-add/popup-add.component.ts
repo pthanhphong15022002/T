@@ -16,6 +16,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  RequestOption,
   Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -212,7 +213,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openInfo(this.task.taskID, this.action);
     }
-    if(this.task.startDate && this.task.endDate)this.changTimeCount = 0;else if(this.task.startDate || this.task.endDate)  this.changTimeCount = 1;
+    if (this.task.startDate && this.task.endDate) this.changTimeCount = 0; else if (this.task.startDate || this.task.endDate) this.changTimeCount = 1;
   }
 
   setTitle(e: any) {
@@ -524,19 +525,27 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    this.tmSv
-      .addTask([
-        this.task,
-        this.functionID,
-        this.listTaskResources,
-        this.listTodo,
-      ])
-      .subscribe((res) => {
-        if (res && res.length > 0) {
-          this.dialog.dataService.addDatas.clear();
-          this.dialog.close(res);
-        }
-      });
+    // this.tmSv
+    //   .addTask([
+    //     this.task,
+    //     this.functionID,
+    //     this.listTaskResources,
+    //     this.listTodo,
+    //   ])
+    //   .subscribe((res) => {
+    //     if (res && res.length > 0) {
+    //       this.dialog.dataService.onAction.next({ type: 'create', data: res });
+    //       this.dialog.dataService.addDatas.clear();
+    //       this.dialog.close(res);
+    //     }
+    //   });
+    this.dialog.dataService.save((opt: RequestOption) => {
+      opt.methodName = 'AddTaskAsync';
+      opt.data = [this.task, this.functionID, this.listTaskResources, this.listTodo];
+      return true;
+    }).subscribe(res => {
+      this.dialog.close(res);
+    })
   }
 
   updateTask() {
@@ -663,14 +672,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
     }
     if (data.field == 'startDate' || data.field == 'endDate') {
-      this.changTimeCount+=1
-      if (this.task.startDate && this.task.endDate && this.changTimeCount >2) {
-          var time = (
-            (this.task.endDate.getTime() - this.task.startDate.getTime()) /
-            3600000
-          ).toFixed(2);
-          this.task.estimated = Number.parseFloat(time);
-        }
+      this.changTimeCount += 1
+      if (this.task.startDate && this.task.endDate && this.changTimeCount > 2) {
+        var time = (
+          (this.task.endDate.getTime() - this.task.startDate.getTime()) /
+          3600000
+        ).toFixed(2);
+        this.task.estimated = Number.parseFloat(time);
+      }
     }
   }
 
@@ -789,7 +798,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUser = [];
     var listTaskResources = [];
     var listUserDetail = [];
-    var totalUser = this.listUser.length ;
+    var totalUser = this.listUser.length;
     for (var i = 0; i < totalUser; i++) {
       if (this.listUser[i] != userID) {
         listUser.push(this.listUser[i]);

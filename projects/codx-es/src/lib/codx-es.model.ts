@@ -3,8 +3,8 @@ export class File {
   fileID: string;
   fileName: string;
   eSign: boolean = false;
-  areas: object;
-  comment: string;
+  areas: object = null;
+  comment: string = null;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
