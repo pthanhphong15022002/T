@@ -105,12 +105,21 @@ export class CodxAdService {
     const controls = formGroup.controls;
     for (const name in controls) {
       if (controls[name].invalid) {
-        if (name == 'Email') {
-          if (controls?.email != null || controls?.email?.value != '') {
-            var checkFormatEmail = formGroup.addValidators(Validators.email);
-            debugger;
-            // this.notificationsService.notify("Trường 'Email' không hợp lệ");
-            return;
+        if (name == 'email') {
+          if (controls?.email.value != null) {
+            if (controls?.email.value != '') {
+              const regex = new RegExp(
+                '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'
+              );
+              var checkRegex = regex.test(controls?.email.value);
+              if (checkRegex == false) {
+                this.notificationsService.notify("Trường 'Email' không hợp lệ");
+                return;
+              }
+            } else {
+              invalid.push(name);
+              break;
+            }
           }
         }
         invalid.push(name);
