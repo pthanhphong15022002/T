@@ -284,7 +284,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adService.notifyInvalid(this.formUser, this.formModel);
       return;
     } else {
-      if (this.isAddMode) {  
+      if (this.isAddMode) {
         if (this.checkBtnAdd == false) return this.onAdd();
         else {
           if (
@@ -385,5 +385,5 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  buttonClick(e: any) {}
+  buttonClick(e: any) { }
 }
