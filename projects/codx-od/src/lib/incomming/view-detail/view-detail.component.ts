@@ -804,7 +804,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   changeDataMF(e:any,data:any)
   {
     var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
-    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111');
+    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111' || x.functionID == 'ODT210');
     if(data?.isBookmark) 
     {
       bm[0].disabled = true;
