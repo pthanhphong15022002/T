@@ -106,6 +106,7 @@
             <div class="w-275px mt-3" *ngIf="!item.referedType">
               <codx-input
                 type="text"
+                [className]="'border'"
                 [field]="item.controlName"
                 placeholder="Có chứa giá trị..."
                 [crrValue]="item.defaultValue"
@@ -115,6 +116,16 @@
             <div class="w-275px mt-3" *ngIf="item.referedType == '3'">
               <codx-input
                 type="combobox"
+                [field]="item.controlName"
+                [crrValue]="item.defaultValue"
+                [refValue]="item.referedValue"
+                (valueChange)="reportObj.valueChange($event)"
+              >
+              </codx-input>
+            </div>
+            <div class="w-275px mt-3" *ngIf="item.referedType == '2'">
+              <codx-input
+                type="valuelist"
                 [field]="item.controlName"
                 [crrValue]="item.defaultValue"
                 [refValue]="item.referedValue"
