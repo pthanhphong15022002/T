@@ -111,7 +111,7 @@
                                                 (click)="openApproval()"
                                                 class="btn btn-sm btn-outline-primary">{{titleSetting}}</button>
                                             <ng-container *ngIf="showPopup">
-                                                <codx-combobox-popup comboboxName="Depts" [field]="approvers"
+                                                <codx-combobox-popup comboboxName="ApproverGroups" [field]="approvers"
                                                     [width]="width" [height]="height" [value]="approvers"
                                                     (clickSave)="changeValueOwner($event)">
                                                 </codx-combobox-popup>
