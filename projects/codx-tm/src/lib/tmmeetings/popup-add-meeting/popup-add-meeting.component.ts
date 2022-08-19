@@ -60,7 +60,7 @@ export class PopupAddMeetingComponent implements OnInit {
   fromDateSeconds: any;
   toDateSeconds: any;
   templateName: any;
-  isCheckTask= new CO_Resources();
+  isCheckTask = true;
   selectedDate = new Date();
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -167,10 +167,12 @@ export class PopupAddMeetingComponent implements OnInit {
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       this.meeting.meetingType = '1';
+      this.meeting.resources['taskControl'] = this.isCheckTask;
       data = [this.meeting, this.functionID];
     } else if (this.action == 'edit') {
       op.method = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
+      this.meeting.resources['taskControl'] = this.isCheckTask;
       data = [this.meeting];
     }
 
@@ -225,7 +227,7 @@ export class PopupAddMeetingComponent implements OnInit {
 
   valueCbx(e) {
     console.log(e);
-    this.isCheckTask.taskControl = e.data;
+    this.isCheckTask = e.data;
   }
 
   valueChange(event) {
@@ -458,7 +460,6 @@ export class PopupAddMeetingComponent implements OnInit {
               tmpResource.resourceID = emp?.userID;
               tmpResource.resourceName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
-              tmpResource.taskControl = this.isCheckTask.taskControl;
               tmpResource.roleType = 'A';
               this.resources.push(tmpResource);
             } else {
@@ -466,10 +467,9 @@ export class PopupAddMeetingComponent implements OnInit {
               tmpResource.resourceName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = 'P';
-              tmpResource.taskControl = this.isCheckTask.taskControl;
-
               this.resources.push(tmpResource);
             }
+            tmpResource.taskControl = this.isCheckTask;
             this.meeting.resources = this.resources;
           }
         }
