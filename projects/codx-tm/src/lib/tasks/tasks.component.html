@@ -28,7 +28,8 @@
 
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)"  (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
-    [icoStatus]="data.priority" icoStatusVll="L0186" [title]="data.userName" [subTitle]="data.positionName"
+    [iconCss]="data?.isTimeOut ? 'icon-notifications expired' : ''"   [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'" [title]="data.userName" [subTitle]="data.positionName"
     [content]="data.memo || 'memo'" [status]="data.status" [statusVll]="vllStatus" [date]="data.dueDate"
     [resources]="data.assignTo" [rootData]="data" [formModel]="view.formModel" [setting]="setting"
     [footer]="cardImgFooter" [dataItem]="data">
