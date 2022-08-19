@@ -1327,9 +1327,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   cancelPrint(e: any) {}
 
-  goToSelectedAnnotation(areaID, labelValue) {
+  goToSelectedAnnotation(areaID, labelValue, fontFormat) {
     this.pdfviewerControl.annotationModule.selectAnnotation(areaID);
     this.formAnnot.controls['content'].setValue(labelValue);
+    this.isBold = fontFormat?.includes('B') ? true : false;
+    this.isItalic = fontFormat?.includes('I') ? true : false;
+    this.isUnd = fontFormat?.includes('U') ? true : false;
     this.curSelectedAnnotID = areaID;
   }
 
