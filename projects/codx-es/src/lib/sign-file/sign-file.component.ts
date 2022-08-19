@@ -175,15 +175,6 @@ export class SignFileComponent extends UIComponent {
         '',
         dialogModel
       );
-      // this.dialog = this.callfunc.openSide(
-      //   PopupAddSignFileComponent,
-      //   {
-      //     isAddNew: true,
-      //     formModel: this.view?.currentView?.formModel,
-      //     option: option,
-      //   },
-      //   option
-      // );
       this.dialog.closed.subscribe((x) => {
         if (x.event) {
           delete x.event._uuid;

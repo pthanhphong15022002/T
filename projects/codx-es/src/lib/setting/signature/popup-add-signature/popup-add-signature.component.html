@@ -4,7 +4,7 @@
   <ng-template #body>
     <div class="d-flex flex-stack fs-6 py-2">
       <div class="fw-bolder text-primary">
-        <codx-label [name]="'lblTitleAddSignature'" default="THÔNG TIN CHỮ KÝ SỐ" [formModel]="form.formModel">
+        <codx-label [name]="'lblTitleAddSignature'" default="THÔNG TIN CHỮ KÝ SỐ" [formModel]="dialog.formModel">
         </codx-label>
       </div>
       <span class="text-end align-items-end" style="display: none;">
@@ -15,7 +15,7 @@
       </span>
     </div>
     <div class="form-group">
-      <codx-label fiedName="Email" default="Email" [formModel]="form.formModel">
+      <codx-label fiedName="Email" default="Email" [formModel]="dialog.formModel">
       </codx-label>
       <div class="d-flex">
         <div class="w-100 me-2">
@@ -36,14 +36,14 @@
     </div>
     <div class="form-group row mt-3">
       <div class="col-6">
-        <codx-label fiedName="SignatureType" [formModel]="form.formModel" default="Loại chữ kí">
+        <codx-label fiedName="SignatureType" [formModel]="dialog.formModel" default="Loại chữ kí">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" [crrValue]="dialogSignature.value?.signatureType"
           [refValue]="cbxName['SignatureType']" field="signatureType" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="Supplier" default="Nhà cung cấp" [formModel]="form.formModel">
+        <codx-label fiedName="Supplier" default="Nhà cung cấp" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" [crrValue]="dialogSignature.value.supplier"
           [refValue]="cbxName['Supplier']" field="supplier" (valueChange)="valueChange($event)">
@@ -53,7 +53,7 @@
     <div class="form-group">
       <div class="d-flex flex-stack fs-6 py-2">
         <div class="fw-bolder ">
-          <codx-label default="Chữ ký & Con dấu" name="lblTitleSignment" [formModel]="form.formModel"></codx-label>
+          <codx-label default="Chữ ký & Con dấu" name="lblTitleSignment" [formModel]="dialog.formModel"></codx-label>
         </div>
         <span class="text-end align-items-end">
           <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal">
@@ -73,7 +73,7 @@
               </div>
             </div>
           </div>
-          <codx-label fiedName="Signature1" default="Kí thường" [formModel]="form.formModel"></codx-label>
+          <codx-label fiedName="Signature1" default="Kí thường" [formModel]="dialog.formModel"></codx-label>
         </div>
         <div class="text-center">
           <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
@@ -82,7 +82,7 @@
                 imageType="square" [width]="50" [recId]="dialogSignature.value.signature2"></codx-img>
             </div>
           </div>
-          <codx-label fiedName="Signature2" default="Kí nháy" [formModel]="form.formModel">
+          <codx-label fiedName="Signature2" default="Kí nháy" [formModel]="dialog.formModel">
           </codx-label>
         </div>
         <div class="text-center">
@@ -92,7 +92,7 @@
                 imageType="square" [width]="50" [recId]="dialogSignature.value.stamp"></codx-img>
             </div>
           </div>
-          <codx-label fiedName="Stamp" default="Con dấu" [formModel]="form.formModel">
+          <codx-label fiedName="Stamp" default="Con dấu" [formModel]="dialog.formModel">
           </codx-label>
         </div>
       </div>
@@ -100,14 +100,14 @@
 
     <div class="form-group row mt-3">
       <div class="col-6">
-        <codx-label fiedName="OTPControl" default="OTP" [formModel]="form.formModel">
+        <codx-label fiedName="OTPControl" default="OTP" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input type="valuelist" name="valuelist" [crrValue]="dialogSignature.value.oTPControl"
           [refValue]="cbxName['OTPControl']" field="oTPControl" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="SpanTime" default="Thời gian" [formModel]="form.formModel">
+        <codx-label fiedName="SpanTime" default="Thời gian" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input type="number" field="spanTime" value="5" [crrValue]="dialogSignature.value.spanTime" [min]="0"
           max="50" (valueChange)="valueChange($event)" [showSpinButton]="false">
@@ -118,7 +118,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary" (click)="onSaveForm()">
-        <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
+        <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
       </button>
     </div>
   </ng-template>
@@ -133,7 +133,7 @@
   <ng-template #body>
     <div class="d-flex flex-stack fs-6 py-2">
       <div class="fw-bolder text-primary">
-        <codx-label [name]="'lblTitleAddSignature'" default="THÔNG TIN CHỮ KÝ SỐ" [formModel]="form.formModel">
+        <codx-label [name]="'lblTitleAddSignature'" default="THÔNG TIN CHỮ KÝ SỐ" [formModel]="dialog.formModel">
         </codx-label>
       </div>
       <span class="text-end align-items-end" style="display: none;">
@@ -144,7 +144,7 @@
       </span>
     </div>
     <div class="form-group">
-      <codx-label fiedName="Email" default="Email" [formModel]="form.formModel">
+      <codx-label fiedName="Email" default="Email" [formModel]="dialog.formModel">
       </codx-label>
       <div class="d-flex">
         <div class="w-100 me-2">
@@ -166,13 +166,13 @@
     </div>
     <div class="form-group row mt-3">
       <div class="col-6">
-        <codx-label fiedName="SignatureType" [formModel]="form.formModel" default="Loại chữ kí">
+        <codx-label fiedName="SignatureType" [formModel]="dialog.formModel" default="Loại chữ kí">
         </codx-label>
         <codx-input type="valuelist" field="signatureType" [Group]="form.formGroup" [formModel]="dialog.formModel">
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="Supplier" default="Nhà cung cấp" [formModel]="form.formModel">
+        <codx-label fiedName="Supplier" default="Nhà cung cấp" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input type="valuelist" field="supplier" [Group]="form.formGroup" [formModel]="dialog.formModel">
         </codx-input>
@@ -181,7 +181,7 @@
     <div class="form-group">
       <div class="d-flex flex-stack fs-6 py-2">
         <div class="fw-bolder ">
-          <codx-label default="Chữ ký & Con dấu" name="lblTitleSignment" [formModel]="form.formModel"></codx-label>
+          <codx-label default="Chữ ký & Con dấu" name="lblTitleSignment" [formModel]="dialog.formModel"></codx-label>
         </div>
         <span class="text-end align-items-end">
           <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal">
@@ -201,7 +201,7 @@
               </div>
             </div>
           </div>
-          <codx-label fiedName="Signature1" default="Kí thường" [formModel]="form.formModel"></codx-label>
+          <codx-label fiedName="Signature1" default="Kí thường" [formModel]="dialog.formModel"></codx-label>
         </div>
         <div class="text-center">
           <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
@@ -210,7 +210,7 @@
                 [recId]="data.signature2"></codx-img>
             </div>
           </div>
-          <codx-label fiedName="Signature2" default="Kí nháy" [formModel]="form.formModel">
+          <codx-label fiedName="Signature2" default="Kí nháy" [formModel]="dialog.formModel">
           </codx-label>
         </div>
         <div class="text-center">
@@ -220,7 +220,7 @@
                 [recId]="data.stamp"></codx-img>
             </div>
           </div>
-          <codx-label fiedName="Stamp" default="Con dấu" [formModel]="form.formModel">
+          <codx-label fiedName="Stamp" default="Con dấu" [formModel]="dialog.formModel">
           </codx-label>
         </div>
       </div>
@@ -228,13 +228,13 @@
 
     <div class="form-group row mt-3">
       <div class="col-6">
-        <codx-label fiedName="OTPControl" default="OTP" [formModel]="form.formModel">
+        <codx-label fiedName="OTPControl" default="OTP" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input type="valuelist" field="oTPControl" [Group]="form.formGroup" [formModel]="dialog.formModel">
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="SpanTime" default="Thời gian" [formModel]="form.formModel">
+        <codx-label fiedName="SpanTime" default="Thời gian" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input type="number" field="spanTime" [min]="0" max="50" [showSpinButton]="false" [Group]="form.formGroup"
           [formModel]="dialog.formModel">
@@ -245,7 +245,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary" (click)="onSaveForm()">
-        <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
+        <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
       </button>
     </div>
   </ng-template>

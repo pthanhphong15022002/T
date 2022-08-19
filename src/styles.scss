@@ -138,7 +138,10 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 .icon-56 {
   font-size: 56px !important;
 }
-
+.h-105px
+{
+    height: 65px;
+}
 /***ES-Trinh ky****/
 .codx-card-custom {
   height: 100%;
@@ -289,4 +292,14 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
     }
 
   }
+}
+
+codx-aside .menu-item .menu-heading {
+  font-size: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+codx-aside .menu-item .separator {
+  margin-top: 20px;
 }
