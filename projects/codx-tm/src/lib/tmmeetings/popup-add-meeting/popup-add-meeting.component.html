@@ -195,10 +195,10 @@
       </div>
     </div>
     <div class="form-group mt-3">
-      <codx-label fiedName="refID" formName="TMMeetings" gridViewName="grvTMMeetings" default="Dự án">
+      <codx-label fiedName="refID" default="Dự án">
       </codx-label>
-      <codx-input type="combobox" field="refID" refValue="TMProjects" [multiple]="false" loadFull="true"
-        [crrValue]="meeting.refID" (valueChange)="valueChange($event)">
+      <codx-input type="combobox" field="refID" refValue="TMProjects"
+       (valueChange)="valueChange($event)" [crrValue]="meeting.refID">
       </codx-input>
     </div>
   </ng-container>

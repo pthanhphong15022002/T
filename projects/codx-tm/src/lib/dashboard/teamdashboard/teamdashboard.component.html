@@ -3,127 +3,243 @@
     <div class="row m-0 bg-body rounded-2 mb-3">
       <div class="fs-4 fw-bold mt-4">Đánh giá hiệu quả làm việc</div>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-sm align-self-end" (mouseenter)="openTooltip()"
-          (mouseleave)="closeTooltip()">
+        <button
+          type="button"
+          class="btn btn-sm align-self-end"
+          (mouseenter)="openTooltip()"
+          (mouseleave)="closeTooltip()"
+        >
           <i class="icon-info text-dark"></i>
         </button>
       </div>
-      <div class="col-lg-3 col-sm-6 p-0" style="position: relative; height: 200px">
-        <ejs-circulargauge style="display: block" centerY="50%" width="150" height="150">
+      <div class="col-lg-3 col-sm-6" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200" >
           <e-axes>
-            <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
-              [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
               <e-ranges>
-                <e-range start="0" end="150" radius="100%" roundedCornerRadius="10"
-                  [linearGradient]="rangeLinearGradient1" startWidth="10" endWidth="10">
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient1"
+                  startWidth="10"
+                  endWidth="10"
+                >
                 </e-range>
               </e-ranges>
               <e-pointers>
-                <e-pointer type="Marker" [value]="availability" markerShape="Image"
-                  imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                <e-pointer
+                  type="Marker"
+                  [value]="availability"
+                  markerShape="Image"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
+                  radius="90%"
+                  markerWidth="30"
+                  markerHeight="30"
+                >
                 </e-pointer>
               </e-pointers>
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="
+        <div
+          style="
             position: absolute;
-            top: 36%;
-            left: 50%;
+            top: 50%;
+            left: 105px;
             transform: translate(-50%, -50%);
-          ">
-          <div class="text-center fs-8 text-gray-600 text-nowrap">Availability (%)</div>
-          <div class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+          "
+        >
+          <p class="text-center" style="margin: 0px">Availability (%)</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
             {{ availability }}
-          </div>
+          </p>
         </div>
       </div>
-      <div class="col-lg-3 col-sm-6 p-0" style="position: relative; height: 200px">
-        <ejs-circulargauge style="display: block" centerY="50%" width="150" height="150">
+      <div class="col-lg-3 col-sm-6" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
           <e-axes>
-            <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
-              [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
               <e-ranges>
-                <e-range start="0" end="150" radius="100%" roundedCornerRadius="10"
-                  [linearGradient]="rangeLinearGradient1" startWidth="10" endWidth="10">
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient1"
+                  startWidth="10"
+                  endWidth="10"
+                >
                 </e-range>
               </e-ranges>
               <e-pointers>
-                <e-pointer type="Marker" [value]="performance" markerShape="Image"
-                  imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                <e-pointer
+                  type="Marker"
+                  [value]="performance"
+                  markerShape="Image"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
+                  radius="90%"
+                  markerWidth="30"
+                  markerHeight="30"
+                >
                 </e-pointer>
               </e-pointers>
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="
+        <div
+          style="
             position: absolute;
-            top: 36%;
-            left: 50%;
+            top: 50%;
+            left: 105px;
             transform: translate(-50%, -50%);
-          ">
-          <div class="text-center fs-8 text-gray-600 text-nowrap">Performance (%)</div>
-          <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+          "
+        >
+          <p class="text-center" style="margin: 0px">Performance (%)</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
             {{ performance }}
           </p>
         </div>
       </div>
-      <div class="col-lg-3 col-sm-6 p-0" style="position: relative; height: 200px">
-        <ejs-circulargauge style="display: block" centerY="50%" width="150" height="150">
+      <div class="col-lg-3 col-sm-6" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
           <e-axes>
-            <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
-              [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
               <e-ranges>
-                <e-range start="0" end="150" radius="100%" roundedCornerRadius="10"
-                  [linearGradient]="rangeLinearGradient1" startWidth="10" endWidth="10">
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient1"
+                  startWidth="10"
+                  endWidth="10"
+                >
                 </e-range>
               </e-ranges>
               <e-pointers>
-                <e-pointer type="Marker" [value]="quality" markerShape="Image"
-                  imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                <e-pointer
+                  type="Marker"
+                  [value]="quality"
+                  markerShape="Image"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
+                  radius="90%"
+                  markerWidth="30"
+                  markerHeight="30"
+                >
                 </e-pointer>
               </e-pointers>
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="
+        <div
+          style="
             position: absolute;
-            top: 36%;
-            left: 50%;
+            top: 50%;
+            left: 105px;
             transform: translate(-50%, -50%);
-          ">
-          <div class="text-center fs-8 text-gray-600 text-nowrap">Quality (%)</div>
-          <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+          "
+        >
+          <p class="text-center" style="margin: 0px">Quality (%)</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
             {{ quality }}
           </p>
         </div>
       </div>
-      <div class="col-lg-3 col-sm-6 p-0" style="position: relative; height: 200px">
-        <ejs-circulargauge style="display: block" centerY="50%" width="150" height="150">
+      <div class="col-lg-3 col-sm-6" style="position: relative; height: 200px">
+        <ejs-circulargauge style="display: block" centerY="50%" height="200">
           <e-axes>
-            <e-axis [lineStyle]="lineStyle" radius="100%" startAngle="230" endAngle="130" minimum="0" maximum="150"
-              [labelStyle]="labelStyle1" [majorTicks]="majorTicks1" [minorTicks]="minorTicks">
+            <e-axis
+              [lineStyle]="lineStyle"
+              radius="100%"
+              startAngle="230"
+              endAngle="130"
+              minimum="0"
+              maximum="150"
+              [labelStyle]="labelStyle1"
+              [majorTicks]="majorTicks1"
+              [minorTicks]="minorTicks"
+            >
               <e-ranges>
-                <e-range start="0" end="150" radius="100%" roundedCornerRadius="10"
-                  [linearGradient]="rangeLinearGradient2" startWidth="10" endWidth="10">
+                <e-range
+                  start="0"
+                  end="150"
+                  radius="100%"
+                  roundedCornerRadius="10"
+                  [linearGradient]="rangeLinearGradient2"
+                  startWidth="10"
+                  endWidth="10"
+                >
                 </e-range>
               </e-ranges>
               <e-pointers>
-                <e-pointer type="Marker" [value]="kpi" markerShape="Image"
-                  imageUrl="./assets/themes/tm/default/img/Button.svg" radius="90%" markerWidth="30" markerHeight="30">
+                <e-pointer
+                  type="Marker"
+                  [value]="kpi"
+                  markerShape="Image"
+                  imageUrl="./assets/themes/tm/default/img/Button.svg"
+                  radius="90%"
+                  markerWidth="30"
+                  markerHeight="30"
+                >
                 </e-pointer>
               </e-pointers>
             </e-axis>
           </e-axes>
         </ejs-circulargauge>
-        <div style="
+        <div
+          style="
             position: absolute;
-            top: 36%;
-            left: 50%;
+            top: 50%;
+            left: 105px;
             transform: translate(-50%, -50%);
-          ">
-          <div class="text-center fs-8 text-gray-600 text-nowrap">KPI (%)</div>
-          <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+          "
+        >
+          <p class="text-center" style="margin: 0px">KPI (%)</p>
+          <p
+            class="text-center text-gray-900 fw-bolder fs-2"
+            style="margin: 0px"
+          >
             {{ kpi }}
           </p>
         </div>
@@ -132,28 +248,48 @@
     <div class="row m-0 bg-body rounded-2 mb-3">
       <div class="fs-4 fw-bold mt-4">Thống kê theo nhóm công việc</div>
       <div class="col-lg-6" style="height: 250px">
-        <ejs-accumulationchart id="chart-group-task" width="100%" height="250"
-          [legendSettings]="legendRateDoneSettings">
+        <ejs-accumulationchart
+          id="chart-group-task"
+          width="100%"
+          height="250"
+          [legendSettings]="legendRateDoneSettings"
+        >
           <e-accumulation-series-collection>
-            <e-accumulation-series [dataSource]="tasksByGroup ? tasksByGroup : {}" xName="taskGroupName"
-              yName="percentage" innerRadius="82%">
+            <e-accumulation-series
+              [dataSource]="tasksByGroup ? tasksByGroup : {}"
+              xName="taskGroupName"
+              yName="percentage"
+              innerRadius="82%"
+            >
             </e-accumulation-series>
           </e-accumulation-series-collection>
         </ejs-accumulationchart>
       </div>
       <div class="col-lg-6" style="position: relative; height: 250px">
-        <ejs-accumulationchart id="chart-rate-done" width="100%" height="250" [legendSettings]="legendRateDoneSettings">
+        <ejs-accumulationchart
+          id="chart-rate-done"
+          width="100%"
+          height="250"
+          [legendSettings]="legendRateDoneSettings"
+        >
           <e-accumulation-series-collection>
-            <e-accumulation-series [dataSource]="piedata ? piedata : {}" xName="x" yName="y" innerRadius="80%">
+            <e-accumulation-series
+              [dataSource]="piedata ? piedata : {}"
+              xName="x"
+              yName="y"
+              innerRadius="80%"
+            >
             </e-accumulation-series>
           </e-accumulation-series-collection>
         </ejs-accumulationchart>
-        <div style="
+        <div
+          style="
             position: absolute;
-            top: 36%;
-            left: 40%;
+            top: 50%;
+            left: 155px;
             transform: translate(-50%, -50%);
-          ">
+          "
+        >
           <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
             {{ qtyTasks }}
           </p>
@@ -165,19 +301,50 @@
       <div class="fs-4 fw-bold mt-4">
         Thống kê công việc hoàn thành và số giờ thực hiện
       </div>
-      <ejs-chart style="display: block" background="transparent" [chartArea]="chartArea" width="100%" [align]="'center'"
-        id="chartbar" [primaryXAxis]="columnXAxis" [primaryYAxis]="columnYAxis" [legendSettings]="legendSettings">
+      <ejs-chart
+        style="display: block"
+        background="transparent"
+        [chartArea]="chartArea"
+        width="100%"
+        [align]="'center'"
+        id="chartbar"
+        [primaryXAxis]="columnXAxis"
+        [primaryYAxis]="columnYAxis"
+        [legendSettings]="legendSettings"
+      >
         <e-axes>
-          <e-axis rowIndex="0" name="WorkHours" opposedPosition="true" title="" labelFormat="" [minimum]="0"
-            [maximum]="100" [interval]="4">
+          <e-axis
+            rowIndex="0"
+            name="WorkHours"
+            opposedPosition="true"
+            title=""
+            labelFormat=""
+            [minimum]="0"
+            [maximum]="100"
+            [interval]="4"
+          >
           </e-axis>
         </e-axes>
         <e-series-collection>
-          <e-series fill="#005DC7" [dataSource]="dataBarChart?.barChart" type="Column" name="Tasks" xName="label"
-            yName="value" [cornerRadius]="radius">
+          <e-series
+            fill="#005DC7"
+            [dataSource]="dataBarChart?.barChart"
+            type="Column"
+            name="Tasks"
+            xName="label"
+            yName="value"
+            [cornerRadius]="radius"
+          >
           </e-series>
-          <e-series fill="#F9D923" [dataSource]="dataBarChart?.lineChart" type="Line" name="WorkHours" yName="value"
-            xName="label" yAxisName="WorkHours">
+          <e-series
+            fill="#F9D923"
+            [dataSource]="dataBarChart?.lineChart"
+            type="Line"
+            name="WorkHours"
+            yName="value"
+            xName="label"
+            yAxisName="WorkHours"
+          >
           </e-series>
         </e-series-collection>
       </ejs-chart>
@@ -216,17 +383,29 @@
         Danh sách nhân viên thực hiện công việc
       </div>
       <div style="position: relative" class="px-5">
-        <button class="btn btn-icon btn-light btn-sortby" style="z-index: 99" (click)="sort()">
+        <button
+          class="btn btn-icon btn-light btn-sortby"
+          style="z-index: 99"
+          (click)="sort()"
+        >
           <div *ngIf="isDesc; then Desc; else Asc"></div>
-          <ng-template #Desc><span class="text-right icon-sort_Z-A"></span></ng-template>
+          <ng-template #Desc
+            ><span class="text-right icon-sort_Z-A"></span
+          ></ng-template>
           <ng-template #Asc>
             <span class="text-right icon-sort_A-Z"></span>
           </ng-template>
         </button>
         <ejs-tab id="element">
           <e-tabitems>
-            <e-tabitem [header]="headerText[0]" [content]="volumeWork"></e-tabitem>
-            <e-tabitem [header]="headerText[1]" [content]="workHours"></e-tabitem>
+            <e-tabitem
+              [header]="headerText[0]"
+              [content]="volumeWork"
+            ></e-tabitem>
+            <e-tabitem
+              [header]="headerText[1]"
+              [content]="workHours"
+            ></e-tabitem>
           </e-tabitems>
         </ejs-tab>
       </div>
@@ -240,17 +419,37 @@
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center justify-content-end">
         <span class="me-3">{{ item?.id }}</span>
-        <codx-img [width]="25" [objectId]="item?.id" [objectName]="item?.id" [objectType]="'AD_Users'"></codx-img>
+        <codx-img
+          [width]="25"
+          [objectId]="item?.id"
+          [objectName]="item?.id"
+          [objectType]="'AD_Users'"
+        ></codx-img>
       </div>
       <div class="d-flex align-items-center mb-5">
         <span class="fw-bold w-50px me-3 text-end">{{ item?.qtyTasks }}</span>
         <div class="progress w-100">
-          <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="item?.status?.done"></div>
-          <div class="progress-bar progress-bar-processing" role="progressbar" [style.backgroundColor]=""
-            [style.width.%]="item?.status?.processing"></div>
-          <div class="progress-bar progress-bar-postpone" role="progressbar" [style.width.%]="item?.status?.postpone">
-          </div>
-          <div class="progress-bar progress-bar-cancel" role="progressbar" [style.width.%]="item?.status?.cancel"></div>
+          <div
+            class="progress-bar progress-bar-done"
+            role="progressbar"
+            [style.width.%]="item?.status?.done"
+          ></div>
+          <div
+            class="progress-bar progress-bar-processing"
+            role="progressbar"
+            [style.backgroundColor]=""
+            [style.width.%]="item?.status?.processing"
+          ></div>
+          <div
+            class="progress-bar progress-bar-postpone"
+            role="progressbar"
+            [style.width.%]="item?.status?.postpone"
+          ></div>
+          <div
+            class="progress-bar progress-bar-cancel"
+            role="progressbar"
+            [style.width.%]="item?.status?.cancel"
+          ></div>
         </div>
       </div>
     </div>
@@ -263,12 +462,21 @@
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center justify-content-end">
         <span class="me-3">{{ item?.id }}</span>
-        <codx-img [width]="25" [objectId]="item?.id" [objectName]="item?.id" [objectType]="'AD_Users'"></codx-img>
+        <codx-img
+          [width]="25"
+          [objectId]="item?.id"
+          [objectName]="item?.id"
+          [objectType]="'AD_Users'"
+        ></codx-img>
       </div>
       <div class="d-flex align-items-center mb-5">
         <span class="fw-bold w-50px me-3 text-end">{{ item?.completed }}</span>
         <div class="progress w-100">
-          <div class="progress-bar progress-bar-processing" role="progressbar" [style.width.%]="item?.percentage"></div>
+          <div
+            class="progress-bar progress-bar-processing"
+            role="progressbar"
+            [style.width.%]="item?.percentage"
+          ></div>
         </div>
       </div>
     </div>
@@ -281,14 +489,22 @@
       <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex justify-content-between">
           <span style="margin-right: 20px">
-            <i class="icon-info" style="color: #005dc7"></i></span>
+            <i class="icon-info" style="color: #005dc7"></i
+          ></span>
           <h2 id="modal-basic-title">
-            <codx-label name="lblEvaluateWorkEfficiency" default="Đánh giá hiệu quả làm việc"
-              [formModel]="dialog.formModel"></codx-label>
+            <codx-label
+              name="lblEvaluateWorkEfficiency"
+              default="Đánh giá hiệu quả làm việc"
+              [formModel]="dialog.formModel"
+            ></codx-label>
           </h2>
         </div>
-        <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
-          (click)="dialog.close()">
+        <button
+          type="button"
+          class="btn btn-xs btn-icon btn-light btn-hover-primary"
+          aria-label="Close"
+          (click)="dialog.close()"
+        >
           <span class="icon-close icon-20 text-dark text-hover-primary"></span>
         </button>
       </div>
@@ -301,13 +517,15 @@
       <p style="margin: 0px 0px 0px 20px">
         (1) Số giờ chấm công thực tế của nhân viên
       </p>
-      <p style="
+      <p
+        style="
           font-style: italic;
           font-size: 12px;
           font-weight: 200;
           margin: 0px 0px 0px 30px;
           color: rgb(0, 0, 0, 0.5);
-        ">
+        "
+      >
         (* Nếu chưa tích hợp chấm công sẽ bằng giờ công chuẩn)
       </p>
       <p style="margin: 0px 0px 0px 20px">
@@ -330,13 +548,15 @@
       <p style="margin: 0px 0px 0px 20px">
         (5) Tổng số giờ hoàn thành công việc thực tế được duyệt
       </p>
-      <p style="
+      <p
+        style="
           font-style: italic;
           font-size: 12px;
           font-weight: 200;
           margin: 0px 0px 0px 30px;
           color: rgb(0, 0, 0, 0.5);
-        ">
+        "
+      >
         (* Nếu không sử dụng quy trình xét duyệt thì số giờ sẽ bằng số giờ thực
         tế)
       </p>
@@ -347,14 +567,16 @@
     <div style="margin-bottom: 20px">
       <p style="font-weight: 700; margin: 0px">KPI (%)</p>
       <p>Năng suất tương đương</p>
-      <p style="
+      <p
+        style="
           margin-left: 100px;
           padding-bottom: 10px;
           width: fit-content;
           box-sizing: bor-box;
           border-bottom: 1px solid #000;
           text-align: center;
-        ">
+        "
+      >
         Availability (%) * Performance (%) * Quality (%)
       </p>
       <p style="text-align: center">1000</p>

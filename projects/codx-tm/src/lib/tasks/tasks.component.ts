@@ -45,7 +45,8 @@ import { ViewDetailComponent } from './view-detail/view-detail.component';
 })
 export class TasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() dataObj?: any;
   @Input() calendarID: string;
@@ -60,6 +61,7 @@ export class TasksComponent
   @ViewChild('treeView') treeView: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
+  viewsActive: Array<ViewModel> = [];
   button?: ButtonModel;
   model?: DataRequest;
   request: ResourceModel;
@@ -84,7 +86,7 @@ export class TasksComponent
   funcID: string;
   gridView: any;
   isAssignTask = false;
-  param: TM_Parameter = new TM_Parameter();;
+  param: TM_Parameter = new TM_Parameter();
   paramModule: any;
   listTaskResousce = [];
   searchField = '';
@@ -105,9 +107,10 @@ export class TasksComponent
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
   dataTree = [];
-  iterationID = '';
-  meetingID = '';
+  iterationID: any;
+  viewMode: any;
   projectID?: any;
+  listViewModel = [];
 
   constructor(
     inject: Injector,
@@ -140,7 +143,6 @@ export class TasksComponent
     } else {
       this.vllStatus = this.vllStatusTasks;
     }
-    this.projectID = this.dataObj?.projectID;
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -184,8 +186,11 @@ export class TasksComponent
   }
 
   ngAfterViewInit(): void {
-    this.views = [
+    this.projectID = this.dataObj?.projectID;
+    this.viewMode = this.dataObj?.viewMode;
+    this.viewsActive = [
       {
+        id: '1',
         type: ViewType.list,
         active: false,
         sameData: true,
@@ -194,8 +199,9 @@ export class TasksComponent
         },
       },
       {
+        id: '2',
         type: ViewType.listdetail,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -203,6 +209,7 @@ export class TasksComponent
         },
       },
       {
+        id: '6',
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -213,6 +220,7 @@ export class TasksComponent
         },
       },
       {
+        id: '8',
         type: ViewType.schedule,
         active: false,
         sameData: true,
@@ -225,6 +233,17 @@ export class TasksComponent
         },
       },
     ];
+    var viewDefaultID = '2';
+    if (this.viewMode && this.viewMode.trim() != '') {
+      viewDefaultID= this.viewMode ;
+    }
+
+    this.viewsActive.forEach((obj) => {
+      if (obj.id == viewDefaultID) {
+        obj.active = true;
+      }
+    });
+    this.views = this.viewsActive;
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
@@ -403,13 +422,13 @@ export class TasksComponent
           [this.view.dataService.dataSelected],
           false
         );
-      if (e?.event && e?.event != null) {
-        let listTask = e?.event;
+      if (e?.event && e?.event != null && e?.event[1] != null) {
+        let listTask = e?.event[1];
         let newTasks = [];
         for (var i = 0; i < listTask.length; i++) {
           if (listTask[i].taskID == data.taskID) {
             this.view.dataService.update(listTask[i]).subscribe();
-            this.view.dataService.setDataSelected(e?.event[0]);
+            this.view.dataService.setDataSelected(listTask[i]);
           } else newTasks.push(listTask[i]);
         }
         if (newTasks.length > 0) {
@@ -641,8 +660,8 @@ export class TasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -714,9 +733,9 @@ export class TasksComponent
   }
   //#endregion
   //#region Event
-  changeView(evt: any) { }
+  changeView(evt: any) {}
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1238,13 +1257,13 @@ export class TasksComponent
         }
         //tắt duyệt đánh giá
         if (
-          (x.functionID == 'TMT04021' || x.functionID == 'TMT04022' || x.functionID == 'TMT04023') &&
+          (x.functionID == 'TMT04021' ||
+            x.functionID == 'TMT04022' ||
+            x.functionID == 'TMT04023') &&
           data.approveStatus != '3'
         ) {
           x.disabled = true;
         }
-
-
       });
     }
   }
@@ -1265,7 +1284,7 @@ export class TasksComponent
       option.Width = 'Auto';
       this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'view', this.isAssignTask],
+        [e.data, 'view', this.isAssignTask],
         option
       );
     }
