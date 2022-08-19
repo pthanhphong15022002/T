@@ -124,7 +124,7 @@
       " [style.color]="data?.approveBy | vll: 'TM014':'color' | async" style="border: none">
           {{data?.approveBy|vll:"TM014":"text"|async}}
         </div>
-        <div class="font-italic" *ngIf="data.approveBy =='R' || data.approveBy == 'P'">
+        <div class="font-italic" *ngIf="data.approveBy =='R' || data.approveBy == 'P' || data.approveBy == 'U'">
           {{data.nameApprover}}
         </div>
       </div>
