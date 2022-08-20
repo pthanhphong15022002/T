@@ -25,6 +25,10 @@ codx-view-list-detail {
     padding-bottom: 52px;
 }
 
+codx-view-list-card {
+    padding-top: 55px;
+}
+
 .header-fixed.toolbar-fixed .toolbar {
     top: 0;
     left: 0;
