@@ -69,6 +69,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
   dataAfterSave: any;
   countOpenPopRoles = 0;
   formUser: FormGroup;
+  checkValueChangeUG = false;
+  dataUG: any = [];
 
   constructor(
     private injector: Injector,
@@ -118,7 +120,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.dialog.closed.subscribe((res) => {
       if (!this.saveSuccess) {
         if (this.dataAfterSave && this.dataAfterSave.userID) {
-          this.adService.deleteUserBeforeDone(this.dataAfterSave).subscribe();
+          this.deleteUserBeforeDone(this.dataAfterSave);
         }
       }
     });
@@ -136,44 +138,84 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    // this.formUser.patchValue(this.adUser);
-    // if (this.formUser.invalid) {
-    //   this.adService.notifyInvalid(this.formUser, this.formModel);
-    //   return;
-    // } else {
-      this.countOpenPopRoles++;
-      if (this.formType == 'add') {
-        if (this.countOpenPopRoles == 1) this.addUserTemp();
+    this.formUser.patchValue(this.adUser);
+    if (this.formUser.invalid) {
+      this.adService.notifyInvalid(this.formUser, this.formModel);
+      return;
+    } else {
+      if (this.checkValueChangeUG == true || this.adUser.userGroup) {
+        this.dataUG.forEach((dt) => {
+          if (dt.UserID == this.adUser.userGroup) {
+            if (this.formType == 'add') {
+              this.notification
+                .alertCode('AD003', null, "'" + dt.UserName + "'")
+                .subscribe((info) => {
+                  if (info.event.status == 'Y') {
+                    this.adUser.customize == true;
+                    this.openPopupRoles(item);
+                  }
+                });
+            } else {
+              if (this.adUser.customize == false) {
+                this.notification
+                  .alertCode('AD003', null, "'" + dt.UserName + "'")
+                  .subscribe((info) => {
+                    if (info.event.status == 'Y') {
+                      this.adUser.customize == true;
+                      this.openPopupRoles(item);
+                    }
+                  });
+              } else this.openPopupRoles(item);
+            }
+          }
+        });
+      } else this.openPopupRoles(item);
+    }
+  }
+
+  openPopupRoles(item: any) {
+    this.countOpenPopRoles++;
+    if (this.formType == 'add') {
+      if (this.countOpenPopRoles == 1) this.addUserTemp();
+    }
+    var option = new DialogModel();
+    option.FormModel = this.form.formModel;
+    var obj = {
+      formType: this.formType,
+      data: item,
+    };
+    this.dialogRole = this.callfc.openForm(
+      PopRolesComponent,
+      '',
+      1200,
+      700,
+      '',
+      obj,
+      '',
+      option
+    );
+    this.dialogRole.closed.subscribe((e) => {
+      if (e?.event) {
+        this.viewChooseRole = e?.event;
+        this.countListViewChoose();
+        this.viewChooseRole.forEach((dt) => {
+          dt['module'] = dt.functionID;
+          dt['roleID'] = dt.recIDofRole;
+          dt.userID = this.adUser.userID;
+        });
+        this.changeDetector.detectChanges();
       }
-      var option = new DialogModel();
-      option.FormModel = this.form.formModel;
-      var obj = {
-        formType: this.formType,
-        data: item,
-      };
-      this.dialogRole = this.callfc.openForm(
-        PopRolesComponent,
-        '',
-        1200,
-        700,
-        '',
-        obj,
-        '',
-        option
-      );
-      this.dialogRole.closed.subscribe((e) => {
-        if (e?.event) {
-          this.viewChooseRole = e?.event;
-          this.countListViewChoose();
-          this.viewChooseRole.forEach((dt) => {
-            dt['module'] = dt.functionID;
-            dt['roleID'] = dt.recIDofRole;
-            dt.userID = this.adUser.userID;
-          });
-          this.changeDetector.detectChanges();
-        }
-      });
-    // }
+    });
+  }
+
+  deleteUserBeforeDone(data: any) {
+    this.adService.deleteUser(data.userID, data.employeeID).subscribe((res) => {
+      if (res) {
+        this.dialog.dataService.data = this.dialog.dataService.data.filter(
+          (x) => x.userID != data.userID
+        );
+      }
+    });
   }
 
   addUserTemp() {
@@ -332,7 +374,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   valueUG(data) {
+    if (data?.component) {
+      this.dataUG = data?.component.dataService.data;
+    }
     if (data.data) {
+      this.checkValueChangeUG = true;
       this.adUser.userGroup = data.data;
       this.loadUserRole(data.data);
     }
@@ -387,5 +433,5 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  buttonClick(e: any) { }
+  buttonClick(e: any) {}
 }
