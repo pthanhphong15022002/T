@@ -37,6 +37,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   columnsGrid: any;
   editSettings: any;
   dataService:any={data:null};
+  feildImport = [];
   @ViewChild('gridView') gridView: CodxGridviewComponent
   constructor(
     private callfunc: CallFuncService,
@@ -54,12 +55,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   ngOnInit(): void {
 
     this.getGridViewSetup();
-    this.editSettings = {
-      allowEditing: true,
-      allowAdding: true,
-      allowDeleting: true,
-      newRowPosition: 'Top',
-    };
   }
  
   ngOnChanges(changes: SimpleChanges) { }
@@ -80,59 +75,15 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   getGridViewSetup()
   {
-    this.cache.gridViewSetup("IETables","grvIETables").subscribe(item=>{
+    this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName).subscribe(item=>{
       if(item)
       {
-        this.columnsGrid = [
-          {
-            field: "ProcessIndex",
-            headerText: item["ProcessIndex"]?.headerText,
-            width: '10%',
-            type:'number'
-          },
-          {
-            field: "DestinationTable",
-            headerText: item["DestinationTable"]?.headerText,
-            width: '20%',
-            type:'text'
-          },
-          {
-            field: "ParentEntity",
-            headerText: item["ParentEntity"]?.headerText,
-            width: '15%',
-            type:'text'
-          },
-          {
-            field: "MappingTemplate",
-            headerText: item["MappingTemplate"]?.headerText,
-            width: '20%',
-            type:'text'
-          },
-          {
-            field: "ImportRule",
-            headerText: item["ImportRule"]?.headerText,
-            width: '15%',
-            type:'text'
-          },
-          {
-            field: "IsSummary",
-            headerText: item["IsSummary"]?.headerText,
-            width: '15%',
-            type:'switch'
-          },
-        ];
-        var sdata = 
-        {
-          recID : '11111',
-          processIndex : 0,
-          destinationTable : "a",
-          parentEntity: 'a',
-          mappingTemplate: 'aaaa',
-          importRule : 1,
-          isSummary: true
-        }
-        this.gridView.dataService.data.push(sdata);
-        this.gridView.addHandler(sdata,true,"recID")
+       var key = Object.keys(item);
+       for(var i  = 0 ; i < key.length ; i++)
+       {
+          if(item[key[i]]?.isImport) this.feildImport.push(item[key[i]]);
+
+       }
       }
       
     })
