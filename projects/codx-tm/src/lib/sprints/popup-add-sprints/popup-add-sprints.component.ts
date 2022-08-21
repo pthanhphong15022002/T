@@ -62,13 +62,17 @@ export class PopupAddSprintsComponent implements OnInit {
     
     this.master = dialog.dataService!.dataSelected;
     this.action = dt?.data[1];
-    this.gridViewSetup = dt?.data?.gridViewSetup ;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
     this.sprintDefaut = this.dialog.dataService.data[0];
     this.dataDefault.push(this.sprintDefaut);
     this.dataOnLoad = this.dialog.dataService.data;
+    this.cache
+        .gridViewSetup(this.dialog.formModel.formName, this.dialog.formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            this.gridViewSetup = res;}})
   }
 
   //#region init
