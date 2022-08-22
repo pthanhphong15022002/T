@@ -49,6 +49,7 @@ export class TMMeetingsComponent
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('template7') template7: TemplateRef<any>;
+  @ViewChild('cardCenter') cardCenter!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -81,6 +82,7 @@ export class TMMeetingsComponent
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   dayWeek = [];
+  request: ResourceModel;
 
   constructor(
     inject: Injector,
@@ -117,6 +119,19 @@ export class TMMeetingsComponent
     this.modelResource.className = 'MeetingsBusiness';
     this.modelResource.service = 'CO';
     this.modelResource.method = 'GetListMeetingsAsync';
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+    this.request = new ResourceModel();
+    this.request.service = 'CO';
+    this.request.assemblyName = 'CO';
+    this.request.className = 'MeetingsBusiness';
+    this.request.method = 'GetListMeetingsAsync';
+    this.request.idField = 'meetingID';
   }
 
   receiveMF(e: any) {
@@ -151,6 +166,16 @@ export class TMMeetingsComponent
         sameData: true,
         model: {
           // panelLeftRef: this.panelLeftRef,
+          template: this.cardCenter,
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
           template: this.cardKanban,
         },
       },
@@ -161,6 +186,12 @@ export class TMMeetingsComponent
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
     this.dt.detectChanges();
   }
+
+  //#region kanban
+  changeDataMF(e:any,data:any){
+    // console.log(e, data);
+  }
+  //#end region
 
   //#region schedule
 
