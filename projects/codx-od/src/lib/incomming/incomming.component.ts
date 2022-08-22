@@ -20,6 +20,7 @@ import {
   DialogRef,
   NotificationsService,
   RequestOption,
+  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -64,6 +65,7 @@ export class IncommingComponent
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
 
   public lstDtDis: any;
   public lstUserID: any = '';
@@ -82,6 +84,9 @@ export class IncommingComponent
   public objectType = 'OD_Dispatches';
   dialog!: DialogRef;
   button?: ButtonModel;
+  request: ResourceModel;
+  resourceKanban?: ResourceModel;
+
   userPermission: any;
   checkUserPer: any;
   compareDate = compareDate;
@@ -133,7 +138,20 @@ export class IncommingComponent
     this.fileService = inject.get(FileService);
   }
   ngOnChanges(changes: SimpleChanges): void {}
-  onInit(): void {}
+  onInit(): void {
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+    this.request = new ResourceModel();
+    this.request.service = 'TM';
+    this.request.assemblyName = 'TM';
+    this.request.className = 'TaskBusiness';
+    this.request.method = 'GetListByStatusAsync';
+    this.request.idField = 'taskID';
+  }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -146,6 +164,16 @@ export class IncommingComponent
           //panelLeftRef: this.panelLeft,
           panelRightRef: this.panelRight,
           contextMenu: '',
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
         },
       },
     ];
@@ -197,7 +225,7 @@ export class IncommingComponent
     var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111' || x.functionID == 'ODT210');
    /*  var blur =  e.filter((x: { functionID: string }) => x.functionID == 'ODT108');
     blur[0].isblur = true; */
-    if(data?.isBookmark) 
+    if(data?.isBookmark)
     {
       bm[0].disabled = true;
       unbm[0].disabled = false;

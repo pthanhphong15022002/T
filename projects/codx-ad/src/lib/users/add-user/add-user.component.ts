@@ -288,13 +288,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
+                this.dialog.close(res.save);
               }
             });
           res.save.chooseRoles = res.save?.functions;
           this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
+    
   }
 
   onUpdate() {
@@ -308,14 +309,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
               if (result) {
                 this.loadData.emit();
               }
+              this.dialog.close(res.update);
             });
           res.update['chooseRoles'] = res.update?.functions;
-          (this.dialog.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
         }
       });
-    this.dialog.close();
   }
 
   onSave() {

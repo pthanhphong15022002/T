@@ -49,6 +49,7 @@ export class TasksComponent
 {
   //#region Constructor
   @Input() dataObj?: any;
+  @Input() showButtonAdd = true;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -111,6 +112,7 @@ export class TasksComponent
   viewMode: any;
   projectID?: any;
   listViewModel = [];
+ 
 
   constructor(
     inject: Injector,
@@ -272,16 +274,6 @@ export class TasksComponent
             [this.view.dataService.dataSelected],
             false
           );
-        // if (e?.event && e?.event != null) {
-        //   this.view.dataService.data = e?.event.concat(
-        //     this.view.dataService.data
-        //   );
-        //   this.view.dataService.setDataSelected(res[0]);
-        //   this.view.dataService.afterSave.next(res);
-        //   this.notiService.notifyCode('TM005');
-        //   this.itemSelected = this.view.dataService.data[0];
-        //   this.detectorRef.detectChanges();
-        // }
       });
     });
   }
@@ -1284,7 +1276,7 @@ export class TasksComponent
       option.Width = 'Auto';
       this.callfc.openSide(
         PopupAddComponent,
-        [e.data, 'view', this.isAssignTask],
+        [e?.data, 'view', this.isAssignTask],
         option
       );
     }

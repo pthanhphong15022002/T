@@ -198,7 +198,7 @@
       <codx-label fiedName="refID" default="Dự án">
       </codx-label>
       <codx-input type="combobox" field="refID" refValue="TMProjects"
-       (valueChange)="valueChange($event)" [crrValue]="meeting.refID">
+       (valueChange)="valueChange($event)" [crrValue]="meeting.refID" loadFull="true">
       </codx-input>
     </div>
   </ng-container>
@@ -252,7 +252,7 @@
         <a style="cursor: pointer">
           <div class="d-flex align-item-center">
             <codx-input type="checkbox" name="taskControl" class="check-sys d-block text-right"
-              ngDefaultControl field="taskControl" (valueChange)="valueCbx($event)" [crrValue]="item.taskControl">
+              ngDefaultControl field="taskControl" (valueChange)="valueCbx(item.resourceID,$event)" [crrValue]="item.taskControl">
             </codx-input>
           </div>
         </a>

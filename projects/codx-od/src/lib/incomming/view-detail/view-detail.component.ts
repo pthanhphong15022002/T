@@ -503,8 +503,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             option
           );
           this.dialog.closed.subscribe((e) => {
-            debugger;
-            console.log(e);
+            if(e[0])
+            {
+              this.data.status = "3";
+              this.view.dataService.update(this.data).subscribe();
+            }
           });
         }
         break;

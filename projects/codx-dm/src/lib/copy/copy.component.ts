@@ -85,10 +85,15 @@ export class CopyComponent implements OnInit {
       if (this.data != null) {
         if (this.objectType == "file") {
           this.fullName = this.data.fileName;
+          this.fileService.getFileDuplicate(this.data.fileName ,this.data.folderId).subscribe(item => {
+            this.fullName = item;
+            this.changeDetectorRef.detectChanges();
+          });
         }
         else 
           this.fullName = this.data.folderName;
       }
+    
    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
