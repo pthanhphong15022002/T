@@ -347,6 +347,7 @@
                   >
                     <ng-template #template let-area="">
                       <div
+                        *ngIf="area.lableType != 8 || isApprover != true"
                         class="annotationItem"
                         (click)="goToSelectedAnnotation(area)"
                         style="border: 1px solid black; margin-bottom: 5px"
