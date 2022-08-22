@@ -136,6 +136,8 @@ export class BookingCarComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
+    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
+    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
         sameData: true,
@@ -180,7 +182,7 @@ export class BookingCarComponent extends UIComponent {
     }
   }
 
-  addNew(obj?) {
+  addNew(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
@@ -214,12 +216,14 @@ export class BookingCarComponent extends UIComponent {
       });
   }
 }
-  delete(obj?) {
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
-      .subscribe((res) => {
-        this.dataSelected = res;
-      });
+  delete(evt?) {
+    let deleteItem = this.viewBase.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   closeEditForm(evt?: any) {

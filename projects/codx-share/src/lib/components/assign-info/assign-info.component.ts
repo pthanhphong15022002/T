@@ -310,7 +310,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res[0]) {
           this.notiService.notifyCode('TM006');
-          this.dialog.close(res[1]);
+          this.dialog.close(res);
           if (!isContinue) {
             this.closePanel();
           }

@@ -133,7 +133,6 @@ export class UserGroupsComponent extends UIComponent {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(AddUserGroupsComponent, obj, option);
-
     });
   }
 
