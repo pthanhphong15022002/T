@@ -49,6 +49,7 @@ export class TasksComponent
 {
   //#region Constructor
   @Input() dataObj?: any;
+  @Input() showButtonAdd = true;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -111,6 +112,7 @@ export class TasksComponent
   viewMode: any;
   projectID?: any;
   listViewModel = [];
+ 
 
   constructor(
     inject: Injector,
@@ -1284,7 +1286,7 @@ export class TasksComponent
       option.Width = 'Auto';
       this.callfc.openSide(
         PopupAddComponent,
-        [e.data, 'view', this.isAssignTask],
+        [e?.data, 'view', this.isAssignTask],
         option
       );
     }
