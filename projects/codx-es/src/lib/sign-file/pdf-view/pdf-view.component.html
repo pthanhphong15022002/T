@@ -1,20 +1,9 @@
-<div
-  class="d-flex justify-content-between main-pane stepper-body tab-custom w-100"
->
+<div class="d-flex justify-content-between main-pane stepper-body tab-custom w-100">
   <div class="main-content d-flex flex-column-fluid h-100">
-    <div
-      class="flex-column flex-lg-row-auto w-lg-240px main-left"
-      [class.hideCol]="hideThumbnail"
-    >
-      <div
-        class="hover-scroll-overlay-y pe-6 me-n6"
-        data-kt-scroll="true"
-        data-kt-scroll-activate="{default: true}"
-        data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".e-tab-header"
-        data-kt-scroll-wrappers=".main-left"
-        data-kt-scroll-offset="'0px'"
-      >
+    <div class="flex-column flex-lg-row-auto w-lg-240px main-left" [class.hideCol]="hideThumbnail">
+      <div class="hover-scroll-overlay-y pe-6 me-n6" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+        data-kt-scroll-height="auto" data-kt-scroll-dependencies=".e-tab-header" data-kt-scroll-wrappers=".main-left"
+        data-kt-scroll-offset="'0px'">
         <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
           <e-tabitems>
             <e-tabitem>
@@ -35,179 +24,93 @@
         </ejs-tab>
       </div>
     </div>
-    <div class="d-flex flex-column flex-row-fluid mx-3 main-center">
-      <div
-        class="d-flex d-flex align-items-center justify-content-between stepper-toolbar"
-      >
-        <div
-          class="left_Toolbar d-flex justify-content-start align-items-center"
-        >
+    <div class="d-flex flex-column flex-row-fluid main-center">
+      <div class="d-flex d-flex align-items-center justify-content-between stepper-toolbar">
+        <div class="left_Toolbar d-flex justify-content-start align-items-center">
           <ejs-toolbar>
             <e-items>
-              <e-item
-                [prefixIcon]="
+              <e-item [prefixIcon]="
                   hideThumbnail
                     ? 'icon-arrow_forward_ios'
                     : 'icon-arrow_back_ios rotate-180'
-                "
-                (click)="changeShowThumbnailState()"
-              ></e-item>
-              <e-item
-                [disabled]="cannotAct"
-                prefixIcon="icon-skip_previous icon-20"
-                (click)="pdfviewerControl?.navigation?.goToFirstPage()"
-                [disabled]="cannotAct"
-              >
+                " (click)="changeShowThumbnailState()"></e-item>
+              <e-item [disabled]="cannotAct" prefixIcon="icon-skip_previous icon-20"
+                (click)="pdfviewerControl?.navigation?.goToFirstPage()" [disabled]="cannotAct">
               </e-item>
-              <e-item
-                prefixIcon="icon-navigate_before icon-20"
-                (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()"
-                [disabled]="cannotAct"
-              >
+              <e-item prefixIcon="icon-navigate_before icon-20"
+                (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()" [disabled]="cannotAct">
               </e-item>
-              <e-item
-                [text]="pdfviewerControl?.currentPageNumber"
-                [disabled]="true"
-              ></e-item>
-              <e-item
-                prefixIcon="icon-navigate_next icon-20"
-                (click)="pdfviewerControl?.navigation?.goToNextPage()"
-                [disabled]="cannotAct"
-              >
+              <e-item [text]="pdfviewerControl?.currentPageNumber" [disabled]="true"></e-item>
+              <e-item prefixIcon="icon-navigate_next icon-20" (click)="pdfviewerControl?.navigation?.goToNextPage()"
+                [disabled]="cannotAct">
               </e-item>
-              <e-item
-                prefixIcon="icon-skip_next icon-20"
-                (click)="pdfviewerControl?.navigation?.goToLastPage()"
-                [disabled]="cannotAct"
-              >
+              <e-item prefixIcon="icon-skip_next icon-20" (click)="pdfviewerControl?.navigation?.goToLastPage()"
+                [disabled]="cannotAct">
               </e-item>
 
-              <e-item
-                prefixIcon="icon-article icon-20"
-                (click)="show($event)"
-                [disabled]="cannotAct"
-              >
+              <e-item prefixIcon="icon-article icon-20" (click)="show($event)" [disabled]="cannotAct">
               </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
 
-        <div
-          class="chooseSignFile w-100 d-flex justify-content-center align-items-center"
-        >
-          <ejs-dropdownlist
-            id="signfilesDropdownList"
-            [dataSource]="lstFiles"
-            [fields]="file"
-            (change)="changeSignFile($event)"
-            [(value)]="curFileID"
-          ></ejs-dropdownlist>
+        <div class="chooseSignFile w-100 d-flex justify-content-center align-items-center">
+          <ejs-dropdownlist id="signfilesDropdownList" [dataSource]="lstFiles" [fields]="file"
+            (change)="changeSignFile($event)" [(value)]="curFileID"></ejs-dropdownlist>
         </div>
-        <div
-          class="right_Toolbar d-flex justify-content-end align-items-center"
-        >
+        <div class="right_Toolbar d-flex justify-content-end align-items-center">
           <ejs-toolbar>
             <e-items>
-              <e-item
-                prefixIcon="e-zoom-out"
-                (click)="clickZoom('out')"
-                [disabled]="cannotAct"
-              >
+              <e-item prefixIcon="e-zoom-out" (click)="clickZoom('out')" [disabled]="cannotAct">
               </e-item>
             </e-items>
           </ejs-toolbar>
-          <ejs-dropdownlist
-            style="width: 100%; min-width: 70px"
-            id="zoomValuesDropdownList"
-            [dataSource]="lstZoomValue"
-            [placeholder]="zoomValue"
-            (change)="clickZoom('to', $event)"
-          ></ejs-dropdownlist>
+          <ejs-dropdownlist style="width: 100%; min-width: 70px" id="zoomValuesDropdownList" [dataSource]="lstZoomValue"
+            [placeholder]="zoomValue" (change)="clickZoom('to', $event)"></ejs-dropdownlist>
           <ejs-toolbar>
             <e-items>
-              <e-item
-                prefixIcon="e-zoom-in"
-                (click)="clickZoom('in')"
-                [disabled]="cannotAct"
-              >
+              <e-item prefixIcon="e-zoom-in" (click)="clickZoom('in')" [disabled]="cannotAct">
               </e-item>
             </e-items>
           </ejs-toolbar>
           <ejs-toolbar>
             <e-items>
-              <e-item
-                prefixIcon="e-print"
-                (click)="clickPrint($event)"
-                [disabled]="cannotAct"
-              >
+              <e-item prefixIcon="e-print" (click)="clickPrint($event)" [disabled]="cannotAct">
               </e-item>
-              <e-item
-                prefixIcon="e-download"
-                (click)="clickDownload()"
-                [disabled]="cannotAct"
-              >
+              <e-item prefixIcon="e-download" (click)="clickDownload()" [disabled]="cannotAct">
               </e-item>
-              <e-item
-                [prefixIcon]="
+              <e-item [prefixIcon]="
                   !hideActions
                     ? 'icon-arrow_forward_ios'
                     : 'icon-arrow_back_ios'
-                "
-                (click)="changeShowActionsState()"
-              ></e-item>
+                " (click)="changeShowActionsState()"></e-item>
             </e-items>
           </ejs-toolbar>
         </div>
       </div>
 
       <div class="h-100 pdfviewer_Space w-100 flex-row-fluid">
-        <ejs-pdfviewer
-          #pdfviewer
-          id="pdfViewer"
-          [(serviceUrl)]="service"
-          [enableToolbar]="false"
-          [enableNavigationToolbar]="false"
-          [enableAnnotationToolbar]="false"
-          [enableThumbnail]="true"
-          (created)="onCreated($event)"
-          [enableAnnotation]="true"
-          (documentUnload)="changeCanActState(true)"
-          (annotationAdd)="addAnnoEvent($event)"
-          (annotationMove)="resetTime($event)"
-          (annotationRemove)="removeAnnot($event)"
-          (annotationResize)="resetTime($event)"
-          (annotationSelect)="selectedAnnotation($event)"
-          (annotationPropertiesChange)="resetTime($event)"
-          (documentLoad)="loadingAnnot($event)"
-          (printEnd)="cancelPrint($event)"
-          [enableCommentPanel]="false"
-          (pageChange)="pageChange($event)"
-          [zoomValue]="zoomValue"
-          (zoomChange)="changeZoomValue($event)"
-          [ajaxRequestSettings]="ajaxSetting"
-          style="
+        <ejs-pdfviewer #pdfviewer id="pdfViewer" [(serviceUrl)]="service" [enableToolbar]="false"
+          [enableNavigationToolbar]="false" [enableAnnotationToolbar]="false" [enableThumbnail]="true"
+          (created)="onCreated($event)" [enableAnnotation]="true" (documentUnload)="changeCanActState(true)"
+          (annotationAdd)="addAnnoEvent($event)" (annotationMove)="resetTime($event)"
+          (annotationRemove)="removeAnnot($event)" (annotationResize)="resetTime($event)"
+          (annotationSelect)="selectedAnnotation($event)" (annotationPropertiesChange)="resetTime($event)"
+          (documentLoad)="loadingAnnot($event)" (printEnd)="cancelPrint($event)" [enableCommentPanel]="false"
+          (pageChange)="pageChange($event)" [zoomValue]="zoomValue" (zoomChange)="changeZoomValue($event)"
+          [ajaxRequestSettings]="ajaxSetting" style="
             height: 100% !important;
             width: 100% !important;
             position: relative;
             display: block;
-          "
-        >
+          ">
         </ejs-pdfviewer>
       </div>
     </div>
-    <div
-      class="actions flex-column flex-lg-row-auto main-right"
-      [class.hideCol]="hideActions"
-    >
-      <div
-        class="hover-scroll-overlay-y pe-6 me-n6"
-        data-kt-scroll="true"
-        data-kt-scroll-activate="{default: true}"
-        data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".e-tab-header"
-        data-kt-scroll-wrappers=".main-right"
-        data-kt-scroll-offset="'0px'"
-      >
+    <div class="actions flex-column flex-lg-row-auto main-right" [class.hideCol]="hideActions">
+      <div class="hover-scroll-overlay-y pe-6 me-n6" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+        data-kt-scroll-height="auto" data-kt-scroll-dependencies=".e-tab-header" data-kt-scroll-wrappers=".main-right"
+        data-kt-scroll-offset="'0px'">
         <ejs-tab #rightToolbar [class.d-none]="hideActions">
           <e-tabitems>
             <e-tabitem>
@@ -217,38 +120,18 @@
 
               <ng-template #content>
                 <div class="position-relative" *ngIf="!isApprover">
-                  <codx-label
-                    name="lblChooseSigner"
-                    [formModel]=""
-                    default="Chọn người kí cần thiết lập"
-                    class="fw-bold text-primary"
-                  ></codx-label>
-                  <ejs-dropdownlist
-                    #inputAuthor
-                    id="signatureDropdownList"
-                    [dataSource]="lstSigners"
-                    [fields]="person"
-                    (change)="changeSigner($event)"
-                    [itemTemplate]="signer"
-                    [valueTemplate]="signer"
-                    [(value)]="curSignerID"
-                  >
+                  <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
+                    class="fw-bold text-primary"></codx-label>
+                  <ejs-dropdownlist #inputAuthor id="signatureDropdownList" [dataSource]="lstSigners" [fields]="person"
+                    (change)="changeSigner($event)" [itemTemplate]="signer" [valueTemplate]="signer"
+                    [(value)]="curSignerID">
                     <ng-template #signer let-approver>
-                      <codx-temp-full
-                        cardCss="card-select px-2 pt-4 pb-2"
-                        [imageId]="approver.authorID"
-                        [imageObjType]="'AD_Users'"
-                        [imageWidth]="35"
-                        imgCss="me-2"
-                        [title]="
+                      <codx-temp-full cardCss="card-select px-2 pt-4 pb-2" [imageId]="approver.authorID"
+                        [imageObjType]="'AD_Users'" [imageWidth]="35" imgCss="me-2" [title]="
                           approver.roleType == 'U'
                             ? approver.fullName
                             : (approver.roleType | vll: 'ES014':'text' | async)
-                        "
-                        [subTitle]="approver.position ?? 'Vị trí công việc'"
-                        [footer]="footer"
-                        [dataItem]="approver"
-                      >
+                        " [subTitle]="approver.position ?? 'Vị trí công việc'" [footer]="footer" [dataItem]="approver">
                       </codx-temp-full>
                     </ng-template>
                   </ejs-dropdownlist>
@@ -261,29 +144,16 @@
                   ></codx-input> -->
                 </div>
                 <div class="mt-3 mb-3">
-                  <codx-label
-                    name="lblDragAction"
-                    [formModel]=""
-                    default="Kéo thả"
-                    class="fw-bold text-primary"
-                  >
+                  <codx-label name="lblDragAction" [formModel]="" default="Kéo thả" class="fw-bold text-primary">
                   </codx-label>
                 </div>
 
                 <div class="d-flex flex-wrap d-grid align-items-center">
-                  <div
-                    class="card-item me-6 mb-6"
-                    *ngFor="let action of actionsButton; let index = index"
-                    [class.active]="holding == index + 1"
-                    (click)="changeAnnotationItem(index + 1)"
-                  >
-                    <codx-card-center
-                      cardCss="border h-100 w-125px"
-                      icoCss="icon-30 mb-1 {{
+                  <div class="card-item me-6 mb-6" *ngFor="let action of actionsButton; let index = index"
+                    [class.active]="holding == index + 1" (click)="changeAnnotationItem(index + 1)">
+                    <codx-card-center cardCss="border h-100 w-125px" icoCss="icon-30 mb-1 {{
                         index + 1 | vll: 'ES015':'icon' | async
-                      }}"
-                      content="{{ index + 1 | vll: 'ES015':'text' | async }}"
-                    >
+                      }}" content="{{ index + 1 | vll: 'ES015':'text' | async }}">
                     </codx-card-center>
                   </div>
                 </div>
@@ -292,22 +162,13 @@
                 <div class="d-flex align-items-center my-2">
                   <div class="d-flex justify-content-start me-2">
                     <!--begin::Switch-->
-                    <codx-input
-                      type="switch"
-                      labelPosition="After"
-                      field=""
-                      [crrValue]="needSuggest"
-                      (valueChange)="changeSuggestState($event)"
-                    >
+                    <codx-input type="switch" labelPosition="After" field="" [crrValue]="needSuggest"
+                      (valueChange)="changeSuggestState($event)">
                     </codx-input>
                     <!--end::Switch-->
                   </div>
                   <div class="text-gray-800 text-nowrap">
-                    <codx-label
-                      name="lblSuggestSignArea"
-                      default="Gợi ý vị trí ký"
-                      class="fw-bold"
-                    ></codx-label>
+                    <codx-label name="lblSuggestSignArea" default="Gợi ý vị trí ký" class="fw-bold"></codx-label>
                   </div>
                 </div>
                 <!--end::Item-->
@@ -315,20 +176,12 @@
                 <div class="autoSign_Space d-flex align-items-center my-2">
                   <div class="d-flex justify-content-start me-2">
                     <!--begin::Switch-->
-                    <codx-input
-                      type="switch"
-                      field="autoSignLastLine"
-                      [crrValue]="autoSignState"
-                      (valueChange)="changeAutoSignState($event, 0)"
-                    ></codx-input>
+                    <codx-input type="switch" field="autoSignLastLine" [crrValue]="autoSignState"
+                      (valueChange)="changeAutoSignState($event, 0)"></codx-input>
                     <!--end::Switch-->
                   </div>
                   <div class="text-gray-800 text-nowrap">
-                    <codx-label
-                      name="lblSignLastLine"
-                      default="Ký dòng cuối cùng"
-                      class="fw-bold"
-                    ></codx-label>
+                    <codx-label name="lblSignLastLine" default="Ký dòng cuối cùng" class="fw-bold"></codx-label>
                   </div>
                 </div>
                 <!--end::Item-->
@@ -341,161 +194,89 @@
               </ng-template>
               <ng-template #content>
                 <ng-container>
-                  <ejs-listview
-                    id="groupedList"
-                    [dataSource]="lstAreas"
-                    [cssClass]="cssClass"
-                    [fields]="fields"
-                    [showHeader]="true"
-                  >
+                  <ejs-listview id="groupedList" [dataSource]="lstAreas" [cssClass]="cssClass" [fields]="fields"
+                    [showHeader]="true">
                     <ng-template #template let-area="">
-                      <div
-                        class="annotationItem"
-                        (click)="
+                      <div class="annotationItem" (click)="
                           goToSelectedAnnotation(
                             area.recID,
                             area.labelValue,
                             area.fontFormat
                           )
-                        "
-                        style="border: 1px solid black; margin-bottom: 5px"
-                      >
-                        <codx-temp-full
-                          [title]="
+                        " style="border: 1px solid black; margin-bottom: 5px">
+                        <codx-temp-full [title]="
                             (area.labelType | vll: 'ES015':'text' | async) +
                             ' - ' +
                             getAreaOwnerName(area.signer)
-                          "
-                          [resourceObjType]="'AD_Users'"
-                          [icoCss]="
+                          " [resourceObjType]="'AD_Users'" [icoCss]="
                             'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
                             (area.labelType | vll: 'ES015':'icon' | async)
-                          "
-                        >
+                          ">
                         </codx-temp-full>
-                        <div
-                          [class.d-none]="
+                        <div [class.d-none]="
                             area.recID != curSelectedAnnotID ||
                             area.labelType == '1' ||
                             area.labelType == '2'
-                          "
-                          [formGroup]="formAnnot"
-                        >
+                          " [formGroup]="formAnnot">
                           <div class="text-content" *ngIf="area.labelType == 6">
-                            <codx-label
-                              fiedName=""
-                              [formModel]=""
-                              default="Nội dung"
-                            >
+                            <codx-label fiedName="" [formModel]="" default="Nội dung">
                             </codx-label>
-                            <input
-                              type="text"
-                              formControlName="content"
-                              class="d-block w-100"
-                              [style]="
+                            <input type="text" formControlName="content" class="d-block w-100" [style]="
                                 'font-size: ' +
                                 curAnnotFontSize +
                                 'px;' +
                                 'font-family: ' +
                                 curAnnotFontStyle +
                                 ';'
-                              "
-                              [ngClass]="{
+                              " [ngClass]="{
                                 'fw-bold': isBold,
                                 'fst-italic': isItalic,
                                 'text-decoration-underline': isUnd
-                              }"
-                              [defaultValue]="area.labelType"
-                            />
+                              }" [defaultValue]="area.labelType" />
                           </div>
 
                           <div class="date-content" *ngIf="area.labelType == 5">
-                            <ejs-dropdownlist
-                              style="width: 100%; min-width: 70px"
-                              id="dateFormatsDropdownList"
-                              [dataSource]="lstAnnotDateFormat"
-                              [(value)]="curAnnotDateFormat"
-                              formControlName="dateFormat"
-                            >
+                            <ejs-dropdownlist style="width: 100%; min-width: 70px" id="dateFormatsDropdownList"
+                              [dataSource]="lstAnnotDateFormat" [(value)]="curAnnotDateFormat"
+                              formControlName="dateFormat">
                             </ejs-dropdownlist>
                           </div>
                           <div class="text-format d-flex">
-                            <ejs-dropdownlist
-                              style="width: 100%; min-width: 70px"
-                              id="fontStylesDropdownList"
-                              [dataSource]="lstAnnotFontStyle"
-                              [(value)]="curAnnotFontStyle"
-                              formControlName="fontStyle"
-                            >
-                            </ejs-dropdownlist
-                            ><ejs-dropdownlist
-                              style="width: 100%; min-width: 70px"
-                              id="fontSizesDropdownList"
-                              [dataSource]="lstAnnotFontSize"
-                              [(value)]="curAnnotFontSize"
-                              formControlName="fontSize"
-                            >
+                            <ejs-dropdownlist style="width: 100%; min-width: 70px" id="fontStylesDropdownList"
+                              [dataSource]="lstAnnotFontStyle" [(value)]="curAnnotFontStyle"
+                              formControlName="fontStyle">
+                            </ejs-dropdownlist>
+                            <ejs-dropdownlist style="width: 100%; min-width: 70px" id="fontSizesDropdownList"
+                              [dataSource]="lstAnnotFontSize" [(value)]="curAnnotFontSize" formControlName="fontSize">
                             </ejs-dropdownlist>
                           </div>
                           <div class="btn-format">
-                            <button
-                              type="button"
-                              [ngClass]="{
+                            <button type="button" [ngClass]="{
                                 btn: true,
                                 'btn-secondary': !isBold,
                                 'btn-success': isBold
-                              }"
-                              (click)="changeFontWeight(1)"
-                            >
-                              <codx-label
-                                name="lblSave"
-                                default="B"
-                                [formModel]=""
-                              ></codx-label>
+                              }" (click)="changeFontWeight(1)">
+                              <codx-label name="lblSave" default="B" [formModel]=""></codx-label>
                             </button>
-                            <button
-                              type="button"
-                              [ngClass]="{
+                            <button type="button" [ngClass]="{
                                 btn: true,
                                 'btn-secondary': !isItalic,
                                 'btn-success': isItalic
-                              }"
-                              (click)="changeFontWeight(2)"
-                            >
-                              <codx-label
-                                name="lblSave"
-                                default="I"
-                                [formModel]=""
-                              ></codx-label></button
-                            ><button
-                              type="button"
-                              [ngClass]="{
+                              }" (click)="changeFontWeight(2)">
+                              <codx-label name="lblSave" default="I" [formModel]=""></codx-label>
+                            </button><button type="button" [ngClass]="{
                                 btn: true,
                                 'btn-secondary': !isUnd,
                                 'btn-success': isUnd
-                              }"
-                              (click)="changeFontWeight(3)"
-                            >
-                              <codx-label
-                                name="lblSave"
-                                default="U"
-                                [formModel]=""
-                              ></codx-label>
+                              }" (click)="changeFontWeight(3)">
+                              <codx-label name="lblSave" default="U" [formModel]=""></codx-label>
                             </button>
                           </div>
                           <div class="btn-apply d-flex justify-content-end">
-                            <button
-                              type="button"
-                              class="btn btn-primary"
-                              (click)="
+                            <button type="button" class="btn btn-primary" (click)="
                                 changeAnnotPro(area.labelType, area.recID)
-                              "
-                            >
-                              <codx-label
-                                name="lblSave"
-                                default="OK"
-                                [formModel]=""
-                              ></codx-label>
+                              ">
+                              <codx-label name="lblSave" default="OK" [formModel]=""></codx-label>
                             </button>
                           </div>
                         </div>
@@ -505,7 +286,7 @@
                       <div class="e-list-wrapper">
                         <span class="e-list-item-content">{{
                           dataSource.items[0].location.pageNumber + 1
-                        }}</span>
+                          }}</span>
                       </div>
                     </ng-template>
                   </ejs-listview>
@@ -531,36 +312,22 @@
       </div>
     </div>
   </div>
-  <img
-    class="row position-absolute invisible"
-    style="width: 250px !important; height: 250px !important"
-    #qrCode
-    id="qrCode"
-  />
+  <img class="row position-absolute invisible" style="width: 250px !important; height: 250px !important" #qrCode
+    id="qrCode" />
 </div>
 
 <ng-template #footer let-data>
-  <codx-vll
-    class="footer-left"
-    [showText]="true"
-    name="ES002"
-    [value]="data.signType"
-  ></codx-vll>
+  <codx-vll class="footer-left" [showText]="true" name="ES002" [value]="data.signType"></codx-vll>
 </ng-template>
 
 <ng-template #itemTmpl let-data>
-  <codx-temp-full
-    [title]="
+  <codx-temp-full [title]="
       (data.labelType | vll: 'ES004':'text' | async) +
       ' - ' +
       getAreaOwnerName(data.signer)
-    "
-    [resourceObjType]="'AD_Users'"
-    [icoCss]="
+    " [resourceObjType]="'AD_Users'" [icoCss]="
       'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       (data.labelType | vll: 'ES004':'icon' | async)
-    "
-    [subTitle]="data.location?.pageNumber"
-  >
+    " [subTitle]="data.location?.pageNumber">
   </codx-temp-full>
 </ng-template>

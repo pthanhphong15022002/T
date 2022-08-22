@@ -102,7 +102,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   @ViewChild('qrCode') qrCode!: ElementRef;
   thumbnailEle!: Element;
 
-  zoomValue: number = 50;
+  zoomValue: number = 100;
   holding: number = 0;
   after_X_Second: number = 3000;
 
@@ -268,7 +268,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
     }
 
-    this.pdfviewerControl.zoomValue = 50;
+    this.pdfviewerControl.zoomValue = 100;
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,
     ];
