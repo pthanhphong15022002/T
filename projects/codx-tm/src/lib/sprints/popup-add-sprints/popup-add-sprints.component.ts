@@ -1,9 +1,11 @@
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnInit,
   Optional,
+  Output,
   ViewChild,
 } from '@angular/core';
 import {
@@ -46,6 +48,7 @@ export class PopupAddSprintsComponent implements OnInit {
   gridViewSetup: any;
   imageUpload: UploadFile = new UploadFile();
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
+
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -108,7 +111,8 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   saveMaster(isAdd: boolean) {
-    this.dialog.dataService
+    this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(up=>{
+      this.dialog.dataService
       .save((option: any) => this.beforeSave(option, isAdd), isAdd ? 0 : null) //Hảo code mới
       .subscribe((res) => {
         if (res) {
@@ -121,6 +125,8 @@ export class PopupAddSprintsComponent implements OnInit {
           this.dialog.close();
         }
       });
+    })
+   
     // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
     //   if (res) {
     //     if(isAdd){
@@ -146,12 +152,7 @@ export class PopupAddSprintsComponent implements OnInit {
     this.master = this.dialog.dataService.dataSelected;
     op.method = 'AddEditSprintAsync';
     op.data = [this.master, isAdd];
-    this.imageAvatar
-      .updateFileDirectReload(this.master.iterationID)
-      .subscribe((res) => {
-        if (res) return true;
-        else return false;
-      });
+    return true;
   }
 
   closeTaskBoard() {
