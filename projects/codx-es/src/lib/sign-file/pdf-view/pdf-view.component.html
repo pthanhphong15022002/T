@@ -35,7 +35,7 @@
         </ejs-tab>
       </div>
     </div>
-    <div class="d-flex flex-column flex-row-fluid mx-3 main-center">
+    <div class="d-flex flex-column flex-row-fluid main-center">
       <div
         class="d-flex d-flex align-items-center justify-content-between stepper-toolbar"
       >
@@ -384,7 +384,8 @@
                                 name="lblSave"
                                 default="Lặp lại cho tất cả các trang"
                                 [formModel]=""
-                              ></codx-label>
+                              >
+                              </codx-label>
                             </codx-input>
                           </div>
                           <div class="text-content" *ngIf="area.labelType == 6">
@@ -436,8 +437,8 @@
                               [(value)]="curAnnotFontStyle"
                               formControlName="fontStyle"
                             >
-                            </ejs-dropdownlist
-                            ><ejs-dropdownlist
+                            </ejs-dropdownlist>
+                            <ejs-dropdownlist
                               style="width: 100%; min-width: 70px"
                               id="fontSizesDropdownList"
                               [dataSource]="lstAnnotFontSize"

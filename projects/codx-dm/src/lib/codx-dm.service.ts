@@ -157,6 +157,9 @@ export class CodxDMService {
     public hideShowBoxInfo = new BehaviorSubject<boolean>(null);
     isHideShowBoxInfo = this.hideShowBoxInfo.asObservable();
 
+    public setThumbnailWait = new BehaviorSubject<any>(null);
+    isSetThumbnailWait = this.setThumbnailWait.asObservable();
+
     public fileEditing = new BehaviorSubject<FileUpload>(null);
     isFileEditing = this.fileEditing.asObservable();
 

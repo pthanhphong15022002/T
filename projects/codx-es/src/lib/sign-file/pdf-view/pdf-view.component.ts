@@ -283,7 +283,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
     }
 
-    this.pdfviewerControl.zoomValue = 50;
+    this.pdfviewerControl.zoomValue = 100;
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,
     ];

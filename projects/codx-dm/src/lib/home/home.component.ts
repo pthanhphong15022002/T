@@ -36,7 +36,7 @@ import {
 import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { CodxDMService } from '../codx-dm.service';
 import { FolderInfo } from '@shared/models/folder.model';
-import { DialogAttachmentType, FileInfo } from '@shared/models/file.model';
+import { DialogAttachmentType, FileInfo, ItemInterval } from '@shared/models/file.model';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -77,6 +77,7 @@ export class HomeComponent extends UIComponent {
   //loadedFolder: boolean;
   user: any;
   dialog!: DialogRef;
+  interval: ItemInterval[];
   // @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     inject: Injector,
@@ -186,6 +187,12 @@ export class HomeComponent extends UIComponent {
       this._beginDrapDrop();
     });
 
+    this.dmSV.isSetThumbnailWait.subscribe(item => {
+      if (item != null) {
+        this.displayThumbnail(item.recID, item.pathDisk);
+      }
+    });
+
     this.dmSV.isFolderId.subscribe(res => {
       if (res != null && this.codxview != null) {
         // var tree = this.codxview.currentView.currentComponent.treeView;        
@@ -212,7 +219,7 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
         this.data = [];
-    //    this.changeDetectorRef.detectChanges();      
+        this.changeDetectorRef.detectChanges();      
         this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
         this.changeDetectorRef.detectChanges();
       }
@@ -409,6 +416,8 @@ export class HomeComponent extends UIComponent {
       this.data = [];
       this.dmSV.folderId.next(id);      
       var items = item.items;      
+      this.dmSV.listFolder = [];
+      this.dmSV.listFiles = [];
       if (items == undefined || items.length <= 0) {        
         this.folderService.options.funcID = this.view.funcID;
         this.folderService.getFolders(id).subscribe(async (res) => {          
@@ -440,7 +449,7 @@ export class HomeComponent extends UIComponent {
       });
     } else {
       this.dmSV.disableInput.next(true);
-      this.notificationsService.notify(this.titleAccessDenied);
+     this.notificationsService.notify(this.titleAccessDenied);
     }    
   }
 
@@ -547,9 +556,47 @@ export class HomeComponent extends UIComponent {
   //  this.changeDetectorRef.detectChanges();
   }
 
+  ngOnDestroy() {
+    //   this.atSV.openForm.unsubscribe();
+    if (this.interval?.length > 0) {
+      this.interval.forEach((element) => {
+        clearInterval(element.instant);
+      });
+    }
+  }
+
+  displayThumbnail(id, pathDisk) {
+    var that = this;
+    if (this.interval == null) this.interval = [];
+    var files = this.dmSV.listFiles;
+    var index = setInterval(() => {
+      that.fileService.getThumbnail(id, pathDisk).subscribe((item) => {
+        if (item != null && item != '') {
+          let index = files.findIndex((d) => d.recID.toString() === id);
+          if (index != -1) {
+            files[index].thumbnail = item;
+            that.dmSV.listFiles = files;
+            that.dmSV.ChangeData.next(true);
+            that.changeDetectorRef.detectChanges();
+          }
+          let indexInterval = this.interval.findIndex((d) => d.id === id);
+          if (indexInterval > -1) {
+            clearInterval(this.interval[indexInterval].instant);
+            this.interval.splice(indexInterval, 1);
+          }
+        }
+      });
+    }, 3000);
+
+    var interval = new ItemInterval();
+    interval.id = id;
+    interval.instant = index;
+    this.interval.push(Object.assign({}, interval));
+  }
+
   requestEnded(e: any) {
     if(e.type === "read"){     
-   //   this.data = [];    
+      this.data = [];    
     //  this.changeDetectorRef.detectChanges();
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {

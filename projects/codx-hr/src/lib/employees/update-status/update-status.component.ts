@@ -50,18 +50,14 @@ export class UpdateStatusComponent implements OnInit {
     this.api
       .execSv<any>("HR","ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", this.employee)
       .subscribe((res) => {
-        if (res && res.length > 0) {
-          this.dialog.close(res)
-          // this.notiService.notifyCode('TM009');
+        if (res) {          
+          this.dialog.close(this.employee)
         } else {
           this.dialog.close()
-          // this.notiService.notifyCode('TM008');
         }
       }
-      );
+    );
     
-    this.dialog.close();
-    this.detectorRef.detectChanges();
   }
 
   valueChange(e) {

@@ -247,13 +247,13 @@ export class CodxAdService {
     );
   }
 
-  updateDomainUser(employeeID) {
+  updateUserRoles(lstURoles, NewURoles, isDelete) {
     return this.api.execSv(
       'SYS',
-      'ERM.Business.HR',
-      'EmployeesBusiness',
-      'UpdateDomainUserAsync',
-      employeeID
+      'ERM.Business.AD',
+      'UserRolesBusiness',
+      'UpdateAsync',
+      [lstURoles, NewURoles, isDelete]
     );
   }
 }

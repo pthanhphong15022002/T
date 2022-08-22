@@ -17,6 +17,7 @@ import {
   NotificationsService,
   RequestOption,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { CodxAdService } from '../../codx-ad.service';
 import { AD_Roles } from '../../models/AD_User.models';
@@ -53,7 +54,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   checkBtnAdd = false;
   saveSuccess = false;
   dataAfterSave: any;
-  countOpenPopRoles = 0;
+  // countOpenPopRoles = 0;
   userType: any;
   isUserGroup = false;
   isPopupCbb = false;
@@ -106,13 +107,13 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.initForm();
-    this.dialog.closed.subscribe((res) => {
-      if (!this.saveSuccess) {
-        if (this.dataAfterSave && this.dataAfterSave.userID) {
-          this.deleteUserBeforeDone(this.dataAfterSave);
-        }
-      }
-    });
+    // this.dialog.closed.subscribe((res) => {
+    //   if (!this.saveSuccess) {
+    //     if (this.dataAfterSave && this.dataAfterSave.userID) {
+    //       this.deleteUserBeforeDone(this.dataAfterSave);
+    //     }
+    //   }
+    // });
   }
 
   initForm() {
@@ -131,10 +132,10 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       this.adService.notifyInvalid(this.formUserGroup, this.formModel);
       return;
     } else {
-      this.countOpenPopRoles++;
-      if (this.formType == 'add') {
-        if (this.countOpenPopRoles == 1) this.addUserTemp();
-      }
+      // this.countOpenPopRoles++;
+      // if (this.formType == 'add') {
+      //   if (this.countOpenPopRoles == 1) this.addUserTemp();
+      // }
       var option = new DialogModel();
       option.FormModel = this.form.formModel;
       var obj = {
@@ -166,33 +167,33 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     }
   }
 
-  deleteUserBeforeDone(data: any) {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected])
-      .subscribe((res: any) => {
-        if (res.data) {
-          this.adService.deleteFile(res.data.userID, 'AD_Users', true);
-        }
-      });
-  }
+  // deleteUserBeforeDone(data: any) {
+  //   this.view.dataService.dataSelected = data;
+  //   this.view.dataService
+  //     .delete([this.view.dataService.dataSelected])
+  //     .subscribe((res: any) => {
+  //       if (res.data) {
+  //         this.adService.deleteFile(res.data.userID, 'AD_Users', true);
+  //       }
+  //     });
+  // }
 
-  addUserTemp() {
-    this.checkBtnAdd = true;
-    this.formUserGroup.patchValue(this.adUserGroup);
-    if (this.formUserGroup.invalid) {
-      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
-      return;
-    } else {
-      this.dialog.dataService
-        .save((opt: any) => this.beforeSaveTemp(opt), 0)
-        .subscribe((res) => {
-          if (res.save) {
-            this.dataAfterSave = res.save;
-          }
-        });
-    }
-  }
+  // addUserTemp() {
+  //   this.checkBtnAdd = true;
+  //   this.formUserGroup.patchValue(this.adUserGroup);
+  //   if (this.formUserGroup.invalid) {
+  //     this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+  //     return;
+  //   } else {
+  //     this.dialog.dataService
+  //       .save((opt: any) => this.beforeSaveTemp(opt), 0)
+  //       .subscribe((res) => {
+  //         if (res.save) {
+  //           this.dataAfterSave = res.save;
+  //         }
+  //       });
+  //   }
+  // }
 
   countListViewChoose() {
     this.countListViewChooseRoleApp = this.viewChooseRole.filter(
@@ -240,6 +241,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         }
       });
     this.dialog.close();
+    this.changeDetector.detectChanges();
   }
 
   onUpdate() {
@@ -259,65 +261,71 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    // this.formUserGroup.patchValue(this.adUserGroup);
-    // if (this.formUserGroup.invalid) {
-    //   this.adService.notifyInvalid(this.formUserGroup, this.formModel);
-    //   return;
-    // } else {
-    //   if (this.isAddMode) {
-    //     if (this.checkBtnAdd == false) return this.onAdd();
-    //     else {
-    //       if (
-    //         this.countListViewChooseRoleApp > 0 ||
-    //         this.countListViewChooseRoleService > 0
-    //       ) {
-    //         this.adService
-    //           .addUserRole(this.dataAfterSave, this.viewChooseRole)
-    //           .subscribe((res: any) => {
-    //             if (res) {
-    //               res.chooseRoles = res?.functions;
-    //               (this.dialog.dataService as CRUDService)
-    //                 .update(res)
-    //                 .subscribe();
-    //               this.changeDetector.detectChanges();
-    //             }
-    //           });
-    //       }
-    //       this.dialog.close();
-    //       this.notification.notifyCode('SYS006');
-    //     }
-    //   } else this.onUpdate();
-    // }
-    var lstUserGroup = [];
+    this.formUserGroup.patchValue(this.adUserGroup);
+    if (this.formUserGroup.invalid) {
+      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+      return;
+    } else {
+      this.saveUserRoles();
+    }
+  }
+
+  saveUserRoles() {
+    var lstUser = [];
+    var checkDifference =
+      JSON.stringify(this.viewChooseRoleTemp) ===
+      JSON.stringify(this.viewChooseRole);
     this.dataUserCbb.forEach((res) => {
       this.lstUser.forEach((dt) => {
         if (res.UserID == dt.userID) {
-          lstUserGroup.push(dt);
+          lstUser.push(dt);
         }
       });
     });
-    var userGroupName;
-    lstUserGroup.forEach((res) => {
+    let countUserHaveGroup = 0;
+    var lstUserHaveGroup = [];
+    var lstUserName = [];
+    lstUser.forEach((res) => {
       if (res.userGroup != null) {
-        this.dialog.dataService.data?.forEach((dt) => {
-          if (dt.userID == res.userGroup) {
-            userGroupName = dt.userName;
-          }
-        });
-        this.notification
-          .alertCode(
-            'AD004',
-            null,
-            "'" + res.userName + "'",
-            "'" + userGroupName + "'"
-          )
-          .subscribe((x) => {
-            if (x.event.status == 'Y') {
-            } else {
-            }
-          });
+        countUserHaveGroup++;
+        lstUserHaveGroup.push(res);
       }
     });
+    if (lstUserHaveGroup.length > 0) {
+      lstUserHaveGroup.forEach((dt) => {
+        var userName = Util.stringFormat(dt.userName, ...lstUserHaveGroup);
+        lstUserName.push(userName);
+      });
+    }
+    if (countUserHaveGroup > 0) {
+      this.notification
+        .alertCode('AD004', null, lstUserName.join(', '))
+        .subscribe((x) => {
+          if (x.event.status == 'Y') {
+            this.saveUser(lstUser, checkDifference);
+          } else {
+            return;
+          }
+        });
+    } else {
+      this.saveUser(lstUser, checkDifference);
+    }
+  }
+
+  saveUser(lstUser, checkDifference) {
+    if (this.isAddMode) {
+      this.onAdd();
+      this.adService
+        .updateUserRoles(lstUser, this.viewChooseRole, true)
+        .subscribe();
+    } else {
+      this.onUpdate();
+      if (!checkDifference) {
+        this.adService
+          .updateUserRoles(lstUser, this.viewChooseRole, true)
+          .subscribe();
+      }
+    }
   }
 
   valueChangeM(data) {

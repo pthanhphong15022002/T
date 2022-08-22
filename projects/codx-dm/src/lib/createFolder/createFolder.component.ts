@@ -856,5 +856,14 @@ export class CreateFolderComponent implements OnInit {
   //   return "form-control is-invalid error";
   // }
 
-  valueChange($event, type) {}
+  valueChange($event, field) {
+    if ($event != null) {
+      switch (field) {      
+        case "icon":
+          if ($event)
+            this.icon = $event;
+          break;
+      }
+    }
+  }
 }
