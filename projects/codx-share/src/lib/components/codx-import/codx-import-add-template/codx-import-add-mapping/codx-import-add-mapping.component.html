@@ -37,11 +37,33 @@
     </div>
   </div>
   <div>
-    <div class="d-flex align-items-center justify-content-between py-2">
-      <codx-label [formModel]="formModel" [fiedName]="'detailImport'" default="Chi tiết import" class="text-primary fw-bold"></codx-label>
-      <i class="fa-regular fa-square-plus fa-xl text-black cursor-pointer" (click)="addItem()"></i>
-    </div>
-    <codx-gridview #gridView [columnsGrid]="columnsGrid"  [editSettings]="editSettings" [rowTmp]="rowTmp" ></codx-gridview>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" *ngFor="let item of feildImport">{{item?.headerText}}/th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>Jacob</td>
+          <td>Thornton</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td>Larry</td>
+          <td>the Bird</td>
+          <td>@twitter</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </ng-template>
 <ng-template #footer>
@@ -51,27 +73,4 @@
       </button>
     </div>
 </ng-template>
-<ng-template #rowTmp let-data>
-  <tr class="tr-ip-add-tmp">
-    <td class="w-10">
-      <span>{{data?.processIndex}}</span>
-    </td>
-    <td class="w-20">
-      <span>{{data?.destinationTable}}</span>
-    </td>
-    <td class="w-15">
-      <span>{{data?.parentEntity}}</span>
-    </td>
-    <td class="w-20">
-      <span>{{data?.mappingTemplate}}</span>
-    </td>
-    <td class="w-15">
-      <span>{{data?.importRule}}</span>
-    </td>
-    <td class="w-15">
-      <codx-input type="switch" [checked]="data?.isSummary" [disabled]="true"></codx-input>
-    </td>
-  </tr>
-</ng-template>
-
 

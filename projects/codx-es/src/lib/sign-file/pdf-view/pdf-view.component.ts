@@ -5,8 +5,6 @@ import {
   Input,
   IterableDiffers,
   ViewChild,
-  ViewChildren,
-  QueryList,
   AfterViewInit,
   Output,
   EventEmitter,
@@ -102,6 +100,11 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   @ViewChild('qrCode') qrCode!: ElementRef;
   thumbnailEle!: Element;
 
+  //for page number input
+  pageMax;
+  pageStep;
+  curPage;
+
   zoomValue: number = 50;
   holding: number = 0;
   after_X_Second: number = 3000;
@@ -118,10 +121,14 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   lstAnnotFontStyle = ['Helvetica', 'Arial'];
   curAnnotFontStyle = 'Helvetica';
-  lstAnnotFontSize = [10, 11, 12, 13, 15, 17, 19, 23];
+  lstAnnotFontSize = [10, 11, 12, 13, 15, 17, 19, 23, 31, 33, 43];
   curAnnotFontSize = 13;
-  lstAnnotDateFormat = ['DD/mm/YYYY', 'mm/YYYY'];
-  curAnnotDateFormat = 'DD/mm/YYYY';
+  lstAnnotDateFormat = [
+    'M/d/yy, h:mm a',
+    'M/d/yy',
+    'EEEE, MMMM d, y, h:mm:ss a zzzz',
+  ];
+  curAnnotDateFormat = 'M/d/yy, h:mm a';
   isBold = false;
   isItalic = false;
   isUnd = false;
@@ -155,6 +162,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   idField = 'recID';
   predicate = 'recID=@0';
   dataValue;
+  renderQRAllPage = false;
   formModel: FormModel;
   formAnnot: FormGroup;
 
@@ -273,10 +281,24 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       16, 128, 256, 30,
     ];
 
+    this.pageStep = 1;
     this.detectorRef.detectChanges();
   }
 
+  leftTollbarCreated(e) {
+    // this.pageInput = new NumericTextBox({
+    //   value: 1,
+    //   width: 150,
+    //   min: 1,
+    //   max: this.pdfviewerControl?.pageCount,
+    //   step: 1,
+    // });
+    // this.pageInput.appendTo('#numeric');
+  }
+
   loadingAnnot(e: any) {
+    this.pageMax = this.pdfviewerControl?.pageCount;
+    console.log(this.pageMax);
     this.esService.getSignFormat().subscribe((res) => {
       console.log('res', res);
     });
@@ -306,10 +328,10 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         comments: [],
         fillColor: '#ffffff00',
         font: {
-          isBold: false,
-          isItalic: false,
+          isBold: item.fontFormat?.includes('B') ? true : false,
+          isItalic: item.fontFormat?.includes('I') ? true : false,
           isStrikeout: false,
-          isUnderline: false,
+          isUnderline: item.fontFormat?.includes('U') ? true : false,
           version: undefined,
         },
         fontColor: '#000',
@@ -574,11 +596,59 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         break;
     }
   }
+  changeQRRenderState(e) {
+    this.renderQRAllPage = !this.renderQRAllPage;
+  }
 
-  changeAnnotPro(type, recID) {
+  changeAnnotPro(type, recID, createdOn) {
     console.log(type, recID);
+    console.log(this.curSelectedAnno);
+    switch (type) {
+      case '5':
+        this.curSelectedAnno.dynamicText = this.datePipe.transform(
+          new Date(createdOn),
+          this.formAnnot.value.dateFormat
+        );
+        break;
+      case '6':
+        this.curSelectedAnno.dynamicText = this.formAnnot.value.content;
+        break;
 
-    console.log('form group', this.formAnnot.value);
+      case '8':
+        if (this.renderQRAllPage) {
+        }
+        return;
+    }
+    this.curSelectedAnno.fontSize = this.formAnnot.value.fontSize;
+    this.curSelectedAnno.fontFamily = this.formAnnot.value.fontStyle;
+    this.curSelectedAnno.font = {
+      isBold: this.isBold,
+      isItalic: this.isItalic,
+      isStrikeout: false,
+      isUnderline: this.isUnd,
+      version: undefined,
+    };
+    this.curSelectedAnno.modifiedDate = this.datePipe.transform(
+      new Date(),
+      'M/d/yy, h:mm a'
+    );
+    let tmpAnnot = { ...this.curSelectedAnno };
+    this.pdfviewerControl.annotationModule.deleteAnnotationById(
+      this.curSelectedAnno
+    );
+    this.pdfviewerControl.annotationModule.selectAnnotation(tmpAnnot);
+    this.pdfviewerControl.addAnnotation(tmpAnnot);
+    this.saveAnnoQueue.set(
+      this.curSelectedAnno.annotationId,
+      setTimeout(
+        this.saveAnnoToDB.bind(this),
+        this.after_X_Second,
+        this.esService,
+        tmpAnnot,
+        this.fileInfo,
+        this.user
+      )
+    );
   }
 
   changeAnnotationItem(type: number) {
@@ -1123,8 +1193,18 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       area.LabelType = anno.customData.split(':')[1];
       area.LabelValue = anno.dynamicText;
       area.FontStyle = anno.fontFamily;
-      area.FontFormat = anno.fontFormat;
       area.FontSize = anno.fontSize;
+      area.FontFormat = '';
+
+      if (anno.font?.isBold) {
+        area.FontFormat += 'B';
+      }
+      if (anno.font?.isItalic) {
+        area.FontFormat += 'I';
+      }
+      if (anno.font?.isUnderline) {
+        area.FontFormat += 'U';
+      }
     }
     service
       .addOrEditSignArea([
@@ -1232,6 +1312,19 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     //   block: 'center',
     //   inline: 'center',
     // });
+    this.curPage = this.pdfviewerControl.currentPageNumber;
+  }
+
+  goToPage(e) {
+    this.curPage = e.target.value;
+    if (this.curPage < 1) {
+      this.curPage = 1;
+    } else if (this.curPage > this.pdfviewerControl.pageCount) {
+      this.curPage = this.pdfviewerControl.pageCount;
+    }
+
+    this.pdfviewerControl.navigation.goToPage(this.curPage);
+    console.log('page', this.curPage);
   }
 
   testFunc(e: any) {}
@@ -1285,6 +1378,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         this.detectorRef.detectChanges();
       });
   }
+
   renderQRFile() {
     let annotationDataFormat: AnnotationDataFormat;
 
@@ -1327,13 +1421,18 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   cancelPrint(e: any) {}
 
-  goToSelectedAnnotation(areaID, labelValue, fontFormat) {
-    this.pdfviewerControl.annotationModule.selectAnnotation(areaID);
-    this.formAnnot.controls['content'].setValue(labelValue);
-    this.isBold = fontFormat?.includes('B') ? true : false;
-    this.isItalic = fontFormat?.includes('I') ? true : false;
-    this.isUnd = fontFormat?.includes('U') ? true : false;
-    this.curSelectedAnnotID = areaID;
+  goToSelectedAnnotation(area) {
+    if (this.curSelectedAnnotID != area.recID) {
+      this.pdfviewerControl.annotationModule.selectAnnotation(area.recID);
+      this.formAnnot.controls['content'].setValue(area.labelValue);
+      this.isBold = area.fontFormat?.includes('B') ? true : false;
+      this.isItalic = area.fontFormat?.includes('I') ? true : false;
+      this.isUnd = area.fontFormat?.includes('U') ? true : false;
+      this.curAnnotFontSize = area.fontSize;
+      this.curAnnotFontStyle = area.fontStyle;
+      this.curSelectedAnnotID = area.recID;
+    }
+    console.log(this.isBold, this.isItalic, this.isUnd);
   }
 
   show(e: any) {

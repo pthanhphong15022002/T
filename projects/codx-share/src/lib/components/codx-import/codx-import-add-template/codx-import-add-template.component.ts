@@ -139,10 +139,6 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   {
     
   }
-  addItem()
-  {
-    this.gridView.addRow();
-  }
   getGridViewSetup()
   {
     this.cache.gridViewSetup("IETables","grvIETables").subscribe(item=>{

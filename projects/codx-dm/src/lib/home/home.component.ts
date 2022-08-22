@@ -419,8 +419,8 @@ export class HomeComponent extends UIComponent {
             this.dmSV.listFolder = data;
             var tree = this.codxview.currentView.currentComponent.treeView;
             item.items = [];
-           // if (tree != undefined) 
-            tree.addChildNodes(item, data);
+            if (tree != undefined) 
+             tree.addChildNodes(item, data);
             this.changeDetectorRef.detectChanges();   
             this._beginDrapDrop();         
           }
@@ -543,11 +543,14 @@ export class HomeComponent extends UIComponent {
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2; 
+  //  this.data = [];    
+  //  this.changeDetectorRef.detectChanges();
   }
 
   requestEnded(e: any) {
-      if(e.type === "read"){ 
-        this.data = [];    
+    if(e.type === "read"){     
+   //   this.data = [];    
+    //  this.changeDetectorRef.detectChanges();
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
         if (e.data != null) {

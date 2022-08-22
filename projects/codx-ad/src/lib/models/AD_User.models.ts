@@ -18,6 +18,7 @@ export class AD_User{
     sessionID: string;
     owner: String;
     positionID: string;
+    customize: boolean = false;
 
 
 
