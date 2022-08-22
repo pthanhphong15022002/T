@@ -3,7 +3,7 @@
     (clickMF)="openFormFuncID($event, data)"
     (click)="click(data)"
     [typeMF]="'hover'"
-    [content]="extractContent(data.title)"
+    [title]="data?.title"
     [desc]="
       convertHtmlAgency(
         data.agencyName,

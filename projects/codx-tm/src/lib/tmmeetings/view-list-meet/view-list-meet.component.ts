@@ -87,7 +87,9 @@ export class ViewListMeetComponent implements OnInit {
   }
 
   searchName(e){
-
+    this.data.resources = this.data.resources.filter((val) =>
+    val.resourceName.toLowerCase().includes(e.toLowerCase())
+  );
   }
 }
 
