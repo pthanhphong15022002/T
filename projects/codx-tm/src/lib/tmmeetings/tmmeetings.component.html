@@ -1,5 +1,5 @@
 <codx-views #view [funcID]="funcID" service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings" [views]="views"
-  [button]="button" className="MeetingsBusiness" method="GetListMeetingsAsync" (buttonClick)="click($event)"
+  [button]="showButtonAdd ?button:null" className="MeetingsBusiness" method="GetListMeetingsAsync" (buttonClick)="click($event)"
   [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID">
 </codx-views>
 

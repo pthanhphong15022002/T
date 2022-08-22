@@ -110,7 +110,6 @@ export class UserGroupsComponent extends UIComponent {
   openPopup(item: any) {
     this.dialog = this.callfc.openForm(ViewUsersComponent, ' ', 300, 400, '', item);
     this.dialog.closed.subscribe(e => {
-      console.log(e);
     })
   }
 
@@ -160,12 +159,10 @@ export class UserGroupsComponent extends UIComponent {
 
   //#region Functions
   changeView(evt: any) {
-    console.log('evt: ', evt);
     var t = this;
   }
 
   selectedChange(val: any) {
-    console.log(val);
     this.itemSelected = val.data;
     this.dt.detectChanges();
   }
