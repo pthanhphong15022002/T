@@ -58,6 +58,8 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   isUserGroup = false;
   isPopupCbb = false;
   dataUserCbb: any = [];
+  formUserGroup: FormGroup;
+  lstUser: any;
 
   constructor(
     private injector: Injector,
@@ -82,7 +84,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     this.adUserGroup = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
-
     this.cache.gridViewSetup('Users', 'grvUsers').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -95,28 +96,45 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       this.title = 'Cập nhật nhóm người dùng';
       this.isAddMode = false;
     } else this.title = this.form?.title;
+    this.adService.getListUser().subscribe((res) => {
+      if (res) {
+        this.lstUser = res;
+      }
+    });
   }
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.initForm();
     this.dialog.closed.subscribe((res) => {
       if (!this.saveSuccess) {
         if (this.dataAfterSave && this.dataAfterSave.userID) {
-          this.adService.deleteUserBeforeDone(this.dataAfterSave).subscribe();
+          this.deleteUserBeforeDone(this.dataAfterSave);
         }
       }
     });
   }
 
+  initForm() {
+    this.adService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) {
+          this.formUserGroup = res;
+        }
+      });
+  }
+
   openPopup(item: any) {
-    if (
-      this.adUserGroup?.employeeID == '' ||
-      this.adUserGroup?.employeeID == null
-    ) {
-      this.notification.notify('Vui lòng nhập thông tin nhóm người dùng');
+    this.formUserGroup.patchValue(this.adUserGroup);
+    if (this.formUserGroup.invalid) {
+      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+      return;
     } else {
       this.countOpenPopRoles++;
-      if (this.countOpenPopRoles > 0) this.addUserTemp();
+      if (this.formType == 'add') {
+        if (this.countOpenPopRoles == 1) this.addUserTemp();
+      }
       var option = new DialogModel();
       option.FormModel = this.form.formModel;
       var obj = {
@@ -148,15 +166,32 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     }
   }
 
-  addUserTemp() {
-    this.checkBtnAdd = true;
-    this.adService
-      .addUserBeforeDone(this.adUserGroup, this.isUserGroup)
-      .subscribe((res) => {
-        if (res) {
-          this.dataAfterSave = res;
+  deleteUserBeforeDone(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe((res: any) => {
+        if (res.data) {
+          this.adService.deleteFile(res.data.userID, 'AD_Users', true);
         }
       });
+  }
+
+  addUserTemp() {
+    this.checkBtnAdd = true;
+    this.formUserGroup.patchValue(this.adUserGroup);
+    if (this.formUserGroup.invalid) {
+      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+      return;
+    } else {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSaveTemp(opt), 0)
+        .subscribe((res) => {
+          if (res.save) {
+            this.dataAfterSave = res.save;
+          }
+        });
+    }
   }
 
   countListViewChoose() {
@@ -176,26 +211,32 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUserGroup, this.viewChooseRole, true];
+      data = [this.adUserGroup, this.viewChooseRole, true, true];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true)
-        data = [this.adUserGroup, this.viewChooseRole];
-      else data = [this.adUserGroup, this.viewChooseRole, checkDifference];
+      data = [this.adUserGroup, this.viewChooseRole, checkDifference];
     }
+    op.data = data;
+    return true;
+  }
+
+  beforeSaveTemp(op: RequestOption) {
+    var data = [];
+    this.isAddMode = true;
+    op.methodName = 'AddUserAsync';
+    data = [this.adUserGroup, null, false, true];
     op.data = data;
     return true;
   }
 
   onAdd() {
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.save) {
-          res.save['chooseRoles'] = res.save?.functions;
-          //this.changeDetector.detectChanges();
+          res.save.chooseRoles = res.save?.functions;
         }
       });
     this.dialog.close();
@@ -218,45 +259,65 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    if (
-      this.adUserGroup?.employeeID == '' ||
-      this.adUserGroup?.employeeID == null
-    ) {
-      this.notification.notify('Vui lòng nhập thông tin user', '', 2000);
-    } else {
-      if (
-        this.countListViewChooseRoleApp == 0 &&
-        this.countListViewChooseRoleService == 0
-      ) {
-        this.dialog.close();
-        this.notification.notifyCode('SYS006');
-        (this.dialog.dataService as CRUDService)
-          .add(this.dataAfterSave)
-          .subscribe();
-        this.changeDetector.detectChanges();
-      } else {
-        if (this.isAddMode) {
-          if (this.checkBtnAdd == false) return this.onAdd();
-          else {
-            if (
-              this.countListViewChooseRoleApp > 0 ||
-              this.countListViewChooseRoleService > 0
-            ) {
-              this.adService
-                .addUserRole(this.dataAfterSave, this.viewChooseRole)
-                .subscribe();
-            }
-            this.dialog.close();
-            this.notification.notifyCode('SYS006');
-            (this.dialog.dataService as CRUDService)
-              .add(this.dataAfterSave)
-              .subscribe((res) => {
-                this.changeDetector.detectChanges();
-              });
+    // this.formUserGroup.patchValue(this.adUserGroup);
+    // if (this.formUserGroup.invalid) {
+    //   this.adService.notifyInvalid(this.formUserGroup, this.formModel);
+    //   return;
+    // } else {
+    //   if (this.isAddMode) {
+    //     if (this.checkBtnAdd == false) return this.onAdd();
+    //     else {
+    //       if (
+    //         this.countListViewChooseRoleApp > 0 ||
+    //         this.countListViewChooseRoleService > 0
+    //       ) {
+    //         this.adService
+    //           .addUserRole(this.dataAfterSave, this.viewChooseRole)
+    //           .subscribe((res: any) => {
+    //             if (res) {
+    //               res.chooseRoles = res?.functions;
+    //               (this.dialog.dataService as CRUDService)
+    //                 .update(res)
+    //                 .subscribe();
+    //               this.changeDetector.detectChanges();
+    //             }
+    //           });
+    //       }
+    //       this.dialog.close();
+    //       this.notification.notifyCode('SYS006');
+    //     }
+    //   } else this.onUpdate();
+    // }
+    var lstUserGroup = [];
+    this.dataUserCbb.forEach((res) => {
+      this.lstUser.forEach((dt) => {
+        if (res.UserID == dt.userID) {
+          lstUserGroup.push(dt);
+        }
+      });
+    });
+    var userGroupName;
+    lstUserGroup.forEach((res) => {
+      if (res.userGroup != null) {
+        this.dialog.dataService.data?.forEach((dt) => {
+          if (dt.userID == res.userGroup) {
+            userGroupName = dt.userName;
           }
-        } else this.onUpdate();
+        });
+        this.notification
+          .alertCode(
+            'AD004',
+            null,
+            "'" + res.userName + "'",
+            "'" + userGroupName + "'"
+          )
+          .subscribe((x) => {
+            if (x.event.status == 'Y') {
+            } else {
+            }
+          });
       }
-    }
+    });
   }
 
   valueChangeM(data) {
@@ -294,15 +355,9 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         if (employee) {
           this.adUserGroup.employeeID = employeeID;
           this.adUserGroup.userName = employee.employeeName;
-          // this.adUserGroup.positionID = employee.positionID,
           this.adUserGroup.buid = employee.organizationID;
           this.adUserGroup.email = employee.email;
           this.adUserGroup.phone = employee.phone;
-          // this.formGroupAdd.controls['userName'].setValue(employee.employeeName);
-          // this.formGroupAdd.controls['buid'].setValue(employee.organizationID);
-          // this.formGroupAdd.controls['email'].setValue(employee.email);
-          // this.formGroupAdd.controls['phone'].setValue(employee.phone);
-          // this.formGroupAdd.patchValue({ [employee['field']]: employee });
           this.changeDetector.detectChanges();
         }
       });

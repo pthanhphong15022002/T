@@ -101,11 +101,27 @@ export class CodxAdService {
     formModel: FormModel,
     gridViewSetup: any = null
   ) {
-    debugger;
     const invalid = [];
     const controls = formGroup.controls;
     for (const name in controls) {
       if (controls[name].invalid) {
+        if (name == 'email') {
+          if (controls?.email.value != null) {
+            if (controls?.email.value != '') {
+              const regex = new RegExp(
+                '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'
+              );
+              var checkRegex = regex.test(controls?.email.value);
+              if (checkRegex == false) {
+                this.notificationsService.notify("Trường 'Email' không hợp lệ");
+                return;
+              }
+            } else {
+              invalid.push(name);
+              break;
+            }
+          }
+        }
         invalid.push(name);
         break;
       }
@@ -192,16 +208,6 @@ export class CodxAdService {
     );
   }
 
-  deleteUserBeforeDone(data) {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'UsersBusiness',
-      'DeleteUserTempAsync',
-      data?.userID
-    );
-  }
-
   addUserBeforeDone(data, isUserGroup = false) {
     return this.api.execSv(
       'SYS',
@@ -219,6 +225,35 @@ export class CodxAdService {
       'UserRolesBusiness',
       'SaveAsync',
       [itemUser, lstURoles]
+    );
+  }
+
+  getListUser() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListUserTempAsync',
+    );
+  }
+
+  deleteUser(userID, employeeID) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'DeleteTempAsync',
+      [userID,employeeID]
+    );
+  }
+
+  updateDomainUser(employeeID) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'UpdateDomainUserAsync',
+      employeeID
     );
   }
 }

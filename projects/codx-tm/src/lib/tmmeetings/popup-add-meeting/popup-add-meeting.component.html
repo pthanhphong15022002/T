@@ -109,8 +109,8 @@
     <!--begin::Input-->
     <div class="d-flex align-items-center fw-bold">
       <a href="" *ngIf="meeting?.isOnline">{{
-                    meeting?.link
-                  }}</a>
+        meeting?.link
+        }}</a>
     </div>
     <!--end::Input-->
   </div>
@@ -144,20 +144,19 @@
         multiple="true" [showInput]="false">
       </codx-input>
     </div>
-    <div class="row">
+    <div class="d-flex flex-wrap">
       <ng-container *ngFor="let item of resources">
-        <div class="col-4">
-          <div>
-            <codx-img class=" flex symbol-40px " [objectId]="item.resourceID" objectType="AD_Users"></codx-img>
+        <div class="d-flex justify-content-between align-items-center rounded-pill bg-light p-2 ps-0 h-30px mt-2 me-2">
+          <div class="me-3">
+            <codx-img class="me-2" [objectId]="item.resourceID" objectType="AD_Users" [width]="30">
+            </codx-img>
             <span>{{item.resourceName}}</span>
           </div>
-          <div>
-            <a (click)="onDeleteUser(item)" style="cursor: pointer">
-              <span class="icon-close icon-16 text-danger me-2"></span>
-            </a>
-          </div>
-
+          <a (click)="onDeleteUser(item)" class="text-hover-danger d-flex align-items-center">
+            <span class="icon-close icon-16"></span>
+          </a>
         </div>
+
       </ng-container>
     </div>
   </ng-container>
@@ -196,10 +195,10 @@
       </div>
     </div>
     <div class="form-group mt-3">
-      <codx-label fiedName="refID" formName="TMMeetings" gridViewName="grvTMMeetings" default="Dự án">
+      <codx-label fiedName="refID" default="Dự án">
       </codx-label>
-      <codx-input type="combobox" field="refID" refValue="PM_Projects" [multiple]="false" loadFull="true"
-        [crrValue]="meeting.refID" (valueChange)="valueChange($event)">
+      <codx-input type="combobox" field="refID" refValue="TMProjects"
+       (valueChange)="valueChange($event)" [crrValue]="meeting.refID">
       </codx-input>
     </div>
   </ng-container>
@@ -252,7 +251,9 @@
       <div>
         <a style="cursor: pointer">
           <div class="d-flex align-item-center">
-            <span class="icon-check_box icon-24 me-2"></span>
+            <codx-input type="checkbox" name="taskControl" class="check-sys d-block text-right"
+              ngDefaultControl field="taskControl" (valueChange)="valueCbx($event)" [crrValue]="item.taskControl">
+            </codx-input>
           </div>
         </a>
       </div>

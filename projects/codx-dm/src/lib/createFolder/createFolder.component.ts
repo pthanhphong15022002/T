@@ -56,6 +56,7 @@ export class CreateFolderComponent implements OnInit {
   titleDialog: any;
   historyFile: HistoryFile;
   propertiesFolder: boolean;
+  showError = false;
   closeResult = '';
   dialog: any;
   id: string;
@@ -339,7 +340,8 @@ export class CreateFolderComponent implements OnInit {
   }
 
   changeValue($event, type) {
-    console.log($event);
+ //   console.log($event);
+    this.errorshow = true;
     switch (type) {
       case 'folderName':
         this.folderName = $event.data;
@@ -442,6 +444,9 @@ export class CreateFolderComponent implements OnInit {
   onSaveRightChanged($event, ctrl) {
     var value = $event.data;
     switch (ctrl) {
+      case 'security':
+        this.security = value;
+        break;
       case 'checkFolder':
         this.createSubFolder = value;
         this.changeDetectorRef.detectChanges();
@@ -544,6 +549,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   onFolderSave() {
+    this.errorshow = true;
     if (this.approval && (this.approvers == '' || this.approvers == undefined)) {
       this.notificationsService.notify(this.titleApprovalName);
       return;
@@ -565,8 +571,8 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.folderId = this.dmSV.getFolderId();
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
-    this.fileEditing.checkSecurity =
-      this.security == null ? false : this.security;
+    this.fileEditing.hasSubFolder = this.createSubFolder;
+    this.fileEditing.checkSecurity = this.security == null ? false : this.security;
     this.fileEditing.approvers = this.approvers;
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;
@@ -832,17 +838,16 @@ export class CreateFolderComponent implements OnInit {
     else return '0';
   }
 
-  validate(item) {
-    this.errorshow = false;
+  validate(item) {  
     switch (item) {
       case 'folderName':
-        if (this.checkFolderName() != '0') {
-          return 'w-100 dms-text-error is-invalid';
+        if (this.checkFolderName() != '0' && this.errorshow) {
+          //this.errorshow = true;
+          return 'w-100 dms-text-error is-invalid';          
         } else {
+        //  this.errorshow = true;
           return 'w-100';
         }
-
-        break;
     }
     return '';
   }

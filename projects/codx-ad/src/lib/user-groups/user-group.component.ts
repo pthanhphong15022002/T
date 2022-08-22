@@ -87,13 +87,13 @@ export class UserGroupsComponent extends UIComponent {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'btnAdd':
+      case 'SYS01':
         this.add();
         break;
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }
@@ -126,13 +126,13 @@ export class UserGroupsComponent extends UIComponent {
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         userType: 'userGroup',
+        formType: 'add',
       }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(AddUserGroupsComponent, obj, option);
-
     });
   }
 
@@ -143,6 +143,7 @@ export class UserGroupsComponent extends UIComponent {
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       var obj = {
         userType: 'userGroup',
+        formType: 'edit',
       }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;

@@ -122,22 +122,22 @@
     <div class="d-flex flex-column employee-add w-200px">
         <div class="d-flex align-items-center mt-2">
             <span class="icon-email icon-16 me-2"></span>
-            <div class="text-dark-50" *ngIf="imployeeInfo?.email != '---'">{{imployeeInfo?.email}}</div>
-            <div class="text-50 text-muted" *ngIf="imployeeInfo?.email == '---'">
+            <div class="text-dark-50" *ngIf="imployeeInfo?.email != ''">{{imployeeInfo?.email}}</div>
+            <div class="text-50 text-muted" *ngIf="imployeeInfo?.email == ''">
                 <codx-label name="lblEmail" formName="HR_Employees" default="Email"></codx-label>
             </div>
         </div>
         <div class="d-flex align-items-center mt-2">
             <span class="icon-phone_android icon-16 me-2"></span>
-            <div class="text-dark-50" *ngIf="imployeeInfo?.phone != '---'">{{imployeeInfo?.phone}}</div>
-            <div class="text-50 text-muted" *ngIf="imployeeInfo?.phone == '---'">
+            <div class="text-dark-50" *ngIf="imployeeInfo?.phone != ''">{{imployeeInfo?.phone}}</div>
+            <div class="text-50 text-muted" *ngIf="imployeeInfo?.phone == ''">
                 <codx-label name="lblPhone" formName="HR_Employees" default="Số điện thoại"></codx-label>
             </div>
         </div>
         <div class="d-flex align-items-top mt-2">
             <span class="icon-place icon-16 me-2"></span>
-            <div class="text-dark-50" *ngIf="imployeeInfo?.street!='---'">{{imployeeInfo?.street}}</div>
-            <div class="text-50 text-muted" *ngIf=" imployeeInfo?.street=='---'">
+            <div class="text-dark-50" *ngIf="imployeeInfo?.street!=''">{{imployeeInfo?.street}}</div>
+            <div class="text-50 text-muted" *ngIf=" imployeeInfo?.street==''">
                 <codx-label name="lblAddress" formName="HR_Employees" default="Đại chỉ thường trú"></codx-label>
             </div>
         </div>
