@@ -26,7 +26,7 @@
                         </ng-template>
                     </div> -->
                 </div>
-                <div id="folderError" autofocus *ngIf="folderName === ''" class="d-flex mb-4 invalid-feedback">
+                <div id="folderError" autofocus *ngIf="errorshow && folderName === ''" class="d-flex mb-4 invalid-feedback">
                     <div *ngIf="folderName === ''; then thenBlockErrorFolder else thenBlockErrorElseFolder">
                     </div>
                     <ng-template #thenBlockErrorFolder>{{titleFolderRequired}}</ng-template>

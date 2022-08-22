@@ -32,6 +32,7 @@ export class PositionsComponent implements OnInit {
   lstRoles: any;
   searchField: any;
   listEmployee = [];
+  popoverDataSelected: any;
 
   constructor(
     private changedt: ChangeDetectorRef,
@@ -52,12 +53,18 @@ export class PositionsComponent implements OnInit {
     };
   }
 
-  popoverEmpList(p: any) {
+  popoverEmpList(p: any, emp) {
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
       p.open();
       this.popoverCrr = p;
     }
+
+    this.listEmployeeSearch = [];
+    if(emp!=null){
+      this.listEmployeeSearch = emp;
+    }
+
   }
 
   searchName(e) {
