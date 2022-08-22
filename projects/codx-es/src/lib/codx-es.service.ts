@@ -146,7 +146,11 @@ export class CodxEsService {
   }
 
   //#region Get from FunctionList
-  getDataDefault(funcID: string, entityName: string, idField: string) {
+  getDataDefault(
+    funcID: string,
+    entityName: string,
+    idField: string
+  ): Observable<object> {
     return this.api.execSv('ES', 'CM', 'DataBusiness', 'GetDefaultAsync', [
       funcID,
       entityName,
@@ -738,6 +742,16 @@ export class CodxEsService {
       'SignFilesBusiness',
       'DeleteSignFileAsync',
       [recID]
+    );
+  }
+
+  saveSignFileIsTemplate(recID: string, templateName: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'CreateTemplateBySignFileAsync',
+      [recID, templateName]
     );
   }
 
