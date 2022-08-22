@@ -42,7 +42,7 @@
         <div
           class="left_Toolbar d-flex justify-content-start align-items-center"
         >
-          <ejs-toolbar>
+          <ejs-toolbar (created)="leftTollbarCreated($event)">
             <e-items>
               <e-item
                 [prefixIcon]="
@@ -65,10 +65,7 @@
                 [disabled]="cannotAct"
               >
               </e-item>
-              <e-item
-                [text]="pdfviewerControl?.currentPageNumber"
-                [disabled]="true"
-              ></e-item>
+              <e-item [template]="pageInput" type="Input"></e-item>
               <e-item
                 prefixIcon="icon-navigate_next icon-20"
                 (click)="pdfviewerControl?.navigation?.goToNextPage()"
@@ -351,13 +348,7 @@
                     <ng-template #template let-area="">
                       <div
                         class="annotationItem"
-                        (click)="
-                          goToSelectedAnnotation(
-                            area.recID,
-                            area.labelValue,
-                            area.fontFormat
-                          )
-                        "
+                        (click)="goToSelectedAnnotation(area)"
                         style="border: 1px solid black; margin-bottom: 5px"
                       >
                         <codx-temp-full
@@ -381,6 +372,20 @@
                           "
                           [formGroup]="formAnnot"
                         >
+                          <div class="qr-switch" *ngIf="area.labelType == 8">
+                            <codx-input
+                              class="form-control me-2"
+                              type="switch"
+                              [crrValue]="renderQRAllPage"
+                              (valueChange)="changeQRRenderState($event)"
+                            >
+                              <codx-label
+                                name="lblSave"
+                                default="Lặp lại cho tất cả các trang"
+                                [formModel]=""
+                              ></codx-label>
+                            </codx-input>
+                          </div>
                           <div class="text-content" *ngIf="area.labelType == 6">
                             <codx-label
                               fiedName=""
@@ -419,7 +424,10 @@
                             >
                             </ejs-dropdownlist>
                           </div>
-                          <div class="text-format d-flex">
+                          <div
+                            class="text-format d-flex"
+                            *ngIf="area.labelType != 8"
+                          >
                             <ejs-dropdownlist
                               style="width: 100%; min-width: 70px"
                               id="fontStylesDropdownList"
@@ -437,7 +445,7 @@
                             >
                             </ejs-dropdownlist>
                           </div>
-                          <div class="btn-format">
+                          <div class="btn-format" *ngIf="area.labelType != 8">
                             <button
                               type="button"
                               [ngClass]="{
@@ -488,7 +496,11 @@
                               type="button"
                               class="btn btn-primary"
                               (click)="
-                                changeAnnotPro(area.labelType, area.recID)
+                                changeAnnotPro(
+                                  area.labelType,
+                                  area.recID,
+                                  area.createdOn
+                                )
                               "
                             >
                               <codx-label
@@ -563,4 +575,17 @@
     [subTitle]="data.location?.pageNumber"
   >
   </codx-temp-full>
+</ng-template>
+
+<ng-template #pageInput>
+  <input
+    id="numeric"
+    type="number"
+    min="1"
+    [max]="pageMax"
+    [step]="pageStep"
+    [(value)]="curPage"
+    defaultValue="1"
+    (keyup.enter)="goToPage($event)"
+  />
 </ng-template>
