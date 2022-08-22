@@ -1,4 +1,5 @@
 <ng-template #panelRight>
+<<<<<<< HEAD
   <app-view-detail
     #detail
     [taskID]="itemSelected?.taskID"
@@ -13,16 +14,27 @@
     (clickMoreFunction)="receiveMF($event)"
     (hoverPopover)="hoverPopover($event)"
   >
+=======
+  <app-view-detail #detail [taskID]="itemSelected?.taskID" [formModel]="view.formModel" [param]="param"
+    [dataTree]="dataTree" [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus"
+    [vllExtendStatus]="vllExtendStatus" [popoverCrr]="popoverCrr" [vllStatus]="vllStatus"
+    (clickMoreFunction)="receiveMF($event)" (hoverPopover)="hoverPopover($event)">
+>>>>>>> 3ba9efa43c06ae503bd847454c1b2c208d83e56a
   </app-view-detail>
 </ng-template>
 
 <ng-template #itemViewList let-data>
+<<<<<<< HEAD
   <lib-view-list
     [formModel]="view.formModel"
     [vllStatus]="vllStatus"
     [data]="data"
     (clickMoreFunction)="receiveMF($event)"
   >
+=======
+  <lib-view-list [formModel]="view.formModel" [vllStatus]="vllStatus" [data]="data"
+    (clickMoreFunction)="receiveMF($event)">
+>>>>>>> 3ba9efa43c06ae503bd847454c1b2c208d83e56a
   </lib-view-list>
 </ng-template>
 
@@ -36,6 +48,7 @@
 </ng-template>
 
 <ng-template #itemTemplate let-data>
+<<<<<<< HEAD
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
@@ -55,10 +68,19 @@
     [footer]="footerList"
     [dataItem]="data"
   >
+=======
+  <codx-temp-full cardCss="card-template border-bottom p-3 list-task" (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
+    [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" [imageWidth]="35" imgCss="me-3" imageObjType="AD_Users"
+    [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.taskName"
+    [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">
+>>>>>>> 3ba9efa43c06ae503bd847454c1b2c208d83e56a
   </codx-temp-full>
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
+<<<<<<< HEAD
   <codx-card-img
     cardCss="border h-100"
     imageObjType="AD_Users"
@@ -81,6 +103,14 @@
     [footer]="cardImgFooter"
     [dataItem]="data"
   >
+=======
+  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
+    [iconCss]="data?.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'" [title]="data.userName" [subTitle]="data.positionName" [content]="data.memo || 'memo'"
+    [status]="data.status" [statusVll]="vllStatus" [date]="data.dueDate" [resources]="data.assignTo" [rootData]="data"
+    [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter" [dataItem]="data">
+>>>>>>> 3ba9efa43c06ae503bd847454c1b2c208d83e56a
   </codx-card-img>
 </ng-template>
 
@@ -123,6 +153,7 @@
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-attach_file icon-20 text-gray-400"></span>
           <span
+<<<<<<< HEAD
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
             >{{ data?.attachments }}</span
           >
@@ -139,6 +170,17 @@
           [numberImages]="3"
           (click)="openViewListTaskResource(data)"
         >
+=======
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+            data?.attachments }}</span>
+        </div>
+      </div>
+      <div class="symbol-group symbol-hover justify-content-end"
+        *ngIf="setting.resources && data.assignTo && data.assignTo.length">
+        <codx-imgs [width]="30" [objectId]="data.assignTo" objectType="AD_Users" [numberImages]="3"
+          (mouseenter)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
+          #popoverList="ngbPopover" placement="left bottom top right" container="body" autoClose="outside">
+>>>>>>> 3ba9efa43c06ae503bd847454c1b2c208d83e56a
         </codx-imgs>
       </div>
     </div>
@@ -168,6 +210,7 @@
           {{ data?.status | vll: vllStatus:"text" | async }}
         </div>
       </div> -->
+<<<<<<< HEAD
       <codx-vll
         [formModel]="view.formModel"
         [field]="'Status'"
@@ -176,6 +219,10 @@
         [showBgColor]="true"
         class="text-gray-600"
       >
+=======
+      <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
+        [showBgColor]="true" class="text-gray-600">
+>>>>>>> 3ba9efa43c06ae503bd847454c1b2c208d83e56a
       </codx-vll>
       <span>
         <span class="fs-7 text-gray-600">{{
@@ -267,6 +314,7 @@
                 {{ item?.status | vll: vllStatus:"text" | async }}
               </div>
             </div> -->
+<<<<<<< HEAD
             <codx-vll
               [formModel]="view.formModel"
               [field]="'Status'"
@@ -275,6 +323,10 @@
               [showBgColor]="true"
               class="text-gray-600"
             >
+=======
+            <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="item?.status" [showText]="true"
+              [showBgColor]="true" class="text-gray-600">
+>>>>>>> 3ba9efa43c06ae503bd847454c1b2c208d83e56a
             </codx-vll>
           </span>
           <span>
