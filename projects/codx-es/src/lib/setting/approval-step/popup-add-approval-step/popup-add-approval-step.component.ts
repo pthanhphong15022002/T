@@ -177,6 +177,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             .subscribe((res) => {
               if (res) {
                 this.dialogApprovalStep.patchValue(res);
+                this.dialogApprovalStep.patchValue({ stepNo: this.stepNo });
                 this.dialogApprovalStep.patchValue({ transID: this.transId });
                 this.esService.getNewDefaultEmail().subscribe((res) => {
                   this.dialogApprovalStep.patchValue({ emailTemplates: res });

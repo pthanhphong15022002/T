@@ -22,71 +22,25 @@
                 </div>
 
                 <!-- tạm dùng vậy fix sau -->
-                <ng-container *ngIf="!taskExtends">
+                <ng-container>
                   <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center me-4">
                       <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
-                      <div class="text-gray-600" [ngClass]="
-                          itemSelected?.phoneCreate
-                            ? 'text-gray-600'
-                            : 'text-gray-400'
-                        ">
-                        {{
-                        itemSelected?.phoneCreate
-                        ? itemSelected?.phoneCreate
-                        : "Số điện thoại"
-                        }}
+                      <div div class="text-gray-600" >
+                        <span #phone>{{ taskExtends? itemSelected?.phone : itemSelected?.phoneCreate | formatvalue:
+                          formModel:"phone":phone :"Employees":"grvEmployees"| async }}</span>
                       </div>
                     </div>
                     <div class="d-flex align-items-center">
                       <span class="icon-email icon-16 text-gray-600 me-2"></span>
-                      <div class="font-size-sm" [ngClass]="
-                          itemSelected?.emailCreate
-                            ? 'text-gray-600'
-                            : 'text-gray-400'
-                        ">
-                        {{
-                        itemSelected?.emailCreate
-                        ? itemSelected?.emailCreate
-                        : "Email"
-                        }}
+                      <div div class="font-size-sm" >
+                        <span #email>{{  taskExtends? itemSelected?.email : itemSelected?.emailCreate | formatvalue:
+                          formModel:"email":email :"Employees":"grvEmployees"| async }}</span>
                       </div>
                     </div>
                   </div>
                 </ng-container>
-                <ng-container *ngIf="taskExtends">
-                  <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center me-4">
-                      <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
-                      <div class="text-gray-600" [ngClass]="
-                          itemSelected?.phone
-                            ? 'text-gray-600'
-                            : 'text-gray-400'
-                        ">
-                        {{
-                        itemSelected?.phone
-                        ? itemSelected?.phone
-                        : "Số điện thoại"
-                        }}
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <span class="icon-email icon-16 text-gray-600 me-2"></span>
-                      <div class="font-size-sm" [ngClass]="
-                          itemSelected?.email
-                            ? 'text-gray-600'
-                            : 'text-gray-400'
-                        ">
-                        {{
-                        itemSelected?.email
-                        ? itemSelected?.email
-                        : "Email"
-                        }}
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-
+            
               </div>
               <div class="d-flex flex-row align-items-start">
                 <!-- <div *ngIf="itemSelected?.extendStatus!=null &&itemSelected?.extendStatus>='3' && vllExtendStatus"

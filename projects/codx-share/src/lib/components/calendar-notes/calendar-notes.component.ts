@@ -151,7 +151,6 @@ export class CalendarNotesComponent
   ngAfterViewInit() {
     this.lstView.dataService.requestEnd = (t, data) => {
       if (t == 'loaded') {
-        console.log('check data', data);
       }
     };
   }

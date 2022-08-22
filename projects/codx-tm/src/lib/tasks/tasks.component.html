@@ -65,14 +65,14 @@
     (clickMF)="clickMF($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    [iconCss]="data.isOverdue ? 'icon-notifications expired' : ''"
-    [statusVll]="vllStatus"
-    [icoStatus]="data.priority"
-    icoStatusVll="L0186"
+    [iconCss]="data?.isTimeOut ? 'icon-notifications expired' : ''"
+    [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'"
     [title]="data.userName"
     [subTitle]="data.positionName"
     [content]="data.memo || 'memo'"
     [status]="data.status"
+    [statusVll]="vllStatus"
     [date]="data.dueDate"
     [resources]="data.assignTo"
     [rootData]="data"
@@ -110,21 +110,21 @@
           <span class="icon-mode_comment icon-20 text-gray-400"></span>
           <span
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
-            >{{ data.comments }}</span
+            >{{ data?.comments }}</span
           >
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-check_box icon-20 text-gray-400"></span>
           <span
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
-            >{{ data.attachments }}</span
+            >{{ data?.todo }}</span
           >
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-attach_file icon-20 text-gray-400"></span>
           <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-light badge-sm mn-6"
-            >0</span
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+            >{{ data?.attachments }}</span
           >
         </div>
       </div>
@@ -137,7 +137,13 @@
           [objectId]="data.assignTo"
           objectType="AD_Users"
           [numberImages]="3"
-          (click)="openViewListTaskResource(data)"
+          (mouseenter)="popoverEmpList(popoverList, data)"
+          [ngbPopover]="popEmpList"
+          popoverClass="empPopoverClass"
+          #popoverList="ngbPopover"
+          placement="left bottom top right"
+          container="body"
+          autoClose="outside"
         >
         </codx-imgs>
       </div>
@@ -159,22 +165,15 @@
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-1">
     <div class="d-flex align-items-end ms-14 codx-badge">
-      <div class="d-status">
-        <div
-          class="badge badge-danger me-2 label-status"
-          [style.border-color]="
+      <!-- <div class="d-status">
+        <div class="badge badge-danger me-2 label-status" [style.border-color]="
             (data?.status | vll: vllStatus:'textColor' | async) + '30'
-          "
-          [style.background-color]="
+          " [style.background-color]="
             (data?.status | vll: vllStatus:'textColor' | async) + '30'
-          "
-          [style.color]="data?.status | vll: vllStatus:'textColor' | async"
-          style="border: none"
-        >
+          " [style.color]="data?.status | vll: vllStatus:'textColor' | async" style="border: none">
           {{ data?.status | vll: vllStatus:"text" | async }}
         </div>
-      </div>
-      -->
+      </div> -->
       <codx-vll
         [formModel]="view.formModel"
         [field]="'Status'"
@@ -263,24 +262,17 @@
       <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R'">
         <div class="d-flex align-items-end me-2 codx-badge">
           <span>
-            <div class="d-status">
-              <div
-                class="badge badge-danger me-2 label-status"
-                [style.border-color]="
+            <!-- <div class="d-status">
+              <div class="badge badge-danger me-2 label-status" [style.border-color]="
                   (item?.status | vll: vllStatus:'textColor' | async) + '30'
-                "
-                [style.background-color]="
+                " [style.background-color]="
                   (item?.status | vll: vllStatus:'textColor' | async) + '30'
-                "
-                [style.color]="
+                " [style.color]="
                   item?.status | vll: vllStatus:'textColor' | async
-                "
-                style="border: none"
-              >
+                " style="border: none">
                 {{ item?.status | vll: vllStatus:"text" | async }}
               </div>
-            </div>
-            -->
+            </div> -->
             <codx-vll
               [formModel]="view.formModel"
               [field]="'Status'"

@@ -95,9 +95,9 @@ export class UserComponent extends UIComponent {
       case 'SYS03':
         this.edit(data);
         break;
-      case 'SYS02':
-        this.delete(data);
-        break;
+      // case 'SYS02':
+      //   this.delete(data);
+      //   break;
       case 'ADS0501':
         this.stop(data);
         break;
