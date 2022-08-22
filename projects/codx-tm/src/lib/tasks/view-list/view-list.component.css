@@ -34,3 +34,11 @@
 .w-20 {
   width: 20% !important;
 }
+
+.w-30 {
+  width: 30% !important;
+}
+
+td p {
+  word-break: break-all;
+}

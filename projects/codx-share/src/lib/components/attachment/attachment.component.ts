@@ -382,11 +382,11 @@ export class AttachmentComponent implements OnInit {
 
   ngOnDestroy() {
     //   this.atSV.openForm.unsubscribe();
-    if (this.interval?.length > 0) {
-      this.interval.forEach((element) => {
-        clearInterval(element.instant);
-      });
-    }
+    // if (this.interval?.length > 0) {
+    //   this.interval.forEach((element) => {
+    //     clearInterval(element.instant);
+    //   });
+    // }
   }
 
   onSelectionAddChanged($data, tree) {
@@ -710,9 +710,49 @@ export class AttachmentComponent implements OnInit {
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
 
-            for (var i = 0; i < addList.length; i++) {
-              this.data.push(Object.assign({}, addList[i]));
+            if (addList.length > 0) {
+              addList.forEach(item => {
+                this.data.push(Object.assign({}, item));
+                if (item.status == 0)
+                  this.dmSV.updateHDD.next(item.messageHddUsed);
+                var files = this.dmSV.listFiles;
+                if (files == null)
+                  files = [];
+  
+                if (item.status == 0) {
+                  if (item.data.fileName != null && item.data.fileName != "") {
+                    item.data.thumbnail = "../../../assets/img/loader.gif";
+                    that.displayThumbnail(item.data);
+                    files.push(Object.assign({}, item.data));
+                  }
+                  // else {
+                  //   if (item.data.folderName != null && item.data.folderName != "") {
+                  //     var folders = this.dmSV.listFolder;
+                  //     var idx = folders.findIndex(x => x.recID == item.data.recID)
+                  //     if (idx == - 1) {
+                  //       folders.push(Object.assign({}, item.data));
+                  //       this.dmSV.listFolder = folders;
+                  //       // that.changeDetectorRef.detectChanges();
+                  //     }
+                  //   }
+                  // }
+                }
+                else {
+                  let index = files.findIndex(d => d.recID.toString() === item.data.recID);
+                  if (index != -1) {
+                    files[index] = item.data;
+                    files[index].recID = item.data.recID;
+                  }
+                }
+                this.notificationsService.notify(item.message);
+                this.dmSV.listFiles = files;
+                this.dmSV.ChangeData.next(true);
+              })
             }
+
+            // for (var i = 0; i < addList.length; i++) {
+            //   this.data.push(Object.assign({}, addList[i]));
+            // }
 
             if (addList.length == this.fileUploadList.length) {
               this.atSV.fileList.next(this.fileUploadList);
@@ -861,33 +901,8 @@ export class AttachmentComponent implements OnInit {
     );
   }
 
-  displayThumbnail(id, pathDisk) {
-    var that = this;
-    if (this.interval == null) this.interval = [];
-    var files = this.dmSV.listFiles;
-    var index = setInterval(() => {
-      that.fileService.getThumbnail(id, pathDisk).subscribe((item) => {
-        if (item != null && item != '') {
-          let index = files.findIndex((d) => d.recID.toString() === id);
-          if (index != -1) {
-            files[index].thumbnail = item;
-            that.dmSV.listFiles = files;
-            that.dmSV.ChangeData.next(true);
-            that.changeDetectorRef.detectChanges();
-          }
-          let indexInterval = this.interval.findIndex((d) => d.id === id);
-          if (indexInterval > -1) {
-            clearInterval(this.interval[indexInterval].instant);
-            this.interval.splice(indexInterval, 1);
-          }
-        }
-      });
-    }, 3000);
-
-    var interval = new ItemInterval();
-    interval.id = id;
-    interval.instant = index;
-    this.interval.push(Object.assign({}, interval));
+  displayThumbnail(data) {    
+    this.dmSV.setThumbnailWait.next(data);    
   }
 
   addFile(fileItem: any) {
@@ -903,20 +918,20 @@ export class AttachmentComponent implements OnInit {
             res.thumbnail = '../../../assets/img/loader.gif';
             files.push(Object.assign({}, res));
             this.dmSV.listFiles = files;
-            this.dmSV.ChangeData.next(true);
-            this.changeDetectorRef.detectChanges();
+            this.dmSV.ChangeData.next(true);           
             //this.fileUploadList = [];
             //  that.displayThumbnail(res.recID, res.pathDisk);
             // this.notificationsService.notify(item.message);
-            this.fileUploadList[0].recID = item.data.recID;
+           // this.fileUploadList[0].recID = item.data.recID;
             // list.push(Object.assign({}, res));
             this.atSV.fileListAdded.push(Object.assign({}, item));
             // for(var i=0; i<addList.length; i++) {
             this.data.push(Object.assign({}, item));
 
-            this.displayThumbnail(item.data.recID, item.data.pathDisk);
+            this.displayThumbnail(item.data);
             this.dmSV.updateHDD.next(item.messageHddUsed);
             this.notificationsService.notify(item.message);
+            this.changeDetectorRef.detectChanges();
           } else if (item.status == 6) {
             // ghi đè
             fileItem.recID = item.data.recID;
@@ -964,13 +979,13 @@ export class AttachmentComponent implements OnInit {
                 );
                 if (index != -1) {
                   res.data.thumbnail = '../../../assets/img/loader.gif';
-                  this.displayThumbnail(res.data.recID, res.data.pathDisk);
+                  this.displayThumbnail(res.data);
                   files[index] = res.data;
                   files[index].recID = res.data.recID;
                 }
                 this.dmSV.listFiles = files;
                 this.dmSV.ChangeData.next(true);
-                this.fileUploadList[0].recID = res.data.recID;
+                //this.fileUploadList[0].recID = res.data.recID;
                 this.atSV.fileListAdded.push(Object.assign({}, item));
                 this.data.push(Object.assign({}, item));
                 //  res.data.thumbnail = "../../../assets/img/loader.gif";
@@ -978,6 +993,7 @@ export class AttachmentComponent implements OnInit {
                 this.notificationsService.notify(res.message);
                 //  this.closePopup();
                 this.fileUploadList = [];
+                this.changeDetectorRef.detectChanges();
               })
               .catch((error) => {
                 console.log('Promise rejected with ' + JSON.stringify(error));

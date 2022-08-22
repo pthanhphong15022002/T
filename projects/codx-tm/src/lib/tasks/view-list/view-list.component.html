@@ -26,10 +26,10 @@
       {{ data?.status | vll: "L0614":"text" | async }}
     </div>
   </td>
-  <td class=" w-20">
-    <div *ngIf="data.memo" class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
-      [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)" placement="bottom"
-      autoClose="outside">
+  <td class=" w-30">
+    <div *ngIf="data.memo" class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail"
+      #p="ngbPopover" [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
+      placement="bottom" autoClose="outside">
       <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
         <div class="d-flex">
@@ -39,7 +39,7 @@
         </div>
       </button>
     </div>
-    <div *ngIf="!data.memo" >
+    <div *ngIf="!data.memo">
       <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
         <div class="d-flex">
@@ -49,7 +49,7 @@
       </button>
     </div>
   </td>
-  <td class=" w-15">
+  <td class=" w-5">
     <div *ngIf="data.category == '3'" class="" (click)="openViewListTaskResource(data)">
       <codx-imgs [width]="30" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="4">
       </codx-imgs>
@@ -101,15 +101,15 @@
     </div>
   </td>
   <td class=" w-5">
-    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)"  [isBookMark]="false" [dataItem]="data"
-      type="hover">
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)"
+      [isBookMark]="false" [dataItem]="data" type="hover">
     </codx-mfunc>
   </td>
 </div>
 
-<ng-template #popDetail >
+<ng-template #popDetail>
   <div>
-    <ng-container >
+    <ng-container>
       <div class="d-flex flex-column flex-grow-1">
         <div class="text-gray-800 " [innerHTML]="popoverDetail?.memo">
           <div class="d-flex align-items-center mt-2">
