@@ -4,11 +4,11 @@ import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 
 @Component({
-  selector: 'lib-popup-device-stationery',
-  templateUrl: './popup-device-stationery.component.html',
-  styleUrls: ['./popup-device-stationery.component.scss'],
+  selector: 'lib-popup-setting-norms',
+  templateUrl: './popup-setting-norms.component.html',
+  styleUrls: ['./popup-setting-norms.component.scss'],
 })
-export class PopupDeviceStationeryComponent extends UIComponent {
+export class PopupSettingNormsComponent extends UIComponent {
   data: any = {};
   dialog: DialogRef;
   headerText = 'Thiết lập định mức VPP';
@@ -26,7 +26,7 @@ export class PopupDeviceStationeryComponent extends UIComponent {
     super(injector);
     this.data = dt?.data;
     this.dialog = dialog;
-    this.formModel = this.dialog.formModel;
+    this.formModel = this.data[0];
   }
 
   onInit(): void {
@@ -38,16 +38,13 @@ export class PopupDeviceStationeryComponent extends UIComponent {
 
     this.initForm();
   }
+
   initForm() {
     this.epService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogVPP = item;
         this.isAfterRender = true;
-        if (this.data) {
-          this.dialogVPP.patchValue(this.data);
-        }
-        console.log(this.isAfterRender);
       });
   }
 }

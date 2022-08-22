@@ -38,12 +38,11 @@ export class TMMeetingsComponent
   @Input() meeting = new CO_Meetings();
 
   @Input() dataObj?: any;
+  @Input() showButtonAdd = true;
   @Input() projectID?: any; //view meeting to sprint_details
   @Input() iterationID?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
-  // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
-  // @ViewChild('sprintsKanban') sprintsKanban: TemplateRef<any> | null;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any> | null;
   @ViewChild('itemTemplate') template!: TemplateRef<any> | null;
