@@ -109,7 +109,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     this.dialog.closed.subscribe((res) => {
       if (!this.saveSuccess) {
         if (this.dataAfterSave && this.dataAfterSave.userID) {
-          this.adService.deleteUserBeforeDone(this.dataAfterSave).subscribe();
+          this.deleteUserBeforeDone(this.dataAfterSave);
         }
       }
     });
@@ -164,6 +164,17 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         }
       });
     }
+  }
+
+  deleteUserBeforeDone(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe((res: any) => {
+        if (res.data) {
+          this.adService.deleteFile(res.data.userID, 'AD_Users', true);
+        }
+      });
   }
 
   addUserTemp() {

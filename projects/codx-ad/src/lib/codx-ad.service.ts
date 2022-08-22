@@ -208,16 +208,6 @@ export class CodxAdService {
     );
   }
 
-  deleteUserBeforeDone(data) {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'UsersBusiness',
-      'DeleteUserTempAsync',
-      data?.userID
-    );
-  }
-
   addUserBeforeDone(data, isUserGroup = false) {
     return this.api.execSv(
       'SYS',
@@ -244,6 +234,26 @@ export class CodxAdService {
       'ERM.Business.AD',
       'UsersBusiness',
       'GetListUserTempAsync',
+    );
+  }
+
+  deleteUser(userID, employeeID) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'DeleteTempAsync',
+      [userID,employeeID]
+    );
+  }
+
+  updateDomainUser(employeeID) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'UpdateDomainUserAsync',
+      employeeID
     );
   }
 }
