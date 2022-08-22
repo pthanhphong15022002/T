@@ -75,20 +75,33 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     this.formType = dt?.data?.formType;
     this.userType = dt?.data?.userType;
     this.data = dialog.dataService!.dataSelected;
+    this.adUserGroup = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(
         JSON.stringify(this.data?.chooseRoles)
       );
       this.countListViewChoose();
+      this.adService
+        .getUserByUserGroup(this.adUserGroup.userID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.dataUserCbb = res;
+          }
+        });
     }
-    this.adUserGroup = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
     this.cache.gridViewSetup('Users', 'grvUsers').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
+    });
+  }
+
+  capitalizeWords(arr) {
+    return arr.map((element) => {
+      return element.charAt(0).toUpperCase() + element.slice(1).toLowerCase();
     });
   }
 
@@ -327,21 +340,37 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     var checkDifferenceUserCbb;
     if (this.dataUserCbb) {
       checkDifferenceUserCbb =
-        JSON.stringify(dataUserCbbTemp) ===
-        JSON.stringify(this.dataUserCbb);
+        JSON.stringify(dataUserCbbTemp) === JSON.stringify(this.dataUserCbb);
     }
     if (this.isAddMode) {
       this.onAdd();
-      if (this.dataUserCbb.length > 0 && countUserHaveGroup > 0) {
-        this.adService
-          .updateUserRoles(lstUser, this.viewChooseRole, true, this.adUserGroup, this.dataUserCbb)
-          .subscribe();
-      }
+      this.notification
+        .alertCode('AD005', null, this.adUserGroup.userName)
+        .subscribe((x) => {
+          if (x?.event.status == 'Y') {
+            if (this.dataUserCbb.length > 0 && countUserHaveGroup > 0) {
+              this.adService
+                .updateUserRoles(
+                  lstUser,
+                  this.viewChooseRole,
+                  true,
+                  this.adUserGroup,
+                  this.dataUserCbb
+                ).subscribe();
+            }
+          }
+        });
     } else {
       this.onUpdate();
       if (!checkDifferenceUserCbb || !checkDifference) {
         this.adService
-          .updateUserRoles(lstUser, this.viewChooseRole, true, this.adUserGroup, this.dataUserCbb)
+          .updateUserRoles(
+            lstUser,
+            this.viewChooseRole,
+            true,
+            this.adUserGroup,
+            this.dataUserCbb
+          )
           .subscribe();
       }
     }
@@ -420,7 +449,11 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   getDataUserInCbb(event) {
     if (event?.dataSelected) {
-      this.dataUserCbb = event?.dataSelected;
+      if (this.formType == 'edit') {
+        event?.dataSelected.forEach((dt) => {
+          this.dataUserCbb.push(dt);
+        });
+      } else this.dataUserCbb = event?.dataSelected;
       this.changeDetector.detectChanges();
     }
   }
