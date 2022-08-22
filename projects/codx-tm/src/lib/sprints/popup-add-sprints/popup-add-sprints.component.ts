@@ -43,7 +43,7 @@ export class PopupAddSprintsComponent implements OnInit {
   dataOnLoad = [];
   vllShare = 'TM003';
   isUploadImg = false;
-  gridViewSetup : any
+  gridViewSetup: any;
   imageUpload: UploadFile = new UploadFile();
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
 
@@ -59,16 +59,24 @@ export class PopupAddSprintsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    
     this.master = dialog.dataService!.dataSelected;
     this.action = dt?.data[1];
-    this.gridViewSetup = dt?.data?.gridViewSetup ;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
     this.sprintDefaut = this.dialog.dataService.data[0];
     this.dataDefault.push(this.sprintDefaut);
     this.dataOnLoad = this.dialog.dataService.data;
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   //#region init
@@ -101,11 +109,11 @@ export class PopupAddSprintsComponent implements OnInit {
 
   saveMaster(isAdd: boolean) {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option, isAdd)) //Hảo code mới
+      .save((option: any) => this.beforeSave(option, isAdd), isAdd ? 0 : null) //Hảo code mới
       .subscribe((res) => {
         if (res) {
-          this.imageAvatar.updateFileDirectReload(this.master.iterationID);
-          if (isAdd && this.funcID !='TMT0301') {
+          // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
+          if (isAdd && this.funcID != 'TMT0301') {
             var dataNew = this.dialog.dataService.data[0];
             this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
             this.dialog.dataService.data[1] = dataNew;
@@ -138,7 +146,12 @@ export class PopupAddSprintsComponent implements OnInit {
     this.master = this.dialog.dataService.dataSelected;
     op.method = 'AddEditSprintAsync';
     op.data = [this.master, isAdd];
-    return true;
+    this.imageAvatar
+      .updateFileDirectReload(this.master.iterationID)
+      .subscribe((res) => {
+        if (res) return true;
+        else return false;
+      });
   }
 
   closeTaskBoard() {
@@ -285,16 +298,16 @@ export class PopupAddSprintsComponent implements OnInit {
     this.master.memo = e?.data;
   }
 
-  changeUser(e){
-   if(e?.data?.value.length >0){
-    var arrResources = e?.data?.value ;
-    this.valueSelectUserCombobox(arrResources)
-   }
+  changeUser(e) {
+    if (e?.data?.value.length > 0) {
+      var arrResources = e?.data?.value;
+      this.valueSelectUserCombobox(arrResources);
+    }
   }
 
   valueSelectUserCombobox(arrResources: any[]) {
-    var resources ='' ;
-    if (arrResources.length>0) {
+    var resources = '';
+    if (arrResources.length > 0) {
       if (this.master.resources && this.master.resources != '') {
         var arrNew = [];
         arrResources.forEach((e) => {
@@ -308,7 +321,7 @@ export class PopupAddSprintsComponent implements OnInit {
           this.getListUser(resources);
         }
       } else {
-         resources = arrResources.join(';');
+        resources = arrResources.join(';');
         this.master.resources = resources;
         this.getListUser(resources);
       }

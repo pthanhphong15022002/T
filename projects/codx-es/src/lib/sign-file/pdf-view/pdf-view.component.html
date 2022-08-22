@@ -35,14 +35,14 @@
         </ejs-tab>
       </div>
     </div>
-    <div class="d-flex flex-column flex-row-fluid mx-3 main-center">
+    <div class="d-flex flex-column flex-row-fluid main-center">
       <div
         class="d-flex d-flex align-items-center justify-content-between stepper-toolbar"
       >
         <div
           class="left_Toolbar d-flex justify-content-start align-items-center"
         >
-          <ejs-toolbar>
+          <ejs-toolbar (created)="leftTollbarCreated($event)">
             <e-items>
               <e-item
                 [prefixIcon]="
@@ -65,10 +65,7 @@
                 [disabled]="cannotAct"
               >
               </e-item>
-              <e-item
-                [text]="pdfviewerControl?.currentPageNumber"
-                [disabled]="true"
-              ></e-item>
+              <e-item [template]="pageInput" type="Input"></e-item>
               <e-item
                 prefixIcon="icon-navigate_next icon-20"
                 (click)="pdfviewerControl?.navigation?.goToNextPage()"
@@ -350,8 +347,9 @@
                   >
                     <ng-template #template let-area="">
                       <div
+                        *ngIf="area.lableType != 8 || isApprover != true"
                         class="annotationItem"
-                        (click)="goToSelectedAnnotation(area.recID)"
+                        (click)="goToSelectedAnnotation(area)"
                         style="border: 1px solid black; margin-bottom: 5px"
                       >
                         <codx-temp-full
@@ -375,6 +373,21 @@
                           "
                           [formGroup]="formAnnot"
                         >
+                          <div class="qr-switch" *ngIf="area.labelType == 8">
+                            <codx-input
+                              class="form-control me-2"
+                              type="switch"
+                              [crrValue]="renderQRAllPage"
+                              (valueChange)="changeQRRenderState($event)"
+                            >
+                              <codx-label
+                                name="lblSave"
+                                default="Lặp lại cho tất cả các trang"
+                                [formModel]=""
+                              >
+                              </codx-label>
+                            </codx-input>
+                          </div>
                           <div class="text-content" *ngIf="area.labelType == 6">
                             <codx-label
                               fiedName=""
@@ -386,6 +399,20 @@
                               type="text"
                               formControlName="content"
                               class="d-block w-100"
+                              [style]="
+                                'font-size: ' +
+                                curAnnotFontSize +
+                                'px;' +
+                                'font-family: ' +
+                                curAnnotFontStyle +
+                                ';'
+                              "
+                              [ngClass]="{
+                                'fw-bold': isBold,
+                                'fst-italic': isItalic,
+                                'text-decoration-underline': isUnd
+                              }"
+                              [defaultValue]="area.labelType"
                             />
                           </div>
 
@@ -399,33 +426,36 @@
                             >
                             </ejs-dropdownlist>
                           </div>
-                          <div class="text-format d-flex">
+                          <div
+                            class="text-format d-flex"
+                            *ngIf="area.labelType != 8"
+                          >
                             <ejs-dropdownlist
                               style="width: 100%; min-width: 70px"
                               id="fontStylesDropdownList"
                               [dataSource]="lstAnnotFontStyle"
-                              (change)="changeFontStyle($event)"
                               [(value)]="curAnnotFontStyle"
                               formControlName="fontStyle"
                             >
-                            </ejs-dropdownlist
-                            ><ejs-dropdownlist
+                            </ejs-dropdownlist>
+                            <ejs-dropdownlist
                               style="width: 100%; min-width: 70px"
                               id="fontSizesDropdownList"
                               [dataSource]="lstAnnotFontSize"
-                              (change)="changeFontSize($event)"
                               [(value)]="curAnnotFontSize"
                               formControlName="fontSize"
                             >
                             </ejs-dropdownlist>
                           </div>
-                          <div class="btn-format">
+                          <div class="btn-format" *ngIf="area.labelType != 8">
                             <button
                               type="button"
-                              class="btn btn-primary"
-                              (click)="
-                                changeAnnotPro(area.labelType, area.recID)
-                              "
+                              [ngClass]="{
+                                btn: true,
+                                'btn-secondary': !isBold,
+                                'btn-success': isBold
+                              }"
+                              (click)="changeFontWeight(1)"
                             >
                               <codx-label
                                 name="lblSave"
@@ -435,10 +465,12 @@
                             </button>
                             <button
                               type="button"
-                              class="btn btn-primary"
-                              (click)="
-                                changeAnnotPro(area.labelType, area.recID)
-                              "
+                              [ngClass]="{
+                                btn: true,
+                                'btn-secondary': !isItalic,
+                                'btn-success': isItalic
+                              }"
+                              (click)="changeFontWeight(2)"
                             >
                               <codx-label
                                 name="lblSave"
@@ -447,10 +479,12 @@
                               ></codx-label></button
                             ><button
                               type="button"
-                              class="btn btn-primary"
-                              (click)="
-                                changeAnnotPro(area.labelType, area.recID)
-                              "
+                              [ngClass]="{
+                                btn: true,
+                                'btn-secondary': !isUnd,
+                                'btn-success': isUnd
+                              }"
+                              (click)="changeFontWeight(3)"
                             >
                               <codx-label
                                 name="lblSave"
@@ -464,7 +498,11 @@
                               type="button"
                               class="btn btn-primary"
                               (click)="
-                                changeAnnotPro(area.labelType, area.recID)
+                                changeAnnotPro(
+                                  area.labelType,
+                                  area.recID,
+                                  area.createdOn
+                                )
                               "
                             >
                               <codx-label
@@ -539,4 +577,17 @@
     [subTitle]="data.location?.pageNumber"
   >
   </codx-temp-full>
+</ng-template>
+
+<ng-template #pageInput>
+  <input
+    id="numeric"
+    type="number"
+    min="1"
+    [max]="pageMax"
+    [step]="pageStep"
+    [(value)]="curPage"
+    defaultValue="1"
+    (keyup.enter)="goToPage($event)"
+  />
 </ng-template>

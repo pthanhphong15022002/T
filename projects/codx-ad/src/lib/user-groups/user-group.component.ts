@@ -87,13 +87,13 @@ export class UserGroupsComponent extends UIComponent {
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
-      case 'btnAdd':
+      case 'SYS01':
         this.add();
         break;
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
         break;
     }
@@ -110,7 +110,6 @@ export class UserGroupsComponent extends UIComponent {
   openPopup(item: any) {
     this.dialog = this.callfc.openForm(ViewUsersComponent, ' ', 300, 400, '', item);
     this.dialog.closed.subscribe(e => {
-      console.log(e);
     })
   }
 
@@ -126,13 +125,13 @@ export class UserGroupsComponent extends UIComponent {
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         userType: 'userGroup',
+        formType: 'add',
       }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(AddUserGroupsComponent, obj, option);
-
     });
   }
 
@@ -143,6 +142,7 @@ export class UserGroupsComponent extends UIComponent {
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       var obj = {
         userType: 'userGroup',
+        formType: 'edit',
       }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -159,12 +159,10 @@ export class UserGroupsComponent extends UIComponent {
 
   //#region Functions
   changeView(evt: any) {
-    console.log('evt: ', evt);
     var t = this;
   }
 
   selectedChange(val: any) {
-    console.log(val);
     this.itemSelected = val.data;
     this.dt.detectChanges();
   }

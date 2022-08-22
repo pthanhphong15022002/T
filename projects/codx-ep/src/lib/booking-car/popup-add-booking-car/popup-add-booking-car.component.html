@@ -1,7 +1,6 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="dialogRef.formModel" [subHeader]=""
   [footer]="footer" [dialog]="dialogRef" [openMore]="true" (buttonClick)="buttonClick($event)"
-  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabMoreInfo]" (setTitle)="setTitle($event)" [data]="data" 
-  [formControl]="fGroupAddBookingCar"
+  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabMoreInfo]" (setTitle)="setTitle($event)" [data]="data"
   >
   <ng-template #tabGeneralInfo>
     <div id="GeneralInfo">
@@ -26,8 +25,10 @@
           type="combobox"
           name="cbxCar"
           refValue="EP_Cars"
-          field="resourceID"
-          [formModel]="form.formModel"
+          ControlName="resourceID"
+          [formModel]="form.formModel"   
+          [multiple]="false"     
+          [Group]="fGroupAddBookingCar"
           [crrValue]="fGroupAddBookingCar.value.resourceID"         
           (valueChange)="valueCbxCarChange($event)"
         >
@@ -221,7 +222,7 @@
           >
           </codx-label>          
           <div class="d-flex flex-row text-end align-items-end">
-            <span class="mx-2">
+            <!-- <span class="mx-2">
               <codx-input 
                 type="combobox" 
                 name="combobox"
@@ -232,7 +233,7 @@
                 field="popup" 
                 (valueChange)="valueCbxDriverChange($event)">
               </codx-input>
-            </span>                    
+            </span>-->
             <span class="mx-2">
               <codx-input
                 type="combobox" 
@@ -288,7 +289,7 @@
         </codx-label>
       </div>
       <div class="d-flex flex-row text-end align-items-end ">        
-        <span class="mx-2">
+        <!-- <span class="mx-2">
           <codx-input 
             type="combobox" 
             name="combobox"
@@ -299,7 +300,7 @@
             field="popup" 
             (valueChange)="valueCbxDriverChange($event)">
           </codx-input>
-        </span>                    
+        </span>-->
         <span class="mx-2">
           <codx-input
             type="combobox" 

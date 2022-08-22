@@ -140,7 +140,41 @@ export class CodxEpService {
       resolve(obj);
     });
   }
-
+  notifyInvalid(
+    formGroup: FormGroup,
+    formModel: FormModel,
+    gridViewSetup: any = null
+  ) {
+    const invalid = [];
+    const controls = formGroup.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        break;
+      }
+    }
+    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+    if (gridViewSetup == null) {
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            gridViewSetup = res;
+            this.notificationsService.notifyCode(
+              'E0001',
+              0,
+              '"' + gridViewSetup[fieldName].headerText + '"'
+            );
+          }
+        });
+    } else {
+      this.notificationsService.notifyCode(
+        'E0001',
+        0,
+        '"' + gridViewSetup[fieldName].headerText + '"'
+      );
+    }
+  }
   execEP(
     className: string,
     methodName: string,

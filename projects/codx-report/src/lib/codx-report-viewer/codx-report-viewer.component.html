@@ -150,7 +150,7 @@
         >
           <div class="d-flex">
             <div class="w-100">
-              <codx-label [name]="group" default="Nhóm tham số {{group}}"></codx-label>
+              <codx-label [name]="group" default="Nhóm tham số {{idx+1}}"></codx-label>
             </div>
             <div><i class="icon-keyboard_arrow_down text-primary"></i></div>
           </div>
@@ -189,6 +189,17 @@
                                 [crrValue]="child.defaultValue"
                                 [refValue]="child.referedValue"
                                 (valueChange)="valueChange($event,true)"
+                              >
+                              </codx-input>
+                            </div>
+                            <div class="w-100 mt-3" *ngIf="child.referedType == '2'">
+                              <codx-input
+                                type="valuelist"
+                                [field]="item.controlName"
+                                [crrValue]="item.defaultValue"
+                                [refValue]="item.referedValue"
+                                [disabled]="!item.isEnable"
+                                (valueChange)="valueChange($event)"
                               >
                               </codx-input>
                             </div>
@@ -302,6 +313,17 @@
                     <div class="w-100 mt-3" *ngIf="item.referedType == '3'">
                       <codx-input
                         type="combobox"
+                        [field]="item.controlName"
+                        [crrValue]="item.defaultValue"
+                        [refValue]="item.referedValue"
+                        [disabled]="!item.isEnable"
+                        (valueChange)="valueChange($event)"
+                      >
+                      </codx-input>
+                    </div>
+                    <div class="w-100 mt-3" *ngIf="item.referedType == '2'">
+                      <codx-input
+                        type="valuelist"
                         [field]="item.controlName"
                         [crrValue]="item.defaultValue"
                         [refValue]="item.referedValue"
