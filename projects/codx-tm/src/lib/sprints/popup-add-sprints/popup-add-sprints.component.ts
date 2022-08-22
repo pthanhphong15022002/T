@@ -105,7 +105,7 @@ export class PopupAddSprintsComponent implements OnInit {
 
   saveMaster(isAdd: boolean) {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option, isAdd)) //Hảo code mới
+      .save((option: any) => this.beforeSave(option, isAdd),isAdd?0:null) //Hảo code mới
       .subscribe((res) => {
         if (res) {
           this.imageAvatar.updateFileDirectReload(this.master.iterationID);
