@@ -196,12 +196,14 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   // }
 
   countListViewChoose() {
-    this.countListViewChooseRoleApp = this.viewChooseRole.filter(
-      (obj) => obj.isPortal == false
-    ).length;
-    this.countListViewChooseRoleService = this.viewChooseRole.filter(
-      (obj) => obj.isPortal == true
-    ).length;
+    if (this.viewChooseRole) {
+      this.countListViewChooseRoleApp = this.viewChooseRole.filter(
+        (obj) => obj.isPortal == false
+      ).length;
+      this.countListViewChooseRoleService = this.viewChooseRole.filter(
+        (obj) => obj.isPortal == true
+      ).length;
+    }
   }
 
   beforeSave(op: RequestOption) {
@@ -237,11 +239,16 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.save) {
-          res.save.chooseRoles = res.save?.functions;
+          if (res.save?.functions) {
+            res.save.chooseRoles = res.save?.functions;
+            (this.dialog.dataService as CRUDService)
+              .update(res.save)
+              .subscribe();
+            this.changeDetector.detectChanges();
+          }
         }
       });
     this.dialog.close();
-    this.changeDetector.detectChanges();
   }
 
   onUpdate() {
@@ -272,9 +279,12 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   saveUserRoles() {
     var lstUser = [];
-    var checkDifference =
-      JSON.stringify(this.viewChooseRoleTemp) ===
-      JSON.stringify(this.viewChooseRole);
+    var checkDifference;
+    if (this.viewChooseRole) {
+      checkDifference =
+        JSON.stringify(this.viewChooseRoleTemp) ===
+        JSON.stringify(this.viewChooseRole);
+    }
     this.dataUserCbb.forEach((res) => {
       this.lstUser.forEach((dt) => {
         if (res.UserID == dt.userID) {
@@ -302,7 +312,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         .alertCode('AD004', null, lstUserName.join(', '))
         .subscribe((x) => {
           if (x.event.status == 'Y') {
-            this.saveUser(lstUser, checkDifference);
+            this.saveUser(lstUser, checkDifference, countUserHaveGroup);
           } else {
             return;
           }
@@ -312,17 +322,26 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     }
   }
 
-  saveUser(lstUser, checkDifference) {
+  saveUser(lstUser, checkDifference, countUserHaveGroup = 0) {
+    var dataUserCbbTemp = this.dataUserCbb;
+    var checkDifferenceUserCbb;
+    if (this.dataUserCbb) {
+      checkDifferenceUserCbb =
+        JSON.stringify(dataUserCbbTemp) ===
+        JSON.stringify(this.dataUserCbb);
+    }
     if (this.isAddMode) {
       this.onAdd();
-      this.adService
-        .updateUserRoles(lstUser, this.viewChooseRole, true)
-        .subscribe();
+      if (this.dataUserCbb.length > 0 && countUserHaveGroup > 0) {
+        this.adService
+          .updateUserRoles(lstUser, this.viewChooseRole, true, this.adUserGroup, this.dataUserCbb)
+          .subscribe();
+      }
     } else {
       this.onUpdate();
-      if (!checkDifference) {
+      if (!checkDifferenceUserCbb || !checkDifference) {
         this.adService
-          .updateUserRoles(lstUser, this.viewChooseRole, true)
+          .updateUserRoles(lstUser, this.viewChooseRole, true, this.adUserGroup, this.dataUserCbb)
           .subscribe();
       }
     }

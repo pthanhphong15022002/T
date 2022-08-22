@@ -247,12 +247,12 @@ export class EmployeesComponent implements OnInit {
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        e?.event.forEach((obj) => {
-          this.view.dataService.update(obj).subscribe();
-        });
-        this.itemSelected = e?.event[0];
+     //  e?.event.forEach((obj) => {
+          this.view.dataService.update(e?.event).subscribe();
+      // });
+        // this.itemSelected = e?.event;
       }
-      this.changedt.detectChanges();
+      this.changedt.detectChanges(); 
     });
   }
 
