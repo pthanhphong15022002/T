@@ -32,7 +32,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   @ViewChild('pdfView') pdfView: PdfViewComponent;
 
-  isApprover = false;
+  isApprover = true;
   dialog;
   data = {
     funcID: 'EST021',

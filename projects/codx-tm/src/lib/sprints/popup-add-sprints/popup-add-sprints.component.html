@@ -78,7 +78,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-between ">
       <codx-input type="checkbox" (valueChange)="valueChangeSharedResource($event)" labelPosition="After"
-        label="Chia sẽ board cho nguồn lực" [crrValue]="master.isShared"></codx-input>
+        label="Chia sẻ board cho nguồn lực" [crrValue]="master.isShared"></codx-input>
       <button type="button" class="btn btn-primary" (click)="saveData(master.iterationID)">
         <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
       </button>

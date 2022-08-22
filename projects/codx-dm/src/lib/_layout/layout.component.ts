@@ -26,6 +26,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   dialog: DialogRef;
   percentUsed: any;
   itemHdd: any;
+  submenu: string;
  // totalUsed: string;
 
   public titleAddFolder = 'Tạo thư mục';
@@ -53,7 +54,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     public codxService: CodxService,
     public cache: CacheService,
     private callfc: CallFuncService,
-    private dmSV: CodxDMService,
+    public dmSV: CodxDMService,
     private changeDetectorRef: ChangeDetectorRef,
     private fileService: FileService,
   ) {
@@ -96,6 +97,22 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       // totalHdd: any;
       this.getHDDInformaton(item);      
     })
+
+  }
+
+  setClassActive() {    
+    //alert(this.submenu);
+    var css = "btn btn-light-default btn-icon btn-md";    
+    if (this.submenu != "") {
+      var no = parseInt(this.submenu);
+      if (no > 0 && no <= 5)
+        css = css + " disabled";        
+    }      
+    console.log(css);
+    return css;
+  }
+
+  onClick(item, title1, title2) {
 
   }
 
