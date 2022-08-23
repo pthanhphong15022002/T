@@ -108,7 +108,10 @@ export class PopupAddBookingCarComponent implements OnInit {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
   }  
-  ngOnInit(): void {    
+  ngOnInit(): void {   
+    if(!this.isAdd){      
+      this.titleAction = 'Chỉnh sửa';
+    } 
     this.codxEpService.getModelPage('EPT2').then((res) => {
       if (res) {
         this.modelPage = res;
@@ -213,18 +216,7 @@ export class PopupAddBookingCarComponent implements OnInit {
           this.fGroupAddBookingCar.patchValue(this.data);
         } 
       }); 
-
-      
-    // this.codxEpService
-    //   .getFormGroup("BookingAttendees","grvBookingAttendees")
-    //   .then((res) => {
-    //     this.fGroupBookingAttendees = res;        
-    //     if (res.value) {
-    //       console.log('fgBookingAttendees', res.value)
-    //       this.fGroupBookingAttendees.patchValue(res.value);
-    //       this.fGroupBookingAttendees.patchValue({transID:this.guid});
-    //     }
-    //   });    
+  
       this.isAfterRender = true;      
       this.changeDetectorRef.detectChanges();    
   }
@@ -313,18 +305,7 @@ export class PopupAddBookingCarComponent implements OnInit {
             return;
           }          
         }        
-      ); 
-    // this.apiHttpService
-    //   .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
-    //     this.fGroupAddBookingCar.value,
-    //     this.isAdd,
-    //     '',
-    //   ])
-    //   .subscribe((res) => {
-    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-    //     this.closeFormEdit(res);
-    //   });
-    //console.log(this.fGroupAddBookingCar.value);    
+      );  
     this.changeDetectorRef.detectChanges();
   }
 
@@ -339,14 +320,6 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.fGroupAddBookingCar.patchValue({ [event['field']]: event.data });
       }
     }
-    // if (event?.component.ControlName) {
-    //   let fieldName=event?.component.ControlName.charAt(0).toLowerCase()+event?.component.ControlName.slice(1);
-    //   if (event.data instanceof Object) {
-    //     this.fGroupAddBookingCar.setValue({ [fieldName]: event.data.value}) ;
-    //   } else {
-    //     this.fGroupAddBookingCar.value[fieldName]= event.data ;
-    //   }
-    // }
   }
 
   valueCbxCarChange(event?) {  

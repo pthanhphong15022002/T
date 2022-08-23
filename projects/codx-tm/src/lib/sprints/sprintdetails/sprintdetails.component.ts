@@ -119,10 +119,10 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     }
     if (this.meetingID) {
       //sau mấy cái này sẽ được truyền qua state
-      this.showTabHistory = false;
-      this.showTabComments = false;
-      this.showTabMeetings = false;
-      //this.all = ['Dashboard', 'Công việc'];
+      // this.showTabHistory = false;
+      // this.showTabComments = false;
+      // this.showTabMeetings = false;
+      this.all = ['Dashboard', 'Công việc'];
     }
   }
   ngOnInit(): void {
@@ -130,11 +130,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {}
   loadTabView() {
-    if(this.showTabDasboard)this.all.push('Dashboard')
-    if(this.showTabTasks)this.all.push('Công việc')
-    if(this.showTabHistory)this.all.push('Lịch sử')
-    if(this.showTabComments)this.all.push('Bình luận')
-    if(this.showTabMeetings)this.all.push('Họp định kì')
+    // if(this.showTabDasboard)this.all.push('Dashboard')
+    // if(this.showTabTasks)this.all.push('Công việc')
+    // if(this.showTabHistory)this.all.push('Lịch sử')
+    // if(this.showTabComments)this.all.push('Bình luận')
+    // if(this.showTabMeetings)this.all.push('Họp định kì')
     if (this.tabControl.length == 0) {
       this.all.forEach((res, index) => {
         var tabModel = new TabModelSprints();

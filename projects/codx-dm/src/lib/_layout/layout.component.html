@@ -46,13 +46,13 @@
                           -->
                           <some-element *ngSwitchCase="'DMT05'">
                               <a ngbDropdownItem  class="dropdown-item cursor-pointer"
-                                  (click)="onClick(6, 'Tài liệu chia sẻ', 'Tài liệu được chia sẻ')">
+                                  (click)="onClick('DMT05', 'Tài liệu chia sẻ', 'Tài liệu được chia sẻ', '1')">
                                   <div class="d-flex align-items-center">
                                       <span><codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được chia sẻ">
                                       </codx-label></span>
                                   </div>
                               </a>
-                              <a ngbDropdownItem class="dropdown-item cursor-pointer" (click)="onClick(7, 'Tài liệu chia sẻ', 'Tài liệu chia sẻ')">
+                              <a ngbDropdownItem class="dropdown-item cursor-pointer" (click)="onClick('DMT05', 'Tài liệu chia sẻ', 'Tài liệu chia sẻ', '2')">
                                   <div class="d-flex align-items-center">
                                       <span><codx-label fiedName="" formName="" gridViewName="" default="Tài liệu chia sẻ">
                                       </codx-label></span>
@@ -61,7 +61,7 @@
                           </some-element>                         
                           <some-other-element *ngSwitchCase="'DMT06'">
                               <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick(8, 'Tài liệu yêu cầu chia sẻ', 'Tài liệu được yêu cầu')">
+                                  (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Tài liệu được yêu cầu', '1')">
                                   <div class="d-flex align-items-center">
                                       <span>
                                           <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
@@ -69,7 +69,7 @@
                                   </div>
                               </a>
                               <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick(9, 'Tài liệu yêu cầu chia sẻ', 'Tài liệu yêu cầu')">
+                                  (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Tài liệu yêu cầu', '2')">
                                   <div class="d-flex align-items-center">
                                       <span>
                                         <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu yêu cầu">
@@ -78,7 +78,7 @@
                                   </div>
                               </a>
                               <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick(10, 'Tài liệu yêu cầu chia sẻ', 'Lịch sử chia sẻ')">
+                                  (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Lịch sử chia sẻ', '3')">
                                   <div class="d-flex align-items-center">
                                       <span>
                                         <codx-label fiedName="" formName="" gridViewName="" default="Lịch sử chia sẻ">
@@ -89,7 +89,7 @@
                           </some-other-element>
                           <some-other-element *ngSwitchCase="'DMT07'">
                               <a class="dropdown-item"
-                                  (click)="onClick(11, 'Tài liệu chờ duyệt', 'Tài liệu được yêu cầu')">
+                                  (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Tài liệu được yêu cầu', '1')">
                                   <div class="d-flex align-items-center">
                                       <span>
                                         <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
@@ -98,7 +98,7 @@
                                   </div>
                               </a>
                               <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick(12, 'Tài liệu chờ duyệt', 'Tài liệu chờ duyệt')">
+                                  (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Tài liệu chờ duyệt', '2')">
                                   <div class="d-flex align-items-center">
                                     <span>
                                       <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
@@ -107,7 +107,7 @@
                                   </div>
                               </a>
                               <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick(13, 'Tài liệu chờ duyệt', 'Lịch sử xét duyệt')">
+                                  (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Lịch sử xét duyệt', '3')">
                                   <div class="d-flex align-items-center">
                                       <span>
                                         <codx-label fiedName="" formName="" gridViewName="" default="Lịch sử xét duyệt">
