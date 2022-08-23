@@ -140,13 +140,13 @@ const T_Component: Type<any>[] = [
   PopupUpdateProgressComponent,
   ViewListComponent,
   PopupAddComponent,
-  CodxTasksComponent
+  CodxTasksComponent,
 ];
 
 const T_Pipe: Type<any>[] = [  TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe,  ],
+  declarations: [T_Component, T_Pipe],
   imports: [
     CommonModule,
     NgbModule,
