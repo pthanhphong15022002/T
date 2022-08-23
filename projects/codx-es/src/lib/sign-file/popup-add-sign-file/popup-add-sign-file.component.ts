@@ -597,8 +597,8 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   previous(currentTab) {
-    let oldNode = currentTab * 2;
-    let newNode = oldNode - 2;
+    let oldNode = currentTab;
+    let newNode = oldNode - 1;
     this.updateNodeStatus(oldNode, newNode);
     this.currentTab--;
   }

@@ -21,21 +21,21 @@
       >
       </codx-label>
     </div>
-    <div class="form-group mb-2">
-      <div class="d-flex justify-content-between align-items-center">
-        <codx-label
-          default="Xe"
-          fieldName="ResourceID"
-          [formModel]="form.formModel"
-        >
-        </codx-label>
-        <span class="label-status text-primary">{{
-          fGroupAddBookingCar.value.status
-            | vll: CbxName["Status"]:"text"
-            | async
-        }}</span>
-      </div>
-      <!-- <codx-input
+      <div class="form-group mb-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <codx-label
+            default="Xe"
+            fieldName="ResourceID"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
+          <span class="label-status text-primary">{{
+            fGroupAddBookingCar.value.status
+              | vll: CbxName["Status"]:"text"
+              | async
+          }}</span>
+        </div>
+        <codx-input
           type="combobox"
           name="cbxCar"
           refValue="EP_Cars"
@@ -46,8 +46,8 @@
           [crrValue]="fGroupAddBookingCar.value.resourceID"         
           (valueChange)="valueCbxCarChange($event)"
         >
-        </codx-input> -->
-      <!-- <codx-input
+        </codx-input>
+        <!-- <codx-input
           type="combobox"
           name="cbxCar"
           refValue="EP_Cars"
