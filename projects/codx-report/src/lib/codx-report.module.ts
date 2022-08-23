@@ -9,6 +9,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 import { CodxReportViewerComponent } from './codx-report-viewer/codx-report-viewer.component';
 import { CodxReportComponent } from './codx-report.component';
+import { PopupAddReportComponent } from './popup-add-report/popup-add-report.component';
 import { PopupParametersComponent } from './popup-parameters/popup-parameters.component';
 import { LayoutComponent } from './_layout/layout.component';
 
@@ -39,7 +40,8 @@ const routes: Routes = [
     CodxReportComponent,
     LayoutComponent,
     CodxReportViewerComponent,
-    PopupParametersComponent
+    PopupParametersComponent,
+    PopupAddReportComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -51,7 +53,8 @@ const routes: Routes = [
   ],
   exports: [
     CodxReportComponent,
-    CodxReportViewerComponent
+    CodxReportViewerComponent,
+    PopupAddReportComponent
   ]
 })
 export class CodxReportModule {
