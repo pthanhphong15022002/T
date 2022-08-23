@@ -40,19 +40,33 @@
           type="number"
           field="number"
           placeholder="Input type number"
-          value="0"
-          min="0"
-          max="50"
+          [min]="0"
+          [max]="5"
         >
         </codx-input>
         <!--end::Input-->
       </div>
     </div>
+    <div class="row">
+      <codx-label
+        class="fw-bold"
+        default="Cấp bậc"
+        fiedName=""
+        [formModel]="dialog.formModel"
+      >
+      </codx-label>
+      <!--begin::Input-->
+
+      <codx-input
+        type="combobox"
+      >
+      </codx-input>
+    </div>
   </ng-template>
 
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-outline-primary">
+      <button type="button" class="btn btn-outline-primary me-2">
         <codx-label
           name="lblSaveAdd"
           default="Lưu&Thêm"
