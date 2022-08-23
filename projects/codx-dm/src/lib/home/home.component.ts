@@ -468,7 +468,7 @@ export class HomeComponent extends UIComponent {
         type:  ViewType.treedetail,
         active: true,
         sameData: true,
-        toolbarTemplate: this.templateSearch,
+      /*  toolbarTemplate: this.templateSearch,*/
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
