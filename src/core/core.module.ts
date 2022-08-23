@@ -12,6 +12,8 @@ import { SharedControlPipe } from './pipes/sharedcontrol.pipe';
 import { FunctionPipe } from './pipes/function.pipe';
 import { BackgroundImagePipe } from './pipes/background-image.pipe';
 import { ErrorInterceptor, JwtInterceptor } from 'codx-core';
+import { AvatarCardPipe } from './pipes/AvatarCard.pipe';
+import { DisplayNameCardPipe } from './pipes/display-name-card.pipe';
 // import { MessagePipe } from './pipes/message.pipe';
 
 @NgModule({
@@ -23,7 +25,9 @@ import { ErrorInterceptor, JwtInterceptor } from 'codx-core';
     FormatDatetimePipe,
     SharedControlPipe,
     FunctionPipe,
-    BackgroundImagePipe  
+    BackgroundImagePipe,
+    AvatarCardPipe,
+    DisplayNameCardPipe  
   ],
   imports: [CommonModule, FormsModule],
   providers: [
@@ -40,6 +44,8 @@ import { ErrorInterceptor, JwtInterceptor } from 'codx-core';
     SharedControlPipe,
     FunctionPipe,
     BackgroundImagePipe,
+    AvatarCardPipe,
+    DisplayNameCardPipe
   ],
 })
 export class CoreModule {}

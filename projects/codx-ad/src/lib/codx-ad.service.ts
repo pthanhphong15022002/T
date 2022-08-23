@@ -256,4 +256,14 @@ export class CodxAdService {
       [lstURoles, NewURoles, isDelete, adUserGroup, dataUserCbb]
     );
   }
+
+  getUserByUserGroup(userID) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetUserByUserGroup',
+      userID
+    );
+  }
 }

@@ -30,12 +30,7 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
   onInit(): void {
     if(this.funcID)
     {
-      this.cache.functionList(this.funcID).subscribe((f:any) => {
-        if(f){
-          this.entityName = f.entityName;
-          this.getAlertAsync(this.entityName);
-        }
-      });
+      this.getAlertAsync(this.funcID);
     }
     // this.api.execNonDB<NotificationMessage[]>( 
     //   'Background',
@@ -51,11 +46,12 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
 
   }
 
-  getAlertAsync(entityName:string){
-    this.api.exec("ERM.Business.AD","AlertRulesBusiness","GetAsync",entityName)
+  getAlertAsync(funcID:string){
+    this.api.exec("ERM.Business.AD","AlertRulesBusiness","GetListAsync",funcID)
     .subscribe((res:any) => {
       if(res){
         console.log(res);
+        this.lstNotify = res;
       }
     })
   }
