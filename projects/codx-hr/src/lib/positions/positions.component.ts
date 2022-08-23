@@ -115,25 +115,10 @@ export class PositionsComponent implements OnInit {
   }
 
   add() {
-    // this.view.dataService.addNew().subscribe((res: any) => {
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view?.currentView?.dataService;
-    //   option.FormModel = this.view?.currentView?.formModel;
-    //   option.Width = '550px';
-    //   this.dialog = this.callfunc.openSide(
-    //     PopupAddPositionsComponent,
-    //     [this.view.dataService.dataSelected, 'add'],
-    //     option
-    //   );
-    //   this.dialog.closed.subscribe((e) => {
-    //     console.log(e);
-    //   });
-    // });
-
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected , option);
       this.dialog.closed.subscribe(e => {
@@ -148,34 +133,21 @@ export class PositionsComponent implements OnInit {
       }
       this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
         option.Width = '550px';
         this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'edit', option);
       });
   }
 
   copy(data) {
-    // this.view.dataService.copy().subscribe((res: any) => {
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view?.currentView?.dataService;
-    //   option.FormModel = this.view?.currentView?.formModel;
-    //   option.Width = '550px';
-    //   this.view.dataService.dataSelected = data;
-    //   this.dialog = this.callfunc.openSide(
-    //     PopupAddPositionsComponent,
-    //     [this.view.dataService.dataSelected, 'copy'],
-    //     option
-    //   );
-    // });
-
     if (data) {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'copy', option);
     });
@@ -217,9 +189,9 @@ loadEmployByCountStatus(el, posID, status) {
             });
     }
 
-  requestEnded(evt: any) {
-    this.view.currentView;
-  }
+  // requestEnded(evt: any) {
+  //   this.view.currentView;
+  // }
 
   selectedChange(val: any) {
     // this.itemSelected = val.data;

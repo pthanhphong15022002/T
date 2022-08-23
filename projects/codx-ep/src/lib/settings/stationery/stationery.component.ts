@@ -168,7 +168,6 @@ export class StationeryComponent extends UIComponent {
   }
 
   clickMF(evt, data) {
-    debugger;
     switch (evt.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -192,8 +191,8 @@ export class StationeryComponent extends UIComponent {
       let option = new SidebarModel();
       let dataSelected = this.viewBase.dataService.dataSelected;
       option.Width = '800px';
-      option.FormModel = this.viewBase?.currentView?.formModel;
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.FormModel = this.viewBase?.formModel;
+      option.DataService = this.viewBase?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
         [dataSelected, true],
@@ -211,8 +210,8 @@ export class StationeryComponent extends UIComponent {
       .subscribe((res) => {
         let option = new SidebarModel();
         option.Width = '800px';
-        option.FormModel = this.viewBase?.currentView?.formModel;
-        option.DataService = this.viewBase?.currentView?.dataService;
+        option.FormModel = this.viewBase?.formModel;
+        option.DataService = this.viewBase?.dataService;
         this.dialog = this.callfc.openSide(
           PopupAddStationeryComponent,
           [this.viewBase.dataService.dataSelected, false],
@@ -259,7 +258,7 @@ export class StationeryComponent extends UIComponent {
   }
 
   splitColor(color: string): any {
-    if (!color == null) {
+    if (color) {
       return color.split(';');
     }
   }

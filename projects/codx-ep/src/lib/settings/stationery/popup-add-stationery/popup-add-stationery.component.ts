@@ -62,7 +62,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   ) {
     super(injector);
     this.data = dt?.data[0];
-    this.isAdd = dt?.data[1]
+    this.isAdd = dt?.data[1];
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
   }
@@ -99,7 +99,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.dialogAddStationery.patchValue({
       owner: this.dialogAddStationery.value.owner[0],
     });
-    console.log(this.dialogAddStationery);
+    this.dialogAddStationery.patchValue({color: this.listColor.join(";")})
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -154,7 +154,6 @@ export class PopupAddStationeryComponent extends UIComponent {
     } else {
       this.listColor.push(this.colorItem);
     }
-
     this.detectorRef.detectChanges();
   }
 

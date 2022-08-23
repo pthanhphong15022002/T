@@ -33,7 +33,7 @@ export class DynamicFormComponent extends UIComponent {
   funcID: string;
   idField: string = 'recID';
   dataSelected: any;
-
+  function: any = {};
   constructor(private inject: Injector) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -117,6 +117,7 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   clickMF(evt?: any, data?: any) {
+    this.function = evt;
     switch (evt.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -133,6 +134,7 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   click(evt: ButtonModel) {
+    this.function = evt;
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
@@ -152,6 +154,7 @@ export class DynamicFormComponent extends UIComponent {
         {
           formModel: option.FormModel,
           data: this.dataSelected,
+          function: this.function,
           dataService: this.viewBase.dataService,
         },
         option
@@ -172,6 +175,7 @@ export class DynamicFormComponent extends UIComponent {
         {
           formModel: option.FormModel,
           data: this.dataSelected,
+          function: this.function,
           dataService: this.viewBase.dataService,
         },
         option
@@ -195,6 +199,7 @@ export class DynamicFormComponent extends UIComponent {
         {
           formModel: option.FormModel,
           data: res,
+          function: this.function,
           dataService: this.viewBase.dataService,
         },
         option
