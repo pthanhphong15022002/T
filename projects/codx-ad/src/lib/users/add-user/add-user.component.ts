@@ -310,10 +310,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
               }
               this.dialog.close(res.update);
             });
-          res.update['chooseRoles'] = res.update?.functions;
+          res.update.chooseRoles = res.update.functions;
+          (this.dialog.dataService as CRUDService).update(res.update).subscribe();
+          this.changeDetector.detectChanges();
         }
       });
-      this.dialog.close();
   }
 
   onSave() {
