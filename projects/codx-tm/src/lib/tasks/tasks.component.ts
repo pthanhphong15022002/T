@@ -503,6 +503,10 @@ export class TasksComponent
       this.notiService.notifyCode('TM020');
       return;
     }
+    if (taskAction.status == '00') {
+      this.notiService.notifyCode('TM060');
+      return;
+    }
     if (taskAction.approveStatus == '3') {
       this.notiService.notifyCode('TM024');
       return;

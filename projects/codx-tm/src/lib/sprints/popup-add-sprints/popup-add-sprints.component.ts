@@ -1,9 +1,11 @@
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnInit,
   Optional,
+  Output,
   ViewChild,
 } from '@angular/core';
 import {
@@ -43,9 +45,10 @@ export class PopupAddSprintsComponent implements OnInit {
   dataOnLoad = [];
   vllShare = 'TM003';
   isUploadImg = false;
-  gridViewSetup : any
+  gridViewSetup: any;
   imageUpload: UploadFile = new UploadFile();
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
+
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -59,7 +62,6 @@ export class PopupAddSprintsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    
     this.master = dialog.dataService!.dataSelected;
     this.action = dt?.data[1];
     this.dialog = dialog;
@@ -69,10 +71,15 @@ export class PopupAddSprintsComponent implements OnInit {
     this.dataDefault.push(this.sprintDefaut);
     this.dataOnLoad = this.dialog.dataService.data;
     this.cache
-        .gridViewSetup(this.dialog.formModel.formName, this.dialog.formModel.gridViewName)
-        .subscribe((res) => {
-          if (res) {
-            this.gridViewSetup = res;}})
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   //#region init
@@ -104,12 +111,13 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   saveMaster(isAdd: boolean) {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option, isAdd),isAdd?0:null) //Hảo code mới
+    this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(up=>{
+      this.dialog.dataService
+      .save((option: any) => this.beforeSave(option, isAdd), isAdd ? 0 : null) //Hảo code mới
       .subscribe((res) => {
         if (res) {
-          this.imageAvatar.updateFileDirectReload(this.master.iterationID);
-          if (isAdd && this.funcID !='TMT0301') {
+          // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
+          if (isAdd && this.funcID != 'TMT0301') {
             var dataNew = this.dialog.dataService.data[0];
             this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
             this.dialog.dataService.data[1] = dataNew;
@@ -117,6 +125,8 @@ export class PopupAddSprintsComponent implements OnInit {
           this.dialog.close();
         }
       });
+    })
+   
     // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
     //   if (res) {
     //     if(isAdd){
@@ -139,7 +149,6 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region Event Method
   beforeSave(op: any, isAdd) {
-    this.master = this.dialog.dataService.dataSelected;
     op.method = 'AddEditSprintAsync';
     op.data = [this.master, isAdd];
     return true;
@@ -225,81 +234,81 @@ export class PopupAddSprintsComponent implements OnInit {
     }
   }
 
-  eventApply(e: any) {
-    var resources = '';
-    var listDepartmentID = '';
-    var listUserID = '';
+  // eventApply(e: any) {
+  //   var resources = '';
+  //   var listDepartmentID = '';
+  //   var listUserID = '';
 
-    e?.data?.forEach((obj) => {
-      // if (obj?.data && obj?.data != '') {
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
-      }
-      //  }
-    });
-    if (listUserID != '')
-      listUserID = listUserID.substring(0, listUserID.length - 1);
-    if (listDepartmentID != '')
-      listDepartmentID = listDepartmentID.substring(
-        0,
-        listDepartmentID.length - 1
-      );
-    if (listDepartmentID != '') {
-      this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
-        if (res) {
-          resources += res;
-          if (listUserID != '') resources += ';' + listUserID;
-          this.valueSelectUser(resources);
-        }
-      });
-    } else this.valueSelectUser(listUserID);
-  }
+  //   e?.data?.forEach((obj) => {
+  //     // if (obj?.data && obj?.data != '') {
+  //     switch (obj.objectType) {
+  //       case 'U':
+  //         listUserID += obj.id + ';';
+  //         break;
+  //       case 'O':
+  //       case 'D':
+  //         listDepartmentID += obj.id + ';';
+  //         break;
+  //     }
+  //     //  }
+  //   });
+  //   if (listUserID != '')
+  //     listUserID = listUserID.substring(0, listUserID.length - 1);
+  //   if (listDepartmentID != '')
+  //     listDepartmentID = listDepartmentID.substring(
+  //       0,
+  //       listDepartmentID.length - 1
+  //     );
+  //   if (listDepartmentID != '') {
+  //     this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
+  //       if (res) {
+  //         resources += res;
+  //         if (listUserID != '') resources += ';' + listUserID;
+  //         this.valueSelectUser(resources);
+  //       }
+  //     });
+  //   } else this.valueSelectUser(listUserID);
+  // }
 
-  valueSelectUser(resources) {
-    if (resources != '') {
-      if (this.master.resources && this.master.resources != '') {
-        var arrAssign = resources.split(';');
-        var arrNew = [];
-        arrAssign.forEach((e) => {
-          if (!this.master.resources.includes(e)) {
-            arrNew.push(e);
-          }
-        });
-        if (arrNew.length > 0) {
-          resources = arrNew.join(';');
-          this.master.resources += ';' + resources;
-          this.getListUser(resources);
-        }
-      } else {
-        this.master.resources = resources;
-        this.getListUser(resources);
-      }
-    }
-    this.changeDetectorRef.detectChanges();
-  }
+  // valueSelectUser(resources) {
+  //   if (resources != '') {
+  //     if (this.master.resources && this.master.resources != '') {
+  //       var arrAssign = resources.split(';');
+  //       var arrNew = [];
+  //       arrAssign.forEach((e) => {
+  //         if (!this.master.resources.includes(e)) {
+  //           arrNew.push(e);
+  //         }
+  //       });
+  //       if (arrNew.length > 0) {
+  //         resources = arrNew.join(';');
+  //         this.master.resources += ';' + resources;
+  //         this.getListUser(resources);
+  //       }
+  //     } else {
+  //       this.master.resources = resources;
+  //       this.getListUser(resources);
+  //     }
+  //   }
+  //   this.changeDetectorRef.detectChanges();
+  // }
   //#endregion
 
   changeMemo(e) {
     this.master.memo = e?.data;
   }
 
-  changeUser(e){
-   if(e?.data?.value.length >0){
-    var arrResources = e?.data?.value ;
-    this.valueSelectUserCombobox(arrResources)
-   }
+  changeUser(e) {
+    if (e?.data?.value.length > 0) {
+      var arrResources = e?.data?.value;
+      this.valueSelectUserCombobox(arrResources);
+    }
   }
 
   valueSelectUserCombobox(arrResources: any[]) {
-    var resources ='' ;
-    if (arrResources.length>0) {
-      if (this.master.resources && this.master.resources != '') {
+    var resources = '';
+    if (arrResources.length > 0) {
+      if (this.master.resources!=null && this.master.resources != '') {
         var arrNew = [];
         arrResources.forEach((e) => {
           if (!this.master.resources.includes(e)) {
@@ -312,7 +321,7 @@ export class PopupAddSprintsComponent implements OnInit {
           this.getListUser(resources);
         }
       } else {
-         resources = arrResources.join(';');
+        resources = arrResources.join(';');
         this.master.resources = resources;
         this.getListUser(resources);
       }
