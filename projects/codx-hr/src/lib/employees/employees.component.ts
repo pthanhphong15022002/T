@@ -248,6 +248,10 @@ export class EmployeesComponent implements OnInit {
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
      //  e?.event.forEach((obj) => {
+      var emp = e?.event ;
+      if(emp.status=='90') {
+        this.view.dataService.remove(e?.event).subscribe();
+      }else
           this.view.dataService.update(e?.event).subscribe();
       // });
         // this.itemSelected = e?.event;
