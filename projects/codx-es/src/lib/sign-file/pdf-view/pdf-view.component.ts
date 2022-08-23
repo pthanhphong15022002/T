@@ -103,7 +103,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   //for page number input
   pageMax;
   pageStep;
-  curPage;
+  curPage = 1;
 
   zoomValue: number = 100;
   holding: number = 0;
@@ -129,7 +129,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   ];
   curAnnotFontStyle = 'Helvetica';
   lstAnnotFontSize = [10, 11, 12, 13, 15, 17, 19, 23, 31, 33, 43];
-  curAnnotFontSize = 13;
+  curAnnotFontSize = 31;
   lstAnnotDateFormat = [
     'M/d/yy, h:mm a',
     'M/d/yy',
@@ -1326,7 +1326,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   goToPage(e) {
-    this.curPage = e.target.value;
+    this.curPage = e.data;
     if (this.curPage < 1) {
       this.curPage = 1;
     } else if (this.curPage > this.pdfviewerControl.pageCount) {
