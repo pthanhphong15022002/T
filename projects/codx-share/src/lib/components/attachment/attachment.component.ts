@@ -147,7 +147,7 @@ export class AttachmentComponent implements OnInit {
     var d = data;
     this.user = this.auth.get();
     this.dialog = dialog;
-    if (data != null) {
+    if (data?.data != null) {
       this.objectType = data?.data.objectType;
       this.objectId = data?.data.objectId;
       this.folderType = data?.data.folderType;

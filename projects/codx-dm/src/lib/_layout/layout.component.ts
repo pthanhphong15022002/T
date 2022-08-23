@@ -59,6 +59,10 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     private fileService: FileService,
   ) {
     this.codxService.init('DM');
+    this.dmSV.isMenuIdActive.subscribe(res => {
+      this.submenu = res;
+      this.changeDetectorRef.detectChanges();
+    });
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
 
@@ -104,8 +108,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     //alert(this.submenu);
     var css = "btn btn-light-default btn-icon btn-md";    
     if (this.submenu != "") {
-      var no = parseInt(this.submenu);
-      if (no > 0 && no <= 5)
+      //var no = parseInt(this.submenu);
+      if (this.submenu == 'DMT01' || this.submenu == 'DMT08' || this.submenu == 'DMT02' || this.submenu == 'DMT03' || this.submenu == 'DMT04') 
         css = css + " disabled";        
     }      
     console.log(css);
