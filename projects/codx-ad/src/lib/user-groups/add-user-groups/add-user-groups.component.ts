@@ -282,7 +282,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         lstUserName.push(userName);
       });
     }
-    if (countUserHaveGroup > 0) {
+    if (countUserHaveGroup > 0 && this.formType == 'add') {
       this.notification
         .alertCode('AD004', null, lstUserName.join(', '))
         .subscribe((x) => {
@@ -305,44 +305,48 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         JSON.stringify(dataUserCbbTemp) === JSON.stringify(this.dataUserCbb);
     }
     if (this.isAddMode) {
-      this.onAdd();
-      if (this.dataUserCbb.length > 0 && countUserHaveGroup > 0) {
+      if (this.dataUserCbb.length > 0) {
         this.notification
           .alertCode('AD005', null, this.adUserGroup.userName)
           .subscribe((x) => {
             if (x?.event.status == 'Y') {
-              this.adService
-                .updateUserRoles(
-                  lstUser,
-                  this.viewChooseRole,
-                  true,
-                  this.adUserGroup,
-                  this.dataUserCbb
-                )
-                .subscribe();
-            }
+              this.onAdd();
+              if (this.dataUserCbb.length > 0 && countUserHaveGroup > 0) {
+                this.adService
+                  .updateUserRoles(
+                    lstUser,
+                    this.viewChooseRole,
+                    true,
+                    this.adUserGroup,
+                    this.dataUserCbb
+                  )
+                  .subscribe();
+              }
+            } else this.onAdd();
           });
       }
     } else {
-      this.onUpdate();
-      if (
-        !checkDifferenceUserCbb ||
-        (!checkDifference && this.dataUserCbb.length > 0)
-      ) {
+      if (!checkDifferenceUserCbb || !checkDifference) {
         this.notification
           .alertCode('AD005', null, this.adUserGroup.userName)
           .subscribe((x) => {
             if (x?.event.status == 'Y') {
-              this.adService
-                .updateUserRoles(
-                  lstUser,
-                  this.viewChooseRole,
-                  true,
-                  this.adUserGroup,
-                  this.dataUserCbb
-                )
-                .subscribe();
-            }
+              this.onUpdate();
+              if (
+                !checkDifferenceUserCbb ||
+                (!checkDifference && this.dataUserCbb.length > 0)
+              ) {
+                this.adService
+                  .updateUserRoles(
+                    lstUser,
+                    this.viewChooseRole,
+                    true,
+                    this.adUserGroup,
+                    this.dataUserCbb
+                  )
+                  .subscribe();
+              }
+            } else this.onUpdate();
           });
       }
     }
