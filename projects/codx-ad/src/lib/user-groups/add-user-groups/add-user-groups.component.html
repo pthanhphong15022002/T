@@ -32,7 +32,8 @@
             <codx-label fiedName="Email" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
                 default="Email nhóm">
             </codx-label>
-            <codx-input field="email" type="text" [crrValue]="adUserGroup.email" (valueChange)="valueChangeM($event)">
+            <codx-input field="email" type="text" [crrValue]="adUserGroup.email" (valueChange)="valueChangeM($event)"
+            [disabled]="formType == 'edit' ? true : false">
             </codx-input>
         </div>
         <div class="form-group row mt-3">
