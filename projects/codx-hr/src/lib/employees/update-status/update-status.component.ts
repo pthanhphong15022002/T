@@ -1,3 +1,4 @@
+import { I } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { HR_Employees } from '../../model/HR_Employees.model';
@@ -13,7 +14,7 @@ export class UpdateStatusComponent implements OnInit {
   employStatus: any = {};
   funcID: any;
   title: string = 'Cập nhật tình trạng';
-  employee: HR_Employees = new HR_Employees();
+  employee: any;
   @Input() view: any;
   // moreFunc: any;
 
@@ -35,32 +36,30 @@ export class UpdateStatusComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  // beforeSave(op: any) {
-  //   var data = [];
-  //   op.methodName = 'UpdateStatusAsync';
-
-  //   data = [
-  //     this.employee,
-  //   ];
-  //   op.data = data;
-  //   return true;
-  // }
-
   updateStatus() {
     this.api
-      .execSv<any>("HR","ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", this.employee)
+      .execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", this.employee)
       .subscribe((res) => {
-        if (res) {          
+        if (res) {
           this.dialog.close(this.employee)
         } else {
           this.dialog.close()
         }
       }
-    );
-    
+      );
   }
 
   valueChange(e) {
-    this.employee.status = e.data;
+    if (e) {
+      var arrData = e.component?.dataSource;
+      this.employee.status = e.data;
+      arrData.forEach(obj => {
+        if (obj.value == e.data) {
+          this.employee.statusName = obj.text;
+          this.employee.statusColor = obj.color;
+        }
+      })
+    }
   }
+
 }

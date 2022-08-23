@@ -32,7 +32,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   @ViewChild('pdfView') pdfView: PdfViewComponent;
 
-  isApprover = true;
+  isApprover = false;
   dialog;
   data = {
     funcID: 'EST021',
@@ -41,7 +41,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
-  recID = '8d3d9c88-1c87-11ed-9790-509a4c39550b';
+  recID = 'd071678f-21fc-11ed-9798-509a4c39550b';
   funcID;
   cbxName;
 
