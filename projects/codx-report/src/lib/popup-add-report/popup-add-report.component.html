@@ -1,0 +1,49 @@
+<codx-layout-add [title]="title" [tabInfo]="tabTitle" [formModel]="dialog.formModel" [subHeader]="subHeader"
+  [footer]="footer" [dialog]="dialog" [openMore]="false" [tabContent]="tabContent" (setTitle)="setTitle($event)"
+  (buttonClick)="buttonClick($event)" #form></codx-layout-add>
+<ng-template #subHeader>
+
+</ng-template>
+
+<ng-template #tabInfo>
+  <h1>nguyeen chos</h1>
+  <button class="btn btn-light-primary" (click)="popup()">
+    <i class="icon-add fs-5 me-1"></i>
+    <codx-label name="lblTitle" formName="Notes" default="Thêm file"></codx-label>
+  </button>
+  <div class="form-group" >
+    <codx-attachment #attachment [objectType]="'SYS_ReportList'" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+      hideDes="1" hideImageUpload="0" hideImageThumb="1" [functionID]="dialog.formModel.funcID" [objectId]="data.recID"
+      [allowMultiFile]="1" [idBrowse]="'add'">
+    </codx-attachment>
+  </div>
+
+</ng-template>
+
+
+<ng-template #tabParam>
+
+</ng-template>
+
+
+
+<ng-template #tabSignature>
+
+</ng-template>
+
+
+
+
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end ">
+    <!-- <button type="button" class="btn btn-light-primary me-3" >
+      <i class="icon-cloud_upload fs-5"></i><span>
+        <codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label>
+      </span>
+    </button> -->
+    <button type="button" class="btn btn-primary ms-1">
+      <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>

@@ -11,6 +11,7 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  LayoutService,
   NotificationsService,
 } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
@@ -59,6 +60,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private layout: LayoutService,
     private authStore: AuthStore,
     private api: ApiHttpService,
     private activedRouter: ActivatedRoute,
@@ -68,7 +70,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
+    this.layout.setUrl(this.tmSv.urlback);
     this.activedRouter.queryParams.subscribe((params) => {
       if (params) {
         this.meetingID = params?.meetingID;
