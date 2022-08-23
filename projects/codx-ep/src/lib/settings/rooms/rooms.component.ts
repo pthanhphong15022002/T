@@ -157,8 +157,8 @@ export class RoomsComponent extends UIComponent {
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
         dataItem,
@@ -174,8 +174,8 @@ export class RoomsComponent extends UIComponent {
       this.dataSelected = item;
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
         item,

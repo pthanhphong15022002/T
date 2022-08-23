@@ -238,7 +238,7 @@ export class BookingRoomComponent extends UIComponent {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.DataService = this.viewBase?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddBookingRoomComponent,
         [this.dataSelected, true],
@@ -255,7 +255,7 @@ export class BookingRoomComponent extends UIComponent {
     this.viewBase.dataService.edit(item).subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.DataService = this.viewBase?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddBookingRoomComponent,
         [item, false],

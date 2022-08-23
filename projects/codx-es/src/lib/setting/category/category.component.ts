@@ -25,7 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../approval-step/approval-step.component';
 
-export class defaultRecource {}
+export class defaultRecource { }
 @Component({
   selector: 'doc-category',
   templateUrl: './category.component.html',
@@ -73,7 +73,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteCategoryAsync';
