@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angul
 import { DialogData, DialogRef, ApiHttpService, FormModel, CallFuncService } from 'codx-core';
 
 @Component({
-  selector: 'lib-view-list',
+  selector: 'share-view-list',
   templateUrl: './view-list.component.html',
   styleUrls: ['./view-list.component.css']
 })

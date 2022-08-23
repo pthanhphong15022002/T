@@ -15,7 +15,7 @@ import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 
 @Component({
-  selector: 'codx-tasks',
+  selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
   templateUrl: './codx-tasks.component.html',
   styleUrls: ['./codx-tasks.component.css'],
 })
