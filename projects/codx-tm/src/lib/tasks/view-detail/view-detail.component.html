@@ -26,69 +26,33 @@
                   <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center me-4">
                       <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
-                      <div div class="text-gray-600" >
+                      <div div class="text-gray-600">
                         <span #phone>{{ taskExtends? itemSelected?.phone : itemSelected?.phoneCreate | formatvalue:
                           formModel:"phone":phone :"Employees":"grvEmployees"| async }}</span>
                       </div>
                     </div>
                     <div class="d-flex align-items-center">
                       <span class="icon-email icon-16 text-gray-600 me-2"></span>
-                      <div div class="font-size-sm" >
-                        <span #email>{{  taskExtends? itemSelected?.email : itemSelected?.emailCreate | formatvalue:
+                      <div div class="font-size-sm">
+                        <span #email>{{ taskExtends? itemSelected?.email : itemSelected?.emailCreate | formatvalue:
                           formModel:"email":email :"Employees":"grvEmployees"| async }}</span>
                       </div>
                     </div>
                   </div>
                 </ng-container>
-            
+
               </div>
               <div class="d-flex flex-row align-items-start">
-                <!-- <div *ngIf="itemSelected?.extendStatus!=null &&itemSelected?.extendStatus>='3' && vllExtendStatus"
-                  class="badge badge-danger me-2 label-status" [style.border-color]="
-                    (itemSelected?.extendStatus  | vll: vllExtendStatus:'textColor' | async) +
-                    '30'
-                  " [style.background-color]="
-                    (itemSelected?.extendStatus | vll: vllExtendStatus:'textColor' | async) +
-                    '30'
-                  " [style.color]="
-                  itemSelected?.extendStatus| vll: vllExtendStatus:'textColor' | async
-                  " style="border: none">
-                  {{itemSelected?.extendStatus| vll: vllExtendStatus:"text" | async }}
-                </div>
-
-                <div *ngIf="itemSelected?.approveStatus!=null && itemSelected?.approveStatus>='2' && vllApproveStatus"
-                  class="badge badge-danger me-2 label-status" [style.border-color]="
-                    (itemSelected?.approveStatus  | vll: vllApproveStatus:'textColor' | async) +
-                    '30'
-                  " [style.background-color]="
-                    (itemSelected?.approveStatus | vll: vllApproveStatus:'textColor' | async) +
-                    '30'
-                  " [style.color]="
-                  itemSelected?.approveStatus| vll: vllApproveStatus:'textColor' | async
-                  " style="border: none">
-                  {{itemSelected?.approveStatus| vll: vllApproveStatus:"text" | async }}
-                </div>
-
-                <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                (itemSelected?.status  | vll: vllStatus:'textColor' | async) +
-                '30'
-              " [style.background-color]="
-                (itemSelected?.status | vll: vllStatus:'textColor' | async) +
-                '30'
-              " [style.color]="
-              itemSelected?.status | vll: vllStatus:'textColor' | async
-              " style="border: none">
-                  {{itemSelected?.status | vll: vllStatus:"text" | async }}
-                </div>
-       -->
-                <codx-vll *ngIf="itemSelected?.extendStatus!=null && itemSelected?.extendStatus>='3'" [name]="vllExtendStatus" [field]="'ExtendStatus'" [value]="itemSelected?.extendStatus" [showText]="true"
-                  [showBgColor]="true" class="text-gray-600">
+                <codx-vll *ngIf="itemSelected?.extendStatus!=null && itemSelected?.extendStatus>='3'"
+                  [name]="vllExtendStatus" [field]="'ExtendStatus'" [value]="itemSelected?.extendStatus"
+                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
                 </codx-vll>
-                <codx-vll *ngIf="itemSelected?.approveStatus!=null && itemSelected?.approveStatus>='2'"  [name]="vllApproveStatus"  [field]="'ApproveStatus'" [value]="itemSelected?.approveStatus" [showText]="true"
-                  [showBgColor]="true" class="text-gray-600">
+                <codx-vll *ngIf="itemSelected?.approveStatus!=null && itemSelected?.approveStatus>='2'"
+                  [name]="vllApproveStatus" [field]="'ApproveStatus'" [value]="itemSelected?.approveStatus"
+                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
                 </codx-vll>
-                <codx-vll  [name]="vllStatus" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
-                  [showBgColor]="true" class="text-gray-600">
+                <codx-vll [name]="vllStatus" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
+                  [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
                 </codx-vll>
 
               </div>
@@ -383,17 +347,9 @@
         <div class="d-flex align-items-end me-2 codx-badge">
           <span>
             <div class="d-status">
-              <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                  (item?.status | vll: 'L0614':'textColor' | async) +
-                  '30'
-                " [style.background-color]="
-                  (item?.status | vll: 'L0614':'textColor' | async) +
-                  '30'
-                " [style.color]="
-                item?.status | vll: 'L0614':'textColor' | async
-                " style="border: none">
-                {{ item?.status | vll: "L0614":"text" | async }}
-              </div>
+              <codx-vll [name]="vllStatus" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
+                [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+              </codx-vll>
             </div>
           </span>
           <span>
