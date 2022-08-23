@@ -49,11 +49,12 @@ export class EmployeesComponent implements OnInit {
     private codxService: CodxService,
     private hrService: CodxHrService,
   ) {
-    this.hrService.getMoreFunction(['HRT03', null, null]).subscribe((res) => {
-      if (res) {
-        this.urlDetail = res[1].url;
-      }
-    });
+    // this.hrService.getMoreFunction(['HRT03', null, null]).subscribe((res) => {
+    //   if (res) {
+    //     this.urlDetail = res[1].url;
+    //   }
+    // });
+    this.urlDetail = "hr/employeeinfomation/HRT03";
   }
 
   ngOnInit(): void {
@@ -109,7 +110,7 @@ export class EmployeesComponent implements OnInit {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
+      option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, this.view.dataService.dataSelected, option);
@@ -153,8 +154,8 @@ export class EmployeesComponent implements OnInit {
     }
     this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'copy', option);
     });
