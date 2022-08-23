@@ -250,10 +250,11 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  ngDoCheck() {}
+  ngDoCheck() { }
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
+
     this.views = [
       {
         type: ViewType.listdetail,
@@ -554,7 +555,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             this.fileInfo.fileID,
             annot.annotationId,
           ])
-          .subscribe((res) => {});
+          .subscribe((res) => { });
         clearTimeout(this.saveAnnoQueue.get(annot.annotationId));
         this.saveAnnoQueue.delete(annot.annotationId);
       });
@@ -850,17 +851,17 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
               //duoi
               (anno.bounds.top >= suggestLocation.top &&
                 anno.bounds.top <=
-                  suggestLocation.top + suggestLocation.height))) ||
+                suggestLocation.top + suggestLocation.height))) ||
             //conflit ben phai
             (anno.bounds.left >= suggestLocation.left &&
               anno.bounds.left <=
-                suggestLocation.left + suggestLocation.width &&
+              suggestLocation.left + suggestLocation.width &&
               //tren
               ((suggestLocation.top >= anno.bounds.top &&
                 suggestLocation.top <= anno.bounds.top + anno.bounds.height) ||
                 (anno.bounds.top >= suggestLocation.top &&
                   anno.bounds.top <=
-                    suggestLocation.top + suggestLocation.height))))
+                  suggestLocation.top + suggestLocation.height))))
         );
       }
     );
@@ -1246,7 +1247,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
     this.esService
       .deleteAreaById([this.recID, this.fileInfo.fileID, e.annotationId])
-      .subscribe((res) => {});
+      .subscribe((res) => { });
 
     this.pdfviewerControl.annotationCollection =
       this.pdfviewerControl.annotationCollection.filter((annot) => {
@@ -1327,7 +1328,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     console.log('page', this.curPage);
   }
 
-  testFunc(e: any) {}
+  testFunc(e: any) { }
 
   selectedAnnotation(e: any) {
     console.log('select annot event', e);
@@ -1362,7 +1363,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.pdfviewerControl.download();
   }
 
-  clickPrint(args) {}
+  clickPrint(args) { }
 
   renderAnnotPanel() {
     this.esService
@@ -1419,7 +1420,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     );
   }
 
-  cancelPrint(e: any) {}
+  cancelPrint(e: any) { }
 
   goToSelectedAnnotation(area) {
     if (this.curSelectedAnnotID != area.recID) {
