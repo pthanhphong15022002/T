@@ -324,7 +324,8 @@ export class PopupAddBookingCarComponent implements OnInit {
     //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
     //     this.closeFormEdit(res);
     //   });
-    //console.log(this.fGroupAddBookingCar.value);
+    //console.log(this.fGroupAddBookingCar.value);    
+    this.changeDetectorRef.detectChanges();
   }
 
   buttonClick(e: any) {

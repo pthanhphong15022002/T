@@ -149,7 +149,6 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region Event Method
   beforeSave(op: any, isAdd) {
-    this.master = this.dialog.dataService.dataSelected;
     op.method = 'AddEditSprintAsync';
     op.data = [this.master, isAdd];
     return true;
@@ -235,64 +234,64 @@ export class PopupAddSprintsComponent implements OnInit {
     }
   }
 
-  eventApply(e: any) {
-    var resources = '';
-    var listDepartmentID = '';
-    var listUserID = '';
+  // eventApply(e: any) {
+  //   var resources = '';
+  //   var listDepartmentID = '';
+  //   var listUserID = '';
 
-    e?.data?.forEach((obj) => {
-      // if (obj?.data && obj?.data != '') {
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
-      }
-      //  }
-    });
-    if (listUserID != '')
-      listUserID = listUserID.substring(0, listUserID.length - 1);
-    if (listDepartmentID != '')
-      listDepartmentID = listDepartmentID.substring(
-        0,
-        listDepartmentID.length - 1
-      );
-    if (listDepartmentID != '') {
-      this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
-        if (res) {
-          resources += res;
-          if (listUserID != '') resources += ';' + listUserID;
-          this.valueSelectUser(resources);
-        }
-      });
-    } else this.valueSelectUser(listUserID);
-  }
+  //   e?.data?.forEach((obj) => {
+  //     // if (obj?.data && obj?.data != '') {
+  //     switch (obj.objectType) {
+  //       case 'U':
+  //         listUserID += obj.id + ';';
+  //         break;
+  //       case 'O':
+  //       case 'D':
+  //         listDepartmentID += obj.id + ';';
+  //         break;
+  //     }
+  //     //  }
+  //   });
+  //   if (listUserID != '')
+  //     listUserID = listUserID.substring(0, listUserID.length - 1);
+  //   if (listDepartmentID != '')
+  //     listDepartmentID = listDepartmentID.substring(
+  //       0,
+  //       listDepartmentID.length - 1
+  //     );
+  //   if (listDepartmentID != '') {
+  //     this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
+  //       if (res) {
+  //         resources += res;
+  //         if (listUserID != '') resources += ';' + listUserID;
+  //         this.valueSelectUser(resources);
+  //       }
+  //     });
+  //   } else this.valueSelectUser(listUserID);
+  // }
 
-  valueSelectUser(resources) {
-    if (resources != '') {
-      if (this.master.resources && this.master.resources != '') {
-        var arrAssign = resources.split(';');
-        var arrNew = [];
-        arrAssign.forEach((e) => {
-          if (!this.master.resources.includes(e)) {
-            arrNew.push(e);
-          }
-        });
-        if (arrNew.length > 0) {
-          resources = arrNew.join(';');
-          this.master.resources += ';' + resources;
-          this.getListUser(resources);
-        }
-      } else {
-        this.master.resources = resources;
-        this.getListUser(resources);
-      }
-    }
-    this.changeDetectorRef.detectChanges();
-  }
+  // valueSelectUser(resources) {
+  //   if (resources != '') {
+  //     if (this.master.resources && this.master.resources != '') {
+  //       var arrAssign = resources.split(';');
+  //       var arrNew = [];
+  //       arrAssign.forEach((e) => {
+  //         if (!this.master.resources.includes(e)) {
+  //           arrNew.push(e);
+  //         }
+  //       });
+  //       if (arrNew.length > 0) {
+  //         resources = arrNew.join(';');
+  //         this.master.resources += ';' + resources;
+  //         this.getListUser(resources);
+  //       }
+  //     } else {
+  //       this.master.resources = resources;
+  //       this.getListUser(resources);
+  //     }
+  //   }
+  //   this.changeDetectorRef.detectChanges();
+  // }
   //#endregion
 
   changeMemo(e) {
@@ -309,7 +308,7 @@ export class PopupAddSprintsComponent implements OnInit {
   valueSelectUserCombobox(arrResources: any[]) {
     var resources = '';
     if (arrResources.length > 0) {
-      if (this.master.resources && this.master.resources != '') {
+      if (this.master.resources!=null && this.master.resources != '') {
         var arrNew = [];
         arrResources.forEach((e) => {
           if (!this.master.resources.includes(e)) {

@@ -51,6 +51,8 @@ import { CommandColumnService } from '@syncfusion/ej2-angular-grids';
 })
 export class HomeComponent extends UIComponent {
   @ViewChild('templateMain') templateMain: TemplateRef<any>;
+  @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
+  
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
@@ -449,7 +451,7 @@ export class HomeComponent extends UIComponent {
       });
     } else {
       this.dmSV.disableInput.next(true);
-     this.notificationsService.notify(this.titleAccessDenied);
+      this.notificationsService.notify(this.titleAccessDenied);
     }    
   }
 
@@ -466,6 +468,7 @@ export class HomeComponent extends UIComponent {
         type:  ViewType.treedetail,
         active: true,
         sameData: true,
+        toolbarTemplate: this.templateSearch,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
