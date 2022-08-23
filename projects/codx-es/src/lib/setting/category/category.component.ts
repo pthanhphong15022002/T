@@ -170,8 +170,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddCategoryComponent,
         { data: this.viewBase.dataService.dataSelected, isAdd: true },
@@ -190,8 +190,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           this.dataSelected = this.viewBase.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '550px';
-          option.DataService = this.viewBase?.currentView?.dataService;
-          option.FormModel = this.viewBase?.currentView?.formModel;
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = this.viewBase?.formModel;
           this.dialog = this.callfunc.openSide(
             PopupAddCategoryComponent,
             { data: evt, isAdd: false },
