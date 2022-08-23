@@ -1,9 +1,8 @@
 <codx-views
   #view
-  *ngIf="entityName"
   [views]="views"
   [service]="service"
-  [entityName]="entityName" 
+  [entityName]="entityName"
   [predicate]="predicate"
   [dataValue]="dataValue"
   [idField]="idField"
@@ -14,7 +13,7 @@
 </codx-views>
 
 <ng-template #morefunction let-data>
-  <div class="has-action-menu" style="height: 30px;">
+  <div class="has-action-menu" style="height: 30px">
     <!-- <div class="action-menu"> -->
     <codx-mfunc
       [dataItem]="data"
