@@ -80,6 +80,13 @@ const routes: Routes = [
         component: SettingComponent,
       },
       {
+        path: 'approvals/:funcID',
+        loadChildren: () =>
+          import('projects/codx-es/src/lib/codx-approvel.module').then(
+            (m) => m.ApprovelModule
+          ),
+      },
+      {
         path: 'set',
         canActivate: [AuthGuard],
         loadChildren: () =>

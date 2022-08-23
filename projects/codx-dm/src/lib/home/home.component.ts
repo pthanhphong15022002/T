@@ -416,6 +416,8 @@ export class HomeComponent extends UIComponent {
       this.data = [];
       this.dmSV.folderId.next(id);      
       var items = item.items;      
+      this.dmSV.listFolder = [];
+      this.dmSV.listFiles = [];
       if (items == undefined || items.length <= 0) {        
         this.folderService.options.funcID = this.view.funcID;
         this.folderService.getFolders(id).subscribe(async (res) => {          
@@ -447,7 +449,7 @@ export class HomeComponent extends UIComponent {
       });
     } else {
       this.dmSV.disableInput.next(true);
-      this.notificationsService.notify(this.titleAccessDenied);
+     this.notificationsService.notify(this.titleAccessDenied);
     }    
   }
 

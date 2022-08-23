@@ -5,6 +5,8 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
 import { NotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/notify-drawer.component';
 import { CodxAlertComponent } from 'projects/codx-share/src/lib/components/codx-alert/codx-alert.component';
 import { ActivatedRoute } from '@angular/router';
+import { SettingNotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
+import { PopupAddNotifyComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
 
 @Component({
   selector: 'lib-layout',
@@ -43,12 +45,9 @@ export class DashboardComponent extends LayoutBaseComponent {
   openFormNotify(){
     let option = new SidebarModel();
     option.Width = '550px';
-    this.dialog = this.callfc.openSide(NotifyDrawerComponent, '', option);
+    this.dialog = this.callfc.openSide(PopupAddNotifyComponent, '', option);
   }
 
   openFormAlertRule(){
-    let option = new SidebarModel();
-    option.Width = '550px';
-    this.dialog = this.callfc.openSide(CodxAlertComponent,'WP', option);
   }
 }

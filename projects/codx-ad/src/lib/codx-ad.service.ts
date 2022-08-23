@@ -247,13 +247,23 @@ export class CodxAdService {
     );
   }
 
-  updateDomainUser(employeeID) {
+  updateUserRoles(lstURoles, NewURoles, isDelete, adUserGroup, dataUserCbb) {
     return this.api.execSv(
       'SYS',
-      'ERM.Business.HR',
-      'EmployeesBusiness',
-      'UpdateDomainUserAsync',
-      employeeID
+      'ERM.Business.AD',
+      'UserRolesBusiness',
+      'UpdateAsync',
+      [lstURoles, NewURoles, isDelete, adUserGroup, dataUserCbb]
+    );
+  }
+
+  getUserByUserGroup(userID) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetUserByUserGroup',
+      userID
     );
   }
 }

@@ -146,11 +146,11 @@ export class IncommingComponent
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
 
     this.request = new ResourceModel();
-    this.request.service = 'TM';
-    this.request.assemblyName = 'TM';
-    this.request.className = 'TaskBusiness';
+    this.request.service = 'OD';
+    this.request.assemblyName = 'OD';
+    this.request.className = 'DispatchesBusiness';
     this.request.method = 'GetListByStatusAsync';
-    this.request.idField = 'taskID';
+    this.request.idField = 'recID';
   }
 
   ngAfterViewInit(): void {
