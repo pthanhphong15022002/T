@@ -30,7 +30,7 @@ export class FileService implements OnDestroy {
         //  private aesCrypto: AESCryptoService,
         private api: ApiHttpService
     ) {
-        this.options.pageLoading = false;
+      //  this.options.pageLoading = false;
         this.options.pageSize = 1;
         this.options.funcID = "";
         this.options.srtDirections
@@ -262,7 +262,7 @@ export class FileService implements OnDestroy {
         return this.api.exec<DataReturn>("DM", "FileBussiness", "AddFileAsync", [folderID, objectID, objectType, cate, item, fileName]);
     }
 
-    GetFiles(parentId: string, folderType: any): Observable<any> {
+    GetFiles(parentId: string): Observable<any> {
         /* const request = {
              IsJson: true,
              Data: parentId,
@@ -276,9 +276,9 @@ export class FileService implements OnDestroy {
              })
          );*/
         //return this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", parentId);
-        this.options.entityName = "DM_FileInfo";
+        this.options.entityName = "DM_FileInfo";       
         //return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", parentId);
-        var data = this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", [this.options, folderType, parentId]);
+        var data = this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", [this.options, parentId]);
         // var fileIbfo = data[0]
       //  console.log(data);
         return data;
