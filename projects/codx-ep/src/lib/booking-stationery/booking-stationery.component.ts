@@ -1,10 +1,5 @@
 import { UIComponent } from 'codx-core';
-import {
-  Component,
-  Injector,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   CallFuncService,
@@ -19,7 +14,6 @@ import {
 } from 'codx-core';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
 import { PopupListStationeryComponent } from './popup-list-stationery/popup-list-stationery.component';
-
 
 @Component({
   selector: 'stationery',
@@ -48,13 +42,13 @@ export class BookingStationeryComponent extends UIComponent {
   entityName = 'EP_Resources';
   predicate = 'ResourceType=@0';
   dataValue = '6';
-  idField = 'RecID';
+  idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
 
   constructor(
     private injector: Injector,
-    private notification: NotificationsService,
+    private notification: NotificationsService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -153,12 +147,6 @@ export class BookingStationeryComponent extends UIComponent {
       case 'btnAddNew':
         this.openRequestList();
         break;
-      case 'btnEdit':
-        this.edit();
-        break;
-      case 'btnDelete':
-        this.delete();
-        break;
     }
   }
   openRequestList(evt?) {
@@ -196,23 +184,12 @@ export class BookingStationeryComponent extends UIComponent {
     });
   }
 
-  edit(evt?) {
-
-  }
-  delete(evt?) {
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
-      .subscribe((res) => {
-        console.log(res);
-        this.dataSelected = res;
-      });
-  }
-
   closeEditForm(evt?: any) {
     if (evt) {
       this.dialog && this.dialog.close();
     }
   }
+  
   listData = [];
   count = 0;
   addCart(evt, data) {
@@ -233,6 +210,5 @@ export class BookingStationeryComponent extends UIComponent {
     }
   }
 
-  clickMF(evt, data) { }
-
+  clickMF(evt, data) {}
 }

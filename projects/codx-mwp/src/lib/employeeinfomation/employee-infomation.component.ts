@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FileUpload } from '@shared/models/file.model';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddEmployeesComponent } from 'projects/codx-hr/src/lib/employees/popup-add-employees/popup-add-employees.component';
 import { CodxMwpService } from '../codx-mwp.service';
@@ -19,7 +20,10 @@ import { EditSkillComponent } from './edit-skill/edit-skill.component';
 export class EmployeeInfomationComponent implements OnInit {
   views: Array<ViewModel> = [];
   @ViewChild('view') view!: ViewsComponent;
-
+  dataEmployee: any = {
+    dataRoot: {},
+    employeeInfo: {},
+  };
   employeeInfo: any = null;
   employeeHobbie: any = null;
   employeeContracts: any = null;
@@ -104,11 +108,6 @@ export class EmployeeInfomationComponent implements OnInit {
         this.cachesv.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
           if (res)
             this.moreFunc = res;
-          //  this.formModel.funcID =this.functionID;
-          //  this.formModel.gridViewName = this.gridViewName;
-          //  this.formModel.formName = this.formName ;
-          //  this.formModel.userPermission = this.user ;
-          //  this.formModel.entityName = "HR_Employees"
           this.dt.detectChanges();
           setTimeout(() => {
             this.imageAvatar.getFormServer();
@@ -116,10 +115,107 @@ export class EmployeeInfomationComponent implements OnInit {
         });
       }
     });
-
-
-
   }
+
+  avatar: FileUpload = null;
+  async handleFileInput(event) {
+    this.avatar = null;
+    const t = this;
+    const files = event.target.files as FileList;
+    let data: ArrayBuffer;
+
+    if (files.length < 0) return;
+
+    data = await files[0].arrayBuffer();
+
+    var bytes = new Uint8Array(data);
+
+    this.avatar = new FileUpload();
+    var item = this.arrayBufferToBase64(data);
+    this.avatar.fileName = files[0].name;
+    this.avatar.avatar = this.getAvatar(files[0].name);
+    this.avatar.extension =
+      files[0].name.substring(
+        files[0].name.lastIndexOf("."),
+        files[0].name.length
+      ) || files[0].name;
+    this.avatar.userName = this.dataEmployee.dataRoot.employeeID;
+    this.avatar.publishDate = this.getNow();
+    this.avatar.type = files[0].type;
+    this.avatar.fileSize = files[0].size;
+    this.avatar.fileName = files[0].name;
+    this.avatar.data = item;
+    this.avatar.funcId = "AD006";
+    this.avatar.objectType = "HR_Employees";
+    this.avatar.objectId = this.dataEmployee.dataRoot.employeeID;
+    this.api
+      .execSv<any>(
+        "DM",
+        "DM",
+        "FileBussiness",
+        "UploadAvatarAsync",
+        this.avatar
+      )
+      .subscribe((res) => {});
+  }
+
+  getAvatar(filename: string) {
+    var ext =
+      filename.substring(filename.lastIndexOf('.'), filename.length) ||
+      filename;
+
+    if (ext == null) {
+      // alert(1);
+      return 'file.svg';
+    } else {
+      switch (ext) {
+        case '.txt':
+          return 'txt.svg';
+        case '.doc':
+        case '.docx':
+          return 'doc.svg';
+        case '.7z':
+        case '.rar':
+        case '.zip':
+          return 'zip.svg';
+        case '.jpg':
+          return 'jpg.svg';
+        case '.mp4':
+          return 'mp4.svg';
+        case '.xls':
+        case '.xlsx':
+          return 'xls.svg';
+        case '.pdf':
+          return 'pdf.svg';
+        case '.png':
+          return 'png.svg';
+        case '.js':
+          return 'javascript.svg';
+        default:
+          return 'file.svg';
+      }
+    }
+  }
+
+  arrayBufferToBase64(buffer) {
+    var binary = "";
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+  }
+
+  getNow() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    var ret = dd + '/' + mm + '/' + yyyy;
+    return ret;
+  }
+
   getContrastYIQ(item) {
     var hexcolor = (item.color || "#ffffff").replace("#", "");
     var r = parseInt(hexcolor.substr(0, 2), 16);
@@ -140,6 +236,7 @@ export class EmployeeInfomationComponent implements OnInit {
       console.log(e);
     })
   }
+  
   ngOnInit(): void {
     this.codxMwpService.modeEdit.subscribe(res => {
       this.editMode = res;
