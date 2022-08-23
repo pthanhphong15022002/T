@@ -228,17 +228,19 @@ export class PopRolesComponent implements OnInit {
 
   onSave() {
     this.checkRoleIDNull = false;
-    this.listChooseRole.forEach((res) => {
-      if (res?.recIDofRole == null) {
-        var a = this.notiService.notifyCode(
-          'AD006',
-          null,
-          "'" + res.customName + "'"
-        );
-        this.checkRoleIDNull = true;
-        return;
-      }
-    });
+    if (this.listChooseRole) {
+      this.listChooseRole.forEach((res) => {
+        if (res?.recIDofRole == null) {
+          var a = this.notiService.notifyCode(
+            'AD006',
+            null,
+            "'" + res.customName + "'"
+          );
+          this.checkRoleIDNull = true;
+          return;
+        }
+      });
+    }
     if (this.checkRoleIDNull == false) {
       if (this.CheckListUserRoles() === this.optionFirst) {
         this.notiService.notifyCode('AD006');

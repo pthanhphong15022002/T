@@ -1,7 +1,7 @@
 <codx-views #view [funcID]="funcID" service="HR" entityName="HR_Positions" idField="positionID"
     [itemSelected]="itemSelected" assemblyName="ERM.Business.HR" className="PositionsBusiness"
     method="GetModelFormPositionsAsync" [views]="views" [button]="button" (buttonClick)="click($event)"
-    [moreFuncs]="moreFuncs" (requestEnded)="requestEnded($event)" (selectedChange)="selectedChange($event)"
+    [moreFuncs]="moreFuncs" (selectedChange)="selectedChange($event)"
     (onDragDrop)="onDragDrop($event)" [selectedFirst]="true">
 </codx-views>
 
