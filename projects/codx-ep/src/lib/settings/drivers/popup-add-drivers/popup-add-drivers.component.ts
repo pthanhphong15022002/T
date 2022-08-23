@@ -144,7 +144,11 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
       console.log(this.fGroupAddDriver);
       return;
     }
-    this.fGroupAddDriver.value.companyID = this.fGroupAddDriver.value.companyID[0];
+    if(this.fGroupAddDriver.value.category!=1){
+      this.fGroupAddDriver.value.companyID=null;
+    }else{      
+      this.fGroupAddDriver.value.companyID = this.fGroupAddDriver.value.companyID[0];
+    }
     this.fGroupAddDriver.value.owner = this.fGroupAddDriver.value.owner[0];
     this.fGroupAddDriver.value.resourceType = '3';
 
