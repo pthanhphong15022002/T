@@ -46,10 +46,11 @@ export class SprintsComponent extends UIComponent {
   itemSelected: any;
   funcID = '';
   valuelist = {};
+  action = 'edit';
   constructor(
     inject: Injector,
     private notiService: NotificationsService,
-    private tmSv : CodxTMService,
+    private tmSv: CodxTMService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute
   ) {
@@ -59,7 +60,7 @@ export class SprintsComponent extends UIComponent {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
-       this.tmSv.urlback = f.url ;
+        this.tmSv.urlback = f.url;
       }
     });
   }
@@ -166,21 +167,21 @@ export class SprintsComponent extends UIComponent {
         this.add();
         break;
       case 'SYS02':
-        if (data.iterationID != this.user.userID) this.delete(data);
+        this.delete(data);
         break;
       case 'SYS03':
-        if (data.iterationID != this.user.userID) this.edit(data);
+        this.edit(data);
         break;
       case 'SYS04':
-        if (data.iterationID != this.user.userID) this.copy(data);
+        this.copy(data);
         break;
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT03011': 
+      case 'TMT03011':
         if (data.iterationID != this.user.userID) this.shareBoard(e.data, data);
         break;
-      case 'TMT03012': 
+      case 'TMT03012':
         this.viewBoard(e.data, data);
         break;
       default:
@@ -235,11 +236,11 @@ export class SprintsComponent extends UIComponent {
 
   viewBoard(e, data) {
     this.urlView = e?.url;
-    this.urlView = 'tm/sprintdetails/TMT03011' ///gán cứng chứ thương chưa đổi
+    this.urlView = 'tm/sprintdetails/TMT03011'; ///gán cứng chứ thương chưa đổi
     this.codxService.navigate('', this.urlView, {
       iterationID: data.iterationID,
     });
-   // this.urlView = 'tm/sprintdetails/TMT03011';
+    // this.urlView = 'tm/sprintdetails/TMT03011';
     // if (data.iterationID != this.user.userID)
     //   this.urlView += '/' + data.iterationID;
     //   this.codxService.navigate('', this.urlView)
@@ -261,7 +262,6 @@ export class SprintsComponent extends UIComponent {
     // if (evt) {
     //   this.dialog.close();
     // }
-    
   }
   //#endregion
   changeDataMF(e, data) {
