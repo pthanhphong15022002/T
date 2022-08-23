@@ -162,6 +162,10 @@ export class EmployeesComponent implements OnInit {
   }
 
   delete(data: any) {
+    if(data.status != "10"){
+      this.notiService.notifyCode("E0760");
+      return;
+    }
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
       this.beforeDel(opt)).subscribe((res) => {
