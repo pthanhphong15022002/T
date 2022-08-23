@@ -170,7 +170,11 @@ export class PopupAddCarsComponent implements OnInit {
       }
     });
     this.fGroupAddCar.value.equipments = equipments;
-    this.fGroupAddCar.value.companyID = this.fGroupAddCar.value.companyID[0];
+    if(this.fGroupAddCar.value.category!=1){
+      this.fGroupAddCar.value.companyID=null;
+    }else{      
+      this.fGroupAddCar.value.companyID = this.fGroupAddCar.value.companyID[0];
+    }
     this.fGroupAddCar.value.owner = this.fGroupAddCar.value.owner[0];
 
     if (!this.fGroupAddCar.value.linkType) {

@@ -40,7 +40,7 @@
             </div>
             <div class="col-4">
               <codx-input name="language" type="valuelist" field="language" placeholder=""
-                [crrValue]="systemSetting?.language" (valueChange)="valueList($event)">
+                [crrValue]="systemSetting?.language" (valueChange)="valueList($event)" refValue="SYS020">
               </codx-input>
             </div>
           </div>
@@ -232,8 +232,8 @@
 
             </div>
             <div class="col-4">
-              <codx-input name="pWLength" type="valuelist" field="pWLength" placeholder=""
-                [crrValue]="systemSetting?.pWLength" (valueChange)="valueList($event)" refValue="SYS014">
+              <codx-input name="pwLength" type="valuelist" field="pwLength" placeholder=""
+                [crrValue]="systemSetting?.pwLength" (valueChange)="valueList($event)" refValue="SYS014">
               </codx-input>
             </div>
           </div>
@@ -249,8 +249,8 @@
 
             </div>
             <div class="col-4">
-              <codx-input name="pWLifeDays" type="valuelist" field="pWLifeDays" placeholder=""
-                [crrValue]="systemSetting?.pWLifeDays" (valueChange)="valueList($event)" refValue="SYS015">
+              <codx-input name="pwLifeDays" type="valuelist" field="pwLifeDays" placeholder=""
+                [crrValue]="systemSetting?.pwLifeDays" (valueChange)="valueList($event)" refValue="SYS015">
               </codx-input>
             </div>
           </div>
@@ -267,8 +267,8 @@
 
             </div>
             <div class="col-4">
-              <codx-input name="pWExpireWarning" type="valuelist" field="pWExpireWarning" placeholder=""
-                [crrValue]="systemSetting?.pWExpireWarning" (valueChange)="valueList($event)" refValue="SYS016">
+              <codx-input name="pwExpireWarning" type="valuelist" field="pwExpireWarning" placeholder=""
+                [crrValue]="systemSetting?.pwExpireWarning" (valueChange)="valueList($event)" refValue="SYS016">
               </codx-input>
             </div>
           </div>
@@ -285,8 +285,8 @@
 
             </div>
             <div class="col-4">
-              <codx-input name="pWDuplicate" type="valuelist" field="pWDuplicate" placeholder=""
-                [crrValue]="systemSetting?.pWDuplicate" (valueChange)="valueList($event)" refValue="SYS017">
+              <codx-input name="pwDuplicate" type="valuelist" field="pwDuplicate" placeholder=""
+                [crrValue]="systemSetting?.pwDuplicate" (valueChange)="valueList($event)" refValue="SYS017">
               </codx-input>
             </div>
           </div>
@@ -344,6 +344,27 @@
           </div>
         </ng-template>
         <ng-template #content>
+          <ng-container *ngFor="let item of functionList">
+            <div class="d-flex justify-content-between align-items-center flex-wrap  pt-4 pb-2">
+              <div class="d-flex flex-wrap">
+                <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" />
+                <div>
+                  <div class="fw-bold" style="font-weight: bold; margin-left: 10px;">
+                    {{item.customName}}
+                  </div>
+                  <div style="margin-left: 10px;">
+                    <codx-label name="App" formName="SystemSetting" default="Cu Phúc cute vô đối">
+                    </codx-label>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-column justify-content-end">
+                <a class="text-dark fw-bold" (click)="clickModule(item.module)">
+                  >
+                </a>
+              </div>
+            </div>
+          </ng-container>
 
         </ng-template>
       </e-tabitem>

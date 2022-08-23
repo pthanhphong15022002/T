@@ -155,8 +155,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    // this.formModel = this.dialog.dataService?.formModel ;
-    // this.gridViewSetup = this.formModel?.gridViewSetup ;
     this.task = {
       ...this.task,
       ...dt?.data[0],
@@ -175,6 +173,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
+      }
+    });
+    this.cache
+    .gridViewSetup(
+      this.dialog.formModel.formName,
+      this.dialog.formModel.gridViewName
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
       }
     });
   }

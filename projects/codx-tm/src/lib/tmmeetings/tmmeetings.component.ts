@@ -103,11 +103,13 @@ export class TMMeetingsComponent
       this.funcID = 'TMT0501';
     }
 
-    this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
-      if (res) {
-        this.urlDetail = res[0].url;
-      }
-    });
+    // this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
+    //   if (res) {
+    //     this.urlDetail = res[0].url;
+    //   }
+    // });
+
+    this.urlDetail = '/meeting/meetingdetails/TMT05011'
 
     this.dataValue = this.user?.userID;
     this.getParams();
@@ -407,8 +409,8 @@ export class TMMeetingsComponent
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
@@ -447,8 +449,8 @@ export class TMMeetingsComponent
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,

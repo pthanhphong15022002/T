@@ -31,6 +31,7 @@
         <codx-label default="" [formModel]="dialogRef.formModel"> </codx-label>
         <div class="d-flex flex-column justify-content-end">
           <codx-input 
+          [disabled]="fGroupAddCar.value.category == 1 ? false :true"
           type="vllicon" 
           refValue="L1470" 
           field="icon" 
@@ -122,7 +123,7 @@
     </div>
 
     <div class="row">
-      <div class="col-6 form-group">
+      <div class="col-4 form-group">
         <codx-label
           fiedName="Category"
           [formModel]="dialogRef.formModel"
@@ -140,14 +141,15 @@
         >
         </codx-input>        
       </div>
-      <div class="col-6 form-group">
+      <div class="col-8 form-group">
         <codx-label
           fiedName="CompanyID"
           [formModel]="dialogRef.formModel"
           default="Đơn vị"
         >
         </codx-label>
-        <codx-input
+        <codx-input        
+          [disabled]="fGroupAddCar.value.category == 1 ? false :true"
           refValue="AgencyNames"
           type="combobox"
           ControlName="companyID"

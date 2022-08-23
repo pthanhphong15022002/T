@@ -8,16 +8,22 @@ export class AD_SystemSetting{
   dCatchWeight: number;
   dPercent2: number;
   dFactor2: number;
-  pWLength: number;
-  pWLifeDays: number;
-  pWExpireWarning: number;
-  pWDuplicate: number;
+  pwLength: number;
+  pwLifeDays: number;
+  pwExpireWarning: number;
+  pwDuplicate: number;
   blockSystem: number;
   freezeInMinutes: number
 }
 
-export class TabControl{
-  name: 'Thông tin chung' | 'Chính sách bảo mật' | 'Cấu hình ứng dụng' |string;
-  textDefault: string;
-  isActive: boolean;
+export class SYS_FunctionList{
+  functionID: string;
+  functionType: string;
+  defaultName: string;
+  customName: string;
+  description: string;
+  parentID: string;
+  module: string;
+  smallIcon: string;
+  createdBy: string;
 }

@@ -18,7 +18,7 @@ import {
 } from 'codx-core';
 
 @Component({
-  selector: 'app-view-detail',
+  selector: 'share-view-detail',
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss'],
 })

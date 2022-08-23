@@ -15,7 +15,7 @@ import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 
 @Component({
-  selector: 'codx-tasks',
+  selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
   templateUrl: './codx-tasks.component.html',
   styleUrls: ['./codx-tasks.component.css'],
 })
@@ -24,7 +24,7 @@ export class CodxTasksComponent
   implements OnInit, AfterViewInit
 {
   //#region Constructor
-  @Input() funcID?: any;
+  // @Input()funcID?: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   @Input() calendarID: string;
@@ -61,7 +61,7 @@ export class CodxTasksComponent
   eventStatus: any;
   itemSelected: any;
   user: any;
-  // funcID: string;
+  funcID: string;
   gridView: any;
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
