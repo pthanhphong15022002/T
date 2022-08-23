@@ -31,9 +31,202 @@
       </ng-template>
 
       <div class="wrapper d-flex flex-column flex-row-fluid">
-        <codx-header [class]="headerCSSClasses" [headerBar]="null" class="header align-items-stretch"
+        <div class="header align-items-stretch">
+          <div class="page-title d-flex align-items-center flex-wrap ms-3">
+            <div class="d-flex align-items-center flex-wrap mt-3">
+              <div class="nav-item dropdown mr-1">
+                  <button [className]="setClassActive()" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      <span class="icon-dashboard icon-20"></span>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <container-element [ngSwitch]="submenu">
+                          <!-- the same view can be shown in more than one case 
+                              *ngSwitchCase="'multi-choice' || 'singe-choice'"
+                          -->
+                          <some-element *ngSwitchCase="'6'">
+                              <a class="dropdown-item"
+                                  (click)="onClick(6, 'Tài liệu chia sẻ', 'Tài liệu được chia sẻ')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu được chia sẻ</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item" (click)="onClick(7, 'Tài liệu chia sẻ', 'Tài liệu chia sẻ')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu chia sẻ</span>
+                                  </div>
+                              </a>
+                          </some-element>
+                          <some-other-element *ngSwitchCase="'7'">
+                              <a class="dropdown-item"
+                                  (click)="onClick(6, 'Tài liệu chia sẻ', 'Tài liệu được chia sẻ')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu được chia sẻ</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item" (click)="onClick(7, 'Tài liệu chia sẻ', 'Tài liệu chia sẻ')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu chia sẻ</span>
+                                  </div>
+                              </a>
+                          </some-other-element>
+                          <some-other-element *ngSwitchCase="'8'">
+                              <a class="dropdown-item"
+                                  (click)="onClick(8, 'Tài liệu yêu cầu chia sẻ', 'Tài liệu được yêu cầu')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu được yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(9, 'Tài liệu yêu cầu chia sẻ', 'Tài liệu yêu cầu')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(10, 'Tài liệu yêu cầu chia sẻ', 'Lịch sử chia sẻ')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Lịch sử chia sẻ</span>
+                                  </div>
+                              </a>
+                          </some-other-element>
+                          <some-other-element *ngSwitchCase="'9'">
+                              <a class="dropdown-item"
+                                  (click)="onClick(8, 'Tài liệu yêu cầu chia sẻ', 'Tài liệu được yêu cầu')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu được yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(9, 'Tài liệu yêu cầu chia sẻ', 'Tài liệu yêu cầu')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(10, 'Tài liệu yêu cầu chia sẻ', 'Lịch sử chia sẻ')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Lịch sử chia sẻ</span>
+                                  </div>
+                              </a>
+                          </some-other-element>
+                          <some-other-element *ngSwitchCase="'10'">
+                              <a class="dropdown-item"
+                                  (click)="onClick(8, 'Tài liệu yêu cầu chia sẻ', 'Tài liệu được yêu cầu')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu được yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(9, 'Tài liệu yêu cầu chia sẻ', 'Tài liệu yêu cầu')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(10, 'Tài liệu yêu cầu chia sẻ', 'Lịch sử chia sẻ')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Lịch sử chia sẻ</span>
+                                  </div>
+                              </a>
+                          </some-other-element>
+                          <some-other-element *ngSwitchCase="'11'">
+                              <a class="dropdown-item"
+                                  (click)="onClick(11, 'Tài liệu chờ duyệt', 'Tài liệu được yêu cầu')">
+                                  <div class="d-flex align-items-center">
+
+                                      <span>Tài liệu được yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(12, 'Tài liệu chờ duyệt', 'Tài liệu chờ duyệt')">
+                                  <div class="d-flex align-items-center">
+
+                                      <span>Tài liệu chờ duyệt</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(13, 'Tài liệu chờ duyệt', 'Lịch sử xét duyệt')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Lịch sử xét duyệt</span>
+                                  </div>
+                              </a>
+                          </some-other-element>
+                          <some-other-element *ngSwitchCase="'12'">
+                              <a class="dropdown-item"
+                                  (click)="onClick(11, 'Tài liệu chờ duyệt', 'Tài liệu được yêu cầu')">
+                                  <div class="d-flex align-items-center">
+
+                                      <span>Tài liệu được yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(12, 'Tài liệu chờ duyệt', 'Tài liệu yêu cầu')">
+                                  <div class="d-flex align-items-center">
+
+                                      <span>Tài liệu yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(13, 'Tài liệu chờ duyệt', 'Lịch sử xét duyệt')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Lịch sử xét duyệt</span>
+                                  </div>
+                              </a>
+                          </some-other-element>
+                          <some-other-element *ngSwitchCase="'13'">
+                              <a class="dropdown-item"
+                                  (click)="onClick(11, 'Tài liệu chờ duyệt', 'Tài liệu được yêu cầu')">
+                                  <div class="d-flex align-items-center">
+
+                                      <span>Tài liệu được yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(12, 'Tài liệu chờ duyệt', 'Tài liệu yêu cầu')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Tài liệu yêu cầu</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item"
+                                  (click)="onClick(13, 'Tài liệu chờ duyệt', 'Lịch sử xét duyệt')">
+                                  <div class="d-flex align-items-center">
+                                      <span>Lịch sử xét duyệt</span>
+                                  </div>
+                              </a>
+                          </some-other-element>
+                          <!--default case when there are no matches -->
+                          <some-element *ngSwitchDefault>
+                              <a class="dropdown-item">
+                                  <div class="d-flex align-items-center">
+                                      <span>Yêu cầu của tôi</span>
+                                  </div>
+                              </a>
+                              <a class="dropdown-item">
+                                  <div class="d-flex align-items-center">
+                                      <span>Yêu cầu chờ tôi cấp</span>
+                                  </div>
+                              </a>
+                          </some-element>
+                      </container-element>
+                  </div>
+              </div>
+              <a>
+                  <h4 class="text-dark font-weight-bold my-0 mr-2">{{this.dmSV.menuActive.getValue()}}</h4>
+              </a>
+              <codx-breadcumb notTree="true" link="true" end="2" start="1" max="4"></codx-breadcumb>
+            </div>
+            <!-- <a>
+                <h4 class="text-dark font-weight-bold my-0 mr-2">{{this.dmSV.menuActive.getValue()}}</h4>
+            </a> -->          
+          </div>
+          <div class="d-flex align-items-stretch flex-shrink-0 mright">
+            <ng-container *ngTemplateOutlet="headerRightBar"></ng-container>
+          </div>          
+        </div>
+        <!-- <codx-header [class]="headerCSSClasses" [headerBar]="null" class="header align-items-stretch"
           [headerRightBar]="headerRightBar" #codxHeader>
-        </codx-header>
+        </codx-header> -->
         <!-- <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
         </codx-wrapper> -->
         <codx-wrapper class="d-flex flex-column flex-column-fluid dm-wrapper">

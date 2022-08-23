@@ -1,13 +1,9 @@
-import {
-  Component,
-  Injector,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   DataRequest,
   DialogRef,
+  FormModel,
   NotificationsService,
   ResourceModel,
   SidebarModel,
@@ -16,7 +12,10 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
+import { PopupSettingNormsComponent } from './popup-setting-norms/popup-setting-norms.component';
+import { PopupUpdateInventoryComponent } from './popup-update-inventory/popup-update-inventory.component';
 
 @Component({
   selector: 'setting-stationery',
@@ -64,6 +63,7 @@ export class StationeryComponent extends UIComponent {
   dialog!: DialogRef;
   model: DataRequest;
   modelResource: ResourceModel;
+  formModel: FormModel;
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -76,8 +76,10 @@ export class StationeryComponent extends UIComponent {
       text: 'Xóa',
     },
   ];
+
   constructor(
     private injector: Injector,
+    private epService: CodxEpService,
     private notiService: NotificationsService
   ) {
     super(injector);
@@ -95,6 +97,10 @@ export class StationeryComponent extends UIComponent {
     this.modelResource.method = 'GetListAsync';
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '6';
+
+    this.epService.getFormModel(this.funcID).then((res) => {
+      this.formModel = res;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -114,7 +120,7 @@ export class StationeryComponent extends UIComponent {
       },
       {
         headerText: 'Giá mua gần nhất',
-        template: this.costPrice
+        template: this.costPrice,
       },
       {
         headerText: 'Quản lý kho',
@@ -158,22 +164,21 @@ export class StationeryComponent extends UIComponent {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.add();
+        this.addNew();
         break;
     }
   }
 
-  add() {
+  addNew() {
     this.viewBase.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       let dataSelected = this.viewBase.dataService.dataSelected;
-
       option.Width = '800px';
       option.FormModel = this.viewBase?.currentView?.formModel;
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
-        dataSelected,
+        [dataSelected, true],
         option
       );
     });
@@ -192,19 +197,41 @@ export class StationeryComponent extends UIComponent {
       option.DataService = this.viewBase?.currentView?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
-        editItem,
+        [editItem, false],
         option
       );
     });
   }
 
-  delete(evt?) {
+  delete() {
     let dataSelected = this.viewBase.dataService.dataSelected;
     this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
+      .delete([dataSelected])
       .subscribe((res) => {
         if (res) this.notiService.notifyCode('TM004');
       });
+  }
+
+  settingNorms(data?) {
+    this.callfc.openForm(
+      PopupUpdateInventoryComponent,
+      'Cập nhật số lượng',
+      500,
+      300,
+      '',
+      [this.formModel, data]
+    );
+  }
+
+  updateInventory(data?) {
+    this.callfc.openForm(
+      PopupSettingNormsComponent,
+      'Thiết lập định mức VPP',
+      500,
+      500,
+      '',
+      [this.formModel, data]
+    );
   }
 
   closeEditForm(evt?: any) {
@@ -213,17 +240,19 @@ export class StationeryComponent extends UIComponent {
     }
   }
 
-  addCart(evt) {
-    //this.callfunc.openForm(this.colorPicker, 'Chọn màu', 400, 300);
-  }
-
   clickMF(evt, data) {
     switch (evt.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
-        this.delete(data);
+      case 'SYS02':
+        this.delete();
+        break;
+      case 'EPS2301':
+        this.settingNorms(data);
+        break;
+      case 'EPS2302':
+        this.updateInventory(data);
         break;
       default:
         break;
@@ -231,6 +260,8 @@ export class StationeryComponent extends UIComponent {
   }
 
   splitColor(color: string): any {
-    return color.split(";");
+    if (!color == null) {
+      return color.split(';');
+    }
   }
 }
