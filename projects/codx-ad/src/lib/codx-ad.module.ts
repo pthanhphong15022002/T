@@ -31,6 +31,7 @@ import { RoleDetailComponent } from './Roles/detail/detail.component';
 import { AsideroledetailComponent } from './_layout/asideroledetail/asideroledetail.component';
 import { UserGroupsComponent } from './user-groups/user-group.component';
 import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
+import { ControlNoteComponent } from './control-note/control-note.component';
 
 export const routes: Routes = [
   {
@@ -68,6 +69,10 @@ export const routes: Routes = [
         path: 'roledetails/:funcID',
         component: RoleDetailComponent,
       }
+      ,{
+        path: 'controlNote',
+        component: ControlNoteComponent,
+      }
 
     ]
   }
@@ -88,6 +93,7 @@ const T_Component: Type<any>[] = [
   RoleDetailComponent,
   AsideroledetailComponent,
   AddUserGroupsComponent,
+  ControlNoteComponent,
 ];
 @NgModule({
   imports: [
