@@ -4,9 +4,9 @@
 </codx-views>
 
 <ng-template #panelRight>
-  <app-view-detail #detail [formModel]="view.formModel" [taskID]="taskExtends?.taskID" [taskExtends]="taskExtends"
+  <share-view-detail #detail [formModel]="view.formModel" [taskID]="taskExtends?.taskID" [taskExtends]="taskExtends"
     [vllStatus]="vllStatus" [vllExtendStatus]="vllExtendStatus" (clickMoreFunction)="receiveMF($event)">
-  </app-view-detail>
+  </share-view-detail>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
@@ -22,26 +22,13 @@
   <div class="d-flex justify-content-between align-items-end mt-2">
     <div class="d-flex align-items-end ms-14 codx-badge">
       <span>
-        <!-- <div class="d-status">
-          <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                (data?.status | vll:vllExtendStatus:'textColor' | async) +
-                '30'
-              " [style.background-color]="
-                (data?.status | vll: vllExtendStatus:'textColor' | async) +
-                '30'
-              " [style.color]="
-              data?.status | vll: vllExtendStatus:'textColor' | async
-              " style="border: none">
-            {{ data?.status | vll: vllExtendStatus:"text" | async }}
-          </div>
-        </div> -->
           <codx-vll
           [formModel]="view.formModel"
           [field]="'Status'"
           [value]="data?.status"
           [showText]="true"
           [showBgColor]="true"
-          class="text-gray-600"
+          class="badge badge-light badge-md fs-7 ms-2"
         >
         </codx-vll>
       </span>

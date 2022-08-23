@@ -46,6 +46,7 @@ import {
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { map, Observable } from 'rxjs';
+import { LV } from '@shared/services/lv.component';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -147,7 +148,7 @@ export class AttachmentComponent implements OnInit {
     var d = data;
     this.user = this.auth.get();
     this.dialog = dialog;
-    if (data != null) {
+    if (data?.data != null) {
       this.objectType = data?.data.objectType;
       this.objectId = data?.data.objectId;
       this.folderType = data?.data.folderType;
@@ -835,6 +836,7 @@ export class AttachmentComponent implements OnInit {
           }
         });
     } else if (total == 1) {
+      //this.addFileLarge(this.fileUploadList[0]);
       this.addFile(this.fileUploadList[0]);
       this.atSV.fileList.next(this.fileUploadList);
     } else {
@@ -905,6 +907,141 @@ export class AttachmentComponent implements OnInit {
     this.dmSV.setThumbnailWait.next(data);    
   }
 
+  async addFileLargeLong(fileItem: FileUpload) {
+    // check dung luong dia cung 
+    var ret = fileItem;
+    var fileSize = parseInt(fileItem.fileSize);
+    var that = this;
+    fileItem.uploadId = "";
+    function isAllowAddFileAsync() {
+      return new Promise((resole, reject) => {
+        that.fileService.isAllowAddFile(fileSize).subscribe(item => {
+          if (item == "ok") {
+            resole(item);
+          }
+          else {
+            reject(item);
+          }
+        });
+      });
+    };
+    try {
+      var item = await isAllowAddFileAsync();
+      var host = "http://192.168.18.36:5010";
+      LV.Files.API.setHostApiUrl(host);
+      var AccessTokenkey = "b5a54909-96bd-4d6a-91b4-1318bda5012c";
+      var fileToUpload = fileItem;
+      // console.log(URL.createObjectURL(fileToUpload.item));
+
+      var regUploadInfo = await LV.Files.API.callApi(
+        LV.Files.APINames.registerUpload,
+        {
+
+          accessToken: AccessTokenkey,
+          registerInfo: {
+            isPublic: true,//false:Muốn truy cập vào nội dung file phải login,true:Công cộng
+            fileName: fileToUpload.item.name, //tên file,
+            sizeInBytes: fileToUpload.item.size, //Kích thước file,
+            chunkSizeInKB: 1024 * 2, //512KB,
+            thumbSize: {
+              width: 200, //Kích thước của file ảnh Thum bề ngang
+              height: 100//Kích thước của file ảnh Thum bề dọc
+            }
+          }
+        });
+      console.log(regUploadInfo);
+      fileItem.thumbnail = regUploadInfo.relUrlShortThumb;
+      fileItem.uploadId = regUploadInfo.id;
+      fileItem.extension = regUploadInfo.fileExt;
+      fileItem.data = "";
+      fileItem.urlPath = regUploadInfo.fullFileName;
+      // play = `{0}
+      // `${host}/api/default/lv-media/content/directory/${app}/${fileName}`
+      for (var i = 0; i < regUploadInfo.numOfChunks; i++) {
+        var start = i * regUploadInfo.chunkSizeInBytes;//Vị trí bắt đầu băm file
+        var end = start + regUploadInfo.chunkSizeInBytes;//Vị trí cuối
+        if (end > regUploadInfo.sizeInBytes)
+          end = regUploadInfo.sizeInBytes;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+        var blogPart = fileToUpload.item.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
+        var fileChunk = new File(
+          [blogPart],
+          fileToUpload.fileName,
+          { type: fileToUpload.type });//Gói lại thành 1 file chunk để upload
+        var uploadChunckInfo = await LV.Files.API.callApi(
+          LV.Files.APINames.uploadChunk,
+          {
+            accessToken: AccessTokenkey,
+            data: {
+              uploadId: regUploadInfo.id,//UploadId lấy từ phần đăng ký
+              index: i//Chỉ mục của chunk
+            },
+            filePart: fileChunk //Dữ liệu củ file chunk đã được gói lại trong file
+          }
+        );
+      }
+    }
+    catch (ex) {
+      fileItem.uploadId = "0";
+      this.notificationsService.notify(ex);
+    }
+
+
+    return ret;
+    //this.displayThumbnail(res.recID, res.pathDisk);
+  }
+
+  addFileLarge(fileItem: FileUpload) {
+    // let no = 0;   
+    // let total = this.fileUploadList.length;
+    debugger;
+    var that = this;
+    var size = 1048576; // 1MB
+    var totalChunk = 0;
+    var dataFile = fileItem.data;
+    if (this.interval == null)
+      this.interval = [];
+    // chia file
+    totalChunk = fileItem.fileSize / size;
+    fileItem.data = '';
+    this.fileService.getChunkFile(fileItem).subscribe(res => {
+      if (res != null) {
+        var item = res.result.data;
+        for (var i = 0; i < item.totalChunk; i++) {
+          // upload chunk file         
+          var start = i * item.chunkSize;//Vị trí bắt đầu băm file
+          var end = start + item.chunkSize - 1;//Vị trí cuối
+          if (end > item.fileSize)
+            end = item.fileSize;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+          var data = dataFile.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
+         // let start = i * item.chunkSize;//Vị trí bắt đầu băm file
+         // let end = start + item.chunkSize;//Vị trí cuối
+        //  if (end > item.fileSize)
+         //   end = item.fileSize;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+         // let data = dataFile.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
+          let file = fileItem;
+          file.data = data;
+          file.urlPath = item.pathChunk;
+          file.fileName = item.recID + "_" + i.toString();
+          //  var index = setInterval(() => {
+          that.fileService.addChunkFile(file).subscribe(sub => {
+            // let indexInterval = that.interval.findIndex(d => d.id === sub.result);
+            // if (indexInterval > -1) {
+            //   clearInterval(that.interval[indexInterval].instant);
+            //   that.interval.splice(indexInterval, 1);
+            // }
+          })
+          //  }, 3000);
+
+          // var interval = new ItemInterval();
+          // interval.id = file.fileName;
+          // interval.instant = index;
+          // that.interval.push(Object.assign({}, interval));
+
+        }
+      }
+    });
+  }
+  
   addFile(fileItem: any) {
     var that = this;
     var done = this.fileService.addFile(fileItem).toPromise();

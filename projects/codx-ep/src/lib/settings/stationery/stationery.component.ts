@@ -42,7 +42,7 @@ export class StationeryComponent extends UIComponent {
   entityName = 'EP_Resources';
   predicate = 'ResourceType=@0';
   dataValue = '6';
-  idField = 'RecID';
+  idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
 
@@ -135,8 +135,6 @@ export class StationeryComponent extends UIComponent {
 
     this.views = [
       {
-        id: '1',
-        text: 'Danh mục VPP',
         type: ViewType.grid,
         sameData: true,
         active: true,
@@ -169,84 +167,13 @@ export class StationeryComponent extends UIComponent {
     }
   }
 
-  addNew() {
-    this.viewBase.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      let dataSelected = this.viewBase.dataService.dataSelected;
-      option.Width = '800px';
-      option.FormModel = this.viewBase?.currentView?.formModel;
-      option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfc.openSide(
-        PopupAddStationeryComponent,
-        [dataSelected, true],
-        option
-      );
-    });
-  }
-
-  edit(data?) {
-    let option = new SidebarModel();
-    let editItem = this.viewBase.dataService.dataSelected;
-
-    if (data) {
-      editItem = data;
-    }
-    this.viewBase.dataService.edit(editItem).subscribe((res) => {
-      option.Width = '800px';
-      option.FormModel = this.viewBase?.currentView?.formModel;
-      option.DataService = this.viewBase?.currentView?.dataService;
-      this.dialog = this.callfc.openSide(
-        PopupAddStationeryComponent,
-        [editItem, false],
-        option
-      );
-    });
-  }
-
-  delete() {
-    let dataSelected = this.viewBase.dataService.dataSelected;
-    this.viewBase.dataService
-      .delete([dataSelected])
-      .subscribe((res) => {
-        if (res) this.notiService.notifyCode('TM004');
-      });
-  }
-
-  settingNorms(data?) {
-    this.callfc.openForm(
-      PopupUpdateInventoryComponent,
-      'Cập nhật số lượng',
-      500,
-      300,
-      '',
-      [this.formModel, data]
-    );
-  }
-
-  updateInventory(data?) {
-    this.callfc.openForm(
-      PopupSettingNormsComponent,
-      'Thiết lập định mức VPP',
-      500,
-      500,
-      '',
-      [this.formModel, data]
-    );
-  }
-
-  closeEditForm(evt?: any) {
-    if (evt) {
-      this.dialog && this.dialog.close();
-    }
-  }
-
   clickMF(evt, data) {
     switch (evt.functionID) {
       case 'SYS03':
         this.edit(data);
         break;
       case 'SYS02':
-        this.delete();
+        this.delete(data);
         break;
       case 'EPS2301':
         this.settingNorms(data);
@@ -259,8 +186,79 @@ export class StationeryComponent extends UIComponent {
     }
   }
 
+  addNew() {
+    this.viewBase.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      let dataSelected = this.viewBase.dataService.dataSelected;
+      option.Width = '800px';
+      option.FormModel = this.viewBase?.formModel;
+      option.DataService = this.viewBase?.dataService;
+      this.dialog = this.callfc.openSide(
+        PopupAddStationeryComponent,
+        [dataSelected, true],
+        option
+      );
+    });
+  }
+
+  edit(data?) {
+    if (data) {
+      this.viewBase.dataService.dataSelected = data;
+    }
+    this.viewBase.dataService
+      .edit(this.viewBase.dataService.dataSelected)
+      .subscribe((res) => {
+        let option = new SidebarModel();
+        option.Width = '800px';
+        option.FormModel = this.viewBase?.formModel;
+        option.DataService = this.viewBase?.dataService;
+        this.dialog = this.callfc.openSide(
+          PopupAddStationeryComponent,
+          [this.viewBase.dataService.dataSelected, false],
+          option
+        );
+      });
+  }
+
+  delete(data?) {
+    if (data) {
+      this.viewBase.dataService.dataSelected = data;
+    }
+    this.viewBase.dataService
+      .delete([this.viewBase.dataService.dataSelected])
+      .subscribe();
+  }
+
+  settingNorms(data?) {
+    this.callfc.openForm(
+      PopupUpdateInventoryComponent,
+      'Cập nhật số lượng',
+      500,
+      200,
+      '',
+      [this.formModel, data]
+    );
+  }
+
+  updateInventory(data?) {
+    this.callfc.openForm(
+      PopupSettingNormsComponent,
+      'Thiết lập định mức VPP',
+      500,
+      300,
+      '',
+      [this.formModel, data]
+    );
+  }
+
+  closeEditForm(evt?: any) {
+    if (evt) {
+      this.dialog && this.dialog.close();
+    }
+  }
+
   splitColor(color: string): any {
-    if (!color == null) {
+    if (color) {
       return color.split(';');
     }
   }

@@ -51,6 +51,7 @@ import { CommandColumnService } from '@syncfusion/ej2-angular-grids';
 })
 export class HomeComponent extends UIComponent {
   @ViewChild('templateMain') templateMain: TemplateRef<any>;
+  @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('templateCard') templateCard: TemplateRef<any>;
   @ViewChild('templateSmallCard') templateSmallCard: TemplateRef<any>;
@@ -440,7 +441,8 @@ export class HomeComponent extends UIComponent {
         this.changeDetectorRef.detectChanges();        
       }
 
-      this.fileService.GetFiles(id, this.dmSV.idMenuActive).subscribe(async res => {   
+      this.fileService.options.funcID = this.view.funcID;
+      this.fileService.GetFiles(id).subscribe(async res => {   
         if (res != null) {
           this.data = [...this.data, ...res];
           this.dmSV.listFiles = res;  
@@ -449,7 +451,7 @@ export class HomeComponent extends UIComponent {
       });
     } else {
       this.dmSV.disableInput.next(true);
-     this.notificationsService.notify(this.titleAccessDenied);
+      this.notificationsService.notify(this.titleAccessDenied);
     }    
   }
 
@@ -466,6 +468,7 @@ export class HomeComponent extends UIComponent {
         type:  ViewType.treedetail,
         active: true,
         sameData: true,
+      /*  toolbarTemplate: this.templateSearch,*/
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
@@ -650,8 +653,9 @@ export class HomeComponent extends UIComponent {
       this.fileService.options.funcID = this.view.funcID;
       this.dmSV.listFiles = [];
       this.dmSV.loadedFile = false;  
+      this.fileService.options.funcID = this.view.funcID;
       this.fileService
-        .GetFiles('', this.view.funcID)
+        .GetFiles('')
         .subscribe(async (res) => {
           if (res != null) {
             this.data = [...this.data, ...res];

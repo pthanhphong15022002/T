@@ -76,9 +76,15 @@ import { CodxImportAddMappingComponent } from './components/codx-import/codx-imp
 import { CodxAlertComponent } from './components/codx-alert/codx-alert.component';
 import { SettingNotifyDrawerComponent } from './layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
 import { PopupAddNotifyComponent } from './layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
-import { AlertDrawerComponent } from './layout/drawers/alert-drawer/alert-drawer.component';
-import { SettingAlertDrawerComponent } from './layout/drawers/alert-drawer/setting-alert-drawer/setting-alert-drawer.component';
-import { PopupAddAlertComponent } from './layout/drawers/alert-drawer/popup-add-alert/popup-add-alert.component';
+import { PopupUpdateStatusComponent } from './components/codx-tasks/popup-update-status/popup-update-status.component';
+import { CodxNoteComponent } from './components/codx-note/codx-note.component';
+import { ViewDetailComponent } from './components/codx-tasks/view-detail/view-detail.component';
+import { PopupConfirmComponent } from './components/codx-tasks/popup-confirm/popup-confirm.component';
+import { PopupExtendComponent } from './components/codx-tasks/popup-extend/popup-extend.component';
+import { PopupUpdateProgressComponent } from './components/codx-tasks/popup-update-progress/popup-update-progress.component';
+import { ViewListComponent } from './components/codx-tasks/view-list/view-list.component';
+import { PopupAddComponent } from './components/codx-tasks/popup-add/popup-add.component';
+import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -126,15 +132,21 @@ const T_Component: Type<any>[] = [
   CodxAlertComponent,
   SettingNotifyDrawerComponent,
   PopupAddNotifyComponent,
-  AlertDrawerComponent,
-  SettingAlertDrawerComponent,
-  PopupAddAlertComponent
+  PopupUpdateStatusComponent,
+  CodxNoteComponent,
+  ViewDetailComponent,
+  PopupConfirmComponent,
+  PopupExtendComponent,
+  PopupUpdateProgressComponent,
+  ViewListComponent,
+  PopupAddComponent,
+  CodxTasksComponent
 ];
 
 const T_Pipe: Type<any>[] = [  TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe],
+  declarations: [T_Component, T_Pipe,  ],
   imports: [
     CommonModule,
     NgbModule,
