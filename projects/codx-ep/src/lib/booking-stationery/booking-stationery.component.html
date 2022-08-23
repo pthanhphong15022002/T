@@ -54,12 +54,14 @@
           <span class="icon-view_agenda icon-20 text-gray-400"></span>
           <span>{{ data.currentQty }}</span>
         </div>
-        <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-shopping_cart icon-20 text-gray-400"></span>
+        <div class="d-flex align-items-center position-relative me-4 ">
+          <span class="icon-shopping_cart icon-20 text-gray-400 reservedQty"></span>
           <span>{{ data.reservedQty }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-brightness_auto icon-20 text-gray-400"></span>
+          <span
+            class="icon-brightness_auto icon-20 text-gray-400 availableQty"
+          ></span>
           <span>{{ data.availableQty }}</span>
         </div>
       </div>
@@ -67,7 +69,7 @@
         class="symbol-group symbol-hover justify-content-end"
         (click)="addCart($event, data)"
       >
-        <span class="icon-shopping_cart icon-20 text-gray-400"></span>
+        <span class="icon-shopping_cart icon-20 text-gray-400 cart" ></span>
       </div>
     </div>
     <!--end::Item-->
@@ -87,14 +89,14 @@
         <codx-label
           name="lblUnit"
           default="Đơn vị tính:"
-          [formModel]="dialog.formModel"
+          [formModel]="viewBase.formModel"
         ></codx-label>
       </div>
       <div>
         <codx-label
           name="lblGroup"
           default="Nhóm: "
-          [formModel]="dialog.formModel"
+          [formModel]="viewBase.formModel"
         ></codx-label>
         <span>{{ data.groupID }}</span>
       </div>
@@ -123,7 +125,7 @@
     <codx-label
       name="lblOnePerson"
       default="1 Chai / Người / Lần "
-      [formModel]="dialog.formModel"
+      [formModel]="viewBase.formModel"
     ></codx-label>
     <div class="action-menu">
       <codx-mfunc

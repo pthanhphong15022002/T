@@ -107,8 +107,12 @@ export class PopupAddBookingCarComponent implements OnInit {
     this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    console.log('formModel',this.formModel);
   }  
-  ngOnInit(): void {    
+  ngOnInit(): void {   
+    if(!this.isAdd){      
+      this.titleAction = 'Chỉnh sửa';
+    } 
     this.codxEpService.getModelPage('EPT2').then((res) => {
       if (res) {
         this.modelPage = res;
@@ -213,18 +217,7 @@ export class PopupAddBookingCarComponent implements OnInit {
           this.fGroupAddBookingCar.patchValue(this.data);
         } 
       }); 
-
-      
-    // this.codxEpService
-    //   .getFormGroup("BookingAttendees","grvBookingAttendees")
-    //   .then((res) => {
-    //     this.fGroupBookingAttendees = res;        
-    //     if (res.value) {
-    //       console.log('fgBookingAttendees', res.value)
-    //       this.fGroupBookingAttendees.patchValue(res.value);
-    //       this.fGroupBookingAttendees.patchValue({transID:this.guid});
-    //     }
-    //   });    
+  
       this.isAfterRender = true;      
       this.changeDetectorRef.detectChanges();    
   }
@@ -297,8 +290,7 @@ export class PopupAddBookingCarComponent implements OnInit {
         }
       }
     });  
-    this.fGroupAddBookingCar.value.equipments = availableEquip+'|'+pickedEquip;
-    this.fGroupAddBookingCar.value.reasonID='Chưa có dữ liệu';//Cbx chưa có dữ liệu   
+    this.fGroupAddBookingCar.value.equipments = availableEquip+'|'+pickedEquip; 
     this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];    
     this.fGroupAddBookingCar.value.resourceID=this.fGroupAddBookingCar.value.resourceID[0]; 
     this.dialogRef.dataService
@@ -313,18 +305,7 @@ export class PopupAddBookingCarComponent implements OnInit {
             return;
           }          
         }        
-      ); 
-    // this.apiHttpService
-    //   .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
-    //     this.fGroupAddBookingCar.value,
-    //     this.isAdd,
-    //     '',
-    //   ])
-    //   .subscribe((res) => {
-    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-    //     this.closeFormEdit(res);
-    //   });
-    //console.log(this.fGroupAddBookingCar.value);    
+      );  
     this.changeDetectorRef.detectChanges();
   }
 
@@ -339,14 +320,6 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.fGroupAddBookingCar.patchValue({ [event['field']]: event.data });
       }
     }
-    // if (event?.component.ControlName) {
-    //   let fieldName=event?.component.ControlName.charAt(0).toLowerCase()+event?.component.ControlName.slice(1);
-    //   if (event.data instanceof Object) {
-    //     this.fGroupAddBookingCar.setValue({ [fieldName]: event.data.value}) ;
-    //   } else {
-    //     this.fGroupAddBookingCar.value[fieldName]= event.data ;
-    //   }
-    // }
   }
 
   valueCbxCarChange(event?) {  
@@ -426,8 +399,7 @@ export class PopupAddBookingCarComponent implements OnInit {
     this.closeEdit.emit(data);
   }
   dataValid(){
-    
-    this.fGroupAddBookingCar.value.reasonID='Chưa có dữ liệu';//Cbx chưa có dữ liệu   
+     
     this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0]; 
     this.fGroupAddBookingCar.value.resourceID=this.fGroupAddBookingCar.value.resourceID[0];
 

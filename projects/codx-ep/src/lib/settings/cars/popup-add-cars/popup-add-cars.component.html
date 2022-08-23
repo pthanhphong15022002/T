@@ -11,7 +11,7 @@
 >
   <ng-template #body>
     <div class="row">
-      <div class="col-5 form-group">
+      <div class="col-8 form-group">
         <codx-label
           fiedName="ResourceName"
           [formModel]="dialogRef.formModel"
@@ -27,10 +27,20 @@
         </codx-input>
       </div>
       
-      <div class="col-5 form-group">
+      <div class="col-2 form-group d-flex flex-column justify-content-end">
         <codx-label default="" [formModel]="dialogRef.formModel"> </codx-label>
-        <div class="d-flex flex-row justify-content-between">
-          <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button>
+        <div class="d-flex flex-column justify-content-end">
+          <codx-input 
+          [disabled]="fGroupAddCar.value.category == 1 ? false :true"
+          type="vllicon" 
+          refValue="L1470" 
+          field="icon" 
+          class="btn btn-primary dropdown-toggle"
+          [crrValue]="fGroupAddCar.value.icon"
+          (valueChange)="valueChange($event)"
+          >
+        </codx-input>
+          <!-- <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button>
           <codx-attachment
             #attachment
             [objectType]="'ES_SignFiles'"
@@ -49,7 +59,7 @@
             (fileCount)="fileCount($event)"
             (fileAdded)="fileAdded($event)"
           >
-          </codx-attachment> 
+          </codx-attachment>  -->
         </div>
         
       </div>
@@ -113,7 +123,7 @@
     </div>
 
     <div class="row">
-      <div class="col-6 form-group">
+      <div class="col-4 form-group">
         <codx-label
           fiedName="Category"
           [formModel]="dialogRef.formModel"
@@ -131,14 +141,15 @@
         >
         </codx-input>        
       </div>
-      <div class="col-6 form-group">
+      <div class="col-8 form-group">
         <codx-label
           fiedName="CompanyID"
           [formModel]="dialogRef.formModel"
           default="Đơn vị"
         >
         </codx-label>
-        <codx-input
+        <codx-input        
+          [disabled]="fGroupAddCar.value.category == 1 ? false :true"
           refValue="AgencyNames"
           type="combobox"
           ControlName="companyID"

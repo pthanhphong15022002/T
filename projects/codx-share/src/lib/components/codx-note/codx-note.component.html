@@ -1,0 +1,93 @@
+<div class="rounded-2 bg-body border border-1 border-gray-300">
+    <div class="rounded-2 bg-body border border-1 m-h-400 p-3">
+        <div class="d-flex">
+            <span class="icon-drag_indicator icon-20 pd-top-5"></span>
+            <div *ngIf="lineType == 'text'">
+                <codx-input format="ed2" [class]="'border-0'" type="text" class="test-textarea" [crrValue]="empty"
+                    [placeholder]="gridViewSetup.Comments.headerText + '...'" (valueChange)="valueChange($event)"
+                    ngDefaultControl field="memo">
+                </codx-input>
+            </div>
+            <div *ngIf="lineType == 'check'">
+                <div class="flex align-items-center">
+                    <codx-input #noteAddText type="checkBox" [crrValue]="" field="status" labelPosition="Before"
+                        class="test-check" (valueChange)="valueChange($event)">
+                    </codx-input>
+                    <ng-template #list>
+                        <span class="dot-black"></span>
+                    </ng-template>
+                    <div class="w-100" #txtNoteEdit name="txtTodoEdit">
+                        <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
+                            (keyUpEnter)="onUpdateNote($event)" [crrValue]="" field="listNote"
+                            (valueChange)="valueChange($event)"
+                            [placeholder]="gridViewSetup.Comments.headerText + '...'">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="lineType =='list'">
+                <div class="flex align-items-center">
+                    <codx-input #noteAddText type="checkBox" [crrValue]="" field="status" labelPosition="Before"
+                        class="test-check" (valueChange)="valueChange($event)">
+                    </codx-input>
+                    <ng-template #list>
+                        <span class="dot-black"></span>
+                    </ng-template>
+                    <div class="w-100" #txtNoteEdit name="txtTodoEdit">
+                        <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
+                            (keyUpEnter)="onUpdateNote($event)" [crrValue]="" field="listNote"
+                            (valueChange)="valueChange($event)"
+                            [placeholder]="gridViewSetup.Comments.headerText + '...'">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex note-action border align-items-center justify-content-between">
+        <div class="d-flex">
+            <div [class.active]="">
+                <span (click)="onType('text')"
+                    class="icon-font_download icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
+            </div>
+            <div [class.active]="">
+                <span (click)="onType('list')"
+                    class="icon-list_alt icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
+            </div>
+            <div [class.active]="">
+                <span (click)="onType('check')"
+                    class="icon-check_box icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
+            </div>
+            <span class="icon-image icon-20 btn btn-icon btn-active-light-primary position-relative"
+                (click)="popupFile()">
+            </span>
+            <span class="icon-attach_file icon-20 btn btn-icon btn-active-light-primary position-relative">
+            </span>
+            <span>|</span>
+            <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative
+            "></span>
+            <span class="icon-format_italic icon-20 btn btn-icon btn-active-light-primary position-relative
+            "></span>
+            <span class="icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative
+            "></span>
+            <codx-input #elm [ele]="" type="colorpicker" class="form-control text-white color-large" field="color"
+                [crrValue]="" dataformat="hex">
+            </codx-input>
+            <div class="btn-emoji">
+                <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"
+                    class="btn btn-icon btn-md ms-2 btn-emoji">
+                    <i class="icon-tag_faces icon-24 text-warning"></i>
+                </button>
+                <ng-container *ngIf="showEmojiPicker">
+                    <div class="emoji">
+                        <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set" [perLine]="7"
+                            (emojiSelect)="addEmoji($event)"></emoji-mart>
+                    </div>
+                </ng-container>
+            </div>
+            <span
+                class="icon-chat_bubble_outline icon-20 btn btn-icon btn-active-light-primary position-relative"></span>
+        </div>
+
+    </div>
+</div>

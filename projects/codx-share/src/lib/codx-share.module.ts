@@ -76,6 +76,15 @@ import { CodxImportAddMappingComponent } from './components/codx-import/codx-imp
 import { CodxAlertComponent } from './components/codx-alert/codx-alert.component';
 import { SettingNotifyDrawerComponent } from './layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
 import { PopupAddNotifyComponent } from './layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
+import { CodxNoteComponent } from './components/codx-note/codx-note.component';
+import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component';
+import { ViewDetailComponent } from './components/codx-tasks/view-detail/view-detail.component';
+import { PopupAddComponent } from './components/codx-tasks/popup-add/popup-add.component';
+import { PopupConfirmComponent } from './components/codx-tasks/popup-confirm/popup-confirm.component';
+import { ViewListComponent } from './components/codx-tasks/view-list/view-list.component';
+import { PopupUpdateProgressComponent } from './components/codx-tasks/popup-update-progress/popup-update-progress.component';
+import { PopupExtendComponent } from './components/codx-tasks/popup-extend/popup-extend.component';
+import { PopupUpdateStatusComponent } from './components/codx-tasks/popup-update-status/popup-update-status.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -122,7 +131,16 @@ const T_Component: Type<any>[] = [
   CodxImportAddMappingComponent,
   CodxAlertComponent,
   SettingNotifyDrawerComponent,
-  PopupAddNotifyComponent
+  PopupAddNotifyComponent,
+  CodxNoteComponent,
+  CodxTasksComponent,
+  ViewDetailComponent,
+  PopupAddComponent,
+  PopupConfirmComponent,
+  ViewListComponent,
+  PopupUpdateProgressComponent,
+  PopupExtendComponent,
+  PopupUpdateStatusComponent
 ];
 
 const T_Pipe: Type<any>[] = [  TruncatePipe, FileImage];

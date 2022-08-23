@@ -32,7 +32,8 @@
             <codx-label fiedName="Email" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
                 default="Email nhóm">
             </codx-label>
-            <codx-input field="email" type="text" [crrValue]="adUserGroup.email" (valueChange)="valueChangeM($event)">
+            <codx-input field="email" type="text" [crrValue]="adUserGroup.email" (valueChange)="valueChangeM($event)"
+            [disabled]="formType == 'edit' ? true : false">
             </codx-input>
         </div>
         <div class="form-group row mt-3">
@@ -60,14 +61,14 @@
             <div class="form-group row mt-3">
                 <div class="form-group col-2">
                     <codx-img #imageUpload class="symbol symbol-35 symbol-circle me-2 image-inpt-wrapper fullImage"
-                        [width]="35" [funcId]="formModel?.funcID" [objectId]="formType == 'add' ? item.UserID : item.userID"
+                        [width]="35" [funcId]="formModel?.funcID" [objectId]="item.userID"
                          [objectType]="formModel?.entityName" data-kt-menu-trigger="click"
                         data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom"
                         [isAllowEdit]="false">
                     </codx-img>
                 </div>
                 <div class="form-group col-4">
-                    <span>{{formType == 'add' ? item.UserName : item.userName}}</span>
+                    <span>{{item.userName}}</span>
                 </div>
                 <div class="form-group col-4">
                     <span class="icon-clear icon-16" (click)="deleteUserCbb(i)">
