@@ -1,11 +1,10 @@
 <codx-form
+  #form
   [headerText]="headerText"
   [subHeaderText]="subheaderText"
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formGroup]="dialogVPP"
-  *ngIf="isAfterRender"
 >
   <ng-template #body>
     <div class="d-flex row align-items-center mb-2">
@@ -48,21 +47,6 @@
         </codx-input>
         <!--end::Input-->
       </div>
-    </div>
-
-    <div class="d-flex flex-column mb-4">
-      <!--begin::Label-->
-      <codx-label
-        class="fw-bold"
-        default="Cấp bậc"
-        fiedName="Location"
-        [formModel]="dialog.formModel"
-      >
-      </codx-label>
-      <!--end::Label-->
-
-      <codx-input type="combobox" name="combobox" ControlName="Location">
-      </codx-input>
     </div>
   </ng-template>
 

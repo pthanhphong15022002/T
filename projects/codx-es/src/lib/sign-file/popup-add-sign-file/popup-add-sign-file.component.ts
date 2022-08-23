@@ -350,6 +350,8 @@ export class PopupAddSignFileComponent implements OnInit {
         this.dialogSignFile.patchValue({
           icon: category?.Icon,
           color: category?.Color,
+          processID: category?.RecID,
+          categoryName: category?.processID,
         });
       }
 
@@ -411,6 +413,14 @@ export class PopupAddSignFileComponent implements OnInit {
     // }
   }
 
+  processIDChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      if (event?.field == 'processID') {
+        this.processID = event?.data;
+      }
+    }
+  }
+
   //#region Methods Save
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
@@ -462,7 +472,10 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   onSaveProcessTemplateID(dialogTmp: DialogRef) {
-    if (this.processID != '') {
+    if (
+      this.processID != '' &&
+      this.dialogSignFile.value.approveControl != '1'
+    ) {
       this.dialogSignFile.patchValue({
         processID: this.processID,
         approveControl: '2',
