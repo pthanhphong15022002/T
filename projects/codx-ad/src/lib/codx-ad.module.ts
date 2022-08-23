@@ -104,7 +104,7 @@ const T_Component: Type<any>[] = [
   RoleDetailComponent,
   AsideroledetailComponent,
   AddUserGroupsComponent,
-  SystemsettingsComponent
+  SystemsettingsComponent,
   ControlNoteComponent,
 ];
 @NgModule({
