@@ -29,6 +29,10 @@ export class EditExperenceComponent implements OnInit {
     this.dialog = dialog;
   }
 
+  ngOnDestroy(): void {
+    this.codxMwp.experienceEdit.next(null);
+  }
+
   ngOnInit(): void {
     if (this.action === 'edit') {
       this.title = 'Cập nhật thông tin';
@@ -90,9 +94,8 @@ export class EditExperenceComponent implements OnInit {
     this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
       .subscribe((res: any) => {
         if (res) {
-          // res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
-          // res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
-
+          res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
+          res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
           this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
           this.dialog.close(this.dataBind);
         }
