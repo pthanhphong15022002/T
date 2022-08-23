@@ -98,19 +98,20 @@
             [style.visibility]="currentTab == 3 && dialogSignFile.value.files?.length > 0 ? 'visible' : 'hidden'">
             <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
           </button> -->
-          <div ngbDropdown class="dropdown me-2 mb-2 rounded-4"
+          <div ngbDropdown class="dropdown"
             [style.visibility]="currentTab == 3 && dialogSignFile.value.files?.length > 0 ? 'visible' : 'hidden'">
-            <button ngbDropdownToggle class="btn btn-sm btn-light d-flex align-items-center" type="button"
-              id="dropdownMenuButton1" aria-expanded="false">
+            <button ngbDropdownToggle
+              class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4 d-flex align-items-center"
+              type="button" id="dropdownMenuButton1" aria-expanded="false">
               <span>
                 <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
               </span>
-              <span class="icon-keyboard_arrow_down icon-16 ms-2"></span>
+              <span class="icon-keyboard_arrow_down icon-16 ms-1"></span>
             </button>
             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
 
               <li>
-                <a ngbDropdownItem (click)="openTemplateName(addTemplateName)">
+                <a ngbDropdownItem (click)="openTemplateName(addTemplateName)" class="cursor-pointer">
                   <div class=" d-flex flex-column">
                     <span class="text-dark">
                       <codx-label name="lblSaveTemplate" [formModel]="formModel" default="Lưu thành mẫu"></codx-label>
@@ -119,7 +120,7 @@
                 </a>
               </li>
               <li>
-                <a ngbDropdownItem (click)="saveCategoryTemplate()">
+                <a ngbDropdownItem (click)="saveCategoryTemplate()" class="cursor-pointer">
                   <div class="d-flex flex-column">
                     <codx-label name="lblSaveCateTemplate" [formModel]="formModel" default="Lưu tài liệu mẫu">
                     </codx-label>
