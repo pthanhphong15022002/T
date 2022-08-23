@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiHttpService, ButtonModel, CallFuncService, CodxService, DataRequest, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, ButtonModel, CallFuncService, CodxService, DataRequest, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType, CacheService } from 'codx-core';
 import moment from 'moment';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
@@ -25,7 +25,6 @@ export class EmployeesComponent implements OnInit {
   functionID: string;
   employee: HR_Employees = new HR_Employees();
   itemSelected: any;
-  urlDetail = '';
   formModel: FormModel;
 
   // @Input() formModel: any;
@@ -46,15 +45,9 @@ export class EmployeesComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private api: ApiHttpService,
-    private codxService: CodxService,
-    private hrService: CodxHrService,
+    private cache: CacheService,
+    private codxService: CodxService
   ) {
-    // this.hrService.getMoreFunction(['HRT03', null, null]).subscribe((res) => {
-    //   if (res) {
-    //     this.urlDetail = res[1].url;
-    //   }
-    // });
-    this.urlDetail = "hr/employeeinfomation/HRT03";
   }
 
   ngOnInit(): void {
@@ -119,7 +112,7 @@ export class EmployeesComponent implements OnInit {
         this.changedt.detectChanges();
       })
     });
-    
+
   }
 
   senioritydate(value: string) {
@@ -163,7 +156,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   delete(data: any) {
-    if(data.status != "10"){
+    if (data.status != "10") {
       this.notiService.notifyCode("E0760");
       return;
     }
@@ -252,21 +245,22 @@ export class EmployeesComponent implements OnInit {
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-     //  e?.event.forEach((obj) => {
-      var emp = e?.event ;
-      if(emp.status=='90') {
-        this.view.dataService.remove(e?.event).subscribe();
-      }else
+        //  e?.event.forEach((obj) => {
+        var emp = e?.event;
+        if (emp.status == '90') {
+          this.view.dataService.remove(e?.event).subscribe();
+        } else
           this.view.dataService.update(e?.event).subscribe();
-      // });
+        // });
         // this.itemSelected = e?.event;
       }
-      this.changedt.detectChanges(); 
+      this.changedt.detectChanges();
     });
   }
 
-  viewEmployeeInfo(data) {
-    this.codxService.navigate('', this.urlDetail, { employeeID: data.employeeID });
+  viewEmployeeInfo(func, data) {
+    if (func.url)
+      this.codxService.navigate('', func.url, { employeeID: data.employeeID });
   }
 
   exportFile() {
@@ -303,7 +297,7 @@ export class EmployeesComponent implements OnInit {
         this.updateStatus(data);
         break;
       case 'HR0032':
-        this.viewEmployeeInfo(data);
+        this.viewEmployeeInfo(e.data, data);
         break;
       case 'SYS002':
         this.exportFile();
