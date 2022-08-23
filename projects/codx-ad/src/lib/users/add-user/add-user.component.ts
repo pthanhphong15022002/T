@@ -302,7 +302,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.update) {
-          debugger;
           this.imageUpload
             .updateFileDirectReload(res.update.userID)
             .subscribe((result) => {
@@ -312,6 +311,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
               this.dialog.close(res.update);
             });
           res.update.chooseRoles = res.update.functions;
+          (this.dialog.dataService as CRUDService).update(res.update).subscribe();
+          this.changeDetector.detectChanges();
         }
       });
   }
