@@ -107,6 +107,7 @@ export class PopupAddBookingCarComponent implements OnInit {
     this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    console.log('formModel',this.formModel);
   }  
   ngOnInit(): void {   
     if(!this.isAdd){      
@@ -289,8 +290,7 @@ export class PopupAddBookingCarComponent implements OnInit {
         }
       }
     });  
-    this.fGroupAddBookingCar.value.equipments = availableEquip+'|'+pickedEquip;
-    this.fGroupAddBookingCar.value.reasonID='Chưa có dữ liệu';//Cbx chưa có dữ liệu   
+    this.fGroupAddBookingCar.value.equipments = availableEquip+'|'+pickedEquip; 
     this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];    
     this.fGroupAddBookingCar.value.resourceID=this.fGroupAddBookingCar.value.resourceID[0]; 
     this.dialogRef.dataService
@@ -399,8 +399,7 @@ export class PopupAddBookingCarComponent implements OnInit {
     this.closeEdit.emit(data);
   }
   dataValid(){
-    
-    this.fGroupAddBookingCar.value.reasonID='Chưa có dữ liệu';//Cbx chưa có dữ liệu   
+     
     this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0]; 
     this.fGroupAddBookingCar.value.resourceID=this.fGroupAddBookingCar.value.resourceID[0];
 
