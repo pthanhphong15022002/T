@@ -16,6 +16,12 @@ export class ViewListComponent implements OnInit {
   @Input() data?: any
   @Input() formModel?: FormModel;
   @Input() vllStatus?:any;
+  @Input() listRoles?: any;
+  listTaskResousceSearch = [];
+  listTaskResousce = [];
+  countResource = 0;
+  popoverCrr: any;
+
 
   @Output() clickMoreFunction = new EventEmitter<any>();
 
@@ -66,24 +72,6 @@ export class ViewListComponent implements OnInit {
       p.close();
   }
 
-  PopoverEmp(p: any, emp) {
-    this.popoverList = p;
-    if (emp != null) {
-      this.api.execSv<any>("TM", "ERM.Business.TM", "TaskResourcesBusiness", "GetListTaskResourcesByTaskIDAsync", emp.taskID
-      ).subscribe(res => {
-        if (res) {
-          this.lstTaskbyParent = res;
-          console.log("data123", this.lstTaskbyParent)
-          p.open();
-        }
-      })
-    }
-    // else {
-    //   this.lstTaskbyParent = [];
-    //   p.close();
-    // }
-  }
-
   openViewListTaskResource(data){
     this.dialog = this.callfc.openForm(
       PopupViewTaskResourceComponent,
@@ -93,5 +81,44 @@ export class ViewListComponent implements OnInit {
       '',
       [data,this.formModel.funcID]
     );
+  }
+
+  popoverEmpList(p: any, task) {
+    this.listTaskResousceSearch = [];
+    this.countResource = 0;
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    }
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskResourcesBusiness',
+        'GetListTaskResourcesByTaskIDAsync',
+        task.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTaskResousce = res;
+          this.listTaskResousceSearch = res;
+          this.countResource = res.length;
+          p.open();
+        }
+      });
+  }
+  searchName(e) {
+    var listTaskResousceSearch = [];
+    if (e.trim() == '') {
+      this.listTaskResousceSearch = this.listTaskResousce;
+      return;
+    }
+
+    this.listTaskResousce.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(e.toLowerCase())) {
+        listTaskResousceSearch.push(res);
+      }
+    });
+    this.listTaskResousceSearch = listTaskResousceSearch;
   }
 }

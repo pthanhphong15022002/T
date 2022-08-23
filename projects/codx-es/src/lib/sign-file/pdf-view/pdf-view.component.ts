@@ -103,7 +103,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   //for page number input
   pageMax;
   pageStep;
-  curPage;
+  curPage = 1;
 
   zoomValue: number = 100;
   holding: number = 0;
@@ -119,10 +119,17 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   lstZoomValue: Array<number> = [25, 30, 50, 75, 90, 100];
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  lstAnnotFontStyle = ['Helvetica', 'Arial'];
+  lstAnnotFontStyle = [
+    'Helvetica',
+    'Arial',
+    'Times New Roman',
+    'Tahoma',
+    'Georgia',
+    'Verdana',
+  ];
   curAnnotFontStyle = 'Helvetica';
   lstAnnotFontSize = [10, 11, 12, 13, 15, 17, 19, 23, 31, 33, 43];
-  curAnnotFontSize = 13;
+  curAnnotFontSize = 31;
   lstAnnotDateFormat = [
     'M/d/yy, h:mm a',
     'M/d/yy',
@@ -250,10 +257,11 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  ngDoCheck() {}
+  ngDoCheck() { }
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
+
     this.views = [
       {
         type: ViewType.listdetail,
@@ -394,7 +402,10 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           anno.stampAnnotationType = 'image';
         } else {
           anno.shapeAnnotationType = 'FreeText';
-          anno.dynamicText = curSignerInfo.fullName;
+          anno.dynamicText =
+            this.vllActions[item.labelType - 1]?.text +
+            ': ' +
+            curSignerInfo.fullName;
           anno.subject = 'Text Box';
         }
       }
@@ -554,7 +565,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             this.fileInfo.fileID,
             annot.annotationId,
           ])
-          .subscribe((res) => {});
+          .subscribe((res) => { });
         clearTimeout(this.saveAnnoQueue.get(annot.annotationId));
         this.saveAnnoQueue.delete(annot.annotationId);
       });
@@ -642,7 +653,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.curSelectedAnno.annotationId,
       setTimeout(
         this.saveAnnoToDB.bind(this),
-        this.after_X_Second,
+        31,
         this.esService,
         tmpAnnot,
         this.fileInfo,
@@ -850,17 +861,17 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
               //duoi
               (anno.bounds.top >= suggestLocation.top &&
                 anno.bounds.top <=
-                  suggestLocation.top + suggestLocation.height))) ||
+                suggestLocation.top + suggestLocation.height))) ||
             //conflit ben phai
             (anno.bounds.left >= suggestLocation.left &&
               anno.bounds.left <=
-                suggestLocation.left + suggestLocation.width &&
+              suggestLocation.left + suggestLocation.width &&
               //tren
               ((suggestLocation.top >= anno.bounds.top &&
                 suggestLocation.top <= anno.bounds.top + anno.bounds.height) ||
                 (anno.bounds.top >= suggestLocation.top &&
                   anno.bounds.top <=
-                    suggestLocation.top + suggestLocation.height))))
+                  suggestLocation.top + suggestLocation.height))))
         );
       }
     );
@@ -1060,14 +1071,13 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   addAnnotIntoPDF(type: number) {
     let signed;
 
-    if (this.url.replace('data:image/jpeg;base64,', '') != '')
-      signed = this.pdfviewerControl.annotationCollection.find((annotation) => {
-        return (
-          annotation.customData === this.signerInfo?.authorID + ':' + type &&
-          annotation.pageNumber === this.pdfviewerControl.currentPageNumber - 1
-        );
-      });
-
+    // if (this.url.replace('data:image/jpeg;base64,', '') != '') {
+    signed = this.pdfviewerControl.annotationCollection.find((annotation) => {
+      return (
+        annotation.customData === this.signerInfo?.authorID + ':' + type &&
+        annotation.pageNumber === this.pdfviewerControl.currentPageNumber - 1
+      );
+    });
     if (!signed) {
       if (
         [1, 2, 8].includes(type) &&
@@ -1084,7 +1094,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           case 2:
           case 8:
             this.pdfviewerControl.freeTextSettings.defaultText =
-              this.vllActions[type - 1]?.text;
+              this.vllActions[type - 1]?.text + ': ' + this.signerInfo.fullName;
+
             break;
           case 3:
             this.pdfviewerControl.freeTextSettings.defaultText =
@@ -1121,7 +1132,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         (this.pdfviewerControl.freeTextSettings.customData as String) =
           this.signerInfo?.authorID + ':' + type;
 
-        this.pdfviewerControl.freeTextSettings.fontSize = 30;
+        this.pdfviewerControl.freeTextSettings.fontSize = 31;
         this.pdfviewerControl.annotationModule.setAnnotationMode('FreeText');
       }
     } else {
@@ -1140,10 +1151,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         return anno.annotationId === curID;
       }
     );
-    if (!(justAddAnno.shapeAnnotationType === 'FreeText')) {
-      justAddAnno.customData =
-        this.signerInfo?.authorID + ':' + e.customStampName;
-    }
+    // if (!(justAddAnno.shapeAnnotationType === 'FreeText')) {}
+    // justAddAnno.customData =
+    //   this.signerInfo?.authorID + ':' + e.customStampName;
     justAddAnno.author = this.signerInfo?.authorID;
     justAddAnno.review.author = this.signerInfo?.authorID;
     this.curSelectedAnno = justAddAnno;
@@ -1153,7 +1163,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         curID,
         setTimeout(
           this.saveAnnoToDB.bind(this),
-          this.after_X_Second,
+          10,
           this.esService,
           this.curSelectedAnno,
           this.fileInfo,
@@ -1246,7 +1256,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
     this.esService
       .deleteAreaById([this.recID, this.fileInfo.fileID, e.annotationId])
-      .subscribe((res) => {});
+      .subscribe((res) => { });
 
     this.pdfviewerControl.annotationCollection =
       this.pdfviewerControl.annotationCollection.filter((annot) => {
@@ -1254,6 +1264,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       });
     clearTimeout(this.saveAnnoQueue.get(e.annotationId));
     this.saveAnnoQueue.delete(e.annotationId);
+    this.renderAnnotPanel();
   }
 
   resetTime(e: any) {
@@ -1316,7 +1327,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   goToPage(e) {
-    this.curPage = e.target.value;
+    this.curPage = e.data;
     if (this.curPage < 1) {
       this.curPage = 1;
     } else if (this.curPage > this.pdfviewerControl.pageCount) {
@@ -1327,7 +1338,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     console.log('page', this.curPage);
   }
 
-  testFunc(e: any) {}
+  testFunc(e: any) { }
 
   selectedAnnotation(e: any) {
     console.log('select annot event', e);
@@ -1362,7 +1373,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.pdfviewerControl.download();
   }
 
-  clickPrint(args) {}
+  clickPrint(args) { }
 
   renderAnnotPanel() {
     this.esService
@@ -1419,7 +1430,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     );
   }
 
-  cancelPrint(e: any) {}
+  cancelPrint(e: any) { }
 
   goToSelectedAnnotation(area) {
     if (this.curSelectedAnnotID != area.recID) {

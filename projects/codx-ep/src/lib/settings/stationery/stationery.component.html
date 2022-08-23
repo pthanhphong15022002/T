@@ -80,12 +80,11 @@
       <div class="fw-bold">{{ data.ownerName }}</div>
       <div class="text-black-50">{{ data.position }}</div>
     </div>
-    <div class="action-menu">
-      <codx-mfunc
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-      ></codx-mfunc>
-    </div>
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
   </div>
 </ng-template>

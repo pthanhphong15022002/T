@@ -18,7 +18,7 @@ import { ActivatedRoute } from '@angular/router';
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'TM';
   dialog!: DialogRef;
-
+  funcID:string = "";
   constructor(inject: Injector,
     private route:ActivatedRoute,
     private callfc: CallFuncService) {
@@ -46,6 +46,5 @@ export class LayoutComponent extends LayoutBaseComponent {
     let option = new SidebarModel();
     option.Width = '550px';
     this.dialog = this.callfc.openSide(NotifyDrawerComponent, "TMT0201", option);
-    this.dialog.closed.subscribe()
   }
 }

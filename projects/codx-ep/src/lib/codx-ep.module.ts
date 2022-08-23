@@ -1,3 +1,4 @@
+import { PopupUpdateInventoryComponent } from './settings/stationery/popup-update-inventory/popup-update-inventory.component';
 import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
 import { PopupAddCarsComponent } from './settings/cars/popup-add-cars/popup-add-cars.component';
 import { CarsComponent } from './settings/cars/cars.component';
@@ -11,11 +12,7 @@ import {
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
-import {
-  AuthGuard,
-  CodxCoreModule,
-  EnvironmentConfig,
-} from 'codx-core';
+import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
 import { LayoutComponent } from './_layout/layout.component';
 import { StationeryComponent } from './settings/stationery/stationery.component';
@@ -30,7 +27,6 @@ import { BookingRoomComponent } from './booking-room/booking-room.component';
 import { PopupAddBookingRoomComponent } from './booking-room/popup-add-booking-room/popup-add-booking-room.component';
 import { PopupRequestStationeryComponent } from './booking-stationery/popup-request-stationery/popup-request-stationery.component';
 import { PopupListStationeryComponent } from './booking-stationery/popup-list-stationery/popup-list-stationery.component';
-import { PopupDeviceStationeryComponent } from './settings/stationery/popup-add-stationery/popup-device-stationery/popup-device-stationery.component';
 import { PopupColorStationeryComponent } from './settings/stationery/popup-add-stationery/popup-color-stationery/popup-color-stationery.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
@@ -39,6 +35,7 @@ import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/p
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { PopupSettingNormsComponent } from './settings/stationery/popup-setting-norms/popup-setting-norms.component';
 const routes: Route[] = [
   {
     path: '',
@@ -56,7 +53,7 @@ const routes: Route[] = [
         path: 'bookingstationery/:funcID',
         component: BookingStationeryComponent,
       },
-      
+
       {
         path: 'settings',
         canActivate: [AuthGuard],
@@ -90,7 +87,7 @@ const routes: Route[] = [
       },
       {
         path: 'drivers/:funcID',
-        component: DriversComponent
+        component: DriversComponent,
       },
       {
         path: 'stationery/:funcID',
@@ -108,7 +105,8 @@ const Components: Type<any>[] = [
   PopupAddBookingRoomComponent,
   PopupAddBookingCarComponent,
   PopupRequestStationeryComponent,
-  PopupDeviceStationeryComponent,
+  PopupSettingNormsComponent,
+  PopupUpdateInventoryComponent,
   PopupColorStationeryComponent,
   PopupAddCarsComponent,
   PopupAddRoomsComponent,
@@ -122,13 +120,11 @@ const Components: Type<any>[] = [
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,
-  DynamicFormComponent
+  DynamicFormComponent,
 ];
 
 @NgModule({
-  declarations: [
-    Components,
-  ],
+  declarations: [Components],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
@@ -139,7 +135,7 @@ const Components: Type<any>[] = [
     ProgressBarAllModule,
     TabModule,
     CodxShareModule,
-    CodxReportModule
+    CodxReportModule,
   ],
   exports: [RouterModule],
 })
