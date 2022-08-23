@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
 import { preRender } from '@syncfusion/ej2-angular-buttons';
@@ -13,7 +13,8 @@ import { WP_News } from '../../../models/WP_News.model';
 @Component({
   selector: 'lib-popup-add',
   templateUrl: './popup-add.component.html',
-  styleUrls: ['./popup-add.component.css']
+  styleUrls: ['./popup-add.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PopupAddComponent implements OnInit {
   dateStart: Date;
@@ -23,30 +24,30 @@ export class PopupAddComponent implements OnInit {
   newsType: any;
   formGroup: FormGroup;
   user: any;
-  
+
   popupFiled = 1;
   popupContent = 2;
   objectID = '';
-  dialogData:any;
+  dialogData: any;
   dialogRef: DialogRef;
   startDate: Date;
   endDate: Date;
   tagName = "";
   objectType = "";
-  shareControl:string =  "";
+  shareControl: string = "";
   userRecevier: any;
   recevierID = "";
   recevierName = "";
 
-  fileUpload:any[] = [];
-  fileImage:any = null;
-  fileVideo:any = null;
-  myPermission:Permission = null;
-  apprPermission:Permission = null;
-  shareIcon:string = "";
-  shareText:string = "";
-  shareWith:String = "";
-  permissions:Permission[] = [];
+  fileUpload: any[] = [];
+  fileImage: any = null;
+  fileVideo: any = null;
+  myPermission: Permission = null;
+  apprPermission: Permission = null;
+  shareIcon: string = "";
+  shareText: string = "";
+  shareWith: String = "";
+  permissions: Permission[] = [];
 
   NEWSTYPE = {
     POST: "1",
@@ -56,8 +57,8 @@ export class PopupAddComponent implements OnInit {
     OWNER: "1",
     MYGROUP: "2",
     MYTEAM: "3",
-    MYDEPARMENTS:"4",
-    MYDIVISION:"5",
+    MYDEPARMENTS: "4",
+    MYDIVISION: "5",
     MYCOMPANY: "6",
     ADMINISTRATOR: "7",
     EVERYONE: "9",
@@ -68,7 +69,7 @@ export class PopupAddComponent implements OnInit {
     GROUPS: "G",
     USER: "U",
   }
-  MEMBERTYPE ={
+  MEMBERTYPE = {
     CREATED: "1",
     SHARE: "2",
     TAGS: "3"
@@ -76,7 +77,7 @@ export class PopupAddComponent implements OnInit {
   FILE_REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
-    APPLICATION :'application'
+    APPLICATION: 'application'
   }
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
@@ -89,9 +90,9 @@ export class PopupAddComponent implements OnInit {
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
-    private cache:CacheService,
-    private dmSV:CodxDMService,
-    @Optional() dd? : DialogData,
+    private cache: CacheService,
+    private dmSV: CodxDMService,
+    @Optional() dd?: DialogData,
     @Optional() dialogRef?: DialogRef
 
   ) {
@@ -107,16 +108,16 @@ export class PopupAddComponent implements OnInit {
   }
 
 
-  messageImage:string ="";
+  messageImage: string = "";
   ngOnInit(): void {
-    this.cache.message('WP017').subscribe((mssg:any) => {
+    this.cache.message('WP017').subscribe((mssg: any) => {
       if (mssg) this.messageImage = Util.stringFormat(mssg.defaultName);
     })
     this.setDataDefault();
   }
 
 
-  setDataDefault(){
+  setDataDefault() {
     this.cache.valueList('L1901').subscribe((vll: any) => {
       let modShare = vll.datas.find((x: any) => x.value == this.SHARECONTROLS.EVERYONE);
       this.shareIcon = modShare.icon;
@@ -165,49 +166,49 @@ export class PopupAddComponent implements OnInit {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
   clickInsertNews() {
-    if(!this.formGroup.controls['Category'].value){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
-          let mssgCode = Util.stringFormat(mssg.defaultName,"Loại bài viết");
+    if (!this.formGroup.controls['Category'].value) {
+      this.cache.message("SYS009").subscribe((mssg: any) => {
+        if (mssg) {
+          let mssgCode = Util.stringFormat(mssg.defaultName, "Loại bài viết");
           this.notifSV.notify(mssgCode);
         }
       });
       return;
     }
-    if(!this.formGroup.controls['Subject'].value){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
-          let mssgCode = Util.stringFormat(mssg.defaultName,"Tiêu đề");
+    if (!this.formGroup.controls['Subject'].value) {
+      this.cache.message("SYS009").subscribe((mssg: any) => {
+        if (mssg) {
+          let mssgCode = Util.stringFormat(mssg.defaultName, "Tiêu đề");
           this.notifSV.notify(mssgCode);
         }
       });
       return;
     }
-    if(!this.formGroup.controls['SubContent'].value){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
-          let mssgCode = Util.stringFormat(mssg.defaultName,"Mô tả");
+    if (!this.formGroup.controls['SubContent'].value) {
+      this.cache.message("SYS009").subscribe((mssg: any) => {
+        if (mssg) {
+          let mssgCode = Util.stringFormat(mssg.defaultName, "Mô tả");
           this.notifSV.notify(mssgCode);
         }
       });
       return;
     }
-    if(!this.formGroup.controls['Contents'].value){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
-          let mssgCode = Util.stringFormat(mssg.defaultName,"Nội dung");
+    if (!this.formGroup.controls['Contents'].value) {
+      this.cache.message("SYS009").subscribe((mssg: any) => {
+        if (mssg) {
+          let mssgCode = Util.stringFormat(mssg.defaultName, "Nội dung");
           this.notifSV.notify(mssgCode);
         }
       });
       return;
     }
-    if(this.fileUpload.length == 0){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
+    if (this.fileUpload.length == 0) {
+      this.cache.message("SYS009").subscribe((mssg: any) => {
+        if (mssg) {
           let mssgCode = "";
-          if(this.newsType == this.NEWSTYPE.POST)
-             mssgCode = Util.stringFormat(mssg.defaultName,"Hình ảnh");
-          else mssgCode = Util.stringFormat(mssg.defaultName,"Hình ảnh/Video");
+          if (this.newsType == this.NEWSTYPE.POST)
+            mssgCode = Util.stringFormat(mssg.defaultName, "Hình ảnh");
+          else mssgCode = Util.stringFormat(mssg.defaultName, "Hình ảnh/Video");
           this.notifSV.notify(mssgCode);
         }
       });
@@ -220,8 +221,8 @@ export class PopupAddComponent implements OnInit {
     objNews.shareControl = this.shareControl;
     objNews.permissions = this.permissions;
     objNews.isActive = true;
-    if(objNews.allowShare){
-      objNews.permissions.map((p:Permission)=>{p.share = true});
+    if (objNews.allowShare) {
+      objNews.permissions.map((p: Permission) => { p.share = true });
     }
     objNews.createdBy = this.user.userID;
     this.api
@@ -235,17 +236,17 @@ export class PopupAddComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           let data = res;
-          if(this.fileUpload.length > 0){
+          if (this.fileUpload.length > 0) {
             this.codxATMImage.objectId = data.recID;
             this.dmSV.fileUploadList = [...this.fileUpload];
             this.codxATMImage.saveFilesObservable().subscribe(
-              (res2:any) => {
-                if(res2){
+              (res2: any) => {
+                if (res2) {
                   this.initForm();
                   this.shareControl = this.SHARECONTROLS.EVERYONE;
                   this.notifSV.notifyCode('E0026');
                   this.dialogRef.close();
-                  this.insertWPComment(data,"3");
+                  this.insertWPComment(data, "3");
                 }
               }
             );
@@ -254,29 +255,29 @@ export class PopupAddComponent implements OnInit {
       });
   }
 
-  approPost(){
-    if(!this.formGroup.controls['Category'].value){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
-          let mssgCode = Util.stringFormat(mssg.defaultName,"Loại bài viết");
+  approPost() {
+    if (!this.formGroup.controls['Category'].value) {
+      this.cache.message("SYS009").subscribe((mssg: any) => {
+        if (mssg) {
+          let mssgCode = Util.stringFormat(mssg.defaultName, "Loại bài viết");
           this.notifSV.notify(mssgCode);
         }
       });
       return;
     }
-    if(!this.formGroup.controls['Subject'].value){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
-          let mssgCode = Util.stringFormat(mssg.defaultName,"Tiêu đề");
+    if (!this.formGroup.controls['Subject'].value) {
+      this.cache.message("SYS009").subscribe((mssg: any) => {
+        if (mssg) {
+          let mssgCode = Util.stringFormat(mssg.defaultName, "Tiêu đề");
           this.notifSV.notify(mssgCode);
         }
       });
       return;
     }
-    if(!this.formGroup.controls['SubContent'].value){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
-          let mssgCode = Util.stringFormat(mssg.defaultName,"Mô tả");
+    if (!this.formGroup.controls['SubContent'].value) {
+      this.cache.message("SYS009").subscribe((mssg: any) => {
+        if (mssg) {
+          let mssgCode = Util.stringFormat(mssg.defaultName, "Mô tả");
           this.notifSV.notify(mssgCode);
         }
       });
@@ -291,13 +292,13 @@ export class PopupAddComponent implements OnInit {
       });
       return;
     }
-    if(this.fileUpload.length == 0){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
+    if (this.fileUpload.length == 0) {
+      this.cache.message("SYS009").subscribe((mssg: any) => {
+        if (mssg) {
           let mssgCode = "";
-          if(this.newsType == this.NEWSTYPE.POST)
-             mssgCode = Util.stringFormat(mssg.defaultName,"Hình ảnh");
-          else mssgCode = Util.stringFormat(mssg.defaultName,"Hình ảnh/Video");
+          if (this.newsType == this.NEWSTYPE.POST)
+            mssgCode = Util.stringFormat(mssg.defaultName, "Hình ảnh");
+          else mssgCode = Util.stringFormat(mssg.defaultName, "Hình ảnh/Video");
           this.notifSV.notify(mssgCode);
         }
       });
@@ -311,8 +312,8 @@ export class PopupAddComponent implements OnInit {
     objNews.shareControl = this.shareControl;
     objNews.permissions = this.permissions;
     objNews.isActive = true;
-    if(objNews.allowShare){
-      objNews.permissions.map((p:Permission)=>{p.share = true});
+    if (objNews.allowShare) {
+      objNews.permissions.map((p: Permission) => { p.share = true });
     }
     objNews.createdBy = this.user.userID;
     this.api
@@ -326,17 +327,17 @@ export class PopupAddComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           let data = res;
-          if(this.fileUpload.length > 0){
+          if (this.fileUpload.length > 0) {
             this.codxATMImage.objectId = data.recID;
             this.codxATMImage.fileUploadList = [...this.fileUpload];
             this.codxATMImage.saveFilesObservable().subscribe(
-              (res2:any) => {
-                if(res2){
+              (res2: any) => {
+                if (res2) {
                   this.initForm();
                   this.shareControl = this.SHARECONTROLS.EVERYONE;
                   this.notifSV.notifyCode('E0026');
                   this.dialogRef.close(res);
-                  this.insertWPComment(data,"0");
+                  this.insertWPComment(data, "0");
                 }
               }
             );
@@ -344,8 +345,8 @@ export class PopupAddComponent implements OnInit {
         }
       });
   }
-  insertWPComment(data: WP_News,approveControl:string ){
-    if(data.createPost){
+  insertWPComment(data: WP_News, approveControl: string) {
+    if (data.createPost) {
       var post = new WP_Comments();
       post.category = "4";
       post.refID = data.recID;
@@ -356,21 +357,20 @@ export class PopupAddComponent implements OnInit {
       post.approveControl = approveControl;
       post.approveStatus = null;
       post.createdBy = data.createdBy;
-      this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","PublishPostAsync", [post, null]).subscribe();
+      this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post, null]).subscribe();
     }
   }
   valueChange(event: any) {
-    if(!event || event.data == "" || !event.data){
+    if (!event || event.data == "" || !event.data) {
       return;
     }
     let field = event.field;
     let value = event.data;
     let obj = {};
-    switch(field)
-    {
+    switch (field) {
       case 'StartDate':
         this.startDate = value.fromDate;
-        if(this.endDate < this.startDate){
+        if (this.endDate < this.startDate) {
           this.notifSV.notifyCode("WP011");
           this.endDate = null;
           obj[field] = null;
@@ -381,18 +381,18 @@ export class PopupAddComponent implements OnInit {
         break;
       case 'EndDate':
         this.endDate = value.fromDate;
-        if(this.endDate < this.startDate){
+        if (this.endDate < this.startDate) {
           this.notifSV.notifyCode("WP011");
           this.endDate = null;
           obj[field] = null;
         }
-        else  {
+        else {
           obj[field] = this.endDate;
         }
         break;
       default:
         obj[field] = value;
-        break; 
+        break;
     }
     this.formGroup.patchValue(obj);
     this.changedt.detectChanges();
@@ -403,7 +403,7 @@ export class PopupAddComponent implements OnInit {
     }
     let data = event[0];
     let countPermission = 0;
-    if(this.shareControl){
+    if (this.shareControl) {
       this.permissions = [];
       this.permissions.push(this.myPermission);
       this.permissions.push(this.apprPermission);
@@ -608,29 +608,28 @@ export class PopupAddComponent implements OnInit {
     this.formGroup.controls['CreatePost'].setValue(false);
     this.changedt.detectChanges();
   }
-  PopoverEmpEnter(p:any){
+  PopoverEmpEnter(p: any) {
     p.open();
   }
-  PopoverEmpLeave(p:any){
+  PopoverEmpLeave(p: any) {
     p.close();
   }
-  removeFile(file){
-    if(file){
+  removeFile(file) {
+    if (file) {
       this.fileUpload = [];
     }
   }
 
-  addFiles(file:any){
-    if(file && file.data.length > 0 ){
+  addFiles(file: any) {
+    if (file && file.data.length > 0) {
       file.data.map(f => {
-        if(f.mimeType.indexOf("image") >= 0 ){
+        if (f.mimeType.indexOf("image") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.IMAGE;
         }
-        else if(f.mimeType.indexOf("video") >= 0)
-        {
+        else if (f.mimeType.indexOf("video") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.VIDEO;
         }
-        else{
+        else {
           f['referType'] = this.FILE_REFERTYPE.APPLICATION;
         }
       });
@@ -641,42 +640,41 @@ export class PopupAddComponent implements OnInit {
     }
   }
 
-  addImage(files){
-    if(files && files.data.length > 0 ){
+  addImage(files) {
+    if (files && files.data.length > 0) {
       let file = files.data[0];
-        if(file.mimeType.indexOf("image") >= 0 ){
-          file['referType'] = this.FILE_REFERTYPE.IMAGE;
-          this.fileImage = file;
-          this.fileUpload.push(file);
-          this.changedt.detectChanges();
-        }
-        else {
-          this.notifSV.notify("Vui lòng chọn file image.")
-        }
+      if (file.mimeType.indexOf("image") >= 0) {
+        file['referType'] = this.FILE_REFERTYPE.IMAGE;
+        this.fileImage = file;
+        this.fileUpload.push(file);
+        this.changedt.detectChanges();
+      }
+      else {
+        this.notifSV.notify("Vui lòng chọn file image.")
+      }
     }
   }
-  addVideo(files){
-    if(files && files.data.length > 0 ){
+  addVideo(files) {
+    if (files && files.data.length > 0) {
       let file = files.data[0];
-         if(file.mimeType.indexOf("video") >= 0)
-        {
-          file['referType'] = this.FILE_REFERTYPE.VIDEO;
-          this.fileVideo = file;
-          this.fileUpload.push(file);
-          this.changedt.detectChanges();
-        }
-        else{
-          this.notifSV.notify("Vui lòng chọn file video.")
-        }
+      if (file.mimeType.indexOf("video") >= 0) {
+        file['referType'] = this.FILE_REFERTYPE.VIDEO;
+        this.fileVideo = file;
+        this.fileUpload.push(file);
+        this.changedt.detectChanges();
+      }
+      else {
+        this.notifSV.notify("Vui lòng chọn file video.")
+      }
     }
   }
-  clickClosePopup(){
+  clickClosePopup() {
     this.dialogRef.close();
   }
-  clickUploadImage(){
+  clickUploadImage() {
     this.codxATMImage.uploadFile();
   }
-  clickUploadVideo(){
+  clickUploadVideo() {
     this.codxATMVideo.uploadFile();
   }
 }
