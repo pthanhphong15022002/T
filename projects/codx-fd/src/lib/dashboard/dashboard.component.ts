@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
 import { SignalRService } from '@core/services/signalr/signalr.service';
 import { Post } from '@shared/models/post';
@@ -7,13 +7,14 @@ import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewMo
 @Component({
   selector: 'lib-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent extends UIComponent implements OnInit, AfterViewInit {
 
 
   predicate = `Category =@0 `;
-  dataValue ="3";
+  dataValue = "3";
   memberType = "3";
   predicateCoins = `UserID=@0 AND ( TransType = "1" OR TransType = "2" OR TransType = "4" OR TransType = "5" OR TransType = "6")`;
   dataValueCoins = "";
@@ -33,12 +34,12 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
 
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('listviewCoins') listviewComponent: CodxListviewComponent;
-  @ViewChild('listview') listview : CodxListviewComponent;
+  @ViewChild('listview') listview: CodxListviewComponent;
   dataRef: Post;
   isLoading = true;
   crrId = "";
   constructor(
-    private injector:Injector,
+    private injector: Injector,
     private dr: ChangeDetectorRef,
     private auth: AuthService,
     private signalRApi: WPService,
@@ -57,14 +58,14 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
       type: ViewType.content,
       active: true,
       showButton: true,
-      model:{
-        panelLeftRef : this.panelContent
+      model: {
+        panelLeftRef: this.panelContent
       }
     }];
-    
+
   }
   onInit(): void {
-    
+
     this.user = this.auth.userValue;
     this.api.call("ERM.Business.FD", "CardsBusiness", "GetDataForWebAsync", []).subscribe(res => {
       if (res && res.msgBodyData != null && res.msgBodyData.length > 0) {
@@ -130,11 +131,11 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
 
 
 
-  clickShowItem(data:any){
-    console.log('tmpCardDetail: ',data)
+  clickShowItem(data: any) {
+    console.log('tmpCardDetail: ', data)
   }
 
-  clickShowPupopAdd(event:any){
+  clickShowPupopAdd(event: any) {
     console.log(event)
   }
 

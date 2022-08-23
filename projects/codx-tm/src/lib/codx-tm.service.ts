@@ -28,6 +28,7 @@ export class CodxTMService {
   taskGroupComponent = false;
   aside = new BehaviorSubject<any>(null);
   toolbar = new BehaviorSubject<any>(null);
+  urlback = "" ;
   constructor(
     private api: ApiHttpService,
     private authStore: AuthStore,
