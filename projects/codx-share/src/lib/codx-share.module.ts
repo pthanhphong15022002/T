@@ -76,6 +76,9 @@ import { CodxImportAddMappingComponent } from './components/codx-import/codx-imp
 import { CodxAlertComponent } from './components/codx-alert/codx-alert.component';
 import { SettingNotifyDrawerComponent } from './layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
 import { PopupAddNotifyComponent } from './layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
+import { AlertDrawerComponent } from './layout/drawers/alert-drawer/alert-drawer.component';
+import { SettingAlertDrawerComponent } from './layout/drawers/alert-drawer/setting-alert-drawer/setting-alert-drawer.component';
+import { PopupAddAlertComponent } from './layout/drawers/alert-drawer/popup-add-alert/popup-add-alert.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -122,7 +125,10 @@ const T_Component: Type<any>[] = [
   CodxImportAddMappingComponent,
   CodxAlertComponent,
   SettingNotifyDrawerComponent,
-  PopupAddNotifyComponent
+  PopupAddNotifyComponent,
+  AlertDrawerComponent,
+  SettingAlertDrawerComponent,
+  PopupAddAlertComponent
 ];
 
 const T_Pipe: Type<any>[] = [  TruncatePipe, FileImage];

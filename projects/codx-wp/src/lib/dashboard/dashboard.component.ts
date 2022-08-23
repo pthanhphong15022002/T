@@ -45,7 +45,7 @@ export class DashboardComponent extends LayoutBaseComponent {
   openFormNotify(){
     let option = new SidebarModel();
     option.Width = '550px';
-    this.dialog = this.callfc.openSide(PopupAddNotifyComponent, '', option);
+    this.dialog = this.callfc.openSide(NotifyDrawerComponent, 'WP', option);
   }
 
   openFormAlertRule(){

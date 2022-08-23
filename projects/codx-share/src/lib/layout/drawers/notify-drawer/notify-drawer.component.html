@@ -1,58 +1,53 @@
-<codx-form [subHeader]="subheader"  [body]="body" [dialog]="dialog">
-</codx-form>
-
-<ng-template #subheader>
+<div class="p-4">
   <div class="d-flex justify-content-between w-100">
     <div>
-      <codx-label [formModel]="" name="lblMessage" default="Thông báo"></codx-label>
+      <codx-label [ngClass]="'dialog-title line-clamp line-clamp-1 fw-bolder'" [formModel]="" name="lblMessage" default="Thông báo"></codx-label>
     </div>
     <div>
-      <button class="btn">
-        <i class="icon-more_horiz"></i>
+      <button class="btn" (click)="clickCloseFrom()">
+        <i class="icon-close icon-18"></i>
       </button>
     </div>
   </div>
-</ng-template>
-<ng-template  #body>
-  <div class="d-flex justify-content-between mt-2 w-100">
+  <!-- <div class="d-flex justify-content-between mt-2 w-100">
     <div>
       <codx-label [formModel]="" name="lblMessage" default="Mới"></codx-label>
     </div>
     <div class="text-primary">
       <codx-label [formModel]="" name="lblMessage" default="Xem tất cả"></codx-label>
     </div>
-  </div>
-  <ng-container *ngIf="lstNotify.length > 0">
-    <ng-container *ngFor="let item of lstNotify">
-      <div class="row p-4 my-2">
-        <div class="col-2">
-          <ng-container [ngSwitch]="item.eventType">
-            <ng-container *ngSwitchCase="0">
-              <codx-img [width]="35" [objectId]="item.createdBy" [objectType]="'AD_Users'"></codx-img>
-            </ng-container>
-            <ng-container *ngSwitchCase="1">
-              <codx-img [width]="35" [objectId]="item.owner" [objectType]="'AD_Users'"></codx-img>
-            </ng-container>
-            <ng-container *ngSwitchDefault>
-              <codx-img [width]="35" [objectId]="item.modifiedBy" [objectType]="'AD_Users'"></codx-img>
-            </ng-container>
-          </ng-container>
-        </div>
-        <div class="col-8">
-          <div>
-              <span class="fw-bolder me-1">{{item.createdName}}</span>
-              <span>{{item.description}}</span>            
+  </div> -->
+  <div>
+    <ng-container *ngIf="lstNotify.length > 0">
+      <ng-container *ngFor="let item of lstNotify">
+        <div class="row p-4 my-2">
+          <div class="col-1">
+            <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+            <!-- <ng-container [ngSwitch]="item.eventType">
+              <ng-container *ngSwitchCase="0">
+                <codx-img [width]="35" [objectId]="item.createdBy" [objectType]="'AD_Users'"></codx-img>
+              </ng-container>
+              <ng-container *ngSwitchCase="1">
+                <codx-img [width]="35" [objectId]="item.owner" [objectType]="'AD_Users'"></codx-img>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <codx-img [width]="35" [objectId]="item.modifiedBy" [objectType]="'AD_Users'"></codx-img>
+              </ng-container>
+            </ng-container> -->
           </div>
-          <div>
-            <span class="text-primary">{{item.createdOn | timefrom}}</span>
+          <div class="col-10">
+            <div>
+                <span class="fw-bolder me-1">{{item.text}}</span>          
+            </div>
+            <div>
+              <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
+            </div>
+          </div>
+          <div class="col-1" *ngIf="!item.isRead">
+            <span class="dots"></span>
           </div>
         </div>
-        <div class="col-2">
-          <ng-container *ngIf="!item.isRead">
-            <span class=" text-primary"></span>
-          </ng-container>
-        </div>
-      </div>
+      </ng-container>
     </ng-container>
-  </ng-container>
-</ng-template>
+  </div>
+</div>
