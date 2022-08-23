@@ -76,6 +76,7 @@ import { CodxImportAddMappingComponent } from './components/codx-import/codx-imp
 import { CodxAlertComponent } from './components/codx-alert/codx-alert.component';
 import { SettingNotifyDrawerComponent } from './layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
 import { PopupAddNotifyComponent } from './layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
+import { CodxNoteComponent } from './components/codx-note/codx-note.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -122,13 +123,14 @@ const T_Component: Type<any>[] = [
   CodxImportAddMappingComponent,
   CodxAlertComponent,
   SettingNotifyDrawerComponent,
-  PopupAddNotifyComponent
+  PopupAddNotifyComponent,
+  CodxNoteComponent,
 ];
 
 const T_Pipe: Type<any>[] = [  TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe],
+  declarations: [T_Component, T_Pipe, CodxNoteComponent],
   imports: [
     CommonModule,
     NgbModule,

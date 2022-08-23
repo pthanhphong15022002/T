@@ -13,6 +13,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxTMService } from '../codx-tm.service';
 import { TM_Sprints } from '../models/TM_Sprints.model';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
 import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sprints.component';
@@ -25,15 +26,6 @@ import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sp
 export class SprintsComponent extends UIComponent {
   @ViewChild('listCardSprints') listCardSprints: TemplateRef<any>;
   gridView: any;
-  // // predicateViewBoards =
-  // //   '((Owner=@0) or (@1.Contains(outerIt.IterationID))) AND ProjectID=null';
-  // predicateViewBoards = '(Owner=@0) or (@1.Contains(outerIt.IterationID))';
-  // predicateProjectBoards =
-  //   '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and ProjectID!=null';
-  // totalRowMyBoard: number = 6;
-  // totalRowProjectBoard: number = 6;
-  // totalViewBoards: number = 0;
-  // totalProjectBoards: number = 0;
   boardAction: any;
   user: any;
   sprintDefaut = new TM_Sprints();
@@ -57,13 +49,19 @@ export class SprintsComponent extends UIComponent {
   constructor(
     inject: Injector,
     private notiService: NotificationsService,
+    private tmSv : CodxTMService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
-    this.funcID = this.activedRouter.params['funcID'];
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) {
+       this.tmSv.urlback = f.url ;
+      }
+    });
   }
 
   //#region Init

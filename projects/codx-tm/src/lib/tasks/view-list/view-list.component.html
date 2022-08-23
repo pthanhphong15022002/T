@@ -14,17 +14,10 @@
     </div>
   </td>
   <td class=" w-10">
-    <div class="badge badge-danger label-status" [style.border-color]="
-                    (data?.status | vll: vllStatus :'textColor' | async) +
-                    '30'
-                  " [style.background-color]="
-                    (data?.status | vll: vllStatus :'textColor' | async) +
-                    '30'
-                  " [style.color]="
-                  data?.status | vll: vllStatus :'textColor' | async
-                  " style="border: none">
-      {{ data?.status | vll: "L0614":"text" | async }}
-    </div>
+    <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data?.status" [showText]="true" [showBgColor]="true"
+      class="badge badge-light badge-md fs-7 ms-2">
+    </codx-vll>
+
   </td>
   <td class=" w-30">
     <div *ngIf="data.memo" class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail"
@@ -50,10 +43,10 @@
     </div>
   </td>
   <td class=" w-5">
-    <div *ngIf="data.category == '3'" class="" >
-      <codx-imgs [width]="30" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="4" (click)="popoverEmpList(popoverList,data)" [ngbPopover]="popEmpList"
-      popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" container="body"
-      autoClose="outside" [openDelay]="500">
+    <div *ngIf="data.category == '3'" class="">
+      <codx-imgs [width]="30" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="4"
+        (click)="popoverEmpList(popoverList,data)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
+        #popoverList="ngbPopover" placement="right bottom" container="body" autoClose="outside" [openDelay]="500">
       </codx-imgs>
     </div>
     <div *ngIf="data.category == '1' || data.category == '2'" class="">
@@ -159,19 +152,9 @@
       <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
         <div class="d-flex align-items-end me-2 codx-badge">
           <span>
-            <div class="d-status">
-              <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                  (item?.status | vll: 'L0614':'textColor' | async) +
-                  '30'
-                " [style.background-color]="
-                  (item?.status | vll: 'L0614':'textColor' | async) +
-                  '30'
-                " [style.color]="
-                item?.status | vll: 'L0614':'textColor' | async
-                " style="border: none">
-                {{ item?.status | vll: "L0614":"text" | async }}
-              </div>
-            </div>
+            <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data?.status" [showText]="true"
+              [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+            </codx-vll>
           </span>
           <span>
             <span class="text-gray-700">{{

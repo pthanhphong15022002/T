@@ -6,34 +6,34 @@
       class="flex-column flex-lg-row-auto w-lg-240px main-left"
       [class.hideCol]="hideThumbnail"
     >
-      <div
-        class="hover-scroll-overlay-y pe-6 me-n6"
-        data-kt-scroll="true"
-        data-kt-scroll-activate="{default: true}"
-        data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".e-tab-header"
-        data-kt-scroll-wrappers=".main-left"
-        data-kt-scroll-offset="'0px'"
-      >
-        <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
-          <e-tabitems>
-            <e-tabitem>
-              <ng-template #headerText>
-                {{ headerLeftName[0].text }}
-              </ng-template>
-              <ng-template #content>
+      <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              {{ headerLeftName[0].text }}
+            </ng-template>
+            <ng-template #content>
+              <div
+                class="hover-scroll-overlay-y"
+                data-kt-scroll="true"
+                data-kt-scroll-activate="{default: true}"
+                data-kt-scroll-height="auto"
+                data-kt-scroll-dependencies=".e-tab-header"
+                data-kt-scroll-wrappers=".e-tab"
+                data-kt-scroll-offset="0px"
+              >
                 <div #thumbnailTab id="thumbnailTab"></div>
-              </ng-template>
-            </e-tabitem>
-            <e-tabitem>
-              <ng-template #headerText>
-                {{ headerLeftName[1].text }}
-              </ng-template>
-              <ng-template #content> </ng-template>
-            </e-tabitem>
-          </e-tabitems>
-        </ejs-tab>
-      </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              {{ headerLeftName[1].text }}
+            </ng-template>
+            <ng-template #content> </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
     </div>
     <div class="d-flex flex-column flex-row-fluid main-center">
       <div
@@ -275,7 +275,7 @@
                     (click)="changeAnnotationItem(index + 1)"
                   >
                     <codx-card-center
-                      cardCss="border h-100 w-125px"
+                      cardCss="border h-100 w-125px pt-4 pb-2"
                       icoCss="icon-30 mb-1 {{
                         index + 1 | vll: 'ES015':'icon' | async
                       }}"
@@ -347,10 +347,8 @@
                   >
                     <ng-template #template let-area="">
                       <div
-                        *ngIf="area.lableType != 8 || isApprover != true"
-                        class="annotationItem"
+                        class="annotationItem d-flex flex-stack"
                         (click)="goToSelectedAnnotation(area)"
-                        style="border: 1px solid black; margin-bottom: 5px"
                       >
                         <codx-temp-full
                           [title]="
@@ -360,7 +358,7 @@
                           "
                           [resourceObjType]="'AD_Users'"
                           [icoCss]="
-                            'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+                            'symbol symbol-icon symbol-circle symbol-32px me-2 ' +
                             (area.labelType | vll: 'ES015':'icon' | async)
                           "
                         >
@@ -580,7 +578,7 @@
 </ng-template>
 
 <ng-template #pageInput>
-  <input
+  <!-- <input
     id="numeric"
     type="number"
     min="1"
@@ -589,5 +587,13 @@
     [(value)]="curPage"
     defaultValue="1"
     (keyup.enter)="goToPage($event)"
-  />
+  /> -->
+  <codx-input
+    type="number"
+    [min]="1"
+    [max]="pageMax"
+    [crrValue]="curPage"
+    (valueChange)="goToPage($event)"
+  >
+  </codx-input>
 </ng-template>
