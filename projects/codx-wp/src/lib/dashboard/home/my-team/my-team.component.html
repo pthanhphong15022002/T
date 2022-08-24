@@ -70,7 +70,7 @@
 <ng-template #popContent>
     <ng-container>
         <div *ngFor="let emp of listEmpInfo | filter : searchField : 'employeeName': '' :''" class="pb-2 full">
-            <div class="d-flex flex-column org-card w-100" [ngbPopover]="" placement="left" [popoverTitle]="popEmpTitle"
+            <div class="d-flex flex-column org-card w-100" [ngbPopover]="popEmpTitle" placement="left"
                 #pemp="ngbPopover" container="body" triggers="manual" (click)="PopoverEmpOfList(pemp,emp)">
                 <div class="d-flex align-items-start">
                     <codx-img class="me-3" [objectId]="emp?.employeeID" [objectName]="emp?.employeeName"

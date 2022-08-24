@@ -1,18 +1,11 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
-  [bodyCss]="'h-100'"
-  [formModel]="formModel"
-  [data]="data"
-></codx-form>
+<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel"
+  [data]="data"></codx-form>
 <ng-template popup adde #body>
   <div class="d-flex align-items-center justify-content-between py-2">
     <div class="hideAttachment w-100 me-2">
-      <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-        hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (filePrimitive)="getfilePrimitive($event)"
+      <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0"
+        hideBtnSave="1" hideFolder="1" hideUploadBtn="1" hideDes="1" [functionID]="formModel?.funcID"
+        (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (filePrimitive)="getfilePrimitive($event)"
         [objectId]="null" [allowMultiFile]="0" [idBrowse]="'addTemplateImport'">
       </codx-attachment>
     </div>
@@ -24,17 +17,14 @@
   <div class="py-2">
     <div class="py-2">
       <codx-label [formModel]="formModels" [fiedName]="'Description'" class="fw-bold"></codx-label>
-      <codx-input 
-        type="text" 
-        [Group]="importAddTmpGroup"
-        ControlName="nameTmp"
-        [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
-      >
+      <codx-input type="text" [Group]="importAddTmpGroup" ControlName="nameTmp"
+        [ngClass]="{ 'is-invalid': submitted && f.format.errors }">
       </codx-input>
     </div>
     <div class="row py-2">
       <div class="col-3">
-        <codx-label [formModel]="formModel" [fiedName]="'sheetimport'" default="Sheet import" class="fw-bold"></codx-label>
+        <codx-label [formModel]="formModel" [fiedName]="'sheetimport'" default="Sheet import" class="fw-bold">
+        </codx-label>
         <select class="form-select select-sheet" aria-label="Sheet Import">
           <ng-container *ngIf="sheet">
             <option *ngFor="let item of sheet">{{item}}</option>
@@ -46,29 +36,32 @@
         <codx-input type="text"></codx-input>
       </div>
       <div class="col-3">
-        <codx-label [formModel]="formModel" [fiedName]="'password'" default="Định dạng mật khẩu" class="fw-bold"></codx-label>
+        <codx-label [formModel]="formModel" [fiedName]="'password'" default="Định dạng mật khẩu" class="fw-bold">
+        </codx-label>
         <codx-input type="combobox"></codx-input>
       </div>
       <div class="col-3">
-        <codx-label [formModel]="formModel" [fiedName]="'dfpassword'" default="Mật khẩu mặc định" class="fw-bold"></codx-label>
+        <codx-label [formModel]="formModel" [fiedName]="'dfpassword'" default="Mật khẩu mặc định" class="fw-bold">
+        </codx-label>
         <codx-input type="text"></codx-input>
       </div>
     </div>
   </div>
   <div>
     <div class="d-flex align-items-center justify-content-between py-2">
-      <codx-label [formModel]="formModel" [fiedName]="'detailImport'" default="Chi tiết import" class="text-primary fw-bold"></codx-label>
+      <codx-label [formModel]="formModel" [fiedName]="'detailImport'" default="Chi tiết import"
+        class="text-primary fw-bold"></codx-label>
       <i class="fa-regular fa-square-plus fa-xl text-black cursor-pointer" (click)="openFormAddTemplate()"></i>
     </div>
-    <codx-gridview #gridView [columnsGrid]="columnsGrid"  [rowTmp]="rowTmp" ></codx-gridview>
+    <codx-gridview #gridView [columnsGrid]="columnsGrid" [rowTmp]="rowTmp"></codx-gridview>
   </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSave()">
-        <codx-label [formModel]="formModel" [fiedName]="'save'" [default]="'Lưu'"></codx-label>
-      </button>
-    </div>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSave()">
+      <codx-label [formModel]="formModel" [fiedName]="'save'" [default]="'Lưu'"></codx-label>
+    </button>
+  </div>
 </ng-template>
 <ng-template #rowTmp let-data>
   <tr class="tr-ip-add-tmp has-action-menu">
@@ -96,5 +89,3 @@
     </td>
   </tr>
 </ng-template>
-
-
