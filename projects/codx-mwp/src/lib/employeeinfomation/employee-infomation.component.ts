@@ -181,18 +181,6 @@ export class EmployeeInfomationComponent implements OnInit {
     };
   }
 
-  updateExperiences(response) {
-    this.ExperencesWorked = [];
-    this.ExperencesCurrent = [];
-    if (response.Experences) { //Experences
-      var exp = response.Experences;
-      if (exp.WorkedCompany)
-        this.ExperencesWorked = exp.WorkedCompany;
-      if (exp.CurrentCompany)
-        this.ExperencesCurrent = exp.CurrentCompany;
-    }
-  }
-
   getQueryParams() {
     this.routeActive.queryParams.subscribe((params) => {
       if (params) {
@@ -252,8 +240,6 @@ export class EmployeeInfomationComponent implements OnInit {
       });
     }, 100);
 
-
-
   }
   updateHobby(response) {
     if (response) {
@@ -268,14 +254,24 @@ export class EmployeeInfomationComponent implements OnInit {
           obj[element.catagory] = 1;
           this.employeeHobbieCategory.push(element.catagory);
         }
-
       }
-
     }
   }
+
+  updateExperiences(response) {
+    this.ExperencesWorked = [];
+    this.ExperencesCurrent = [];
+    if (response.Experences) { //Experences
+      var exp = response.Experences;
+      if (exp.WorkedCompany)
+        this.ExperencesWorked = exp.WorkedCompany;
+      if (exp.CurrentCompany)
+        this.ExperencesCurrent = exp.CurrentCompany;
+    }
+  }
+
   updateRelation(response) {
     this.employeeRelationship = [];
-
     if (response.Relationship)  // Relationship
       this.employeeRelationship = response.Relationship;
   }
@@ -313,22 +309,6 @@ export class EmployeeInfomationComponent implements OnInit {
       }
     }
   }
-  // // sliderChange(e, data) {
-  // //   this.skillChartEmployee = [];
-  // //   data.rating = data.valueX = e.toString();
-  // //   // this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeSkillAsync', [[data]])
-  // //   //   .subscribe((o: any) => {
-  // //   //     var objIndex = this.skillEmployee.findIndex((obj => obj.recID == data.recID));
-  // //   //     this.skillEmployee[objIndex].rating = this.skillEmployee[objIndex].valueX = data.rating;
-  // //   //     this.skillEmployee = [...this.skillEmployee, ...[]];
-  // //   //     this.dt.detectChanges();
-  // //   //   });
-  // //   // for (let index = 0; index < this.skillEmployee.length; index++) {
-  // //   //   const element = this.skillEmployee[index];
-  // //   //   this.skillChartEmployee.push(element);
-  // //   // }
-  // //   // this.dt.detectChanges();
-  // // }
 
   ngAfterViewInit() {
     this.views = [
@@ -386,7 +366,7 @@ export class EmployeeInfomationComponent implements OnInit {
   clickMFS(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS03':
-        this.editRelation(data);
+        this.editRelations(data);
         break;
       case 'SYS02':
         this.deleteRelation(data);
@@ -467,7 +447,7 @@ export class EmployeeInfomationComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-  editRelation(data) {
+  editRelations(data?) {
     this.view.dataService.request.funcID = "MWP00205";
     this.view.dataService.request.entityName = "HR_EmployeeRelations";
     this.view.dataService.idField = "recID"
@@ -526,7 +506,7 @@ export class EmployeeInfomationComponent implements OnInit {
   deleteHobby(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-      this.beforeDelExperences(opt)).subscribe((res) => {
+      this.beforeDelHobby(opt)).subscribe((res) => {
         if (res) {
           this.employeeHobbieCategory = [];
           var obj: any = {};
@@ -601,7 +581,7 @@ export class EmployeeInfomationComponent implements OnInit {
   deleteRelation(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-      this.beforeDelExperences(opt)).subscribe((res) => {
+      this.beforeDelRelation(opt)).subscribe((res) => {
         if (res) {
           this.codxMwpService.LoadData(this.employee.employeeID, "", "7").subscribe((response: any) => {
             if (response) {

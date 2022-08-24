@@ -1,6 +1,6 @@
 <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views"
-  (sortChange)="sortChanged($event)"
+  (sortChanged)="sortChanged($event)"
   (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="addFile($event)"
   (viewChanged)="changeView($event)" (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)"></codx-views>
 

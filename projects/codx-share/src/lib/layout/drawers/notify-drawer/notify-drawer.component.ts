@@ -42,10 +42,11 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
       'NotificationBusinesss',
       'GetAsync',
       [this.auth.userValue.userID, this.auth.userValue.tenant]
-    ).subscribe((res:any) => {
-      if(res){
-        console.log(res);
+    ).subscribe((res:any[]) => {
+      if(res.length > 0){
         this.lstNotify = res;
+        this.lstNewNotify = res.splice(0,5);
+        this.lstOldNotify = res;
       }
     });
   }
