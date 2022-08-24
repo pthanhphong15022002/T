@@ -4,42 +4,30 @@
             <span class="icon-drag_indicator icon-20 pd-top-5"></span>
             <div *ngIf="lineType == 'text'">
                 <codx-input format="ed2" [class]="'border-0'" type="text" class="test-textarea" [crrValue]="empty"
-                    [placeholder]="gridViewSetup.Comments.headerText + '...'" (valueChange)="valueChange($event)"
-                    ngDefaultControl field="memo">
+                    [placeholder]="gridViewSetup?.Comments?.headerText + '...'" (valueChange)="valueChange($event)"
+                    ngDefaultControl field="memo" (keyUpEnter)="keyUpEnter($event)">
                 </codx-input>
             </div>
-            <div *ngIf="lineType == 'check'">
-                <div class="flex align-items-center">
+            <div *ngIf="lineType == 'check'" class="d-flex">
+                <div class="check-box">
                     <codx-input #noteAddText type="checkBox" [crrValue]="" field="status" labelPosition="Before"
                         class="test-check" (valueChange)="valueChange($event)">
                     </codx-input>
-                    <ng-template #list>
-                        <span class="dot-black"></span>
-                    </ng-template>
-                    <div class="w-100" #txtNoteEdit name="txtTodoEdit">
-                        <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
-                            (keyUpEnter)="onUpdateNote($event)" [crrValue]="" field="listNote"
-                            (valueChange)="valueChange($event)"
-                            [placeholder]="gridViewSetup.Comments.headerText + '...'">
-                        </codx-input>
-                    </div>
+                </div>
+                <div class="w-100 text-after-check-box" #txtNoteEdit name="txtTodoEdit">
+                    <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
+                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="listNote"
+                        (valueChange)="valueChange($event)" [placeholder]="gridViewSetup?.Comments?.headerText + '...'">
+                    </codx-input>
                 </div>
             </div>
-            <div *ngIf="lineType =='list'">
-                <div class="flex align-items-center">
-                    <codx-input #noteAddText type="checkBox" [crrValue]="" field="status" labelPosition="Before"
-                        class="test-check" (valueChange)="valueChange($event)">
+            <div *ngIf="lineType =='list'" class="d-flex">
+                <div class="li"><li></li></div>
+                <div class="w-100 text-after-li" #txtNoteEdit name="txtTodoEdit">
+                    <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
+                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="listNote"
+                        (valueChange)="valueChange($event)" [placeholder]="gridViewSetup?.Comments?.headerText + '...'">
                     </codx-input>
-                    <ng-template #list>
-                        <span class="dot-black"></span>
-                    </ng-template>
-                    <div class="w-100" #txtNoteEdit name="txtTodoEdit">
-                        <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
-                            (keyUpEnter)="onUpdateNote($event)" [crrValue]="" field="listNote"
-                            (valueChange)="valueChange($event)"
-                            [placeholder]="gridViewSetup.Comments.headerText + '...'">
-                        </codx-input>
-                    </div>
                 </div>
             </div>
         </div>

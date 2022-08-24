@@ -5,3 +5,21 @@
 .pd-top-5{
     padding-top: 5px;
 }
+
+.li {
+    margin-left: 10px;
+    margin-top: 8px;
+}
+
+.text-after-li {
+    margin-left: -10px
+}
+
+.check-box {
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+.text-after-check-box {
+    margin-left: -6px
+}
