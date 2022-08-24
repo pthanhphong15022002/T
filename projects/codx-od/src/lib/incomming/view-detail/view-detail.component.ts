@@ -118,6 +118,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     )
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
+    this.setHeight();
   }
   ngOnInit(): void {
     this.active = 1;
@@ -126,6 +127,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.userID = this.authStore.get().userID;
     this.getDataValuelist();
    
+  }
+  setHeight()
+  {
+    var main = Array.from(document.getElementsByClassName('codx-detail-main') as HTMLCollectionOf<HTMLElement>)[0].offsetHeight;
+    var header = Array.from(document.getElementsByClassName('codx-detail-header') as HTMLCollectionOf<HTMLElement>)[0].offsetHeight;
+    Array.from(document.getElementsByClassName('codx-detail-body') as HTMLCollectionOf<HTMLElement>)[0].style.height = (main - header - 27) +"px";
   }
   getGridViewSetup(funcID: any) {
     this.cache.functionList(funcID).subscribe((fuc) => {
@@ -505,6 +512,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           this.dialog.closed.subscribe((e) => {
             if(e[0])
             {
+              debugger;
               this.data.status = "3";
               this.view.dataService.update(this.data).subscribe();
             }
@@ -553,7 +561,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           option
         );
         this.dialog.closed.subscribe((x) => {
-          if (x.event != null) {
+          if (x.event) {
+            debugger;
             this.data.lstUserID = getListImg(x.event[0].relations);
             this.data.listInformationRel = this.data.listInformationRel.concat(
               x.event[1]
