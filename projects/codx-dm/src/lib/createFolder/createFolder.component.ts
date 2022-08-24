@@ -340,7 +340,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   changeValue($event, type) {
- //   console.log($event);
+    //   console.log($event);
     this.errorshow = true;
     switch (type) {
       case 'folderName':
@@ -350,7 +350,7 @@ export class CreateFolderComponent implements OnInit {
     }
   }
 
-  allpyShare($event) {}
+  allpyShare($event) { }
 
   changeValueOwner($event) {
     this.showPopup = false;
@@ -583,8 +583,8 @@ export class CreateFolderComponent implements OnInit {
         if (res.status == 0) {
           var folders = this.dmSV.listFolder;
           if (folders == null) folders = [];
-        //  if ((res.data.level != '1' && this.dmSV.idMenuActive == 'DMT02') ||
-        //    (res.data.level != '3' && this.dmSV.idMenuActive == 'DMT03'))
+          //  if ((res.data.level != '1' && this.dmSV.idMenuActive == 'DMT02') ||
+          //    (res.data.level != '3' && this.dmSV.idMenuActive == 'DMT03'))
           //that.dmSV.isTree = true;
           folders.push(Object.assign({}, res.data));
           that.dmSV.listFolder = folders;
@@ -593,7 +593,7 @@ export class CreateFolderComponent implements OnInit {
           //  that.dmSV.changeData(folders, null, this.dmSV.getFolderId());
           //  that.dmSV.changeAddFolder(res.data);
           that.changeDetectorRef.detectChanges();
-        //  that.dmSV.isTree = false;
+          //  that.dmSV.isTree = false;
           //  this.modalService.dismissAll();
           this.dialog.close();
         } else {
@@ -745,7 +745,7 @@ export class CreateFolderComponent implements OnInit {
     );
   }
 
-  removeUserRight(index) {}
+  removeUserRight(index) { }
 
   isShowAll(action = false) {
     if (action) this.showAll = !this.showAll;
@@ -838,14 +838,14 @@ export class CreateFolderComponent implements OnInit {
     else return '0';
   }
 
-  validate(item) {  
+  validate(item) {
     switch (item) {
       case 'folderName':
         if (this.checkFolderName() != '0' && this.errorshow) {
           //this.errorshow = true;
-          return 'w-100 dms-text-error is-invalid';          
+          return 'w-100 dms-text-error is-invalid';
         } else {
-        //  this.errorshow = true;
+          //  this.errorshow = true;
           return 'w-100';
         }
     }
@@ -858,7 +858,7 @@ export class CreateFolderComponent implements OnInit {
 
   valueChange($event, field) {
     if ($event != null) {
-      switch (field) {      
+      switch (field) {
         case "icon":
           if ($event)
             this.icon = $event;

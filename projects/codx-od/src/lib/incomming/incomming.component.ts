@@ -44,6 +44,7 @@ import { IncommingAddComponent } from './incomming-add/incomming-add.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-incomming',
@@ -127,7 +128,7 @@ export class IncommingComponent
   notifySvr: NotificationsService;
   atSV: AttachmentService;
   fileService: FileService;
-  constructor(inject: Injector) {
+  constructor(inject: Injector, private route: ActivatedRoute,) {
     super(inject);
     this.odService = inject.get(DispatchService);
     this.agService = inject.get(AgencyService);
@@ -139,6 +140,9 @@ export class IncommingComponent
   }
   ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
+    // this.route.params.subscribe((routeParams) => {
+    //     (this.view as ViewsComponent).currentView = null;
+    // });
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';

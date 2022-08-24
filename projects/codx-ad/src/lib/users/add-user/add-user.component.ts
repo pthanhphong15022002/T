@@ -339,15 +339,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res) {
                   res.chooseRoles = res?.functions;
-                  (this.dialog.dataService as CRUDService)
+                  this.dialog.close(res);
+                  /* (this.dialog.dataService as CRUDService)
                     .update(res)
-                    .subscribe();
+                    .subscribe(); */
                   this.changeDetector.detectChanges();
                 }
               });
           }
-          this.dialog.close();
           this.notification.notifyCode('SYS006');
+          
         }
       } else this.onUpdate();
     }
@@ -392,23 +393,20 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   getEmployee(employeeID: string) {
-    if (!this.adUser.employeeID) {
-      this.api
-        .exec<any>('ERM.Business.HR', 'HRBusiness', 'GetModelEmp', [employeeID])
-        .subscribe((employee) => {
-          if (employee) {
-            this.adUser.employeeID = employeeID;
-            this.adUser.userName = employee.employeeName;
-            this.adUser.buid = employee.organizationID;
-            if (this.formType == 'add') {
-              this.adUser.email = employee.email;
-              this.adUser.phone = employee.phone;
-            } else this.adUser['phone'] = this.adUser.mobile;
-
-            this.changeDetector.detectChanges();
-          }
-        });
-    }
+    this.api
+      .exec<any>('ERM.Business.HR', 'HRBusiness', 'GetModelEmp', [employeeID])
+      .subscribe((employee) => {
+        if (employee) {
+          this.adUser.employeeID = employeeID;
+          this.adUser.userName = employee.employeeName;
+          this.adUser.buid = employee.organizationID;
+          if (this.formType == 'add') {
+            this.adUser.email = employee.email;
+            this.adUser.phone = employee.phone;
+          } else this.adUser['phone'] = this.adUser.mobile;
+          this.changeDetector.detectChanges();
+        }
+      });
   }
 
   loadUserRole(userID) {

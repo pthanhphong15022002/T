@@ -9,6 +9,7 @@ import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel } fro
 export class CodxReferencesComponent implements OnInit {
   @Input() formModel?: FormModel;
   @Input() dataTree = [];
+  @Input() vllStatus = "TMT004" ;
   dialog :any
   // popoverList: any;
   // popoverDetail: any;
