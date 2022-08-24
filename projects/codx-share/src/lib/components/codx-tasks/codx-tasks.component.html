@@ -17,14 +17,15 @@
     </share-view-list>
 </ng-template>
 
-<!-- <ng-template #treeView let-data>
-    <lib-tree-view
+<ng-template *ngIf="funcID=='TMT0203'" #treeView let-data >
+    <share-tree-view
       [formModel]="view.formModel"
       [data]="data"
+      [vllStatus]="vllStatus"
       (clickMoreFunction)="receiveMF($event)"
     >
-    </lib-tree-view>
-  </ng-template> -->
+    </share-tree-view>
+  </ng-template>
 
 <ng-template #itemTemplate let-data>
     <codx-temp-full cardCss="card-template border-bottom p-3 list-task" (clickMF)="clickMF($event, data)"

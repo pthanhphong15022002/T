@@ -1,6 +1,6 @@
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
@@ -85,6 +85,7 @@ import { PopupUpdateProgressComponent } from './components/codx-tasks/popup-upda
 import { ViewListComponent } from './components/codx-tasks/view-list/view-list.component';
 import { PopupAddComponent } from './components/codx-tasks/popup-add/popup-add.component';
 import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component';
+import { TreeViewComponent } from './components/codx-tasks/tree-view/tree-view.component';
 import { CodxCommentHistoryComponent } from './components/codx-comment-history/codx-comment-history.component';
 
 const T_Component: Type<any>[] = [
@@ -142,10 +143,12 @@ const T_Component: Type<any>[] = [
   ViewListComponent,
   PopupAddComponent,
   CodxTasksComponent,
+  TreeViewComponent,
   CodxCommentHistoryComponent,
+
 ];
 
-const T_Pipe: Type<any>[] = [  TruncatePipe, FileImage];
+const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
   declarations: [T_Component, T_Pipe],
