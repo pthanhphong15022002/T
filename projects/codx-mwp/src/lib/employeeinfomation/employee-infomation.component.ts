@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FileUpload } from '@shared/models/file.model';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddEmployeesComponent } from 'projects/codx-hr/src/lib/employees/popup-add-employees/popup-add-employees.component';
 import { CodxMwpService } from '../codx-mwp.service';
@@ -19,7 +20,10 @@ import { EditSkillComponent } from './edit-skill/edit-skill.component';
 export class EmployeeInfomationComponent implements OnInit {
   views: Array<ViewModel> = [];
   @ViewChild('view') view!: ViewsComponent;
-
+  dataEmployee: any = {
+    dataRoot: {},
+    employeeInfo: {},
+  };
   employeeInfo: any = null;
   employeeHobbie: any = null;
   employeeContracts: any = null;
@@ -104,11 +108,6 @@ export class EmployeeInfomationComponent implements OnInit {
         this.cachesv.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
           if (res)
             this.moreFunc = res;
-          //  this.formModel.funcID =this.functionID;
-          //  this.formModel.gridViewName = this.gridViewName;
-          //  this.formModel.formName = this.formName ;
-          //  this.formModel.userPermission = this.user ;
-          //  this.formModel.entityName = "HR_Employees"
           this.dt.detectChanges();
           setTimeout(() => {
             this.imageAvatar.getFormServer();
@@ -116,10 +115,8 @@ export class EmployeeInfomationComponent implements OnInit {
         });
       }
     });
-
-
-
   }
+
   getContrastYIQ(item) {
     var hexcolor = (item.color || "#ffffff").replace("#", "");
     var r = parseInt(hexcolor.substr(0, 2), 16);
@@ -140,6 +137,7 @@ export class EmployeeInfomationComponent implements OnInit {
       console.log(e);
     })
   }
+  
   ngOnInit(): void {
     this.codxMwpService.modeEdit.subscribe(res => {
       this.editMode = res;

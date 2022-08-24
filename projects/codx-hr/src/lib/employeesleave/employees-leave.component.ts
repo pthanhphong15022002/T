@@ -77,7 +77,7 @@ export class EmployeesLeaveComponent implements OnInit {
     this.changedt.detectChanges();
   }
 
-  delete(data: any) {
+  // delete(data: any) {
     // this.view.dataService
     //   .delete([this.view.dataService.dataSelected] ,true,(opt) =>
     //     this.beforeDel(opt)
@@ -87,13 +87,13 @@ export class EmployeesLeaveComponent implements OnInit {
     //       this.notiService.notifyCode('TM004');
     //     }
     //   });
-  }
+  // }
 
-  beforeDel(opt: RequestOption) {
-    opt.methodName = 'DeleteAsync';
-    opt.data = this.itemSelected.employeeID;
-    return true;
-  }
+  // beforeDel(opt: RequestOption) {
+  //   opt.methodName = 'DeleteAsync';
+  //   opt.data = this.itemSelected.employeeID;
+  //   return true;
+  // }
 
   selectedChange(val: any) {
     this.itemSelected = val.data;
@@ -106,15 +106,19 @@ export class EmployeesLeaveComponent implements OnInit {
     }
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, [this.view.dataService.dataSelected, 'edit'], option);
     });
+    this.changedt.detectChanges();
   }
 
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
       case 'HR0032':
         this.viewEmployeeInfo(data);
         break;

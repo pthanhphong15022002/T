@@ -11,6 +11,7 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  LayoutService,
   NotificationsService,
 } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
@@ -51,9 +52,15 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   nameObj: any;
   projectCategory: any;
   createdByName: any;
+  showTabDasboard = true;
+  showTabTasks = true;
+  showTabHistory = true;
+  showTabComments = true;
+  showTabMeetings = true;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private layout: LayoutService,
     private authStore: AuthStore,
     private api: ApiHttpService,
     private activedRouter: ActivatedRoute,
@@ -63,28 +70,32 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
+    this.layout.setUrl(this.tmSv.urlback);
+    this.cache.functionList(this.funcID).subscribe(f=>{
+        if(f) this.layout.setLogo(f.smallIcon);
+    })
     this.activedRouter.queryParams.subscribe((params) => {
       if (params) {
         this.meetingID = params?.meetingID;
         this.iterationID = params?.iterationID;
       }
     });
-   
+
     if (this.iterationID != '') {
       this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
         if (res) {
-          this.data =res ;
+          this.data = res;
           this.createdByName = res.createdByName;
           this.nameObj = res.iterationName;
           this.projectID = res?.projectID;
           this.resources = res.resources;
           this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
-            resources : this.resources? this.resources:'' ,
+            resources: this.resources ? this.resources : '',
             iterationID: this.iterationID ? this.iterationID : '',
+            viewMode: res.viewMode ? res.viewMode : '',
           };
-        
+
           if (this.resources != null) {
             this.getListUserByResource(this.resources);
           }
@@ -94,14 +105,14 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     if (this.meetingID) {
       this.tmSv.getMeetingID(this.meetingID).subscribe((res) => {
         if (res) {
-          this.data =res ;
+          this.data = res;
           this.createdByName = res.userName;
           this.nameObj = res.meetingName;
           this.projectID = res.projectID;
           this.resources = res.avataResource;
           this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
-            resources : this.resources? this.resources:'' ,
+            resources: this.resources ? this.resources : '',
           };
           if (this.resources != null) {
             this.getListUserByResource(this.resources);
@@ -109,14 +120,24 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         }
       });
     }
-    if (this.meetingID) this.all = ['Dashboard', 'Công việc'];
+    if (this.meetingID) {
+      //sau mấy cái này sẽ được truyền qua state
+      // this.showTabHistory = false;
+      // this.showTabComments = false;
+      // this.showTabMeetings = false;
+      this.all = ['Dashboard', 'Công việc'];
+    }
   }
   ngOnInit(): void {
-   this.loadTabView() ;
+    this.loadTabView();
   }
-  ngAfterViewInit(): void {  
-  }
-  loadTabView(){
+  ngAfterViewInit(): void {}
+  loadTabView() {
+    // if(this.showTabDasboard)this.all.push('Dashboard')
+    // if(this.showTabTasks)this.all.push('Công việc')
+    // if(this.showTabHistory)this.all.push('Lịch sử')
+    // if(this.showTabComments)this.all.push('Bình luận')
+    // if(this.showTabMeetings)this.all.push('Họp định kì')
     if (this.tabControl.length == 0) {
       this.all.forEach((res, index) => {
         var tabModel = new TabModelSprints();
@@ -146,11 +167,12 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   }
   //popoverCrr
   popoverEmpList(p: any) {
-    if (this.popoverCrr) {
-      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
-      p.open();
-      this.popoverCrr = p;
-    }
+    // if (this.popoverCrr) {
+    //   if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    // }
+    // if(p.isOpen) p.close() ;
+    p.open();
+    //this.popoverCrr = p;
   }
 
   searchName(e) {

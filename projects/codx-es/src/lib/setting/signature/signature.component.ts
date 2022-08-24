@@ -220,8 +220,8 @@ export class SignatureComponent implements OnInit, AfterViewInit {
           this.dataSelected = this.viewBase.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '550px';
-          option.DataService = this.viewBase?.currentView?.dataService;
-          option.FormModel = this.viewBase?.currentView?.formModel;
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = this.viewBase?.formModel;
 
           this.dialog = this.callfunc.openSide(
             PopupAddSignatureComponent,

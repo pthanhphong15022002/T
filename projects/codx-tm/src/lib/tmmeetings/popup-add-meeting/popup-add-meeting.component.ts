@@ -60,6 +60,7 @@ export class PopupAddMeetingComponent implements OnInit {
   fromDateSeconds: any;
   toDateSeconds: any;
   templateName: any;
+  isCheckTask = true;
   selectedDate = new Date();
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -98,12 +99,10 @@ export class PopupAddMeetingComponent implements OnInit {
       this.meeting.meetingType = '1';
       this.meeting.startDate = new Date(Date.now());
       this.resources = [];
-
     } else if (this.action == 'edit') {
       this.title = 'Chỉnh sửa họp định kì';
       this.setTimeEdit();
       this.resources = this.meeting.resources;
-
     }
     if (this.meeting.templateID) {
       this.api
@@ -121,7 +120,6 @@ export class PopupAddMeetingComponent implements OnInit {
           }
         });
     }
-
   }
 
   setTimeEdit() {
@@ -169,10 +167,12 @@ export class PopupAddMeetingComponent implements OnInit {
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       this.meeting.meetingType = '1';
+      this.meeting.resources['taskControl'] = this.isCheckTask;
       data = [this.meeting, this.functionID];
     } else if (this.action == 'edit') {
       op.method = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
+      this.meeting.resources['taskControl'] = this.isCheckTask;
       data = [this.meeting];
     }
 
@@ -223,6 +223,13 @@ export class PopupAddMeetingComponent implements OnInit {
       this.title = 'Sửa ' + e;
     }
     this.changDetec.detectChanges();
+  }
+
+  valueCbx(id,e) {
+    console.log(e);
+    this.meeting.resources.forEach((res) => {
+      if (res.resourceID == id) res.taskControl = e.data;
+    });
   }
 
   valueChange(event) {
@@ -456,12 +463,14 @@ export class PopupAddMeetingComponent implements OnInit {
               tmpResource.resourceName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = 'A';
+              tmpResource.taskControl = true;
               this.resources.push(tmpResource);
             } else {
               tmpResource.resourceID = emp?.userID;
               tmpResource.resourceName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = 'P';
+              tmpResource.taskControl = true;
               this.resources.push(tmpResource);
             }
             this.meeting.resources = this.resources;

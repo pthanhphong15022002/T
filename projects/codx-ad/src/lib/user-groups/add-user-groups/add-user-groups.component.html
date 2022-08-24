@@ -5,19 +5,19 @@
 <ng-template #tabDescription>
     <div class="form-group">
         <div class="form-group row mt-3">
-            <codx-label fiedName="lblUserGroupID" [formName]="formModel?.formName"
+            <codx-label fiedName="UserID" [formName]="formModel?.formName"
                 [gridViewName]="formModel?.gridViewName" default="Mã nhóm người dùng">
             </codx-label>
-            <codx-input field="userGroupID" type="text" [disabled]="formType == 'edit' ? true : false"
+            <codx-input field="userID" type="text" [disabled]="formType == 'edit' ? true : false"
                 [crrValue]="adUserGroup.userID">
             </codx-input>
         </div>
 
         <div class="form-group mt-3">
-            <codx-label name="lblUserGroupName" [formName]="formModel?.formName"
+            <codx-label fiedName="UserName" [formName]="formModel?.formName"
                 [gridViewName]="formModel?.gridViewName" default="Tên nhóm người dùng">
             </codx-label>
-            <codx-input type="text" field="userGroupName" [crrValue]="adUserGroup.userName"
+            <codx-input type="text" field="userName" [crrValue]="adUserGroup.userName"
                 (valueChange)="valueChangeU($event)">
             </codx-input>
         </div>
@@ -25,14 +25,15 @@
             <codx-label fiedName="lblDescription" [formName]="formModel?.formName"
                 [gridViewName]="formModel?.gridViewName" default="Mô tả">
             </codx-label>
-            <codx-input type="text" field="description" [crrValue]="adUserGroup.buid" (valueChange)="valueBU($event)">
+            <codx-input type="text" field="description" [crrValue]="adUserGroup.description" (valueChange)="valueBU($event)">
             </codx-input>
         </div>
         <div class="form-group row mt-3">
             <codx-label fiedName="Email" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
                 default="Email nhóm">
             </codx-label>
-            <codx-input field="email" type="text" [crrValue]="adUserGroup.email" (valueChange)="valueChangeM($event)">
+            <codx-input field="email" type="text" [crrValue]="adUserGroup.email" (valueChange)="valueChangeM($event)"
+            [disabled]="formType == 'edit' ? true : false">
             </codx-input>
         </div>
         <div class="form-group row mt-3">
@@ -60,14 +61,14 @@
             <div class="form-group row mt-3">
                 <div class="form-group col-2">
                     <codx-img #imageUpload class="symbol symbol-35 symbol-circle me-2 image-inpt-wrapper fullImage"
-                        [width]="35" [funcId]="formModel?.funcID" [objectId]="item.UserID"
+                        [width]="35" [funcId]="formModel?.funcID" [objectId]="item.userID"
                          [objectType]="formModel?.entityName" data-kt-menu-trigger="click"
                         data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom"
                         [isAllowEdit]="false">
                     </codx-img>
                 </div>
                 <div class="form-group col-4">
-                    <span>{{item.UserName}}</span>
+                    <span>{{item.userName}}</span>
                 </div>
                 <div class="form-group col-4">
                     <span class="icon-clear icon-16" (click)="deleteUserCbb(i)">

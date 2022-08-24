@@ -156,8 +156,8 @@ export class SignFileComponent extends UIComponent {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
 
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -169,21 +169,12 @@ export class SignFileComponent extends UIComponent {
         this.funcID,
         {
           isAddNew: true,
-          formModel: this.view?.currentView?.formModel,
+          formModel: this.view?.formModel,
           option: option,
         },
         '',
         dialogModel
       );
-      // this.dialog = this.callfunc.openSide(
-      //   PopupAddSignFileComponent,
-      //   {
-      //     isAddNew: true,
-      //     formModel: this.view?.currentView?.formModel,
-      //     option: option,
-      //   },
-      //   option
-      // );
       this.dialog.closed.subscribe((x) => {
         if (x.event) {
           delete x.event._uuid;
@@ -200,25 +191,6 @@ export class SignFileComponent extends UIComponent {
       color: 'white',
     };
     return styles;
-  }
-
-  edit(data) {
-    // let item = this.codxViews.dataService.dataSelected;
-    // if (evt) {
-    //   item = evt;
-    // }
-    // this.codxViews.dataService.edit(item).subscribe((res) => {
-    //   this.dataSelected = this.codxViews.dataService.dataSelected;
-    //   let option = new SidebarModel();
-    //   option.Width = '800px';
-    //   option.DataService = this.codxViews?.currentView?.dataService;
-    //   option.FormModel = this.codxViews?.currentView?.formModel;
-    //   this.dialog = this.callfunc.openSide(
-    //     PopupAddSignatureComponent,
-    //     [item, false],
-    //     option
-    //   );
-    // });
   }
 
   clickMF(event: any, data) {

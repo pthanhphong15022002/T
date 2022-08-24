@@ -1,13 +1,7 @@
 import { UIComponent } from 'codx-core';
-import {
-  Component,
-  Injector,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
-  CallFuncService,
   DataRequest,
   DialogRef,
   NotificationsService,
@@ -19,7 +13,6 @@ import {
 } from 'codx-core';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
 import { PopupListStationeryComponent } from './popup-list-stationery/popup-list-stationery.component';
-
 
 @Component({
   selector: 'stationery',
@@ -40,7 +33,7 @@ export class BookingStationeryComponent extends UIComponent {
   columnsGrid: any;
   dialog!: DialogRef;
   model: DataRequest;
-  modelResource: ResourceModel;
+  //modelResource: ResourceModel;
   cart: [];
   funcID: string;
   service = 'EP';
@@ -48,13 +41,13 @@ export class BookingStationeryComponent extends UIComponent {
   entityName = 'EP_Resources';
   predicate = 'ResourceType=@0';
   dataValue = '6';
-  idField = 'RecID';
+  idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
 
   constructor(
     private injector: Injector,
-    private notification: NotificationsService,
+    private notification: NotificationsService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -64,13 +57,13 @@ export class BookingStationeryComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-    this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'EP';
-    this.modelResource.className = 'ResourcesBusiness';
-    this.modelResource.service = 'EP';
-    this.modelResource.method = 'GetListAsync';
-    this.modelResource.predicate = 'ResourceType=@0';
-    this.modelResource.dataValue = '6';
+    // this.modelResource = new ResourceModel();
+    // this.modelResource.assemblyName = 'EP';
+    // this.modelResource.className = 'ResourcesBusiness';
+    // this.modelResource.service = 'EP';
+    // this.modelResource.method = 'GetListAsync';
+    // this.modelResource.predicate = 'ResourceType=@0';
+    // this.modelResource.dataValue = '6';
   }
 
   ngAfterViewInit(): void {
@@ -153,12 +146,6 @@ export class BookingStationeryComponent extends UIComponent {
       case 'btnAddNew':
         this.openRequestList();
         break;
-      case 'btnEdit':
-        this.edit();
-        break;
-      case 'btnDelete':
-        this.delete();
-        break;
     }
   }
   openRequestList(evt?) {
@@ -169,8 +156,8 @@ export class BookingStationeryComponent extends UIComponent {
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase.currentView.formModel;
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfc.openSide(
         PopupListStationeryComponent,
         dataItem,
@@ -178,34 +165,18 @@ export class BookingStationeryComponent extends UIComponent {
       );
     });
   }
-  addNewRequest(evt?) {
-    let dataItem = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      dataItem = evt;
-    }
+  addNewRequest() {
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase.currentView.formModel;
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfc.openSide(
         PopupRequestStationeryComponent,
-        [dataItem, this.listData, this.count],
+        [this.listData, this.count],
         option
       );
     });
-  }
-
-  edit(evt?) {
-
-  }
-  delete(evt?) {
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
-      .subscribe((res) => {
-        console.log(res);
-        this.dataSelected = res;
-      });
   }
 
   closeEditForm(evt?: any) {
@@ -213,6 +184,7 @@ export class BookingStationeryComponent extends UIComponent {
       this.dialog && this.dialog.close();
     }
   }
+
   listData = [];
   count = 0;
   addCart(evt, data) {
@@ -233,6 +205,5 @@ export class BookingStationeryComponent extends UIComponent {
     }
   }
 
-  clickMF(evt, data) { }
-
+  clickMF(evt, data) {}
 }

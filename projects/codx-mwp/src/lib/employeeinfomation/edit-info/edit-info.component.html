@@ -19,9 +19,9 @@
                     <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="employeeName">
                     </codx-input> -->
 
-                    <codx-input class="form-control" type="text" [crrValue]="employee?.employeeName"
-                        field="employeeName">
-                    </codx-input>
+                    <codx-input class="form-control" type="text" [crrValue]="employee?.employeeName" field="employeeName"
+                    (valueChange)="dataChange($event, 'employeeName')" placeholder="Tên nhân viên">
+                  </codx-input>
                 </div>
             </div>
         </div>

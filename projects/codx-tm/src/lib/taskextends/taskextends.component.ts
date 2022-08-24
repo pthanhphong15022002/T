@@ -16,10 +16,10 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { PopupConfirmComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-confirm/popup-confirm.component';
+import { ViewDetailComponent } from 'projects/codx-share/src/lib/components/codx-tasks/view-detail/view-detail.component';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_TaskExtends } from '../models/TM_Tasks.model';
-import { PopupConfirmComponent } from '../tasks/popup-confirm/popup-confirm.component';
-import { ViewDetailComponent } from '../tasks/view-detail/view-detail.component';
 
 @Component({
   selector: 'lib-taskextends',

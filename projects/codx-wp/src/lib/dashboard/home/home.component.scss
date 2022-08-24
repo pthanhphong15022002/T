@@ -88,9 +88,9 @@ codx-home .home-left {
     min-height: 320px;
 }
 
-.pic-feed-img codx-img,
-.pic-feed-img codx-img div,
-.pic-feed-img codx-img div img {
+.imgs-grid codx-img,
+.imgs-grid codx-img div,
+.imgs-grid codx-img div img {
     height: auto !important;
     width: 100% !important;
 }
@@ -109,4 +109,15 @@ codx-home .home-left {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+
+.separator {
+    border: 0;
+}
+
+[data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-title,
+[data-kt-aside-minimize=on] .aside:not(:hover) .aside-menu .menu-title {
+    opacity: 1;
+    margin-left: 10px;
 }

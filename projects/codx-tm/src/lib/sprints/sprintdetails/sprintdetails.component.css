@@ -12,9 +12,6 @@ codx-wrapper {
     border-top: 1px #eee solid;
 }
 
-codx-wrapper.hover-scroll-overlay-y:hover {
-    overflow-y: hidden;
-}
 
 codx-views {
     position: relative;
@@ -23,6 +20,10 @@ codx-views {
 codx-view-list-detail {
     padding-top: 55px;
     padding-bottom: 52px;
+}
+
+codx-view-list-card {
+    padding-top: 55px;
 }
 
 .header-fixed.toolbar-fixed .toolbar {
@@ -39,6 +40,8 @@ codx-view-list-detail {
 codx-view-list-detail .codx-detail-footer {
     overflow: hidden;
 }
+
+
 
 .sprints-task-detail {
     background-color: transparent !important;

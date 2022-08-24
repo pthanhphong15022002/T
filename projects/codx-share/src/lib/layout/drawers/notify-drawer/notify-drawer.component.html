@@ -1,46 +1,53 @@
-<codx-form [body]="body" [dialog]="dialog">
-</codx-form>
-<ng-template  #body>
-  <div>
-    <div class="d-flex justify-content-between">
-      <div></div>
-      <div>
-        <button class="btn" (click)="clickShowAlert()">
-          <i class="icon-more_vert"></i>
-        </button>
-      </div>
+<div class="p-4">
+  <div class="d-flex justify-content-between w-100">
+    <div>
+      <codx-label [ngClass]="'dialog-title line-clamp line-clamp-1 fw-bolder'" [formModel]="" name="lblMessage" default="Thông báo"></codx-label>
+    </div>
+    <div>
+      <button class="btn" (click)="clickCloseFrom()">
+        <i class="icon-close icon-18"></i>
+      </button>
     </div>
   </div>
-  <!-- <div id="kt_drawer_notify" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="notify"
-  data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}"
-  data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_drawer_notify_toggle"
-  data-kt-drawer-close="#kt_drawer_notify_close">
-  <div class="card w-100 rounded-0" id="kt_drawer_notify_messenger">
-    <div class="card-header pe-5" id="kt_drawer_notify_messenger_header">
-      <div class="card-title">
-        <div class="d-flex justify-content-center flex-column me-3">
-          <a class="fs-4 fw-bolder text-gray-900 text-hover-primary
-              me-1 mb-2 lh-1 cursor-pointer">Brian Cox</a>
-          <div class="mb-0 lh-1">
-            <span class="badge badge-success badge-circle w-10px h-10px me-1"></span><span
-              class="fs-7 fw-bold text-gray-400">Active</span>
+  <!-- <div class="d-flex justify-content-between mt-2 w-100">
+    <div>
+      <codx-label [formModel]="" name="lblMessage" default="Mới"></codx-label>
+    </div>
+    <div class="text-primary">
+      <codx-label [formModel]="" name="lblMessage" default="Xem tất cả"></codx-label>
+    </div>
+  </div> -->
+  <div>
+    <ng-container *ngIf="lstNotify.length > 0">
+      <ng-container *ngFor="let item of lstNotify">
+        <div class="row p-4 my-2">
+          <div class="col-1">
+            <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+            <!-- <ng-container [ngSwitch]="item.eventType">
+              <ng-container *ngSwitchCase="0">
+                <codx-img [width]="35" [objectId]="item.createdBy" [objectType]="'AD_Users'"></codx-img>
+              </ng-container>
+              <ng-container *ngSwitchCase="1">
+                <codx-img [width]="35" [objectId]="item.owner" [objectType]="'AD_Users'"></codx-img>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <codx-img [width]="35" [objectId]="item.modifiedBy" [objectType]="'AD_Users'"></codx-img>
+              </ng-container>
+            </ng-container> -->
+          </div>
+          <div class="col-10">
+            <div>
+                <span class="fw-bolder me-1">{{item.text}}</span>          
+            </div>
+            <div>
+              <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
+            </div>
+          </div>
+          <div class="col-1" *ngIf="!item.isRead">
+            <span class="dots"></span>
           </div>
         </div>
-      </div>
-      <div class="card-toolbar">
-        <div class="me-2">
-          <button class="btn btn-sm btn-icon btn-active-light-primary" data-kt-menu-trigger="click"
-            data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
-            <i class="bi bi-three-dots fs-3"></i>
-          </button>
-        </div>
-        <div class="btn btn-sm btn-icon btn-active-light-primary" id="kt_drawer_notify_close">
-          <span class="svg-icon svg-icon-2"></span>
-          <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'" class="svg-icon svg-icon-2"></span>
-        </div>
-      </div>
-    </div>
-    <codx-chat-inner [isDrawer]="true"></codx-chat-inner>
+      </ng-container>
+    </ng-container>
   </div>
-  </div> -->
-</ng-template>
+</div>

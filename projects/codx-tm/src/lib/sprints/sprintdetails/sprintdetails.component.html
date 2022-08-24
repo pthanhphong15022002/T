@@ -12,7 +12,7 @@
         <span class="text-gray-600" #createdOn> {{data?.createdOn | date: "dd/MM/yyyy" }}</span>
       </div>
       <div class="me-3">
-        <span class="icon-person icon-18 me-1 text-gray-600"></span>
+        <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
         <span class="text-gray-600">{{createdByName }}</span>
       </div>
     </div>
@@ -35,7 +35,7 @@
   <div class="col-4">
     <codx-imgs style="float: right" [objectId]="resources" objectType="AD_Users" [numberImages]="7" [width]="30"
       (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
-      #popoverList="ngbPopover" placement="bottom" container="body" autoClose="outside" [openDelay]="500"></codx-imgs>
+      #popoverList="ngbPopover" placement="bottom left right" container="body" autoClose="outside" ></codx-imgs>
   </div>
 </div>
 <div class="page-content d-flex flex-row">
@@ -48,7 +48,7 @@
         <codx-sprintdetails-dashboard [projectID]="projectID" [resources]="resources"></codx-sprintdetails-dashboard>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
-        <codx-tasks *ngIf="dataObj" [dataObj]="dataObj"></codx-tasks>
+        <codx-tasks-share *ngIf="dataObj" [dataObj]="dataObj" [showButtonAdd]="false"></codx-tasks-share>
       </ng-container>
       <ng-container *ngIf="name == 'Lịch sử'">
         <ng-container>
@@ -62,7 +62,7 @@
         </ng-container>
       </ng-container>
       <ng-container *ngIf="name == 'Họp định kì'">
-        <codx-tmmeetings [dataObj]="dataObj"></codx-tmmeetings>
+        <codx-tmmeetings [dataObj]="dataObj" [showButtonAdd]="false"></codx-tmmeetings>
       </ng-container>
     </div>
   </div>

@@ -29,6 +29,8 @@ import {
   Util,
   ViewsComponent,
 } from 'codx-core';
+import { ES_SignFile , File } from 'projects/codx-es/src/lib/codx-es.model';
+import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
@@ -94,19 +96,16 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private ref: ChangeDetectorRef
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data) {
-      if (
-        changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
-      ) {
-        this.dataItem = changes?.dataItem?.currentValue;
-        this.userID = this.authStore.get().userID;
-        this.data = changes.data?.currentValue;
-        if (!this.data) this.data = {};
-        this.getDataValuelist();
-        this.getPermission(this.data.recID);
-        this.ref.detectChanges();
-      }
+    if (changes?.data && changes.data?.previousValue?.recID != changes.data?.currentValue?.recID) {
+      this.userID = this.authStore.get().userID;
+      this.data = changes.data?.currentValue;
+      if (!this.data) this.data = {};
+      this.getDataValuelist();
+      this.getPermission(this.data.recID);
+      this.ref.detectChanges();
     }
+    if(changes?.dataItem && changes?.dataItem?.currentValue != changes?.dataItem?.previousValue)
+      this.dataItem = changes?.dataItem?.currentValue;
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
     if (changes?.pfuncID?.currentValue != changes?.pfuncID?.previousValue) {
@@ -504,7 +503,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             option
           );
           this.dialog.closed.subscribe((e) => {
-            console.log(e);
+            if(e[0])
+            {
+              this.data.status = "3";
+              this.view.dataService.update(this.data).subscribe();
+            }
           });
         }
         break;
@@ -634,6 +637,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case "ODT110":
       case "ODT209":
       case "ODT111":
+      case "ODT210":
         {
           this.odService.bookMark(datas.recID).subscribe((item) => {
             if (item.status == 0)
@@ -741,12 +745,43 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             "350d611b-1de0-11ed-9448-00155d035517"
           ).subscribe((res2:any) =>
           {
+            let dialogModel = new DialogModel();
+            dialogModel.IsFull = true;
             //trình ký
-            if(res2 == true) 
+            if(res2?.eSign == true) 
             {
+              let signFile = new ES_SignFile();
+              signFile.title = datas.title;
+              signFile.categoryID = res2?.categoryID;
+              signFile.files = [];
+              if(this.data?.files)
+              {
+                for(var i = 0 ; i< this.data?.files.length ; i++)
+                {
+                  //Biến recID nha Hòa : recID= this.data?.recID
+                  var file = new File();
+                  //file.recID = this.data?.files[i].recID;
+                  file.fileID = this.data?.files[i].recID;
+                  file.fileName = this.data?.files[i].fileName;
+                  signFile.files.push(file);
+                }
+              }
+              this.dialog = this.callfunc.openForm(
+                PopupAddSignFileComponent,
+                'Chỉnh sửa',
+                700,
+                650,
+                "",
+                {
+                  oSignFile: signFile,
+                  formModel: this.view?.currentView?.formModel,
+                },
+                '',
+                dialogModel
+              );
               //this.callfunc.openForm();
             }
-            else if(res2 == false)
+            else if(res2?.eSign == false)
               //xét duyệt
               this.release(datas);
           });
@@ -804,7 +839,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   changeDataMF(e:any,data:any)
   {
     var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
-    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111');
+    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111' || x.functionID == 'ODT210');
     if(data?.isBookmark) 
     {
       bm[0].disabled = true;

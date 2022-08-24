@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from 'codx-core';
 import {
   ApiHttpService,
   CacheService,
@@ -66,25 +67,31 @@ export class PopupAddBookingCarComponent implements OnInit {
     },
   ];
   isSaveSuccess = false;
-
+  
+  fGroupBookingAttendees: FormGroup;
   fGroupAddBookingCar: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
   modelPage: ModelPage;
-
+  cbxUser: any;
+  peopleAttend =[];
+  curUser:any;
   data:any;
   isNew: boolean = true;
   currentSection = "GeneralInfo";
   CbxName: any;
   isAfterRender = false;  
-  
+ 
+  grvBookingCar:any;
+  strAttendees:string='';
   vllDevices = [];
   lstDeviceCar = [];
   tmplstDevice = [];
   lstPeople=[];
-  driver=null;
+  driver:any;
   smallListPeople=[];
-
+  editCarDevice=null;
+  tempArray=[];
   constructor(    
     private callFuncService: CallFuncService,
     private cacheService: CacheService,
@@ -92,20 +99,38 @@ export class PopupAddBookingCarComponent implements OnInit {
     private codxEpService: CodxEpService,
     private notificationsService: NotificationsService,
     private apiHttpService: ApiHttpService,
+    private authService: AuthService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {    
     
-    this.data = dialogRef.dataService!.dataSelected;
-    this.isAdd = dialogData?.data?.isAdd;
+    this.data = dialogRef.dataService!.dataSelected;    
+    //this.data = dialogData?.data[0];
+    this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    console.log('formModel',this.formModel);
   }  
-  ngOnInit(): void {    
+  ngOnInit(): void {   
+    if(!this.isAdd){      
+      this.titleAction = 'Chỉnh sửa';
+    } 
     this.codxEpService.getModelPage('EPT2').then((res) => {
       if (res) {
         this.modelPage = res;
         console.log('EPT2',res);
+      }
+      if(this.isAdd){
+        let people = this.authService.userValue;
+        var user :{id: string, text: string, objectType: string, objectName: string}={                
+          id:people.userID,
+          text:people.userName,
+          objectType:undefined,
+          objectName:undefined
+        };
+        this.curUser=user;
+        this.changeDetectorRef.detectChanges();
+        
       }
       this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
@@ -114,11 +139,38 @@ export class PopupAddBookingCarComponent implements OnInit {
           device.id = item.value;
           device.text = item.text;
           this.lstDeviceCar.push(device);
-        });
+        });   
+        if(!this.isAdd && this.fGroupAddBookingCar.value.equipments!=null){
+          
+            let deviceArray=this.fGroupAddBookingCar.value.equipments.split("|");
+            let availableDevice= deviceArray[0];
+            let pickedDevice= deviceArray[1];
+            
+            this.lstDeviceCar.forEach(device =>{
+              availableDevice.split(";").forEach(equip=>{
+                if(device.id==equip){               
+                  this.tempArray.push(device); 
+                }
+              });     
+            })
+            this.tempArray.forEach(device=>{
+              pickedDevice.split(";").forEach(equip=>{
+                if(device.id==equip){               
+                  device.isSelected=true;
+                }
+              });  
+            })            
+                   
+          this.tmplstDevice = JSON.parse(JSON.stringify(this.tempArray)); 
+        } 
         this.lstDeviceCar = JSON.parse(JSON.stringify(this.lstDeviceCar));
       });
       
-
+      if(!this.isAdd){        
+        this.driverChangeWithCar(this.data.resourceID);
+        
+        this.changeDetectorRef.detectChanges();
+      }
       this.codxEpService
       .getComboboxName(
         this.dialogRef.formModel.formName,
@@ -131,9 +183,39 @@ export class PopupAddBookingCarComponent implements OnInit {
 
       this.cacheService.functionList('EPT2').subscribe(res => {
         this.cacheService.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
-          console.log('grvEPT', res)
+          console.log('grvEPT', res);
+          this.grvBookingCar=res;
         })
-      })     
+      }) 
+      if(!this.isAdd){
+        this.apiHttpService
+        .callSv('EP', 'ERM.Business.EP', 'BookingAttendeesBusiness','GetAsync', [this.data.recID])
+        .subscribe((res) => {
+          if(res){
+            this.peopleAttend=res.msgBodyData[0];
+            this.peopleAttend.forEach(people=>{
+              let tempPeople :{id: string, text: string, objectType: string, objectName: string}={                
+                id:people.userID,
+                text:people.userName,
+                objectType:undefined,
+                objectName:undefined
+              };
+              this.lstPeople.push(tempPeople);
+            });
+
+            if(this.lstPeople.length == 1){      
+              this.smallListPeople = this.lstPeople;
+            }
+
+            if(this.lstPeople.length >= 2) {
+              this.smallListPeople=null;
+              this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
+            }        
+            
+            this.changeDetectorRef.detectChanges();
+          }
+        });
+      }
       this.initForm();      
     });
   }
@@ -145,10 +227,12 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.fGroupAddBookingCar = res;        
         if (this.data) {
           console.log('fgroupEPT2', this.data)
-          this.fGroupAddBookingCar.patchValue(this.data);        
+          this.fGroupAddBookingCar.patchValue(this.data);
         } 
-      });      
-      this.isAfterRender = true;
+      }); 
+  
+      this.isAfterRender = true;      
+      this.changeDetectorRef.detectChanges();    
   }
   setTitle(e: any) {
     this.title = this.titleAction + ' ' + e.toString().toLowerCase();
@@ -158,17 +242,19 @@ export class PopupAddBookingCarComponent implements OnInit {
   beforeSave(option: RequestOption) {
     let itemData = this.fGroupAddBookingCar.value;
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd];
+    option.data = [itemData, this.isAdd,this.strAttendees];
     return true;
   }
 
   onSaveForm() {
-    if (this.fGroupAddBookingCar.invalid == true) {
+    
+    if (!this.dataValid()) {
       return;
     }  
-    if (this.fGroupAddBookingCar.value.endDate - this.fGroupAddBookingCar.value.startDate <= 0 ) {
-      this.notificationsService.notifyCode('EP003');
-    }
+    // if (this.fGroupAddBookingCar.invalid == true) {
+    //   this.codxEpService.notifyInvalid(this.fGroupAddBookingCar, this.formModel);
+    //   return;
+    // }
     if ( this.fGroupAddBookingCar.value.startDate && this.fGroupAddBookingCar.value.endDate ) {
       let hours = parseInt(
         (
@@ -184,7 +270,7 @@ export class PopupAddBookingCarComponent implements OnInit {
       this.fGroupAddBookingCar.patchValue({
         category: '2',
         status: '1',
-        resourceType: '2',
+        resourceType: '2',        
       });
 
       var date = new Date(this.fGroupAddBookingCar.value.startDate);
@@ -193,40 +279,47 @@ export class PopupAddBookingCarComponent implements OnInit {
       );
     }
 
-    let equipments = '';
+    this.lstPeople.forEach(people=>{
+      if (this.strAttendees == '') {
+        this.strAttendees += people.id;
+      } else {
+        this.strAttendees += ';' + people.id;
+      }
+    })
+
+    let pickedEquip = '';
+    let availableEquip='';
     this.tmplstDevice.forEach((element) => {
+      if (availableEquip == '') {
+        availableEquip += element.id;
+      } else {
+        availableEquip += ';' + element.id;
+      }
       if (element.isSelected) {
-        if (equipments == '') {
-          equipments += element.id;
+        if (pickedEquip == '') {
+          pickedEquip += element.id;
         } else {
-          equipments += ';' + element.id;
+          pickedEquip += ';' + element.id;
         }
       }
-    });
-    
-    this.fGroupAddBookingCar.value.equipments = equipments;
-    this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];
-    this.fGroupAddBookingCar.value.reasonID='Chưa có dữ liệu';//Cbx chưa có dữ liệu
+    });  
+    this.fGroupAddBookingCar.value.equipments = availableEquip+'|'+pickedEquip; 
+    this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];    
+    this.fGroupAddBookingCar.value.resourceID=this.fGroupAddBookingCar.value.resourceID[0]; 
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe(
+      .subscribe(             
         res => {
           if(res.save || res.update){
             this.dialogRef && this.dialogRef.close();
-          } else this.notificationsService.notifyCode('E0011');
+          } else 
+          {
+            this.notificationsService.notifyCode('E0011');
+            return;
+          }          
         }        
-      ); 
-    // this.apiHttpService
-    //   .callSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
-    //     this.fGroupAddBookingCar.value,
-    //     this.isAdd,
-    //     '',
-    //   ])
-    //   .subscribe((res) => {
-    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-    //     this.closeFormEdit(res);
-    //   });
-    //console.log(this.fGroupAddBookingCar.value);
+      );  
+    this.changeDetectorRef.detectChanges();
   }
 
   buttonClick(e: any) {
@@ -241,28 +334,48 @@ export class PopupAddBookingCarComponent implements OnInit {
       }
     }
   }
+
   valueCbxCarChange(event?) {  
-    if(event?.data!=null){
+    if(event?.data!=null && event?.data !=""){      
       this.tmplstDevice=[];
       var cbxCar = event.component.dataService.data;
-        cbxCar.forEach(element => {
-          if (element.ResourceID == event.data) {          
-            var carEquipments= element.Equipments.split(";");
-            carEquipments.forEach(item=>{
-              this.lstDeviceCar.forEach(device=>{
-                if(item==device.id){
-                  this.tmplstDevice.push(device);                
-                }
-              })
-            })          
-          }
-        });   
-      this.changeDetectorRef.detectChanges();
-    }    
+      cbxCar.forEach(element => {
+        if (element.ResourceID == event.data) {          
+          var carEquipments= element.Equipments.split(";");
+          carEquipments.forEach(item=>{
+            this.lstDeviceCar.forEach(device=>{
+              if(item==device.id){ 
+                device.isSelected=false;
+                this.tmplstDevice.push(device);                
+              }              
+            })
+          })          
+        }
+      });
+      this.driverChangeWithCar(event.data);
+    } 
   }
 
-  valueCbxUserChange(event) {
-    this.lstPeople = event.data.dataSelected; 
+  driverChangeWithCar(carID:string){
+    this.apiHttpService
+        .callSv('EP', 'ERM.Business.EP', 'ResourcesBusiness','GetDriverByCarAsync', [carID])
+        .subscribe((res) => {
+          if(res){            
+            var x= res;
+            let driverInfo :{id: string, text: string, objectType: string, objectName: string}={                
+              id:res.msgBodyData[0].resourceID,
+              text:res.msgBodyData[0].resourceName,
+              objectType:undefined,
+              objectName:undefined
+            };
+            this.driver=driverInfo;
+            this.changeDetectorRef.detectChanges();
+          }
+          
+        });   
+  }
+  valueCbxUserChange(event?) {
+    this.lstPeople=event.data.dataSelected;
     if(this.lstPeople.length == 1){      
       this.smallListPeople = this.lstPeople;
     }
@@ -270,13 +383,14 @@ export class PopupAddBookingCarComponent implements OnInit {
       this.smallListPeople=null;
       this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
     }         
+    
     this.changeDetectorRef.detectChanges();
   }
 
-  valueCbxDriverChange(event) {
-    this.driver= event.data.dataSelected[0];    
-    this.changeDetectorRef.detectChanges();
-  }
+  // valueCbxDriverChange(event) {
+  //   this.driver= event.data.dataSelected[0];    
+  //   this.changeDetectorRef.detectChanges();
+  // }
 
   changeTime(data) {
     if (!data.field || !data.data) return;
@@ -296,5 +410,27 @@ export class PopupAddBookingCarComponent implements OnInit {
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);
+  }
+  dataValid(){
+    
+    this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0]; 
+    this.fGroupAddBookingCar.value.resourceID=this.fGroupAddBookingCar.value.resourceID[0];
+
+    var data = this.fGroupAddBookingCar.value;
+    var result= true;
+    if(this.lstPeople.length<1){
+      this.notificationsService.notifyCode('E0001',0,'"' + "Người đi cùng" + '"');
+      return false;
+    }
+    var requiredControlName=["resourceID","startDate","endDate","reasonID","title","agencyName","address","contactName","phone"];
+    requiredControlName.forEach((item)=>{ 
+      var x= data[item];     
+      if(!data[item]){
+        let fieldName= item.charAt(0).toUpperCase()+item.slice(1);
+        this.notificationsService.notifyCode('E0001',0,'"' + this.grvBookingCar[fieldName].headerText + '"'); 
+        result = false;     
+      }           
+    });
+    return result; 
   }
 }

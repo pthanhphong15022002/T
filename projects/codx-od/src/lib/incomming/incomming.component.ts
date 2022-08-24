@@ -20,6 +20,7 @@ import {
   DialogRef,
   NotificationsService,
   RequestOption,
+  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -43,6 +44,7 @@ import { IncommingAddComponent } from './incomming-add/incomming-add.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-incomming',
@@ -64,6 +66,7 @@ export class IncommingComponent
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
 
   public lstDtDis: any;
   public lstUserID: any = '';
@@ -82,6 +85,9 @@ export class IncommingComponent
   public objectType = 'OD_Dispatches';
   dialog!: DialogRef;
   button?: ButtonModel;
+  request: ResourceModel;
+  resourceKanban?: ResourceModel;
+
   userPermission: any;
   checkUserPer: any;
   compareDate = compareDate;
@@ -122,7 +128,7 @@ export class IncommingComponent
   notifySvr: NotificationsService;
   atSV: AttachmentService;
   fileService: FileService;
-  constructor(inject: Injector) {
+  constructor(inject: Injector, private route: ActivatedRoute,) {
     super(inject);
     this.odService = inject.get(DispatchService);
     this.agService = inject.get(AgencyService);
@@ -133,7 +139,23 @@ export class IncommingComponent
     this.fileService = inject.get(FileService);
   }
   ngOnChanges(changes: SimpleChanges): void {}
-  onInit(): void {}
+  onInit(): void {
+    // this.route.params.subscribe((routeParams) => {
+    //     (this.view as ViewsComponent).currentView = null;
+    // });
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+    this.request = new ResourceModel();
+    this.request.service = 'OD';
+    this.request.assemblyName = 'OD';
+    this.request.className = 'DispatchesBusiness';
+    this.request.method = 'GetListByStatusAsync';
+    this.request.idField = 'recID';
+  }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -146,6 +168,16 @@ export class IncommingComponent
           //panelLeftRef: this.panelLeft,
           panelRightRef: this.panelRight,
           contextMenu: '',
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
         },
       },
     ];
@@ -194,10 +226,10 @@ export class IncommingComponent
   changeDataMF(e:any,data:any)
   {
     var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
-    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111');
+    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111' || x.functionID == 'ODT210');
    /*  var blur =  e.filter((x: { functionID: string }) => x.functionID == 'ODT108');
     blur[0].isblur = true; */
-    if(data?.isBookmark) 
+    if(data?.isBookmark)
     {
       bm[0].disabled = true;
       unbm[0].disabled = false;
@@ -373,6 +405,7 @@ export class IncommingComponent
   }
 
   valueChange(dt: any) {
+    debugger;
     var recID = null;
     if (dt?.data) {
       recID = dt.data.recID;

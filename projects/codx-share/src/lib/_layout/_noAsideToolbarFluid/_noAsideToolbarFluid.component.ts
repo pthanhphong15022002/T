@@ -19,7 +19,7 @@ export class LayoutNoAsideToolbarFluidComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
   override asideFixed = true;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  //override toolbar = false;
+  override toolbar = false;
   constructor(
     inject: Injector,
     private codxShareService: CodxShareService,

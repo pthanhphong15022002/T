@@ -1,3 +1,4 @@
+import { environment } from './../../../../../../src/environments/environment';
 /// <reference types="@boldreports/types/reports.all" />
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Router, Params } from '@angular/router';
@@ -19,18 +20,18 @@ export class CodxReportComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() parameters: any = {};
   @Input() reportUUID: any = '';
   @Input() locale!: string;
-  @Input() serviceDesignUrl: string = 'http://localhost:8011/api/ReportDesigner';
-  @Input() serviceViewUrl: string = 'http://localhost:8011/api/ReportViewer';
+  @Input() serviceDesignUrl: string = environment.apiUrl + '/api/ReportDesigner';
+  @Input() serviceViewUrl: string = environment.apiUrl + '/api/ReportViewer';
   @Input() toolbarDesignSettings: any;
   @Input() toolbarViewSettings: any;
   public isAdmin = true;
   _user: any;
   protected changeDetectorRef!: ChangeDetectorRef;
   constructor(
-    private auth : AuthStore
+    private auth: AuthStore
   ) {
     this._user = this.auth.get();
-    this.serviceViewUrl = 'http://localhost:8011/api/ReportViewer';
+    this.serviceViewUrl = environment.apiUrl + '/api/ReportViewer';
     this.toolbarViewSettings = {
       showToolbar: this.showToolbar,
       customGroups: [{
@@ -50,7 +51,7 @@ export class CodxReportComponent implements OnInit, AfterViewInit, OnChanges {
       }]
 
     };
-    if(this.isAdmin == false){
+    if (this.isAdmin == false) {
       this.toolbarDesignSettings = {
         showToolbar: false,
         items: ~ej.ReportDesigner.ToolbarItems.All
@@ -60,26 +61,26 @@ export class CodxReportComponent implements OnInit, AfterViewInit, OnChanges {
       this.toolbarDesignSettings = {
         showToolbar: this.showToolbar,
         items: ej.ReportDesigner.ToolbarItems.All &
-         ~ej.ReportDesigner.ToolbarItems.New &
-         ~ej.ReportDesigner.ToolbarItems.Open
+          ~ej.ReportDesigner.ToolbarItems.New &
+          ~ej.ReportDesigner.ToolbarItems.Open
       }
     }
 
     //this.reportUUID = '3cdcde9d-8d64-ec11-941d-00155d035518';
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(Object.keys(this.parameters).length ==0){
-    //   this.parameters.name = "Tèo";
-    // this.parameters.address = "HCM, VN";
-    // this.parameters.age = 17;
+    if (Object.keys(this.parameters).length == 0) {
+      //   this.parameters.name = "Tèo";
+      // this.parameters.address = "HCM, VN";
+      // this.parameters.age = 17;
     }
   }
   ngOnInit(): void {
-    if(!this.locale){
+    if (!this.locale) {
       this.locale = 'vi-VN';
     }
   }
-   dataSource:any = {
+  dataSource: any = {
     connectionString: "Host=172.16.7.31;Port=5432;",
     isIntegrated: false,
     password: "Erm@2021",
@@ -91,11 +92,11 @@ export class CodxReportComponent implements OnInit, AfterViewInit, OnChanges {
 
   }
 
-  onEditReport(evt: any){
-    this.isViewMode =false;
+  onEditReport(evt: any) {
+    this.isViewMode = false;
     this.reportUUID = evt;
   }
-  viewReport(){
+  viewReport() {
     this.isViewMode = true;
   }
 }

@@ -1,11 +1,26 @@
-import { Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { DialogRef, FormModel, CallFuncService, DialogModel, Util, ApiHttpService, NotificationsService, CodxService } from 'codx-core';
+import {
+  Component,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  DialogRef,
+  FormModel,
+  CallFuncService,
+  DialogModel,
+  Util,
+  ApiHttpService,
+  NotificationsService,
+  CodxService,
+} from 'codx-core';
 import { RangeLine } from '../../../models/task.model';
 
 @Component({
   selector: 'ranges-add',
   templateUrl: './addEdit.component.html',
-  styleUrls: ['./addEdit.component.css']
+  styleUrls: ['./addEdit.component.css'],
 })
 export class AddEditComponent implements OnInit {
   line: RangeLine = new RangeLine();
@@ -32,11 +47,11 @@ export class AddEditComponent implements OnInit {
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
   }
   //#region Init
-  ngOnInit(): void { }
+  ngOnInit(): void {}
   //#endregion
   //#region master
   onSave() {
-    this.dialog.dataService.save().subscribe(res => {
+    this.dialog.dataService.save().subscribe((res) => {
       if (res && !res.error) {
         this.dialog.dataService.hasSaved = false;
         this.dialog.close();
@@ -46,16 +61,14 @@ export class AddEditComponent implements OnInit {
   //#endregion
   //#region line
   addLine(template: any, data = null) {
-    this.dialog.dataService.save().subscribe(res => {
+    this.dialog.dataService.save().subscribe((res) => {
       if (!res?.save?.error || !res?.update?.error) {
         if (!this.dialog.dataService.dataSelected.isNew())
           this.dialog.dataService.hasSaved = true;
-        if (data)
-          this.line = data;
+        if (data) this.line = data;
         else {
           this.line.recID = Util.uid();
           this.line.rangeID = this.master.rangeID;
-          //this.codxService.setAddNew(this.line, 'recID')
         }
         this.callfc.openForm(template, '', 500, 400);
       }
@@ -63,29 +76,27 @@ export class AddEditComponent implements OnInit {
   }
 
   saveLine(dialog) {
-    this.api.exec<any>('BS', 'RangeLinesBusiness', 'AddEditRangeLineAsync', this.line).subscribe(res => {
-      if (res) {
-        if (this.line['isNew'])
-          this.lines.push(res)
-        this.line = new RangeLine();
-        dialog.close();
-      }
-    })
+    this.api
+      .exec<any>('BS', 'RangeLinesBusiness', 'AddEditRangeLineAsync', this.line)
+      .subscribe((res) => {
+        if (res) {
+          if (this.line['isNew']) this.lines.push(res);
+          this.line = new RangeLine();
+          dialog.close();
+        }
+      });
   }
 
   removeLine(item, index) {
-    this.api.exec<any>('BS', 'RangeLinesBusiness', 'DeleteRangeLineAsync', item).subscribe(res => {
-      if (res)
-        this.lines.splice(index, 1);
-    })
+    this.api
+      .exec<any>('BS', 'RangeLinesBusiness', 'DeleteRangeLineAsync', item)
+      .subscribe((res) => {
+        if (res) this.lines.splice(index, 1);
+      });
   }
 
   valueChange(data) {
     this.line[data.field] = data.data;
   }
   //#endregion
-
-
 }
-
-

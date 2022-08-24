@@ -163,6 +163,7 @@ codx-wrapper {
 .header-title {
   font-size: 18px;
 }
+
 .space_content {
   padding-top: 1.5%;
   padding-right: 2%;
@@ -175,4 +176,8 @@ codx-wrapper {
 
 .space_personal {
   padding-left: 7%;
+}
+
+.mw-1000px {
+  max-width: 1000px;
 }

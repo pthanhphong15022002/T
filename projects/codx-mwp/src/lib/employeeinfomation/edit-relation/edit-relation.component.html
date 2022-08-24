@@ -17,8 +17,7 @@
                     <div class="form-group">
                         <codx-label fiedName="Birthday" default="Ngày sinh"></codx-label>
                         <codx-input type="datetime" class="test-datetime" placeholder="datetime" format="d"
-                            field="birthday" (valueChange)="changeTime($event)"
-                            [crrValue]="dataBind?.birthday">
+                            field="birthday" (valueChange)="changeTime($event)" [crrValue]="dataBind?.birthday">
                         </codx-input>
                     </div>
                 </div>
@@ -85,8 +84,7 @@
                     <div class="form-group">
                         <codx-label fiedName="IssuedOn" default="Ngày cấp"></codx-label>
                         <codx-input type="datetime" class="test-datetime" placeholder="datetime" format="d"
-                            [crrValue]="dataBind?.issuedOn" field="issuedOn"
-                            (valueChange)="changeTime($event)">
+                            [crrValue]="dataBind?.issuedOn" field="issuedOn" (valueChange)="changeTime($event)">
                         </codx-input>
                     </div>
                 </div>
@@ -117,25 +115,16 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <!-- <label>Số đăng ký</label>
-                        <input class="form-control" type="text" [disabled]="!dataBind?.dependent"
-                            [(ngModel)]="dataBind?.registerNo" /> -->
-
-                            <codx-label fiedName="RegisterNo" default="Số đăng ký">
-                            </codx-label>
-                            <codx-input type="text" field="registerNo"
-                                class="form-control" (valueChange)="dataChange($event, 'registerNo')"
-                                [crrValue]="dataBind?.registerNo" [disabled]="!dataBind?.dependent">
-                            </codx-input>
+                        <codx-label fiedName="RegisterNo" default="Số đăng ký">
+                        </codx-label>
+                        <codx-input type="text" field="registerNo" class="form-control"
+                            (valueChange)="dataChange($event, 'registerNo')" [crrValue]="dataBind?.registerNo"
+                            [disabled]="!dataBind?.dependent">
+                        </codx-input>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <!-- <label>Ngày đăng ký</label>
-                        <kendo-datepicker class="form-control" [(ngModel)]="dataBind?.registeredOn"
-                            [disabled]="!dataBind?.dependent">
-                        </kendo-datepicker> -->
-
                         <codx-label fiedName="registeredOn" default="Ngày đăng ký"></codx-label>
                         <codx-input type="datetime" class="test-datetime" field="registeredOn" format="d"
                             placeholder="datetime" [crrValue]="dataBind?.joinedOn" [disabled]="!dataBind?.dependent"
@@ -145,28 +134,29 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="col-xl-4 col-md-4 text-center">
+        <div class="col-xl-4 col-md-4 text-center">
             <div class="form-group">
-                <div class="image-input image-input-outline mt-7" id="kt_user_add_avatar">
-                    <div class="image-input-wrapper">
-                        <codx-imgs #imageAvatar class="symbol symbol-40 symbol-circle me-2 image-input-wrapper fullImage"
+                <div class="image-input image-input-outline" id="kt_user_add_avatar">
+                    <!-- <div class="image-input-wrapper"> -->
+                        <codx-img #imageAvatar isAllowEdit="true" updateDirect="true" [width]="100" [height]="100"
+                            class="me-4e"
                             [objectId]="dataBind?.recID" objectType="HR_EmployeeRelations">
-                        </codx-imgs>
-                    </div>
-                    <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                            data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
-                            <span class="icon-edit icon-18 text-dark-50"></span>
-                            <input id="fileAvatar" type="file" name="profile_avatar" (change)="handleFileInput($event)"
-                                accept=".png, .jpg, .jpeg">
-                            <input type="hidden" name="profile_avatar_remove">
-                        </label>
-                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                            data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
-                            <span class="icon-close icon-20 text-dark-50"></span>
-                        </span>
+                        </codx-img>
+                    <!-- </div> -->
+                    <!-- <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                        data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                        <span class="icon-edit icon-18 text-dark-50"></span>
+                        <input id="fileAvatar" type="file" name="profile_avatar" (change)="handleFileInput($event)"
+                            accept=".png, .jpg, .jpeg">
+                        <input type="hidden" name="profile_avatar_remove">
+                    </label>
+                    <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                        data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                        <span class="icon-close icon-20 text-dark-50"></span>
+                    </span> -->
                 </div>
             </div>
-        </div> -->
+        </div>
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-end">

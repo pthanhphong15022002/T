@@ -13,6 +13,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Html } from '@syncfusion/ej2-angular-diagrams';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, DataRequest, DataService, DialogData, DialogModel, DialogRef, NotificationsService } from 'codx-core';
@@ -29,6 +30,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   submitted = false;
   gridModel: any;
   formModel: any;
+  formModels:any = {};
   recID: any
   data = {}
   hideThumb = false;
@@ -37,6 +39,14 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   columnsGrid: any;
   editSettings: any;
   dataService:any={data:null};
+  fieldImport = [];
+  dataImport = [];
+  date=new Date();
+  sessionID: any;
+  mappingTemplate: any;
+  dataIETable:any = {};
+  dataIEMapping:any = {};
+  addMappingForm :any;
   @ViewChild('gridView') gridView: CodxGridviewComponent
   constructor(
     private callfunc: CallFuncService,
@@ -47,19 +57,29 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    debugger;
     this.dialog = dialog;
     this.formModel = dt.data?.[0];
+    this.dataIETable = dt.data?.[1];
+    this.dataIEMapping = dt.data?.[2];
+    this.sessionID =  this.dataIETable?.recID;
+    this.mappingTemplate = this.dataIEMapping?.recID;
+    this.addMappingForm = this.formBuilder.group({
+      mappingName: [this.dataIEMapping?.mappingName],
+      processIndex: [this.dataIETable?.processIndex],
+      destinationTable: [this.dataIETable?.destinationTable],
+      parentEntity:[this.dataIETable?.parentEntity],
+      importRule: [this.dataIETable?.importRule],
+      isSummary: [this.dataIETable?.isSummary]
+    });
   }
   
   ngOnInit(): void {
-
+    this.formModels = {
+      formName: 'IETables',
+      gridViewName : 'grvIETables'
+    }
     this.getGridViewSetup();
-    this.editSettings = {
-      allowEditing: true,
-      allowAdding: true,
-      allowDeleting: true,
-      newRowPosition: 'Top',
-    };
   }
  
   ngOnChanges(changes: SimpleChanges) { }
@@ -72,7 +92,14 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   onSave()
   {
-    
+    this.addMappingForm.value.parentEntity = this.addMappingForm.value?.parentEntity[0];
+    this.dataIETable.mappingName = this.addMappingForm.value?.mappingName;
+    this.dataIETable.processIndex = this.addMappingForm.value?.processIndex;
+    this.dataIETable.destinationTable = this.addMappingForm.value?.destinationTable;
+    this.dataIETable.parentEntity = this.addMappingForm.value?.parentEntity;
+    this.dataIETable.importRule = this.addMappingForm.value?.importRule;
+    this.dataIETable.isSummary = this.addMappingForm.value?.isSummary;
+    this.dialog.close([this.dataIETable , this.dataImport]);
   }
   addItem()
   {
@@ -80,61 +107,70 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   getGridViewSetup()
   {
-    this.cache.gridViewSetup("IETables","grvIETables").subscribe(item=>{
+    this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName).subscribe(item=>{
       if(item)
       {
-        this.columnsGrid = [
+       var key = Object.keys(item);
+       for(var i  = 0 ; i < key.length ; i++)
+       {
+          if(item[key[i]]?.isImport) 
           {
-            field: "ProcessIndex",
-            headerText: item["ProcessIndex"]?.headerText,
-            width: '10%',
-            type:'number'
-          },
-          {
-            field: "DestinationTable",
-            headerText: item["DestinationTable"]?.headerText,
-            width: '20%',
-            type:'text'
-          },
-          {
-            field: "ParentEntity",
-            headerText: item["ParentEntity"]?.headerText,
-            width: '15%',
-            type:'text'
-          },
-          {
-            field: "MappingTemplate",
-            headerText: item["MappingTemplate"]?.headerText,
-            width: '20%',
-            type:'text'
-          },
-          {
-            field: "ImportRule",
-            headerText: item["ImportRule"]?.headerText,
-            width: '15%',
-            type:'text'
-          },
-          {
-            field: "IsSummary",
-            headerText: item["IsSummary"]?.headerText,
-            width: '15%',
-            type:'switch'
-          },
-        ];
-        var sdata = 
-        {
-          recID : '11111',
-          processIndex : 0,
-          destinationTable : "a",
-          parentEntity: 'a',
-          mappingTemplate: 'aaaa',
-          importRule : 1,
-          isSummary: true
-        }
-        this.gridView.dataService.data.push(sdata);
-        this.gridView.addHandler(sdata,true,"recID")
+            var obj = {
+              destinationField: key[i],
+            }
+            this.dataImport.push(obj);
+          }
+       }
       }
-      
     })
+    this.cache.gridViewSetup(this.formModels.formName,this.formModels.gridViewName).subscribe(item=>{
+      if(item)
+      {
+        debugger;
+        var key = Object.keys(item);
+        for(var i  = 0 ; i < key.length ; i++)
+        {
+           if(item[key[i]]?.isVisible)
+           {
+            this.fieldImport.push(item[key[i]]);
+            for(var x = 0 ; x< this.dataImport.length; x++)
+            {
+              if(item[key[i]]?.controlType == "CheckBox") this.dataImport[x][key[i]] = false;
+              else this.dataImport[x][key[i]] = "";
+            }
+           } 
+        }
+      }
+    })
+   
+  }
+  changeValueText(item:any,field:any,data:any)
+  {
+    item[field] = data?.data;
+    if(data?.component)
+    {
+      var value = data?.component?.dataSource.filter(x=>x.value == data?.data);
+      item[field] = value[0].text
+    }
+  }
+  changeValueCBB(data:any , field:any, check=false)
+  {
+    debugger;
+    this.addMappingForm.get(field).setValue(data?.data);
+    if(data?.component?.itemsSelected && check)
+      this.addMappingForm.get("destinationTable").setValue(data?.component?.itemsSelected[0]?.TableName);
+  }
+  clicktest()
+  {
+    debugger;
+   
+    var a = this.dataImport;
+  }
+  html()
+  {
+    const child = document.createElement('td');
+    let html = `<codx-input type="text"></codx-input>`;
+    child.innerHTML = html;
+  
   }
 }

@@ -46,7 +46,7 @@
         (valueChange)="valueEndTimeChange($event)">
       </codx-input>
     </div>
-    <div class="col-2">
+    <div class="col-2 mt-6">
       <codx-label class="fs-6 fw-bold mb-2" default>
       </codx-label>
       <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
@@ -88,7 +88,7 @@
   <div class="d-flex flex-column mb-4">
     <!--begin::Label-->
     <div class="d-flex justify-content-between align-items-center mb-2">
-      <div class="form-switch1">
+      <div class="form-switch1 d-flex align-items-center">
         <codx-input #checkbox field="isOnline" type="switch" [checked]="meeting?.isOnline" labelPosition="After"
           [disabled]="false" class="test-switch" (valueChange)="valueChange($event)">
         </codx-input>
@@ -109,8 +109,8 @@
     <!--begin::Input-->
     <div class="d-flex align-items-center fw-bold">
       <a href="" *ngIf="meeting?.isOnline">{{
-                    meeting?.link
-                  }}</a>
+        meeting?.link
+        }}</a>
     </div>
     <!--end::Input-->
   </div>
@@ -134,9 +134,9 @@
   <ng-container>
     <div class="d-flex align-items-center justify-content-between mt-6">
       <div class="d-flex align-items-center mb-3">
-        <span class="icon-person icon-24 me-2 text-primary"></span>
-        <div class="fw-bold fs-6 text-primary">
-          <codx-label fiedName="Resources" [formModel]="form.formModel" default="Người tham gia">
+        <span class="icon-person icon-20 me-2 text-primary"></span>
+        <div class="text-primary">
+          <codx-label class="fw-bold fs-6" fiedName="Resources" [formModel]="form.formModel" default="Người tham gia">
           </codx-label>
         </div>
       </div>
@@ -144,20 +144,19 @@
         multiple="true" [showInput]="false">
       </codx-input>
     </div>
-    <div class="row">
+    <div class="d-flex flex-wrap">
       <ng-container *ngFor="let item of resources">
-        <div class="col-4">
-          <div>
-            <codx-img class=" flex symbol-40px " [objectId]="item.resourceID" objectType="AD_Users"></codx-img>
+        <div class="d-flex justify-content-between align-items-center rounded-pill bg-light p-2 ps-0 h-30px mt-2 me-2">
+          <div class="me-3">
+            <codx-img class="me-2" [objectId]="item.resourceID" objectType="AD_Users" [width]="30">
+            </codx-img>
             <span>{{item.resourceName}}</span>
           </div>
-          <div>
-            <a (click)="onDeleteUser(item)" style="cursor: pointer">
-              <span class="icon-close icon-16 text-danger me-2"></span>
-            </a>
-          </div>
-
+          <a (click)="onDeleteUser(item)" class="text-hover-danger d-flex align-items-center">
+            <span class="icon-close icon-16"></span>
+          </a>
         </div>
+
       </ng-container>
     </div>
   </ng-container>
@@ -196,10 +195,10 @@
       </div>
     </div>
     <div class="form-group mt-3">
-      <codx-label fiedName="refID" formName="TMMeetings" gridViewName="grvTMMeetings" default="Dự án">
+      <codx-label fiedName="refID" default="Dự án">
       </codx-label>
-      <codx-input type="combobox" field="refID" refValue="PM_Projects" [multiple]="false" loadFull="true"
-        [crrValue]="meeting.refID" (valueChange)="valueChange($event)">
+      <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
+        [crrValue]="meeting.refID" loadFull="true">
       </codx-input>
     </div>
   </ng-container>
@@ -211,11 +210,11 @@
     <ng-container *ngFor="let item of listRoles">
       <div class="d-flex align-items-center ms-4">
         <span inlineSVG="./assets/themes/co/default/img/{{item.icon}}"></span>
-        <div class="fs-8 text-gray-500">{{item.text}}</div>
+        <div class="fs-8 text-gray-500 ms-1">{{item.text}}</div>
       </div>
     </ng-container>
   </div>
-  <div class="d-flex align-items-center justify-content-between mt-4">
+  <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
     <div class="d-flex align-items-center">
       <span class="icon-person icon-16 me-2 text-primary"></span>
       <div class="fw-bold fs-6 text-primary">
@@ -230,7 +229,7 @@
   <ng-container *ngFor="let item of resources">
     <div class="d-flex py-2 border-bottom justify-content-between list-title">
       <div class="d-flex align-items-top">
-        <div style=" position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
+        <div class="me-3" style=" position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
           placement="right" #p="ngbPopover" (mouseenter)="showPopover(p,item.resourceID)" autoClose="outside">
           <codx-img class="" [objectId]="item.resourceID" objectType="AD_Users">
           </codx-img>
@@ -252,7 +251,9 @@
       <div>
         <a style="cursor: pointer">
           <div class="d-flex align-item-center">
-            <span class="icon-check_box icon-24 me-2"></span>
+            <codx-input type="checkbox" name="taskControl" class="check-sys d-block text-right" ngDefaultControl
+              field="taskControl" (valueChange)="valueCbx(item.resourceID,$event)" [crrValue]="item.taskControl">
+            </codx-input>
           </div>
         </a>
       </div>
@@ -331,7 +332,7 @@
       <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4"
         (click)="selectRoseType(idUserSelected,item.value)" style="cursor: pointer;">
         <span inlineSVG="./assets/themes/co/default/img/{{item.icon}}"></span>
-        <div class="fs-8 text-gray-500">{{item.text}}</div>
+        <div class="fs-8 text-gray-500 ms-1">{{item.text}}</div>
       </div>
     </ng-container>
   </div>

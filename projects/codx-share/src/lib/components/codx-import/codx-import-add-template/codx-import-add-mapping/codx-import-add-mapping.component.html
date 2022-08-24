@@ -4,44 +4,62 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="formModel"
   [data]="data"
+  [formModel]="formModels"
 ></codx-form>
 <ng-template popup adde #body>
   <div class="py-2">
     <div class="py-2">
-      <codx-label [formModel]="formModel" [fiedName]="'name'" default="Tên mapping" class="fw-bold"></codx-label>
-      <codx-input type="text"></codx-input>
+      <codx-label  default="Tên mapping" class="fw-bold"></codx-label>
+      <codx-input type="combobox" [refValue]="'MappingTemplate'" [crrValue]="dataIEMapping?.mappingName"  (valueChange)="changeValueCBB($event,'mappingName',true)"></codx-input>
     </div>
     <div class="d-flex align-items-center justify-content-between row py-2">
       <div class="col-2">
-        <codx-label [formModel]="formModel" [fiedName]="'sheetimport'" default="Thứ tự import" class="fw-bold"></codx-label>
-        <codx-input type="combobox"></codx-input>
+        <codx-label [formModel]="formModels" [fiedName]="'ProcessIndex'"  class="fw-bold"></codx-label>
+        <codx-input type="number" [min]="0" [showSpinButton]="false" [Group]="addMappingForm" ControlName="processIndex"></codx-input>
       </div>
       <div class="col-3">
-        <codx-label [formModel]="formModel" [fiedName]="'title'" default="Bảng dữ liệu" class="fw-bold"></codx-label>
-        <codx-input type="text"></codx-input>
+        <codx-label [formModel]="formModels" [fiedName]="'DestinationTable'" class="fw-bold"></codx-label>
+        <codx-input type="text" [Group]="addMappingForm" ControlName="destinationTable"></codx-input>
       </div>
       <div class="col-3">
-        <codx-label [formModel]="formModel" [fiedName]="'password'" default="Bảng dữ liệu cha" class="fw-bold"></codx-label>
-        <codx-input type="combobox"></codx-input>
+        <codx-label [formModel]="formModels" [fiedName]="'ParentEntity'" class="fw-bold"></codx-label>
+        <codx-input type="combobox" [Group]="addMappingForm" ControlName="parentEntity"></codx-input>
       </div>
       <div class="col-2">
-        <codx-label [formModel]="formModel" [fiedName]="'dfpassword'" default="Rule import" class="fw-bold"></codx-label>
-        <codx-input type="text"></codx-input>
+        <codx-label [formModel]="formModels" [fiedName]="'ImportRule'" class="fw-bold"></codx-label>
+        <codx-input type="valuelist" refValue="SYS010" [crrValue]="dataIEMapping?.importRule" (valueChange)="changeValueCBB($event,'importRule')"></codx-input>
       </div>
       <div class="col-2 d-flex align-items-center">
-        <codx-input type="switch" style="margin-top:6px"></codx-input>
-        <codx-label default="IsSumary" class="ms-2" ></codx-label>
+        <codx-input type="switch" [Group]="addMappingForm" ControlName="isSummary" style="margin-top:6px"></codx-input>
+        <codx-label [formModel]="formModels" [fiedName]="'IsSummary'" class="ms-2" ></codx-label>
       </div>
     </div>
   </div>
-  <div>
-    <div class="d-flex align-items-center justify-content-between py-2">
-      <codx-label [formModel]="formModel" [fiedName]="'detailImport'" default="Chi tiết import" class="text-primary fw-bold"></codx-label>
-      <i class="fa-regular fa-square-plus fa-xl text-black cursor-pointer" (click)="addItem()"></i>
-    </div>
-    <codx-gridview #gridView [columnsGrid]="columnsGrid"  [editSettings]="editSettings" [rowTmp]="rowTmp" ></codx-gridview>
+  <div class="h-feildImport">
+    <table class="table d-inline-block w-100">
+      <thead>
+        <tr>
+          <th scope="col"><codx-label default="Trường nhận" class="fw-bold"></codx-label></th>
+          <th scope="col" *ngFor="let item of fieldImport"><codx-label [default]="item?.headerText" class="fw-bold"></codx-label></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Chưa làm được form group huhu nhớ làm nha-->
+        <tr *ngFor="let item of dataImport">
+          <td>{{item?.destinationField}}</td>
+          <ng-container *ngTemplateOutlet="tmpTable; context: { $implicit: item}"></ng-container>
+         
+         <!--  <td><codx-input type="text" (valueChange)="changeValueText(item,'dataType',$event)"></codx-input></td>
+          <td class="w-80px text-center"><codx-input type="checkbox"></codx-input></td>
+          <td><codx-input type="text"></codx-input></td>
+          <td  class="w-140px"><codx-input type="text"></codx-input></td>
+          <td><codx-input type="text"></codx-input></td>
+          <td><codx-input type="text"></codx-input></td>
+          <td><codx-input type="text"></codx-input></td> -->
+        </tr>
+      </tbody>
+    </table>
   </div>
 </ng-template>
 <ng-template #footer>
@@ -51,27 +69,29 @@
       </button>
     </div>
 </ng-template>
-<ng-template #rowTmp let-data>
-  <tr class="tr-ip-add-tmp">
-    <td class="w-10">
-      <span>{{data?.processIndex}}</span>
+<ng-template #tmpTable let-item>
+  <ng-container *ngFor="let item2 of fieldImport">
+    <td  >
+      <ng-container [ngSwitch]="item2?.controlType">
+        <ng-container *ngSwitchCase="'TextBox'">
+          <codx-input type="text" (valueChange)="changeValueText(item,item2?.fieldName,$event)"></codx-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'CheckBox'">
+          <codx-input type="checkbox" (valueChange)="changeValueText(item,item2?.fieldName,$event)"></codx-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'ComboBox'">
+          <ng-container *ngIf="item2?.referedType == 2; else elseCBB">
+            <codx-input type="valuelist"  [refValue]="item2?.referedValue" (valueChange)="changeValueText(item,item2?.fieldName,$event)"></codx-input>
+          </ng-container>
+          <ng-template #elseCBB>
+            <codx-input type="combobox"  [refValue]="item2?.referedValue" (valueChange)="changeValueText(item,item2?.fieldName,$event)"></codx-input>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngSwitchCase="'MaskBox'">
+        </ng-container>
+      </ng-container>
     </td>
-    <td class="w-20">
-      <span>{{data?.destinationTable}}</span>
-    </td>
-    <td class="w-15">
-      <span>{{data?.parentEntity}}</span>
-    </td>
-    <td class="w-20">
-      <span>{{data?.mappingTemplate}}</span>
-    </td>
-    <td class="w-15">
-      <span>{{data?.importRule}}</span>
-    </td>
-    <td class="w-15">
-      <codx-input type="switch" [checked]="data?.isSummary" [disabled]="true"></codx-input>
-    </td>
-  </tr>
+  </ng-container>
 </ng-template>
 
 

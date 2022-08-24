@@ -4,7 +4,8 @@
       <div class="w-100">
         <div>
           <codx-temp-full 
-            [title]="extractContent(data?.title)"
+            [title]="data?.title"
+            [titleCss]="'fs-5'"
             [desc]="convertHtmlAgency(data?.agencyName,data?.txtLstAgency)"
             [bookmark]="false"
             [titleLine]="2"
@@ -102,7 +103,7 @@
     <div class="tab-horizone h-od-tab  ">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active"  class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink><codx-label default="Nơi nhận"></codx-label></a>
+          <a ngbNavLink><div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2 mt-1" [ngClass]="{'text-primary':active===1}"></i><span>Nơi nhận</span></div></a>
           <ng-template ngbNavContent>
             <ng-container *ngFor="let item of data?.listInformationRel">
               <div class="list-item has-action-menu-1 mb-6">
@@ -137,7 +138,7 @@
           </ng-template>
         </li>
         <li [ngbNavItem]="2">
-          <a ngbNavLink>Công việc</a>
+          <a ngbNavLink><div class="d-flex align-item-center"><i class="icon-format_list_numbered me-2" [ngClass]="{'text-primary':active===2}"></i><span>Công việc</span></div></a>
           <ng-template ngbNavContent>
             <ng-container *ngIf="data?.tasks[0].length>0">
               <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
@@ -145,7 +146,7 @@
           </ng-template>
         </li>
         <li [ngbNavItem]="3">
-          <a ngbNavLink>Chi tiết</a>
+          <a ngbNavLink><div class="d-flex align-item-center"><i class="icon-info me-2" [ngClass]="{'text-primary':active===3}"></i><span>Chi tiết</span></div></a>
           <ng-template ngbNavContent>
          <!--    <ng-container *ngIf="data?.tasks[0].length>0">
               <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>

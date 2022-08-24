@@ -49,6 +49,7 @@ export class TasksComponent
 {
   //#region Constructor
   @Input() dataObj?: any;
+  @Input() showButtonAdd = true;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
@@ -61,6 +62,7 @@ export class TasksComponent
   @ViewChild('treeView') treeView: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
+  viewsActive: Array<ViewModel> = [];
   button?: ButtonModel;
   model?: DataRequest;
   request: ResourceModel;
@@ -85,7 +87,7 @@ export class TasksComponent
   funcID: string;
   gridView: any;
   isAssignTask = false;
-  param: TM_Parameter = new TM_Parameter();;
+  param: TM_Parameter = new TM_Parameter();
   paramModule: any;
   listTaskResousce = [];
   searchField = '';
@@ -106,9 +108,11 @@ export class TasksComponent
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
   dataTree = [];
-  iterationID = '';
-  meetingID = '';
+  iterationID: any;
+  viewMode: any;
   projectID?: any;
+  listViewModel = [];
+ 
 
   constructor(
     inject: Injector,
@@ -141,7 +145,6 @@ export class TasksComponent
     } else {
       this.vllStatus = this.vllStatusTasks;
     }
-    this.projectID = this.dataObj?.projectID;
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -166,10 +169,17 @@ export class TasksComponent
 
     this.request = new ResourceModel();
     this.request.service = 'TM';
-    this.request.assemblyName = 'CM';
-    this.request.className = 'DataBusiness';
-    this.request.method = 'LoadDataAsync';
+    this.request.assemblyName = 'TM';
+    this.request.className = 'TaskBusiness';
+    this.request.method = 'GetListDetailTasksAsync';
     this.request.idField = 'taskID';
+
+    // this.request = new ResourceModel();
+    // this.request.service = 'TM';
+    // this.request.assemblyName = 'CM';
+    // this.request.className = 'DataBusiness';
+    // this.request.method = 'LoadDataAsync';
+    // this.request.idField = 'taskID';
 
     this.button = {
       id: 'btnAdd',
@@ -178,8 +188,11 @@ export class TasksComponent
   }
 
   ngAfterViewInit(): void {
-    this.views = [
+    this.projectID = this.dataObj?.projectID;
+    this.viewMode = this.dataObj?.viewMode;
+    this.viewsActive = [
       {
+        id: '1',
         type: ViewType.list,
         active: false,
         sameData: true,
@@ -188,8 +201,9 @@ export class TasksComponent
         },
       },
       {
+        id: '2',
         type: ViewType.listdetail,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -197,6 +211,7 @@ export class TasksComponent
         },
       },
       {
+        id: '6',
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -207,6 +222,7 @@ export class TasksComponent
         },
       },
       {
+        id: '8',
         type: ViewType.schedule,
         active: false,
         sameData: true,
@@ -219,6 +235,17 @@ export class TasksComponent
         },
       },
     ];
+    var viewDefaultID = '2';
+    if (this.viewMode && this.viewMode.trim() != '') {
+      viewDefaultID= this.viewMode ;
+    }
+
+    this.viewsActive.forEach((obj) => {
+      if (obj.id == viewDefaultID) {
+        obj.active = true;
+      }
+    });
+    this.views = this.viewsActive;
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
@@ -231,8 +258,8 @@ export class TasksComponent
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
@@ -247,16 +274,6 @@ export class TasksComponent
             [this.view.dataService.dataSelected],
             false
           );
-        if (e?.event && e?.event != null) {
-          this.view.dataService.data = e?.event.concat(
-            this.view.dataService.data
-          );
-          this.view.dataService.setDataSelected(res[0]);
-          this.view.dataService.afterSave.next(res);
-          this.notiService.notifyCode('TM005');
-          this.itemSelected = this.view.dataService.data[0];
-          this.detectorRef.detectChanges();
-        }
       });
     });
   }
@@ -308,8 +325,8 @@ export class TasksComponent
     if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
@@ -397,13 +414,13 @@ export class TasksComponent
           [this.view.dataService.dataSelected],
           false
         );
-      if (e?.event && e?.event != null) {
-        let listTask = e?.event;
+      if (e?.event && e?.event != null && e?.event[1] != null) {
+        let listTask = e?.event[1];
         let newTasks = [];
         for (var i = 0; i < listTask.length; i++) {
           if (listTask[i].taskID == data.taskID) {
             this.view.dataService.update(listTask[i]).subscribe();
-            this.view.dataService.setDataSelected(e?.event[0]);
+            this.view.dataService.setDataSelected(listTask[i]);
           } else newTasks.push(listTask[i]);
         }
         if (newTasks.length > 0) {
@@ -427,8 +444,8 @@ export class TasksComponent
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
@@ -442,11 +459,7 @@ export class TasksComponent
               false
             );
           if (e?.event && e?.event != null) {
-            // e?.event.forEach((obj) => {
-            //   this.view.dataService.update(obj).subscribe();
-            // });
-           // this.itemSelected = e?.event[0]; cái này lúc trước trả về 1 mảng///đổi core là đổi lại.............
-            this.view.dataService.update( e?.event).subscribe();
+            this.view.dataService.update(e?.event).subscribe();
             this.itemSelected = e?.event;
             this.detail.taskID = this.itemSelected.taskID;
             this.detail.getTaskDetail();
@@ -466,6 +479,7 @@ export class TasksComponent
             listTaskDelete.forEach((x) => {
               this.view.dataService.remove(x).subscribe();
             });
+            this.view.dataService.onAction.next({ type: 'delete', data: data });
             this.notiService.notifyCode('TM004');
             if (parent) {
               this.view.dataService.update(parent).subscribe();
@@ -487,6 +501,10 @@ export class TasksComponent
   changeStatusTask(moreFunc, taskAction) {
     if (taskAction.status == '05') {
       this.notiService.notifyCode('TM020');
+      return;
+    }
+    if (taskAction.status == '00') {
+      this.notiService.notifyCode('TM060');
       return;
     }
     if (taskAction.approveStatus == '3') {
@@ -702,9 +720,9 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-          this.itemSelected = e?.event[0];
-          this.detail.taskID = this.itemSelected.taskID;
-          this.detail.getTaskDetail();
+        this.itemSelected = e?.event[0];
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -732,7 +750,7 @@ export class TasksComponent
   //codx-view select
 
   selectedChange(task: any) {
-    this.itemSelected = task?.data ?task?.data : task;
+    this.itemSelected = task?.data ? task?.data : task;
     this.loadTreeView();
     this.detectorRef.detectChanges();
   }
@@ -896,9 +914,9 @@ export class TasksComponent
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
         });
-         this.itemSelected = e?.event[0];
-          this.detail.taskID = this.itemSelected.taskID;
-          this.detail.getTaskDetail();
+        this.itemSelected = e?.event[0];
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -959,8 +977,8 @@ export class TasksComponent
           this.view.dataService.update(obj).subscribe();
         });
         this.itemSelected = e?.event[0];
-          this.detail.taskID = this.itemSelected.taskID;
-          this.detail.getTaskDetail();
+        this.detail.taskID = this.itemSelected.taskID;
+        this.detail.getTaskDetail();
       }
       this.detectorRef.detectChanges();
     });
@@ -1197,7 +1215,7 @@ export class TasksComponent
         break;
       case 'SYS001': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
-       this.importFile();
+        this.importFile();
         break;
       case 'SYS002': // cái này phải xem lại , nên có biến gì đó để xét
         //Chung làm
@@ -1212,7 +1230,7 @@ export class TasksComponent
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
-           //tắt duyệt confirm
+        //tắt duyệt confirm
         if (
           (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
           (data.confirmControl == '0' || data.confirmStatus != '1')
@@ -1233,15 +1251,15 @@ export class TasksComponent
         ) {
           x.disabled = true;
         }
-         //tắt duyệt đánh giá
-         if (
-          (x.functionID == 'TMT04021' || x.functionID == 'TMT04022'  || x.functionID == 'TMT04023') &&
+        //tắt duyệt đánh giá
+        if (
+          (x.functionID == 'TMT04021' ||
+            x.functionID == 'TMT04022' ||
+            x.functionID == 'TMT04023') &&
           data.approveStatus != '3'
         ) {
           x.disabled = true;
         }
-     
-       
       });
     }
   }
@@ -1262,7 +1280,7 @@ export class TasksComponent
       option.Width = 'Auto';
       this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'view', this.isAssignTask],
+        [e?.data, 'view', this.isAssignTask],
         option
       );
     }

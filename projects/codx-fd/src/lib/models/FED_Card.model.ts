@@ -1,4 +1,4 @@
-import { Permission } from "@shared/models/file.model";
+import { FD_Permissions } from "./FD_Permissionn.model";
 
 export class FED_Card {
     recID: string;
@@ -35,7 +35,7 @@ export class FED_Card {
     modifiedOn: any;
     modifiedBy: string;
     approveStatus: string;
-    permissions: Permission[];
+    permissions: FD_Permissions[];
     //Others
     functionID: string;
     entityName: string;

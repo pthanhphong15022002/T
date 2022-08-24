@@ -11,7 +11,7 @@ import {
   UploadFile,
   UserModel,
 } from 'codx-core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export class GridModels {
@@ -146,7 +146,11 @@ export class CodxEsService {
   }
 
   //#region Get from FunctionList
-  getDataDefault(funcID: string, entityName: string, idField: string) {
+  getDataDefault(
+    funcID: string,
+    entityName: string,
+    idField: string
+  ): Observable<object> {
     return this.api.execSv('ES', 'CM', 'DataBusiness', 'GetDefaultAsync', [
       funcID,
       entityName,
@@ -563,13 +567,17 @@ export class CodxEsService {
         lstData = res;
       });
     }
-    return this.api.execSv(
-      'ES',
-      'ES',
-      'ApprovalStepsBusiness',
-      'AddNewApprovalStepsAsync',
-      [lstData]
-    );
+    if (lstData == null) {
+      return EMPTY;
+    } else {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'AddNewApprovalStepsAsync',
+        [lstData]
+      );
+    }
   }
 
   editApprovalStep(): Observable<any> {
@@ -577,14 +585,17 @@ export class CodxEsService {
     this.approvalStep.subscribe((res) => {
       lstDataEdit = res;
     });
-
-    return this.api.execSv(
-      'ES',
-      'ES',
-      'ApprovalStepsBusiness',
-      'UpdateApprovalStepsAsync',
-      [lstDataEdit]
-    );
+    if (lstDataEdit == null) {
+      return EMPTY;
+    } else {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'UpdateApprovalStepsAsync',
+        [lstDataEdit]
+      );
+    }
   }
 
   updateTransID(newTransID): Observable<any> {
@@ -738,6 +749,16 @@ export class CodxEsService {
       'SignFilesBusiness',
       'DeleteSignFileAsync',
       [recID]
+    );
+  }
+
+  saveSignFileIsTemplate(recID: string, templateName: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'CreateTemplateBySignFileAsync',
+      [recID, templateName]
     );
   }
 
