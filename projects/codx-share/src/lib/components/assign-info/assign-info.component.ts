@@ -46,7 +46,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   param: any;
   taskGroup: TM_TaskGroups;
   task: TM_Tasks = new TM_Tasks();
-  functionID: string;
+  functionID ='TMT0201'; // giao việc nên cố định funcID này
   popover: any;
   title = 'Giao việc';
   showPlan = true;
@@ -90,7 +90,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.title = dt?.data[3] ? dt?.data[3] : this.title;
     this.dialog = dialog;
     this.user = this.authStore.get();
-    this.functionID = this.dialog.formModel.funcID;
+    // this.functionID = this.dialog.formModel.funcID;
+
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -119,7 +120,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.taskID = '';
     this.api
       .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-        'TMT0203',
+        this.functionID,
         'TM_Tasks',
         'taskID',
       ])
