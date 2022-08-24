@@ -416,17 +416,25 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
+  checkOpenCbbPopup = 0;
   getDataUserInCbb(event) {
+    this.checkOpenCbbPopup++;
     if (event?.dataSelected) {
+      if (this.checkOpenCbbPopup >= 2 || this.formType == 'add' || this.formType == 'edit') {
+        if (this.dataUserCbb) {
+          let i = 0;
+          event?.dataSelected.forEach((dt) => {
+            this.dataUserCbb.forEach((x) => {
+              if (dt.UserID == x.userID) {
+                event?.dataSelected.splice(i, 1);
+              }
+            });
+            i++;
+          });
+        }
+      }
       event?.dataSelected.forEach((e: any) => {
         this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
-        // if (this.dataUserCbb) {
-        //   this.dataUserCbb.forEach((dt) => {
-        //     if (e.UserID != dt.UserID) {
-        //       this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
-        //     }
-        //   });
-        // }
       });
       this.changeDetector.detectChanges();
     }

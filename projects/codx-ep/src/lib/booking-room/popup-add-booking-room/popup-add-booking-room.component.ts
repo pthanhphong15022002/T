@@ -10,10 +10,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
+  ApiHttpService,
+  AuthService,
+  CacheService,
+  CallFuncService,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -31,23 +37,30 @@ export class Device {
   templateUrl: './popup-add-booking-room.component.html',
   styleUrls: ['./popup-add-booking-room.component.scss'],
 })
-export class PopupAddBookingRoomComponent extends UIComponent {
+export class PopupAddBookingRoomComponent implements OnInit {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
+   
+  fGroupAddBookingRoom: FormGroup;
+  formModel: FormModel;
+  dialogRef: DialogRef;
   modelPage: ModelPage;
+
+  grvBookingRoom:any;
+  peopleAttend =[];
+  tempArray=[];
+  curUser:any;
+  lstPeople=[];
   vllDevices = [];
   lstDeviceRoom = [];
   isAfterRender = false;
-  dialogAddBookingRoom: FormGroup;
   chosenDate = null;
   CbxName: any;
   link = '';
-  headerTitle = 'Đặt phòng';
-  subHeaderTitle = 'Đặt phòng họp';
   selectDate = null;
   startTime: any = null;
   endTime: any = null;
@@ -59,96 +72,223 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   beginMinute = 0;
   endHour = 0;
   endMinute = 0;
-  public headerText: Object = [
-    { text: 'Thông tin chung', iconCss: 'icon-info' },
-    { text: 'Người tham dự', iconCss: 'icon-person_add' },
-    { text: 'Văn phòng phẩm', iconCss: 'icon-layers' },
-    { text: 'Thông tin khác', iconCss: 'icon-tune' },
+
+  titleAction = 'Thêm mới';
+  title="đặt phòng";
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'tabGeneralInfo'
+    },
+    {
+      icon: 'icon-person_add_alt_1',
+      text: 'Người tham dự',
+      name: 'tabPeopleInfo'
+    },
+    {
+      icon: 'icon-layers',
+      text: 'Văn phòng phẩm',
+      name: 'tabStationery',
+    },
+    {
+      icon: 'icon-tune',
+      text: 'Thông tin khác',
+      name: 'tabMoreInfo',
+    },
   ];
 
+  funcID:string;
   isAdd = false;
   range: any;
   data: any = {};
-  dialog: any;
   isSaveSuccess = false;
-  constructor(
-    private injector: Injector,
-    private notiService: NotificationsService,
-    private epService: CodxEpService,
-    @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
+  constructor(    
+    private callFuncService: CallFuncService,
+    private cacheService: CacheService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private codxEpService: CodxEpService,
+    private notificationsService: NotificationsService,
+    private apiHttpService: ApiHttpService,
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute,
+    @Optional() dialogData?: DialogData,
+    @Optional() dialogRef?: DialogRef
   ) {
-    super(injector);
-    this.data = dt?.data[0];
-    this.isAdd = dt?.data[1];
-    this.dialog = dialog;
-    this.range = dialog.dataService!.dataSelected;
+    this.data = dialogData?.data[0];
+    this.isAdd = dialogData?.data[1];
+    this.dialogRef = dialogRef;
+    this.formModel = this.dialogRef.formModel;   
+    this.funcID=this.formModel.funcID; 
+    //this.range = dialogRef.dataService!.dataSelected;
   }
-
-  onInit(): void {
-    this.epService.getModelPage('EPT1').then((res) => {
+  ngOnInit(): void {
+    if(!this.isAdd){      
+      this.titleAction = 'Chỉnh sửa';
+    } 
+    this.codxEpService.getModelPage(this.funcID).then((res) => {
       if (res) {
         this.modelPage = res;
       }
-      this.cache.valueList('EP012').subscribe((res) => {
+
+      this.codxEpService.getComboboxName(this.formModel.formName,this.formModel.gridViewName)
+      .then((res) => {
+        this.CbxName = res;
+        console.log('cbxEPT1', this.CbxName);
+      });
+
+      this.cacheService.gridViewSetup(this.formModel.formName,this.formModel.gridViewName).subscribe(res => {
+        console.log('grvEPT1', res);
+        this.grvBookingRoom=res;
+      })
+
+      this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
           let device = new Device();
           device.id = item.value;
           device.text = item.text;
           this.lstDeviceRoom.push(device);
-        });
-        this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
-        console.log('Device: ', this.lstDeviceRoom);
+        }); 
+          
+        if(!this.isAdd && this.fGroupAddBookingRoom.value.equipments!=null){
+          
+            let deviceArray=this.fGroupAddBookingRoom.value.equipments.split("|");
+            let availableDevice= deviceArray[0];
+            let pickedDevice= deviceArray[1];
+            
+            this.lstDeviceRoom.forEach(device =>{
+              availableDevice.split(";").forEach(equip=>{
+                if(device.id==equip){               
+                  this.tempArray.push(device); 
+                }
+              });     
+            })
+            this.tempArray.forEach(device=>{
+              pickedDevice.split(";").forEach(equip=>{
+                if(device.id==equip){               
+                  device.isSelected=true;
+                }
+              });  
+            })            
+                  
+          this.tmplstDevice = JSON.parse(JSON.stringify(this.tempArray)); 
+        } 
+        this.lstDeviceRoom = JSON.parse(JSON.stringify(this.lstDeviceRoom));
       });
 
-      this.epService
-        .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
-        .then((res) => {
-          this.CbxName = res;
+      if(this.isAdd){
+        let people = this.authService.userValue;
+        var user :{id: string, text: string, objectType: string, objectName: string}={                
+          id:people.userID,
+          text:people.userName,
+          objectType:undefined,
+          objectName:undefined
+        };
+        this.curUser=user;
+        this.changeDetectorRef.detectChanges();
+        
+      } 
+      
+      if(!this.isAdd){
+        this.apiHttpService
+        .callSv('EP', 'ERM.Business.EP', 'BookingAttendeesBusiness','GetAsync', [this.data.recID])
+        .subscribe((res) => {
+          if(res){
+            this.peopleAttend=res.msgBodyData[0];
+            this.peopleAttend.forEach(people=>{
+              let tempPeople :{id: string, text: string, objectType: string, objectName: string}={                
+                id:people.userID,
+                text:people.userName,
+                objectType:undefined,
+                objectName:undefined
+              };
+              this.lstPeople.push(tempPeople);
+            });
+
+            // if(this.lstPeople.length == 1){      
+            //   this.smallListPeople = this.lstPeople;
+            // }
+
+            // if(this.lstPeople.length >= 2) {
+            //   this.smallListPeople=null;
+            //   this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
+            // }        
+            
+            this.changeDetectorRef.detectChanges();
+          }
         });
-
-      this.cache.functionList('EPT1').subscribe(res => {
-        this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
-          console.log('Test', res)
-        })
-      })
-
-      this.initForm();
+      }
+      this.initForm();      
     });
-
-    this.isFullDay = false;
-    this.chosenDate = null;
   }
 
+  // onInit(): void {
+  //   this.codxEpService.getModelPage('EPT1').then((res) => {
+  //     if (res) {
+  //       this.modelPage = res;
+  //     }
+  //     this.cacheService.valueList('EP012').subscribe((res) => {
+  //       this.vllDevices = res.datas;
+  //       this.vllDevices.forEach((item) => {
+  //         let device = new Device();
+  //         device.id = item.value;
+  //         device.text = item.text;
+  //         this.lstDeviceRoom.push(device);
+  //       });
+  //       this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+  //       console.log('Device: ', this.lstDeviceRoom);
+  //     });
+
+  //     this.codxEpService
+  //       .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
+  //       .then((res) => {
+  //         this.CbxName = res;
+  //       });
+
+  //     this.cacheService.functionList('EPT1').subscribe(res => {
+  //       this.cacheService.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
+  //         console.log('Test', res)
+  //       })
+  //     })
+
+  //     this.initForm();
+  //   });
+
+  //   this.isFullDay = false;
+  //   this.chosenDate = null;
+  // }
+
   ngAfterViewInit(): void {
-    if (this.dialog) {
+    if (this.dialogRef) {
       if (!this.isSaveSuccess) {
-        this.dialog.closed.subscribe((res: any) => {
+        this.dialogRef.closed.subscribe((res: any) => {
           console.log('Close without saving or save failed', res);
-          this.dialog.dataService.saveFailed.next(null);
+          this.dialogRef.dataService.saveFailed.next(null);
         });
       }
     }
   }
 
   initForm() {
-    this.epService
+    this.codxEpService
       .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
       .then((item) => {
-        this.dialogAddBookingRoom = item;
+        this.fGroupAddBookingRoom = item;
         this.isAfterRender = true;
-        if (!this.isAdd) {
-          this.dialogAddBookingRoom && this.dialogAddBookingRoom.patchValue(this.data);
-        }
-      });
+        if (this.data) {
+          console.log('fgroupEPT1', this.data)
+          this.fGroupAddBookingRoom.patchValue(this.data);
+        } 
+      }); 
     this.link = null;
     this.selectDate = null;
     this.endTime = null;
-    this.startTime = null;
+    this.startTime = null;    
+    this.changeDetectorRef.detectChanges();   
   }
   beforeSave(option: any) {
-    let itemData = this.dialogAddBookingRoom.value;
+    let itemData = this.fGroupAddBookingRoom.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
@@ -195,16 +335,32 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     //       'd501dea4-e636-11ec-a4e6-8cec4b569fde';
     //   }
     // }
-    // this.dialog.dataService
+    // this.dialogRef.dataService
     //   .save((opt: any) => this.beforeSave(opt))
     //   .subscribe((res: any) => {
     //     if (res) {
     //       this.isSaveSuccess = true;
     //     }
     //   });
-    console.log(this.dialogAddBookingRoom.value);
+    console.log(this.fGroupAddBookingRoom.value);
   }
-
+  changeTime(data) {
+    if (!data.field || !data.data) return;
+    this.fGroupAddBookingRoom.patchValue({ [data['field']]: data.data.fromDate });
+  }
+  
+  valueCbxUserChange(event?) {
+    this.lstPeople=event.data.dataSelected;
+    // if(this.lstPeople.length == 1){      
+    //   this.smallListPeople = this.lstPeople;
+    // }
+    // if(this.lstPeople.length >= 2) {
+    //   this.smallListPeople=null;
+    //   this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
+    // }         
+    
+    this.changeDetectorRef.detectChanges();
+  }
   valueChange(event) {
     if (event?.field == 'day') {
       this.isFullDay = event.data;
@@ -217,20 +373,23 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     } else if (event?.field) {
       if (event.data instanceof Object) {
-        this.dialogAddBookingRoom.patchValue({ [event['field']]: event.data.value });
+        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data.value });
       } else {
-        this.dialogAddBookingRoom.patchValue({ [event['field']]: event.data });
+        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data });
       }
 
     }
-    this.detectorRef.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 
   closeForm() {
     this.initForm();
     this.closeEdit.emit();
   }
-
+  setTitle(e: any) {
+    this.title = this.titleAction + ' ' + e.toString().toLowerCase();
+    this.changeDetectorRef.detectChanges();    
+  }
   lstDevices = [];
   tmplstDevice = [];
 
@@ -242,8 +401,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 370);
-    this.detectorRef.detectChanges();
+    var dialog = this.callFuncService.openForm(template, '', 550, 370);
+    this.changeDetectorRef.detectChanges();
   }
 
   private getDismissReason(reason: any): string {
@@ -259,12 +418,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   valueDateChange(event: any) {
     this.selectDate = event.data.fromDate;
     if (this.selectDate) {
-      this.dialogAddBookingRoom.patchValue({ bookingOn: this.selectDate });
+      this.fGroupAddBookingRoom.patchValue({ bookingOn: this.selectDate });
     }
 
     this.setDate();
   }
 
+  buttonClick(e: any) {
+    //console.log(e);
+  }
   valueStartTimeChange(event: any) {
     this.startTime = event.data.fromDate;
     this.isFullDay = false;
@@ -287,7 +449,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.selectDate.setHours(this.beginHour, this.beginMinute, 0)
           );
           if (this.startDate) {
-            this.dialogAddBookingRoom.patchValue({ startDate: this.startDate });
+            this.fGroupAddBookingRoom.patchValue({ startDate: this.startDate });
           }
         }
       }
@@ -301,24 +463,24 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.selectDate.setHours(this.endHour, this.endMinute, 0)
           );
           if (this.endDate) {
-            this.dialogAddBookingRoom.patchValue({ endDate: this.endDate });
+            this.fGroupAddBookingRoom.patchValue({ endDate: this.endDate });
           }
         }
       }
       if (this.beginHour > this.endHour || this.beginMinute > this.endMinute) {
-        this.notiService.notifyCode('EP003');
+        this.notificationsService.notifyCode('EP003');
       }
     }
   }
 
   checkedOnlineChange(event) {
-    this.dialogAddBookingRoom.patchValue({
+    this.fGroupAddBookingRoom.patchValue({
       online: event.data instanceof Object ? event.data.checked : event.data,
     });
 
-    if (!this.dialogAddBookingRoom.value.online)
-      this.dialogAddBookingRoom.patchValue({ onlineUrl: null });
-    this.detectorRef.detectChanges();
+    if (!this.fGroupAddBookingRoom.value.online)
+      this.fGroupAddBookingRoom.patchValue({ onlineUrl: null });
+    this.changeDetectorRef.detectChanges();
   }
 
   changeLink(event) {
@@ -326,7 +488,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupLink() {
-    this.callfc.openForm(this.addLink, '', 500, 300);
+    this.callFuncService.openForm(this.addLink, '', 500, 250);    
+    this.changeDetectorRef.detectChanges();
   }
 
   public setdata(data: any) {
@@ -334,7 +497,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.isAdd = true;
       this.initForm();
     } else {
-      this.dialogAddBookingRoom.patchValue(data);
+      this.fGroupAddBookingRoom.patchValue(data);
     }
   }
 
