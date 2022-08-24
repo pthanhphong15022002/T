@@ -143,7 +143,7 @@ const T_Component: Type<any>[] = [
   ViewListComponent,
   PopupAddComponent,
   CodxTasksComponent,
-  TreeViewComponent
+  TreeViewComponent,
   CodxCommentHistoryComponent,
   
 ];
