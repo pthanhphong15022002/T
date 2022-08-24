@@ -420,7 +420,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   getDataUserInCbb(event) {
     this.checkOpenCbbPopup++;
     if (event?.dataSelected) {
-      if (this.checkOpenCbbPopup >= 2 || this.formType == 'add' || this.formType == 'add') {
+      if (this.checkOpenCbbPopup >= 2 || this.formType == 'add' || this.formType == 'edit') {
         if (this.dataUserCbb) {
           let i = 0;
           event?.dataSelected.forEach((dt) => {
