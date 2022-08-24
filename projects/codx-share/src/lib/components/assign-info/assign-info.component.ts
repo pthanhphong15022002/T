@@ -46,7 +46,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   param: any;
   taskGroup: TM_TaskGroups;
   task: TM_Tasks = new TM_Tasks();
-  functionID ='TMT0201'; // giao việc nên cố định funcID này
+  functionID = 'TMT0203'; // giao việc nên cố định funcID này
   popover: any;
   title = 'Giao việc';
   showPlan = true;
@@ -91,16 +91,17 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     // this.functionID = this.dialog.formModel.funcID;
-
+    
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
     });
+    
     // this.cache
     // .gridViewSetup(
-    //   "MyTasks",
-    //   "grvMyTasks"
+    //   this.dialog.formModel.formName,
+    //   this.dialog.formModel.gridViewName
     // )
     // .subscribe((res) => {
     //   if (res) {
@@ -109,11 +110,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  ngOnInit(): void {
-   
-  }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
-    this.setDefault()
+    this.setDefault();
   }
 
   setDefault() {
@@ -128,9 +127,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         if (response) {
           response['_uuid'] = response['taskID'] ?? Util.uid();
           response['idField'] = 'taskID';
-          response['isNew'] = function () {
-            return response[response.taskID] != response['_uuid'];
-          };
+          // response['isNew'] = function () {
+          //   return response[response.taskID] != response['_uuid'];
+          // };
           this.task = response;
           this.loadingAll = true;
           this.openInfo();

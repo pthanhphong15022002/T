@@ -191,7 +191,7 @@
 
 
 <!-- New Form  -->
-<codx-form headerText="{{title}}" subHeaderText="" [body]="bodyLater" [footer]="footer" [dialog]="dialog"></codx-form>
+<codx-form headerText="{{title}}" subHeaderText="" [body]="bodyLater" [footer]="footer" [dialog]="dialog" ></codx-form>
 <ng-template #subHeader>
 
 </ng-template>
@@ -213,6 +213,18 @@
         <codx-label name="TaskGroups" formName="Tasks" default="Nhóm công việc">
         </codx-label>
       </div>
+      <!-- <codx-input
+      field="taskGroupID"
+      [type]="gridViewSetup['TaskGroupID']['controlType']"
+      [placeholder]="gridViewSetup['TaskGroupID']['headerText']"
+      [refValue]="gridViewSetup['TaskGroupID']['referedValue']"
+      [refType]="gridViewSetup['TaskGroupID']['referedType']"
+      (valueChange)="cbxChange($event)"
+      [crrValue]="task?.taskGroupID"
+      [showInput]="true"
+      [disabled]="readOnly"
+    >
+    </codx-input> -->
       <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm công việc"
         refValue="TaskGroups" loadFull="true" field="taskGroupID" (valueChange)="cbxChange($event)" [multiple]="false"
         [crrValue]="task?.taskGroupID">
