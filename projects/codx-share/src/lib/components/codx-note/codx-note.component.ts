@@ -54,6 +54,7 @@ export class CodxNoteComponent implements OnInit {
   isBOLD = false;
   isITALIC = false;
   isUNDERLINE = false;
+
   chooseFont(font) {
     if (font) {
       if (font == 'BOLD') {
@@ -105,6 +106,13 @@ export class CodxNoteComponent implements OnInit {
     if (event?.data != null) {
       this.co_content[event?.field] = event?.data;
       if (this.co_content.memo != null) this.updateContent(this.co_content);
+    }
+  }
+
+  valueChangeColor(event) {
+    if (event?.data) {
+      this.co_content[event?.field] = event?.data;
+      document.getElementById('font').style.color = event?.data;
     }
   }
 
