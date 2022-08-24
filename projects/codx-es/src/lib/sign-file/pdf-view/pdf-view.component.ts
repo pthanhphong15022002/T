@@ -27,6 +27,7 @@ import {
 } from '@syncfusion/ej2-angular-pdfviewer';
 import {
   AuthStore,
+  CodxListviewComponent,
   FormModel,
   ScrollComponent,
   UIComponent,
@@ -40,6 +41,7 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { qr } from './model/mode';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 @Component({
   selector: 'lib-pdf-view',
   templateUrl: './pdf-view.component.html',
@@ -98,6 +100,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   @ViewChild('inputAuthor') inputAuthor!: ElementRef | any;
   @ViewChild('thumbnailTab') thumbnailTab!: ElementRef;
   @ViewChild('qrCode') qrCode!: ElementRef;
+  @ViewChild('listview') listview!: CodxListviewComponent;
+
   thumbnailEle!: Element;
 
   //for page number input
@@ -119,15 +123,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   lstZoomValue: Array<number> = [25, 30, 50, 75, 90, 100];
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  lstAnnotFontStyle = [
-    'Helvetica',
-    'Arial',
-    'Times New Roman',
-    'Tahoma',
-    'Georgia',
-    'Verdana',
-  ];
-  curAnnotFontStyle = 'Helvetica';
+  lstAnnotFontStyle;
+  curAnnotFontStyle;
   lstAnnotFontSize = [10, 11, 12, 13, 15, 17, 19, 23, 31, 33, 43];
   curAnnotFontSize = 31;
   lstAnnotDateFormat = [
@@ -136,6 +133,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     'EEEE, MMMM d, y, h:mm:ss a zzzz',
   ];
   curAnnotDateFormat = 'M/d/yy, h:mm a';
+  curDynamicText;
+
   isBold = false;
   isItalic = false;
   isUnd = false;
@@ -168,15 +167,16 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   method = 'GetAllAreasAsync';
   idField = 'recID';
   predicate = 'recID=@0';
-  dataValue;
+  dataValue: string;
   renderQRAllPage = false;
   formModel: FormModel;
   formAnnot: FormGroup;
 
-  public fields: Object = { text: 'Name', groupBy: 'location.pageNumber' };
+  // public fields: Object = { text: 'Name', groupBy: 'location.pageNumber' };
   public cssClass: string = 'e-list-template';
-  public lstAreas: object = [];
+  public lstAreas = [];
   curSelectedAnnotID;
+  curSelectedPageGroup;
 
   @ViewChild('paneLeft') panelLeft: TemplateRef<any>;
   @ViewChild('itemTmpl') itemTmpl: TemplateRef<any>;
@@ -249,6 +249,14 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.vllActions = res.datas;
     });
 
+    this.cache.valueList('ES024').subscribe((res) => {
+      this.lstAnnotFontStyle = res?.datas?.filter((font) => {
+        return font?.text;
+      });
+      this.curAnnotFontStyle = this.lstAnnotFontStyle[0];
+      this.detectorRef.detectChanges();
+    });
+
     this.formAnnot = new FormGroup({
       content: new FormControl(),
       fontStyle: new FormControl(this.curAnnotFontStyle),
@@ -257,7 +265,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  ngDoCheck() { }
+  ngDoCheck() {}
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
@@ -306,123 +314,135 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   loadingAnnot(e: any) {
     this.pageMax = this.pdfviewerControl?.pageCount;
-    console.log(this.pageMax);
     this.esService.getSignFormat().subscribe((res) => {
       console.log('res', res);
     });
-    this.fileInfo?.areas?.forEach((item: any) => {
-      let anno = {
-        annotationId: item.recID,
-        annotationSelectorSettings: {
-          selectionBorderColor: '',
-          resizerBorderColor: 'black',
-          resizerFillColor: '#FF4081',
-          resizerSize: 8,
-          isLock: true,
-          selectionBorderThickness: 1,
-        },
-        annotationSettings: {
-          minWidth: 100,
-          minHeight: 100,
-          isLock: false,
-        },
-        bounds: {
-          top: Number(item.location.top),
-          left: Number(item.location.left),
-          width: Number(item.location.width),
-          height: Number(item.location.height),
-        },
-        author: item.signer,
-        comments: [],
-        fillColor: '#ffffff00',
-        font: {
-          isBold: item.fontFormat?.includes('B') ? true : false,
-          isItalic: item.fontFormat?.includes('I') ? true : false,
-          isStrikeout: false,
-          isUnderline: item.fontFormat?.includes('U') ? true : false,
-          version: undefined,
-        },
-        fontColor: '#000',
-        fontFamily: item.fontStyle,
-        fontSize: item.fontSize,
-        isPrint: true,
-        isReadonly: false,
-        modifiedDate: this.datePipe.transform(new Date(), 'M/d/yy, h:mm a'),
-        opacity: 1,
-        note: '',
-        pageNumber: item.location.pageNumber,
-        review: {
-          state: 'Unmarked',
-          stateModel: 'None',
-          version: undefined,
-        },
-        customData: item.signer + ':' + item.labelType,
-        rotateAngle: 0,
-        strokeColor: '#ffffff00',
-        textAlign: 'Left',
-        thickness: 1,
-      } as any;
 
-      if (!['1', '2', '8'].includes(item.labelType)) {
-        anno.shapeAnnotationType = 'FreeText';
-        anno.dynamicText = item.labelValue;
-        anno.subject = 'Text Box';
-      } else {
-        let curSignerInfo = this.lstSigners.find(
-          (signer) => signer.authorID == anno.author
-        );
-        switch (item.labelType) {
-          case '1': {
-            anno.stampAnnotationPath =
-              'data:image/jpeg;base64,' + curSignerInfo?.signature;
-            break;
-          }
-          case '2': {
-            anno.stampAnnotationPath =
-              'data:image/jpeg;base64,' + curSignerInfo?.stamp;
-            break;
-          }
-          case '8': {
-            switch (this.approveStatus) {
-              case '1':
-                anno.stampAnnotationPath = qr;
+    this.esService
+      .getSignAreas(
+        this.recID,
+        this.fileInfo.fileID,
+        this.isApprover,
+        this.user.userID
+      )
+      .subscribe((res) => {
+        this.lstAreas = res;
+
+        this.lstAreas.forEach((item: any) => {
+          let anno = {
+            annotationId: item.recID,
+            annotationSelectorSettings: {
+              selectionBorderColor: '',
+              resizerBorderColor: 'black',
+              resizerFillColor: '#FF4081',
+              isLock: true,
+              selectionBorderThickness: 1,
+            },
+            annotationSettings: {
+              minWidth: 100,
+              minHeight: 100,
+              isLock: false,
+            },
+            bounds: {
+              top: Number(item.location.top),
+              left: Number(item.location.left),
+              width: Number(item.location.width),
+              height: Number(item.location.height),
+            },
+            author: item.signer,
+            comments: [],
+            fillColor: '#ffffff00',
+            font: {
+              isBold: item.fontFormat?.includes('B') ? true : false,
+              isItalic: item.fontFormat?.includes('I') ? true : false,
+              isStrikeout: false,
+              isUnderline: item.fontFormat?.includes('U') ? true : false,
+              version: undefined,
+            },
+            fontColor: '#000',
+            fontFamily: item.fontStyle,
+            fontSize: item.fontSize,
+            isPrint: true,
+            isReadonly: false,
+            modifiedDate: this.datePipe.transform(new Date(), 'M/d/yy, h:mm a'),
+            opacity: 1,
+            note: '',
+            pageNumber: item.location.pageNumber,
+            review: {
+              state: 'Unmarked',
+              stateModel: 'None',
+              version: undefined,
+            },
+            customData: item.signer + ':' + item.labelType,
+            rotateAngle: 0,
+            strokeColor: '#ffffff00',
+            textAlign: 'Left',
+            thickness: 1,
+          } as any;
+
+          if (!['1', '2', '8'].includes(item.labelType)) {
+            anno.shapeAnnotationType = 'FreeText';
+            anno.dynamicText = item.labelValue;
+            anno.subject = 'Text Box';
+          } else {
+            let curSignerInfo = this.lstSigners.find(
+              (signer) => signer.authorID == anno.author
+            );
+            switch (item.labelType) {
+              case '1': {
+                anno.stampAnnotationPath =
+                  'data:image/jpeg;base64,' + curSignerInfo?.signature;
                 break;
-              case '3':
-              case '5':
-                anno.stampAnnotationPath = '';
+              }
+              case '2': {
+                anno.stampAnnotationPath =
+                  'data:image/jpeg;base64,' + curSignerInfo?.stamp;
                 break;
+              }
+              case '8': {
+                switch (this.approveStatus) {
+                  case '1':
+                    anno.stampAnnotationPath = qr;
+                    break;
+                  case '3':
+                  case '5':
+                    anno.stampAnnotationPath = '';
+                    break;
+                }
+                break;
+              }
             }
-            break;
+            if (
+              anno.stampAnnotationPath.replace('data:image/jpeg;base64,', '') !=
+              ''
+            ) {
+              anno.shapeAnnotationType = 'stamp';
+              anno.stampAnnotationType = 'image';
+            } else {
+              anno.shapeAnnotationType = 'FreeText';
+              anno.dynamicText =
+                this.vllActions[item.labelType - 1]?.text +
+                ': ' +
+                curSignerInfo.fullName;
+              anno.subject = 'Text Box';
+            }
           }
-        }
-        if (
-          anno.stampAnnotationPath.replace('data:image/jpeg;base64,', '') != ''
-        ) {
-          anno.shapeAnnotationType = 'stamp';
-          anno.stampAnnotationType = 'image';
-        } else {
-          anno.shapeAnnotationType = 'FreeText';
-          anno.dynamicText =
-            this.vllActions[item.labelType - 1]?.text +
-            ': ' +
-            curSignerInfo.fullName;
-          anno.subject = 'Text Box';
-        }
-      }
 
-      if (this.isApprover) {
-        if (
-          this.lstRenderAnnotation.indexOf(item) ==
-          this.lstRenderAnnotation.length - 1
-        ) {
-          anno.annotationSelectorSettings.isLock = false;
-        } else {
-          anno.annotationSelectorSettings.isLock = true;
-        }
-      }
+          if (this.isApprover) {
+            if (
+              this.lstRenderAnnotation.indexOf(item) ==
+              this.lstRenderAnnotation.length - 1
+            ) {
+              anno.annotationSelectorSettings.isLock = false;
+            } else {
+              anno.annotationSelectorSettings.isLock = true;
+            }
+          }
 
-      this.pdfviewerControl.addAnnotation(anno);
-    });
+          this.pdfviewerControl.addAnnotation(anno);
+        });
+        this.detectorRef.detectChanges();
+      });
   }
 
   getAreaOwnerName(authorID) {
@@ -469,9 +489,13 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     let active = this.fileInfo ? true : false;
     this.isActiveToSign.emit(active);
     //add sign areas into sign area tab
-    this.renderAnnotPanel();
+    this.autoSignState = false;
 
-    this.dataValue = this.recID;
+    // this.dataValue =
+    //   this.recID + ';' + this.fileInfo.fileID + ';' + this.isApprover;
+    // console.log('check dataValue', this.dataValue);
+
+    // this.listview.dataService.dataObj = this.dataValue;
     this.detectorRef.detectChanges();
   }
 
@@ -511,11 +535,13 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             this.esService
               .getLastTextLine(this.pdfviewerControl.pageCount)
               .subscribe((res: any) => {
-                this.runAutoSign(
-                  this.pdfviewerControl.pageCount - 1,
-                  mode,
-                  res.Y + 31
-                );
+                if (res) {
+                  this.runAutoSign(
+                    this.pdfviewerControl.pageCount - 1,
+                    mode,
+                    res.Y + 31
+                  );
+                }
               });
             break;
           }
@@ -565,7 +591,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             this.fileInfo.fileID,
             annot.annotationId,
           ])
-          .subscribe((res) => { });
+          .subscribe((res) => {});
         clearTimeout(this.saveAnnoQueue.get(annot.annotationId));
         this.saveAnnoQueue.delete(annot.annotationId);
       });
@@ -613,7 +639,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   changeAnnotPro(type, recID, createdOn) {
     console.log(type, recID);
-    console.log(this.curSelectedAnno);
     switch (type) {
       case '5':
         this.curSelectedAnno.dynamicText = this.datePipe.transform(
@@ -649,17 +674,61 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     );
     this.pdfviewerControl.annotationModule.selectAnnotation(tmpAnnot);
     this.pdfviewerControl.addAnnotation(tmpAnnot);
-    this.saveAnnoQueue.set(
-      this.curSelectedAnno.annotationId,
-      setTimeout(
-        this.saveAnnoToDB.bind(this),
-        31,
-        this.esService,
-        tmpAnnot,
-        this.fileInfo,
-        this.user
-      )
-    );
+
+    let area: tmpSignArea = {
+      Signer: tmpAnnot.author,
+      LabelType: tmpAnnot.customStampName,
+      LabelValue: null,
+      FixedWidth: true,
+      SignDate: false,
+      DateFormat: new Date(),
+      Location: {
+        left: tmpAnnot.bounds.left,
+        top: tmpAnnot.bounds.top,
+        width: tmpAnnot.bounds.width,
+        height: tmpAnnot.bounds.height,
+        pageNumber: tmpAnnot.pageNumber,
+      },
+      FontStyle: null,
+      FontFormat: null,
+      FontSize: null,
+      SignatureType: 1,
+      Comment: '',
+      CreatedBy: this.user.userID,
+      ModifiedBy: this.user.userID,
+    };
+    console.log('save area o change pros');
+
+    if (!['1', '2', '8'].includes(area.LabelType)) {
+      area.LabelType = tmpAnnot.customData.split(':')[1];
+      area.LabelValue = tmpAnnot.dynamicText;
+      area.FontStyle = tmpAnnot.fontFamily;
+      area.FontSize = tmpAnnot.fontSize;
+      area.FontFormat = '';
+
+      if (tmpAnnot.font?.isBold) {
+        area.FontFormat += 'B';
+      }
+      if (tmpAnnot.font?.isItalic) {
+        area.FontFormat += 'I';
+      }
+      if (tmpAnnot.font?.isUnderline) {
+        area.FontFormat += 'U';
+      }
+    }
+    this.esService
+      .addOrEditSignArea([
+        this.recID,
+        this.fileInfo.fileID,
+        area,
+        tmpAnnot.annotationId,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.renderAnnotPanel();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   changeAnnotationItem(type: number) {
@@ -738,6 +807,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         version: undefined,
       },
       fontColor: '#000',
+      fontFamily: 'Helvetica',
+      fontSize: 17,
       isPrint: true,
       isReadonly: false,
       modifiedDate: this.datePipe.transform(new Date(), 'M/d/yy, h:mm a'),
@@ -789,7 +860,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             'data:image/jpeg;base64,' + signer['signature'];
         } else {
           anno.shapeAnnotationType = 'FreeText';
-          anno.dynamicText = signer.fullName;
+          // anno.dynamicText = signer.fullName;
+          anno.dynamicText =
+            this.vllActions[1 - 1]?.text + ': ' + signer.fullName;
           anno.subject = 'Text Box';
         }
 
@@ -802,7 +875,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           anno.annotationId,
           setTimeout(
             this.saveAnnoToDB.bind(this),
-            this.after_X_Second + 500 * i,
+            500 * i,
             this.esService,
             { ...anno },
             this.fileInfo,
@@ -861,17 +934,17 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
               //duoi
               (anno.bounds.top >= suggestLocation.top &&
                 anno.bounds.top <=
-                suggestLocation.top + suggestLocation.height))) ||
+                  suggestLocation.top + suggestLocation.height))) ||
             //conflit ben phai
             (anno.bounds.left >= suggestLocation.left &&
               anno.bounds.left <=
-              suggestLocation.left + suggestLocation.width &&
+                suggestLocation.left + suggestLocation.width &&
               //tren
               ((suggestLocation.top >= anno.bounds.top &&
                 suggestLocation.top <= anno.bounds.top + anno.bounds.height) ||
                 (anno.bounds.top >= suggestLocation.top &&
                   anno.bounds.top <=
-                  suggestLocation.top + suggestLocation.height))))
+                    suggestLocation.top + suggestLocation.height))))
         );
       }
     );
@@ -1132,7 +1205,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         (this.pdfviewerControl.freeTextSettings.customData as String) =
           this.signerInfo?.authorID + ':' + type;
 
-        this.pdfviewerControl.freeTextSettings.fontSize = 31;
+        this.pdfviewerControl.freeTextSettings.fontSize = 17;
         this.pdfviewerControl.annotationModule.setAnnotationMode('FreeText');
       }
     } else {
@@ -1189,9 +1262,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         height: anno.bounds.height,
         pageNumber: anno.pageNumber,
       },
-      FontStyle: null,
+      FontStyle: anno.fontFamily,
       FontFormat: null,
-      FontSize: null,
+      FontSize: anno.fontSize,
       SignatureType: 1,
       Comment: '',
       CreatedBy: user.userID,
@@ -1202,8 +1275,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     if (!['1', '2', '8'].includes(area.LabelType)) {
       area.LabelType = anno.customData.split(':')[1];
       area.LabelValue = anno.dynamicText;
-      area.FontStyle = anno.fontFamily;
-      area.FontSize = anno.fontSize;
+
       area.FontFormat = '';
 
       if (anno.font?.isBold) {
@@ -1256,7 +1328,10 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
     this.esService
       .deleteAreaById([this.recID, this.fileInfo.fileID, e.annotationId])
-      .subscribe((res) => { });
+      .subscribe((res) => {
+        this.renderAnnotPanel();
+        this.detectorRef.detectChanges();
+      });
 
     this.pdfviewerControl.annotationCollection =
       this.pdfviewerControl.annotationCollection.filter((annot) => {
@@ -1264,7 +1339,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       });
     clearTimeout(this.saveAnnoQueue.get(e.annotationId));
     this.saveAnnoQueue.delete(e.annotationId);
-    this.renderAnnotPanel();
   }
 
   resetTime(e: any) {
@@ -1338,7 +1412,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     console.log('page', this.curPage);
   }
 
-  testFunc(e: any) { }
+  testFunc(e: any) {}
 
   selectedAnnotation(e: any) {
     console.log('select annot event', e);
@@ -1373,7 +1447,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.pdfviewerControl.download();
   }
 
-  clickPrint(args) { }
+  clickPrint(args) {}
 
   renderAnnotPanel() {
     this.esService
@@ -1430,7 +1504,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     );
   }
 
-  cancelPrint(e: any) { }
+  cancelPrint(e: any) {}
 
   goToSelectedAnnotation(area) {
     if (this.curSelectedAnnotID != area.recID) {
@@ -1442,15 +1516,15 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.curAnnotFontSize = area.fontSize;
       this.curAnnotFontStyle = area.fontStyle;
       this.curSelectedAnnotID = area.recID;
+      this.curDynamicText = area.labelValue;
+      this.detectorRef.detectChanges();
+      console.log(this.curDynamicText);
     }
-    console.log(this.isBold, this.isItalic, this.isUnd);
   }
 
   show(e: any) {
     console.log('collection', this.pdfviewerControl.annotationCollection);
-    this.pdfviewerControl.annotationModule.selectAnnotation(
-      this.pdfviewerControl.annotationCollection[0]
-    );
+
     // this.esService
     //   .createLocalCertificatePFX('ekkobuu@gmail.com', '12345678')
     //   .subscribe((res) => {

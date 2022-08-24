@@ -63,6 +63,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   vllPriority = 'TM005';
   changTimeCount = 2;
   loadingAll = false;
+  gridViewSetup: any;
+
   constructor(
     private authStore: AuthStore,
     private tmSv: CodxTMService,
@@ -94,16 +96,20 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         this.listRoles = res.datas;
       }
     });
+    this.cache.gridViewSetup('Tasks', 'grvTasks').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     this.setDefault();
   }
 
   setDefault() {
-    this.task.taskID = "";
+    this.task.taskID = '';
     this.api
       .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
         this.functionID,
@@ -118,7 +124,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             return response[response.taskID] != response['_uuid'];
           };
           this.task = response;
-          this.loadingAll = true
+          this.loadingAll = true;
           this.openInfo();
         }
       });
@@ -156,9 +162,10 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.task.refID = this.taskParent.refID;
       this.task.refNo = this.taskParent.refNo;
       this.task.taskType = this.taskParent.taskType;
-      this.copyListTodo(this.taskParent.taskID)
+      this.copyListTodo(this.taskParent.taskID);
       if (this.task.startDate && this.task.endDate) this.changTimeCount = 0;
-      else if (this.task.startDate || this.task.endDate) this.changTimeCount = 1;
+      else if (this.task.startDate || this.task.endDate)
+        this.changTimeCount = 1;
       if (this.taskParent?.taskGroupID)
         this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
@@ -167,11 +174,13 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   }
 
   copyListTodo(id) {
-    this.api.execSv<any>("TM", "TM", "TaskBusiness", "CopyListTodoByTaskIdAsync", id).subscribe(res => {
-      if (res) {
-        this.listTodo = res;
-      }
-    })
+    this.api
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'CopyListTodoByTaskIdAsync', id)
+      .subscribe((res) => {
+        if (res) {
+          this.listTodo = res;
+        }
+      });
   }
 
   changText(e) {
@@ -183,7 +192,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   //   this.task[data.field] = data.data.fromDate;
   // }
   changeTime(data) {
-
     if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
     if (data.field == 'startDate') {
@@ -198,7 +206,10 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             .toDate();
       }
     }
-    if ((data.field == 'startDate' || data.field == 'endDate') && this.loadingAll) {
+    if (
+      (data.field == 'startDate' || data.field == 'endDate') &&
+      this.loadingAll
+    ) {
       this.changTimeCount += 1;
       if (
         this.task?.startDate &&
@@ -240,7 +251,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  changeVLL(e) { }
+  changeVLL(e) {}
 
   saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
