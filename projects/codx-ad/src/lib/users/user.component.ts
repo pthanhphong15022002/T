@@ -128,7 +128,7 @@ export class UserComponent extends UIComponent {
     var desc = '<div class="d-flex">';
     if (buID)
       desc +=
-        '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' +
+        '<div class="d-flex align-items-center mb-1"><span class="text-gray-600 icon-14 icon-apartment me-1"></span><span>' +
         buID +
         '</span></div>';
 

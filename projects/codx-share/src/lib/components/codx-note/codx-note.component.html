@@ -89,8 +89,7 @@
                     </li>
                     <li>
                         <a class="btn btn-icon btn-active-light-primary position-relative aT">
-                            <span [class]="'icon-chat_bubble_outline icon-20'"
-                                [style.color]="'dodgerblue'"></span>
+                            <span [class]="'icon-chat_bubble_outline icon-20'" [style.color]="'dodgerblue'"></span>
                             <span class="show-customName">{{'Thêm bình luận'}}</span>
                         </a>
                     </li>
@@ -116,7 +115,7 @@
                 </div>
                 <div class="w-100 text-after-check-box" #txtNoteEdit name="txtTodoEdit">
                     <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
-                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="memo"
+                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="memo" id="font"
                         (valueChange)="valueChange($event)" [placeholder]="gridViewSetup?.Comments?.headerText + '...'">
                     </codx-input>
                 </div>
@@ -127,7 +126,7 @@
                 </div>
                 <div class="w-100 text-after-li" #txtNoteEdit name="txtTodoEdit">
                     <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
-                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="memo"
+                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="memo" id="font"
                         (valueChange)="valueChange($event)" [placeholder]="gridViewSetup?.Comments?.headerText + '...'">
                     </codx-input>
                 </div>
@@ -160,8 +159,8 @@
             " (click)="chooseFont('ITALIC')"></span>
             <span class="icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative
             " (click)="chooseFont('UNDERLINE')"></span>
-            <codx-input #elm [ele]="" type="colorpicker" class="form-control text-white color-large" field="color"
-                [crrValue]="" dataformat="hex">
+            <codx-input type="colorpicker" [showText]="true" [modeSwitcher]="true" [crrValue]="" field="color"
+                (valueChange)="valueChangeColor($event)">
             </codx-input>
             <div class="btn-emoji">
                 <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"

@@ -156,6 +156,7 @@ export class DynamicFormComponent extends UIComponent {
           data: this.dataSelected,
           function: this.function,
           dataService: this.viewBase.dataService,
+          isAddMode: true,
         },
         option
       );
@@ -177,6 +178,7 @@ export class DynamicFormComponent extends UIComponent {
           data: this.dataSelected,
           function: this.function,
           dataService: this.viewBase.dataService,
+          isAddMode: false,
         },
         option
       );

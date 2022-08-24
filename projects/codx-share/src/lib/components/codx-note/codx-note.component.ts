@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ApiHttpService, CacheService } from 'codx-core';
+import { createTrue } from 'typescript';
 import { CO_Contents } from './model/CO_Contents.model';
 
 @Component({
@@ -43,36 +44,43 @@ export class CodxNoteComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   onType(type) {
     this.lineType = type;
     this.dt.detectChanges();
   }
 
-  countBOLD = 0;
-  countITALIC = 0;
-  countUNDERLINE = 0;
+  isBOLD = false;
+  isITALIC = false;
+  isUNDERLINE = false;
+
   chooseFont(font) {
     if (font) {
       if (font == 'BOLD') {
-        this.countBOLD++;
         document.getElementById('font').style.fontWeight = 'bolder';
-        // if(this.countBOLD > 1) {
-        // document.getElementById('font').style.fontWeight = '';
-        // }
+        if (this.isBOLD) {
+          document.getElementById('font').style.fontWeight = '';
+        }
+        this.isBOLD = !this.isBOLD;
       } else if (font == 'ITALIC') {
-        this.countITALIC++;
         document.getElementById('font').style.fontStyle = 'italic';
+        if (this.isITALIC) {
+          document.getElementById('font').style.fontStyle = '';
+        }
+        this.isITALIC = !this.isITALIC;
       } else if (font == 'UNDERLINE') {
-        this.countUNDERLINE++;
         document.getElementById('font').style.textDecoration = 'underline';
+        if (this.isUNDERLINE) {
+          document.getElementById('font').style.textDecoration = '';
+        }
+        this.isUNDERLINE = !this.isUNDERLINE;
       }
       this.dt.detectChanges();
     }
   }
 
-  popupFile() { }
+  popupFile() {}
 
   addEmoji(event) {
     this.message += event.emoji.native;
@@ -101,6 +109,13 @@ export class CodxNoteComponent implements OnInit {
     }
   }
 
+  valueChangeColor(event) {
+    if (event?.data) {
+      this.co_content[event?.field] = event?.data;
+      document.getElementById('font').style.color = event?.data;
+    }
+  }
+
   keyUpEnter(event) {
     if (event?.data) {
       // this.addContent(event?.data);
@@ -124,5 +139,5 @@ export class CodxNoteComponent implements OnInit {
     debugger;
   }
 
-  delete() { }
+  delete() {}
 }
