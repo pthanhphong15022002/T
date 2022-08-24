@@ -5,7 +5,7 @@ import { CO_Contents } from './model/CO_Contents.model';
 @Component({
   selector: 'codx-note',
   templateUrl: './codx-note.component.html',
-  styleUrls: ['./codx-note.component.css'],
+  styleUrls: ['./codx-note.component.scss'],
 })
 export class CodxNoteComponent implements OnInit {
   message: any;
@@ -43,7 +43,7 @@ export class CodxNoteComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onType(type) {
     this.lineType = type;
@@ -72,7 +72,7 @@ export class CodxNoteComponent implements OnInit {
     }
   }
 
-  popupFile() {}
+  popupFile() { }
 
   addEmoji(event) {
     this.message += event.emoji.native;
@@ -124,5 +124,5 @@ export class CodxNoteComponent implements OnInit {
     debugger;
   }
 
-  delete() {}
+  delete() { }
 }

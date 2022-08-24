@@ -1,6 +1,6 @@
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
@@ -145,10 +145,10 @@ const T_Component: Type<any>[] = [
   CodxTasksComponent,
   TreeViewComponent,
   CodxCommentHistoryComponent,
-  
+
 ];
 
-const T_Pipe: Type<any>[] = [  TruncatePipe, FileImage];
+const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
   declarations: [T_Component, T_Pipe],
