@@ -18,7 +18,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   headerText = 'Yêu cầu văn phòng phẩm';
   subHeaderText = 'Yêu cầu cho phòng';
   count: any;
-  listItem: any;
+  listItem: any[];
   constructor(
     private injector: Injector,
     private epService: CodxEpService,
@@ -79,22 +79,24 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.dialogRequest.patchValue({ category: '5' });
     this.dialogRequest.patchValue({ hours: '0' });
     //this.dialogRequest.patchValue({ comments: '0' });
-
-    console.log(this.listItem);
-    // this.dialog.dataService
-    //   .save((opt: any) => this.beforeSave(opt))
-    //   .subscribe();
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe();
   }
 
-  valueDateChange(event: any) {
+  valueDateChange(event) {
     this.selectDate = event.data.fromDate;
     if (this.selectDate) {
       this.dialogRequest.patchValue({ bookingOn: this.selectDate });
     }
   }
 
+  valueQuantityChange(event, id) {
+    let item: any = this.listItem.filter((x) => x.resourceID == id);
+    item[0].quantity = event.data;
+  }
+
   valueChange(event) {
-    debugger;
     if (event?.field) {
       if (event.data instanceof Object) {
         this.dialogRequest.patchValue({
