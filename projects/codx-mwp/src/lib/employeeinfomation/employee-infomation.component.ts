@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileUpload } from '@shared/models/file.model';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddEmployeesComponent } from 'projects/codx-hr/src/lib/employees/popup-add-employees/popup-add-employees.component';
 import { CodxMwpService } from '../codx-mwp.service';
@@ -94,12 +95,6 @@ export class EmployeeInfomationComponent implements OnInit {
   ) {
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'];
-    // this.cachesv.moreFunction(this.functionID,null).subscribe(res=>{
-    //   if(res)this.moreFunc=res;
-    // })
-    // this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res=>{
-    //     if(res)this.moreFunc=res;
-    // });
     this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res => {
       if (res) {
         this.defautFunc = res[0]
@@ -137,7 +132,7 @@ export class EmployeeInfomationComponent implements OnInit {
       console.log(e);
     })
   }
-  
+
   ngOnInit(): void {
     this.codxMwpService.modeEdit.subscribe(res => {
       this.editMode = res;
@@ -413,7 +408,29 @@ export class EmployeeInfomationComponent implements OnInit {
     this.dt.detectChanges();
   }
 
+  addExperences() {
+    this.view.dataService.request.funcID = "MWP00202";
+    this.view.dataService.request.entityName = "HR_EmployeeExperiences";
+    this.view.dataService.idField = "recID"
+
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.dialog = this.callfunc.openSide(EditExperenceComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
+      this.dialog.closed.subscribe(e => {
+        console.log(e);
+      })
+    });
+    this.dt.detectChanges();
+  }
+
   editExperences(data?) {
+    this.view.dataService.request.funcID = "MWP00202";
+    this.view.dataService.request.entityName = "HR_EmployeeExperiences";
+    this.view.dataService.idField = "recID"
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -421,8 +438,9 @@ export class EmployeeInfomationComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(EditExperenceComponent, 'edit', option);
+      option.Width = '550px';
+      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.dialog = this.callfunc.openSide(EditExperenceComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: false }, option);
     });
     this.dt.detectChanges();
   }
@@ -433,7 +451,26 @@ export class EmployeeInfomationComponent implements OnInit {
     this.codxMwpService.educationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
   }
 
+  addRelation() {
+    this.view.dataService.request.funcID = "MWP00205";
+    this.view.dataService.request.entityName = "HR_EmployeeRelations";
+    this.view.dataService.idField = "recID"
+
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
+    });
+    this.dt.detectChanges();
+  }
+
   editRelation(data) {
+    this.view.dataService.request.funcID = "MWP00205";
+    this.view.dataService.request.entityName = "HR_EmployeeRelations";
+    this.view.dataService.idField = "recID"
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -441,55 +478,14 @@ export class EmployeeInfomationComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(EditRelationComponent, 'edit', option);
-    });
-    this.dt.detectChanges();
-  }
-
-  addExperences() {
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(EditExperenceComponent, this.view.dataService.dataSelected, option);
-      this.dialog.closed.subscribe(e => {
-        console.log(e);
-      })
-    });
-    this.dt.detectChanges();
-  }
-
-  addRelation() {
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfunc.openSide(EditRelationComponent, this.view.dataService.dataSelected, option);
-      this.dialog.closed.subscribe(e => {
-        console.log(e);
-      })
+      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: false }, option);
     });
     this.dt.detectChanges();
   }
 
   popupAddHobbi(item: any) {
-    // this.allowhobby = true;
-    // this.codxMwpService.EmployeeInfomation = this;
-    // data = data || { employeeID: this.employeeInfo.employeeID };
-    // data.list = this.employeeHobbie;
-    // this.codxMwpService.hobbyEdit.next(data);
-    // this.showCBB = true;
-    // this.dt.detectChanges();
-
-    // var model = new DialogModel();
-    // model.DataService = new CRUDService(this.inject); 
-    // this.dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', data,"", model);
-    // this.dialog.closed.subscribe(e => {
-    //   console.log(e);
-    // })
     this.allowhobby = true;
     var model = new DialogModel();
     model.DataService = new CRUDService(this.inject);
@@ -504,53 +500,139 @@ export class EmployeeInfomationComponent implements OnInit {
 
 
   deleteSkill(data) {
+    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'DeleteEmployeeSkill', data.recID)
+      .subscribe((o: any) => {
+        var index = this.skillChartEmployee.indexOf(data);
+        if (index > -1) {
+          this.skillChartEmployee.splice(index, 1);
+        }
+        index = this.skillEmployee.indexOf(data);
+        if (index > -1) {
+          this.skillEmployee.splice(index, 1);
 
+        }
+        this.dt.detectChanges();
+      });
   }
 
+  beforeDelHobby(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteEmployeeHobby';
+    opt.className = 'EmployeesBusiness';
+    opt.assemblyName = 'ERM.Business.HR';
+    opt.data = itemSelected.recID;
+    return true;
+  }
   deleteHobby(data) {
-    // this.systemDialogService.confirm("Question", "Bạn có muốn xóa ?")
-    //   .then((confirmed) => {
-    //     if (confirmed) {
-          this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'DeleteEmployeeHobby', data.recID)
-            .subscribe((o: any) => {
-              const index = this.employeeHobbie.indexOf(data);
-              if (index > -1) {
-                this.employeeHobbie.splice(index, 1);
-                this.employeeHobbieCategory = [];
-                var obj: any = {};
-                for (let index = 0; index < this.employeeHobbie.length; index++) {
-                  const element = this.employeeHobbie[index];
-                  if (!obj[element.catagory]) {
-                    obj[element.catagory] = 1;
-                    this.employeeHobbieCategory.push(element.catagory);
-                  }
-                }
-                this.dt.detectChanges();
-              }
-            });
-         
-              // this.view.dataService.dataSelected = data;
-              // this.view.dataService
-              //   .delete([this.view.dataService.dataSelected], true, (opt) =>
-              //     this.beforeDel(opt)
-              //   )
-              //   .subscribe(res => {
-              //     if (res) this.notiService.notifyCode('TM004');
-              //   })
-            
-      // }
-      // )
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
+      this.beforeDelExperences(opt)).subscribe((res) => {
+        if (res) {
+          this.employeeHobbieCategory = [];
+          var obj: any = {};
+          for (let index = 0; index < this.employeeHobbie.length; index++) {
+            const element = this.employeeHobbie[index];
+            if (!obj[element.catagory]) {
+              obj[element.catagory] = 1;
+              this.employeeHobbieCategory.push(element.catagory);
+            }
+          }
+          this.codxMwpService.LoadData(this.employee.employeeID, "", "5").subscribe((response: any) => {
+            if (response) {
+              this.updateHobby(response);
+            }
+            this.dt.detectChanges();
+          });
+        }
+      });
+
+    // this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'DeleteEmployeeHobby', data.recID)
+    //   .subscribe((o: any) => {
+    //     const index = this.employeeHobbie.indexOf(data);
+    //     if (index > -1) {
+    //       this.employeeHobbie.splice(index, 1);
+    //       this.employeeHobbieCategory = [];
+    //       var obj: any = {};
+    //       for (let index = 0; index < this.employeeHobbie.length; index++) {
+    //         const element = this.employeeHobbie[index];
+    //         if (!obj[element.catagory]) {
+    //           obj[element.catagory] = 1;
+    //           this.employeeHobbieCategory.push(element.catagory);
+    //         }
+    //       }
+    //       this.dt.detectChanges();
+    //     }
+    //   });
   }
 
+  beforeDelExperences(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteEmployeeExperiences';
+    opt.className = 'EmployeesBusiness';
+    opt.assemblyName = 'ERM.Business.HR';
+    opt.data = itemSelected.recID;
+    return true;
+  }
   deleteExperences(data) {
-
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
+      this.beforeDelExperences(opt)).subscribe((res) => {
+        if (res) {
+          this.codxMwpService.LoadData(this.employee.employeeID, "", "2").subscribe((response: any) => {
+            if (response) {
+              this.updateExperiences(response);
+            }
+            this.dt.detectChanges();
+          });
+        }
+      });
+   
   }
 
+
+  beforeDelRelation(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteEmployeeRelation';
+    opt.className = 'EmployeesBusiness';
+    opt.assemblyName = 'ERM.Business.HR';
+    opt.data = itemSelected.recID;
+    return true;
+  }
   deleteRelation(data) {
-
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
+      this.beforeDelExperences(opt)).subscribe((res) => {
+        if (res) {
+          this.codxMwpService.LoadData(this.employee.employeeID, "", "7").subscribe((response: any) => {
+            if (response) {
+              this.updateRelation(response);
+            }
+            this.dt.detectChanges();
+          });
+        }
+      });
   }
 
+  beforeDelEducation(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteEmployeeEducation';
+    opt.className = 'EmployeesBusiness';
+    opt.assemblyName = 'ERM.Business.HR';
+    opt.data = itemSelected.recID;
+    return true;
+  }
   deleteEducation(data) {
-
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
+      this.beforeDelEducation(opt)).subscribe((res) => {
+        if (res) {
+          this.codxMwpService.LoadData(this.employee.employeeID, "", "4").subscribe((response: any) => {
+            if (response) {
+              this.updateTraining(response);
+            }
+            this.dt.detectChanges();
+          });
+        }
+      });
   }
 }
