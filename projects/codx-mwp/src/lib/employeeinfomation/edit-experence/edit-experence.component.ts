@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxMwpService } from '../../codx-mwp.service';
 
 @Component({
@@ -14,6 +14,7 @@ export class EditExperenceComponent implements OnInit {
   data: any;
   action = '';
   isSaving: boolean = false;
+  isAdd = true;
 
   constructor(
     private notiService: NotificationsService,
@@ -25,7 +26,11 @@ export class EditExperenceComponent implements OnInit {
     @Optional() dt?: DialogData
   ) {
     // this.data = dialog.dataService!.dataSelected;
-    this.dataBind = dt.data;
+    if (dt && dt.data) {
+      this.dataBind = dt.data.dataSelected;
+      this.isAdd = dt.data.isAdd;
+    }
+
     this.dialog = dialog;
   }
 
@@ -78,20 +83,8 @@ export class EditExperenceComponent implements OnInit {
     }
   }
 
-  // beforeSave(op: any) {
-  //   var data = [];
-  //   op.method = 'UpdateEmployeeExperiencesAsync';
-  //   op.service = 'HR';
-  //   data = [
-  //     this.dataBind,
-
-  //   ];
-  //   op.data = data;
-  //   return true;
-  // }
-
   OnSaveForm() {
-    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
+    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind, this.isAdd])
       .subscribe((res: any) => {
         if (res) {
           res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
@@ -101,8 +94,9 @@ export class EditExperenceComponent implements OnInit {
         }
         else {
           this.notiService.notifyCode("SYS021");
+          this.dialog.close();
         }
       });
-    this.dialog.close();
+      this.dialog.close();
   }
 }

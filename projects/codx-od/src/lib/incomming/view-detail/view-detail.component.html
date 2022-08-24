@@ -100,14 +100,14 @@
     </ng-container>
   </ng-template>
   <ng-template #body>
-    <div class="tab-horizone h-od-tab  ">
+    <div class="tab-horizone h-od-tab h-100">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active"  class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink><div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2" [ngClass]="{'text-primary':active===1}"></i><span>Nơi nhận</span></div></a>
+          <a ngbNavLink><div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2 mt-1" [ngClass]="{'text-primary':active===1}"></i><span>Nơi nhận</span></div></a>
           <ng-template ngbNavContent>
             <ng-container *ngFor="let item of data?.listInformationRel">
               <div class="list-item has-action-menu-1 mb-6">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-start">
                   <div class="w-120px me-6">
                     <div class="text-primary d-flex justify-content-center fw-bold fs-4">{{(item.date ? item.date : item.createdOn) | date:'shortTime'}}</div>
                     <div class="text-dark d-flex justify-content-center text-gray-400 fs-6">{{(item.date ? item.date : item.createdOn) | date :  "dd/MM/yyyy"}}</div>
@@ -154,7 +154,7 @@
           </ng-template>
         </li>
       </ul>
-      <div [ngbNavOutlet]="nav" class="py-5"></div>
+      <div [ngbNavOutlet]="nav" class="pt-5"></div>
     </div>
   </ng-template>
   <ng-template #footer>

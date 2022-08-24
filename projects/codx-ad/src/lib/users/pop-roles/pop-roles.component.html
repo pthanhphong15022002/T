@@ -34,20 +34,14 @@
                         name="Checkboxes4" (change)="onChange($event,item)">
                     </div>
                     <div class="col-10 column_second">
-                      <div class="row">
-                        <div class="col-2">
-                          <img class="w-50px" src="../../../{{item.smallIcon}}" alt="" />
+                      <div class="d-flex align-items-start">
+                        <div class="me-3">
+                          <img class="w-40px" src="../../../{{item.smallIcon}}" alt="" />
                         </div>
-                        <div class="col-10">
-                          <div class="col-12 pb-2">
-                            <div class="fw-bold" style="font-weight: bold">
-                              {{item.customName}}
-                            </div>
-                          </div>
-                          <div class="col-12">
-
+                        <div class="d-flex flex-column w-100">
+                          <div class="fw-bold">{{item.customName}}</div>
+                          <div class="mt-1">
                             <div *ngIf="item.ischeck; else checkAppIsNull">
-
                               <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole"
                                 refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false"
                                 [multiple]="false" [disabled]="false" loadFull="true">

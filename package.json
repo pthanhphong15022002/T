@@ -73,6 +73,7 @@
     "ng-inline-svg": "^13.1.2",
     "ngx-clipboard": "^15.1.0",
     "ngx-hover-preload": "^0.0.3",
+    "ngx-infinite-scroll": "^10.0.0",
     "ngx-moment": "^6.0.2",
     "ngx-skeleton-loader": "^5.0.0",
     "ngx-ui-loader": "^13.0.0",

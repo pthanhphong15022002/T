@@ -1,14 +1,7 @@
 import { UIComponent } from 'codx-core';
-import {
-  Component,
-  Injector,
-  Optional,
-} from '@angular/core';
+import { Component, Injector, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import {
-  DialogData,
-  DialogRef,
-} from 'codx-core';
+import { DialogData, DialogRef } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
 @Component({
   selector: 'lib-popup-request-stationery',
@@ -17,10 +10,9 @@ import { CodxEpService } from '../../codx-ep.service';
 })
 export class PopupRequestStationeryComponent extends UIComponent {
   data = {};
-  isAdd = true
+  isAdd = true;
   dialog: any;
   selectDate = null;
-  CbxName: any;
   isAfterRender = false;
   dialogRequest: FormGroup;
   headerText = 'Yêu cầu văn phòng phẩm';
@@ -34,25 +26,12 @@ export class PopupRequestStationeryComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(injector);
-    this.data = dt?.data;
-    this.count = dt?.data[2];
-    this.listItem = dt?.data[1];
+    this.listItem = dt?.data[0];
+    this.count = dt?.data[1];
     this.dialog = dialog;
   }
 
   onInit(): void {
-    this.cache.functionList('EPT3').subscribe(res => {
-      this.epService
-        .getComboboxName(
-          res.formName,
-          res.gridViewName
-        )
-        .then((res) => {
-          this.CbxName = res;
-          console.log(this.CbxName)
-        });
-    })
-
     this.initForm();
   }
 
@@ -72,9 +51,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
           this.dialogRequest = res;
           this.isAfterRender = true;
         } else {
-
         }
-
       });
   }
 
@@ -85,8 +62,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
     } else {
       this.isAdd = false;
     }
-    option.method = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd];
+    option.className = 'BookingsBusiness';
+    option.methodName = 'AddEditItemAsync';
+    option.data = [itemData, this.isAdd, '', this.listItem];
     return true;
   }
 
@@ -95,12 +73,17 @@ export class PopupRequestStationeryComponent extends UIComponent {
       return;
     }
     if (!this.dialogRequest.value.linkType) {
-      this.dialogRequest.value.linkType = '0';
+      this.dialogRequest.patchValue({ linkType: '0' });
     }
-    this.dialogRequest.value.resourceType = '5';
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe();
+    this.dialogRequest.patchValue({ resourceType: '3' });
+    this.dialogRequest.patchValue({ category: '5' });
+    this.dialogRequest.patchValue({ hours: '0' });
+    //this.dialogRequest.patchValue({ comments: '0' });
+
+    console.log(this.listItem);
+    // this.dialog.dataService
+    //   .save((opt: any) => this.beforeSave(opt))
+    //   .subscribe();
   }
 
   valueDateChange(event: any) {
@@ -110,9 +93,18 @@ export class PopupRequestStationeryComponent extends UIComponent {
     }
   }
 
-  valueChange(evt) { }
-  valueCbxChange(evt) { }
+  valueChange(event) {
+    debugger;
+    if (event?.field) {
+      if (event.data instanceof Object) {
+        this.dialogRequest.patchValue({
+          [event['field']]: event.data.value,
+        });
+      } else {
+        this.dialogRequest.patchValue({ [event['field']]: event.data });
+      }
+    }
+  }
 
-  openFormFuncID() { }
-  click() { }
+  click() {}
 }
