@@ -77,7 +77,12 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.initForm();
+    this.esService.getFormModel('EST04').then((res) => {
+      if (res) {
+        this.formModel = res;
+        this.initForm();
+      }
+    });
   }
 
   ngOnInit(): void {
