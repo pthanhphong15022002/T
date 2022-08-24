@@ -339,7 +339,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
               }
             } else this.onUpdate();
           });
-      }
+      } else this.onUpdate();
     }
   }
 
@@ -420,6 +420,13 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (event?.dataSelected) {
       event?.dataSelected.forEach((e: any) => {
         this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
+        // if (this.dataUserCbb) {
+        //   this.dataUserCbb.forEach((dt) => {
+        //     if (e.UserID != dt.UserID) {
+        //       this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
+        //     }
+        //   });
+        // }
       });
       this.changeDetector.detectChanges();
     }
