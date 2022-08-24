@@ -149,7 +149,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
   beforeSave(option: any) {
     let itemData = this.dialogAddBookingRoom.value;
-    option.method = 'AddEditItemAsync';
+    option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
