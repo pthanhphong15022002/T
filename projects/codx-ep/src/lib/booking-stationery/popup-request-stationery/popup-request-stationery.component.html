@@ -121,7 +121,7 @@
                       class="d-flex align-items-center position-relative me-4"
                     >
                       <span
-                        class="icon-shopping_cart icon-20 text-gray-400 reservedQty" 
+                        class="icon-shopping_cart icon-20 text-gray-400 reservedQty"
                       ></span>
                       <span>{{ item.reservedQty }}</span>
                     </div>
@@ -147,7 +147,7 @@
                 [cusButton]="true"
                 [min]="0"
                 [max]="50"
-                (valueChange)="valueChange($event)"
+                (valueChange)="valueQuantityChange($event, item.resourceID)"
               >
               </codx-input>
             </td>
