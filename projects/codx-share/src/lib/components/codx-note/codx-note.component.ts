@@ -25,6 +25,15 @@ export class CodxNoteComponent implements OnInit {
   set = 'apple';
   lineType = 'TEXT';
   empty = '';
+  listNote = [
+    {
+      memo: null,
+      status: null,
+      textColor: null,
+      format: null,
+      lineType: null,
+    },
+  ];
 
   co_content: CO_Contents = new CO_Contents();
 
@@ -98,7 +107,7 @@ export class CodxNoteComponent implements OnInit {
       var field = event?.field;
       this.co_content.lineType = this.lineType;
       this.co_content[field] = dt;
-      if (this.co_content.lineType == 'CHECK') this.addContent(this.co_content);
+      this.addContent(this.co_content);
     }
   }
 
@@ -113,6 +122,7 @@ export class CodxNoteComponent implements OnInit {
     if (event?.data) {
       this.co_content[event?.field] = event?.data;
       document.getElementById('font').style.color = event?.data;
+      if (this.co_content.memo != null) this.updateContent(this.co_content);
     }
   }
 
@@ -123,8 +133,9 @@ export class CodxNoteComponent implements OnInit {
   }
 
   addContent(data) {
-    data;
-    debugger;
+    if (data) {
+      this.listNote.push(data);
+    }
     // this.api
     //   .execSv('CO', 'ERM.Business.CO', 'ContentsBusiness', 'SaveAsync', data)
     //   .subscribe((res) => {
