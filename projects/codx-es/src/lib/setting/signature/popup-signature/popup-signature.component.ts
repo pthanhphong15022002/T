@@ -1,28 +1,34 @@
 import {
   ChangeDetectorRef,
   Component,
+  Injector,
   OnInit,
   Optional,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { CacheService, CodxService, DialogData, DialogRef } from 'codx-core';
+import {
+  CacheService,
+  CodxService,
+  DialogData,
+  DialogRef,
+  UIComponent,
+} from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { isBuffer } from 'util';
 
 @Component({
   selector: 'app-popup-signature',
   templateUrl: './popup-signature.component.html',
   styleUrls: ['./popup-signature.component.scss'],
 })
-export class PopupSignatureComponent implements OnInit {
+export class PopupSignatureComponent extends UIComponent {
   @ViewChild('attSignature1') attSignature1: AttachmentComponent;
   @ViewChild('attSignature2') attSignature2: AttachmentComponent;
   @ViewChild('attStamp') attStamp: AttachmentComponent;
 
-  currentTab: number = 3;
+  currentTab: number = 1;
   dataFile: any = null;
   Signature1: any = null;
   Signature2: any = null;
@@ -38,22 +44,35 @@ export class PopupSignatureComponent implements OnInit {
   dialogSignature: FormGroup;
   data: any;
 
+  //NHBUU
+  vllFontStyle;
+  selectedFont;
+
   constructor(
-    private codxService: CodxService,
+    private inject: Injector,
     private cr: ChangeDetectorRef,
     public dmSV: CodxDMService,
 
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(inject);
     this.dialog = dialog;
     this.dialog.formModel = data?.data.dialog.formModel;
     this.dialogSignature = data?.data.model;
     // this.data = dialog.DataService?.dataSelected;
     this.data = data?.data.data;
+    console.log('data', this.data);
   }
 
-  ngOnInit(): void {}
+  onInit(): void {
+    this.cache.valueList('ES024').subscribe((res) => {
+      this.vllFontStyle = res.datas;
+      this.selectedFont = this.vllFontStyle[0]?.text;
+      this.detectorRef.detectChanges();
+      console.log('font', this.vllFontStyle);
+    });
+  }
 
   onSaveForm() {
     if (this.attSignature1.fileUploadList.length == 1) {
@@ -105,5 +124,11 @@ export class PopupSignatureComponent implements OnInit {
 
   changeTab(tab) {
     this.currentTab = tab;
+  }
+
+  changeSelectedFont(font) {
+    console.log('change font', font);
+
+    this.selectedFont = font;
   }
 }
