@@ -315,7 +315,7 @@
                     <codx-input
                       type="switch"
                       field="autoSignLastLine"
-                      [crrValue]="autoSignState"
+                      [(crrValue)]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>
                     <!--end::Switch-->
@@ -338,11 +338,22 @@
               </ng-template>
               <ng-template #content>
                 <ng-container>
+                  <!-- <codx-listview
+                    #listview
+                    service="ES"
+                    assemblyName="ERM.Business.ES"
+                    className="SignFilesBusiness"
+                    method="GetAllAreasAsync"
+                    [dataValue]="dataValue"
+                    predicate="null"
+                    entityName="ES_SignFiles"
+                    [itemTemplate]="itemTmpl"
+                  >
+                  </codx-listview> -->
                   <ejs-listview
                     id="groupedList"
                     [dataSource]="lstAreas"
                     [cssClass]="cssClass"
-                    [fields]="fields"
                     [showHeader]="true"
                   >
                     <ng-template #template let-area="">
@@ -361,6 +372,7 @@
                             'symbol symbol-icon symbol-circle symbol-32px me-2 ' +
                             (area.labelType | vll: 'ES015':'icon' | async)
                           "
+                          [desc]="'Trang ' + (+area.location?.pageNumber + 1)"
                         >
                         </codx-temp-full>
                         <div
@@ -406,7 +418,7 @@
                                 ';'
                               "
                               [ngClass]="{
-                                'fw-bold': isBold,
+                                'font-weight-bold': isBold,
                                 'fst-italic': isItalic,
                                 'text-decoration-underline': isUnd
                               }"
@@ -513,13 +525,6 @@
                         </div>
                       </div>
                     </ng-template>
-                    <ng-template #groupTemplate let-dataSource="">
-                      <div class="e-list-wrapper">
-                        <span class="e-list-item-content">{{
-                          dataSource.items[0].location.pageNumber + 1
-                        }}</span>
-                      </div>
-                    </ng-template>
                   </ejs-listview>
                 </ng-container>
               </ng-template>
@@ -572,7 +577,7 @@
       'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       (data.labelType | vll: 'ES004':'icon' | async)
     "
-    [subTitle]="data.location?.pageNumber"
+    [subTitle]="'Trang ' + data.location?.pageNumber + 1"
   >
   </codx-temp-full>
 </ng-template>
