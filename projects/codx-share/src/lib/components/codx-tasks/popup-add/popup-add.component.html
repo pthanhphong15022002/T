@@ -32,7 +32,7 @@
       >
       </codx-label>
     </div>
-    <codx-input
+    <!-- <codx-input
       field="taskName"
       type="text"
       [crrValue]="task?.taskName"
@@ -40,7 +40,19 @@
       [disabled]="readOnly"
       (valueChange)="valueChange($event)"
     >
-    </codx-input>
+    </codx-input> -->
+    <codx-input
+    field="taskName"
+    [type]="'text'"
+    [placeholder]="gridViewSetup['TaskName']['headerText']"
+    [refValue]="gridViewSetup['TaskName']['referedValue']"
+    [refType]="gridViewSetup['TaskName']['referedType']"
+    (valueChange)="valueChange($event)"
+    [crrValue]="task?.taskName"
+    [showInput]="true"
+    [disabled]="readOnly"
+  >
+  </codx-input>
   </div>
   <div class="form-group mt-3">
     <div>
@@ -92,12 +104,13 @@
         </codx-label>
       </div>
       <codx-input
-        type="valuelist"
         field="priority"
-        [crrValue]="task?.priority"
-        [refValue]="gridViewSetup['Priority']['referedValue']"
+        [type]="gridViewSetup['Priority']['controlType']"
         [placeholder]="gridViewSetup['Priority']['headerText']"
+        [refValue]="gridViewSetup['Priority']['referedValue']"
+        [refType]="gridViewSetup['Priority']['referedType']"
         (valueChange)="changeVLL($event)"
+        [crrValue]="task?.priority"
         [disabled]="readOnly"
       >
       </codx-input>
