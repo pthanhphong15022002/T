@@ -440,8 +440,16 @@ export class HomeComponent extends UIComponent {
         }             
       });
     } else {
-      this.dmSV.disableInput.next(true);
-      this.notificationsService.notify(this.titleAccessDenied);
+      if (item.read != null) 
+        this.notificationsService.notify(this.titleAccessDenied);
+      if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03')  {
+        this.dmSV.disableInput.next(true);      
+        this.dmSV.disableUpload.next(true);        
+      }        
+      else  {
+        this.dmSV.disableInput.next(false);    
+        this.dmSV.disableUpload.next(false);          
+      }        
     }    
   }
 
@@ -587,10 +595,25 @@ export class HomeComponent extends UIComponent {
     this.interval.push(Object.assign({}, interval));
   }
 
+  onScrollDown($event) {
+   // alert(1);
+  }
+
+  onScrollUp($event) {
+ //   alert(2);
+  }
+
+  sortChanged($event) {
+    console.log($event);
+  }
+
   requestEnded(e: any) {
     if(e.type === "read"){     
       this.data = [];    
-    //  this.changeDetectorRef.detectChanges();
+      this.dmSV.listFolder = []; 
+      this.dmSV.listFiles = [];
+      // npm i ngx-infinite-scroll@10.0.0
+      this.changeDetectorRef.detectChanges();
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
         if (e.data != null) {
