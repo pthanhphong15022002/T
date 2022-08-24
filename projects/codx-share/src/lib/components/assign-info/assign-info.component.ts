@@ -96,17 +96,16 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         this.listRoles = res.datas;
       }
     });
-   
-    this.cache
-    .gridViewSetup(
-      "MyTasks",
-      "grvMyTasks"
-    )
-    .subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+    // this.cache
+    // .gridViewSetup(
+    //   "MyTasks",
+    //   "grvMyTasks"
+    // )
+    // .subscribe((res) => {
+    //   if (res) {
+    //     this.gridViewSetup = res;
+    //   }
+    // });
   }
 
   ngOnInit(): void {
@@ -117,11 +116,10 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   }
 
   setDefault() {
-   
     this.task.taskID = '';
     this.api
       .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-        this.functionID,
+        'TMT0203',
         'TM_Tasks',
         'taskID',
       ])
