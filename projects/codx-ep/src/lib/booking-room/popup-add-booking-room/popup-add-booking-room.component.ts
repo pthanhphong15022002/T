@@ -289,7 +289,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
   }
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
-    option.method = 'AddEditItemAsync';
+    option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }

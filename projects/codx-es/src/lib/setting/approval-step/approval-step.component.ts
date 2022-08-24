@@ -4,9 +4,11 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Optional,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -30,7 +32,7 @@ export class Approver {}
   templateUrl: './approval-step.component.html',
   styleUrls: ['./approval-step.component.scss'],
 })
-export class ApprovalStepComponent implements OnInit, AfterViewInit {
+export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() transId = '';
   @Input() type = '0';
   @Output() addEditItem = new EventEmitter();
@@ -39,7 +41,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   subHeaderText;
 
   lstOldData;
-  isEdited = false;
+  public isEdited = false;
 
   currentStepNo = 1;
   dialogApproval: DialogRef;
@@ -74,8 +76,16 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.esService.getFormModel('EST04').then((res) => {
+      if (res) {
+        this.formModel = res;
+        this.initForm();
+      }
+    });
+  }
+
   ngOnInit(): void {
-    this.cache.message('').subscribe((res) => {});
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
@@ -144,9 +154,13 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
 
   saveStep() {
     if (this.isEdited) {
+      console.log('SET VALUE');
+
       this.esService.setApprovalStep(this.lstStep);
       this.esService.setLstDeleteStep(this.lstDeleteStep);
     } else {
+      console.log('SET NULL');
+
       this.esService.setApprovalStep(null);
       this.esService.setLstDeleteStep(null);
     }
@@ -172,7 +186,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       lstStep: this.lstStep,
       isAdd: true,
       dataEdit: null,
-      type: this.type,
+      type: '0',
     };
 
     this.openPopupAddAppStep(data);
@@ -185,7 +199,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       lstStep: this.lstStep,
       isAdd: false,
       dataEdit: approvalStep,
-      type: this.type,
+      type: '0',
     };
     this.openPopupAddAppStep(data);
   }

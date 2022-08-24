@@ -151,7 +151,7 @@ export class PopupAddRoomsComponent implements OnInit {
     } else {
       this.isAdd = false;
     }
-    option.method = 'AddEditItemAsync';
+    option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }

@@ -259,7 +259,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUser, this.viewChooseRole, true];
+      data = [this.adUser, this.viewChooseRole, true, false];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
@@ -339,15 +339,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res) {
                   res.chooseRoles = res?.functions;
-                  (this.dialog.dataService as CRUDService)
+                  this.dialog.close(res);
+                  /* (this.dialog.dataService as CRUDService)
                     .update(res)
-                    .subscribe();
+                    .subscribe(); */
                   this.changeDetector.detectChanges();
                 }
               });
           }
-          this.dialog.close();
           this.notification.notifyCode('SYS006');
+          
         }
       } else this.onUpdate();
     }
@@ -411,7 +412,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   loadUserRole(userID) {
     if (!userID) return;
     this.api
-      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRoles', [userID])
+      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRolesAsync', [userID])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           this.viewChooseRole = res.msgBodyData[0];
@@ -420,6 +421,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
             dt['roleID'] = dt.recIDofRole;
             dt.userID = this.adUser.userID;
           });
+          debugger;
           this.countListViewChooseRoleApp = this.viewChooseRole.length;
           this.changeDetector.detectChanges();
         }

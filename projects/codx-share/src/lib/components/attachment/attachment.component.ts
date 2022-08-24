@@ -758,7 +758,7 @@ export class AttachmentComponent implements OnInit {
             if (addList.length == this.fileUploadList.length) {
               this.atSV.fileList.next(this.fileUploadList);
               this.atSV.fileListAdded = addList;
-              this.notificationsService.notify(this.title);
+             // this.notificationsService.notify(this.title);
               this.closePopup();
               this.fileUploadList = [];
             } else {

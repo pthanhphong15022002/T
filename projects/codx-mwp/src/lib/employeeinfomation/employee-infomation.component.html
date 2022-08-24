@@ -633,13 +633,8 @@
                         <codx-card-center cardCss="border h-100" [imageId]="relationship.recID"
                           [formModel]="view.formModel" [title]="relationship.relationName" [formModel]="view.formModel"
                           (clickMF)="clickMFS($event, data)" [dataItem]="relationship" [typeMF]="'hover'" [desc]="
-                            relationship.relationType +
-                            ' | ' +
-                            'Năm sinh: ' +
-                            (relationship.birthday | date: 'yyyy')
-                          ">
+                            relationship.relationType + ' | ' + 'Năm sinh: ' + (relationship.birthday | date: 'yyyy')">
                         </codx-card-center>
-                        <!-- </div> -->
                       </div>
                     </ng-container>
                     <ng-container *ngIf="editMode">

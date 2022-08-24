@@ -19,35 +19,74 @@
   </div> -->
   <div>
     <ng-container *ngIf="lstNotify.length > 0">
-      <ng-container *ngFor="let item of lstNotify">
-        <div class="row p-4 my-2">
-          <div class="col-1">
-            <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
-            <!-- <ng-container [ngSwitch]="item.eventType">
-              <ng-container *ngSwitchCase="0">
-                <codx-img [width]="35" [objectId]="item.createdBy" [objectType]="'AD_Users'"></codx-img>
-              </ng-container>
-              <ng-container *ngSwitchCase="1">
-                <codx-img [width]="35" [objectId]="item.owner" [objectType]="'AD_Users'"></codx-img>
-              </ng-container>
-              <ng-container *ngSwitchDefault>
-                <codx-img [width]="35" [objectId]="item.modifiedBy" [objectType]="'AD_Users'"></codx-img>
-              </ng-container>
-            </ng-container> -->
-          </div>
-          <div class="col-10">
-            <div>
-                <span class="fw-bolder me-1">{{item.text}}</span>          
-            </div>
-            <div>
-              <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
-            </div>
-          </div>
-          <div class="col-1" *ngIf="!item.isRead">
-            <span class="dots"></span>
+      <div>
+          <div>
+            <codx-label [formModel]="" name="lblNew" default="Mới"></codx-label>
+          <div>
+            <ng-container *ngFor="let item of lstNewNotify; index as i">
+              <div class="row p-4 my-2">
+                <div class="col-1">
+                  <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+                  <!-- <ng-container [ngSwitch]="item.eventType">
+                    <ng-container *ngSwitchCase="0">
+                      <codx-img [width]="35" [objectId]="item.createdBy" [objectType]="'AD_Users'"></codx-img>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="1">
+                      <codx-img [width]="35" [objectId]="item.owner" [objectType]="'AD_Users'"></codx-img>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      <codx-img [width]="35" [objectId]="item.modifiedBy" [objectType]="'AD_Users'"></codx-img>
+                    </ng-container>
+                  </ng-container> -->
+                </div>
+                <div class="col-10">
+                  <div [innerHTML]="item.text">        
+                  </div>
+                  <div>
+                    <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
+                  </div>
+                </div>
+                <div class="col-1" *ngIf="!item.isRead">
+                  <span class="dots"></span>
+                </div>
+              </div>
+            </ng-container>
           </div>
         </div>
-      </ng-container>
+        <div>
+            <codx-label [formModel]="" name="lblOld" default="Trước đây"></codx-label>
+          <div>
+            <ng-container *ngFor="let item of lstOldNotify; index as i">
+              <div class="row p-4 my-2">
+                <div class="col-1">
+                  <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+                  <!-- <ng-container [ngSwitch]="item.eventType">
+                    <ng-container *ngSwitchCase="0">
+                      <codx-img [width]="35" [objectId]="item.createdBy" [objectType]="'AD_Users'"></codx-img>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="1">
+                      <codx-img [width]="35" [objectId]="item.owner" [objectType]="'AD_Users'"></codx-img>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      <codx-img [width]="35" [objectId]="item.modifiedBy" [objectType]="'AD_Users'"></codx-img>
+                    </ng-container>
+                  </ng-container> -->
+                </div>
+                <div class="col-10">
+                  <div [innerHTML]="item.text">       
+                  </div>
+                  <div>
+                    <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
+                  </div>
+                </div>
+                <div class="col-1" *ngIf="!item.isRead">
+                  <span class="dots"></span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
     </ng-container>
   </div>
 </div>
