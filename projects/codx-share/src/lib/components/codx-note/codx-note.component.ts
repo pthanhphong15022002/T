@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { CacheService } from 'codx-core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ApiHttpService, CacheService } from 'codx-core';
 
 @Component({
   selector: 'codx-note',
   templateUrl: './codx-note.component.html',
-  styleUrls: ['./codx-note.component.css']
+  styleUrls: ['./codx-note.component.css'],
 })
 export class CodxNoteComponent implements OnInit {
 
@@ -20,32 +20,34 @@ export class CodxNoteComponent implements OnInit {
     'facebook',
     'emojione',
     'apple',
-    'messenger'
-  ]
+    'messenger',
+  ];
   set = 'apple';
 
-  constructor(private dt: ChangeDetectorRef,
+  @Input() showMenu = true;
+  @Input() showMF = true;
+
+  constructor(
+    private dt: ChangeDetectorRef,
     private cache: CacheService,
-
-    ) { 
-      this.cache.gridViewSetup('Contents', 'grvContents').subscribe(res => {
-        if(res) {
-          this.gridViewSetup = res;
-          console.log("check gridViewSetup", this.gridViewSetup);
-        }
-      })
-    }
-
-  ngOnInit(): void {
+    private api: ApiHttpService
+  ) {
+    this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+        console.log('check gridViewSetup', this.gridViewSetup);
+      }
+    });
   }
+
+  ngOnInit(): void {}
 
   onType(type) {
-
+    this.lineType = type;
+    this.dt.detectChanges();
   }
 
-  popupFile() {
-
-  }
+  popupFile() {}
 
   addEmoji(event) {
     this.message += event.emoji.native;
@@ -58,14 +60,29 @@ export class CodxNoteComponent implements OnInit {
   }
 
   valueChange(event, item = null, i = null) {
-
+    if (event?.data) {
+      // this.addContent(event?.data);
+    }
   }
 
-  onUpdateNote(event) {
-
+  keyUpEnter(event) {
+    if (event?.data) {
+      // this.addContent(event?.data);
+    }
   }
 
-  addNote() {
+  addContent(data) {
+    debugger;
+    this.api
+      .execSv('CO', 'ERM.Business.CO', 'ContentsBusiness', 'SaveAsync', data)
+      .subscribe((res) => {
+        if (res) {
+
+        }
+      });
+  }
+
+  delete() {
     
   }
 }

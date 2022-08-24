@@ -283,7 +283,7 @@ export class PopupAddComponent implements OnInit {
       });
       return;
     }
-    if(!this.formGroup.controls['Contents'].value){
+    if(!this.formGroup.controls['Contents'].value && this.newsType == this.NEWSTYPE.POST){
       this.cache.message("SYS009").subscribe((mssg:any) => {
         if(mssg){
           let mssgCode = Util.stringFormat(mssg.defaultName,"Nội dung");

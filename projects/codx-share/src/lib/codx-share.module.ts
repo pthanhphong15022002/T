@@ -1,6 +1,7 @@
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
@@ -60,7 +61,6 @@ import { CodxReportViewerComponent } from './components/codx-report/codx-report-
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 //import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
-import { HttpClientModule } from '@angular/common/http';
 import { CodxCommentsComponent } from './components/codx-comments/codx-comments.component';
 import { LayoutNoAsideToolbarFluidComponent } from './_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { DynamicSettingComponent } from './components/dynamic-setting/dynamic-setting.component';
@@ -85,6 +85,7 @@ import { PopupUpdateProgressComponent } from './components/codx-tasks/popup-upda
 import { ViewListComponent } from './components/codx-tasks/view-list/view-list.component';
 import { PopupAddComponent } from './components/codx-tasks/popup-add/popup-add.component';
 import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component';
+import { CodxCommentHistoryComponent } from './components/codx-comment-history/codx-comment-history.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -141,6 +142,7 @@ const T_Component: Type<any>[] = [
   ViewListComponent,
   PopupAddComponent,
   CodxTasksComponent,
+  CodxCommentHistoryComponent,
 ];
 
 const T_Pipe: Type<any>[] = [  TruncatePipe, FileImage];

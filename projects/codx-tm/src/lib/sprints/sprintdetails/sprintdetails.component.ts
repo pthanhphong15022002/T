@@ -43,11 +43,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   vllRole = 'TM002';
   popoverCrr: any;
   private all = [
-    // 'Dashboard',
-    // 'Công việc',
-    // 'Lịch sử',
-    // 'Bình luận',
-    // 'Họp định kì',
+    'Dashboard',
+    'Công việc',
+    'Lịch sử',
+    'Bình luận',
+    'Họp định kì',
   ];
   nameObj: any;
   projectCategory: any;
@@ -71,6 +71,9 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.layout.setUrl(this.tmSv.urlback);
+    this.cache.functionList(this.funcID).subscribe(f=>{
+        if(f) this.layout.setLogo(f.smallIcon);
+    })
     this.activedRouter.queryParams.subscribe((params) => {
       if (params) {
         this.meetingID = params?.meetingID;
