@@ -98,16 +98,16 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       }
     });
     
-    // this.cache
-    // .gridViewSetup(
-    //   this.dialog.formModel.formName,
-    //   this.dialog.formModel.gridViewName
-    // )
-    // .subscribe((res) => {
-    //   if (res) {
-    //     this.gridViewSetup = res;
-    //   }
-    // });
+    this.cache
+    .gridViewSetup(
+     "AssignTasks",
+      "grvAssignTasks"
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
   ngOnInit(): void {}
