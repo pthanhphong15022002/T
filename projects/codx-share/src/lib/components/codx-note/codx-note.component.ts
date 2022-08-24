@@ -81,4 +81,8 @@ export class CodxNoteComponent implements OnInit {
         }
       });
   }
+
+  delete() {
+    
+  }
 }
