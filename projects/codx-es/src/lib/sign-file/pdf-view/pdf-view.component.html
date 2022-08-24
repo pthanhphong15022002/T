@@ -214,12 +214,14 @@
 
               <ng-template #content>
                 <div class="position-relative" *ngIf="!isApprover">
-                  <codx-label
-                    name="lblChooseSigner"
-                    [formModel]=""
-                    default="Chọn người kí cần thiết lập"
-                    class="fw-bold text-primary"
-                  ></codx-label>
+                  <div class="mt-3 mb-3">
+                    <codx-label
+                      name="lblChooseSigner"
+                      [formModel]=""
+                      default="Chọn người kí cần thiết lập"
+                      class="fw-bold text-primary"
+                    ></codx-label>
+                  </div>
                   <ejs-dropdownlist
                     #inputAuthor
                     id="signatureDropdownList"
@@ -243,7 +245,7 @@
                             : (approver.roleType | vll: 'ES014':'text' | async)
                         "
                         [subTitle]="approver.position ?? 'Vị trí công việc'"
-                        [footer]="footer"
+                        [baseHeaderRightTmp]="footer"
                         [dataItem]="approver"
                       >
                       </codx-temp-full>
@@ -275,7 +277,7 @@
                     (click)="changeAnnotationItem(index + 1)"
                   >
                     <codx-card-center
-                      cardCss="border h-100 w-125px pt-4 pb-2"
+                      cardCss="border h-100 w-125px pt-4 pb-2 "
                       icoCss="icon-30 mb-1 {{
                         index + 1 | vll: 'ES015':'icon' | async
                       }}"
@@ -338,11 +340,22 @@
               </ng-template>
               <ng-template #content>
                 <ng-container>
+                  <!-- <codx-listview
+                    #listview
+                    service="ES"
+                    assemblyName="ERM.Business.ES"
+                    className="SignFilesBusiness"
+                    method="GetAllAreasAsync"
+                    [dataValue]="dataValue"
+                    predicate="null"
+                    entityName="ES_SignFiles"
+                    [itemTemplate]="itemTmpl"
+                  >
+                  </codx-listview> -->
                   <ejs-listview
                     id="groupedList"
                     [dataSource]="lstAreas"
                     [cssClass]="cssClass"
-                    [fields]="fields"
                     [showHeader]="true"
                   >
                     <ng-template #template let-area="">
@@ -360,6 +373,14 @@
                           [icoCss]="
                             'symbol symbol-icon symbol-circle symbol-32px me-2 ' +
                             (area.labelType | vll: 'ES015':'icon' | async)
+                          "
+                          [iconCss2]="
+                            area.recID != curSelectedAnnotID
+                              ? 'icon-expand_more'
+                              : 'icon-expand_less'
+                          "
+                          [subTitle]="
+                            'Trang ' + (+area.location.pageNumber + 1)
                           "
                         >
                         </codx-temp-full>
@@ -406,7 +427,7 @@
                                 ';'
                               "
                               [ngClass]="{
-                                'fw-bold': isBold,
+                                'font-weight-bold': isBold,
                                 'fst-italic': isItalic,
                                 'text-decoration-underline': isUnd
                               }"
@@ -572,7 +593,7 @@
       'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       (data.labelType | vll: 'ES004':'icon' | async)
     "
-    [subTitle]="data.location?.pageNumber"
+    [subTitle]="'Trang ' + data.location?.pageNumber + 1"
   >
   </codx-temp-full>
 </ng-template>

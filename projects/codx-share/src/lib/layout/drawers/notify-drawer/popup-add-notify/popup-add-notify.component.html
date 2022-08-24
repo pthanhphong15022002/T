@@ -21,6 +21,7 @@
             <div>
                 <codx-input 
                 type="text" 
+                [field]="'Description'"
                 [placeholder]="'Like Recieve new thankyou note'" 
                 [crrValue]="form.controls['Description'].value"
                 (valueChange)="valueChange($event)"
@@ -144,18 +145,29 @@
             </div>
         </div>
         <div class="my-2">
-            <div class="text-primary fw-bolder">
-                <codx-label formModel="" name="lblNotifyFor" default="Thông báo cho"></codx-label>
+            <div class="d-flex justify-content-between text-primary fw-bolder">
+                <div>
+                    <codx-label formModel="" name="lblNotifyFor" default="Thông báo cho"></codx-label>
+                </div>
+                <div>
+                    <button class="btn btn-icon btn-xs btn-light-primary" (click)="openFormShare(cbbShare)">
+                        <span class="icon-person_add_alt_1 icon-18"></span>
+                    </button>
+                </div>
+                
             </div>
-            <div>
-                <codx-input 
-                    type="textarea"
-                    field="SendTo"
-                    (valueChange)="valueChange($event)" 
-                    format="ed2" 
-                    [placeholder]="'Danh sách đối tượng'" 
-                    [crrValue]="form.controls['SendTo'].value">
-                </codx-input>
+            <div class="p-2 border w-100" *ngIf="sendTo.length > 0">
+                <ng-container *ngFor="let item of sendTo">
+                    <div class="d-flex align-items-center my-2">
+                        <div class="me-2">
+                            <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30"></codx-img>
+                        </div>
+                        <div>
+                            <span>{{item.objectName}}</span>
+                            <span class="icon-clear text-danger ms-2" (click)="removeUser(item)"></span>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
         </div>
         <div class="my-2">
@@ -166,6 +178,7 @@
                 <p>
                     <codx-input 
                         [crrValue]="form.controls['IsAlert'].value" 
+                        (valueChange)="valueChange($event)"
                         name="checkedAlert" 
                         type="checkbox"  
                         label="Alert"
@@ -176,16 +189,18 @@
                 <p>
                     <codx-input 
                         [crrValue]="form.controls['IsMail'].value" 
+                        (valueChange)="valueChange($event)"
                         name="checkedEmail" 
                         type="checkbox"
-                        field="Email" 
-                        label="IsEmail" 
+                        field="IsMail" 
+                        label="Email" 
                         [labelPosition]="'right'">
                     </codx-input>
                 </p>
                 <p>
                     <codx-input 
                         [crrValue]="form.controls['IsSMS'].value" 
+                        (valueChange)="valueChange($event)"
                         name="checkedSMS"
                         type="checkbox"
                         field="IsSMS" 
@@ -219,4 +234,26 @@
             </button>
         </div>
     </div>
+</ng-template>
+
+<ng-container #controlTag *ngIf="isShowCbbSendto">
+    <codx-combobox-popup 
+    [comboboxName]="'Users'" 
+    [field]="'tagUser'" 
+    [multiple]="true" 
+    [width]="width"
+    [height]="height" 
+    [value]="''" 
+    (clickSave)="saveAddUser($event)">
+    </codx-combobox-popup>
+</ng-container>
+
+
+<ng-template #cbbShare let-dialoga>
+    <codx-share 
+    [dialog]="dialoga" 
+    [multiple]="false" 
+    listName="L1902" 
+    (eventApply)="eventApply($event)">
+    </codx-share>
 </ng-template>
