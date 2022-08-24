@@ -4,9 +4,11 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Optional,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -30,7 +32,7 @@ export class Approver {}
   templateUrl: './approval-step.component.html',
   styleUrls: ['./approval-step.component.scss'],
 })
-export class ApprovalStepComponent implements OnInit, AfterViewInit {
+export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() transId = '';
   @Input() type = '0';
   @Output() addEditItem = new EventEmitter();
@@ -74,8 +76,11 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.initForm();
+  }
+
   ngOnInit(): void {
-    this.cache.message('').subscribe((res) => {});
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
