@@ -506,7 +506,7 @@ export class EmployeeInfomationComponent implements OnInit {
   deleteHobby(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-      this.beforeDelExperences(opt)).subscribe((res) => {
+      this.beforeDelHobby(opt)).subscribe((res) => {
         if (res) {
           this.employeeHobbieCategory = [];
           var obj: any = {};
