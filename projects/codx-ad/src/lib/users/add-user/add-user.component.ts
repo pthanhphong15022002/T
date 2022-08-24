@@ -339,15 +339,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res) {
                   res.chooseRoles = res?.functions;
-                  (this.dialog.dataService as CRUDService)
+                  this.dialog.close(res);
+                  /* (this.dialog.dataService as CRUDService)
                     .update(res)
-                    .subscribe();
+                    .subscribe(); */
                   this.changeDetector.detectChanges();
                 }
               });
           }
-          this.dialog.close();
           this.notification.notifyCode('SYS006');
+          
         }
       } else this.onUpdate();
     }

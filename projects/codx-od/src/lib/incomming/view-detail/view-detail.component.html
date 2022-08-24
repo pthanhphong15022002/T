@@ -103,7 +103,7 @@
     <div class="tab-horizone h-od-tab  ">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active"  class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink><div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2" [ngClass]="{'text-primary':active===1}"></i><span>Nơi nhận</span></div></a>
+          <a ngbNavLink><div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2 mt-1" [ngClass]="{'text-primary':active===1}"></i><span>Nơi nhận</span></div></a>
           <ng-template ngbNavContent>
             <ng-container *ngFor="let item of data?.listInformationRel">
               <div class="list-item has-action-menu-1 mb-6">

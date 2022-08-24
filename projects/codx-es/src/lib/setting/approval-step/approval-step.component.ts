@@ -39,7 +39,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
   subHeaderText;
 
   lstOldData;
-  isEdited = false;
+  public isEdited = false;
 
   currentStepNo = 1;
   dialogApproval: DialogRef;
@@ -144,9 +144,13 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
 
   saveStep() {
     if (this.isEdited) {
+      console.log('SET VALUE');
+
       this.esService.setApprovalStep(this.lstStep);
       this.esService.setLstDeleteStep(this.lstDeleteStep);
     } else {
+      console.log('SET NULL');
+
       this.esService.setApprovalStep(null);
       this.esService.setLstDeleteStep(null);
     }
@@ -172,7 +176,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       lstStep: this.lstStep,
       isAdd: true,
       dataEdit: null,
-      type: this.type,
+      type: '0',
     };
 
     this.openPopupAddAppStep(data);
@@ -185,7 +189,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit {
       lstStep: this.lstStep,
       isAdd: false,
       dataEdit: approvalStep,
-      type: this.type,
+      type: '0',
     };
     this.openPopupAddAppStep(data);
   }
