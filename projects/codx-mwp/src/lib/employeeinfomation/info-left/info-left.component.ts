@@ -82,62 +82,7 @@ export class InfoLeftComponent implements OnInit {
       }
     });
   }
-  getNow() {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    var ret = dd + '/' + mm + '/' + yyyy;
-    return ret;
-  }
 
-  getAvatar(filename: string) {
-    var ext =
-      filename.substring(filename.lastIndexOf('.'), filename.length) ||
-      filename;
-
-    if (ext == null) {
-      // alert(1);
-      return 'file.svg';
-    } else {
-      switch (ext) {
-        case '.txt':
-          return 'txt.svg';
-        case '.doc':
-        case '.docx':
-          return 'doc.svg';
-        case '.7z':
-        case '.rar':
-        case '.zip':
-          return 'zip.svg';
-        case '.jpg':
-          return 'jpg.svg';
-        case '.mp4':
-          return 'mp4.svg';
-        case '.xls':
-        case '.xlsx':
-          return 'xls.svg';
-        case '.pdf':
-          return 'pdf.svg';
-        case '.png':
-          return 'png.svg';
-        case '.js':
-          return 'javascript.svg';
-        default:
-          return 'file.svg';
-      }
-    }
-  }
-
-  arrayBufferToBase64(buffer) {
-    var binary = '';
-    var bytes = new Uint8Array(buffer);
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
-  }
 
   scrollTo(section) {
     this.codxMwpService.currentSection = section;

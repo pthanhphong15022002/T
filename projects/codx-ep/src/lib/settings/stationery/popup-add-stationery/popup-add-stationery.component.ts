@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 
 import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -62,7 +62,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   ) {
     super(injector);
     this.data = dt?.data[0];
-    this.isAdd = dt?.data[1]
+    this.isAdd = dt?.data[1];
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
   }
@@ -79,6 +79,10 @@ export class PopupAddStationeryComponent extends UIComponent {
         this.isAfterRender = true;
         if (this.data) {
           this.dialogAddStationery.patchValue(this.data);
+          this.dialogAddStationery.addControl(
+            'code',
+            new FormControl(this.data.code)
+          );
         }
       });
   }
@@ -95,11 +99,13 @@ export class PopupAddStationeryComponent extends UIComponent {
       console.log(this.dialogAddStationery);
       return;
     }
-    this.dialogAddStationery.patchValue({ resourceType: '6' });
     this.dialogAddStationery.patchValue({
       owner: this.dialogAddStationery.value.owner[0],
     });
-    console.log(this.dialogAddStationery);
+    this.dialogAddStationery.patchValue({ color: this.listColor.join(';') });
+    this.dialogAddStationery.patchValue({
+      groupID: '1',
+    });
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -154,7 +160,6 @@ export class PopupAddStationeryComponent extends UIComponent {
     } else {
       this.listColor.push(this.colorItem);
     }
-
     this.detectorRef.detectChanges();
   }
 
@@ -165,5 +170,11 @@ export class PopupAddStationeryComponent extends UIComponent {
 
   buttonClick(e: any) {
     //console.log(e);
+  }
+
+  splitColor(color: string): any {
+    if (color) {
+      return color.split(';');
+    }
   }
 }

@@ -187,7 +187,7 @@ export class BookingCarComponent extends UIComponent {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
@@ -206,8 +206,8 @@ export class BookingCarComponent extends UIComponent {
         this.dataSelected = this.viewBase.dataService.dataSelected;
         let option = new SidebarModel();
         option.Width = '800px';
-        option.DataService = this.viewBase?.currentView?.dataService;
-        option.FormModel = this.viewBase?.currentView?.formModel;
+        option.DataService = this.viewBase?.dataService;
+        option.FormModel = this.viewBase?.formModel;
         this.dialog = this.callFuncService.openSide(
           PopupAddBookingCarComponent,
           [this.viewBase.dataService.dataSelected, false],
