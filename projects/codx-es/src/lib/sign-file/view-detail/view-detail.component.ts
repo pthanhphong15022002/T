@@ -57,7 +57,14 @@ export class ViewDetailComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.initForm();
+    if (!this.formModel) {
+      this.esService.getFormModel('EST021').then((formModel) => {
+        if (this.formModel) this.formModel = formModel;
+        this.initForm();
+      });
+    } else {
+      this.initForm();
+    }
   }
 
   initForm() {
@@ -208,10 +215,6 @@ export class ViewDetailComponent implements OnInit {
           formModel: this.view?.formModel,
           option: option,
         },
-        // {
-        //   oSignFile: option.DataService.dataSelected,
-        //   formModel: this.view?.formModel,
-        // },
         '',
         dialogModel
       );

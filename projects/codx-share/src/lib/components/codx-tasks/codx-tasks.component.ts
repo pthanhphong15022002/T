@@ -1,8 +1,34 @@
-import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DataRequest, DialogRef, NotificationsService, RequestOption, ResourceModel, SidebarModel, UIComponent, UrlUtil, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogRef,
+  NotificationsService,
+  RequestOption,
+  ResourceModel,
+  SidebarModel,
+  UIComponent,
+  UrlUtil,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
-import { TM_Parameter, TM_TaskExtends, TM_TaskGroups } from './model/task.model';
+import {
+  TM_Parameter,
+  TM_TaskExtends,
+  TM_TaskGroups,
+} from './model/task.model';
 import * as moment from 'moment';
 import { CodxTasksService } from './codx-tasks.service';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
@@ -18,6 +44,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
   templateUrl: './codx-tasks.component.html',
   styleUrls: ['./codx-tasks.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CodxTasksComponent
   extends UIComponent
@@ -36,18 +63,18 @@ export class CodxTasksComponent
   @ViewChild('eventModel') eventModel?: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
-  @ViewChild('treeView') treeView: TemplateRef<any>;
+  @ViewChild('treeView') treeView!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
   button?: ButtonModel;
   model?: DataRequest;
   request: ResourceModel;
+  requestTree: ResourceModel;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
   resourceTree: ResourceModel;
   resource: ResourceModel;
-  resourceTaskExtends: ResourceModel;
   dialog!: DialogRef;
   dialogConfirmStatus!: DialogRef;
   dialogApproveStatus!: DialogRef;
@@ -85,6 +112,7 @@ export class CodxTasksComponent
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
   dataTree = [];
+  listDataTree = [];
   iterationID: any;
   viewMode: any;
   projectID?: any;
@@ -150,13 +178,19 @@ export class CodxTasksComponent
     this.request.method = 'GetListDetailTasksAsync';
     this.request.idField = 'taskID';
 
+    this.requestTree = new ResourceModel();
+    this.requestTree.service = 'TM';
+    this.requestTree.assemblyName = 'TM';
+    this.requestTree.className = 'TaskBusiness';
+    this.requestTree.method = 'GetListTreeDetailTasksAsync';
+    this.requestTree.idField = 'taskID';
+
     // this.request = new ResourceModel();
     // this.request.service = 'TM';
     // this.request.assemblyName = 'CM';
     // this.request.className = 'DataBusiness';
     // this.request.method = 'LoadDataAsync';
     // this.request.idField = 'taskID';
-
     this.button = {
       id: 'btnAdd',
     };
@@ -210,12 +244,35 @@ export class CodxTasksComponent
           template3: this.cellTemplate,
         },
       },
+      // {
+      //   id: '15',
+      //   type: ViewType.treedetail,
+      //   active: false,
+      //   sameData: false,
+      //   request: this.requestTree,
+      //   model: {
+      //     template: this.treeView,
+      //   },
+      // },
     ];
+    if (this.funcID == 'TMT0203') {
+      var tree = {
+        id: '15',
+        type: ViewType.treedetail,
+        active: false,
+        sameData: false,
+        request: this.requestTree,
+        model: {
+          template: this.treeView,
+        },
+      };
+      this.viewsActive.push(tree);
+    }
+
     var viewDefaultID = '2';
     if (this.viewMode && this.viewMode.trim() != '') {
       viewDefaultID = this.viewMode;
     }
-
     this.viewsActive.forEach((obj) => {
       if (obj.id == viewDefaultID) {
         obj.active = true;

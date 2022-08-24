@@ -132,11 +132,13 @@ export class AddNoteComponent implements OnInit {
   }
 
   getNumberNotePin() {
-    this.data.forEach((res) => {
-      if (res.isPin == true || res.isPin == '1') {
-        this.countNotePin++;
-      }
-    });
+    if (this.data) {
+      this.data.forEach((res) => {
+        if (res.isPin == true || res.isPin == '1') {
+          this.countNotePin++;
+        }
+      });
+    }
   }
 
   // addFirstObjectInArray() {
