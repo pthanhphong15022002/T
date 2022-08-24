@@ -166,8 +166,7 @@ export class EmployeesComponent implements OnInit {
         if (res[0]) {
           this.itemSelected = this.view.dataService.data[0];
         }
-      }
-      );
+      });
     this.changedt.detectChanges();
   }
 
