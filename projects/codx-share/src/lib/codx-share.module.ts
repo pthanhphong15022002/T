@@ -85,6 +85,7 @@ import { PopupUpdateProgressComponent } from './components/codx-tasks/popup-upda
 import { ViewListComponent } from './components/codx-tasks/view-list/view-list.component';
 import { PopupAddComponent } from './components/codx-tasks/popup-add/popup-add.component';
 import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component';
+import { TreeViewComponent } from './components/codx-tasks/tree-view/tree-view.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -141,6 +142,7 @@ const T_Component: Type<any>[] = [
   ViewListComponent,
   PopupAddComponent,
   CodxTasksComponent,
+  TreeViewComponent
 ];
 
 const T_Pipe: Type<any>[] = [  TruncatePipe, FileImage];
