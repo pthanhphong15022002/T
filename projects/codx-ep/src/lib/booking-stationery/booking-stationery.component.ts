@@ -2,7 +2,6 @@ import { UIComponent } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
-  CallFuncService,
   DataRequest,
   DialogRef,
   NotificationsService,
@@ -34,7 +33,7 @@ export class BookingStationeryComponent extends UIComponent {
   columnsGrid: any;
   dialog!: DialogRef;
   model: DataRequest;
-  modelResource: ResourceModel;
+  //modelResource: ResourceModel;
   cart: [];
   funcID: string;
   service = 'EP';
@@ -58,13 +57,13 @@ export class BookingStationeryComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-    this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'EP';
-    this.modelResource.className = 'ResourcesBusiness';
-    this.modelResource.service = 'EP';
-    this.modelResource.method = 'GetListAsync';
-    this.modelResource.predicate = 'ResourceType=@0';
-    this.modelResource.dataValue = '6';
+    // this.modelResource = new ResourceModel();
+    // this.modelResource.assemblyName = 'EP';
+    // this.modelResource.className = 'ResourcesBusiness';
+    // this.modelResource.service = 'EP';
+    // this.modelResource.method = 'GetListAsync';
+    // this.modelResource.predicate = 'ResourceType=@0';
+    // this.modelResource.dataValue = '6';
   }
 
   ngAfterViewInit(): void {
@@ -166,11 +165,7 @@ export class BookingStationeryComponent extends UIComponent {
       );
     });
   }
-  addNewRequest(evt?) {
-    let dataItem = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      dataItem = evt;
-    }
+  addNewRequest() {
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
@@ -178,7 +173,7 @@ export class BookingStationeryComponent extends UIComponent {
       option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfc.openSide(
         PopupRequestStationeryComponent,
-        [dataItem, this.listData, this.count],
+        [this.listData, this.count],
         option
       );
     });
@@ -189,7 +184,7 @@ export class BookingStationeryComponent extends UIComponent {
       this.dialog && this.dialog.close();
     }
   }
-  
+
   listData = [];
   count = 0;
   addCart(evt, data) {
