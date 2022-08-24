@@ -1,7 +1,107 @@
 <div class="rounded-2 bg-body border border-1 border-gray-300">
     <div class="rounded-2 bg-body border border-1 m-h-400 p-3">
         <div class="d-flex">
-            <span class="icon-drag_indicator icon-20 pd-top-5"></span>
+            <div ngbDropdown class="dropdown" container="body">
+                <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                    ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                    <i class="icon-drag_indicator icon-20 pd-top-5 black"></i>
+                </a>
+                <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                    <li>
+                        <a (click)="delete()" class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="'icon-clear icon-20'" [style.color]="'red'"></span>
+                            <span class="show-customName">{{'Xóa'}}</span>
+                        </a>
+                    </li>
+                    <hr>
+                    <li>
+                        <a class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="" [style.color]=""></span>
+                            <span class="show-customName">{{'Thêm diễn giải'}}</span>
+                        </a>
+                    </li>
+                    <hr>
+                    <li>
+                        <a class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="'icon-format_size icon-20'" [style.color]=""></span>
+                            <span class="show-customName">{{'Dữ liệu thường'}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="'icon-title  icon-20'" [style.color]=""></span>
+                            <span class="show-customName">{{'Tiêu đề'}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="'icon-check_box  icon-20'" [style.color]=""></span>
+                            <span class="show-customName">{{'Check list'}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="'icon-list_alt  icon-20'" [style.color]=""></span>
+                            <span class="show-customName">{{'Danh sách'}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="'icon-format_list_numbered icon-20'" [style.color]=""></span>
+                            <span class="show-customName">{{'Số thứ tự'}}</span>
+                        </a>
+                    </li>
+                    <hr>
+                    <li>
+                        <a>
+                            <span
+                                [class]="'icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative'"
+                                [style.color]=""></span>
+                            <span
+                                [class]="'icon-format_italic icon-20 btn btn-icon btn-active-light-primary position-relative'"
+                                [style.color]=""></span>
+                            <span
+                                [class]="'icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative'"
+                                [style.color]=""></span>
+                            <codx-input #elm [ele]="" type="colorpicker" class="form-control text-white color-large"
+                                field="color" [crrValue]="" dataformat="hex">
+                            </codx-input>
+                            <div class="btn-emoji">
+                                <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"
+                                    class="btn btn-icon btn-md ms-2 btn-emoji">
+                                    <i class="icon-tag_faces icon-24 text-warning"></i>
+                                </button>
+                                <ng-container *ngIf="showEmojiPicker">
+                                    <div class="emoji">
+                                        <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set"
+                                            [perLine]="7" (emojiSelect)="addEmoji($event)"></emoji-mart>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </a>
+                    </li>
+                    <hr>
+                    <li>
+                        <a class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="'icon-person_add_alt_1 icon-20'" [style.color]="'dodgerblue'"></span>
+                            <span class="show-customName">{{'Giao việc'}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="'icon-chat_bubble_outline icon-20'"
+                                [style.color]="'dodgerblue'"></span>
+                            <span class="show-customName">{{'Thêm bình luận'}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-icon btn-active-light-primary position-relative aT">
+                            <span [class]="'icon-attach_file icon-20'" [style.color]="'dodgerblue'"></span>
+                            <span class="show-customName">{{'Đính kèm file'}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <div *ngIf="lineType == 'text'">
                 <codx-input format="ed2" [class]="'border-0'" type="text" class="test-textarea" [crrValue]="empty"
                     [placeholder]="gridViewSetup?.Comments?.headerText + '...'" (valueChange)="valueChange($event)"
@@ -22,7 +122,9 @@
                 </div>
             </div>
             <div *ngIf="lineType =='list'" class="d-flex">
-                <div class="li"><li></li></div>
+                <div class="li">
+                    <li></li>
+                </div>
                 <div class="w-100 text-after-li" #txtNoteEdit name="txtTodoEdit">
                     <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
                         (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="listNote"
@@ -32,7 +134,7 @@
             </div>
         </div>
     </div>
-    <div class="d-flex note-action border align-items-center justify-content-between">
+    <ng-template class="d-flex note-action border align-items-center justify-content-between" #menu *ngIf="showMenu">
         <div class="d-flex">
             <div [class.active]="">
                 <span (click)="onType('text')"
@@ -76,6 +178,5 @@
             <span
                 class="icon-chat_bubble_outline icon-20 btn btn-icon btn-active-light-primary position-relative"></span>
         </div>
-
-    </div>
+    </ng-template>
 </div>

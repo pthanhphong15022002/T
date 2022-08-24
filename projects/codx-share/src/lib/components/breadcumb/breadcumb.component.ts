@@ -68,6 +68,9 @@ export class BreadcumbComponent implements OnInit {
     this.dmSV.parentFolderId = this.linkList[id];
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(this.linkList[id]);
+    var data = {} as any;
+    data.recID = this.linkList[id];
+    this.dmSV.nodeSelect.next(data);
     //isFolderId
     this.changeDetectorRef.detectChanges();
   }
