@@ -35,7 +35,41 @@
 {
   width: 20%;
 }
+.w-140px
+{
+  width: 140px;
+}
 .tr-ip-add-tmp td
 {
   padding: 8px;
+}
+.h-feildImport 
+{
+  height: calc(100% - 145px);
+}
+.h-feildImport .table
+{
+  height: calc(100% - 10px);
+}
+.table
+{
+  overflow-x: auto;
+ 
+}
+.table thead
+{
+  background-color: #F5F8FA;
+  white-space: nowrap;
+}
+.table thead, .table tbody tr {
+  height: 20px;
+}
+
+.table  tbody {
+  height: calc(100% - 50px);
+  overflow: auto;
+}
+.table  tbody tr td
+{
+  width: 200px;
 }
