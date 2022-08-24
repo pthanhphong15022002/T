@@ -305,7 +305,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   loadUserRole(userID) {
     if (!userID) return;
     this.api
-      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRoles', [userID])
+      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRolesAsync', [userID])
       .subscribe((res) => {
         if (res && res.msgBodyData) {
           this.viewChooseRole = res.msgBodyData[0];
