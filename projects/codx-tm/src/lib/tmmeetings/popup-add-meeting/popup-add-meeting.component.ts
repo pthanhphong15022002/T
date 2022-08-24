@@ -225,9 +225,11 @@ export class PopupAddMeetingComponent implements OnInit {
     this.changDetec.detectChanges();
   }
 
-  valueCbx(e) {
+  valueCbx(id,e) {
     console.log(e);
-    this.isCheckTask = e.data;
+    this.meeting.resources.forEach((res) => {
+      if (res.resourceID == id) res.taskControl = e.data;
+    });
   }
 
   valueChange(event) {
@@ -461,15 +463,16 @@ export class PopupAddMeetingComponent implements OnInit {
               tmpResource.resourceName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = 'A';
+              tmpResource.taskControl = true;
               this.resources.push(tmpResource);
             } else {
               tmpResource.resourceID = emp?.userID;
               tmpResource.resourceName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.roleType = 'P';
+              tmpResource.taskControl = true;
               this.resources.push(tmpResource);
             }
-            tmpResource.taskControl = this.isCheckTask;
             this.meeting.resources = this.resources;
           }
         }

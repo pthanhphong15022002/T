@@ -266,7 +266,7 @@
         <div class="d-flex align-items-top">
           <!-- <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
           </codx-img> -->
-          <div style=" position: relative" class="h-30px" popoverClass="userPopoverClass"
+          <div style=" position: relative" class="h-30px me-3" popoverClass="userPopoverClass"
             [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
             (mouseenter)="showPopover(p,item.resourceID)" autoClose="outside">
             <codx-img [width]="30" [objectId]="item?.resourceID" objectType="AD_Users">
@@ -286,22 +286,20 @@
             <div class="text-gray-700">{{item?.positionName}} <span *ngIf=" item?.departmentName"> |
                 {{item?.departmentName}}</span></div>
           </div>
-          <div>
-            <!-- <div class="text-dark" *ngIf="item?.memo == null">
+          <!-- <div class="text-dark" *ngIf="item?.memo == null">
               <codx-input class="" type="text" (valueChange)="changeMemo2($event,item?.resourceID)"
                 placeholder="Ghi chú phân công..." [disabled]="readOnly"></codx-input>
             </div> -->
-            <div class="text-dark">
-              <codx-input class="" type="text" [crrValue]="item?.memo"
-                (valueChange)="changeMemo2($event,item?.resourceID)" placeholder="Ghi chú phân công..."
-                [disabled]="readOnly"></codx-input>
-            </div>
+          <div class="text-dark">
+            <codx-input class="" type="text" [crrValue]="item?.memo"
+              (valueChange)="changeMemo2($event,item?.resourceID)" placeholder="Ghi chú phân công..."
+              [disabled]="readOnly"></codx-input>
           </div>
         </div>
         <div *ngIf="!readOnly">
           <a (click)="onDeleteUser(item)" style="cursor: pointer">
             <div class="d-flex align-item-center">
-              <span class="icon-close icon-16 text-danger me-2"></span>
+              <span class="icon-close icon-16 text-danger ms-2"></span>
               <span class="text-hover-danger">
                 <codx-label name="Delete" formName="Tasks" default="Xóa"></codx-label>
               </span>
@@ -336,7 +334,7 @@
     <!-- <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan "> -->
 
     <div class="form-group row ">
-      <div class="col-4">
+      <div class="col-5">
         <div>
           <codx-label fiedName="StartDate" formName="Tasks" gridViewName="grvTasks" default="Ngày bắt đầu">
           </codx-label>
@@ -345,7 +343,7 @@
           (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-4">
+      <div class="col-5">
         <div>
           <codx-label fiedName="EndDate" formName="Tasks" gridViewName="grvTasks" default="Ngày kết thúc">
           </codx-label>
@@ -354,7 +352,7 @@
           (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-4">
+      <div class="col-2">
         <div>
           <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTasks" default="Số giờ">
           </codx-label>

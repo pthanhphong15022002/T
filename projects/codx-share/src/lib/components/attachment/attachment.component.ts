@@ -46,6 +46,7 @@ import {
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { map, Observable } from 'rxjs';
+import { LV } from '@shared/services/lv.component';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -147,7 +148,7 @@ export class AttachmentComponent implements OnInit {
     var d = data;
     this.user = this.auth.get();
     this.dialog = dialog;
-    if (data != null) {
+    if (data?.data != null) {
       this.objectType = data?.data.objectType;
       this.objectId = data?.data.objectId;
       this.folderType = data?.data.folderType;
@@ -382,11 +383,11 @@ export class AttachmentComponent implements OnInit {
 
   ngOnDestroy() {
     //   this.atSV.openForm.unsubscribe();
-    if (this.interval?.length > 0) {
-      this.interval.forEach((element) => {
-        clearInterval(element.instant);
-      });
-    }
+    // if (this.interval?.length > 0) {
+    //   this.interval.forEach((element) => {
+    //     clearInterval(element.instant);
+    //   });
+    // }
   }
 
   onSelectionAddChanged($data, tree) {
@@ -710,9 +711,49 @@ export class AttachmentComponent implements OnInit {
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
 
-            for (var i = 0; i < addList.length; i++) {
-              this.data.push(Object.assign({}, addList[i]));
+            if (addList.length > 0) {
+              addList.forEach(item => {
+                this.data.push(Object.assign({}, item));
+                if (item.status == 0)
+                  this.dmSV.updateHDD.next(item.messageHddUsed);
+                var files = this.dmSV.listFiles;
+                if (files == null)
+                  files = [];
+  
+                if (item.status == 0) {
+                  if (item.data.fileName != null && item.data.fileName != "") {
+                    item.data.thumbnail = "../../../assets/img/loader.gif";
+                    that.displayThumbnail(item.data);
+                    files.push(Object.assign({}, item.data));
+                  }
+                  // else {
+                  //   if (item.data.folderName != null && item.data.folderName != "") {
+                  //     var folders = this.dmSV.listFolder;
+                  //     var idx = folders.findIndex(x => x.recID == item.data.recID)
+                  //     if (idx == - 1) {
+                  //       folders.push(Object.assign({}, item.data));
+                  //       this.dmSV.listFolder = folders;
+                  //       // that.changeDetectorRef.detectChanges();
+                  //     }
+                  //   }
+                  // }
+                }
+                else {
+                  let index = files.findIndex(d => d.recID.toString() === item.data.recID);
+                  if (index != -1) {
+                    files[index] = item.data;
+                    files[index].recID = item.data.recID;
+                  }
+                }
+                this.notificationsService.notify(item.message);
+                this.dmSV.listFiles = files;
+                this.dmSV.ChangeData.next(true);
+              })
             }
+
+            // for (var i = 0; i < addList.length; i++) {
+            //   this.data.push(Object.assign({}, addList[i]));
+            // }
 
             if (addList.length == this.fileUploadList.length) {
               this.atSV.fileList.next(this.fileUploadList);
@@ -795,6 +836,7 @@ export class AttachmentComponent implements OnInit {
           }
         });
     } else if (total == 1) {
+      //this.addFileLarge(this.fileUploadList[0]);
       this.addFile(this.fileUploadList[0]);
       this.atSV.fileList.next(this.fileUploadList);
     } else {
@@ -861,35 +903,145 @@ export class AttachmentComponent implements OnInit {
     );
   }
 
-  displayThumbnail(id, pathDisk) {
-    var that = this;
-    if (this.interval == null) this.interval = [];
-    var files = this.dmSV.listFiles;
-    var index = setInterval(() => {
-      that.fileService.getThumbnail(id, pathDisk).subscribe((item) => {
-        if (item != null && item != '') {
-          let index = files.findIndex((d) => d.recID.toString() === id);
-          if (index != -1) {
-            files[index].thumbnail = item;
-            that.dmSV.listFiles = files;
-            that.dmSV.ChangeData.next(true);
-            that.changeDetectorRef.detectChanges();
-          }
-          let indexInterval = this.interval.findIndex((d) => d.id === id);
-          if (indexInterval > -1) {
-            clearInterval(this.interval[indexInterval].instant);
-            this.interval.splice(indexInterval, 1);
-          }
-        }
-      });
-    }, 3000);
-
-    var interval = new ItemInterval();
-    interval.id = id;
-    interval.instant = index;
-    this.interval.push(Object.assign({}, interval));
+  displayThumbnail(data) {    
+    this.dmSV.setThumbnailWait.next(data);    
   }
 
+  async addFileLargeLong(fileItem: FileUpload) {
+    // check dung luong dia cung 
+    var ret = fileItem;
+    var fileSize = parseInt(fileItem.fileSize);
+    var that = this;
+    fileItem.uploadId = "";
+    function isAllowAddFileAsync() {
+      return new Promise((resole, reject) => {
+        that.fileService.isAllowAddFile(fileSize).subscribe(item => {
+          if (item == "ok") {
+            resole(item);
+          }
+          else {
+            reject(item);
+          }
+        });
+      });
+    };
+    try {
+      var item = await isAllowAddFileAsync();
+      var host = "http://192.168.18.36:5010";
+      LV.Files.API.setHostApiUrl(host);
+      var AccessTokenkey = "b5a54909-96bd-4d6a-91b4-1318bda5012c";
+      var fileToUpload = fileItem;
+      // console.log(URL.createObjectURL(fileToUpload.item));
+
+      var regUploadInfo = await LV.Files.API.callApi(
+        LV.Files.APINames.registerUpload,
+        {
+
+          accessToken: AccessTokenkey,
+          registerInfo: {
+            isPublic: true,//false:Muốn truy cập vào nội dung file phải login,true:Công cộng
+            fileName: fileToUpload.item.name, //tên file,
+            sizeInBytes: fileToUpload.item.size, //Kích thước file,
+            chunkSizeInKB: 1024 * 2, //512KB,
+            thumbSize: {
+              width: 200, //Kích thước của file ảnh Thum bề ngang
+              height: 100//Kích thước của file ảnh Thum bề dọc
+            }
+          }
+        });
+      console.log(regUploadInfo);
+      fileItem.thumbnail = regUploadInfo.relUrlShortThumb;
+      fileItem.uploadId = regUploadInfo.id;
+      fileItem.extension = regUploadInfo.fileExt;
+      fileItem.data = "";
+      fileItem.urlPath = regUploadInfo.fullFileName;
+      // play = `{0}
+      // `${host}/api/default/lv-media/content/directory/${app}/${fileName}`
+      for (var i = 0; i < regUploadInfo.numOfChunks; i++) {
+        var start = i * regUploadInfo.chunkSizeInBytes;//Vị trí bắt đầu băm file
+        var end = start + regUploadInfo.chunkSizeInBytes;//Vị trí cuối
+        if (end > regUploadInfo.sizeInBytes)
+          end = regUploadInfo.sizeInBytes;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+        var blogPart = fileToUpload.item.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
+        var fileChunk = new File(
+          [blogPart],
+          fileToUpload.fileName,
+          { type: fileToUpload.type });//Gói lại thành 1 file chunk để upload
+        var uploadChunckInfo = await LV.Files.API.callApi(
+          LV.Files.APINames.uploadChunk,
+          {
+            accessToken: AccessTokenkey,
+            data: {
+              uploadId: regUploadInfo.id,//UploadId lấy từ phần đăng ký
+              index: i//Chỉ mục của chunk
+            },
+            filePart: fileChunk //Dữ liệu củ file chunk đã được gói lại trong file
+          }
+        );
+      }
+    }
+    catch (ex) {
+      fileItem.uploadId = "0";
+      this.notificationsService.notify(ex);
+    }
+
+
+    return ret;
+    //this.displayThumbnail(res.recID, res.pathDisk);
+  }
+
+  addFileLarge(fileItem: FileUpload) {
+    // let no = 0;   
+    // let total = this.fileUploadList.length;
+    debugger;
+    var that = this;
+    var size = 1048576; // 1MB
+    var totalChunk = 0;
+    var dataFile = fileItem.data;
+    if (this.interval == null)
+      this.interval = [];
+    // chia file
+    totalChunk = fileItem.fileSize / size;
+    fileItem.data = '';
+    this.fileService.getChunkFile(fileItem).subscribe(res => {
+      if (res != null) {
+        var item = res.result.data;
+        for (var i = 0; i < item.totalChunk; i++) {
+          // upload chunk file         
+          var start = i * item.chunkSize;//Vị trí bắt đầu băm file
+          var end = start + item.chunkSize - 1;//Vị trí cuối
+          if (end > item.fileSize)
+            end = item.fileSize;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+          var data = dataFile.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
+         // let start = i * item.chunkSize;//Vị trí bắt đầu băm file
+         // let end = start + item.chunkSize;//Vị trí cuối
+        //  if (end > item.fileSize)
+         //   end = item.fileSize;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+         // let data = dataFile.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
+          let file = fileItem;
+          file.data = data;
+          file.urlPath = item.pathChunk;
+          file.fileName = item.recID + "_" + i.toString();
+          //  var index = setInterval(() => {
+          that.fileService.addChunkFile(file).subscribe(sub => {
+            // let indexInterval = that.interval.findIndex(d => d.id === sub.result);
+            // if (indexInterval > -1) {
+            //   clearInterval(that.interval[indexInterval].instant);
+            //   that.interval.splice(indexInterval, 1);
+            // }
+          })
+          //  }, 3000);
+
+          // var interval = new ItemInterval();
+          // interval.id = file.fileName;
+          // interval.instant = index;
+          // that.interval.push(Object.assign({}, interval));
+
+        }
+      }
+    });
+  }
+  
   addFile(fileItem: any) {
     var that = this;
     var done = this.fileService.addFile(fileItem).toPromise();
@@ -903,20 +1055,20 @@ export class AttachmentComponent implements OnInit {
             res.thumbnail = '../../../assets/img/loader.gif';
             files.push(Object.assign({}, res));
             this.dmSV.listFiles = files;
-            this.dmSV.ChangeData.next(true);
-            this.changeDetectorRef.detectChanges();
+            this.dmSV.ChangeData.next(true);           
             //this.fileUploadList = [];
             //  that.displayThumbnail(res.recID, res.pathDisk);
             // this.notificationsService.notify(item.message);
-            this.fileUploadList[0].recID = item.data.recID;
+           // this.fileUploadList[0].recID = item.data.recID;
             // list.push(Object.assign({}, res));
             this.atSV.fileListAdded.push(Object.assign({}, item));
             // for(var i=0; i<addList.length; i++) {
             this.data.push(Object.assign({}, item));
 
-            this.displayThumbnail(item.data.recID, item.data.pathDisk);
+            this.displayThumbnail(item.data);
             this.dmSV.updateHDD.next(item.messageHddUsed);
             this.notificationsService.notify(item.message);
+            this.changeDetectorRef.detectChanges();
           } else if (item.status == 6) {
             // ghi đè
             fileItem.recID = item.data.recID;
@@ -964,13 +1116,13 @@ export class AttachmentComponent implements OnInit {
                 );
                 if (index != -1) {
                   res.data.thumbnail = '../../../assets/img/loader.gif';
-                  this.displayThumbnail(res.data.recID, res.data.pathDisk);
+                  this.displayThumbnail(res.data);
                   files[index] = res.data;
                   files[index].recID = res.data.recID;
                 }
                 this.dmSV.listFiles = files;
                 this.dmSV.ChangeData.next(true);
-                this.fileUploadList[0].recID = res.data.recID;
+                //this.fileUploadList[0].recID = res.data.recID;
                 this.atSV.fileListAdded.push(Object.assign({}, item));
                 this.data.push(Object.assign({}, item));
                 //  res.data.thumbnail = "../../../assets/img/loader.gif";
@@ -978,6 +1130,7 @@ export class AttachmentComponent implements OnInit {
                 this.notificationsService.notify(res.message);
                 //  this.closePopup();
                 this.fileUploadList = [];
+                this.changeDetectorRef.detectChanges();
               })
               .catch((error) => {
                 console.log('Promise rejected with ' + JSON.stringify(error));

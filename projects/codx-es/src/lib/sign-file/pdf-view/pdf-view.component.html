@@ -6,43 +6,43 @@
       class="flex-column flex-lg-row-auto w-lg-240px main-left"
       [class.hideCol]="hideThumbnail"
     >
-      <div
-        class="hover-scroll-overlay-y pe-6 me-n6"
-        data-kt-scroll="true"
-        data-kt-scroll-activate="{default: true}"
-        data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".e-tab-header"
-        data-kt-scroll-wrappers=".main-left"
-        data-kt-scroll-offset="'0px'"
-      >
-        <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
-          <e-tabitems>
-            <e-tabitem>
-              <ng-template #headerText>
-                {{ headerLeftName[0].text }}
-              </ng-template>
-              <ng-template #content>
+      <ejs-tab #leftToolbar [class.d-none]="hideThumbnail">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              {{ headerLeftName[0].text }}
+            </ng-template>
+            <ng-template #content>
+              <div
+                class="hover-scroll-overlay-y"
+                data-kt-scroll="true"
+                data-kt-scroll-activate="{default: true}"
+                data-kt-scroll-height="auto"
+                data-kt-scroll-dependencies=".e-tab-header"
+                data-kt-scroll-wrappers=".e-tab"
+                data-kt-scroll-offset="0px"
+              >
                 <div #thumbnailTab id="thumbnailTab"></div>
-              </ng-template>
-            </e-tabitem>
-            <e-tabitem>
-              <ng-template #headerText>
-                {{ headerLeftName[1].text }}
-              </ng-template>
-              <ng-template #content> </ng-template>
-            </e-tabitem>
-          </e-tabitems>
-        </ejs-tab>
-      </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              {{ headerLeftName[1].text }}
+            </ng-template>
+            <ng-template #content> </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
     </div>
-    <div class="d-flex flex-column flex-row-fluid mx-3 main-center">
+    <div class="d-flex flex-column flex-row-fluid main-center">
       <div
         class="d-flex d-flex align-items-center justify-content-between stepper-toolbar"
       >
         <div
           class="left_Toolbar d-flex justify-content-start align-items-center"
         >
-          <ejs-toolbar>
+          <ejs-toolbar (created)="leftTollbarCreated($event)">
             <e-items>
               <e-item
                 [prefixIcon]="
@@ -65,10 +65,7 @@
                 [disabled]="cannotAct"
               >
               </e-item>
-              <e-item
-                [text]="pdfviewerControl?.currentPageNumber"
-                [disabled]="true"
-              ></e-item>
+              <e-item [template]="pageInput" type="Input"></e-item>
               <e-item
                 prefixIcon="icon-navigate_next icon-20"
                 (click)="pdfviewerControl?.navigation?.goToNextPage()"
@@ -217,12 +214,14 @@
 
               <ng-template #content>
                 <div class="position-relative" *ngIf="!isApprover">
-                  <codx-label
-                    name="lblChooseSigner"
-                    [formModel]=""
-                    default="Chọn người kí cần thiết lập"
-                    class="fw-bold text-primary"
-                  ></codx-label>
+                  <div class="mt-3 mb-3">
+                    <codx-label
+                      name="lblChooseSigner"
+                      [formModel]=""
+                      default="Chọn người kí cần thiết lập"
+                      class="fw-bold text-primary"
+                    ></codx-label>
+                  </div>
                   <ejs-dropdownlist
                     #inputAuthor
                     id="signatureDropdownList"
@@ -246,7 +245,7 @@
                             : (approver.roleType | vll: 'ES014':'text' | async)
                         "
                         [subTitle]="approver.position ?? 'Vị trí công việc'"
-                        [footer]="footer"
+                        [baseHeaderRightTmp]="footer"
                         [dataItem]="approver"
                       >
                       </codx-temp-full>
@@ -278,7 +277,7 @@
                     (click)="changeAnnotationItem(index + 1)"
                   >
                     <codx-card-center
-                      cardCss="border h-100 w-125px"
+                      cardCss="border h-100 w-125px pt-4 pb-2 "
                       icoCss="icon-30 mb-1 {{
                         index + 1 | vll: 'ES015':'icon' | async
                       }}"
@@ -341,24 +340,28 @@
               </ng-template>
               <ng-template #content>
                 <ng-container>
+                  <!-- <codx-listview
+                    #listview
+                    service="ES"
+                    assemblyName="ERM.Business.ES"
+                    className="SignFilesBusiness"
+                    method="GetAllAreasAsync"
+                    [dataValue]="dataValue"
+                    predicate="null"
+                    entityName="ES_SignFiles"
+                    [itemTemplate]="itemTmpl"
+                  >
+                  </codx-listview> -->
                   <ejs-listview
                     id="groupedList"
                     [dataSource]="lstAreas"
                     [cssClass]="cssClass"
-                    [fields]="fields"
                     [showHeader]="true"
                   >
                     <ng-template #template let-area="">
                       <div
-                        class="annotationItem"
-                        (click)="
-                          goToSelectedAnnotation(
-                            area.recID,
-                            area.labelValue,
-                            area.fontFormat
-                          )
-                        "
-                        style="border: 1px solid black; margin-bottom: 5px"
+                        class="annotationItem d-flex flex-stack"
+                        (click)="goToSelectedAnnotation(area)"
                       >
                         <codx-temp-full
                           [title]="
@@ -368,8 +371,16 @@
                           "
                           [resourceObjType]="'AD_Users'"
                           [icoCss]="
-                            'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+                            'symbol symbol-icon symbol-circle symbol-32px me-2 ' +
                             (area.labelType | vll: 'ES015':'icon' | async)
+                          "
+                          [iconCss2]="
+                            area.recID != curSelectedAnnotID
+                              ? 'icon-expand_more'
+                              : 'icon-expand_less'
+                          "
+                          [subTitle]="
+                            'Trang ' + (+area.location.pageNumber + 1)
                           "
                         >
                         </codx-temp-full>
@@ -381,6 +392,21 @@
                           "
                           [formGroup]="formAnnot"
                         >
+                          <div class="qr-switch" *ngIf="area.labelType == 8">
+                            <codx-input
+                              class="form-control me-2"
+                              type="switch"
+                              [crrValue]="renderQRAllPage"
+                              (valueChange)="changeQRRenderState($event)"
+                            >
+                              <codx-label
+                                name="lblSave"
+                                default="Lặp lại cho tất cả các trang"
+                                [formModel]=""
+                              >
+                              </codx-label>
+                            </codx-input>
+                          </div>
                           <div class="text-content" *ngIf="area.labelType == 6">
                             <codx-label
                               fiedName=""
@@ -401,7 +427,7 @@
                                 ';'
                               "
                               [ngClass]="{
-                                'fw-bold': isBold,
+                                'font-weight-bold': isBold,
                                 'fst-italic': isItalic,
                                 'text-decoration-underline': isUnd
                               }"
@@ -419,7 +445,10 @@
                             >
                             </ejs-dropdownlist>
                           </div>
-                          <div class="text-format d-flex">
+                          <div
+                            class="text-format d-flex"
+                            *ngIf="area.labelType != 8"
+                          >
                             <ejs-dropdownlist
                               style="width: 100%; min-width: 70px"
                               id="fontStylesDropdownList"
@@ -427,8 +456,8 @@
                               [(value)]="curAnnotFontStyle"
                               formControlName="fontStyle"
                             >
-                            </ejs-dropdownlist
-                            ><ejs-dropdownlist
+                            </ejs-dropdownlist>
+                            <ejs-dropdownlist
                               style="width: 100%; min-width: 70px"
                               id="fontSizesDropdownList"
                               [dataSource]="lstAnnotFontSize"
@@ -437,7 +466,7 @@
                             >
                             </ejs-dropdownlist>
                           </div>
-                          <div class="btn-format">
+                          <div class="btn-format" *ngIf="area.labelType != 8">
                             <button
                               type="button"
                               [ngClass]="{
@@ -488,7 +517,11 @@
                               type="button"
                               class="btn btn-primary"
                               (click)="
-                                changeAnnotPro(area.labelType, area.recID)
+                                changeAnnotPro(
+                                  area.labelType,
+                                  area.recID,
+                                  area.createdOn
+                                )
                               "
                             >
                               <codx-label
@@ -560,7 +593,28 @@
       'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       (data.labelType | vll: 'ES004':'icon' | async)
     "
-    [subTitle]="data.location?.pageNumber"
+    [subTitle]="'Trang ' + data.location?.pageNumber + 1"
   >
   </codx-temp-full>
+</ng-template>
+
+<ng-template #pageInput>
+  <!-- <input
+    id="numeric"
+    type="number"
+    min="1"
+    [max]="pageMax"
+    [step]="pageStep"
+    [(value)]="curPage"
+    defaultValue="1"
+    (keyup.enter)="goToPage($event)"
+  /> -->
+  <codx-input
+    type="number"
+    [min]="1"
+    [max]="pageMax"
+    [crrValue]="curPage"
+    (valueChange)="goToPage($event)"
+  >
+  </codx-input>
 </ng-template>

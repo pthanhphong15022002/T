@@ -171,7 +171,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     //this.dialog.dataService.dataSelected = this.dialogSignature.value;
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.update || res.save) {
           this.isSaveSuccess = true;

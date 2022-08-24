@@ -31,6 +31,9 @@ import { RoleDetailComponent } from './Roles/detail/detail.component';
 import { AsideroledetailComponent } from './_layout/asideroledetail/asideroledetail.component';
 import { UserGroupsComponent } from './user-groups/user-group.component';
 import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
+import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
+import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
+import { ControlNoteComponent } from './control-note/control-note.component';
 
 export const routes: Routes = [
   {
@@ -67,10 +70,23 @@ export const routes: Routes = [
       ,{
         path: 'roledetails/:funcID',
         component: RoleDetailComponent,
+      },
+      {
+        path: 'controlNote',
+        component: ControlNoteComponent,
       }
-
     ]
-  }
+  },
+  {
+    path: '',
+    component: LayoutNoAsideToolbarFluidComponent,
+    children: [
+      {
+        path: 'systemsetting/:funcID',
+        component: SystemsettingsComponent,
+      }
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [
@@ -88,6 +104,8 @@ const T_Component: Type<any>[] = [
   RoleDetailComponent,
   AsideroledetailComponent,
   AddUserGroupsComponent,
+  SystemsettingsComponent,
+  ControlNoteComponent,
 ];
 @NgModule({
   imports: [

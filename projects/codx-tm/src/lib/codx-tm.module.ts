@@ -72,16 +72,22 @@ import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.co
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
 import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
+import { CodxTasksComponent } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
+      // {
+      //   path: 'tasks/:funcID',
+      //   component: TasksComponent,
+      // },
       {
         path: 'tasks/:funcID',
-        component: TasksComponent,
+        component: CodxTasksComponent,
       },
+      
       {
         path: 'taskextends/:funcID',
         component: TaskExtendsComponent,

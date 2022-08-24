@@ -19,6 +19,7 @@ export class AD_User{
     owner: String;
     positionID: string;
     customize: boolean = false;
+    mobile: string;
 
 
 

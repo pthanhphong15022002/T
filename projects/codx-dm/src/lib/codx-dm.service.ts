@@ -157,6 +157,9 @@ export class CodxDMService {
     public hideShowBoxInfo = new BehaviorSubject<boolean>(null);
     isHideShowBoxInfo = this.hideShowBoxInfo.asObservable();
 
+    public setThumbnailWait = new BehaviorSubject<any>(null);
+    isSetThumbnailWait = this.setThumbnailWait.asObservable();
+
     public fileEditing = new BehaviorSubject<FileUpload>(null);
     isFileEditing = this.fileEditing.asObservable();
 
@@ -452,7 +455,8 @@ export class CodxDMService {
           this.ChangeData.next(true);      
         });
 
-        this.fileService.GetFiles(data.recID, this.idMenuActive).subscribe(async res => {        
+        this.fileService.options.funcID = this.idMenuActive;
+        this.fileService.GetFiles(data.recID).subscribe(async res => {        
           this.listFiles = res;
           this.loadedFile = true;
           this.ChangeData.next(true);        

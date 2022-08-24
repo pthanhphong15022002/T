@@ -7,7 +7,7 @@
 </ng-template>
 
 <ng-template #itemViewList let-data>
-  <lib-view-list [formModel]="view.formModel" [vllStatus]="vllStatus" [data]="data"
+  <lib-view-list [formModel]="view.formModel" [vllStatus]="vllStatus" [data]="data" [listRoles]="listRoles"
     (clickMoreFunction)="receiveMF($event)">
   </lib-view-list>
 </ng-template>
@@ -93,17 +93,8 @@
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-1">
     <div class="d-flex align-items-end ms-14 codx-badge">
-      <!-- <div class="d-status">
-        <div class="badge badge-danger me-2 label-status" [style.border-color]="
-            (data?.status | vll: vllStatus:'textColor' | async) + '30'
-          " [style.background-color]="
-            (data?.status | vll: vllStatus:'textColor' | async) + '30'
-          " [style.color]="data?.status | vll: vllStatus:'textColor' | async" style="border: none">
-          {{ data?.status | vll: vllStatus:"text" | async }}
-        </div>
-      </div> -->
-      <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
-        [showBgColor]="true" class="text-gray-600">
+      <codx-vll [name]="vllStatus" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
+        [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
       </codx-vll>
       <span>
         <span class="fs-7 text-gray-600">{{
@@ -113,8 +104,8 @@
     </div>
     <div *ngIf="data.category == '3'" class="" (mouseenter)="popoverEmpList(popoverList, data)"
       [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom"
-      container="body" autoClose="outside">
-      <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3" [openDelay]="500">
+      container="body" autoClose="outside" [openDelay]="500">
+      <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3">
       </codx-imgs>
     </div>
   </div>
@@ -152,19 +143,8 @@
       <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R'">
         <div class="d-flex align-items-end me-2 codx-badge">
           <span>
-            <!-- <div class="d-status">
-              <div class="badge badge-danger me-2 label-status" [style.border-color]="
-                  (item?.status | vll: vllStatus:'textColor' | async) + '30'
-                " [style.background-color]="
-                  (item?.status | vll: vllStatus:'textColor' | async) + '30'
-                " [style.color]="
-                  item?.status | vll: vllStatus:'textColor' | async
-                " style="border: none">
-                {{ item?.status | vll: vllStatus:"text" | async }}
-              </div>
-            </div> -->
-            <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="item?.status" [showText]="true"
-              [showBgColor]="true" class="text-gray-600">
+            <codx-vll [name]="vllStatus" [formModel]="view.formModel" [field]="'Status'" [value]="item?.status"
+              [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
             </codx-vll>
           </span>
           <span>
@@ -179,7 +159,7 @@
 </ng-template>
 
 <codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
-  className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="button"
+  className="TaskBusiness" method="GetListDetailTasksAsync" [views]="views" [button]="showButtonAdd ?button :null"
   (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
   [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
   (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">

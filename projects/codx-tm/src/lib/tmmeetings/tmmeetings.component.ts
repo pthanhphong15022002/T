@@ -38,18 +38,18 @@ export class TMMeetingsComponent
   @Input() meeting = new CO_Meetings();
 
   @Input() dataObj?: any;
+  @Input() showButtonAdd = true;
   @Input() projectID?: any; //view meeting to sprint_details
   @Input() iterationID?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
-  // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
-  // @ViewChild('sprintsKanban') sprintsKanban: TemplateRef<any> | null;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any> | null;
   @ViewChild('itemTemplate') template!: TemplateRef<any> | null;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('template7') template7: TemplateRef<any>;
+  @ViewChild('cardCenter') cardCenter!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -82,6 +82,7 @@ export class TMMeetingsComponent
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   dayWeek = [];
+  request: ResourceModel;
 
   constructor(
     inject: Injector,
@@ -93,15 +94,22 @@ export class TMMeetingsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) {
+       this.tmService.urlback = f.url ;
+      }
+    });
     if (this.funcID == 'TMT03011') {
       this.funcID = 'TMT0501';
     }
 
-    this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
-      if (res) {
-        this.urlDetail = res[0].url;
-      }
-    });
+    // this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
+    //   if (res) {
+    //     this.urlDetail = res[0].url;
+    //   }
+    // });
+
+    this.urlDetail = '/meeting/meetingdetails/TMT05011'
 
     this.dataValue = this.user?.userID;
     this.getParams();
@@ -118,6 +126,19 @@ export class TMMeetingsComponent
     this.modelResource.className = 'MeetingsBusiness';
     this.modelResource.service = 'CO';
     this.modelResource.method = 'GetListMeetingsAsync';
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+    this.request = new ResourceModel();
+    this.request.service = 'CO';
+    this.request.assemblyName = 'CO';
+    this.request.className = 'MeetingsBusiness';
+    this.request.method = 'GetListMeetingsAsync';
+    this.request.idField = 'meetingID';
   }
 
   receiveMF(e: any) {
@@ -152,6 +173,16 @@ export class TMMeetingsComponent
         sameData: true,
         model: {
           // panelLeftRef: this.panelLeftRef,
+          template: this.cardCenter,
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
           template: this.cardKanban,
         },
       },
@@ -162,6 +193,12 @@ export class TMMeetingsComponent
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
     this.dt.detectChanges();
   }
+
+  //#region kanban
+  changeDataMF(e:any,data:any){
+    // console.log(e, data);
+  }
+  //#end region
 
   //#region schedule
 
@@ -372,8 +409,8 @@ export class TMMeetingsComponent
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
@@ -412,8 +449,8 @@ export class TMMeetingsComponent
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,

@@ -84,14 +84,15 @@ export class AddUserComponent extends UIComponent implements OnInit {
     super(injector);
     this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
+    this.adUser = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(
         JSON.stringify(this.data?.chooseRoles)
       );
+      this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
     }
-    this.adUser = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
 
@@ -209,13 +210,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   deleteUserBeforeDone(data: any) {
-    this.adService.deleteUser(data.userID, data.employeeID).subscribe((res) => {
-      if (res) {
-        this.dialog.dataService.data = this.dialog.dataService.data.filter(
-          (x) => x.userID != data.userID
-        );
-      }
-    });
+    this.adService.deleteUser(data.userID, data.employeeID).subscribe();
+    this.dialog.dataService.data = this.dialog.dataService.data.filter(
+      (x) => x.userID != data.userID
+    );
   }
 
   addUserTemp() {
@@ -291,14 +289,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-                this.dialog.close(res.save);
               }
+              this.dialog.close(res?.save);
             });
           res.save.chooseRoles = res.save?.functions;
           this.changeDetector.detectChanges();
         }
       });
-    
   }
 
   onUpdate() {
@@ -314,7 +311,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
               }
               this.dialog.close(res.update);
             });
-          res.update['chooseRoles'] = res.update?.functions;
+          res.update.chooseRoles = res.update.functions;
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
+          this.changeDetector.detectChanges();
         }
       });
   }
@@ -367,8 +368,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   valueEmp(data) {
-    this.adUser.employeeID = data.data;
-    this.getEmployee(this.adUser.employeeID);
+    if (data.data) {
+      this.adUser.employeeID = data.data;
+      this.getEmployee(this.adUser.employeeID);
+    }
   }
 
   valueUG(data) {
@@ -389,18 +392,23 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   getEmployee(employeeID: string) {
-    this.api
-      .exec<any>('ERM.Business.HR', 'HRBusiness', 'GetModelEmp', [employeeID])
-      .subscribe((employee) => {
-        if (employee) {
-          this.adUser.employeeID = employeeID;
-          this.adUser.userName = employee.employeeName;
-          this.adUser.buid = employee.organizationID;
-          this.adUser.email = employee.email;
-          this.adUser.phone = employee.phone;
-          this.changeDetector.detectChanges();
-        }
-      });
+    if (!this.adUser.employeeID) {
+      this.api
+        .exec<any>('ERM.Business.HR', 'HRBusiness', 'GetModelEmp', [employeeID])
+        .subscribe((employee) => {
+          if (employee) {
+            this.adUser.employeeID = employeeID;
+            this.adUser.userName = employee.employeeName;
+            this.adUser.buid = employee.organizationID;
+            if (this.formType == 'add') {
+              this.adUser.email = employee.email;
+              this.adUser.phone = employee.phone;
+            } else this.adUser['phone'] = this.adUser.mobile;
+
+            this.changeDetector.detectChanges();
+          }
+        });
+    }
   }
 
   loadUserRole(userID) {

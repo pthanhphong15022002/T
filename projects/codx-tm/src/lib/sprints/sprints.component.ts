@@ -13,6 +13,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxTMService } from '../codx-tm.service';
 import { TM_Sprints } from '../models/TM_Sprints.model';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
 import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sprints.component';
@@ -25,15 +26,6 @@ import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sp
 export class SprintsComponent extends UIComponent {
   @ViewChild('listCardSprints') listCardSprints: TemplateRef<any>;
   gridView: any;
-  // predicateViewBoards =
-  //   '((Owner=@0) or (@1.Contains(outerIt.IterationID))) AND ProjectID=null';
-  predicateViewBoards = '(Owner=@0) or (@1.Contains(outerIt.IterationID))';
-  predicateProjectBoards =
-    '((Owner=@0) or (@1.Contains(outerIt.IterationID))) and ProjectID!=null';
-  totalRowMyBoard: number = 6;
-  totalRowProjectBoard: number = 6;
-  totalViewBoards: number = 0;
-  totalProjectBoards: number = 0;
   boardAction: any;
   user: any;
   sprintDefaut = new TM_Sprints();
@@ -54,16 +46,23 @@ export class SprintsComponent extends UIComponent {
   itemSelected: any;
   funcID = '';
   valuelist = {};
+  action = 'edit';
   constructor(
     inject: Injector,
     private notiService: NotificationsService,
+    private tmSv: CodxTMService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
-    this.funcID = this.activedRouter.params['funcID'];
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) {
+        this.tmSv.urlback = f.url;
+      }
+    });
   }
 
   //#region Init
@@ -75,7 +74,6 @@ export class SprintsComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.views = [
       {
-        id: '2',
         type: ViewType.card,
         sameData: true,
         active: true,
@@ -150,7 +148,7 @@ export class SprintsComponent extends UIComponent {
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res) this.notiService.notifyCode('TM004');
+        // if (res) this.notiService.notifyCode('TM004');
       });
   }
 
@@ -169,21 +167,21 @@ export class SprintsComponent extends UIComponent {
         this.add();
         break;
       case 'SYS02':
-        if (data.iterationID != this.user.userID) this.delete(data);
+        this.delete(data);
         break;
       case 'SYS03':
-        if (data.iterationID != this.user.userID) this.edit(data);
+        this.edit(data);
         break;
       case 'SYS04':
-        if (data.iterationID != this.user.userID) this.copy(data);
+        this.copy(data);
         break;
       case 'sendemail':
         this.sendemail(data);
         break;
-      case 'TMT03011': 
+      case 'TMT03011':
         if (data.iterationID != this.user.userID) this.shareBoard(e.data, data);
         break;
-      case 'TMT03012': 
+      case 'TMT03012':
         this.viewBoard(e.data, data);
         break;
       default:
@@ -238,11 +236,11 @@ export class SprintsComponent extends UIComponent {
 
   viewBoard(e, data) {
     this.urlView = e?.url;
-    this.urlView = 'tm/sprintdetails/TMT03011' ///gán cứng chứ thương chưa đổi
+    this.urlView = 'tm/sprintdetails/TMT03011'; ///gán cứng chứ thương chưa đổi
     this.codxService.navigate('', this.urlView, {
       iterationID: data.iterationID,
     });
-   // this.urlView = 'tm/sprintdetails/TMT03011';
+    // this.urlView = 'tm/sprintdetails/TMT03011';
     // if (data.iterationID != this.user.userID)
     //   this.urlView += '/' + data.iterationID;
     //   this.codxService.navigate('', this.urlView)

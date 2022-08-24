@@ -8,7 +8,7 @@ import { CodxAlertComponent } from '../../../components/codx-alert/codx-alert.co
   styleUrls: ['./notify-drawer.component.scss'],
 })
 export class NotifyDrawerComponent extends UIComponent implements OnInit {
-  dialog: any;
+  dialog: DialogRef;
   lstNotify:any[] = [];
   lstNewNotify:any[] = [];
   lstOldNotify:any[] = [];
@@ -30,33 +30,30 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
   onInit(): void {
     if(this.funcID)
     {
-      this.cache.functionList(this.funcID).subscribe((f:any) => {
-        if(f){
-          this.entityName = f.entityName;
-          this.getAlertAsync(this.entityName);
-        }
-      });
+      this.getNotifyAsync(this.funcID);
     }
-    // this.api.execNonDB<NotificationMessage[]>( 
-    //   'Background',
-    //   'NotificationBusinesss',
-    //   'GetAsync',
-    //   [this.auth.userValue.userID, this.auth.userValue.tenant]
-    // ).subscribe((res:any) => {
-    //   if(res){
-    //     console.log(res);
-    //     this.lstNotify = res;
-    //   }
-    // });
-
   }
-
-  getAlertAsync(entityName:string){
-    this.api.exec("ERM.Business.AD","AlertRulesBusiness","GetAsync",entityName)
-    .subscribe((res:any) => {
+  clickCloseFrom(){
+    this.dialog.close();
+  }
+  getNotifyAsync(funcID:string){
+    this.api.execNonDB<NotificationMessage[]>( 
+      'Background',
+      'NotificationBusinesss',
+      'GetAsync',
+      [this.auth.userValue.userID, this.auth.userValue.tenant]
+    ).subscribe((res:any) => {
       if(res){
         console.log(res);
+        this.lstNotify = res;
       }
-    })
+    });
   }
+
+  clickStopAlert(event:any,item:any){
+    item.isRead = event.value;
+    this.dt.detectChanges();
+  }
+
+
 }
