@@ -115,3 +115,9 @@ codx-home .home-left {
 .separator {
     border: 0;
 }
+
+[data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-title,
+[data-kt-aside-minimize=on] .aside:not(:hover) .aside-menu .menu-title {
+    opacity: 1;
+    margin-left: 10px;
+}

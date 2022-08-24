@@ -1,3 +1,5 @@
+::ng-deep {
+
 .m-h-400 {
   min-height: 400px;
 }
@@ -30,4 +32,16 @@
 
 .dodgerblue {
     color: dodgerblue;
+}
+
+.aT {
+    width: 100% !important;
+}
+
+.icon-T {
+    margin-left: -15px
+}
+input.e-input, textarea.e-input, .e-input-group, .e-input-group.e-control-wrapper{
+    font-weight: inherit!important;
+}
 }

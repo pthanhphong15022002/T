@@ -213,10 +213,18 @@
         <codx-label name="TaskGroups" formName="Tasks" default="Nhóm công việc">
         </codx-label>
       </div>
-      <codx-input service="TM" type="combobox" [disabled]="readOnly" name="combobox" placeholder="Nhóm công việc"
-        refValue="TaskGroups" loadFull="true" field="taskGroupID" (valueChange)="cbxChange($event)" [multiple]="false"
-        [crrValue]="task?.taskGroupID">
-      </codx-input>
+      <codx-input
+      field="taskGroupID"
+      [type]="gridViewSetup['TaskGroupID']['controlType']"
+      [placeholder]="gridViewSetup['TaskGroupID']['headerText']"
+      [refValue]="gridViewSetup['TaskGroupID']['referedValue']"
+      [refType]="gridViewSetup['TaskGroupID']['referedType']"
+      (valueChange)="cbxChange($event)"
+      [crrValue]="task?.taskGroupID"
+      [showInput]="true"
+      [disabled]="readOnly"
+    >
+    </codx-input>
     </div>
   </div>
   <div>
@@ -234,10 +242,20 @@
     <div class="col-6">
       <codx-label fiedName="Priority" formName="Tasks" gridViewName="grvTasks" default="Độ ưu tiên">
       </codx-label>
-
-      <codx-input type="valuelist" ngDefaultControl field="priority" [crrValue]="task?.priority"
+      <codx-input
+      field="priority"
+      [type]="gridViewSetup['Priority']['controlType']"
+      [placeholder]="gridViewSetup['Priority']['headerText']"
+      [refValue]="gridViewSetup['Priority']['referedValue']"
+      [refType]="gridViewSetup['Priority']['referedType']"
+      (valueChange)="changeVLL($event)"
+      [crrValue]="task?.priority"
+      [disabled]="readOnly"
+    >
+    </codx-input>
+      <!-- <codx-input type="valuelist" ngDefaultControl field="priority" [crrValue]="task?.priority"
         [refValue]="vllPriority" placeholder="Độ ưu tiên" (valueChange)="changeVLL($event)">
-      </codx-input>
+      </codx-input> -->
     </div>
   </div>
 
@@ -370,10 +388,22 @@
         <codx-label fiedName="ProjectID" formName="Tasks" gridViewName="grvTasks" default="Dự án">
         </codx-label>
       </div>
-      <codx-input service="TM" type="combobox" name="combobox" style="border: none" placeholder="Dự án" ngDefaultControl
+      <!-- <codx-input service="TM" type="combobox" name="combobox" style="border: none"  [placeholder]="gridViewSetup['ProjectID']['headerText']" ngDefaultControl
         refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
         [crrValue]="task?.projectID" [disabled]="readOnly">
-      </codx-input>
+      </codx-input> -->
+      <codx-input
+      field="projectID"
+      [type]="gridViewSetup?.ProjectID['controlType']"
+      [placeholder]="gridViewSetup?.ProjectID['headerText']"
+      [refValue]="gridViewSetup?.ProjectID['referedValue']"
+      [refType]="gridViewSetup?.ProjectID['referedType']"
+      (valueChange)="cbxChange($event)"
+      [crrValue]="task?.projectID"
+      [showInput]="true"
+      [disabled]="readOnly"
+    >
+    </codx-input>
     </div>
     <div class="col-6">
       <div>
@@ -390,9 +420,21 @@
       <codx-label fiedName="RefNo" formName="Tasks" gridViewName="grvTasks" default="Tham chiếu">
       </codx-label>
     </div>
-    <codx-input service="SYS" type="combobox" name="combobox" class="form-control borderless p-0" style="border: none"
+    <!-- <codx-input service="SYS" type="combobox" name="combobox" class="form-control borderless p-0" style="border: none"
       placeholder="Tham chiếu" ngDefaultControl refValue="" loadFull="true" field="refNo"
-      (valueChange)="cbxChange($event)" [disabled]="readOnly"></codx-input>
+      (valueChange)="cbxChange($event)" [disabled]="readOnly"></codx-input> -->
+      <codx-input
+      field="refNo"
+      [type]="gridViewSetup['RefNo']['controlType']"
+      [placeholder]="gridViewSetup['RefNo']['headerText']"
+      [refValue]="gridViewSetup['RefNo']['referedValue']"
+      [refType]="gridViewSetup['RefNo']['referedType']"
+      (valueChange)="cbxChange($event)"
+      [crrValue]="task?.refNo"
+      [showInput]="true"
+      [disabled]="readOnly"
+    >
+    </codx-input>
   </div>
 </ng-template>
 

@@ -28,7 +28,7 @@ export class CodxTMService {
   taskGroupComponent = false;
   aside = new BehaviorSubject<any>(null);
   toolbar = new BehaviorSubject<any>(null);
-  urlback = "" ;
+  urlback = '';
   constructor(
     private api: ApiHttpService,
     private authStore: AuthStore,
@@ -296,7 +296,6 @@ export class CodxTMService {
     );
   }
 
-  
   getSprintsDetails(id) {
     return this.api.execSv<any>(
       'TM',
@@ -336,13 +335,13 @@ export class CodxTMService {
     return list.reduce((a, v) => ({ ...a, [v[fieldName]]: v[fieldValue] }), {});
   }
 
-  getMyDBData(model: Object) {
+  getMyDBData(model: Object, daySelected: any) {
     return this.api.execSv(
       'TM',
       'TM',
       'TaskBusiness',
       'GetDataMyDashboardAsync',
-      [model]
+      [model, daySelected]
     );
   }
 

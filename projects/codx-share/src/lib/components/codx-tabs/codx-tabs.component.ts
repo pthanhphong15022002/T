@@ -30,7 +30,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() displayThumb: string = 'full';
 
   private all: TabModel[] = [
-    { name: 'attachment', textDefault: 'Đính Kèm', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính Kèm', isActive: true },
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
     { name: 'Reference', textDefault: 'Tham chiếu', isActive: false },

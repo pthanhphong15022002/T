@@ -114,7 +114,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       if (this.submenu == 'DMT01' || this.submenu == 'DMT08' || this.submenu == 'DMT02' || this.submenu == 'DMT03' || this.submenu == 'DMT04') 
         css = css + " disabled";        
     }      
-    console.log(css);
+   // console.log(css);
     return css;
   }
 
