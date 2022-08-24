@@ -102,50 +102,50 @@
                     </li>
                 </ul>
             </div>
-            <div *ngIf="lineType == 'text'">
+            <div *ngIf="lineType == 'TEXT'">
                 <codx-input format="ed2" [class]="'border-0'" type="text" class="test-textarea" [crrValue]="empty"
                     [placeholder]="gridViewSetup?.Comments?.headerText + '...'" (valueChange)="valueChange($event)"
-                    ngDefaultControl field="memo" (keyUpEnter)="keyUpEnter($event)">
+                    ngDefaultControl field="memo" (keyUpEnter)="keyUpEnter($event)" id="font">
                 </codx-input>
             </div>
-            <div *ngIf="lineType == 'check'" class="d-flex">
+            <div *ngIf="lineType == 'CHECKBOX'" class="d-flex">
                 <div class="check-box">
                     <codx-input #noteAddText type="checkBox" [crrValue]="" field="status" labelPosition="Before"
-                        class="test-check" (valueChange)="valueChange($event)">
+                        class="test-check" (valueChange)="valueChangeStatus($event)">
                     </codx-input>
                 </div>
                 <div class="w-100 text-after-check-box" #txtNoteEdit name="txtTodoEdit">
                     <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
-                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="listNote"
+                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="memo" id="font"
                         (valueChange)="valueChange($event)" [placeholder]="gridViewSetup?.Comments?.headerText + '...'">
                     </codx-input>
                 </div>
             </div>
-            <div *ngIf="lineType =='list'" class="d-flex">
+            <div *ngIf="lineType =='LIST'" class="d-flex">
                 <div class="li">
                     <li></li>
                 </div>
                 <div class="w-100 text-after-li" #txtNoteEdit name="txtTodoEdit">
                     <codx-input #txtNoteEdit type="text" name="txtTodoEdit" class="test-textbox border-0 input-note"
-                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="listNote"
+                        (keyUpEnter)="keyUpEnter($event)" [crrValue]="" field="memo" id="font"
                         (valueChange)="valueChange($event)" [placeholder]="gridViewSetup?.Comments?.headerText + '...'">
                     </codx-input>
                 </div>
             </div>
         </div>
     </div>
-    <ng-template class="d-flex note-action border align-items-center justify-content-between" #menu *ngIf="showMenu">
+    <div class="d-flex note-action border align-items-center justify-content-between" #menu *ngIf="showMenu">
         <div class="d-flex">
             <div [class.active]="">
-                <span (click)="onType('text')"
+                <span (click)="onType('TEXT')"
                     class="icon-font_download icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
             </div>
             <div [class.active]="">
-                <span (click)="onType('list')"
+                <span (click)="onType('LIST')"
                     class="icon-list_alt icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
             </div>
             <div [class.active]="">
-                <span (click)="onType('check')"
+                <span (click)="onType('CHECKBOX')"
                     class="icon-check_box icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
             </div>
             <span class="icon-image icon-20 btn btn-icon btn-active-light-primary position-relative"
@@ -155,11 +155,11 @@
             </span>
             <span>|</span>
             <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative
-            "></span>
+            " (click)="chooseFont('BOLD')"></span>
             <span class="icon-format_italic icon-20 btn btn-icon btn-active-light-primary position-relative
-            "></span>
+            " (click)="chooseFont('ITALIC')"></span>
             <span class="icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative
-            "></span>
+            " (click)="chooseFont('UNDERLINE')"></span>
             <codx-input #elm [ele]="" type="colorpicker" class="form-control text-white color-large" field="color"
                 [crrValue]="" dataformat="hex">
             </codx-input>
@@ -178,5 +178,5 @@
             <span
                 class="icon-chat_bubble_outline icon-20 btn btn-icon btn-active-light-primary position-relative"></span>
         </div>
-    </ng-template>
+    </div>
 </div>

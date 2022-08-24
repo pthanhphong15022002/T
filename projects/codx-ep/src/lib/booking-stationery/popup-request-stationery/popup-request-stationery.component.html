@@ -70,17 +70,16 @@
     >
       <div class="title">
         <codx-label
-          name="lblAgent"
-          default="Số lượng nhân viên của phòng: "
+          fiedName="Attendees"
           [formModel]="form.formModel"
+          default="Số lượng nhân viên của phòng: "
         ></codx-label>
       </div>
       <!--begin: btn-icon-->
       <codx-input
-        type="number"
         class="test-number min-w-50px"
-        field="number"
-        placeholder="number"
+        type="number"
+        field="attendees"
         [crrValue]="1"
         [cusButton]="true"
         [min]="0"
@@ -200,7 +199,8 @@
           type="combobox"
           refValue="ReasonCodes"
           [multiple]="false"
-          fieldName="reasonID"
+          field="reasonID"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
