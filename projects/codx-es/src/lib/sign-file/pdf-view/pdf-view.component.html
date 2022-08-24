@@ -34,21 +34,22 @@
                     ? 'icon-arrow_forward_ios'
                     : 'icon-arrow_back_ios rotate-180'
                 " (click)="changeShowThumbnailState()"></e-item>
-              <e-item [disabled]="cannotAct" prefixIcon="icon-skip_previous icon-20"
+              <e-item [disabled]="cannotAct" prefixIcon="icon-skip_previous icon-20 btn btn-sm btn-icon  w-30px h-30px"
                 (click)="pdfviewerControl?.navigation?.goToFirstPage()" [disabled]="cannotAct">
               </e-item>
-              <e-item prefixIcon="icon-navigate_before icon-20"
+              <e-item prefixIcon="icon-navigate_before icon-20 btn btn-sm btn-icon  w-30px h-30px"
                 (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()" [disabled]="cannotAct">
               </e-item>
               <e-item [template]="pageInput" type="Input"></e-item>
-              <e-item prefixIcon="icon-navigate_next icon-20" (click)="pdfviewerControl?.navigation?.goToNextPage()"
-                [disabled]="cannotAct">
+              <e-item prefixIcon="icon-navigate_next icon-20 btn btn-sm btn-icon  w-30px h-30px"
+                (click)="pdfviewerControl?.navigation?.goToNextPage()" [disabled]="cannotAct">
               </e-item>
-              <e-item prefixIcon="icon-skip_next icon-20" (click)="pdfviewerControl?.navigation?.goToLastPage()"
-                [disabled]="cannotAct">
+              <e-item prefixIcon="icon-skip_next icon-20 btn btn-sm btn-icon  w-30px h-30px"
+                (click)="pdfviewerControl?.navigation?.goToLastPage()" [disabled]="cannotAct">
               </e-item>
 
-              <e-item prefixIcon="icon-article icon-20" (click)="show($event)" [disabled]="cannotAct">
+              <e-item prefixIcon="icon-article icon-20 btn btn-sm btn-icon  w-30px h-30px" (click)="show($event)"
+                [disabled]="cannotAct">
               </e-item>
             </e-items>
           </ejs-toolbar>
@@ -61,7 +62,8 @@
         <div class="right_Toolbar d-flex justify-content-end align-items-center">
           <ejs-toolbar>
             <e-items>
-              <e-item prefixIcon="e-zoom-out" (click)="clickZoom('out')" [disabled]="cannotAct">
+              <e-item prefixIcon="e-zoom-out btn btn-sm btn-icon w-30px h-30px" (click)="clickZoom('out')"
+                [disabled]="cannotAct">
               </e-item>
             </e-items>
           </ejs-toolbar>
@@ -69,15 +71,18 @@
             [placeholder]="zoomValue" (change)="clickZoom('to', $event)"></ejs-dropdownlist>
           <ejs-toolbar>
             <e-items>
-              <e-item prefixIcon="e-zoom-in" (click)="clickZoom('in')" [disabled]="cannotAct">
+              <e-item prefixIcon="e-zoom-in btn btn-sm btn-icon  w-30px h-30px" (click)="clickZoom('in')"
+                [disabled]="cannotAct">
               </e-item>
             </e-items>
           </ejs-toolbar>
-          <ejs-toolbar>
+          <ejs-toolbar class="border">
             <e-items>
-              <e-item prefixIcon="e-print" (click)="clickPrint($event)" [disabled]="cannotAct">
+              <e-item prefixIcon="e-print btn btn-sm btn-icon  w-30px h-30px" (click)="clickPrint($event)"
+                [disabled]="cannotAct">
               </e-item>
-              <e-item prefixIcon="e-download" (click)="clickDownload()" [disabled]="cannotAct">
+              <e-item prefixIcon="e-download btn btn-sm btn-icon  w-30px h-30px" (click)="clickDownload()"
+                [disabled]="cannotAct">
               </e-item>
               <e-item [prefixIcon]="
                   !hideActions
