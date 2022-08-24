@@ -77,6 +77,8 @@
     }
     .e-tab .e-tab-header + .e-content {
       padding: 0 20px;
+      height: calc(100% - 60px)!important;
+      overflow-y: auto;
     }
     .e-tab .e-tab-header .e-toolbar-items {
       min-height: 42px;
@@ -212,7 +214,42 @@
   .e-toolbar .e-toolbar-items {
         background: transparent !important;
       }
+      .e-toolbar .e-toolbar-item .e-tbar-btn.e-btn .e-icons.e-btn-icon{
+        line-height: 26px!important;
+       
+      }
+      .e-toolbar .e-toolbar-items .e-toolbar-item .e-tbar-btn.e-btn {
+            height: 32px;
+            margin: 0;
+            min-height: 32px;
+            min-width: 32px;
+            padding: 0 4px;
+            border-radius: 0px;
+            transition: transform .5s cubic-bezier(0.25,0.10,0.25,1.00);
+          
+            padding-left: 4px;
+            padding-right: 4px;
+            direction: ltr;
+          }
+          .chooseSignFile{
+            .e-input-group:not(.e-success):not(.e-warning):not(.e-error),.e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
+              border-color: transparent;
+              color: $dark;
+              font-weight: 500;
+            }
+            
+          }
 
+          
+   
+      
+
+}
+.e-input-group.e-input-focus:not(.e-success):not(.e-warning):not(.e-error), .e-input-group.e-control-wrapper.e-input-focus:not(.e-success):not(.e-warning):not(.e-error) {
+  border-color: transparent;
+  border-color:transparent;
+  border-radius: 0px;
+  box-shadow:none;
 }
   // .stepper-toolbar {
   //   .e-toolbar {

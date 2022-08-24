@@ -189,22 +189,13 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUserGroup, this.viewChooseRole, true, true];
+      data = [this.adUserGroup, this.viewChooseRole, true, true, false];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
       data = [this.adUserGroup, this.viewChooseRole, checkDifference];
     }
-    op.data = data;
-    return true;
-  }
-
-  beforeSaveTemp(op: RequestOption) {
-    var data = [];
-    this.isAddMode = true;
-    op.methodName = 'AddUserAsync';
-    data = [this.adUserGroup, null, false, true];
     op.data = data;
     return true;
   }
@@ -324,7 +315,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
               }
             } else this.onAdd();
           });
-      }
+      } else this.onAdd();
     } else {
       if (!checkDifferenceUserCbb || !checkDifference) {
         this.notification
@@ -348,7 +339,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
               }
             } else this.onUpdate();
           });
-      }
+      } else this.onUpdate();
     }
   }
 
@@ -398,7 +389,9 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   loadUserRole(userID) {
     if (!userID) return;
     this.api
-      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRolesAsync', [userID])
+      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRolesAsync', [
+        userID,
+      ])
       .subscribe((res) => {
         if (res && res.msgBodyData) {
           this.viewChooseRole = res.msgBodyData[0];
@@ -427,6 +420,13 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (event?.dataSelected) {
       event?.dataSelected.forEach((e: any) => {
         this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
+        // if (this.dataUserCbb) {
+        //   this.dataUserCbb.forEach((dt) => {
+        //     if (e.UserID != dt.UserID) {
+        //       this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
+        //     }
+        //   });
+        // }
       });
       this.changeDetector.detectChanges();
     }
