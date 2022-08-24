@@ -13,6 +13,7 @@ import {
   CodxGridviewComponent,
   CodxScheduleComponent,
   DataRequest,
+  DialogModel,
   DialogRef,
   NotificationsService,
   ResourceModel,
@@ -23,6 +24,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
+import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 import { CodxEpService, ModelPage } from '../codx-ep.service';
 import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
 
@@ -119,6 +121,11 @@ export class BookingRoomComponent extends UIComponent {
         icon: 'icon-list-chechbox',
         text: 'Xóa',
       },
+      {
+        id: 'btnAddReport',
+        icon: 'icon-list-chechbox',
+        text: 'Thêm mới report',
+      },
     ];
 
     this.fields = {
@@ -214,15 +221,25 @@ export class BookingRoomComponent extends UIComponent {
       case 'btnDelete':
         this.delete();
         break;
+      case 'btnAddReport':
+        this.addReport();
+        break;
     }
   }
 
+  addReport(){
+    let option = new DialogModel();
+    option.DataService = this.viewBase.dataService;
+    option.FormModel = this.viewBase.formModel;
+    option.IsFull = true;
+    this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,'3cdcde9d-8d64-ec11-941d-00155d035518',"",option);
+  }
   addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.DataService = this.viewBase?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddBookingRoomComponent,
         [this.dataSelected, true],
@@ -239,7 +256,7 @@ export class BookingRoomComponent extends UIComponent {
     this.viewBase.dataService.edit(item).subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.DataService = this.viewBase?.currentView?.dataService;
+      option.DataService = this.viewBase?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddBookingRoomComponent,
         [item, false],

@@ -26,7 +26,7 @@ export class FolderService implements OnDestroy {
     ) {
         this.options.pageLoading = false;
         this.options.pageSize = 1;
-        this.options.funcID = "";
+        this.options.funcID = "";        
     }
 
     //postFile(fileToUpload: File): Observable<boolean> {

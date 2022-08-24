@@ -1,3 +1,4 @@
+import { T } from '@angular/cdk/keycodes';
 import {
   Component,
   OnInit,
@@ -120,13 +121,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     this.initForm();
-    // this.dialog.closed.subscribe((res) => {
-    //   if (!this.saveSuccess) {
-    //     if (this.dataAfterSave && this.dataAfterSave.userID) {
-    //       this.deleteUserBeforeDone(this.dataAfterSave);
-    //     }
-    //   }
-    // });
   }
 
   initForm() {
@@ -145,10 +139,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       this.adService.notifyInvalid(this.formUserGroup, this.formModel);
       return;
     } else {
-      // this.countOpenPopRoles++;
-      // if (this.formType == 'add') {
-      //   if (this.countOpenPopRoles == 1) this.addUserTemp();
-      // }
       var option = new DialogModel();
       option.FormModel = this.form.formModel;
       var obj = {
@@ -179,34 +169,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       });
     }
   }
-
-  // deleteUserBeforeDone(data: any) {
-  //   this.view.dataService.dataSelected = data;
-  //   this.view.dataService
-  //     .delete([this.view.dataService.dataSelected])
-  //     .subscribe((res: any) => {
-  //       if (res.data) {
-  //         this.adService.deleteFile(res.data.userID, 'AD_Users', true);
-  //       }
-  //     });
-  // }
-
-  // addUserTemp() {
-  //   this.checkBtnAdd = true;
-  //   this.formUserGroup.patchValue(this.adUserGroup);
-  //   if (this.formUserGroup.invalid) {
-  //     this.adService.notifyInvalid(this.formUserGroup, this.formModel);
-  //     return;
-  //   } else {
-  //     this.dialog.dataService
-  //       .save((opt: any) => this.beforeSaveTemp(opt), 0)
-  //       .subscribe((res) => {
-  //         if (res.save) {
-  //           this.dataAfterSave = res.save;
-  //         }
-  //       });
-  //   }
-  // }
 
   countListViewChoose() {
     if (this.viewChooseRole) {
@@ -300,7 +262,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     }
     this.dataUserCbb.forEach((res) => {
       this.lstUser.forEach((dt) => {
-        if (res.UserID == dt.userID) {
+        if (res.userID == dt.userID) {
           lstUser.push(dt);
         }
       });
@@ -320,7 +282,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         lstUserName.push(userName);
       });
     }
-    if (countUserHaveGroup > 0) {
+    if (countUserHaveGroup > 0 && this.formType == 'add') {
       this.notification
         .alertCode('AD004', null, lstUserName.join(', '))
         .subscribe((x) => {
@@ -343,35 +305,49 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         JSON.stringify(dataUserCbbTemp) === JSON.stringify(this.dataUserCbb);
     }
     if (this.isAddMode) {
-      this.onAdd();
-      this.notification
-        .alertCode('AD005', null, this.adUserGroup.userName)
-        .subscribe((x) => {
-          if (x?.event.status == 'Y') {
-            if (this.dataUserCbb.length > 0 && countUserHaveGroup > 0) {
-              this.adService
-                .updateUserRoles(
-                  lstUser,
-                  this.viewChooseRole,
-                  true,
-                  this.adUserGroup,
-                  this.dataUserCbb
-                ).subscribe();
-            }
-          }
-        });
+      if (this.dataUserCbb.length > 0) {
+        this.notification
+          .alertCode('AD005', null, this.adUserGroup.userName)
+          .subscribe((x) => {
+            if (x?.event.status == 'Y') {
+              this.onAdd();
+              if (this.dataUserCbb.length > 0 && countUserHaveGroup > 0) {
+                this.adService
+                  .updateUserRoles(
+                    lstUser,
+                    this.viewChooseRole,
+                    true,
+                    this.adUserGroup,
+                    this.dataUserCbb
+                  )
+                  .subscribe();
+              }
+            } else this.onAdd();
+          });
+      }
     } else {
-      this.onUpdate();
       if (!checkDifferenceUserCbb || !checkDifference) {
-        this.adService
-          .updateUserRoles(
-            lstUser,
-            this.viewChooseRole,
-            true,
-            this.adUserGroup,
-            this.dataUserCbb
-          )
-          .subscribe();
+        this.notification
+          .alertCode('AD005', null, this.adUserGroup.userName)
+          .subscribe((x) => {
+            if (x?.event.status == 'Y') {
+              this.onUpdate();
+              if (
+                !checkDifferenceUserCbb ||
+                (!checkDifference && this.dataUserCbb.length > 0)
+              ) {
+                this.adService
+                  .updateUserRoles(
+                    lstUser,
+                    this.viewChooseRole,
+                    true,
+                    this.adUserGroup,
+                    this.dataUserCbb
+                  )
+                  .subscribe();
+              }
+            } else this.onUpdate();
+          });
       }
     }
   }
@@ -449,11 +425,9 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   getDataUserInCbb(event) {
     if (event?.dataSelected) {
-      if (this.formType == 'edit') {
-        event?.dataSelected.forEach((dt) => {
-          this.dataUserCbb.push(dt);
-        });
-      } else this.dataUserCbb = event?.dataSelected;
+      event?.dataSelected.forEach((e: any) => {
+        this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
+      });
       this.changeDetector.detectChanges();
     }
   }

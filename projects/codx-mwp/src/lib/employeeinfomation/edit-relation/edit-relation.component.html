@@ -115,10 +115,6 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <!-- <label>Số đăng ký</label>
-                        <input class="form-control" type="text" [disabled]="!dataBind?.dependent"
-                            [(ngModel)]="dataBind?.registerNo" /> -->
-
                         <codx-label fiedName="RegisterNo" default="Số đăng ký">
                         </codx-label>
                         <codx-input type="text" field="registerNo" class="form-control"
@@ -129,11 +125,6 @@
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <!-- <label>Ngày đăng ký</label>
-                        <kendo-datepicker class="form-control" [(ngModel)]="dataBind?.registeredOn"
-                            [disabled]="!dataBind?.dependent">
-                        </kendo-datepicker> -->
-
                         <codx-label fiedName="registeredOn" default="Ngày đăng ký"></codx-label>
                         <codx-input type="datetime" class="test-datetime" field="registeredOn" format="d"
                             placeholder="datetime" [crrValue]="dataBind?.joinedOn" [disabled]="!dataBind?.dependent"

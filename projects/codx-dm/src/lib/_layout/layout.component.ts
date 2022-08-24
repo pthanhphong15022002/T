@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { FileUpload } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
+import { FolderService } from '@shared/services/folder.service';
 import { AuthService, CacheService, CallFuncService, CodxService, DialogRef, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { Observable, of } from 'rxjs';
@@ -55,10 +56,12 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     public cache: CacheService,
     private callfc: CallFuncService,
     public dmSV: CodxDMService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private folderService: FolderService,
     private fileService: FileService,
+    private changeDetectorRef: ChangeDetectorRef,    
   ) {
     this.codxService.init('DM');
+  
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
 
@@ -70,7 +73,10 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.headerCSSClasses = this.layout.getStringCSSClasses('header');
     this.headerLeft = this.layout.getProp('header.left') as string;
     this.user = this.auth.userValue;
-
+    this.dmSV.isMenuIdActive.subscribe(res => {
+      this.submenu = res;
+      this.changeDetectorRef.detectChanges();
+    });
     // this.dmSV.isSetRight.subscribe(res => {      
     //   if (this.dmSV.parentCreate) {
     //     this.disableInput = false;
@@ -104,16 +110,40 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     //alert(this.submenu);
     var css = "btn btn-light-default btn-icon btn-md";    
     if (this.submenu != "") {
-      var no = parseInt(this.submenu);
-      if (no > 0 && no <= 5)
+      //var no = parseInt(this.submenu);
+      if (this.submenu == 'DMT01' || this.submenu == 'DMT08' || this.submenu == 'DMT02' || this.submenu == 'DMT03' || this.submenu == 'DMT04') 
         css = css + " disabled";        
     }      
     console.log(css);
     return css;
   }
 
-  onClick(item, title1, title2) {
+  onClick(id, title, subtitle, subid) {
+    var breadcumb = [];
+    breadcumb.push(title);
+    breadcumb.push(subtitle);
+    this.dmSV.idMenuActive = id;
+    this.dmSV.breadcumb.next(breadcumb);
+    this.dmSV.menuIdActive.next(id);
+    this.dmSV.menuActive.next(title);
+    this.dmSV.currentNode = '';
+    this.dmSV.folderId.next(id); 
 
+    this.folderService.options.funcID = id;
+    this.folderService.options.favoriteID = subid;
+    this.folderService.getFolders(id).subscribe(async list => {
+      this.dmSV.listFolder = list;
+      this.dmSV.ChangeData.next(true);
+      this.changeDetectorRef.detectChanges();
+    });
+
+    this.fileService.options.funcID = id;
+    this.fileService.options.favoriteID = subid;
+    this.fileService.GetFiles("").subscribe(async list => {
+      this.dmSV.listFiles = list;
+      this.dmSV.ChangeData.next(true);
+      this.changeDetectorRef.detectChanges();
+    });
   }
 
   getHDDInformaton(item: any) {

@@ -1,63 +1,53 @@
 <codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'FED_Gifts'" [showToolBar]="false"></codx-views>
 
 <div #panelLeft>
-    <div class="page-home page-master">
+    <div class="page-home page-master p-6 bg-body rounded-4" [style]="'margin-top:60px'">
         <div class="d-flex flex-column">
-            <div class="d-flex">
-                <div class="container d-flex pb-1 pt-2">
-                    <div class="w-100 pr-3">
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex" #control>
-                                <div class="w-110 h-38">
-                                    <codx-input class="form-control pr-1" type="valuelist" field="vllOrganize"
-                                        refValue="L1483" (valueChange)="valueChange($event, 'vllOrganize')">
-                                    </codx-input>
-                                </div>
-                                <div class="w-110 h-38 left-5">
-                                    <codx-input class="form-control pr-1" type="combobox" field="Organize"
-                                        [refValue]="comboboxName" (valueChange)="valueChange($event, 'Organize')">
-                                    </codx-input>
-                                </div>
-                                <div class="w-110 h-38 left-5">
-                                    <codx-input type="valuelist" class="form-control pr-1" placeholder=""
-                                        ngDefaultControl refValue="L1436" field="typeTime" [crrValue]="typeTime"
-                                        (valueChange)="changeTypeTime($event, 'typeTime')">
-                                    </codx-input>
-                                </div>
-                                <div class="w-110 h-38 left-5">
-                                    <codx-input type="datetime" [dataformat]="typeTimeName" class="form-control"
-                                        [crrValue]="today" field="today" ngDefaultControl
-                                        (valueChange)="changeTime($event, 'today')">
-                                    </codx-input>
-                                </div>
-                            </div>
-                            <div class="d-flex">
-                                <div class="h-38 w-88">
-                                    <codx-input type="valuelist" class="pr-1" placeholder="" ngDefaultControl
-                                        refValue="L1451" field="edit" [crrValue]="cardType"
-                                        (valueChange)="changeCardType($event)">
-                                    </codx-input>
-                                </div>
-                                <div class="h-38 w-88 left-5">
-                                    <span class="btn btn-sm btn-outline-secondary me-1 color-black"
-                                        [class.active]="typeBallot == TYPE_Ballot.Ballot_SENDED"
-                                        (click)="changeTypeCoins(TYPE_Ballot.Ballot_SENDED)">
-                                        <codx-label name="lblBallotSended" formName="FED_TagObjects"
-                                            default="Phiếu cho">
-                                        </codx-label>
-                                    </span>
-                                </div>
-                                <div class="h-38 w-88">
-                                    <span class="btn btn-sm btn-outline-secondary color-black"
-                                        [class.active]="typeBallot == TYPE_Ballot.Ballot_RECEIVED"
-                                        (click)="changeTypeCoins(TYPE_Ballot.Ballot_RECEIVED)">
-                                        <codx-label name="lblBallotReceived" formName="FED_TagObjects"
-                                            default="Phiếu nhận">
-                                        </codx-label>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+            <div class="d-flex justify-content-between">
+                <div class="d-flex" #control>
+                    <div class="w-110 h-38">
+                        <codx-input class="form-control pr-1" type="valuelist" field="vllOrganize" refValue="L1483"
+                            (valueChange)="valueChange($event, 'vllOrganize')">
+                        </codx-input>
+                    </div>
+                    <div class="w-110 h-38 left-5">
+                        <codx-input class="form-control pr-1" type="combobox" field="Organize" [refValue]="comboboxName"
+                            (valueChange)="valueChange($event, 'Organize')">
+                        </codx-input>
+                    </div>
+                    <div class="w-110 h-38 left-5">
+                        <codx-input type="valuelist" class="form-control pr-1" placeholder="" ngDefaultControl
+                            refValue="L1436" field="typeTime" [crrValue]="typeTime"
+                            (valueChange)="changeTypeTime($event, 'typeTime')">
+                        </codx-input>
+                    </div>
+                    <div class="w-110 h-38 left-5">
+                        <codx-input type="datetime" [dataformat]="typeTimeName" class="form-control" [crrValue]="today"
+                            field="today" ngDefaultControl (valueChange)="changeTime($event, 'today')">
+                        </codx-input>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="h-38 w-88">
+                        <codx-input type="valuelist" class="pr-1" placeholder="" ngDefaultControl refValue="L1451"
+                            field="edit" [crrValue]="cardType" (valueChange)="changeCardType($event)">
+                        </codx-input>
+                    </div>
+                    <div class="h-38 w-88 left-5">
+                        <span class="btn btn-sm btn-outline-secondary me-1 color-black"
+                            [class.active]="typeBallot == TYPE_Ballot.Ballot_SENDED"
+                            (click)="changeTypeCoins(TYPE_Ballot.Ballot_SENDED)">
+                            <codx-label name="lblBallotSended" formName="FED_TagObjects" default="Phiếu cho">
+                            </codx-label>
+                        </span>
+                    </div>
+                    <div class="h-38 w-88">
+                        <span class="btn btn-sm btn-outline-secondary color-black"
+                            [class.active]="typeBallot == TYPE_Ballot.Ballot_RECEIVED"
+                            (click)="changeTypeCoins(TYPE_Ballot.Ballot_RECEIVED)">
+                            <codx-label name="lblBallotReceived" formName="FED_TagObjects" default="Phiếu nhận">
+                            </codx-label>
+                        </span>
                     </div>
                 </div>
             </div>
