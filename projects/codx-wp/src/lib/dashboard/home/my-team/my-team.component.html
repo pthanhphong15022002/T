@@ -73,7 +73,7 @@
             <div class="d-flex justify-content-between align-items-top">
                 <div class="d-flex flex-column org-card flex-grow-1" [ngbPopover]="" placement="left"
                     [popoverTitle]="popEmpTitle" #pemp="ngbPopover" container="body" triggers="manual"
-                    (click)="PopoverEmpOfList(pemp,emp)">
+                    popoverClass="userPopoverClass">
                     <div class="d-flex align-items-start">
                         <codx-img class="symbol symbol-40 symbol-circle me-4" [objectId]="emp?.employeeID"
                             [objectName]="emp?.employeeName" objectType="HR_Employees" [width]="40">
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-                <a class="text-dark-50">
+                <a class="text-dark-50" (click)="PopoverEmpOfList(pemp,emp)">
                     <span class="icon-keyboard_arrow_right icon-22"></span>
                 </a>
             </div>
