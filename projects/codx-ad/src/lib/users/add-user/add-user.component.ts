@@ -259,7 +259,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUser, this.viewChooseRole, true];
+      data = [this.adUser, this.viewChooseRole, true, false];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
@@ -421,6 +421,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
             dt['roleID'] = dt.recIDofRole;
             dt.userID = this.adUser.userID;
           });
+          debugger;
           this.countListViewChooseRoleApp = this.viewChooseRole.length;
           this.changeDetector.detectChanges();
         }
