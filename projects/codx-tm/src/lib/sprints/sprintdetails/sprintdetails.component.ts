@@ -43,11 +43,11 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   vllRole = 'TM002';
   popoverCrr: any;
   private all = [
-    // 'Dashboard',
-    // 'Công việc',
-    // 'Lịch sử',
-    // 'Bình luận',
-    // 'Họp định kì',
+    'Dashboard',
+    'Công việc',
+    'Lịch sử',
+    'Bình luận',
+    'Họp định kì',
   ];
   nameObj: any;
   projectCategory: any;
