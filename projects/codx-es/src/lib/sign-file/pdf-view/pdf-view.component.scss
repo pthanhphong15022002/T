@@ -9,7 +9,7 @@
     overflow: hidden;
   }
   codx-vll {
-    margin-left: 3.25rem;
+    font-size: 12px;
   }
   .symbol-32px  {
     width: 32px;
@@ -27,6 +27,7 @@
     background-position: center center;
     background-size: cover;      
   }
+ 
   .main-content {
     width: 100% !important;
     height: 100% !important;
@@ -274,6 +275,20 @@
   .e-listview .e-list-item.e-active{
     background-color: white!important;
   }
+  .card-item.active .codx_cardcenter,.card-item:hover .codx_cardcenter,.card-item:focus .codx_cardcenter {  
+    cursor: pointer;
+    color: #009EF7;
+    border: 1px solid #009EF7!important;
+    background-color: #F1FAFF !important;
+  }  
+  
+  .e-pv-thumbnail-selection {
+    border: 2px solid #0d6efd;
+    border-radius: 0;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+    cursor: pointer;
+    padding: 1px;
+}
   #groupedList.e-listview {
     .e-listview .e-list-header{
       display: none!important;
@@ -285,10 +300,53 @@
       height: 0!important;
       border-bottom: 0px solid!important;
       padding: 0!important;
-  } 
-  
+  }  
 
   }
+
  }
- 
+ .e-ddl.e-input-group .e-input-value, .e-ddl.e-input-group .e-input-value:focus{
+    font-size: 13px!important;
+ }
+ ejs-autocomplete,ejs-combobox,ejs-dropdownlist{
+  display:block
+}
+.e-dropdownbase .e-list-parent {
+  margin: 0;
+  padding: 0;
+}
+#signatureDropdownList .e-list-item {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  background-color: #fff;
+  border-bottom: 0;
+  border-color: #fff;
+  color: rgba(0,0,0,.87);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 36px;
+  min-height: 36px;
+  padding-right: 16px;
+  text-indent: 16px;
+}
+.e-bigger.e-small .e-dropdownbase .e-list-group-item,.e-bigger.e-small .e-dropdownbase .e-fixed-head,.e-dropdownbase.e-small.e-bigger .e-list-group-item,.e-dropdownbase.e-small.e-bigger .e-fixed-head{
+  line-height:30px;
+  min-height:30px;
+  padding-left:0px!important;
+}
+#signatureDropdownList_popup  .e-list-item * {
+  display: block;
+  text-indent: 0!important;
+  line-height: 22px!important;
+  font-size: 13px!important;
+}
+#signatureDropdownList_popup .ename {
+  display: block !important;
+  opacity: .87;
+ // font-size: 16px;
+  margin-top: 9px;
+}
+.e-numeric {
+  width: 100px!important;
+}
+
 }

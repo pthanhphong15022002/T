@@ -5,10 +5,10 @@
 </codx-views>
 
 <ng-template #cardTemp let-data>
-    <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID" [imgOn]="data.modifiedOn"
-        [title]="data.employeeName" [subTitle]="data.positionName" [dataItem]="data"
-        [desc]="(data.birthday | date: 'dd/MM/yyyy')" [footer]="footer" [typeMF]="'hover'"
-        (clickMF)="clickMF($event, data)">
+    <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
+        [imageObjType]="view.formModel.entityName" [imgOn]="data?.modifiedOn" [title]="data.employeeName"
+        [subTitle]="data.positionName" [dataItem]="data" [desc]="(data.birthday | date: 'dd/MM/yyyy')" [footer]="footer"
+        [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
     </codx-card-center>
 </ng-template>
 
@@ -49,23 +49,27 @@
                 </div>
 
                 <span class="text-dark fw-bold">
-                    <span #positionName>{{ data.positionName | formatvalue: view.formModel:"positionID":positionName | async }}</span>
+                    <span #positionName>{{ data.positionName | formatvalue: view.formModel:"positionID":positionName |
+                        async }}</span>
                 </span>
 
                 <span class="text-dark fw-bold">
-                    <span #organizationName>{{ data.organizationName | formatvalue: view.formModel:"orgUnitID":organizationName | async }}</span>
+                    <span #organizationName>{{ data.organizationName | formatvalue:
+                        view.formModel:"orgUnitID":organizationName | async }}</span>
                 </span>
 
                 <div>
-                    
+
                     <span class="text-dark fw-bold">
-                        <span #departmentName>{{ data.departmentName | formatvalue: view.formModel:"departmentID":departmentName | async }}</span>
+                        <span #departmentName>{{ data.departmentName | formatvalue:
+                            view.formModel:"departmentID":departmentName | async }}</span>
                     </span>
 
                     <span class="text-gray-400"> | </span>
 
                     <span class="text-dark fw-bold">
-                        <span #divisionName>{{ data.divisionName | formatvalue: view.formModel:"divisionID":divisionName | async }}</span>
+                        <span #divisionName>{{ data.divisionName | formatvalue: view.formModel:"divisionID":divisionName
+                            | async }}</span>
                     </span>
                 </div>
             </div>
@@ -112,7 +116,7 @@
             <span class="text-gray-600 me-1">
                 <codx-label name="lblBirthPlace" formName="Employees" default="Nơi sinh: "></codx-label>
             </span>
-           
+
             <span class="text-dark fw-bold">
                 <span #birthPlace>{{ data.provinceName | formatvalue: view.formModel:"birthPlace":birthPlace | async
                     }}</span>
@@ -122,7 +126,7 @@
             <span class="text-gray-600 me-1">
                 <codx-label name="lblEducation" formName="Employees" default="Trình độ: "></codx-label>
             </span>
-        
+
             <span class="text-dark fw-bold">
                 <span #education>{{ data.education | formatvalue: view.formModel:"education":education | async }}</span>
             </span>
@@ -146,7 +150,7 @@
             <span class="text-gray-800">
                 <span #joinedOn>{{ data.joinedOn | formatvalue: view.formModel:"joinedOn":joinedOn | async }}</span>
             </span>
-        
+
         </div>
         <div class="align-items-center fs-7">
             <span class="text-gray-600 me-1">

@@ -1,15 +1,16 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, CallFuncService, DialogData, DialogRef, NotificationMessage, SidebarModel, UIComponent } from 'codx-core';
-import { CodxAlertComponent } from '../../../components/codx-alert/codx-alert.component';
+import { ChangeDetectorRef, Component, inject, Injector, OnInit, Optional } from '@angular/core';
+import { extend } from '@syncfusion/ej2-base';
+import { AuthService, DialogData, DialogRef, NotificationMessage, UIComponent } from 'codx-core';
 
 @Component({
-  selector: 'codx-notify-drawer',
-  templateUrl: './notify-drawer.component.html',
-  styleUrls: ['./notify-drawer.component.scss'],
+  selector: 'lib-alert-drawer',
+  templateUrl: './alert-drawer.component.html',
+  styleUrls: ['./alert-drawer.component.css']
 })
-export class NotifyDrawerComponent extends UIComponent implements OnInit {
-  dialog: DialogRef;
-  lstNotify:any[] = [];
+export class AlertDrawerComponent extends UIComponent implements OnInit {
+
+  dialog: any;
+  lstAlerts:any[] = [];
   lstNewNotify:any[] = [];
   lstOldNotify:any[] = [];
   funcID:string ="";
@@ -30,13 +31,13 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
   onInit(): void {
     if(this.funcID)
     {
-      this.getNotifyAsync(this.funcID);
+      this.getAlertAsync(this.funcID);
     }
   }
-  clickCloseFrom(){
-    this.dialog.close();
-  }
-  getNotifyAsync(funcID:string){
+
+
+
+  getAlertAsync(funcID:string){
     this.api.execNonDB<NotificationMessage[]>( 
       'Background',
       'NotificationBusinesss',
@@ -45,7 +46,7 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
     ).subscribe((res:any) => {
       if(res){
         console.log(res);
-        this.lstNotify = res;
+        this.lstAlerts = res;
       }
     });
   }
@@ -54,6 +55,4 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
     item.isRead = event.value;
     this.dt.detectChanges();
   }
-
-
 }
