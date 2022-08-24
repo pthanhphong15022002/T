@@ -17,7 +17,10 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CodxAdService } from '../codx-ad.service';
-import { AD_SystemSetting, TabControl } from '../models/AD_SystemSetting.models';
+import {
+  AD_SystemSetting,
+  SYS_FunctionList,
+} from '../models/AD_SystemSetting.models';
 
 @Component({
   selector: 'lib-systemsettings',
@@ -36,7 +39,7 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
   moreFunc = [];
   gridViewSetup: any;
   dialog!: DialogRef;
-  tabControl: TabControl[] = [];
+  functionList: SYS_FunctionList[] = [];
   name = '';
   private all = ['Thông tin chung', 'Chính sách bảo mật', 'Cấu hình ứng dụng'];
   active = 1;
@@ -71,19 +74,6 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
         if (res) this.gridViewSetup = res;
       });
 
-    if (this.tabControl.length == 0) {
-      this.all.forEach((res, index) => {
-        var tabModel = new TabControl();
-        tabModel.name = tabModel.textDefault = res;
-        if (index == 1) tabModel.isActive = true;
-        else tabModel.isActive = false;
-        this.tabControl.push(tabModel);
-      });
-    } else {
-      this.active = this.tabControl.findIndex(
-        (x: TabControl) => x.isActive == true
-      );
-    }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -107,6 +97,7 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.systemSetting = res[0];
+          this.functionList = res[1];
         }
       });
   }
@@ -126,20 +117,28 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
 
   //#region layout
 
-  clickMenu(item) {
-    this.name = item.name;
-    this.tabControl.forEach((obj) => {
-      if (obj.isActive == true) {
-        obj.isActive = false;
-        return;
-      }
-    });
-    item.isActive = true;
-    this.changeDetectorRef.detectChanges();
-  }
   //#endregion
 
-  valueList(e){
+  valueList(e) {
+    this.systemSetting[e.field] = e.data;
+    if (e.field) {
+      this.api
+        .callSv('SYS', 'AD', 'SystemSettingsBusiness', 'UpdateSystemAsync', [
+          this.systemSetting,
+        ])
+        .subscribe();
+    }
 
+    console.log(e);
+  }
+
+  clickModule(e) {
+    let mo = '';
+    var url = '';
+    if (e) {
+      mo += e + 'S';
+    }
+    url += 'shared/settings/' + mo;
+    this.codxService.navigate('', url);
   }
 }

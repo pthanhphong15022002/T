@@ -84,14 +84,15 @@ export class AddUserComponent extends UIComponent implements OnInit {
     super(injector);
     this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
+    this.adUser = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(
         JSON.stringify(this.data?.chooseRoles)
       );
+      this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
     }
-    this.adUser = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
 
@@ -311,7 +312,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
               this.dialog.close(res.update);
             });
           res.update.chooseRoles = res.update.functions;
-          (this.dialog.dataService as CRUDService).update(res.update).subscribe();
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
           this.changeDetector.detectChanges();
         }
       });
@@ -336,15 +339,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res) {
                   res.chooseRoles = res?.functions;
-                  (this.dialog.dataService as CRUDService)
+                  this.dialog.close(res);
+                  /* (this.dialog.dataService as CRUDService)
                     .update(res)
-                    .subscribe();
+                    .subscribe(); */
                   this.changeDetector.detectChanges();
                 }
               });
           }
-          this.dialog.close();
           this.notification.notifyCode('SYS006');
+          
         }
       } else this.onUpdate();
     }
@@ -365,8 +369,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   valueEmp(data) {
-    this.adUser.employeeID = data.data;
-    this.getEmployee(this.adUser.employeeID);
+    if (data.data) {
+      this.adUser.employeeID = data.data;
+      this.getEmployee(this.adUser.employeeID);
+    }
   }
 
   valueUG(data) {
@@ -394,8 +400,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.adUser.employeeID = employeeID;
           this.adUser.userName = employee.employeeName;
           this.adUser.buid = employee.organizationID;
-          this.adUser.email = employee.email;
-          this.adUser.phone = employee.phone;
+          if (this.formType == 'add') {
+            this.adUser.email = employee.email;
+            this.adUser.phone = employee.phone;
+          } else this.adUser['phone'] = this.adUser.mobile;
           this.changeDetector.detectChanges();
         }
       });

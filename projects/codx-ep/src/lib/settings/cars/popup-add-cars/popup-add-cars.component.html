@@ -148,7 +148,8 @@
           default="Đơn vị"
         >
         </codx-label>
-        <codx-input
+        <codx-input        
+          [disabled]="fGroupAddCar.value.category == 1 ? false :true"
           refValue="AgencyNames"
           type="combobox"
           ControlName="companyID"

@@ -8,15 +8,17 @@
         background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
       ">
       <div class="d-flex align-items-center avatar">
-        <codx-img class="me-4" #imageAvatar [width]="100" [objectId]="employeeInfo?.employeeID"  objectType="HR_Employees" [funcId]="view.formModel.funcID" isAllowEdit="true" 
-           updateDirect="true">
+        <codx-img class="me-4" #imageAvatar [width]="100" [objectId]="employeeInfo?.employeeID"
+          objectType="HR_Employees" [funcId]="view.formModel.funcID" isAllowEdit="true" updateDirect="true">
         </codx-img>
         <div class="d-flex flex-column">
           <div class="fw-bold text-dark fs-5 mb-1">
             {{ employeeInfo?.employeeName }}
           </div>
-          <div class="text-dark" #positionName>{{ employeeInfo?.positionName | formatvalue: view.formModel:"positionID":positionName | async  }}</div>
-          <div class="text-gray-700" #organizationName>{{ employeeInfo?.organizationName | formatvalue: view.formModel:"orgUnitID":organizationName | async  }}</div>
+          <div class="text-dark" #positionName>{{ employeeInfo?.positionName | formatvalue:
+            view.formModel:"positionID":positionName | async }}</div>
+          <div class="text-gray-700" #organizationName>{{ employeeInfo?.organizationName | formatvalue:
+            view.formModel:"orgUnitID":organizationName | async }}</div>
         </div>
       </div>
     </div>

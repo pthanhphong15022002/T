@@ -140,7 +140,7 @@
       </div>
       <ng-container *ngIf="item.refType == 'WP_News'; else templateShare">
         <div class="post mt-3" (click)="naviagte(item.shares)">
-          <codx-file [objectID]="item.refID" (evtGetFiles)="getFiles($event, item)"></codx-file>
+          <codx-file [objectID]="item.refID" [objectType]="'WP_News'" (evtGetFiles)="getFiles($event, item)"></codx-file>
         </div>
       </ng-container>
       <ng-template #templateShare>

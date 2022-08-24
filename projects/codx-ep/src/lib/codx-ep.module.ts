@@ -27,7 +27,6 @@ import { BookingRoomComponent } from './booking-room/booking-room.component';
 import { PopupAddBookingRoomComponent } from './booking-room/popup-add-booking-room/popup-add-booking-room.component';
 import { PopupRequestStationeryComponent } from './booking-stationery/popup-request-stationery/popup-request-stationery.component';
 import { PopupListStationeryComponent } from './booking-stationery/popup-list-stationery/popup-list-stationery.component';
-import { PopupColorStationeryComponent } from './settings/stationery/popup-add-stationery/popup-color-stationery/popup-color-stationery.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
 import { DriversComponent } from './settings/drivers/drivers.component';
@@ -107,7 +106,6 @@ const Components: Type<any>[] = [
   PopupRequestStationeryComponent,
   PopupSettingNormsComponent,
   PopupUpdateInventoryComponent,
-  PopupColorStationeryComponent,
   PopupAddCarsComponent,
   PopupAddRoomsComponent,
   PopupAddStationeryComponent,

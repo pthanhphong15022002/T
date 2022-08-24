@@ -8,6 +8,7 @@ import {
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { NotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/notify-drawer.component';
 import { ActivatedRoute } from '@angular/router';
+import { SettingNotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
 
 @Component({
   selector: 'codx-layout',
@@ -45,6 +46,6 @@ export class LayoutComponent extends LayoutBaseComponent {
   openFormNotifyDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
-    this.dialog = this.callfc.openSide(NotifyDrawerComponent, "TMT0201", option);
+    this.dialog = this.callfc.openSide(SettingNotifyDrawerComponent, "TMT0201", option);
   }
 }

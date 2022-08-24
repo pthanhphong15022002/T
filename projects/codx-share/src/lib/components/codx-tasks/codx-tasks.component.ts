@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, DataRequest, DialogRef, NotificationsService, RequestOption, ResourceModel, SidebarModel, UIComponent, UrlUtil, ViewModel, ViewType } from 'codx-core';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
@@ -18,13 +18,14 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
   templateUrl: './codx-tasks.component.html',
   styleUrls: ['./codx-tasks.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CodxTasksComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
   //#region Constructor
-  @Input() funcID?: any;
+  // @Input()funcID?: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   @Input() calendarID: string;
@@ -61,7 +62,7 @@ export class CodxTasksComponent
   eventStatus: any;
   itemSelected: any;
   user: any;
-  // funcID: string;
+  funcID: string;
   gridView: any;
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
@@ -215,7 +216,6 @@ export class CodxTasksComponent
     if (this.viewMode && this.viewMode.trim() != '') {
       viewDefaultID = this.viewMode;
     }
-
     this.viewsActive.forEach((obj) => {
       if (obj.id == viewDefaultID) {
         obj.active = true;

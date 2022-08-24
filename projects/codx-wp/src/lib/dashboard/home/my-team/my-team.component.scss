@@ -59,6 +59,13 @@
     padding-bottom: 0px !important;
 }
 
-.card {
-    height: 150.7px !important;
+.popover-body {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+.popover .popover-header {
+    border-color: var(--gray-200);
 }
