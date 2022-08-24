@@ -8,7 +8,7 @@
                     <span *ngIf="i > 0" class="icon-keyboard_arrow_right icon-20"></span>
                     <div *ngIf="link; then jump1 else nojump1"></div>
                     <ng-template #jump1>
-                        <a (click)="onJump(i)">
+                        <a class="cursor-pointer text text-dark" (click)="onJump(i)">
                             <span class="text-dark-50">{{item.toString()}}</span>
                         </a>
                     </ng-template>
@@ -28,7 +28,7 @@
  -->
                     <div *ngIf="link; then jump2 else nojump2"></div>
                     <ng-template #jump2>
-                        <a (click)="onJump(i)">
+                        <a class="cursor-pointer text text-dark" (click)="onJump(i)">
                             <span class="text-dark-50">{{item.toString()}}</span>
                         </a>
                     </ng-template>
@@ -54,7 +54,7 @@
                                     <!-- <span class="ms-3">{{item.toString()}}</span> -->
                                     <div *ngIf="link; then jump4 else nojump4"></div>
                                     <ng-template #jump4>
-                                        <a (click)="onJump(i)">
+                                        <a class="cursor-pointer text text-dark" (click)="onJump(i)">
                                             <span class="ms-3">{{item.toString()}}</span>
                                         </a>
                                     </ng-template>
@@ -73,7 +73,7 @@
                     <!-- <span class="text-dark-50">{{item.toString()}}</span> -->
                     <div *ngIf="link; then jump3 else nojump3"></div>
                     <ng-template #jump3>
-                        <a (click)="onJump(i)">
+                        <a class="cursor-pointer text text-dark" (click)="onJump(i)">
                             <span class="text-dark-50">{{item.toString()}}</span>
                         </a>
                     </ng-template>

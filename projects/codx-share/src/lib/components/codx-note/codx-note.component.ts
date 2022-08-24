@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ApiHttpService, CacheService } from 'codx-core';
 
 @Component({
@@ -7,6 +7,7 @@ import { ApiHttpService, CacheService } from 'codx-core';
   styleUrls: ['./codx-note.component.css'],
 })
 export class CodxNoteComponent implements OnInit {
+
   message: any;
   showEmojiPicker = false;
   lineType = 'text';
@@ -22,6 +23,9 @@ export class CodxNoteComponent implements OnInit {
     'messenger',
   ];
   set = 'apple';
+
+  @Input() showMenu = true;
+  @Input() showMF = true;
 
   constructor(
     private dt: ChangeDetectorRef,
@@ -57,13 +61,13 @@ export class CodxNoteComponent implements OnInit {
 
   valueChange(event, item = null, i = null) {
     if (event?.data) {
-      this.addContent(event?.data);
+      // this.addContent(event?.data);
     }
   }
 
   keyUpEnter(event) {
     if (event?.data) {
-      this.addContent(event?.data);
+      // this.addContent(event?.data);
     }
   }
 

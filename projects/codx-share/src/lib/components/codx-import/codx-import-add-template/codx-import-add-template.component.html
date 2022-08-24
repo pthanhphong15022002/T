@@ -4,6 +4,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
+  [bodyCss]="'h-100'"
   [formModel]="formModel"
   [data]="data"
 ></codx-form>
@@ -22,7 +23,7 @@
   </div>
   <div class="py-2">
     <div class="py-2">
-      <codx-label [formModel]="formModel" [fiedName]="'name'" default="Tên template" class="fw-bold"></codx-label>
+      <codx-label [formModel]="formModels" [fiedName]="'Description'" class="fw-bold"></codx-label>
       <codx-input 
         type="text" 
         [Group]="importAddTmpGroup"
@@ -81,7 +82,7 @@
       <span>{{data?.parentEntity}}</span>
     </td>
     <td class="w-20">
-      <span>{{data?.mappingTemplate}}</span>
+      <span class="d-block text-truncate">{{data?.mappingName}}</span>
     </td>
     <td class="w-15">
       <span>{{getTextImportRule(data?.importRule)}}</span>
@@ -89,7 +90,7 @@
     <td class="w-10">
       <codx-input type="switch" [checked]="data?.isSummary" [disabled]="true" class="mt-2"></codx-input>
       <div class="action-menu d-flex justify-content-center align-items-center cursor-pointer mt-1">
-        <i class="icon-edit text-primary icon-16 mx-1"></i>
+        <i class="icon-edit text-primary icon-16 mx-1" (click)="edit(data)"></i>
         <i class="icon-close text-danger icon-16 mx-1"></i>
       </div>
     </td>
