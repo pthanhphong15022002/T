@@ -62,7 +62,7 @@
           default="Email">
         </codx-label>
         <codx-input field="email" type="text" [crrValue]="adUser.email" (valueChange)="valueChangeM($event)"
-          [disabled]="!adUser.employeeID ? false : true" *ngIf="formType == 'edit'">
+          [disabled]="!adUser.email ? false : true" *ngIf="formType == 'edit'">
         </codx-input>
         <codx-input field="email" type="text" [crrValue]="adUser.email" (valueChange)="valueChangeM($event)"
           [disabled]="false" *ngIf="formType == 'add'">

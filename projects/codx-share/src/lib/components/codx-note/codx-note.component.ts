@@ -57,13 +57,13 @@ export class CodxNoteComponent implements OnInit {
 
   valueChange(event, item = null, i = null) {
     if (event?.data) {
-      this.addContent(event?.data);
+      // this.addContent(event?.data);
     }
   }
 
   keyUpEnter(event) {
     if (event?.data) {
-      this.addContent(event?.data);
+      // this.addContent(event?.data);
     }
   }
 
