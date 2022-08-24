@@ -58,9 +58,9 @@ export class CodxNoteComponent implements OnInit {
       if (font == 'BOLD') {
         this.countBOLD++;
         document.getElementById('font').style.fontWeight = 'bolder';
-        if(this.countBOLD > 1) {
-        document.getElementById('font').style.fontWeight = '';
-        }
+        // if(this.countBOLD > 1) {
+        // document.getElementById('font').style.fontWeight = '';
+        // }
       } else if (font == 'ITALIC') {
         this.countITALIC++;
         document.getElementById('font').style.fontStyle = 'italic';
