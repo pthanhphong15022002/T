@@ -62,10 +62,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
     } else {
       this.isAdd = false;
     }
-    console.log(itemData)
     option.className = 'BookingsBusiness';
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd];
+    option.data = [itemData, this.isAdd, '', this.listItem];
     return true;
   }
 
@@ -76,12 +75,15 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (!this.dialogRequest.value.linkType) {
       this.dialogRequest.patchValue({ linkType: '0' });
     }
-    this.dialogRequest.patchValue({ resourceType: '5' });
+    this.dialogRequest.patchValue({ resourceType: '3' });
+    this.dialogRequest.patchValue({ category: '5' });
     this.dialogRequest.patchValue({ hours: '0' });
     //this.dialogRequest.patchValue({ comments: '0' });
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe();
+
+    console.log(this.listItem);
+    // this.dialog.dataService
+    //   .save((opt: any) => this.beforeSave(opt))
+    //   .subscribe();
   }
 
   valueDateChange(event: any) {
@@ -92,6 +94,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   valueChange(event) {
+    debugger;
     if (event?.field) {
       if (event.data instanceof Object) {
         this.dialogRequest.patchValue({
