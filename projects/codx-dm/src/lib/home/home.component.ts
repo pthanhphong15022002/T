@@ -156,7 +156,12 @@ export class HomeComponent extends UIComponent {
       if (res != null) {      
         var tree = this.codxview.currentView.currentComponent.treeView;        
         if (tree != null) 
-          tree.getCurrentNode(res.recID);        
+        {
+          if (res.recID != null)
+            tree.getCurrentNode(res.recID);         
+          else
+            tree.getCurrentNode(res);        
+        }          
       }
     });
 
@@ -194,28 +199,13 @@ export class HomeComponent extends UIComponent {
       }
     });
 
-    this.dmSV.isFolderId.subscribe(res => {
-      if (res != null && this.codxview != null) {
-        // var tree = this.codxview.currentView.currentComponent.treeView;        
-        // tree.getCurrentNode(res);   
-        //var tree = this.codxview.currentView.currentComponent.treeView.textField = "folderName";
-       // var tree = this.codxview.currentView.currentComponent.treeView;
-       // if (tree) {
-          //var item = {};
-          //item.data = 
-         // var data = tree.getCurrentNode(res);
-          //console.log(data);
-       // }
-          
-      //  if (res.length > 1 && res != this.dmSV.currentNode) {
-          //this.tree.getCurrentNode(res);
-     //   }
-        // else  {
-        //   that.dmSV.listFolder.next(that.tree.data);   
-        // }          
-      }
-
-    });
+    // this.dmSV.isFolderId.subscribe(res => {
+    //   if (res != null) {      
+    //     var tree = this.codxview.currentView.currentComponent.treeView;        
+    //     if (tree != null) 
+    //       tree.getCurrentNode(res);        
+    //   }
+    // });
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
@@ -545,7 +535,7 @@ export class HomeComponent extends UIComponent {
         },
       },
     ];
-    this.codxview.dataService.parentIdField = 'ParentID';
+    this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
     this.changeDetectorRef.detectChanges();
