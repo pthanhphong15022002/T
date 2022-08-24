@@ -15,6 +15,14 @@
   margin-right: 10px;
 }
 
+.unexpired {
+  color: #C9C9D4;
+}
+
+.expired {
+  color: #F64E60;
+}
+
 .w-5 {
   width: 5% !important;
 }
