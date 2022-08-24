@@ -203,14 +203,14 @@ export class PopupAddBookingCarComponent implements OnInit {
               this.lstPeople.push(tempPeople);
             });
 
-            if(this.lstPeople.length == 1){      
-              this.smallListPeople = this.lstPeople;
-            }
+            // if(this.lstPeople.length == 1){      
+            //   this.smallListPeople = this.lstPeople;
+            // }
 
-            if(this.lstPeople.length >= 2) {
-              this.smallListPeople=null;
-              this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
-            }        
+            // if(this.lstPeople.length >= 2) {
+            //   this.smallListPeople=null;
+            //   this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
+            // }        
             
             this.changeDetectorRef.detectChanges();
           }
@@ -304,6 +304,8 @@ export class PopupAddBookingCarComponent implements OnInit {
       }
     });  
     this.fGroupAddBookingCar.value.equipments = availableEquip+'|'+pickedEquip; 
+    this.fGroupAddBookingCar.value.bookingOn=this.fGroupAddBookingCar.value.startDate;  
+    this.fGroupAddBookingCar.value.stopOn=this.fGroupAddBookingCar.value.stopOn;  
     this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0];    
     this.fGroupAddBookingCar.value.resourceID=this.fGroupAddBookingCar.value.resourceID[0]; 
     this.dialogRef.dataService
@@ -376,13 +378,13 @@ export class PopupAddBookingCarComponent implements OnInit {
   }
   valueCbxUserChange(event?) {
     this.lstPeople=event.data.dataSelected;
-    if(this.lstPeople.length == 1){      
-      this.smallListPeople = this.lstPeople;
-    }
-    if(this.lstPeople.length >= 2) {
-      this.smallListPeople=null;
-      this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
-    }         
+    // if(this.lstPeople.length == 1){      
+    //   this.smallListPeople = this.lstPeople;
+    // }
+    // if(this.lstPeople.length >= 2) {
+    //   this.smallListPeople=null;
+    //   this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
+    // }         
     
     this.changeDetectorRef.detectChanges();
   }

@@ -130,7 +130,7 @@
             </ul>
           </div>
           <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" (click)="approve()"
-            [style.visibility]="currentTab == 3 && dialogSignFile.value.files?.length > 0 ? 'visible' : 'hidden'">
+            [style.visibility]="(currentTab == 3 && dialogSignFile.value.files?.length > 0 && dialogSignFile.value.approveStatus == '1') ? 'visible' : 'hidden'">
             <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Gửi duyệt"></codx-label>
           </a>
 
@@ -188,7 +188,8 @@
                       <codx-label fiedName="CategoryID" [formModel]="formModel" default="Phân loại">
                       </codx-label>
                       <codx-input type="combobox" name="combobox" [refValue]="cbxCategory ?? cbxName['CategoryID']"
-                        field="categoryID" (valueChange)="valueChange($event)">
+                        field="categoryID" (valueChange)="valueChange($event)"
+                        [crrValue]="dialogSignFile.value?.categoryID">
                       </codx-input>
                     </div>
                   </div>
