@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from 'codx-core';
 import {
   ApiHttpService,
   CacheService,
@@ -74,7 +75,7 @@ export class PopupAddBookingCarComponent implements OnInit {
   modelPage: ModelPage;
   cbxUser: any;
   peopleAttend =[];
-
+  curUser:any;
   data:any;
   isNew: boolean = true;
   currentSection = "GeneralInfo";
@@ -98,6 +99,7 @@ export class PopupAddBookingCarComponent implements OnInit {
     private codxEpService: CodxEpService,
     private notificationsService: NotificationsService,
     private apiHttpService: ApiHttpService,
+    private authService: AuthService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {    
@@ -118,7 +120,18 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.modelPage = res;
         console.log('EPT2',res);
       }
-      
+      if(this.isAdd){
+        let people = this.authService.userValue;
+        var user :{id: string, text: string, objectType: string, objectName: string}={                
+          id:people.userID,
+          text:people.userName,
+          objectType:undefined,
+          objectName:undefined
+        };
+        this.curUser=user;
+        this.changeDetectorRef.detectChanges();
+        
+      }
       this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
@@ -126,7 +139,7 @@ export class PopupAddBookingCarComponent implements OnInit {
           device.id = item.value;
           device.text = item.text;
           this.lstDeviceCar.push(device);
-        });        
+        });   
         if(!this.isAdd && this.fGroupAddBookingCar.value.equipments!=null){
           
             let deviceArray=this.fGroupAddBookingCar.value.equipments.split("|");
@@ -362,7 +375,7 @@ export class PopupAddBookingCarComponent implements OnInit {
         });   
   }
   valueCbxUserChange(event?) {
-    this.lstPeople = event.data.dataSelected; 
+    this.lstPeople=event.data.dataSelected;
     if(this.lstPeople.length == 1){      
       this.smallListPeople = this.lstPeople;
     }
@@ -399,7 +412,7 @@ export class PopupAddBookingCarComponent implements OnInit {
     this.closeEdit.emit(data);
   }
   dataValid(){
-     
+    
     this.fGroupAddBookingCar.value.agencyName=this.fGroupAddBookingCar.value.agencyName[0]; 
     this.fGroupAddBookingCar.value.resourceID=this.fGroupAddBookingCar.value.resourceID[0];
 
