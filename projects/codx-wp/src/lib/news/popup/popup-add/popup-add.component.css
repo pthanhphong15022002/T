@@ -1,0 +1,7 @@
+div.e-rte-content {
+    height: calc(100vh - 148px) !important;
+}
+
+div.e-content.e-lib {
+    height: calc(100vh - 150px) !important;
+}

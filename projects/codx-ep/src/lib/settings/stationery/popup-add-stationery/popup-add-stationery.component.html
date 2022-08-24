@@ -38,18 +38,16 @@
           <div class="col-8">
             <codx-label
               class="fw-bold"
-              fiedName="ResourceType"
+              fiedName="GroupID"
               [formModel]="form.formModel"
               default="Nhóm"
             >
             </codx-label>
 
             <codx-input
-              type="valuelist"
-              name="valuelist"
-              [crrValue]="dialogAddStationery.value.resourceType"
-              refValue="EP001"
-              field="resourceType"
+              ControlName="groupID"
+              [formModel]="form.formModel"
+              [Group]="dialogAddStationery"
             >
             </codx-input>
           </div>
@@ -97,7 +95,7 @@
 
           <div class="position-relative">
             <codx-input
-            type="combobox"
+              type="combobox"
               ControlName="owner"
               [formModel]="form.formModel"
               [Group]="dialogAddStationery"
@@ -160,7 +158,7 @@
               <div class="d-flex justify-content-start mb-4">
                 <div class="button-color">
                   <button
-                    *ngFor="let item of listColor"
+                    *ngFor="let item of splitColor(this.data.color)"
                     type="button"
                     class="btn btn-sm w-30px h-30px mx-2 border"
                     [ngStyle]="{ 'background-color': item }"

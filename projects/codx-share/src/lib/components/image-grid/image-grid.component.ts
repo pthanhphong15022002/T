@@ -69,15 +69,22 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       .subscribe((result:any[]) => {
         if(result.length > 0){
           result.forEach((f:any) => {
-            if(f.referType == this.FILE_REFERTYPE.IMAGE){
-              this.file_img_video.push(f);
+            if(this.objectType == "WP_News"){
+              if(f.referType == this.FILE_REFERTYPE.IMAGE){
+                this.file_img_video.push(f);
+              }
             }
-            else if(f.referType == this.FILE_REFERTYPE.VIDEO){
-              f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
-              this.file_img_video.push(f);
-            }
-            else{
-              this.file_application.push(f);
+            else {
+              if(f.referType == this.FILE_REFERTYPE.IMAGE){
+                this.file_img_video.push(f);
+              }
+              else if(f.referType == this.FILE_REFERTYPE.VIDEO){
+                f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
+                this.file_img_video.push(f);
+              }
+              else{
+                this.file_application.push(f);
+              }
             }
           });
           this.files = result; 
