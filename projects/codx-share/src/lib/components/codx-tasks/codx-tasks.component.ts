@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injector, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, DataRequest, DialogRef, NotificationsService, RequestOption, ResourceModel, SidebarModel, UIComponent, UrlUtil, ViewModel, ViewType } from 'codx-core';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
@@ -18,6 +18,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
   templateUrl: './codx-tasks.component.html',
   styleUrls: ['./codx-tasks.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CodxTasksComponent
   extends UIComponent
@@ -215,7 +216,6 @@ export class CodxTasksComponent
     if (this.viewMode && this.viewMode.trim() != '') {
       viewDefaultID = this.viewMode;
     }
-
     this.viewsActive.forEach((obj) => {
       if (obj.id == viewDefaultID) {
         obj.active = true;
