@@ -35,6 +35,8 @@ export class BookingStationeryComponent extends UIComponent {
   model: DataRequest;
   //modelResource: ResourceModel;
   cart: [];
+  listData = [];
+  count = 0;
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
@@ -185,8 +187,7 @@ export class BookingStationeryComponent extends UIComponent {
     }
   }
 
-  listData = [];
-  count = 0;
+
   addCart(evt, data) {
     let dataItem = data;
     if (this.listData.length == 0) {
