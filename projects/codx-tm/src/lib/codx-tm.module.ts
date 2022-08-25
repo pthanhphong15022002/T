@@ -81,11 +81,11 @@ export const routes: Routes = [
     children: [
       // {
       //   path: 'tasks/:funcID',
-      //   component: TasksComponent,
+      //   component: CodxTasksComponent,
       // },
       {
         path: 'tasks/:funcID',
-        component: CodxTasksComponent,
+        component: TasksComponent,
       },
       
       {
