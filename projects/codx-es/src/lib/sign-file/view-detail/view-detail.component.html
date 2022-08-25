@@ -1,5 +1,5 @@
 <codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [footer]="!hideFooter?footer:null"
-  [footer]="!hideFooter?footer:null" [hideMF]="hideMF" [formModel]="formModel" (clickMF)="openFormFuncID($event)">
+  [body]="body" [hideMF]="hideMF" [formModel]="formModel" (clickMF)="openFormFuncID($event)">
 
   <ng-template #header>
     <div class="vmd-detail">
@@ -204,7 +204,6 @@
       <div *ngIf="itemDetailStt == '3'" class="mb-2">
         <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
         </lib-view-approval-process>
-
       </div>
     </div>
   </ng-template>

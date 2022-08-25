@@ -81,12 +81,12 @@ export class ViewDetailComponent implements OnInit {
       document.getElementsByClassName(
         'codx-detail-main'
       ) as HTMLCollectionOf<HTMLElement>
-    )[0].offsetHeight;
+    )[0]?.offsetHeight;
     var header = Array.from(
       document.getElementsByClassName(
         'codx-detail-header'
       ) as HTMLCollectionOf<HTMLElement>
-    )[0].offsetHeight;
+    )[0]?.offsetHeight;
     Array.from(
       document.getElementsByClassName(
         'codx-detail-body'
