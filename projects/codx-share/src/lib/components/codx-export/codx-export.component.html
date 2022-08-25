@@ -6,10 +6,10 @@
   [dialog]="dialog"
   [formModel]="formModel"
   [data]="data"
+  [bodyCss]="'h-100'"
 ></codx-form>
 <ng-template popup adde #body>
   <div>
-    <codx-label default="Dữ liệu xuất"></codx-label>
     <div class="d-flex align-items-center mt-2">
       <div class="radio-list text-dark">
         <codx-input
@@ -54,285 +54,167 @@
       </div>
     </div>
   </div>
-  <div class="separator my-2"></div>
-  <div class="d-flex flex-column justify-content-between my-7">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-start mb-3">
-        <div class="w-30px mt-1">
-          <codx-input
-            type="radio"
-            name="format"
-            [Group]="exportGroup"
-            ControlName="format"
-            crrValue="excel"
-            [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
-          >
-          </codx-input>
+  <div class="d-flex justify-content-start h-temp py-5">
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-export h-100" orientation="vertical" (navChange)="navChanged($event)">
+    <li ngbNavItem="1">
+      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-excel fs-1 me-2 " style="color:#347442"></i><codx-label [default]="'Excel'" class="fw-bold"></codx-label></div></a>
+      <ng-template ngbNavContent>
+        <ng-container *ngTemplateOutlet="nodata; context: { $implicit: content?.excel }"></ng-container>
+      </ng-template>
+    </li>
+    <li ngbNavItem="2">
+      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-lines fs-1 me-2 " style="color:#347442"></i><codx-label [default]="'PivotTable'" class="fw-bold"></codx-label></div></a>
+      <ng-template ngbNavContent>
+        <ng-container *ngTemplateOutlet="nodata; context: { $implicit: content?.pivot }"></ng-container>
+      </ng-template>
+    </li>
+    <li ngbNavItem="3">
+      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-word fs-1 me-2 " style="color:#005DC7"></i><codx-label [default]="'Word'" class="fw-bold"></codx-label></div></a>
+      <ng-template ngbNavContent>
+        <ng-container *ngTemplateOutlet="nodata; context: { $implicit: content?.word }"></ng-container>
+      </ng-template>
+    </li>
+    <li ngbNavItem="4">
+      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-pdf fs-1 me-2 " style="color:#FFAC33"></i><codx-label [default]="'PDF'" class="fw-bold"></codx-label></div></a>
+      <ng-template ngbNavContent>
+        <ng-container *ngTemplateOutlet="nodata; context: { $implicit: content?.pdf }"></ng-container>
+      </ng-template>
+    </li>
+    <li ngbNavItem="5">
+      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-excel fs-1 me-2 " style="color:#347442"></i><codx-label [default]="'Excel Template'" class="fw-bold"></codx-label></div></a>
+      <ng-template ngbNavContent>
+        <div>
+          <div>
+            <codx-label [default]="'Excel Template'" class="fs-4 fw-bold"></codx-label>
+          </div>
+          <div>
+            <codx-label [default]="'Xuất dữ liệu được chọn thành file excel theo template đã định dạng trước'"></codx-label>
+          </div>
         </div>
-        <div class="d-flex flex-column flex-grow-1">
-          <div class="codx_title_sub">
-            <codx-label default="Excel"></codx-label>
-          </div>
-          <div class="codx_des">
-            <i class="text-gray-400"
-              ><codx-label
-                default="Xuất dữ liệu được chọn thành file excel bao gồm các trường dữ liệu hàng ngang"
-              ></codx-label
-            ></i>
-          </div>
-        </div>
-      </div>
-      <div class="d-flex justify-content-between mb-3">
-        <div class="d-flex align-items-start">
-          <div class="w-30px mt-1">
-            <codx-input
-              type="radio"
-              name="format"
-              [Group]="exportGroup"
-              ControlName="format"
-              crrValue="pivot"
-              [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
-            >
-            </codx-input>
-          </div>
-          <div class="d-flex flex-column flex-grow-1">
-            <div class="codx_title_sub">
-              <codx-label default="Pivot Table"></codx-label>
+        <div (scroll)="onScroll($event)"  class="h-scroll overflow-auto my-5">
+          <div class="d-flex align-items-start my-3" *ngFor="let item of dataEx">
+            <div class="w-30px mt-1">
+              <codx-input type="radio" name="format" [Group]="exportGroup" ControlName="format" [crrValue]="'excelTemp_' + item.recID" [ngClass]="{ 'is-invalid': submitted && f.format.errors }"></codx-input>
             </div>
-            <div class="codx_des">
-              <i class="text-gray-400"
-                ><codx-label
-                  default="Xuất dữ liệu được chọn thành file excel có định dạng pivot table"
-                ></codx-label
-              ></i>
-            </div>
-            <div class="codx_des">
-              <codx-attachment
-                #attachment
-                hideBtnSave="1"
-                hideFolder="1"
-                hideUploadBtn="1"
-                hideDes="1"
-                objectType="AD_ExcelTemplates"
-                [functionID]="formModel?.funcID"
-                idBrowse="2"
-              >
-              </codx-attachment>
-            </div>
-          </div>
-        </div>
-        <div class="d-flex align-items-start ms-6 mt-2">
-          <button
-            type="button"
-            class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1"
-            (click)="openFormUploadFile()"
-          >
-            <codx-label default="Chọn file"></codx-label>
-          </button>
-        </div>
-      </div>
-      <div class="d-flex align-items-start mb-3">
-        <div class="w-30px mt-1">
-          <codx-input
-            type="radio"
-            name="format"
-            [Group]="exportGroup"
-            ControlName="format"
-            crrValue="word"
-            [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
-          >
-          </codx-input>
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-          <div class="codx_title_sub">
-            <codx-label default="Word"></codx-label>
-          </div>
-          <div class="codx_des">
-            <i class="text-gray-400"
-              ><codx-label
-                default="Xuất dữ liệu được chọn thành file word"
-              ></codx-label
-            ></i>
-          </div>
-        </div>
-      </div>
-      <div class="d-flex align-items-start mb-3">
-        <div class="w-30px mt-1">
-          <codx-input
-            type="radio"
-            name="format"
-            [Group]="exportGroup"
-            ControlName="format"
-            crrValue="pdf"
-            [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
-          >
-          </codx-input>
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-          <div class="codx_title_sub">
-            <codx-label default="PDF"></codx-label>
-          </div>
-          <div class="codx_des">
-            <i class="text-gray-400"
-              ><codx-label
-                default="Xuất dữ liệu được chọn thành file pdf"
-              ></codx-label
-            ></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="separator my-2"></div>
-  <div class="my-7">
-    <div class="d-flex align-items-start mb-3">
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="codx_title_sub">
-          <codx-label default="Excel Template"></codx-label>
-        </div>
-        <div class="codx_des">
-          <i class="text-gray-400"
-            ><codx-label
-              default="Xuất dữ liệu được chọn thành file excel theo template đã định dạng trước"
-            ></codx-label
-          ></i>
-        </div>
-      </div>
-      <div class="d-flex align-items-start ms-6">
-        <button
-          type="button"
-          class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1"
-          (click)="openForm('add', null, 'excel')"
-        >
-          <codx-label default="Thêm"></codx-label>
-        </button>
-      </div>
-    </div>
-    <div (scroll)="onScroll($event)" style="max-height: 100px; overflow: auto">
-      <div class="d-flex align-items-start mb-3" *ngFor="let item of dataEx">
-        <div class="w-30px mt-1">
-          <codx-input
-            type="radio"
-            name="format"
-            [Group]="exportGroup"
-            ControlName="format"
-            [crrValue]="'excelTemp_' + item.recID"
-            [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
-          >
-          </codx-input>
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-          <div class="codx_title_sub">{{ item.templateName }}</div>
-          <div class="codx_des">
-            <i class="text-gray-400">{{ item.description }}</i>
-          </div>
-          
-        </div>
-        <div class="d-flex align-items-start ms-6">
-          <button
-              type="button"
-              class="btn btn-outline-secondary"
-              triggers="click"
-              [autoClose]="true"
-              [ngbTooltip]="tool"
-              ngClass="border-0"
-            >
-            <span class="icon-more_vert icon-18"></span>
-          </button>
-          <ng-template #tool >
-            <ng-container *ngFor="let x of moreFunction" >
-              <div class="d-flex p-2 cursor-pointer" (click)="openForm(x?.id, item, 'excel')">
-                <span class="icon-16 me-2" [ngClass]="x?.icon" [style.color]="x?.textColor"></span>
-                <codx-label [formModel]="formModel" [fiedName]="x?.text"></codx-label>
+            <div class="d-flex flex-column flex-grow-1">
+              <div class="fw-bold fs-5">{{ item.templateName }}</div>
+              <div class="codx_des">
+                <i class="text-gray-400 fs-6">{{ item.description }}</i>
               </div>
-            </ng-container>
+            </div>
+            <div class="d-flex align-items-start ms-6">
+              <button type="button" class="btn btn-outline-secondary" triggers="click" [autoClose]="true" [ngbTooltip]="tool" ngClass="border-0">
+                <span class="icon-more_vert icon-18"></span>
+              </button>
+              <ng-template #tool>
+                <ng-container *ngFor="let x of moreFunction">
+                  <div class="d-flex p-2 cursor-pointer" (click)="openForm(x?.id, item)">
+                    <span class="icon-16 me-2" [ngClass]="x?.icon" [style.color]="x?.textColor"></span>
+                    <codx-label [formModel]="formModel" [fiedName]="x?.text"></codx-label>
+                  </div>
+                </ng-container>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </li>
+    <li ngbNavItem="6">
+      <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-word  fs-1 me-2 " style="color:#005DC7"></i><codx-label [default]="'Word Template'" class="fw-bold"></codx-label></div></a>
+      <ng-template ngbNavContent>
+        <div>
+          <div>
+            <codx-label [default]="'Word Template'" class="fs-4 fw-bold"></codx-label>
+          </div>
+          <div>
+            <codx-label [default]="'Xuất dữ liệu được chọn thành file word theo template đã định dạng trước'"></codx-label>
+          </div>
+        </div>
+        <div class="h-scroll overflow-auto my-5">
+          <ng-container *ngIf="dataWord , else elseWord">
+            <div class="d-flex align-items-start mb-3" *ngFor="let item of dataWord">
+              <div class="w-30px mt-1">
+                <codx-input type="radio" name="format" [Group]="exportGroup" ControlName="format" [crrValue]="item.recID" [ngClass]="{ 'is-invalid': submitted && f.format.errors }"></codx-input>
+              </div>
+              <div class="d-flex flex-column flex-grow-1">
+                <div class="codx_title_sub">{{ item.templateName }}</div>
+                <div class="codx_des">
+                  <i class="text-gray-400">{{ item.description }}</i>
+                </div>
+              </div>
+              <div class="d-flex align-items-start ms-6">
+                <div ngbDropdown class="dropdown ms-6">
+                  <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-haspopup="true" aria-expanded="false">
+                    <span class="icon-more_vert icon-18"></span>
+                  </button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                    <a ngbDropdownItem class="dropdown-item">
+                      <div class="d-flex align-items-center cursor-pointer" (click)="openForm('edit', item)">
+                        <span class="icon-edit text-primary icon-16"></span>
+                        <span class="ms-2">Chỉnh sửa</span>
+                      </div>
+                    </a>
+                    <a ngbDropdownItem class="dropdown-item">
+                      <div class="d-flex align-items-center cursor-pointer" (click)="openForm('delete', item)">
+                        <span class="icon-delete text-danger icon-16"></span>
+                        <span class="ms-2">Xóa</span>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #elseWord>
+            <div class="export-container">
+              <div class="list-empty card card-flush h-100">
+                <div class="d-flex flex-column flex-center justify-content-center">
+                  <img
+                    src="../assets/themes/sys/default/img/DataEmpty.svg"
+                    class="w-200px"
+                  />
+                  <div class="fw-bold mt-1 text-center">
+                    <div class="mt-2 text-center">Chưa có dữ liệu word</div>
+                  </div>
+                  <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+                </div>
+              </div>
+            </div>
           </ng-template>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="separator my-2"></div>
-  <div class="my-7">
-    <div class="d-flex align-items-start mb-3">
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="codx_title_sub">
-          <codx-label default="Word Template"></codx-label>
-        </div>
-        <div class="codx_des">
-          <i class="text-gray-400"
-            ><codx-label
-              default="Xuất dữ liệu được chọn thành file word theo template đã định dạng trước"
-            ></codx-label
-          ></i>
-        </div>
-      </div>
-      <div class="d-flex align-items-start ms-6">
-        <button
-          type="button"
-          class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1"
-          (click)="openForm('add', null, 'word')"
-        >
-          <codx-label default="Thêm"></codx-label>
-        </button>
-      </div>
-    </div>
-    <div class="d-flex align-items-start mb-3" *ngFor="let item of dataWord">
-      <div class="w-30px mt-1">
-        <codx-input
-          type="radio"
-          name="format"
-          [Group]="exportGroup"
-          ControlName="format"
-          [crrValue]="item.recID"
-          [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
-        >
-        </codx-input>
-      </div>
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="codx_title_sub">{{ item.templateName }}</div>
-        <div class="codx_des">
-          <i class="text-gray-400">{{ item.description }}</i>
-        </div>
-      </div>
-      <div class="d-flex align-items-start ms-6">
-        <div ngbDropdown class="dropdown ms-6">
-          <button
-            ngbDropdownToggle
-            class="btn"
-            type="button"
-            id="dropdownMenuButton1"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <span class="icon-more_vert icon-18"></span>
-          </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-            <a ngbDropdownItem class="dropdown-item">
-              <div
-                class="d-flex align-items-center cursor-pointer"
-                (click)="openForm('edit', item, 'word')"
-              >
-                <span class="icon-edit text-primary icon-16"></span>
-                <span class="ms-2">Chỉnh sửa</span>
-              </div>
-            </a>
-            <a ngbDropdownItem class="dropdown-item">
-              <div
-                class="d-flex align-items-center cursor-pointer"
-                (click)="openForm('delete', item, 'word')"
-              >
-                <span class="icon-delete text-danger icon-16"></span>
-                <span class="ms-2">Xóa</span>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+      </ng-template>
+    </li>
+  </ul>
+  <div [ngbNavOutlet]="nav" class="tmp-content ms-4 w-100 h-100"></div>
   </div>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <button class="btn btn-light-primary" (click)="onSave()">Xuất file</button>
+  <div class="d-flex" [ngClass]="show ? 'justify-content-between' : 'justify-content-end'">
+    <button *ngIf="show" class="btn-ml btn btn-outline-primary" (click)="openForm('add', null)">Thêm template</button>
+    <button class="btn btn-primary" (click)="onSave()">Xuất file</button>
+  </div>
+</ng-template>
+<ng-template #nodata let-data>
+  <div>
+    <div>
+      <codx-label [default]="data?.title" class="fs-4 fw-bold"></codx-label>
+    </div>
+    <div>
+      <codx-label [default]="data?.subTitle"></codx-label>
+    </div>
+    <div class="export-container">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fw-bold mt-1 text-center">
+            <div class="mt-2 text-center">Chọn <span class="fs-4 fw-bold">Xuất File</span> để tải tập tin về máy</div>
+          </div>
+          <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>

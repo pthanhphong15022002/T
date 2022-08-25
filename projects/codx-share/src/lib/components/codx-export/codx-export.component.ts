@@ -34,6 +34,7 @@ import { CodxExportAddComponent } from './codx-export-add/codx-export-add.compon
 })
 export class CodxExportComponent implements OnInit, OnChanges {
   submitted = false;
+  active = "1";
   gridModel: any;
   recID: any;
   data = {};
@@ -52,7 +53,30 @@ export class CodxExportComponent implements OnInit, OnChanges {
   assemblyName: string = 'AD';
   className: string = 'ExcelTemplatesBusiness';
   method: string = 'GetByEntityAsync';
-
+  show=false;
+  type='excel';
+  content={
+    excel:
+    {
+      title: "Excel",
+      subTitle: "Xuất dữ liệu được chọn thành file excel bao gồm các trường dữ liệu hàng ngang"
+    },
+    word:
+    {
+      title: "Word",
+      subTitle: "Xuất dữ liệu được chọn thành file word bao gồm các trường dữ liệu hàng ngang"
+    },
+    pdf:
+    {
+      title: "PDF",
+      subTitle: "Xuất dữ liệu được chọn thành file pdf bao gồm các trường dữ liệu hàng ngang"
+    },
+    pivot:
+    {
+      title: "Pivot Table",
+      subTitle: "Xuất dữ liệu được chọn thành file excel có định dạng pivot table"
+    },
+  }
   moreFunction = 
   [
     {
@@ -115,7 +139,6 @@ export class CodxExportComponent implements OnInit, OnChanges {
       var arr = this.gridModel?.entityName.split('_');
       this.services = arr[0];
       this.cache.entity(this.gridModel?.entityName).subscribe((res) => {
-        debugger;
         if (res) {
           this.idField = res.isPK;
         }
@@ -169,7 +192,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
       );
   }
 
-  openForm(val: any, data: any, type: any) {
+  openForm(val: any, data: any) {
     switch (val) {
       case 'add':
       case 'edit': {
@@ -180,10 +203,10 @@ export class CodxExportComponent implements OnInit, OnChanges {
           .openForm(
             CodxExportAddComponent,
             null,
+            900,
+            700,
             null,
-            800,
-            null,
-            { action: val, type: type },
+            { action: val, type: this.type },
             '',
             option
           )
@@ -224,17 +247,17 @@ export class CodxExportComponent implements OnInit, OnChanges {
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') {
               var method =
-                type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
+                this.type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
               this.api
                 .execActionData<any>(method, [data], 'DeleteAsync')
                 .subscribe((item) => {
                   if (item[0] == true) {
                     this.notifySvr.notifyCode('RS002');
-                    if (type == 'excel')
+                    if (this.type == 'excel')
                       this.dataEx = this.dataEx.filter(
                         (x) => x.recID != item[1][0].recID
                       );
-                    else if (type == 'word')
+                    else if (this.type == 'word')
                       this.dataWord = this.dataWord.filter(
                         (x) => x.recID != item[1][0].recID
                       );
@@ -322,5 +345,46 @@ export class CodxExportComponent implements OnInit, OnChanges {
       var data = this.optionEx;
       //alert("a");
     }
+  }
+  navChanged(e:any)
+  {
+    this.show = false;
+    var id;
+    switch(e?.nextId)
+    {
+      case "1":
+      {
+        id= "excel";
+        break;
+      }
+      case "2":
+      {
+        //id= "word";
+        break;
+      }
+      case "3":
+      {
+        id= "word";
+        break;
+      }
+      case "4":
+      {
+        id= "pdf";
+        break;
+      }
+      case "5":
+      {
+        this.type = "excel"
+        this.show = true;
+        break;
+      }
+      case "6":
+      {
+        this.type = "word"
+        this.show = true;
+        break;
+      }
+    }
+    this.exportGroup.controls['format'].setValue(id);
   }
 }

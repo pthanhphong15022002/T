@@ -1,29 +1,16 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ApiHttpService, AuthService, CacheService } from 'codx-core';
+import { E } from '@angular/cdk/keycodes';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ApiHttpService, AuthService, CacheService, NotificationsService } from 'codx-core';
+import { environment } from 'src/environments/environment';
+import { tmpComment } from '../../models/tmpComments.model';
 import { AttachmentComponent } from '../attachment/attachment.component';
-class BKD_TrackLogs {
-  recID: string;
-  objectType: string;
-  objectID: string;
-  ChildID: string;
-  actionType: string;
-  oldValues: string;
-  newValues: string;
-  attachments: string;
-  comments: string;
-  votes: any[];
-  deleted: boolean;
-  autoCreated: boolean;
-  createdOn: Date;
-  createdBy: string;
-  iPConnection: string;
-  reference: string;
-  tenantID: string;
-}
+
 @Component({
   selector: 'codx-comment-history',
   templateUrl: './codx-comment-history.component.html',
-  styleUrls: ['./codx-comment-history.component.scss']
+  styleUrls: ['./codx-comment-history.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+
 })
 export class CodxCommentHistoryComponent implements OnInit {
 
@@ -31,6 +18,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() objectID: string;
   @Input() objectType: string;
   @Input() type: "view" | "create" = "view";
+  @Input() data:any;
 
   user: any = null;
   comment: string = "";
@@ -45,6 +33,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     private api: ApiHttpService,
     private auth: AuthService,
     private cache: CacheService,
+    private notifySV:NotificationsService,
     private dt: ChangeDetectorRef
   ) {
 
@@ -52,6 +41,9 @@ export class CodxCommentHistoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
+    if(this.data){
+      this.getFileByObjectID();
+    }
   }
 
   valueChange(event: any) {
@@ -84,18 +76,56 @@ export class CodxCommentHistoryComponent implements OnInit {
     this.dt.detectChanges();
   }
   sendComments() {
-    let data = new BKD_TrackLogs();
-    data.comments = this.comment;
-    data.createdOn = new Date();
-    data.createdOn = this.user.userID;
-    this.api.execSv("Background", "ERM.Business.Background", "TrackLogsBusiness", "InsertAsync", data)
-      .subscribe((res: any) => {
-        console.log(res)
-      })
+    let data = new tmpComment();
+    data.comment = this.comment;
+    data.attachments = this.lstFile.length;
+    data.objectID = this.objectID;
+    data.objectType = this.objectType;
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
+    .subscribe((res1:any) => {
+      if(res1){
+        if(data.attachments > 0)
+        {
+          this.codxATM.objectId = res1.recID;
+          this.codxATM.fileUploadList = this.lstFile;
+          this.codxATM.saveFilesObservable().subscribe((res2:any) => {
+            this.notifySV.notifyCode("SYS006");    
+          })
+        }
+        else
+        {
+          this.notifySV.notifyCode("SYS006");
+        }
+      }
+      else {
+        this.notifySV.notifyCode("SYS022");
+      }
+    });
+
   }
 
   uploadFile() {
     this.codxATM.uploadFile();
   }
 
+
+  getFileByObjectID(){
+    this.api.execSv(
+      "DM","ERM.Business.DM",
+      "FileBussiness",
+      "GetFilesByIbjectIDAsync",
+      this.data.recID)
+    .subscribe((res:any[]) => {
+      if(res.length > 0){
+        let files = res[0];
+        files.map((e:any) => {
+          if(e && e.referType == this.REFERTYPE.VIDEO)
+          {
+            e['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
+          }
+        })
+        this.lstFile = res; 
+        this.dt.detectChanges();
+    }});
+  }
 }

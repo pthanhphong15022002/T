@@ -70,9 +70,9 @@ export class BookingRoomComponent extends UIComponent {
   fields: any;
   resourceField: any;
   funcID: string;
-  lstPined: any = [];
-  titleCollapse: string = 'Đóng hộp tham số';
-  reportUUID: any = '3cdcde9d-8d64-ec11-941d-00155d035518';
+  lstPined : any = [];
+  titleCollapse: string = "Đóng hộp tham số";
+  reportUUID: any = 'TMR01';
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -224,19 +224,18 @@ export class BookingRoomComponent extends UIComponent {
       case 'btnDelete':
         this.delete();
         break;
-      // case 'btnAddReport':
-      //   this.addReport();
-      //   break;
+      case 'btnAddReport':
+        this.addReport();
+        break;
     }
   }
 
-  // addReport(){
-  //   let option = new DialogModel();
-  //   option.DataService = this.viewBase.dataService;
-  //   option.FormModel = this.viewBase.formModel;
-  //   option.IsFull = true;
-  //   this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,'3cdcde9d-8d64-ec11-941d-00155d035518',"",option);
-  // }
+  addReport(){
+    let option = new DialogModel();
+    option.DataService = this.viewBase.dataService;
+    option.FormModel = this.viewBase.formModel;
+    this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,"TMR01","",option);
+  }
   addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;

@@ -4,7 +4,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { DataItem, FolderInfo, ItemRight, NodeTree } from "@shared/models/folder.model";
 import { FolderService } from "@shared/services/folder.service";
 import { FileService } from "@shared/services/file.service";
-import { AlertConfirmInputConfig, AuthService, CallFuncService, FormModel, NotificationsService, SidebarModel } from "codx-core";
+import { AlertConfirmInputConfig, AuthService, CallFuncService, DialogModel, FormModel, NotificationsService, SidebarModel } from "codx-core";
 import { FileInfo, FileUpload, HistoryFile, Permission, SubFolder, View } from "@shared/models/file.model";
 import { CopyComponent } from "./copy/copy.component";
 import { EditFileComponent } from "./editFile/editFile.component";
@@ -1034,8 +1034,10 @@ export class CodxDMService {
           this.setRequest(type, data.recID, data.perm[0].id, this.idMenuActive == 'DMT06' ?  '4' : '8', false);         
           break;
         case "DMT0210": //view file
+        var dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
           this.fileService.getFile(data.recID).subscribe(data => {
-              this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data,  this.formModel], "");
+              this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data,  this.formModel], "",dialogModel);
               var files = this.listFiles;
               if (files != null) {
                 let index = files.findIndex(d => d.recID.toString() === data.recID);
@@ -1283,7 +1285,7 @@ export class CodxDMService {
         if (folder.icon.indexOf('.') == -1)
           item1 = `<i class="${folder.icon}" role="presentation"></i>`;
         else {
-          var path = `${this.path}/${folder.icon}`;
+          var path = `${folder.icon}`;
           item1 = `<img class="h-15px " src="${path}">`;
         }
       }

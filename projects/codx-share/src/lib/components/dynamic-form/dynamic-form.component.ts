@@ -11,9 +11,11 @@ import {
   CRUDService,
   DataRequest,
   CallFuncService,
+  LayoutService,
 } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -37,66 +39,28 @@ export class DynamicFormComponent extends UIComponent {
   idField: string = 'recID';
   dataSelected: any;
   function: any = {};
-  constructor(private inject: Injector, private callfunc: CallFuncService) {
+  constructor(
+    private inject: Injector,
+    private callfunc: CallFuncService,
+    private route: ActivatedRoute,
+    private layout: LayoutService
+  ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
   }
 
   onInit(): void {
+    this.route.params.subscribe((routeParams) => {
+      debugger;
+      this.layout.setLogo(null);
+      var state = history.state;
+      if (state) {
+        if (state.urlOld) this.layout.setUrl(state.urlOld);
+      }
+    });
     this.buttons = {
       id: 'btnAdd',
     };
-    // this.cache.functionList(this.funcID).subscribe((res) => {
-    //   this.predicate = res.predicate;
-    //   this.dataValue = res.dataValue;
-    //   this.api
-    //     .callSv('SYS', 'SYS', 'EntitiesBusiness', 'GetCacheEntityAsync', [
-    //       res.entityName,
-    //     ])
-    //     .subscribe((res: any) => {
-    //       if (res && res.msgBodyData) {
-    //         var entities = res.msgBodyData[0];
-    //         this.entityName = entities.tableName;
-    //         var arr = entities.tableName.split('_') as any[];
-    //         if (arr.length > 0) {
-    //           this.service = arr[0];
-    //         }
-    //         this.detectorRef.detectChanges();
-    //       }
-    //     }); // hàm này để tạm do chưa có cache entities trên UI
-    //   this.cache
-    //     .gridViewSetup(res.formName, res.gridViewName)
-    //     .subscribe((res) => {
-    //       this.data = Object.values(res) as any[];
-    //       this.data = this.data.filter((res) => {
-    //         if (res.isVisible) {
-    //           res['field'] = this.camelize(res.fieldName);
-    //         }
-    //         return res;
-    //       });
-
-    //       this.columnsGrid = this.data.sort((a, b) => {
-    //         return a.columnOrder - b.columnOrder;
-    //       });
-
-    //       this.columnsGrid[this.columnsGrid.length - 1].template =
-    //         this.morefunction;
-
-    //       //Để tạm vì nhỏ quá morefc k hiện hết
-    //       this.columnsGrid[this.columnsGrid.length - 1].width = '200';
-
-    //       this.views = [
-    //         {
-    //           type: ViewType.grid,
-    //           sameData: true,
-    //           active: true,
-    //           model: {
-    //             resources: this.columnsGrid,
-    //           },
-    //         },
-    //       ];
-    //     });
-    // });
   }
 
   ngAfterViewInit(): void {
@@ -252,13 +216,5 @@ export class DynamicFormComponent extends UIComponent {
       [gridModel, evt[id]],
       null
     );
-  }
-
-  private camelize(str) {
-    return str
-      .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
-        return index === 0 ? word.toLowerCase() : word.toUpperCase();
-      })
-      .replace(/\s+/g, '');
   }
 }
