@@ -392,22 +392,25 @@ export class HomeComponent extends UIComponent {
     if (item.read) {
       var breadcumb = [];
       var breadcumbLink = [];
-      this.codxview.currentView.currentComponent.treeView.textField = "folderName";
-      var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
+      if (this.codxview.currentView.currentComponent?.treeView != null) {
+        this.codxview.currentView.currentComponent.treeView.textField = "folderName";
+        var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
+        breadcumb.push(this.dmSV.menuActive.getValue());
+        breadcumbLink.push(this.dmSV.idMenuActive);
+        for (var i = list.length - 1; i >= 0; i--) {
+          breadcumb.push(list[i].text);
+          breadcumbLink.push(list[i].id);
+        }
+        this.dmSV.breadcumbLink = breadcumbLink;
+        this.dmSV.breadcumb.next(breadcumb);   
+      }
+        
       this.dmSV.folderName = item.folderName;
       this.dmSV.parentFolderId = item.parentId;
       this.dmSV.level = item.level;    
       this.dmSV.getRight(item);      
       this.dmSV.loadedFile = false;  
-      this.dmSV.loadedFolder = false;  
-      breadcumb.push(this.dmSV.menuActive.getValue());
-      breadcumbLink.push(this.dmSV.idMenuActive);
-      for (var i = list.length - 1; i >= 0; i--) {
-        breadcumb.push(list[i].text);
-        breadcumbLink.push(list[i].id);
-      }
-      this.dmSV.breadcumbLink = breadcumbLink;
-      this.dmSV.breadcumb.next(breadcumb);      
+      this.dmSV.loadedFolder = false;           
       this.data = [];
       this.dmSV.folderId.next(id);      
       this.dmSV.folderID = id;
@@ -732,6 +735,8 @@ export class HomeComponent extends UIComponent {
       this.fileService.options.funcID = this.view.funcID;
       this.dmSV.listFiles = [];
       this.dmSV.loadedFile = false;  
+     // this.data = [];
+      this.changeDetectorRef.detectChanges();
       this.folderService.options.srtColumns = this.sortColumn;
       this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
