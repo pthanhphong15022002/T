@@ -37,7 +37,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   data;
   // data = {
   //   funcID: 'EST021',
-  //   recID: '185e0dca-246e-11ed-979b-509a4c39550b',
+  //   recID: '5a9afa04-2471-11ed-979b-509a4c39550b',
   // };
 
   formModel: FormModel;
@@ -61,8 +61,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
         .then((res) => {
           if (res) {
             this.dialogSignFile = res;
+            this.detectorRef.detectChanges();
           }
-          this.detectorRef.detectChanges();
         });
     });
   }

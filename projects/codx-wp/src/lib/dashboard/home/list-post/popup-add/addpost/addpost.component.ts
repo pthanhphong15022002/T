@@ -52,7 +52,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   @ViewChild('codxFileEdit') codxFileEdit: ImageGridComponent;
   //Variable for control share
   CATEGORY = {
-    POST: "Post",
+    POST: "1",
     COMMENTS: "2",
     FEEDBACK: "3",
     SHARE: "4",
