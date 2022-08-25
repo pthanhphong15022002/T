@@ -30,13 +30,6 @@ import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx
 import { CodxTMService } from '../codx-tm.service';
 import { TM_TaskGroups } from '../models/TM_TaskGroups.model';
 import { TM_Parameter, TM_TaskExtends } from '../models/TM_Tasks.model';
-import { PopupAddComponent } from './popup-add/popup-add.component';
-import { PopupConfirmComponent } from './popup-confirm/popup-confirm.component';
-import { PopupExtendComponent } from './popup-extend/popup-extend.component';
-import { PopupUpdateProgressComponent } from './popup-update-progress/popup-update-progress.component';
-import { PopupViewTaskResourceComponent } from './popup-view-task-resource/popup-view-task-resource.component';
-import { UpdateStatusPopupComponent } from './update-status-popup/update-status-popup.component';
-import { ViewDetailComponent } from './view-detail/view-detail.component';
 @Component({
   selector: 'codx-tasks',
   templateUrl: './tasks.component.html',
