@@ -1253,7 +1253,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       Signer: anno.author,
       LabelType: anno.customStampName,
       LabelValue: null,
-      FixedWidth: true,
+      FixedWidth: false,
       SignDate: false,
       DateFormat: new Date(),
       Location: {
