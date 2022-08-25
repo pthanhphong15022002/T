@@ -433,6 +433,7 @@ export class CodxDMService {
         this.folderName = data.folderName;
         this.currentNode = '';
         this.folderId.next(data.recID);
+        this.folderID = data.recID;
         this.nodeSelect.next(data);
         this.disableInput.next(false);
 
@@ -1282,7 +1283,7 @@ export class CodxDMService {
         if (folder.icon.indexOf('.') == -1)
           item1 = `<i class="${folder.icon}" role="presentation"></i>`;
         else {
-          var path = `${this.path}/${folder.icon}`;
+          var path = `${folder.icon}`;
           item1 = `<img class="h-15px " src="${path}">`;
         }
       }

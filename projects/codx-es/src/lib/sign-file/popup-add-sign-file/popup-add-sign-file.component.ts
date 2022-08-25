@@ -743,6 +743,11 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
+  saveAndClose() {
+    this.onSaveSignFile();
+    this.dialog && this.dialog.close();
+  }
+
   closeDialogTmp(dialogTmp: DialogRef) {
     if (this.templateName != '') this.templateName = '';
     dialogTmp && dialogTmp.close();

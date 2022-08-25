@@ -51,7 +51,7 @@ export class CodxTasksComponent
   implements OnInit, AfterViewInit
 {
   //#region Constructor
-  // @Input()funcID?: any;
+  @Input() funcID?: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   @Input() calendarID: string;
@@ -88,7 +88,7 @@ export class CodxTasksComponent
   eventStatus: any;
   itemSelected: any;
   user: any;
-  funcID: string;
+  // funcID: string;
   gridView: any;
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
@@ -127,29 +127,6 @@ export class CodxTasksComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-
-    // cmt truyền động để chạy debug cho nhanh
-    // this.cache.functionList(this.funcID).subscribe(res=
-    //   if(res){
-    //     this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(result => {
-    //       if (result){
-    //         this.vllStatus = result.Status.referedValue ;
-    //         this.vllApproveStatus = result.ApproveStatus.referedValue ;
-    //         this.vllVerifyStatus = result.VerifyStatus.referedValue;
-    //         this.vllExtendStatus = result.ExtendStatus.referedValue;
-    //         this.vllConfirmStatus = result.ConfirmStatus.referedValue;
-    //       }
-    //     })
-    //   }
-    // })
-
-    //để cái này chay test cho nhanh
-    if (this.funcID == 'TMT0203') {
-      this.vllStatus = this.vllStatusAssignTasks;
-    } else {
-      this.vllStatus = this.vllStatusTasks;
-    }
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -198,6 +175,28 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
+    
+     if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // cmt truyền động để chạy debug cho nhanh
+    // this.cache.functionList(this.funcID).subscribe(res=
+    //   if(res){
+    //     this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(result => {
+    //       if (result){
+    //         this.vllStatus = result.Status.referedValue ;
+    //         this.vllApproveStatus = result.ApproveStatus.referedValue ;
+    //         this.vllVerifyStatus = result.VerifyStatus.referedValue;
+    //         this.vllExtendStatus = result.ExtendStatus.referedValue;
+    //         this.vllConfirmStatus = result.ConfirmStatus.referedValue;
+    //       }
+    //     })
+    //   }
+    // })
+    if (this.funcID == 'TMT0203') {
+      this.vllStatus = this.vllStatusAssignTasks;
+    } else {
+      this.vllStatus = this.vllStatusTasks;
+    }
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
     this.viewsActive = [

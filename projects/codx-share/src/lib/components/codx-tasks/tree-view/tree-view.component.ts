@@ -6,9 +6,10 @@ import {
   OnInit,
   Optional,
   Output,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel, ViewTreeDetailComponent } from 'codx-core';
 
 @Component({
   selector: 'share-tree-view',
@@ -19,6 +20,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() data?: any;
   @Input() formModel?: any;
   @Input() vllStatus ?:any
+  @ViewChild("treeView") treeView : ViewTreeDetailComponent
   listDataTree :any [] =[];
   // dataTree :any [] =[];
 
@@ -34,28 +36,28 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
+    this.treeView.dataService.loaded ;
   }
 
   ngOnInit(): void {
    
   }
   ngAfterViewInit(): void {
- 
+    
   }
-  loadTreeView(item) {
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTasksTreeAsync',
-        item?.taskID
-      )
-      .subscribe((res) => {
-        if (res) this.listDataTree.push(res);
-      });
-  }
+  // loadTreeView(item) {
+  //   this.api
+  //     .execSv<any>(
+  //       'TM',
+  //       'ERM.Business.TM',
+  //       'TaskBusiness',
+  //       'GetListTasksTreeAsync',
+  //       item?.taskID
+  //     )
+  //     .subscribe((res) => {
+  //       if (res) this.listDataTree.push(res);
+  //     });
+  // }
 
   clickMF(e: any, dt?: any) {
     this.clickMoreFunction.emit({ e: e, data: dt });
