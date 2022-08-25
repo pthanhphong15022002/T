@@ -224,9 +224,9 @@ export class BookingRoomComponent extends UIComponent {
       case 'btnDelete':
         this.delete();
         break;
-      // case 'btnAddReport':
-      //   this.addReport();
-      //   break;
+      case 'btnAddReport':
+        this.addReport();
+        break;
     }
   }
 

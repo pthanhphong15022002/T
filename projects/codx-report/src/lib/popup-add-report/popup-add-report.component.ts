@@ -79,7 +79,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     if(this.reportID){
       this.api.execSv("SYS", "ERM.Business.SYS", "ReportListBusiness", "GetByReportIDAsync", this.reportID).subscribe((res: any) => {
         if (res) {
-          debugger
          this.data = res;
          this.recID = this.data.recID;
         }
