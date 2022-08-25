@@ -1,40 +1,45 @@
-import { PopupUpdateInventoryComponent } from './settings/stationery/popup-update-inventory/popup-update-inventory.component';
-import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
-import { PopupAddCarsComponent } from './settings/cars/popup-add-cars/popup-add-cars.component';
-import { CarsComponent } from './settings/cars/cars.component';
+import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
-import { Route, RouterModule } from '@angular/router';
-import { SharedModule } from 'src/shared';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { Route, RouterModule } from '@angular/router';
+import { SharedModule } from '@shared/shared.module';
 import {
   AccumulationChartAllModule,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import { HttpClientModule } from '@angular/common/http';
-import { LayoutComponent } from './_layout/layout.component';
-import { StationeryComponent } from './settings/stationery/stationery.component';
-import { BookingStationeryComponent } from './booking/stationery/booking-stationery.component';
-import { StationeryDashboardComponent } from './booking/stationery/dashboard/dashboard.component';
+import { CodxReportModule } from 'projects/codx-report/src/public-api';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { ApprovalCarComponent } from './approval/car/approval-car.component';
+import { ApprovalRoomComponent } from './approval/room/approval-room.component';
+import { ApprovalStationeryComponent } from './approval/stationery/approval-stationery.component';
+import { ViewDetailComponent } from './approval/stationery/view-detail/view-detail.component';
 import { BookingCarComponent } from './booking/car/booking-car.component';
-import { RoomDashboardComponent } from './booking/room/dashboard/dashboard.component';
 import { CarDashboardComponent } from './booking/car/dashboard/dashboard.component';
 import { PopupAddBookingCarComponent } from './booking/car/popup-add-booking-car/popup-add-booking-car.component';
-import { RoomsComponent } from './settings/rooms/rooms.component';
 import { BookingRoomComponent } from './booking/room/booking-room.component';
+import { RoomDashboardComponent } from './booking/room/dashboard/dashboard.component';
 import { PopupAddBookingRoomComponent } from './booking/room/popup-add-booking-room/popup-add-booking-room.component';
-import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
+import { BookingStationeryComponent } from './booking/stationery/booking-stationery.component';
+import { StationeryDashboardComponent } from './booking/stationery/dashboard/dashboard.component';
 import { PopupListStationeryComponent } from './booking/stationery/popup-list-stationery/popup-list-stationery.component';
-import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
+import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
+import { CarsComponent } from './settings/cars/cars.component';
+import { PopupAddCarsComponent } from './settings/cars/popup-add-cars/popup-add-cars.component';
 import { DriversComponent } from './settings/drivers/drivers.component';
 import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/popup-add-drivers.component';
-import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
-import { CodxReportModule } from 'projects/codx-report/src/public-api';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
+import { RoomsComponent } from './settings/rooms/rooms.component';
+import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
 import { PopupSettingNormsComponent } from './settings/stationery/popup-setting-norms/popup-setting-norms.component';
+import { PopupUpdateInventoryComponent } from './settings/stationery/popup-update-inventory/popup-update-inventory.component';
+import { StationeryComponent } from './settings/stationery/stationery.component';
+import { LayoutComponent } from './_layout/layout.component';
+
 const routes: Route[] = [
   {
     path: '',
@@ -52,7 +57,10 @@ const routes: Route[] = [
         path: 'bookingstationery/:funcID',
         component: BookingStationeryComponent,
       },
-
+      {
+        path: 'approvalstationery/:funcID',
+        component: ApprovalStationeryComponent,
+      },
       {
         path: 'settings',
         canActivate: [AuthGuard],
@@ -101,6 +109,9 @@ const Components: Type<any>[] = [
   BookingRoomComponent,
   BookingCarComponent,
   BookingStationeryComponent,
+  ApprovalRoomComponent,
+  ApprovalCarComponent,
+  ApprovalStationeryComponent,
   PopupAddBookingRoomComponent,
   PopupAddBookingCarComponent,
   PopupRequestStationeryComponent,
@@ -118,6 +129,7 @@ const Components: Type<any>[] = [
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,
+  ViewDetailComponent,
   DynamicFormComponent,
 ];
 
