@@ -40,6 +40,7 @@
   .icon-T {
     margin-left: -15px;
   }
+
   input.e-input,
   textarea.e-input,
   .e-input-group,
@@ -49,5 +50,13 @@
 }
 
 .active [class*="icon-"] {
-    color: #0078FF;
+  color: #0078FF;
+}
+
+.action-menu-1 {
+  position: absolute;
+  top: 31px;
+  left: 20px;
+  width: 40px;
+  z-index: 99;
 }
