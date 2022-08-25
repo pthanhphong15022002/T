@@ -5,7 +5,6 @@ import {
   DataRequest,
   DialogRef,
   NotificationsService,
-  ResourceModel,
   SidebarModel,
   ViewModel,
   ViewsComponent,
@@ -33,7 +32,6 @@ export class BookingStationeryComponent extends UIComponent {
   columnsGrid: any;
   dialog!: DialogRef;
   model: DataRequest;
-  //modelResource: ResourceModel;
   cart: [];
   listData = [];
   count = 0;
@@ -59,13 +57,6 @@ export class BookingStationeryComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-    // this.modelResource = new ResourceModel();
-    // this.modelResource.assemblyName = 'EP';
-    // this.modelResource.className = 'ResourcesBusiness';
-    // this.modelResource.service = 'EP';
-    // this.modelResource.method = 'GetListAsync';
-    // this.modelResource.predicate = 'ResourceType=@0';
-    // this.modelResource.dataValue = '6';
   }
 
   ngAfterViewInit(): void {
@@ -186,7 +177,6 @@ export class BookingStationeryComponent extends UIComponent {
       this.dialog && this.dialog.close();
     }
   }
-
 
   addCart(evt, data) {
     let dataItem = data;
