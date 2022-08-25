@@ -95,6 +95,7 @@
       <codx-thumbnail
         [files]="data?.files"
         displayThumb="simple"
+        [hideDelete]="'0'"
       >
       </codx-thumbnail>
     </ng-container>
@@ -140,17 +141,15 @@
         <li [ngbNavItem]="2">
           <a ngbNavLink><div class="d-flex align-item-center"><i class="icon-format_list_numbered me-2" [ngClass]="{'text-primary':active===2}"></i><span>Công việc</span></div></a>
           <ng-template ngbNavContent>
-            <ng-container *ngIf="data?.tasks[0].length>0">
+            <ng-container *ngIf="(data?.tasks && data?.tasks[0] && data?.tasks[0].length>0) , else defaulEmpt">
               <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
-            </ng-container> 
+            </ng-container>
           </ng-template>
         </li>
         <li [ngbNavItem]="3">
           <a ngbNavLink><div class="d-flex align-item-center"><i class="icon-info me-2" [ngClass]="{'text-primary':active===3}"></i><span>Chi tiết</span></div></a>
           <ng-template ngbNavContent>
-         <!--    <ng-container *ngIf="data?.tasks[0].length>0">
-              <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks[0]" [showSearch]="false" [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
-            </ng-container> -->
+            <ng-container *ngTemplateOutlet="defaulEmpt"></ng-container>
           </ng-template>
         </li>
       </ul>
@@ -235,13 +234,16 @@
 </div>
 </ng-template>
 <ng-template #baseTmpRight let-data>
-  <codx-vll 
-    [showText]="true"
-    [showBgColor]="true" 
-    [name]="'OD009'"
-    [value]="data?.status" 
-    class="badge badge-light badge-md fs-7 ms-2">
-  </codx-vll>
+  <ng-container *ngIf="data?.relationType!='1'">
+    <codx-vll 
+      [showText]="true"
+      [showBgColor]="true" 
+      [name]="'OD009'"
+      [value]="data?.status" 
+      class="badge badge-light badge-md fs-7 ms-2">
+    </codx-vll>
+  </ng-container>
+  
   <ng-container *ngIf="data?.reCall">
     <codx-vll
       [showText]="true"
@@ -251,4 +253,20 @@
       class="badge badge-light badge-md fs-7 ">
     </codx-vll>
   </ng-container>
+</ng-template>
+<ng-template #defaulEmpt>
+  <div class="container">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+        <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+      </div>
+    </div>
+  </div>
 </ng-template>

@@ -2,7 +2,8 @@ import { UIComponent } from 'codx-core';
 import { Component, Injector, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DialogData, DialogRef } from 'codx-core';
-import { CodxEpService } from '../../codx-ep.service';
+import { CodxEpService } from '../../../codx-ep.service';
+
 @Component({
   selector: 'lib-popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',

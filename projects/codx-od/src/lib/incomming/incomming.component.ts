@@ -244,7 +244,6 @@ export class IncommingComponent
   {
     if(e)
     {
-    debugger;
       var foundIndex = e.findIndex((x: { functionID: string }) => x.functionID == 'SYS001');
       e[foundIndex].disabled = true;
     }
@@ -405,7 +404,6 @@ export class IncommingComponent
   }
 
   valueChange(dt: any) {
-    debugger;
     var recID = null;
     if (dt?.data) {
       recID = dt.data.recID;

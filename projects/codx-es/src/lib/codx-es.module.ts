@@ -55,6 +55,7 @@ import { PopupSignForApprovalComponent } from './sign-file/popup-sign-for-approv
 import { ViewApprovalProcessComponent } from './setting/view-approval-process/view-approval-process.component';
 import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { ESApprovelComponent } from './sign-file/approval/approval.component';
 
 const routes: Routes = [
   {
@@ -139,6 +140,7 @@ const routes: Routes = [
     PopupADRComponent,
     PopupSignForApprovalComponent,
     ViewApprovalProcessComponent,
+    ESApprovelComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

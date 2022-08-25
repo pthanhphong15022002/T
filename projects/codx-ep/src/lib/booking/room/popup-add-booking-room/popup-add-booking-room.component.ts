@@ -24,7 +24,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { CodxEpService, ModelPage } from '../../codx-ep.service';
+import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 
 export class Device {
   id;
@@ -294,6 +294,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
     return true;
   }
   onSaveForm() {
+    console.log('data',this.fGroupAddBookingRoom.value);
     // if (this.resource) {
     // }
     // if (this.addEditForm.invalid == true) {
@@ -342,7 +343,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
     //       this.isSaveSuccess = true;
     //     }
     //   });
-    console.log(this.fGroupAddBookingRoom.value);
   }
   changeTime(data) {
     if (!data.field || !data.data) return;
@@ -377,11 +377,36 @@ export class PopupAddBookingRoomComponent implements OnInit {
       } else {
         this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data });
       }
-
     }
+    if (event?.component.ControlName){
+      if (event.data instanceof Object) {
+        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data.value });
+      } else {
+        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data });
+      }
+    }    
     this.changeDetectorRef.detectChanges();
   }
 
+  valueCbxRoomChange(event?) {  
+    if(event?.data!=null && event?.data !=""){      
+      this.tmplstDevice=[];
+      var cbxCar = event.component.dataService.data;
+      cbxCar.forEach(element => {
+        if (element.ResourceID == event.data) {          
+          var carEquipments= element.Equipments.split(";");
+          carEquipments.forEach(item=>{
+            this.lstDeviceRoom.forEach(device=>{
+              if(item==device.id){ 
+                device.isSelected=false;
+                this.tmplstDevice.push(device);                
+              }              
+            })
+          })          
+        }
+      });
+    } 
+  }
   closeForm() {
     this.initForm();
     this.closeEdit.emit();

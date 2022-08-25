@@ -42,9 +42,8 @@
         ControlName="resourceID"
         [formModel]="form.formModel"   
         [multiple]="false"     
-        [Group]="fGroupAddBookingRoom"
-        [crrValue]="fGroupAddBookingRoom.value.resourceID"         
-        (valueChange)="valueChange($event)"
+        [Group]="fGroupAddBookingRoom"      
+        (valueChange)="valueCbxRoomChange($event)"
       >
       </codx-input>        
     </div>
@@ -549,23 +548,24 @@
     <div class="form-group col-3">
       <codx-label default="Số người tham dự" fiedName="Attendees"> </codx-label>
       <codx-input
-        type="text"
         ControlName="attendees"
         [formModel]="form.formModel"
-        [Group]="fGroupAddBookingRoom"
+        [Group]="fGroupAddBookingRoom"        
+        (valueChange)="valueChange($event)">
       >
       </codx-input>
     </div>    
 
     <div class="form-group">
       <codx-label default="Phân loại" fiedName="Category"> </codx-label>
-      <codx-input
+      <codx-input 
         type="valuelist"
+        name="valuelist"
+        ngDefaultControl
         [crrValue]="fGroupAddBookingRoom.value.category"
         refValue="VL005"
         field="category"
-        (valueChange)="valueChange($event)"
-      >
+        (valueChange)="valueChange($event)">
       </codx-input>
     </div>
 
@@ -583,8 +583,7 @@
 
     <div class="row form-group">        
       <codx-label default="" fiedName="" [formModel]="form.formModel"> </codx-label>      
-      <div class="col-3 form-group ">  
-        <codx-label default="" fiedName="" [formModel]="form.formModel"> </codx-label>    
+      <div class="col-3 form-group ">    
         <codx-input  #checkbox
           type="switch"
           [checked]="fGroupAddBookingRoom.value.repeat"
@@ -595,7 +594,7 @@
           >
         </codx-input>
         <codx-label
-          fiedName="lblAgain"
+          fiedName="Repeat"
           default="Lặp lại"
           [formModel]="dialogRef.formModel"
         ></codx-label>                
