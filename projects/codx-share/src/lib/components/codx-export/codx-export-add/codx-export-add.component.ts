@@ -90,7 +90,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.attachment.uploadFile();
   }
   onSave() {
-    debugger;
     this.submitted = true;
     if (this.exportAddForm.invalid) return;
     this.exportAddForm.value.owner = "a";
@@ -114,7 +113,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             else this.notifySvr.notifyCode("SYS023");
           })
       }
-      else this.notifySvr.notifyCode("DM001");
+      else this.notifySvr.notifyCode("OD022");
     }
     //Chỉnh sửa
     else if (this.action == "edit") {
