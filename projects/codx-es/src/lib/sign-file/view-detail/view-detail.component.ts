@@ -55,25 +55,43 @@ export class ViewDetailComponent implements OnInit {
   ngOnInit(): void {
     this.itemDetailStt = 1;
     this.itemDetailDataStt = 1;
-    if (!this.formModel) {
+    if (this.formModel) {
+      this.initForm();
+    } else {
       this.esService.getFormModel('EST021').then((formModel) => {
-        if (this.formModel) this.formModel = formModel;
+        if (formModel) this.formModel = formModel;
         this.initForm();
       });
-    } else {
-      this.initForm();
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.formModel) {
+    if (this.formModel) {
+      this.initForm();
+    } else {
       this.esService.getFormModel('EST021').then((formModel) => {
-        if (this.formModel) this.formModel = formModel;
+        if (formModel) this.formModel = formModel;
         this.initForm();
       });
-    } else {
-      this.initForm();
     }
+  }
+
+  setHeight() {
+    var main = Array.from(
+      document.getElementsByClassName(
+        'codx-detail-main'
+      ) as HTMLCollectionOf<HTMLElement>
+    )[0].offsetHeight;
+    var header = Array.from(
+      document.getElementsByClassName(
+        'codx-detail-header'
+      ) as HTMLCollectionOf<HTMLElement>
+    )[0].offsetHeight;
+    Array.from(
+      document.getElementsByClassName(
+        'codx-detail-body'
+      ) as HTMLCollectionOf<HTMLElement>
+    )[0].style.height = main - header - 27 + 'px';
   }
 
   initForm() {
@@ -136,6 +154,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
     }
+    this.setHeight();
   }
 
   changeNavState(state) {

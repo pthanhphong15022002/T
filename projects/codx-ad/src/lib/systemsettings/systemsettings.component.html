@@ -1,5 +1,5 @@
 <div class="content d-flex flex-column flex-column-fluid p-0 mw-1100px" id="kt_content">
-  <div id="erm_content" class="d-flex flex-column-fluid w-100">
+  <div id="erm_content" class="w-100">
     <codx-views #view entityName="AD_SystemSettings" service="SYS" assemblyName="ERM.Business.AD"
       className="SystemSettingsBusiness" [method]="'GetOneAsync'" [views]="views" idField="recID">
     </codx-views>
@@ -14,18 +14,16 @@
         <ng-template #headerText>
           <div class="nav-item">
             <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
-              <span class="icon-info icon-18 me-2"></span>
-              <span class="d-flex flex-column align-items-start">
-                <span class="fw-bold">
-                  <codx-label name="Description" formName="SystemSetting" default="Thông tin chung">
-                  </codx-label>
-                </span>
+              <span class="icon-info icon-20 me-2"></span>
+              <span class="fw-bold">
+                <codx-label name="Description" formName="SystemSetting" default="Thông tin chung">
+                </codx-label>
               </span>
             </a>
           </div>
         </ng-template>
         <ng-template #content>
-          <div class="w-100 bg-body rounded-3 p-6">
+          <div class="w-100 bg-body rounded-3 p-9">
             <div class="form-group">
               <codx-label class="text-dark" default="Thông tin chung">
               </codx-label>
@@ -211,127 +209,128 @@
       </e-tabitem>
       <e-tabitem>
         <ng-template #headerText class="">
+
           <div class="nav-item">
             <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
-              <span class="icon-info icon-18 me-2"></span>
-              <span class="d-flex flex-column align-items-start">
-                <span class="fw-bold">
-                  <codx-label name="Security" formName="SystemSetting" default="Chính sách bảo mật">
-                  </codx-label>
-                </span>
+              <span class="icon-info icon-20 me-2"></span>
+              <span class="fw-bold">
+                <codx-label name="Security" formName="SystemSetting" default="Chính sách bảo mật">
+                </codx-label>
               </span>
             </a>
           </div>
         </ng-template>
         <ng-template #content>
-          <div class="form-group">
-            <codx-label default="Chính sách bảo mật">
-            </codx-label>
-          </div>
-          <div class="form-group row mt-3">
-            <div class="col-9">
-              <codx-label class="text-dark" fiedName="PWLength" default="Chiều dài tối thiểu của mật khẩu"
-                formName="SystemSetting" gridViewName="grvSystemSetting">
+          <div class="w-100 bg-body rounded-3 p-9">
+            <div class="form-group">
+              <codx-label default="Chính sách bảo mật">
               </codx-label>
-              <div>
-                <codx-label default="Kiểm soát chiều dài tối thiểu của mật khẩu">
+            </div>
+            <div class="form-group row mt-3">
+              <div class="col-9">
+                <codx-label class="text-dark" fiedName="PWLength" default="Chiều dài tối thiểu của mật khẩu"
+                  formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
-              </div>
+                <div>
+                  <codx-label default="Kiểm soát chiều dài tối thiểu của mật khẩu">
+                  </codx-label>
+                </div>
 
+              </div>
+              <div class="col-3">
+                <codx-input name="pwLength" type="valuelist" field="pwLength" placeholder=""
+                  [crrValue]="systemSetting?.pwLength" (valueChange)="valueList($event)" refValue="SYS014">
+                </codx-input>
+              </div>
             </div>
-            <div class="col-3">
-              <codx-input name="pwLength" type="valuelist" field="pwLength" placeholder=""
-                [crrValue]="systemSetting?.pwLength" (valueChange)="valueList($event)" refValue="SYS014">
-              </codx-input>
-            </div>
-          </div>
-          <div class="form-group row mt-3">
-            <div class="col-9">
-              <codx-label class="text-dark" fiedName="PWLifeDays" default="Thời gian mật khẩu" formName="SystemSetting"
-                gridViewName="grvSystemSetting">
-              </codx-label>
-              <div>
-                <codx-label default="Thời hạn mật khẩu sẽ hết hạn sau {0} ngày">
+            <div class="form-group row mt-3">
+              <div class="col-9">
+                <codx-label class="text-dark" fiedName="PWLifeDays" default="Thời gian mật khẩu"
+                  formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
+                <div>
+                  <codx-label default="Thời hạn mật khẩu sẽ hết hạn sau {0} ngày">
+                  </codx-label>
+                </div>
+
               </div>
-
+              <div class="col-3">
+                <codx-input name="pwLifeDays" type="valuelist" field="pwLifeDays" placeholder=""
+                  [crrValue]="systemSetting?.pwLifeDays" (valueChange)="valueList($event)" refValue="SYS015">
+                </codx-input>
+              </div>
             </div>
-            <div class="col-3">
-              <codx-input name="pwLifeDays" type="valuelist" field="pwLifeDays" placeholder=""
-                [crrValue]="systemSetting?.pwLifeDays" (valueChange)="valueList($event)" refValue="SYS015">
-              </codx-input>
-            </div>
-          </div>
 
-          <div class="form-group row mt-3">
-            <div class="col-9">
-              <codx-label class="text-dark" fiedName="PWExpireWarning" default="Cảnh báo hết hạn mật khẩu"
-                formName="SystemSetting" gridViewName="grvSystemSetting">
-              </codx-label>
-              <div>
-                <codx-label default="Chương trình cảnh báo hết hạn trước {0} ngày">
+            <div class="form-group row mt-3">
+              <div class="col-9">
+                <codx-label class="text-dark" fiedName="PWExpireWarning" default="Cảnh báo hết hạn mật khẩu"
+                  formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
+                <div>
+                  <codx-label default="Chương trình cảnh báo hết hạn trước {0} ngày">
+                  </codx-label>
+                </div>
+
               </div>
-
+              <div class="col-3">
+                <codx-input name="pwExpireWarning" type="valuelist" field="pwExpireWarning" placeholder=""
+                  [crrValue]="systemSetting?.pwExpireWarning" (valueChange)="valueList($event)" refValue="SYS016">
+                </codx-input>
+              </div>
             </div>
-            <div class="col-3">
-              <codx-input name="pwExpireWarning" type="valuelist" field="pwExpireWarning" placeholder=""
-                [crrValue]="systemSetting?.pwExpireWarning" (valueChange)="valueList($event)" refValue="SYS016">
-              </codx-input>
-            </div>
-          </div>
 
-          <div class="form-group row mt-3">
-            <div class="col-9">
-              <codx-label class="text-dark" fiedName="PWDuplicate" default="Kiểm tra trùng mật khẩu"
-                formName="SystemSetting" gridViewName="grvSystemSetting">
-              </codx-label>
-              <div>
-                <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
+            <div class="form-group row mt-3">
+              <div class="col-9">
+                <codx-label class="text-dark" fiedName="PWDuplicate" default="Kiểm tra trùng mật khẩu"
+                  formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
+                <div>
+                  <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
+                  </codx-label>
+                </div>
+
               </div>
-
+              <div class="col-3">
+                <codx-input name="pwDuplicate" type="valuelist" field="pwDuplicate" placeholder=""
+                  [crrValue]="systemSetting?.pwDuplicate" (valueChange)="valueList($event)" refValue="SYS017">
+                </codx-input>
+              </div>
             </div>
-            <div class="col-3">
-              <codx-input name="pwDuplicate" type="valuelist" field="pwDuplicate" placeholder=""
-                [crrValue]="systemSetting?.pwDuplicate" (valueChange)="valueList($event)" refValue="SYS017">
-              </codx-input>
-            </div>
-          </div>
 
-          <div class="form-group row mt-3">
-            <div class="col-9">
-              <codx-label class="text-dark" fiedName="BlockSystem" default="Khóa đăng nhập" formName="SystemSetting"
-                gridViewName="grvSystemSetting">
-              </codx-label>
-              <div>
-                <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
+            <div class="form-group row mt-3">
+              <div class="col-9">
+                <codx-label class="text-dark" fiedName="BlockSystem" default="Khóa đăng nhập" formName="SystemSetting"
+                  gridViewName="grvSystemSetting">
                 </codx-label>
+                <div>
+                  <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
+                  </codx-label>
+                </div>
+
               </div>
-
+              <div class="col-3">
+                <codx-input name="blockSystem" type="valuelist" field="blockSystem" placeholder=""
+                  [crrValue]="systemSetting?.blockSystem" (valueChange)="valueList($event)" refValue="SYS018">
+                </codx-input>
+              </div>
             </div>
-            <div class="col-3">
-              <codx-input name="blockSystem" type="valuelist" field="blockSystem" placeholder=""
-                [crrValue]="systemSetting?.blockSystem" (valueChange)="valueList($event)" refValue="SYS018">
-              </codx-input>
-            </div>
-          </div>
 
-          <div class="form-group row mt-3">
-            <div class="col-9">
-              <codx-label class="text-dark" fiedName="FreezeInMinutes" default="Khóa hệ thống" formName="SystemSetting"
-                gridViewName="grvSystemSetting">
-              </codx-label>
-              <div>
-                <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
+            <div class="form-group row mt-3">
+              <div class="col-9">
+                <codx-label class="text-dark" fiedName="FreezeInMinutes" default="Khóa hệ thống"
+                  formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
-              </div>
+                <div>
+                  <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
+                  </codx-label>
+                </div>
 
-            </div>
-            <div class="col-3">
-              <codx-input name="freezeInMinutes" type="valuelist" field="freezeInMinutes" placeholder=""
-                [crrValue]="systemSetting?.freezeInMinutes" (valueChange)="valueList($event)" refValue="SYS019">
-              </codx-input>
+              </div>
+              <div class="col-3">
+                <codx-input name="freezeInMinutes" type="valuelist" field="freezeInMinutes" placeholder=""
+                  [crrValue]="systemSetting?.freezeInMinutes" (valueChange)="valueList($event)" refValue="SYS019">
+                </codx-input>
+              </div>
             </div>
           </div>
         </ng-template>
@@ -341,39 +340,40 @@
         <ng-template #headerText class="">
           <div class="nav-item">
             <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
-              <span class="icon-info icon-18 me-2"></span>
-              <span class="d-flex flex-column align-items-start">
-                <span class="fw-bold">
-                  <codx-label name="App" formName="SystemSetting" default="Cấu hình ứng dụng">
-                  </codx-label>
-                </span>
+              <span class="icon-info icon-20 me-2"></span>
+              <span class="fw-bold">
+                <codx-label name="App" formName="SystemSetting" default="Cấu hình ứng dụng">
+                </codx-label>
               </span>
             </a>
           </div>
         </ng-template>
         <ng-template #content>
-          <ng-container *ngFor="let item of functionList">
-            <div class="d-flex justify-content-between align-items-center flex-wrap  pt-4 pb-2">
-              <div class="d-flex flex-wrap">
-                <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" />
-                <div>
-                  <div class="fw-bold" style="font-weight: bold; margin-left: 10px;">
-                    {{item.customName}}
-                  </div>
-                  <div style="margin-left: 10px;">
-                    <codx-label name="App" formName="SystemSetting" default="Cu Phúc cute vô đối">
-                    </codx-label>
+          <div class="w-100 bg-body rounded-3 p-9">
+            <ng-container *ngFor="let item of functionList">
+
+              <div class="d-flex justify-content-between align-items-center flex-wrap  pt-4 pb-2">
+                <div class="d-flex flex-wrap">
+                  <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" />
+                  <div>
+                    <div class="fw-bold" style="font-weight: bold; margin-left: 10px;">
+                      {{item.customName}}
+                    </div>
+                    <div style="margin-left: 10px;">
+                      <codx-label name="App" formName="SystemSetting" default="Cu Phúc cute vô đối">
+                      </codx-label>
+                    </div>
                   </div>
                 </div>
+                <div class="d-flex flex-column justify-content-end">
+                  <a class="text-dark fw-bold" (click)="clickModule(item.module)">
+                    <span class="icon-arrow_forward_ios icon-16 text-gray-600"></span>
+                  </a>
+                </div>
               </div>
-              <div class="d-flex flex-column justify-content-end">
-                <a class="text-dark fw-bold" (click)="clickModule(item.module)">
-                  >
-                </a>
-              </div>
-            </div>
-          </ng-container>
 
+            </ng-container>
+          </div>
         </ng-template>
       </e-tabitem>
     </e-tabitems>

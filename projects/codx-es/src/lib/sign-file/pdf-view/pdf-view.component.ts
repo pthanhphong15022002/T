@@ -191,6 +191,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   ajaxSetting: any;
 
   onInit() {
+    //
+    // this.user.userID = 'LTTTRUC';
     this.saveAnnoQueue = new Map();
     this.ajaxSetting = {
       ajaxHeaders: [
@@ -317,7 +319,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.esService.getSignFormat().subscribe((res) => {
       console.log('res', res);
     });
-
+    // this.pdfviewerControl.formFieldsModule.clearFormFields();
     this.esService
       .getSignAreas(
         this.recID,
@@ -328,7 +330,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         this.lstAreas = res;
 
-        this.lstAreas.forEach((item: any) => {
+        this.lstAreas?.forEach((item: any) => {
           let anno = {
             annotationId: item.recID,
             annotationSelectorSettings: {
@@ -341,7 +343,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             annotationSettings: {
               minWidth: 100,
               minHeight: 100,
-              isLock: false,
+              isLock: item.fixedWidth,
             },
             bounds: {
               top: Number(item.location.top),
@@ -427,17 +429,13 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
               anno.subject = 'Text Box';
             }
           }
-
-          if (this.isApprover) {
-            if (
-              this.lstRenderAnnotation.indexOf(item) ==
-              this.lstRenderAnnotation.length - 1
-            ) {
-              anno.annotationSelectorSettings.isLock = false;
-            } else {
-              anno.annotationSelectorSettings.isLock = true;
-            }
-          }
+          // if (this.isApprover) {
+          //   if (item.signer == 'LTTTRUC') {
+          //     anno.annotationSelectorSettings.isLock = false;
+          //   } else {
+          //     anno.annotationSelectorSettings.isLock = true;
+          //   }
+          // }
 
           this.pdfviewerControl.addAnnotation(anno);
         });
@@ -679,7 +677,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       Signer: tmpAnnot.author,
       LabelType: tmpAnnot.customStampName,
       LabelValue: null,
-      FixedWidth: true,
+      FixedWidth: false,
       SignDate: false,
       DateFormat: new Date(),
       Location: {
@@ -1160,6 +1158,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           customStampName: type.toString(),
           customStampImageSource: this.url,
         };
+        // this.pdfviewerControl.customStampSettings.customStamps = [stamp];
+        // this.pdfviewerControl.annotationModule.setAnnotationMode('Stamp');
         this.pdfviewerControl.customStamp = [stamp];
       } else {
         switch (type) {
@@ -1209,6 +1209,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         this.pdfviewerControl.annotationModule.setAnnotationMode('FreeText');
       }
     } else {
+      this.pdfviewerControl.annotationModule.setAnnotationMode('None');
       this.holding = 0;
       this.url = '';
     }
@@ -1225,8 +1226,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       }
     );
     // if (!(justAddAnno.shapeAnnotationType === 'FreeText')) {}
-    // justAddAnno.customData =
-    //   this.signerInfo?.authorID + ':' + e.customStampName;
+    justAddAnno.customData =
+      this.signerInfo?.authorID + ':' + e.customStampName;
     justAddAnno.author = this.signerInfo?.authorID;
     justAddAnno.review.author = this.signerInfo?.authorID;
     this.curSelectedAnno = justAddAnno;
@@ -1252,7 +1253,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       Signer: anno.author,
       LabelType: anno.customStampName,
       LabelValue: null,
-      FixedWidth: true,
+      FixedWidth: false,
       SignDate: false,
       DateFormat: new Date(),
       Location: {
@@ -1299,6 +1300,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         if (res) {
           clearTimeout(this.saveAnnoQueue.get(anno.annotationId));
           this.saveAnnoQueue.delete(anno.annotationId);
+
           let index = this.pdfviewerControl.annotationCollection.findIndex(
             (annot) => annot.annotationId == anno.annotationId
           );
@@ -1524,6 +1526,11 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   show(e: any) {
     console.log('collection', this.pdfviewerControl.annotationCollection);
+    console.log('handwrittent', this.pdfviewerControl.formFieldCollections);
+    let pageWidth = this.pdfviewerControl.viewerBase.pageSize[0].width;
+    let h = this.pdfviewerControl.viewerBase.pageSize[0].height;
+
+    console.log('page size', pageWidth, h);
 
     // this.esService
     //   .createLocalCertificatePFX('ekkobuu@gmail.com', '12345678')
