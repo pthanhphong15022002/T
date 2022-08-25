@@ -68,7 +68,7 @@ export class PopupADRComponent extends UIComponent {
     this.controlName = this.mode == 2 ? 'rejectControl' : 'redoControl';
 
     //nho xoa NGUYENPM LTTTRUC
-    // this.user.userID = 'LTTTRUC';
+    // this.user.userID = 'NGUYENPM';
     //
 
     this.detectorRef.detectChanges();
