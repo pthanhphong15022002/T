@@ -1,16 +1,17 @@
 <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views"
-  (sortChanged)="sortChanged($event)"  [autoSort]="false"
+  (sortChanged)="sortChanged($event)"  [autoSort]="false" [autoSearch]="false" 
   (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="addFile($event)"
   (viewChanged)="changeView($event)" (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)"></codx-views>
-
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
   <ng-template #noContext>
     <div oncontextmenu="return false;" class="d-flex align-items-center px-3 py-1" #item>
       <div class="node" [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
     </div>
-  </ng-template>
+  </ng-template> 
+  
+  
   <ng-template #context>
     <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)"
       class="d-flex align-items-center px-3 py-1 home">

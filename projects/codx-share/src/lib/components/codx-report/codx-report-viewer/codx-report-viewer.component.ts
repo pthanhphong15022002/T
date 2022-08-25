@@ -21,7 +21,7 @@ import { CodxExportComponent } from '../../codx-export/codx-export.component';
 @Component({
   selector: 'codx-report-viewer',
   templateUrl: './codx-report-viewer.component.html',
-  styleUrls: ['./codx-report-viewer.component.css'],
+  styleUrls: ['./codx-report-viewer.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class CodxReportViewerComponent
