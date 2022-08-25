@@ -95,6 +95,7 @@
       <codx-thumbnail
         [files]="data?.files"
         displayThumb="simple"
+        [hideDelete]="'0'"
       >
       </codx-thumbnail>
     </ng-container>
@@ -235,13 +236,16 @@
 </div>
 </ng-template>
 <ng-template #baseTmpRight let-data>
-  <codx-vll 
-    [showText]="true"
-    [showBgColor]="true" 
-    [name]="'OD009'"
-    [value]="data?.status" 
-    class="badge badge-light badge-md fs-7 ms-2">
-  </codx-vll>
+  <ng-container *ngIf="data?.relationType!='1'">
+    <codx-vll 
+      [showText]="true"
+      [showBgColor]="true" 
+      [name]="'OD009'"
+      [value]="data?.status" 
+      class="badge badge-light badge-md fs-7 ms-2">
+    </codx-vll>
+  </ng-container>
+  
   <ng-container *ngIf="data?.reCall">
     <codx-vll
       [showText]="true"
