@@ -99,8 +99,8 @@
     <button [title]="titleCollapse"type="button" class="btn btn-sm background-color-white my-1 text-hover-primary " style="margin-left: -5px ;" (click)="collapse($event)">
       <i style="font-size: 21px !important;font-weight:600" class="icon-tune text-muted"></i>
     </button>
-    <div class="w-100 d-flex ">
-      <div class="d-flex  mx-3" *ngFor="let item of lstPined">
+    <div class="w-100 d-flex justify-content-start ">
+      <div class=" mx-3" *ngFor="let item of lstPined">
         <ng-container [ngSwitch]="item?.dataType" >
           <ng-container *ngSwitchCase="'string'">
             <div class="w-275px mt-3" *ngIf="!item.referedType">
@@ -215,10 +215,6 @@
           </ng-container>
         </ng-container>
       </div>
-    </div>
-
-    <div class="d-flex float-right">
-      <button class="btn btn-sm background-color-white my-1 text-hover-primary" style="margin-right: -15px ;" (click)="reportObj.printReport()"><i style="font-size: 21px !important" class="icon-print  text-muted"></i></button>
     </div>
   </div>
 </ng-template>

@@ -323,3 +323,7 @@ codx-views>.container-fluid.h-100 {
 hr {
   background-color: var(--gray-500);
 }
+.is-invalid .ng-invalid
+{
+  border: solid 1.5px red  !important;
+}

@@ -60,8 +60,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
-  predicate ='  (ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3 ';
-  dataValue: any = '0;1;5;false';
+  predicate ='(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
+  dataValue: any = '0;1;5;2';
 
   modal: DialogRef;
   headerText = '';

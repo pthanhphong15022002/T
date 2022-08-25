@@ -121,8 +121,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       if (!style.fontStyle) style.fontStyle = 'italic';
       else style.fontStyle = '';
     } else if (font == 'UNDERLINE') {
-      if (!style.textDecoration) style.textDecoration = 'underline';
-      else style.textDecoration = '';
+      if (!style.textDecorationLine) style.textDecorationLine = 'underline';
+      else style.textDecorationLine = '';
     }
     this.dt.detectChanges();
   }
@@ -226,14 +226,16 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   getElement(ele: any) {
     this.currentElement = ele.elRef.nativeElement as HTMLElement;
-    var style: any = this.currentElement.style;
-    // if (style.length == 0) this.setFont();
-    // else {
-    //   for (let i = 0; i < style.length; i++) {
-    //     if (style[i] == 'font-weight') this.setFont(true, false, false);
-    //     else if (style[i] == 'font-style') this.setFont(false, true, false);
-    //     else this.setFont(false, false, true);
-    //   }
-    // }
+    if (this.listNote.length > 1) {
+      var style: any = this.currentElement.style;
+      if (style.length == 0) this.setFont();
+      else {
+        for (let i = 0; i < style.length; i++) {
+          if (style[i] == 'font-weight') this.setFont(true, false, false);
+          else if (style[i] == 'font-style') this.setFont(false, true, false);
+          else this.setFont(false, false, true);
+        }
+      }
+    }
   }
 }
