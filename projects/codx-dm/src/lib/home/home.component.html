@@ -1,16 +1,17 @@
 <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views"
-  (sortChanged)="sortChanged($event)" (selectedChange)="onSelectionChanged($event)" [button]="button"
-  (buttonClick)="addFile($event)" (viewChanged)="changeView($event)" (onLoading)="onLoading($event)"
-  (requestEnded)="requestEnded($event)"></codx-views>
-
+  (sortChanged)="sortChanged($event)"  [autoSort]="false" [autoSearch]="false" [selectedFirst]="false"
+  (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="addFile($event)"
+  (viewChanged)="changeView($event)" (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)"></codx-views>
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
   <ng-template #noContext>
     <div oncontextmenu="return false;" class="d-flex align-items-center px-3 py-1" #item>
       <div class="node" [innerHTML]="dmSV.setFullHtmlNode(data, data.folderName)"></div>
     </div>
-  </ng-template>
+  </ng-template> 
+  
+  
   <ng-template #context>
     <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)"
       class="d-flex align-items-center px-3 py-1 home">
@@ -25,7 +26,7 @@
 </ng-template>
 
 <ng-template #templateRight>
-  <div appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="w-100 scroll-y home" data-kt-scroll="true"
+  <div  appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="w-100 scroll-y home" data-kt-scroll="true"
     data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
     data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS" data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="empty"></ng-container>
@@ -34,7 +35,14 @@
     <ng-container *ngTemplateOutlet="loading"></ng-container>
   </div>
 </ng-template>
-
+<!--
+ infinite-scroll  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="50" 
+  [immediateCheck]="false"
+  [scrollWindow]="false"
+  (scrolled)="onScrollDown($event)" 
+  (scrolledUp)="onScrollUp($event)"
+-->
 <ng-template #templateSearch>
   asdsdsdsd
 </ng-template>

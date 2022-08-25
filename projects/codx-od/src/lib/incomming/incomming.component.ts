@@ -239,6 +239,11 @@ export class IncommingComponent
       unbm[0].disabled = true;
       bm[0].disabled = false;
     }
+    if(this.view.formModel.funcID == "ODT41" && data?.status != "1" && data?.status != "2")
+    {
+      var approvel = e.filter((x: { functionID: string }) => x.functionID == 'ODT201');
+      approvel[0].disabled = true
+    } 
   }
   aaaa(e:any)
   {
@@ -262,6 +267,7 @@ export class IncommingComponent
       this.cache
         .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
+          debugger;
           this.gridViewSetup = grd;
           if (grd['Security']['referedValue'] != undefined)
             this.cache
@@ -446,6 +452,7 @@ export class IncommingComponent
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;
     this.getGridViewSetup(funcID);
+    this.lstDtDis = null;
     /*  this.view.dataService.predicates = "Status=@0";
     this.view.dataService.dataValues = "1"; */
     //this.view.dataService.setPredicates(['Status=@0'],['1']).subscribe();

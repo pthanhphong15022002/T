@@ -70,6 +70,7 @@
           [refValue]="data.referedValue || data.referdValue"
           [loadFull]="true"
           [field]="data.fieldName"
+          [checked]="dataValue[data.fieldName] == '1'"
           [crrValue]="dataValue[data.fieldName] || ''"
           (valueChange)="valueChange($event)"
         >
@@ -81,7 +82,8 @@
           [state]="{
             setting: setting | group: data.recID:'2',
             function: function,
-            dataValue: dataValue[data.fieldName]
+            dataValue: dataValue[data.fieldName],
+            urlOld: urlOld
           }"
           *ngIf="data.displayMode === '1'"
           ><span class="icon-keyboard_arrow_right icon-20 ml-6"></span

@@ -760,8 +760,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         this.callfunc.openForm(
           CodxExportComponent,
           null,
-          null,
-          800,
+          900,
+          700,
           '',
           [gridModel, datas.recID],
           null
@@ -789,7 +789,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               signFile.refId = this.data?.recID;
               signFile.refDate = this.data?.refDate;
               signFile.refNo = this.data?.refNo;
-
               signFile.files = [];
               if (this.data?.files) {
                 for (var i = 0; i < this.data?.files.length; i++) {
@@ -815,8 +814,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               );
               dialogApprove.closed.subscribe((res) => {
                 debugger;
-                if (res.event == true) {
-                  //gửi duyệt thành công
+                if (res.event) {
+                  datas.status = '3';
+                  this.view.dataService.update(datas).subscribe();
                 }
               });
               //this.callfunc.openForm();
@@ -890,6 +890,16 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     } else {
       unbm[0].disabled = true;
       bm[0].disabled = false;
+    }
+    if (
+      this.formModel.funcID == 'ODT41' &&
+      data?.status != '1' &&
+      data?.status != '2'
+    ) {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT201'
+      );
+      approvel[0].disabled = true;
     }
     //data?.isblur = true
   }

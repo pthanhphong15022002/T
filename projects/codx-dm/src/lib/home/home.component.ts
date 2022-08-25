@@ -43,6 +43,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { CommandColumnService } from '@syncfusion/ej2-angular-grids';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'home',
@@ -74,6 +75,8 @@ export class HomeComponent extends UIComponent {
   titleCreatedBy = 'Người tạo';
   titleCreatedOn = 'Ngày tạo';
   titleLength = 'Dung lượng';
+  sortColumn: string;
+  sortDirection: string;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   user: any;
@@ -389,27 +392,34 @@ export class HomeComponent extends UIComponent {
     if (item.read) {
       var breadcumb = [];
       var breadcumbLink = [];
-      this.codxview.currentView.currentComponent.treeView.textField = "folderName";
-      var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
+      if (this.codxview.currentView.currentComponent?.treeView != null) {
+        this.codxview.currentView.currentComponent.treeView.textField = "folderName";
+        var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
+        breadcumb.push(this.dmSV.menuActive.getValue());
+        breadcumbLink.push(this.dmSV.idMenuActive);
+        for (var i = list.length - 1; i >= 0; i--) {
+          breadcumb.push(list[i].text);
+          breadcumbLink.push(list[i].id);
+        }
+        this.dmSV.breadcumbLink = breadcumbLink;
+        this.dmSV.breadcumb.next(breadcumb);   
+      }
+        
       this.dmSV.folderName = item.folderName;
       this.dmSV.parentFolderId = item.parentId;
       this.dmSV.level = item.level;    
       this.dmSV.getRight(item);      
-
-      breadcumb.push(this.dmSV.menuActive.getValue());
-      breadcumbLink.push(this.dmSV.idMenuActive);
-      for (var i = list.length - 1; i >= 0; i--) {
-        breadcumb.push(list[i].text);
-        breadcumbLink.push(list[i].id);
-      }
-      this.dmSV.breadcumbLink = breadcumbLink;
-      this.dmSV.breadcumb.next(breadcumb);      
+      this.dmSV.loadedFile = false;  
+      this.dmSV.loadedFolder = false;           
       this.data = [];
       this.dmSV.folderId.next(id);      
+      this.dmSV.folderID = id;
       var items = item.items;      
       this.dmSV.listFolder = [];
       this.dmSV.listFiles = [];
       if (items == undefined || items.length <= 0) {        
+        this.folderService.options.srtColumns = this.sortColumn;
+        this.folderService.options.srtDirections = this.sortDirection;
         this.folderService.options.funcID = this.view.funcID;
         this.folderService.getFolders(id).subscribe(async (res) => {          
           if (res != null) {            
@@ -424,20 +434,24 @@ export class HomeComponent extends UIComponent {
             this.changeDetectorRef.detectChanges();   
             this._beginDrapDrop();         
           }
+          this.dmSV.loadedFolder = true;  
         });
       } else {        
         this.data = [...this.data, ...item.items];
-        this.dmSV.listFolder = item.items;        
+        this.dmSV.listFolder = item.items;
+        this.dmSV.loadedFolder = true;          
         this.changeDetectorRef.detectChanges();        
       }
-
+      this.folderService.options.srtColumns = this.sortColumn;
+      this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
       this.fileService.GetFiles(id).subscribe(async res => {   
         if (res != null) {
           this.data = [...this.data, ...res];
           this.dmSV.listFiles = res;  
           this.changeDetectorRef.detectChanges();
-        }             
+        }        
+        this.dmSV.loadedFile = true;       
       });
     } else {
       if (item.read != null) 
@@ -604,14 +618,67 @@ export class HomeComponent extends UIComponent {
   }
 
   sortChanged($event) {
-    console.log($event);
+   this.sortColumn = $event.field;
+   this.sortDirection = $event.dir;
+   this.dmSV.listFiles = [];
+   this.dmSV.loadedFile = false;  
+   this.dmSV.loadedFolder = false;  
+   this.folderService.options.srtColumns = this.sortColumn;
+   this.folderService.options.srtDirections = this.sortDirection;
+   this.fileService.options.funcID = this.view.funcID;
+   this.data = [];
+   if (this.dmSV.folderID != "") {
+    this.folderService.getFolders(this.dmSV.folderID).subscribe(async (res) => {          
+      if (res != null) {            
+        var data = res[0];                   
+        this.dmSV.listFolder = data;
+        this.dmSV.loadedFolder = true;         
+      }
+    });
+   }
+
+   this.fileService
+     .GetFiles(this.dmSV.folderID)
+     .subscribe(async (res) => {
+       if (res != null) {
+        this.dmSV.listFiles = res;           
+        if (this.sortDirection == null || this.sortDirection == "asc") 
+        {
+          this.data = [...this.dmSV.listFolder, ...res];
+        }        
+        else 
+          this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
+        
+       }
+       this.dmSV.loadedFile = true;           
+       this.changeDetectorRef.detectChanges();
+     });      
+ //  console.log($event);
+  }
+
+  searchChange($event) { 
+    var text = '';
+    this.data = [];
+    this.dmSV.loadedFolder = true;
+    this.dmSV.loadedFile = false;
+    if (this.codxview.currentView.currentComponent.treeView != null)
+      this.codxview.currentView.viewModel.model.panelLeftHide = true;
+   // this.codxview.codxview.
+    this.fileService.searchFile(text, 1, 100).subscribe(item => {
+      if (item != null) {
+        this.dmSV.loadedFile = true;
+        this.dmSV.listFiles = item.data;
+        this.data = [...this.data, ...this.dmSV.listFiles];
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   requestEnded(e: any) {
     if(e.type === "read"){     
       this.data = [];    
       this.dmSV.listFolder = []; 
-      this.dmSV.listFiles = [];
+      this.dmSV.listFiles = [];      
       // npm i ngx-infinite-scroll@10.0.0
       this.changeDetectorRef.detectChanges();
       this.folderService.options.funcID = this.view.funcID;
@@ -632,6 +699,7 @@ export class HomeComponent extends UIComponent {
         this.dmSV.disableUpload.next(true);        
       }
       else {
+        this.codxview.currentView.viewModel.model.panelLeftHide = false;
         this.dmSV.parentApproval = false;
         this.dmSV.parentPhysical = false;
         this.dmSV.parentCopyrights = false;
@@ -656,6 +724,7 @@ export class HomeComponent extends UIComponent {
       this._beginDrapDrop();        
       this.dmSV.idMenuActive = this.view.funcID;     
       this.dmSV.folderId.next('');
+      this.dmSV.folderID = "";
       this.dmSV.loadedFolder = true;      
       this.dmSV.menuIdActive.next(this.view.funcID);
       this.dmSV.idMenuActive = this.view.funcID;;
@@ -666,6 +735,10 @@ export class HomeComponent extends UIComponent {
       this.fileService.options.funcID = this.view.funcID;
       this.dmSV.listFiles = [];
       this.dmSV.loadedFile = false;  
+     // this.data = [];
+      this.changeDetectorRef.detectChanges();
+      this.folderService.options.srtColumns = this.sortColumn;
+      this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
       this.fileService
         .GetFiles('')

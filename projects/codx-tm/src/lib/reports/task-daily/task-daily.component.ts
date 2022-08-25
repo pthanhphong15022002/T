@@ -26,7 +26,7 @@ export class TaskDailyComponent implements OnInit {
   lstPined : any = [];
   isCollapsed = true;
   titleCollapse: string = "Đóng hộp tham số";
-  reportUUID: any = '3cdcde9d-8d64-ec11-941d-00155d035518';
+  reportUUID: any = 'TMR01';
   constructor(
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
@@ -68,10 +68,7 @@ export class TaskDailyComponent implements OnInit {
     },
      {
       sameData: true,
-      id: '4',
       type: ViewType.content,
-      showButton: false,
-      showFilter: false,
       active: true,
       text: 'Report',
       icon: 'icon-assignment',

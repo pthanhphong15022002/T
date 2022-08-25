@@ -9,8 +9,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskGroupComponent } from './setting/taskgroups/task-group.component';
 import { SettingComponent } from './setting/setting.component';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
-import { ViewDetailComponent } from './tasks/view-detail/view-detail.component';
-import { PopupAddComponent } from './tasks/popup-add/popup-add.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import {
@@ -33,7 +31,6 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
 import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-sprints.component';
-import { UpdateStatusPopupComponent } from './tasks/update-status-popup/update-status-popup.component';
 import { PopAddTaskgroupComponent } from './setting/taskgroups/pop-add-taskgroup/pop-add-taskgroup.component';
 import { RangesKanbanComponent } from './setting/rangeskanban/ranges-kanban.component';
 import { HomeSettingComponent } from './setting/homesetting/home-setting.component';
@@ -52,18 +49,12 @@ import { MyDashboardComponent } from './dashboard/mydashboard/mydashboard.compon
 import { TeamDashboardComponent } from './dashboard/teamdashboard/teamdashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
-import { ViewListComponent } from './tasks/view-list/view-list.component';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
 import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { DeptDashboardComponent } from './dashboard/deptdashboard/deptdashboard.component';
 import { CompDashboardComponent } from './dashboard/compdashboard/compdashboard.component';
-import { TreeViewComponent } from './tasks/tree-view/tree-view.component';
 import { ViewListMeetComponent } from './tmmeetings/view-list-meet/view-list-meet.component';
-import { PopupViewTaskResourceComponent } from './tasks/popup-view-task-resource/popup-view-task-resource.component';
-import { PopupConfirmComponent } from './tasks/popup-confirm/popup-confirm.component';
-import { PopupExtendComponent } from './tasks/popup-extend/popup-extend.component';
 import { MeetingDetailComponent } from './tmmeetings/meeting-detail/meeting-detail.component';
-import { PopupUpdateProgressComponent } from './tasks/popup-update-progress/popup-update-progress.component';
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
 import { TemplateComponent } from './tmmeetings/template/template.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
@@ -81,11 +72,11 @@ export const routes: Routes = [
     children: [
       // {
       //   path: 'tasks/:funcID',
-      //   component: TasksComponent,
+      //   component: CodxTasksComponent,
       // },
       {
         path: 'tasks/:funcID',
-        component: CodxTasksComponent,
+        component: TasksComponent,
       },
       
       {
@@ -196,11 +187,8 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-  PopupAddComponent,
-  ViewDetailComponent,
   SprintsComponent,
   PopupAddSprintsComponent,
-  UpdateStatusPopupComponent,
   HomeSettingComponent,
   SettingComponent,
   TaskGroupComponent,
@@ -227,15 +215,9 @@ const T_Component: Type<any>[] = [
   TeamDashboardComponent,
   DeptDashboardComponent,
   CompDashboardComponent,
-  ViewListComponent,
   TMMeetingsComponent,
   PopupAddMeetingComponent,
-  TreeViewComponent,
   ViewListMeetComponent,
-  PopupViewTaskResourceComponent,
-  PopupConfirmComponent,
-  PopupExtendComponent,
-  PopupUpdateProgressComponent,
   MeetingDetailComponent,
   TaskExtendsComponent,
   TemplateComponent,
