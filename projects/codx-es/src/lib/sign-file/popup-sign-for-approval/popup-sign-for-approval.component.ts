@@ -34,10 +34,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   isApprover = true;
   dialog;
-  data = {
-    funcID: 'EST021',
-    recID: '185e0dca-246e-11ed-979b-509a4c39550b',
-  };
+  data;
+  // data = {
+  //   funcID: 'EST021',
+  //   recID: '185e0dca-246e-11ed-979b-509a4c39550b',
+  // };
 
   formModel: FormModel;
   dialogSignFile: FormGroup;
@@ -51,8 +52,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   onInit(): void {
     this.canOpenSubPopup = false;
-    this.funcID = this.data.funcID;
-    this.recID = this.data.recID;
+    this.funcID = this.data?.funcID;
+    this.recID = this.data?.recID;
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService
