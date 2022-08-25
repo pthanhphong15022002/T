@@ -39,7 +39,13 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   user: UserModel | null = null;
 
   public funcs$: Observable<any>;
-
+/*
+db.DM_FolderInfo.updateMany(
+   { FolderType: "4" },
+   { $set: { FolderType: "DMT03" } },
+   { collation: { locale: "fr", strength: 1 } }
+);
+ */
   //   constructor(
 //     inject: Injector,
 //     public cache: CacheService,

@@ -43,6 +43,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { CommandColumnService } from '@syncfusion/ej2-angular-grids';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'home',
@@ -626,17 +627,9 @@ export class HomeComponent extends UIComponent {
    if (this.dmSV.folderID != "") {
     this.folderService.getFolders(this.dmSV.folderID).subscribe(async (res) => {          
       if (res != null) {            
-        var data = res[0];            
-       // this.listFolders = data;
-       // this.data = [...this.data, ...data];
+        var data = res[0];                   
         this.dmSV.listFolder = data;
-        this.dmSV.loadedFolder = true;  
-        // var tree = this.codxview.currentView.currentComponent.treeView;
-        // item.items = [];
-        // if (tree != undefined) 
-        //  tree.addChildNodes(item, data);
-        // this.changeDetectorRef.detectChanges();   
-        // this._beginDrapDrop();         
+        this.dmSV.loadedFolder = true;         
       }
     });
    }
@@ -658,6 +651,24 @@ export class HomeComponent extends UIComponent {
        this.changeDetectorRef.detectChanges();
      });      
  //  console.log($event);
+  }
+
+  searchChange($event) { 
+    var text = '';
+    this.data = [];
+    this.dmSV.loadedFolder = true;
+    this.dmSV.loadedFile = false;
+    if (this.codxview.currentView.currentComponent.treeView != null)
+      this.codxview.currentView.viewModel.model.panelLeftHide = true;
+   // this.codxview.codxview.
+    this.fileService.searchFile(text, 1, 100).subscribe(item => {
+      if (item != null) {
+        this.dmSV.loadedFile = true;
+        this.dmSV.listFiles = item.data;
+        this.data = [...this.data, ...this.dmSV.listFiles];
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   requestEnded(e: any) {
@@ -685,6 +696,7 @@ export class HomeComponent extends UIComponent {
         this.dmSV.disableUpload.next(true);        
       }
       else {
+        this.codxview.currentView.viewModel.model.panelLeftHide = false;
         this.dmSV.parentApproval = false;
         this.dmSV.parentPhysical = false;
         this.dmSV.parentCopyrights = false;

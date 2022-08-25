@@ -237,7 +237,6 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
       if(item[0])
       {
-        debugger;
         var data = JSON.parse(item[0]);
         this.mappingTemplate = data[0];
         this.importAddTmpGroup.controls['nameTmp'].setValue(this.mappingTemplate?.MappingName);
