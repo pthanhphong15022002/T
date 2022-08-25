@@ -763,7 +763,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           null,
           800,
           '',
-          [gridModel, datas.recID , "OD" , "RecID"],
+          [gridModel, datas.recID],
           null
         );
         break;
