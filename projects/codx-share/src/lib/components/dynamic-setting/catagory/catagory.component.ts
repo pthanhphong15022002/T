@@ -191,6 +191,9 @@ export class CatagoryComponent implements OnInit {
     var field = evt.field;
     var value = evt.data;
     if (!value) return;
+    if (typeof value == 'boolean') {
+      value = !!+value + '';
+    }
     var dt = this.settingValue.find((x) => x.category == this.category);
     if (this.category == '1') {
       this.dataValue[field] = value;
