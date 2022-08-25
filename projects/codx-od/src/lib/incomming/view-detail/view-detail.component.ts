@@ -760,8 +760,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         this.callfunc.openForm(
           CodxExportComponent,
           null,
-          null,
-          800,
+          900,
+          700,
           '',
           [gridModel, datas.recID],
           null
@@ -891,6 +891,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       unbm[0].disabled = true;
       bm[0].disabled = false;
     }
+    if(this.formModel.funcID == "ODT41" && data?.status != "1" && data?.status != "2")
+    {
+      var approvel = e.filter((x: { functionID: string }) => x.functionID == 'ODT201');
+      approvel[0].disabled = true
+    } 
     //data?.isblur = true
   }
   //Gửi duyệt
