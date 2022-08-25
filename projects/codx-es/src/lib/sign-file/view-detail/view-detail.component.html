@@ -1,5 +1,5 @@
-<codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [body]="body" [footer]="footer"
-  [formModel]="formModel" (clickMF)="openFormFuncID($event)">
+<codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [footer]="!hideFooter?footer:null"
+  [footer]="!hideFooter?footer:null" [hideMF]="hideMF" [formModel]="formModel" (clickMF)="openFormFuncID($event)">
 
   <ng-template #header>
     <div class="vmd-detail">
@@ -112,14 +112,17 @@
       <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
         <li [ngbNavItem]="1">
           <a ngbNavLink>
-            <codx-label name="lblAbstract" [formModel]="itemDetailTemplate.formModel" default="Mô tả ngắn gọn"
-              class="ms-1 fw-bold"></codx-label>
-            <ng-template ngbNavContent>
-              <div class="summary mt-2">
-                {{ itemDetail?.abstract }}
-              </div>
-            </ng-template>
+            <div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2 mt-1"
+                [ngClass]="{'text-primary':active===1}"></i><span>
+                <codx-label name="lblAbstract" [formModel]="itemDetailTemplate.formModel" default="Mô tả ngắn gọn"
+                  class="ms-1 fw-bold"></codx-label>
+              </span></div>
           </a>
+          <ng-template ngbNavContent>
+            <div class="summary mt-2">
+              {{ itemDetail?.abstract }}
+            </div>
+          </ng-template>
         </li>
         <li [ngbNavItem]="2">
           <a ngbNavLink>
@@ -148,6 +151,46 @@
       </ul>
 
     </div> -->
+
+    <!-- <div class="tab-horizone h-od-tab h-100">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2 mt-1"
+                [ngClass]="{'text-primary':active===1}"></i><span>Nơi nhận</span></div>
+          </a>
+          <ng-template ngbNavContent>
+            <h1>...</h1>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center"><i class="icon-format_list_numbered me-2"
+                [ngClass]="{'text-primary':active===2}"></i><span>Công việc</span></div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container *ngIf="taskViews[0].length>0">
+              <codx-treeview #treeAdd id="treeAdd" [data]="taskViews[0]" [showSearch]="false"
+                [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
+              </codx-treeview>
+            </ng-container>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center"><i class="icon-info me-2"
+                [ngClass]="{'text-primary':active===3}"></i><span>Chi tiết</span></div>
+          </a>
+          <ng-template ngbNavContent>
+            <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
+            </lib-view-approval-process>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="pt-5"></div>
+    </div> -->
+
+
     <div class="container mb-2">
       <div class="summary mt-2" *ngIf="itemDetailStt == '1'">
         {{ itemDetail?.abstract }}
@@ -162,52 +205,6 @@
         <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
         </lib-view-approval-process>
 
-        <div class="row w-100" *ngFor="let part of process; let index = index">
-          <div class="col-12">
-            <div class="codx-approval">
-              <div class="codx-approval-step step-test pb-3">
-                <div class="codx-approval-header d-flex align-items-center mb-4">
-                  <div class="step-number" [class.active]="part.isActived.lenght > 0 ? true : false">
-                    {{ part.stepNo }}
-                  </div>
-                  <div class="step-title text-gray-800 fw-bold fs-4">
-                    {{ part.stepType | vll: "ES002":"text" | async }}
-                  </div>
-                  <div class="badge badge-success badge-sm badge-circle ms-3"
-                    *ngIf="part.isActived.lenght > 0 ? true : false">
-                    <span class="icon-check icon-16"></span>
-                  </div>
-                </div>
-                <div class="codx-approval-content ms-17" *ngFor="let approve of part.approvers">
-                  <div class="d-flex align-items-top justify-content-between mb-3">
-                    <codx-temp-full [imageId]="approve.approver" imageObjType="AD_Users" [imageWidth]="35"
-                      [title]="approve.approverName" [desc]="approve.approverPosition" [desc2]="approve.comment">
-                    </codx-temp-full>
-                    <div class="d-flex align-items-center text-center">
-                      <div class="d-flex flex-column">
-                        <div class="text-dark fw-bold">
-                          {{ approve.status | vll: "ES003":"text" | async }}
-                        </div>
-                        <div *ngIf="approve.status == '1'">
-                          <div class="badge badge-danger">
-                            {{ approve.leadtime }}
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ms-6 d-flex">
-                        <span class="icon-attach_file icon-18 me-1"></span>
-                        <span class="text-dark">
-                          {{
-                          approve.attachments ? approve.attachments : 0
-                          }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </ng-template>
