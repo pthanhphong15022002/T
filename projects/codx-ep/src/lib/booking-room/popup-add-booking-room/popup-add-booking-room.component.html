@@ -1,894 +1,630 @@
-<codx-form
-  [headerText]="headerTitle"
-  [subHeaderText]="subHeaderTitle"
-  [body]="body"
-  [footer]="footer"
-  [data]="range"
+<codx-layout-add
   #form
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
+  [title]="title"
+  [tabInfo]="tabInfo"
+  [formModel]="dialogRef.formModel"
+  [subHeader]=""
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [openMore]="false"
+  (buttonClick)="buttonClick($event)"
+  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]"
+  (setTitle)="setTitle($event)"
+  [data]="data"
+
 >
-  <ng-template popup adde #body>
-    <div class="tab-content">
-      <!-- Render the Tab Component -->
-      <ejs-tab
-        id="tab_orientation"
-        #orientationTab
-        [showCloseButton]="false"
-        heightAdjustMode="Auto"
-        headerPlacement="Left"
-      >
-        <e-tabitems>
-          <e-tabitem [header]="headerText[0]">
-            <ng-template #content>
-              <div class="tabpanel p-5">
-                <div class="tab-content">
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <codx-label
-                        default="Phòng"
-                        fiedName="ResourceID"
-                        [formModel]="form.formModel"
-                      >
-                      </codx-label>
-                      <span class="label-status text-primary">
-                        <codx-label
-                          name="lblReady"
-                          default="Sẵn sàng"
-                          [formModel]="form.formModel"
-                        >
-                        </codx-label>
-                      </span>
-                    </div>
-                    <!--end::Label-->
-                    <codx-input
-                      type="combobox"
-                      field="resourceID"
-                      [refValue]="'EP_Rooms'"
-                      [crrValue]="dialogAddBookingRoom.value.resourceID"
-                      (valueChange)="valueChange($event)"
-                    ></codx-input>
-                  </div>
-
-                  <div
-                    class="d-flex flex-wrap align-items-center justify-content-between fw-bold fs-7 mb-2"
-                  >
-                    <div class="d-flex" *ngFor="let item of tmplstDevice">
-                      <span
-                        class="d-flex align-items-center me-2 mb-2"
-                        [ngClass]="
-                          item.isSelected ? 'text-primary' : 'text-muted'
-                        "
-                      >
-                        <span
-                          class="icon-wifi me-1"
-                          [ngClass]="item.isSelected ? 'text-primary' : ''"
-                        >
-                        </span
-                        >{{ item.text }}
-                      </span>
-                    </div>
-                    <!--begin: btn-icon-->
-                    <span class="text-end align-items-end">
-                      <button
-                        type="button"
-                        class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                        data-dismiss="modal"
-                        (click)="openPopupDevice(popupDevice)"
-                      >
-                        <i
-                          class="icon-select_all text-primary text-hover-primary-dark icon-24"
-                        ></i>
-                      </button>
-                    </span>
-                    <!--end: btn-icon-->
-                  </div>
-                  <div class="d-flex row align-items-center mb-4">
-                    <div class="col-4">
-                      <codx-label
-                        default="Ngày"
-                        fiedName="ResourceID"
-                        [formModel]="form.formModel"
-                      >
-                      </codx-label>
-                      <!--begin::Input-->
-                      <codx-input
-                        type="datetime"
-                        class="form-control test-datetime"
-                        field="datetime"
-                        [crrValue]="dialogAddBookingRoom.value.startDate"
-                        ControlName="startDate"
-                        placeholder="datetime"
-                        format="d"
-                        (valueChange)="valueDateChange($event)"
-                      >
-                      </codx-input>
-                      <!--end::Input-->
-                    </div>
-                    <div class="col-3">
-                      <codx-label
-                        default="Từ giờ"
-                        fiedName="StartDate"
-                        aria-disabled="false"
-                        [formModel]="dialog.formModel"
-                      >
-                      </codx-label>
-                      <!--begin::Input-->
-                      <codx-input
-                        type="datetime"
-                        class="test-datetime"
-                        field="datetime"
-                        placeholder="datetime"
-                        [crrValue]="startTime"
-                        format="t"
-                        (valueChange)="valueChange($event)"
-                      >
-                      </codx-input>
-                    </div>
-                    <div class="col-3">
-                      <!--begin::Label-->
-                      <codx-label
-                        default="Đến giờ"
-                        fiedName="EndDate"
-                        [formModel]="dialog.formModel"
-                      >
-                      </codx-label>
-                      <!--end::Label-->
-                      <!--begin::Input-->
-                      <codx-input
-                        type="datetime"
-                        class="test-datetime"
-                        field="datetime"
-                        placeholder="datetime"
-                        [crrValue]="endTime"
-                        format="t"
-                        (valueChange)="valueChange($event)"
-                      >
-                      </codx-input>
-
-                      <!--end::Input-->
-                    </div>
-                    <div class="col-2">
-                      <codx-label class="fs-6 fw-bold mb-2" default>
-                      </codx-label>
-                      <codx-input
-                        #checkbox
-                        type="checkbox"
-                        label="Cả ngày"
-                        labelPosition="after"
-                        field="day"
-                        class="test-check"
-                        (valueChange)="valueChange($event)"
-                        [crrValue]="isFullDay"
-                      >
-                      </codx-input>
-                    </div>
-                  </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <codx-label
-                      class="fw-bold"
-                      default="Mục đích sử dụng"
-                      fiedName="ReasonID"
-                      [formModel]="form.formModel"
-                    >
-                    </codx-label>
-                    <codx-input
-                      type="combobox"
-                      field="fieldName"
-                      [refValue]="'EP_Bookings'"
-                      (valueChange)="valueChange($event)"
-                      [multiple]="false"
-                    >
-                    </codx-input>
-                  </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <codx-label
-                      default="Tiêu đề"
-                      fiedName="Title"
-                      [formModel]="form.formModel"
-                    >
-                    </codx-label>
-                    <!--end::Label-->
-                    <codx-input
-                      type="text"
-                      name="text"
-                      ControlName="title"
-                      [Group]="dialogAddBookingRoom"
-                      crrValue="title"
-                      placeholder=""
-                      class="form-control"
-                    ></codx-input>
-                  </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <codx-label
-                      default="Nội dung buổi họp"
-                      fiedName="Memo"
-                      [formModel]="form.formModel"
-                    >
-                    </codx-label>
-                    <!--end::Label-->
-                    <codx-input
-                      type="textarea"
-                      field="memo"
-                      format="ed3"
-                      [crrValue]="dialogAddBookingRoom.value.memo"
-                      (valueChange)="valueChange($event)"
-                    >
-                    </codx-input>
-                  </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Label-->
-                    <div
-                      class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                      <div class="form-switch1">
-                        <codx-input
-                          #checkbox
-                          field="online"
-                          type="switch"
-                          [checked]="dialogAddBookingRoom.value.online"
-                          labelPosition="After"
-                          [disabled]="false"
-                          class="test-switch"
-                          (valueChange)="valueChange($event)"
-                        >
-                        </codx-input>
-                        <span class="fw-bold ms-2"
-                          ><label for="switchOnl">
-                            <codx-label
-                              fiedName="Online"
-                              default="Họp online"
-                              [formModel]="form.formModel"
-                            >
-                            </codx-label> </label
-                        ></span>
-                      </div>
-                      <!--begin: btn-icon-->
-                      <span class="text-end align-items-end">
-                        <button
-                          type="button"
-                          class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                          (click)="openPopupLink()"
-                          *ngIf="dialogAddBookingRoom.value.online"
-                        >
-                          <i
-                            class="icon-insert_link text-primary text-hover-primary-dark icon-24"
-                          ></i>
-                        </button>
-                      </span>
-                      <!--end: btn-icon-->
-                    </div>
-                    <!--end::Label-->
-                    <!--begin::Input-->
-                    <div class="d-flex align-items-center fw-bold">
-                      <a href="" *ngIf="dialogAddBookingRoom.value.online">{{
-                        dialogAddBookingRoom.value.onlineUrl
-                      }}</a>
-                    </div>
-                    <!--end::Input-->
-                  </div>
-
-                  <div class="d-flex flex-column mb-8">
-                    <!--begin::Title-->
-                    <div
-                      class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                      <h4 class="fw-bolder text-gray-800 d-block">
-                        <codx-label
-                          default="Người tham dự"
-                          fiedName="Attendees"
-                        ></codx-label>
-                      </h4>
-                      <!--begin: btn-icon-->
-                      <span class="text-end align-items-end">
-                        <button
-                          type="button"
-                          class="btn btn-clean btn-sm btn-icon btn-icon-md"
-                          data-dismiss="modal"
-                        >
-                          <i
-                            class="icon-group_add text-primary text-hover-primary-dark icon-24"
-                          ></i>
-                        </button>
-                      </span>
-                      <!--end: btn-icon-->
-                    </div>
-                    <!--end::Title-->
-                    <!--begin::Users group-->
-                    <div
-                      class="symbol-group symbol-group-check symbol-hover flex-nowrap"
-                    >
-                      <div
-                        class="symbol symbol-35px symbol-circle"
-                        data-bs-toggle="tooltip"
-                        title=""
-                        data-bs-original-title="Alan Warden"
-                      >
-                        <span
-                          class="symbol-label bg-warning text-inverse-warning fw-bolder"
-                          >A</span
-                        >
-                        <span
-                          class="symbol-badge badge badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"
-                        ></span>
-                      </div>
-                      <div
-                        class="symbol symbol-35px symbol-circle"
-                        data-bs-toggle="tooltip"
-                        title=""
-                        data-bs-original-title="Michael Eberon"
-                      >
-                        <img
-                          alt="Pic"
-                          src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                        />
-                        <span
-                          class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"
-                        ></span>
-                      </div>
-                      <div
-                        class="symbol symbol-35px symbol-circle"
-                        data-bs-toggle="tooltip"
-                        title=""
-                        data-bs-original-title="Melody Macy"
-                      >
-                        <img
-                          alt="Pic"
-                          src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                        />
-                        <span
-                          class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"
-                        ></span>
-                      </div>
-
-                      <a
-                        href="#"
-                        class="symbol symbol-35px symbol-circle"
-                        data-bs-toggle="modal"
-                        data-bs-target="#kt_modal_view_users"
-                      >
-                        <span
-                          class="symbol-label bg-light-primary text-primary fs-8 fw-bolder"
-                          >+3</span
-                        >
-                      </a>
-                    </div>
-                    <!--end::Users group-->
-                  </div>
-
-                  <div class="d-flex flex-column mb-4">
-                    <!--begin::Title-->
-                    <div
-                      class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                      <h4 class="fw-bolder text-gray-800 d-block">
-                        <codx-label
-                          default="Tài liệu tham khảo"
-                          fiedName="Attendees"
-                        >
-                        </codx-label>
-                      </h4>
-                      <a
-                        class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary"
-                      >
-                        <span
-                          class="icon-cloud_upload btn-text-primary me-2"
-                          (click)="popup($event)"
-                        ></span>
-                        <codx-label
-                          name="lblUpload"
-                          default="Upload file"
-                          [formModel]="dialog.formModel"
-                        >
-                        </codx-label>
-                      </a>
-                    </div>
-                    <!--end::Title-->
-                    <div class="AttachmentFile-group flex-nowrap">
-                      <!--begin::Users group-->
-                      <div class="d-flex align-items-center mb-2">
-                        <!--begin::Svg Icon | path: icons/duotune/files/fil003.svg-->
-                        <span class="me-4 icon-file-excel"> </span>
-                        <!--end::Svg Icon-->
-                        <a href="#" class="text-gray-800 text-hover-primary"
-                          >Báo cáo doanh số tháng 3 <span>(1MB)</span></a
-                        >
-                      </div>
-                      <div class="d-flex align-items-center mb-2">
-                        <!--begin::Svg Icon | path: icons/duotune/files/fil003.svg-->
-                        <span class="me-4 icon-file-excel">
-                          <!-- <img alt="Pic" src="../../../assets/themes/sys/default/light/img/avatar_default.svg"> -->
-                        </span>
-                        <!--end::Svg Icon-->
-                        <a href="#" class="text-gray-800 text-hover-primary"
-                          >Báo cáo doanh số tháng 3 <span>(1MB)</span></a
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem [header]="headerText[1]">
-            <ng-template #content>
-              <div id="rome" class="tabpanel p-5">
-                <div class="tab-content">
-                  <!--begin::Title-->
-                  <div
-                    class="d-flex justify-content-between align-items-center mb-4"
-                  >
-                    <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                      <codx-label
-                        name="lblMember"
-                        default="Người tham dự"
-                        [formModel]="dialog.formModel"
-                      ></codx-label>
-                    </h4>
-                    <span class="icon-group_add text-primary fs-1"></span>
-                  </div>
-                  <!--end::Title-->
-                  <!--begin::User item-->
-                  <div class="d-flex align-items-center mb-4">
-                    <!--begin::Symbol-->
-                    <div
-                      class="symbol symbol-35px symbol-circle me-4"
-                      data-bs-toggle="tooltip"
-                      title=""
-                      data-bs-original-title="Trần Quốc Hoàn"
-                    >
-                      <img
-                        alt="Pic"
-                        src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                      />
-                      <span
-                        class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
-                        >R</span
-                      >
-                    </div>
-                    <!--end::Symbol-->
-                    <!--begin::Text-->
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="text-dark fw-bold fs-6 fw-bolder">
-                        <codx-label
-                          name="lblName"
-                          default="Trần Quốc Hoàn"
-                          [formModel]="dialog.formModel"
-                        ></codx-label>
-                      </div>
-                      <span class="text-muted fw-bold">
-                        <codx-label
-                          name="lblHost"
-                          default="Chủ trì cuộc họp"
-                          [formModel]="dialog.formModel"
-                        >
-                        </codx-label>
-                      </span>
-                    </div>
-                    <!--end::Text-->
-                    <!--begin::label-->
-                    <div class="d-flex flex-column justify-content-end">
-                      <span class="badge badge-light-success fs-7 fw-bold mb-1">
-                        <codx-label
-                          name="lblUndefined"
-                          default="Chưa xác định"
-                          [formModel]="dialog.formModel"
-                        >
-                        </codx-label>
-                      </span>
-                      <span class="text-muted fw-bold text-center">
-                        <codx-label
-                          name="lblDay"
-                          default="1 ngày trước"
-                          [formModel]="dialog.formModel"
-                        ></codx-label>
-                      </span>
-                    </div>
-                    <!--end::label-->
-                  </div>
-                  <!--end::User item-->
-                  <!--begin::User item-->
-                  <div class="d-flex align-items-center mb-4">
-                    <!--begin::Symbol-->
-                    <div
-                      class="symbol symbol-35px symbol-circle me-4"
-                      data-bs-toggle="tooltip"
-                      title=""
-                      data-bs-original-title="Võ Văn Quang"
-                    >
-                      <img
-                        class="empImg"
-                        alt="Pic"
-                        src="../../../assets/themes/sys/default/light/img/avatar_default.svg"
-                      />
-                      <span
-                        class="symbol-badge badge badge-circle bg-dark top-100 start-100 text-white fs-8"
-                        >0</span
-                      >
-                    </div>
-                    <!--end::Symbol-->
-                    <!--begin::Text-->
-                    <div class="d-flex flex-column flex-grow-1">
-                      <div class="text-dark fw-bold fs-6 fw-bolder">
-                        <codx-label
-                          name="lblName"
-                          default="Trần Quốc Hoàn"
-                          [formModel]="dialog.formModel"
-                        ></codx-label>
-                      </div>
-                      <span class="text-muted fw-bold">
-                        <codx-label
-                          name="lblMember"
-                          default="Thành viên"
-                          [formModel]="dialog.formModel"
-                        ></codx-label>
-                      </span>
-                    </div>
-                    <!--end::Text-->
-                    <!--begin::label-->
-                    <div class="d-flex flex-column justify-content-end">
-                      <span class="badge badge-light-danger mb-1">
-                        <codx-label
-                          name="lblNotJoin"
-                          default="Không tham gia"
-                          [formModel]="dialog.formModel"
-                        >
-                        </codx-label>
-                      </span>
-                      <span class="text-muted fw-bold text-center">
-                        <codx-label
-                          name="lblDay"
-                          default="1 ngày trước"
-                          [formModel]="dialog.formModel"
-                        ></codx-label>
-                      </span>
-                    </div>
-                    <!--end::label-->
-                  </div>
-                  <!--end::User item-->
-                  <div class="text-center">
-                    <div
-                      class="Participants d-flex align-items-center w-275px mx-auto"
-                    >
-                      <a
-                        href="#"
-                        class="d-flex align-items-center text-dark text-hover-primary me-5"
-                      >
-                        <span
-                          class="badge badge-sm badge-circle btn-danger top-100 start-100 text-white fs-8 me-1"
-                          >A</span
-                        >
-                        Chủ trì
-                      </a>
-                      <a
-                        href="#"
-                        class="d-flex align-items-center text-dark text-hover-primary me-5"
-                      >
-                        <span
-                          class="badge badge-sm badge-circle btn-success top-100 start-100 text-white fs-8 me-1"
-                          >S</span
-                        >
-                        Thư ký
-                      </a>
-                      <a
-                        href="#"
-                        class="d-flex align-items-center text-dark text-hover-primary me-5"
-                      >
-                        <span
-                          class="badge badge-sm badge-circle btn-primary top-100 start-100 text-white fs-8 me-1"
-                          >P</span
-                        >
-                        Tham dự
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem [header]="headerText[2]">
-            <ng-template #content>
-              <div id="rome" class="tabpanel p-5">
-                <div class="tab-content">
-                  <!--begin::Title-->
-                  <div
-                    class="d-flex justify-content-between align-items-center mb-4"
-                  >
-                    <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                      <codx-label
-                        name="lblStationery"
-                        default="Văn phòng phẩm"
-                        [formModel]="dialog.formModel"
-                      >
-                      </codx-label>
-                    </h4>
-                    <span class="icon-layers text-primary fs-1"></span>
-                  </div>
-                  <!--end::Title-->
-
-                  <div class="d-flex align-items-center mb-4">
-                    <span class="fw-bolder text-gray-800 d-block mb-2">
-                      <codx-label
-                        default="Số người tham dự"
-                        fiedName="Attendees"
-                      >
-                      </codx-label>
-                    </span>
-                    <div class="d-flex flex-column text-center">
-                      <div class="position-relative w-100 mw-125px">
-                        <!--begin::Decrease control-->
-                        <button
-                          type="button"
-                          class="btn btn-icon btn-active-color-gray-700 position-absolute translate-middle-y top-40 start-0"
-                          data-kt-dialer-control="decrease"
-                        >
-                          <!--begin::Svg Icon | path: icons/duotune/general/gen042.svg-->
-                          <span class="icon-minimize"> </span>
-                          <!--end::Svg Icon-->
-                        </button>
-                        <!--end::Decrease control-->
-                        <!--begin::Input control-->
-                        <codx-input
-                          type="text"
-                          class="form-control text-center"
-                          data-kt-dialer-control="input"
-                          placeholder="Amount"
-                          name="manageBudget"
-                          readonly="readonly"
-                          value=""
-                        ></codx-input>
-                        <!--end::Input control-->
-                        <!--begin::Increase control-->
-                        <button
-                          type="button"
-                          class="btn btn-icon btn-active-color-gray-700 position-absolute translate-middle-y top-50 end-0"
-                          data-kt-dialer-control="increase"
-                        >
-                          <!--begin::Svg Icon | path: icons/duotune/general/gen041.svg-->
-                          <span class="icon-add"> </span>
-                          <!--end::Svg Icon-->
-                        </button>
-                        <!--end::Increase control-->
-                      </div>
-                    </div>
-                  </div>
-                  <div class="separator my-5"></div>
-                  <div class="d-flex flex-stack mb-4">
-                    <!--begin::Wrapper-->
-                    <div class="d-flex align-items-center me-3">
-                      <!--begin::Icon-->
-                      <codx-img
-                        #image
-                        class="me-3 w-60px"
-                        objectId="ADMIN"
-                        objectType="Users"
-                      >
-                      </codx-img>
-                      <!--end::Icon-->
-                      <!--begin::Section-->
-                      <div class="flex-grow-1">
-                        <a
-                          href="#"
-                          class="text-gray-800 text-hover-primary fw-bolder lh-0"
-                          >Nước suối</a
-                        >
-                        <span class="text-gray-400 fw-bold d-block fs-6"
-                          >Đơn vị tính : chai</span
-                        >
-                      </div>
-                      <!--end::Section-->
-                    </div>
-                    <!--end::Wrapper-->
-                    <!--begin::Statistics-->
-                    <div class="d-flex align-items-center w-100 mw-125px">
-                      <!--begin::Progress-->
-                      <codx-input
-                        type="number"
-                        field="number"
-                        placeholder="Input type number"
-                        value="0"
-                        min="0"
-                        max="50"
-                      >
-                      </codx-input>
-                      <!--end::Value-->
-                    </div>
-                    <!--end::Statistics-->
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem [header]="headerText[3]">
-            <ng-template #content>
-              <div id="rome" class="tabpanel p-5">
-                <div class="tab-content">
-                  <div class="d-flex flex-column mb-4">
-                    <h4 class="fw-bolder text-gray-800 d-block mb-2">
-                      <codx-label
-                        name="lblInformation"
-                        default="Thông tin khác"
-                        [formModel]="form.formModel"
-                      >
-                      </codx-label>
-                    </h4>
-                  </div>
-                  <div class="d-flex flex-column mb-4">
-                    <div class="col-6">
-                      <codx-label
-                        class="fw-bold"
-                        default="Số người tham dự"
-                        fiedName="Attendees"
-                        [formModel]="dialog.formModel"
-                      >
-                      </codx-label>
-                      <codx-input
-                        type="number"
-                        field="attendees"
-                        placeholder="Input type number"
-                        value="0"
-                        [min]="0"
-                        max="50"
-                        [crrValue]="dialogAddBookingRoom.value.attendees"
-                        (valueChange)="valueChange($event)"
-                      >
-                      </codx-input>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column mb-4">
-                    <codx-label
-                      class="fw-bold"
-                      default="Phân loại"
-                      fiedName="Category"
-                      [formModel]="dialog.formModel"
-                    >
-                    </codx-label>
-
-                    <codx-input
-                      type="valuelist"
-                      field="category"
-                      refValue="VL005"
-                      [crrValue]="dialogAddBookingRoom.value.category"
-                      (valueChange)="valueChange($event)"
-                    >
-                    </codx-input>
-                  </div>
-                  <div class="d-flex flex-column mb-4">
-                    <codx-label
-                      class="fw-bold"
-                      default="Ghi chú"
-                      fiedName="Note"
-                      [formModel]="dialog.formModel"
-                    >
-                    </codx-label>
-                    <codx-input
-                      type="textarea"
-                      field="note"
-                      format="ed3"
-                      (valueChange)="valueChange($event)"
-                    >
-                    </codx-input>
-                  </div>
-                  <div class="d-flex flex-column mb-4">
-                    <div class="col-8">
-                      <div class="d-flex flex-stack mb-4">
-                        <div class="form-switch1">
-                          <codx-input
-                            #checkbox
-                            type="switch"
-                            [checked]="dialogAddBookingRoom.value.repeat"
-                            field="repeat"
-                            [disabled]="false"
-                            class="test-switch"
-                            (valueChange)="valueChange($event)"
-                          ></codx-input>
-                          <span class="fw-bold ms-2"
-                            ><label for="switch">
-                              <codx-label
-                                name="lblAgain"
-                                default="Lặp lại"
-                                [formModel]="dialog.formModel"
-                              ></codx-label> </label
-                          ></span>
-                        </div>
-                        <div class="me-5">
-                          <codx-input
-                            type="valuelist"
-                            [refValue]="CbxName['Interval']"
-                            [crrValue]="dialogAddBookingRoom.value.interval"
-                            field="interval"
-                            (valueChange)="valueChange($event)"
-                            [disabled]="!dialogAddBookingRoom.value.repeat"
-                          ></codx-input>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </e-tabitem>
-        </e-tabitems>
-      </ejs-tab>
-    </div>
-  </ng-template>
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-light-primary" (click)="onSaveForm()">
-        <codx-label
-          name="lblSave"
-          default="Lưu"
-          [formModel]="dialog.formModel"
-        ></codx-label>
-      </button>
-    </div>
-  </ng-template>
-</codx-form>
-
-<ng-template #addLink let-dialog>
-  <div class="card-header">
-    <h4 class="card-title" id="card-basic-title">
+  <ng-template #tabGeneralInfo>
+    <div id="GeneralInfo">
       <codx-label
-        name="lblLink"
-        default="Link cuộc họp"
-        [formModel]="dialog.formModel"
-      ></codx-label>
-    </h4>
-    <button
-      type="button"
-      class="btn btn-xs btn-icon btn-light btn-hover-primary"
-      aria-label="Close"
-      (click)="dialog.close()"
-    >
-      <span class="icon-close icon-20"></span>
-    </button>
-  </div>
-  <div class="card-body">
-    <div class="form-group row">
-      <div class="col-4">
-        <label>
-          <codx-label
-            name="lblPath"
-            default="Đường dẫn"
-            [formModel]="dialog.formModel"
-          ></codx-label>
-        </label>
+        class="mb-3 fs-5 fw-bold"
+        name="lblGeneralInfo"
+        default="Thông tin chung"
+      >
+      </codx-label>
+    </div>
+    <div class="form-group mb-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <codx-label
+          default="Phòng"
+          fieldName="ResourceID"
+          [formModel]="form.formModel"
+        >
+        </codx-label>
+        <span class="label-status text-primary">{{
+          fGroupAddBookingRoom.value.status
+            | vll: CbxName["Status"]:"text"
+            | async
+        }}</span>
+      </div>
+      <codx-input
+        type="combobox"
+        refValue="EP_Rooms"
+        ControlName="resourceID"
+        [formModel]="form.formModel"   
+        [multiple]="false"     
+        [Group]="fGroupAddBookingRoom"
+        [crrValue]="fGroupAddBookingRoom.value.resourceID"         
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>        
+    </div>
+    <div class="row">
+      <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex justify-content-start">
+          <div
+            class="d-flex justify-content-start"
+            *ngFor="let item of tmplstDevice"
+          >
+            <span
+              class="d-flex align-items-center me-2"
+              [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
+            >
+              <span
+                class="me-1 ps-2"
+                [ngClass]="[
+                  item.isSelected ? 'text-primary' : 'text-muted',
+                  item.id == '1'
+                    ? 'icon-wifi'
+                    : item.id == '2'
+                    ? 'icon-personal_video'
+                    : item.id == '3'
+                    ? 'icon-videocam'
+                    : item.id == '4'
+                    ? 'icon-video_settings'
+                    : ' icon-thermostat'
+                ]"
+              >
+              </span
+              >{{ item.text }}
+            </span>
+          </div>
+        </div>
+        <span class="text-end" *ngIf="tmplstDevice.length > 0">
+          <button
+            type="button"
+            class="btn btn-clean btn-sm btn-icon btn-icon-md"
+            data-dismiss="modal"
+            (click)="openPopupDevice(popupDevice)"
+          >
+            <i
+              class="icon-select_all text-primary text-hover-primary-dark icon-24"
+            ></i>
+          </button>
+        </span>
       </div>
     </div>
-    <div class="form-group row">
+
+    <div class="row">
+      <div class="col-4 form-group">
+        <codx-label
+          default="Ngày"
+          fiedName="ResourceID"
+          [formModel]="form.formModel"
+        >
+        </codx-label>
+        <codx-input
+          type="datetime"
+          class="form-control test-datetime"
+          field="datetime"
+          [crrValue]="fGroupAddBookingRoom.value.startDate"
+          ControlName="startDate"
+          placeholder="datetime"
+          format="d"
+          (valueChange)="valueDateChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          default="Từ giờ"
+          fiedName="StartDate"
+          aria-disabled="false"
+          [formModel]="dialogRef.formModel"
+        >
+        </codx-label>
+        <codx-input
+          type="datetime"
+          class="test-datetime"
+          field="datetime"
+          placeholder="datetime"
+          [crrValue]="startTime"
+          format="t"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label
+          default="Đến giờ"
+          fiedName="EndDate"
+          [formModel]="dialogRef.formModel"
+        >
+        </codx-label>
+        <codx-input
+          type="datetime"
+          class="test-datetime"
+          field="datetime"
+          placeholder="datetime"
+          [crrValue]="endTime"
+          format="t"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+
+      </div>
+
+      <div class="col-2">
+        <codx-label class="fs-6 fw-bold mb-2" default=""> </codx-label>
+        <codx-input
+          #checkbox
+          type="checkbox"
+          label="Cả ngày"
+          labelPosition="after"
+          field="day"
+          class="test-check"
+          (valueChange)="valueChange($event)"
+          [crrValue]="isFullDay"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        default="Mục đích sử dụng"
+        fiedName="ReasonID"
+        [formModel]="dialogRef.formModel"
+      >
+      </codx-label>
+      <codx-input
+        type="combobox"
+        refValue="ReasonCodes"
+        placeholder="Chọn mục đích"
+        [multiple]="false"
+        field="reasonID"
+        [crrValue]="fGroupAddBookingRoom.value.reasonID"
+        (valueChange)="valueChange($event)"
+        
+      >
+      </codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        default="Tiêu đề"
+        fiedName="Title"
+        [formModel]="dialogRef.formModel"
+      >
+      </codx-label>
       <codx-input
         type="text"
-        class="form-control"
-        placeholder="https://home.suremeet.vn/"
-        [crrValue]="link"
-        (valueChange)="changeLink($event)"
+        ControlName="title"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingRoom"
       ></codx-input>
     </div>
-  </div>
-  <div class="card-footer" (click)="dialog.close()">
-    <button type="button" class="btn btn-primary">
+
+    <div class="d-flex flex-column mb-4">
       <codx-label
-        name="lblSave"
-        default="Lưu"
-        [formModel]="dialog.formModel"
-      ></codx-label>
-    </button>
-  </div>
-</ng-template>
+        default="Nội dung buổi họp"
+        fiedName="Memo"
+        [formModel]="form.formModel"
+      >
+      </codx-label>
+      <codx-input        
+        type="textarea" format="ed2" rows="3"
+        field="memo"
+        placeholder="Diễn giải"
+        [crrValue]="fGroupAddBookingRoom.value.memo"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+
+    <div class="d-flex flex-column mb-4">
+      <div
+        class="d-flex justify-content-between align-items-center mb-2"
+      >
+        <div class="form-switch1">
+          <codx-input
+            #checkbox
+            field="online"
+            type="switch"
+            [checked]="fGroupAddBookingRoom.value.online"
+            labelPosition="After"
+            [disabled]="false"
+            class="test-switch"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+          <span class="fw-bold ms-2"
+            ><label for="switchOnl">
+                <codx-label
+                  fiedName="Online"
+                  default="Họp online"
+                  [formModel]="form.formModel"
+                >
+                </codx-label> 
+              </label>
+          </span>
+        </div>
+        <span class="text-end align-items-end">
+          <button
+            type="button"
+            class="btn btn-clean btn-sm btn-icon btn-icon-md"
+            (click)="openPopupLink()"
+            *ngIf="fGroupAddBookingRoom.value.online"
+          >
+            <i
+              class="icon-insert_link text-primary text-hover-primary-dark icon-24"
+            ></i>
+          </button>
+        </span>
+      </div>
+      <div class="d-flex align-items-center fw-bold">
+        <a href="" *ngIf="fGroupAddBookingRoom.value.online">{{
+          fGroupAddBookingRoom.value.onlineUrl
+        }}</a>
+      </div>
+    </div>
+
+
+    <div class="d-flex flex-column mb-8">
+      <div
+        class="d-flex justify-content-between align-items-center mb-2 form-group"
+      >
+        <codx-label default="Lái xe & người đi cùng" fiedName="Note">
+        </codx-label>
+        <div class="d-flex flex-row text-end align-items-end">
+          <span class="mx-2">
+            <codx-input
+              type="Combobox"
+              name="combobox"
+              [refValue]="'Users'"
+              [multiple]="true"
+              [showInput]="false"
+              refType="P"
+              field="popup"
+              (valueChange)="valueCbxUserChange($event)"
+            >
+            </codx-input>
+          </span>
+        </div>
+      </div>
+
+      <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">        
+        <div
+          class="symbol-group symbol-group-check symbol-hover flex-nowrap"
+          *ngIf="curUser!=null"
+        >
+          <div class="symbol symbol-35px symbol-circle">
+            <codx-img
+              [objectId]="curUser.id"
+              objectName="curUser.text"
+              objectType="AD_Users"
+            ></codx-img>
+            <span
+              class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"
+            ></span>
+          </div>
+        </div>
+        <div
+          class="symbol-group symbol-group-check symbol-hover flex-nowrap"
+          *ngIf="lstPeople.length >= 1"
+        >
+          <div class="symbol symbol-35px symbol-circle" >
+            <codx-img
+              [objectId]="lstPeople[0].id"
+              objectName="lstPeople[0].text"
+              objectType="AD_Users"
+            ></codx-img>
+            <span
+              class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"
+            ></span>
+          </div>
+        </div>
+
+        <div
+          class="symbol-group symbol-group-check symbol-hover flex-nowrap"
+          *ngIf="lstPeople.length >= 2"
+        >
+          <span
+            href="#"
+            class="symbol symbol-35px symbol-circle"
+            data-bs-toggle="modal"
+            data-bs-target="#kt_modal_view_users"
+          >
+            <span
+              class="symbol-label bg-light-primary text-primary fs-8 fw-bolder"
+              >+{{ lstPeople.length - 1 }}</span
+            >
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-2 form-group">
+        <codx-label
+          default="Tài liệu tham khảo"
+          fiedName="Attachments"            
+          [formModel]="dialogRef.formModel"
+        >
+        </codx-label>
+        <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary" >
+          <span class="icon-cloud_upload btn-text-primary me-2"  (click)="popup($event)" ></span>
+          <codx-label fiedName="Upload" default="Upload file" [formModel]="dialogRef.formModel"></codx-label>
+        </a>
+      </div>
+      <!--end::Title-->
+      <div class="AttachmentFile-group flex-nowrap">
+        <!--begin::Users group-->
+        <div class="d-flex align-items-center mb-2">
+          <!--begin::Svg Icon | path: icons/duotune/files/fil003.svg-->
+          <span class="me-4 icon-file-excel"> </span>
+          <!--end::Svg Icon-->
+          <a href="#" class="text-gray-800 text-hover-primary"
+            >Báo cáo doanh số tháng 3 <span>(1MB)</span></a
+          >
+        </div>
+        <div class="d-flex align-items-center mb-2">
+          <!--begin::Svg Icon | path: icons/duotune/files/fil003.svg-->
+          <span class="me-4 icon-file-excel">
+            <!-- <img alt="Pic" src="../../../assets/themes/sys/default/light/img/avatar_default.svg"> -->
+          </span>
+          <!--end::Svg Icon-->
+          <a href="#" class="text-gray-800 text-hover-primary"
+            >Báo cáo doanh số tháng 3 <span>(1MB)</span></a
+          >
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #tabPeopleInfo>
+    <div class="d-flex justify-content-between align-items-center mb-2" id="PeopleInfo" >
+      <div class="mb-3 fs-5 fw-bold">
+        <codx-label name="lblPeopleInfo" default="Người tham dự"> </codx-label>
+      </div>
+      <div class="d-flex flex-row text-end align-items-end">
+        <codx-input
+          type="combobox"
+          name="combobox"
+          [refValue]="'Users'"
+          [multiple]="true"
+          [showInput]="false"
+          refType="P"
+          (valueChange)="valueCbxUserChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    
+    <div class="d-flex align-items-center mb-4" *ngIf="curUser!=null">
+      <div class="symbol symbol-35px symbol-circle me-4">
+        <codx-img
+          [objectId]="curUser.id"
+          objectName="curUser.text"
+          objectType="AD_Users"
+        ></codx-img>
+        <span
+          class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
+          >P</span
+        >
+      </div>
+
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6 fw-bolder">
+          {{ curUser.text }}
+        </div>
+        <span class="text-muted fw-bold">Người tham dự</span>
+      </div>
+
+      <div class="d-flex flex-column justify-content-end">
+        <span class="badge badge-light-success fs-7 fw-bold mb-1"
+          >Chưa xác định</span
+        >
+        <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
+      </div>
+    </div>
+    
+    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">
+      <div class="symbol symbol-35px symbol-circle me-4">
+        <codx-img
+          [objectId]="item.id"
+          objectName="item.text"
+          objectType="AD_Users"
+        ></codx-img>
+        <span
+          class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
+          >P</span
+        >
+      </div>
+
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6 fw-bolder">
+          {{ item.text }}
+        </div>
+        <span class="text-muted fw-bold">Người tham dự</span>
+      </div>
+
+      <div class="d-flex flex-column justify-content-end">
+        <span class="badge badge-light-success fs-7 fw-bold mb-1"
+          >Chưa xác định</span
+        >
+        <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
+      </div>
+    </div>
+  </ng-template>
+
+     
+
+  <ng-template #tabStationery>
+    <div class="d-flex justify-content-between align-items-center mb-2" id="Stationery" >
+      <div class="mb-3 fs-5 fw-bold">
+        <codx-label name="lblPeopleInfo" default="Văn phòng phẩm"> </codx-label>
+      </div>
+      <div class="d-flex flex-row text-end align-items-end">
+        <codx-input
+          type="combobox"
+          name="combobox"
+          [refValue]="'EP_Stationery'"
+          [multiple]="true"
+          [showInput]="false"
+          refType="P"
+          (valueChange)="valueCbxUserChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>     
+
+    <div class="form-group row"> 
+      <div class="col-4">
+        <codx-label
+          default="Số người tham dự"
+          fiedName="Attendees"          
+          [formModel]="form.formModel"
+        >
+        </codx-label> 
+      </div>     
+      <div class="col-4">
+        <codx-input
+          type="number"
+          class="test-number min-w-50px"
+          field="number"
+          placeholder="number"
+          [crrValue]="1"
+          [cusButton]="true"
+          [min]="0"
+          [max]="50"
+          (valueChange)="valueChange($event)"
+          >
+        </codx-input> 
+      </div>       
+         
+    </div>
+
+    <div class="separator my-5"></div>
+    <div class="d-flex flex-stack mb-4">
+      <div class="d-flex align-items-center me-3">
+        <codx-img
+          #image
+          class="me-3 w-60px"
+          objectId="ADMIN"
+          objectType="Users"
+        >
+        </codx-img>
+        <div class="flex-grow-1">
+          <a
+            href="#"
+            class="text-gray-800 text-hover-primary fw-bolder lh-0"
+            >Nước suối</a
+          >
+          <span class="text-gray-400 fw-bold d-block fs-6"
+            >Đơn vị tính : chai</span
+          >
+        </div>
+      </div>
+      <codx-input
+          type="number"
+          class="test-number min-w-50px"
+          field="number"
+          placeholder="number"
+          [crrValue]="1"
+          [cusButton]="true"
+          [min]="0"
+          [max]="50"
+          (valueChange)="valueChange($event)"
+          >
+        </codx-input> 
+    </div>
+    
+  </ng-template>
+
+  <ng-template #tabMoreInfo>
+    <div id="MoreInfo">
+      <div class="mb-3 fs-5 fw-bold">
+        <codx-label name="lblMoreInfo" default="Thông tin khác"> </codx-label>
+      </div>
+    </div>
+    <div class="form-group col-3">
+      <codx-label default="Số người tham dự" fiedName="Attendees"> </codx-label>
+      <codx-input
+        type="text"
+        ControlName="attendees"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingRoom"
+      >
+      </codx-input>
+    </div>    
+
+    <div class="form-group">
+      <codx-label default="Phân loại" fiedName="Category"> </codx-label>
+      <codx-input
+        type="valuelist"
+        [crrValue]="fGroupAddBookingRoom.value.category"
+        refValue="VL005"
+        field="category"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label default="Ghi chú" fiedName="Note"> </codx-label>
+      <codx-input
+        type="textarea" format="ed2" rows="3"
+        field="note"
+        placeholder="Ghi chú"
+        [crrValue]="fGroupAddBookingRoom.value.note"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+
+    <div class="row form-group">        
+      <codx-label default="" fiedName="" [formModel]="form.formModel"> </codx-label>      
+      <div class="col-3 form-group ">  
+        <codx-label default="" fiedName="" [formModel]="form.formModel"> </codx-label>    
+        <codx-input  #checkbox
+          type="switch"
+          [checked]="fGroupAddBookingRoom.value.repeat"
+          field="repeat"
+          [disabled]="false"
+          class="test-switch"
+          (valueChange)="valueChange($event)"
+          >
+        </codx-input>
+        <codx-label
+          fiedName="lblAgain"
+          default="Lặp lại"
+          [formModel]="dialogRef.formModel"
+        ></codx-label>                
+      </div>   
+
+      <div class="col-5">
+        <codx-input
+          type="valuelist"
+          [refValue]="CbxName['Interval']"
+          [crrValue]="fGroupAddBookingRoom.value.interval"
+          field="interval"
+          (valueChange)="valueChange($event)"
+          [disabled]="!fGroupAddBookingRoom.value.repeat"
+        ></codx-input>
+      </div>
+
+    </div>
+    
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>
+    </div>
+  </ng-template>
+</codx-layout-add>
 
 <ng-template #popupDevice let-dialog>
-  <!--begin::Card body-->
-  <div class="card-header">
+  <div class="modal-header">
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex justify-content-between align-items-center">
         <h2 id="modal-basic-title">
@@ -910,22 +646,34 @@
       <div class="text-dark-50">
         <codx-label
           name="lblChooseEquipments"
-          default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+          default="Chọn các thiết bị đã tích hợp sẵn trong xe"
           [formModel]="dialog.formModel"
         ></codx-label>
       </div>
     </div>
   </div>
-  <div class="card-body">
+  <div class="modal-body">
     <div class="py-2" *ngFor="let item of tmplstDevice">
-      <!--begin::Item-->
       <div class="d-flex flex-stack">
         <div class="d-flex">
-          <span class="text-dark icon-wifi me-2 p-1"></span>
-          <div class="d-flex flex-column">
-            <a href="#" class="text-dark text-hover-primary fw-bolder">{{
-              item.text
-            }}</a>
+          <span
+            class="text-dark me-2 p-1"
+            [ngClass]="[
+              item.isSelected ? 'text-primary' : 'text-muted',
+              item.id == '1'
+                ? 'icon-wifi'
+                : item.id == '2'
+                ? 'icon-personal_video'
+                : item.id == '3'
+                ? 'icon-videocam'
+                : item.id == '4'
+                ? 'icon-video_settings'
+                : ' icon-thermostat'
+            ]"
+          >
+          </span>
+          <div class="d-flex flex-column justify-content-center">
+            <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
           </div>
         </div>
         <div class="d-flex justify-content-end">
@@ -941,12 +689,9 @@
           </div>
         </div>
       </div>
-      <!--end::Item-->
-      <!-- <div class="separator separator-dashed my-5"></div> -->
     </div>
-    <!--end::Card body-->
-  </div>
-  <div class="card-footer d-flex justify-content-end" (click)="dialog.close()">
+  </div> 
+  <div class="modal-footer" (click)="dialog.close()">
     <button type="button" class="btn btn-primary">
       <codx-label
         name="lblSave"
@@ -954,5 +699,57 @@
         [formModel]="dialog.formModel"
       ></codx-label>
     </button>
+  </div>
+</ng-template>
+
+<ng-template #addLink let-dialog>
+  <div class="card-header d-flex flex-row justify-content-between">
+    <h4 class="card-title" id="card-basic-title">
+      <codx-label
+        name="lblLink"
+        default="Link cuộc họp"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </h4>    
+    <button
+      type="button"
+      class="btn btn-xs btn-icon btn-light btn-hover-primary"
+      aria-label="Close"
+      (click)="dialog.close()"
+      >
+      <span class="icon-close icon-20"></span>
+    </button>
+  </div>
+
+  <div class="card-body ">
+    <div class="form-group"></div>
+    <div class="form-group">
+      <codx-label
+        fiedName="Path"
+        default="Đường dẫn"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </div>
+    <div class="form-group">
+      <codx-input
+        type="text"
+        class="form-control"
+        placeholder="https://home.suremeet.vn/"
+        [crrValue]="link"
+        (valueChange)="changeLink($event)"
+      ></codx-input>
+    </div>
+  </div>
+  <div class="card-footer" (click)="dialog.close()">
+    <div class="form-group d-flex justify-content-end flex-row">
+
+      <button type="button" class="btn btn-primary">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="dialog.formModel"
+        ></codx-label>
+      </button>
+    </div>
   </div>
 </ng-template>

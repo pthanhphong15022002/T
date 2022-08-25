@@ -307,7 +307,7 @@ export class IncommingAddComponent implements OnInit {
         return this.notifySvr.notifyCode('E0001', 0, field)
       }
     }
-    if((!this.fileCount || this.fileCount ==0) && this.type == "add") 
+    if((!this.fileCount || this.fileCount ==0) && (this.type == "add" || this.type == "copy")) 
     {
       return this.notifySvr.notifyCode('OD022');
     }
