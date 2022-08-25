@@ -15,8 +15,12 @@
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
-                <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
-                <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div class="stepper-approve-disabled  badge badge-light-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
               </div>
               <div class="stepper-label" [ngClass]="currentTab == 0 ? 'fw-bold text-primary' : '' ">
                 <codx-label name="lblUploadFile" default="Tải tài liệu" [formModel]="formModel"></codx-label>
@@ -32,8 +36,12 @@
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
-                <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
-                <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div class="stepper-approve-disabled  badge badge-light-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
               </div>
               <div class="stepper-label" [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : '' ">
                 <codx-label name="lblFileInfo" default="Thông tin tài liệu" [formModel]="formModel"></codx-label>
@@ -50,8 +58,12 @@
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
-                <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
-                <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div class="stepper-approve-disabled  badge badge-light-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
               </div>
               <div class="stepper-label" [ngClass]="currentTab == 2 ? 'fw-bold text-primary' : '' ">
                 <codx-label name="lblApprovalStep" default="Quy trình duyệt" [formModel]="formModel"></codx-label>
@@ -65,8 +77,12 @@
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
-                <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
-                <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div class="stepper-approve-disabled  badge badge-light-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
               </div>
               <div class="stepper-label" [ngClass]="currentTab == 3 ? 'fw-bold text-primary' : '' ">
                 <codx-label name="lblSignArea" default="Thiết lập vùng ký" [formModel]="formModel"></codx-label>
