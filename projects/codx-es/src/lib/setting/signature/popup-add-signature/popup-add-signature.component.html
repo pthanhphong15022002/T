@@ -168,13 +168,15 @@
       <div class="col-6">
         <codx-label fiedName="SignatureType" [formModel]="dialog.formModel" default="Loại chữ kí">
         </codx-label>
-        <codx-input type="valuelist" field="signatureType" [Group]="form.formGroup" [formModel]="dialog.formModel">
+        <codx-input type="valuelist" field="signatureType" [Group]="form.formGroup" [formModel]="dialog.formModel"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="col-6">
         <codx-label fiedName="Supplier" default="Nhà cung cấp" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input type="valuelist" field="supplier" [Group]="form.formGroup" [formModel]="dialog.formModel">
+        <codx-input type="valuelist" field="supplier" [Group]="form.formGroup" [formModel]="dialog.formModel"
+          [disabled]="data.signatureType == '2'">
         </codx-input>
       </div>
     </div>

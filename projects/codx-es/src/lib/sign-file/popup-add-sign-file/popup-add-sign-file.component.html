@@ -15,8 +15,12 @@
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
-                <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
-                <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div class="stepper-approve-disabled  badge badge-light-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
               </div>
               <div class="stepper-label" [ngClass]="currentTab == 0 ? 'fw-bold text-primary' : '' ">
                 <codx-label name="lblUploadFile" default="Tải tài liệu" [formModel]="formModel"></codx-label>
@@ -32,8 +36,12 @@
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
-                <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
-                <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div class="stepper-approve-disabled  badge badge-light-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
               </div>
               <div class="stepper-label" [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : '' ">
                 <codx-label name="lblFileInfo" default="Thông tin tài liệu" [formModel]="formModel"></codx-label>
@@ -50,8 +58,12 @@
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
-                <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
-                <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div class="stepper-approve-disabled  badge badge-light-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
               </div>
               <div class="stepper-label" [ngClass]="currentTab == 2 ? 'fw-bold text-primary' : '' ">
                 <codx-label name="lblApprovalStep" default="Quy trình duyệt" [formModel]="formModel"></codx-label>
@@ -65,8 +77,12 @@
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
-                <i class="stepper-approve icon-30 text-primary icon-check_circle"></i>
-                <i class="stepper-approve-disabled icon-30 text-gray-400 icon-check_circle"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div class="stepper-approve-disabled  badge badge-light-primary badge-lg badge-circle p-1">
+                  <span class="icon-check icon-18"></span>
+                </div>
               </div>
               <div class="stepper-label" [ngClass]="currentTab == 3 ? 'fw-bold text-primary' : '' ">
                 <codx-label name="lblSignArea" default="Thiết lập vùng ký" [formModel]="formModel"></codx-label>
@@ -100,13 +116,13 @@
           </button> -->
           <div ngbDropdown class="dropdown"
             [style.visibility]="currentTab == 3 && dialogSignFile.value.files?.length > 0 ? 'visible' : 'hidden'">
-            <button ngbDropdownToggle
+            <button
               class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4 d-flex align-items-center"
-              type="button" id="dropdownMenuButton1" aria-expanded="false">
-              <span>
-                <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
+              type="button" aria-expanded="false">
+              <span (click)="saveAndClose()">
+                <codx-label class="me-3" name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
               </span>
-              <span class="icon-keyboard_arrow_down icon-16 ms-1"></span>
+              <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1"></span>
             </button>
             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
 
@@ -130,7 +146,7 @@
             </ul>
           </div>
           <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" (click)="approve()"
-            [style.visibility]="currentTab == 3 && dialogSignFile.value.files?.length > 0 ? 'visible' : 'hidden'">
+            [style.visibility]="(currentTab == 3 && dialogSignFile.value.files?.length > 0 && dialogSignFile.value.approveStatus == '1') ? 'visible' : 'hidden'">
             <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Gửi duyệt"></codx-label>
           </a>
 
@@ -188,7 +204,7 @@
                       <codx-label fiedName="CategoryID" [formModel]="formModel" default="Phân loại">
                       </codx-label>
                       <codx-input type="combobox" name="combobox" [refValue]="cbxName['CategoryID']" field="categoryID"
-                        (valueChange)="valueChange($event)">
+                        (valueChange)="valueChange($event)" [crrValue]="dialogSignFile.value?.categoryID">
                       </codx-input>
                     </div>
                   </div>
@@ -235,8 +251,7 @@
                   <codx-label fiedName="OrgUnitID" [formModel]="formModel" default="Phòng ban">
                   </codx-label>
                   <codx-input type="combobox" name="combobox" ngDefaultControl [refValue]="cbxName['OrgUnitID']"
-                    field="orgUnitID" (valueChange)="valueChange($event)" [crrValue]="dialogSignFile.value?.orgUnitID"
-                    class="form-control">
+                    field="orgUnitID" (valueChange)="valueChange($event)" [crrValue]="dialogSignFile.value?.orgUnitID">
                   </codx-input>
                 </div>
               </div>
@@ -391,7 +406,7 @@
     <div class="card-body">
       <div class="form-group">
         <label class="me-2">
-          <codx-label fiedName="" [formModel]="formModel" default="Qui trình mẫu"></codx-label>
+          <codx-label fiedName="" [formModel]="formModel" default="Quy trình mẫu"></codx-label>
         </label>
         <codx-input type="combobox" class="form-control" field="processID" refValue="ProcessTemplate"
           (valueChange)="processIDChange($event)">
@@ -402,6 +417,10 @@
       <div class="d-flex justify-content-end">
         <a class="btn btn-primary" (click)="onSaveProcessTemplateID(dialogTemplate)">
           <codx-label name="lblOk" default="OK" [formModel]="formModel">
+          </codx-label>
+        </a>
+        <a class="btn btn-secondary" (click)="closeDialogTmp(dialogTemplate)">
+          <codx-label name="lblExit" default="Hủy" [formModel]="formModel">
           </codx-label>
         </a>
       </div>

@@ -59,11 +59,11 @@
                 <div class="timeline-items">
                   <ng-container *ngFor="let item of lstStep; let index=index">
                     <div class="timeline-item " [ngClass]="justView ? '': 'has-action-menu' ">
-                      <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
-                        <div class=" timeline-media w-40px h-40px me-4">
+                      <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex ">
+                        <div class=" timeline-media w-40px h-40px me-2">
                           <span class="stepper-number">{{item.stepNo}}</span>
                         </div>
-                        <div class="stepper-label">
+                        <div class="stepper-label mw-125px">
                           <h3 class="stepper-title line-clamp line-clamp-3">
                             {{(item.stepType | vll:'ES002':'text'|async)}}
                           </h3>
@@ -81,7 +81,7 @@
                       <div class="timeline-content mx-auto">
                         <div class="d-flex flex-wrap">
                           <ng-container *ngFor="let approver of item.approvers">
-                            <div class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
+                            <div class="border border-gray-300 rounded min-w-220px mw-220px me-4 mb-2">
                               <codx-temp-full cardCss="card-template px-2 pt-4 pb-2"
                                 *ngIf="approver.roleType?.length ==1" [imageId]="approver.approver"
                                 [title]="approver.approverName" [subTitle]="approver.positionName ?? 'Vị trí công việc'"
@@ -108,7 +108,7 @@
                       </div>
                     </div>
                     <div class="timeline-item" *ngIf="index==lstStep.length-1 && !justView">
-                      <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
+                      <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
                         <div class="step-add cursor-pointer w-30px h-30px" ngbTooltip="Thêm mới" (click)="add()">
                           <span class="stepper-number">+</span>
                         </div>
@@ -172,7 +172,7 @@
                   <div class=" timeline-media w-40px h-40px me-4">
                     <span class="stepper-number">{{item.stepNo}}</span>
                   </div>
-                  <div class="stepper-label">
+                  <div class="stepper-label mw-125px">
                     <h3 class="stepper-title line-clamp  line-clamp-3">
                       {{(item.stepType | vll:'ES002':'text'|async)}}
                     </h3>
@@ -216,7 +216,7 @@
                 </div>
               </div>
               <div class="timeline-item" *ngIf="index==lstStep.length-1">
-                <div class="timeline-nav flex-row-auto w-100 w-lg-200px">
+                <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
                   <div class="step-add cursor-pointer w-30px h-30px " ngbTooltip="Thêm mới" (click)="add()">
                     <span class="stepper-number">+</span>
                   </div>
@@ -244,7 +244,7 @@
                 <div class=" timeline-media w-40px h-40px me-4">
                   <span class="stepper-number">{{item.stepNo}}</span>
                 </div>
-                <div class="stepper-label">
+                <div class="stepper-label mw-125px">
                   <h3 class="stepper-title line-clamp  line-clamp-3">
                     {{(item.stepType | vll:'ES002':'text'|async)}}
                   </h3>

@@ -1,0 +1,216 @@
+<codx-detail-tmp
+  #itemDetailTemplate
+  [header]="header"
+  [dataItem]="itemDetail"
+  [formModel]="formModel"
+  [body]="body"
+  [footer]="!hideFooter ? footer : null"
+  [hideMF]="hideMF"
+  (clickMF)="openFormFuncID($event)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
+  class="h-100"
+>
+  <ng-template #header>
+    <div class="vmd-detail">
+      <div class="d-flex justify-content-between flex-grow-1 mb-2">
+        <div class="d-flex align-items-center">
+          <codx-temp-full
+            [title]="itemDetail?.title"
+            [icoCss]="
+              'w-20px h-20px fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+              itemDetail?.icon
+            "
+            [icoStyle]="setStyles(itemDetail?.color)"
+          >
+          </codx-temp-full>
+        </div>
+        <div class="d-flex align-self-center">
+          <codx-vll
+            [showText]="true"
+            [formModel]="formModel"
+            [field]="'ApproveStatus'"
+            [value]="itemDetail?.approveStatus"
+            class="badge badge-light badge-square badge-md fs-7"
+          >
+          </codx-vll>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column flex-grow-1 mb-2">
+      <codx-temp-full
+        [title]="itemDetail?.ownerName"
+        [subTitle]="itemDetail?.ownerPosition ?? 'Vị trí công việc'"
+        [imageId]="itemDetail?.createdBy"
+        imageObjType="AD_Users"
+        [imageWidth]="40"
+      >
+      </codx-temp-full>
+    </div>
+
+    <div class="d-flex flex-grow-1 mb-2">
+      <div class="me-4 icon-apartment"></div>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6">
+          <codx-label
+            field="OrgUnitID"
+            [formModel]="formModel"
+            default="Phòng "
+            class="fw-bold me-1"
+            style="font-weight: bold"
+          ></codx-label>
+          : {{ itemDetail?.ownerOrgUnit }}
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex mt-1 flex-grow-1 mb-2">
+      <div class="d-flex me-6">
+        <codx-label
+          field="CreatedOn"
+          [formModel]="formModel"
+          default="Ngày yêu cầu"
+          class="fw-bold me-1"
+        >
+        </codx-label>
+        <span class="text-gray-600">
+          :
+          {{
+            itemDetail
+              ? (itemDetail?.createdOn | date: "dd/MM/yyyy")
+              : "dd/MM/yyyy"
+          }}
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <codx-label
+          field="ExpiredOn"
+          [formModel]="formModel"
+          default="Ngày hết hạn"
+          class="fw-bold me-1"
+        ></codx-label>
+        <span class="text-gray-600">
+          :
+          {{
+            itemDetail?.permission
+              ? (itemDetail?.permissions?.expiredOn | date: "dd/MM/yyyy")
+              : "dd/MM/yyyy"
+          }}
+        </span>
+      </div>
+      <div class="d-flex text-dark me-6">
+        <codx-label
+          fiedName="Priority"
+          [formModel]="formModel"
+          default="Ưu tiên"
+          class="fw-bold me-1"
+        >
+        </codx-label>
+        :
+        <codx-vll
+          [formModel]="formModel"
+          [field]="'Priority'"
+          [value]="itemDetail?.priority"
+          [showText]="true"
+          class="text-gray-600"
+        >
+        </codx-vll>
+      </div>
+    </div>
+    <div class="d-flex mb-2">
+      <div class="d-flex me-6">
+        <codx-label
+          field="RefNo"
+          [formModel]="itemDetailTemplate.formModel"
+          default="Số văn bản"
+          class="fw-bold me-1"
+        >
+        </codx-label>
+        <span class="text-gray-600">
+          : {{ itemDetail ? itemDetail?.refNo : "" }}
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <codx-label
+          field="RefDate"
+          [formModel]="itemDetailTemplate.formModel"
+          default="Ngày văn bản"
+          class="fw-bold me-1"
+        ></codx-label>
+        <span class="text-gray-600">
+          :
+          {{
+            itemDetail?.refDate
+              ? (itemDetail?.refDate | date: "dd/MM/yyyy")
+              : "dd/MM/yyyy"
+          }}
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #body>
+    <div class="container mb-2">
+      <div class="summary mt-2" *ngIf="itemDetailStt == '1'">
+        {{ itemDetail?.abstract }}
+      </div>
+      <div class="list_Of_Jobs mb-2" *ngIf="itemDetailStt == '2'"></div>
+      <div *ngIf="itemDetailStt == '3'" class="mb-2"></div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="codx_e-header">
+      <div class="d-flex align-items-center btn-tabs">
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailDataStt == '1'"
+          (click)="clickChangeItemDetailDataStatus('1')"
+        >
+          <i class="icon-history icon-16"></i>
+          <span class="ms-2 fw-bold">Lịch sử</span>
+        </button>
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailDataStt == '3'"
+          (click)="clickChangeItemDetailDataStatus('3')"
+        >
+          <i class="icon-attachment icon-16"></i>
+          <codx-label
+            name="lblAttachment"
+            [formModel]="itemDetailTemplate.formModel"
+            default="Đính kèm"
+            class="ms-2 fw-bold"
+          ></codx-label>
+        </button>
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailDataStt == '2'"
+          (click)="clickChangeItemDetailDataStatus('2')"
+        >
+          <i class="icon-message icon-16"></i>
+          <codx-label
+            name="lblDiscussion"
+            [formModel]="itemDetailTemplate.formModel"
+            default="Bình luận"
+            class="ms-2 fw-bold"
+          ></codx-label>
+        </button>
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailDataStt == '4'"
+          (click)="clickChangeItemDetailDataStatus('4')"
+        >
+          <i class="icon-insert_link icon-16"></i>
+          <codx-label
+            name="lblLink"
+            [formModel]="itemDetailTemplate.formModel"
+            default="Tham chiếu"
+            class="ms-2 fw-bold"
+          >
+          </codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</codx-detail-tmp>

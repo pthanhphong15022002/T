@@ -15,6 +15,7 @@ export class EditRelationComponent implements OnInit {
   dialog: any;
   data: any;
   action = '';
+  isAdd = true;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
 
   constructor(
@@ -26,8 +27,12 @@ export class EditRelationComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
-    this.data = dialog.dataService!.dataSelected;
-    this.dataBind = this.data;
+    // this.data = dialog.dataService!.dataSelected;
+    if (dt && dt.data) {
+      this.dataBind = dt.data.dataSelected;
+      this.isAdd = dt.data.isAdd;
+    }
+
     this.dialog = dialog;
 
   }
@@ -55,44 +60,26 @@ export class EditRelationComponent implements OnInit {
 
   avatar: FileUpload = null;
 
-  // beforeSave(op: any) {
-  //   var data = [];
-  //   op.methodName = 'UpdateEmployeeRelationAsync';
-  //   data = [
-  //     this.dataBind,
-
-  //   ];
-  //   op.data = data;
-  //   return true;
-  // }
-
   OnSaveForm() {
-
-    this.api.exec("ERM.Business.HR", "EmployeesBusiness", "UpdateEmployeeRelationAsync", this.dataBind).subscribe((res: any) => {
-
+    this.api.exec("ERM.Business.HR", "EmployeesBusiness", "UpdateEmployeeRelationAsync", [this.dataBind, this.isAdd]).subscribe((res: any) => {
       if (res) {
         if (this.avatar) {
           var objRes = res;
           this.imageAvatar.updateFileDirectReload(this.dataBind.recID);
           this.api.execSv<any>("DM", "DM", "FileBussiness", "UploadAvatarAsync", this.avatar).subscribe(res => {
-            // this.ngxService.stopBackground();
-            // this.isSaving = false;
             this.codxMwp.EmployeeInfomation.updateRelation({ Relationship: objRes });
-            this.dialog.close();
+            this.dialog.close(this.dataBind);
           });
         }
         else {
           this.codxMwp.EmployeeInfomation.updateRelation({ Relationship: res });
-          // this.ngxService.stopBackground();
-          // this.isSaving = false;
-          this.dialog.close();
+          this.dialog.close(this.dataBind);
         }
       }
       else {
-        // this.ngxService.stopBackground();
-        // this.isSaving = false;
         this.notiService.notify("Error");
       }
     });
+    this.dialog.close();
   }
 }

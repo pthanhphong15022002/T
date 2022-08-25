@@ -758,7 +758,7 @@ export class AttachmentComponent implements OnInit {
             if (addList.length == this.fileUploadList.length) {
               this.atSV.fileList.next(this.fileUploadList);
               this.atSV.fileListAdded = addList;
-              this.notificationsService.notify(this.title);
+             // this.notificationsService.notify(this.title);
               this.closePopup();
               this.fileUploadList = [];
             } else {
@@ -927,7 +927,7 @@ export class AttachmentComponent implements OnInit {
     };
     try {
       var item = await isAllowAddFileAsync();
-      var host = "http://192.168.18.36:5010";
+      var host = "http://172.16.7.91:8008";//http://192.168.18.36:5010";
       LV.Files.API.setHostApiUrl(host);
       var AccessTokenkey = "b5a54909-96bd-4d6a-91b4-1318bda5012c";
       var fileToUpload = fileItem;

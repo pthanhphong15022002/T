@@ -1,0 +1,15 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
+  [body]="body"
+  [dialog]="dialog"
+  [formControl]="dialogListStationery"
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+    <div class="d-flex justify-content-between">
+      <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
+    </div>
+  </ng-template>
+</codx-form>

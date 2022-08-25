@@ -44,6 +44,7 @@ import { IncommingAddComponent } from './incomming-add/incomming-add.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-incomming',
@@ -127,7 +128,7 @@ export class IncommingComponent
   notifySvr: NotificationsService;
   atSV: AttachmentService;
   fileService: FileService;
-  constructor(inject: Injector) {
+  constructor(inject: Injector, private route: ActivatedRoute,) {
     super(inject);
     this.odService = inject.get(DispatchService);
     this.agService = inject.get(AgencyService);
@@ -139,6 +140,9 @@ export class IncommingComponent
   }
   ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
+    // this.route.params.subscribe((routeParams) => {
+    //     (this.view as ViewsComponent).currentView = null;
+    // });
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';
@@ -235,12 +239,16 @@ export class IncommingComponent
       unbm[0].disabled = true;
       bm[0].disabled = false;
     }
+    if(this.view.formModel.funcID == "ODT41" && data?.status != "1" && data?.status != "2")
+    {
+      var approvel = e.filter((x: { functionID: string }) => x.functionID == 'ODT201');
+      approvel[0].disabled = true
+    } 
   }
   aaaa(e:any)
   {
     if(e)
     {
-    debugger;
       var foundIndex = e.findIndex((x: { functionID: string }) => x.functionID == 'SYS001');
       e[foundIndex].disabled = true;
     }
@@ -259,6 +267,7 @@ export class IncommingComponent
       this.cache
         .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
+          debugger;
           this.gridViewSetup = grd;
           if (grd['Security']['referedValue'] != undefined)
             this.cache
@@ -401,7 +410,6 @@ export class IncommingComponent
   }
 
   valueChange(dt: any) {
-    debugger;
     var recID = null;
     if (dt?.data) {
       recID = dt.data.recID;
@@ -444,9 +452,18 @@ export class IncommingComponent
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;
     this.getGridViewSetup(funcID);
+    this.lstDtDis = null;
     /*  this.view.dataService.predicates = "Status=@0";
     this.view.dataService.dataValues = "1"; */
     //this.view.dataService.setPredicates(['Status=@0'],['1']).subscribe();
     //this.activeDiv = "1";
+  }
+  checkDeadLine(time:any)
+  {
+    if(new Date(time).getTime() < new Date().getTime() || !time)
+    {
+      return "icon-access_alarm"
+    }
+    return ""
   }
 }

@@ -15,7 +15,7 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
-import { Device } from '../../../booking-room/popup-add-booking-room/popup-add-booking-room.component';
+import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -151,7 +151,7 @@ export class PopupAddRoomsComponent implements OnInit {
     } else {
       this.isAdd = false;
     }
-    option.method = 'AddEditItemAsync';
+    option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
