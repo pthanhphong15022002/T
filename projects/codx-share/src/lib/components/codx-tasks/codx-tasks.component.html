@@ -7,25 +7,16 @@
 </ng-template>
 
 <ng-template #itemViewList let-data>
-    <share-view-list
-      [formModel]="view.formModel"
-      [vllStatus]="vllStatus"
-      [data]="data"
-      [listRoles]="listRoles"
-      (clickMoreFunction)="receiveMF($event)"
-    >
+    <share-view-list [formModel]="view.formModel" [vllStatus]="vllStatus" [data]="data" [listRoles]="listRoles"
+        (clickMoreFunction)="receiveMF($event)">
     </share-view-list>
 </ng-template>
 
-<ng-template *ngIf="funcID=='TMT0203'" #treeView let-data >
-    <share-tree-view
-      [formModel]="view.formModel"
-      [data]="data"
-      [vllStatus]="vllStatus"
-      (clickMoreFunction)="receiveMF($event)"
-    >
+<ng-template *ngIf="funcID=='TMT0203'" #treeView let-data>
+    <share-tree-view [formModel]="view.formModel" [data]="data" [vllStatus]="vllStatus"
+        (clickMoreFunction)="receiveMF($event)">
     </share-tree-view>
-  </ng-template>
+</ng-template>
 
 <ng-template #itemTemplate let-data>
     <codx-temp-full cardCss="card-template border-bottom p-3 list-task" (clickMF)="clickMF($event, data)"
@@ -105,7 +96,7 @@
     <div class="d-flex justify-content-between align-items-end mt-1">
         <div class="d-flex align-items-end ms-14 codx-badge">
             <codx-vll [name]="vllStatus" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
-                [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+                [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
             </codx-vll>
             <span>
                 <span class="fs-7 text-gray-600">{{
