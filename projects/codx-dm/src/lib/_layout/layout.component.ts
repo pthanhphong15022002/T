@@ -39,7 +39,13 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   user: UserModel | null = null;
 
   public funcs$: Observable<any>;
-
+/*
+db.DM_FolderInfo.updateMany(
+   { FolderType: "4" },
+   { $set: { FolderType: "DMT03" } },
+   { collation: { locale: "fr", strength: 1 } }
+);
+ */
   //   constructor(
 //     inject: Injector,
 //     public cache: CacheService,
@@ -114,7 +120,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       if (this.submenu == 'DMT01' || this.submenu == 'DMT08' || this.submenu == 'DMT02' || this.submenu == 'DMT03' || this.submenu == 'DMT04') 
         css = css + " disabled";        
     }      
-    console.log(css);
+   // console.log(css);
     return css;
   }
 

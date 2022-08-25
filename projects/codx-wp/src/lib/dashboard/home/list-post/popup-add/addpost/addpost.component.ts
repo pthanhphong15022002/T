@@ -642,7 +642,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       if (data.length > 1) {
         this.cache.message('WP019').subscribe((mssg: any) => {
           if (mssg)
-            this.tagWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].UserName + '</b>', data.length - 1, this.shareText);
+            this.tagWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].UserName + '</b>', data.length - 1);
         });
       }
       else {

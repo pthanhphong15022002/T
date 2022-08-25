@@ -29,7 +29,7 @@ import {
   Util,
   ViewsComponent,
 } from 'codx-core';
-import { ES_SignFile , File } from 'projects/codx-es/src/lib/codx-es.model';
+import { ES_SignFile, File } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -96,7 +96,10 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private ref: ChangeDetectorRef
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.data && changes.data?.previousValue?.recID != changes.data?.currentValue?.recID) {
+    if (
+      changes?.data &&
+      changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
+    ) {
       this.userID = this.authStore.get().userID;
       this.data = changes.data?.currentValue;
       if (!this.data) this.data = {};
@@ -104,7 +107,10 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       this.getPermission(this.data.recID);
       this.ref.detectChanges();
     }
-    if(changes?.dataItem && changes?.dataItem?.currentValue != changes?.dataItem?.previousValue)
+    if (
+      changes?.dataItem &&
+      changes?.dataItem?.currentValue != changes?.dataItem?.previousValue
+    )
       this.dataItem = changes?.dataItem?.currentValue;
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
@@ -118,6 +124,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     )
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
+    this.setHeight();
   }
   ngOnInit(): void {
     this.active = 1;
@@ -125,7 +132,23 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getDataValuelist();
-   
+  }
+  setHeight() {
+    var main = Array.from(
+      document.getElementsByClassName(
+        'codx-detail-main'
+      ) as HTMLCollectionOf<HTMLElement>
+    )[0].offsetHeight;
+    var header = Array.from(
+      document.getElementsByClassName(
+        'codx-detail-header'
+      ) as HTMLCollectionOf<HTMLElement>
+    )[0].offsetHeight;
+    Array.from(
+      document.getElementsByClassName(
+        'codx-detail-body'
+      ) as HTMLCollectionOf<HTMLElement>
+    )[0].style.height = main - header - 27 + 'px';
   }
   getGridViewSetup(funcID: any) {
     this.cache.functionList(funcID).subscribe((fuc) => {
@@ -461,7 +484,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'ODT101': {
         /* if(this.checkOpenForm(funcID))
           {
-            /*  
+            /*
           } */
         var data = datas;
         let option = new SidebarModel();
@@ -503,10 +526,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             option
           );
           this.dialog.closed.subscribe((e) => {
-            if(e[0])
-            {
-              this.data.status = "3";
-              this.view.dataService.update(this.data).subscribe();
+            if (e?.event && e?.event[0]) {
+              datas.status = '3';
+              this.view.dataService.update(datas).subscribe();
             }
           });
         }
@@ -553,7 +575,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           option
         );
         this.dialog.closed.subscribe((x) => {
-          if (x.event != null) {
+          if (x.event) {
+            debugger;
             this.data.lstUserID = getListImg(x.event[0].relations);
             this.data.listInformationRel = this.data.listInformationRel.concat(
               x.event[1]
@@ -579,7 +602,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'ODT205': {
         /* if(this.checkOpenForm(funcID))
           {
-          
+
           } */
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
@@ -634,20 +657,18 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         break;
       }
       //Bookmark
-      case "ODT110":
-      case "ODT209":
-      case "ODT111":
-      case "ODT210":
-        {
-          this.odService.bookMark(datas.recID).subscribe((item) => {
-            if (item.status == 0)
-            {
-              this.view.dataService.update(item.data).subscribe(); 
-            } 
-            this.notifySvr.notify(item.message);
-          });
-          break;
-        }
+      case 'ODT110':
+      case 'ODT209':
+      case 'ODT111':
+      case 'ODT210': {
+        this.odService.bookMark(datas.recID).subscribe((item) => {
+          if (item.status == 0) {
+            this.view.dataService.update(item.data).subscribe();
+          }
+          this.notifySvr.notify(item.message);
+        });
+        break;
+      }
       //Gửi email
       case 'sendemail': {
         let option = new SidebarModel();
@@ -697,91 +718,109 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         break;
       }
       //Import file
-      case "SYS001":
-        {
-          var gridModel = new DataRequest();
-          gridModel.formName = this.formModel.formName;
-          gridModel.entityName = this.formModel.entityName;
-          gridModel.funcID = this.formModel.funcID;
-          gridModel.gridViewName = this.formModel.gridViewName;
-          gridModel.page = this.view.dataService.request.page;
-          gridModel.pageSize = this.view.dataService.request.pageSize;
-          gridModel.predicate = this.view.dataService.request.predicates;
-          gridModel.dataValue = this.view.dataService.request.dataValues;
-          gridModel.entityPermission = this.formModel.entityPer;
-          //
-          //Chưa có group
-          gridModel.groupFields = "createdBy";
-          this.callfunc.openForm(CodxImportComponent,null,900,800,"",[gridModel,datas.recID],null);
-          break;
-        }
+      case 'SYS001': {
+        var gridModel = new DataRequest();
+        gridModel.formName = this.formModel.formName;
+        gridModel.entityName = this.formModel.entityName;
+        gridModel.funcID = this.formModel.funcID;
+        gridModel.gridViewName = this.formModel.gridViewName;
+        gridModel.page = this.view.dataService.request.page;
+        gridModel.pageSize = this.view.dataService.request.pageSize;
+        gridModel.predicate = this.view.dataService.request.predicates;
+        gridModel.dataValue = this.view.dataService.request.dataValues;
+        gridModel.entityPermission = this.formModel.entityPer;
+        //
+        //Chưa có group
+        gridModel.groupFields = 'createdBy';
+        this.callfunc.openForm(
+          CodxImportComponent,
+          null,
+          900,
+          800,
+          '',
+          [gridModel, datas.recID],
+          null
+        );
+        break;
+      }
       //Export file
-      case "SYS002":
-        {
-          var gridModel = new DataRequest();
-          gridModel.formName = this.formModel.formName;
-          gridModel.entityName = this.formModel.entityName;
-          gridModel.funcID = this.formModel.funcID;
-          gridModel.gridViewName = this.formModel.gridViewName;
-          gridModel.page = this.view.dataService.request.page;
-          gridModel.pageSize = this.view.dataService.request.pageSize;
-          gridModel.predicate = this.view.dataService.request.predicates;
-          gridModel.dataValue = this.view.dataService.request.dataValues;
-          gridModel.entityPermission = this.formModel.entityPer;
-          //Chưa có group 
-          gridModel.groupFields = "createdBy";
-          this.callfunc.openForm(CodxExportComponent,null,null,800,"",[gridModel,datas.recID],null);
-          break;
-        }
-      //Gửi duyệt 
-      case "ODT201":
-        {
-          this.api
+      case 'SYS002': {
+        var gridModel = new DataRequest();
+        gridModel.formName = this.formModel.formName;
+        gridModel.entityName = this.formModel.entityName;
+        gridModel.funcID = this.formModel.funcID;
+        gridModel.gridViewName = this.formModel.gridViewName;
+        gridModel.page = this.view.dataService.request.page;
+        gridModel.pageSize = this.view.dataService.request.pageSize;
+        gridModel.predicate = this.view.dataService.request.predicates;
+        gridModel.dataValue = this.view.dataService.request.dataValues;
+        gridModel.entityPermission = this.formModel.entityPer;
+        //Chưa có group
+        gridModel.groupFields = 'createdBy';
+        this.callfunc.openForm(
+          CodxExportComponent,
+          null,
+          900,
+          700,
+          '',
+          [gridModel, datas.recID],
+          null
+        );
+        break;
+      }
+      //Gửi duyệt
+      case 'ODT201': {
+        this.api
           .execSv(
             'ES',
             'ES',
             'ApprovalTransBusiness',
             'GetCategoryByProcessIDAsync',
-            "350d611b-1de0-11ed-9448-00155d035517"
-          ).subscribe((res2:any) =>
-          {
+            '350d611b-1de0-11ed-9448-00155d035517'
+          )
+          .subscribe((res2: any) => {
             let dialogModel = new DialogModel();
             dialogModel.IsFull = true;
             //trình ký
-            if(res2?.eSign == true) 
-            {
+            if (res2?.eSign == true) {
               let signFile = new ES_SignFile();
               signFile.title = datas.title;
               signFile.categoryID = res2?.categoryID;
+              signFile.refId = this.data?.recID;
+              signFile.refDate = this.data?.refDate;
+              signFile.refNo = this.data?.refNo;
               signFile.files = [];
-              if(this.data?.files)
-              {
-                for(var i = 0 ; i< this.data?.files.length ; i++)
-                {
-                  //Biến recID nha Hòa : recID= this.data?.recID
+              if (this.data?.files) {
+                for (var i = 0; i < this.data?.files.length; i++) {
                   var file = new File();
-                  //file.recID = this.data?.files[i].recID;
                   file.fileID = this.data?.files[i].recID;
                   file.fileName = this.data?.files[i].fileName;
                   signFile.files.push(file);
                 }
               }
-              this.dialog = this.callfunc.openForm(
+              let dialogApprove = this.callfunc.openForm(
                 PopupAddSignFileComponent,
                 'Chỉnh sửa',
                 700,
                 650,
-                "",
+                '',
                 {
                   oSignFile: signFile,
                   formModel: this.view?.currentView?.formModel,
+                  cbxCategory: 'ODCategories',
                 },
                 '',
                 dialogModel
               );
+              dialogApprove.closed.subscribe((res) => {
+                debugger;
+                if (res.event) {
+                  datas.status = "3";
+                  this.view.dataService.update(datas).subscribe();
+                }
+              });
               //this.callfunc.openForm();
-            }
-            else if(res2?.eSign == false)
+            } else if (res2?.eSign == false)
               //xét duyệt
               this.release(datas);
           });
@@ -836,45 +875,53 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     });
     this.view.dataService.data[index] = data;
   }
-  changeDataMF(e:any,data:any)
-  {
-    var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
-    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111' || x.functionID == 'ODT210');
-    if(data?.isBookmark) 
-    {
+  changeDataMF(e: any, data: any) {
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ODT110' || x.functionID == 'ODT209'
+    );
+    var unbm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ODT111' || x.functionID == 'ODT210'
+    );
+    if (data?.isBookmark) {
       bm[0].disabled = true;
       unbm[0].disabled = false;
-    }
-    else
-    {
+    } else {
       unbm[0].disabled = true;
       bm[0].disabled = false;
     }
+    if(this.formModel.funcID == "ODT41" && data?.status != "1" && data?.status != "2")
+    {
+      var approvel = e.filter((x: { functionID: string }) => x.functionID == 'ODT201');
+      approvel[0].disabled = true
+    } 
     //data?.isblur = true
   }
   //Gửi duyệt
-  release(data:any)
-  {
+  release(data: any) {
     this.api
-    .execSv(
-      this.view.service,
-      'ERM.Business.CM',
-      'DataBusiness',
-      'ReleaseAsync',
-      [data?.recID,
-      "3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3",
-      this.view.formModel.entityName,
-      this.formModel.funcID,
-      '<div>'+data?.title+'</div>']
-    ).subscribe((res2:any) =>
-    {
-      if(res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError)
-      else {
-        data.status = "3";
-        this.view.dataService.update(data).subscribe();
-        this.notifySvr.notifyCode("ES007");
-      }
-      //this.notifySvr.notify(res2?.msgCodeError)
-    });
+      .execSv(
+        this.view.service,
+        'ERM.Business.CM',
+        'DataBusiness',
+        'ReleaseAsync',
+        [
+          data?.recID,
+          '3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3',
+          this.view.formModel.entityName,
+          this.formModel.funcID,
+          '<div>' + data?.title + '</div>',
+        ]
+      )
+      .subscribe((res2: any) => {
+        if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
+        else {
+          data.status = '3';
+          this.view.dataService.update(data).subscribe();
+          this.notifySvr.notifyCode('ES007');
+        }
+        //this.notifySvr.notify(res2?.msgCodeError)
+      });
   }
 }

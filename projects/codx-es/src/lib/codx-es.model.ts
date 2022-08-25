@@ -40,7 +40,7 @@ export class ES_SignFile {
   moved: boolean = false;
   orgUnitID: string = null;
   owner: string = null;
-  pages = 0;
+  pages: number = 0;
   permissions = null;
   personalFolder = null;
   priority = '1';
@@ -54,7 +54,7 @@ export class ES_SignFile {
   share: boolean = true;
   signAreas = null;
   tags = null;
-  title: string = 'Tài liệu ndhoa';
+  title: string;
   updateColumns = '';
   write = true;
 }

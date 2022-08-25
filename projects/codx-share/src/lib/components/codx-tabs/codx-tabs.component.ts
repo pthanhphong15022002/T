@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import { ApiHttpService } from 'codx-core';
 import { TabModel } from './model/tabControl.model';
 
 @Component({
@@ -19,7 +20,9 @@ export class CodxTabsComponent implements OnInit {
   @Input() objectID!: any;
   @Input() formModel!: any;
   @Input() TabControl: TabModel[] = [];
+  //tree task
   @Input() dataTree: any[];
+  @Input() vllStatus: any;
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
@@ -28,7 +31,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() displayThumb: string = 'full';
 
   private all: TabModel[] = [
-    { name: 'attachment', textDefault: 'Đính Kèm', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính Kèm', isActive: true },
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
     { name: 'Reference', textDefault: 'Tham chiếu', isActive: false },
@@ -36,6 +39,7 @@ export class CodxTabsComponent implements OnInit {
   ];
   constructor(
     injector: Injector,
+    private api:ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -54,6 +58,7 @@ export class CodxTabsComponent implements OnInit {
         (x: TabModel) => x.isActive == true
       );
     }
+    this.getListComment();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -63,5 +68,13 @@ export class CodxTabsComponent implements OnInit {
 
   getfileCount(e: any) {
     console.log(e);
+  }
+  lstComment:any = [];
+  getListComment(){
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
+    .subscribe((res:any[]) => {
+      console.log(res);
+      this.lstComment = res;
+    })
   }
 }

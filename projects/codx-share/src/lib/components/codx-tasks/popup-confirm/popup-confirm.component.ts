@@ -132,22 +132,48 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       });
   }
 
+  //#region extendStatus
   saveExtendStatus() {
-    this.api
-      .execSv<any>('TM', 'TM', 'TaskExtendsBusiness', 'ExtendStatusTaskAsync', [
-        this.taskExtends.taskID,
-        this.taskExtends.status,
-        this.comment,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.dialog.close(res);
-          this.notiService.notifyCode('SYS007')
-         // this.notiService.notify('Duyệt gia hạn công việc thành công !');
-          // this.notiService.notifyCode(" 20K của Hảo :))") ;
-        } else this.dialog.close();
-      });
+     // var valueDefault = UrlUtil.getUrl('defaultValue', moreFunc.url);
+     if ( this.taskExtends.status == '5') {
+      this.api
+        .execSv<any>(
+          'TM',
+          'TM',
+          'TaskBusiness',
+          'GetTaskParentByTaskIDAsync',
+          this.taskExtends.taskID
+        )
+        .subscribe((res) => {
+          if (res) {
+            if (res.dueDate < this.taskExtends.extendDate) {
+              this.notiService.alertCode('TM059').subscribe((confirm) => {
+                if (confirm?.event && confirm?.event?.status == 'Y') {
+                  this.actionExtends();
+                }
+              });
+            } else this.actionExtends();
+          }
+        });
+    } else this.actionExtends();
+   
   }
+  actionExtends(){
+    this.api
+    .execSv<any>('TM', 'TM', 'TaskExtendsBusiness', 'ExtendStatusTaskAsync', [
+      this.taskExtends.taskID,
+      this.taskExtends.status,
+      this.comment,
+    ])
+    .subscribe((res) => {
+      if (res) {
+        this.dialog.close(res);
+        this.notiService.notifyCode('SYS007')
+      } else this.dialog.close();
+    });
+  }
+
+  //#endregion
 
   saveApproveStatus() {
     // this.task.approveComment = this.comment;

@@ -1,4 +1,33 @@
-.z-index-10100
+.nav-export .nav-item
 {
-  z-index: 10100 !important;
+  min-width: 200px;
+  margin: 6px 0;
+}
+.nav-export .active
+{
+  background-color: #F4F7FF;
+}
+.nav-export .nav-link
+{
+  color: black;
+  padding: 0.3rem 1rem;
+}
+.tmp-content .tab-pane
+{
+  height: 100%;
+}
+.export-container
+{
+  margin : 65px 0;
+}
+.btn-ml
+{
+  margin-left: 220px;
+}
+.h-scroll
+{
+  height: 465px;
+}
+.h-temp{
+  height: calc(100% - 35px);
 }

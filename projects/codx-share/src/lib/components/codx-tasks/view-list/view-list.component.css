@@ -15,30 +15,26 @@
   margin-right: 10px;
 }
 
-.w-5 {
-  width: 5% !important;
+.unexpired {
+  color: #C9C9D4;
 }
 
-.w-7 {
-  width: 7% !important;
+.expired {
+  color: #F64E60;
 }
 
-.w-10 {
-  width: 10% !important;
-}
-
-.w-15 {
-  width: 15% !important;
-}
-
-.w-20 {
-  width: 20% !important;
-}
-
-.w-30 {
-  width: 30% !important;
+#dropdownShowDescription.btn {
+  padding: 0 !important;
 }
 
 td p {
   word-break: break-all;
+}
+
+.w-120px {
+  width: 120px;
+}
+
+.min-w-120px {
+  min-width: 120px;
 }

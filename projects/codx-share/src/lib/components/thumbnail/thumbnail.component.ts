@@ -16,6 +16,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() files: any;
   @Input() formModel: any;
   @Input() displayThumb: any;
+  @Input() hideDelete = '1';
   titleEditFileDialog = "Cập nhật file";
   titleUpdateFile = "Cập nhật file";
   titleUpdateShare = "Chia sẻ";

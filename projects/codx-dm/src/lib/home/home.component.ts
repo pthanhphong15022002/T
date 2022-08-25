@@ -43,6 +43,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { CommandColumnService } from '@syncfusion/ej2-angular-grids';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'home',
@@ -74,6 +75,8 @@ export class HomeComponent extends UIComponent {
   titleCreatedBy = 'Người tạo';
   titleCreatedOn = 'Ngày tạo';
   titleLength = 'Dung lượng';
+  sortColumn: string;
+  sortDirection: string;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   user: any;
@@ -156,7 +159,12 @@ export class HomeComponent extends UIComponent {
       if (res != null) {      
         var tree = this.codxview.currentView.currentComponent.treeView;        
         if (tree != null) 
-          tree.getCurrentNode(res.recID);        
+        {
+          if (res.recID != null)
+            tree.getCurrentNode(res.recID);         
+          else
+            tree.getCurrentNode(res);        
+        }          
       }
     });
 
@@ -194,28 +202,13 @@ export class HomeComponent extends UIComponent {
       }
     });
 
-    this.dmSV.isFolderId.subscribe(res => {
-      if (res != null && this.codxview != null) {
-        // var tree = this.codxview.currentView.currentComponent.treeView;        
-        // tree.getCurrentNode(res);   
-        //var tree = this.codxview.currentView.currentComponent.treeView.textField = "folderName";
-       // var tree = this.codxview.currentView.currentComponent.treeView;
-       // if (tree) {
-          //var item = {};
-          //item.data = 
-         // var data = tree.getCurrentNode(res);
-          //console.log(data);
-       // }
-          
-      //  if (res.length > 1 && res != this.dmSV.currentNode) {
-          //this.tree.getCurrentNode(res);
-     //   }
-        // else  {
-        //   that.dmSV.listFolder.next(that.tree.data);   
-        // }          
-      }
-
-    });
+    // this.dmSV.isFolderId.subscribe(res => {
+    //   if (res != null) {      
+    //     var tree = this.codxview.currentView.currentComponent.treeView;        
+    //     if (tree != null) 
+    //       tree.getCurrentNode(res);        
+    //   }
+    // });
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
@@ -405,7 +398,8 @@ export class HomeComponent extends UIComponent {
       this.dmSV.parentFolderId = item.parentId;
       this.dmSV.level = item.level;    
       this.dmSV.getRight(item);      
-
+      this.dmSV.loadedFile = false;  
+      this.dmSV.loadedFolder = false;  
       breadcumb.push(this.dmSV.menuActive.getValue());
       breadcumbLink.push(this.dmSV.idMenuActive);
       for (var i = list.length - 1; i >= 0; i--) {
@@ -416,10 +410,13 @@ export class HomeComponent extends UIComponent {
       this.dmSV.breadcumb.next(breadcumb);      
       this.data = [];
       this.dmSV.folderId.next(id);      
+      this.dmSV.folderID = id;
       var items = item.items;      
       this.dmSV.listFolder = [];
       this.dmSV.listFiles = [];
       if (items == undefined || items.length <= 0) {        
+        this.folderService.options.srtColumns = this.sortColumn;
+        this.folderService.options.srtDirections = this.sortDirection;
         this.folderService.options.funcID = this.view.funcID;
         this.folderService.getFolders(id).subscribe(async (res) => {          
           if (res != null) {            
@@ -434,24 +431,36 @@ export class HomeComponent extends UIComponent {
             this.changeDetectorRef.detectChanges();   
             this._beginDrapDrop();         
           }
+          this.dmSV.loadedFolder = true;  
         });
       } else {        
         this.data = [...this.data, ...item.items];
-        this.dmSV.listFolder = item.items;        
+        this.dmSV.listFolder = item.items;
+        this.dmSV.loadedFolder = true;          
         this.changeDetectorRef.detectChanges();        
       }
-
+      this.folderService.options.srtColumns = this.sortColumn;
+      this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
       this.fileService.GetFiles(id).subscribe(async res => {   
         if (res != null) {
           this.data = [...this.data, ...res];
           this.dmSV.listFiles = res;  
           this.changeDetectorRef.detectChanges();
-        }             
+        }        
+        this.dmSV.loadedFile = true;       
       });
     } else {
-      this.dmSV.disableInput.next(true);
-      this.notificationsService.notify(this.titleAccessDenied);
+      if (item.read != null) 
+        this.notificationsService.notify(this.titleAccessDenied);
+      if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03')  {
+        this.dmSV.disableInput.next(true);      
+        this.dmSV.disableUpload.next(true);        
+      }        
+      else  {
+        this.dmSV.disableInput.next(false);    
+        this.dmSV.disableUpload.next(false);          
+      }        
     }    
   }
 
@@ -545,7 +554,7 @@ export class HomeComponent extends UIComponent {
         },
       },
     ];
-    this.codxview.dataService.parentIdField = 'ParentID';
+    this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
     this.changeDetectorRef.detectChanges();
@@ -597,10 +606,78 @@ export class HomeComponent extends UIComponent {
     this.interval.push(Object.assign({}, interval));
   }
 
+  onScrollDown($event) {
+   // alert(1);
+  }
+
+  onScrollUp($event) {
+ //   alert(2);
+  }
+
+  sortChanged($event) {
+   this.sortColumn = $event.field;
+   this.sortDirection = $event.dir;
+   this.dmSV.listFiles = [];
+   this.dmSV.loadedFile = false;  
+   this.dmSV.loadedFolder = false;  
+   this.folderService.options.srtColumns = this.sortColumn;
+   this.folderService.options.srtDirections = this.sortDirection;
+   this.fileService.options.funcID = this.view.funcID;
+   this.data = [];
+   if (this.dmSV.folderID != "") {
+    this.folderService.getFolders(this.dmSV.folderID).subscribe(async (res) => {          
+      if (res != null) {            
+        var data = res[0];                   
+        this.dmSV.listFolder = data;
+        this.dmSV.loadedFolder = true;         
+      }
+    });
+   }
+
+   this.fileService
+     .GetFiles(this.dmSV.folderID)
+     .subscribe(async (res) => {
+       if (res != null) {
+        this.dmSV.listFiles = res;           
+        if (this.sortDirection == null || this.sortDirection == "asc") 
+        {
+          this.data = [...this.dmSV.listFolder, ...res];
+        }        
+        else 
+          this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
+        
+       }
+       this.dmSV.loadedFile = true;           
+       this.changeDetectorRef.detectChanges();
+     });      
+ //  console.log($event);
+  }
+
+  searchChange($event) { 
+    var text = '';
+    this.data = [];
+    this.dmSV.loadedFolder = true;
+    this.dmSV.loadedFile = false;
+    if (this.codxview.currentView.currentComponent.treeView != null)
+      this.codxview.currentView.viewModel.model.panelLeftHide = true;
+   // this.codxview.codxview.
+    this.fileService.searchFile(text, 1, 100).subscribe(item => {
+      if (item != null) {
+        this.dmSV.loadedFile = true;
+        this.dmSV.listFiles = item.data;
+        this.data = [...this.data, ...this.dmSV.listFiles];
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
   requestEnded(e: any) {
     if(e.type === "read"){     
       this.data = [];    
-    //  this.changeDetectorRef.detectChanges();
+      this.dmSV.listFolder = []; 
+      this.dmSV.listFiles = [];      
+      // npm i ngx-infinite-scroll@10.0.0
+      this.changeDetectorRef.detectChanges();
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
         if (e.data != null) {
@@ -619,6 +696,7 @@ export class HomeComponent extends UIComponent {
         this.dmSV.disableUpload.next(true);        
       }
       else {
+        this.codxview.currentView.viewModel.model.panelLeftHide = false;
         this.dmSV.parentApproval = false;
         this.dmSV.parentPhysical = false;
         this.dmSV.parentCopyrights = false;
@@ -643,6 +721,7 @@ export class HomeComponent extends UIComponent {
       this._beginDrapDrop();        
       this.dmSV.idMenuActive = this.view.funcID;     
       this.dmSV.folderId.next('');
+      this.dmSV.folderID = "";
       this.dmSV.loadedFolder = true;      
       this.dmSV.menuIdActive.next(this.view.funcID);
       this.dmSV.idMenuActive = this.view.funcID;;
@@ -653,6 +732,8 @@ export class HomeComponent extends UIComponent {
       this.fileService.options.funcID = this.view.funcID;
       this.dmSV.listFiles = [];
       this.dmSV.loadedFile = false;  
+      this.folderService.options.srtColumns = this.sortColumn;
+      this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
       this.fileService
         .GetFiles('')

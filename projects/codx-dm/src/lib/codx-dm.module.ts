@@ -34,18 +34,19 @@ import { ShareComponent } from './share/share.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { DragDropFileUploadDirective } from './directives/drag-drop-file-upload.directive';
 import { DragDropFileFolderDirective } from './directives/drag-drop-file-folder.directive';
+//import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    children: [                          
+    children: [
       // {
       //   path: '',
       //   component: HomeComponent
       // },
-     
+
       // {
       //   path: 'DMT02',
       //   component: HomeComponent
@@ -57,11 +58,11 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: HomeComponent
-      },  
+      },
       {
         path: ':funcID/:fileID',
         component: ViewFileDialogComponent
-      },           
+      },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -77,7 +78,7 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-  HomeComponent,  
+  HomeComponent,
   CardComponent,
   DetailComponent,
   CreateFolderComponent,
@@ -93,7 +94,7 @@ const T_Component: Type<any>[] = [
   ShareComponent,
   DragDropFileUploadDirective,
   DragDropFileFolderDirective,
-  
+
 ]
 @NgModule({
   imports: [
@@ -114,11 +115,12 @@ const T_Component: Type<any>[] = [
     FormsModule,
     NgbModule,
     CoreModule,
-    UploaderModule
+    UploaderModule,
+   // InfiniteScrollModule
   ],
   exports: [
     RouterModule
-  ], 
+  ],
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

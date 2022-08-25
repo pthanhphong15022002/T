@@ -12,7 +12,7 @@
         <span class="text-gray-600" #createdOn> {{data?.createdOn | date: "dd/MM/yyyy" }}</span>
       </div>
       <div class="me-3">
-        <span class="icon-person icon-18 me-1 text-gray-600"></span>
+        <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
         <span class="text-gray-600">{{createdByName }}</span>
       </div>
     </div>
@@ -48,7 +48,7 @@
         <codx-sprintdetails-dashboard [projectID]="projectID" [resources]="resources"></codx-sprintdetails-dashboard>
       </ng-container>
       <ng-container *ngIf="name == 'Công việc'">
-        <codx-tasks-share *ngIf="dataObj" [dataObj]="dataObj" [showButtonAdd]="false"></codx-tasks-share>
+        <codx-tasks-share *ngIf="dataObj" [dataObj]="dataObj" [showButtonAdd]="false" [funcID]="funcID"></codx-tasks-share>
       </ng-container>
       <ng-container *ngIf="name == 'Lịch sử'">
         <ng-container>

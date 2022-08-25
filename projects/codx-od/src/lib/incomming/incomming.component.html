@@ -10,7 +10,7 @@
     [resources]="getIdUser(data.createdBy, data.owner)" [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="data.isBookmark"
-    [titleLine]="2" [icoDateCss]="'icon-access_alarm'" [dataItem]="data" (changeDataMF)="changeDataMF($event,data)">
+    [titleLine]="2" [icoDateCss]="checkDeadLine(data?.deadline)" [dataItem]="data" (changeDataMF)="changeDataMF($event,data)">
   </codx-temp-full>
   <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
@@ -48,5 +48,5 @@
 
 <codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [entityName]="'OD_Dispatches'"
   [method]="'GetListByStatusAsync'" [assemblyName]="'OD'" [service]="'OD'" [className]="'DispatchesBusiness'"
-  (selectedChange)="valueChange($event)" [selectedFirst]="true" idField="recID" (requestEnded)="requestEnded($event)">
+  (selectedChange)="valueChange($event)" [selectedFirst]="true" idField="recID" (requestEnded)="requestEnded($event)" (viewChanged)="viewChange($event)">
 </codx-views>

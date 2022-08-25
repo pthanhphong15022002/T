@@ -153,7 +153,7 @@ export class MyDashboardComponent extends UIComponent {
   }
 
   private getGeneralData() {
-    this.tmService.getMyDBData(this.model).subscribe((res) => {
+    this.tmService.getMyDBData(this.model, this.daySelected).subscribe((res) => {
       this.data = res;
       this.detectorRef.detectChanges();
     });
@@ -172,5 +172,9 @@ export class MyDashboardComponent extends UIComponent {
     this.month = data?.month + 1;
     this.beginMonth = data?.beginMonth;
     this.endMonth = data?.endMonth;
+    this.tmService.getMyDBData(this.model, this.daySelected).subscribe((res) => {
+      this.data = res;
+      this.detectorRef.detectChanges();
+    });
   }
 }

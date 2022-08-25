@@ -11,7 +11,7 @@ import {
   UploadFile,
   UserModel,
 } from 'codx-core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export class GridModels {
@@ -123,17 +123,26 @@ export class CodxEsService {
       }
     }
     let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+
     if (gridViewSetup == null) {
       this.cache
         .gridViewSetup(formModel.formName, formModel.gridViewName)
         .subscribe((res) => {
           if (res) {
             gridViewSetup = res;
-            this.notificationsService.notifyCode(
-              'E0001',
-              0,
-              '"' + gridViewSetup[fieldName].headerText + '"'
-            );
+            if (fieldName == 'Email' && formGroup.value.email != null) {
+              this.notificationsService.notifyCode(
+                'E0003',
+                0,
+                '"' + gridViewSetup[fieldName].headerText + '"'
+              );
+            } else {
+              this.notificationsService.notifyCode(
+                'E0001',
+                0,
+                '"' + gridViewSetup[fieldName].headerText + '"'
+              );
+            }
           }
         });
     } else {
@@ -567,13 +576,17 @@ export class CodxEsService {
         lstData = res;
       });
     }
-    return this.api.execSv(
-      'ES',
-      'ES',
-      'ApprovalStepsBusiness',
-      'AddNewApprovalStepsAsync',
-      [lstData]
-    );
+    if (lstData == null) {
+      return EMPTY;
+    } else {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'AddNewApprovalStepsAsync',
+        [lstData]
+      );
+    }
   }
 
   editApprovalStep(): Observable<any> {
@@ -581,14 +594,17 @@ export class CodxEsService {
     this.approvalStep.subscribe((res) => {
       lstDataEdit = res;
     });
-
-    return this.api.execSv(
-      'ES',
-      'ES',
-      'ApprovalStepsBusiness',
-      'UpdateApprovalStepsAsync',
-      [lstDataEdit]
-    );
+    if (lstDataEdit == null) {
+      return EMPTY;
+    } else {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'UpdateApprovalStepsAsync',
+        [lstDataEdit]
+      );
+    }
   }
 
   updateTransID(newTransID): Observable<any> {
