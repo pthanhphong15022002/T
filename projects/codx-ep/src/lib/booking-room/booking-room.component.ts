@@ -70,7 +70,7 @@ export class BookingRoomComponent extends UIComponent {
   funcID: string;
   lstPined : any = [];
   titleCollapse: string = "Đóng hộp tham số";
-  reportUUID: any = '3cdcde9d-8d64-ec11-941d-00155d035518';
+  reportUUID: any = 'TMR01';
   constructor(
     private injector: Injector,
     private notiService: NotificationsService,
@@ -231,8 +231,7 @@ export class BookingRoomComponent extends UIComponent {
     let option = new DialogModel();
     option.DataService = this.viewBase.dataService;
     option.FormModel = this.viewBase.formModel;
-    option.IsFull = true;
-    this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,'3cdcde9d-8d64-ec11-941d-00155d035518',"",option);
+    this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,"TMR01","",option);
   }
   addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {

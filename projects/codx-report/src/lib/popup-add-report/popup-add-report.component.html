@@ -6,16 +6,20 @@
 </ng-template>
 
 <ng-template #tabInfo>
-  <div class="form-group w-100" >
+  <div class="form-group w-100"  >
     <h2><codx-label name="lblInfo" default="Thông tin chung"  ></codx-label></h2>
     <h6 class="text-muted"><codx-label name="lblInfoDes" default="Thông tin chung của báo cáo"  ></codx-label></h6>
-    <div class="container">
+    <div class="container" *ngIf="data">
       <div class="row mt-5">
         <div class="col-10">
           <div class="border border-secondary h-100">
-            <div *ngIf="checkFile">
+            <div *ngIf="!checkFile" class="ms-3 mt-2">
+              <span >{{data.reportName}}</span>
+            </div>
+
+            <div class="m-3">
                 <codx-attachment #attachment [objectType]="'SYS_ReportList'" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                hideDes="1" hideImageUpload="0" hideImageThumb="1" [functionID]="dialog.formModel.funcID" [objectId]="data.recID"
+                hideDes="1" hideImageUpload="0" hideImageThumb="1" [functionID]="dialog.formModel.funcID" [objectId]="recID"
                 [allowMultiFile]="'0'" [idBrowse]="'add'" [allowExtensions]="'.rdl, .rdlc'">
               </codx-attachment>
             </div>
@@ -33,13 +37,13 @@
       <div class="row mt-5">
         <div class="col-12">
           <codx-label class="text-muted" name="lblReportName"   default="Tên báo cáo"></codx-label>
-          <codx-input type="text" field="defaultName" [crrValue]="defaultName" (valueChange)="valueChange($event)"></codx-input>
+          <codx-input type="text" field="defaultName" [crrValue]="data.defaultName" (valueChange)="valueChange($event)"></codx-input>
         </div>
       </div>
       <div class="row mt-5">
         <div class="col-12">
           <codx-label class="text-muted" name="lblDescription"   default="Diễn giải"></codx-label>
-          <codx-input type="textarea"  format="ed2" field="description" [crrValue]="description" placeholder="Diễn giải" (valueChange)="valueChange($event)"></codx-input>
+          <codx-input type="textarea"  format="ed2" field="description" [crrValue]="data.description" placeholder="Diễn giải" (valueChange)="valueChange($event)"></codx-input>
         </div>
       </div>
       <div class="row mt-5">
@@ -49,17 +53,17 @@
         </div>
         <div class="col-6">
           <codx-label class="text-muted" name="lblMethodName"   default="Method"></codx-label>
-          <codx-input type="text"  field="methodName" [crrValue]="methodName"  (valueChange)="valueChange($event)"></codx-input>
+          <codx-input type="text"  field="methodName" [crrValue]="data.methodName"  (valueChange)="valueChange($event)"></codx-input>
         </div>
       </div>
       <div class="row mt-5">
         <div class="col-6">
           <codx-label class="text-muted" name="lblAssemblyName"   default="Assembly"></codx-label>
-          <codx-input type="text"  field="assemblyName" [crrValue]="assemblyName"  (valueChange)="valueChange($event)"></codx-input>
+          <codx-input type="text"  field="assemblyName" [crrValue]="data.assemblyName"  (valueChange)="valueChange($event)"></codx-input>
         </div>
         <div class="col-6">
           <codx-label class="text-muted" name="lblClassName"   default="Class"></codx-label>
-          <codx-input type="text"  field="className" [crrValue]="className"  (valueChange)="valueChange($event)"></codx-input>
+          <codx-input type="text"  field="className" [crrValue]="data.className"  (valueChange)="valueChange($event)"></codx-input>
         </div>
       </div>
     </div>
@@ -154,7 +158,7 @@
             </span>
           </div>
           <div class="row mt-5">
-            <codx-input type="radio" name="signature" crrValue="1" (valueChange)="valueRadio($event)" labelPosition="Right" label="1 chữ ký"></codx-input>
+            <codx-input type="radio" [checked]="true" field="signatures" name="signature" crrValue="1" (valueChange)="valueRadio($event)" labelPosition="Right" label="1 chữ ký"></codx-input>
           </div>
         </div>
         <div style="width: 20%">
@@ -164,7 +168,7 @@
             </span>
           </div>
           <div class="row mt-5">
-            <codx-input type="radio" name="signature" crrValue="2" (valueChange)="valueRadio($event)" labelPosition="Right" label="2 chữ ký"></codx-input>
+            <codx-input type="radio" field="signatures" name="signature" crrValue="2" (valueChange)="valueRadio($event)" labelPosition="Right" label="2 chữ ký"></codx-input>
           </div>
         </div>
         <div style="width: 20%">
@@ -174,7 +178,7 @@
             </span>
           </div>
           <div class="row mt-5">
-            <codx-input type="radio" name="signature" crrValue="3" (valueChange)="valueRadio($event)" labelPosition="Right" label="3 chữ ký"></codx-input>
+            <codx-input type="radio" field="signatures" name="signature" crrValue="3" (valueChange)="valueRadio($event)" labelPosition="Right" label="3 chữ ký"></codx-input>
           </div>
         </div>
         <div style="width: 20%">
@@ -184,7 +188,7 @@
             </span>
           </div>
           <div class="row mt-5">
-            <codx-input type="radio" name="signature" crrValue="4" (valueChange)="valueRadio($event)" labelPosition="Right" label="4 chữ ký"></codx-input>
+            <codx-input type="radio" field="signatures" name="signature" crrValue="4" (valueChange)="valueRadio($event)" labelPosition="Right" label="4 chữ ký"></codx-input>
           </div>
         </div>
         <div style="width: 20%">
@@ -194,7 +198,7 @@
             </span>
           </div>
           <div class="row mt-5">
-            <codx-input type="radio" name="signature" crrValue="5" (valueChange)="valueRadio($event)" labelPosition="Right" label="5 chữ ký"></codx-input>
+            <codx-input type="radio" field="signatures" name="signature" crrValue="5" (valueChange)="valueRadio($event)" labelPosition="Right" label="5 chữ ký"></codx-input>
           </div>
         </div>
       </div>
@@ -206,15 +210,15 @@
       <div class="col-6">
         <div class="row">
           <div class="col-6">
-            <codx-input type="radio" name="signatureOrder" crrValue="right" (valueChange)="valueRadio($event)" labelPosition="Right" label="Từ phải sang trái"></codx-input>
+            <codx-input type="radio" field="signatureRoles" name="signatureOrder" crrValue="right" [checked]="true" (valueChange)="valueRadio($event)" labelPosition="Right" label="Từ phải sang trái"></codx-input>
           </div>
           <div class="col-6">
-            <codx-input type="radio" name="signatureOrder" crrValue="left" (valueChange)="valueRadio($event)" labelPosition="Right" label="Từ trái sang phải"></codx-input>
+            <codx-input type="radio" field="signatureRoles" name="signatureOrder" crrValue="left" (valueChange)="valueRadio($event)" labelPosition="Right" label="Từ trái sang phải"></codx-input>
           </div>
         </div>
       </div>
     </div>
-    <div class="row mt-5 d-flex justify-content-start">
+    <!-- <div class="row mt-5 d-flex justify-content-start">
       <h5 class="text-primary"><codx-label name="lblSignatureList" default="Danh sách chữ ký"  ></codx-label></h5>
     </div>
     <div class="row mt-5">
@@ -226,7 +230,7 @@
           <e-column field='description' headerText='Diễn giải' width='130'  textAlign='Left'></e-column>
       </e-columns>
       </ejs-grid>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 

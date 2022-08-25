@@ -1,12 +1,15 @@
+import { T } from "@angular/cdk/keycodes";
 import { Component, ViewEncapsulation, OnInit, AfterViewInit, ChangeDetectorRef, Optional, ViewChild, TemplateRef } from "@angular/core";
-import { ApiHttpService, AuthStore, NotificationsService, CacheService, DialogData, DialogRef } from "codx-core";
+import { ApiHttpService, AuthStore, NotificationsService, CacheService, DialogData, DialogRef, Util } from "codx-core";
 import { AttachmentComponent } from "projects/codx-share/src/lib/components/attachment/attachment.component";
 import { AttachmentService } from "projects/codx-share/src/lib/components/attachment/attachment.service";
+import { utils } from "xlsx";
 
 @Component({
   selector: 'popup-add-report',
   templateUrl: './popup-add-report.component.html',
   styleUrls: ['./popup-add-report.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PopupAddReportComponent implements OnInit, AfterViewInit {
   @ViewChild('tabInfo') tabInfo : TemplateRef<any>;
@@ -18,13 +21,18 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   tabContent: any[] = [];
   tabTitle: any[] = [];
   dialog: any;
-  data: any = {};
+  data?: any ;
+  fuctionItem:any = {};
+  reportID: any;
+  recID: any;
   checkFile = false;
   defaultName: any;
   className: any;
   description: any;
   assemblyName: any;
   methodName: any;
+  moduleName: any;
+  funcID:any;
   menuInfo= {
     icon: 'icon-info',
     text: 'Thông tin chung',
@@ -59,30 +67,29 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ){
-    this.data.recID = dt?.data;
+    this.reportID = dt?.data;
     this.dialog = dialog;
-    if(this.data.recID){
-      this.api.callSv("SYS", "ERM.Business.SYS", "ReportListBusiness", "GetAsync", this.data.recID).subscribe((res: any) => {
-        if (res) {
-         this.data = res.msgBodyData[0];
-         this.className = this.data.className;
-         this.methodName = this.data.methodName;
-         this.assemblyName = this.data.assemblyName;
-         this.defaultName = this.data.defaultName;
-         this.description = this.data.description;
-         this.changeDetectorRef.detectChanges();
-        }
-      });
-      this.api.callSv("SYS", "ERM.Business.SYS", "ReportParametersBusiness", "GetReportParamAsync", this.data.recID).subscribe((res: any) => {
-        if (res) {
-         this.parameters = res.msgBodyData[0].parameters;
-        }
-      });
-      }
+    if(this.dialog.formModel){
+      this.funcID = this.dialog.formModel.funcID;
+    }
+
   }
 
   ngOnInit(): void {
-
+    if(this.reportID){
+      this.api.execSv("SYS", "ERM.Business.SYS", "ReportListBusiness", "GetByReportIDAsync", this.reportID).subscribe((res: any) => {
+        if (res) {
+          debugger
+         this.data = res;
+         this.recID = this.data.recID;
+        }
+      });
+      this.api.execSv("SYS", "ERM.Business.SYS", "ReportParametersBusiness", "GetReportParamAsync", this.reportID).subscribe((res: any) => {
+        if (res) {
+         this.parameters = res.parameters;
+        }
+      });
+      }
   }
 
   ngAfterViewInit(): void {
@@ -98,8 +105,22 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     ];
 
 
-    if(!this.data || Object.keys(this.data).length == 0 || !this.data.recID){
-      this.data.recID = GuId.newGuid();
+    if(!this.recID){
+      this.recID= Util.uid();
+      this.data = {};
+      this.data.description = null;
+
+      this.cache.functionList(this.funcID).subscribe(res=>{
+       if(res){
+        this.moduleName = res.module;
+       }
+
+      });
+      this.api.execSv("SYS","ERM.Business.SYS","ReportListBusiness","CreateFunctionIDAsync",[this.moduleName, 'R'] ).subscribe(res=>{
+        if(res){
+          this.data.reportID = res;
+        }
+      })
     }
   }
 
@@ -112,7 +133,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   popup() {
-    if(this.attachment.fileUploadList.length == 0){
+    if(this.attachment && this.attachment.fileUploadList.length == 0){
       this.attachment.uploadFile();
       this.checkFile = true;
     }
@@ -120,17 +141,47 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(evt:any){
-    debugger
     this.data[evt.field] = evt.data;
   }
 
   valueRadio(evt: any){
-
+    if(evt.field == 'signatures'){
+      this.data[evt.field] = parseInt(evt.data);
+    }
+    else{
+      this.data[evt.field] = evt.data;
+    }
   }
 
   saveForm(){
-    this.data.reportName = this.attachment.fileUploadList[0].fileName;
-    console.log(this.data);
+    if(!this.data.recID){
+      this.data.recID = this.recID;
+    }
+    if(this.attachment && this.attachment.fileUploadList.length > 0){
+      this.data.reportName = this.data.location = this.attachment.fileUploadList[0].fileName;
+    }
+
+    this.fuctionItem.functionID = this.data.reportID;
+    this.fuctionItem.functionType = 'R';
+    this.fuctionItem.parentID = this.funcID;
+    this.fuctionItem.defaultName =this.fuctionItem.customName = this.data.defaultName;
+    this.fuctionItem.description = this.data.description;
+    this.fuctionItem.module = this.moduleName;
+    this.fuctionItem.width = 0;
+    this.fuctionItem.height = 0;
+    if(!this.data.reportType){
+      this.data.reportType ='1';
+    }
+    if(!this.data.service){
+      this.data.service = this.data.assemblyName;
+    }
+    console.log(this.fuctionItem);
+    this.api.execSv("SYS","ERM.Business.SYS","ReportListBusiness","AddUpdateAsync",[this.data,this.fuctionItem]).subscribe(res=>{
+      console.log(res);
+      this.dialog.close();
+
+    })
+
 
   }
 }
