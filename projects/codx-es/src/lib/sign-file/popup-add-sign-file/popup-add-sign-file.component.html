@@ -116,13 +116,13 @@
           </button> -->
           <div ngbDropdown class="dropdown"
             [style.visibility]="currentTab == 3 && dialogSignFile.value.files?.length > 0 ? 'visible' : 'hidden'">
-            <button ngbDropdownToggle
+            <button
               class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4 d-flex align-items-center"
-              type="button" id="dropdownMenuButton1" aria-expanded="false">
-              <span>
-                <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
+              type="button" aria-expanded="false">
+              <span (click)="saveAndClose()">
+                <codx-label class="me-3" name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
               </span>
-              <span class="icon-keyboard_arrow_down icon-16 ms-1"></span>
+              <span ngbDropdownToggle id="dropdownMenuButton1" class="icon-keyboard_arrow_down icon-16 ms-1"></span>
             </button>
             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
 
