@@ -9,8 +9,11 @@ import {
   CodxFormDynamicComponent,
   ButtonModel,
   CRUDService,
+  DataRequest,
+  CallFuncService,
 } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { CodxExportComponent } from '../codx-export/codx-export.component';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -34,7 +37,7 @@ export class DynamicFormComponent extends UIComponent {
   idField: string = 'recID';
   dataSelected: any;
   function: any = {};
-  constructor(private inject: Injector) {
+  constructor(private inject: Injector, private callfunc: CallFuncService) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
   }
@@ -128,6 +131,10 @@ export class DynamicFormComponent extends UIComponent {
       case 'SYS04':
         this.copy(data);
         break;
+      //Export file
+      case 'SYS002':
+        this.export(data);
+        break;
       default:
         break;
     }
@@ -215,6 +222,36 @@ export class DynamicFormComponent extends UIComponent {
     this.viewBase.dataService.delete([delItem]).subscribe((res) => {
       this.dataSelected = res;
     });
+  }
+
+  private export(evt: any) {
+    var id = 'recID';
+    this.cache.entity(this.viewBase.formModel.entityName).subscribe((res) => {
+      if (res) {
+        id = res.isPK;
+      }
+    });
+    var gridModel = new DataRequest();
+    gridModel.formName = this.viewBase.formModel.formName;
+    gridModel.entityName = this.viewBase.formModel.entityName;
+    gridModel.funcID = this.viewBase.formModel.funcID;
+    gridModel.gridViewName = this.viewBase.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.viewBase.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfunc.openForm(
+      CodxExportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, evt[id]],
+      null
+    );
   }
 
   private camelize(str) {

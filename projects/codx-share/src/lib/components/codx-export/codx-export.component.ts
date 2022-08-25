@@ -45,6 +45,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
   request = new DataRequest();
   optionEx = new DataRequest();
   optionWord = new DataRequest();
+  services = 'OD'
+  idField= 'RecID'
   service: string = 'SYS';
   assemblyName: string = 'AD';
   className: string = 'ExcelTemplatesBusiness';
@@ -77,6 +79,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.dialog = dialog;
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
+    this.idField = dt.data?.[3];
+    this.services = dt.data?.[2];
   }
   ngOnInit(): void {
     //Tạo formGroup
@@ -237,12 +241,12 @@ export class CodxExportComponent implements OnInit, OnChanges {
           this.gridModel.predicates = null;
           this.gridModel.dataValues = null;
         } else if (value?.dataExport == 'selected') {
-          this.gridModel.predicates = 'RecID=@0';
+          this.gridModel.predicates = this.idField+'=@0';
           this.gridModel.dataValues = [this.recID].join(';');
         }
         if (splitFormat[1]) idTemp = splitFormat[1];
         this.api
-          .execSv<any>('OD', 'CM', 'CMBusiness', 'ExportExcelAsync', [
+          .execSv<any>(this.services, 'CM', 'CMBusiness', 'ExportExcelAsync', [
             this.gridModel,
             idTemp,
           ])
