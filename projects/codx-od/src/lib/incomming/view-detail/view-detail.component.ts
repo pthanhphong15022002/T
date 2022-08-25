@@ -815,7 +815,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               );
               dialogApprove.closed.subscribe((res) => {
                 debugger;
-                if (res.event) {
+                if (res.event == true) {
                   //gửi duyệt thành công
                 }
               });
