@@ -32,7 +32,7 @@
           </div>
           <div ngbDropdown container="body" class="btn btn-sm btn-icon btn-white cursor-pointer"
             (mouseout)="hideMore()">
-            <i class="icon-more_vert text-primary icon-18" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
+            <i class="icon-more_vert  icon-16" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false"></i>
             <div ngbDropdownMenu id="drop" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a ngbDropdownItem
@@ -101,18 +101,18 @@
           </ng-template>
         </div>
         <div class="action-menu-1 d-flex align-items-center cursor-pointer">
-          <div class="btn btn-sm btn-icon btn-white cursor-pointer" *ngIf="hideDelete=='1'" (click)="deleteFile(item.data.recID)">
+          <div class="btn btn-sm btn-icon btn-white cursor-pointer" *ngIf="hideDelete=='1'" (click)="deleteFile(item.recID)">
             <i class="icon-close text-danger icon-16"></i>
           </div>
-          <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="openFile(item.data.recID)">
+          <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="openFile(item.recID)">
             <i class="icon-preview text-success icon-16"></i>
           </div>
-          <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download(item.data.recID)">
+          <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download(item.recID)">
             <i class="icon-cloud_download text-primary icon-16"></i>
           </div>
           <div ngbDropdown container="body" class="btn btn-sm btn-icon btn-white cursor-pointer"
             (mouseout)="hideMore()">
-            <i class="icon-more_vert text-primary icon-18" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
+            <i class="icon-more_vert icon-16" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false"></i>
             <div ngbDropdownMenu id="drop" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a ngbDropdownItem
