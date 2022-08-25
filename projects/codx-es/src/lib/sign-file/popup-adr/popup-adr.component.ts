@@ -67,8 +67,8 @@ export class PopupADRComponent extends UIComponent {
     this.dialogSignFile = this.data.formGroup;
     this.controlName = this.mode == 2 ? 'rejectControl' : 'redoControl';
 
-    //nho xoa
-    this.user.userID = 'LTTTRUC';
+    //nho xoa NGUYENPM LTTTRUC
+    // this.user.userID = 'LTTTRUC';
     //
 
     this.detectorRef.detectChanges();
