@@ -53,7 +53,7 @@ export class CodxNoteComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onType(type) {
     this.lineType = type;
@@ -89,7 +89,7 @@ export class CodxNoteComponent implements OnInit {
     }
   }
 
-  popupFile() {}
+  popupFile() { }
 
   addEmoji(event) {
     this.message += event.emoji.native;
@@ -137,7 +137,7 @@ export class CodxNoteComponent implements OnInit {
     }
   }
 
-  keyUpEnterTemp(event) {}
+  keyUpEnterTemp(event) { }
 
   addContent(data) {
     if (data) {
@@ -159,7 +159,7 @@ export class CodxNoteComponent implements OnInit {
     debugger;
   }
 
-  delete() {}
+  delete() { }
 
   refresh() {
     this.listNote = [];
