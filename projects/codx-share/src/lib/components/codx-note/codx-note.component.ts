@@ -107,7 +107,12 @@ export class CodxNoteComponent implements OnInit {
       var field = event?.field;
       this.co_content.lineType = this.lineType;
       this.co_content[field] = dt;
-      this.addContent(this.co_content);
+      this.keyUpEnter(event);
+      var ele = document.getElementsByClassName('memo');
+      if (ele) {
+        let htmlE = ele[ele.length - 1] as HTMLElement;
+        htmlE.focus();
+      }
     }
   }
 
@@ -128,13 +133,17 @@ export class CodxNoteComponent implements OnInit {
 
   keyUpEnter(event) {
     if (event?.data) {
-      // this.addContent(event?.data);
+      this.addContent(event?.data);
     }
   }
 
+  keyUpEnterTemp(event) {}
+
   addContent(data) {
     if (data) {
+      debugger;
       this.listNote.push(data);
+      this.dt.detectChanges();
     }
     // this.api
     //   .execSv('CO', 'ERM.Business.CO', 'ContentsBusiness', 'SaveAsync', data)
@@ -151,4 +160,9 @@ export class CodxNoteComponent implements OnInit {
   }
 
   delete() {}
+
+  refresh() {
+    this.listNote = [];
+    this.dt.detectChanges();
+  }
 }
