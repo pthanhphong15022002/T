@@ -15,6 +15,7 @@ import {
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  CacheService,
   CallFuncService,
   DataRequest,
   DialogData,
@@ -73,14 +74,14 @@ export class CodxExportComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
-    this.idField = dt.data?.[3];
-    this.services = dt.data?.[2];
+
   }
   ngOnInit(): void {
     //Tạo formGroup
@@ -103,10 +104,29 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.request.entityName = 'AD_ExcelTemplates';
     this.request.funcID = this.formModel?.funcID;
     //////////////////////////
-
+    this.setting();
     //Load data excel template
     this.load();
   }
+
+  setting()
+  {
+    if (this.gridModel?.entityName) {
+      var arr = this.gridModel?.entityName.split('_');
+      this.services = arr[0];
+      this.cache.entity(this.gridModel?.entityName).subscribe((res) => {
+        debugger;
+        if (res) {
+          this.idField = res.isPK;
+        }
+      });
+    }
+    if (this.services) {
+      if (this.services.toLowerCase() == 'ad') this.service = 'sys';
+      else if (this.services.toLowerCase() == 'pr') this.service = 'hr';
+    }
+  }
+
   get f(): { [key: string]: AbstractControl } {
     return this.exportGroup.controls;
   }

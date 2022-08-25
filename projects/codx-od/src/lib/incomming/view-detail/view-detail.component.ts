@@ -526,9 +526,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             option
           );
           this.dialog.closed.subscribe((e) => {
-            if (e[0]) {
-              this.data.status = '3';
-              this.view.dataService.update(this.data).subscribe();
+            if (e?.event && e?.event[0]) {
+              datas.status = '3';
+              this.view.dataService.update(datas).subscribe();
             }
           });
         }
@@ -763,7 +763,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           null,
           800,
           '',
-          [gridModel, datas.recID , "OD" , "RecID"],
+          [gridModel, datas.recID],
           null
         );
         break;
@@ -799,7 +799,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                   signFile.files.push(file);
                 }
               }
-              this.dialog = this.callfunc.openForm(
+              let dialogApprove = this.callfunc.openForm(
                 PopupAddSignFileComponent,
                 'Chỉnh sửa',
                 700,
@@ -813,6 +813,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 '',
                 dialogModel
               );
+              dialogApprove.closed.subscribe((res) => {
+                debugger;
+                if (res.event) {
+                  //gửi duyệt thành công
+                }
+              });
               //this.callfunc.openForm();
             } else if (res2?.eSign == false)
               //xét duyệt
