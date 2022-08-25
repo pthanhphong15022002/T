@@ -114,6 +114,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
               this.dataItem?.transID
           );
         }
+
+        ///es/approvals/EST021/
         //const queryParams = { 'id' : this.dataItem?.transID};
 
         //this.router.navigate(['tester/od/approvals/ODT71/'+params[1]+"/"+fuc?.functionID]);
@@ -189,6 +191,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
     var funcID = e?.functionID;
+
     var status;
     if (
       funcID == 'SYS201' ||
@@ -214,4 +217,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         } else this.notifySvr.notify(res2?.msgCodeError);
       });
   }
+
+  approve(data) {}
 }

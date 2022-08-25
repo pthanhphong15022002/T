@@ -1,0 +1,29 @@
+  @import '@boldreports/javascript-reporting-controls/Content/bootstrap-theme/bold.reports.all.min.css';
+  @import '../../../../../../../node_modules/codemirror/lib/codemirror.css';
+  @import '../../../../../../..//node_modules/codemirror/addon/hint/show-hint.css';
+ .e-vscroll.e-box {
+   padding-left: 0 !important;
+   margin: 0 -5px;
+ }
+ .e-scroller .e-vscroll .e-vup.e-button {
+   background-color: #bdbdbd;
+   padding-left: 2px;
+   height: 15px !important;
+ }
+ .e-scroller .e-vscroll .e-vdown.e-button {
+   background-color: #bdbdbd;
+   padding-left: 2px;
+   height: 15px !important;
+ }
+ .e-scroller .e-hscroll .e-hup.e-button {
+   background-color: #bdbdbd;
+   padding-left: 7px;
+ }
+ .e-scroller .e-hscroll .e-hdown.e-button {
+   background-color: #bdbdbd;
+   padding-left: 7px;
+ }
+ .e-reportdesigner-scroller .e-vscrollbar {
+   border-top: 1px solid #e0e0e0;
+   margin-right: -10px;
+ }
