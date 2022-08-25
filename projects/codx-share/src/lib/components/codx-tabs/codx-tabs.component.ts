@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import { ApiHttpService } from 'codx-core';
 import { TabModel } from './model/tabControl.model';
 
 @Component({
@@ -38,6 +39,7 @@ export class CodxTabsComponent implements OnInit {
   ];
   constructor(
     injector: Injector,
+    private api:ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -56,6 +58,7 @@ export class CodxTabsComponent implements OnInit {
         (x: TabModel) => x.isActive == true
       );
     }
+    this.getListComment();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -65,5 +68,13 @@ export class CodxTabsComponent implements OnInit {
 
   getfileCount(e: any) {
     console.log(e);
+  }
+  lstComment:any = [];
+  getListComment(){
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
+    .subscribe((res:any[]) => {
+      console.log(res);
+      this.lstComment = res;
+    })
   }
 }
