@@ -799,7 +799,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                   signFile.files.push(file);
                 }
               }
-              this.dialog = this.callfunc.openForm(
+              let dialogApprove = this.callfunc.openForm(
                 PopupAddSignFileComponent,
                 'Chỉnh sửa',
                 700,
@@ -813,6 +813,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 '',
                 dialogModel
               );
+              dialogApprove.closed.subscribe((res) => {
+                debugger;
+                if (res.event) {
+                  //gửi duyệt thành công
+                }
+              });
               //this.callfunc.openForm();
             } else if (res2?.eSign == false)
               //xét duyệt
