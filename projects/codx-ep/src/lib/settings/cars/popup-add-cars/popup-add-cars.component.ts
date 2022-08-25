@@ -13,7 +13,8 @@ import {
   RequestOption,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { Device } from '../../../booking-car/popup-add-booking-car/popup-add-booking-car.component';
+import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
+
 
 import { CodxEpService } from '../../../codx-ep.service';
 

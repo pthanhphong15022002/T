@@ -1,12 +1,12 @@
 import { DialogData, DialogRef, UIComponent } from 'codx-core';
 import { Component, Injector, OnInit, Optional } from '@angular/core';
-import { CodxEpService } from '../../codx-ep.service';
 import { FormGroup } from '@angular/forms';
+import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
   selector: 'lib-popup-list-stationery',
   templateUrl: './popup-list-stationery.component.html',
-  styleUrls: ['./popup-list-stationery.component.scss']
+  styleUrls: ['./popup-list-stationery.component.scss'],
 })
 export class PopupListStationeryComponent extends UIComponent {
   headerText: string = 'Danh sách yêu cầu';
@@ -21,7 +21,8 @@ export class PopupListStationeryComponent extends UIComponent {
     private injector: Injector,
     private epService: CodxEpService,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef) {
+    @Optional() dialog?: DialogRef
+  ) {
     super(injector);
     this.data = dt?.data;
     this.dialog = dialog;
@@ -50,11 +51,11 @@ export class PopupListStationeryComponent extends UIComponent {
           this.dialogListStationery = res;
           this.isAfterRender = true;
         } else {
-
         }
-
       });
   }
 
-  valueChange(event) { }
+  valueChange(event) {}
+
+  search(event) {}
 }
