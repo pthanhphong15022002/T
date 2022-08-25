@@ -383,13 +383,13 @@ export class HomeComponent extends UIComponent {
 
   onSelectionChanged($data) {    
     ScrollComponent.reinitialization();
-    if ($data == null || $data.data == null || $data.data.isItem == null) {
+    if ($data == null || $data.data == null) {
       return;
     }
 
     let id = $data.data.recID;
     let item = $data.data;
-    if (item.read && item.isItem != null && item.isItem) {
+    if (item.read) {
       var breadcumb = [];
       var breadcumbLink = [];
       if (this.codxview.currentView.currentComponent?.treeView != null) {

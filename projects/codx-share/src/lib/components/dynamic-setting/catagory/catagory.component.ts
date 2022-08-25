@@ -6,6 +6,7 @@ import {
   CacheService,
   CallFuncService,
   DialogModel,
+  LayoutService,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { stringify } from 'querystring';
@@ -35,12 +36,14 @@ export class CatagoryComponent implements OnInit {
     private cacheService: CacheService,
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private layout: LayoutService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((routeParams) => {
       debugger;
+      this.layout.setLogo(null);
       this.urlOld = '..' + window.location.pathname;
       var state = history.state;
       if (state) {
@@ -190,9 +193,9 @@ export class CatagoryComponent implements OnInit {
   valueChange(evt: any) {
     var field = evt.field;
     var value = evt.data;
-    if (!value) return;
+
     if (typeof value == 'boolean') {
-      value = !!+value + '';
+      value = +value + '';
     }
     var dt = this.settingValue.find((x) => x.category == this.category);
     if (this.category == '1') {
