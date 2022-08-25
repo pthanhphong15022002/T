@@ -6,7 +6,9 @@ import {
   Output,
   EventEmitter,
   Injector,
+  ChangeDetectorRef,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CacheService,
@@ -21,6 +23,7 @@ import {
   UIComponent,
   ViewModel,
   ViewsComponent,
+  CallFuncService,
   ViewType,
 } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
@@ -51,10 +54,10 @@ export class BookingRoomComponent extends UIComponent {
   entityName = 'EP_Bookings';
   predicate = 'ResourceType=@0';
   dataValue = '1';
-  idField = 'recID';
+  idField = 'RecID';
   className = 'BookingsBusiness';
   method = 'GetEventsAsync';
-  methodResource = 'GetResourceAsync';
+
   modelPage: ModelPage;
   modelResource?: ResourceModel;
   model = new DataRequest();
@@ -71,28 +74,32 @@ export class BookingRoomComponent extends UIComponent {
   lstPined : any = [];
   titleCollapse: string = "Đóng hộp tham số";
   reportUUID: any = '3cdcde9d-8d64-ec11-941d-00155d035518';
-  constructor(
+  constructor(    
     private injector: Injector,
-    private notiService: NotificationsService,
-    private epService: CodxEpService,
-    private cacheSv : CacheService
+    private callFuncService: CallFuncService,
+    private codxEpService: CodxEpService,
+    private cacheService: CacheService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private activatedRoute: ActivatedRoute
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.modelPage = {
-      entity: 'EP_Bookings',
-      formName: 'Bookings',
-      gridViewName: 'grvBookings',
-      functionID: 'EP1',
-    };
-    let fu: any;
-    this.cacheSv.functionList("TMT0201").subscribe(res=>{
-      if(res){
-        fu = res;
+    this.funcID = this.activatedRoute.snapshot.params['funcID']; 
+    console.log(this.funcID); 
+    this.codxEpService.getModelPage(this.funcID).then((res) => {
+      if (res) {
+        this.modelPage = res;
+        console.log('funcID',res);
       }
-    });
-    this.cacheSv.gridViewSetup("MyTasks", "grvMyTasks").subscribe(res=> {
-    });
+    });  
+
+    // let fu: any;
+    // this.cacheService.functionList("TMT0201").subscribe(res=>{
+    //   if(res){
+    //     fu = res;
+    //   }
+    // });
+    // this.cacheService.gridViewSetup("MyTasks", "grvMyTasks").subscribe(res=> {
+    // });
   }
 
 
@@ -151,8 +158,8 @@ export class BookingRoomComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
-    this.viewBase.dataService.methodSave = 'AddNewAsync';
-    this.viewBase.dataService.methodUpdate = 'EditAsync';
+    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
+    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
         sameData: true,
@@ -180,20 +187,20 @@ export class BookingRoomComponent extends UIComponent {
           panelLeftRef: this.chart,
         },
       },
-      {
-        sameData: true,
-        id: '4',
-        type: ViewType.content,
-        showButton: false,
-        showFilter: false,
-        active: false,
-        text: 'Report',
-        icon: 'icon-assignment',
-        toolbarTemplate: this.pined,
-        model: {
-          panelLeftRef: this.report,
-        },
-      },
+      // {
+      //   sameData: true,
+      //   id: '4',
+      //   type: ViewType.content,
+      //   showButton: false,
+      //   showFilter: false,
+      //   active: false,
+      //   text: 'Report',
+      //   icon: 'icon-assignment',
+      //   toolbarTemplate: this.pined,
+      //   model: {
+      //     panelLeftRef: this.report,
+      //   },
+      // },
     ];
     this.detectorRef.detectChanges();
   }
@@ -221,26 +228,27 @@ export class BookingRoomComponent extends UIComponent {
       case 'btnDelete':
         this.delete();
         break;
-      case 'btnAddReport':
-        this.addReport();
-        break;
+      // case 'btnAddReport':
+      //   this.addReport();
+      //   break;
     }
   }
 
-  addReport(){
-    let option = new DialogModel();
-    option.DataService = this.viewBase.dataService;
-    option.FormModel = this.viewBase.formModel;
-    option.IsFull = true;
-    this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,'3cdcde9d-8d64-ec11-941d-00155d035518',"",option);
-  }
+  // addReport(){
+  //   let option = new DialogModel();
+  //   option.DataService = this.viewBase.dataService;
+  //   option.FormModel = this.viewBase.formModel;
+  //   option.IsFull = true;
+  //   this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,'3cdcde9d-8d64-ec11-941d-00155d035518',"",option);
+  // }
   addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.dataService;
-      this.dialog = this.callfc.openSide(
+      option.FormModel = this.viewBase?.formModel;
+      this.dialog = this.callFuncService.openSide(
         PopupAddBookingRoomComponent,
         [this.dataSelected, true],
         option
@@ -249,20 +257,23 @@ export class BookingRoomComponent extends UIComponent {
   }
 
   edit(evt?) {
-    let item = this.viewBase.dataService.dataSelected;
     if (evt) {
-      item = evt;
+      this.viewBase.dataService.dataSelected = evt;
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = this.viewBase?.formModel;
+          this.dialog = this.callFuncService.openSide(
+            PopupAddBookingRoomComponent,
+            [this.viewBase.dataService.dataSelected, false],
+            option
+          );
+        });
     }
-    this.viewBase.dataService.edit(item).subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.DataService = this.viewBase?.dataService;
-      this.dialog = this.callfc.openSide(
-        PopupAddBookingRoomComponent,
-        [item, false],
-        option
-      );
-    });
   }
   delete(evt?) {
     let deleteItem = this.viewBase.dataService.dataSelected;

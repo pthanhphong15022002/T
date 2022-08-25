@@ -18,7 +18,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   headerText = 'Yêu cầu văn phòng phẩm';
   subHeaderText = 'Yêu cầu cho phòng';
   count: any;
-  listItem: any;
+  listItem: any[];
   constructor(
     private injector: Injector,
     private epService: CodxEpService,
@@ -62,10 +62,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
     } else {
       this.isAdd = false;
     }
-    console.log(itemData)
     option.className = 'BookingsBusiness';
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd];
+    option.data = [itemData, this.isAdd, '', this.listItem];
     return true;
   }
 
@@ -76,7 +75,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (!this.dialogRequest.value.linkType) {
       this.dialogRequest.patchValue({ linkType: '0' });
     }
-    this.dialogRequest.patchValue({ resourceType: '5' });
+    this.dialogRequest.patchValue({ resourceType: '3' });
+    this.dialogRequest.patchValue({ category: '5' });
     this.dialogRequest.patchValue({ hours: '0' });
     //this.dialogRequest.patchValue({ comments: '0' });
     this.dialog.dataService
@@ -84,11 +84,16 @@ export class PopupRequestStationeryComponent extends UIComponent {
       .subscribe();
   }
 
-  valueDateChange(event: any) {
+  valueDateChange(event) {
     this.selectDate = event.data.fromDate;
     if (this.selectDate) {
       this.dialogRequest.patchValue({ bookingOn: this.selectDate });
     }
+  }
+
+  valueQuantityChange(event, id) {
+    let item: any = this.listItem.filter((x) => x.resourceID == id);
+    item[0].quantity = event.data;
   }
 
   valueChange(event) {

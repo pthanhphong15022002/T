@@ -156,22 +156,6 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group row mt-3">
-    <div class="col-4">
-      <codx-label [formModel]="form.formModel" fiedName="SendMode"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="sendMode"></codx-input>
-    </div>
-    <div class="col-3">
-      <codx-label [formModel]="form.formModel" fiedName="DispatchOn"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn">
-      </codx-input>
-    </div>
-    <div class="col-5">
-      <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline">
-      </codx-input>
-    </div>
-  </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
     <div class="d-flex">
@@ -180,8 +164,24 @@
         [showInput]="true" refType="P" field="popup" [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
       </codx-input>
     </div>
-
   </div>
+  <div class="form-group row mt-3">
+    <div class="col">
+      <codx-label [formModel]="form.formModel" fiedName="SendMode"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="sendMode"></codx-input>
+    </div>
+    <div class="col">
+      <codx-label [formModel]="form.formModel" fiedName="DispatchOn"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn">
+      </codx-input>
+    </div>
+    <div class="col" *ngIf="form.formModel.funcID != 'ODT41'">
+      <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline">
+      </codx-input>
+    </div>
+  </div>
+  
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">

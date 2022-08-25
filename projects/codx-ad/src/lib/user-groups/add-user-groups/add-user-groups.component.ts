@@ -339,7 +339,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
               }
             } else this.onUpdate();
           });
-      }
+      } else this.onUpdate();
     }
   }
 
@@ -416,8 +416,23 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
+  checkOpenCbbPopup = 0;
   getDataUserInCbb(event) {
+    this.checkOpenCbbPopup++;
     if (event?.dataSelected) {
+      if (this.checkOpenCbbPopup >= 2 || this.formType == 'add' || this.formType == 'edit') {
+        if (this.dataUserCbb) {
+          let i = 0;
+          event?.dataSelected.forEach((dt) => {
+            this.dataUserCbb.forEach((x) => {
+              if (dt.UserID == x.userID) {
+                event?.dataSelected.splice(i, 1);
+              }
+            });
+            i++;
+          });
+        }
+      }
       event?.dataSelected.forEach((e: any) => {
         this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
       });

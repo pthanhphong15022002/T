@@ -49,6 +49,7 @@ export class PopupAddSignFileComponent implements OnInit {
   formModel: FormModel;
   isAfterRender = false;
   cbxName: any = {};
+  cbxCategory: string;
   dialogSignFile: FormGroup;
   lstDataFile = [];
   isAddNew: boolean = true;
@@ -90,7 +91,9 @@ export class PopupAddSignFileComponent implements OnInit {
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
+
     if (this.oSignFile) {
+      this.cbxCategory = data?.data?.cbxCategory;
       this.currentTab = 1;
       this.processTab = 1;
     } else if (!this.isAddNew) {
@@ -116,19 +119,23 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.refId = this.oSignFile.refId;
               this.data.refDate = this.oSignFile.refDate;
               this.data.refNo = this.oSignFile.refNo;
-              this.initForm1();
+              this.initForm();
             }
+          });
+        this.esService
+          .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+          .then((res) => {
+            if (res) this.cbxName = res;
           });
       });
     } else {
       this.initForm();
+      this.esService
+        .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+        .then((res) => {
+          if (res) this.cbxName = res;
+        });
     }
-
-    this.esService
-      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) this.cbxName = res;
-      });
   }
 
   ngAfterViewInit() {
@@ -155,6 +162,7 @@ export class PopupAddSignFileComponent implements OnInit {
             this.dialogSignFile.patchValue({
               priority: '1',
               approveStatus: '1',
+              approveControl: '3',
               employeeID: user.employee?.employeeID,
               orgUnitID: user.employee?.orgUnitID,
               deptID: user.employee?.departmentID,
@@ -163,6 +171,8 @@ export class PopupAddSignFileComponent implements OnInit {
             });
 
             this.isAfterRender = true;
+            this.cr.detectChanges();
+            this.updateNodeStatus(0, 1);
           } else {
             this.dialogSignFile.patchValue(this.data);
             if (this.isAddNew) {
@@ -486,6 +496,7 @@ export class PopupAddSignFileComponent implements OnInit {
         processID: this.processID,
         approveControl: '2',
       });
+      this.onSaveSignFile();
 
       dialogTmp && dialogTmp.close();
     }

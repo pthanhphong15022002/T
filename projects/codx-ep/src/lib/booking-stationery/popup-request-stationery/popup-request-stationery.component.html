@@ -121,7 +121,7 @@
                       class="d-flex align-items-center position-relative me-4"
                     >
                       <span
-                        class="icon-shopping_cart icon-20 text-gray-400"
+                        class="icon-shopping_cart icon-20 text-gray-400 reservedQty"
                       ></span>
                       <span>{{ item.reservedQty }}</span>
                     </div>
@@ -129,7 +129,7 @@
                       class="d-flex align-items-center position-relative me-4"
                     >
                       <span
-                        class="icon-brightness_auto icon-20 text-gray-400"
+                        class="icon-brightness_auto icon-20 text-gray-400 availableQty"
                       ></span>
                       <span>{{ item.availableQty }}</span>
                     </div>
@@ -141,13 +141,13 @@
               <codx-input
                 type="number"
                 class="test-number min-w-50px"
-                field="number"
+                field="quantity"
                 placeholder="number"
                 [crrValue]="1"
                 [cusButton]="true"
                 [min]="0"
                 [max]="50"
-                (valueChange)="valueChange($event)"
+                (valueChange)="valueQuantityChange($event, item.resourceID)"
               >
               </codx-input>
             </td>
