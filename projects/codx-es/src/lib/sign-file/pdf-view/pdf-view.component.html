@@ -30,7 +30,25 @@
             <ng-template #headerText>
               {{ headerLeftName[1].text }}
             </ng-template>
-            <ng-template #content> </ng-template>
+            <ng-template #content>
+              <ejs-listview
+                id="groupedListCA"
+                [dataSource]="lstAreas"
+                [cssClass]="cssClass"
+              >
+                <ng-template let-area>
+                  <codx-temp-full
+                    cardCss="card-select px-2 pt-4 pb-2"
+                    [imageId]="area.signer"
+                    [imageObjType]="'AD_Users'"
+                    [imageWidth]="35"
+                    imgCss="me-2"
+                    [title]="getAreaOwnerName(area.signer)"
+                  >
+                  </codx-temp-full>
+                </ng-template>
+              </ejs-listview>
+            </ng-template>
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
@@ -165,6 +183,8 @@
           [enableToolbar]="false"
           [enableNavigationToolbar]="false"
           [enableAnnotationToolbar]="false"
+          [enableHandwrittenSignature]="false"
+          [enableFormFields]="false"
           [enableThumbnail]="true"
           (created)="onCreated($event)"
           [enableAnnotation]="true"

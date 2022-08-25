@@ -32,7 +32,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   @ViewChild('pdfView') pdfView: PdfViewComponent;
 
-  isApprover = false;
+  isApprover = true;
   dialog;
   data = {
     funcID: 'EST021',
@@ -41,7 +41,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
-  recID = 'd071678f-21fc-11ed-9798-509a4c39550b';
+  recID = '5fc6727b-2464-11ed-979b-509a4c39550b';
   funcID;
   cbxName;
 
@@ -99,8 +99,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.dialog.closed.subscribe((res) => {
       if (res.event == 'ok') {
         console.log('run');
-
-        this.pdfView.renderQRFile();
       }
     });
   }
