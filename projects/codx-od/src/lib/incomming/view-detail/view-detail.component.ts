@@ -526,9 +526,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             option
           );
           this.dialog.closed.subscribe((e) => {
-            if (e[0]) {
-              this.data.status = '3';
-              this.view.dataService.update(this.data).subscribe();
+            if (e?.event && e?.event[0]) {
+              datas.status = '3';
+              this.view.dataService.update(datas).subscribe();
             }
           });
         }
