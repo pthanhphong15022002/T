@@ -89,7 +89,7 @@ export class CopyComponent implements OnInit {
             this.fullName = item;
             this.changeDetectorRef.detectChanges();
           });
-        }
+        }  
         else 
           this.fullName = this.data.folderName;
       }

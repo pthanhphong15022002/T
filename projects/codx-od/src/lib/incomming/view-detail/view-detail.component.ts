@@ -789,7 +789,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               signFile.refId = this.data?.recID;
               signFile.refDate = this.data?.refDate;
               signFile.refNo = this.data?.refNo;
-
               signFile.files = [];
               if (this.data?.files) {
                 for (var i = 0; i < this.data?.files.length; i++) {
@@ -816,7 +815,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               dialogApprove.closed.subscribe((res) => {
                 debugger;
                 if (res.event) {
-                  //gửi duyệt thành công
+                  datas.status = "3";
+                  this.view.dataService.update(datas).subscribe();
                 }
               });
               //this.callfunc.openForm();

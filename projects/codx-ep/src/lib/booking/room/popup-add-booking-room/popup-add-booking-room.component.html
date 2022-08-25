@@ -104,11 +104,9 @@
         <codx-input
           type="datetime"
           class="form-control test-datetime"
-          field="datetime"
-          [crrValue]="fGroupAddBookingRoom.value.startDate"
-          ControlName="startDate"
-          placeholder="datetime"
           format="d"
+          field="bookingOn"
+          [crrValue]="fGroupAddBookingRoom.value.bookingOn"
           (valueChange)="valueDateChange($event)"
         >
         </codx-input>
@@ -124,11 +122,10 @@
         <codx-input
           type="datetime"
           class="test-datetime"
-          field="datetime"
-          placeholder="datetime"
-          [crrValue]="startTime"
+          field="startDate"
+          [crrValue]="fGroupAddBookingRoom.value.startDate"
           format="t"
-          (valueChange)="valueChange($event)"
+          (valueChange)="valueTimeChange($event)"
         >
         </codx-input>
       </div>
@@ -142,9 +139,8 @@
         <codx-input
           type="datetime"
           class="test-datetime"
-          field="datetime"
-          placeholder="datetime"
-          [crrValue]="endTime"
+          field="endDate"
+          [crrValue]="fGroupAddBookingRoom.value.endDate"
           format="t"
           (valueChange)="valueChange($event)"
         >
@@ -265,9 +261,8 @@
           fGroupAddBookingRoom.value.onlineUrl
         }}</a>
       </div>
-    </div>
-
-
+    </div>   
+    
     <div class="d-flex flex-column mb-8">
       <div
         class="d-flex justify-content-between align-items-center mb-2 form-group"
@@ -470,7 +465,7 @@
           [multiple]="true"
           [showInput]="false"
           refType="P"
-          (valueChange)="valueCbxUserChange($event)"
+          (valueChange)="valueCbxStationeryChange($event)"
         >
         </codx-input>
       </div>
@@ -489,13 +484,12 @@
         <codx-input
           type="number"
           class="test-number min-w-50px"
-          field="number"
-          placeholder="number"
-          [crrValue]="1"
+          field="attendees"
+          [crrValue]="fGroupAddBookingRoom.value.attendees"
           [cusButton]="true"
           [min]="0"
           [max]="50"
-          (valueChange)="valueChange($event)"
+          (valueChange)="valueAttendeesChange($event)"
           >
         </codx-input> 
       </div>       
@@ -503,36 +497,36 @@
     </div>
 
     <div class="separator my-5"></div>
-    <div class="d-flex flex-stack mb-4">
+    <div class="d-flex flex-stack mb-4" *ngFor="let item of lstStationery">
       <div class="d-flex align-items-center me-3">
-        <codx-img
-          #image
-          class="me-3 w-60px"
-          objectId="ADMIN"
-          objectType="Users"
-        >
-        </codx-img>
-        <div class="flex-grow-1">
+        <div class="pe-4">
+          <codx-img
+            [objectId]="item.id"
+            objectName="item.text"
+            objectType="AD_Users"
+          ></codx-img>
+        </div>
+        <div class="ps-4 flex-grow-2">
           <a
             href="#"
             class="text-gray-800 text-hover-primary fw-bolder lh-0"
-            >Nước suối</a
+            >{{item.text}}</a
           >
           <span class="text-gray-400 fw-bold d-block fs-6"
-            >Đơn vị tính : chai</span
+            >Đơn vị tính : ???</span
           >
         </div>
       </div>
       <codx-input
           type="number"
           class="test-number min-w-50px"
-          field="number"
-          placeholder="number"
-          [crrValue]="1"
+          [field]="item.id"
+          placeholder="0"
+          [crrValue]="item.quantity"
           [cusButton]="true"
           [min]="0"
           [max]="50"
-          (valueChange)="valueChange($event)"
+          (valueChange)="valueQuantityChange($event)"
           >
         </codx-input> 
     </div>
@@ -548,11 +542,11 @@
     <div class="form-group col-3">
       <codx-label default="Số người tham dự" fiedName="Attendees"> </codx-label>
       <codx-input
-        ControlName="attendees"
-        [formModel]="form.formModel"
-        [Group]="fGroupAddBookingRoom"        
-        (valueChange)="valueChange($event)">
-      >
+        type="number"
+        field="attendees"
+        [crrValue]="fGroupAddBookingRoom.value.attendees"     
+        (valueChange)="valueChange($event)"
+        >      
       </codx-input>
     </div>    
 
@@ -560,11 +554,9 @@
       <codx-label default="Phân loại" fiedName="Category"> </codx-label>
       <codx-input 
         type="valuelist"
-        name="valuelist"
-        ngDefaultControl
-        [crrValue]="fGroupAddBookingRoom.value.category"
         refValue="VL005"
         field="category"
+        [crrValue]="fGroupAddBookingRoom.value.category"
         (valueChange)="valueChange($event)">
       </codx-input>
     </div>
@@ -585,11 +577,11 @@
       <codx-label default="" fiedName="" [formModel]="form.formModel"> </codx-label>      
       <div class="col-3 form-group ">    
         <codx-input  #checkbox
+          class="test-switch"
           type="switch"
-          [checked]="fGroupAddBookingRoom.value.repeat"
           field="repeat"
           [disabled]="false"
-          class="test-switch"
+          [checked]="fGroupAddBookingRoom.value.repeat"
           (valueChange)="valueChange($event)"
           >
         </codx-input>
@@ -604,8 +596,8 @@
         <codx-input
           type="valuelist"
           [refValue]="CbxName['Interval']"
-          [crrValue]="fGroupAddBookingRoom.value.interval"
           field="interval"
+          [crrValue]="fGroupAddBookingRoom.value.interval"
           (valueChange)="valueChange($event)"
           [disabled]="!fGroupAddBookingRoom.value.repeat"
         ></codx-input>
@@ -705,7 +697,7 @@
   <div class="card-header d-flex flex-row justify-content-between">
     <h4 class="card-title" id="card-basic-title">
       <codx-label
-        name="lblLink"
+        fiedName="Link"
         default="Link cuộc họp"
         [formModel]="dialog.formModel"
       ></codx-label>
@@ -734,7 +726,7 @@
         type="text"
         class="form-control"
         placeholder="https://home.suremeet.vn/"
-        [crrValue]="link"
+        [crrValue]="fGroupAddBookingRoom.value.onlineUrl"
         (valueChange)="changeLink($event)"
       ></codx-input>
     </div>

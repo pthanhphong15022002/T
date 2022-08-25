@@ -18,6 +18,11 @@
   <ng-container>
     <div class="tab-tch mt-3">
       <div class="d-flex align-items-start justify-content-between">
+        <span *ngIf="data?.items.length > 0">
+          <span
+            class="icon-18 icon-add_box me-2 align-items-start"
+          ></span>
+        </span>
         <div class="d-flex align-items-start w-100 pe-9">
           <div class="me-3">
             <codx-img [width]="35" #image [objectId]='data?.userID'></codx-img>
