@@ -433,6 +433,7 @@ export class CodxDMService {
         this.folderName = data.folderName;
         this.currentNode = '';
         this.folderId.next(data.recID);
+        this.folderID = data.recID;
         this.nodeSelect.next(data);
         this.disableInput.next(false);
 

@@ -1,32 +1,19 @@
-<codx-views
-  #view
-  [views]="views"
-  [autoLoad]="false"
-  (viewChanged)="viewChanged($event, view)"
->
+<codx-views #view [views]="views" [autoLoad]="false" (viewChanged)="viewChanged($event, view)">
 </codx-views>
 
 <ng-template #template>
-  <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+  <div class="content d-flex flex-column flex-column-fluid p-0" id="kt_content">
     <!--<app-subheader></app-subheader>-->
     <div id="erm_content" class="d-flex flex-column-fluid">
-      <div class="container">
-        <div class="d-flex mb-3 mt-2">
-          <div class="aside-detail flex-row-auto w-300px">
-            <div class="aside-menu mr-6">
-              <ul class="menu-nav">
-                <li
-                  class="menu-item"
-                  *ngFor="let item of itemMenu"
-                  (click)="navigate($event, item)"
-                  [attr.data-id]="item"
-                  [ngClass]="catagory === item ? 'menu-item-active' : ''"
-                >
+      <div class="container bg-body p-6">
+        <div class="d-flex">
+          <div class="aside-detail flex-row-auto w-300px me-6">
+            <div class="aside-menu">
+              <ul class="menu-nav p-0">
+                <li class="menu-item" *ngFor="let item of itemMenu" (click)="navigate($event, item)"
+                  [attr.data-id]="item" [ngClass]="catagory === item ? 'menu-item-active' : ''">
                   <a class="menu-link d-flex align-items-center">
-                    <i
-                      class="me-2"
-                      [ngClass]="item | vll: listName:'icon' | async"
-                    ></i>
+                    <i class="me-2" [ngClass]="item | vll: listName:'icon' | async"></i>
                     {{ item | vll: listName:"text" | async }}
                   </a>
                 </li>
