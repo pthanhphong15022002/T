@@ -814,7 +814,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               );
               dialogApprove.closed.subscribe((res) => {
                 debugger;
-                if (res.event) {
+                if (res.event == true) {
                   datas.status = '3';
                   this.view.dataService.update(datas).subscribe();
                 }
