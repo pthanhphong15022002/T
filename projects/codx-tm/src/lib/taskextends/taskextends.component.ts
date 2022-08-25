@@ -80,28 +80,30 @@ export class TaskExtendsComponent
 
   //#region extends
   openExtendStatusPopup(moreFunc, data) {
-    var valueDefault = UrlUtil.getUrl('defaultValue', moreFunc.url);
-    if (valueDefault == '5') {
-      this.api
-        .execSv<any>(
-          'TM',
-          'TM',
-          'TaskBusiness',
-          'GetTaskParentByTaskIDAsync',
-          data.taskID
-        )
-        .subscribe((res) => {
-          if (res) {
-            if (res.dueDate < data.extendDate) {
-              this.notiService.alertCode('TM059').subscribe((confirm) => {
-                if (confirm?.event && confirm?.event?.status == 'Y') {
-                  this.confirmExtends(moreFunc, data);
-                }
-              });
-            } else this.confirmExtends(moreFunc, data);
-          }
-        });
-    } else this.confirmExtends(moreFunc, data);
+    //chuyển kiểm tra sau nên cmt lại
+    // var valueDefault = UrlUtil.getUrl('defaultValue', moreFunc.url);
+    // if (valueDefault == '5') {
+    //   this.api
+    //     .execSv<any>(
+    //       'TM',
+    //       'TM',
+    //       'TaskBusiness',
+    //       'GetTaskParentByTaskIDAsync',
+    //       data.taskID
+    //     )
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         if (res.dueDate < data.extendDate) {
+    //           this.notiService.alertCode('TM059').subscribe((confirm) => {
+    //             if (confirm?.event && confirm?.event?.status == 'Y') {
+    //               this.confirmExtends(moreFunc, data);
+    //             }
+    //           });
+    //         } else this.confirmExtends(moreFunc, data);
+    //       }
+    //     });
+    // } else this.confirmExtends(moreFunc, data);
+    this.confirmExtends(moreFunc, data) ;
   }
 
   confirmExtends(moreFunc, data) {

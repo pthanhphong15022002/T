@@ -35,7 +35,6 @@ import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/
 import { DragDropFileUploadDirective } from './directives/drag-drop-file-upload.directive';
 import { DragDropFileFolderDirective } from './directives/drag-drop-file-folder.directive';
 //import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-//import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 
 export const routes: Routes = [
@@ -117,7 +116,7 @@ const T_Component: Type<any>[] = [
     NgbModule,
     CoreModule,
     UploaderModule,
-    //   InfiniteScrollModule
+   // InfiniteScrollModule
   ],
   exports: [
     RouterModule

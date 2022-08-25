@@ -35,6 +35,8 @@ export class ViewDetailComponent implements OnInit {
   @Input() funcID;
   @Input() formModel;
   @Input() view: ViewsComponent;
+  @Input() hideMF = false;
+  @Input() hideFooter = false;
   @ViewChild('attachment') attachment;
 
   active = 1;
@@ -53,7 +55,14 @@ export class ViewDetailComponent implements OnInit {
   ngOnInit(): void {
     this.itemDetailStt = 1;
     this.itemDetailDataStt = 1;
-    this.initForm();
+    if (!this.formModel) {
+      this.esService.getFormModel('EST021').then((formModel) => {
+        if (this.formModel) this.formModel = formModel;
+        this.initForm();
+      });
+    } else {
+      this.initForm();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
