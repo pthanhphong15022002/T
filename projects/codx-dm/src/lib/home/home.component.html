@@ -2,7 +2,7 @@
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views"
   (sortChanged)="sortChanged($event)"  [autoSort]="false"
   (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="addFile($event)"
-  (viewChanged)="changeView($event)" (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)"></codx-views>
+  (viewChanged)="changeView($event)" (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)"></codx-views>
 
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
