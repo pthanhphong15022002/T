@@ -244,7 +244,6 @@ export class IncommingComponent
   {
     if(e)
     {
-    debugger;
       var foundIndex = e.findIndex((x: { functionID: string }) => x.functionID == 'SYS001');
       e[foundIndex].disabled = true;
     }
@@ -405,7 +404,6 @@ export class IncommingComponent
   }
 
   valueChange(dt: any) {
-    debugger;
     var recID = null;
     if (dt?.data) {
       recID = dt.data.recID;
@@ -452,5 +450,13 @@ export class IncommingComponent
     this.view.dataService.dataValues = "1"; */
     //this.view.dataService.setPredicates(['Status=@0'],['1']).subscribe();
     //this.activeDiv = "1";
+  }
+  checkDeadLine(time:any)
+  {
+    if(new Date(time).getTime() < new Date().getTime() || !time)
+    {
+      return "icon-access_alarm"
+    }
+    return ""
   }
 }

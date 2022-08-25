@@ -392,12 +392,10 @@
   line-height: 22px!important;
   font-size: 13px!important;
 }
-#signatureDropdownList_popup .ename {
-  display: block !important;
-  opacity: .87;
- // font-size: 16px;
-  margin-top: 9px;
+#signatureDropdownList_popup .e-input-focus .text-gray-700 {   
+  color: white!important; 
 }
+
 .e-numeric {
   width: 100px!important;
 }

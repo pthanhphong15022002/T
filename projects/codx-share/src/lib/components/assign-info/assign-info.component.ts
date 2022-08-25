@@ -46,7 +46,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   param: any;
   taskGroup: TM_TaskGroups;
   task: TM_Tasks = new TM_Tasks();
-  functionID: string;
+  functionID = 'TMT0203'; // giao việc nên cố định funcID này
   popover: any;
   title = 'Giao việc';
   showPlan = true;
@@ -90,13 +90,20 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.title = dt?.data[3] ? dt?.data[3] : this.title;
     this.dialog = dialog;
     this.user = this.authStore.get();
-    this.functionID = this.dialog.formModel.funcID;
+    // this.functionID = this.dialog.formModel.funcID;
+    
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
     });
-    this.cache.gridViewSetup('Tasks', 'grvTasks').subscribe((res) => {
+    
+    this.cache
+    .gridViewSetup(
+     "AssignTasks",
+      "grvAssignTasks"
+    )
+    .subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
@@ -120,9 +127,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         if (response) {
           response['_uuid'] = response['taskID'] ?? Util.uid();
           response['idField'] = 'taskID';
-          response['isNew'] = function () {
-            return response[response.taskID] != response['_uuid'];
-          };
+          // response['isNew'] = function () {
+          //   return response[response.taskID] != response['_uuid'];
+          // };
           this.task = response;
           this.loadingAll = true;
           this.openInfo();
@@ -593,7 +600,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.taskGroup = res;
-          if (res.checkList != null) {
+          if (res.checkList != null && res.checkList.trim()!="") {
             var toDo = res.checkList.split(';');
             this.listTodo = [];
             toDo.forEach((tx) => {

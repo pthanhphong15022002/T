@@ -15,6 +15,7 @@ import {
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  CacheService,
   CallFuncService,
   DataRequest,
   DialogData,
@@ -45,6 +46,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
   request = new DataRequest();
   optionEx = new DataRequest();
   optionWord = new DataRequest();
+  services = 'OD'
+  idField= 'RecID'
   service: string = 'SYS';
   assemblyName: string = 'AD';
   className: string = 'ExcelTemplatesBusiness';
@@ -71,12 +74,14 @@ export class CodxExportComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.gridModel = dt.data?.[0];
     this.recID = dt.data?.[1];
+
   }
   ngOnInit(): void {
     //Tạo formGroup
@@ -99,10 +104,29 @@ export class CodxExportComponent implements OnInit, OnChanges {
     this.request.entityName = 'AD_ExcelTemplates';
     this.request.funcID = this.formModel?.funcID;
     //////////////////////////
-
+    this.setting();
     //Load data excel template
     this.load();
   }
+
+  setting()
+  {
+    if (this.gridModel?.entityName) {
+      var arr = this.gridModel?.entityName.split('_');
+      this.services = arr[0];
+      this.cache.entity(this.gridModel?.entityName).subscribe((res) => {
+        debugger;
+        if (res) {
+          this.idField = res.isPK;
+        }
+      });
+    }
+    if (this.services) {
+      if (this.services.toLowerCase() == 'ad') this.service = 'sys';
+      else if (this.services.toLowerCase() == 'pr') this.service = 'hr';
+    }
+  }
+
   get f(): { [key: string]: AbstractControl } {
     return this.exportGroup.controls;
   }
@@ -237,12 +261,12 @@ export class CodxExportComponent implements OnInit, OnChanges {
           this.gridModel.predicates = null;
           this.gridModel.dataValues = null;
         } else if (value?.dataExport == 'selected') {
-          this.gridModel.predicates = 'RecID=@0';
+          this.gridModel.predicates = this.idField+'=@0';
           this.gridModel.dataValues = [this.recID].join(';');
         }
         if (splitFormat[1]) idTemp = splitFormat[1];
         this.api
-          .execSv<any>('OD', 'CM', 'CMBusiness', 'ExportExcelAsync', [
+          .execSv<any>(this.services, 'CM', 'CMBusiness', 'ExportExcelAsync', [
             this.gridModel,
             idTemp,
           ])

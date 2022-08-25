@@ -41,12 +41,12 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    children: [                          
+    children: [
       // {
       //   path: '',
       //   component: HomeComponent
       // },
-     
+
       // {
       //   path: 'DMT02',
       //   component: HomeComponent
@@ -58,11 +58,11 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: HomeComponent
-      },  
+      },
       {
         path: ':funcID/:fileID',
         component: ViewFileDialogComponent
-      },           
+      },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -78,7 +78,7 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-  HomeComponent,  
+  HomeComponent,
   CardComponent,
   DetailComponent,
   CreateFolderComponent,
@@ -94,7 +94,7 @@ const T_Component: Type<any>[] = [
   ShareComponent,
   DragDropFileUploadDirective,
   DragDropFileFolderDirective,
-  
+
 ]
 @NgModule({
   imports: [
@@ -116,11 +116,11 @@ const T_Component: Type<any>[] = [
     NgbModule,
     CoreModule,
     UploaderModule,
-  //  InfiniteScrollModule
+   // InfiniteScrollModule
   ],
   exports: [
     RouterModule
-  ], 
+  ],
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

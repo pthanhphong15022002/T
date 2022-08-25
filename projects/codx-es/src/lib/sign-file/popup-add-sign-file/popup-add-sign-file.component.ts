@@ -743,6 +743,11 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
+  saveAndClose() {
+    this.onSaveSignFile();
+    this.dialog && this.dialog.close();
+  }
+
   closeDialogTmp(dialogTmp: DialogRef) {
     if (this.templateName != '') this.templateName = '';
     dialogTmp && dialogTmp.close();
@@ -765,7 +770,7 @@ export class PopupAddSignFileComponent implements OnInit {
             .subscribe((result) => {
               if (res) {
                 this.notify.notifyCode('Gửi duyệt thành công!');
-                this.dialog && this.dialog.close();
+                this.dialog && this.dialog.close(true);
               }
             });
         } else {
