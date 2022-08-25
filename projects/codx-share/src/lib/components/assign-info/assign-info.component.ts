@@ -83,7 +83,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.refID = this.task?.refID;
     this.refType = this.task?.refType;
     this.dueDate = this.task?.dueDate;
-    if (this.task?.taskID) this.taskParent = this.task;
+    if (dt?.data[0]?.taskID) this.taskParent = dt?.data[0];
 
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
     this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;

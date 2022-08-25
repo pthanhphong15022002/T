@@ -1,6 +1,16 @@
-<codx-treeview #treeView [itemTemplate]="templateTreeView" [data]="dataTree" [entityName]="'TM_Tasks'" [service]="'TM'"
-  [enableCheck]=false idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true"
-  [isLoadChild]="false">
+<codx-treeview
+  #treeView
+  [itemTemplate]="templateTreeView"
+  [data]="dataTree"
+  [entityName]="'TM_Tasks'"
+  [service]="'TM'"
+  [enableCheck]="true"
+  idField="recID"
+  parentIdField="parentID"
+  [autoLoad]="false"
+  [isOutput]="true"
+  [isLoadChild]="false"
+>
 </codx-treeview>
 
 <!-- temptree -->
@@ -10,55 +20,86 @@
       <div class="d-flex align-items-start justify-content-between">
         <div class="d-flex align-items-top mt-5">
           <div class="symbol symbol-40px symbol-circle me-4">
-            <codx-img #image [objectId]='data?.userID'></codx-img>
+            <codx-img #image [objectId]="data?.userID"></codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">
             <div class="d-flex align-items-center mb-1">
-              <span class="text-dark fw-bold">{{data?.userName}}</span>
-              <span *ngIf="data?.isTimeOut" class="icon-schedule icon-16 text-gray-700 ms-2"></span>
+              <span class="text-dark fw-bold">{{ data?.userName }}</span>
+              <span
+                *ngIf="data?.isTimeOut"
+                class="icon-schedule icon-16 text-gray-700 ms-2"
+              ></span>
             </div>
-            <div class="text-gray-700">{{data?.positionName}}</div>
+            <div class="text-gray-700">{{ data?.positionName }}</div>
             <div class="text-dark">
-              {{data?.taskName}}
+              {{ data?.taskName }}
             </div>
           </div>
           <div class="d-flex align-items-center ms-9">
-            <div [class]="'d-flex align-items-center me-3'+ ' ' +(data?.comments ? 'text-success' : 'text-gray-600')">
-              <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
-              <span class="ms-1"> {{data?.comments}}</span>
-            </div>
-            <div [class]="'d-flex align-items-center me-3'+ ' ' +(data?.todo ? 'text-success' : 'text-gray-600')">
-              <span class="text-hover-primary icon-check-correct icon-16"></span>
-              <span class="ms-1">
-                {{data?.todo}}</span>
+            <div
+              [class]="
+                'd-flex align-items-center me-3' +
+                ' ' +
+                (data?.comments ? 'text-success' : 'text-gray-600')
+              "
+            >
+              <span
+                class="text-hover-primary icon-chat_bubble_outline icon-16"
+              ></span>
+              <span class="ms-1"> {{ data?.comments }}</span>
             </div>
             <div
-              [class]="'d-flex align-items-center me-3'+ ' ' +(data?.attachments ? 'text-success' : 'text-gray-600')">
+              [class]="
+                'd-flex align-items-center me-3' +
+                ' ' +
+                (data?.todo ? 'text-success' : 'text-gray-600')
+              "
+            >
+              <span
+                class="text-hover-primary icon-check-correct icon-16"
+              ></span>
+              <span class="ms-1"> {{ data?.todo }}</span>
+            </div>
+            <div
+              [class]="
+                'd-flex align-items-center me-3' +
+                ' ' +
+                (data?.attachments ? 'text-success' : 'text-gray-600')
+              "
+            >
               <span class="text-hover-primary icon-attach_file icon-16"></span>
               <span>
-                {{data?.attachments}}
+                {{ data?.attachments }}
               </span>
             </div>
             <span>
-              <div class="badge badge-danger me-2 label-status" [style.border-color]="
-        (data?.status | vll: vllStatus:'textColor' | async) +
-        '30'
-      " [style.background-color]="
-        (data?.status | vll: vllStatus:'textColor' | async) +
-        '30'
-      " [style.color]="
-      data?.status | vll: vllStatus:'textColor' | async
-      " style="border: none">
+              <div
+                class="badge badge-danger me-2 label-status"
+                [style.border-color]="
+                  (data?.status | vll: vllStatus:'textColor' | async) + '30'
+                "
+                [style.background-color]="
+                  (data?.status | vll: vllStatus:'textColor' | async) + '30'
+                "
+                [style.color]="
+                  data?.status | vll: vllStatus:'textColor' | async
+                "
+                style="border: none"
+              >
                 {{ data?.status | vll: vllStatus:"text" | async }}
               </div>
             </span>
             <div class="d-flex flex-column m-3">
               <div class="d-flex align-items-center justify-content-end">
-                <span class="me-3">{{ data?.percentage.toFixed(2)}}%</span>
+                <span class="me-3">{{ data?.percentage.toFixed(2) }}%</span>
               </div>
               <div class="d-flex align-items-center mb-5">
                 <div class="progress w-100">
-                  <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="data?.percentage"></div>
+                  <div
+                    class="progress-bar progress-bar-done"
+                    role="progressbar"
+                    [style.width.%]="data?.percentage"
+                  ></div>
                 </div>
               </div>
             </div>
