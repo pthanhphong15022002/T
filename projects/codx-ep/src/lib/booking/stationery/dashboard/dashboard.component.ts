@@ -24,7 +24,8 @@ import {
   } from 'codx-core';
   import { Browser, EmitType } from '@syncfusion/ej2-base';
   import { AnimationModel ,ILoadedEventArgs as progressArgs, ProgressTheme} from '@syncfusion/ej2-angular-progressbar';
-import { CodxEpService } from '../../codx-ep.service';
+import { CodxEpService } from '../../../codx-ep.service';
+
 
   @Component({
     selector: 'codx-stationery-dashboard',

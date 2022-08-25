@@ -2,52 +2,61 @@ import {
   Component,
   TemplateRef,
   ViewChild,
+  Input,
+  Output,
+  EventEmitter,
   Injector,
   ChangeDetectorRef,
 } from '@angular/core';
-import {
-  NotificationsService,
-  ResourceModel,
-  DialogRef,
-  SidebarModel,
-  UIComponent,
-  CallFuncService,
-  CacheService,
-} from 'codx-core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
+  CacheService,
+  CodxGridviewComponent,
   CodxScheduleComponent,
+  DataRequest,
+  DialogModel,
+  DialogRef,
+  NotificationsService,
+  ResourceModel,
+  SidebarModel,
+  UIComponent,
   ViewModel,
   ViewsComponent,
+  CallFuncService,
   ViewType,
 } from 'codx-core';
-import { DataRequest } from '@shared/models/data.request';
-import { CodxEpService, ModelPage } from '../codx-ep.service';
-import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
-import { ActivatedRoute } from '@angular/router';
+import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
+import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
+import { CodxEpService, ModelPage } from '../../codx-ep.service';
+import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
+
 @Component({
-  selector: 'booking-car',
-  templateUrl: 'booking-car.component.html',
-  styleUrls: ['booking-car.component.scss'],
+  selector: 'booking-room',
+  templateUrl: './booking-room.component.html',
+  styleUrls: ['./booking-room.component.scss'],
 })
-export class BookingCarComponent extends UIComponent {
+export class BookingRoomComponent extends UIComponent {
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
+  @ViewChild('report') report: TemplateRef<any>;
+  @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  @ViewChild('pined') pined?: TemplateRef<any>;
 
-
+  showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Bookings';
   predicate = 'ResourceType=@0';
-  dataValue = '2';
+  dataValue = '1';
   idField = 'RecID';
   className = 'BookingsBusiness';
   method = 'GetEventsAsync';
+
   modelPage: ModelPage;
   modelResource?: ResourceModel;
   model = new DataRequest();
@@ -61,24 +70,35 @@ export class BookingCarComponent extends UIComponent {
   fields: any;
   resourceField: any;
   funcID: string;
-
-  columnsGrid: any;
+  lstPined: any = [];
+  titleCollapse: string = 'Đóng hộp tham số';
+  reportUUID: any = '3cdcde9d-8d64-ec11-941d-00155d035518';
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
-    private activedRouter: ActivatedRoute,
     private codxEpService: CodxEpService,
     private cacheService: CacheService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private activatedRoute: ActivatedRoute
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.modelPage = {
-      entity: 'EP_Bookings',
-      formName: 'BookingCars',
-      gridViewName: 'grvBookingCars',
-      functionID: 'EPT2',
-    };
+    this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    console.log(this.funcID);
+    this.codxEpService.getModelPage(this.funcID).then((res) => {
+      if (res) {
+        this.modelPage = res;
+        console.log('funcID', res);
+      }
+    });
+
+    // let fu: any;
+    // this.cacheService.functionList("TMT0201").subscribe(res=>{
+    //   if(res){
+    //     fu = res;
+    //   }
+    // });
+    // this.cacheService.gridViewSetup("MyTasks", "grvMyTasks").subscribe(res=> {
+    // });
   }
 
   onInit(): void {
@@ -88,19 +108,14 @@ export class BookingCarComponent extends UIComponent {
     this.modelResource.service = 'EP';
     this.modelResource.method = 'GetResourceAsync';
     this.modelResource.predicate = 'ResourceType=@0';
-    this.modelResource.dataValue = '2';
+    this.modelResource.dataValue = '1';
 
     this.model.page = 1;
     this.model.pageSize = 200;
     this.model.predicate = 'ResourceType=@0';
-    this.model.dataValue = '2';
+    this.model.dataValue = '1';
 
     this.moreFunc = [
-      {
-        id: 'EPS22',
-        icon: 'icon-list-chechbox',
-        text: 'Danh mục xe',
-      },
       {
         id: 'btnEdit',
         icon: 'icon-list-chechbox',
@@ -110,6 +125,11 @@ export class BookingCarComponent extends UIComponent {
         id: 'btnDelete',
         icon: 'icon-list-chechbox',
         text: 'Xóa',
+      },
+      {
+        id: 'btnAddReport',
+        icon: 'icon-list-chechbox',
+        text: 'Thêm mới report',
       },
     ];
 
@@ -141,7 +161,7 @@ export class BookingCarComponent extends UIComponent {
     this.views = [
       {
         sameData: true,
-        id: '1',
+        id: '2',
         type: ViewType.schedule,
         active: true,
         request2: this.modelResource,
@@ -151,22 +171,47 @@ export class BookingCarComponent extends UIComponent {
           template4: this.resourceHeader,
           template5: this.resourceTootip,
           template6: this.footerTemplate,
-          template7: this.footerButton
+          template7: this.footerButton,
         },
       },
       {
         sameData: true,
         id: '3',
-        type: ViewType.chart,
-        active: true,
+        type: ViewType.content,
+        active: false,
+        text: 'Chart',
+        icon: 'icon-bar_chart',
         model: {
           panelLeftRef: this.chart,
         },
       },
+      // {
+      //   sameData: true,
+      //   id: '4',
+      //   type: ViewType.content,
+      //   showButton: false,
+      //   showFilter: false,
+      //   active: false,
+      //   text: 'Report',
+      //   icon: 'icon-assignment',
+      //   toolbarTemplate: this.pined,
+      //   model: {
+      //     panelLeftRef: this.report,
+      //   },
+      // },
     ];
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
+  collapse(evt) {
+    this.reportObj && this.reportObj.collapse();
+    this.titleCollapse = this.reportObj.isCollapsed
+      ? 'Mở hộp tham số'
+      : 'Đóng hộp tham số';
+  }
+  changeValueDate(evt: any) {}
+
+  valueChange(evt: any, a?: any, type?: any) {}
 
   click(evt: ButtonModel) {
     switch (evt.id) {
@@ -179,10 +224,20 @@ export class BookingCarComponent extends UIComponent {
       case 'btnDelete':
         this.delete();
         break;
+      // case 'btnAddReport':
+      //   this.addReport();
+      //   break;
     }
   }
 
-  addNew(evt?: any) {
+  // addReport(){
+  //   let option = new DialogModel();
+  //   option.DataService = this.viewBase.dataService;
+  //   option.FormModel = this.viewBase.formModel;
+  //   option.IsFull = true;
+  //   this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,'3cdcde9d-8d64-ec11-941d-00155d035518',"",option);
+  // }
+  addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
@@ -190,32 +245,32 @@ export class BookingCarComponent extends UIComponent {
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callFuncService.openSide(
-        PopupAddBookingCarComponent,
+        PopupAddBookingRoomComponent,
         [this.dataSelected, true],
         option
       );
     });
   }
 
-  edit(obj?) {
-    if (obj) {
-    this.viewBase.dataService.dataSelected = obj;
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
-      .subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '800px';
-        option.DataService = this.viewBase?.dataService;
-        option.FormModel = this.viewBase?.formModel;
-        this.dialog = this.callFuncService.openSide(
-          PopupAddBookingCarComponent,
-          [this.viewBase.dataService.dataSelected, false],
-          option
-        );
-      });
+  edit(evt?) {
+    if (evt) {
+      this.viewBase.dataService.dataSelected = evt;
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = this.viewBase?.formModel;
+          this.dialog = this.callFuncService.openSide(
+            PopupAddBookingRoomComponent,
+            [this.viewBase.dataService.dataSelected, false],
+            option
+          );
+        });
+    }
   }
-}
   delete(evt?) {
     let deleteItem = this.viewBase.dataService.dataSelected;
     if (evt) {
@@ -230,24 +285,5 @@ export class BookingCarComponent extends UIComponent {
     if (evt) {
       this.dialog && this.dialog.close();
     }
-  }
-  
-  clickMF(event, data) {
-    console.log(event);
-    switch (event?.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-    }
-  }
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
-  
-  onSelect(obj: any) {
-    console.log(obj);
   }
 }

@@ -24,7 +24,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { CodxEpService, ModelPage } from '../../codx-ep.service';
+import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 
 export class Device {
   id;
