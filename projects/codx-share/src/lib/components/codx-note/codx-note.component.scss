@@ -1,47 +1,53 @@
 ::ng-deep {
+  .m-h-400 {
+    min-height: 400px;
+  }
 
-.m-h-400 {
-  min-height: 400px;
-}
-
-.pd-top-5{
+  .pd-top-5 {
     padding-top: 5px;
-}
+  }
 
-.li {
+  .li {
     margin-left: 10px;
     margin-top: 8px;
-}
+  }
 
-.text-after-li {
-    margin-left: -10px
-}
+  .text-after-li {
+    margin-left: -10px;
+  }
 
-.check-box {
+  .check-box {
     margin-top: 5px;
     margin-left: 10px;
-}
+  }
 
-.text-after-check-box {
-    margin-left: -6px
-}
+  .text-after-check-box {
+    margin-left: -6px;
+  }
 
-.black {
+  .black {
     color: black;
-}
+  }
 
-.dodgerblue {
+  .dodgerblue {
     color: dodgerblue;
-}
+  }
 
-.aT {
+  .aT {
     width: 100% !important;
+  }
+
+  .icon-T {
+    margin-left: -15px;
+  }
+  input.e-input,
+  textarea.e-input,
+  .e-input-group,
+  .e-input-group.e-control-wrapper {
+    font-weight: inherit !important;
+  }
 }
 
-.icon-T {
-    margin-left: -15px
-}
-input.e-input, textarea.e-input, .e-input-group, .e-input-group.e-control-wrapper{
-    font-weight: inherit!important;
-}
+.active [class*="icon-"] {
+    color: #0078FF;
 }
