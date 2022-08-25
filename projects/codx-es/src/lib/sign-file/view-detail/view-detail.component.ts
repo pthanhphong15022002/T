@@ -53,7 +53,7 @@ export class ViewDetailComponent implements OnInit {
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   ngOnInit(): void {
-    this.itemDetailStt = 1;
+    this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
     if (this.formModel) {
       this.initForm();
