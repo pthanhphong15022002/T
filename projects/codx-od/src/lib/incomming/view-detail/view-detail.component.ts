@@ -532,7 +532,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           this.dialog.closed.subscribe((e) => {
             if (e?.event && e?.event[0]) {
               datas.status = '3';
-              this.view.dataService.update(datas).subscribe();
+              this.odService.updateDispatch(datas, false).subscribe((item) => {
+                if (item.status == 0) {
+                 this.view.dataService.update(datas).subscribe();
+                }
+                else this.notifySvr.notify(item.message);
+              });
             }
           });
         }
@@ -866,11 +871,26 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
     if (relationType == '1')
-      return Util.stringFormat(
-        this.ms020?.customName,
-        this.fmTextValuelist(relationType, '6'),
-        agencyName
-      );
+    {
+      if(this.formModel.funcID == 'ODT31')
+      {
+        return Util.stringFormat(
+          this.ms020?.customName,
+          this.fmTextValuelist(relationType, '6'),
+          agencyName
+        );
+      }
+      else
+      {
+        return "Gửi đến "+ agencyName;
+        /* return Util.stringFormat(
+          this.ms023?.customName,
+          this.fmTextValuelist(relationType, '6'),
+          agencyName
+        ); */
+      }
+    }
+      
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
