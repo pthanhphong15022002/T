@@ -1,3 +1,4 @@
+import { A } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -55,6 +56,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
   tempArray=[];
   curUser:any;
   lstPeople=[];
+  lstStationery=[];
+  strAttendees:string;
   vllDevices = [];
   lstDeviceRoom = [];
   isAfterRender = false;
@@ -204,16 +207,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
                 objectName:undefined
               };
               this.lstPeople.push(tempPeople);
-            });
-
-            // if(this.lstPeople.length == 1){      
-            //   this.smallListPeople = this.lstPeople;
-            // }
-
-            // if(this.lstPeople.length >= 2) {
-            //   this.smallListPeople=null;
-            //   this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
-            // }        
+            });      
             
             this.changeDetectorRef.detectChanges();
           }
@@ -222,42 +216,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
       this.initForm();      
     });
   }
-
-  // onInit(): void {
-  //   this.codxEpService.getModelPage('EPT1').then((res) => {
-  //     if (res) {
-  //       this.modelPage = res;
-  //     }
-  //     this.cacheService.valueList('EP012').subscribe((res) => {
-  //       this.vllDevices = res.datas;
-  //       this.vllDevices.forEach((item) => {
-  //         let device = new Device();
-  //         device.id = item.value;
-  //         device.text = item.text;
-  //         this.lstDeviceRoom.push(device);
-  //       });
-  //       this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
-  //       console.log('Device: ', this.lstDeviceRoom);
-  //     });
-
-  //     this.codxEpService
-  //       .getComboboxName(this.modelPage.formName, this.modelPage.gridViewName)
-  //       .then((res) => {
-  //         this.CbxName = res;
-  //       });
-
-  //     this.cacheService.functionList('EPT1').subscribe(res => {
-  //       this.cacheService.gridViewSetup(res.formName, res.gridViewName).subscribe(res => {
-  //         console.log('Test', res)
-  //       })
-  //     })
-
-  //     this.initForm();
-  //   });
-
-  //   this.isFullDay = false;
-  //   this.chosenDate = null;
-  // }
 
   ngAfterViewInit(): void {
     if (this.dialogRef) {
@@ -279,6 +237,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
         if (this.data) {
           console.log('fgroupEPT1', this.data)
           this.fGroupAddBookingRoom.patchValue(this.data);
+          this.fGroupAddBookingRoom.patchValue({'attendees':1});
         } 
       }); 
     this.link = null;
@@ -290,59 +249,70 @@ export class PopupAddBookingRoomComponent implements OnInit {
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd];
+    option.data = [itemData, this.isAdd,this.strAttendees,this.lstStationery];
     return true;
   }
   onSaveForm() {
+    this.strAttendees='';
+    this.lstPeople.forEach((people) => {
+      if (this.strAttendees == '') {
+        this.strAttendees += people.id;
+      } else {
+        this.strAttendees += ';' + people.id;
+      }
+    });
+    
     console.log('data',this.fGroupAddBookingRoom.value);
-    // if (this.resource) {
-    // }
-    // if (this.addEditForm.invalid == true) {
+    console.log('people',this.strAttendees);
+    console.log('orderStationery',this.lstStationery);
+    
+    // if (this.fGroupAddBookingRoom.invalid == true) {
     //   return;
     // }
-    // if (
-    //   this.addEditForm.value.endDate - this.addEditForm.value.startDate <=
-    //   0
-    // ) {
-    //   this.notiService.notifyCode('EP003');
-    // }
+    if (this.fGroupAddBookingRoom.value.endDate - this.fGroupAddBookingRoom.value.startDate <= 0 ) {
+      this.notificationsService.notifyCode('EP003');
+    }
     // if (this.startTime && this.endTime) {
     //   let hours = parseInt(
     //     ((this.endTime - this.startTime) / 1000 / 60 / 60).toFixed()
     //   );
     //   if (!isNaN(hours) && hours > 0) {
-    //     this.addEditForm.patchValue({ hours: hours });
+    //     this.fGroupAddBookingRoom.patchValue({ hours: hours });
     //   }
     // }
-    // let equipments = '';
-    // this.lstDeviceRoom.forEach((element) => {
-    //   if (element.isSelected) {
-    //     if (equipments == '') {
-    //       equipments += element.id;
-    //     } else {
-    //       equipments += ';' + element.id;
-    //     }
-    //   }
-    // });
-    // this.addEditForm.patchValue({ equipments: equipments });
-    // if (this.isAdd) {
-    //   this.addEditForm.patchValue({
-    //     category: '1',
-    //     status: '1',
-    //     resourceType: '1',
-    //   });
-    //   if (!this.addEditForm.value.resourceID) {
-    //     this.addEditForm.value.resourceID =
-    //       'd501dea4-e636-11ec-a4e6-8cec4b569fde';
-    //   }
-    // }
-    // this.dialogRef.dataService
-    //   .save((opt: any) => this.beforeSave(opt))
-    //   .subscribe((res: any) => {
-    //     if (res) {
-    //       this.isSaveSuccess = true;
-    //     }
-    //   });
+    
+    let pickedEquip = '';
+    let availableEquip = '';
+    this.tmplstDevice.forEach((element) => {
+      if (availableEquip == '') {
+        availableEquip += element.id;
+      } else {
+        availableEquip += ';' + element.id;
+      }
+      if (element.isSelected) {
+        if (pickedEquip == '') {
+          pickedEquip += element.id;
+        } else {
+          pickedEquip += ';' + element.id;
+        }
+      }
+    });
+    this.fGroupAddBookingRoom.patchValue({ equipments: availableEquip + '|' + pickedEquip });
+    if (this.isAdd) {
+      this.fGroupAddBookingRoom.patchValue({
+        category: '1',
+        status: '1',
+        resourceType: '1',
+        resourceID: this.fGroupAddBookingRoom.value.resourceID[0],
+      });      
+    }
+    this.dialogRef.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe((res: any) => {
+        if (res) {
+          this.isSaveSuccess = true;
+        }
+      });
   }
   changeTime(data) {
     if (!data.field || !data.data) return;
@@ -350,17 +320,47 @@ export class PopupAddBookingRoomComponent implements OnInit {
   }
   
   valueCbxUserChange(event?) {
-    this.lstPeople=event.data.dataSelected;
-    // if(this.lstPeople.length == 1){      
-    //   this.smallListPeople = this.lstPeople;
-    // }
-    // if(this.lstPeople.length >= 2) {
-    //   this.smallListPeople=null;
-    //   this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
-    // }         
+    this.lstPeople=event.data.dataSelected;          
     
     this.changeDetectorRef.detectChanges();
   }
+  valueCbxStationeryChange(event?) {
+    this.lstStationery=[];
+    event.data.dataSelected.forEach(item=>{
+      let tempStationery:{id:string,quantity:number,text:string,objectType:string,objectName:string}={
+        id:item.id,
+        quantity:this.fGroupAddBookingRoom.value.attendees,
+        text:item.text,
+        objectName:item.objectName,
+        objectType:item.objectType
+      }      
+      this.lstStationery.push(tempStationery);
+    });
+    this.changeDetectorRef.detectChanges();
+  }
+
+  valueQuantityChange(event?) {
+    this.lstStationery.forEach(item=>{
+      if(item.id==event?.field){
+        item.quantity=event?.data;
+      }
+    })
+
+  }
+  valueAttendeesChange(event) {
+    if (event?.field) {
+      if (event.data instanceof Object) {
+        this.fGroupAddBookingRoom.patchValue({ attendees: event.data.value });
+      } else {
+        this.fGroupAddBookingRoom.patchValue({attendees: event.data });
+      }
+    }  
+    this.lstStationery.forEach(item=>{
+      item.quantity=this.fGroupAddBookingRoom.value.attendees;
+    })
+    this.changeDetectorRef.detectChanges();
+  }
+
   valueChange(event) {
     if (event?.field == 'day') {
       this.isFullDay = event.data;
@@ -377,14 +377,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       } else {
         this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data });
       }
-    }
-    if (event?.component.ControlName){
-      if (event.data instanceof Object) {
-        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data.value });
-      } else {
-        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data });
-      }
-    }    
+    }  
     this.changeDetectorRef.detectChanges();
   }
 
@@ -452,7 +445,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
   buttonClick(e: any) {
     //console.log(e);
   }
-  valueStartTimeChange(event: any) {
+  valueTimeChange(event: any) {
+    
     this.startTime = event.data.fromDate;
     this.isFullDay = false;
     this.setDate();
@@ -509,7 +503,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
   }
 
   changeLink(event) {
-    this.link = event.data;
+    this.fGroupAddBookingRoom.value.onlineUrl = event.data;    
+    this.changeDetectorRef.detectChanges();
   }
 
   openPopupLink() {

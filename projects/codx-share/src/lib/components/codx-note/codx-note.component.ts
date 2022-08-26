@@ -70,9 +70,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   getElementFirst() {
     var ele = document.getElementsByClassName('memo');
@@ -112,17 +112,18 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     var style = this.currentElement.style;
     if (font == 'BOLD') {
       if (!style.fontWeight)
-        this.currentElement.setAttribute(
-          'style',
-          'font-weight: bolder !important'
-        );
+        // this.currentElement.setAttribute(
+        //   'style',
+        //   'font-weight: bolder !important'
+        // );
+        style.fontWeight = 'bolder';
       else style.fontWeight = '';
     } else if (font == 'ITALIC') {
       if (!style.fontStyle) style.fontStyle = 'italic';
       else style.fontStyle = '';
     } else if (font == 'UNDERLINE') {
-      if (!style.textDecoration) style.textDecoration = 'underline';
-      else style.textDecoration = '';
+      if (!style.textDecorationLine) style.textDecorationLine = 'underline';
+      else style.textDecorationLine = '';
     }
     this.dt.detectChanges();
   }
@@ -133,7 +134,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.chooseFont(font);
   }
 
-  popupFile() {}
+  popupFile() { }
 
   addEmoji(event) {
     this.message += event.emoji.native;
@@ -207,7 +208,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     data;
   }
 
-  delete() {}
+  delete() { }
 
   refresh() {
     this.listNote = [
@@ -226,14 +227,16 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   getElement(ele: any) {
     this.currentElement = ele.elRef.nativeElement as HTMLElement;
-    var style: any = this.currentElement.style;
-    // if (style.length == 0) this.setFont();
-    // else {
-    //   for (let i = 0; i < style.length; i++) {
-    //     if (style[i] == 'font-weight') this.setFont(true, false, false);
-    //     else if (style[i] == 'font-style') this.setFont(false, true, false);
-    //     else this.setFont(false, false, true);
-    //   }
-    // }
+    if (this.listNote.length > 1) {
+      var style: any = this.currentElement.style;
+      if (style.length == 0) this.setFont();
+      else {
+        for (let i = 0; i < style.length; i++) {
+          if (style[i] == 'font-weight') this.font.BOLD = true;
+          else if (style[i] == 'font-style') this.font.ITALIC = true;
+          else this.font.UNDERLINE = true;
+        }
+      }
+    }
   }
 }
