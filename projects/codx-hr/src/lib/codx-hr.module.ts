@@ -82,10 +82,10 @@ export const routes: Routes = [
             path: 'reportingline/:funcID',
             component: PositionsComponent,
           },
-          {
-            path: 'employeeinfomation/:funcID',
-            component: EmployeeInfomationComponent,
-          },
+          // {
+          //   path: 'employeeinfomation/:funcID',
+          //   component: EmployeeInfomationComponent,
+          // },
           {
             path: 'setting',
             component: HRParametersComponent,
