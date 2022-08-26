@@ -45,6 +45,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     BOLD: false,
     ITALIC: false,
     UNDERLINE: false,
+    COLOR: "#269a26",
   };
   format = {
     TEXT: true,
@@ -52,6 +53,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     CHECKBOX: false,
   };
   co_content: CO_Contents = new CO_Contents();
+  test: any;
+  color: any;
 
   @Input() showMenu = true;
   @Input() showMF = true;
@@ -73,15 +76,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {}
-
-  getElementFirst() {
-    var ele = document.getElementsByClassName('memo');
-    if (ele) {
-      let htmlE = ele[ele.length - 1] as HTMLElement;
-      htmlE.focus();
-      this.currentElement = htmlE;
-    }
-  }
 
   onType(type: any) {
     if (type == 'TEXT') {
@@ -109,28 +103,47 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   chooseFont(font) {
     if (!this.currentElement) return;
+    this.currentElement.focus();
     var style = this.currentElement.style;
     if (font == 'BOLD') {
-      if (!style.fontWeight)
-        // this.currentElement.setAttribute(
-        //   'style',
-        //   'font-weight: bolder !important'
-        // );
-        style.fontWeight = 'bolder';
-      else style.fontWeight = '';
+      if (style.fontWeight == 'normal')
+        this.currentElement.style.setProperty(
+          'font-weight',
+          'bolder',
+          'important'
+        );
+      else style.fontWeight = 'normal';
     } else if (font == 'ITALIC') {
-      if (!style.fontStyle) style.fontStyle = 'italic';
-      else style.fontStyle = '';
+      if (style.fontStyle == 'normal')
+        this.currentElement.style.setProperty(
+          'font-style',
+          'italic',
+          'important'
+        );
+      else style.fontStyle = 'normal';
     } else if (font == 'UNDERLINE') {
-      if (!style.textDecorationLine) style.textDecorationLine = 'underline';
-      else style.textDecorationLine = '';
+      if (style.textDecorationLine == 'none')
+        this.currentElement.style.setProperty(
+          'text-decoration-line',
+          'underline',
+          'important'
+        );
+      else style.textDecorationLine = 'none';
     }
     this.dt.detectChanges();
   }
 
-  checkFont(font) {
+  checkFont(font, ele) {
+    if (!this.currentElement && ele)
+      this.currentElement = ele.elRef.nativeElement;
+    if (this.currentElement) {
+      var input = this.currentElement.querySelector(
+        '.codx-text'
+      ) as HTMLElement;
+      input.focus();
+    }
+
     this.font[font] = !this.font[font];
-    if (this.listNote.length <= 1) this.getElementFirst();
     this.chooseFont(font);
   }
 
@@ -168,6 +181,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       if (this.currentElement) {
         var style = this.currentElement.style;
         style.color = event?.data;
+        this.color = event?.data;
       }
       if (this.co_content.memo != null) this.updateContent(this.co_content);
     }
@@ -182,17 +196,23 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   keyUpEnterTemp(event) {
     this.keyUpEnter(event);
     this.setFont();
-    var ele = document.getElementsByClassName('memo');
+    var ele = document.querySelectorAll('codx-input[type="text"]');
     if (ele) {
       let htmlE = ele[ele.length - 1] as HTMLElement;
-      htmlE.focus();
       this.currentElement = htmlE;
+      var input = this.currentElement.querySelector(
+        '.codx-text'
+      ) as HTMLElement;
+      input.focus();
     }
   }
 
   addContent(data) {
     if (data) {
-      this.listNote.push(data);
+      this.co_content.format = null;
+      this.co_content.memo = data;
+      this.listNote.push(this.co_content);
+      this.listNote[this.listNote.length - 1].memo = null;
       this.dt.detectChanges();
     }
     // this.api
@@ -220,6 +240,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         lineType: null,
       },
     ];
+    this.currentElement = null;
     this.setFont();
     this.setFormat();
     this.dt.detectChanges();
@@ -229,13 +250,16 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.currentElement = ele.elRef.nativeElement as HTMLElement;
     if (this.listNote.length > 1) {
       var style: any = this.currentElement.style;
-      if (style.length == 0) this.setFont();
-      else {
-        for (let i = 0; i < style.length; i++) {
-          if (style[i] == 'font-weight') this.font.BOLD = true;
-          else if (style[i] == 'font-style') this.font.ITALIC = true;
-          else this.font.UNDERLINE = true;
-        }
+      var len = Object.keys(this.font).length || 0;
+      for (let i = 0; i < len - 1; i++) {
+        if (style.fontWeight != 'normal') this.font.BOLD = true;
+        else this.font.BOLD = false;
+        if (style.fontStyle != 'normal') this.font.ITALIC = true;
+        else this.font.ITALIC = false;
+        if (style.textDecorationLine != 'none') this.font.UNDERLINE = true;
+        else this.font.UNDERLINE = false;
+        // if (style.color != 'unset') this.font.COLOR = true;
+        // else this.font.COLOR = false;
       }
     }
   }
