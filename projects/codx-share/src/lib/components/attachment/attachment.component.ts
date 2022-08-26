@@ -1172,6 +1172,7 @@ export class AttachmentComponent implements OnInit {
     if (index > -1) {
       this.fileUploadList.splice(index, 1); //remove element from array
       //  this.fileUploadList.next(this.fileUploadList);
+      this.fileCount.emit(this.fileUploadList.length)
     }
   }
 
@@ -2719,5 +2720,9 @@ export class AttachmentComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
 
     return false;
+  }
+  clearData() {
+    this.data = [];
+    this.fileUploadList = [];
   }
 }
