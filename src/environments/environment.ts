@@ -6,7 +6,11 @@ export const environment = {
   appVersion: 'v101lv',
   TNDATA_KEY: 'tnf649fc9a5f55',
   // apiUrl: 'http://localhost:8011',
+<<<<<<< HEAD
+  // shopping: 'https://localhost:44317/Shopping',
+=======
   //shopping: 'https://localhost:44317/Shopping',
+>>>>>>> 9f38e2cbd2c6a68e4f7c4af0af39b5a2fdc2bdfc
   shopping: 'https://172.16.7.34:8111/Shopping',
   apiUrl: 'http://172.16.7.34:8011',
   pdfUrl: 'http://localhost:8015/api/pdf',
