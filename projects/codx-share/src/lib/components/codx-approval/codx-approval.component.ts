@@ -16,12 +16,16 @@ import {
   ApiHttpService,
   ButtonModel,
   CacheService,
+  CallFuncService,
   CodxService,
+  DialogModel,
   NotificationsService,
+  SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
 @Component({
@@ -57,7 +61,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     private detectorRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private codxService: CodxService,
-    private notifySvr: NotificationsService
+    private notifySvr: NotificationsService,
+    private callfunc: CallFuncService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {}
@@ -191,31 +196,66 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
     var funcID = e?.functionID;
-
-    var status;
     if (
-      funcID == 'SYS201' ||
-      funcID == 'SYS202' ||
-      funcID == 'SYS203' ||
-      funcID == 'SYS204'
-    )
-      status = '5';
-    else if (funcID == 'SYS205') status = '4';
-    else if (funcID == 'SYS206') status = '6';
-    this.api
-      .execSv(
-        'ES',
-        'ERM.Business.ES',
-        'ApprovalTransBusiness',
-        'ApproveAsync',
-        [data?.recID, status, '', '']
-      )
-      .subscribe((res2: any) => {
-        if (!res2?.msgCodeError) {
-          this.view.dataService.update(data).subscribe();
-          this.notifySvr.notifyCode('SYS007');
-        } else this.notifySvr.notify(res2?.msgCodeError);
+      (funcID == 'SYS202' || funcID == 'SYS205' || funcID == 'SYS206') &&
+      data.processType == 'ES_SignFiles'
+    ) {
+      //Kys
+
+      debugger;
+      let option = new SidebarModel();
+      option.Width = '800px';
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      let dialogApprove = this.callfunc.openForm(
+        PopupSignForApprovalComponent,
+        'Thêm mới',
+        700,
+        650,
+        this.funcID,
+        {
+          funcID: 'EST021',
+          recID: data.transID,
+        },
+        '',
+        dialogModel
+      );
+      dialogApprove.closed.subscribe((x) => {
+        if (x.event) {
+          delete x.event._uuid;
+          this.view.dataService.add(x.event, 0).subscribe();
+          //this.getDtDis(x.event?.recID)
+        }
       });
+    } else if (data.processType != 'ES_SignFiles') {
+      var status;
+      if (
+        funcID == 'SYS201' ||
+        funcID == 'SYS202' ||
+        funcID == 'SYS203' ||
+        funcID == 'SYS204'
+      )
+        status = '5';
+      else if (funcID == 'SYS205') status = '4';
+      else if (funcID == 'SYS206') status = '6';
+      this.api
+        .execSv(
+          'ES',
+          'ERM.Business.ES',
+          'ApprovalTransBusiness',
+          'ApproveAsync',
+          [data?.recID, status, '', '']
+        )
+        .subscribe((res2: any) => {
+          if (!res2?.msgCodeError) {
+            this.view.dataService.update(data).subscribe();
+            this.notifySvr.notifyCode('SYS007');
+          } else this.notifySvr.notify(res2?.msgCodeError);
+        });
+    }
   }
 
   approve(data) {}

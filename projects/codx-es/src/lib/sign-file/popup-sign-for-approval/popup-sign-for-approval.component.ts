@@ -26,8 +26,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    debugger;
     this.dialog = dialog;
-    this.data = dt.data[0];
+    this.data = dt.data;
   }
 
   @ViewChild('pdfView') pdfView: PdfViewComponent;

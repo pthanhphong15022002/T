@@ -87,11 +87,16 @@ export class ViewDetailComponent implements OnInit {
         'codx-detail-header'
       ) as HTMLCollectionOf<HTMLElement>
     )[0]?.offsetHeight;
-    Array.from(
-      document.getElementsByClassName(
-        'codx-detail-body'
-      ) as HTMLCollectionOf<HTMLElement>
-    )[0].style.height = main - header - 27 + 'px';
+    let nodes = document.getElementsByClassName(
+      'codx-detail-body'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (nodes.length > 0) {
+      Array.from(
+        document.getElementsByClassName(
+          'codx-detail-body'
+        ) as HTMLCollectionOf<HTMLElement>
+      )[0].style.height = main - header - 27 + 'px';
+    }
   }
 
   initForm() {
