@@ -65,11 +65,13 @@ export class MeetingDetailComponent extends UIComponent {
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
-    this.tmService.getMoreFunction(['TMT05011', null, null]).subscribe((res) => {
-      if (res) {
-        this.urlDetail = res[0].url;
-      }
-    });
+    // this.tmService.getMoreFunction(['TMT05011', null, null]).subscribe((res) => {
+    //   if (res) {
+    //     this.urlDetail = res[0].url;
+        
+    //   }
+    // });
+    this.urlDetail = 'tm/sprintdetails/TMT03011'; ///gán cứng chứ đang lỗi';
   }
 
 
