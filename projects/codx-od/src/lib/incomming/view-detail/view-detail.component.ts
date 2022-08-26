@@ -814,8 +814,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               );
               dialogApprove.closed.subscribe((res) => {
                 debugger;
-                if (res.event) {
-                  datas.status = "3";
+                if (res.event == true) {
+                  datas.status = '3';
                   this.view.dataService.update(datas).subscribe();
                 }
               });
@@ -891,11 +891,16 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       unbm[0].disabled = true;
       bm[0].disabled = false;
     }
-    if(this.formModel.funcID == "ODT41" && data?.status != "1" && data?.status != "2")
-    {
-      var approvel = e.filter((x: { functionID: string }) => x.functionID == 'ODT201');
-      approvel[0].disabled = true
-    } 
+    if (
+      this.formModel.funcID == 'ODT41' &&
+      data?.status != '1' &&
+      data?.status != '2'
+    ) {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT201'
+      );
+      approvel[0].disabled = true;
+    }
     //data?.isblur = true
   }
   //Gửi duyệt
