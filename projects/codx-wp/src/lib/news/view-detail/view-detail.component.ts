@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel, AuthService } from 'codx-core';
 import { environment } from 'src/environments/environment';
@@ -33,7 +34,9 @@ export class ViewDetailComponent implements OnInit {
     private auth: AuthService,
     private route: ActivatedRoute,
     private callfc: CallFuncService,
-    private changedt: ChangeDetectorRef) { }
+    private changedt: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
+    ) { }
   ngOnInit(): void {
     this.route.params.subscribe((p: any) => {
       this.recID = p["recID"];
@@ -69,6 +72,7 @@ export class ViewDetailComponent implements OnInit {
       (res) => {
         if (res) {
           this.dataItem = res[0];
+          this.dataItem.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.dataItem.contents);
           this.listViews = res[1];
           this.listNews = res[2];
         }
