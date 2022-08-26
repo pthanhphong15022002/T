@@ -60,7 +60,7 @@
                   <ng-container *ngFor="let item of lstStep; let index=index">
                     <div class="timeline-item " [ngClass]="justView ? '': 'has-action-menu' ">
                       <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex ">
-                        <div class=" timeline-media w-40px h-40px me-2">
+                        <div class=" timeline-media w-40px h-40px me-4">
                           <span class="stepper-number">{{item.stepNo}}</span>
                         </div>
                         <div class="stepper-label mw-125px">
@@ -81,7 +81,7 @@
                       <div class="timeline-content mx-auto">
                         <div class="d-flex flex-wrap">
                           <ng-container *ngFor="let approver of item.approvers">
-                            <div class="border border-gray-300 rounded min-w-220px mw-220px me-4 mb-2">
+                            <div class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
                               <codx-temp-full cardCss="card-template px-2 pt-4 pb-2"
                                 *ngIf="approver.roleType?.length ==1" [imageId]="approver.approver"
                                 [title]="approver.approverName" [subTitle]="approver.positionName ?? 'Vị trí công việc'"
