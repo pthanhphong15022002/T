@@ -68,10 +68,9 @@ export class MeetingDetailComponent extends UIComponent {
     // this.tmService.getMoreFunction(['TMT05011', null, null]).subscribe((res) => {
     //   if (res) {
     //     this.urlDetail = res[0].url;
-        
     //   }
     // });
-    this.urlDetail = 'tm/sprintdetails/TMT03011'; ///gán cứng chứ đang lỗi';
+    this.urlDetail = 'tm/sprintdetails/TMT05011'
   }
 
 

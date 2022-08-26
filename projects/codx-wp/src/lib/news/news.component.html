@@ -59,7 +59,7 @@
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ lstHotNew[1].subject | maxlenght:70}}
+              {{ lstHotNew[1].subject | maxlenght:100}}
             </div>
             <div class="text-gray-700">
               {{lstHotNew[1].subContent | maxlenght:300}}
@@ -67,7 +67,7 @@
             <div class="fs-7 text-gray-400 mt-1">{{ lstHotNew[1].createdOn | fmDT }}</div>
           </div>
         </div>
-        <div *ngIf="lstHotNew[2];else empty2" class="row my-2" (click)="clickViewDetail(lstHotNew[2])">
+        <div *ngIf="lstHotNew[2];else empty2" class="row my-3" (click)="clickViewDetail(lstHotNew[2])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
               <codx-img [width]="180" imageType="square" [cssClass]="'image w-100'" [objectId]="lstHotNew[2].recID"

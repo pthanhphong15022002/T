@@ -109,9 +109,7 @@ export class TMMeetingsComponent
     //   }
     // });
 
-   // this.urlDetail = '/meeting/meetingdetails/TMT05011' //DUONG DAN SAI
-    this.urlDetail = '/tm/meetingdetails/TMT05011'
-
+    this.urlDetail = 'tm/meetingdetails/TMT05011'
 
     this.dataValue = this.user?.userID;
     this.getParams();
