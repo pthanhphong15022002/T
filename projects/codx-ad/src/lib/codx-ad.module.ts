@@ -2,12 +2,20 @@ import { UserComponent } from './users/user.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  NgModule,
+  Type,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartAllModule,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
@@ -34,6 +42,7 @@ import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-g
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
 import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { ControlNoteComponent } from './control-note/control-note.component';
+import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 
 export const routes: Routes = [
   {
@@ -54,28 +63,25 @@ export const routes: Routes = [
       {
         path: 'users/:funcID',
         component: UserComponent,
-      }
-      , {
-        path: 'accountinfo/:funcID',
-        component: CompanySettingComponent
-      }
-      ,{
+      },
+
+      {
         path: 'groupusers/:funcID',
-        component: UserGroupsComponent
-      }
-      ,{
+        component: UserGroupsComponent,
+      },
+      {
         path: 'roles/:funcID',
         component: RolesComponent,
-      }
-      ,{
+      },
+      {
         path: 'roledetails/:funcID',
         component: RoleDetailComponent,
       },
       {
         path: 'controlNote',
         component: ControlNoteComponent,
-      }
-    ]
+      },
+    ],
   },
   {
     path: '',
@@ -84,7 +90,11 @@ export const routes: Routes = [
       {
         path: 'systemsetting/:funcID',
         component: SystemsettingsComponent,
-      }
+      },
+      {
+        path: 'accountinfo/:funcID',
+        component: CompanySettingComponent,
+      },
     ],
   },
 ];
@@ -126,8 +136,8 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
-    SharedModule
-
+    SharedModule,
+    SliderModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,

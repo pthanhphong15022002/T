@@ -58,8 +58,19 @@ import { EditSkillComponent } from './employeeinfomation/edit-skill/edit-skill.c
 import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-skill/pop-add-skill.component';
 import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 
 export const routes: Routes = [
+  {
+    path: '',
+    component: LayoutOnlyHeaderComponent,
+    children: [
+      {
+        path: 'employeeinfomation/:funcID',
+        component: EmployeeInfomationComponent,
+      },
+    ],
+  },
   {
     path: '',
     component: LayoutComponent,
@@ -68,10 +79,10 @@ export const routes: Routes = [
         path: 'personals/:funcID',
         component: PersonalsComponent,
       },
-      {
-        path: 'employeeinfomation/:funcID',
-        component: EmployeeInfomationComponent,
-      },
+      // {
+      //   path: 'employeeinfomation/:funcID',
+      //   component: EmployeeInfomationComponent,
+      // },
       // {
       //   path:'',
       //   redirectTo:'personals/:funcID',

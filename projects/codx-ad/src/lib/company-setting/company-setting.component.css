@@ -181,3 +181,45 @@ codx-wrapper {
 .mw-1000px {
   max-width: 1000px;
 }
+
+.e-tab-header {
+  width: 220px;
+  min-width: 220px;
+  margin-right: 20px;
+}
+
+.mw-1100px {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
+  border: 0 !important;
+  background-color: var(--gray-200);
+}
+
+
+.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover {
+  background: transparent;
+  border: 0;
+  color: var(--primary) !important;
+}
+
+.e-tab .e-tab-header::before {
+  border-color: transparent;
+  margin-top: 20px;
+}
+
+.nav-link {
+  align-items: center;
+
+}
+
+.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+  border: 0 !important;
+}
+
+.e-tab .e-tab-header .e-toolbar-item {
+  height: 38px;
+  min-height: 38px;
+}

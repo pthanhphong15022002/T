@@ -40,4 +40,5 @@ export class AD_CompanySettings {
   ;modifiedBy: String
   ;intergration: String
   ;storage: Number
+  ;memory: Number
 }
