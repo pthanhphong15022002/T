@@ -111,7 +111,7 @@ export class TaskDailyComponent implements OnInit {
         text: 'Report',
         icon: 'icon-assignment',
         //toolbarTemplate: this.pined,
-        //reportView: true,
+        //  // reportView: true,
         model: {
           panelLeftRef: this.report,
         },
@@ -137,6 +137,10 @@ export class TaskDailyComponent implements OnInit {
         this.param = {};
       }, 2000);
     }
+    // else {
+    //   this.param = { name: '1' };
+    //   setTimeout(() => { this.param = {} }, 2000)
+    // }
   }
   printReport() {
     this.print = true;
