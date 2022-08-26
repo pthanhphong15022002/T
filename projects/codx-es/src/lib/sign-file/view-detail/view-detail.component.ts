@@ -77,16 +77,22 @@ export class ViewDetailComponent implements OnInit {
   }
 
   setHeight() {
-    var main = Array.from(
-      document.getElementsByClassName(
-        'codx-detail-main'
-      ) as HTMLCollectionOf<HTMLElement>
-    )[0]?.offsetHeight;
-    var header = Array.from(
-      document.getElementsByClassName(
-        'codx-detail-header'
-      ) as HTMLCollectionOf<HTMLElement>
-    )[0]?.offsetHeight;
+    let main,
+      header = 0;
+    let ele = document.getElementsByClassName(
+      'codx-detail-main'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (ele) {
+      main = Array.from(ele)[0]?.offsetHeight;
+    }
+
+    let eleheader = document.getElementsByClassName(
+      'codx-detail-header'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (ele) {
+      header = Array.from(eleheader)[0]?.offsetHeight;
+    }
+
     let nodes = document.getElementsByClassName(
       'codx-detail-body'
     ) as HTMLCollectionOf<HTMLElement>;
