@@ -73,9 +73,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   onType(type: any) {
     if (type == 'TEXT') {
@@ -147,7 +147,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.chooseFont(font);
   }
 
-  popupFile() {}
+  popupFile() { }
 
   addEmoji(event) {
     this.message += event.emoji.native;
@@ -228,7 +228,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     data;
   }
 
-  delete() {}
+  delete() { }
 
   refresh() {
     this.listNote = [

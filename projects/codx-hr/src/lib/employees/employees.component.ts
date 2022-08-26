@@ -162,7 +162,7 @@ export class EmployeesComponent implements OnInit {
     }
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-      this.beforeDel(opt)).subscribe((res) => {
+      this.beforeDel(opt), 'Thông báo').subscribe((res) => {
         if (res[0]) {
           this.itemSelected = this.view.dataService.data[0];
         }

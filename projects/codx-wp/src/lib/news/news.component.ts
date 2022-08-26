@@ -93,7 +93,6 @@ export class NewsComponent implements OnInit {
     this.api.execSv(this.service,this.assemblyName,this.className,"GetDatasNewsAsync",[funcID,category])
     .subscribe((res:any[]) => 
     {
-      if(res.length > 0){
         this.lstHotNew = res[0]; // tin mới nhất
         this.lstVideo = res[1]; // video
         this.lstGroup = res[2]; // tin cũ hơn
@@ -114,7 +113,6 @@ export class NewsComponent implements OnInit {
           }
         }
         this.changedt.detectChanges();
-      }
     });
   }
 

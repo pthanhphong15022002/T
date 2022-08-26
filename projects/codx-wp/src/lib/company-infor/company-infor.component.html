@@ -1,18 +1,28 @@
 <codx-views #codxViews [views]="views" [funcID]="funcID" [entityName]="'WP_News'" [showToolBar]="false">
 </codx-views>
+<ng-container>
+  <div class="more-function">
+    <div class="d-flex flex-column">
+      <a (click)="clickShowPopupEdit()" class="btn btn-icon btn-primary"><i class=" icon-edit fs-1"></i></a>
+    </div>
+</div>
+</ng-container>
 <ng-template #panelLeftRef>
   <div class="container">
     <ng-container *ngIf="data;else empty">
-      <div class="row" [innerHTML]="data.contents"></div>
+      <div class="row p-4 bg-body" [innerHTML]="data.contentHtml"></div>
+      <!-- <div class="row p-4">
+        <codx-input 
+            type="textarea" 
+            class="test-textarea" 
+            field="textarea" 
+            format="ed3"
+            [crrValue]="data.contents"
+            ngDefaultControl>
+        </codx-input>
+      </div> -->
     </ng-container>
-    <ng-container *ngIf="codxViews.userPermission.create">
-      <div class="more-function">
-        <div class="d-flex flex-column">
-          <a (click)="clickShowPopupEdit()" class="btn btn-icon btn-primary"><i class=" icon-edit fs-1"></i></a>
-        </div>
-    </div>
-    </ng-container>
-</div>
+  </div>
 </ng-template>
 <ng-template #empty>
   <div class="text-center">
