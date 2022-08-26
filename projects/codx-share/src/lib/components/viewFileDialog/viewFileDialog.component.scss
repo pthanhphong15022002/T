@@ -70,3 +70,11 @@ ngb-modal-window {
 //     border: 1px solid rgba(0,0,0,.15);
 //     border-radius: 0.25rem;
 // }
+
+#dm_viewFile{
+    height: calc(100vh - 80px)!important;
+    iframe{
+        height: calc(100vh - 120px)!important;
+    }
+}
+    
