@@ -112,10 +112,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     var style = this.currentElement.style;
     if (font == 'BOLD') {
       if (!style.fontWeight)
-        this.currentElement.setAttribute(
-          'style',
-          'font-weight: bolder !important'
-        );
+        // this.currentElement.setAttribute(
+        //   'style',
+        //   'font-weight: bolder !important'
+        // );
+        style.fontWeight = 'bolder';
       else style.fontWeight = '';
     } else if (font == 'ITALIC') {
       if (!style.fontStyle) style.fontStyle = 'italic';
@@ -231,9 +232,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       if (style.length == 0) this.setFont();
       else {
         for (let i = 0; i < style.length; i++) {
-          if (style[i] == 'font-weight') this.setFont(true, false, false);
-          else if (style[i] == 'font-style') this.setFont(false, true, false);
-          else this.setFont(false, false, true);
+          if (style[i] == 'font-weight') this.font.BOLD = true;
+          else if (style[i] == 'font-style') this.font.ITALIC = true;
+          else this.font.UNDERLINE = true;
         }
       }
     }
