@@ -316,7 +316,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     if (this.isHaveFile)
       this.attachment.saveFilesObservable().subscribe((res) => {
         if (res) {
-          this.task.attachments = res.length;
+          this.task.attachments = res.length ? res.length : 1 ;
           this.actionSaveAssign(taskIDParent, isContinue);
         }
       });
