@@ -68,10 +68,11 @@
   <codx-card-center
     cardCss="border w-250px h-100 emp-card"
     [imageId]="data.employeeID"
-    imageObjType="HR_Employees"
     [title]="data.employeeName"
     [subTitle]="data.positionName || 'Bộ phận'"
     [dataItem]="data"
+    [imageObjType]="view.formModel.entityName"
+    [imgOn]="data?.modifiedOn"
     [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'"
     [footer]="footer"
   >

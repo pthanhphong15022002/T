@@ -36,7 +36,7 @@ export class TaskExtendsComponent
   views: Array<ViewModel> = [];
   user: any;
   funcID: any;
-  // itemSelected: any;
+  dataTree = [];
   taskExtends: TM_TaskExtends;
   dialogExtendsStatus!: DialogRef;
   vllExtendStatus = 'TM010';
@@ -74,6 +74,7 @@ export class TaskExtendsComponent
     this.taskExtends = val?.data ? val?.data : val;
     // this.itemSelected = val?.data?.task ;
     // this.taskExtends = val
+    this.loadTreeView();
     this.detectorRef.detectChanges();
   }
   requestEnded(e) {}
@@ -103,7 +104,7 @@ export class TaskExtendsComponent
     //       }
     //     });
     // } else this.confirmExtends(moreFunc, data);
-    this.confirmExtends(moreFunc, data) ;
+    this.confirmExtends(moreFunc, data);
   }
 
   confirmExtends(moreFunc, data) {
@@ -162,4 +163,20 @@ export class TaskExtendsComponent
       });
     }
   }
+
+  //#region  tree
+  loadTreeView() {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTasksTreeAsync',
+        this.taskExtends?.taskID
+      )
+      .subscribe((res) => {
+        if (res) this.dataTree = res;
+      });
+  }
+  //#endregion
 }
