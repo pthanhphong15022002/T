@@ -86,10 +86,14 @@ export class CodxCommentHistoryComponent implements OnInit {
       if(res1){
         if(data.attachments > 0)
         {
+          this.codxATM.functionID = this.objectID;
           this.codxATM.objectId = res1.recID;
+          this.codxATM.objectType = "BG_TrackLogs";
           this.codxATM.fileUploadList = this.lstFile;
           this.codxATM.saveFilesObservable().subscribe((res2:any) => {
-            this.notifySV.notifyCode("SYS006");    
+            if(res2){
+              this.notifySV.notifyCode("SYS006");    
+            }
           })
         }
         else
@@ -117,7 +121,7 @@ export class CodxCommentHistoryComponent implements OnInit {
       this.data.recID)
     .subscribe((res:any[]) => {
       if(res.length > 0){
-        let files = res[0];
+        let files = res;
         files.map((e:any) => {
           if(e && e.referType == this.REFERTYPE.VIDEO)
           {

@@ -105,7 +105,7 @@
       <div class="d-flex flex-column mb-3">
         <codx-label default="Trang chứa template"></codx-label>
         <codx-input 
-          type="number"
+          type="text"
           [showSpinButton]="false"
           [Group]="exportAddForm"
           ControlName="sheetIndex"  
@@ -121,7 +121,7 @@
           style="width:100%" 
           [Group]="exportAddForm"
           ControlName="headerRow"
-          [ngClass]="{'is-invalid': submitted && f.format.errors }" 
+          [ngClass]="{'is-invalid': submitted && f.headerRow.errors }" 
           ></codx-input>
         </div>
         <div class="col">
