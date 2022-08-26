@@ -17,8 +17,8 @@ export class ViewApprovalProcessComponent implements OnInit {
   @Input() transID: string = '';
   @Input() approveStatus: string = '';
 
-  process;
-  lstStep;
+  process: any = [];
+  lstStep: any = [];
   constructor(
     private esService: CodxEsService,
     private cr: ChangeDetectorRef
@@ -56,6 +56,7 @@ export class ViewApprovalProcessComponent implements OnInit {
       } else {
         this.esService.getApprovalTrans(this.transID).subscribe((res) => {
           if (res) {
+            debugger;
             this.process = res;
             this.lstStep = [];
             this.cr.detectChanges();

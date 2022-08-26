@@ -740,7 +740,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.dialog && this.dialog.close();
     }
     if (this.processTab > 0) {
-      this.callfuncService.openForm(dialogClose, '', 400, 250);
+      this.callfuncService.openForm(dialogClose, '', 500, 250);
     }
   }
 
