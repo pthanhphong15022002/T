@@ -15,6 +15,7 @@ import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
@@ -48,6 +49,16 @@ export const routes: Routes = [
           {
             path: 'contactbook/:funcID',
             component: EmpContactsComponent,
+          },
+        ],
+      },
+      {
+        path: '',
+        component: LayoutOnlyHeaderComponent,
+        children: [
+          {
+            path: 'empinfosub/:funcID',
+            component: EmployeeInfomationComponent,
           },
         ],
       },
