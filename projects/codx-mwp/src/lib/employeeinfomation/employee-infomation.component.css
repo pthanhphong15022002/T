@@ -285,14 +285,13 @@ lib-employee-infomation {
     border: 8px solid transparent;
     border-top: 8px solid #252d42;
 }
+
 /***fix 1:56 8.1.2022***/
-.h-employee{
-    height: calc(100% - 150px);   
-    position: relative;
-}
+
 .h-employee .pw-content {
-    height: calc(100% - 42px); 
+    height: calc(100% - 42px);
 }
+
 /* .hover-scroll-overlay-y {
     position: relative;
   }
@@ -322,9 +321,10 @@ lib-employee-infomation {
       overflow-y: auto;
     }
   } */
-.user-content{
+.user-content {
     /* overflow: auto !important; height:80%; display: block; */
 }
+
 /***
 Custom Scrollbars
 ***/
@@ -332,24 +332,27 @@ Custom Scrollbars
     width: 5px;
     height: 7px;
     border-radius: 5px !important;
-  }
-  ::-webkit-scrollbar-track {
+}
+
+::-webkit-scrollbar-track {
     background-color: #f7f8fa;
     /* background-color: transparent; */
     border-radius: 5px !important;
     box-shadow: none;
     /*** thanh dai nhat **/
-  }
-  ::-webkit-scrollbar-thumb {
+}
+
+::-webkit-scrollbar-thumb {
     background-color: #bcbfc7;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
+}
+
+::-webkit-scrollbar-thumb:hover {
     background-color: #a5a6ac;
-  }
-  ::-webkit-scrollbar-thumb {
+}
+
+::-webkit-scrollbar-thumb {
     border-radius: 3px;
     box-shadow: none;
     border: 0;
     /* border: 1px #fff solid; */
-  }
+}
