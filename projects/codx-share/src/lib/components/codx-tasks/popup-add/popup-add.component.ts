@@ -113,7 +113,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   menuJobDes = {
     icon: 'icon-article',
-    text: 'Mô tả công việc',
+    text: 'Nội dung công việc',
     name: 'JobDescription',
     subName: 'Job Description',
     subText: 'Job Description',
