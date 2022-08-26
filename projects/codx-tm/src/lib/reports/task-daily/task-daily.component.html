@@ -1,5 +1,7 @@
 <codx-views #view [funcID]="'TMR01'" [autoLoad]="false" entityName="TM_Tasks" service="TM" assemblyName="ERM.Business.TM" className="ReportBusiness"
-  method="ListReportTasksAsync" [views]="views" idField="taskID" [pageSize]="100" [selectedFirst]="true">
+  method="ListReportTasksAsync" [views]="views" idField="taskID" [pageSize]="100" [selectedFirst]="true"
+  (filterReportChange)="paramChange($event)" (reportPrint)="printReport()"
+  >
 </codx-views>
 
 <ng-template #GiftIDCell let-data>
@@ -219,5 +221,5 @@
   </div>
 </ng-template>
 <ng-template #report>
-  <report-viewer [reportUUID]="reportUUID" (pinedItems)="lstPined = $event" #reportObj ></report-viewer>
+  <codx-report [showToolbar]="true" [reportUUID]="funcID" [parameters]="param" [print]="print"></codx-report>
   </ng-template>
