@@ -196,40 +196,50 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
     var funcID = e?.functionID;
-    if (
-      (funcID == 'SYS202' || funcID == 'SYS205' || funcID == 'SYS206') &&
-      data.processType == 'ES_SignFiles'
-    ) {
+    if (data.processType == 'ES_SignFiles') {
       //Kys
+      if (
+        funcID == 'SYS202' ||
+        funcID == 'SYS205' ||
+        funcID == 'SYS206' ||
+        funcID == 'SYS204' ||
+        funcID == 'SYS203' ||
+        funcID == 'SYS202'
+      ) {
+        debugger;
+        let option = new SidebarModel();
+        option.Width = '800px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
 
-      debugger;
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        let dialogApprove = this.callfunc.openForm(
+          PopupSignForApprovalComponent,
+          'Thêm mới',
+          700,
+          650,
+          this.funcID,
+          {
+            funcID: 'EST021',
+            recID: data.transID,
+          },
+          '',
+          dialogModel
+        );
+        // dialogApprove.closed.subscribe((x) => {
+        //   if (x.event) {
+        //     delete x.event._uuid;
+        //     this.view.dataService.add(x.event, 0).subscribe();
+        //     //this.getDtDis(x.event?.recID)
+        //   }
+        // });
+      }
 
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      let dialogApprove = this.callfunc.openForm(
-        PopupSignForApprovalComponent,
-        'Thêm mới',
-        700,
-        650,
-        this.funcID,
-        {
-          funcID: 'EST021',
-          recID: data.transID,
-        },
-        '',
-        dialogModel
-      );
-      dialogApprove.closed.subscribe((x) => {
-        if (x.event) {
-          delete x.event._uuid;
-          this.view.dataService.add(x.event, 0).subscribe();
-          //this.getDtDis(x.event?.recID)
-        }
-      });
+      //hoan tat
+      // else if (funcID == 'SYS204') {
+
+      // }
     } else if (data.processType != 'ES_SignFiles') {
       var status;
       if (
