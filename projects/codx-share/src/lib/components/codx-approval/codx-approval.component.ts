@@ -191,7 +191,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
     var funcID = e?.functionID;
-
     var status;
     if (
       funcID == 'SYS201' ||
@@ -211,6 +210,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         [data?.recID, status, '', '']
       )
       .subscribe((res2: any) => {
+        debugger;
         if (!res2?.msgCodeError) {
           this.view.dataService.update(data).subscribe();
           this.notifySvr.notifyCode('SYS007');
