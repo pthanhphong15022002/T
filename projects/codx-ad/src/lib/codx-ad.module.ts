@@ -34,6 +34,7 @@ import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-g
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
 import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { ControlNoteComponent } from './control-note/control-note.component';
+import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 
 export const routes: Routes = [
   {
@@ -126,7 +127,9 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
-    SharedModule
+    SharedModule,
+    SliderModule,
+
 
   ],
   exports: [RouterModule],

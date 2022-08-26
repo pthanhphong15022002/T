@@ -24,6 +24,8 @@ export class TaskDailyComponent implements OnInit {
   user: any;
   funcID: any;
   lstPined : any = [];
+  param : any = {};
+  print: boolean = false;
   isCollapsed = true;
   titleCollapse: string = "Đóng hộp tham số";
   reportUUID: any = 'TMR01';
@@ -72,7 +74,8 @@ export class TaskDailyComponent implements OnInit {
       active: true,
       text: 'Report',
       icon: 'icon-assignment',
-      toolbarTemplate: this.pined,
+      //toolbarTemplate: this.pined,
+      reportView:true,
       model: {
         panelLeftRef: this.report,
       },
@@ -86,7 +89,20 @@ export class TaskDailyComponent implements OnInit {
       }
     })
   }
+  paramChange(evt:any){
+    if(!evt.data.data.data){
+      this.param = {};
+    }
+    else{
+      this.param ={name:'1'};
+      setTimeout(()=>{this.param = {}},2000)
+    }
 
+  }
+  printReport(){
+    this.print = true;
+    setTimeout(()=>{this.print =false},10000)
+  }
   popoverList: any;
   popoverDetail: any;
   PopoverDetail(p: any, emp) {
