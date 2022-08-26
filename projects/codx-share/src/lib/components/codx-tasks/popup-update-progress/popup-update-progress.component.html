@@ -31,8 +31,9 @@
         <div class="row mt-4 form-group">
             <div class="col-12">
                 <codx-label name="lblCommment" formName="Tasks" default="Ghi chú"></codx-label>
-                <codx-input class="form-control" type="textarea" field="textarea" [format]="'ed2'" class="w-100"
-                    field="comment" [crrValue]="comment" rows="6" (valueChange)="valueChangComment($event)">
+                <codx-input class="form-control" type="textarea" field="textarea" [format]="'ed2'"
+                    class="w-100 resize-none" field="comment" [crrValue]="comment" rows="6"
+                    (valueChange)="valueChangComment($event)">
                 </codx-input>
             </div>
         </div>

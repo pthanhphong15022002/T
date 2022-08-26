@@ -75,16 +75,16 @@
                     itemSelected?.extendStatus != null &&
                     itemSelected?.extendStatus >= '3'
                   " [name]="vllExtendStatus" [field]="'ExtendStatus'" [value]="itemSelected?.extendStatus"
-                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7">
                 </codx-vll>
                 <codx-vll *ngIf="
                     itemSelected?.approveStatus != null &&
                     itemSelected?.approveStatus >= '2'
                   " [name]="vllApproveStatus" [field]="'ApproveStatus'" [value]="itemSelected?.approveStatus"
-                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7">
                 </codx-vll>
                 <codx-vll [name]="vllStatus" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
-                  [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+                  [showBgColor]="true" class="badge badge-light badge-md fs-7">
                 </codx-vll>
               </div>
             </div>
@@ -445,14 +445,12 @@
         {{ item?.memo }}
       </div>
       <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
-        <div class="d-flex align-items-end me-2 codx-badge">
-          <span>
-            <div class="d-status">
-              <codx-vll [name]="vllStatus" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
-                [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
-              </codx-vll>
-            </div>
-          </span>
+        <div class="d-flex align-items-end codx-badge">
+          <div class="d-status">
+            <codx-vll [name]="vllStatus" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
+              [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+            </codx-vll>
+          </div>
           <span>
             <span class="text-gray-700">{{
               item.dueDate | date: "dd/MM/yyyy"

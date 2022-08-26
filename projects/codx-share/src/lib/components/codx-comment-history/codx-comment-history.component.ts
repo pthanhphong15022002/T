@@ -86,24 +86,33 @@ export class CodxCommentHistoryComponent implements OnInit {
       if(res1){
         if(data.attachments > 0)
         {
+          this.codxATM.functionID = this.objectID;
           this.codxATM.objectId = res1.recID;
+          this.codxATM.objectType = "BG_TrackLogs";
           this.codxATM.fileUploadList = this.lstFile;
           this.codxATM.saveFilesObservable().subscribe((res2:any) => {
-            this.notifySV.notifyCode("SYS006");    
+            if(res2){
+              this.notifySV.notifyCode("SYS006"); 
+              this.clearData();   
+            }
           })
         }
         else
         {
-          this.notifySV.notifyCode("SYS006");
+              this.notifySV.notifyCode("SYS006");
+              this.clearData();   
         }
       }
       else {
-        this.notifySV.notifyCode("SYS022");
+        this.notifySV.notifyCode("SYS023");
       }
     });
 
   }
-
+  clearData(){
+    this.lstFile = [];
+    this.comment = "";
+  }
   uploadFile() {
     this.codxATM.uploadFile();
   }
@@ -117,7 +126,7 @@ export class CodxCommentHistoryComponent implements OnInit {
       this.data.recID)
     .subscribe((res:any[]) => {
       if(res.length > 0){
-        let files = res[0];
+        let files = res;
         files.map((e:any) => {
           if(e && e.referType == this.REFERTYPE.VIDEO)
           {
@@ -127,5 +136,17 @@ export class CodxCommentHistoryComponent implements OnInit {
         this.lstFile = res; 
         this.dt.detectChanges();
     }});
+  }
+
+  deleteComment(item:any){
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item)
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.notifySV.notifyCode("SYS008");
+      }
+      else 
+        this.notifySV.notifyCode("SYS022");
+    })
   }
 }

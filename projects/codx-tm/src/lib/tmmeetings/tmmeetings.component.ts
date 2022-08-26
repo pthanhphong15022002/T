@@ -393,7 +393,7 @@ export class TMMeetingsComponent
         this.delete(data);
         break;
       case 'TMT05011':
-        this.viewDetail(data);
+        this.viewDetail(e.data,data);
         break;
     }
   }
@@ -495,8 +495,8 @@ export class TMMeetingsComponent
     return true;
   }
 
-  viewDetail(data) {
-    this.codxService.navigate('', this.urlDetail, {
+  viewDetail(func,data) {
+    this.codxService.navigate('',func.url, {
       meetingID: data.meetingID,
     });
   }
