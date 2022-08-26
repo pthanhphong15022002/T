@@ -248,7 +248,39 @@
           </div>
         </div>
       </div>
+      <!-- Bộ nhớ tài khoảng -->
+      <div class="body_detail p-6">
+        <div class="d-flex justify-content-between mb-3">
+          <div class="fw-bold text-dark">
+            <codx-label fiedName="" class="title_contact" formName="" gridViewName="" default="Bộ nhớ tài khoản">
+            </codx-label>
+          </div>
+          <button class="btn btn-icon btn-white">
+            <i class="icon-create icon-18"></i></button>
+        </div>
+        <div class="footer_content">
+          <div class="row pb-5">
+            <div>
+              <codx-label  default="Bộ nhớ tài khoản của bạn được chia sẽ trên các ứng dụng của hệ thống ERM">
+              </codx-label>
+            </div>
+            <div class="bg-success-o-60">
+              <div id="container">
+                <div class="wrap">
+                  <div class="sliderwrap">
+                    <ejs-slider id="minrange" [type]="minType" [min]="0" [max]="21"
+                      [value]="formatBytes(data.memory)" [readonly]="true">
+                    </ejs-slider>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div [innerHTML]="innerHTML(data.memory, data.storage)">
 
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </ng-template>

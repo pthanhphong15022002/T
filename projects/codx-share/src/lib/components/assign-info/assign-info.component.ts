@@ -91,23 +91,20 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     // this.functionID = this.dialog.formModel.funcID;
-    
+
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
     });
-    
+
     this.cache
-    .gridViewSetup(
-     "AssignTasks",
-      "grvAssignTasks"
-    )
-    .subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+      .gridViewSetup('AssignTasks', 'grvAssignTasks')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   ngOnInit(): void {}
@@ -315,8 +312,18 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       //   return;
       // }
     }
-    if (this.isHaveFile) this.attachment.saveFiles();
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
+    if (this.isHaveFile)
+      this.attachment.saveFilesObservable().subscribe((res) => {
+        if (res) {
+          this.task.attachments = res.length ? res.length : 1 ;
+          this.actionSaveAssign(taskIDParent, isContinue);
+        }
+      });
+    else this.actionSaveAssign(taskIDParent, isContinue);
+  }
+
+  actionSaveAssign(taskIDParent, isContinue) {
     this.tmSv
       .saveAssign([
         this.task,
@@ -600,7 +607,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.taskGroup = res;
-          if (res.checkList != null && res.checkList.trim()!="") {
+          if (res.checkList != null && res.checkList.trim() != '') {
             var toDo = res.checkList.split(';');
             this.listTodo = [];
             toDo.forEach((tx) => {
