@@ -114,6 +114,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
               this.dataItem?.transID
           );
         }
+
+        ///es/approvals/EST021/
         //const queryParams = { 'id' : this.dataItem?.transID};
 
         //this.router.navigate(['tester/od/approvals/ODT71/'+params[1]+"/"+fuc?.functionID]);
@@ -208,10 +210,13 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         [data?.recID, status, '', '']
       )
       .subscribe((res2: any) => {
+        debugger;
         if (!res2?.msgCodeError) {
           this.view.dataService.update(data).subscribe();
           this.notifySvr.notifyCode('SYS007');
         } else this.notifySvr.notify(res2?.msgCodeError);
       });
   }
+
+  approve(data) {}
 }

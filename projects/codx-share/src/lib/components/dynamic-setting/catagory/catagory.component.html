@@ -70,6 +70,7 @@
           [refValue]="data.referedValue || data.referdValue"
           [loadFull]="true"
           [field]="data.fieldName"
+          [checked]="dataValue[data.fieldName] == '1'"
           [crrValue]="dataValue[data.fieldName] || ''"
           (valueChange)="valueChange($event)"
         >

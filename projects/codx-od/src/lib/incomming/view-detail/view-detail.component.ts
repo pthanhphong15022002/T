@@ -86,6 +86,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   name: any;
   ms020: any;
   ms021: any;
+  ms023: any;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -169,6 +170,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     });
     this.cache.message('OD021').subscribe((item) => {
       this.ms021 = item;
+    });
+    this.cache.message('OD023').subscribe((item) => {
+      this.ms023 = item;
     });
     this.cache.valueList('OD008').subscribe((item) => {
       this.dvlRelType = item;
@@ -813,10 +817,14 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 dialogModel
               );
               dialogApprove.closed.subscribe((res) => {
-                debugger;
-                if (res.event) {
-                  datas.status = "3";
-                  this.view.dataService.update(datas).subscribe();
+                if (res.event == true) {
+                  datas.status = '3';
+                  this.odService.updateDispatch(datas, false).subscribe((item) => {
+                    if (item.status == 0) {
+                     this.view.dataService.update(datas).subscribe();
+                    }
+                    else this.notifySvr.notify(item.message);
+                  });
                 }
               });
               //this.callfunc.openForm();
@@ -891,11 +899,16 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       unbm[0].disabled = true;
       bm[0].disabled = false;
     }
-    if(this.formModel.funcID == "ODT41" && data?.status != "1" && data?.status != "2")
-    {
-      var approvel = e.filter((x: { functionID: string }) => x.functionID == 'ODT201');
-      approvel[0].disabled = true
-    } 
+    if (
+      this.formModel.funcID == 'ODT41' &&
+      data?.status != '1' &&
+      data?.status != '2'
+    ) {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT201'
+      );
+      approvel[0].disabled = true;
+    }
     //data?.isblur = true
   }
   //Gửi duyệt

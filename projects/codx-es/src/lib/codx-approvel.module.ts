@@ -2,10 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
-import { SignFileComponent } from 'projects/codx-es/src/lib/sign-file/sign-file.component';
-import { ViewDetailComponent } from 'projects/codx-es/src/lib/sign-file/view-detail/view-detail.component';
 import { ODApprovelComponent } from 'projects/codx-od/src/lib/incomming/approvel/approvel.component';
 import { ODTestDetailComponent } from 'projects/codx-od/src/lib/incomming/test/test.component';
+import { ESApprovelComponent } from './sign-file/approval/approval.component';
 
 const routes: Routes = [
   {
@@ -22,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: 'signfiles/:funcID/:id',
-        component: ViewDetailComponent,
+        component: ESApprovelComponent,
       },
     ],
   },

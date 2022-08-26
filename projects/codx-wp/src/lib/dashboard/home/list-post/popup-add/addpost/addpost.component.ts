@@ -52,7 +52,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   @ViewChild('codxFileEdit') codxFileEdit: ImageGridComponent;
   //Variable for control share
   CATEGORY = {
-    POST: "Post",
+    POST: "1",
     COMMENTS: "2",
     FEEDBACK: "3",
     SHARE: "4",
@@ -163,6 +163,14 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.adminPermission.isActive = true;
     this.adminPermission.createdBy = this.user.userID;
     this.adminPermission.createdOn = new Date();
+    let evrPermission = new Permission();
+    evrPermission.objectType = this.SHARECONTROLS.EVERYONE;
+    evrPermission.memberType = this.MEMBERTYPE.SHARE;
+    evrPermission.read = true;
+    evrPermission.share = true;
+    evrPermission.isActive = true;
+    evrPermission.createdBy = this.user.userID;
+    evrPermission.createdOn = new Date();
     this.cache.message('WP011').subscribe((mssg: any) => {
       this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
       this.dt.detectChanges();
@@ -189,6 +197,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       // OWNER
       this.permissions.push(this.myPermission);
       this.permissions.push(this.adminPermission);
+      this.permissions.push(evrPermission);
     }
     this.dt.detectChanges();
   }

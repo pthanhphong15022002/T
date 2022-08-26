@@ -140,9 +140,6 @@ export class IncommingComponent
   }
   ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
-    // this.route.params.subscribe((routeParams) => {
-    //     (this.view as ViewsComponent).currentView = null;
-    // });
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';
