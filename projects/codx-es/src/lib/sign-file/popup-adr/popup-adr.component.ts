@@ -90,8 +90,8 @@ export class PopupADRComponent extends UIComponent {
       )
       .subscribe((res) => {
         console.log('res');
+        this.dialog.close('ok');
       });
-    this.dialog.close('ok');
   }
 
   popupUploadFile() {

@@ -1172,6 +1172,7 @@ export class AttachmentComponent implements OnInit {
     if (index > -1) {
       this.fileUploadList.splice(index, 1); //remove element from array
       //  this.fileUploadList.next(this.fileUploadList);
+      this.fileCount.emit(this.fileUploadList.length)
     }
   }
 

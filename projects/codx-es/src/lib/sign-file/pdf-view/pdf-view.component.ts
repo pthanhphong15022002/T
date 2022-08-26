@@ -1446,7 +1446,28 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   clickDownload() {
     this.pdfviewerControl.downloadFileName = this.fileInfo.fileName;
-    this.pdfviewerControl.download();
+    this.beforeDownLoad()
+      .then((annots) => {
+        this.pdfviewerControl.download();
+        return annots;
+      })
+      .then((annotations) => {
+        annotations.forEach((item) => {
+          this.pdfviewerControl.addAnnotation(item);
+        });
+      });
+  }
+
+  async beforeDownLoad() {
+    let tmpCollections = this.pdfviewerControl.annotationCollection;
+
+    this.pdfviewerControl.deleteAnnotations();
+    tmpCollections?.forEach((annot) => {
+      if (annot.customData.split(':')[1] != '1') {
+        this.pdfviewerControl.addAnnotation(annot);
+      }
+    });
+    return tmpCollections;
   }
 
   clickPrint(args) {}
