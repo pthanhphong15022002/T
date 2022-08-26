@@ -7,7 +7,7 @@ export const environment = {
   TNDATA_KEY: 'tnf649fc9a5f55',
   // apiUrl: 'https://codx.com.vn',
   shopping: 'https://register.codx.com.vn/shopping',
-  librOfficeUrl: 'https://office.codx.com.vn/loleaflet/2afbc52/loleaflet.html',
+  librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
   apiUrl: 'http://172.16.7.34:8011',
   pdfUrl: 'http://172.16.7.34:8015/api/pdf',
 

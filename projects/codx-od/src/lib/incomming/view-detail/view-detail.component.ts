@@ -86,6 +86,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   name: any;
   ms020: any;
   ms021: any;
+  ms023: any;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -169,6 +170,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     });
     this.cache.message('OD021').subscribe((item) => {
       this.ms021 = item;
+    });
+    this.cache.message('OD023').subscribe((item) => {
+      this.ms023 = item;
     });
     this.cache.valueList('OD008').subscribe((item) => {
       this.dvlRelType = item;
@@ -813,10 +817,14 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 dialogModel
               );
               dialogApprove.closed.subscribe((res) => {
-                debugger;
                 if (res.event == true) {
                   datas.status = '3';
-                  this.view.dataService.update(datas).subscribe();
+                  this.odService.updateDispatch(datas, false).subscribe((item) => {
+                    if (item.status == 0) {
+                     this.view.dataService.update(datas).subscribe();
+                    }
+                    else this.notifySvr.notify(item.message);
+                  });
                 }
               });
               //this.callfunc.openForm();
@@ -858,11 +866,26 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
     if (relationType == '1')
-      return Util.stringFormat(
-        this.ms020?.customName,
-        this.fmTextValuelist(relationType, '6'),
-        agencyName
-      );
+    {
+      if(this.formModel.funcID == 'ODT31')
+      {
+        return Util.stringFormat(
+          this.ms020?.customName,
+          this.fmTextValuelist(relationType, '6'),
+          agencyName
+        );
+      }
+      else
+      {
+        return "Gửi đến "+ agencyName;
+        /* return Util.stringFormat(
+          this.ms023?.customName,
+          this.fmTextValuelist(relationType, '6'),
+          agencyName
+        ); */
+      }
+    }
+      
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),

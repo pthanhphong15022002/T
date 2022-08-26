@@ -44,7 +44,9 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   data: AD_CompanySettings;
   // data = new AD_CompanySettings();
   dialog!: DialogRef;
-
+  minType = "MinRange";
+  memory: number;
+  storage: number;
   // image main logo
   check?: string
   imageUpload: UploadFile = new UploadFile();
@@ -141,6 +143,22 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
       }
     })
   }
+
+  formatBytes(bytes){
+    var gb = (bytes/ (1024*1024*1024)).toFixed(1);
+    return gb;
+  }
+
+  innerHTML(memory, storage){
+    var me = (memory/ (1024*1024*1024)).toFixed(1) + ' GB ';
+    var sto = (storage/ (1024*1024*1024)).toFixed(1) + ' GB';
+    var inner = '';
+    if(memory && storage){
+      inner+= '<div>Đã dùng '+ me +'trong số '+ sto +'</div>'
+    }
+    return inner;
+  }
+
   txtToLower(e: any) {
     this.data.companyCode = this.data.companyCode.toLowerCase();
   }
@@ -165,16 +183,16 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
         var reader = new FileReader();
         reader.onload = this._handleReaderLoadedMailHeader.bind(this);
       }
-            
+
       reader.readAsDataURL(file);
       let dataTest: ArrayBuffer;
       dataTest = await file.arrayBuffer();
       this.imageUpload.fileName = file.name;
       this.imageUpload.fileBytes = Array.from(new Uint8Array(dataTest));
-      
+
       //  Save image main logo
       if (optionCheck == this.optionMainLogo) {
-        
+
         this.data.logo = ''; // main logo
         this.adService
           .updateInformationCompanySettings(this.data, this.optionMainLogo, this.imageUpload)
@@ -183,7 +201,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
 
       //  Save image main logo
       if(optionCheck == this.optionMailHeader) {
-       
+
         this.data.logoFull = ''; // header logo
         this.adService
         .updateInformationCompanySettings(this.data,this.optionMailHeader,this.imageUpload)
