@@ -28,8 +28,7 @@ import { TM_TaskExtends } from '../models/TM_Tasks.model';
 })
 export class TaskExtendsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
@@ -53,7 +52,7 @@ export class TaskExtendsComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -68,6 +67,7 @@ export class TaskExtendsComponent
         },
       },
     ];
+    this.change
   }
 
   selectedChange(val: any) {
@@ -77,7 +77,7 @@ export class TaskExtendsComponent
     this.loadTreeView();
     this.detectorRef.detectChanges();
   }
-  requestEnded(e) {}
+  requestEnded(e) { }
 
   //#region extends
   openExtendStatusPopup(moreFunc, data) {
