@@ -23,7 +23,9 @@ export class TaskDailyComponent implements OnInit {
 
   user: any;
   funcID: any;
-  lstPined : any = [];
+  lstPined: any = [];
+  param: any = {};
+  print: boolean = false;
   isCollapsed = true;
   titleCollapse: string = "Đóng hộp tham số";
   reportUUID: any = 'TMR01';
@@ -34,7 +36,7 @@ export class TaskDailyComponent implements OnInit {
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-   }
+  }
 
   columnsGrid = [];
   views: Array<ViewModel> = [];
@@ -53,40 +55,54 @@ export class TaskDailyComponent implements OnInit {
       { field: 'active', headerText: 'Hoạt động', template: this.itemActive, width: 150 },
       { field: 'buid', headerText: 'Bộ phận người thực hiện', width: 140 }
     ];
-   // this.loadData();
+    // this.loadData();
   }
 
   ngAfterViewInit(): void {
     this.views = [
       {
-      type: ViewType.grid,
-      sameData: true,
-      active: false,
-      model: {
-        resources: this.columnsGrid,
-      }
-    },
-     {
-      sameData: true,
-      type: ViewType.content,
-      active: true,
-      text: 'Report',
-      icon: 'icon-assignment',
-      toolbarTemplate: this.pined,
-      model: {
-        panelLeftRef: this.report,
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          resources: this.columnsGrid,
+        }
       },
-    },];
+      {
+        sameData: true,
+        type: ViewType.content,
+        active: true,
+        text: 'Report',
+        icon: 'icon-assignment',
+        //toolbarTemplate: this.pined,
+        // reportView:true,
+        model: {
+          panelLeftRef: this.report,
+        },
+      },];
   }
 
-  loadData(){
-    this.api.callSv('TM','TM','ReportBusiness','ListReportTasksAsync').subscribe(res=>{
-      if(res){
+  loadData() {
+    this.api.callSv('TM', 'TM', 'ReportBusiness', 'ListReportTasksAsync').subscribe(res => {
+      if (res) {
         console.log(res);
       }
     })
   }
+  paramChange(evt: any) {
+    if (!evt.data.data.data) {
+      this.param = {};
+    }
+    else {
+      this.param = { name: '1' };
+      setTimeout(() => { this.param = {} }, 2000)
+    }
 
+  }
+  printReport() {
+    this.print = true;
+    setTimeout(() => { this.print = false }, 10000)
+  }
   popoverList: any;
   popoverDetail: any;
   PopoverDetail(p: any, emp) {
@@ -100,11 +116,11 @@ export class TaskDailyComponent implements OnInit {
       p.close();
   }
 
-  collapse(evt){
+  collapse(evt) {
     this.reportObj && this.reportObj.collapse();
     this.titleCollapse = this.reportObj.isCollapsed ? "Mở hộp tham số" : "Đóng hộp tham số";
   }
-  valueChange(evt: any, a?: any,type?: any ){
+  valueChange(evt: any, a?: any, type?: any) {
 
   }
 
