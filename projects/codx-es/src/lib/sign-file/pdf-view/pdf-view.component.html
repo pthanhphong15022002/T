@@ -40,12 +40,9 @@
                       *ngIf="area.labelType == '1' && area.fixedWidth == true"
                     >
                       <codx-temp-full
+                        [imageId]="area.signer"
                         [title]="'CA: ' + getAreaOwnerName(area.signer)"
                         [resourceObjType]="'AD_Users'"
-                        [icoCss]="
-                          'symbol symbol-icon symbol-circle symbol-32px me-2 ' +
-                          (area.labelType | vll: 'ES015':'icon' | async)
-                        "
                         [subTitle]="'Trang ' + (+area.location.pageNumber + 1)"
                         [subTitleCss]="'page-end'"
                       >

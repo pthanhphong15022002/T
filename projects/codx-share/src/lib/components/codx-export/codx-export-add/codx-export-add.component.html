@@ -114,12 +114,14 @@
       <div class="row mb-3">
         <div class="col">
           <codx-label default="Dòng chi tiết"></codx-label>
-          <codx-input type="text" 
-          [class]="'me-3'"  
+          <codx-input 
+          type="text" 
+          ngClass="w-100" 
+          class="test-textbox"
           style="width:100%" 
           [Group]="exportAddForm"
           ControlName="headerRow"
-          [ngClass]="{ 'is-invalid': submitted && f.format.errors }" 
+          [ngClass]="{'is-invalid': submitted && f.format.errors }" 
           ></codx-input>
         </div>
         <div class="col">

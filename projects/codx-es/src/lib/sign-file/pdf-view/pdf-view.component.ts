@@ -192,7 +192,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   onInit() {
     //
-    // this.user.userID = 'LTTTRUC';
+    // this.user.userID = 'NGUYENPM';
     this.saveAnnoQueue = new Map();
     this.ajaxSetting = {
       ajaxHeaders: [
