@@ -104,9 +104,9 @@ export class EmployeeInfomationComponent implements OnInit {
           if (res)
             this.moreFunc = res;
           this.dt.detectChanges();
-          setTimeout(() => {
-            this.imageAvatar.getFormServer();
-          }, 100);
+          // setTimeout(() => {
+          //   this.imageAvatar.getFormServer();
+          // }, 100);
         });
       }
     });

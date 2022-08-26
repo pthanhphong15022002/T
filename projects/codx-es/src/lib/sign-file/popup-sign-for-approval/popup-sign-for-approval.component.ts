@@ -37,7 +37,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   data;
   // data = {
   //   funcID: 'EST021',
-  //   recID: '5a9afa04-2471-11ed-979b-509a4c39550b',
+  //   recID: 'fda05e5c-24e7-11ed-a51b-d89ef34bb550',
   // };
 
   formModel: FormModel;
@@ -52,8 +52,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   onInit(): void {
     this.canOpenSubPopup = false;
-    this.funcID = this.data?.funcID;
-    this.recID = this.data?.recID;
+    this.funcID = this.data ? this.data.funcID : 'EST01';
+    this.recID = this.data
+      ? this.data.recID
+      : 'fda05e5c-24e7-11ed-a51b-d89ef34bb550';
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService
