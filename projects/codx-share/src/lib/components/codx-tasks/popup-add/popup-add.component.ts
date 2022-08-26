@@ -176,15 +176,15 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
     });
     this.cache
-    .gridViewSetup(
-      this.dialog.formModel.formName,
-      this.dialog.formModel.gridViewName
-    )
-    .subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -495,9 +495,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   actionSave(id) {
     if (this.taskType) this.task.taskType = this.taskType;
     else this.task.taskType = '1';
-    if (this.isHaveFile) this.attachment.saveFiles();
-    if (this.action == 'edit') this.updateTask();
-    else this.addTask();
+    if (this.isHaveFile) this.attachment.saveFilesObservable().subscribe(res => {
+      if (res) {
+        this.task.attachments = res.length;
+        if (this.action == 'edit') this.updateTask();
+        else this.addTask();
+      }
+    });
+    else {
+      if (this.action == 'edit') this.updateTask();
+      else this.addTask();
+    }
   }
 
   beforeSave(op: any) {
@@ -526,20 +534,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
 
   addTask(isCloseFormTask: boolean = true) {
-    // this.tmSv
-    //   .addTask([
-    //     this.task,
-    //     this.functionID,
-    //     this.listTaskResources,
-    //     this.listTodo,
-    //   ])
-    //   .subscribe((res) => {
-    //     if (res && res.length > 0) {
-    //       this.dialog.dataService.onAction.next({ type: 'create', data: res });
-    //       this.dialog.dataService.addDatas.clear();
-    //       this.dialog.close(res);
-    //     }
-    //   });
     this.dialog.dataService.save((opt: RequestOption) => {
       opt.methodName = 'AddTaskAsync';
       opt.data = [this.task, this.functionID, this.listTaskResources, this.listTodo];
