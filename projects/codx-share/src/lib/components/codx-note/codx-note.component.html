@@ -123,9 +123,11 @@
                     <div class="text">
                         <div *ngIf="lineType == 'TEXT'">
                             <div class="w-100" (click)="getElement(input)">
-                                <codx-input #input [class]="'border-0'" type="text" class="test-textarea memo"
-                                    [crrValue]="item.memo" [placeholder]="gridViewSetup?.Comments?.headerText + '...'"
-                                    (valueChange)="valueChange($event)" ngDefaultControl field="memo" id='font'
+                                <codx-input #input [class]="'border-0'"
+                                    style="font-weight:normal; font-style:normal; text-decoration-line:none; color: unset" type="text"
+                                    class="test-textarea memo" [crrValue]="item.memo"
+                                    [placeholder]="gridViewSetup?.Comments?.headerText + '...'"
+                                    (valueChange)="valueChange($event, input)" ngDefaultControl field="memo" id='font'
                                     (keyUpEnter)="keyUpEnterTemp($event)">
                                 </codx-input>
                             </div>
@@ -138,6 +140,7 @@
                             </div>
                             <div class="w-100 text-after-check-box" (click)="getElement(input)">
                                 <codx-input #input type="text" class="test-textbox border-0 input-note memo"
+                                    style="font-weight:normal; font-style:normal; text-decoration-line:none"
                                     (keyUpEnter)="keyUpEnterTemp($event)" [crrValue]="" field="memo" id="font"
                                     (valueChange)="valueChange($event, input)"
                                     [placeholder]="gridViewSetup?.Comments?.headerText + '...'">
@@ -150,6 +153,7 @@
                             </div>
                             <div class="w-100 text-after-li" (click)="getElement(input)">
                                 <codx-input #input type="text" class="test-textbox border-0 input-note memo"
+                                    style="font-weight:normal; font-style:normal; text-decoration-line:none"
                                     (keyUpEnter)="keyUpEnterTemp($event)" [crrValue]="" field="memo" id="font"
                                     (valueChange)="valueChange($event)"
                                     [placeholder]="gridViewSetup?.Comments?.headerText + '...'">
@@ -182,12 +186,12 @@
             </span>
             <span>|</span>
             <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative
-            " (click)="checkFont('BOLD')" [class.active]="font.BOLD ? 'active' : ''"></span>
+            " (click)="checkFont('BOLD', input)" [class.active]="font.BOLD ? 'active' : ''"></span>
             <span class="icon-format_italic icon-20 btn btn-icon btn-active-light-primary position-relative
-            " (click)="checkFont('ITALIC')" [class.active]="font.ITALIC ? 'active' : ''"></span>
+            " (click)="checkFont('ITALIC', input)" [class.active]="font.ITALIC ? 'active' : ''"></span>
             <span class="icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative
-            " (click)="checkFont('UNDERLINE')" [class.active]="font.UNDERLINE ? 'active' : ''"></span>
-            <codx-input type="colorpicker" [showText]="false" [modeSwitcher]="true" [crrValue]="" field="color"
+            " (click)="checkFont('UNDERLINE', input)" [class.active]="font.UNDERLINE ? 'active' : ''"></span>
+            <codx-input type="colorpicker" [showText]="true" [modeSwitcher]="true" [crrValue]="font.COLOR" field="color"
                 (valueChange)="valueChangeColor($event)">
             </codx-input>
             <div class="btn-emoji">
