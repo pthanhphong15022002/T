@@ -327,3 +327,19 @@ Custom Scrollbars
 .page-pw.h-100 {
     overflow: hidden;
 }
+
+.pic-emloyee {
+    position: relative;
+
+
+}
+
+.pic-emloyee .badge.badge-circle {
+    margin-top: -10px;
+    margin-left: -10px;
+}
+
+.h-employee {
+    height: calc(100vh - 219px) !important;
+    overflow: auto;
+}
