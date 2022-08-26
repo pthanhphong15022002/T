@@ -18,7 +18,7 @@
             </div>
         </div>
         <codx-attachment #codxATM 
-            [functionID]="funcID" 
+            [functionID]="objectID" 
             [objectType]="'BG_TrackLogs'" 
             [hideFolder]="'1'"
             [hideUploadBtn]="'1'" 
@@ -94,14 +94,6 @@
                                         <i class="fas fa-ellipsis-h"></i>
                                     </a>
                                     <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                        <li *ngIf="data.write">
-                                            <a ngbDropdownItem href="javascript:void(0)">
-                                                <span class="icon-edit icon-16 me-2"></span>
-                                                <codx-label [formModel]="" name="lblEdit_comments"
-                                                    default="Chỉnh sửa">
-                                                </codx-label>
-                                            </a>
-                                        </li>
                                         <li *ngIf="data.delete">
                                             <a ngbDropdownItem href="javascript:void(0)">
                                                 <span class="icon-delete icon-16 me-2"></span>
@@ -117,17 +109,6 @@
                     <ng-container *ngIf="data.comment">
                         <div class="w-100" [innerHTML]="data.comment"></div>
                     </ng-container>
-                    <!-- <ng-container *ngIf="data.totalVote > 0">
-                        <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
-                            <div *ngFor="let vote of data.votes">
-                                <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
-                                    alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
-                            </div>
-                            <div>
-                                <span class="ms-2">{{data.totalVote}}</span>
-                            </div>
-                        </div>
-                    </ng-container> -->
                 </div>
                 <ng-container *ngIf="lstFile">
                     <div class="row px-4 ms-10 justify-content-between">
@@ -154,54 +135,11 @@
                                             title="{{item.fileName}}" [descLine]="1">
                                         </codx-temp-full>
                                     </ng-container>
-                                    <div class="remove-file">
-                                        <a href="javascript:void(0)" class="h-100" (click)="removeFile(item)">
-                                            <i class="icon-close icon-18 text-danger"></i>
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
                         </ng-container>
                     </div>
                 </ng-container>
-                <!-- <div class="mt-2 d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-grow-1">
-                        <span class="text-gray-400 fs-7 text-hover-primary ">
-                            <div class="btn-like delay-500">
-                                <div *ngIf="!data.myVotedType;else dataMyVoted">
-                                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                        <span class="fs-7 text-gray-400 ms-2">
-                                            <codx-label formName="WP_Comments" name="lblLike" default="Thích">
-                                            </codx-label>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="d-flex mod icon-like">
-                                    <ng-container *ngFor="let item of lstData">
-                                        <a class="mod-icon" (click)="votePost(data, item.value)">
-                                            <img src="/assets/themes/wp/default/img/{{item.icon}}"
-                                                alt="Kiwi standing on oval"></a>
-                                    </ng-container>
-                                </div>
-                                <ng-template #dataMyVoted>
-                                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                        <div>
-                                            <span class="fw-bold ms-2"
-                                                [style.color]="data.myVotedType | vll:'L1480':'textColor' | async">
-                                                {{data.myVotedType | vll:'L1480':'text' | async}}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </div>
-                        </span>
-                        <span class="d-flex align-items-center text-gray-400 fs-7 text-hover-primary ms-2"
-                            (click)="replyTo(data)">
-                            <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời"></codx-label>
-                        </span>
-                    </div>
-    
-                </div> -->
             </div>
         </div>
     </ng-container>
