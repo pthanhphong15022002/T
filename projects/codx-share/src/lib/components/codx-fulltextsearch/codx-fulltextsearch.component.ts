@@ -303,7 +303,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
       let request = new DataRequest();
       request.comboboxName = data?.ref;
       request.page = data?.page + 1;
-      request.pageSize = 1;
+      request.pageSize = 5;
       this.fetch('load', data, request, data?.ref, data.cbb);
     }
   }
