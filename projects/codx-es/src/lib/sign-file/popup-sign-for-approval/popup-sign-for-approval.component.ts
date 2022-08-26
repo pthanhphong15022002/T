@@ -27,7 +27,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.data = dt.data[0];
+    this.data = dt?.data[0];
   }
 
   @ViewChild('pdfView') pdfView: PdfViewComponent;
@@ -55,7 +55,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.funcID = this.data ? this.data.funcID : 'EST01';
     this.recID = this.data
       ? this.data.recID
-      : 'fda05e5c-24e7-11ed-a51b-d89ef34bb550';
+      : '8d52a9dc-24ed-11ed-9451-00155d035517';
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService
