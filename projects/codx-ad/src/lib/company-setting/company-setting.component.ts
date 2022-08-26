@@ -145,7 +145,7 @@ export class CompanySettingComponent extends UIComponent implements OnInit, Afte
   }
 
   formatBytes(bytes){
-    var gb = (bytes/ (1024*1024*1024)).toFixed(1);
+    var gb = (bytes/ (1024*1024*1024)).toFixed(0);
     return gb;
   }
 

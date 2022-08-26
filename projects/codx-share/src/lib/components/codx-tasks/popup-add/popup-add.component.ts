@@ -254,6 +254,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.tabReference,
       ];
     }
+
+    this.dialog.beforeClose.asObservable().subscribe(res => {
+      console.log('dialog', res);
+    })
   }
 
   getParam(callback = null) {
@@ -541,6 +545,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return true;
     }).subscribe(res => {
       this.dialog.close(res);
+      this.attachment.clearData();
     })
   }
 
@@ -554,10 +559,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               this.dialog.dataService.addDatas.clear();
               if (res.update) {
                 this.dialog.close(res.update);
+                this.attachment.clearData();
               }
             });
         } else {
           this.dialog.close();
+          this.attachment.clearData();
         }
       });
     } else {
@@ -567,6 +574,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           if (res.update) {
             this.dialog.dataService.addDatas.clear();
             this.dialog.close(res.update);
+            this.attachment.clearData();
           }
         });
     }
