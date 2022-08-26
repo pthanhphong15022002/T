@@ -67,7 +67,7 @@ export class TaskExtendsComponent
         },
       },
     ];
-    this.change
+    this.detectorRef.detectChanges();
   }
 
   selectedChange(val: any) {
