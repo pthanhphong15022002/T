@@ -385,6 +385,7 @@
     defaultValue="1"
     (keyup.enter)="goToPage($event)"
   /> -->
-  <codx-input type="number" [min]="1" [max]="pageMax" [crrValue]="curPage" (valueChange)="goToPage($event)">
+  <codx-input type="number" [min]="1" [max]="pageMax" [crrValue]="curPage" (valueChange)="goToPage($event)"
+    [showSpinButton]="false">
   </codx-input>
 </ng-template>
