@@ -70,7 +70,7 @@ export class MeetingDetailComponent extends UIComponent {
     //     this.urlDetail = res[0].url;
     //   }
     // });
-    this.urlDetail = 'tm/sprintdetails/TMT05011'
+    this.urlDetail = 'tm/sprintdetails/TMT03011'
   }
 
 
