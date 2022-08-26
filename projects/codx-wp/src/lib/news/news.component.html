@@ -32,7 +32,7 @@
             </codx-img>
           </div>
           <div class="fs-4 fw-bolder mt-2 news-title cursor-pointer">
-            {{ lstHotNew[0].subject }}
+            {{ lstHotNew[0].subject | maxlenght:150}}
           </div>
           <div class="text-gray-700 mt-1">
             {{lstHotNew[0].subContent | maxlenght:500}}
@@ -59,7 +59,7 @@
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ lstHotNew[1].subject }}
+              {{ lstHotNew[1].subject | maxlenght:70}}
             </div>
             <div class="text-gray-700">
               {{lstHotNew[1].subContent | maxlenght:300}}
@@ -83,7 +83,7 @@
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ lstHotNew[2].subject }}
+              {{ lstHotNew[2].subject | maxlenght:70}}
             </div>
             <div class="text-gray-700 news-des">
               {{lstHotNew[2].subContent | maxlenght:300}}
@@ -107,7 +107,7 @@
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ lstHotNew[3].subject }}
+              {{ lstHotNew[3].subject | maxlenght:70}}
             </div>
             <div class="text-gray-700 news-des">
               {{lstHotNew[3].subContent | maxlenght:300}}
