@@ -66,7 +66,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         pWDefault: this.data?.pWDefault,
         isDefault: this.data?.isDefault != null ? this.data?.isDefault : false,
         covertPDF: this.data?.covertPDF != null ? this.data?.covertPDF : false,
-        sheetIndex: this.data?.sheetIndex,
+        sheetIndex: [this.data?.sheetIndex!= null ? this.data?.sheetIndex : 0,Validators.required],
         headerRow: [this.data?.headerRow,Validators.required],
         headerColumn: this.data?.headerColumn,
         splitPagesOn: this.data?.splitPagesOn,
