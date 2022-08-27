@@ -135,21 +135,32 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.getDataValuelist();
   }
   setHeight() {
-    var main = Array.from(
-      document.getElementsByClassName(
-        'codx-detail-main'
-      ) as HTMLCollectionOf<HTMLElement>
-    )[0].offsetHeight;
-    var header = Array.from(
-      document.getElementsByClassName(
-        'codx-detail-header'
-      ) as HTMLCollectionOf<HTMLElement>
-    )[0].offsetHeight;
-    Array.from(
-      document.getElementsByClassName(
-        'codx-detail-body'
-      ) as HTMLCollectionOf<HTMLElement>
-    )[0].style.height = main - header - 27 + 'px';
+    let main,
+      header = 0;
+    let ele = document.getElementsByClassName(
+      'codx-detail-main'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (ele) {
+      main = Array.from(ele)[0]?.offsetHeight;
+    }
+
+    let eleheader = document.getElementsByClassName(
+      'codx-detail-header'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (ele) {
+      header = Array.from(eleheader)[0]?.offsetHeight;
+    }
+
+    let nodes = document.getElementsByClassName(
+      'codx-detail-body'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (nodes.length > 0) {
+      Array.from(
+        document.getElementsByClassName(
+          'codx-detail-body'
+        ) as HTMLCollectionOf<HTMLElement>
+      )[0].style.height = main - header - 27 + 'px';
+    }
   }
   getGridViewSetup(funcID: any) {
     this.cache.functionList(funcID).subscribe((fuc) => {
@@ -514,7 +525,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       //Giao việc
       case 'ODT102': {
         if (this.checkOpenForm(funcID)) {
-        
         }
         var task = new TM_Tasks();
         task.refID = datas?.recID;
@@ -536,9 +546,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             datas.status = '3';
             this.odService.updateDispatch(datas, false).subscribe((item) => {
               if (item.status == 0) {
-               this.view.dataService.update(datas).subscribe();
-              }
-              else this.notifySvr.notify(item.message);
+                this.view.dataService.update(datas).subscribe();
+              } else this.notifySvr.notify(item.message);
             });
           }
         });
@@ -638,16 +647,15 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'ODT107':
       case 'ODT206': {
         if (this.checkOpenForm(funcID)) {
-          
         }
         this.callfunc
-            .openForm(this.tmpdeadline, null, 600, 400)
-            .closed.subscribe((x) => {
-              if (x.event) {
-                this.data.deadline = x.event?.deadline;
-                this.updateNotCallFuntion(x.event);
-              }
-            });
+          .openForm(this.tmpdeadline, null, 600, 400)
+          .closed.subscribe((x) => {
+            if (x.event) {
+              this.data.deadline = x.event?.deadline;
+              this.updateNotCallFuntion(x.event);
+            }
+          });
         break;
       }
       //Quản lý phiên bản
@@ -795,6 +803,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             //trình ký
             if (res2?.eSign == true) {
               let signFile = new ES_SignFile();
+              signFile.recID = this.data?.recID;
               signFile.title = datas.title;
               signFile.categoryID = res2?.categoryID;
               signFile.refId = this.data?.recID;
@@ -826,13 +835,14 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               dialogApprove.closed.subscribe((res) => {
                 if (res.event == true) {
                   datas.status = '3';
-                  datas.approveStatus = '3'
-                  this.odService.updateDispatch(datas, false).subscribe((item) => {
-                    if (item.status == 0) {
-                     this.view.dataService.update(datas).subscribe();
-                    }
-                    else this.notifySvr.notify(item.message);
-                  });
+                  datas.approveStatus = '3';
+                  this.odService
+                    .updateDispatch(datas, false)
+                    .subscribe((item) => {
+                      if (item.status == 0) {
+                        this.view.dataService.update(datas).subscribe();
+                      } else this.notifySvr.notify(item.message);
+                    });
                 }
               });
               //this.callfunc.openForm();
@@ -873,19 +883,15 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
-    if (relationType == '1')
-    {
-      if(this.formModel.funcID == 'ODT31')
-      {
+    if (relationType == '1') {
+      if (this.formModel.funcID == 'ODT31') {
         return Util.stringFormat(
           this.ms020?.customName,
           this.fmTextValuelist(relationType, '6'),
           agencyName
         );
-      }
-      else
-      {
-        return "Gửi đến "+ agencyName;
+      } else {
+        return 'Gửi đến ' + agencyName;
         /* return Util.stringFormat(
           this.ms023?.customName,
           this.fmTextValuelist(relationType, '6'),
@@ -893,7 +899,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         ); */
       }
     }
-      
+
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
