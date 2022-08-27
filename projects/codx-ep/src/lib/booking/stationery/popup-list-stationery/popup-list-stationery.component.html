@@ -7,9 +7,33 @@
   [formControl]="dialogListStationery"
   *ngIf="isAfterRender"
 >
-  <ng-template #body>
-    <div class="d-flex justify-content-between">
-      <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
-    </div>
+  <ng-template #body let-data>
+    <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
+    <codx-listview
+      #listview
+      service="EP"
+      assemblyName="EP"
+      className="BookingsBusiness"
+      method="GetListBookingStationeryAsync"
+      entityName="EP_Bookings"
+      predicate="ResourceType=@0"
+      dataValue="3"
+      [groupBy]=""
+      [itemTemplate]="TemplateList"
+      [height]="200"
+    >
+    </codx-listview>
+  </ng-template>
+
+  <ng-template #TemplateList let-data>
+    <div>{{ data.title }}</div>
+    <div>{{ data.note }}</div>
+    <div>{{ data.status | vll: "VL003":"text" | async }}</div>
+    <div>{{ data.createdOn | date: "dd/MM/yyyy" }}</div>
+    <codx-img
+      objectId="{{ data.createdBy }}"
+      objectName=""
+      objectType="AD_Users"
+    ></codx-img>
   </ng-template>
 </codx-form>

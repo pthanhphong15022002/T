@@ -32,6 +32,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { SearchingComponent } from './incomming/searching/searching.component';
 import { TabsComponent } from './incomming/tab/tabs.component';
 import { ODApprovelComponent } from './incomming/approvel/approvel.component';
+import { CompletedComponent } from './incomming/completed/completed.component';
 
 const routes: Routes = [
   {
@@ -98,6 +99,7 @@ const routes: Routes = [
     SearchingComponent,
     TabsComponent,
     ODApprovelComponent,
+    CompletedComponent
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -112,7 +112,7 @@ export class PopupAddSignFileComponent implements OnInit {
           .subscribe((dataDefault) => {
             if (dataDefault) {
               this.data = dataDefault;
-
+              this.data.recID = this.oSignFile.recID;
               this.data.title = this.oSignFile.title;
               this.data.categoryID = this.oSignFile.categoryID;
               this.data.files = this.oSignFile.files;

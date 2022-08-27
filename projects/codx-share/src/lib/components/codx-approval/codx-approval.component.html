@@ -9,7 +9,7 @@
     [titleLine]="2" [date]="data.createdOn" [resources]="data?.createdBy" [resourceObjType]="'AD_Users'"
     [icoDateCss]="'icon-access_alarm'" cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [formModel]="view?.formModel" [dataItem]="data" [typeMF]="'hover'" (clickMF)="clickMF($event,data)"
-    (changeDataMF)="changeMF($event,data)">
+    (changeDataMF)="changeMF($event,data)" [baseHeaderRightTmp]="baseHeaderRight">
   </codx-temp-full>
   <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
@@ -34,4 +34,7 @@
   <div class="od-approval-detail">
     <router-outlet></router-outlet>
   </div> -->
+</ng-template>
+<ng-template #baseHeaderRight let-data>
+  <codx-vll [name]="'ES002'" [value]="data?.stepType" [showText]="true" [showBgColor]="true"></codx-vll>
 </ng-template>

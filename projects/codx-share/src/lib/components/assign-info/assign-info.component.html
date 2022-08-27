@@ -241,8 +241,11 @@
         </div>
       </ng-container>
     </div>
-    <!-- <div class="extend-function" *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null)"> -->
-    <div class="extend-function">
+    <!-- <div class="extend-function" *ngIf="(param?.PlanControl !='0')"> -->
+    <div
+      class="extend-function"
+      *ngIf="param?.PlanControl != '0' || param?.PlanControl == null"
+    >
       <hr />
       <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
         <div class="d-flex align-items-center w-auto extend-title">
@@ -264,9 +267,12 @@
         </div>
       </div>
     </div>
-    <ng-container *ngIf="showPlan">
-      <!-- <ng-container *ngIf="(param?.PlanControl !='0'|| param?.PlanControl == null) && showPlan "> -->
 
+    <ng-container
+      *ngIf="
+        (param?.PlanControl != '0' || param?.PlanControl == null) && showPlan
+      "
+    >
       <div class="form-group row">
         <div class="col-5">
           <div>

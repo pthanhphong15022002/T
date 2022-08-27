@@ -83,12 +83,12 @@
                     </div>
                     <div class="mh-300px" style="overflow: auto;">
                       <div class="d-flex align-items-center mb-2"
-                        *ngFor="let permission of item.permissions | filter: searchField:'objectName'">
-                        <codx-img class="me-2" [width]="25" [imageType]="'circle'" [objectId]="permission.objectID"
+                        *ngFor="let share of item.userShares">
+                        <codx-img class="me-2" [width]="25" [imageType]="'circle'" [objectId]="share.objectID"
                           objectType="AD_Users">
                         </codx-img>
                         <div class="text-dark">
-                          {{ permission.objectName }}
+                          {{ share.objectName }}
                         </div>
                       </div>
                     </div>
