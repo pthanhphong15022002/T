@@ -791,23 +791,20 @@ export class HomeComponent extends UIComponent {
       this.fileService.options.page = this.dmSV.page;
       this.fileService
         .GetFiles('')
-        .subscribe(async (res) => {
-          // if (res != null) {
-          //   this.data = [...this.data, ...res[0]];
-          //   this.dmSV.listFiles = res[0];       
-          //   this.dmSV.totalPage = parseInt(res[1]);    
-          // }
-          this.dmSV.listFiles = res[0]; 
-          if (this.sortDirection == null || this.sortDirection == "asc") 
-          {
-            if (res[0] != null)
-              this.data = [...this.dmSV.listFolder, ...res[0]];
+        .subscribe(async (res) => {         
+          if (res != null) { 
+            this.dmSV.listFiles = res[0]; 
+            if (this.sortDirection == null || this.sortDirection == "asc") 
+            {
+              if (res[0] != null)
+                this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
+              else 
+                this.data = this.dmSV.listFolder;
+            }        
             else 
-              this.data = this.dmSV.listFolder;
-          }        
-          else 
-            this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
-          this.dmSV.totalPage = parseInt(res[1]);
+              this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
+            this.dmSV.totalPage = parseInt(res[1]);
+          }
 
           this.dmSV.loadedFile = true;           
           this.changeDetectorRef.detectChanges();
