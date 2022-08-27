@@ -230,7 +230,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         dialogApprove.closed.subscribe((x) => {
           if (x.event) {
             delete x.event._uuid;
-            this.view.dataService.add(x.event, 0).subscribe();
+            this.view.dataService.update(data).subscribe();
             //this.getDtDis(x.event?.recID)
           }
         });
