@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostListener,
@@ -25,6 +26,7 @@ import { Observable, finalize, map, of } from 'rxjs';
   styleUrls: ['./codx-import-add-mapping.component.scss'],
 })
 export class CodxImportAddMappingComponent implements OnInit, OnChanges {
+  @ViewChild('grid') grid : GridComponent;
   active = "1";
   dialog: any;
   submitted = false;
@@ -40,13 +42,15 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   editSettings: any;
   dataService:any={data:null};
   fieldImport = [];
-  dataImport = [];
+  dataImport  = [];
+  dataImport2  = [];
   date=new Date();
   sessionID: any;
   mappingTemplate: any;
   dataIETable:any = {};
   dataIEMapping:any = {};
   addMappingForm :any;
+  dataCbb= {}
   @ViewChild('gridView') gridView: CodxGridviewComponent
   constructor(
     private callfunc: CallFuncService,
@@ -54,6 +58,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
+    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -64,6 +69,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     this.dataIEMapping = dt.data?.[2];
     this.sessionID =  this.dataIETable?.recID;
     this.mappingTemplate = this.dataIEMapping?.recID;
+
     this.addMappingForm = this.formBuilder.group({
       mappingName: [this.dataIEMapping?.mappingName],
       processIndex: [this.dataIETable?.processIndex],
@@ -79,6 +85,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       formName: 'IETables',
       gridViewName : 'grvIETables'
     }
+    this.editSettings = {allowEditing: true, allowAdding: true,allowDeleting: true, mode: "Batch"};
     this.getGridViewSetup();
   }
  
@@ -107,6 +114,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   getGridViewSetup()
   {
+    debugger;
     this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName).subscribe(item=>{
       if(item)
       {
@@ -116,33 +124,46 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
           if(item[key[i]]?.isImport) 
           {
             var obj = {
-              destinationField: key[i],
+              "destinationField": key[i],
             }
             this.dataImport.push(obj);
           }
        }
-      }
-    })
-    this.cache.gridViewSetup(this.formModels.formName,this.formModels.gridViewName).subscribe(item=>{
-      if(item)
-      {
-        debugger;
-        var key = Object.keys(item);
-        for(var i  = 0 ; i < key.length ; i++)
+       var field = 
+       {
+         text: "destinationField",
+         type: null
+       }
+       this.fieldImport.push(field);
+       this.cache.gridViewSetup(this.formModels.formName,this.formModels.gridViewName).subscribe(item=>{
+        if(item)
         {
-           if(item[key[i]]?.isVisible)
-           {
-            this.fieldImport.push(item[key[i]]);
-            for(var x = 0 ; x< this.dataImport.length; x++)
-            {
-              if(item[key[i]]?.controlType == "CheckBox") this.dataImport[x][key[i]] = false;
-              else this.dataImport[x][key[i]] = "";
-            }
-           } 
+          var key = Object.keys(item);
+          for(var i  = 0 ; i < key.length ; i++)
+          {
+             if(item[key[i]]?.isVisible)
+             {
+              this.dataImport2 = this.dataImport;
+              for(var x = 0 ; x< this.dataImport2.length; x++)
+              {
+                if(item[key[i]]?.controlType == "CheckBox") this.dataImport2[x][key[i]] = false;
+                else this.dataImport2[x][key[i]] = "";
+                if(item[key[i]].referedType == "3" && !(item[key[i]]?.referedValue in this.dataCbb)) this.dataCbb[item[key[i]]?.referedValue] = ["1","2","3"]
+              }
+              var field2 = 
+              {
+                text: key[i],
+                type: item[key[i]]?.referedType,
+                value: item[key[i]]?.referedValue
+              }
+              debugger;
+              this.fieldImport.push(field2);
+             } 
+          }
         }
+      })
       }
     })
-   
   }
   changeValueText(item:any,field:any,data:any)
   {
@@ -172,5 +193,9 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     let html = `<codx-input type="text"></codx-input>`;
     child.innerHTML = html;
   
+  }
+  aaa(a:any)
+  {
+    debugger;
   }
 }

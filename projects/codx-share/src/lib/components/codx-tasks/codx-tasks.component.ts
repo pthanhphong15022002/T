@@ -247,8 +247,8 @@ export class CodxTasksComponent
       //   id: '15',
       //   type: ViewType.treedetail,
       //   active: false,
-      //   sameData: false,
-      //   request: this.requestTree,
+      //   sameData: true,
+      //   // request: this.requestTree,
       //   model: {
       //     template: this.treeView,
       //   },
@@ -256,13 +256,14 @@ export class CodxTasksComponent
     ];
     if (this.funcID == 'TMT0203') {
       var tree = {
-        id: '15',
-        type: ViewType.treedetail,
+        id: '16',
+        type: ViewType.content,
+        text :"Cây-Tree",
         active: false,
         sameData: false,
         request: this.requestTree,
         model: {
-          template: this.treeView,
+          panelLeftRef: this.treeView,
         },
       };
       this.viewsActive.push(tree);
@@ -761,7 +762,25 @@ export class CodxTasksComponent
   }
   //#endregion
   //#region Event
-  changeView(evt: any) {}
+  changeView(evt: any) {
+  //  if(evt.view.id=="16" && this.listDataTree.length == 0){
+  //   var gridModel = new DataRequest();
+  //   gridModel.formName = this.view.formModel.formName;
+  //   gridModel.entityName = this.view.formModel.entityName;
+  //   gridModel.funcID = this.view.formModel.funcID;
+  //   gridModel.gridViewName = this.view.formModel.gridViewName;
+  //   gridModel.page = this.view.dataService.request.page;
+  //   gridModel.pageSize = this.view.dataService.request.pageSize;
+  //   gridModel.predicate = this.view.dataService.request.predicates;
+  //   gridModel.dataValue = this.view.dataService.request.dataValues;
+  //   gridModel.entityPermission = this.view.formModel.entityPer;
+  //   this.tmSv.getListTree(gridModel).subscribe(res=>{
+  //     if(res)
+  //     this.listDataTree = res;
+  //   }) ;
+  //   this.detectorRef.detectChanges();
+  //  }
+  }
 
   requestEnded(evt: any) {}
 
