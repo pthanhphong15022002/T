@@ -36,6 +36,6 @@ export class LayoutComponent extends LayoutBaseComponent {
   openFormNotifyDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
-    this.dialog = this.callfc.openSide(NotifyDrawerComponent, "FDT01", option);
+    this.dialog = this.callfc.openSide(AlertDrawerComponent, "FDT01", option);
   }
 }

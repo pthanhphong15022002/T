@@ -329,7 +329,7 @@ export class ViewFileDialogComponent implements OnInit {
       // this.data.thumbnail;//
       this.linkViewImage = this.data.thumbnail; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
-    else if (this.ext == ".pdf") {
+    else if (this.ext == ".pdf111") {
       this.isPdf = true;
       this.document = this.id;
     //  this.service = `${environment.apiUrl}/api/dm/files/${this.id}`;

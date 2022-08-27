@@ -62,13 +62,13 @@
                         value="UIMode=classic;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=false"
                         type="hidden" />
                 </form>
-                <iframe *ngIf="!isPdf && !isVideo && !linkViewImage" #viewfileframe class="viewfileiframe" frameBorder="0"
+                <iframe *ngIf="!isVideo && !linkViewImage" #viewfileframe class="viewfileiframe" frameBorder="0"
                     name="my_frame" style="width: 100%; height: calc(100vh - 80px)!important;">
                 </iframe>
                 <video *ngIf="isVideo" preload="auto" controls class="viewfileiframe" autoplay style="width: 100%;     height: 100%;">
                     <source src="{{srcVideo}}" type="video/mp4" />
                 </video>
-                <ejs-pdfviewer #pdfviewer *ngIf="isPdf" id="pdfViewer" [serviceUrl]='service' [documentPath]='document' style="height:640px;display:block"></ejs-pdfviewer>
+                <!-- <ejs-pdfviewer #pdfviewer *ngIf="isPdf" id="pdfViewer" [serviceUrl]='service' [documentPath]='document' style="height:640px;display:block"></ejs-pdfviewer> -->
                 <img *ngIf="linkViewImage" src="{{linkViewImage}}" style="max-height: 100%; height: 100%;" />
             </div>
             <div id="output"></div>

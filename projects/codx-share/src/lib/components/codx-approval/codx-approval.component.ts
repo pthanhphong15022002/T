@@ -222,17 +222,18 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           {
             funcID: 'EST021',
             recID: data.transID,
+            title: data.htmlView,
           },
           '',
           dialogModel
         );
-        // dialogApprove.closed.subscribe((x) => {
-        //   if (x.event) {
-        //     delete x.event._uuid;
-        //     this.view.dataService.add(x.event, 0).subscribe();
-        //     //this.getDtDis(x.event?.recID)
-        //   }
-        // });
+        dialogApprove.closed.subscribe((x) => {
+          if (x.event) {
+            delete x.event._uuid;
+            this.view.dataService.add(x.event, 0).subscribe();
+            //this.getDtDis(x.event?.recID)
+          }
+        });
       }
 
       //hoan tat
