@@ -137,16 +137,18 @@ db.DM_FolderInfo.updateMany(
 
     this.folderService.options.funcID = id;
     this.folderService.options.favoriteID = subid;
-    this.folderService.getFolders(id).subscribe(async list => {
-      this.dmSV.listFolder = list;
-      this.dmSV.ChangeData.next(true);
-      this.changeDetectorRef.detectChanges();
+    this.folderService.getFolders('').subscribe(async list => {
+      if (list != null) {
+        this.dmSV.listFolder = list[0];
+        this.dmSV.ChangeData.next(true);
+        this.changeDetectorRef.detectChanges();
+      }     
     });
 
     this.fileService.options.funcID = id;
     this.fileService.options.favoriteID = subid;
     this.fileService.GetFiles("").subscribe(async list => {
-      this.dmSV.listFiles = list;
+      this.dmSV.listFiles = list[0];
       this.dmSV.ChangeData.next(true);
       this.changeDetectorRef.detectChanges();
     });
