@@ -60,10 +60,19 @@
         </tr>
       </tbody>
     </table> -->
-    <ejs-grid #grid [dataSource]='dataImport'> 
-      <e-columns> 
-        <e-column *ngFor="let item of dataImport" [headerText]='item?.headerText' [field]="item.headerText" width='150' textAlign='Center'></e-column>
-      </e-columns>      
+    <ejs-grid #grid [dataSource]='dataImport2' [editSettings]='editSettings'> 
+      <e-columns>
+        <e-column *ngFor="let item of fieldImport ; let i = index" [field]='item?.text'  [isPrimaryKey]='i==0?true:false' >
+          {{aaa(item)}}
+          <ng-template *ngIf="item?.type == '3'" let-data #template>
+            {{aaa(dataCbb)}}
+            <ejs-dropdownlist  [dataSource]="dataCbb[item?.value]"
+                popupHeight="300px">
+            </ejs-dropdownlist>
+          </ng-template>
+        </e-column>
+     
+    </e-columns>   
   </ejs-grid> 
   </div>
 </ng-template>

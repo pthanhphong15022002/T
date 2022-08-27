@@ -240,6 +240,11 @@ export class IncommingComponent
     {
       var approvel = e.filter((x: { functionID: string }) => x.functionID == 'ODT201');
       approvel[0].disabled = true
+    }
+    if(data?.status == "7")
+    {
+      var completed = e.filter((x: { functionID: string }) => x.functionID == 'ODT211' ||  x.functionID == 'ODT112');
+      completed[0].disabled = true
     } 
   }
   aaaa(e:any)

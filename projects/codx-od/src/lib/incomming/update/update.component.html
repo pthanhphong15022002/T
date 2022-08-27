@@ -63,17 +63,6 @@
                 </codx-input>
             </div>
             <div class="col-12">
-                <div class="d-flex align-items-center mt-4">
-                    <codx-input  
-                        type="switch"
-                        ControlName="reporting"
-                        [Group]="updateForm"
-                    >
-                    </codx-input>
-                    <codx-label default="Báo cáo kết quả" class="ms-2"></codx-label>
-                </div>
-            </div>
-            <div class="col-12">
                 <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
                 hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
                 [allowMultiFile]="0" [idBrowse]="'update'">

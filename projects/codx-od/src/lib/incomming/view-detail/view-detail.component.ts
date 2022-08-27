@@ -43,6 +43,7 @@ import {
 } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
 import { AddLinkComponent } from '../addlink/addlink.component';
+import { CompletedComponent } from '../completed/completed.component';
 import { ForwardComponent } from '../forward/forward.component';
 import { IncommingAddComponent } from '../incomming-add/incomming-add.component';
 import { SendEmailComponent } from '../sendemail/sendemail.component';
@@ -842,6 +843,32 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           });
         break;
       }
+      //Hoàn tất
+      case "ODT112":
+      case "ODT211":
+      {
+        var option = new DialogModel();
+        option.FormModel = this.formModel;
+        this.callfunc
+          .openForm(
+            CompletedComponent,
+            null,
+            600,
+            400,
+            null,
+            { data: datas },
+            '',
+            option
+          )
+          .closed.subscribe((x) => {
+            if (x?.event == 0) 
+            {
+              datas.status = "7";
+              this.view.dataService.update(datas).subscribe();
+            }
+          });
+        break;
+      }
     }
   }
   beforeDel(opt: RequestOption) {
@@ -932,6 +959,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       );
       approvel[0].disabled = true;
     }
+    if(data?.status == "7")
+    {
+      var completed = e.filter((x: { functionID: string }) => x.functionID == 'ODT211' ||  x.functionID == 'ODT112');
+      completed[0].disabled = true
+    } 
     //data?.isblur = true
   }
   //Gửi duyệt
