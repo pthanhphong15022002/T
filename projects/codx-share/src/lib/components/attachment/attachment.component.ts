@@ -2724,4 +2724,8 @@ export class AttachmentComponent implements OnInit {
 
     return false;
   }
+  clearData() {
+    this.data = [];
+    this.fileUploadList = [];
+  }
 }

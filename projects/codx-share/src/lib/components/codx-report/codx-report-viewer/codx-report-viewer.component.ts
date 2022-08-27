@@ -104,8 +104,9 @@ export class CodxReportViewerComponent
       this.oldParam = JSON.parse(JSON.stringify(this.parameters));
       this.viewer && (this.viewer.widget as any).reload();
     }
-    if (changes.print && changes.print.currentValue) {
+    if (changes.print && changes.print.currentValue == true) {
       this.viewer && (this.viewer.widget as any).print();
+      this.print = false
     }
   }
   ngOnInit(): void {

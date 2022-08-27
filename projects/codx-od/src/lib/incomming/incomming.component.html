@@ -5,12 +5,14 @@
         data.agencyName,
         this.gridViewSetup?.AgencyName?.headerText
       )
-    " [status]="data.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
+    " 
     cardCss="card-template border-bottom px-2 pt-4 pb-2" [formModel]="view.formModel"
-    [resources]="getIdUser(data.createdBy, data.owner)" [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
+    [icoStatus]="data?.urgency"
     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="data.isBookmark"
-    [titleLine]="2" [icoDateCss]="checkDeadLine(data?.deadline)" [dataItem]="data" (changeDataMF)="changeDataMF($event,data)">
+    [titleLine]="2" [icoDateCss]="checkDeadLine(data?.deadline)" [dataItem]="data" (changeDataMF)="changeDataMF($event,data)"
+    [footer]="footerTmp"
+    >
   </codx-temp-full>
   <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
@@ -52,3 +54,21 @@
   [method]="'GetListByStatusAsync'" [assemblyName]="'OD'" [service]="'OD'" [className]="'DispatchesBusiness'"
   (selectedChange)="valueChange($event)" [selectedFirst]="true" idField="recID" (requestEnded)="requestEnded($event)" (viewChanged)="viewChange($event)">
 </codx-views>
+<ng-template #footerTmp let-data>
+  <div  class="d-flex flex-wrap justify-content-between ">
+  <div class="d-flex align-items-center">
+    <codx-vll [value]="data.status" [name]="gridViewSetup['Status']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+    </codx-vll>
+
+    <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41'" [value]="data.approveStatus" [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+    </codx-vll>
+    <div class="d-flex align-items-center">
+      <span class="me-1 icon-16" [ngClass]="checkDeadLine(data?.deadline)"></span>
+      <span class="text-dark-50">{{data.createdOn | amDateFormat: (''||'L')}}</span>
+    </div>
+  </div>
+  <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'"
+    [width]="30" [numberImages]="3" [mode]="false">
+  </codx-imgs>
+</div>
+</ng-template>

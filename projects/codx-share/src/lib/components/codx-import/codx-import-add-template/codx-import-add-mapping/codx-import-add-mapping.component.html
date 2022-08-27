@@ -37,7 +37,7 @@
     </div>
   </div>
   <div class="h-feildImport">
-    <table class="table d-inline-block w-100">
+    <!-- <table class="table d-inline-block w-100">
       <thead>
         <tr>
           <th scope="col"><codx-label default="Trường nhận" class="fw-bold"></codx-label></th>
@@ -45,10 +45,10 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Chưa làm được form group huhu nhớ làm nha-->
-        <tr *ngFor="let item of dataImport">
+        Chưa làm được form group huhu nhớ làm nha-->
+        <!-- <tr *ngFor="let item of dataImport">
           <td>{{item?.destinationField}}</td>
-          <ng-container *ngTemplateOutlet="tmpTable; context: { $implicit: item}"></ng-container>
+          <ng-container *ngTemplateOutlet="tmpTable; context: { $implicit: item}"></ng-container> -->
          
          <!--  <td><codx-input type="text" (valueChange)="changeValueText(item,'dataType',$event)"></codx-input></td>
           <td class="w-80px text-center"><codx-input type="checkbox"></codx-input></td>
@@ -56,10 +56,15 @@
           <td  class="w-140px"><codx-input type="text"></codx-input></td>
           <td><codx-input type="text"></codx-input></td>
           <td><codx-input type="text"></codx-input></td>
-          <td><codx-input type="text"></codx-input></td> -->
+          <td><codx-input type="text"></codx-input></td> 
         </tr>
       </tbody>
-    </table>
+    </table> -->
+    <ejs-grid #grid [dataSource]='dataImport'> 
+      <e-columns> 
+        <e-column *ngFor="let item of dataImport" [headerText]='item?.headerText' [field]="item.headerText" width='150' textAlign='Center'></e-column>
+      </e-columns>      
+  </ejs-grid> 
   </div>
 </ng-template>
 <ng-template #footer>
@@ -71,7 +76,7 @@
 </ng-template>
 <ng-template #tmpTable let-item>
   <ng-container *ngFor="let item2 of fieldImport">
-    <td  >
+    <td >
       <ng-container [ngSwitch]="item2?.controlType">
         <ng-container *ngSwitchCase="'TextBox'">
           <codx-input type="text" (valueChange)="changeValueText(item,item2?.fieldName,$event)"></codx-input>
@@ -81,10 +86,10 @@
         </ng-container>
         <ng-container *ngSwitchCase="'ComboBox'">
           <ng-container *ngIf="item2?.referedType == 2; else elseCBB">
-            <codx-input type="valuelist"  [refValue]="item2?.referedValue" (valueChange)="changeValueText(item,item2?.fieldName,$event)"></codx-input>
+            <codx-input type="valuelist"  [refValue]="item2?.referedValue" ></codx-input>
           </ng-container>
           <ng-template #elseCBB>
-            <codx-input type="combobox"  [refValue]="item2?.referedValue" (valueChange)="changeValueText(item,item2?.fieldName,$event)"></codx-input>
+            <codx-input type="combobox"  [refValue]="item2?.referedValue" ></codx-input>
           </ng-template>
         </ng-container>
         <ng-container *ngSwitchCase="'MaskBox'">

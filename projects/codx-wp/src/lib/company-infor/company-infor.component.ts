@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewC
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CallFuncService, DataRequest, DialogModel, DialogRef, NotificationsService, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CompanyEditComponent } from './popup-edit/company-edit/company-edit.component';
+import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-company-infor',
@@ -25,7 +26,9 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
     private callc:CallFuncService,
     private notifySvr:NotificationsService,
     private route : ActivatedRoute,
-    private changedt:ChangeDetectorRef) { }
+    private changedt:ChangeDetectorRef,
+    private sanitizer: DomSanitizer
+    ) { }
   ngAfterViewInit(): void {
     this.views= [{
       id: "1",
@@ -56,6 +59,7 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
         )
         .subscribe((res:any) => {
           this.data = res;
+          this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
           this.changedt.detectChanges();
         });
   }

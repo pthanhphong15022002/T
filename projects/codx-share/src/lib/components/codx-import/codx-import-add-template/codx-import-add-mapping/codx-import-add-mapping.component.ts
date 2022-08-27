@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostListener,
@@ -25,6 +26,7 @@ import { Observable, finalize, map, of } from 'rxjs';
   styleUrls: ['./codx-import-add-mapping.component.scss'],
 })
 export class CodxImportAddMappingComponent implements OnInit, OnChanges {
+  @ViewChild('grid') grid : GridComponent;
   active = "1";
   dialog: any;
   submitted = false;
@@ -40,7 +42,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   editSettings: any;
   dataService:any={data:null};
   fieldImport = [];
-  dataImport = [];
+  dataImport  = [];
   date=new Date();
   sessionID: any;
   mappingTemplate: any;
@@ -54,6 +56,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
+    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -107,6 +110,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   getGridViewSetup()
   {
+    debugger;
     this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName).subscribe(item=>{
       if(item)
       {
@@ -116,33 +120,45 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
           if(item[key[i]]?.isImport) 
           {
             var obj = {
-              destinationField: key[i],
+              "headerText": "destinationField",
+              "data": key[i],
             }
+            this.fieldImport.push("destinationField");
             this.dataImport.push(obj);
           }
        }
-      }
-    })
-    this.cache.gridViewSetup(this.formModels.formName,this.formModels.gridViewName).subscribe(item=>{
-      if(item)
-      {
-        debugger;
-        var key = Object.keys(item);
-        for(var i  = 0 ; i < key.length ; i++)
+       this.cache.gridViewSetup(this.formModels.formName,this.formModels.gridViewName).subscribe(item=>{
+        if(item)
         {
-           if(item[key[i]]?.isVisible)
-           {
-            this.fieldImport.push(item[key[i]]);
-            for(var x = 0 ; x< this.dataImport.length; x++)
-            {
-              if(item[key[i]]?.controlType == "CheckBox") this.dataImport[x][key[i]] = false;
-              else this.dataImport[x][key[i]] = "";
-            }
-           } 
+          var key = Object.keys(item);
+          for(var i  = 0 ; i < key.length ; i++)
+          {
+             if(item[key[i]]?.isVisible)
+             {
+              debugger;
+              this.fieldImport.push(item[key[i]]);
+              for(var x = 0 ; x< this.dataImport.length; x++)
+              {
+                var obj = 
+                {
+                  headerText : key[i],
+                  data : ""
+                }
+                if(item[key[i]]?.controlType == "CheckBox") 
+                {
+                  obj.data = "false";
+                }
+                this.dataImport[x].push(obj);
+                
+              }
+              
+             } 
+          }
+          this.dataImport = [...this.dataImport,[]]
         }
+      })
       }
     })
-   
   }
   changeValueText(item:any,field:any,data:any)
   {
