@@ -141,13 +141,6 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
-  // addFirstObjectInArray() {
-  //   var dtFirst: any;
-  //   if (this.note.noteType == 'check') dtFirst = [{ status: 0, listNote: '' }];
-  //   else dtFirst = [{ status: null, listNote: '' }];
-  //   this.note.checkList.unshift(dtFirst[0]);
-  // }
-
   ngAfterViewInit() {
     if (this.formType == 'edit') {
       this.getFileByObjectId();
@@ -319,7 +312,6 @@ export class AddNoteComponent implements OnInit {
       else this.checkNull = false;
     }
     this.note.checkList;
-    debugger;
     if (this.checkNull == false) {
       this.api
         .exec<any>(

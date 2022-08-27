@@ -143,7 +143,7 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 }
 
 .fs-5 {
-  font-size: 14px !important;
+  // font-size: 14px !important;
 }
 
 .icon-56 {
@@ -323,7 +323,11 @@ codx-views>.container-fluid.h-100 {
 hr {
   background-color: var(--gray-500);
 }
-.is-invalid .ng-invalid
-{
-  border: solid 1.5px red  !important;
+
+.is-invalid .ng-invalid {
+  border: solid 1.5px red !important;
+}
+
+.resize-none {
+  resize: none;
 }

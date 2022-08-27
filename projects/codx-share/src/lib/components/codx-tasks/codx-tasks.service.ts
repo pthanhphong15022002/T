@@ -27,6 +27,16 @@ export class CodxTasksService {
       taskID
     );
   }
+  //get Tree
+  getListTree(model) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetListTreeDetailTasksAsync',
+      model
+    );
+  }
 
   getUserByListDepartmentID(listDepID) {
     return this.api.execSv<any>(

@@ -66,7 +66,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   isAdd = false;
   crrEstimated: any;
   isHaveFile = false;
-  showLabelAttacment = false ;
+  showLabelAttacment = false;
   crrIndex: number;
   popover: any;
   vllShare = 'TM003';
@@ -113,7 +113,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   menuJobDes = {
     icon: 'icon-article',
-    text: 'Mô tả công việc',
+    text: 'Nội dung công việc',
     name: 'JobDescription',
     subName: 'Job Description',
     subText: 'Job Description',
@@ -254,6 +254,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.tabReference,
       ];
     }
+
+    this.dialog.beforeClose.asObservable().subscribe(res => {
+      console.log('dialog', res);
+    })
   }
 
   getParam(callback = null) {
@@ -496,9 +500,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   actionSave(id) {
     if (this.taskType) this.task.taskType = this.taskType;
     else this.task.taskType = '1';
-    if (this.isHaveFile) this.attachment.saveFilesObservable().subscribe(res => {
+    if (this.attachment.fileUploadList.length) this.attachment.saveFilesObservable().subscribe(res => {
       if (res) {
-        this.task.attachments = res.length ? res.length : 1 ;
+        this.task.attachments = Array.isArray(res) ? res.length : 1;
         if (this.action == 'edit') this.updateTask();
         else this.addTask();
       }
@@ -541,6 +545,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       return true;
     }).subscribe(res => {
       this.dialog.close(res);
+      this.attachment.clearData();
     })
   }
 
@@ -554,10 +559,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               this.dialog.dataService.addDatas.clear();
               if (res.update) {
                 this.dialog.close(res.update);
+                this.attachment.clearData();
               }
             });
         } else {
           this.dialog.close();
+          this.attachment.clearData();
         }
       });
     } else {
@@ -567,6 +574,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           if (res.update) {
             this.dialog.dataService.addDatas.clear();
             this.dialog.close(res.update);
+            this.attachment.clearData();
           }
         });
     }
@@ -847,7 +855,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if(this.action != 'edit') this.showLabelAttacment = this.isHaveFile;
+    if (this.action != 'edit') this.showLabelAttacment = this.isHaveFile;
   }
   showPoppoverDelete(p, i) {
     if (i == null) return;

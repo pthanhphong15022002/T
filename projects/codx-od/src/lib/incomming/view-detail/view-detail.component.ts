@@ -43,6 +43,7 @@ import {
 } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
 import { AddLinkComponent } from '../addlink/addlink.component';
+import { CompletedComponent } from '../completed/completed.component';
 import { ForwardComponent } from '../forward/forward.component';
 import { IncommingAddComponent } from '../incomming-add/incomming-add.component';
 import { SendEmailComponent } from '../sendemail/sendemail.component';
@@ -514,28 +515,34 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       //Giao việc
       case 'ODT102': {
         if (this.checkOpenForm(funcID)) {
-          var task = new TM_Tasks();
-          task.refID = datas?.recID;
-          task.refType = this.view?.formModel.entityName;
-          var vllControlShare = 'TM003';
-          var vllRose = 'TM002';
-          var title = val?.data.customName;
-          let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.view?.formModel;
-          option.Width = '550px';
-          this.dialog = this.callfunc.openSide(
-            AssignInfoComponent,
-            [task, vllControlShare, vllRose, title],
-            option
-          );
-          this.dialog.closed.subscribe((e) => {
-            if (e?.event && e?.event[0]) {
-              datas.status = '3';
-              this.view.dataService.update(datas).subscribe();
-            }
-          });
+        
         }
+        var task = new TM_Tasks();
+        task.refID = datas?.recID;
+        task.refType = this.view?.formModel.entityName;
+        var vllControlShare = 'TM003';
+        var vllRose = 'TM002';
+        var title = val?.data.customName;
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfunc.openSide(
+          AssignInfoComponent,
+          [task, vllControlShare, vllRose, title],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event && e?.event[0]) {
+            datas.status = '3';
+            this.odService.updateDispatch(datas, false).subscribe((item) => {
+              if (item.status == 0) {
+               this.view.dataService.update(datas).subscribe();
+              }
+              else this.notifySvr.notify(item.message);
+            });
+          }
+        });
         break;
       }
       //Cập nhật
@@ -632,7 +639,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'ODT107':
       case 'ODT206': {
         if (this.checkOpenForm(funcID)) {
-          this.callfunc
+          
+        }
+        this.callfunc
             .openForm(this.tmpdeadline, null, 600, 400)
             .closed.subscribe((x) => {
               if (x.event) {
@@ -640,7 +649,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 this.updateNotCallFuntion(x.event);
               }
             });
-        }
         break;
       }
       //Quản lý phiên bản
@@ -819,6 +827,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               dialogApprove.closed.subscribe((res) => {
                 if (res.event == true) {
                   datas.status = '3';
+                  datas.approveStatus = '3'
                   this.odService.updateDispatch(datas, false).subscribe((item) => {
                     if (item.status == 0) {
                      this.view.dataService.update(datas).subscribe();
@@ -831,6 +840,32 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             } else if (res2?.eSign == false)
               //xét duyệt
               this.release(datas);
+          });
+        break;
+      }
+      //Hoàn tất
+      case "ODT112":
+      case "ODT211":
+      {
+        var option = new DialogModel();
+        option.FormModel = this.formModel;
+        this.callfunc
+          .openForm(
+            CompletedComponent,
+            null,
+            600,
+            400,
+            null,
+            { data: datas },
+            '',
+            option
+          )
+          .closed.subscribe((x) => {
+            if (x?.event == 0) 
+            {
+              datas.status = "7";
+              this.view.dataService.update(datas).subscribe();
+            }
           });
         break;
       }
@@ -866,11 +901,26 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
     if (relationType == '1')
-      return Util.stringFormat(
-        this.ms020?.customName,
-        this.fmTextValuelist(relationType, '6'),
-        agencyName
-      );
+    {
+      if(this.formModel.funcID == 'ODT31')
+      {
+        return Util.stringFormat(
+          this.ms020?.customName,
+          this.fmTextValuelist(relationType, '6'),
+          agencyName
+        );
+      }
+      else
+      {
+        return "Gửi đến "+ agencyName;
+        /* return Util.stringFormat(
+          this.ms023?.customName,
+          this.fmTextValuelist(relationType, '6'),
+          agencyName
+        ); */
+      }
+    }
+      
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
@@ -909,6 +959,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       );
       approvel[0].disabled = true;
     }
+    if(data?.status == "7")
+    {
+      var completed = e.filter((x: { functionID: string }) => x.functionID == 'ODT211' ||  x.functionID == 'ODT112');
+      completed[0].disabled = true
+    } 
     //data?.isblur = true
   }
   //Gửi duyệt

@@ -7,7 +7,13 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
-import { UIComponent, DialogData, DialogRef, FormModel } from 'codx-core';
+import {
+  UIComponent,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { threadId } from 'worker_threads';
 import { CodxEsService } from '../../codx-es.service';
 import { PdfViewComponent } from '../pdf-view/pdf-view.component';
@@ -22,12 +28,14 @@ export class PopupSignForApprovalComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
+    private notify: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    debugger;
     this.dialog = dialog;
-    this.data = dt?.data[0];
+    this.data = dt.data;
   }
 
   @ViewChild('pdfView') pdfView: PdfViewComponent;
@@ -105,6 +113,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
       if (res.event == 'ok') {
         console.log('run');
         this.pdfView.renderAnnotPanel();
+        this.notify.notifyCode('RS002');
+        this.dialog && this.dialog.close();
       }
     });
   }
@@ -114,5 +124,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
   saveDialog() {
     this.dialog.close();
+  }
+
+  close() {
+    this.dialog && this.dialog.close();
   }
 }

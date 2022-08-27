@@ -92,6 +92,8 @@ export class CodxDMService {
     public dataFileEditing: FileUpload;
     public listFolder = [];
     public listFiles = [];
+    page = 1;
+    totalPage = 1;    
     revision: boolean;
     moveable = false;
     itemRight: ItemRight;
@@ -235,17 +237,17 @@ export class CodxDMService {
     // public listFiles = new BehaviorSubject<FileInfo[]>(null);
     // islistFiles = this.listFiles.asObservable();
 
-    public pageNo = new BehaviorSubject<Number>(null);
-    isPageNo = this.pageNo.asObservable();
+    // public pageNo = new BehaviorSubject<Number>(null);
+    // isPageNo = this.pageNo.asObservable();
 
-    public pageSize = new BehaviorSubject<Number>(null);
-    isPageSize = this.pageSize.asObservable();
+    // public pageSize = new BehaviorSubject<Number>(null);
+    // isPageSize = this.pageSize.asObservable();
 
-    public total = new BehaviorSubject<number>(null);
-    isTotal = this.total.asObservable();
+    // public total = new BehaviorSubject<number>(null);
+    // isTotal = this.total.asObservable();
 
-    public totalPage = new BehaviorSubject<number>(null);
-    isTotalPage = this.totalPage.asObservable();
+    // public totalPage = new BehaviorSubject<number>(null);
+    // isTotalPage = this.totalPage.asObservable();
 
     public textSearch = new BehaviorSubject<string>(null);
     isTextSearch = this.textSearch.asObservable();
@@ -465,8 +467,11 @@ export class CodxDMService {
       }
       else {
         // open file
+        var dialogModel = new DialogModel();
+        dialogModel.IsFull = true;         
+
         this.fileService.getFile(data.recID).subscribe(data => {
-          this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+          this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "", dialogModel);
           var files = this.listFiles;
           if (files != null) {
             let index = files.findIndex(d => d.recID.toString() === data.recID);
@@ -1311,10 +1316,10 @@ export class CodxDMService {
 
     changeTextSearch(text: any, total: any, totalPage: any, pageNo: any, paoaSize: any) {
         this.textSearch.next(text);
-        this.total.next(total);
-        this.totalPage.next(totalPage);
-        this.pageNo.next(pageNo);
-        this.pageSize.next(paoaSize);
+        this.totalPage = total;
+       // this.totalPage.next(totalPage);
+        this.page = pageNo;
+        //this.pageSize.next(paoaSize);
     }
 
     changeAddFile(file: any) {
