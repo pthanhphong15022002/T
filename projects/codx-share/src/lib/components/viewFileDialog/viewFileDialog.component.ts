@@ -2,12 +2,14 @@ import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Opt
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataItem } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
+import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Sorting } from '@syncfusion/ej2-pivotview';
 import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { PropertiesComponent } from 'projects/codx-dm/src/lib/properties/properties.component';
 import { environment } from 'src/environments/environment';
+import { threadId } from 'worker_threads';
 import { SystemDialogService } from './systemDialog.service';
 
 @Component({
@@ -17,10 +19,11 @@ import { SystemDialogService } from './systemDialog.service';
 
 })
 export class ViewFileDialogComponent implements OnInit {
-  @ViewChild('contentViewFileDialog') contentViewFileDialog;
-
+  @ViewChild('contentViewFileDialog') contentViewFileDialog;  
+  @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;  
   src: string = "about:blank";
   isVideo: boolean = false;
+  isPdf: boolean = false;
   linkViewImage: string = "";
   access_token: string = "";
   tenant: string = "";
@@ -36,6 +39,9 @@ export class ViewFileDialogComponent implements OnInit {
   @Input() ext: string;
   @Input('viewBase') viewBase: ViewsComponent;
   dialog: any;
+  public service: string = environment.pdfUrl;//'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
+  public document: string = 'PDF_Succinctly.pdf';
+
   constructor(private router: Router,
     private readonly auth: AuthService,
     public dmSV: CodxDMService,
@@ -322,6 +328,16 @@ export class ViewFileDialogComponent implements OnInit {
     ) {
       // this.data.thumbnail;//
       this.linkViewImage = this.data.thumbnail; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
+    }
+    else if (this.ext == ".pdf") {
+      this.isPdf = true;
+      this.document = this.id;
+    //  this.service = `${environment.apiUrl}/api/dm/files/${this.id}`;
+      this.pdfviewer.load(this.id, '');
+      this.changeDetectorRef.detectChanges();
+      // this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
+      //   this.document = item;
+      // });
     }
     else 
       this.viewFile(this.id);
