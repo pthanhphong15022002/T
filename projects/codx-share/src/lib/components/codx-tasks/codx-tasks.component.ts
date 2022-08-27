@@ -242,13 +242,15 @@ export class CodxTasksComponent
           template: this.eventTemplate,
           template3: this.cellTemplate,
         },
-      },
+      }
       // {
-      //   id: '15',
-      //   type: ViewType.treedetail,
+      //   id: '16',
+      //   type: ViewType.listdetail,
       //   active: false,
       //   sameData: true,
-      //   // request: this.requestTree,
+      //   text :"Cây-Tree",
+      //   icon:"icon-account_tree",
+      //  // request: this.requestTree,
       //   model: {
       //     template: this.treeView,
       //   },
@@ -257,13 +259,14 @@ export class CodxTasksComponent
     if (this.funcID == 'TMT0203') {
       var tree = {
         id: '16',
-        type: ViewType.content,
-        text :"Cây-Tree",
+        type: ViewType.listdetail,
         active: false,
-        sameData: false,
-        request: this.requestTree,
+        sameData: true,
+        text :"Cây-Tree",
+        icon:"icon-account_tree",
+       // request: this.requestTree,
         model: {
-          panelLeftRef: this.treeView,
+          template: this.treeView,
         },
       };
       this.viewsActive.push(tree);
@@ -1458,4 +1461,23 @@ export class CodxTasksComponent
       });
   }
   //#endregion schedule
+
+  receiveShowTaskChildren(e){
+    this.api
+    .execSv<any>(
+      'TM',
+      'ERM.Business.TM',
+      'TaskBusiness',
+      'GetListTasksTreeAsync',
+      e.item.taskID
+    )
+    .subscribe((res) => {
+      if (res) {
+       // this.view.dataService.update(res[0]) ;
+         var index = this.view.dataService.data.findIndex((x)=>x.taskID==res[0].taskID) ;
+        if(index!=-1) this.view.dataService.data[index] = res[0];
+       this.detectorRef.detectChanges();
+        }
+    });
+  }
 }
