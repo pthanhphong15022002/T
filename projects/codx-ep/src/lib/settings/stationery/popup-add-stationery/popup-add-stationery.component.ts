@@ -177,4 +177,12 @@ export class PopupAddStationeryComponent extends UIComponent {
       return color.split(';');
     }
   }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
+  }
+
+  fileCount(event) {}
+
+  fileAdded(event) {}
 }

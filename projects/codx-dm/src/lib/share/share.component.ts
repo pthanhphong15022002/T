@@ -11,6 +11,7 @@ import { CodxDMService } from '../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
 import { FileInfo, FileUpload, ItemInterval, Permission } from '@shared/models/file.model';
 import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'share',
@@ -55,6 +56,7 @@ export class ShareComponent implements OnInit {
   titleRequest = "Đã yêu cầu cấp quyền"
   titleReadonly = 'Readonly';
   titleModified = 'Modified';
+  titleCopyUrl = "Đã copy vào bộ nhớ đường dẫn";
   requestRight: boolean;  
   path: string;  
   dialog: any;
@@ -89,13 +91,15 @@ export class ShareComponent implements OnInit {
     private notificationsService: NotificationsService,
    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
+    private systemDialogService: SystemDialogService,    
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
       this.dialog = dialog;       
       this.type = data.data[0];
       this.fileEditing = data.data[1];
+      this.id =  this.fileEditing.recID;
+      
       this.isShare = data.data[2];
       this.fullName = this.fileEditing.folderName ? this.fileEditing.folderName : this.fileEditing.fileName;
       this.formModel = dialog.formModel;  
@@ -104,7 +108,8 @@ export class ShareComponent implements OnInit {
   }
 
   ngOnInit(): void {   
-    this.user = this.auth.get();        
+    this.user = this.auth.get();       
+   
   }
 
   checkContent() {    
@@ -187,7 +192,7 @@ export class ShareComponent implements OnInit {
     if (index > -1) {
       url = window.location.href.substring(0, index);
     }
-    var url = `${url}?id=${this.id}&type=${this.type}`;
+    var url = `${url}?id=${this.id}&type=${this.type}&name=${this.fullName}`;
     return url;
   }
 
@@ -307,10 +312,15 @@ export class ShareComponent implements OnInit {
     }
     //return true;
     this.dialog.close();
-  }
+  }  
 
   copyPath() {
-
+    this.copyToClipboard(this.getPath())
+      .then(() => console.log('text copied !'))
+      .catch(() => console.log('error'));
+    // navigator.clipboard.writeText(this.getPath());
+    this.notificationsService.notify(this.titleCopyUrl);
+    // this.shareContent = this.shareContent + this.getPath();
   }
 
   onSaveRightChanged($event, type) {

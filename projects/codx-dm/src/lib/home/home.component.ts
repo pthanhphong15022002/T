@@ -21,6 +21,7 @@ import {
   DialogRef,
   CRUDService,
   ScrollComponent,
+  DialogModel,
 } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import {
@@ -44,6 +45,8 @@ import { CreateFolderComponent } from '../createFolder/createFolder.component';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { CommandColumnService } from '@syncfusion/ej2-angular-grids';
 import { threadId } from 'worker_threads';
+import { ActivatedRoute } from '@angular/router';
+import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 
 @Component({
   selector: 'home',
@@ -70,6 +73,7 @@ export class HomeComponent extends UIComponent {
   listFolders: FolderInfo[];
   listFiles: FileInfo[];
   data = [];
+  titleAccessDeniedFile = 'Bạn không có quyền truy cập file này';
   titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
   titleFileName = 'Tên tài liệu';
   titleCreatedBy = 'Người tạo';
@@ -79,6 +83,8 @@ export class HomeComponent extends UIComponent {
   sortDirection: string;
   //loadedFile: boolean;
   //loadedFolder: boolean;
+  //page = 1;
+  //totalPage = 1;
   user: any;
   dialog!: DialogRef;
   interval: ItemInterval[];
@@ -90,11 +96,44 @@ export class HomeComponent extends UIComponent {
     private folderService: FolderService,
     private fileService: FileService,
     private changeDetectorRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
     private notificationsService: NotificationsService
   ) {
     super(inject);
   }
   
+  onScroll(event) {    
+    const dcScroll = event.srcElement;
+    if (
+      dcScroll.scrollTop + dcScroll.clientHeight <
+      dcScroll.scrollHeight - 150
+    ) {
+      return;
+    }
+    if (this.dmSV.page < this.dmSV.totalPage) {
+      this.dmSV.page++;
+      this.folderService.options.srtColumns = this.sortColumn;
+      this.folderService.options.srtDirections = this.sortDirection;
+      this.fileService.options.funcID = this.view.funcID;
+      this.fileService.options.page = this.dmSV.page;
+      this.fileService
+        .GetFiles(this.dmSV.folderID)
+        .subscribe(async (res) => {
+          if (res != null) {
+            this.dmSV.listFiles =  [...this.dmSV.listFiles, ...res[0]];   
+            
+            this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles]; 
+            this.dmSV.totalPage = parseInt(res[1]);    
+          }
+          this.dmSV.loadedFile = true;           
+          this.changeDetectorRef.detectChanges();
+        });    
+    }    
+    //console.log(event);
+    // this.dataService.currentComponent = this.listView;
+    // this.dataService.scrolling();
+  }
+
   openItem(data: any) {
   //  alert(1);
   }
@@ -147,6 +186,32 @@ export class HomeComponent extends UIComponent {
     this.button = {
       id: 'btnUpload',
     };   
+
+    this.route.queryParams
+      .subscribe(params => {
+        if (params?.id) {
+          var dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+            this.fileService.getFile(params?.id).subscribe(data => {
+              if (data.read) {
+                this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data,  this.codxview], "",dialogModel);
+                var files = this.listFiles;
+                if (files != null) {
+                  let index = files.findIndex(d => d.recID.toString() === data.recID);
+                  if (index != -1) {
+                    files[index] = data;
+                  }
+                  this.listFiles = files;                    
+                  this.dmSV.ChangeData.next(true);                
+                }
+              }
+              else {
+                this.notificationsService.notify(this.titleAccessDeniedFile);
+              }               
+            });
+        }       
+      }
+    ); 
 
     this.dmSV.isDisableUpload.subscribe((res) => {
       if (res != null) {
@@ -213,8 +278,11 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
         this.data = [];
-        this.changeDetectorRef.detectChanges();      
-        this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
+        this.changeDetectorRef.detectChanges();  
+        if (this.dmSV.listFiles != null)    
+          this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
+        else 
+          this.data = this.dmSV.listFolder;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -392,6 +460,8 @@ export class HomeComponent extends UIComponent {
     if (item.read) {
       var breadcumb = [];
       var breadcumbLink = [];
+      this.dmSV.page = 1;
+
       if (this.codxview.currentView.currentComponent?.treeView != null) {
         this.codxview.currentView.currentComponent.treeView.textField = "folderName";
         var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
@@ -446,12 +516,16 @@ export class HomeComponent extends UIComponent {
       this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
       this.fileService.GetFiles(id).subscribe(async res => {   
-        if (res != null) {
-          this.data = [...this.data, ...res];
-          this.dmSV.listFiles = res;  
-          this.changeDetectorRef.detectChanges();
+        this.dmSV.listFiles = res[0]; 
+        if (this.sortDirection == null || this.sortDirection == "asc") 
+        {
+          this.data = [...this.dmSV.listFolder, ...res[0]];
         }        
-        this.dmSV.loadedFile = true;       
+        else 
+          this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
+        this.dmSV.totalPage = parseInt(res[1]);    
+        this.dmSV.loadedFile = true;   
+        this.changeDetectorRef.detectChanges();    
       });
     } else {
       if (item.read != null) 
@@ -637,18 +711,23 @@ export class HomeComponent extends UIComponent {
     });
    }
 
+   this.fileService.options.page = this.dmSV.page;
    this.fileService
      .GetFiles(this.dmSV.folderID)
      .subscribe(async (res) => {
        if (res != null) {
-        this.dmSV.listFiles = res;           
+        this.dmSV.listFiles = res[0];           
         if (this.sortDirection == null || this.sortDirection == "asc") 
         {
-          this.data = [...this.dmSV.listFolder, ...res];
+        //  this.data = [...this.dmSV.listFolder, ...res[0]];
+          if (res[0] != null)
+            this.data = [...this.dmSV.listFolder, ...res[0]];
+          else 
+            this.data = this.dmSV.listFolder;
         }        
         else 
           this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
-        
+        this.dmSV.totalPage = parseInt(res[1]);
        }
        this.dmSV.loadedFile = true;           
        this.changeDetectorRef.detectChanges();
@@ -664,6 +743,8 @@ export class HomeComponent extends UIComponent {
     if (this.codxview.currentView.currentComponent.treeView != null)
       this.codxview.currentView.viewModel.model.panelLeftHide = true;
    // this.codxview.codxview.
+    this.dmSV.page = 1;
+    this.fileService.options.page = this.dmSV.page;
     this.fileService.searchFile(text, 1, 100).subscribe(item => {
       if (item != null) {
         this.dmSV.loadedFile = true;
@@ -681,6 +762,8 @@ export class HomeComponent extends UIComponent {
       this.dmSV.listFiles = [];      
       // npm i ngx-infinite-scroll@10.0.0
       this.changeDetectorRef.detectChanges();
+      this.dmSV.page = 1;
+
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
         if (e.data != null) {
@@ -740,13 +823,24 @@ export class HomeComponent extends UIComponent {
       this.folderService.options.srtColumns = this.sortColumn;
       this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
+      this.fileService.options.page = this.dmSV.page;
       this.fileService
         .GetFiles('')
-        .subscribe(async (res) => {
-          if (res != null) {
-            this.data = [...this.data, ...res];
-            this.dmSV.listFiles = res;           
+        .subscribe(async (res) => {         
+          if (res != null) { 
+            this.dmSV.listFiles = res[0]; 
+            if (this.sortDirection == null || this.sortDirection == "asc") 
+            {
+              if (res[0] != null)
+                this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
+              else 
+                this.data = this.dmSV.listFolder;
+            }        
+            else 
+              this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
+            this.dmSV.totalPage = parseInt(res[1]);
           }
+
           this.dmSV.loadedFile = true;           
           this.changeDetectorRef.detectChanges();
         });          
