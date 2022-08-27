@@ -1,0 +1,28 @@
+<codx-form
+    headerText="Cập nhật tình trạng" 
+    subHeaderText="" 
+    [body]="body" 
+    [footer]="footer" 
+    [dialog]="dialog"
+    [data]="data"
+    [formModel]="dialog?.formModel"
+>
+    <ng-template popup adde #body>
+       <div>
+            <codx-label [formModel]="formModel" fiedName="Status" ></codx-label>
+            <codx-input type="text" crrValue="Hoàn tất" disabled="true"></codx-input>
+        </div>
+        <div class="my-4">
+            <codx-label [formModel]="formModel" fiedName="Comment"  default="Bình luận"></codx-label>
+            <codx-input type="textarea" format="ed2" [Group]="complatedForm" [ControlName]="'comment'"></codx-input>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <div class="d-flex">
+                <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>
+            </div>
+        </div>
+    </ng-template>
+</codx-form>
+<!-- <codx-attachment #attachment type="center" objectType="WP_Notes" objectId="628c326c590addf224627f42" functionID="WPT03941" (fileAdded)="fileAdded($event)" [hidden]=""></codx-attachment> -->

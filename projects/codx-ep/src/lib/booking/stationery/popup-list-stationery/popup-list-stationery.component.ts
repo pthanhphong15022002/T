@@ -58,4 +58,8 @@ export class PopupListStationeryComponent extends UIComponent {
   valueChange(event) {}
 
   search(event) {}
+
+  click(event) {}
+
+  clickMF(event, data) {}
 }

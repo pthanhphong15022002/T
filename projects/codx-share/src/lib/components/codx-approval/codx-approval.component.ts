@@ -206,7 +206,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         funcID == 'SYS203' ||
         funcID == 'SYS202'
       ) {
-        debugger;
         let option = new SidebarModel();
         option.Width = '800px';
         option.DataService = this.view?.dataService;
@@ -262,6 +261,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         )
         .subscribe((res2: any) => {
           if (!res2?.msgCodeError) {
+            debugger;
+            data.status = status;
             this.view.dataService.update(data).subscribe();
             this.notifySvr.notifyCode('SYS007');
           } else this.notifySvr.notify(res2?.msgCodeError);
