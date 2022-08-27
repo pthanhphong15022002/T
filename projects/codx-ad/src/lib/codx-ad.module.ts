@@ -2,12 +2,20 @@ import { UserComponent } from './users/user.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  NgModule,
+  Type,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { AccumulationChartAllModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartAllModule,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
@@ -25,11 +33,16 @@ import { PopupPersonalComponent } from './company-setting/popup-personal/popup-p
 import { PopRolesComponent } from './users/pop-roles/pop-roles.component';
 import { CompanySettingComponent } from './company-setting/company-setting.component';
 import { SharedModule } from '@shared/shared.module';
-import { GroupUsersComponent } from './group-users/group-users.component';
 import { RolesComponent } from './Roles/home/home.component';
 import { RoleEditComponent } from './Roles/role-edit/role-edit.component';
 import { RoleDetailComponent } from './Roles/detail/detail.component';
 import { AsideroledetailComponent } from './_layout/asideroledetail/asideroledetail.component';
+import { UserGroupsComponent } from './user-groups/user-group.component';
+import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
+import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
+import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
+import { ControlNoteComponent } from './control-note/control-note.component';
+import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 
 export const routes: Routes = [
   {
@@ -50,26 +63,40 @@ export const routes: Routes = [
       {
         path: 'users/:funcID',
         component: UserComponent,
-      }
-      , {
-        path: 'accountinfo/:funcID',
-        component: CompanySettingComponent
-      }
-      ,{
+      },
+
+      {
         path: 'groupusers/:funcID',
-        component: GroupUsersComponent
-      }
-      ,{
+        component: UserGroupsComponent,
+      },
+      {
         path: 'roles/:funcID',
         component: RolesComponent,
-      }
-      ,{
+      },
+      {
         path: 'roledetails/:funcID',
         component: RoleDetailComponent,
-      }
-
-    ]
-  }
+      },
+      {
+        path: 'controlNote',
+        component: ControlNoteComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideToolbarFluidComponent,
+    children: [
+      {
+        path: 'systemsetting/:funcID',
+        component: SystemsettingsComponent,
+      },
+      {
+        path: 'accountinfo/:funcID',
+        component: CompanySettingComponent,
+      },
+    ],
+  },
 ];
 
 const T_Component: Type<any>[] = [
@@ -81,11 +108,14 @@ const T_Component: Type<any>[] = [
   AddUserComponent,
   PopupPersonalComponent,
   PopRolesComponent,
-  GroupUsersComponent,
+  UserGroupsComponent,
   RolesComponent,
   RoleEditComponent,
   RoleDetailComponent,
   AsideroledetailComponent,
+  AddUserGroupsComponent,
+  SystemsettingsComponent,
+  ControlNoteComponent,
 ];
 @NgModule({
   imports: [
@@ -106,8 +136,8 @@ const T_Component: Type<any>[] = [
     TabModule,
     FormsModule,
     NgbModule,
-    SharedModule
-
+    SharedModule,
+    SliderModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,

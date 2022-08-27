@@ -50,6 +50,7 @@ export class PopRolesComponent implements OnInit {
   checkService = true;
   formType = '';
   isCheck = true;
+  checkRoleIDNull = false;
 
   @ViewChild('form') form: CodxFormComponent;
 
@@ -226,15 +227,30 @@ export class PopRolesComponent implements OnInit {
   }
 
   onSave() {
-    if (this.CheckListUserRoles() === this.optionFirst) {
-      this.notiService.notifyCode('AD006');
-    } else if (this.CheckListUserRoles() === this.optionSecond) {
-      this.notiService.notifyCode('Lưu thành công');
-      this.dialogSecond.close(this.listChooseRole);
-      this.changeDec.detectChanges();
-    } else {
-      this.notiService.notifyCode('Không có gì thay đổi');
-      this.dialogSecond.close(this.listChooseRole);
+    this.checkRoleIDNull = false;
+    if (this.listChooseRole) {
+      this.listChooseRole.forEach((res) => {
+        if (res?.recIDofRole == null) {
+          var a = this.notiService.notifyCode(
+            'AD006',
+            null,
+            "'" + res.customName + "'"
+          );
+          this.checkRoleIDNull = true;
+          return;
+        }
+      });
+    }
+    if (this.checkRoleIDNull == false) {
+      if (this.CheckListUserRoles() === this.optionFirst) {
+        this.notiService.notifyCode('AD006');
+      } else if (this.CheckListUserRoles() === this.optionSecond) {
+        this.dialogSecond.close(this.listChooseRole);
+        this.changeDec.detectChanges();
+      } else {
+        this.notiService.notifyCode('Không có gì thay đổi');
+        this.dialogSecond.close(this.listChooseRole);
+      }
     }
   }
 

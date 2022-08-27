@@ -6,14 +6,11 @@ import {
   DialogRef,
   NotificationsService,
   Util,
-  ViewsComponent,
 } from 'codx-core';
-import { BehaviorSubject, map } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
   Optional,
   ViewChild,
@@ -33,7 +30,7 @@ import { TM_TaskGroups } from 'projects/codx-tm/src/lib/models/TM_TaskGroups.mod
   templateUrl: './assign-info.component.html',
   styleUrls: ['./assign-info.component.scss'],
 })
-export class AssignInfoComponent implements OnInit {
+export class AssignInfoComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   STATUS_TASK_GOAL = StatusTaskGoal;
   user: any;
@@ -49,7 +46,7 @@ export class AssignInfoComponent implements OnInit {
   param: any;
   taskGroup: TM_TaskGroups;
   task: TM_Tasks = new TM_Tasks();
-  functionID: string;
+  functionID = 'TMT0203'; // giao việc nên cố định funcID này
   popover: any;
   title = 'Giao việc';
   showPlan = true;
@@ -59,10 +56,14 @@ export class AssignInfoComponent implements OnInit {
   listRoles = [];
   isHaveFile = false;
   taskParent: any;
-  refID = "";
-  refType = "";
+  refID = '';
+  refType = '';
+  dueDate: Date;
   taskType = '1';
-  vllPriority = "TM005";
+  vllPriority = 'TM005';
+  changTimeCount = 2;
+  loadingAll = false;
+  gridViewSetup: any;
 
   constructor(
     private authStore: AuthStore,
@@ -74,34 +75,45 @@ export class AssignInfoComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.getParam()
+    this.getParam();
     this.task = {
       ...this.task,
       ...dt?.data[0],
-    }; 
+    };
     this.refID = this.task?.refID;
     this.refType = this.task?.refType;
-    if (this.task?.taskID) this.taskParent = this.task;
+    this.dueDate = this.task?.dueDate;
+    if (dt?.data[0]?.taskID) this.taskParent = dt?.data[0];
+
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
     this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
     this.title = dt?.data[3] ? dt?.data[3] : this.title;
     this.dialog = dialog;
     this.user = this.authStore.get();
-    this.functionID = this.dialog.formModel.funcID;
+    // this.functionID = this.dialog.formModel.funcID;
+
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
     });
+
+    this.cache
+      .gridViewSetup('AssignTasks', 'grvAssignTasks')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
-  ngOnInit(): void {
-    // if (this.task.taskID) this.taskParent = this.task ;
+  ngOnInit(): void {}
+  ngAfterViewInit(): void {
     this.setDefault();
-    // else this.openInfo();
   }
 
   setDefault() {
+    this.task.taskID = '';
     this.api
       .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
         this.functionID,
@@ -112,11 +124,11 @@ export class AssignInfoComponent implements OnInit {
         if (response) {
           response['_uuid'] = response['taskID'] ?? Util.uid();
           response['idField'] = 'taskID';
-          response['isNew'] = function () {
-            return response[response.taskID] != response['_uuid'];
-          };
-          response['taskID'] = response['_uuid'];
+          // response['isNew'] = function () {
+          //   return response[response.taskID] != response['_uuid'];
+          // };
           this.task = response;
+          this.loadingAll = true;
           this.openInfo();
         }
       });
@@ -127,16 +139,23 @@ export class AssignInfoComponent implements OnInit {
   }
 
   openInfo() {
-    this.task.dueDate = moment(new Date())
-      .set({ hour: 23, minute: 59, second: 59 })
-      .toDate();
+    if (this.dueDate && !this.taskParent) {
+      this.task.dueDate = moment(new Date(this.dueDate)).toDate();
+    } else
+      this.task.dueDate = moment(new Date())
+        .set({ hour: 23, minute: 59, second: 59 })
+        .toDate();
     this.listUser = [];
     this.listTaskResources = [];
-    this.task.category = "3"
-    this.task.status = "10";
-    this.task.refID = this.refID
+    this.task.category = '3';
+    this.task.status = '10';
+    this.task.refID = this.refID;
     this.task.refType = this.refType;
     if (this.taskParent) {
+      this.task.dueDate = this.taskParent.dueDate;
+      this.task.endDate = this.taskParent.endDate;
+      this.task.startDate = this.taskParent.startDate;
+      this.task.estimated = this.taskParent.estimated;
       this.task.taskName = this.taskParent.taskName;
       this.task.memo = this.taskParent.memo;
       this.task.memo2 = this.taskParent.memo2;
@@ -147,22 +166,26 @@ export class AssignInfoComponent implements OnInit {
       this.task.refID = this.taskParent.refID;
       this.task.refNo = this.taskParent.refNo;
       this.task.taskType = this.taskParent.taskType;
-      if(this.taskParent.listTaskGoals.length>0){
-        var toDos = this.taskParent.listTaskGoals
-        toDos.forEach((obj) => {
-          var taskG = new TaskGoal();
-          taskG.status = this.STATUS_TASK_GOAL.NotChecked;
-          taskG.text = obj.memo;
-          taskG.recID = null;
-          this.listTodo.push(taskG);
-        });
-      }
-     if(this.taskParent?.taskGroupID) this.logicTaskGroup(this.taskParent?.taskGroupID);
+      this.copyListTodo(this.taskParent.taskID);
+      if (this.task.startDate && this.task.endDate) this.changTimeCount = 0;
+      else if (this.task.startDate || this.task.endDate)
+        this.changTimeCount = 1;
+      if (this.taskParent?.taskGroupID)
+        this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
 
     this.changeDetectorRef.detectChanges();
   }
 
+  copyListTodo(id) {
+    this.api
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'CopyListTodoByTaskIdAsync', id)
+      .subscribe((res) => {
+        if (res) {
+          this.listTodo = res;
+        }
+      });
+  }
 
   changText(e) {
     this.task.taskName = e.data;
@@ -187,8 +210,16 @@ export class AssignInfoComponent implements OnInit {
             .toDate();
       }
     }
-    if (data.field == 'startDate' || data.field == 'endDate') {
-      if (this.task?.startDate && this.task?.endDate) {
+    if (
+      (data.field == 'startDate' || data.field == 'endDate') &&
+      this.loadingAll
+    ) {
+      this.changTimeCount += 1;
+      if (
+        this.task?.startDate &&
+        this.task?.endDate &&
+        this.changTimeCount > 2
+      ) {
         var time = (
           (this.task?.endDate.getTime() - this.task?.startDate.getTime()) /
           3600000
@@ -224,8 +255,7 @@ export class AssignInfoComponent implements OnInit {
     }
   }
 
-  changeVLL(e) { }
-
+  changeVLL(e) {}
 
   saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
@@ -236,10 +266,17 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('TM011');
       return;
     }
-    if (this.param?.MaxHoursControl != '0' && this.task.estimated > Number.parseFloat(this.param?.MaxHours)) {
-      this.notiService.notifyCode('TM058') ///cần truyền tham số
-      return ;
-     }  
+    if (this.task.estimated < 0) {
+      this.notiService.notifyCode('TM033');
+      return;
+    }
+    if (
+      this.param?.MaxHoursControl != '0' &&
+      this.task.estimated > Number.parseFloat(this.param?.MaxHours)
+    ) {
+      this.notiService.notifyCode('TM058', 0, [this.param?.MaxHours]);
+      return;
+    }
     if (this.task.estimated < 0) {
       this.notiService.notifyCode('TM033');
       return;
@@ -255,7 +292,10 @@ export class AssignInfoComponent implements OnInit {
       this.notiService.notifyCode('TM029');
       return;
     }
-    if (this.param?.PlanControl == "2" && (!this.task.startDate || !this.task.endDate)) {
+    if (
+      this.param?.PlanControl == '2' &&
+      (!this.task.startDate || !this.task.endDate)
+    ) {
       this.notiService.notifyCode('TM030');
       return;
     }
@@ -264,20 +304,38 @@ export class AssignInfoComponent implements OnInit {
       return;
     }
     if (this.task.taskGroupID) {
-      if (this.taskGroup?.checkListControl != '0' && this.listTodo.length == 0) {
-        this.notiService.notifyCode('TM032');
-        return;
-      }
+      // if (
+      //   this.taskGroup?.checkListControl != '0' &&
+      //   this.listTodo.length == 0
+      // ) {
+      //   this.notiService.notifyCode('TM032');
+      //   return;
+      // }
     }
-    if (this.isHaveFile)
-      this.attachment.saveFiles();
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
+    if (this.isHaveFile)
+      this.attachment.saveFilesObservable().subscribe((res) => {
+        if (res) {
+          this.task.attachments = Array.isArray(res) ? res.length : 1 ;
+          this.actionSaveAssign(taskIDParent, isContinue);
+        }
+      });
+    else this.actionSaveAssign(taskIDParent, isContinue);
+  }
+
+  actionSaveAssign(taskIDParent, isContinue) {
     this.tmSv
-      .saveAssign([this.task, this.functionID, this.listTaskResources, this.listTodo, taskIDParent])
+      .saveAssign([
+        this.task,
+        this.functionID,
+        this.listTaskResources,
+        this.listTodo,
+        taskIDParent,
+      ])
       .subscribe((res) => {
         if (res[0]) {
           this.notiService.notifyCode('TM006');
-          this.dialog.close(res[1]);
+          this.dialog.close(res);
           if (!isContinue) {
             this.closePanel();
           }
@@ -319,7 +377,6 @@ export class AssignInfoComponent implements OnInit {
   //   } else this.task.assignTo = '';
   // }
   onDeleteUser(item) {
-
     var userID = item.resourceID;
     var listUser = [];
     var listTaskResources = [];
@@ -364,7 +421,8 @@ export class AssignInfoComponent implements OnInit {
     console.log(e);
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true; else this.isHaveFile = false;
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
   }
   eventApply(e: any) {
     var assignTo = '';
@@ -492,10 +550,8 @@ export class AssignInfoComponent implements OnInit {
   //     });
   // }
   showPopover(p, userID) {
-    if (this.popover)
-      this.popover.close();
-    if (userID)
-      this.idUserSelected = userID;
+    if (this.popover) this.popover.close();
+    if (userID) this.idUserSelected = userID;
     p.open();
     this.popover = p;
   }
@@ -504,11 +560,10 @@ export class AssignInfoComponent implements OnInit {
   }
 
   selectRoseType(idUserSelected, value) {
-
-    this.listTaskResources.forEach(res => {
+    this.listTaskResources.forEach((res) => {
       if (res.resourceID == idUserSelected) res.roleType = value;
-    })
-    this.changeDetectorRef.detectChanges()
+    });
+    this.changeDetectorRef.detectChanges();
 
     this.popover.close();
   }
@@ -529,14 +584,14 @@ export class AssignInfoComponent implements OnInit {
   valueChangeEstimated(data) {
     if (!data.data) return;
     var num = data.data;
-    // if (num < 0) {
-    //   this.notiService.notifyCode('TM033');
-    // }
+    if (num < 0) {
+      this.notiService.notifyCode('TM033');
+    }
     // if (this.param?.MaxHoursControl != '0' && num > this.param?.MaxHours) {
     //   this.task[data.field] = this.param?.MaxHours;
-    // }else   
-    this.task[data.field] = num
-  
+    // }else
+    this.task[data.field] = num;
+
     this.changeDetectorRef.detectChanges();
   }
 
@@ -552,9 +607,9 @@ export class AssignInfoComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.taskGroup = res;
-          if (res.checkList != null) {
+          if (res.checkList != null && res.checkList.trim() != '') {
             var toDo = res.checkList.split(';');
-            // this.countTodoByGroup = toDo.length ;
+            this.listTodo = [];
             toDo.forEach((tx) => {
               var taskG = new TaskGoal();
               taskG.status = this.STATUS_TASK_GOAL.NotChecked;

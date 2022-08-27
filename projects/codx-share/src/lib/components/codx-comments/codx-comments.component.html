@@ -4,74 +4,53 @@
             <div class="me-3">
                 <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="35"></codx-img>
             </div>
-            <div class="position-relative cmt feed-box cmt-cmt c3 w-100"
-                (keyup.enter)="sendComment()">
-                <codx-input type="text" placeholder="Trả lời" [crrValue]="message"
-                    (valueChange)="valueChange($event)">
+            <div class="position-relative cmt feed-box cmt-cmt c3 w-100" (keyup.enter)="sendComment()">
+                <codx-input type="text" placeholder="Trả lời" [crrValue]="message" (valueChange)="valueChange($event)">
                 </codx-input>
                 <div class="feed-icon btn-send">
-                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
-                        (click)="uploadFile()">
+                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary " (click)="uploadFile()">
                         <span class="icon-attach_file icon-18"></span>
                     </span>
-                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
-                        (click)="sendComment()">
+                    <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary " (click)="sendComment()">
                         <span class="icon-send icon-18"></span>
                     </span>
                 </div>
             </div>
         </div>
-        <codx-attachment #codxATM 
-            [functionID]="funcID"
-            [objectType]="objectType"
-            [hideFolder]="'1'" 
-            [hideUploadBtn]="'1'" 
-            [hideDes]="'1'" 
-            [type]="'inline'"
-            allowExtensions=".jpg,.png" 
-            [allowMultiFile]="'0'" 
-            [hideImageUpload]="'1'"
-            [hideBtnSave]="'1'"
-            [hideImageThumb]="'1'"
-            [showMessage]="'0'"
-            (fileCount)="getFileCount($event)" >
+        <codx-attachment #codxATM [functionID]="funcID" [objectType]="objectType" [hideFolder]="'1'"
+            [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" allowExtensions=".jpg,.png" [allowMultiFile]="'0'"
+            [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'"
+            (fileCount)="getFileCount($event)">
         </codx-attachment>
-    <div *ngIf="fileUpload" class="d-flex position-relative">
-        <div class="my-3" >
-            <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
-                <ng-container *ngIf="fileUpload.recID;else imageSrc">
-                    <codx-img 
-                    [recId]="fileUpload.recID" 
-                    [objectId]="fileUpload.objectID" 
-                    [width]="100"
-                    cssClass="pic"
-                    imageType="square">
-                </codx-img>
+        <div *ngIf="fileUpload" class="d-flex position-relative">
+            <div class="my-3">
+                <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
+                    <ng-container *ngIf="fileUpload.recID;else imageSrc">
+                        <codx-img [recId]="fileUpload.recID" [objectId]="fileUpload.objectID" [width]="100"
+                            cssClass="pic" imageType="square">
+                        </codx-img>
+                    </ng-container>
+                    <ng-template #imageSrc>
+                        <img [src]="fileUpload.data || fileUpload.thumbnail" alt="" class="image">
+                    </ng-template>
                 </ng-container>
-                <ng-template #imageSrc>
-                    <img [src]="fileUpload.data || fileUpload.thumbnail" alt="" class="image">
-                </ng-template>
-            </ng-container>
-            <ng-container *ngIf="fileUpload.referType == REFERTYPE.VIDEO">
-                <video #video controls class="w-100 rounded min-h-250px">
-                    <source [src]="fileUpload.srcVideo || fileUpload.data" type="video/mp4">
-                </video>
-            </ng-container>
-            <ng-container *ngIf="fileUpload.referType == REFERTYPE.APPLICATION">
-                <codx-temp-full 
-                    imageSrc="{{fileUpload.extension | avtFile}}" 
-                    imgCss="w-20px me-3 cursor-pointer"
-                    title="{{fileUpload.fileName}}" 
-                    [descLine]="1">
-                </codx-temp-full>
-            </ng-container>
+                <ng-container *ngIf="fileUpload.referType == REFERTYPE.VIDEO">
+                    <video #video controls class="w-100 rounded min-h-250px">
+                        <source [src]="fileUpload.srcVideo || fileUpload.data" type="video/mp4">
+                    </video>
+                </ng-container>
+                <ng-container *ngIf="fileUpload.referType == REFERTYPE.APPLICATION">
+                    <codx-temp-full imageSrc="{{fileUpload.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
+                        title="{{fileUpload.fileName}}" [descLine]="1">
+                    </codx-temp-full>
+                </ng-container>
+            </div>
+            <div class="remove-file">
+                <a href="javascript:void(0)" class="h-100" (click)="removeFile()">
+                    <i class="icon-close icon-18 text-danger"></i>
+                </a>
+            </div>
         </div>
-        <div class="remove-file">
-            <a href="javascript:void(0)" class="h-100" (click)="removeFile()">
-                <i class="icon-close icon-18 text-danger"></i>
-            </a>
-        </div>
-    </div>
     </ng-container>
 </div>
 
@@ -87,10 +66,8 @@
                         <span class="fw-bolder">
                             <a href="javascript:void(0)" class="text-dark fw-bolder">{{data.createdName}}</a>
                         </span>
-                        <span class="ms-4 text-gray-400 fw-normal flex-grow-1 fs-7" 
-                            data-toggle="tooltip">
-                            {{data.createdOn | fmDT}}
-                        </span>
+                        <span class="ms-2 text-gray-400 fw-normal flex-grow-1 fs-7"
+                            data-toggle="tooltip">{{data.createdOn | timefrom}}</span>
                     </div>
                     <ng-container *ngIf="user.userID == data.createdBy">
                         <div class="more">
@@ -102,16 +79,17 @@
                                 </a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                     <li *ngIf="data.write">
-                                        <a  ngbDropdownItem href="javascript:void(0)">
+                                        <a ngbDropdownItem href="javascript:void(0)" (click)="editComment()">
                                             <span class="icon-edit icon-16 me-2"></span>
-                                            <codx-label formName="Comments" name="lblEdit_comments" default="Chỉnh sửa">
+                                            <codx-label [formModel]="formModel" name="lblEdit_comments"
+                                                default="Chỉnh sửa">
                                             </codx-label>
                                         </a>
                                     </li>
                                     <li *ngIf="data.delete">
-                                        <a ngbDropdownItem href="javascript:void(0)">
+                                        <a ngbDropdownItem href="javascript:void(0)" (click)="deleteComment()">
                                             <span class="icon-delete icon-16 me-2"></span>
-                                            <codx-label formName="Comments" name="lblDelete_comments" default="Xóa">
+                                            <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa">
                                             </codx-label>
                                         </a>
                                     </li>
@@ -142,13 +120,9 @@
                 <div class="d-flex my-3">
                     <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
                         <ng-container *ngIf="fileUpload.recID;else imageSrc">
-                            <codx-img 
-                            [recId]="fileUpload.recID" 
-                            [objectId]="fileUpload.objectID" 
-                            [width]="100"
-                            cssClass="pic"
-                            imageType="square">
-                        </codx-img>
+                            <codx-img [recId]="fileUpload.recID" [objectId]="fileUpload.objectID" [width]="100"
+                                cssClass="pic" imageType="square">
+                            </codx-img>
                         </ng-container>
                         <ng-template #imageSrc>
                             <img [src]="fileUpload.data || fileUpload.thumbnail" alt="" class="image">
@@ -160,11 +134,8 @@
                         </video>
                     </ng-container>
                     <ng-container *ngIf="fileUpload.referType == REFERTYPE.APPLICATION">
-                        <codx-temp-full 
-                            imageSrc="{{fileUpload.extension | avtFile}}" 
-                            imgCss="w-20px me-3 cursor-pointer"
-                            title="{{fileUpload.fileName}}" 
-                            [descLine]="1">
+                        <codx-temp-full imageSrc="{{fileUpload.extension | avtFile}}"
+                            imgCss="w-20px me-3 cursor-pointer" title="{{fileUpload.fileName}}" [descLine]="1">
                         </codx-temp-full>
                     </ng-container>
                 </div>
@@ -209,8 +180,5 @@
             </div>
         </div>
     </div>
-    
+
 </ng-template>
-
-
-

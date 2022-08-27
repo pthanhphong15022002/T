@@ -9,8 +9,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskGroupComponent } from './setting/taskgroups/task-group.component';
 import { SettingComponent } from './setting/setting.component';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
-import { ViewDetailComponent } from './tasks/view-detail/view-detail.component';
-import { PopupAddComponent } from './tasks/popup-add/popup-add.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import {
@@ -33,7 +31,6 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { SprintsComponent } from './sprints/sprints.component';
 import { PopupAddSprintsComponent } from './sprints/popup-add-sprints/popup-add-sprints.component';
-import { UpdateStatusPopupComponent } from './tasks/update-status-popup/update-status-popup.component';
 import { PopAddTaskgroupComponent } from './setting/taskgroups/pop-add-taskgroup/pop-add-taskgroup.component';
 import { RangesKanbanComponent } from './setting/rangeskanban/ranges-kanban.component';
 import { HomeSettingComponent } from './setting/homesetting/home-setting.component';
@@ -52,18 +49,12 @@ import { MyDashboardComponent } from './dashboard/mydashboard/mydashboard.compon
 import { TeamDashboardComponent } from './dashboard/teamdashboard/teamdashboard.component';
 import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-share-sprints.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
-import { ViewListComponent } from './tasks/view-list/view-list.component';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
 import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { DeptDashboardComponent } from './dashboard/deptdashboard/deptdashboard.component';
 import { CompDashboardComponent } from './dashboard/compdashboard/compdashboard.component';
-import { TreeViewComponent } from './tasks/tree-view/tree-view.component';
 import { ViewListMeetComponent } from './tmmeetings/view-list-meet/view-list-meet.component';
-import { PopupViewTaskResourceComponent } from './tasks/popup-view-task-resource/popup-view-task-resource.component';
-import { PopupConfirmComponent } from './tasks/popup-confirm/popup-confirm.component';
-import { PopupExtendComponent } from './tasks/popup-extend/popup-extend.component';
 import { MeetingDetailComponent } from './tmmeetings/meeting-detail/meeting-detail.component';
-import { PopupUpdateProgressComponent } from './tasks/popup-update-progress/popup-update-progress.component';
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
 import { TemplateComponent } from './tmmeetings/template/template.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
@@ -71,17 +62,23 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
 import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
-import { DashboardMeetingComponent } from './tmmeetings/view-work/dashboard-meeting/dashboard-meeting.component';
+import { CodxReportModule } from 'projects/codx-report/src/public-api';
+import { CodxTasksComponent } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
+      // {
+      //   path: 'tasks/:funcID',
+      //   component: CodxTasksComponent,
+      // },
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
       },
+      
       {
         path: 'taskextends/:funcID',
         component: TaskExtendsComponent,
@@ -93,14 +90,6 @@ export const routes: Routes = [
       {
         path: 'meeting/:funcID',
         component: TMMeetingsComponent,
-      },
-      {
-        path: 'meetingdetails/:funcID',
-        component: MeetingDetailComponent,
-      },
-      {
-        path: 'sprintdetails/:funcID',
-        component: ViewWorkComponent,
       },
       {
         path: 'mydashboard/:funcID',
@@ -148,23 +137,31 @@ export const routes: Routes = [
           },
         ],
       },
+      // {
+      //   path: 'reports',
+      //   component: ReportsComponent,
+      //   children: [
+      //     {
+      //       path: ':funcID',
+      //       component: HomeReportComponent,
+      //     },
+      //     {
+      //       path: 'taskdaily/:funcID',
+      //       component: TaskDailyComponent,
+      //     },
+      //     {
+      //       path: 'taskbyprojects/:funcID',
+      //       component: TaskByProjectsComponent,
+      //     },
+      //   ],
+      // },
       {
-        path: 'reports',
-        component: ReportsComponent,
-        children: [
-          {
-            path: ':funcID',
-            component: HomeReportComponent,
-          },
-          {
-            path: 'taskdaily/:funcID',
-            component: TaskDailyComponent,
-          },
-          {
-            path: 'taskbyprojects/:funcID',
-            component: TaskByProjectsComponent,
-          },
-        ],
+        path: 'taskdaily/:funcID',
+        component: TaskDailyComponent,
+      },
+      {
+        path: 'taskbyprojects/:funcID',
+        component: TaskByProjectsComponent,
       },
       {
         path: '**',
@@ -179,12 +176,10 @@ export const routes: Routes = [
       {
         path: 'sprintdetails/:funcID',
         component: SprintDetailsComponent,
-        children: [
-          {
-            path: ':id',
-            component: SprintDetailsComponent,
-          },
-        ],
+      },
+      {
+        path: 'meetingdetails/:funcID',
+        component: MeetingDetailComponent,
       },
     ],
   },
@@ -192,11 +187,8 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [
   LayoutComponent,
-  PopupAddComponent,
-  ViewDetailComponent,
   SprintsComponent,
   PopupAddSprintsComponent,
-  UpdateStatusPopupComponent,
   HomeSettingComponent,
   SettingComponent,
   TaskGroupComponent,
@@ -223,22 +215,15 @@ const T_Component: Type<any>[] = [
   TeamDashboardComponent,
   DeptDashboardComponent,
   CompDashboardComponent,
-  ViewListComponent,
   TMMeetingsComponent,
   PopupAddMeetingComponent,
-  TreeViewComponent,
   ViewListMeetComponent,
-  PopupViewTaskResourceComponent,
-  PopupConfirmComponent,
-  PopupExtendComponent,
-  PopupUpdateProgressComponent,
   MeetingDetailComponent,
   TaskExtendsComponent,
   TemplateComponent,
   SprintDetailsComponent,
   ViewWorkComponent,
   DashboardComponent,
-  DashboardMeetingComponent
 ];
 @NgModule({
   imports: [
@@ -259,6 +244,7 @@ const T_Component: Type<any>[] = [
     FormsModule,
     NgbModule,
     SplitterModule,
+    CodxReportModule
   ],
   exports: [RouterModule],
   declarations: T_Component,

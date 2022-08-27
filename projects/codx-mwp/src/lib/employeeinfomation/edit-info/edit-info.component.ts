@@ -103,16 +103,18 @@ export class EditInfoComponent implements OnInit {
     // this.detectorRef.detectChanges();
     // this.dialog.close();
 
-    this.api.call("ERM.Business.HR", "EmployeesBusiness", "UpdateAsync", [this.employee]).subscribe(res => {
-      if (res && res.msgBodyData[0]) {
+    this.api.execSv<any>("HR","ERM.Business.HR", "EmployeesBusiness", "UpdateAsync", [this.employee]).subscribe(res => {
+      // if (res && res.msgBodyData[0]) {
         if (res) {
-          this.codxMwp.EmployeeInfomation.loadEmployee(res.msgBodyData[0]);
+          // this.codxMwp.EmployeeInfomation.loadEmployee(res);
+          this.notiService.notify("Chỉnh sửa thành công");
           this.dialog.close();
         }
         else {
           this.notiService.notify("Error");
+          this.dialog.close();
         }
-      }
+      // }
     });
   }
 

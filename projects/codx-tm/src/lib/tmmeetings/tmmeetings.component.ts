@@ -7,6 +7,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
   Input,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -22,24 +23,33 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.component';
-import { CO_Resources } from '../models/CO_Meetings.model';
+import { CO_Meetings, CO_Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
+import { APICONSTANT } from '@shared/constant/api-const';
 
 @Component({
-  selector: 'lib-tmmeetings',
+  selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
-  styleUrls: ['./tmmeetings.component.css'],
+  styleUrls: ['./tmmeetings.component.scss'],
 })
-export class TMMeetingsComponent extends UIComponent {
+export class TMMeetingsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit {
+  @Input() meeting = new CO_Meetings();
+
+  @Input() dataObj?: any;
+  @Input() showButtonAdd = true;
+  @Input() projectID?: any; //view meeting to sprint_details
+  @Input() iterationID?: any;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
-  // @ViewChild('sprintsListTasks') sprintsListTasks: TemplateRef<any> | null;
-  // @ViewChild('sprintsKanban') sprintsKanban: TemplateRef<any> | null;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('eventTemplate') eventTemplate: TemplateRef<any> | null;
   @ViewChild('itemTemplate') template!: TemplateRef<any> | null;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('template7') template7: TemplateRef<any>;
+  @ViewChild('cardCenter') cardCenter!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -54,6 +64,7 @@ export class TMMeetingsComponent extends UIComponent {
   dayoff = [];
   month: any;
   day: any;
+  tag = 'Tag';
   startTime: any;
   eventStatus: any;
   itemSelected: any;
@@ -69,6 +80,9 @@ export class TMMeetingsComponent extends UIComponent {
   formName = '';
   gridViewName = '';
   @Input() calendarID: string;
+  @Input() viewPreset: string = 'weekAndDay';
+  dayWeek = [];
+  request: ResourceModel;
 
   constructor(
     inject: Injector,
@@ -80,33 +94,55 @@ export class TMMeetingsComponent extends UIComponent {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
-      if (res) {
-        this.urlDetail = res[0].url;
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) {
+       this.tmService.urlback = f.url ;
       }
     });
+    if (this.funcID == 'TMT03011') {
+      this.funcID = 'TMT0501';
+    }
+
+    // this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
+    //   if (res) {
+    //     this.urlDetail = res[0].url;
+    //   }
+    // });
+
+    this.urlDetail = 'tm/meetingdetails/TMT05011'
 
     this.dataValue = this.user?.userID;
+    this.getParams();
+
   }
-
-
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
-    this.getParams();
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'CO';
     this.modelResource.className = 'MeetingsBusiness';
     this.modelResource.service = 'CO';
     this.modelResource.method = 'GetListMeetingsAsync';
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+    this.request = new ResourceModel();
+    this.request.service = 'CO';
+    this.request.assemblyName = 'CO';
+    this.request.className = 'MeetingsBusiness';
+    this.request.method = 'GetListMeetingsAsync';
+    this.request.idField = 'meetingID';
   }
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
-
   }
 
   ngAfterViewInit(): void {
@@ -120,7 +156,7 @@ export class TMMeetingsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.schedule,
+        type: ViewType.calendar,
         active: false,
         sameData: true,
         model: {
@@ -128,6 +164,7 @@ export class TMMeetingsComponent extends UIComponent {
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+          template7: this.template7
         },
       },
       {
@@ -136,6 +173,16 @@ export class TMMeetingsComponent extends UIComponent {
         sameData: true,
         model: {
           // panelLeftRef: this.panelLeftRef,
+          template: this.cardCenter,
+        },
+      },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
           template: this.cardKanban,
         },
       },
@@ -144,9 +191,14 @@ export class TMMeetingsComponent extends UIComponent {
     this.view.dataService.methodSave = 'AddMeetingsAsync';
     this.view.dataService.methodUpdate = 'UpdateMeetingsAsync';
     this.view.dataService.methodDelete = 'DeleteMeetingsAsync';
-
     this.dt.detectChanges();
   }
+
+  //#region kanban
+  changeDataMF(e:any,data:any){
+    // console.log(e, data);
+  }
+  //#end region
 
   //#region schedule
 
@@ -166,6 +218,7 @@ export class TMMeetingsComponent extends UIComponent {
   };
 
   getCellContent(evt: any) {
+    console.log(evt);
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
         let day = new Date(this.dayoff[i].startDate);
@@ -200,16 +253,35 @@ export class TMMeetingsComponent extends UIComponent {
   getParams() {
     this.api
       .execSv<any>(
-        'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
+        APICONSTANT.SERVICES.SYS,
+        APICONSTANT.ASSEMBLY.CM,
+        APICONSTANT.BUSINESS.CM.Parameters,
         'GetOneField',
         ['TMParameters', null, 'CalendarID']
       )
       .subscribe((res) => {
         if (res) {
+          this.param = res;
           this.calendarID = res.fieldValue;
+          this.getDayWeek(this.calendarID);
           this.getDayOff(this.calendarID);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  getDayWeek(id) {
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.Calendars,
+        'GetDayWeekAsync',
+        [id]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dayWeek = res;
         }
       });
   }
@@ -234,22 +306,42 @@ export class TMMeetingsComponent extends UIComponent {
   }
   //#endregion schedule
 
-  convertHtmlAgency(resourceID: any) {
-    var desc = '<div class="d-flex">';
-    if (resourceID)
-      desc +=
-        '<codx-imgs [objectId]="getResourceID(' +
-        resourceID +
-        ')" objectType="AD_Users" [numberImages]="4"></codx-imgs>';
+  convertHtmlAgency(data: any) {
+    var date = data.startDate;
+    var desc = '<div class="d-flex align-items-center ms-1" >';
+    var day = '';
+    var toDay = '<div class="d-flex flex-column me-2" >';
+    if (date) {
+      let date1 = new Date(date);
+      let month = date1.getMonth() + 1;
+      let myDay = this.addZero(date1.getDate());
+      let year = date1.getFullYear();
+      let day1 = date1.getDay() + 1;
+      day +=
+        '<div class="fs-2hx fw-bold text-gray-800 me-2 lh-1">' +
+        myDay +
+        '</div>';
+      toDay +=
+        '<div class="text-dark fw-bold">' +
+        'Thứ ' +
+        day1 +
+        '</div>' +
+        '<div class="fw-lighter">' +
+        'Tháng ' +
+        month +
+        ', ' +
+        year +
+        '</div></div>';
+    }
 
-    return desc + '</div>';
+    return desc + day + toDay + '</div>';
   }
 
   getResourceID(data) {
     var resources = [];
     resources = data.resources;
     var id = '';
-    if(resources!=null){
+    if (resources != null) {
       resources.forEach((e) => {
         id += e.resourceID + ';';
       });
@@ -301,7 +393,7 @@ export class TMMeetingsComponent extends UIComponent {
         this.delete(data);
         break;
       case 'TMT05011':
-        this.viewDetail(data);
+        this.viewDetail(e.data,data);
         break;
     }
   }
@@ -325,6 +417,28 @@ export class TMMeetingsComponent extends UIComponent {
         'add',
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+        if (e?.event && e?.event != null) {
+          var objectData = this.view.dataService.data;
+          var object = {};
+          for (var i = 0; i < objectData.length; i++) {
+            if (objectData[i][i] !== undefined) {
+              object[i] = objectData[i][i];
+              objectData[i] = object[i];
+            }
+          }
+          this.view.dataService.data = e?.event.concat(
+            objectData
+          );
+          this.meeting = objectData[0];
+          this.detectorRef.detectChanges();
+        }
+      });
     });
   }
   edit(data) {
@@ -335,8 +449,8 @@ export class TMMeetingsComponent extends UIComponent {
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
@@ -350,16 +464,16 @@ export class TMMeetingsComponent extends UIComponent {
               false
             );
           if (e?.event && e?.event != null) {
-            // e?.event.forEach((obj) => {
-            //   this.view.dataService.update(obj).subscribe();
-            // });
-            this.itemSelected = e?.event;
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.meeting = e?.event;
           }
           this.detectorRef.detectChanges();
         });
       });
   }
-  copy(data) {}
+  copy(data) { }
   delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -381,7 +495,9 @@ export class TMMeetingsComponent extends UIComponent {
     return true;
   }
 
-  viewDetail(data) {
-    this.codxService.navigate('', this.urlDetail, {meetingID: data.meetingID});
+  viewDetail(func,data) {
+    this.codxService.navigate('',func.url, {
+      meetingID: data.meetingID,
+    });
   }
 }

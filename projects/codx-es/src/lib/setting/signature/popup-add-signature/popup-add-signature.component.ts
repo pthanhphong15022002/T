@@ -96,6 +96,11 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     //   .subscribe((dt: any) => {
     //     this.objectIDFile = dt;
     //   });
+    this.esService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {
+        this.dialogSignature = item;
+      });
   }
 
   initForm() {
@@ -142,9 +147,13 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         // this.dialogSignature.patchValue({
         //   fullName: event?.data.dataSelected[0].text,
         // });
+      } else if (event?.field == 'signatureType') {
+        if (event?.data == '2') {
+          this.data.supplier = '0';
+        }
       } else if (event?.data === Object(event?.data))
-        this.dialogSignature.patchValue({ [event['field']]: event.data.value });
-      else this.dialogSignature.patchValue({ [event['field']]: event.data });
+        this.data[event['field']] = event?.data.value[0];
+      else this.data[event['field']] = event?.data;
       this.cr.detectChanges();
     }
   }
@@ -163,15 +172,17 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   onSaveForm() {
-    // if (this.dialogSignature.invalid == true) {
-    //   this.notification.notifyCode('E0016');
-    //   return;
-    // }
+    this.dialogSignature.patchValue(this.data);
+
+    if (this.dialogSignature.invalid == true) {
+      this.esService.notifyInvalid(this.dialogSignature, this.formModel);
+      return;
+    }
 
     //this.dialog.dataService.dataSelected = this.dialogSignature.value;
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.update || res.save) {
           this.isSaveSuccess = true;
@@ -193,6 +204,10 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   openPopup(content) {
+    if (this.data.fullName == '' || this.data.fullName == null) {
+      this.notification.notify('Tên người dùng không được bỏ trống!');
+      return;
+    }
     let data = {
       dialog: this.dialog,
       model: this.dialogSignature,

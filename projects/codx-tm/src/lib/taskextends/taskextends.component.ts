@@ -12,11 +12,14 @@ import {
   DialogRef,
   NotificationsService,
   UIComponent,
+  UrlUtil,
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { PopupConfirmComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-confirm/popup-confirm.component';
+import { ViewDetailComponent } from 'projects/codx-share/src/lib/components/codx-tasks/view-detail/view-detail.component';
 import { CodxTMService } from '../codx-tm.service';
-import { PopupConfirmComponent } from '../tasks/popup-confirm/popup-confirm.component';
+import { TM_TaskExtends } from '../models/TM_Tasks.model';
 
 @Component({
   selector: 'lib-taskextends',
@@ -25,18 +28,18 @@ import { PopupConfirmComponent } from '../tasks/popup-confirm/popup-confirm.comp
 })
 export class TaskExtendsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
+  @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   user: any;
   funcID: any;
-  itemSelected: any;
-  taskExtends: any;
+  dataTree = [];
+  taskExtends: TM_TaskExtends;
   dialogExtendsStatus!: DialogRef;
-  vllExtendStatus = 'TM010'; 
-  vllStatus ='TM004'
+  vllExtendStatus = 'TM010';
+  vllStatus = 'TM004';
   constructor(
     inject: Injector,
     private authStore: AuthStore,
@@ -47,10 +50,9 @@ export class TaskExtendsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-   
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -61,21 +63,51 @@ export class TaskExtendsComponent
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
-        // groupBy: 'fieldGroup', Thương kêu gắng sau 
+          // groupBy: 'fieldGroup', Thương kêu gắng sau
         },
       },
     ];
+    this.detectorRef.detectChanges();
   }
 
   selectedChange(val: any) {
-    this.taskExtends = val?.data
-    this.itemSelected = val?.data?.task ;
+    this.taskExtends = val?.data ? val?.data : val;
+    // this.itemSelected = val?.data?.task ;
+    // this.taskExtends = val
+    this.loadTreeView();
     this.detectorRef.detectChanges();
   }
-  requestEnded(e) {}
+  requestEnded(e) { }
 
   //#region extends
   openExtendStatusPopup(moreFunc, data) {
+    //chuyển kiểm tra sau nên cmt lại
+    // var valueDefault = UrlUtil.getUrl('defaultValue', moreFunc.url);
+    // if (valueDefault == '5') {
+    //   this.api
+    //     .execSv<any>(
+    //       'TM',
+    //       'TM',
+    //       'TaskBusiness',
+    //       'GetTaskParentByTaskIDAsync',
+    //       data.taskID
+    //     )
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         if (res.dueDate < data.extendDate) {
+    //           this.notiService.alertCode('TM059').subscribe((confirm) => {
+    //             if (confirm?.event && confirm?.event?.status == 'Y') {
+    //               this.confirmExtends(moreFunc, data);
+    //             }
+    //           });
+    //         } else this.confirmExtends(moreFunc, data);
+    //       }
+    //     });
+    // } else this.confirmExtends(moreFunc, data);
+    this.confirmExtends(moreFunc, data);
+  }
+
+  confirmExtends(moreFunc, data) {
     var obj = {
       moreFunc: moreFunc,
       data: data,
@@ -91,24 +123,24 @@ export class TaskExtendsComponent
       obj
     );
     this.dialogExtendsStatus.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) { 
-        var taskExtends = e?.event
+      if (e?.event && e?.event != null) {
+        var taskExtends = e?.event;
         this.view.dataService.update(taskExtends).subscribe();
-        this.taskExtends = taskExtends
-        this.itemSelected = taskExtends.task;
+        this.taskExtends = taskExtends;
+        this.detail.taskID = taskExtends.taskID;
+        this.detail.getTaskDetail();
         this.detectorRef.detectChanges();
       }
-    })
-
+    });
   }
+  //#endregion
 
   receiveMF(e: any) {
     this.clickMF(e.e, this.taskExtends);
   }
 
   clickMF(e, data) {
-    this.taskExtends = data ;
-    this.itemSelected = data.task;
+    this.taskExtends = data;
     switch (e.functionID) {
       case 'TMT04011':
       case 'TMT04012':
@@ -116,4 +148,35 @@ export class TaskExtendsComponent
         break;
     }
   }
+  changeDataMF(e, data) {
+    if (e) {
+      e.forEach((x) => {
+        if (x.functionID == 'SYS04') {
+          x.disabled = true;
+        }
+        if (
+          (x.functionID == 'TMT04011' || x.functionID == 'TMT04012') &&
+          data.status != '3'
+        ) {
+          x.disabled = true;
+        }
+      });
+    }
+  }
+
+  //#region  tree
+  loadTreeView() {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTasksTreeAsync',
+        this.taskExtends?.taskID
+      )
+      .subscribe((res) => {
+        if (res) this.dataTree = res;
+      });
+  }
+  //#endregion
 }

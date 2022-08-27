@@ -7,7 +7,13 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
-import { UIComponent, DialogData, DialogRef, FormModel } from 'codx-core';
+import {
+  UIComponent,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { threadId } from 'worker_threads';
 import { CodxEsService } from '../../codx-es.service';
 import { PdfViewComponent } from '../pdf-view/pdf-view.component';
@@ -22,26 +28,31 @@ export class PopupSignForApprovalComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
+    private notify: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    debugger;
     this.dialog = dialog;
-    // this.data = dt.data[0];
+    this.data = dt.data;
   }
 
   @ViewChild('pdfView') pdfView: PdfViewComponent;
 
-  isApprover = false;
+  isApprover = true;
   dialog;
-  data = {
-    funcID: 'EST021',
-  };
+  data;
+  // data = {
+  //   funcID: 'EST021',
+  //   recID: 'fda05e5c-24e7-11ed-a51b-d89ef34bb550',
+  // };
 
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
-  recID = '1dd72dd0-19f0-11ed-978d-509a4c39550b';
+  recID = '';
+  // recID = '';
   funcID;
   cbxName;
 
@@ -49,8 +60,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   onInit(): void {
     this.canOpenSubPopup = false;
-    this.funcID = this.data.funcID;
-
+    this.funcID = this.data ? this.data.funcID : 'EST01';
+    this.recID = this.data
+      ? this.data.recID
+      : '8d52a9dc-24ed-11ed-9451-00155d035517';
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService
@@ -58,8 +71,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
         .then((res) => {
           if (res) {
             this.dialogSignFile = res;
+            this.detectorRef.detectChanges();
           }
-          this.detectorRef.detectChanges();
         });
     });
   }
@@ -99,8 +112,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.dialog.closed.subscribe((res) => {
       if (res.event == 'ok') {
         console.log('run');
-
-        this.pdfView.renderQRFile();
+        this.pdfView.renderAnnotPanel();
+        this.notify.notifyCode('RS002');
+        this.dialog && this.dialog.close();
       }
     });
   }
@@ -110,5 +124,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
   saveDialog() {
     this.dialog.close();
+  }
+
+  close() {
+    this.dialog && this.dialog.close();
   }
 }

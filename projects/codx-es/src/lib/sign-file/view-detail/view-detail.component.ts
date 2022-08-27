@@ -14,6 +14,8 @@ import {
   SidebarModel,
   ViewsComponent,
 } from 'codx-core';
+import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
+import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 
@@ -33,25 +35,95 @@ export class ViewDetailComponent implements OnInit {
   @Input() funcID;
   @Input() formModel;
   @Input() view: ViewsComponent;
+  @Input() hideMF = false;
+  @Input() hideFooter = false;
   @ViewChild('attachment') attachment;
 
+  active = 1;
   openNav = false;
   canRequest;
   itemDetailStt;
-  taskViews;
+  taskViews = [];
+  files = [];
   process;
   itemDetailDataStt;
   dialog: DialogRef;
   lstStep = [];
+  transID: string;
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   ngOnInit(): void {
-    this.itemDetailStt = 1;
-    this.taskViews = 1;
+    this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
+    if (this.formModel) {
+      this.initForm();
+    } else {
+      this.esService.getFormModel('EST021').then((formModel) => {
+        if (formModel) this.formModel = formModel;
+        this.initForm();
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (this.formModel) {
+      this.initForm();
+    } else {
+      this.esService.getFormModel('EST021').then((formModel) => {
+        if (formModel) this.formModel = formModel;
+        this.initForm();
+      });
+    }
+  }
+
+  setHeight() {
+    let main,
+      header = 0;
+    let ele = document.getElementsByClassName(
+      'codx-detail-main'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (ele) {
+      main = Array.from(ele)[0]?.offsetHeight;
+    }
+
+    let eleheader = document.getElementsByClassName(
+      'codx-detail-header'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (ele) {
+      header = Array.from(eleheader)[0]?.offsetHeight;
+    }
+
+    let nodes = document.getElementsByClassName(
+      'codx-detail-body'
+    ) as HTMLCollectionOf<HTMLElement>;
+    if (nodes.length > 0) {
+      Array.from(
+        document.getElementsByClassName(
+          'codx-detail-body'
+        ) as HTMLCollectionOf<HTMLElement>
+      )[0].style.height = main - header - 27 + 'px';
+    }
+  }
+
+  initForm() {
+    // this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
+    //   if (res) {
+    //     this.taskViews = res;
+    //   }
+    //   console.log('task', res);
+    // });
+
+    this.esService
+      .getFiles(
+        this.formModel.funcID,
+        this.itemDetail?.recID,
+        this.formModel.entityName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.files = res;
+        }
+      });
     if (this.itemDetail && this.itemDetail !== null) {
       this.esService
         .getDetailSignFile(this.itemDetail?.recID)
@@ -61,17 +133,19 @@ export class ViewDetailComponent implements OnInit {
             this.df.detectChanges();
           }
         });
-
-      let transID = this.itemDetail.processID;
-      if (this.itemDetail?.approveControl == '1') {
-        transID = this.itemDetail.recID;
+      this.transID = this.itemDetail.processID;
+      if (
+        this.itemDetail?.approveControl == '1' ||
+        this.itemDetail?.approveStatus != '1'
+      ) {
+        this.transID = this.itemDetail.recID;
       }
 
       this.esService.getFormModel('EST04').then((res) => {
         if (res) {
           let fmApprovalStep = res;
           let gridModels = new GridModels();
-          gridModels.dataValue = transID;
+          gridModels.dataValue = this.transID;
           gridModels.predicate = 'TransID=@0';
           gridModels.funcID = fmApprovalStep.funcID;
           gridModels.entityName = fmApprovalStep.entityName;
@@ -91,6 +165,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
     }
+    this.setHeight();
   }
 
   changeNavState(state) {
@@ -102,10 +177,7 @@ export class ViewDetailComponent implements OnInit {
   }
 
   getHour(date, leadtime) {
-    //
     var res = new Date(date);
-    console.log('time', res);
-
     res.setHours(res.getHours() + leadtime);
     return res;
   }
@@ -134,15 +206,39 @@ export class ViewDetailComponent implements OnInit {
       case 'SYS02':
         this.delete(datas);
         break;
+      case 'SYS04':
+        this.assign(datas);
+        break;
+    }
+  }
+
+  assign(datas) {
+    if (this.checkOpenForm(this.funcID)) {
+      var task = new TM_Tasks();
+      task.refID = datas?.recID;
+      task.refType = this.view?.formModel.entityName;
+      task.dueDate = datas?.expiredOn;
+      var vllControlShare = 'TM003';
+      var vllRose = 'TM002';
+      var title = 'Giao việc';
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(
+        AssignInfoComponent,
+        [task, vllControlShare, vllRose, title],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {});
     }
   }
 
   edit(datas: any) {
     this.view.dataService.edit(datas).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
 
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -155,7 +251,7 @@ export class ViewDetailComponent implements OnInit {
         {
           isAddNew: false,
           dataSelected: datas,
-          formModel: this.view?.currentView?.formModel,
+          formModel: this.view?.formModel,
           option: option,
         },
         '',
@@ -178,6 +274,15 @@ export class ViewDetailComponent implements OnInit {
         if (item) {
         }
       });
+  }
+
+  checkOpenForm(val: any) {
+    // if(val == "ODT108" && this.checkUserPer?.created) return true;
+    // else if((val == "ODT109" || val == "ODT110") && this.checkUserPer?.read) return true;
+    // else if(this.checkUserPer?.created || this.checkUserPer?.owner) return true;
+    // else this.notifySvr.notify("Bạn không có quyền thực hiện chức năng này.")
+    // return false;
+    return true;
   }
 
   clickMF(e) {

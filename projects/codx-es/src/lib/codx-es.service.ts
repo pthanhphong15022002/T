@@ -11,7 +11,7 @@ import {
   UploadFile,
   UserModel,
 } from 'codx-core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export class GridModels {
@@ -80,6 +80,12 @@ export class ES_SignFile {
   ModifiedBy: string;
 }
 
+export class tmpApprovalTrans {
+  transID;
+  approver;
+  comment;
+  mode; //Approve - 1 || Reject - 2 || Redo - 3
+}
 interface cbxObj {
   [key: string]: any;
 }
@@ -103,7 +109,64 @@ export class CodxEsService {
     private http: HttpClient
   ) {}
 
+  notifyInvalid(
+    formGroup: FormGroup,
+    formModel: FormModel,
+    gridViewSetup: any = null
+  ) {
+    const invalid = [];
+    const controls = formGroup.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        break;
+      }
+    }
+    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+
+    if (gridViewSetup == null) {
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            gridViewSetup = res;
+            if (fieldName == 'Email' && formGroup.value.email != null) {
+              this.notificationsService.notifyCode(
+                'E0003',
+                0,
+                '"' + gridViewSetup[fieldName].headerText + '"'
+              );
+            } else {
+              this.notificationsService.notifyCode(
+                'E0001',
+                0,
+                '"' + gridViewSetup[fieldName].headerText + '"'
+              );
+            }
+          }
+        });
+    } else {
+      this.notificationsService.notifyCode(
+        'E0001',
+        0,
+        '"' + gridViewSetup[fieldName].headerText + '"'
+      );
+    }
+  }
+
   //#region Get from FunctionList
+  getDataDefault(
+    funcID: string,
+    entityName: string,
+    idField: string
+  ): Observable<object> {
+    return this.api.execSv('ES', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      funcID,
+      entityName,
+      idField,
+    ]);
+  }
+
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {
@@ -141,8 +204,9 @@ export class CodxEsService {
 
               if (element.fieldName == 'owner') {
                 model[element.fieldName].push(user.userID);
-              }
-              if (element.fieldName == 'createdOn') {
+              } else if (element.fieldName == 'bUID') {
+                model[element.fieldName].push(user['buid']);
+              } else if (element.fieldName == 'createdOn') {
                 model[element.fieldName].push(new Date());
               } else if (element.fieldName == 'stop') {
                 model[element.fieldName].push(false);
@@ -315,23 +379,6 @@ export class CodxEsService {
     );
   }
 
-  getApprovalTrans(recID: string) {
-    // let data = new DataRequest();
-    // data.formName = 'ApprovalTrans';
-    // data.gridViewName = 'grvSignFiles';
-    // data.entityName = 'ES_ApprovalTrans';
-    // data.predicate = 'ProcessID=@0';
-    // data.dataValue = recID;
-    // data.pageLoading = false;
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'GetByProcessIDAsync',
-      [recID]
-    );
-  }
-
   getApprovedSignatures(recID, userID) {
     return this.api.execSv(
       'es',
@@ -343,7 +390,7 @@ export class CodxEsService {
   }
   //#endregion
 
-  //#region  AutoNumbers
+  //#region AD_AutoNumbers
   public setupAutoNumber = new BehaviorSubject<any>(null);
   isSetupAutoNumber = this.setupAutoNumber.asObservable();
 
@@ -457,7 +504,7 @@ export class CodxEsService {
 
   //#endregion
 
-  //#region Category
+  //#region ES_Category
   addNewCategory(data: any): Observable<any> {
     return this.api.execSv('ES', 'ES', 'CategoriesBusiness', 'AddNewAsync', [
       data,
@@ -487,7 +534,7 @@ export class CodxEsService {
   }
   //#endregion
 
-  //#region ApprovalSteps
+  //#region ES_ApprovalSteps
   public approvalStep = new BehaviorSubject<any>(null);
   isSetupApprovalStep = this.approvalStep.asObservable();
 
@@ -529,13 +576,17 @@ export class CodxEsService {
         lstData = res;
       });
     }
-    return this.api.execSv(
-      'ES',
-      'ES',
-      'ApprovalStepsBusiness',
-      'AddNewApprovalStepsAsync',
-      [lstData]
-    );
+    if (lstData == null) {
+      return EMPTY;
+    } else {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'AddNewApprovalStepsAsync',
+        [lstData]
+      );
+    }
   }
 
   editApprovalStep(): Observable<any> {
@@ -543,14 +594,17 @@ export class CodxEsService {
     this.approvalStep.subscribe((res) => {
       lstDataEdit = res;
     });
-
-    return this.api.execSv(
-      'ES',
-      'ES',
-      'ApprovalStepsBusiness',
-      'UpdateApprovalStepsAsync',
-      [lstDataEdit]
-    );
+    if (lstDataEdit == null) {
+      return EMPTY;
+    } else {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'UpdateApprovalStepsAsync',
+        [lstDataEdit]
+      );
+    }
   }
 
   updateTransID(newTransID): Observable<any> {
@@ -629,7 +683,6 @@ export class CodxEsService {
   //#endregion
 
   //#region ES_SignFiles
-
   getAutoNumberByCategory(categoryID): Observable<any> {
     return this.api.exec(
       'ERM.Business.AD',
@@ -708,7 +761,60 @@ export class CodxEsService {
     );
   }
 
+  saveSignFileIsTemplate(recID: string, templateName: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'CreateTemplateBySignFileAsync',
+      [recID, templateName]
+    );
+  }
+
   //#endregion
+
+  //#region ES_ApprovalTrans
+
+  getTask(recID: string): Observable<any> {
+    return this.api.execSv(
+      'TM',
+      'ERM.Business.TM',
+      'TaskBusiness',
+      'GetListTaskTreeByRefIDAsync',
+      recID
+    );
+  }
+
+  release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.CM',
+      'DataBusiness',
+      'ReleaseAsync',
+      [
+        oSignFile?.recID,
+        oSignFile.approveControl == '1'
+          ? oSignFile?.recID
+          : oSignFile?.processID,
+        entityName,
+        funcID,
+        '<div>' + oSignFile.title + '</div>',
+      ]
+    );
+  }
+
+  getApprovalTrans(recID: string) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetViewByTransIDAsync',
+      [recID]
+    );
+  }
+
+  //#endregion
+
   addOrEditSignArea(data: any): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -729,7 +835,8 @@ export class CodxEsService {
     );
   }
 
-  getSignAreas(data): Observable<any> {
+  getSignAreas(sfID, fileID, isApprover, userID): Observable<any> {
+    let data = [sfID, fileID, isApprover, userID];
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
@@ -806,16 +913,39 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(data){
+  updateSignFileTrans(userID, sfID, mode, comment) {
+    let data = [userID, sfID, mode, comment];
     return this.api.execSv(
-      'ES',
+      'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UpdateApprovalTransStatusAsync',
       data
-    )
+    );
   }
   //#endregion
+
+  //#region CA
+  createLocalCertificatePFX(mail, pass) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'SignaturesBusiness',
+      'CreateLocalCertificatePFXAsync',
+      [mail, pass]
+    );
+  }
+  //#endregion
+
+  getFiles(funcID: string, objectId: string, objectType): Observable<any> {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesForOutsideAsync',
+      [funcID, objectId, objectType]
+    );
+  }
 }
 export class LayoutModel {
   isChange: boolean = false;

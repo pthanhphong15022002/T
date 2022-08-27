@@ -1,14 +1,13 @@
-<codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [body]="body" [footer]="footer"
-  [formModel]="formModel" (clickMF)="openFormFuncID($event)">
+<codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [footer]="!hideFooter?footer:null"
+  [body]="body" [hideMF]="hideMF" [formModel]="formModel" (clickMF)="openFormFuncID($event)">
 
   <ng-template #header>
     <div class="vmd-detail">
-      <div class="d-flex justify-content-between flex-grow-1 mb-2">
+      <div class="d-flex justify-content-between flex-grow-1 mb-3">
         <div class="d-flex align-items-center">
-
           <codx-temp-full [title]="itemDetail?.title"
-            [icoCss]="'w-30px h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-2 ' +itemDetail?.icon"
-            [icoStyle]="setStyles(itemDetail?.color)">
+            [icoCss]="'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 ' +itemDetail?.icon"
+            [icoStyle]="setStyles(itemDetail?.color)" [titleCss]="'fs-4'">
           </codx-temp-full>
         </div>
         <div class="d-flex align-self-center">
@@ -28,24 +27,23 @@
       <div class="me-4 icon-apartment"></div>
       <div class="d-flex flex-column flex-grow-1">
         <div class="text-dark fw-bold fs-6">
-          <codx-label field="OrgUnitID" [formModel]="formModel" default="Phòng: " class="fw-bold me-1"
+          <codx-label field="OrgUnitID" [formModel]="formModel" default="Phòng " class="fw-bold me-1"
             style="font-weight: bold"></codx-label>
-          {{ itemDetail?.ownerOrgUnit }}
+          : {{ itemDetail?.ownerOrgUnit }}
         </div>
       </div>
     </div>
 
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6">
-        <codx-label field="CreatedOn" [formModel]="formModel" default="Ngày yêu cầu: " class="fw-bold me-1">
+        <codx-label field="CreatedOn" [formModel]="formModel" default="Ngày yêu cầu" class="fw-bold me-1">
         </codx-label>
         <span class="text-gray-600">
-          {{itemDetail? (itemDetail?.createdOn | date: "dd/MM/yyyy"): "dd/MM/yyyy"}}
+          : {{itemDetail? (itemDetail?.createdOn | date: "dd/MM/yyyy"): "dd/MM/yyyy"}}
         </span>
       </div>
       <div class="d-flex me-6">
-        <codx-label field="DateExpire" [formModel]="itemDetailTemplate.formModel" default="Ngày hết hạn"
-          class="fw-bold me-1"></codx-label>
+        <codx-label field="ExpiredOn" [formModel]="formModel" default="Ngày hết hạn" class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">
           : {{
           itemDetail?.permission
@@ -55,22 +53,9 @@
         </span>
       </div>
       <div class="d-flex text-dark me-6">
-        <codx-label name="lblPriority" [formModel]="itemDetailTemplate.formModel" default="Ưu tiên:"
-          class="fw-bold me-1">
+        <codx-label fiedName="Priority" [formModel]="formModel" default="Ưu tiên" class="fw-bold me-1">
         </codx-label>
-        <!-- <span class="icon-flag icon-16" [style.color]="
-            itemDetail
-              ? (itemDetail?.priority | vll: 'L0186':'color' | async)
-              : ''
-          "></span>
-        <span class="text-gray-600">
-          {{
-          itemDetail
-          ? (itemDetail?.priority | vll: "L0186":"text" | async)
-          : ""
-          }}
-        </span> -->
-        <codx-vll [formModel]="formModel" [field]="'Priority'" [value]="itemDetail?.priority" [showText]="true"
+        : <codx-vll [formModel]="formModel" [field]="'Priority'" [value]="itemDetail?.priority" [showText]="true"
           class="text-gray-600">
         </codx-vll>
       </div>
@@ -84,25 +69,18 @@
         </span>
       </div>
       <div class="d-flex me-6">
-        <codx-label field="RefDate" [formModel]="itemDetailTemplate.formModel" default="Ngày tham chiếu"
+        <codx-label field="RefDate" [formModel]="itemDetailTemplate.formModel" default="Ngày văn bản"
           class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">
-          : {{
-          itemDetail
-          ? (itemDetail?.refDate | date: "dd/MM/yyyy")
-          : "dd/MM/yyyy"
-          }}
+          : {{itemDetail?.refDate ? (itemDetail?.refDate | date: "dd/MM/yyyy") : "dd/MM/yyyy"}}
         </span>
       </div>
     </div>
     <div class="mb-2">
-      <codx-attachment #attachment [objectType]="formModel.entityName" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-        hideDes="1" [functionID]="" [objectId]="itemDetail?.recID" [allowMultiFile]="1" [functionID]="formModel.funcID">
-      </codx-attachment>
-      <!-- <codx-attachment #attachment objectType="ES_SignFiles" hideImageUpload="0"
-      [objectId]="dialogSignFile.value.recID" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
-      [functionID]="formModel.funcID" type="inline" (fileCount)="getfileCount($event)">
-    </codx-attachment> -->
+      <ng-container *ngIf="files.length > 0">
+        <codx-thumbnail [files]="files" displayThumb="simple">
+        </codx-thumbnail>
+      </ng-container>
     </div>
 
     <div class="codx_e-header mb-2" [class.active]="true">
@@ -122,7 +100,7 @@
         <button class="btn btn-white text-dark me-1" [class.active]="itemDetailStt == '3'"
           (click)="clickChangeItemViewStatus('3', itemDetail?.recID)">
           <i class="icon-people_alt icon-16"></i>
-          <codx-label name="lblApprovalTrans" [formModel]="itemDetailTemplate.formModel" default="Qui trình duyệt"
+          <codx-label name="lblApprovalTrans" [formModel]="itemDetailTemplate.formModel" default="Quy trình duyệt"
             class="ms-1 fw-bold"></codx-label>
         </button>
       </div>
@@ -130,109 +108,102 @@
   </ng-template>
 
   <ng-template #body>
+    <!-- <div class="tab-horizone h-od-tab ">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2 mt-1"
+                [ngClass]="{'text-primary':active===1}"></i><span>
+                <codx-label name="lblAbstract" [formModel]="itemDetailTemplate.formModel" default="Mô tả ngắn gọn"
+                  class="ms-1 fw-bold"></codx-label>
+              </span></div>
+          </a>
+          <ng-template ngbNavContent>
+            <div class="summary mt-2">
+              {{ itemDetail?.abstract }}
+            </div>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>
+            <codx-label name="lblBusiness" [formModel]="itemDetailTemplate.formModel" default="Công việc"
+              class="ms-1 fw-bold"></codx-label>
+            <ng-template ngbNavContent>
+              <ng-container *ngIf="taskViews[0].length>0">
+                <codx-treeview #treeAdd id="treeAdd" [data]="taskViews[0]" [showSearch]="false"
+                  [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
+                </codx-treeview>
+              </ng-container>
+            </ng-template>
+          </a>
+        </li>
+        <li [ngbNavItem]="3">
+          <a ngbNavLink>
+            <i class="icon-people_alt icon-16"></i>
+            <codx-label name="lblApprovalTrans" [formModel]="itemDetailTemplate.formModel" default="Quy trình duyệt"
+              class="ms-1 fw-bold"></codx-label>
+            <ng-template ngbNavContent>
+              <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
+              </lib-view-approval-process>
+            </ng-template>
+          </a>
+        </li>
+      </ul>
+
+    </div> -->
+
+    <!-- <div class="tab-horizone h-od-tab h-100">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2 mt-1"
+                [ngClass]="{'text-primary':active===1}"></i><span>Nơi nhận</span></div>
+          </a>
+          <ng-template ngbNavContent>
+            <h1>...</h1>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center"><i class="icon-format_list_numbered me-2"
+                [ngClass]="{'text-primary':active===2}"></i><span>Công việc</span></div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container *ngIf="taskViews[0].length>0">
+              <codx-treeview #treeAdd id="treeAdd" [data]="taskViews[0]" [showSearch]="false"
+                [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
+              </codx-treeview>
+            </ng-container>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center"><i class="icon-info me-2"
+                [ngClass]="{'text-primary':active===3}"></i><span>Chi tiết</span></div>
+          </a>
+          <ng-template ngbNavContent>
+            <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
+            </lib-view-approval-process>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="pt-5"></div>
+    </div> -->
+
+
     <div class="container mb-2">
       <div class="summary mt-2" *ngIf="itemDetailStt == '1'">
         {{ itemDetail?.abstract }}
       </div>
       <div class="list_Of_Jobs mb-2" *ngIf="itemDetailStt == '2'">
-        <ng-container>
-          <codx-treeview #treeAdd id="treeAdd" [data]="taskViews" [showSearch]="false" [itemTemplate]="taskViewDetail"
-            [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
-          </codx-treeview>
-        </ng-container>
+        <!-- <ng-container *ngIf="taskViews[0].length>0">
+          <codx-treeview #treeAdd id="treeAdd" [data]="taskViews[0]" [showSearch]="false" [itemTemplate]="templateorg"
+            [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
+        </ng-container> -->
       </div>
       <div *ngIf="itemDetailStt == '3'" class="mb-2">
-        <div class="codx-approval mt-3" *ngIf="lstStep?.length > 0">
-          <ng-container *ngFor="let item of lstStep, let index = index">
-            <div class="codx-approval-step step-test pb-1">
-              <div class="codx-approval-header d-flex align-items-center">
-                <div class="step-number">{{item.stepNo}}</div>
-                <div class="step-title text-gray-800 fw-bold fs-5">{{item.stepName}}</div>
-              </div>
-              <div class="codx-approval-content ms-17">
-                <ng-container *ngFor="let approver of item.approvers">
-                  <div class="d-flex align-items-top justify-content-between mb-2">
-                    <codx-temp-full *ngIf="approver.roleType?.length == 1" [imageId]="approver.approver"
-                      [imageObjType]="'AD_Users'" [imageWidth]="35"
-                      [title]="approver.approverName ?? (approver.approver |vll: 'ES014': 'text'|async)"
-                      [desc]="approver.positionName ?? 'Vị trí công việc'">
-                    </codx-temp-full>
-                    <codx-temp-full *ngIf="approver.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
-                    (item.icon ? item.icon : 'share_default.svg')" imgCss="w-30px p-3 me-3 user-mini-icon"
-                      [imageWidth]="20" [title]="(approver.approver |vll: 'ES014': 'text'|async)"
-                      [desc]="approver.approver |vll: 'ES014': 'text'|async">
-                    </codx-temp-full>
-
-                    <div class="d-flex align-items-center text-center">
-                      <div class="ms-6 d-flex">
-                        <span class="text-dark">{{item.leadtime}} giờ</span>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-
-              </div>
-            </div>
-            <div class="codx-approval-step step-signature-temp pb-3" *ngIf="index == lstStep.length-1"></div>
-          </ng-container>
-        </div>
-        <div class="row w-100" *ngFor="let part of process; let index = index">
-          <div class="col-12">
-            <div class="codx-approval">
-              <div class="codx-approval-step step-test pb-3">
-                <div class="codx-approval-header d-flex align-items-center mb-4">
-                  <div class="step-number" [class.active]="part.isActived.lenght > 0 ? true : false">
-                    {{ index + 1 }}
-                  </div>
-                  <div class="step-title text-gray-800 fw-bold fs-4">
-                    {{ part.stepType | vll: "ES002":"text" | async }}
-                  </div>
-                  <div class="badge badge-success badge-sm badge-circle ms-3"
-                    *ngIf="part.isActived.lenght > 0 ? true : false">
-                    <span class="icon-check icon-16"></span>
-                  </div>
-                </div>
-                <div class="codx-approval-content ms-17" *ngFor="let approve of part.approvers">
-                  <div class="d-flex align-items-top justify-content-between mb-3">
-                    <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
-                      [title]="approve.approverName" [desc]="approve.approverPosition" [desc2]="approve.comment">
-                    </codx-temp-full>
-                    <div class="d-flex align-items-center text-center">
-                      <div class="d-flex flex-column">
-                        <div class="text-dark fw-bold">
-                          {{ approve.status | vll: "ES003":"text" | async }}
-                        </div>
-                        <div class="badge my-1 badge-primary" *ngIf="
-                            approve.duration <= approve.leadtime;
-                            else inQueue
-                          ">
-                          {{ getHour("2022-07-06T00:00:00Z", 0) }}
-                          -cc
-                          {{ getHour(approve.activedOn, approve.leadtime) }}
-                        </div>
-                        <ng-template #inQueue>
-                          <div class="badge badge-danger">
-                            {{ approve.leadtime }}
-                          </div>
-                        </ng-template>
-                        <div class="text-gray-600 fs-7" *ngIf="approve.approvedOn ? true : false">
-                          {{ approve.approvedOn | date: "medium" }}
-                        </div>
-                      </div>
-                      <div class="ms-6 d-flex">
-                        <span class="icon-attach_file icon-18 me-1"></span>
-                        <span class="text-dark">
-                          {{
-                          approve.attachments ? approve.attachments : 0
-                          }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
+        </lib-view-approval-process>
       </div>
     </div>
   </ng-template>
@@ -266,8 +237,45 @@
       </div>
     </div>
   </ng-template>
-</codx-detail-tmp>
 
+  <ng-template #templateorg let-data>
+    <div class="container-fluid justify-content-between d-flex">
+      <div class="d-flex align-items-top mt-5">
+        <codx-temp-full [imageId]="data?.userID" [imageObjType]="'AD_Users'" [title]="data?.userName" [titleLine]="2"
+          [subTitle]="data?.positionNameCreate" [desc]="data?.taskName" [dataItem]="data" [footer]="footerTask">
+        </codx-temp-full>
+      </div>
+      <div class="mt-5 ms-5 justify-content-end w-120px text-center" *ngIf="data?.items?.length == 0">
+        <codx-vll [name]="'L0614'" [value]="data?.status" [showText]="true" [showBgColor]="false"></codx-vll>
+        <div class="progress h-6px w-100 mt-2">
+          <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="data?.percentage" aria-valuenow="50"
+            aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="d-flex mt-2">
+          <span class="icon-schedule icon-16 text-gray-600"></span>
+          <span class="ms-2 text-dark">{{data?.dueDate | date: "dd/MM/yyyy"}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</codx-detail-tmp>
+<ng-template #footerTask let-data>
+  <div class="d-flex align-items-center mt-2" [style.marginLeft.px]="50">
+    <div class="d-flex align-items-center">
+      <span class="icon-person me-1" [class.text-muted]="data?.items.length == 0"
+        [class.text-primary]="data?.items.length > 0"></span>
+      <span class="text-dark" *ngIf="data?.items.length > 0">{{data?.items.length}}</span>
+    </div>
+    <div class="d-flex align-items-center ms-6">
+      <span class="icon-chat_bubble_outline me-1 text-muted"></span>
+      <span class="text-dark"></span>
+    </div>
+    <div class="d-flex align-items-center ms-6">
+      <span class="icon-attach_file me-1 text-muted"></span>
+      <span class="text-dark"></span>
+    </div>
+  </div>
+</ng-template>
 <ng-template #taskViewDetail let-user>
   <div class="user_Info">
     <div class="d-flex">

@@ -52,6 +52,10 @@ import { SettingComponent } from './setting/setting.component';
 import { PdfViewComponent } from './sign-file/pdf-view/pdf-view.component';
 import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
 import { PopupSignForApprovalComponent } from './sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
+import { ViewApprovalProcessComponent } from './setting/view-approval-process/view-approval-process.component';
+import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { ESApprovelComponent } from './sign-file/approval/approval.component';
 
 const routes: Routes = [
   {
@@ -69,20 +73,19 @@ const routes: Routes = [
       },
 
       {
-        path: 'signatures/:funcID',
-        component: SignatureComponent,
-      },
-      {
-        path: 'categories/:funcID',
-        component: DocCategoryComponent,
-      },
-      {
         path: 'home/:funcID',
         component: DashboardComponent,
       },
       {
         path: 'setting/:funcID',
         component: SettingComponent,
+      },
+      {
+        path: 'approvals/:funcID',
+        loadChildren: () =>
+          import('projects/codx-es/src/lib/codx-approvel.module').then(
+            (m) => m.ApprovelModule
+          ),
       },
       {
         path: 'set',
@@ -104,6 +107,20 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'signatures/:funcID',
+        component: SignatureComponent,
+      },
+      {
+        path: 'categories/:funcID',
+        component: DocCategoryComponent,
+      },
+    ],
+  },
 ];
 @NgModule({
   declarations: [
@@ -122,6 +139,8 @@ const routes: Routes = [
     PdfViewComponent,
     PopupADRComponent,
     PopupSignForApprovalComponent,
+    ViewApprovalProcessComponent,
+    ESApprovelComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -135,6 +154,7 @@ const routes: Routes = [
     TabModule,
     CodxShareModule,
     PdfViewerAllModule,
+    ListViewAllModule,
   ],
   exports: [CodxEsComponent],
   providers: [
@@ -148,7 +168,7 @@ const routes: Routes = [
     StackingColumnSeriesService,
     LegendService,
     TooltipService,
-    //pdfService (NQBuu)
+    //pdfService (NHBuu)
     LinkAnnotationService,
     BookmarkViewService,
     MagnificationService,

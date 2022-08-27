@@ -25,7 +25,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Input() objectType:string = "";
   @Input() edit: boolean = false;
   @Input() files:any[] = [];
-  @Input() multiple:boolean = true;
   @Output() evtGetFiles = new EventEmitter();
   @Output() removeFile = new EventEmitter();
   @Output() addFile = new EventEmitter();
@@ -70,15 +69,22 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       .subscribe((result:any[]) => {
         if(result.length > 0){
           result.forEach((f:any) => {
-            if(f.referType == this.FILE_REFERTYPE.IMAGE){
-              this.file_img_video.push(f);
+            if(this.objectType == "WP_News"){
+              if(f.referType == this.FILE_REFERTYPE.IMAGE){
+                this.file_img_video.push(f);
+              }
             }
-            else if(f.referType == this.FILE_REFERTYPE.VIDEO){
-              f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
-              this.file_img_video.push(f);
-            }
-            else{
-              this.file_application.push(f);
+            else {
+              if(f.referType == this.FILE_REFERTYPE.IMAGE){
+                this.file_img_video.push(f);
+              }
+              else if(f.referType == this.FILE_REFERTYPE.VIDEO){
+                f['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
+                this.file_img_video.push(f);
+              }
+              else{
+                this.file_application.push(f);
+              }
             }
           });
           this.files = result; 
@@ -90,11 +96,12 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   convertFile(){
     if(this.files){
       this.files.forEach((f:any) => {
-        if(f.referType == this.FILE_REFERTYPE.IMAGE || f.referType == this.FILE_REFERTYPE.VIDEO  ){
-          this.file_img_video.push(f);
-        }
-        else{
+        if(f.referType == this.FILE_REFERTYPE.APPLICATION){
           this.file_application.push(f);
+        }
+        else
+        {
+          this.file_img_video.push(f);
         }
       });
       this.dt.detectChanges();
@@ -106,31 +113,25 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   }
 
   removeFiles(file:any){
-    if(this.multiple){
-      switch(file.referType){
-        case this.FILE_REFERTYPE.APPLICATION:
-          for (let i = 0; i < this.file_application.length; i++) {
-            if(this.file_application[i].fileName == file.fileName)
-            {
-              this.file_application.splice(i,1);
-              break;
-            };
-          };
-        break;
-      default:
-        for (let i = 0; i < this.file_img_video.length; i++) {
-          if(this.file_img_video[i].fileName == file.fileName)
+    switch(file.referType){
+      case this.FILE_REFERTYPE.APPLICATION:
+        for (let i = 0; i < this.file_application.length; i++) {
+          if(this.file_application[i].fileName == file.fileName)
           {
-            this.file_img_video.splice(i,1);
+            this.file_application.splice(i,1);
             break;
           };
-        }; 
-        break;
-      }
-    }
-    else
-    {
-      this.files = [];
+        };
+      break;
+    default:
+      for (let i = 0; i < this.file_img_video.length; i++) {
+        if(this.file_img_video[i].fileName == file.fileName)
+        {
+          this.file_img_video.splice(i,1);
+          break;
+        };
+      }; 
+      break;
     }
     this.files = this.files.filter((f:any) => f.fileName != file.fileName);
     this.filesDelete.push(file);
@@ -138,6 +139,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     this.dt.detectChanges();
   }
   addFiles(files:any[]){
+    debugger;
     files.map(f => {
       if(f.mimeType.indexOf("image") >= 0 ){
         f['referType'] = this.FILE_REFERTYPE.IMAGE;

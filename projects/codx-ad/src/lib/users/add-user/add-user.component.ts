@@ -25,6 +25,8 @@ import {
   CRUDService,
   UIComponent,
   DialogModel,
+  NotificationsService,
+  LayoutAddComponent,
 } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
@@ -41,9 +43,8 @@ import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 })
 export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
-  @ViewChild('form') form: any;
+  @ViewChild('form') form: LayoutAddComponent;
   @Output() loadData = new EventEmitter();
-  @ViewChild('view') codxView!: any;
 
   title = '';
   dialog!: DialogRef;
@@ -64,26 +65,34 @@ export class AddUserComponent extends UIComponent implements OnInit {
   formGroupAdd: FormGroup;
   gridViewSetup: any = [];
   checkBtnAdd = false;
+  saveSuccess = false;
+  dataAfterSave: any;
+  countOpenPopRoles = 0;
+  formUser: FormGroup;
+  checkValueChangeUG = false;
+  dataUG: any = [];
 
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
     private auth: AuthStore,
     private adService: CodxAdService,
+    private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
     super(injector);
-    this.formType = dt?.data.formType;
+    this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
+    this.adUser = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(
         JSON.stringify(this.data?.chooseRoles)
       );
+      this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
     }
-    this.adUser = JSON.parse(JSON.stringify(this.data));
     this.dialog = dialog;
     this.user = auth.get();
 
@@ -109,10 +118,67 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    this.dialog.closed.subscribe((res) => {
+      if (!this.saveSuccess) {
+        if (this.dataAfterSave && this.dataAfterSave.userID) {
+          this.deleteUserBeforeDone(this.dataAfterSave);
+        }
+      }
+    });
+    this.initForm();
+  }
+
+  initForm() {
+    this.adService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((dt) => {
+        if (dt) {
+          this.formUser = dt;
+        }
+      });
   }
 
   openPopup(item: any) {
-    this.onAdd();
+    this.formUser.patchValue(this.adUser);
+    if (this.formUser.invalid) {
+      this.adService.notifyInvalid(this.formUser, this.formModel);
+      return;
+    } else {
+      if (this.checkValueChangeUG == true || this.adUser.userGroup) {
+        this.dataUG.forEach((dt) => {
+          if (dt.UserID == this.adUser.userGroup) {
+            if (this.formType == 'add') {
+              this.notification
+                .alertCode('AD003', null, "'" + dt.UserName + "'")
+                .subscribe((info) => {
+                  if (info.event.status == 'Y') {
+                    this.adUser.customize == true;
+                    this.openPopupRoles(item);
+                  }
+                });
+            } else {
+              if (this.adUser.customize == false) {
+                this.notification
+                  .alertCode('AD003', null, "'" + dt.UserName + "'")
+                  .subscribe((info) => {
+                    if (info.event.status == 'Y') {
+                      this.adUser.customize == true;
+                      this.openPopupRoles(item);
+                    }
+                  });
+              } else this.openPopupRoles(item);
+            }
+          }
+        });
+      } else this.openPopupRoles(item);
+    }
+  }
+
+  openPopupRoles(item: any) {
+    this.countOpenPopRoles++;
+    if (this.formType == 'add') {
+      if (this.countOpenPopRoles == 1) this.addUserTemp();
+    }
     var option = new DialogModel();
     option.FormModel = this.form.formModel;
     var obj = {
@@ -143,13 +209,46 @@ export class AddUserComponent extends UIComponent implements OnInit {
     });
   }
 
+  deleteUserBeforeDone(data: any) {
+    this.adService.deleteUser(data.userID, data.employeeID).subscribe();
+    this.dialog.dataService.data = this.dialog.dataService.data.filter(
+      (x) => x.userID != data.userID
+    );
+  }
+
+  addUserTemp() {
+    this.checkBtnAdd = true;
+    this.formUser.patchValue(this.adUser);
+    if (this.formUser.invalid) {
+      this.adService.notifyInvalid(this.formUser, this.formModel);
+      return;
+    } else {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSaveTemp(opt), 0)
+        .subscribe((res) => {
+          if (res.save) {
+            this.imageUpload
+              .updateFileDirectReload(res.save.userID)
+              .subscribe((result) => {
+                if (result) {
+                  this.loadData.emit();
+                }
+              });
+            this.dataAfterSave = res.save;
+          }
+        });
+    }
+  }
+
   countListViewChoose() {
-    this.countListViewChooseRoleApp = this.viewChooseRole.filter(
-      (obj) => obj.isPortal == false
-    ).length;
-    this.countListViewChooseRoleService = this.viewChooseRole.filter(
-      (obj) => obj.isPortal == true
-    ).length;
+    if (this.viewChooseRole) {
+      this.countListViewChooseRoleApp = this.viewChooseRole.filter(
+        (obj) => obj.isPortal == false
+      ).length;
+      this.countListViewChooseRoleService = this.viewChooseRole.filter(
+        (obj) => obj.isPortal == true
+      ).length;
+    }
   }
 
   beforeSave(op: RequestOption) {
@@ -160,29 +259,29 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'add') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
-      data = [this.adUser, this.isAddMode, this.viewChooseRole];
+      data = [this.adUser, this.viewChooseRole, true, false];
     }
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      if (checkDifference == true)
-        data = [this.adUser, this.isAddMode, this.viewChooseRole];
-      else
-        data = [
-          this.adUser,
-          this.isAddMode,
-          this.viewChooseRole,
-          checkDifference,
-        ];
+      data = [this.adUser, this.viewChooseRole, checkDifference];
     }
     op.data = data;
     return true;
   }
 
+  beforeSaveTemp(op: RequestOption) {
+    var data = [];
+    this.isAddMode = true;
+    op.methodName = 'AddUserAsync';
+    data = [this.adUser, null, false, false];
+    op.data = data;
+    return true;
+  }
+
   onAdd() {
-    this.checkBtnAdd = true;
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.save) {
           this.imageUpload
@@ -190,14 +289,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-                this.dialog.close(res.save);
               }
+              this.dialog.close(res?.save);
             });
-          res.save['chooseRoles'] = res.save?.functions;
-          //this.changeDetector.detectChanges();
+          res.save.chooseRoles = res.save?.functions;
+          this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
   }
 
   onUpdate() {
@@ -211,23 +309,49 @@ export class AddUserComponent extends UIComponent implements OnInit {
               if (result) {
                 this.loadData.emit();
               }
+              this.dialog.close(res.update);
             });
-          res.update['chooseRoles'] = res.update?.functions;
+          res.update.chooseRoles = res.update.functions;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
           this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
   }
 
   onSave() {
-    if (this.isAddMode) {
-      if (this.checkBtnAdd == false) return this.onAdd();
-      else this.dialog.close();
+    this.saveSuccess = true;
+    this.formUser.patchValue(this.adUser);
+    if (this.formUser.invalid) {
+      this.adService.notifyInvalid(this.formUser, this.formModel);
+      return;
+    } else {
+      if (this.isAddMode) {
+        if (this.checkBtnAdd == false) return this.onAdd();
+        else {
+          if (
+            this.countListViewChooseRoleApp > 0 ||
+            this.countListViewChooseRoleService > 0
+          ) {
+            this.adService
+              .addUserRole(this.dataAfterSave, this.viewChooseRole)
+              .subscribe((res: any) => {
+                if (res) {
+                  res.chooseRoles = res?.functions;
+                  this.dialog.close(res);
+                  /* (this.dialog.dataService as CRUDService)
+                    .update(res)
+                    .subscribe(); */
+                  this.changeDetector.detectChanges();
+                }
+              });
+          }
+          this.notification.notifyCode('SYS006');
+          
+        }
+      } else this.onUpdate();
     }
-    return this.onUpdate();
   }
 
   reloadAvatar(data: any): void {
@@ -245,12 +369,18 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   valueEmp(data) {
-    this.adUser.employeeID = data.data;
-    this.getEmployee(this.adUser.employeeID);
+    if (data.data) {
+      this.adUser.employeeID = data.data;
+      this.getEmployee(this.adUser.employeeID);
+    }
   }
 
   valueUG(data) {
+    if (data?.component) {
+      this.dataUG = data?.component.dataService.data;
+    }
     if (data.data) {
+      this.checkValueChangeUG = true;
       this.adUser.userGroup = data.data;
       this.loadUserRole(data.data);
     }
@@ -269,15 +399,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
         if (employee) {
           this.adUser.employeeID = employeeID;
           this.adUser.userName = employee.employeeName;
-          // this.adUser.positionID = employee.positionID,
           this.adUser.buid = employee.organizationID;
-          this.adUser.email = employee.email;
-          this.adUser.phone = employee.phone;
-          // this.formGroupAdd.controls['userName'].setValue(employee.employeeName);
-          // this.formGroupAdd.controls['buid'].setValue(employee.organizationID);
-          // this.formGroupAdd.controls['email'].setValue(employee.email);
-          // this.formGroupAdd.controls['phone'].setValue(employee.phone);
-          // this.formGroupAdd.patchValue({ [employee['field']]: employee });
+          if (this.formType == 'add') {
+            this.adUser.email = employee.email;
+            this.adUser.phone = employee.phone;
+          } else this.adUser['phone'] = this.adUser.mobile;
           this.changeDetector.detectChanges();
         }
       });
@@ -286,15 +412,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
   loadUserRole(userID) {
     if (!userID) return;
     this.api
-      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRoles', [userID])
+      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRolesAsync', [userID])
       .subscribe((res) => {
-        if (res && res.msgBodyData) {
+        if (res && res.msgBodyData[0]) {
           this.viewChooseRole = res.msgBodyData[0];
           this.viewChooseRole.forEach((dt) => {
             dt['module'] = dt.functionID;
             dt['roleID'] = dt.recIDofRole;
             dt.userID = this.adUser.userID;
           });
+          debugger;
           this.countListViewChooseRoleApp = this.viewChooseRole.length;
           this.changeDetector.detectChanges();
         }
@@ -312,47 +439,4 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   buttonClick(e: any) {}
-
-  // getFormGroup(formName, gridView): Promise<FormGroup> {
-  //   return new Promise<FormGroup>((resolve, reject) => {
-  //     this.cache.gridViewSetup(formName, gridView).subscribe(gv => {
-  //       var model = {};
-  //       if (gv) {
-  //         const user = this.auth.get();
-  //         for (const key in gv) {
-  //           var b = false;
-  //           if (Object.prototype.hasOwnProperty.call(gv, key)) {
-  //             const element = gv[key];
-  //             element.fieldName = element.fieldName.charAt(0).toLowerCase() + element.fieldName.slice(1);
-  //             model[element.fieldName] = [];
-
-  //             if (element.fieldName == "owner") {
-  //               model[element.fieldName].push(user.userID);
-  //             }
-  //             if (element.fieldName == "createdOn") {
-  //               model[element.fieldName].push(new Date());
-  //             }
-  //             else if (element.fieldName == "stop") {
-  //               model[element.fieldName].push(false);
-  //             }
-  //             else if (element.fieldName == "orgUnitID") {
-  //               model[element.fieldName].push(user['buid']);
-  //             }
-  //             else if (element.dataType == "Decimal" || element.dataType == "Int") {
-  //               model[element.fieldName].push(0);
-  //             }
-  //             else if (element.dataType == "Bool" || element.dataType == "Boolean")
-  //               model[element.fieldName].push(false);
-  //             else if (element.fieldName == "createdBy") {
-  //               model[element.fieldName].push(user.userID);
-  //             } else {
-  //               model[element.fieldName].push(null);
-  //             }
-  //           }
-  //         }
-  //       }
-  //       resolve(this.fb.group(model, { updateOn: 'blur' }));
-  //     });
-  //   });
-  // }
 }

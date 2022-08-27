@@ -125,21 +125,6 @@ ejs-listview .e-ul>li {
 }
 
 
-/*** 1 - 5 pic ***/
-.feed-5pic .col-xl-5.pl-0 div+div {
-    margin-top: 3px;
-}
-
-.feed-img-more {
-    margin-top: -150px !important;
-    height: 150px;
-    position: relative;
-    z-index: 99;
-    background-color: rgba(0, 0, 0, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .text-number {
     font-size: 24px;
@@ -287,4 +272,12 @@ ejs-listview .e-ul>li {
 .edit-comment .form-control {
     border-radius: 30px !important;
     padding-right: 20px;
+}
+
+.tmpshare {
+    background-color: #fff;
+    right: -10px;
+    padding: 12px;
+    z-index: 99;
+    box-shadow: 2px 2px 6px #444;
 }

@@ -13,7 +13,8 @@ import {
   RequestOption,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { Device } from '../../../booking-car/popup-add-booking-car/popup-add-booking-car.component';
+import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
+
 
 import { CodxEpService } from '../../../codx-ep.service';
 
@@ -170,7 +171,11 @@ export class PopupAddCarsComponent implements OnInit {
       }
     });
     this.fGroupAddCar.value.equipments = equipments;
-    this.fGroupAddCar.value.companyID = this.fGroupAddCar.value.companyID[0];
+    if(this.fGroupAddCar.value.category!=1){
+      this.fGroupAddCar.value.companyID=null;
+    }else{      
+      this.fGroupAddCar.value.companyID = this.fGroupAddCar.value.companyID[0];
+    }
     this.fGroupAddCar.value.owner = this.fGroupAddCar.value.owner[0];
 
     if (!this.fGroupAddCar.value.linkType) {
@@ -189,7 +194,7 @@ export class PopupAddCarsComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
         }
       );      
-    this.attachment.saveFilesObservable().subscribe(res=>{})
+    //this.attachment.saveFilesObservable().subscribe(res=>{})
   }
 
   fileCount(event){

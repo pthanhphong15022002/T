@@ -1,11 +1,11 @@
-<div class="card">
+<div class="card my-team">
     <div class="card-header border-0">
-        <div class="card-title">
-            <codx-label class="mt-2" name="lblTeam" formName="HR_Employees" default="Thành viên nhóm"></codx-label>
+        <div class="card-title mt-5">
+            <codx-label class="mb-1" name="lblTeam" formName="HR_Employees" default="Thành viên nhóm"></codx-label>
         </div>
     </div>
-    <div class="card-body pd-top-0">
-        <div class="team-group">
+    <div class="card-body pt-0 pb-2">
+        <div class="team-group pb-3">
             <ngx-skeleton-loader *ngIf="!employeeMyTeam" count="5" animation="progress"></ngx-skeleton-loader>
             <div class="user-teams">
                 <div *ngIf="employeeMyTeam && employeeMyTeam?.length <=10">
@@ -56,7 +56,7 @@
                         <div *ngIf="num == 9" (mouseenter)="PopoverEmpList(empPopoverList,employeeMyTeam)"
                             [ngbPopover]="popContent" popoverClass="empPopoverClass" [popoverTitle]="popTitle"
                             #empPopoverList="ngbPopover" placement="bottom" container="body" autoClose="outside"
-                            triggers="manual" class="symbol symbol-45px symbol-circle user-info ut-item ut-more"
+                            triggers="manual" class="symbol symbol-40px symbol-circle user-info ut-item ut-more"
                             aria-describedby="ngb-popover-35">
                             <span class="symbol-label fs-4">+{{employeeMyTeam?.length-9}}</span>
                         </div>
@@ -69,24 +69,18 @@
 
 <ng-template #popContent>
     <ng-container>
-        <div *ngFor="let emp of listEmpInfo | filter : searchField : 'employeeName': '' :''" class="p10 full">
-            <div class="d-flex justify-content-between align-items-top">
-                <div class="d-flex flex-column org-card flex-grow-1" [ngbPopover]="" placement="left"
-                    [popoverTitle]="popEmpTitle" #pemp="ngbPopover" container="body" triggers="manual"
-                    (click)="PopoverEmpOfList(pemp,emp)">
-                    <div class="d-flex align-items-start">
-                        <codx-img class="symbol symbol-40 symbol-circle me-4" [objectId]="emp?.employeeID"
-                            [objectName]="emp?.employeeName" objectType="HR_Employees" [width]="40">
-                        </codx-img>
-                        <div class="d-flex flex-column flex-grow-1">
-                            <div class="text-dark">{{emp?.employeeName}}</div>
-                            <div class="text-dark-50">{{emp?.positionName}}</div>
-                        </div>
+        <div *ngFor="let emp of listEmpInfo | filter : searchField : 'employeeName': '' :''" class="pb-2 full">
+            <div class="d-flex flex-column org-card w-100 cursor-pointer" [ngbPopover]="popEmpTitle" placement="left"
+                #pemp="ngbPopover" container="body" triggers="manual" (click)="PopoverEmpOfList(pemp,emp)">
+                <div class="d-flex align-items-start">
+                    <codx-img class="me-3" [objectId]="emp?.employeeID" [objectName]="emp?.employeeName"
+                        objectType="HR_Employees" [width]="30">
+                    </codx-img>
+                    <div class="d-flex flex-column w-100">
+                        <div class="text-dark fw-bold">{{emp?.employeeName}}</div>
+                        <div class="text-gray-500 fs-7">{{emp?.positionName}}</div>
                     </div>
                 </div>
-                <a class="text-dark-50">
-                    <span class="icon-keyboard_arrow_right icon-22"></span>
-                </a>
             </div>
         </div>
     </ng-container>
@@ -101,7 +95,7 @@
             <div class="left-5">({{employeeMyTeam?.length}})</div>
         </div>
     </div>
-    <div>
+    <div class="mt-1">
         <codx-input type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiếm"></codx-input>
     </div>
 </ng-template>
@@ -113,32 +107,32 @@
                 [objectName]="imployeeInfo?.employeeName" objectType="HR_Employees">
             </codx-img>
         </div>
-        <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex flex-column w-100">
             <div class="text-dark fw-bold">{{imployeeInfo?.employeeName}}</div>
             <div class="text-gray-700">{{imployeeInfo?.positionName}}</div>
             <div class="text-gray-500 fs-7">{{imployeeInfo?.organizationName}}</div>
         </div>
     </div>
     <div class="d-flex flex-column employee-add w-200px">
-        <div class="d-flex align-items-center mt-2">
+        <div class="d-flex align-items-center mt-1">
             <span class="icon-email icon-16 me-2"></span>
-            <div class="text-dark-50" *ngIf="imployeeInfo?.email != '---'">{{imployeeInfo?.email}}</div>
-            <div class="text-50 text-muted" *ngIf="imployeeInfo?.email == '---'">
+            <div class="text-dark-50" *ngIf="imployeeInfo?.email != ''">{{imployeeInfo?.email}}</div>
+            <div class="text-50 text-muted" *ngIf="imployeeInfo?.email == ''">
                 <codx-label name="lblEmail" formName="HR_Employees" default="Email"></codx-label>
             </div>
         </div>
-        <div class="d-flex align-items-center mt-2">
+        <div class="d-flex align-items-center mt-1">
             <span class="icon-phone_android icon-16 me-2"></span>
-            <div class="text-dark-50" *ngIf="imployeeInfo?.phone != '---'">{{imployeeInfo?.phone}}</div>
-            <div class="text-50 text-muted" *ngIf="imployeeInfo?.phone == '---'">
+            <div class="text-dark-50" *ngIf="imployeeInfo?.phone != ''">{{imployeeInfo?.phone}}</div>
+            <div class="text-50 text-muted" *ngIf="imployeeInfo?.phone == ''">
                 <codx-label name="lblPhone" formName="HR_Employees" default="Số điện thoại"></codx-label>
             </div>
         </div>
-        <div class="d-flex align-items-top mt-2">
+        <div class="d-flex align-items-top mt-1">
             <span class="icon-place icon-16 me-2"></span>
-            <div class="text-dark-50" *ngIf="imployeeInfo?.street!='---'">{{imployeeInfo?.street}}</div>
-            <div class="text-50 text-muted" *ngIf=" imployeeInfo?.street=='---'">
-                <codx-label name="lblAddress" formName="HR_Employees" default="Đại chỉ thường trú"></codx-label>
+            <div class="text-dark-50" *ngIf="imployeeInfo?.street!=''">{{imployeeInfo?.street}}</div>
+            <div class="text-50 text-muted" *ngIf=" imployeeInfo?.street==''">
+                <codx-label name="lblAddress" formName="HR_Employees" default="Địa chỉ thường trú"></codx-label>
             </div>
         </div>
     </div>

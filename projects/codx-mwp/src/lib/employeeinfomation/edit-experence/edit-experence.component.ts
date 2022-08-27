@@ -1,5 +1,5 @@
-import { Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { CodxMwpService } from '../../codx-mwp.service';
 
 @Component({
@@ -14,27 +14,58 @@ export class EditExperenceComponent implements OnInit {
   data: any;
   action = '';
   isSaving: boolean = false;
+  isAdd = true;
 
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
     private api: ApiHttpService,
     private codxMwp: CodxMwpService,
+    private df: ChangeDetectorRef,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
     // this.data = dialog.dataService!.dataSelected;
-    this.dataBind = dt.data;
+    if (dt && dt.data) {
+      this.dataBind = dt.data.dataSelected;
+      this.isAdd = dt.data.isAdd;
+    }
+
     this.dialog = dialog;
+  }
+
+  ngOnDestroy(): void {
+    this.codxMwp.experienceEdit.next(null);
   }
 
   ngOnInit(): void {
     if (this.action === 'edit') {
       this.title = 'Cập nhật thông tin';
     }
-    // if(this.action==='copy'){
-    //   this.title = 'Sao chép';
-    // }
+    this.codxMwp.experienceChange.subscribe((data: any) => {
+      if (data) {
+        this.dataBind = {};
+        this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'GetEmployeeExperiences', data.recID)
+          .subscribe((o: any) => {
+            if (!o) return;
+
+            // if (o.fromDate)
+            //   o.fromDate = parseDate(o.fromDate);
+
+            // if (o.toDate)
+            //   o.toDate = parseDate(o.toDate);
+
+            if (!o.employeeID) {
+              o.employeeID = data.employeeID;
+            }
+            this.dialog.openForm();
+            this.dataBind = o;
+            this.df.detectChanges();
+          });
+
+      }
+
+    });
   }
 
   changeTime(data) {
@@ -52,35 +83,20 @@ export class EditExperenceComponent implements OnInit {
     }
   }
 
-  // beforeSave(op: any) {
-  //   var data = [];
-  //   op.method = 'UpdateEmployeeExperiencesAsync';
-  //   op.service = 'HR';
-  //   data = [
-  //     this.dataBind,
-
-  //   ];
-  //   op.data = data;
-  //   return true;
-  // }
-
   OnSaveForm() {
-    // this.isSaving = true;
-    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind])
+    this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind, this.isAdd])
       .subscribe((res: any) => {
-        // this.isSaving = false;
-        // console.log(res);
         if (res) {
           res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
           res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
-
           this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
           this.dialog.close(this.dataBind);
         }
         else {
           this.notiService.notifyCode("SYS021");
+          this.dialog.close();
         }
       });
-    // this.dialog.close(this.dataBind);
+      this.dialog.close();
   }
 }

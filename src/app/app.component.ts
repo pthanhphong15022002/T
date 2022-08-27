@@ -1,7 +1,17 @@
-import { Component, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  OnInit,
+  HostListener,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { TenantService } from 'codx-core';
+import {
+  NotificationsFCMService,
+  NotificationsService,
+  TenantService,
+} from 'codx-core';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 
 @Component({
@@ -12,12 +22,16 @@ import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
-  // private angularFireMessaging: AngularFireMessaging;
+  private angularFireMessaging: AngularFireMessaging;
 
   constructor(
     private router: Router,
     private tenant: TenantService,
-  ) { }
+    // private angularFireMessaging: AngularFireMessaging,
+    private ns: NotificationsFCMService,
+    private notify: NotificationsService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.unsubscribe.push(this.tenant.init(this.router));
@@ -35,7 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
     //   (payload: any) => {
     //     console.log("new message received. ", payload);
     //     this.ns.get().subscribe(async res => {
-    //       //this.notificationMessages = res;
+    //       console.log('res: ',res)
     //       this.ns.changeData(res);
     //     });
     //     this.notify.notify(payload.notification.body);
@@ -44,5 +58,23 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+    // sự kiện khi ấn nút back của trình duyệt
+    this.closeDialog();
+  }
+
+  closeDialog() {
+    var dialogContain = document.querySelector('.codx-dialog-container');
+    dialogContain.innerHTML = '';
+    var dialog = document.querySelectorAll('.e-dialog');
+    if (dialog && dialog.length > 0) {
+      dialog.forEach((box) => {
+        if (box.tagName.toLowerCase() !== 'ejs-dialog') box = box.parentElement;
+        box.remove();
+      });
+    }
   }
 }

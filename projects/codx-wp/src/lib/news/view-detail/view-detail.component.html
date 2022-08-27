@@ -23,7 +23,7 @@
                 <div class=" justify-content-between border-bottom py-1">
                     <div class="d-flex flex-center justify-content-between border-bottom py-1">
                         <div class="d-flex flex-center">
-                            <div class="d-flex flex-center bagde-light me-6">
+                            <div class="d-flex flex-center badge badge-light me-6">
                                 <span class="fs-7 text-gray-600 me-1">
                                     <img class="h-13px w-13px"
                                         src="assets/themes/sys/default/img/{{(dataItem.shareControl | vll:'L1901' : 'icon' | async)}}" />
@@ -53,6 +53,16 @@
                     </ng-contianer>
                     <ng-template #news>
                         <div class="py-3" [innerHTML]="dataItem?.subContent"></div>
+                        <!-- <div class="row p-4">
+                            <codx-input 
+                                type="textarea" 
+                                class="test-textarea" 
+                                field="textarea" 
+                                format="ed3"
+                                [crrValue]="dataItem.contentHtml"
+                                ngDefaultControl>
+                            </codx-input>
+                        </div> -->
                         <div class="py-3" [innerHTML]="dataItem?.contents"></div>
                     </ng-template>
                     <div class="fw-bolder fs-3 erer text-primary mt-6">

@@ -5,14 +5,14 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialogRef"
-  [formModel]="formModel"
+  [formModel]="dialogRef.formModel"
   [formControl]="fGroupAddDriver"
   *ngIf="isAfterRender"
 >
 <ng-template #body>
   
   <div class="row">
-    <div class="col-6 form-group">
+    <div class="col-4 form-group">
       <codx-label
         fiedName="Category"
         [formModel]="dialogRef.formModel"
@@ -22,7 +22,6 @@
       <codx-input
           type="valuelist"
           name="valuelist"
-          ngDefaultControl
           [crrValue]="fGroupAddDriver.value.category"
           refValue="VL005"
           field="category"
@@ -30,7 +29,7 @@
         >
         </codx-input>
     </div>
-    <div class="col-6 form-group">
+    <div class="col-8 form-group" >
       <codx-label
         fiedName="CompanyID"
         [formModel]="dialogRef.formModel"
@@ -39,19 +38,19 @@
       </codx-label>
 
       <codx-input
+        [disabled]="fGroupAddDriver.value.category == 1 ? false :true"
         refValue="AgencyNames"
         type="combobox"
         [Group]="fGroupAddDriver"
         ControlName="companyID"
         [formModel]="form.formModel"
-        (valueChange)="valueChange($event)"  
         [multiple]="false" 
       >
       </codx-input> 
     </div>
   </div>
   <div class="row">
-    <div class="col-6 form-group">
+    <div class="col-8 form-group">
       <codx-label
         fiedName="ResourceName"
         [formModel]="dialogRef.formModel"
@@ -68,11 +67,20 @@
       </codx-input>
     </div>
     
-    <div class="col-5 form-group">
+    <div class="col-2 form-group d-flex flex-column justify-content-end">
       <codx-label default="" [formModel]="dialogRef.formModel"> </codx-label>
-      <div class="d-flex flex-row justify-content-between">
-        <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button>
-        <codx-attachment
+      <div class="d-flex flex-column justify-content-end">
+        <codx-input 
+        type="vllicon" 
+        refValue="L1470" 
+        field="icon" 
+        class="btn btn-primary dropdown-toggle"
+        [crrValue]="fGroupAddDriver.value.icon"
+        (valueChange)="valueChange($event)"
+          >
+        </codx-input>
+        <!-- <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button> -->
+        <!-- <codx-attachment
           #attachment
           [objectType]="'ES_SignFiles'"
           [functionID]="dialogRef.formModel.funcID"
@@ -90,7 +98,7 @@
           (fileCount)="fileCount($event)"
           (fileAdded)="fileAdded($event)"
         >
-        </codx-attachment> 
+        </codx-attachment>  -->
       </div>
       
     </div>
@@ -106,8 +114,8 @@
         field="linkID"        
         ngDefaultControl
         [crrValue]="this.fGroupAddDriver.value.linkID"
-        (valueChange)="valueCbxCarChange($event)" 
-        [multiple]="false" 
+        [multiple]="false"         
+        (valueChange)="valueCbxCarChange($event)"  
         >
       </codx-input>      
     </div>

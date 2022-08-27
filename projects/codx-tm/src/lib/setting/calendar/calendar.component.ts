@@ -21,6 +21,7 @@ import { APICONSTANT } from '@shared/constant/api-const';
 import 'lodash';
 import { SelectweekComponent } from 'projects/codx-share/src/lib/components/selectweek/selectweek.component';
 import { CodxTMService } from '../../codx-tm.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'setting-calendar',
@@ -29,7 +30,8 @@ import { CodxTMService } from '../../codx-tm.service';
 })
 export class CalendarComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @Input() viewPreset: string = 'weekAndDay';
   @Input() calendarID: string;
   @ViewChild(SelectweekComponent) selectweekComponent: SelectweekComponent;
@@ -60,22 +62,33 @@ export class CalendarComponent
   constructor(
     private injector: Injector,
     private tmService: CodxTMService,
-    private authService: AuthStore) {
+    private authService: AuthStore,
+    private route: ActivatedRoute
+  ) {
     super(injector);
     this.user = this.authService.get();
     this.funcID = this.router.snapshot.params['funcID'];
   }
 
   onInit(): void {
-    this.cache.valueList('L1481').subscribe((res) => {
-      this.vlls = res.datas;
+    this.route.params.subscribe((routeParams) => {
+      debugger;
+      var state = history.state;
+      if (state) {
+        this.calendarID = state.dataValue || '';
+        this.cache.valueList('L1481').subscribe((res) => {
+          this.vlls = res.datas;
+        });
+        this.tmService.getFormModel(this.funcID).then((res) => {
+          this.formModel = res;
+          const { formName, gridViewName } = this.formModel;
+          this.tmService
+            .getComboboxName(formName, gridViewName)
+            .then((res) => {});
+        });
+        this.getParams();
+      }
     });
-    this.tmService.getFormModel(this.funcID).then((res) => {
-      this.formModel = res;
-      const { formName, gridViewName } = this.formModel;
-      this.tmService.getComboboxName(formName, gridViewName).then((res) => { });
-    });
-    this.getParams();
   }
 
   ngAfterViewInit(): void {

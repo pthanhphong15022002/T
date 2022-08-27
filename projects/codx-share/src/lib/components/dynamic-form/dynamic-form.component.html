@@ -2,24 +2,25 @@
   #view
   [views]="views"
   [service]="service"
-  [assemblyName]="assemblyName"
-  [className]="className"
-  [method]="method"
+  [entityName]="entityName"
   [predicate]="predicate"
   [dataValue]="dataValue"
+  [idField]="idField"
+  [button]="buttons"
+  (buttonClick)="click($event)"
   (viewChanged)="viewChanged($event, view)"
 >
 </codx-views>
 
 <ng-template #morefunction let-data>
-  <div class="has-action-menu">
-    <div class="action-menu">
-      <codx-mfunc
-        [dataItem]="data"
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-      ></codx-mfunc>
-    </div>
+  <div class="has-action-menu" style="height: 30px">
+    <!-- <div class="action-menu"> -->
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
+    <!-- </div> -->
   </div>
 </ng-template>

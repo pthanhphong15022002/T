@@ -60,8 +60,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
-  predicate ='  (ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =@3 ';
-  dataValue: any = '0;1;5;false';
+  predicate ='(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
+  dataValue: any = '0;1;5;2';
 
   modal: DialogRef;
   headerText = '';
@@ -252,37 +252,27 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         if (res) this.tagUsers = res;
       });
   }
-
-  getShareUser(shareControl, commentID) {
-    if (shareControl == '1') {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'GetShareOwnerListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res) this.tagUsers = res;
-          console.log('CHECK TAG USER LIST', this.tagUsers.orgUnitName);
+  lstUserShare:any[] = [];
+  getShareUser(item:any) {
+    if(item.shareControl=='U' ||
+      item.shareControl=='G' || item.shareControl=='R' ||
+      item.shareControl=='P' || item.shareControl=='D' ||
+      item.shareControl=='O')
+      {
+        item.isShowShare = !item.isShowShare;
+        this.lstUserShare = item.permissions.filter((p:any) => {
+          return p.memberType == "2";
         });
-    } else {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'GetShareUserListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.tagUsers = res;
-            console.log('CHECK TAG USER LIST', this.tagUsers);
-          }
-        });
+        this.dt.detectChanges();
     }
   }
 
+
+  closeListShare(item:any){
+    if(item.isShowShare){
+      item.isShowShare = false;
+    }
+  }
   naviagte(data: any) {
     this.api
       .execSv(

@@ -11,6 +11,7 @@ import {
   CacheService,
   CallFuncService,
   CodxGridviewComponent,
+  DialogModel,
   DialogRef,
   RequestOption,
   SidebarModel,
@@ -22,8 +23,9 @@ import { PopupAddCategoryComponent } from './popup-add-category/popup-add-catego
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
+import { ApprovalStepComponent } from '../approval-step/approval-step.component';
 
-export class defaultRecource {}
+export class defaultRecource { }
 @Component({
   selector: 'doc-category',
   templateUrl: './category.component.html',
@@ -71,7 +73,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteCategoryAsync';
@@ -100,12 +102,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               template: '',
               width: 180,
             },
-            {
-              field: 'parentID',
-              headerText: gv['ParentID'].headerText,
-              template: this.parentID,
-              width: 120,
-            },
+            // {
+            //   field: 'parentID',
+            //   headerText: gv['ParentID'].headerText,
+            //   template: this.parentID,
+            //   width: 120,
+            // },
             {
               field: 'icon',
               headerText: gv['Icon'].headerText,
@@ -168,8 +170,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddCategoryComponent,
         { data: this.viewBase.dataService.dataSelected, isAdd: true },
@@ -188,8 +190,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           this.dataSelected = this.viewBase.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '550px';
-          option.DataService = this.viewBase?.currentView?.dataService;
-          option.FormModel = this.viewBase?.currentView?.formModel;
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = this.viewBase?.formModel;
           this.dialog = this.callfunc.openSide(
             PopupAddCategoryComponent,
             { data: evt, isAdd: false },
@@ -230,5 +232,32 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       lstNumber.push(i + 1);
     }
     return lstNumber;
+  }
+
+  viewDetail(oCategory) {
+    let transID = oCategory.recID;
+    let data = {
+      type: '0',
+      transID: transID,
+      justView: true,
+    };
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+
+    this.callfunc.openForm(
+      ApprovalStepComponent,
+      '',
+      screen.width,
+      screen.height,
+      '',
+      data,
+      '',
+      dialogModel
+    );
+  }
+
+  contentTooltip() {
+    return 'Xem chi tiết';
   }
 }

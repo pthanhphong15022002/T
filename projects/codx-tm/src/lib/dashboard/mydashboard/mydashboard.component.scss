@@ -13,3 +13,8 @@
   background-color: #20bdae;
   margin-right: 6px;
 }
+
+.taskbox-list {
+  max-height: calc(100vh - 250px);
+  overflow: auto;
+}

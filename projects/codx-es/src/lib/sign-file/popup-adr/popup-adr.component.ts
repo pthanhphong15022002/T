@@ -6,7 +6,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { UIComponent, DialogData, DialogRef, FormModel } from 'codx-core';
+import {
+  UIComponent,
+  DialogData,
+  DialogRef,
+  FormModel,
+  AuthStore,
+} from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../codx-es.service';
 
@@ -21,13 +27,16 @@ export class PopupADRComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
     this.dialog = dialog;
     this.data = dt.data;
+    this.user = this.authStore.get();
   }
+
   okClick = false;
   data;
   title;
@@ -46,6 +55,7 @@ export class PopupADRComponent extends UIComponent {
   noteData;
   cbxName;
 
+  user;
   onInit(): void {
     this.title = this.data.title;
     this.subTitle = this.data.subTitle;
@@ -56,6 +66,11 @@ export class PopupADRComponent extends UIComponent {
     this.formModel.currentData = this.approvalTrans;
     this.dialogSignFile = this.data.formGroup;
     this.controlName = this.mode == 2 ? 'rejectControl' : 'redoControl';
+
+    //nho xoa NGUYENPM LTTTRUC
+    // this.user.userID = 'NGUYENPM';
+    //
+
     this.detectorRef.detectChanges();
   }
 
@@ -64,12 +79,19 @@ export class PopupADRComponent extends UIComponent {
   changeReason(e) {}
 
   saveDialog() {
+    console.log(this.dialogSignFile);
+
     this.esService
-      .updateSignFileTrans([this.recID, this.mode])
+      .updateSignFileTrans(
+        this.user.userID,
+        this.recID,
+        this.mode,
+        this.dialogSignFile?.value ? this.dialogSignFile.value.comment : ''
+      )
       .subscribe((res) => {
         console.log('res');
+        this.dialog.close('ok');
       });
-    this.dialog.close('ok');
   }
 
   popupUploadFile() {

@@ -1,12 +1,12 @@
 
 <form [formGroup]="agencyForm" (ngSubmit)="onSave()">
-  <codx-form headerText="Thêm đơn vị nhận" subHeaderText="Cho phép gia hạn deadline cho xử lý công việc" [body]="body" [footer]="footer" [dialog]="dialog">
+  <codx-form headerText="Thêm đơn vị nhận"  [body]="body" [footer]="footer" [dialog]="dialog">
       <ng-template popup adde #body>
         <div class="form-group mt-3">
-          <codx-label default="Phân loại"></codx-label>
+          <codx-label default="Nguồn"></codx-label>
           <codx-input
             type="valuelist"
-            [placeholder]="'Chọn phân loại'" 
+            [placeholder]="'Chọn nguồn'" 
             refValue="OD001"
             [Group]="agencyForm"
             ControlName="category"
@@ -60,7 +60,7 @@
             </codx-input>
           </div>
           <div class="col-6">
-            <codx-label default="Fax"></codx-label>
+            <codx-label default="Email"></codx-label>
             <codx-input
               type="text"
               [Group]="agencyForm"
@@ -68,6 +68,16 @@
             >
             </codx-input>
           </div>
+        </div>
+        <div class="form-group mt-3">
+          <codx-label default="Ghi chú"></codx-label>
+          <codx-input
+            type="textarea"
+            format="ed2"
+            [Group]="agencyForm"
+            ControlName="note"
+          >
+          </codx-input>
         </div>
       </ng-template>
       <ng-template #footer>

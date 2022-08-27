@@ -1,3 +1,27 @@
+// dynamic form
+// import { Component, ViewChild, Injector } from '@angular/core';
+// import { UIComponent, ViewsComponent } from 'codx-core';
+// @Component({
+//   selector: 'setting-rooms',
+//   templateUrl: 'rooms.component.html',
+//   styleUrls: ['rooms.component.scss'],
+// })
+// export class RoomsComponent extends UIComponent {
+//   @ViewChild('view') viewBase: ViewsComponent;
+//   funcID: string;
+
+//   constructor(private injector: Injector) {
+//     super(injector);
+//     this.funcID = this.router.snapshot.params['funcID'];
+//   }
+
+//   onInit(): void {}
+
+//   ngAfterViewInit(): void {
+//     // if (this.viewBase)
+//     //   this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+//   }
+// }
 import {
   Component,
   TemplateRef,
@@ -64,6 +88,37 @@ export class RoomsComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.columnGrids = [
+      {
+        field: 'resourceID',
+        headerText: 'Mã phòng',
+      },
+      {
+        field: 'resourceName',
+        headerText: 'Tên phòng',
+      },
+      {
+        headerText: 'Tình trạng',
+        template: this.statusCol,
+      },
+      {
+        headerText: 'Xếp hạng',
+        template: this.rankingCol,
+      },
+    ];
+    this.views = [
+      {
+        sameData: true,
+        id: '1',
+        text: 'Danh mục phòng',
+        type: ViewType.grid,
+        active: true,
+        model: {
+          resources: this.columnGrids,
+        },
+      },
+    ];
+
     this.buttons = {
       id: 'btnAdd',
     };
@@ -102,8 +157,8 @@ export class RoomsComponent extends UIComponent {
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
         dataItem,
@@ -119,8 +174,8 @@ export class RoomsComponent extends UIComponent {
       this.dataSelected = item;
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.currentView?.dataService;
-      option.FormModel = this.viewBase?.currentView?.formModel;
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
         item,
@@ -141,3 +196,4 @@ export class RoomsComponent extends UIComponent {
     this.dialog && this.dialog.close();
   }
 }
+

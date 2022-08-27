@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, DataRequest, ViewType, SidebarModel, DialogRef, DialogModel } from 'codx-core';
@@ -62,6 +62,7 @@ export class NewsComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService
   ) { }
+
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -86,11 +87,12 @@ export class NewsComponent implements OnInit {
       this.changedt.detectChanges();
     })
   }
+
+
   loadDataAync(funcID:string,category:string){
     this.api.execSv(this.service,this.assemblyName,this.className,"GetDatasNewsAsync",[funcID,category])
     .subscribe((res:any[]) => 
     {
-      if(res.length > 0){
         this.lstHotNew = res[0]; // tin mới nhất
         this.lstVideo = res[1]; // video
         this.lstGroup = res[2]; // tin cũ hơn
@@ -111,7 +113,6 @@ export class NewsComponent implements OnInit {
           }
         }
         this.changedt.detectChanges();
-      }
     });
   }
 
@@ -137,7 +138,10 @@ export class NewsComponent implements OnInit {
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent,'',0,0,'',{type:newsType},'',option);
+    let modal =  this.callfc.openForm(PopupAddComponent,'',0,0,'',{type:newsType},'',option);
+    modal.closed.subscribe((res:any) => {
+      if(res.event) this.loadDataAync(this.funcID,this.category); // sau này có xét duyệt thì bỏ đi
+    })
   }
 
   clickShowPopupSearch() {

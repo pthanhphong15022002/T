@@ -2,10 +2,14 @@ import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Opt
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataItem } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
+import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
+import { Sorting } from '@syncfusion/ej2-pivotview';
+import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { PropertiesComponent } from 'projects/codx-dm/src/lib/properties/properties.component';
 import { environment } from 'src/environments/environment';
-import { AttachmentService } from '../attachment/attachment.service';
+import { threadId } from 'worker_threads';
 import { SystemDialogService } from './systemDialog.service';
 
 @Component({
@@ -15,10 +19,11 @@ import { SystemDialogService } from './systemDialog.service';
 
 })
 export class ViewFileDialogComponent implements OnInit {
-  @ViewChild('contentViewFileDialog') contentViewFileDialog;
-
+  @ViewChild('contentViewFileDialog') contentViewFileDialog;  
+  @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;  
   src: string = "about:blank";
   isVideo: boolean = false;
+  isPdf: boolean = false;
   linkViewImage: string = "";
   access_token: string = "";
   tenant: string = "";
@@ -28,29 +33,46 @@ export class ViewFileDialogComponent implements OnInit {
   data: any;
   user: any;
   titleDialog = "";
+  formModel: any;
+  pathVideo: string;
   @Input() id: string;
   @Input() ext: string;
   @Input('viewBase') viewBase: ViewsComponent;
   dialog: any;
+  public service: string = environment.pdfUrl;//'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
+  public document: string = 'PDF_Succinctly.pdf';
+
   constructor(private router: Router,
     private readonly auth: AuthService,
-    private dmSV: AttachmentService,
+    public dmSV: CodxDMService,
     private fileService: FileService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     private notificationsService: NotificationsService,
-    private callfc: CallFuncService,
+    private callfc: CallFuncService,    
     private elementRef: ElementRef,
     //private modalService: NgbModal,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    if (data.data != null)
-      this.data = data.data;
+    if (data.data != null) {
+      if (data.data.length == 2) {
+        this.data = data.data[0];
+        this.formModel = data.data[1];
+      }      
+      else 
+        this.data = data.data;
+    }      
     else
       this.data = data;
 
     this.id = this.data.recID;
+    this.fileService.getFile(this.id).subscribe(item => {
+      if (item != null) {
+        this.data = item;
+      }
+    });
+    
     this.dialog = dialog;
     //  var data: any = this.auth.user$;
     // this.user = data.source.value;
@@ -72,18 +94,25 @@ export class ViewFileDialogComponent implements OnInit {
   }
 
   properties() {
-    // $('app-customdialog').css('position', 'fixed');
-    // $('app-customdialog').css('z-index', '9999');
-    var data = new DataItem();
-    // $('.viewfile').css('z-index', '1000');
-    // $('.my-dialog').css('z-index', '99992');
-    data.recID = this.id;
-    data.type = 'file';
-    data.fullName = this.fullName;
-    data.copy = false;
-    data.dialog = "properties";
-    data.id_to = "";
-    data.view = "1";
+    let option = new SidebarModel();
+   // option.DataService = this.dataService;
+   // option.FormModel = this.formModel;
+    option.Width = '550px';
+    // let data = {} as any;    
+    //data.id =  this.data.recID;            
+    this.callfc.openSide(PropertiesComponent, this.data, option);      
+    // // $('app-customdialog').css('position', 'fixed');
+    // // $('app-customdialog').css('z-index', '9999');
+    // var data = new DataItem();
+    // // $('.viewfile').css('z-index', '1000');
+    // // $('.my-dialog').css('z-index', '99992');
+    // data.recID = this.id;
+    // data.type = 'file';
+    // data.fullName = this.fullName;
+    // data.copy = false;
+    // data.dialog = "properties";
+    // data.id_to = "";
+    // data.view = "1";
     // this.dmSV.setOpenDialog.next(data);
   }
 
@@ -216,14 +245,20 @@ export class ViewFileDialogComponent implements OnInit {
     this.tenant = this.auth.userValue.tenant;
     this.access_token = this.auth.userValue.token;
     //alert(1);
+    // if ( this.srcVideo == "" && this.linkViewImage == "") { 
+    //   this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
+    //     this.src = `${environment.librOfficeUrl}?WOPISrc=${item}`;  
+    //   });
+    // }   
+
     this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
-    if (document.getElementById("frmFile") != null) {
+   // if ( this.srcVideo == "" && this.linkViewImage == "") {
       setTimeout(() => {
         (        
             document.getElementById("frmFile") as HTMLFormElement).submit();
             //$("#viewfiledalog").find("form")[0]["submit"]();
       }, 100);
-    }
+   // }
   }
 
   _animalOpen(name, num, callback?) {
@@ -259,6 +294,15 @@ export class ViewFileDialogComponent implements OnInit {
 
   ngOnInit(): void {
     //if (this.systemDialogService.onOpenViewFileDialog.observers.length == 0) {
+
+    this.dmSV.isChangeDataViewFile.subscribe(item => {
+      if (item) {
+        this.data = item;
+        this.getBookmark();
+        this.changeDetectorRef.detectChanges();
+      }
+    })
+
     var o = this.data;
     //this.systemDialogService.onOpenViewFileDialog.subscribe((o) => {
     //   if (o == null) return;
@@ -282,10 +326,21 @@ export class ViewFileDialogComponent implements OnInit {
       || this.ext == ".jpg"
       || this.ext == ".bmp"
     ) {
-      this.linkViewImage = `${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
+      // this.data.thumbnail;//
+      this.linkViewImage = this.data.thumbnail; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
-
-    this.viewFile(this.id);
+    else if (this.ext == ".pdf") {
+      this.isPdf = true;
+      this.document = this.id;
+    //  this.service = `${environment.apiUrl}/api/dm/files/${this.id}`;
+      this.pdfviewer.load(this.id, '');
+      this.changeDetectorRef.detectChanges();
+      // this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
+      //   this.document = item;
+      // });
+    }
+    else 
+      this.viewFile(this.id);
     // let diaglog = this.callfc.openForm(this.contentViewFileDialog, o.fileName, 1000, 800, null, "");
     // diaglog.close(res => {
     //   this.viewFile(this.iD);

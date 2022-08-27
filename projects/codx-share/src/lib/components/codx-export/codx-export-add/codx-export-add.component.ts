@@ -61,13 +61,13 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.exportAddForm = this.formBuilder.group(
       {
         templateName: [this.data?.templateName, Validators.required],
-        description: [this.data?.description, Validators.required],
+        description: this.data?.description,
         pWControl: this.data?.pWControl,
         pWDefault: this.data?.pWDefault,
         isDefault: this.data?.isDefault != null ? this.data?.isDefault : false,
         covertPDF: this.data?.covertPDF != null ? this.data?.covertPDF : false,
-        sheetIndex: this.data?.sheetIndex != null ? this.data?.sheetIndex : 0,
-        headerRow: this.data?.headerRow,
+        sheetIndex: [this.data?.sheetIndex!= null ? this.data?.sheetIndex : 0,Validators.required],
+        headerRow: [this.data?.headerRow,Validators.required],
         headerColumn: this.data?.headerColumn,
         splitPagesOn: this.data?.splitPagesOn,
         splitPagesMode: this.data?.splitPagesMode,
@@ -113,7 +113,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             else this.notifySvr.notifyCode("SYS023");
           })
       }
-      else this.notifySvr.notifyCode("DM001");
+      else this.notifySvr.notifyCode("OD022");
     }
     //Chỉnh sửa
     else if (this.action == "edit") {

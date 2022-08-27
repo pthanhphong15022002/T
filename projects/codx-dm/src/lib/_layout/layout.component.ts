@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { FileUpload } from '@shared/models/file.model';
+import { FileService } from '@shared/services/file.service';
+import { FolderService } from '@shared/services/folder.service';
 import { AuthService, CacheService, CallFuncService, CodxService, DialogRef, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { Observable, of } from 'rxjs';
@@ -20,20 +22,30 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   headerLeft: string = 'menu';
   asideDisplay: boolean = false;
   asideCSSClasses?: string;
-  disableInput = true;
+  disableInput = false;
   module = 'DM';
   dialog: DialogRef;
+  percentUsed: any;
+  itemHdd: any;
+  submenu: string;
+ // totalUsed: string;
 
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
-  public titleHddUsed = 'Đã sử dụng 203.63MB trong tổng số 50.00 GB';
+  public titleHddUsed = 'Đã sử dụng 0MB trong tổng số 50.00 GB';
 
   @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
   @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
   user: UserModel | null = null;
 
   public funcs$: Observable<any>;
-
+/*
+db.DM_FolderInfo.updateMany(
+   { FolderType: "4" },
+   { $set: { FolderType: "DMT03" } },
+   { collation: { locale: "fr", strength: 1 } }
+);
+ */
   //   constructor(
 //     inject: Injector,
 //     public cache: CacheService,
@@ -49,10 +61,13 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     public codxService: CodxService,
     public cache: CacheService,
     private callfc: CallFuncService,
-    private dmSV: CodxDMService,
-    private changeDetectorRef: ChangeDetectorRef,
+    public dmSV: CodxDMService,
+    private folderService: FolderService,
+    private fileService: FileService,
+    private changeDetectorRef: ChangeDetectorRef,    
   ) {
     this.codxService.init('DM');
+  
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
 
@@ -64,16 +79,103 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.headerCSSClasses = this.layout.getStringCSSClasses('header');
     this.headerLeft = this.layout.getProp('header.left') as string;
     this.user = this.auth.userValue;
-    this.dmSV.isSetRight.subscribe(res => {
-      //if (this.dmSV.parentFull || this.dmSV.parentCreate) {
-      if (this.dmSV.parentCreate) {
-        this.disableInput = false;
-      }
-      else
-        this.disableInput = true;
-
+    this.dmSV.isMenuIdActive.subscribe(res => {
+      this.submenu = res;
       this.changeDetectorRef.detectChanges();
     });
+    // this.dmSV.isSetRight.subscribe(res => {      
+    //   if (this.dmSV.parentCreate) {
+    //     this.disableInput = false;
+    //   }
+    //   else
+    //     this.disableInput = true;
+
+    //   this.changeDetectorRef.detectChanges();
+    // });
+
+    this.dmSV.isDisableInput.subscribe(res => {    
+      if (res != null) {
+        this.disableInput = res;
+        this.changeDetectorRef.detectChanges();
+      }      
+    });
+
+    this.dmSV.isUpdateHDD.subscribe(item => {     
+      this.getHDDInformaton(item);        
+    });
+    
+    this.fileService.getTotalHdd().subscribe(item => {
+      //  totalUsed: any;
+      // totalHdd: any;
+      this.getHDDInformaton(item);      
+    })
+
+  }
+
+  setClassActive() {    
+    //alert(this.submenu);
+    var css = "btn btn-light-default btn-icon btn-md";    
+    if (this.submenu != "") {
+      //var no = parseInt(this.submenu);
+      if (this.submenu == 'DMT01' || this.submenu == 'DMT08' || this.submenu == 'DMT02' || this.submenu == 'DMT03' || this.submenu == 'DMT04') 
+        css = css + " disabled";        
+    }      
+   // console.log(css);
+    return css;
+  }
+
+  onClick(id, title, subtitle, subid) {
+    var breadcumb = [];
+    breadcumb.push(title);
+    breadcumb.push(subtitle);
+    this.dmSV.idMenuActive = id;
+    this.dmSV.breadcumb.next(breadcumb);
+    this.dmSV.menuIdActive.next(id);
+    this.dmSV.menuActive.next(title);
+    this.dmSV.currentNode = '';
+    this.dmSV.folderId.next(id); 
+
+    this.folderService.options.funcID = id;
+    this.folderService.options.favoriteID = subid;
+    this.folderService.getFolders('').subscribe(async list => {
+      if (list != null) {
+        this.dmSV.listFolder = list[0];
+        this.dmSV.ChangeData.next(true);
+        this.changeDetectorRef.detectChanges();
+      }     
+    });
+
+    this.fileService.options.funcID = id;
+    this.fileService.options.favoriteID = subid;
+    this.fileService.GetFiles("").subscribe(async list => {
+      this.dmSV.listFiles = list[0];
+      this.dmSV.ChangeData.next(true);
+      this.changeDetectorRef.detectChanges();
+    });
+  }
+
+  getHDDInformaton(item: any) {
+    if (item != null) {
+      this.itemHdd = item;
+      this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
+      if (item.unit == 'MB')
+        this.percentUsed = this.percentUsed / 1024;
+      this.percentUsed = this.percentUsed.toFixed(0);
+      //console.log(this.percentUsed);
+      this.titleHddUsed = item.messageHddUsed;
+      this.changeDetectorRef.detectChanges();
+    }    
+  }
+
+  getPercentClass() {
+    if (this.itemHdd != null) {
+      if (this.percentUsed >= 90)
+        return "progress-bar bg-danger";
+      else
+        return "progress-bar";
+    }
+    else
+      return "progress-bar";
   }
 
   ngAfterViewInit(): void {

@@ -15,12 +15,13 @@ import {
 import { Router, Params } from '@angular/router';
 import { BoldReportDesignerComponent } from '@boldreports/angular-reporting-components/reportdesigner.component';
 import { BoldReportViewerComponent } from '@boldreports/angular-reporting-components/reportviewer.component';
-import { AuthStore } from 'codx-core';
+import { ApiHttpService, AuthStore, CallFuncService, DataRequest } from 'codx-core';
+import { CodxExportComponent } from '../../codx-export/codx-export.component';
 
 @Component({
   selector: 'codx-report-viewer',
   templateUrl: './codx-report-viewer.component.html',
-  styleUrls: ['./codx-report-viewer.component.css'],
+  styleUrls: ['./codx-report-viewer.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class CodxReportViewerComponent
@@ -31,7 +32,7 @@ export class CodxReportViewerComponent
   @Input() parameters: any = {};
   @Input() paramRequest: any = [{}];
   @Input() reportUUID: any = '';
-  @Input() locale!: string;
+  @Input() locale: string = 'vi-VN';
   @Input() print: boolean = false;
   @Output() editReport = new EventEmitter<any>();
   @ViewChild('viewer') viewer!: BoldReportViewerComponent;
@@ -44,7 +45,9 @@ export class CodxReportViewerComponent
   private _user: any;
   protected changeDetectorRef!: ChangeDetectorRef;
   constructor(
-    private auth : AuthStore
+    private auth : AuthStore,
+    private api: ApiHttpService,
+    private callfunc: CallFuncService,
   ) {
     this._user = this.auth.get();
     if (
@@ -101,8 +104,9 @@ export class CodxReportViewerComponent
       this.oldParam = JSON.parse(JSON.stringify(this.parameters));
       this.viewer && (this.viewer.widget as any).reload();
     }
-    if (changes.print && changes.print.currentValue) {
+    if (changes.print && changes.print.currentValue == true) {
       this.viewer && (this.viewer.widget as any).print();
+      this.print = false
     }
   }
   ngOnInit(): void {
@@ -135,9 +139,26 @@ export class CodxReportViewerComponent
   //Export click event handler
   onExportItemClick(event: any) {
     if (event.value === 'Excel Template') {
-      //Implement the code to export report as Text
-      alert('Excel File export option clicked');
-      console.log(event);
+      let reportItem;
+      this.api.exec("SYS",
+      "ReportBusiness",
+      "GetReportInfoAsync",
+       this.reportUUID).subscribe(res => {
+        reportItem = res;
+        let gridModel = new DataRequest();
+        gridModel.formName = "";
+        gridModel.entityName = reportItem.entityName;
+        gridModel.funcID = "";
+        gridModel.gridViewName = "";
+        gridModel.page = 0;
+        gridModel.pageSize = 5000;
+        //Chưa có group
+        gridModel.groupFields = "createdBy";
+        this.callfunc.openForm(CodxExportComponent,null,null,800,"",[gridModel,reportItem.recID],null);
+      })
+
+
+
 
     } else if (event.value === 'PDF Template') {
       //Implement the code to export report as DOT

@@ -56,6 +56,7 @@ export class CreateFolderComponent implements OnInit {
   titleDialog: any;
   historyFile: HistoryFile;
   propertiesFolder: boolean;
+  showError = false;
   closeResult = '';
   dialog: any;
   id: string;
@@ -86,7 +87,7 @@ export class CreateFolderComponent implements OnInit {
   listNodeAdd: any;
   listFolder: FolderInfo[];
   listFiles: FileInfo[];
-  folderName = 'folder';
+  folderName = '';
   fileName = []; //"file";
   datafile: ArrayBuffer[];
   percent = '0%';
@@ -339,7 +340,8 @@ export class CreateFolderComponent implements OnInit {
   }
 
   changeValue($event, type) {
-    console.log($event);
+    //   console.log($event);
+    this.errorshow = true;
     switch (type) {
       case 'folderName':
         this.folderName = $event.data;
@@ -348,7 +350,7 @@ export class CreateFolderComponent implements OnInit {
     }
   }
 
-  allpyShare($event) {}
+  allpyShare($event) { }
 
   changeValueOwner($event) {
     this.showPopup = false;
@@ -442,6 +444,9 @@ export class CreateFolderComponent implements OnInit {
   onSaveRightChanged($event, ctrl) {
     var value = $event.data;
     switch (ctrl) {
+      case 'security':
+        this.security = value;
+        break;
       case 'checkFolder':
         this.createSubFolder = value;
         this.changeDetectorRef.detectChanges();
@@ -544,10 +549,8 @@ export class CreateFolderComponent implements OnInit {
   }
 
   onFolderSave() {
-    if (
-      this.approval &&
-      (this.approvers == '' || this.approvers == undefined)
-    ) {
+    this.errorshow = true;
+    if (this.approval && (this.approvers == '' || this.approvers == undefined)) {
       this.notificationsService.notify(this.titleApprovalName);
       return;
     }
@@ -568,23 +571,21 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.folderId = this.dmSV.getFolderId();
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
-    this.fileEditing.checkSecurity =
-      this.security == null ? false : this.security;
+    this.fileEditing.hasSubFolder = this.createSubFolder;
+    this.fileEditing.checkSecurity = this.security == null ? false : this.security;
     this.fileEditing.approvers = this.approvers;
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;
     var that = this;
     if (this.id == '' || this.id == null) {
-      this.fileEditing.folderType = this.dmSV.folderType;
+      this.fileEditing.folderType = this.dmSV.idMenuActive;
       this.folderService.addFolder(this.fileEditing).subscribe(async (res) => {
         if (res.status == 0) {
           var folders = this.dmSV.listFolder;
           if (folders == null) folders = [];
-          if (
-            (res.data.level != '1' && this.dmSV.idMenuActive == '3') ||
-            (res.data.level != '3' && this.dmSV.idMenuActive == '4')
-          )
-            that.dmSV.isTree = true;
+          //  if ((res.data.level != '1' && this.dmSV.idMenuActive == 'DMT02') ||
+          //    (res.data.level != '3' && this.dmSV.idMenuActive == 'DMT03'))
+          //that.dmSV.isTree = true;
           folders.push(Object.assign({}, res.data));
           that.dmSV.listFolder = folders;
           that.dmSV.ChangeData.next(true);
@@ -592,7 +593,7 @@ export class CreateFolderComponent implements OnInit {
           //  that.dmSV.changeData(folders, null, this.dmSV.getFolderId());
           //  that.dmSV.changeAddFolder(res.data);
           that.changeDetectorRef.detectChanges();
-          that.dmSV.isTree = false;
+          //  that.dmSV.isTree = false;
           //  this.modalService.dismissAll();
           this.dialog.close();
         } else {
@@ -744,7 +745,7 @@ export class CreateFolderComponent implements OnInit {
     );
   }
 
-  removeUserRight(index) {}
+  removeUserRight(index) { }
 
   isShowAll(action = false) {
     if (action) this.showAll = !this.showAll;
@@ -838,16 +839,15 @@ export class CreateFolderComponent implements OnInit {
   }
 
   validate(item) {
-    this.errorshow = false;
     switch (item) {
       case 'folderName':
-        if (this.checkFolderName() != '0') {
+        if (this.checkFolderName() != '0' && this.errorshow) {
+          //this.errorshow = true;
           return 'w-100 dms-text-error is-invalid';
         } else {
+          //  this.errorshow = true;
           return 'w-100';
         }
-
-        break;
     }
     return '';
   }
@@ -856,5 +856,14 @@ export class CreateFolderComponent implements OnInit {
   //   return "form-control is-invalid error";
   // }
 
-  valueChange($event, type) {}
+  valueChange($event, field) {
+    if ($event != null) {
+      switch (field) {
+        case "icon":
+          if ($event)
+            this.icon = $event;
+          break;
+      }
+    }
+  }
 }

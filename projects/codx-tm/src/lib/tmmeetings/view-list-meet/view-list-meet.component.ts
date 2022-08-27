@@ -5,7 +5,7 @@ import { DialogData, DialogRef, FormModel } from 'codx-core';
 @Component({
   selector: 'lib-view-list-meet',
   templateUrl: './view-list-meet.component.html',
-  styleUrls: ['./view-list-meet.component.css']
+  styleUrls: ['./view-list-meet.component.scss']
 })
 export class ViewListMeetComponent implements OnInit {
 
@@ -19,10 +19,14 @@ export class ViewListMeetComponent implements OnInit {
   endTime: any;
   resources: CO_Resources[] = [];
   resourceID: any;
+  popoverCrr: any;
+  countResource = 0;
+
   constructor(
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) {
+
   }
 
   ngOnInit(): void {
@@ -32,16 +36,16 @@ export class ViewListMeetComponent implements OnInit {
   }
 
   clickMF(e: any, dt?: any) {
-    this.clickMoreFunction.emit({e:e,data:dt})
+    this.clickMoreFunction.emit({ e: e, data: dt })
   }
 
   getResourceID() {
     this.resources = this.data.resources;
-    var id= '';
-    this.resources.forEach((e)=>{
+    var id = '';
+    this.resources.forEach((e) => {
       id += e.resourceID + ';';
     });
-    if(id!=''){
+    if (id != '') {
       this.resourceID = id.substring(0, id.length - 1);
     }
   }
@@ -69,10 +73,23 @@ export class ViewListMeetComponent implements OnInit {
   convertHtmlAgency(position: any) {
     var desc = '<div class="d-flex">';
     if (position)
-      desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' + position + '</span></div>';
+      desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="">' + position + '</span></div>';
 
     return desc + '</div>';
   }
 
+  popoverEmpList(p: any) {
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+      p.open();
+      this.popoverCrr = p;
+    }
+  }
 
+  searchName(e){
+    this.data.resources = this.data.resources.filter((val) =>
+    val.resourceName.toLowerCase().includes(e.toLowerCase())
+  );
+  }
 }
+

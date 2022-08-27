@@ -95,6 +95,9 @@ export class UserComponent extends UIComponent {
       case 'SYS03':
         this.edit(data);
         break;
+      // case 'SYS02':
+      //   this.delete(data);
+      //   break;
       case 'ADS0501':
         this.stop(data);
         break;
@@ -125,7 +128,7 @@ export class UserComponent extends UIComponent {
     var desc = '<div class="d-flex">';
     if (buID)
       desc +=
-        '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' +
+        '<div class="d-flex align-items-center mb-1"><span class="text-gray-600 icon-14 icon-apartment me-1"></span><span>' +
         buID +
         '</span></div>';
 
@@ -142,15 +145,24 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      // this.dialog.closed.subscribe((x) => {
-      //   if (x.event == null)
-      //     this.view.dataService
-      //       .remove(this.view.dataService.dataSelected)
-      //       .subscribe(x => {
-      //         this.dt.detectChanges();
-      //       });
-      // });
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event) {
+          e.event.modifiedOn = new Date();
+          this.view.dataService.update(e.event).subscribe();
+        }
+      });
     });
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe((res: any) => {
+        if (res.data) {
+          this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true);
+        }
+      });
   }
 
   edit(data?) {
@@ -168,6 +180,12 @@ export class UserComponent extends UIComponent {
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+        this.dialog.closed.subscribe((x) => {
+          if (x.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
       });
   }
 

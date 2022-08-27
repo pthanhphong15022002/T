@@ -1,21 +1,13 @@
 import {
   Component,
-  EventEmitter,
   Injector,
   Optional,
-  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 
-import {
-  DialogData,
-  DialogRef,
-  FormModel,
-  ImageViewerComponent,
-  UIComponent,
-} from 'codx-core';
+import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService } from '../../../codx-ep.service';
 
@@ -25,24 +17,31 @@ import { CodxEpService } from '../../../codx-ep.service';
   styleUrls: ['./popup-add-stationery.component.scss'],
 })
 export class PopupAddStationeryComponent extends UIComponent {
-  @ViewChild('popupDevice', { static: true }) popupDevice;
-  @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('popupColor') popupTemp: TemplateRef<any>;
-  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @Output() loadData = new EventEmitter();
-
-  vllDevices = [];
-  lstDeviceRoom = [];
   isAfterRender = false;
   dialogAddStationery: FormGroup;
-  chosenDate = null;
-  CbxName: any;
-  link: string = '';
   color: any;
   columnGrid;
-  headerTitle: string = 'Thêm Văn Phòng phẩm';
-  subHeaderTilte: string = 'Thêm mới Văn phòng phẩm';
+  title: string = '';
+  titleAction: string = 'Thêm mới';
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'tabGeneralInfo',
+    },
+    {
+      icon: 'icon-person_add_alt_1',
+      text: 'Định mức sử dụng',
+      name: 'tabPeopleInfo',
+    },
+    {
+      icon: 'icon-tune',
+      text: 'Thông tin khác',
+      name: 'tabMoreInfo',
+    },
+  ];
   data: any = {};
   dialog: DialogRef;
   isAdd = true;
@@ -62,70 +61,56 @@ export class PopupAddStationeryComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(injector);
-    this.data = dt?.data;
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
   }
 
   onInit(): void {
-    this.epService
-      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        this.CbxName = res;
-        this.initForm();
-      });
+    this.initForm();
   }
 
   initForm() {
     this.epService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.dialogAddStationery = item
+        this.dialogAddStationery = item;
         this.isAfterRender = true;
         if (this.data) {
           this.dialogAddStationery.patchValue(this.data);
+          this.dialogAddStationery.addControl(
+            'code',
+            new FormControl(this.data.code)
+          );
         }
       });
   }
 
   beforeSave(option: any) {
     let itemData = this.dialogAddStationery.value;
-    if (!itemData.resourceID) {
-      this.isAdd = true;
-    } else {
-      this.isAdd = false;
-    }
-    option.method = 'AddEditItemAsync';
+    option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
 
   onSaveForm() {
-    // if (this.dialogAddStationery.invalid == true) {
-    //   console.log(this.dialogAddStationery);
-    //   return;
-    // }
-    // if (!this.dialogAddStationery.value.linkType) {
-    //   this.dialogAddStationery.value.linkType = '0';
-    // }
-    // this.dialogAddStationery.value.resourceType = '6';
-    // this.dialog.dataService
-    //   .save((opt: any) => this.beforeSave(opt))
-    //   .subscribe((res) => {
-    //     this.imageUpload
-    //       .updateFileDirectReload(res.msgBodyData[0].resourceID)
-    //       .subscribe((result) => {
-    //         if (result) {
-    //           this.initForm();
-    //           this.loadData.emit();
-    //         } else {
-    //           this.initForm();
-    //         }
-    //       });
-    //     this.onDone.emit([res.msgBodyData[0], this.isAdd]);
-    //     this.dialog.close();
-    //   });
-    console.log('payload', this.dialogAddStationery.value)
+    if (this.dialogAddStationery.invalid == true) {
+      console.log(this.dialogAddStationery);
+      return;
+    }
+    this.dialogAddStationery.patchValue({
+      owner: this.dialogAddStationery.value.owner[0],
+    });
+    this.dialogAddStationery.patchValue({ color: this.listColor.join(';') });
+    this.dialogAddStationery.patchValue({
+      groupID: '1',
+    });
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe((res) => {
+        this.dialog.close();
+      });
   }
 
   checkedOnlineChange(event) {
@@ -138,22 +123,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  changeLink(event) {
-    this.link = event.data;
-  }
-
-  openPopupLink() {
-    // this.modalService
-    //   .open(this.addLink, { centered: true, size: 'md' })
-    //   .result.then(
-    //     (result) => {
-    //       this.dialogAddStationery.patchValue({ onlineUrl: this.link });
-    //     },
-    //     (reason) => { }
-    //   );
-  }
-
-  public setdata(data: any) {
+  setdata(data: any) {
     if (this.isAdd) {
       this.isAdd = true;
       this.initForm();
@@ -162,22 +132,13 @@ export class PopupAddStationeryComponent extends UIComponent {
     }
   }
 
-  popup(evt: any) {
-    // this.attachment.openPopupDevices();
-  }
-
-  fileAdded(evt: any) {
-    console.log(evt);
-  }
-
-  openPopupDevice(template: any, color) {
+  openPopupColor(template: any, color) {
     this.color = color;
     var dialog = this.callfc.openForm(template, '', 500, 350);
     this.detectorRef.detectChanges();
   }
 
   valueChange(event) {
-
     if (event?.field) {
       if (event.data instanceof Object) {
         this.dialogAddStationery.patchValue({
@@ -199,11 +160,21 @@ export class PopupAddStationeryComponent extends UIComponent {
     } else {
       this.listColor.push(this.colorItem);
     }
-
     this.detectorRef.detectChanges();
   }
 
+  setTitle(e: any) {
+    this.title = this.titleAction + ' ' + e.toString().toLowerCase();
+    this.detectorRef.detectChanges();
+  }
 
+  buttonClick(e: any) {
+    //console.log(e);
+  }
 
-  getfileCount(event) { }
+  splitColor(color: string): any {
+    if (color) {
+      return color.split(';');
+    }
+  }
 }

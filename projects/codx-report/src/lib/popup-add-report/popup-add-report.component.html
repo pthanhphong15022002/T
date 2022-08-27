@@ -1,0 +1,252 @@
+<codx-layout-add [title]="title" [tabInfo]="tabTitle"   [subHeader]="subHeader"
+  [footer]="footer" [dialog]="dialog" [openMore]="false" [tabContent]="tabContent" (setTitle)="setTitle($event)"
+  (buttonClick)="buttonClick($event)" [isSider]="false" [formModel]="dialog.formModel" #form></codx-layout-add>
+<ng-template #subHeader>
+
+</ng-template>
+
+<ng-template #tabInfo>
+  <div class="form-group w-100"  >
+    <h2><codx-label name="lblInfo" default="Thông tin chung"  ></codx-label></h2>
+    <h6 class="text-muted"><codx-label name="lblInfoDes" default="Thông tin chung của báo cáo"  ></codx-label></h6>
+    <div class="container" *ngIf="data">
+      <div class="row mt-5">
+        <div class="col-10">
+          <div class="border border-secondary h-100">
+            <div *ngIf="!checkFile" class="ms-3 mt-2">
+              <span >{{data.reportName}}</span>
+            </div>
+
+            <div class="m-3">
+                <codx-attachment #attachment [objectType]="'SYS_ReportList'" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                hideDes="1" hideImageUpload="0" hideImageThumb="1" [functionID]="dialog.formModel.funcID" [objectId]="recID"
+                [allowMultiFile]="'0'" [idBrowse]="'add'" [allowExtensions]="'.rdl, .rdlc'">
+              </codx-attachment>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-2 d-flex justify-content-end">
+            <button type="button" class="btn btn-light-primary  float-right" (click)="popup()" >
+               <i class="icon-cloud_upload fs-5"></i><span>
+               <codx-label name="UploadFile" default="Upload File"></codx-label>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-12">
+          <codx-label class="text-muted" name="lblReportName"   default="Tên báo cáo"></codx-label>
+          <codx-input type="text" field="defaultName" [crrValue]="data.defaultName" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-12">
+          <codx-label class="text-muted" name="lblDescription"   default="Diễn giải"></codx-label>
+          <codx-input type="textarea"  format="ed2" field="description" [crrValue]="data.description" placeholder="Diễn giải" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-6">
+          <codx-label class="text-muted" name="lblReportType"   default="Loại báo cáo"></codx-label>
+          <codx-input type="valuelist" field="reportType" [crrValue]="data.reportType" refValue="" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label class="text-muted" name="lblMethodName"   default="Method"></codx-label>
+          <codx-input type="text"  field="methodName" [crrValue]="data.methodName"  (valueChange)="valueChange($event)"></codx-input>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-6">
+          <codx-label class="text-muted" name="lblAssemblyName"   default="Assembly"></codx-label>
+          <codx-input type="text"  field="assemblyName" [crrValue]="data.assemblyName"  (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label class="text-muted" name="lblClassName"   default="Class"></codx-label>
+          <codx-input type="text"  field="className" [crrValue]="data.className"  (valueChange)="valueChange($event)"></codx-input>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</ng-template>
+
+
+<ng-template #tabParam>
+  <div class="form-group w-100">
+    <h2><codx-label name="lblReportParams" default="Tham số báo cáo"  ></codx-label></h2>
+    <h6 class="text-muted"><codx-label name="lblReportParamSetting" default="Thiết lập tham số báo cáo"  ></codx-label></h6>
+    <div class="mt-5 overflow-x-auto">
+      <ejs-grid [dataSource]='parameters' height='350'>
+        <e-columns>
+          <e-column field='controlIndex' headerText='Index' width='80' textAlign='Center'></e-column>
+          <e-column field='controlName' headerText='Control' width='120' textAlign='Center'></e-column>
+          <e-column field='labelName' headerText='Tên tham số' width='150' textAlign='Center'></e-column>
+          <e-column field='dataType' headerText='Kiểu dữ liệu' width='130'  textAlign='Center'></e-column>
+          <e-column field='isRequired' headerText='Bắt buộc' width='150' textAlign='Center'>
+            <ng-template #template let-data>
+              <div *ngIf="data.isRequired;else falsy" class="statustemp e-activecolor">
+                      <span class="statustxt e-activecolor">Có</span>
+              </div>
+              <ng-template #falsy>
+                  <div class="statustemp e-inactivecolor">
+                      <span class="statustxt e-inactivecolor">Không</span>
+                  </div>
+                  </ng-template>
+            </ng-template>
+          </e-column>
+          <e-column field='isVisible' headerText='Hiển thị' width='150' textAlign='Center'>
+            <ng-template #template let-data>
+              <div *ngIf="data.isVisible;else falsy" class="statustemp e-activecolor">
+                      <span class="statustxt e-activecolor">Có</span>
+              </div>
+              <ng-template #falsy>
+                  <div class="statustemp e-inactivecolor">
+                      <span class="statustxt e-inactivecolor">Không</span>
+                  </div>
+                  </ng-template>
+            </ng-template>
+          </e-column>
+          <e-column field='isEnable' headerText='Kích hoạt' width='150' textAlign='Center'>
+            <ng-template #template let-data>
+              <div *ngIf="data.isEnable;else falsy" class="statustemp e-activecolor">
+                      <span class="statustxt e-activecolor">Có</span>
+              </div>
+              <ng-template #falsy>
+                  <div class="statustemp e-inactivecolor">
+                      <span class="statustxt e-inactivecolor">Không</span>
+                  </div>
+                  </ng-template>
+            </ng-template>
+          </e-column>
+          <e-column field='isPin' headerText='Ghim' width='150' textAlign='Center'>
+            <ng-template #template let-data>
+              <div *ngIf="data.isPin;else falsy" class="statustemp e-activecolor">
+                      <span class="statustxt e-activecolor">Có</span>
+              </div>
+              <ng-template #falsy>
+                  <div class="statustemp e-inactivecolor">
+                      <span class="statustxt e-inactivecolor">Không</span>
+                  </div>
+                  </ng-template>
+            </ng-template>
+          </e-column>
+      </e-columns>
+      </ejs-grid>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<ng-template #tabSignature>
+  <div class="form-group w-100">
+    <h2><codx-label name="lblSignature" default="Chữ ký"  ></codx-label></h2>
+    <h6 class="text-muted"><codx-label name="lblSigatures" default="Danh sách chữ ký báo cáo"  ></codx-label></h6>
+  </div>
+  <div class="containter mt-5">
+    <div class="row  d-flex justify-content-start">
+      <h5 class="text-primary"><codx-label name="lblSignatureGroup" default="Bộ chữ ký"  ></codx-label></h5>
+    </div>
+    <div class="row m-5">
+      <div class="col-12 d-flex justify-content-start">
+        <div style="width: 20%">
+          <div class="row">
+            <span>
+              <img src="/assets/themes/sys/default/img/1_Signatures.svg" />
+            </span>
+          </div>
+          <div class="row mt-5">
+            <codx-input type="radio" [checked]="true" field="signatures" name="signature" crrValue="1" (valueChange)="valueRadio($event)" labelPosition="Right" label="1 chữ ký"></codx-input>
+          </div>
+        </div>
+        <div style="width: 20%">
+          <div class="row">
+            <span>
+              <img src="/assets/themes/sys/default/img/2_Signatures.svg" />
+            </span>
+          </div>
+          <div class="row mt-5">
+            <codx-input type="radio" field="signatures" name="signature" crrValue="2" (valueChange)="valueRadio($event)" labelPosition="Right" label="2 chữ ký"></codx-input>
+          </div>
+        </div>
+        <div style="width: 20%">
+          <div class="row">
+            <span>
+              <img src="/assets/themes/sys/default/img/3_Signatures.svg" />
+            </span>
+          </div>
+          <div class="row mt-5">
+            <codx-input type="radio" field="signatures" name="signature" crrValue="3" (valueChange)="valueRadio($event)" labelPosition="Right" label="3 chữ ký"></codx-input>
+          </div>
+        </div>
+        <div style="width: 20%">
+          <div class="row">
+            <span>
+              <img src="/assets/themes/sys/default/img/4_Signatures.svg" />
+            </span>
+          </div>
+          <div class="row mt-5">
+            <codx-input type="radio" field="signatures" name="signature" crrValue="4" (valueChange)="valueRadio($event)" labelPosition="Right" label="4 chữ ký"></codx-input>
+          </div>
+        </div>
+        <div style="width: 20%">
+          <div class="row">
+            <span>
+              <img src="/assets/themes/sys/default/img/5_Signatures.svg" />
+            </span>
+          </div>
+          <div class="row mt-5">
+            <codx-input type="radio" field="signatures" name="signature" crrValue="5" (valueChange)="valueRadio($event)" labelPosition="Right" label="5 chữ ký"></codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-5 d-flex justify-content-start">
+      <h5 class="text-primary"><codx-label name="lblSignatureOrder" default="Chiều sắp xếp chữ ký"  ></codx-label></h5>
+    </div>
+    <div class="row m-5">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-6">
+            <codx-input type="radio" field="signatureRoles" name="signatureOrder" crrValue="right" [checked]="true" (valueChange)="valueRadio($event)" labelPosition="Right" label="Từ phải sang trái"></codx-input>
+          </div>
+          <div class="col-6">
+            <codx-input type="radio" field="signatureRoles" name="signatureOrder" crrValue="left" (valueChange)="valueRadio($event)" labelPosition="Right" label="Từ trái sang phải"></codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row mt-5 d-flex justify-content-start">
+      <h5 class="text-primary"><codx-label name="lblSignatureList" default="Danh sách chữ ký"  ></codx-label></h5>
+    </div>
+    <div class="row mt-5">
+      <ejs-grid [dataSource]='signatures' height='350'>
+        <e-columns>
+          <e-column field='index' headerText='STT' width='100' textAlign='Center'></e-column>
+          <e-column field='role' headerText='Vai trò ký' width='220' textAlign='Center'></e-column>
+          <e-column field='signer' headerText='Người ký' width='220' textAlign='Center'></e-column>
+          <e-column field='description' headerText='Diễn giải' width='130'  textAlign='Left'></e-column>
+      </e-columns>
+      </ejs-grid>
+    </div> -->
+  </div>
+</ng-template>
+
+
+
+
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end ">
+    <!-- <button type="button" class="btn btn-light-primary me-3" >
+      <i class="icon-cloud_upload fs-5"></i><span>
+        <codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label>
+      </span>
+    </button> -->
+    <button type="button" class="btn btn-primary ms-1" (click)="saveForm()">
+      <codx-label name="Save" formName="Tasks" default="Lưu" ></codx-label>
+    </button>
+  </div>
+</ng-template>

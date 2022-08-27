@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import { Component, Injector } from '@angular/core';
 import {
   CallFuncService,
@@ -12,9 +13,10 @@ import { CodxOdService } from '../codx-od.service';
   selector: 'codx-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  
+
   module = 'OD';
   dialog!: DialogRef
   // override aside = true;
@@ -25,7 +27,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(inject: Injector,
     private hideToolbar: CodxOdService,
     private callfc: CallFuncService,
-    ) {
+  ) {
     super(inject);
   }
 

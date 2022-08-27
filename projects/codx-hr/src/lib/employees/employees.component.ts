@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiHttpService, ButtonModel, CallFuncService, CodxService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, ButtonModel, CallFuncService, CodxService, DataRequest, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType, CacheService } from 'codx-core';
 import moment from 'moment';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { CodxHrService } from '../codx-hr.service';
 import { HR_Employees } from '../model/HR_Employees.model';
@@ -24,7 +25,7 @@ export class EmployeesComponent implements OnInit {
   functionID: string;
   employee: HR_Employees = new HR_Employees();
   itemSelected: any;
-  urlDetail = '';
+  formModel: FormModel;
 
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
@@ -44,15 +45,9 @@ export class EmployeesComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private api: ApiHttpService,
-    private df: ChangeDetectorRef,
-    private codxService: CodxService,
-    private hrService: CodxHrService,
+    private cache: CacheService,
+    private codxService: CodxService
   ) {
-    this.hrService.getMoreFunction(['HRT03', null, null]).subscribe((res) => {
-      if (res) {
-        this.urlDetail = res[1].url;
-      }
-    });
   }
 
   ngOnInit(): void {
@@ -108,14 +103,16 @@ export class EmployeesComponent implements OnInit {
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
+      option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, this.view.dataService.dataSelected, option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
+        this.changedt.detectChanges();
       })
     });
+
   }
 
   senioritydate(value: string) {
@@ -141,6 +138,7 @@ export class EmployeesComponent implements OnInit {
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
     });
+    this.changedt.detectChanges();
   }
 
   copy(data) {
@@ -149,23 +147,27 @@ export class EmployeesComponent implements OnInit {
     }
     this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'copy', option);
     });
+    this.changedt.detectChanges();
   }
 
   delete(data: any) {
+    if (data.status != "10") {
+      this.notiService.notifyCode("E0760");
+      return;
+    }
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-      this.beforeDel(opt)).subscribe((res) => {
+      this.beforeDel(opt), 'Thông báo').subscribe((res) => {
         if (res[0]) {
           this.itemSelected = this.view.dataService.data[0];
         }
-      }
-      );
-      this.df.detectChanges();
+      });
+    this.changedt.detectChanges();
   }
 
   async onSelectionChanged($event) {
@@ -242,17 +244,37 @@ export class EmployeesComponent implements OnInit {
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        e?.event.forEach((obj) => {
-          this.view.dataService.update(obj).subscribe();
-        });
-        this.itemSelected = e?.event[0];
+        //  e?.event.forEach((obj) => {
+        var emp = e?.event;
+        if (emp.status == '90') {
+          this.view.dataService.remove(e?.event).subscribe();
+        } else
+          this.view.dataService.update(e?.event).subscribe();
+        // });
+        // this.itemSelected = e?.event;
       }
-      this.df.detectChanges();
+      this.changedt.detectChanges();
     });
   }
 
-  viewEmployeeInfo(data) {
-    this.codxService.navigate('', this.urlDetail, { employeeID: data.employeeID });
+  viewEmployeeInfo(func, data) {
+    if (func.url)
+      this.codxService.navigate('', func.url, { employeeID: data.employeeID });
+  }
+
+  exportFile() {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    gridModel.groupFields = "createdBy";
+    this.callfunc.openForm(CodxExportComponent, null, null, 800, "", [gridModel, this.itemSelected.employeeID], null);
   }
 
   clickMF(e: any, data?: any) {
@@ -274,7 +296,10 @@ export class EmployeesComponent implements OnInit {
         this.updateStatus(data);
         break;
       case 'HR0032':
-        this.viewEmployeeInfo(data);
+        this.viewEmployeeInfo(e.data, data);
+        break;
+      case 'SYS002':
+        this.exportFile();
         break;
     }
   }

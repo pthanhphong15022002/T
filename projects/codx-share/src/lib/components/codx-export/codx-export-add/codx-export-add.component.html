@@ -8,38 +8,34 @@
   ></codx-form>
   <ng-template popup adde #body>
     <div class="d-flex flex-column mb-3">
-      <codx-label default="Chọn file template"></codx-label>
-        <div class="d-flex justify-content-between">
-          <div class="d-flex justify-content-start w-100 border-bottom">
-          <codx-attachment 
-            #attachment 
-            [objectType]="module"
-            hideBtnSave="1"  
-            hideFolder="1" 
-            hideUploadBtn="1"  
-            hideDes="1"
-            [functionID]="dialog?.formModel?.funcID"
-            (fileCount)="getfileCount($event)"
-            (fileGet)="getFile($event)"
-            [objectId]="data?.recID"
-            [allowMultiFile]="0"
-            idBrowse="3"
-            [allowMultiFile]=""
-            [allowExtensions]="'.docx,.xlsx'"
-          >
-          </codx-attachment>
-        <!--   (fileAdded)="fileAdded($event)"
-              (fileCount)="getfileCount($event)" -->
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex justify-content-start w-100 hideAttachment">
+            <codx-attachment 
+              #attachment 
+              [objectType]="module"
+              hideBtnSave="1"  
+              hideFolder="1" 
+              hideUploadBtn="1"  
+              hideDes="1"
+              [functionID]="dialog?.formModel?.funcID"
+              (fileCount)="getfileCount($event)"
+              (fileGet)="getFile($event)"
+              [objectId]="data?.recID"
+              [allowMultiFile]="0"
+              showMessage="0"
+              idBrowse="3"
+              [allowMultiFile]=""
+              [allowExtensions]="'.docx,.xlsx'"
+              class="w-100"
+            >
+            </codx-attachment>
           </div>
           <div class="d-flex justify-content-end ms-2">
-            <button 
-              type="button"
-              class="btn btn-sm btn-outline  btn-outline-primary btn-active-light-primary text-nowrap px-2 py-1"
-              (click)="openFormUploadFile()"
-            >
-              Chọn file
+            <button type="button" class="btn btn-outline-primary" style="width: 100px;" (click)="openFormUploadFile()">
+              <codx-label [default]="'Chọn File'"></codx-label>
             </button>
           </div>
+          <span class="icon-download ms-2 icon-20"></span>
         </div>
     </div>
     <div class="d-flex flex-column mb-3">
@@ -110,20 +106,24 @@
       <div class="d-flex flex-column mb-3">
         <codx-label default="Trang chứa template"></codx-label>
         <codx-input 
-          type="number"
+          type="text"
           [showSpinButton]="false"
           [Group]="exportAddForm"
-          ControlName="sheetIndex"  
+          ControlName="sheetIndex" 
+          [ngClass]="{'is-invalid': submitted && f.sheetIndex.errors }"  
         ></codx-input>
       </div>
       <div class="row mb-3">
         <div class="col">
           <codx-label default="Dòng chi tiết"></codx-label>
-          <codx-input type="text" 
-          [class]="'me-3'"  
+          <codx-input 
+          type="text" 
+          ngClass="w-100" 
+          class="test-textbox"
           style="width:100%" 
           [Group]="exportAddForm"
-          ControlName="headerRow" 
+          ControlName="headerRow"
+          [ngClass]="{'is-invalid': submitted && f.headerRow.errors }" 
           ></codx-input>
         </div>
         <div class="col">
@@ -252,7 +252,7 @@
   </ng-template>
   <ng-template #footer>
       <div class="d-flex justify-content-end">
-      <button class="btn btn-light-primary" (click)="onSave()">
+      <button class="btn btn-primary" (click)="onSave()">
          Lưu
       </button>
       </div>
