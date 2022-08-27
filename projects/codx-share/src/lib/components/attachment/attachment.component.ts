@@ -836,8 +836,9 @@ export class AttachmentComponent implements OnInit {
           }
         });
     } else if (total == 1) {
-      //this.addFileLarge(this.fileUploadList[0]);
+      //this.addFileLargeLong(this.fileUploadList[0]);
       this.addFile(this.fileUploadList[0]);
+      
       this.atSV.fileList.next(this.fileUploadList);
     } else {
       // this.cacheService.message('DM001')
@@ -926,8 +927,10 @@ export class AttachmentComponent implements OnInit {
       });
     };
     try {
+      // http://192.168.18.36:8011/
+    //  http://192.168.18.36:8011
       var item = await isAllowAddFileAsync();
-      var host = "http://172.16.7.91:8008";//http://192.168.18.36:5010";
+      var host = "http://192.168.18.36:8011";//"http://172.16.7.91:8008";//http://192.168.18.36:5010";
       LV.Files.API.setHostApiUrl(host);
       var AccessTokenkey = "b5a54909-96bd-4d6a-91b4-1318bda5012c";
       var fileToUpload = fileItem;

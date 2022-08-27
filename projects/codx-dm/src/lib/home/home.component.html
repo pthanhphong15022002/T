@@ -11,7 +11,9 @@
     </div>
   </ng-template> 
   
-  
+  <!--
+    <div class="card-body p-0" (scroll)="onScroll($event)">  
+  -->
   <ng-template #context>
     <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)"
       class="d-flex align-items-center px-3 py-1 home">
@@ -26,14 +28,14 @@
 </ng-template>
 
 <ng-template #templateRight>
-  <div  appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="w-100 scroll-y home" data-kt-scroll="true"
+  <ng-container *ngTemplateOutlet="empty"></ng-container>
+  <ng-container *ngTemplateOutlet="nodata"></ng-container>  
+  <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="w-100 scroll-y home" data-kt-scroll="true"
     data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
-    data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS" data-kt-scroll-offset="0">
-    <ng-container *ngTemplateOutlet="empty"></ng-container>
-    <ng-container *ngTemplateOutlet="currView"></ng-container>
-    <ng-container *ngTemplateOutlet="nodata"></ng-container>
-    <ng-container *ngTemplateOutlet="loading"></ng-container>
+    data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS" data-kt-scroll-offset="0">   
+    <ng-container *ngTemplateOutlet="currView"></ng-container>    
   </div>
+  <ng-container *ngTemplateOutlet="loading"></ng-container>
 </ng-template>
 <!--
  infinite-scroll  [infiniteScrollDistance]="2"
@@ -107,14 +109,14 @@
 
   <!-- <div data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto" attr.data-kt-scroll-dependencies=''
    attr.data-kt-scroll-wrappers='dms-viewcard' attr.data-kt-scroll-offset="'0px'">     -->
-  <div class="d-flex flex-wrap dms-card p-5">
+  <div  class="d-flex flex-wrap dms-card p-5">
     <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
       *ngFor="let item of data" [class]="classFile(item, 'pe-6 pb-6')" [data]="item" [formModel]="view.formModel">
     </card>
   </div>
 </ng-template>
 <ng-template #templateSmallCard>
-  <div class="d-flex flex-wrap dms-card-sm p-5">
+  <div  class="d-flex flex-wrap dms-card-sm p-5">
     <codx-temp-full appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
       *ngFor="let item of data" [class]="classFile(item, 'float-start')" [imageSrc]="dmSV.getImage(item)"
       imgCss="card-item img-folder me-3" (clickMF)="dmSV.clickMF($event, item)"
