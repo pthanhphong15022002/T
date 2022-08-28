@@ -236,7 +236,7 @@ export class SprintsComponent extends UIComponent {
 
   viewBoard(e, data) {
     this.urlView = e?.url;
-    this.urlView = 'tm/sprintdetails/TMT03011'; ///gán cứng chứ thương chưa đổi
+   // this.urlView = 'tm/sprintdetails/TMT03011'; ///gán cứng chứ thương chưa đổi
     this.codxService.navigate('', this.urlView, {
       iterationID: data.iterationID,
     });

@@ -9,7 +9,8 @@
   </div>
   <div class="form-group">
     <codx-label [fiedName]="fieldComment" formName="Tasks" gridViewName="grvTasks" default="Bình luận"></codx-label>
-    <codx-input type="textarea" (valueChange)="valueChange($event)" [crrValue]="comment" format="ed2" rows="6">
+    <codx-input type="textarea" class="resize-none" (valueChange)="valueChange($event)" [crrValue]="comment"
+      format="ed2" rows="5">
     </codx-input>
   </div>
 </ng-template>

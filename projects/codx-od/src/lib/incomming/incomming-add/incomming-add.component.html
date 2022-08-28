@@ -109,12 +109,12 @@
   <div class="row mt-3">
     <div class="col-4">
       <codx-label [formModel]="form.formModel" fiedName="RefNo" class="fw-bold"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refNo" ControlName="refNo">
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refNo" ControlName="refNo" >
       </codx-input>
     </div>
     <div class="col-4">
       <codx-label [formModel]="form.formModel" fiedName="RefDate" class="fw-bold"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate">
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">
       </codx-input>
     </div>
     <div class="col-2">
@@ -172,12 +172,12 @@
     </div>
     <div class="col">
       <codx-label [formModel]="form.formModel" fiedName="DispatchOn"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn">
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn" [format]="'d'">
       </codx-input>
     </div>
     <div class="col" *ngIf="form.formModel.funcID != 'ODT41'">
       <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline">
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline" [format]="'d'">
       </codx-input>
     </div>
   </div>

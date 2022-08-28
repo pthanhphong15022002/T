@@ -95,7 +95,7 @@
                                     </a>
                                     <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                         <li *ngIf="data.delete">
-                                            <a ngbDropdownItem href="javascript:void(0)">
+                                            <a ngbDropdownItem href="javascript:void(0)" (click)="deleteComment(data)">
                                                 <span class="icon-delete icon-16 me-2"></span>
                                                 <codx-label [formModel]="" name="lblDelete_comments" default="Xóa">
                                                 </codx-label>

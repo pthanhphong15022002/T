@@ -161,24 +161,27 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       var list = data.filter(
         (x) =>
           x.data != null &&
-          x.data.formName == 'Approvals' &&
-          x.functionID != 'SYS206' &&
-          x.functionID != 'SYS205'
+          x.data.formName == 'Approvals'
       );
       for (var i = 0; i < list.length; i++) {
-        list[i].disabled = true;
-        if (
-          ((datas?.stepType == 'S1' || datas?.stepType == 'S2') &&
-            list[i].functionID == 'SYS202') ||
-          ((datas?.stepType == 'A1' ||
-            datas?.stepType == 'R' ||
-            datas?.stepType == 'C') &&
-            list[i].functionID == 'SYS203') ||
-          (datas?.stepType == 'S3' && list[i].functionID == 'SYS204') ||
-          (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
-        ) {
-          list[i].disabled = false;
-          //list[i].isbookmark = true
+        list[i].isbookmark = true;
+        if(list[i].functionID != 'SYS206' &&
+        list[i].functionID != 'SYS205')
+        {
+          list[i].disabled = true;
+          if (
+            ((datas?.stepType == 'S1' || datas?.stepType == 'S2') &&
+              list[i].functionID == 'SYS202') ||
+            ((datas?.stepType == 'A1' ||
+              datas?.stepType == 'R' ||
+              datas?.stepType == 'C') &&
+              list[i].functionID == 'SYS203') ||
+            (datas?.stepType == 'S3' && list[i].functionID == 'SYS204') ||
+            (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
+          ) {
+            list[i].disabled = false;
+          
+          }
         }
       }
       var list2 = data.filter(
@@ -206,7 +209,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         funcID == 'SYS203' ||
         funcID == 'SYS202'
       ) {
-        debugger;
         let option = new SidebarModel();
         option.Width = '800px';
         option.DataService = this.view?.dataService;
@@ -223,17 +225,19 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           {
             funcID: 'EST021',
             recID: data.transID,
+            title: data.htmlView,
           },
           '',
           dialogModel
         );
-        // dialogApprove.closed.subscribe((x) => {
-        //   if (x.event) {
-        //     delete x.event._uuid;
-        //     this.view.dataService.add(x.event, 0).subscribe();
-        //     //this.getDtDis(x.event?.recID)
-        //   }
-        // });
+        dialogApprove.closed.subscribe((x) => {
+          if (x.event) {
+            debugger;
+            delete x.event._uuid;
+            this.view.dataService.add(x.event,0).subscribe();
+            //this.getDtDis(x.event?.recID)
+          }
+        });
       }
 
       //hoan tat
@@ -261,6 +265,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         )
         .subscribe((res2: any) => {
           if (!res2?.msgCodeError) {
+            debugger;
+            data.status = status;
             this.view.dataService.update(data).subscribe();
             this.notifySvr.notifyCode('SYS007');
           } else this.notifySvr.notify(res2?.msgCodeError);
