@@ -48,7 +48,6 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
   styleUrls: ['./pdf-view.component.scss'],
   providers: [
     LinkAnnotationService,
-    BookmarkViewService,
     MagnificationService,
     ThumbnailViewService,
     ToolbarService,
@@ -293,7 +292,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     if (this.thumbnailEle) {
       this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
     }
-
+    this.pdfviewerControl.freeTextSettings.enableAutoFit = true;
     this.pdfviewerControl.zoomValue = 100;
     this.pdfviewerControl.contextMenuSettings.contextMenuItems = [
       16, 128, 256, 30,
@@ -319,7 +318,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.esService.getSignFormat().subscribe((res) => {
       console.log('res', res);
     });
-    // this.pdfviewerControl.formFieldsModule.clearFormFields();
     this.esService
       .getSignAreas(
         this.recID,
@@ -329,20 +327,17 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       )
       .subscribe((res) => {
         this.lstAreas = res;
-
-        this.lstAreas?.forEach((item: any) => {
+        this.pdfviewerControl.refresh();
+        res?.forEach((item: any) => {
           let anno = {
             annotationId: item.recID,
             annotationSelectorSettings: {
               selectionBorderColor: '',
               resizerBorderColor: 'black',
               resizerFillColor: '#FF4081',
-              isLock: true,
               selectionBorderThickness: 1,
             },
             annotationSettings: {
-              minWidth: 100,
-              minHeight: 100,
               isLock: item.fixedWidth,
             },
             bounds: {
@@ -423,8 +418,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             } else {
               anno.shapeAnnotationType = 'FreeText';
               anno.dynamicText =
-                this.vllActions[item.labelType - 1]?.text +
-                ': ' +
+                // this.vllActions[item.labelType - 1]?.text +
+                // ': ' +
                 curSignerInfo.fullName;
               anno.subject = 'Text Box';
             }
@@ -436,11 +431,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           //     anno.annotationSelectorSettings.isLock = true;
           //   }
           // }
-
-          this.pdfviewerControl.addAnnotation(anno);
+          this.pdfviewerControl.freeTextSettings.enableAutoFit = true;
+          this.pdfviewerControl.addAnnotation({ ...anno });
         });
         this.detectorRef.detectChanges();
       });
+    // this.pdfviewerControl?.formFieldsModule?.clearFormFields();
   }
 
   getAreaOwnerName(authorID) {
@@ -600,7 +596,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         }
       );
       this.pdfviewerControl.deleteAnnotations();
-      tmpCollections.forEach((curAnnot) => {
+      tmpCollections?.forEach((curAnnot) => {
         this.pdfviewerControl.addAnnotation(curAnnot);
       });
     }
@@ -860,7 +856,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           anno.shapeAnnotationType = 'FreeText';
           // anno.dynamicText = signer.fullName;
           anno.dynamicText =
-            this.vllActions[1 - 1]?.text + ': ' + signer.fullName;
+            // this.vllActions[1 - 1]?.text + ': ' +
+            signer.fullName;
           anno.subject = 'Text Box';
         }
 
@@ -1167,7 +1164,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           case 2:
           case 8:
             this.pdfviewerControl.freeTextSettings.defaultText =
-              this.vllActions[type - 1]?.text + ': ' + this.signerInfo.fullName;
+              // this.vllActions[type - 1]?.text + ': ' +
+              this.signerInfo.fullName;
 
             break;
           case 3:
@@ -1206,6 +1204,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           this.signerInfo?.authorID + ':' + type;
 
         this.pdfviewerControl.freeTextSettings.fontSize = 17;
+        this.pdfviewerControl.freeTextSettings.enableAutoFit = true;
         this.pdfviewerControl.annotationModule.setAnnotationMode('FreeText');
       }
     } else {
@@ -1218,7 +1217,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   addAnnoEvent(e: AnnotationAddEventArgs) {
     console.log('add event', e);
 
-    this.holding = 0;
     let curID = e.annotationId;
     let justAddAnno = this.pdfviewerControl.annotationCollection.find(
       (anno) => {
@@ -1226,8 +1224,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       }
     );
     // if (!(justAddAnno.shapeAnnotationType === 'FreeText')) {}
-    justAddAnno.customData =
-      this.signerInfo?.authorID + ':' + e.customStampName;
+    justAddAnno.customData = this.signerInfo?.authorID + ':' + this.holding;
+    this.holding = 0;
+
     justAddAnno.author = this.signerInfo?.authorID;
     justAddAnno.review.author = this.signerInfo?.authorID;
     this.curSelectedAnno = justAddAnno;
@@ -1239,7 +1238,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           this.saveAnnoToDB.bind(this),
           10,
           this.esService,
-          this.curSelectedAnno,
+          justAddAnno,
           this.fileInfo,
           this.user
         )
@@ -1310,13 +1309,17 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           }
 
           if (this.saveAnnoQueue.size == 0) {
-            let tmpCollections = [
-              ...this.pdfviewerControl.annotationCollection,
-            ];
+            let tmpCollections = this.pdfviewerControl.annotationCollection;
+
             this.pdfviewerControl.deleteAnnotations();
-            tmpCollections.forEach((curAnnotation) => {
-              this.pdfviewerControl.addAnnotation(curAnnotation);
+            tmpCollections?.forEach((curAnnotation) => {
+              this.pdfviewerControl.addAnnotation({ ...curAnnotation });
             });
+
+            console.log(
+              'new collection',
+              this.pdfviewerControl.annotationCollection
+            );
 
             //reload annot panel
             this.renderAnnotPanel();
@@ -1417,13 +1420,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   testFunc(e: any) {}
 
   selectedAnnotation(e: any) {
-    console.log('select annot event', e);
-
     this.curSelectedAnno = this.pdfviewerControl.annotationCollection.find(
       (anno) => {
         return anno.annotationId === e.annotationId;
       }
     );
+    console.log('select annot event', this.curSelectedAnno);
   }
 
   clickZoom(type: string, e?: any) {
@@ -1464,7 +1466,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.pdfviewerControl.deleteAnnotations();
     tmpCollections?.forEach((annot) => {
       if (annot.customData.split(':')[1] != '1') {
-        this.pdfviewerControl.addAnnotation(annot);
+        this.pdfviewerControl.addAnnotation({ ...annot });
       }
     });
     return tmpCollections;
@@ -1548,16 +1550,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   show(e: any) {
     console.log('collection', this.pdfviewerControl.annotationCollection);
     console.log('handwrittent', this.pdfviewerControl.formFieldCollections);
-    let pageWidth = this.pdfviewerControl.viewerBase.pageSize[0].width;
-    let h = this.pdfviewerControl.viewerBase.pageSize[0].height;
-
-    console.log('page size', pageWidth, h);
-
-    // this.esService
-    //   .createLocalCertificatePFX('ekkobuu@gmail.com', '12345678')
-    //   .subscribe((res) => {
-    //     console.log(res);
-    //   });
+    let annotationDataFormat: AnnotationDataFormat;
+    this.pdfviewerControl
+      .exportAnnotationsAsBase64String(annotationDataFormat)
+      .then((res) => {
+        console.log('base64 new pdf', res);
+      });
   }
 
   closeAddForm(event) {

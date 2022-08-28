@@ -153,6 +153,7 @@ export class CopyComponent implements OnInit {
             that.dmSV.ChangeData.next(true);
             that.displayThumbnail(res.data.recID, res.data.pathDisk);
             this.dialog.close();
+            that.notificationsService.notify(res.message);
           }
           else {       
             this.titleMessage = res.message;
@@ -200,7 +201,8 @@ export class CopyComponent implements OnInit {
             }
             this.dmSV.listFiles = files;
             this.dmSV.ChangeData.next(true);
-            this.dialog.close();         
+            this.dialog.close();     
+         //   that.notificationsService.notify(res.message);    
           }
           else {          
             this.titleMessage = res.message;
@@ -251,6 +253,7 @@ export class CopyComponent implements OnInit {
           that.dmSV.ChangeData.next(true);
           that.changeDetectorRef.detectChanges();
           this.dialog.close();
+         // that.notificationsService.notify(res.message);
          // this.modalService.dismissAll();
         }
         else {

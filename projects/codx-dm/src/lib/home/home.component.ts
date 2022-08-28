@@ -515,17 +515,19 @@ export class HomeComponent extends UIComponent {
       this.folderService.options.srtColumns = this.sortColumn;
       this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
-      this.fileService.GetFiles(id).subscribe(async res => {   
-        this.dmSV.listFiles = res[0]; 
-        if (this.sortDirection == null || this.sortDirection == "asc") 
-        {
-          this.data = [...this.dmSV.listFolder, ...res[0]];
-        }        
-        else 
-          this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
-        this.dmSV.totalPage = parseInt(res[1]);    
-        this.dmSV.loadedFile = true;   
-        this.changeDetectorRef.detectChanges();    
+      this.fileService.GetFiles(id).subscribe(async res => {  
+        if (res  != null) {
+          this.dmSV.listFiles = res[0]; 
+          if (this.sortDirection == null || this.sortDirection == "asc") 
+          {
+            this.data = [...this.dmSV.listFolder, ...res[0]];
+          }        
+          else 
+            this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
+          this.dmSV.totalPage = parseInt(res[1]);    
+          this.dmSV.loadedFile = true;   
+          this.changeDetectorRef.detectChanges(); 
+        }           
       });
     } else {
       if (item.read != null) 
@@ -815,6 +817,19 @@ export class HomeComponent extends UIComponent {
       breadcumb.push(this.view.function.customName);
       this.dmSV.menuActive.next(this.view.function.customName);
       this.dmSV.breadcumb.next(breadcumb);    
+    
+      switch(this.view.funcID) {
+        case "DMT05":
+          breadcumb.push(this.dmSV.titleShareBy);
+          break;
+        case "DMT06":
+          breadcumb.push(this.dmSV.titleRequestShare);
+          break;
+        case "DMT07":
+          breadcumb.push(this.dmSV.titleRequestBy);
+          break;
+      }
+
       this.fileService.options.funcID = this.view.funcID;
       this.dmSV.listFiles = [];
       this.dmSV.loadedFile = false;  
