@@ -37,6 +37,7 @@ import { HRParametersComponent } from './hrparameters/hrparameters.component';
 import { PopupAddPositionsComponent } from './positions/popup-add-positions/popup-add-positions.component';
 import { PositionsComponent } from './positions/positions.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 
 export const routes: Routes = [
   {
@@ -163,6 +164,7 @@ const T_Component: Type<any>[] = [
   ReligionsComponent,
   EthnicGroupsComponent,
   UpdateStatusComponent,
+  NoSubAsideComponent
 ];
 @NgModule({
   imports: [
