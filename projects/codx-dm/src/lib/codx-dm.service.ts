@@ -616,20 +616,27 @@ export class CodxDMService {
     filterMoreFunction(e: any, data: any, modeView = false) {    
       var type = this.getType(data, "entity");
       var bookmark = this.isBookmark(data);
-      var list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233;DMT0204;DMT0216";//DMT08
+      var list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";//DMT08
       if (e) {          
         for(var i=0; i<e.length; i++) {       
           if (e[i].data != null && e[i].data.entityName == type)
             e[i].disabled = false;     
           else
             e[i].disabled = true;  
-         
+         // DMT0204;DMT0216
           // khong phai cho duyet
+          var listMove = "DMT0204;DMT0216";
+          if (data.isSystem || (this.idMenuActive != "DMT02" && this.idMenuActive != "DMT03")) {
+            if (e[i].data != null && listMove.indexOf(e[i].data.functionID) > -1) { 
+              e[i].disabled = true;  
+            }
+          }      
+          
           if (this.idMenuActive != "DMT06" && this.idMenuActive != "DMT07") {
             if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
               e[i].disabled = true;  
             }
-          } 
+          }           
           else {
             //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
             //list = "DMT0226;DMT0227;DMT0230;DMT0231";
