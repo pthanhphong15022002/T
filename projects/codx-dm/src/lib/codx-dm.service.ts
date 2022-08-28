@@ -616,7 +616,7 @@ export class CodxDMService {
     filterMoreFunction(e: any, data: any, modeView = false) {    
       var type = this.getType(data, "entity");
       var bookmark = this.isBookmark(data);
-      var list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
+      var list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233;DMT0204;DMT0216";//DMT08
       if (e) {          
         for(var i=0; i<e.length; i++) {       
           if (e[i].data != null && e[i].data.entityName == type)
