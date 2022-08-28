@@ -31,7 +31,7 @@ export class EditFileComponent implements OnInit {
   titleFileType = 'Loại tập tin';
   titleSize = 'Kích cỡ file';
   titleCreator = 'Người tạo';
-  titleCreaton = 'Người tạo';
+  titleCreaton = 'Ngày tạo';
   titleShare = 'Chia sẻ';
   titleSelectObject = 'Chọn đối tượng';
   titleExpand = 'Thông tin mở rộng';
@@ -516,7 +516,7 @@ export class EditFileComponent implements OnInit {
             break;
         case 'publisher':
           if ($event.data.length > 0)
-            this.fileEditing.publisher = $event.data[0];
+            this.fileEditing.publisher = $event.data;
           else
             this.fileEditing.publisher = "";         
           break;
