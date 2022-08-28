@@ -42,9 +42,11 @@ export class CodxDMService {
     public titleEmptyAction = 'Dọn sạch thùng rác';
     public titleNodaTa = 'Không có tài liệu';
     public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
+    public titleShareBy = "Tài liệu được chia sẻ";
+    public titleRequestShare = "Tài liệu yêu cầu chia sẻ";
+    public titleRequestBy = "Tài liệu được yêu cầu"; 
     public formModel: FormModel;    
     public dataService: any;
-
     isData = this.data.asObservable();   
     public modeStore = "0";
     public hideTree = false;
