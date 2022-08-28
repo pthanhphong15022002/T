@@ -10,14 +10,12 @@
       </div>
       <div class="row">
         <div class="col col-3">
-          <codx-input name="group" class="test-check" type="radio" style="width:100%"
-            [checked]="selection == 0 ? true : false" [label]="titleCopyTo"
-            (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
+          <codx-input name="group" class="test-check" type="radio" style="width:100%" [checked]="true"
+            [label]="titleCopyTo" (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
         </div>
         <div class="col col-3">
-          <codx-input name="group" class="test-check" type="radio" style="width:100%"
-            [checked]="selection == 1 ? true : false" [label]="titleMove"
-            (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
+          <codx-input name="group" class="test-check" type="radio" style="width:100%" [checked]="false"
+            [label]="titleMove" (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
         </div>
       </div>
       <div class="mt-2 moveto ms-n4">
