@@ -88,6 +88,7 @@ import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component
 import { TreeViewComponent } from './components/codx-tasks/tree-view/tree-view.component';
 import { CodxCommentHistoryComponent } from './components/codx-comment-history/codx-comment-history.component';
 import { PdfViewerAllModule } from '@syncfusion/ej2-angular-pdfviewer';
+import { NoSubAsideComponent } from './_layout/_noSubAside/_noSubAside.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -114,6 +115,7 @@ const T_Component: Type<any>[] = [
   LayoutNoAsideComponent,
   LayoutOnlyHeaderComponent,
   LayoutNoAsideToolbarFluidComponent,
+  NoSubAsideComponent,
   QuickLinksInnerComponent,
   UserInnerComponent,
   CodxReportComponent,
