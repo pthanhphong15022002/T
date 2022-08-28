@@ -211,7 +211,10 @@ export class IncommingAddComponent implements OnInit {
     }
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
   }
-
+  valueChangeDate(event:any)
+  {
+    this.dispatch[event?.field] = event?.data.fromDate;
+  }
   /////// lưu/câp nhật công văn
   onSave() {
     if(!this.checkIsRequired()) return;
