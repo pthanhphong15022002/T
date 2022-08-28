@@ -60,7 +60,6 @@ export class ViewApprovalProcessComponent implements OnInit {
             this.process = res;
             this.lstStep = [];
             this.cr.detectChanges();
-            console.log(this.process);
           }
         });
       }
