@@ -91,7 +91,7 @@ export class TaskDailyComponent implements OnInit {
       },
       { field: 'buid', headerText: 'Bộ phận người thực hiện', width: 140 },
     ];
-    // this.loadData();
+    this.loadData();
   }
 
   ngAfterViewInit(): void {

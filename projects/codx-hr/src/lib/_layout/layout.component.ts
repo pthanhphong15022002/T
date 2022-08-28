@@ -8,13 +8,13 @@ import { Observable } from 'rxjs';
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
-  
+
   module = 'HR';
   dialog!: DialogRef;
-  
+
   constructor(inject: Injector,
     private callfc: CallFuncService,
-    ) {
+  ) {
     super(inject);
   }
 

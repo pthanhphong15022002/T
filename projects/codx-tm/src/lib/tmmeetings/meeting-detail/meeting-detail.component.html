@@ -72,8 +72,21 @@
         </ng-container>
       </ng-container>
       <ng-container *ngIf="name=='Thảo luận'">
-        <ng-container> Thảo luận... </ng-container>
-
+        <div class="tab_container">
+          <div class="tab_body" *ngFor="let cmt of lstComment">
+            <codx-comment-history
+              [data]="cmt"
+              [type]="'view'"
+            ></codx-comment-history>
+          </div>
+          <div class="tab_footer">
+            <codx-comment-history
+              [objectID]="'TMT05011'"
+              [objectType]="'CO_Meetings'"
+              [type]="'create'"
+            ></codx-comment-history>
+          </div>
+        </div>
       </ng-container>
 
     </div>
