@@ -22,6 +22,7 @@ import {
 } from 'codx-core';
 import moment from 'moment';
 import { TemplateComponent } from '../template/template.component';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-add-meeting',
@@ -31,6 +32,7 @@ import { TemplateComponent } from '../template/template.component';
 export class PopupAddMeetingComponent implements OnInit {
   @Input() meeting = new CO_Meetings();
   @ViewChild('addLink', { static: true }) addLink;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   crrEstimated: any;
   startTime: any = null;
@@ -42,6 +44,7 @@ export class PopupAddMeetingComponent implements OnInit {
   title = '';
   showPlan = true;
   data: any;
+  readOnly= false;
   isFullDay: boolean;
   beginHour = 0;
   beginMinute = 0;
@@ -214,6 +217,8 @@ export class PopupAddMeetingComponent implements OnInit {
       name: 'Resources',
     },
     { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'Open' },
+    { icon: 'icon-playlist_add_check', text: 'Công việc review', name: 'Job' },
+
   ];
 
   setTitle(e: any) {
@@ -501,5 +506,9 @@ export class PopupAddMeetingComponent implements OnInit {
     this.changDetec.detectChanges();
 
     this.popover.close();
+  }
+
+  addFile(evt: any) {
+    this.attachment.uploadFile();
   }
 }

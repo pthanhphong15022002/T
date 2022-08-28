@@ -54,6 +54,9 @@ export class BookingStationeryComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      console.log(res);
+    });
     this.button = {
       id: 'btnAdd',
     };

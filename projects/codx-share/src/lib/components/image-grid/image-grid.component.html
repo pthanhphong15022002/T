@@ -1,7 +1,7 @@
 <ng-container *ngIf="file_img_video.length > 0">
   <div [ngSwitch]="file_img_video.length" class="imgs-grid">
     <ng-container *ngSwitchCase="1">
-      <div class="feed-1pic position-relative overflow-hidden h-250px">
+      <div class="feed-1pic position-relative overflow-hidden h-250px" (click)="clickViewDetail(file_img_video[0])">
         <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">
           <ng-container *ngIf="file_img_video[0].recID;else image_1_0">
             <codx-img class="h-auto" [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID"
@@ -24,7 +24,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="2">
       <div class="row row-custom feed-2pic m-0 ">
-        <div class="col-7 pe-2 ps-0 position-relative overflow-hidden h-200px">
+        <div class="col-7 pe-2 ps-0 position-relative overflow-hidden h-200px" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_2_0">
             <ng-container *ngIf="file_img_video[0].recID;else Image_2_0">
               <codx-img class="h-auto" [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID"
@@ -44,7 +44,7 @@
             <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[0] }"></ng-container>
           </ng-container>
         </div>
-        <div class="col-5 px-0 h-200px position-relative overflow-hidden">
+        <div class="col-5 px-0 h-200px position-relative overflow-hidden" (click)="clickViewDetail(file_img_video[1])">
           <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_2_1">
             <ng-container *ngIf="file_img_video[1].recID;else Image_2_1">
               <codx-img class="h-auto" [recId]="file_img_video[1].recID" [objectId]="file_img_video[1].objectID"
@@ -68,7 +68,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="3">
       <div class="row row-custom feed-3pic m-0">
-        <div class="col-7 ps-0 pe-2 position-relative h-320px overflow-hidden">
+        <div class="col-7 ps-0 pe-2 position-relative h-320px overflow-hidden" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_3_0">
             <ng-container *ngIf="file_img_video[0].recID;else Image_3_0">
               <codx-img class="h-auto" [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID"
@@ -89,7 +89,7 @@
           </ng-container>
         </div>
         <div class="col-5 px-0 ">
-          <div class="position-relative h-150px overflow-hidden">
+          <div class="position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[1])">
             <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_3_1">
               <ng-container *ngIf="file_img_video[1].recID;else Image_3_1">
                 <codx-img class="h-auto" [recId]="file_img_video[1].recID" [objectId]="file_img_video[1].objectID"
@@ -109,7 +109,7 @@
               <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[1] }"></ng-container>
             </ng-container>
           </div>
-          <div class="position-relative h-150px overflow-hidden mt-2">
+          <div class="position-relative h-150px overflow-hidden mt-2" (click)="clickViewDetail(file_img_video[2])">
             <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_3_2">
               <ng-container *ngIf="file_img_video[2].recID;else Image_3_2">
                 <codx-img class="h-auto" [recId]="file_img_video[2].recID" [objectId]="file_img_video[2].objectID"
@@ -134,7 +134,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="4">
       <div class="row row-custom feed-4pic m-0">
-        <div class="col-5 pe-2 ps-0 position-relative h-320px overflow-hidden">
+        <div class="col-5 pe-2 ps-0 position-relative h-320px overflow-hidden" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_4_0">
             <ng-container *ngIf="file_img_video[0].recID;else Image_4_0">
               <codx-img [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID" [width]="300"
@@ -155,7 +155,7 @@
           </ng-container>
         </div>
         <div class="col-7 px-0">
-          <div class="position-relative h-150px overflow-hidden">
+          <div class="position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[1])">
             <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_4_1">
               <ng-container *ngIf="file_img_video[1].recID;else Image_4_1">
                 <codx-img class="h-auto" [recId]="file_img_video[1].recID" [objectId]="file_img_video[1].objectID"
@@ -176,7 +176,7 @@
             </ng-container>
           </div>
           <div class="row row-custom mt-2 mx-0">
-            <div class="col-6 ps-0 pe-0 position-relative h-150px overflow-hidden">
+            <div class="col-6 ps-0 pe-0 position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[2])">
               <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_4_2">
                 <ng-container *ngIf="file_img_video[2].recID;else Image_4_2">
                   <codx-img class="h-auto" [recId]="file_img_video[2].recID" [objectId]="file_img_video[2].objectID"
@@ -197,7 +197,7 @@
                 </ng-container>
               </ng-container>
             </div>
-            <div class="col-6 px-0 ps-2 position-relative h-150px overflow-hidden">
+            <div class="col-6 px-0 ps-2 position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[3])">
               <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_4_3">
                 <ng-container *ngIf="file_img_video[3].recID;else Image_4_3">
                   <codx-img class="h-auto" [recId]="file_img_video[3].recID" [objectId]="file_img_video[3].objectID"
@@ -225,7 +225,7 @@
     <ng-container *ngSwitchDefault>
       <div class="row row-custom feed-5pic m-0">
         <div class="col-7 ps-0 pe-2">
-          <div class="position-relative h-200px overflow-hidden">
+          <div class="position-relative h-200px overflow-hidden " (click)="clickViewDetail(file_img_video[0])">
             <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_n_0">
               <ng-container *ngIf="file_img_video[0].recID;else Image_n_0">
                 <codx-img class="h-auto" [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID"
@@ -246,7 +246,7 @@
             </ng-container>
           </div>
           <div class="row row-custom mt-2 mx-0 h-125px">
-            <div class="col-6 pe-0 ps-0 position-relative h-125px overflow-hidden">
+            <div class="col-6 pe-0 ps-0 position-relative h-125px overflow-hidden " (click)="clickViewDetail(file_img_video[1])">
               <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_n_1">
                 <ng-container *ngIf="file_img_video[1].recID;else Image_n_1">
                   <codx-img class="h-auto" [recId]="file_img_video[1].recID" [objectId]="file_img_video[1].objectID"
@@ -267,7 +267,7 @@
                 </ng-container>
               </ng-container>
             </div>
-            <div class="col-6 ps-2 pe-0 position-relative h-125px overflow-hidden">
+            <div class="col-6 ps-2 pe-0 position-relative h-125px overflow-hidden" (click)="clickViewDetail(file_img_video[2])">
               <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_n_2">
                 <ng-container *ngIf="file_img_video[2].recID;else Image_n_2">
                   <codx-img class="h-auto" [recId]="file_img_video[2].recID" [objectId]="file_img_video[2].objectID"
@@ -291,7 +291,7 @@
           </div>
         </div>
         <div class="col-5 px-0">
-          <div class="position-relative h-150px overflow-hidden">
+          <div class="position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[3])">
             <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_n_3">
               <ng-container *ngIf="file_img_video[3].recID;else Image_n_3">
                 <codx-img class="h-auto" [recId]="file_img_video[3].recID" [objectId]="file_img_video[3].objectID"
@@ -311,7 +311,7 @@
               <ng-container *ngTemplateOutlet="removeFile  context: { $implicit: file_img_video[3] }"></ng-container>
             </ng-container>
           </div>
-          <div class="position-relative mt-2 h-175px overflow-hidden">
+          <div class="position-relative mt-2 h-175px overflow-hidden" (click)="clickViewDetail(file_img_video[4])">
             <ng-container *ngIf="file_img_video[4].referType == FILE_REFERTYPE.IMAGE; else video_n_4">
               <ng-container *ngIf="file_img_video[4].recID;else Image_n_4">
                 <codx-img class="h-auto" [recId]="file_img_video[4].recID" [objectId]="file_img_video[4].objectID"

@@ -58,7 +58,7 @@ export class CodxTabsComponent implements OnInit {
         (x: TabModel) => x.isActive == true
       );
     }
-    this.getListComment();
+    this.getHistoryAsync();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -70,11 +70,20 @@ export class CodxTabsComponent implements OnInit {
     console.log(e);
   }
   lstComment:any = [];
-  getListComment(){
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
+  // getListComment(){
+  //   this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
+  //   .subscribe((res:any[]) => {
+  //     console.log(res);
+  //     this.lstComment = res;
+  //   })
+  // }
+
+  getHistoryAsync(){
+    let objectID = "00cfeb10-a433-43e3-b6b3-876e25bf20a3";
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetTrackLogsByObjectIDAsync" , objectID)
     .subscribe((res:any[]) => {
       console.log(res);
-      this.lstComment = res;
-    })
+    });
   }
+  
 }
