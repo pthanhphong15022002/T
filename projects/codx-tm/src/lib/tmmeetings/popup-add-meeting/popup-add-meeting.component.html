@@ -1,5 +1,5 @@
 <codx-layout-add [title]="title" [tabInfo]="tabInfo" [formModel]="dialog.formModel" [subHeader]="subHeader"
-  [footer]="footer" [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescip, tabResources,tabOpen]"
+  [footer]="footer" [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescip, tabResources,tabOpen, tabJob]"
   (setTitle)="setTitle($event)" #form [data]="data"></codx-layout-add>
 
 <ng-template #subHeader>
@@ -160,48 +160,6 @@
       </ng-container>
     </div>
   </ng-container>
-  <div class="extend-function" *ngIf="(meeting.meetingType =='1')">
-    <hr />
-    <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
-      <div class="d-flex align-items-center w-auto extend-title">
-        <span class="text-primary text-hover-primary_darker fw-bold me-1">
-          <codx-label name="Plan" [formModel]="form.formModel" default="Công việc review"></codx-label>
-        </span>
-        <span *ngIf="showPlan" class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
-        <span *ngIf="!showPlan" class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
-      </div>
-    </div>
-  </div>
-
-  <ng-container *ngIf="(meeting.meetingType =='1') && showPlan ">
-    <div class="form-group row mt-3">
-      <div class="col-6">
-        <div>
-          <codx-label fiedName="FromDate" [formModel]="form.formModel" default="Ngày bắt đầu">
-          </codx-label>
-        </div>
-        <codx-input type="datetime" class="test-datetime" (valueChange)="valueDateChange($event)"
-          [crrValue]="meeting?.fromDate" field="fromDate" placeholder="datetime" format="F">
-        </codx-input>
-      </div>
-      <div class="col-6">
-        <div>
-          <codx-label fiedName="ToDate" [formModel]="form.formModel" default="Ngày kết thúc">
-          </codx-label>
-        </div>
-        <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.toDate"
-          (valueChange)="valueDateChange($event)" field="toDate" format="F" placeholder="datetime">
-        </codx-input>
-      </div>
-    </div>
-    <div class="form-group mt-3">
-      <codx-label fiedName="refID" default="Dự án">
-      </codx-label>
-      <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
-        [crrValue]="meeting.refID" loadFull="true">
-      </codx-input>
-    </div>
-  </ng-container>
 </ng-template>
 
 
@@ -286,12 +244,84 @@
   </ng-container>
 </ng-template>
 
+<ng-template #tabJob>
+  <ng-container>
+    <div class="extend-function" *ngIf="(meeting.meetingType =='1')">
+      <hr />
+      <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
+        <div class="d-flex align-items-center w-auto extend-title">
+          <span class="text-primary text-hover-primary_darker fw-bold me-1">
+            <codx-label name="Plan" [formModel]="form.formModel" default="Công việc review"></codx-label>
+          </span>
+          <span *ngIf="showPlan" class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
+          <span *ngIf="!showPlan" class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="(meeting.meetingType =='1') && showPlan ">
+      <div class="form-group row mt-3">
+        <div class="col-6">
+          <div>
+            <codx-label fiedName="FromDate" [formModel]="form.formModel" default="Ngày bắt đầu">
+            </codx-label>
+          </div>
+          <codx-input type="datetime" class="test-datetime" (valueChange)="valueDateChange($event)"
+            [crrValue]="meeting?.fromDate" field="fromDate" placeholder="datetime" format="F">
+          </codx-input>
+        </div>
+        <div class="col-6">
+          <div>
+            <codx-label fiedName="ToDate" [formModel]="form.formModel" default="Ngày kết thúc">
+            </codx-label>
+          </div>
+          <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.toDate"
+            (valueChange)="valueDateChange($event)" field="toDate" format="F" placeholder="datetime">
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <codx-label fiedName="refID" default="Dự án">
+        </codx-label>
+        <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
+          [crrValue]="meeting.refID" loadFull="true">
+        </codx-input>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-between">
+    <button
+      type="button"
+      class="btn btn-light-primary me-3"
+      (click)="addFile($event)"
+    >
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
+        <codx-label
+          name="UploadFile"
+          formName="Tasks"
+          default="Upload File"
+        ></codx-label>
+      </span>
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary ms-1"
+      (click)="onSave()"
+    >
+      <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+    </button>
+  </div>
+
+  <!-- <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary ms-1">
       <codx-label name="Save" default="Lưu" (click)="onSave()"></codx-label>
     </button>
-  </div>
+  </div> -->
 </ng-template>
 
 
