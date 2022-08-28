@@ -10,8 +10,8 @@ import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawe
 export class NoSubAsideComponent extends LayoutBaseComponent {
 
   module = '';
-  // aside=true;
-  // asideFixed = true;
+  override aside = true;
+  //override asideFixed = true;
   // toolbar = false;
   constructor(
     inject: Injector,
