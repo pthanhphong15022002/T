@@ -206,4 +206,13 @@ export class MeetingDetailComponent extends UIComponent {
       meetingID: data.meetingID,
     });
   }
+
+  lstComment:any = [];
+  getListComment(){
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
+    .subscribe((res:any[]) => {
+      console.log(res);
+      this.lstComment = res;
+    })
+  }
 }

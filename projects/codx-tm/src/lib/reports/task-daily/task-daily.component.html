@@ -1,5 +1,4 @@
-<codx-views #view [funcID]="'TMR01'" [autoLoad]="false" entityName="TM_Tasks" service="TM" assemblyName="ERM.Business.TM" className="ReportBusiness"
-  method="ListReportTasksAsync" [views]="views" idField="taskID" [pageSize]="100" [selectedFirst]="true"
+<codx-views #view [funcID]="'TMR01'" [views]="views"[pageSize]="100" [selectedFirst]="true"
   (filterReportChange)="paramChange($event)" (reportPrint)="printReport()"
   >
 </codx-views>

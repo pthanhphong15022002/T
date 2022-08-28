@@ -815,6 +815,19 @@ export class HomeComponent extends UIComponent {
       breadcumb.push(this.view.function.customName);
       this.dmSV.menuActive.next(this.view.function.customName);
       this.dmSV.breadcumb.next(breadcumb);    
+    
+      switch(this.view.funcID) {
+        case "DMT05":
+          breadcumb.push(this.dmSV.titleShareBy);
+          break;
+        case "DMT06":
+          breadcumb.push(this.dmSV.titleRequestShare);
+          break;
+        case "DMT07":
+          breadcumb.push(this.dmSV.titleRequestBy);
+          break;
+      }
+
       this.fileService.options.funcID = this.view.funcID;
       this.dmSV.listFiles = [];
       this.dmSV.loadedFile = false;  

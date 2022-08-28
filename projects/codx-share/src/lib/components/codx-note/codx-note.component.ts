@@ -41,11 +41,13 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     },
   ];
   currentElement: HTMLElement;
+  currentElementColor: HTMLElement;
+  elementColor: any;
   font = {
     BOLD: false,
     ITALIC: false,
     UNDERLINE: false,
-    COLOR: "#269a26",
+    COLOR: '#d71212',
   };
   format = {
     TEXT: true,
@@ -54,7 +56,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   };
   co_content: CO_Contents = new CO_Contents();
   test: any;
-  color: any;
 
   @Input() showMenu = true;
   @Input() showMF = true;
@@ -73,9 +74,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   onType(type: any) {
     if (type == 'TEXT') {
@@ -138,16 +139,59 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.currentElement = ele.elRef.nativeElement;
     if (this.currentElement) {
       var input = this.currentElement.querySelector(
-        '.codx-text'
+        'input.codx-text'
       ) as HTMLElement;
       input.focus();
     }
-
     this.font[font] = !this.font[font];
     this.chooseFont(font);
   }
 
-  popupFile() { }
+  valueChangeColor(event, ele, elementColor) {
+    if (event?.data) {
+      if (!this.currentElement && ele)
+        this.currentElement = ele.elRef.nativeElement;
+      if (this.currentElement) {
+        this.currentElement = this.currentElement.querySelector(
+          'input.codx-text'
+        ) as HTMLElement;
+        this.currentElement.focus();
+        this.co_content[event?.field] = event?.data;
+        this.elementColor = elementColor;
+        this.chooseColor(event?.data);
+      }
+      if (this.co_content.memo != null) this.updateContent(this.co_content);
+    }
+  }
+
+  chooseColor(color) {
+    if (!this.currentElement) return;
+    this.currentElement.focus();
+    this.currentElement.style.setProperty('color', color, 'important');
+    this.font.COLOR = color;
+    this.dt.detectChanges();
+  }
+
+  test1(color) {
+    if (this.elementColor)
+      this.currentElementColor = this.elementColor.elRef.nativeElement;
+    if (this.currentElementColor) {
+      var divColor = this.currentElementColor.querySelector(
+        'div.codx-colorpicker'
+      ) as HTMLElement;
+      var childrenDivColor = divColor.children[0] as HTMLElement;
+      var grandChildrenDivColor = childrenDivColor.children[0] as HTMLElement;
+      var inputColor = grandChildrenDivColor.children[1] as HTMLElement;
+      this.currentElementColor = inputColor;
+      this.currentElementColor.style.setProperty(
+        'background-color',
+        color,
+        'important'
+      );
+    }
+  }
+
+  popupFile() {}
 
   addEmoji(event) {
     this.message += event.emoji.native;
@@ -175,18 +219,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     }
   }
 
-  valueChangeColor(event) {
-    if (event?.data) {
-      this.co_content[event?.field] = event?.data;
-      if (this.currentElement) {
-        var style = this.currentElement.style;
-        style.color = event?.data;
-        this.color = event?.data;
-      }
-      if (this.co_content.memo != null) this.updateContent(this.co_content);
-    }
-  }
-
   keyUpEnter(event) {
     if (event?.data) {
       this.addContent(event?.data);
@@ -201,7 +233,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       let htmlE = ele[ele.length - 1] as HTMLElement;
       this.currentElement = htmlE;
       var input = this.currentElement.querySelector(
-        '.codx-text'
+        'input.codx-text'
       ) as HTMLElement;
       input.focus();
     }
@@ -228,7 +260,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     data;
   }
 
-  delete() { }
+  delete() {}
 
   refresh() {
     this.listNote = [
@@ -248,6 +280,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   getElement(ele: any) {
     this.currentElement = ele.elRef.nativeElement as HTMLElement;
+    var divElement = this.currentElement.children[0] as HTMLElement;
+    var inputElement = divElement.children[0] as HTMLElement;
+    var colorOfInputEle = inputElement.style.color;
     if (this.listNote.length > 1) {
       var style: any = this.currentElement.style;
       var len = Object.keys(this.font).length || 0;
@@ -258,9 +293,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         else this.font.ITALIC = false;
         if (style.textDecorationLine != 'none') this.font.UNDERLINE = true;
         else this.font.UNDERLINE = false;
-        // if (style.color != 'unset') this.font.COLOR = true;
-        // else this.font.COLOR = false;
+        this.test1(colorOfInputEle);
       }
     }
+    this.dt.detectChanges();
   }
 }
