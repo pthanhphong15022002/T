@@ -626,11 +626,17 @@ export class CodxDMService {
          // DMT0204;DMT0216
           // khong phai cho duyet
           var listMove = "DMT0204;DMT0216";
-          if (data.isSystem || (this.idMenuActive != "DMT02" && this.idMenuActive != "DMT03")) {
+          if (data.isSystem || (this.idMenuActive != "DMT02" && this.idMenuActive != "DMT03") || this.idMenuActive == "DMT03") {
             if (e[i].data != null && listMove.indexOf(e[i].data.functionID) > -1) { 
               e[i].disabled = true;  
-            }
-          }      
+            }          
+          }  
+          
+          // if (this.idMenuActive == "DMT03") {
+          //   if (e[i].data != null && listMove.indexOf(e[i].data.functionID) > -1) { 
+          //     e[i].disabled = true;  
+          //   }          
+          // }
           
           if (this.idMenuActive != "DMT06" && this.idMenuActive != "DMT07") {
             if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) { 
