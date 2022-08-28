@@ -60,7 +60,7 @@ export class PopupUpdateStatusComponent implements OnInit {
       ).toFixed(2);
       this.completed = Number.parseFloat(time).toFixed(2);
     }
-    if (this.data?.maxHoursControl != '0' && this.completed > this.data?.maxHours) {
+    if (this.status=="90" && this.data?.maxHoursControl != '0' && this.completed > this.data?.maxHours) {
       this.notiService.notifyCode('TM058',0,[this.data?.maxHours])  ///truyền có tham số
       return;
      }  
@@ -110,7 +110,7 @@ export class PopupUpdateStatusComponent implements OnInit {
     ];
   }
   saveData() {
-    if (this.data?.maxHoursControl != '0' && this.completed > this.data?.maxHours) {
+    if (this.status=="90" && this.data?.maxHoursControl != '0' && this.completed > this.data?.maxHours) {
       this.notiService.notifyCode('TM058',0,[this.data?.maxHours])  ///truyền có tham số
       return;
      }  
