@@ -656,11 +656,12 @@
             </div>
 
             <!-- sở thích -->
-            <div id="MWP00206" class="d-block">
+            <div id="MWP00206" class="d-block mb-5">
               <div class="user-profile overview">
-                <div class="fw-bold fs-4 text-primary mb-2 mt-6"></div>
-                <codx-label name="lblHobbie" formName="Employees" default="Sở thích">
-                </codx-label>
+                <div class="fw-bold fs-4 text-primary mb-2 mt-6">
+                  <codx-label name="lblHobbie" formName="Employees" default="Sở thích">
+                  </codx-label>
+                </div>
               </div>
               <ngx-skeleton-loader *ngIf="!employeeHobbie" count="5" animation="progress"></ngx-skeleton-loader>
               <div class="border rounded-2 p-6" *ngIf="employeeHobbie">

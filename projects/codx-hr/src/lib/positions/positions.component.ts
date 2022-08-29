@@ -54,17 +54,27 @@ export class PositionsComponent implements OnInit {
   }
 
   popoverEmpList(p: any, emp) {
+    this.listEmployeeSearch = [];
+    this.countResource = 0;
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
-      p.open();
-      this.popoverCrr = p;
     }
-
-    this.listEmployeeSearch = [];
-    if(emp!=null){
-      this.listEmployeeSearch = emp;
-    }
-
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetByUserAsync',
+        emp.employeeID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listEmployee = res;
+          this.listEmployeeSearch = res;
+          this.countResource = res.length;
+          p.open();
+        }
+      });
   }
 
   searchName(e) {
@@ -81,7 +91,7 @@ export class PositionsComponent implements OnInit {
       }
     });
     this.listEmployeeSearch = listEmployeeSearch;
-   }
+  }
 
 
   ngAfterViewInit(): void {
@@ -120,7 +130,7 @@ export class PositionsComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected , option);
+      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected, option);
       this.dialog.closed.subscribe(e => {
         console.log(e);
       })
@@ -128,16 +138,16 @@ export class PositionsComponent implements OnInit {
   }
 
   edit(data?) {
-      if (data) {
-        this.view.dataService.dataSelected = data;
-      }
-      this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'edit', option);
-      });
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'edit', option);
+    });
   }
 
   copy(data) {
@@ -163,7 +173,7 @@ export class PositionsComponent implements OnInit {
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected] , true ,(opt,) =>
+    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
       this.beforeDel(opt)).subscribe((res) => {
         if (res[0]) {
           this.itemSelected = this.view.dataService.data[0];
@@ -172,22 +182,22 @@ export class PositionsComponent implements OnInit {
       );
   }
 
-loadEmployByCountStatus(el, posID, status) {
-        var stt = status.split(';');
-        this.popover["_elementRef"] = new ElementRef(el);
-        if (this.popover.isOpen()) {
-            this.popover.close();
-        }
-        this.posInfo = {};
-        this.employees = [];
-        this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
-            .subscribe(response => {
-
-                this.employees = response || [];
-                this.popover.open();
-
-            });
+  loadEmployByCountStatus(el, posID, status) {
+    var stt = status.split(';');
+    this.popover["_elementRef"] = new ElementRef(el);
+    if (this.popover.isOpen()) {
+      this.popover.close();
     }
+    this.posInfo = {};
+    this.employees = [];
+    this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
+      .subscribe(response => {
+
+        this.employees = response || [];
+        this.popover.open();
+
+      });
+  }
 
   // requestEnded(evt: any) {
   //   this.view.currentView;
