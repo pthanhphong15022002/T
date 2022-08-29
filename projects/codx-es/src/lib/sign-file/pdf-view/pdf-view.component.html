@@ -238,7 +238,7 @@
         heightAdjustMode="Fill"
       >
         <e-tabitems>
-          <e-tabitem>
+          <e-tabitem *ngIf="!isDisable">
             <ng-template #headerText>
               {{ headerRightName[0].text }}
             </ng-template>
@@ -408,7 +408,8 @@
                         [class.d-none]="
                           area.recID != curSelectedAnnotID ||
                           area.labelType == '1' ||
-                          area.labelType == '2'
+                          area.labelType == '2' ||
+                          area.fixedWidth == true
                         "
                         [formGroup]="formAnnot"
                       >
