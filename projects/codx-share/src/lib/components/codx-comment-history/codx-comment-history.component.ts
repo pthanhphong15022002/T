@@ -22,6 +22,8 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() data:any;
   @Input() viewIcon:boolean = true;
   @Output() evtReply = new EventEmitter;
+  @Output() evtDelete = new EventEmitter;
+
   user: any = null;
   message: string = "";
   REFERTYPE = {
@@ -80,7 +82,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     .subscribe((res:any) => {
       if(res)
       {
-        this.notifySV.notifyCode("SYS008");
+        this.evtDelete.emit(item);
       }
       else 
         this.notifySV.notifyCode("SYS022");
