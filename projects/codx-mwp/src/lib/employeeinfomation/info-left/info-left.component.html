@@ -24,11 +24,11 @@
     <codx-label class="text-gray-600" fiedName="phoneExt" formName="Employees" gridViewName="grvEmployees"
       default="MSVN:">
     </codx-label>
-      <span #employeeID>{{
-        dataEmployee.employeeInfo?.employeeID
-        | formatvalue: formModel:"employeeID":employeeID
-        | async
-        }}</span>
+    <span #employeeID>{{
+      dataEmployee.employeeInfo?.employeeID
+      | formatvalue: formModel:"employeeID":employeeID
+      | async
+      }}</span>
   </div>
   <div class="d-flex justify-content-between pb-2">
     <codx-label class="text-gray-600" fiedName="status" formName="Employees" gridViewName="grvEmployees"
@@ -45,10 +45,10 @@
     <!-- <span class="text-dark">{{
       dataEmployee.employeeInfo?.joinedOn | date: "dd/MM/yyyy"
       }}</span> -->
-      <span #joinedOn>{{
-        dataEmployee.employeeInfo?.joinedOn | formatvalue: formModel:"joinedOn":hiredOn
-        | async
-        }}</span>
+    <span #joinedOn>{{
+      dataEmployee.employeeInfo?.joinedOn | formatvalue: formModel:"joinedOn":hiredOn
+      | async
+      }}</span>
   </div>
   <div class="d-flex justify-content-between pb-2">
     <codx-label class="text-gray-600" fiedName="hiredOn" formName="Employees" gridViewName="grvEmployees"
@@ -236,10 +236,11 @@
 </div>
 
 <div *ngIf="!hideEdit">
-  <a class="edit-btn" data-title="Chỉnh sửa thông tin nhân viên" *ngIf="!editMode" (click)="editInfoMode()">
+  <a class="edit-btn-float btn-primary" data-title="Chỉnh sửa thông tin nhân viên" *ngIf="!editMode"
+    (click)="editInfoMode()">
     <span class="icon-edit icon-18"></span>
   </a>
-  <a class="edit-btn" data-title="Xem thông tin nhân viên" *ngIf="editMode" (click)="viewInfoMode()">
+  <a class="edit-btn-float btn-primary" data-title="Xem thông tin nhân viên" *ngIf="editMode" (click)="viewInfoMode()">
     <span class="icon-text_snippet icon-18"></span>
   </a>
 </div>
