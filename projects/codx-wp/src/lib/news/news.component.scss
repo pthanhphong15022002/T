@@ -108,3 +108,21 @@ codx-wrapper {
 .carousel-inner .video:hover .image-200::before {
     opacity: 1;
 }
+
+.news-item .col-2 {
+    width: 20%;
+}
+
+.news-item .col-10 {
+    width: 80%;
+}
+
+.hot-right .bottom-0 {
+    bottom: 5px !important;
+    right: 5px !important;
+}
+
+.news-title {
+    font-size: 15px;
+    color: var(--text-dark);
+}
