@@ -183,7 +183,7 @@ export class TaskGroupComponent extends UIComponent
       {
         type: ViewType.grid,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           resources: this.columnsGrid,
           template: this.grid,
@@ -192,7 +192,7 @@ export class TaskGroupComponent extends UIComponent
       {
         type: ViewType.list,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.itemTemplate,
         },

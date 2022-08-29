@@ -92,7 +92,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
-    }
+    } else this.adUser.buid = '';
     this.dialog = dialog;
     this.user = auth.get();
 
@@ -421,7 +421,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
             dt['roleID'] = dt.recIDofRole;
             dt.userID = this.adUser.userID;
           });
-          debugger;
           this.countListViewChooseRoleApp = this.viewChooseRole.length;
           this.changeDetector.detectChanges();
         }

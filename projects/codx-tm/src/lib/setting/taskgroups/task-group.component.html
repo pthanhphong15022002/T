@@ -46,81 +46,105 @@
     <td class="rowphoto">
       <div class="padding" *ngIf="data.projectControl != '0'">
         <codx-vll
-          field="ProjectControl"
-          name="TM012"
-          [formModel]="view.formModel"
+          [name]="'TM012'"
+          [field]="'ProjectControl'"
           [value]="data?.projectControl"
           [showText]="true"
           [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 ms-2"
         >
         </codx-vll>
+        <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
+        (data?.projectControl | vll: 'TM012':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.projectControl | vll: 'TM012':'color' | async) + '30'
+      " [style.color]="data?.projectControl | vll: 'TM012':'color' | async" style="border: none">
+          {{data?.projectControl|vll:"TM012":"text"|async}}
+        </div> -->
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.locationControl">
-        <div
-          [style.border-color]="
-            (data?.locationControl | vll: 'TM012':'color' | async) + '30'
-          "
-          [style.background-color]="
-            (data?.locationControl | vll: 'TM012':'color' | async) + '30'
-          "
-          [style.color]="data?.locationControl | vll: 'TM012':'color' | async"
-          style="border: none"
+        <codx-vll
+          [name]="'TM012'"
+          [field]="'LocationControl'"
+          [value]="data?.locationControl"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 ms-2"
         >
-          {{ data?.locationControl | vll: "TM012":"text" | async }}
-        </div>
+        </codx-vll>
+        <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
+        (data?.locationControl | vll: 'TM012':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.locationControl | vll: 'TM012':'color' | async) + '30'
+      " [style.color]="data?.locationControl | vll: 'TM012':'color' | async" style="border: none">
+          {{data?.locationControl|vll:"TM012":"text"|async}}
+        </div> -->
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.planControl">
-        <div
-          [style.border-color]="
-            (data?.planControl | vll: 'TM012':'color' | async) + '30'
-          "
-          [style.background-color]="
-            (data?.planControl | vll: 'TM012':'color' | async) + '30'
-          "
-          [style.color]="data?.planControl | vll: 'TM012':'color' | async"
-          style="border: none"
+        <codx-vll
+          [name]="'TM012'"
+          [field]="'PlanControl'"
+          [value]="data?.planControl"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 ms-2"
         >
-          {{ data?.planControl | vll: "TM012":"text" | async }}
-        </div>
+        </codx-vll>
+        <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
+        (data?.planControl | vll: 'TM012':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.planControl | vll: 'TM012':'color' | async) + '30'
+      " [style.color]="data?.planControl | vll: 'TM012':'color' | async" style="border: none">
+          {{data?.planControl|vll:"TM012":"text"|async}}
+        </div> -->
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.updateControl">
-        <div
-          [style.border-color]="
-            (data?.updateControl | vll: 'TM013':'color' | async) + '30'
-          "
-          [style.background-color]="
-            (data?.updateControl | vll: 'TM013':'color' | async) + '30'
-          "
-          [style.color]="data?.updateControl | vll: 'TM013':'color' | async"
-          style="border: none"
+        <codx-vll
+          [name]="'TM013'"
+          [field]="'UpdateControl'"
+          [value]="data?.updateControl"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 ms-2"
         >
-          {{ data?.updateControl | vll: "TM013":"text" | async }}
-        </div>
+        </codx-vll>
+        <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
+        (data?.updateControl | vll: 'TM013':'color' | async) + '30'
+      " [style.background-color]="
+        (data?.updateControl | vll: 'TM013':'color' | async) + '30'
+      " [style.color]="data?.updateControl | vll: 'TM013':'color' | async" style="border: none">
+          {{data?.updateControl|vll:"TM013":"text"|async}}
+        </div> -->
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding" *ngIf="data.checkListControl">
+      <div
+        class="padding"
+        *ngIf="data.checkListControl && data.checkListControl == '2'"
+      >
         <div class="d-flex align-items-center" style="padding-right: 30px">
-          <div
-            [style.border-color]="
-              (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
-            "
-            [style.background-color]="
-              (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
-            "
-            [style.color]="
-              data?.checkListControl | vll: 'L1463':'color' | async
-            "
-            style="border: none"
+          <codx-vll
+            [name]="'TM015'"
+            [field]="'CheckListControl'"
+            [value]="data?.checkListControl"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 ms-2"
           >
-            {{ data?.checkListControl | vll: "L1463":"text" | async }}
-          </div>
+          </codx-vll>
+          <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
+          (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+        " [style.background-color]="
+          (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+        " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
+            {{data?.checkListControl|vll:"L1463":"text"|async}}
+          </div> -->
           <div
             class="dropdown ms-2"
             [ngbPopover]="popDetail"
@@ -150,10 +174,34 @@
           </div>
         </div>
       </div>
+      <div
+        class="padding"
+        *ngIf="data.checkListControl && data.checkListControl != '2'"
+      >
+        <div class="d-flex align-items-center" style="padding-right: 30px">
+          <codx-vll
+            [name]="'TM015'"
+            [field]="'CheckListControl'"
+            [value]="data?.checkListControl"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 ms-2"
+          >
+          </codx-vll>
+          <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
+          (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+        " [style.background-color]="
+          (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
+        " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
+            {{data?.checkListControl|vll:"L1463":"text"|async}}
+          </div> -->
+        </div>
+      </div>
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.verifyControl == '1'">
         <div
+          class="badge badge-light badge-md fs-7 ms-2"
           *ngIf="
             data.verifyByType == 'R' ||
             data.verifyByType == 'P' ||
@@ -181,24 +229,29 @@
             data.verifyByType != 'U'
           "
         >
-          <div
-            [style.border-color]="
-              (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
-            "
-            [style.background-color]="
-              (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
-            "
-            [style.color]="data?.verifyByType | vll: 'TM006':'color' | async"
-            style="border: none"
+          <codx-vll
+            [name]="'TM006'"
+            [field]="'checkListControl'"
+            [value]="data?.verifyByType"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 ms-2"
           >
-            {{ data?.verifyByType | vll: "TM006":"text" | async }}
-          </div>
+          </codx-vll>
+          <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
+          (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
+        " [style.background-color]="
+          (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
+        " [style.color]="data?.verifyByType | vll: 'TM006':'color' | async" style="border: none">
+            {{data?.verifyByType|vll: 'TM006':"text"|async}}
+          </div> -->
         </div>
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.approveControl == '1'">
         <div
+          class="badge badge-light badge-md fs-7 ms-2"
           *ngIf="
             data.approveBy == 'R' ||
             data.approveBy == 'P' ||
@@ -227,6 +280,7 @@
           "
         >
           <div
+            class="badge badge-light badge-md fs-7 ms-2"
             [style.border-color]="
               (data?.approveBy | vll: 'TM014':'color' | async) + '30'
             "
