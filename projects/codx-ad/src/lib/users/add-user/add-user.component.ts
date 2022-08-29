@@ -377,7 +377,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           </div>
           <div class="d-flex flex-column w-100">
             <div class="text-dark fw-bold fs-5">${data.userName}</div>
-            <div class="text-gray-400"></div>
+            <div class="text-gray-400">${data.userName ? data.userName : ''}</div>
           </div>
         </div>
         <!--end::user center-->
