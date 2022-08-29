@@ -76,14 +76,16 @@
           <div class="tab_body" *ngFor="let cmt of lstComment">
             <codx-comment-history
               [data]="cmt"
+              [actionType]="'C'"
               [type]="'view'"
             ></codx-comment-history>
           </div>
           <div class="tab_footer">
             <codx-comment-history
-              [objectID]="'TMT05011'"
+              [objectID]="meeting.recID"
               [objectType]="'CO_Meetings'"
               [type]="'create'"
+              [actionType]="'C'"
             ></codx-comment-history>
           </div>
         </div>

@@ -80,9 +80,9 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         },
       },
     ];
-    this.button = {
-      id: 'btnAdd',
-    };
+    // this.button = {
+    //   id: 'btnAdd',
+    // };
     this.getGridViewSetup(this.view.formModel.funcID);
     this.detectorRef.detectChanges();
   }
@@ -221,6 +221,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             funcID: 'EST021',
             recID: data.transID,
             title: data.htmlView,
+            stepType: data.stepType,
           },
           '',
           dialogModel
