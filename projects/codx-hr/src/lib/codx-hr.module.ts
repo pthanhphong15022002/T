@@ -37,6 +37,7 @@ import { HRParametersComponent } from './hrparameters/hrparameters.component';
 import { PopupAddPositionsComponent } from './positions/popup-add-positions/popup-add-positions.component';
 import { PositionsComponent } from './positions/positions.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 
 export const routes: Routes = [
   {
@@ -64,12 +65,12 @@ export const routes: Routes = [
       },
       {
         path: '',
-        component: LayoutComponent,
+        component: NoSubAsideComponent,
         children: [
-          {
-            path: 'contactbook/:funcID',
-            component: EmpContactsComponent,
-          },
+          // {
+          //   path: 'contactbook/:funcID',
+          //   component: EmpContactsComponent,
+          // },
           {
             path: 'employee/:funcID',
             component: EmployeesComponent,
@@ -163,6 +164,7 @@ const T_Component: Type<any>[] = [
   ReligionsComponent,
   EthnicGroupsComponent,
   UpdateStatusComponent,
+  NoSubAsideComponent
 ];
 @NgModule({
   imports: [

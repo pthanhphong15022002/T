@@ -67,24 +67,31 @@
                 <div class="text-dark fw-bold">
                   {{ approver.status | vll: "ES003":"text" | async }}
                 </div>
-                <div *ngIf="approver.status == '1'">
-                  <div class="badge badge-secondary w-90px">
+                <div *ngIf="approver.status == '1' || approver.status == '3'">
+                  <div class="badge badge-secondary min-w-90px">
                     {{ approver.leadtime }} giờ
                   </div>
                 </div>
-                <div *ngIf="approver.status == '3'">
-                  <div class="badge my-1 badge-primary" *ngIf="approver.duration <= approver.leadtime; else inQueue">
-                    {{ approver.activedOn | date: 'dd/MM/yyyy HH:mm'}}
+                <!-- <div *ngIf="approver.status == '3'">
+                  <div class="badge my-1 badge-primary min-w-90px" *ngIf="approver.duration <= approver.leadtime">
+                    {{ approver.activedOn | date: 'HH:mm'}}
                     -
-                    {{ getHour(approver.activedOn, approver.leadtime)| date: 'dd/MM/yyyy HH:mm' }}
+                    {{ getHour(approver.activedOn, approver.leadtime)| date: 'HH:mm' }}
                   </div>
-                  <ng-template #inQueue>
-                    <div class="badge badge-danger">
-                      {{ approver.leadtime }}
-                    </div>
-                  </ng-template>
+                  <div class="text-gray-600 fs-7">
+                    {{ approver.activedOn | date: 'dd/MM/yyyy' }}
+                  </div>
+                </div> -->
+                <div *ngIf="approver.status == '5'">
+                  <div class="badge my-1 min-w-90px"
+                    [ngClass]="approver.duration <= approver.leadtime ? 'badge-primary' : 'badge-danger'">
+                    {{ approver.activedOn | date: 'HH:mm'}}
+                    -
+                    {{ getHour(approver.activedOn, approver.leadtime)| date: 'HH:mm' }}
+                  </div>
+
                   <div class="text-gray-600 fs-7" *ngIf="approver.approvedOn ? true : false">
-                    {{ '2022-08-15T09:49:46.721+00:00' | date: "medium" }}
+                    {{ approver.approvedOn | date: 'dd/MM/yyyy HH:mm' }}
                   </div>
                 </div>
 

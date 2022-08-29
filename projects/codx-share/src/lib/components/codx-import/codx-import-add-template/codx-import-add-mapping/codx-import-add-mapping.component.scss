@@ -51,25 +51,18 @@
 {
   height: calc(100% - 10px);
 }
-.table
+.e-grid
 {
-  overflow-x: auto;
- 
+  border: none;
 }
-.table thead
-{
+.e-grid .e-gridheader {
+  border:none;
   background-color: #F5F8FA;
-  white-space: nowrap;
 }
-.table thead, .table tbody tr {
-  height: 20px;
-}
-
-.table  tbody {
-  height: calc(100% - 50px);
-  overflow: auto;
-}
-.table  tbody tr td
+.e-grid .e-headercontent
 {
-  width: 200px;
+  border-right: none !important;
+}
+.e-grid .e-headercell {
+  background-color: #F5F8FA;
 }

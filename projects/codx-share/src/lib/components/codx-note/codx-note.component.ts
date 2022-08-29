@@ -31,30 +31,39 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   set = 'apple';
   lineType = 'TEXT';
   empty = '';
-  listNote = [
+  listNote: any = [
     {
-      memo: null,
+      memo: '',
       status: null,
       textColor: null,
       format: null,
-      lineType: null,
+      lineType: 'TEXT',
     },
   ];
+  listNoteTemp: any = {
+    memo: '',
+    status: null,
+    textColor: null,
+    format: null,
+    lineType: 'TEXT',
+  };
   currentElement: HTMLElement;
+  currentElementColor: HTMLElement;
+  elementColor: any;
   font = {
     BOLD: false,
     ITALIC: false,
     UNDERLINE: false,
-    COLOR: "#269a26",
+    COLOR: 'sunset',
   };
   format = {
     TEXT: true,
+    TITLE: false,
     LIST: false,
     CHECKBOX: false,
   };
   co_content: CO_Contents = new CO_Contents();
   test: any;
-  color: any;
 
   @Input() showMenu = true;
   @Input() showMF = true;
@@ -73,11 +82,36 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {
+    if (this.input) this.currentElement = this.input.elRef.nativeElement;
+    if (this.currentElement) {
+      var input = this.currentElement.querySelector(
+        '.codx-text'
+      ) as HTMLElement;
+      input.focus();
+    }
+  }
 
-  onType(type: any) {
+  chooseType(type: any, ele: any) {
+    if (!this.currentElement && ele)
+      this.currentElement = ele.elRef.nativeElement;
+    if (this.currentElement) {
+      var input = this.currentElement.querySelector(
+        '.codx-text'
+      ) as HTMLElement;
+      if(input)
+        input.focus();
+    }
+    this.lineType = type;
+    var value: any = input;
+    if (this.listNote.length == 1) this.listNote[0].lineType = this.lineType;
+    else {
+      this.listNote.forEach((dt) => {
+        if (dt.memo == '') dt.lineType = this.lineType;
+      });
+    }
     if (type == 'TEXT') {
       this.setFormat(true, false, false);
     } else if (type == 'CHECKBOX') {
@@ -85,14 +119,18 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     } else {
       this.setFormat(false, false, true);
     }
-    this.lineType = type;
-    this.dt.detectChanges();
   }
 
-  setFormat(text = false, checkBox = false, list = false) {
+  setFormat(text = true, checkBox = false, list = false) {
     this.format.TEXT = text;
     this.format.CHECKBOX = checkBox;
     this.format.LIST = list;
+
+    if (!this.currentElement) return;
+    this.currentElement.focus();
+    // if (this.format.TEXT) this.currentElement.id = 'TEXT';
+    // else if (this.format.LIST) this.currentElement.id = 'LIST';
+    // else this.currentElement.id = 'CHECKBOX';
   }
 
   setFont(bold = false, italic = false, underline = false) {
@@ -138,16 +176,59 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.currentElement = ele.elRef.nativeElement;
     if (this.currentElement) {
       var input = this.currentElement.querySelector(
-        '.codx-text'
+        'input.codx-text'
       ) as HTMLElement;
       input.focus();
     }
-
     this.font[font] = !this.font[font];
     this.chooseFont(font);
   }
 
-  popupFile() { }
+  valueChangeColor(event, ele, elementColor) {
+    if (event?.data) {
+      if (!this.currentElement && ele)
+        this.currentElement = ele.elRef.nativeElement;
+      if (this.currentElement) {
+        this.currentElement = this.currentElement.querySelector(
+          'input.codx-text'
+        ) as HTMLElement;
+        this.currentElement.focus();
+        this.listNoteTemp[event?.field] = event?.data;
+        this.elementColor = elementColor;
+        this.chooseColor(event?.data);
+      }
+      if (this.listNoteTemp.memo != null) this.updateContent(this.listNoteTemp);
+    }
+  }
+
+  chooseColor(color) {
+    if (!this.currentElement) return;
+    this.currentElement.focus();
+    this.currentElement.style.setProperty('color', color, 'important');
+    this.font.COLOR = color;
+    this.dt.detectChanges();
+  }
+
+  setColorForCodxColor(color) {
+    if (this.elementColor)
+      this.currentElementColor = this.elementColor.elRef.nativeElement;
+    if (this.currentElementColor) {
+      var divColor = this.currentElementColor.querySelector(
+        'div.codx-colorpicker'
+      ) as HTMLElement;
+      var childrenDivColor = divColor.children[0] as HTMLElement;
+      var grandChildrenDivColor = childrenDivColor.children[0] as HTMLElement;
+      var inputColor = grandChildrenDivColor.children[1] as HTMLElement;
+      this.currentElementColor = inputColor;
+      this.currentElementColor.style.setProperty(
+        'background-color',
+        color,
+        'important'
+      );
+    }
+  }
+
+  popupFile() {}
 
   addEmoji(event) {
     this.message += event.emoji.native;
@@ -159,31 +240,19 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  valueChange(event, element = null, i = null) {
+  valueChange(event, ele) {
     if (event?.data) {
       var dt = event?.data;
       var field = event?.field;
-      this.co_content.lineType = this.lineType;
-      this.co_content[field] = dt;
+      this.listNoteTemp.lineType = this.lineType;
+      if (event?.field != 'memo') this.listNoteTemp[field] = dt;
     }
   }
 
   valueChangeStatus(event) {
     if (event?.data != null) {
-      this.co_content[event?.field] = event?.data;
-      if (this.co_content.memo != null) this.updateContent(this.co_content);
-    }
-  }
-
-  valueChangeColor(event) {
-    if (event?.data) {
-      this.co_content[event?.field] = event?.data;
-      if (this.currentElement) {
-        var style = this.currentElement.style;
-        style.color = event?.data;
-        this.color = event?.data;
-      }
-      if (this.co_content.memo != null) this.updateContent(this.co_content);
+      this.listNoteTemp[event?.field] = event?.data;
+      if (this.listNoteTemp.memo != null) this.updateContent(this.listNoteTemp);
     }
   }
 
@@ -201,18 +270,38 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       let htmlE = ele[ele.length - 1] as HTMLElement;
       this.currentElement = htmlE;
       var input = this.currentElement.querySelector(
-        '.codx-text'
+        'input.codx-text'
       ) as HTMLElement;
       input.focus();
     }
   }
 
   addContent(data) {
+    var checkFirstNote = false;
     if (data) {
-      this.co_content.format = null;
-      this.co_content.memo = data;
-      this.listNote.push(this.co_content);
-      this.listNote[this.listNote.length - 1].memo = null;
+      var obj = {
+        memo: data,
+        status: this.listNoteTemp.status,
+        textColor: this.listNoteTemp.textColor,
+        format: null,
+        lineType: this.lineType,
+      };
+      if (this.listNote.length >= 2) {
+        this.listNote.pop();
+        checkFirstNote = true;
+      }
+      this.listNote.push(obj);
+      // reverse
+      if (checkFirstNote == false) this.listNote.shift();
+      var initListNote = {
+        memo: '',
+        status: null,
+        textColor: null,
+        format: null,
+        lineType: this.lineType,
+      };
+      this.listNote.push(initListNote);
+      //reverse
       this.dt.detectChanges();
     }
     // this.api
@@ -228,7 +317,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     data;
   }
 
-  delete() { }
+  delete() {}
 
   refresh() {
     this.listNote = [
@@ -248,6 +337,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   getElement(ele: any) {
     this.currentElement = ele.elRef.nativeElement as HTMLElement;
+    var divElement = this.currentElement.children[0] as HTMLElement;
+    var inputElement = divElement.children[0] as HTMLElement;
+    var colorOfInputEle = inputElement.style.color;
+
     if (this.listNote.length > 1) {
       var style: any = this.currentElement.style;
       var len = Object.keys(this.font).length || 0;
@@ -258,9 +351,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         else this.font.ITALIC = false;
         if (style.textDecorationLine != 'none') this.font.UNDERLINE = true;
         else this.font.UNDERLINE = false;
-        // if (style.color != 'unset') this.font.COLOR = true;
-        // else this.font.COLOR = false;
+        this.setColorForCodxColor(colorOfInputEle);
       }
     }
+    this.dt.detectChanges();
   }
 }

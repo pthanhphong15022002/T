@@ -457,15 +457,15 @@ export class MoveComponent implements OnInit {
           // move
           if (that.selection == 1) {
             // let list = this.dmSV.listFolder.getValue();
-            this.dmSV.nodeDeleted.next(that.id);
-            this.dmSV.addFolder.next(res.data); // them node con
+            this.dmSV.nodeDeleted.next(that.id);           
             let index = list.findIndex(d => d.recID.toString() === that.id.toString()); //find index in your array
             if (index > -1) {
               list.splice(index, 1);//remove element from array
               that.dmSV.listFolder = list;
-              that.changeDetectorRef.detectChanges();
+             // that.changeDetectorRef.detectChanges();
             }
           }
+          this.dmSV.addFolder.next(res.data); // them node con
           that.dmSV.ChangeData.next(true);
           that.changeDetectorRef.detectChanges();
           that.dialog.close();         

@@ -109,13 +109,17 @@
   <div class="row mt-3">
     <div class="col-4">
       <codx-label [formModel]="form.formModel" fiedName="RefNo" class="fw-bold"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refNo" ControlName="refNo">
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refNo" ControlName="refNo" >
       </codx-input>
     </div>
     <div class="col-4">
       <codx-label [formModel]="form.formModel" fiedName="RefDate" class="fw-bold"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate">
+      <!-- Bùa r nhờ Quang fix sau -->
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">   </codx-input>-->
+        <codx-input type="datetime" format="d" field="refDate" 
+        [crrValue]="dispatch?.refDate" (valueChange)="valueChangeDate($event)">
       </codx-input>
+    
     </div>
     <div class="col-2">
       <codx-label [formModel]="form.formModel" fiedName="Pages" class="fw-bold"></codx-label>
@@ -172,13 +176,19 @@
     </div>
     <div class="col">
       <codx-label [formModel]="form.formModel" fiedName="DispatchOn"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn">
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn" [format]="'d'">     </codx-input>-->
+        <codx-input type="datetime" format="d" field="dispatchOn" 
+        [crrValue]="dispatch?.dispatchOn" (valueChange)="valueChangeDate($event)">
       </codx-input>
+  
     </div>
     <div class="col" *ngIf="form.formModel.funcID != 'ODT41'">
       <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline">
-      </codx-input>
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline" [format]="'d'">
+      </codx-input> -->
+      <codx-input type="datetime" format="d" field="deadline" 
+      [crrValue]="dispatch?.deadline" (valueChange)="valueChangeDate($event)">
+    </codx-input>
     </div>
   </div>
   

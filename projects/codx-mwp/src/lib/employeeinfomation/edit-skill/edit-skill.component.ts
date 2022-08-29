@@ -8,7 +8,7 @@ import { ApiHttpService, CallFuncService, DialogData, DialogRef, NotificationsSe
 })
 export class EditSkillComponent implements OnInit {
   dialog: any;
-  title = "Cập nhật thông tin";
+  title = "Chỉnh sửa kỹ năng";
   minType= "MinRange";
   skillEmployee : any;
   skillChartEmployee: any = null;
