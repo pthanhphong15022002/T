@@ -49,6 +49,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   date=new Date();
   sessionID: any;
   mappingTemplate: any;
+  dataIEConnection:any = {};
   dataIETable:any = {};
   dataIEMapping:any = {};
   addMappingForm :any;
@@ -59,6 +60,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   paramsCbb = {};
   public isDropdown = true;
   selectionOptions: SelectionSettingsModel;
+  customerIDRules:object;
   public contextMenuItems: any;
   public rowIndex: number;
   public cellIndex: number;
@@ -76,19 +78,9 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     debugger;
     this.dialog = dialog;
     this.formModel = dt.data?.[0];
-    this.dataIETable = dt.data?.[1];
-    this.dataIEMapping = dt.data?.[2];
-    this.sessionID =  this.dataIETable?.recID;
-    this.mappingTemplate = this.dataIEMapping?.recID;
-
-    this.addMappingForm = this.formBuilder.group({
-      mappingName: [this.dataIEMapping?.mappingName],
-      processIndex: [this.dataIETable?.processIndex],
-      destinationTable: [this.dataIETable?.destinationTable],
-      parentEntity:[this.dataIETable?.parentEntity],
-      importRule: [this.dataIETable?.importRule],
-      isSummary: [this.dataIETable?.isSummary]
-    });
+    this.dataIEConnection = dt.data?.[1]
+    this.dataIETable = dt.data?.[2];
+    this.dataIEMapping = dt.data?.[3];
   }
   
   ngOnInit(): void {
@@ -98,6 +90,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     }
     this.editSettings = {allowEditing: true, allowAdding: true,allowDeleting: true, mode: "Normal"};
     this.selectionOptions = { type: 'Multiple'};
+    this.customerIDRules = { required: true };
     this.contextMenuItems = [
       'AutoFit',
       'AutoFitAll',
@@ -114,8 +107,25 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       { text: 'Copy', target: '.e-content', id: 'customCopy' },
       { text: 'Paste', target: '.e-content', id: 'customPaste' }
     ];
+    this.addMappingForm = this.formBuilder.group({
+      mappingName: [this.dataIEMapping?.mappingName],
+      processIndex: [this.dataIETable?.processIndex],
+      destinationTable: [this.dataIETable?.destinationTable],
+      parentEntity:[this.dataIETable?.parentEntity],
+      importRule: [this.dataIETable?.importRule],
+      isSummary: [this.dataIETable?.isSummary]
+    });
     this.getGridViewSetup();
   }
+
+  createData()
+  {
+    if(!this.dataIETable)
+    {
+      var recIDIETables = crypto.randomUUID();
+    }
+  }
+
   load(args){
     this.grid.element.addEventListener('mouseup', (e: MouseEventArgs) => {
       if ((e.target as HTMLElement).classList.contains("e-rowcell")) {
@@ -150,9 +160,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   onSave()
   {
-    debugger;
     this.grid.endEdit();
-    var a = this.grid.dataSource;
     this.addMappingForm.value.parentEntity = this.addMappingForm.value?.parentEntity[0];
     this.dataIETable.mappingName = this.addMappingForm.value?.mappingName;
     this.dataIETable.processIndex = this.addMappingForm.value?.processIndex;
@@ -160,7 +168,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     this.dataIETable.parentEntity = this.addMappingForm.value?.parentEntity;
     this.dataIETable.importRule = this.addMappingForm.value?.importRule;
     this.dataIETable.isSummary = this.addMappingForm.value?.isSummary;
-    this.dialog.close([this.dataIETable , this.dataImport]);
+    this.dialog.close([this.dataIETable , this.grid.dataSource]);
   }
   addItem()
   {
@@ -209,7 +217,8 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
                 text: key[i],
                 controlType : item[keys]?.controlType,
                 type: item[keys]?.referedType,
-                value: item[keys]?.referedValue
+                value: item[keys]?.referedValue,
+                require: item[keys]?.isRequire
               }
               if((item[key[i]].referedType == "3" || item[key[i]].referedType == "2") && val && !(keys in this.editParams)) 
               {
@@ -361,5 +370,10 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   getHeaderText(e:any)
   {
     return this.gridViewSetup[e].headerText;
+  }
+  getEdit(e:any , field:any)
+  {
+    if(e =='3' || e == '2') return this.editParams[field] 
+    return null;
   }
 }

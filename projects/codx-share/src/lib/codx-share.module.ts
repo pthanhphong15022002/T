@@ -1,7 +1,6 @@
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
@@ -174,7 +173,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     BoldReportDesignerModule,
     BoldReportViewerModule,
     PdfViewerAllModule,
-
+    ReactiveFormsModule
   ],
   exports: [T_Component, T_Pipe],
 })

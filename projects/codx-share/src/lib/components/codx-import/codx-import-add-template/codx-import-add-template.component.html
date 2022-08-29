@@ -25,9 +25,11 @@
       <div class="col-3">
         <codx-label [formModel]="formModel" [fiedName]="'sheetimport'" default="Sheet import" class="fw-bold">
         </codx-label>
-        <select class="form-select select-sheet" aria-label="Sheet Import">
+        <select class="form-select select-sheet" aria-label="Sheet Import"  #mySelect
+          (change)="changeSheetImport(mySelect.value)"
+        >
           <ng-container *ngIf="sheet">
-            <option *ngFor="let item of sheet">{{item}}</option>
+            <option *ngFor="let item of sheet" [ngValue]="item">{{item}}</option>
           </ng-container>
         </select>
       </div>
