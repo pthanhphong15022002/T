@@ -150,7 +150,6 @@ const T_Component: Type<any>[] = [
   CodxCommentHistoryComponent,
   CodxTreeHistoryComponent,
   CodxViewAssignComponent
-
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
