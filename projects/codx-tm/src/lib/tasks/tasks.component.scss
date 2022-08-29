@@ -48,3 +48,14 @@ ejs-richtexteditor .e-dialog>.e-footer-content,
 ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
     padding: 15px;
 }
+
+codx-tabs .tab-comt {
+    position: relative;
+    height: 334px;
+
+}
+
+codx-tabs .tab-comt .tab_container {
+    height: 300px;
+    overflow: auto;
+}

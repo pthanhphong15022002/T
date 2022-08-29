@@ -712,7 +712,7 @@ export class CodxEsService {
     );
   }
 
-  getSFByID(data) {
+  getSFByID(data): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',

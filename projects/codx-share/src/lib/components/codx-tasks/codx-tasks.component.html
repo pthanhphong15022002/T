@@ -33,7 +33,8 @@
     [data]="data"
     [vllStatus]="vllStatus"
     (clickMoreFunction)="receiveMF($event)"
-  > </share-tree-view>
+  >
+  </share-tree-view>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
@@ -187,7 +188,7 @@
         [field]="'Status'"
         [value]="data?.status"
         [showText]="true"
-        [showBgColor]="true"
+        [showBgColor]="false"
         class="badge badge-light badge-md fs-7 me-2"
       >
       </codx-vll>

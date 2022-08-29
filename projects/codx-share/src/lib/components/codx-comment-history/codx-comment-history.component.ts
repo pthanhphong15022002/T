@@ -17,11 +17,12 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() funcID: string;
   @Input() objectID: string;
   @Input() objectType: string;
+  @Input() actionType:string;
   @Input() type: "view" | "create" = "view";
   @Input() data:any;
 
   user: any = null;
-  comment: string = "";
+  message: string = "";
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
@@ -48,7 +49,7 @@ export class CodxCommentHistoryComponent implements OnInit {
 
   valueChange(event: any) {
     if (event.data) {
-      this.comment = event.data;
+      this.message = event.data;
       this.dt.detectChanges();
     }
   }
@@ -77,10 +78,11 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
   sendComments() {
     let data = new tmpComment();
-    data.comment = this.comment;
+    data.comment = this.message;
     data.attachments = this.lstFile.length;
     data.objectID = this.objectID;
     data.objectType = this.objectType;
+    data.actionType = this.actionType;
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
     .subscribe((res1:any) => {
       if(res1){
@@ -111,7 +113,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
   clearData(){
     this.lstFile = [];
-    this.comment = "";
+    this.message = "";
   }
   uploadFile() {
     this.codxATM.uploadFile();
