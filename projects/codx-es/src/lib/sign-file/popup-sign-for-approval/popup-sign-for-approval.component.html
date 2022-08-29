@@ -55,6 +55,7 @@
         #pdfView
         [isApprover]="isApprover"
         [recID]="recID"
+        [isDisable]="!canOpenSubPopup"
         (isActiveToSign)="changeActiveOpenPopup($event)"
       >
       </lib-pdf-view>

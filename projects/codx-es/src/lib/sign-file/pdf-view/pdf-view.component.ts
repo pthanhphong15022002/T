@@ -60,6 +60,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   public service: string = environment.pdfUrl;
   @Input() recID = '';
   @Input() isApprover;
+  @Input() isDisable = false;
   @Output() isActiveToSign = new EventEmitter();
 
   user?: any;
@@ -1490,6 +1491,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           annot.customData.split(':')[1] != '1' &&
           annot.customData.split(':')[1] != '2'
         ) {
+          annot.annotationSettings.isLock = true;
           this.pdfviewerControl.addAnnotation(annot);
         }
       });
@@ -1591,12 +1593,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   show(e: any) {
     console.log('collection', this.pdfviewerControl.annotationCollection);
     console.log('handwrittent', this.pdfviewerControl.formFieldCollections);
-    let annotationDataFormat: AnnotationDataFormat;
-    this.pdfviewerControl
-      .exportAnnotationsAsBase64String(annotationDataFormat)
-      .then((res) => {
-        console.log('base64 new pdf', res);
-      });
+    console.log('page size', this.pdfviewerControl.viewerBase.pageSize);
   }
 
   closeAddForm(event) {
