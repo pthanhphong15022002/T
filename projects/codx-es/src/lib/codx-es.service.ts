@@ -913,8 +913,8 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(userID, sfID, mode, comment): Observable<any> {
-    let data = [userID, sfID, mode, comment];
+  updateSignFileTrans(newcontent, userID, sfID, mode, comment) {
+    let data = [newcontent, userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

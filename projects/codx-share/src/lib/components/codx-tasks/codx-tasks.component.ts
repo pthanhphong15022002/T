@@ -122,7 +122,7 @@ export class CodxTasksComponent
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
-    private tmSv: CodxTasksService
+    private tmSv: CodxTasksService,
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -726,9 +726,10 @@ export class CodxTasksComponent
   //#endregion
   //#region Event
   changeView(evt: any) {
+    let idx = this.viewsActive.findIndex(x => x.id === '16');
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.funcID == 'TMT0203') {
-      let exist = this.viewsActive.find(x => x.id === '16');
-      if (exist) return;
+      if (idx > -1) return;
       var tree = {
         id: '16',
         type: ViewType.listdetail,
@@ -741,7 +742,9 @@ export class CodxTasksComponent
         },
       };
       this.viewsActive.push(tree);
-     
+    } else {
+      if (idx > -1)
+        this.viewsActive.splice(idx, 1);
     }
   }
 
