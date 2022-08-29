@@ -79,19 +79,7 @@ export class PopupADRComponent extends UIComponent {
   changeReason(e) {}
 
   saveDialog() {
-    console.log(this.dialogSignFile);
-
-    this.esService
-      .updateSignFileTrans(
-        this.user.userID,
-        this.recID,
-        this.mode,
-        this.dialogSignFile?.value ? this.dialogSignFile.value.comment : ''
-      )
-      .subscribe((res) => {
-        console.log('res');
-        this.dialog.close('ok');
-      });
+    this.dialog.close(this.mode);
   }
 
   popupUploadFile() {
