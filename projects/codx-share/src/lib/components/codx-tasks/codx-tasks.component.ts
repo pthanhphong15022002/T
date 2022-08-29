@@ -741,8 +741,8 @@ export class CodxTasksComponent
         },
       };
       this.viewsActive.push(tree);
+     
     }
-
   }
 
   requestEnded(evt: any) { }
