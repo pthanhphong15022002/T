@@ -122,7 +122,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
         if (this.grid.isEdit)
             this.grid.endEdit();
         let rowInfo = this.grid.getRowInfo(e.target) as any;
-        debugger;
         var check = this.fieldImport.filter(x=>(x.type == "3" || x.type == "2") && x.text == rowInfo.column.field);
         if(check!=null&& check.length>0)  this.isDropdown = true;
         // if (rowInfo.column.field === "CreatedBy")
@@ -169,7 +168,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   getGridViewSetup()
   {
-    debugger;
     this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName).subscribe(item=>{
       if(item)
       {
@@ -262,7 +260,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       }
     })
   }
-  
   changeValueText(item:any,field:any,data:any)
   {
     item[field] = data?.data;
@@ -360,5 +357,9 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       return "" 
     }
     return data[field]
-}
+  }
+  getHeaderText(e:any)
+  {
+    return this.gridViewSetup[e].headerText;
+  }
 }

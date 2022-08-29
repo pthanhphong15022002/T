@@ -70,9 +70,8 @@ export class MeetingDetailComponent extends UIComponent {
     //     this.urlDetail = res[0].url;
     //   }
     // });
-    this.urlDetail = 'tm/sprintdetails/TMT03011'
+    this.urlDetail = 'tm/sprintdetails/TMT03011';
   }
-
 
   onInit(): void {
     this.loadData();
@@ -93,10 +92,10 @@ export class MeetingDetailComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-
+    this.getListComment();
   }
 
-  loadData(){
+  loadData() {
     if (this.meetingID != null) {
       this.tmService.getMeetingID(this.meetingID).subscribe((res) => {
         if (res) {
@@ -159,9 +158,7 @@ export class MeetingDetailComponent extends UIComponent {
       let start =
         this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
       let end =
-        this.addZero(eDate.getHours()) +
-        ':' +
-        this.addZero(eDate.getMinutes());
+        this.addZero(eDate.getHours()) + ':' + this.addZero(eDate.getMinutes());
       this.startTime = start + ' - ' + end;
     }
     return this.startTime;
@@ -207,12 +204,13 @@ export class MeetingDetailComponent extends UIComponent {
     });
   }
 
-  lstComment:any = [];
-  getListComment(){
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
-    .subscribe((res:any[]) => {
-      console.log(res);
-      this.lstComment = res;
-    })
+  lstComment: any = [];
+  getListComment() {
+    this.api
+      .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetHistoryByObjectIDAsync', [this.meeting.recID,'C'])
+      .subscribe((res: any[]) => {
+        console.log(res);
+        this.lstComment = res;
+      });
   }
 }

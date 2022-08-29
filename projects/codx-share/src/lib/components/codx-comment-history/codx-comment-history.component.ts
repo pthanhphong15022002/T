@@ -2,7 +2,7 @@ import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ApiHttpService, AuthService, CacheService, NotificationsService } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { tmpComment } from '../../models/tmpComments.model';
+import { tmpHistory } from '../../models/tmpComments.model';
 import { AttachmentComponent } from '../attachment/attachment.component';
 
 @Component({
@@ -17,11 +17,12 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() funcID: string;
   @Input() objectID: string;
   @Input() objectType: string;
+  @Input() actionType:string;
   @Input() type: "view" | "create" = "view";
   @Input() data:any;
 
   user: any = null;
-  comment: string = "";
+  message: string = "";
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
@@ -48,7 +49,7 @@ export class CodxCommentHistoryComponent implements OnInit {
 
   valueChange(event: any) {
     if (event.data) {
-      this.comment = event.data;
+      this.message = event.data;
       this.dt.detectChanges();
     }
   }
@@ -76,11 +77,13 @@ export class CodxCommentHistoryComponent implements OnInit {
     this.dt.detectChanges();
   }
   sendComments() {
-    let data = new tmpComment();
-    data.comment = this.comment;
+    let data = new tmpHistory();
+    data.comment = this.message;
     data.attachments = this.lstFile.length;
     data.objectID = this.objectID;
     data.objectType = this.objectType;
+    data.actionType = this.actionType;
+    data.functionID = this.funcID;
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
     .subscribe((res1:any) => {
       if(res1){
@@ -111,7 +114,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
   clearData(){
     this.lstFile = [];
-    this.comment = "";
+    this.message = "";
   }
   uploadFile() {
     this.codxATM.uploadFile();
@@ -139,7 +142,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
 
   deleteComment(item:any){
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item)
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item.recID)
     .subscribe((res:any) => {
       if(res)
       {
