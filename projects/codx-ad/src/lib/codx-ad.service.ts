@@ -266,4 +266,14 @@ export class CodxAdService {
       userID
     );
   }
+
+  createFirstPost(tmpPost) {
+    return this.api.execSv(
+      'WP',
+      'ERM.Business.WP',
+      'CommentsBusiness',
+      'PublishPostAsync',
+      tmpPost
+    );
+  }
 }

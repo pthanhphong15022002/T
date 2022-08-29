@@ -178,25 +178,6 @@ export class CodxTasksComponent
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    this.view.dataService.onAction.subscribe(res => {
-      if (res && res.data && this.view.currentView) {
-        let kanban = (this.view.currentView as any).kanban;
-        if (!kanban) return;
-        switch (res.type) {
-          case 'create':
-            kanban.addCard(res.data);
-            break;
-          case 'update':
-            kanban.updateCard(res.data);
-            break;
-          case 'delete':
-            kanban.removeCard(res.data)
-            break;
-        }
-      }
-    })
-
-
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else {
@@ -248,34 +229,7 @@ export class CodxTasksComponent
           template3: this.cellTemplate,
         },
       }
-      // {
-      //   id: '16',
-      //   type: ViewType.listdetail,
-      //   active: false,
-      //   sameData: true,
-      //   text :"Cây-Tree",
-      //   icon:"icon-account_tree",
-      //  // request: this.requestTree,
-      //   model: {
-      //     template: this.treeView,
-      //   },
-      // },
     ];
-    if (this.funcID == 'TMT0203') {
-      var tree = {
-        id: '16',
-        type: ViewType.listdetail,
-        active: false,
-        sameData: true,
-        text: "Cây-Tree",
-        icon: "icon-account_tree",
-        // request: this.requestTree,
-        model: {
-          template: this.treeView,
-        },
-      };
-      this.viewsActive.push(tree);
-    }
 
     var viewDefaultID = '2';
     if (this.viewMode && this.viewMode.trim() != '') {
@@ -295,6 +249,7 @@ export class CodxTasksComponent
     this.detectorRef.detectChanges();
   }
   //#endregion
+
   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
@@ -771,23 +726,23 @@ export class CodxTasksComponent
   //#endregion
   //#region Event
   changeView(evt: any) {
-    //  if(evt.view.id=="16" && this.listDataTree.length == 0){
-    //   var gridModel = new DataRequest();
-    //   gridModel.formName = this.view.formModel.formName;
-    //   gridModel.entityName = this.view.formModel.entityName;
-    //   gridModel.funcID = this.view.formModel.funcID;
-    //   gridModel.gridViewName = this.view.formModel.gridViewName;
-    //   gridModel.page = this.view.dataService.request.page;
-    //   gridModel.pageSize = this.view.dataService.request.pageSize;
-    //   gridModel.predicate = this.view.dataService.request.predicates;
-    //   gridModel.dataValue = this.view.dataService.request.dataValues;
-    //   gridModel.entityPermission = this.view.formModel.entityPer;
-    //   this.tmSv.getListTree(gridModel).subscribe(res=>{
-    //     if(res)
-    //     this.listDataTree = res;
-    //   }) ;
-    //   this.detectorRef.detectChanges();
-    //  }
+    if (this.funcID == 'TMT0203') {
+      let exist = this.viewsActive.find(x => x.id === '16');
+      if (exist) return;
+      var tree = {
+        id: '16',
+        type: ViewType.listdetail,
+        active: false,
+        sameData: true,
+        text: "Cây-Tree",
+        icon: "icon-account_tree",
+        model: {
+          template: this.treeView,
+        },
+      };
+      this.viewsActive.push(tree);
+    }
+
   }
 
   requestEnded(evt: any) { }

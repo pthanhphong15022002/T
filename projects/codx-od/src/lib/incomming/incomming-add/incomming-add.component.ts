@@ -75,7 +75,7 @@ export class IncommingAddComponent implements OnInit {
   ngOnInit(): void {
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
-
+   
     var user = this.auth.get();
     if(user?.userID)
       this.dispatch.createdBy = user?.userID;
@@ -103,7 +103,7 @@ export class IncommingAddComponent implements OnInit {
     } else if (this.type == 'edit') {
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
     }
-
+    
     this.getKeyRequied();
   }
   fileAdded(event: any) {
@@ -225,6 +225,7 @@ export class IncommingAddComponent implements OnInit {
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
     if (this.type == 'add' || this.type == 'copy') {
       this.dispatch.status = '1';
+      this.dispatch.approveStatus = '1';
       if (this.type == 'copy') {
         delete this.dispatch.id;
         this.dispatch.relations = null;
@@ -285,7 +286,9 @@ export class IncommingAddComponent implements OnInit {
     }
   }
   getfileCount(e: any) {
-    this.fileCount = e.data.length;
+    debugger
+    if(e && e?.data) this.fileCount = e.data.length;
+    else if(e) this.fileCount = e.length;
   }
   changeFormAgency(val: any) {
     this.showAgency = true;
@@ -310,10 +313,7 @@ export class IncommingAddComponent implements OnInit {
         return this.notifySvr.notifyCode('E0001', 0, field)
       }
     }
-    if((!this.fileCount || this.fileCount ==0) && (this.type == "add" || this.type == "copy")) 
-    {
-      return this.notifySvr.notifyCode('OD022');
-    }
+    if(!this.fileCount || this.fileCount ==0) return this.notifySvr.notifyCode('OD022');
     return true;
   };
 }

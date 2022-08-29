@@ -42,7 +42,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   isApprover = true;
   dialog;
-  data;
+  data: any = {};
   // data = {
   //   funcID: 'EST021',
   //   recID: 'fda05e5c-24e7-11ed-a51b-d89ef34bb550',
@@ -67,7 +67,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService
-        .getFormGroup('ApprovalTrans', 'grvApprovalTrans')
+        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
         .then((res) => {
           if (res) {
             this.dialogSignFile = res;
