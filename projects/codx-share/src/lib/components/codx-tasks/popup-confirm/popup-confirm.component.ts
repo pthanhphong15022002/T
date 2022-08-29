@@ -162,6 +162,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   actionExtends() {
     this.api
       .execSv<any>('TM', 'TM', 'TaskExtendsBusiness', 'ExtendStatusTaskAsync', [
+        this.funcID,
         this.taskExtends.taskID,
         this.taskExtends.status,
         this.comment,
