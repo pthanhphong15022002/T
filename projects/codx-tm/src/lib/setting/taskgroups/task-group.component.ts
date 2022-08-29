@@ -31,7 +31,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./task-group.component.css'],
 })
 export class TaskGroupComponent extends UIComponent
-implements OnInit {
+  implements OnInit {
 
   @ViewChild('main') main: TemplateRef<any>;
   @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
@@ -134,7 +134,6 @@ implements OnInit {
       { headerTemplate: this.itemAutoCompleted, width: 180 },
       { headerTemplate: this.itemExtendControl, width: 180 },
       { headerTemplate: this.itemConfirmControl, width: 180 },
-
       { headerTemplate: this.itemCreatedBy, width: 200 },
       { headerTemplate: this.itemCreatedOn, width: 100 },
       { field: '', headerText: '', width: 30 },
@@ -276,20 +275,20 @@ implements OnInit {
             [this.view.dataService.dataSelected],
             false
           );
-          if (e?.event && e?.event != null) {
-            var objectData = this.view.dataService.data;
-            var object = {};
-            // for(var i=0; i< objectData.length; i++){
-            //   if(objectData[i][i]!==undefined) {
-            //     object[i] = objectData[i][i];
-            //     objectData[i] = object[i];
-            //   }
-            // }
-            this.view.dataService.data = e?.event.concat(
-              objectData
-            );
-            this.detectorRef.detectChanges();
-          }
+        if (e?.event && e?.event != null) {
+          var objectData = this.view.dataService.data;
+          var object = {};
+          // for(var i=0; i< objectData.length; i++){
+          //   if(objectData[i][i]!==undefined) {
+          //     object[i] = objectData[i][i];
+          //     objectData[i] = object[i];
+          //   }
+          // }
+          this.view.dataService.data = e?.event.concat(
+            objectData
+          );
+          this.detectorRef.detectChanges();
+        }
       });
     });
   }
@@ -310,9 +309,9 @@ implements OnInit {
           'edit',
           option
         );
-        this.dialog.closed.subscribe((e) =>{
+        this.dialog.closed.subscribe((e) => {
           console.log(e);
-          if(e && e.event !=null){
+          if (e && e.event != null) {
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
             });
@@ -352,10 +351,10 @@ implements OnInit {
     console.log(val);
   }
 
-  innerHTML(note){
+  innerHTML(note) {
     var desc = document.createElement('div');
-    if(note){
-      desc.innerHTML = '<div>'+note+'</div>';
+    if (note) {
+      desc.innerHTML = '<div>' + note + '</div>';
     }
     return desc.innerText;
   }

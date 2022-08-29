@@ -80,9 +80,9 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         },
       },
     ];
-    this.button = {
-      id: 'btnAdd',
-    };
+    // this.button = {
+    //   id: 'btnAdd',
+    // };
     this.getGridViewSetup(this.view.formModel.funcID);
     this.detectorRef.detectChanges();
   }
@@ -159,15 +159,11 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     if (value) datas = value;
     if (datas) {
       var list = data.filter(
-        (x) =>
-          x.data != null &&
-          x.data.formName == 'Approvals'
+        (x) => x.data != null && x.data.formName == 'Approvals'
       );
       for (var i = 0; i < list.length; i++) {
         list[i].isbookmark = true;
-        if(list[i].functionID != 'SYS206' &&
-        list[i].functionID != 'SYS205')
-        {
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
           if (
             ((datas?.stepType == 'S1' || datas?.stepType == 'S2') &&
@@ -180,7 +176,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
           ) {
             list[i].disabled = false;
-          
           }
         }
       }
@@ -202,7 +197,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     if (data.processType == 'ES_SignFiles') {
       //Kys
       if (
-        funcID == 'SYS202' ||
+        funcID == 'SYS201' ||
         funcID == 'SYS205' ||
         funcID == 'SYS206' ||
         funcID == 'SYS204' ||
@@ -226,6 +221,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             funcID: 'EST021',
             recID: data.transID,
             title: data.htmlView,
+            stepType: data.stepType,
           },
           '',
           dialogModel
@@ -234,7 +230,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           if (x.event) {
             debugger;
             delete x.event._uuid;
-            this.view.dataService.add(x.event,0).subscribe();
+            this.view.dataService.add(x.event, 0).subscribe();
             //this.getDtDis(x.event?.recID)
           }
         });
