@@ -324,7 +324,7 @@ hr {
   background-color: var(--gray-500);
 }
 
-.is-invalid .ng-invalid {
+.is-invalid .ng-invalid , .is-invalid-error{
   border: solid 1.5px red !important;
 }
 
@@ -334,4 +334,8 @@ hr {
 
 .form-group codx-label.fw-normal .codx-label {
   font-weight: 400 !important;
+}
+
+[data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-arrow {
+  opacity: 0;
 }

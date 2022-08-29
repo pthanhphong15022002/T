@@ -221,6 +221,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             funcID: 'EST021',
             recID: data.transID,
             title: data.htmlView,
+            status: data.status,
             stepType: data.stepType,
           },
           '',
@@ -228,10 +229,16 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         );
         dialogApprove.closed.subscribe((x) => {
           if (x.event) {
-            debugger;
-            delete x.event._uuid;
-            this.view.dataService.add(x.event, 0).subscribe();
-            //this.getDtDis(x.event?.recID)
+            console.log(x.event);
+
+            /*return {
+              result: true,
+              mode: 1
+            }
+
+            mode: 1. Ký
+                2. Từ chối
+                3. Làm lại */
           }
         });
       }

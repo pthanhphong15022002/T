@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="contact-orgchat">
-            <codx-treeview id="chartOrg" #chartOrg [pageSize]=10 [itemTemplate]="templateorg" funcId="HRS0201"
+            <codx-treeview id="treeView" #treeView [pageSize]=10 [itemTemplate]="templateTree" 
                 entityName="HR_OrganizationUnits" service="HR" type="treeView" textField="orgUnitName"
                 gridViewName="grvOrganizationUnits" formName="OrganizationUnits" [enableCheck]=false idField="orgUnitID"
                 (onSelectionChanged)="onSelectionChanged($event)">
@@ -26,7 +26,7 @@
     </div>
 </ng-template>
 
-<ng-template #templateorg let-data>
+<ng-template #templateTree let-data>
     {{data.orgUnitName}}
 </ng-template>
 

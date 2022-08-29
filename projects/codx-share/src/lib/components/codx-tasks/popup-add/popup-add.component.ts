@@ -199,6 +199,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openTask();
     } else if (this.action == 'copy') {
+      this.titleAction = 'Sao chép';
       this.task.status = '10';
       this.task.recID= Util.uid();
       if (this.functionID == 'TMT0203') {
@@ -206,7 +207,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       } else {
         this.task.category = '1';
       }
-      this.titleAction = 'Sao chép';
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
       this.titleAction = this.action == 'edit' ? 'Chỉnh sửa' : 'Xem chi tiết';
