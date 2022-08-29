@@ -202,7 +202,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     if (data.processType == 'ES_SignFiles') {
       //Kys
       if (
-        funcID == 'SYS202' ||
+        funcID == 'SYS201' ||
         funcID == 'SYS205' ||
         funcID == 'SYS206' ||
         funcID == 'SYS204' ||

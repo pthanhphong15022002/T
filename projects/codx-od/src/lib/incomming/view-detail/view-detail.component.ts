@@ -965,9 +965,17 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
     if(data?.status == "7")
     {
-      var completed = e.filter((x: { functionID: string }) => x.functionID == 'ODT211' ||  x.functionID == 'ODT112');
-      completed[0].disabled = true
+      var completed = e.filter((x: { functionID: string }) => x.functionID == 'ODT211' ||  x.functionID == 'ODT112' || x.functionID == 'SYS02' || x.functionID == 'SYS03');
+      for(var i =0; i<completed.length ; i++)
+      {
+        completed[i].disabled = true
+      }
     } 
+    if(data?.status == "3")
+    {
+      var completed = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
+      completed[0].disabled = true
+    }  
     //data?.isblur = true
   }
   //Gửi duyệt

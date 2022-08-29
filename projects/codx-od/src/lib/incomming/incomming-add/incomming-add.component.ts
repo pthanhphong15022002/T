@@ -75,7 +75,7 @@ export class IncommingAddComponent implements OnInit {
   ngOnInit(): void {
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
-
+   
     var user = this.auth.get();
     if(user?.userID)
       this.dispatch.createdBy = user?.userID;
@@ -103,7 +103,7 @@ export class IncommingAddComponent implements OnInit {
     } else if (this.type == 'edit') {
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
     }
-
+    
     this.getKeyRequied();
   }
   fileAdded(event: any) {
@@ -225,6 +225,7 @@ export class IncommingAddComponent implements OnInit {
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
     if (this.type == 'add' || this.type == 'copy') {
       this.dispatch.status = '1';
+      this.dispatch.approveStatus = '1';
       if (this.type == 'copy') {
         delete this.dispatch.id;
         this.dispatch.relations = null;
