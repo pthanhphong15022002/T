@@ -34,7 +34,7 @@ export class CodxTabsComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: true },
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-    { name: 'Reference', textDefault: 'Công việc', isActive: false },
+    { name: 'AssignTo', textDefault: 'Công việc', isActive: false },
     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
   constructor(
@@ -59,6 +59,7 @@ export class CodxTabsComponent implements OnInit {
       );
     }
     this.getHistoryAsync();
+    this.getCommentAsync();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -69,20 +70,21 @@ export class CodxTabsComponent implements OnInit {
   getfileCount(e: any) {
     console.log(e);
   }
+  lstHistory:any = [];
   lstComment:any = [];
-  // getListComment(){
-  //   this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
-  //   .subscribe((res:any[]) => {
-  //     console.log(res);
-  //     this.lstComment = res;
-  //   })
-  // }
-
   getHistoryAsync(){
     let objectID = "00cfeb10-a433-43e3-b6b3-876e25bf20a3";
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetTrackLogsByObjectIDAsync" , objectID)
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetTrackLogsByObjectIDAsync" , [objectID])
     .subscribe((res:any[]) => {
-      console.log(res);
+      this.lstHistory = res;
+    });
+  }
+
+  getCommentAsync(){
+    let objectID = "00cfeb10-a433-43e3-b6b3-876e25bf20a3";
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetHistoryByObjectIDAsync" , [objectID,"C"])
+    .subscribe((res:any[]) => {
+      this.lstComment = res;
     });
   }
   

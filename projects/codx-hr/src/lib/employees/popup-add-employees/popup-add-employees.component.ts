@@ -186,9 +186,9 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        if (res) {
-          this.dialog.close(res);
-        }
+        // if (res) {
+        //   this.dialog.close(res);
+        // }
         this.dialog.close(res)
       });
   }

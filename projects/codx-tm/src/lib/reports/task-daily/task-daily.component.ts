@@ -120,8 +120,10 @@ export class TaskDailyComponent implements OnInit {
   }
 
   loadData() {
+    var fromDate = new Date('2022-08-01');
+    var toDate = new Date('2022-08-30');
     this.api
-      .callSv('TM', 'TM', 'ReportBusiness', 'ListReportTasksAsync')
+      .callSv('TM', 'TM', 'ReportBusiness', 'ListReportTasksAsync', [fromDate,toDate])
       .subscribe((res) => {
         if (res) {
           console.log(res);
