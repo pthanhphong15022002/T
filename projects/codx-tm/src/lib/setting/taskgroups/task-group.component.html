@@ -1,38 +1,58 @@
-<codx-views #view [funcID]="funcID" entityName="TM_TaskGroups" service="TM" assemblyName="ERM.Business.TM"
-  className="TaskGroupBusiness" method="GetListTaskGroupsAsync" [views]="views" [button]="button"
-  [moreFuncs]="moreFuncs" (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)"
-  (selectedChange)="selectedChange($event)" idField="taskGroupID" [pageSize]="100" [selectedFirst]="true">
+<codx-views
+  #view
+  [funcID]="funcID"
+  entityName="TM_TaskGroups"
+  service="TM"
+  assemblyName="ERM.Business.TM"
+  className="TaskGroupBusiness"
+  method="GetListTaskGroupsAsync"
+  [views]="views"
+  [button]="button"
+  [moreFuncs]="moreFuncs"
+  (viewChanged)="changeView($event)"
+  (buttonClick)="buttonClick($event)"
+  (selectedChange)="selectedChange($event)"
+  idField="taskGroupID"
+  [pageSize]="100"
+  [selectedFirst]="true"
+>
 </codx-views>
 
 <ng-template #grid let-data>
   <tr>
     <td class="rowphoto">
       <div class="padding">
-        {{data.taskGroupID}}
+        {{ data.taskGroupID }}
       </div>
     </td>
     <td class="rowphoto" placement="left">
-      <div class="padding  cursor-pointer line-clamp line-clamp-2" [ngbTooltip]="data.taskGroupName">
-        {{data.taskGroupName}}
-
+      <div
+        class="padding cursor-pointer line-clamp line-clamp-2"
+        [ngbTooltip]="data.taskGroupName"
+      >
+        {{ data.taskGroupName }}
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding">
-        {{data.taskGroupName2}}
-
+        {{ data.taskGroupName2 }}
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <div [innerHTML]="data.note" [ngbTooltip]="innerHTML(data.note)">
-        </div>
+        <div [innerHTML]="data.note" [ngbTooltip]="innerHTML(data.note)"></div>
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding" *ngIf="data.projectControl!='0'">
-        <codx-vll [name]="'TM012'" [field]="'ProjectControl'" [value]="data?.projectControl" [showText]="true"
-          [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+      <div class="padding" *ngIf="data.projectControl != '0'">
+        <codx-vll
+          [name]="'TM012'"
+          [field]="'ProjectControl'"
+          [value]="data?.projectControl"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 ms-2"
+        >
         </codx-vll>
         <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
         (data?.projectControl | vll: 'TM012':'color' | async) + '30'
@@ -45,8 +65,14 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.locationControl">
-        <codx-vll [name]="'TM012'" [field]="'LocationControl'" [value]="data?.locationControl" [showText]="true"
-          [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+        <codx-vll
+          [name]="'TM012'"
+          [field]="'LocationControl'"
+          [value]="data?.locationControl"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 ms-2"
+        >
         </codx-vll>
         <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
         (data?.locationControl | vll: 'TM012':'color' | async) + '30'
@@ -59,8 +85,14 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.planControl">
-        <codx-vll [name]="'TM012'" [field]="'PlanControl'" [value]="data?.planControl" [showText]="true"
-          [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+        <codx-vll
+          [name]="'TM012'"
+          [field]="'PlanControl'"
+          [value]="data?.planControl"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 ms-2"
+        >
         </codx-vll>
         <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
         (data?.planControl | vll: 'TM012':'color' | async) + '30'
@@ -73,8 +105,14 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.updateControl">
-        <codx-vll [name]="'TM013'" [field]="'UpdateControl'" [value]="data?.updateControl" [showText]="true"
-          [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+        <codx-vll
+          [name]="'TM013'"
+          [field]="'UpdateControl'"
+          [value]="data?.updateControl"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 ms-2"
+        >
         </codx-vll>
         <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
         (data?.updateControl | vll: 'TM013':'color' | async) + '30'
@@ -86,10 +124,19 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding" *ngIf="data.checkListControl && data.checkListControl == '2'">
-        <div class="d-flex align-items-center" style="padding-right: 30px;">
-          <codx-vll [name]="'TM015'" [field]="'CheckListControl'" [value]="data?.checkListControl" [showText]="true"
-            [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+      <div
+        class="padding"
+        *ngIf="data.checkListControl && data.checkListControl == '2'"
+      >
+        <div class="d-flex align-items-center" style="padding-right: 30px">
+          <codx-vll
+            [name]="'TM015'"
+            [field]="'CheckListControl'"
+            [value]="data?.checkListControl"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 ms-2"
+          >
           </codx-vll>
           <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
           (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
@@ -98,11 +145,24 @@
         " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
             {{data?.checkListControl|vll:"L1463":"text"|async}}
           </div> -->
-          <div class="dropdown ms-2" [ngbPopover]="popDetail" placement="bottom" #empPopover="ngbPopover"
-            [openDelay]="500" (mouseenter)="PopoverDetail(empPopover, data)"
-            (mouseleave)="PopoverDetail(empPopover, null)">
-            <button [disabled]="!data.checkList" class="btn" type="button" id="dropdownShowDescription"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <div
+            class="dropdown ms-2"
+            [ngbPopover]="popDetail"
+            placement="bottom"
+            #empPopover="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="PopoverDetail(empPopover, data)"
+            (mouseleave)="PopoverDetail(empPopover, null)"
+          >
+            <button
+              [disabled]="!data.checkList"
+              class="btn"
+              type="button"
+              id="dropdownShowDescription"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
               <div class="d-flex">
                 <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
                 <!-- <div class="b text-start" >
@@ -114,10 +174,19 @@
           </div>
         </div>
       </div>
-      <div class="padding" *ngIf="data.checkListControl && data.checkListControl != '2'">
-        <div class="d-flex align-items-center" style="padding-right: 30px;">
-          <codx-vll [name]="'TM015'" [field]="'CheckListControl'" [value]="data?.checkListControl" [showText]="true"
-            [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+      <div
+        class="padding"
+        *ngIf="data.checkListControl && data.checkListControl != '2'"
+      >
+        <div class="d-flex align-items-center" style="padding-right: 30px">
+          <codx-vll
+            [name]="'TM015'"
+            [field]="'CheckListControl'"
+            [value]="data?.checkListControl"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 ms-2"
+          >
           </codx-vll>
           <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
           (data?.checkListControl | vll: 'L1463':'color' | async) + '30'
@@ -126,27 +195,48 @@
         " [style.color]="data?.checkListControl | vll: 'L1463':'color' | async" style="border: none">
             {{data?.checkListControl|vll:"L1463":"text"|async}}
           </div> -->
-
         </div>
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.verifyControl == '1'">
-        <div class="badge badge-light badge-md fs-7 ms-2"
-          *ngIf="data.verifyByType =='R' || data.verifyByType == 'P' || data.verifyByType == 'U'">
-          <div [style.border-color]="
-          (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
-        " [style.background-color]="
-          (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
-        " [style.color]="data?.verifyByType | vll: 'TM006':'color' | async" style="border: none">
-          </div>
+        <div
+          class="badge badge-light badge-md fs-7 ms-2"
+          *ngIf="
+            data.verifyByType == 'R' ||
+            data.verifyByType == 'P' ||
+            data.verifyByType == 'U'
+          "
+        >
+          <div
+            [style.border-color]="
+              (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
+            "
+            [style.background-color]="
+              (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
+            "
+            [style.color]="data?.verifyByType | vll: 'TM006':'color' | async"
+            style="border: none"
+          ></div>
           <div class="font-italic">
-            {{data.nameVerify}}
+            {{ data.nameVerify }}
           </div>
         </div>
-        <div *ngIf="data.verifyByType !='R' && data.verifyByType != 'P' && data.verifyByType != 'U'">
-          <codx-vll [name]="'TM006'" [field]="'checkListControl'" [value]="data?.verifyByType" [showText]="true"
-            [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
+        <div
+          *ngIf="
+            data.verifyByType != 'R' &&
+            data.verifyByType != 'P' &&
+            data.verifyByType != 'U'
+          "
+        >
+          <codx-vll
+            [name]="'TM006'"
+            [field]="'checkListControl'"
+            [value]="data?.verifyByType"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 ms-2"
+          >
           </codx-vll>
           <!-- <div class="badge badge-danger me-2 label-status " [style.border-color]="
           (data?.verifyByType | vll: 'TM006':'color' | async) + '30'
@@ -160,81 +250,139 @@
     </td>
     <td class="rowphoto">
       <div class="padding" *ngIf="data.approveControl == '1'">
-        <div class="badge badge-light badge-md fs-7 ms-2"
-          *ngIf="data.approveBy =='R' || data.approveBy == 'P' || data.approveBy == 'U'">
-          <div [style.border-color]="
-          (data?.approveBy | vll: 'TM014':'color' | async) + '30'
-        " [style.background-color]="
-          (data?.approveBy | vll: 'TM014':'color' | async) + '30'
-        " [style.color]="data?.approveBy | vll: 'TM014':'color' | async" style="border: none">
-          </div>
+        <div
+          class="badge badge-light badge-md fs-7 ms-2"
+          *ngIf="
+            data.approveBy == 'R' ||
+            data.approveBy == 'P' ||
+            data.approveBy == 'U'
+          "
+        >
+          <div
+            [style.border-color]="
+              (data?.approveBy | vll: 'TM014':'color' | async) + '30'
+            "
+            [style.background-color]="
+              (data?.approveBy | vll: 'TM014':'color' | async) + '30'
+            "
+            [style.color]="data?.approveBy | vll: 'TM014':'color' | async"
+            style="border: none"
+          ></div>
           <div class="font-italic">
-            {{data.nameApprover}}
+            {{ data.nameApprover }}
           </div>
         </div>
-        <div *ngIf="data.approveBy !='R' && data.approveBy != 'P' && data.approveBy != 'U'">
-          <div class="badge badge-light badge-md fs-7 ms-2" [style.border-color]="
-          (data?.approveBy | vll: 'TM014':'color' | async) + '30'
-        " [style.background-color]="
-          (data?.approveBy | vll: 'TM014':'color' | async) + '30'
-        " [style.color]="data?.approveBy | vll: 'TM014':'color' | async" style="border: none">
-            {{data?.approveBy|vll:"TM014":"text"|async}}
+        <div
+          *ngIf="
+            data.approveBy != 'R' &&
+            data.approveBy != 'P' &&
+            data.approveBy != 'U'
+          "
+        >
+          <div
+            class="badge badge-light badge-md fs-7 ms-2"
+            [style.border-color]="
+              (data?.approveBy | vll: 'TM014':'color' | async) + '30'
+            "
+            [style.background-color]="
+              (data?.approveBy | vll: 'TM014':'color' | async) + '30'
+            "
+            [style.color]="data?.approveBy | vll: 'TM014':'color' | async"
+            style="border: none"
+          >
+            {{ data?.approveBy | vll: "TM014":"text" | async }}
           </div>
-
         </div>
       </div>
-
     </td>
     <td class="rowphoto">
       <div class="padding center" *ngIf="data.maxHoursControl == '1'">
         <span class="text-gray-600 me-1">
-          {{data.maxHours}}
+          {{ data.maxHours }}
         </span>
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding center">
-        <codx-input name="editControl" type="switch" class="test-switch" field="editControl"
-          [crrValue]="data.editControl === '1' ? true : false" disabled="disabled">
+        <codx-input
+          name="editControl"
+          type="switch"
+          class="test-switch"
+          field="editControl"
+          [crrValue]="data.editControl === '1' ? true : false"
+          disabled="disabled"
+        >
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding center">
-        <codx-input name="dueDateControl" type="switch" class="test-switch" field="dueDateControl"
-          [crrValue]="data.dueDateControl === '1' ? true : false" disabled="disabled">
+        <codx-input
+          name="dueDateControl"
+          type="switch"
+          class="test-switch"
+          field="dueDateControl"
+          [crrValue]="data.dueDateControl === '1' ? true : false"
+          disabled="disabled"
+        >
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding center">
-        <codx-input name="autoCompleted" type="switch" class="test-switch" field="autoCompleted"
-          [crrValue]="data.autoCompleted === '1' ? true : false" disabled="disabled">
+        <codx-input
+          name="autoCompleted"
+          type="switch"
+          class="test-switch"
+          field="autoCompleted"
+          [crrValue]="data.autoCompleted === '1' ? true : false"
+          disabled="disabled"
+        >
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding center">
-        <codx-input name="extendControl" type="switch" class="test-switch" field="extendControl"
-          [crrValue]="data.extendControl === '1' ? true : false" disabled="disabled">
+        <codx-input
+          name="extendControl"
+          type="switch"
+          class="test-switch"
+          field="extendControl"
+          [crrValue]="data.extendControl === '1' ? true : false"
+          disabled="disabled"
+        >
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding center">
-        <codx-input name="confirmControl" type="switch" class="test-switch" field="confirmControl"
-          [crrValue]="data.confirmControl === '1' ? true : false" disabled="disabled">
+        <codx-input
+          name="confirmControl"
+          type="switch"
+          class="test-switch"
+          field="confirmControl"
+          [crrValue]="data.confirmControl === '1' ? true : false"
+          disabled="disabled"
+        >
         </codx-input>
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding">
         <div class="d-flex align-items-center" #itemCreateBy>
-          <codx-img class="symbol symbol-24 symbol-circle me-2" width="25" [objectId]="data.createdBy"
-            objectType="AD_Users">
+          <codx-img
+            class="symbol symbol-24 symbol-circle me-2"
+            width="25"
+            [objectId]="data.createdBy"
+            objectType="AD_Users"
+          >
           </codx-img>
-          <div class="text-dark" placement="left" [ngbTooltip]="data.createName">
-            {{data.createName}}
+          <div
+            class="text-dark"
+            placement="left"
+            [ngbTooltip]="data.createName"
+          >
+            {{ data.createName }}
           </div>
         </div>
       </div>
@@ -243,13 +391,17 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        {{data.createdOn | date: 'dd/MM/yyyy'}}
+        {{ data.createdOn | date: "dd/MM/yyyy" }}
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
-          [dataItem]="data">
+        <codx-mfunc
+          [formModel]="view.formModel"
+          (clickMF)="clickMF($event, data)"
+          [isBookMark]="false"
+          [dataItem]="data"
+        >
         </codx-mfunc>
       </div>
     </td>
@@ -257,177 +409,267 @@
 </ng-template>
 
 <ng-template #popDetail let-data>
-  <ng-container *ngFor="let item of popoverDetail; index as i;">
-    <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
+  <ng-container *ngFor="let item of popoverDetail; index as i">
+    <div
+      class="d-flex justify-content-between align-items-center checkbox-item mb-4"
+    >
       <label class="checkbox checkbox-square checkbox-sm mb-0">
-        <codx-input type="checkbox" label="{{item}}" disabled>
-        </codx-input>
+        <codx-input type="checkbox" label="{{ item }}" disabled> </codx-input>
       </label>
     </div>
   </ng-container>
 </ng-template>
 
-
 <ng-template #itemTaskGroupID let-data>
   <div class="padding">
-    <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups" default="Mã nhóm">
+    <codx-label
+      fiedName="TaskGroupID"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Mã nhóm"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemTaskGroupName let-data>
   <div class="padding">
-
-    <codx-label fiedName="TaskGroupName" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhóm công việc">
+    <codx-label
+      fiedName="TaskGroupName"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Nhóm công việc"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemTaskGroupName2 let-data>
   <div class="padding">
-
-    <codx-label fiedName="TaskGroupName2" formName="TaskGroups" gridViewName="grvTaskGroups" default="Tên khác">
+    <codx-label
+      fiedName="TaskGroupName2"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Tên khác"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemNote let-data>
   <div class="padding">
-
-    <codx-label fiedName="Note" formName="TaskGroups" gridViewName="grvTaskGroups" default="Ghi chú">
+    <codx-label
+      fiedName="Note"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Ghi chú"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemProjectControl let-data>
   <div class="padding">
-    <codx-label fiedName="ProjectControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Chọn dự án">
+    <codx-label
+      fiedName="ProjectControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Chọn dự án"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemLocationControl let-data>
   <div class="padding">
-    <codx-label fiedName="LocationControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Nhập địa điểm">
+    <codx-label
+      fiedName="LocationControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Nhập địa điểm"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemPlanControl let-data>
   <div class="padding">
-    <codx-label fiedName="PlanControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Lập KH thực hiện">
+    <codx-label
+      fiedName="PlanControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Lập KH thực hiện"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemUpdateControl let-data>
   <div class="padding">
-    <codx-label fiedName="UpdateControl" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Cập nhật tình trạng">
+    <codx-label
+      fiedName="UpdateControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Cập nhật tình trạng"
+    >
     </codx-label>
   </div>
 </ng-template>
 
-
 <ng-template #itemCheckListControl let-data>
   <div class="padding">
-    <codx-label fiedName="CheckListControl" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Nhập việc cần làm">
+    <codx-label
+      fiedName="CheckListControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Nhập việc cần làm"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemVerifyControl let-data>
   <div class="padding">
-    <codx-label fiedName="VerifyControl" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Duyệt thực hiện công việc">
+    <codx-label
+      fiedName="VerifyControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Duyệt thực hiện công việc"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemApproveControl let-data>
   <div class="padding">
-    <codx-label fiedName="ApproveControl" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Đánh giá công việc hoàn tất">
+    <codx-label
+      fiedName="ApproveControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Đánh giá công việc hoàn tất"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemProjectControl let-data>
   <div class="padding">
-
-    <codx-label fiedName="ProjectControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Chọn dự án">
+    <codx-label
+      fiedName="ProjectControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Chọn dự án"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemMaxHoursControl let-data>
   <div class="padding">
-    <codx-label fiedName="MaxHoursControl" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Thời gian tối đa hoàn thành">
+    <codx-label
+      fiedName="MaxHoursControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Thời gian tối đa hoàn thành"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemEditControl let-data>
   <div class="padding">
-    <codx-label fiedName="EditControl" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Chỉnh sửa nội dung giao việc">
+    <codx-label
+      fiedName="EditControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Chỉnh sửa nội dung giao việc"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemDueDateControl let-data>
   <div class="padding">
-    <codx-label fiedName="DueDateControl" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Thêm công việc quá khứ">
+    <codx-label
+      fiedName="DueDateControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Thêm công việc quá khứ"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemAutoCompleted let-data>
   <div class="padding">
-    <codx-label fiedName="AutoCompleted" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Cập nhật hoàn thành tự động">
+    <codx-label
+      fiedName="AutoCompleted"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Cập nhật hoàn thành tự động"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemExtendControl let-data>
   <div class="padding">
-    <codx-label fiedName="ExtendControl" formName="TaskGroups" gridViewName="grvTaskGroups" default="Gia hạn công việc">
+    <codx-label
+      fiedName="ExtendControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Gia hạn công việc"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemConfirmControl let-data>
   <div class="padding">
-    <codx-label fiedName="ConfirmControl" formName="TaskGroups" gridViewName="grvTaskGroups"
-      default="Xác nhận thực hiện công việc">
+    <codx-label
+      fiedName="ConfirmControl"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Xác nhận thực hiện công việc"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemCreatedBy let-data>
   <div class="padding">
-
-    <codx-label fiedName="CreatedBy" formName="TaskGroups" gridViewName="grvTaskGroups" default="Người tạo">
+    <codx-label
+      fiedName="CreatedBy"
+      formName="TaskGroups"
+      gridViewName="grvTaskGroups"
+      default="Người tạo"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemCreatedOn let-data>
   <div class="padding">
-
-    <codx-label fiedName="CreatedOn" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ngày tạo">
+    <codx-label
+      fiedName="CreatedOn"
+      formName="RangesKanban"
+      gridViewName="grvRangesKanban"
+      default="Ngày tạo"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="moreFuncClick($event,data)"
-    [title]="data.taskGroupName" [esc2]="data.note" [formModel]="view.formModel" [imageId]="data.createdBy"
-    imageObjType="AD_Users">
+  <codx-temp-full
+    cardCss="card-template border-bottom px-2 py-3"
+    (clickMF)="moreFuncClick($event, data)"
+    [title]="data.taskGroupName"
+    [esc2]="data.note"
+    [formModel]="view.formModel"
+    [imageId]="data.createdBy"
+    imageObjType="AD_Users"
+  >
     <!-- icoSubTitleCss="icon-assignment" [subTitle]="data.positionName" 1;fa fa-flag-o;2;fa fa-flag-o;3;fa fa-flag-o-->
   </codx-temp-full>
 </ng-template>
@@ -435,7 +677,6 @@
 <ng-template #tipContent let-data>
   <codx-label [innerHTML]="data.note"></codx-label>
 </ng-template>
-
 
 <!-- <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>

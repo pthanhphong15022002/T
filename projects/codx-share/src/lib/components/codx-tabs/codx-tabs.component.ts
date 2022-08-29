@@ -59,6 +59,7 @@ export class CodxTabsComponent implements OnInit {
       );
     }
     this.getHistoryAsync();
+    this.getCommentAsync();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -70,12 +71,20 @@ export class CodxTabsComponent implements OnInit {
     console.log(e);
   }
   lstHistory:any = [];
+  lstComment:any = [];
   getHistoryAsync(){
     let objectID = "00cfeb10-a433-43e3-b6b3-876e25bf20a3";
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetTrackLogsByObjectIDAsync" , [objectID])
     .subscribe((res:any[]) => {
       this.lstHistory = res;
-      console.log(res);
+    });
+  }
+
+  getCommentAsync(){
+    let objectID = "00cfeb10-a433-43e3-b6b3-876e25bf20a3";
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetHistoryByObjectIDAsync" , [objectID,"C"])
+    .subscribe((res:any[]) => {
+      this.lstComment = res;
     });
   }
   

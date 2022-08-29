@@ -1,13 +1,31 @@
 <ng-container [ngSwitch]="actionType">
     <ng-container *ngSwitchCase="'C'">
-        <ng-container *ngTemplateOutlet="comment"></ng-container>
+        <ng-container *ngTemplateOutlet="C"></ng-container>
     </ng-container>
     <ng-container *ngSwitchCase="'N'">
-        <ng-container *ngTemplateOutlet="task"></ng-container>
+        <ng-container *ngTemplateOutlet="N"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'E'">
+        <ng-container *ngTemplateOutlet="E"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'T'">
+        <ng-container *ngTemplateOutlet="T"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'U'">
+        <ng-container *ngTemplateOutlet="U"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'A'">
+        <ng-container *ngTemplateOutlet="A"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'S'">
+        <ng-container *ngTemplateOutlet="S"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'D'">
+        <ng-container *ngTemplateOutlet="D"></ng-container>
     </ng-container>
 </ng-container>
 <!-- COMMENT -->
-<ng-template #comment>
+<ng-template #C>
     <div class="position-relative my-3">
         <ng-container *ngIf="type=='create'; else modView">
             <div class="d-flex align-items-center mt-4">
@@ -79,86 +97,85 @@
             </ng-container>
         </ng-container>
     </div>
-</ng-template>
-<ng-template #modView>
-    <ng-container *ngIf="data">
-        <div class="row mt-4">
-            <div class="col-1">
-                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="40"></codx-img>
-            </div>
-            <div class="col-11">
-                <div class="comments">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <span class="fw-bolder">
-                                <a href="javascript:void(0)" class="text-dark fw-bolder">{{data.createdName}}</a>
-                            </span>
-                            <span class="ms-2 text-gray-400 fw-normal flex-grow-1 fs-7"
-                                data-toggle="tooltip">{{data.createdOn | timefrom}}</span>
-                        </div>
-                        <ng-container *ngIf="user.userID == data.createdBy">
-                            <div class="more">
-                                <div ngbDropdown class="dropdown">
-                                    <a href="javascript:void(0)"
-                                        class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
-                                        id="dropdownMenuButton1" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </a>
-                                    <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                        <li *ngIf="data.delete">
-                                            <a ngbDropdownItem href="javascript:void(0)" (click)="deleteComment(data)">
-                                                <span class="icon-delete icon-16 me-2"></span>
-                                                <codx-label [formModel]="" name="lblDelete_comments" default="Xóa">
-                                                </codx-label>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+    <ng-template #modView>
+        <ng-container *ngIf="data">
+            <div class="row mt-4">
+                <div class="col-1">
+                    <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="40"></codx-img>
+                </div>
+                <div class="col-11">
+                    <div class="comments">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <span class="fw-bolder">
+                                    <a href="javascript:void(0)" class="text-dark fw-bolder">{{data.createdName}}</a>
+                                </span>
+                                <span class="ms-2 text-gray-400 fw-normal flex-grow-1 fs-7"
+                                    data-toggle="tooltip">{{data.createdOn | timefrom}}</span>
                             </div>
+                            <ng-container *ngIf="user.userID == data.createdBy">
+                                <div class="more">
+                                    <div ngbDropdown class="dropdown">
+                                        <a href="javascript:void(0)"
+                                            class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
+                                            id="dropdownMenuButton1" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </a>
+                                        <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                                            <li *ngIf="data.delete">
+                                                <a ngbDropdownItem href="javascript:void(0)" (click)="deleteComment(data)">
+                                                    <span class="icon-delete icon-16 me-2"></span>
+                                                    <codx-label [formModel]="" name="lblDelete_comments" default="Xóa">
+                                                    </codx-label>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <ng-container *ngIf="data.comment">
+                            <div class="w-100" [innerHTML]="data.comment"></div>
                         </ng-container>
                     </div>
-                    <ng-container *ngIf="data.comment">
-                        <div class="w-100" [innerHTML]="data.comment"></div>
+                    <ng-container *ngIf="lstFile">
+                        <div class="row px-4 ms-10 justify-content-between">
+                            <ng-container *ngFor="let item of lstFile">
+                                <div class="col-5 my-2">
+                                    <div class="w-100 position-relative">
+                                        <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
+                                            <ng-container *ngIf="item.recID;else imageSrc">
+                                                <codx-img [recId]="item.recID" [objectId]="item.objectID" [width]="100"
+                                                    cssClass="pic" imageType="square">
+                                                </codx-img>
+                                            </ng-container>
+                                            <ng-template #imageSrc>
+                                                <img [src]="item.data || item.thumbnail" alt="" class="image">
+                                            </ng-template>
+                                        </ng-container>
+                                        <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
+                                            <video #video controls class="w-100 rounded min-h-250px">
+                                                <source [src]="item.srcVideo || item.data" type="video/mp4">
+                                            </video>
+                                        </ng-container>
+                                        <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
+                                            <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
+                                                title="{{item.fileName}}" [descLine]="1">
+                                            </codx-temp-full>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
                     </ng-container>
                 </div>
-                <ng-container *ngIf="lstFile">
-                    <div class="row px-4 ms-10 justify-content-between">
-                        <ng-container *ngFor="let item of lstFile">
-                            <div class="col-5 my-2">
-                                <div class="w-100 position-relative">
-                                    <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
-                                        <ng-container *ngIf="item.recID;else imageSrc">
-                                            <codx-img [recId]="item.recID" [objectId]="item.objectID" [width]="100"
-                                                cssClass="pic" imageType="square">
-                                            </codx-img>
-                                        </ng-container>
-                                        <ng-template #imageSrc>
-                                            <img [src]="item.data || item.thumbnail" alt="" class="image">
-                                        </ng-template>
-                                    </ng-container>
-                                    <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
-                                        <video #video controls class="w-100 rounded min-h-250px">
-                                            <source [src]="item.srcVideo || item.data" type="video/mp4">
-                                        </video>
-                                    </ng-container>
-                                    <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
-                                        <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
-                                            title="{{item.fileName}}" [descLine]="1">
-                                        </codx-temp-full>
-                                    </ng-container>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </div>
-                </ng-container>
             </div>
-        </div>
-    </ng-container>
+        </ng-container>
+    </ng-template>
 </ng-template>
 <!-- END COMMENT -->
-
-<!-- TASK -->
-<ng-template #task>
+<!-- NEW -->
+<ng-template #N>
     <div class="row mt-4">
         <div class="col-1">
             <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="40"></codx-img>
@@ -177,4 +194,176 @@
         </div>
     </div>
 </ng-template>
+<!-- END NEW -->
+<!-- MAIL -->
+<ng-template #E>
+    <div class="row mt-4">
+        <div class="col-1">
+            <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="40"></codx-img>
+        </div>
+        <div class="col-11">
+            <div class="comments">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <div class="w-100" [innerHTML]="data.description"></div>
+                        <div class="ms-2 text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                            {{data.createdOn | timefrom}}
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-seen">
+                            <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+</ng-template>
+<!-- END MAIL -->
+<!-- TASK -->
+<ng-template #T>
+    <div class="row mt-4">
+        <div class="col-1">
+            <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="40"></codx-img>
+        </div>
+        <div class="col-11">
+            <div class="comments">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <div class="w-100" [innerHTML]="data.description"></div>
+                        <div class="ms-2 text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                            {{data.createdOn | timefrom}}
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-seen">
+                            <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
 <!-- END TASK -->
+<!-- UPDATE -->
+<ng-template #U>
+    <div class="row mt-4">
+        <div class="col-1">
+            <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="40"></codx-img>
+        </div>
+        <div class="col-11">
+            <div class="comments">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <div class="w-100" [innerHTML]="data.description"></div>
+                        <div class="ms-2 text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                            {{data.createdOn | timefrom}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END UPDATE -->
+<!-- ATTACHMENT -->
+<ng-template #A>
+    <div class="row mt-4">
+        <div class="col-1">
+            <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="40"></codx-img>
+        </div>
+        <div class="col-11">
+            <div class="comments">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <div class="w-100" [innerHTML]="data.description"></div>
+                        <div class="ms-2 text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                            {{data.createdOn | timefrom}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="lstFile">
+                <div class="row px-4 ms-10 justify-content-between">
+                    <ng-container *ngFor="let item of lstFile">
+                        <div class="col-5 my-2">
+                            <div class="w-100 position-relative">
+                                <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
+                                    <ng-container *ngIf="item.recID;else imageSrc">
+                                        <codx-img [recId]="item.recID" [objectId]="item.objectID" [width]="100"
+                                            cssClass="pic" imageType="square">
+                                        </codx-img>
+                                    </ng-container>
+                                    <ng-template #imageSrc>
+                                        <img [src]="item.data || item.thumbnail" alt="" class="image">
+                                    </ng-template>
+                                </ng-container>
+                                <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
+                                    <video #video controls class="w-100 rounded min-h-250px">
+                                        <source [src]="item.srcVideo || item.data" type="video/mp4">
+                                    </video>
+                                </ng-container>
+                                <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
+                                    <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
+                                        title="{{item.fileName}}" [descLine]="1">
+                                    </codx-temp-full>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+<!-- END ATTACHMENT -->
+<!-- SHARE -->
+<ng-template #S>
+    <div class="row mt-4">
+        <div class="col-1">
+            <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="40"></codx-img>
+        </div>
+        <div class="col-11">
+            <div class="comments">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <div class="w-100" [innerHTML]="data.description"></div>
+                        <div class="ms-2 text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                            {{data.createdOn | timefrom}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END SHARE -->
+<!-- DELETED -->
+<ng-template #D>
+    <div class="row mt-4">
+        <div class="col-1">
+            <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="40"></codx-img>
+        </div>
+        <div class="col-11">
+            <div class="comments">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <div class="w-100" [innerHTML]="data.description"></div>
+                        <div class="ms-2 text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                            {{data.createdOn | timefrom}}
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-seen">
+                            <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END DELETED -->
+

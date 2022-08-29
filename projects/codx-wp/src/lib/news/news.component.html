@@ -18,13 +18,13 @@
 <ng-template #panelLeftRef>
   <div class="fix-container rounded-4 position-relative">
     <div class="row" *ngIf="lstHotNew[0]">
-      <div class="fw-bold text-dark fs-2 mt-3 mb-3 border-bottom border-gray">
+      <div class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">
         <codx-label [formModel]="codxViews.formModel" name="lblNews" default="Tin mới nhất"></codx-label>
       </div>
     </div>
 
     <div class="row ">
-      <div class="col-6">
+      <div class="col-6 hot-left">
         <ng-container *ngIf="lstHotNew[0];else empty1">
           <div class="cursor-pointer">
             <codx-img imageType="square" [cssClass]="'image-300 w-100'" [width]="480"
@@ -42,8 +42,8 @@
           </div>
         </ng-container>
       </div>
-      <div class="col-6">
-        <div *ngIf="lstHotNew[1];else empty2" class="row mb-2" (click)="clickViewDetail(lstHotNew[1])">
+      <div class="col-6 hot-right">
+        <div *ngIf="lstHotNew[1];else empty2" class="row mb-5" (click)="clickViewDetail(lstHotNew[1])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
               <codx-img imageType="square" [width]="180" [cssClass]="'image w-100'" [objectId]="lstHotNew[1].recID"
@@ -61,13 +61,13 @@
             <div class="fs-5 fw-bold news-title cursor-pointer">
               {{ lstHotNew[1].subject | maxlenght:100}}
             </div>
-            <div class="text-gray-700">
+            <div class="text-gray-700 news-des line-clamp line-clamp-3">
               {{lstHotNew[1].subContent | maxlenght:300}}
             </div>
             <div class="fs-7 text-gray-400 mt-1">{{ lstHotNew[1].createdOn | fmDT }}</div>
           </div>
         </div>
-        <div *ngIf="lstHotNew[2];else empty2" class="row my-3" (click)="clickViewDetail(lstHotNew[2])">
+        <div *ngIf="lstHotNew[2];else empty2" class="row mb-5" (click)="clickViewDetail(lstHotNew[2])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
               <codx-img [width]="180" imageType="square" [cssClass]="'image w-100'" [objectId]="lstHotNew[2].recID"
@@ -76,7 +76,7 @@
                 <span class="badge badge-danger">
                   <!-- <codx-label formName="News" name="lblCategory" [default]="lstHotNew[2].category"></codx-label> -->
                   {{lstHotNew[2].category | vll:"WP002":"text"| async}}
-                
+
                 </span>
               </div>
             </div>
@@ -85,13 +85,13 @@
             <div class="fs-5 fw-bold news-title cursor-pointer">
               {{ lstHotNew[2].subject | maxlenght:70}}
             </div>
-            <div class="text-gray-700 news-des">
+            <div class="text-gray-700 news-des line-clamp line-clamp-3">
               {{lstHotNew[2].subContent | maxlenght:300}}
             </div>
             <div class="fs-7 text-gray-400 mt-1">{{ lstHotNew[2].createdOn | fmDT }}</div>
           </div>
         </div>
-        <div *ngIf="lstHotNew[3];else empty2" class="row mt-2" (click)="clickViewDetail(lstHotNew[3])">
+        <div *ngIf="lstHotNew[3];else empty2" class="row mb-1" (click)="clickViewDetail(lstHotNew[3])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
               <codx-img [width]="180" imageType="square" [cssClass]="'image w-100'" [objectId]="lstHotNew[3].recID"
@@ -100,7 +100,7 @@
                 <span class="badge badge-danger">
                   <!-- <codx-label formName="News" name="lblCategory" [default]="lstHotNew[3].category"></codx-label> -->
                   {{lstHotNew[3].category | vll:"WP002":"text"| async}}
-                
+
                 </span>
               </div>
             </div>
@@ -109,7 +109,7 @@
             <div class="fs-5 fw-bold news-title cursor-pointer">
               {{ lstHotNew[3].subject | maxlenght:70}}
             </div>
-            <div class="text-gray-700 news-des">
+            <div class="text-gray-700 news-des line-clamp line-clamp-3">
               {{lstHotNew[3].subContent | maxlenght:300}}
             </div>
             <div class="fs-7 text-gray-400 mt-1">{{ lstHotNew[3].createdOn | fmDT }}</div>
@@ -139,17 +139,18 @@
         <ng-container *ngIf="lstGroup">
           <ng-container *ngFor="let grItem of lstGroup | keyvalue">
             <div class="row">
-              <div>
+              <div class="mt-6">
                 <span class="fw-bolder fs-5">{{grItem.key | vll:'WP002':'text' | async}}</span>
               </div>
-              <div *ngFor="let item of grItem.value" (click)="clickViewDetail(item)" class="row my-4">
+              <div *ngFor="let item of grItem.value" (click)="clickViewDetail(item)" class="news-item row my-4">
                 <div class="col-2 cursor-pointer">
                   <codx-img [width]="180" [cssClass]="'image-125 w-100'" imageType="square" [objectId]="item.recID"
                     objectType="WP_News"></codx-img>
                 </div>
                 <div class="col-10">
-                  <codx-temp-full [resourceObjType]="entityName" cardCss="h-125px" [title]="item.subject"
-                    [titleCss]="'cursor-pointer'" [desc]="item.subContent" [date]="item.createdOn" [bookmark]="false">
+                  <codx-temp-full [resourceObjType]="entityName" cardCss="" [title]="item.subject"
+                    [titleCss]="'cursor-pointer news-title'" [desc]="item.subContent" [date]="item.createdOn"
+                    [bookmark]="false">
                   </codx-temp-full>
                 </div>
               </div>
