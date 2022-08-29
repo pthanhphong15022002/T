@@ -88,6 +88,8 @@ import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component
 import { TreeViewComponent } from './components/codx-tasks/tree-view/tree-view.component';
 import { CodxCommentHistoryComponent } from './components/codx-comment-history/codx-comment-history.component';
 import { PdfViewerAllModule } from '@syncfusion/ej2-angular-pdfviewer';
+import { CodxViewAssignComponent } from './components/codx-view-assign/codx-view-assign.component';
+import { CodxTreeHistoryComponent } from './components/codx-tree-history/codx-tree-history.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -146,13 +148,15 @@ const T_Component: Type<any>[] = [
   CodxTasksComponent,
   TreeViewComponent,
   CodxCommentHistoryComponent,
+  CodxViewAssignComponent,
+  CodxTreeHistoryComponent,
 
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe],
+  declarations: [T_Component, T_Pipe,],
   imports: [
     CommonModule,
     NgbModule,

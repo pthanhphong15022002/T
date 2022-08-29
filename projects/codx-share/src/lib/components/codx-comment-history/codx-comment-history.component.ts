@@ -2,7 +2,7 @@ import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ApiHttpService, AuthService, CacheService, NotificationsService } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { tmpComment } from '../../models/tmpComments.model';
+import { tmpHistory } from '../../models/tmpComments.model';
 import { AttachmentComponent } from '../attachment/attachment.component';
 
 @Component({
@@ -77,12 +77,13 @@ export class CodxCommentHistoryComponent implements OnInit {
     this.dt.detectChanges();
   }
   sendComments() {
-    let data = new tmpComment();
+    let data = new tmpHistory();
     data.comment = this.message;
     data.attachments = this.lstFile.length;
     data.objectID = this.objectID;
     data.objectType = this.objectType;
     data.actionType = this.actionType;
+    data.functionID = this.funcID;
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
     .subscribe((res1:any) => {
       if(res1){
@@ -141,7 +142,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
 
   deleteComment(item:any){
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item)
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item.recID)
     .subscribe((res:any) => {
       if(res)
       {

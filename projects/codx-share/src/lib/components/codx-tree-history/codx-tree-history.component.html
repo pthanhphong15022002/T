@@ -1,0 +1,20 @@
+
+<div>
+    <ng-container *ngFor="let node of lstHistory">
+        <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
+    </ng-container>
+</div>
+<ng-template #NodeHistory let-item>
+    <div class="c1">
+        <codx-comment-history 
+            [data]="item"
+            [actionType]="item.actionType"
+            [type]="'view'">
+        </codx-comment-history>
+        <ng-container *ngFor="let node of item.listSubComment">
+            <div class="c2">
+                <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
