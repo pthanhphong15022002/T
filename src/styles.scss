@@ -335,3 +335,7 @@ hr {
 .form-group codx-label.fw-normal .codx-label {
   font-weight: 400 !important;
 }
+
+[data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-arrow {
+  opacity: 0;
+}
