@@ -1303,6 +1303,7 @@ export class CodxTasksComponent
 
   //#region  tree
   loadTreeView() {
+    if (!this.itemSelected || !this.itemSelected?.taskID) return;
     this.api
       .execSv<any>(
         'TM',

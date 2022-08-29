@@ -39,8 +39,8 @@ export class PopupADRComponent extends UIComponent {
 
   okClick = false;
   data;
-  title;
-  subTitle;
+  title: string;
+  subTitle: string;
   mode;
   funcID;
   recID;

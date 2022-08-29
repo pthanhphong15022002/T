@@ -1,9 +1,9 @@
-<codx-treeview #treeView [itemTemplate]="templateTreeView" [data]="dataTree" [entityName]="'TM_Tasks'" [service]="'TM'"
+<!-- <codx-treeview #treeView [itemTemplate]="templateTreeView" [data]="dataTree" [entityName]="'TM_Tasks'" [service]="'TM'"
   [enableCheck]="true" idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true"
   [isLoadChild]="false">
 </codx-treeview>
 
-<!-- temptree -->
+
 <ng-template #templateTreeView let-data>
   <ng-container>
     <div class="tab-tch mt-3">
@@ -69,4 +69,120 @@
 
     </div>
   </ng-container>
+</ng-template> -->
+<codx-temp-full
+  cardCss="card-template border-bottom p-3 list-task"
+  [imageId]="dataVll?.id"
+  [imageWidth]="35"
+  imgCss="me-3"
+  imageObjType="AD_Users"
+  [title]="dataVll?.title"
+  [content]="data?.memo"
+  [footer]="footerList"
+  [dataItem]="data"
+>
+</codx-temp-full>
+<ng-template #footerList let-data>
+  <div class="d-flex justify-content-between align-items-end mt-1">
+    <div class="d-flex align-items-end ms-14 codx-badge">
+      <div class="me-3">
+        <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
+        <span class="text-gray-600" #createdOn>
+          {{ data?.createdOn | date: "dd/MM/yyyy" }}</span
+        >
+      </div>
+      <div class="me-3">
+        <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
+        <span class="text-gray-600">{{ data?.createByName }}</span>
+      </div>
+    </div>
+    <div>
+      <div class="feed-icon btn-send">
+        <span
+          class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
+          (click)="uploadFile()"
+        >
+          <span class="icon-attach_file icon-18"></span>
+        </span>
+        <span
+          class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
+          (click)="showComments()"
+        >
+          <span class="icon-chat_bubble_outline icon-18"></span>
+        </span>
+      </div>
+      <codx-attachment
+        #attachment
+        [functionID]="data.recID"
+        [objectType]="'BG_TrackLogs'"
+        [hideFolder]="'1'"
+        [hideUploadBtn]="'1'"
+        [hideDes]="'1'"
+        [type]="'inline'"
+        allowExtensions=".jpg,.png"
+        [allowMultiFile]="'1'"
+        [hideImageUpload]="'1'"
+        [hideBtnSave]="'1'"
+        [hideImageThumb]="'1'"
+        [showMessage]="'0'"
+        (fileCount)="selectedFiles($event)"
+      >
+      </codx-attachment>
+      <ng-container *ngIf="lstFile">
+        <div class="row px-4 ms-10 justify-content-between">
+          <ng-container *ngFor="let item of lstFile">
+            <div class="col-5 my-2">
+              <div class="w-100 position-relative">
+                <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
+                  <ng-container *ngIf="item.recID; else imageSrc">
+                    <codx-img
+                      [recId]="item.recID"
+                      [objectId]="item.objectID"
+                      [width]="100"
+                      cssClass="pic"
+                      imageType="square"
+                    >
+                    </codx-img>
+                  </ng-container>
+                  <ng-template #imageSrc>
+                    <img
+                      [src]="item.data || item.thumbnail"
+                      alt=""
+                      class="image"
+                    />
+                  </ng-template>
+                </ng-container>
+                <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
+                  <video #video controls class="w-100 rounded min-h-250px">
+                    <source
+                      [src]="item.srcVideo || item.data"
+                      type="video/mp4"
+                    />
+                  </video>
+                </ng-container>
+                <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
+                  <codx-temp-full
+                    imageSrc="{{ item.extension | avtFile }}"
+                    imgCss="w-20px me-3 cursor-pointer"
+                    title="{{ item.fileName }}"
+                    [descLine]="1"
+                  >
+                  </codx-temp-full>
+                </ng-container>
+                <div class="remove-file">
+                  <a
+                    href="javascript:void(0)"
+                    class="h-100"
+                    (click)="removeFile(item)"
+                  >
+                    <i class="icon-close icon-18 text-danger"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
 </ng-template>

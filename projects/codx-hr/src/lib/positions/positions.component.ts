@@ -98,7 +98,7 @@ export class PositionsComponent implements OnInit {
     this.views = [
       {
         id: '1',
-        type: ViewType.list,
+        type: ViewType.listdetail,
         active: true,
         sameData: true,
         model: {

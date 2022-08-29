@@ -133,7 +133,7 @@
                             <div class="w-100 text-after-check-box" (click)="getElement(input)">
                                 <codx-input #input type="text" [class]="'border-0'" class="test-textbox input-note memo"
                                     style="font-weight:normal; font-style:normal; text-decoration-line:none; color: #000000"
-                                    (keyUpEnter)="keyUpEnterTemp($event)" [crrValue]="item.memo" field="memo" id=""
+                                    (keyUpEnter)="keyUpEnter($event)" [crrValue]="item.memo" field="memo" id="{{i}}"
                                     (valueChange)="valueChange($event, input)"
                                     [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                 </codx-input>
