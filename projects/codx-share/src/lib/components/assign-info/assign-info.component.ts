@@ -128,7 +128,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           //   return response[response.taskID] != response['_uuid'];
           // };
           this.task = response;
-          this.task.recID= Util.uid();
+          // this.task.recID= Util.uid();
           this.loadingAll = true;
           this.openInfo();
         }
