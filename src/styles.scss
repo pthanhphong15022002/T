@@ -324,7 +324,7 @@ hr {
   background-color: var(--gray-500);
 }
 
-.is-invalid .ng-invalid {
+.is-invalid .ng-invalid , .is-invalid-error{
   border: solid 1.5px red !important;
 }
 

@@ -77,10 +77,12 @@
         width="200"  
         [isPrimaryKey]='i==0?true:false'
         [headerText]="getHeaderText(item?.text)" 
-        [editType]="getEditType(item?.controlType)" [type]="getType(item?.controlType)" 
-        [edit]="(item?.type=='3' || item?.type == '2')?editParams[item?.text]:null" 
+        [editType]="getEditType(item?.controlType)" 
+        [type]="getType(item?.controlType)" 
+        [edit]="getEdit(item?.type,item?.text)" 
         [valueAccessor]="valueAccess"
         [displayAsCheckBox]="true"
+        [validationRules]="item?.require ?customerIDRules:null"
         >
         </e-column>
      

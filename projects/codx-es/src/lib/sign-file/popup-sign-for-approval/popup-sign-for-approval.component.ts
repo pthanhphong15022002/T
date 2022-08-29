@@ -7,7 +7,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
+import {
+  AnnotationDataFormat,
+  PdfViewerComponent,
+} from '@syncfusion/ej2-angular-pdfviewer';
 import {
   UIComponent,
   DialogData,
@@ -33,11 +36,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
     private esService: CodxEsService,
     private notify: NotificationsService,
     private authStore: AuthStore,
+
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    debugger;
     this.dialog = dialog;
     this.data = dt.data;
     this.user = this.authStore.get();
@@ -48,7 +51,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
   isAfterRender: boolean = false;
   isApprover = true;
   dialog;
-  data: any = {};
+  data;
+  user;
   // data = {
   //   funcID: 'EST021',
   //   recID: 'fda05e5c-24e7-11ed-a51b-d89ef34bb550',
@@ -67,6 +71,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
   onInit(): void {
     this.canOpenSubPopup = false;
     this.funcID = this.data ? this.data.funcID : 'EST01';
+    this.canOpenSubPopup = this.data?.status == 3 ? true : false;
+
     this.recID = this.data
       ? this.data.recID
       : '8d52a9dc-24ed-11ed-9451-00155d035517';
@@ -117,11 +123,21 @@ export class PopupSignForApprovalComponent extends UIComponent {
       }
     );
     this.dialog.closed.subscribe((res) => {
-      if (res.event == 'ok') {
-        console.log('run');
-        this.pdfView.renderAnnotPanel();
-        this.notify.notifyCode('RS002');
-        this.dialog && this.dialog.close();
+      console.log('res.event', res.event);
+
+      if (res.event) {
+        this.pdfView
+          .signPDF(mode, this.dialogSignFile.value.comment)
+          .then((value) => {
+            console.log('da ki', value);
+            if (value) {
+              this.notify.notifyCode('RS002');
+              this.canOpenSubPopup = false;
+              this.pdfView.reload();
+              this.dialog && this.dialog?.close();
+              this.detectorRef.detectChanges();
+            }
+          });
       }
     });
   }
@@ -151,18 +167,18 @@ export class PopupSignForApprovalComponent extends UIComponent {
       500,
       this.funcID
     );
-    dialogPopup.closed.subscribe((res) => {
-      if (res.event == 'ok') {
-        console.log('run');
-        this.pdfView.renderAnnotPanel();
-        this.notify.notifyCode('RS002');
-        this.dialog && this.dialog.close();
-      }
-    });
+    // dialogPopup.closed.subscribe((res) => {
+    //   if (res.event == 'ok') {
+    //     console.log('run');
+    //     this.pdfView.renderAnnotPanel();
+    //     this.notify.notifyCode('RS002');
+    //     this.dialog && this.dialog.close();
+    //   }
+    // });
   }
 
   changeActiveOpenPopup(e) {
-    this.canOpenSubPopup = e;
+    console.log('active', e);
   }
   saveDialog() {
     this.dialog.close();
@@ -192,7 +208,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   noteData;
 
-  user;
   onInit1() {
     // this.formModel = this.data.formModel;
     this.formModel.currentData = this.approvalTrans;
@@ -207,35 +222,65 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   saveDialog1(dialog1: DialogRef) {
     console.log(this.dialogSignFile);
-
-    this.esService
-      .updateSignFileTrans(
-        this.user.userID,
-        this.recID,
-        this.mode,
-        this.dialogSignFile?.value ? this.dialogSignFile.value.comment : ''
-      )
-      .subscribe((res) => {
-        if (res) {
-          if (res?.msgCodeError == null) {
+    if (this.mode == 1) {
+      this.pdfView
+        .signPDF(this.mode, this.dialogSignFile.value.comment)
+        .then((value) => {
+          console.log('da ki', value);
+          if (value) {
+            // this.notify.notifyCode('RS002');
+            // this.canOpenSubPopup = false;
+            // this.pdfView.reload();
+            // this.detectorRef.detectChanges();
             let result = {
-              result: true,
+              result: value,
               mode: this.mode,
             };
             this.notify.notifyCode('RS002');
             dialog1 && dialog1.close(result);
             this.dialog && this.dialog.close(result);
-          } else {
+          }
+          // if (res) {
+          //   if (res?.msgCodeError == null) {
+          //     let result = {
+          //       result: true,
+          //       mode: this.mode,
+          //     };
+          //     this.notify.notifyCode('RS002');
+          //     dialog1 && dialog1.close(result);
+          //     this.dialog && this.dialog.close(result);
+          //   } else {
+          //     let result = {
+          //       result: false,
+          //       mode: this.mode,
+          //     };
+          //     this.notify.notify(res?.msgCodeError);
+          //     dialog1 && dialog1.close(result);
+          //     this.dialog && this.dialog.close(result);
+          //   }
+          // }
+        });
+    } else {
+      this.esService
+        .updateSignFileTrans(
+          null,
+          this.user.userID,
+          this.recID,
+          this.mode,
+          this.dialogSignFile?.value ? this.dialogSignFile.value.comment : ''
+        )
+        .subscribe((res) => {
+          if (res) {
             let result = {
-              result: false,
+              result: res,
               mode: this.mode,
             };
-            this.notify.notify(res?.msgCodeError);
+            this.notify.notifyCode('RS002');
             dialog1 && dialog1.close(result);
             this.dialog && this.dialog.close(result);
           }
-        }
-      });
+        });
+    }
   }
 
   popupUploadFile() {

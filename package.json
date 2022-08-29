@@ -29,7 +29,6 @@
     "@microsoft/signalr": "^6.0.3",
     "@ng-bootstrap/ng-bootstrap": "^12.0.1",
     "@popperjs/core": "^2.11.4",
-    "@syncfusion/ej2": "^19.4.56",
     "@syncfusion/ej2-angular-base": "^19.4.56",
     "@syncfusion/ej2-angular-buttons": "^19.4.55",
     "@syncfusion/ej2-angular-calendars": "^19.4.56",
