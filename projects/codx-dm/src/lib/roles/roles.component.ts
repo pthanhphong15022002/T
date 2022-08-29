@@ -507,7 +507,7 @@ export class RolesComponent implements OnInit {
     }
     
     // load new permission  
-    if (this.fileEditing.permissions[index] != null) {
+    if (this.fileEditing.permissions[index] != null) {    
       this.create = this.fileEditing.permissions[index].create;
       this.read = this.fileEditing.permissions[index].read;
       this.update = this.fileEditing.permissions[index].update;
@@ -810,7 +810,8 @@ export class RolesComponent implements OnInit {
         this.fileEditing.permissions = this.addRoleToList(this.fileEditing.permissions, perm);
       }
       this.changePermission(this.currentPemission);
-      this.changeDetectorRef.detectChanges();
+   //   this.changePermission(this.currentPemission);
+     // this.changeDetectorRef.detectChanges();
       // data.forEach(item => {
         
       // });

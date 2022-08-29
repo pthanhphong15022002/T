@@ -596,7 +596,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         );
         this.dialog.closed.subscribe((x) => {
           if (x.event) {
-            debugger;
             this.data.lstUserID = getListImg(x.event[0].relations);
             this.data.listInformationRel = this.data.listInformationRel.concat(
               x.event[1]
@@ -827,8 +826,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 '',
                 {
                   oSignFile: signFile,
+                  files: this.data?.files,
                   formModel: this.view?.currentView?.formModel,
-                  cbxCategory: 'ODCategories',
                 },
                 '',
                 dialogModel
@@ -841,7 +840,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                     .updateDispatch(datas, false)
                     .subscribe((item) => {
                       if (item.status == 0) {
-                        this.view.dataService.update(datas).subscribe();
+                        this.view.dataService.update(item?.data).subscribe();
                       } else this.notifySvr.notify(item.message);
                     });
                 }
@@ -854,9 +853,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         break;
       }
       //Hoàn tất
-      case "ODT112":
-      case "ODT211":
-      {
+      case 'ODT112':
+      case 'ODT211': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
         this.callfunc
@@ -871,9 +869,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             option
           )
           .closed.subscribe((x) => {
-            if (x?.event == 0) 
-            {
-              datas.status = "7";
+            if (x?.event == 0) {
+              datas.status = '7';
               this.view.dataService.update(datas).subscribe();
             }
           });
@@ -965,11 +962,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       );
       approvel[0].disabled = true;
     }
-    if(data?.status == "7")
-    {
-      var completed = e.filter((x: { functionID: string }) => x.functionID == 'ODT211' ||  x.functionID == 'ODT112');
-      completed[0].disabled = true
-    } 
+    if (data?.status == '7') {
+      var completed = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'ODT211' || x.functionID == 'ODT112'
+      );
+      completed[0].disabled = true;
+    }
     //data?.isblur = true
   }
   //Gửi duyệt
@@ -992,8 +991,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
         else {
           data.status = '3';
-          this.view.dataService.update(data).subscribe();
-          this.notifySvr.notifyCode('ES007');
+          data.approveStatus = '3';
+          this.odService.updateDispatch(data, false).subscribe((item) => {
+            if (item.status == 0) {
+              this.view.dataService.update(item?.data).subscribe();
+            } else this.notifySvr.notify(item.message);
+          });
         }
         //this.notifySvr.notify(res2?.msgCodeError)
       });

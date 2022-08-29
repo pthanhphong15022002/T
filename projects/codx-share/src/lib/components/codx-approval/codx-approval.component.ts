@@ -159,26 +159,24 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     if (value) datas = value;
     if (datas) {
       var list = data.filter(
-        (x) =>
-          x.data != null &&
-          x.data.formName == 'Approvals' &&
-          x.functionID != 'SYS206' &&
-          x.functionID != 'SYS205'
+        (x) => x.data != null && x.data.formName == 'Approvals'
       );
       for (var i = 0; i < list.length; i++) {
-        list[i].disabled = true;
-        if (
-          ((datas?.stepType == 'S1' || datas?.stepType == 'S2') &&
-            list[i].functionID == 'SYS202') ||
-          ((datas?.stepType == 'A1' ||
-            datas?.stepType == 'R' ||
-            datas?.stepType == 'C') &&
-            list[i].functionID == 'SYS203') ||
-          (datas?.stepType == 'S3' && list[i].functionID == 'SYS204') ||
-          (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
-        ) {
-          list[i].disabled = false;
-          //list[i].isbookmark = true
+        list[i].isbookmark = true;
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
+          list[i].disabled = true;
+          if (
+            ((datas?.stepType == 'S1' || datas?.stepType == 'S2') &&
+              list[i].functionID == 'SYS202') ||
+            ((datas?.stepType == 'A1' ||
+              datas?.stepType == 'R' ||
+              datas?.stepType == 'C') &&
+              list[i].functionID == 'SYS203') ||
+            (datas?.stepType == 'S3' && list[i].functionID == 'SYS204') ||
+            (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
+          ) {
+            list[i].disabled = false;
+          }
         }
       }
       var list2 = data.filter(
@@ -199,7 +197,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     if (data.processType == 'ES_SignFiles') {
       //Kys
       if (
-        funcID == 'SYS202' ||
+        funcID == 'SYS201' ||
         funcID == 'SYS205' ||
         funcID == 'SYS206' ||
         funcID == 'SYS204' ||
@@ -229,6 +227,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         );
         dialogApprove.closed.subscribe((x) => {
           if (x.event) {
+            debugger;
             delete x.event._uuid;
             this.view.dataService.add(x.event, 0).subscribe();
             //this.getDtDis(x.event?.recID)

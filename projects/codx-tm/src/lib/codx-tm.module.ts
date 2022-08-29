@@ -40,7 +40,6 @@ import { ProjectgroupsComponent } from './setting/projectgroups/projectgroups.co
 import { PopAddProjectgroupComponent } from './setting/projectgroups/pop-add-projectgroup/pop-add-projectgroup.component';
 import { ReportsComponent } from './reports/reports.component';
 import { TaskDailyComponent } from './reports/task-daily/task-daily.component';
-import { HomeReportComponent } from './reports/home-report/home-report.component';
 import { TaskByProjectsComponent } from './reports/task-by-projects/task-by-projects.component';
 import { ProjectChartComponent } from './reports/task-by-projects/project-chart/project-chart.component';
 import { CalendarComponent } from './setting/calendar/calendar.component';
@@ -78,7 +77,7 @@ export const routes: Routes = [
         path: 'tasks/:funcID',
         component: TasksComponent,
       },
-      
+
       {
         path: 'taskextends/:funcID',
         component: TaskExtendsComponent,
@@ -201,7 +200,6 @@ const T_Component: Type<any>[] = [
   PopAddProjectgroupComponent,
   ReportsComponent,
   TaskDailyComponent,
-  HomeReportComponent,
   TaskByProjectsComponent,
   ProjectChartComponent,
   CalendarComponent,

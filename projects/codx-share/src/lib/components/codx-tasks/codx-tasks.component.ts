@@ -48,8 +48,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -175,23 +174,29 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-    
-     if (!this.funcID)
+
+    if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // cmt truyền động để chạy debug cho nhanh
-    // this.cache.functionList(this.funcID).subscribe(res=
-    //   if(res){
-    //     this.cache.gridViewSetup(res.formName, res.gridViewName).subscribe(result => {
-    //       if (result){
-    //         this.vllStatus = result.Status.referedValue ;
-    //         this.vllApproveStatus = result.ApproveStatus.referedValue ;
-    //         this.vllVerifyStatus = result.VerifyStatus.referedValue;
-    //         this.vllExtendStatus = result.ExtendStatus.referedValue;
-    //         this.vllConfirmStatus = result.ConfirmStatus.referedValue;
-    //       }
-    //     })
-    //   }
-    // })
+
+    this.view.dataService.onAction.subscribe(res => {
+      if (res && res.data && this.view.currentView) {
+        let kanban = (this.view.currentView as any).kanban;
+        if (!kanban) return;
+        switch (res.type) {
+          case 'create':
+            kanban.addCard(res.data);
+            break;
+          case 'update':
+            kanban.updateCard(res.data);
+            break;
+          case 'delete':
+            kanban.removeCard(res.data)
+            break;
+        }
+      }
+    })
+
+
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else {
@@ -242,13 +247,15 @@ export class CodxTasksComponent
           template: this.eventTemplate,
           template3: this.cellTemplate,
         },
-      },
+      }
       // {
-      //   id: '15',
-      //   type: ViewType.treedetail,
+      //   id: '16',
+      //   type: ViewType.listdetail,
       //   active: false,
       //   sameData: true,
-      //   // request: this.requestTree,
+      //   text :"Cây-Tree",
+      //   icon:"icon-account_tree",
+      //  // request: this.requestTree,
       //   model: {
       //     template: this.treeView,
       //   },
@@ -257,13 +264,14 @@ export class CodxTasksComponent
     if (this.funcID == 'TMT0203') {
       var tree = {
         id: '16',
-        type: ViewType.content,
-        text :"Cây-Tree",
+        type: ViewType.listdetail,
         active: false,
-        sameData: false,
-        request: this.requestTree,
+        sameData: true,
+        text: "Cây-Tree",
+        icon: "icon-account_tree",
+        // request: this.requestTree,
         model: {
-          panelLeftRef: this.treeView,
+          template: this.treeView,
         },
       };
       this.viewsActive.push(tree);
@@ -689,8 +697,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -763,26 +771,26 @@ export class CodxTasksComponent
   //#endregion
   //#region Event
   changeView(evt: any) {
-  //  if(evt.view.id=="16" && this.listDataTree.length == 0){
-  //   var gridModel = new DataRequest();
-  //   gridModel.formName = this.view.formModel.formName;
-  //   gridModel.entityName = this.view.formModel.entityName;
-  //   gridModel.funcID = this.view.formModel.funcID;
-  //   gridModel.gridViewName = this.view.formModel.gridViewName;
-  //   gridModel.page = this.view.dataService.request.page;
-  //   gridModel.pageSize = this.view.dataService.request.pageSize;
-  //   gridModel.predicate = this.view.dataService.request.predicates;
-  //   gridModel.dataValue = this.view.dataService.request.dataValues;
-  //   gridModel.entityPermission = this.view.formModel.entityPer;
-  //   this.tmSv.getListTree(gridModel).subscribe(res=>{
-  //     if(res)
-  //     this.listDataTree = res;
-  //   }) ;
-  //   this.detectorRef.detectChanges();
-  //  }
+    //  if(evt.view.id=="16" && this.listDataTree.length == 0){
+    //   var gridModel = new DataRequest();
+    //   gridModel.formName = this.view.formModel.formName;
+    //   gridModel.entityName = this.view.formModel.entityName;
+    //   gridModel.funcID = this.view.formModel.funcID;
+    //   gridModel.gridViewName = this.view.formModel.gridViewName;
+    //   gridModel.page = this.view.dataService.request.page;
+    //   gridModel.pageSize = this.view.dataService.request.pageSize;
+    //   gridModel.predicate = this.view.dataService.request.predicates;
+    //   gridModel.dataValue = this.view.dataService.request.dataValues;
+    //   gridModel.entityPermission = this.view.formModel.entityPer;
+    //   this.tmSv.getListTree(gridModel).subscribe(res=>{
+    //     if(res)
+    //     this.listDataTree = res;
+    //   }) ;
+    //   this.detectorRef.detectChanges();
+    //  }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1458,4 +1466,23 @@ export class CodxTasksComponent
       });
   }
   //#endregion schedule
+
+  receiveShowTaskChildren(e) {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTasksTreeAsync',
+        e.item.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          // this.view.dataService.update(res[0]) ;
+          var index = this.view.dataService.data.findIndex((x) => x.taskID == res[0].taskID);
+          if (index != -1) this.view.dataService.data[index] = res[0];
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
 }
