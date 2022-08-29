@@ -103,6 +103,7 @@ export class AttachmentComponent implements OnInit {
   @Input() hideUploadBtn = '0';
   @Input() hideFolder = '0';
   @Input() hideDes = '0';
+  @Input() hideDelete = '0';
   @Input() hideImageUpload = '0';
   @Input() hideImageThumb = '0';
   @Input() showMessage = '1';
