@@ -1,8 +1,33 @@
 <codx-views #view funcID="HRT03" service="HR" entityName="HR_Employees" [views]="views" [button]="button"
     (buttonClick)="click($event)" idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
-    method="GetModelFormEmployAsync" (viewChanged)="changeView($event)" [formModel]="view.formModel"
-    (requestEnded)="requestEnded($event)" [selectedFirst]="true" [itemSelected]="itemSelected">
+    method="GetModelFormEmployAsync" [formModel]="view.formModel"
+    [selectedFirst]="true" [itemSelected]="itemSelected">
 </codx-views>
+
+<ng-template #panelLeftRef>
+    <div class="content d-flex flex-column flex-column-fluid paneltree">
+        <div class="searorg">
+            <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+                <div class="input-group input-group-solid background-transparent erm-search">
+                    <span class="icon-search icon-20"></span>
+                    <!-- <input type="text" class="form-control text-dark px-0" #eleSearchChart
+              placeholder="Nhập thông tin bạn muốn tìm..." (keydown)="search($event,eleSearchChart)"> -->
+                </div>
+            </div>
+        </div>
+        <div class="contact-orgchat">
+            <codx-treeview id="chartOrg" #chartOrg [pageSize]=10 [itemTemplate]="templateorg" funcId="HRS0201"
+                entityName="HR_OrganizationUnits" service="HR" type="treeView" textField="orgUnitName"
+                gridViewName="grvOrganizationUnits" formName="OrganizationUnits" [enableCheck]=false idField="orgUnitID"
+                (onSelectionChanged)="onSelectionChanged($event)">
+            </codx-treeview>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #templateorg let-data>
+    {{data.orgUnitName}}
+</ng-template>
 
 <ng-template #cardTemp let-data>
     <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
