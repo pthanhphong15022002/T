@@ -82,7 +82,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     data.attachments = this.lstFile.length;
     data.objectID = this.objectID;
     data.objectType = this.objectType;
-    data.actionType = 'C';
+    data.actionType = this.actionType;
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
     .subscribe((res1:any) => {
       if(res1){

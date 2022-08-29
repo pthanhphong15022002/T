@@ -178,25 +178,6 @@ export class CodxTasksComponent
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    this.view.dataService.onAction.subscribe(res => {
-      if (res && res.data && this.view.currentView) {
-        let kanban = (this.view.currentView as any).kanban;
-        if (!kanban) return;
-        switch (res.type) {
-          case 'create':
-            kanban.addCard(res.data);
-            break;
-          case 'update':
-            kanban.updateCard(res.data);
-            break;
-          case 'delete':
-            kanban.removeCard(res.data)
-            break;
-        }
-      }
-    })
-
-
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else {
