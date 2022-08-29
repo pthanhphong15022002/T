@@ -127,7 +127,7 @@ export class EmployeesComponent implements OnInit {
   requestEnded(evt: any) {
   }
 
-  edit(data) {
+  edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }

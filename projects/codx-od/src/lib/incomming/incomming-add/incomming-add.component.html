@@ -3,9 +3,16 @@
 </codx-form>
 <ng-template #subHeader>
   <div class="d-flex align-items-center">
-    <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
-      <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
-    </span>
+    <div *ngIf="this.dispatch?.status=='1'||this.dispatch?.status=='2' ; else elseSelected">
+      <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
+        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+      </span>
+    </div>
+    <ng-template #elseSelected>
+      <span class="btn btn-sm btn-light btn-pill">
+        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+      </span>
+    </ng-template>
   </div>
   <div>
   </div>
@@ -14,7 +21,7 @@
   <div>
     <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
       hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
-      [objectId]="dispatch?.recID" [allowMultiFile]="0" [idBrowse]="'add'">
+      [objectId]="dispatch?.recID" [allowMultiFile]="0" [idBrowse]="'add'" [hideDelete]="(this.dispatch?.status=='1'||this.dispatch?.status=='2')?'1':'0'">
     </codx-attachment>
   </div>
   <div class="tab-horizone">
