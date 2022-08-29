@@ -1,3 +1,4 @@
-.menu-item.menu-item-active .text-dark {
+.menu-item.menu-item-active .text-dark,
+.menu-item.menu-item-active i {
     color: var(--text-primary) !important;
 }
