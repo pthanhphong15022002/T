@@ -23,6 +23,9 @@ export class CodxTabsComponent implements OnInit {
   //tree task
   @Input() dataTree: any[];
   @Input() vllStatus: any;
+  //references
+  @Input() dataReferences: any[];
+  @Input() vllRefType: any = 'TM018';
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
