@@ -153,7 +153,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.refID = this.refID;
     this.task.refType = this.refType;
     if (this.taskParent) {
-      this.task.parentID = this.taskParent.recID ;
+      // this.task.parentID = this.taskParent.recID ;
       this.task.dueDate = this.taskParent.dueDate;
       this.task.endDate = this.taskParent.endDate;
       this.task.startDate = this.taskParent.startDate;
