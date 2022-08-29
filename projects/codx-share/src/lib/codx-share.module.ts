@@ -1,7 +1,6 @@
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
@@ -88,6 +87,8 @@ import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component
 import { TreeViewComponent } from './components/codx-tasks/tree-view/tree-view.component';
 import { CodxCommentHistoryComponent } from './components/codx-comment-history/codx-comment-history.component';
 import { PdfViewerAllModule } from '@syncfusion/ej2-angular-pdfviewer';
+import { CodxTreeHistoryComponent } from './components/codx-tree-history/codx-tree-history.component';
+import { CodxViewAssignComponent } from './components/codx-view-assign/codx-view-assign.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -145,14 +146,16 @@ const T_Component: Type<any>[] = [
   PopupAddComponent,
   CodxTasksComponent,
   TreeViewComponent,
+  CodxViewAssignComponent,
   CodxCommentHistoryComponent,
-
+  CodxTreeHistoryComponent,
+  CodxViewAssignComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe],
+  declarations: [T_Component, T_Pipe,],
   imports: [
     CommonModule,
     NgbModule,
@@ -170,7 +173,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     BoldReportDesignerModule,
     BoldReportViewerModule,
     PdfViewerAllModule,
-
+    ReactiveFormsModule
   ],
   exports: [T_Component, T_Pipe],
 })

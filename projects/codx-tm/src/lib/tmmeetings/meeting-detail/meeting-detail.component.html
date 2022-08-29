@@ -69,6 +69,7 @@
     <div class="m-0 bg-body rounded-2 h-100">
       <ng-container *ngIf="name=='Nội dung họp'">
         <ng-container *ngTemplateOutlet="templateMeeting">
+          ...
         </ng-container>
       </ng-container>
       <ng-container *ngIf="name=='Thảo luận'">
@@ -76,14 +77,16 @@
           <div class="tab_body" *ngFor="let cmt of lstComment">
             <codx-comment-history
               [data]="cmt"
+              [actionType]="'C'"
               [type]="'view'"
             ></codx-comment-history>
           </div>
           <div class="tab_footer">
             <codx-comment-history
-              [objectID]="'TMT05011'"
+              [objectID]="meeting.meetingID"
               [objectType]="'CO_Meetings'"
               [type]="'create'"
+              [actionType]="'C'"
             ></codx-comment-history>
           </div>
         </div>
@@ -94,10 +97,5 @@
 </div>
 
 <ng-template #templateMeeting>
-  <div class="text-dark fw-bolder">
-    ĐÃ THỰC HIỆN
-  </div>
-  <div *ngFor="let item of content1">
-    {{item.memo}}
-  </div>
+  <codx-note [showMenu]="true" [showMF]="true"></codx-note>
 </ng-template>

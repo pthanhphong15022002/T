@@ -3,9 +3,16 @@
 </codx-form>
 <ng-template #subHeader>
   <div class="d-flex align-items-center">
-    <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
-      <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
-    </span>
+    <div *ngIf="this.dispatch?.status=='1'||this.dispatch?.status=='2' ; else elseSelected">
+      <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
+        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+      </span>
+    </div>
+    <ng-template #elseSelected>
+      <span class="btn btn-sm btn-light btn-pill">
+        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+      </span>
+    </ng-template>
   </div>
   <div>
   </div>
@@ -13,8 +20,8 @@
 <ng-template popup adde #body>
   <div>
     <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-      hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
-      [objectId]="dispatch?.recID" [allowMultiFile]="0" [idBrowse]="'add'">
+      hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (fileGet)="getfileCount($event)"
+      [objectId]="dispatch?.recID" [allowMultiFile]="0" [idBrowse]="'add'" [hideDelete]="(this.dispatch?.status=='1'||this.dispatch?.status=='2')?'1':'0'">
     </codx-attachment>
   </div>
   <div class="tab-horizone">
@@ -114,8 +121,12 @@
     </div>
     <div class="col-4">
       <codx-label [formModel]="form.formModel" fiedName="RefDate" class="fw-bold"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">
+      <!-- Bùa r nhờ Quang fix sau -->
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">   </codx-input>-->
+        <codx-input type="datetime" format="d" field="refDate" 
+        [crrValue]="dispatch?.refDate" (valueChange)="valueChangeDate($event)">
       </codx-input>
+    
     </div>
     <div class="col-2">
       <codx-label [formModel]="form.formModel" fiedName="Pages" class="fw-bold"></codx-label>
@@ -172,13 +183,19 @@
     </div>
     <div class="col">
       <codx-label [formModel]="form.formModel" fiedName="DispatchOn"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn" [format]="'d'">
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn" [format]="'d'">     </codx-input>-->
+        <codx-input type="datetime" format="d" field="dispatchOn" 
+        [crrValue]="dispatch?.dispatchOn" (valueChange)="valueChangeDate($event)">
       </codx-input>
+  
     </div>
     <div class="col" *ngIf="form.formModel.funcID != 'ODT41'">
       <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline" [format]="'d'">
-      </codx-input>
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline" [format]="'d'">
+      </codx-input> -->
+      <codx-input type="datetime" format="d" field="deadline" 
+      [crrValue]="dispatch?.deadline" (valueChange)="valueChangeDate($event)">
+    </codx-input>
     </div>
   </div>
   

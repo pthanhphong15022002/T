@@ -1,8 +1,8 @@
 <codx-views #view [funcID]="funcID" service="HR" entityName="HR_Positions" idField="positionID"
     [itemSelected]="itemSelected" assemblyName="ERM.Business.HR" className="PositionsBusiness"
     method="GetModelFormPositionsAsync" [views]="views" [button]="button" (buttonClick)="click($event)"
-    [moreFuncs]="moreFuncs" (selectedChange)="selectedChange($event)"
-    (onDragDrop)="onDragDrop($event)" [selectedFirst]="true">
+    [moreFuncs]="moreFuncs" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
+    [selectedFirst]="true">
 </codx-views>
 
 <ng-template #panelLeftRef>
@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="contact-orgchat">
-            <codx-treeview id="chartOrg" #chartOrg [pageSize]=10 [itemTemplate]="templateorg" funcId="HRS0201"
+            <codx-treeview id="treeView" #treeView [pageSize]=10 [itemTemplate]="templateTree" 
                 entityName="HR_OrganizationUnits" service="HR" type="treeView" textField="orgUnitName"
                 gridViewName="grvOrganizationUnits" formName="OrganizationUnits" [enableCheck]=false idField="orgUnitID"
                 (onSelectionChanged)="onSelectionChanged($event)">
@@ -26,7 +26,7 @@
     </div>
 </ng-template>
 
-<ng-template #templateorg let-data>
+<ng-template #templateTree let-data>
     {{data.orgUnitName}}
 </ng-template>
 
@@ -90,11 +90,11 @@
                                 objectType="HR_Employees">
                             </codx-img> -->
                             <codx-img [width]="30" [objectId]="data.currentEmpID" objectType="HR_Employees"
-                                [numberImages]="7" (mouseenter)="popoverEmpList(popoverList, data)"
-                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
-                                placement="bottom" container="body" autoClose="outside" [openDelay]="500">
+                                [numberImages]="7" placement="bottom" container="body" autoClose="outside"
+                                [openDelay]="500">
                             </codx-img>
-                            <div *ngIf="data.currentEmpcounts>1"
+                            <div *ngIf="data.currentEmpcounts>1" (mouseenter)="popoverEmpList(popoverList, data)"
+                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
                                 class="symbol w-30px h-30px symbol-circle border-white bg-light justify-content-center d-flex align-items-center">
                                 {{data.currentcounts-1}}+</div>
                         </div>
@@ -149,21 +149,21 @@
 
 <ng-template #popEmpList>
     <div class="fw-bold">
-      <codx-label name="Resouces" formName="Employees" default="Danh sách nhân viên"></codx-label>
-      <span>{{ "(" + countResource + ")" }}</span>
+        <codx-label name="Resouces" formName="Employees" default="Danh sách nhân viên"></codx-label>
+        <!-- <span>{{ "(" + countResource + ")" }}</span> -->
     </div>
     <div>
-      <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
+        <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
     </div>
     <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listEmployeeSearch">
-      <div class="me-3">
-        <div>
-          <codx-img class="" [objectId]="item?.currentEmpID" objectType="HR_Employees">
-          </codx-img>
+        <div class="me-3">
+            <div>
+                <codx-img class="" [objectId]="item?.currentEmpID" objectType="HR_Employees">
+                </codx-img>
+            </div>
         </div>
-      </div>
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-gray-600 fs-7">{{ item?.positionName }}</div>
-      </div>
+        <div class="d-flex flex-column flex-grow-1">
+            <div class="text-gray-600 fs-7">{{ item?.positionName }}</div>
+        </div>
     </div>
 </ng-template>

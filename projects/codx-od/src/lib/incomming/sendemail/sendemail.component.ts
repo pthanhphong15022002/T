@@ -22,6 +22,7 @@ import { AgencyService } from '../../services/agency.service';
 import { DispatchService } from '../../services/dispatch.service';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import {
+  ApiHttpService,
   AuthStore,
   CacheService,
   DataRequest,
@@ -44,6 +45,7 @@ export class SendEmailComponent implements OnInit {
   dialog: any;
   data: any;
   gridViewSetup: any;
+  job:"";
   @ViewChild('attachment') attachment: AttachmentComponent;
   formatBytes = formatBytes;
   sendEmailForm = new FormGroup({
@@ -58,6 +60,7 @@ export class SendEmailComponent implements OnInit {
     private odService: DispatchService,
     private authStore: AuthStore,
     private notifySvr: NotificationsService,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -67,10 +70,13 @@ export class SendEmailComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.authStore.get();
     this.gridViewSetup = this.data['gridViewSetup'];
+    this.getDataUser();
   }
-
-  onSave(e: any) {
-    console.log(e);
+  changeValueOwner(event: any) {
+    //this.dispatch.owner = event.data?.value[0];
+    this.sendEmailForm.controls['to'].setValue([event.data?.value[0]]);
+  }
+  onSave() {
     /*  
    this.dataAssign.recID = this.data.recID;
     this.inforEmail.from = this.user?.userID;
@@ -95,8 +101,17 @@ export class SendEmailComponent implements OnInit {
         this.sendEmailForm.value
       )
       .subscribe((item) => {
-        if (item.status == 0 && e.submitter.name != 'next') this.dialog.close();
+        if (item.status == 0) this.dialog.close();
         this.notifySvr.notify(item.message);
       });
+  }
+  getDataUser()
+  {
+    this.api.execSv("HR", 'ERM.Business.HR', "HRBusiness" , "GetDataJoinUserAsync" ,this.user?.userID).subscribe((item:any)=>{
+      if(item)
+      {
+        this.job = item?.jobName
+      }
+    })
   }
 }

@@ -56,6 +56,7 @@ import { ViewApprovalProcessComponent } from './setting/view-approval-process/vi
 import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { ESApprovelComponent } from './sign-file/approval/approval.component';
+import { SearchingComponent } from './searching/searching.component';
 
 const routes: Routes = [
   {
@@ -66,12 +67,10 @@ const routes: Routes = [
         path: 'signfiles/:funcID',
         component: SignFileComponent,
       },
-
       {
         path: 'pdf/:funcID',
         component: PopupSignForApprovalComponent,
       },
-
       {
         path: 'home/:funcID',
         component: DashboardComponent,
@@ -79,6 +78,10 @@ const routes: Routes = [
       {
         path: 'setting/:funcID',
         component: SettingComponent,
+      },
+      {
+        path: 'searching/:funcID',
+        component: SearchingComponent,
       },
       {
         path: 'approvals/:funcID',
@@ -141,6 +144,7 @@ const routes: Routes = [
     PopupSignForApprovalComponent,
     ViewApprovalProcessComponent,
     ESApprovelComponent,
+    SearchingComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

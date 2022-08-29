@@ -341,5 +341,4 @@ Custom Scrollbars
 
 .h-employee {
     height: calc(100vh - 219px) !important;
-    overflow: auto;
 }

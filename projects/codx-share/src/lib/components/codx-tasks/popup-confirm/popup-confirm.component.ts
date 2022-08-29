@@ -24,7 +24,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
   data: any;
   dialog: any;
   task: TM_Tasks = new TM_Tasks();
-  taskExtends: TM_TaskExtends =new TM_TaskExtends();
+  taskExtends: TM_TaskExtends = new TM_TaskExtends();
   url: string;
   status: string;
   title: string = 'Xác nhận ';
@@ -50,7 +50,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.funcID = this.data.funcID;
     this.vllConfirm = this.data.vll;
-   
+
     this.action = this.data?.action;
     this.fieldComments();
     this.moreFunc = this.data.moreFunc;
@@ -60,18 +60,19 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.fieldDefault =
       fieldDefault.charAt(0).toLocaleLowerCase() + fieldDefault.slice(1);
     this.valueDefault = UrlUtil.getUrl('defaultValue', this.url);
-    if(this.action=='extend') {
+    if (this.action == 'extend') {
       this.taskExtends = this.data?.data;
-      this.task[this.fieldDefault] = this.valueDefault ;
+      this.task[this.fieldDefault] = this.valueDefault;
       this.taskExtends.status = this.task[this.fieldDefault]
     }
-    else {this.task = this.data?.data;
-      this.task[this.fieldDefault] = this.valueDefault 
+    else {
+      this.task = this.data?.data;
+      this.task[this.fieldDefault] = this.valueDefault
     }
   }
 
-  ngOnInit(): void {}
-  ngAfterViewInit(): void {}
+  ngOnInit(): void { }
+  ngAfterViewInit(): void { }
 
   valueChange(data) {
     if (data?.data) {
@@ -109,7 +110,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.task.confirmComment = this.comment;
     if (
       this.task.confirmStatus == '3' &&
-      (this.task.confirmComment ==null || this.task.confirmComment.trim() == '')
+      (this.task.confirmComment == null || this.task.confirmComment.trim() == '')
     ) {
       this.notiService.notifyCode('TM019');
       return;
@@ -126,7 +127,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007')
-         // this.notiService.notify('Xác nhận công việc thành công !');
+          // this.notiService.notify('Xác nhận công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
@@ -134,8 +135,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
 
   //#region extendStatus
   saveExtendStatus() {
-     // var valueDefault = UrlUtil.getUrl('defaultValue', moreFunc.url);
-     if ( this.taskExtends.status == '5') {
+    // var valueDefault = UrlUtil.getUrl('defaultValue', moreFunc.url);
+    if (this.taskExtends.status == '5') {
       this.api
         .execSv<any>(
           'TM',
@@ -156,21 +157,22 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
           }
         });
     } else this.actionExtends();
-   
+
   }
-  actionExtends(){
+  actionExtends() {
     this.api
-    .execSv<any>('TM', 'TM', 'TaskExtendsBusiness', 'ExtendStatusTaskAsync', [
-      this.taskExtends.taskID,
-      this.taskExtends.status,
-      this.comment,
-    ])
-    .subscribe((res) => {
-      if (res) {
-        this.dialog.close(res);
-        this.notiService.notifyCode('SYS007')
-      } else this.dialog.close();
-    });
+      .execSv<any>('TM', 'TM', 'TaskExtendsBusiness', 'ExtendStatusTaskAsync', [
+        this.funcID,
+        this.taskExtends.taskID,
+        this.taskExtends.status,
+        this.comment,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(res);
+          this.notiService.notifyCode('SYS007')
+        } else this.dialog.close();
+      });
   }
 
   //#endregion
@@ -179,7 +181,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     // this.task.approveComment = this.comment;
     ///xu ly save
     this.api
-    .execSv<any>('TM', 'TM', 'TaskBusiness', 'ApproveStatusTaskAsync', [
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'ApproveStatusTaskAsync', [
         this.funcID,
         this.task.taskID,
         this.task.approveStatus,
@@ -189,7 +191,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007')
-         // this.notiService.notify('Đánh giá kết quả công việc thành công !');
+          // this.notiService.notify('Đánh giá kết quả công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
@@ -199,7 +201,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.task.verifyComment = this.comment;
     if (
       this.task.verifyStatus == '3' &&
-      (this.task.verifyComment ==null || this.task.verifyComment.trim() == '')
+      (this.task.verifyComment == null || this.task.verifyComment.trim() == '')
     ) {
       this.notiService.notifyCode('TM019');
       return;

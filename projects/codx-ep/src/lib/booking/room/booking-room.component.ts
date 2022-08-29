@@ -234,7 +234,7 @@ export class BookingRoomComponent extends UIComponent {
     let option = new DialogModel();
     option.DataService = this.viewBase.dataService;
     option.FormModel = this.viewBase.formModel;
-    this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,"TMR01","",option);
+    this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,null,"",option);
   }
   addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {

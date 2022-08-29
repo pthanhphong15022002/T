@@ -9,7 +9,7 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
 })
 export class NoSubAsideComponent extends LayoutBaseComponent {
 
-  module = '';
+  module = 'HR';
   override aside = true;
   //override asideFixed = true;
   // toolbar = false;

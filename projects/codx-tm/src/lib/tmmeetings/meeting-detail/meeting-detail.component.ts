@@ -70,12 +70,16 @@ export class MeetingDetailComponent extends UIComponent {
     //     this.urlDetail = res[0].url;
     //   }
     // });
-    this.urlDetail = 'tm/sprintdetails/TMT03011'
+    this.urlDetail = 'tm/sprintdetails/TMT03011';
+    this.loadData();
   }
 
-
   onInit(): void {
-    this.loadData();
+    this.getListComment();
+
+  }
+
+  ngAfterViewInit(): void {
     if (this.tabControl.length == 0) {
       this.all.forEach((res, index) => {
         var tabModel = new TabControl();
@@ -92,11 +96,7 @@ export class MeetingDetailComponent extends UIComponent {
     this.changeDetectorRef.detectChanges();
   }
 
-  ngAfterViewInit(): void {
-
-  }
-
-  loadData(){
+  loadData() {
     if (this.meetingID != null) {
       this.tmService.getMeetingID(this.meetingID).subscribe((res) => {
         if (res) {
@@ -140,6 +140,7 @@ export class MeetingDetailComponent extends UIComponent {
 
   clickMenu(item) {
     this.name = item.name;
+
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {
         obj.isActive = false;
@@ -147,6 +148,7 @@ export class MeetingDetailComponent extends UIComponent {
       }
     });
     item.isActive = true;
+
     this.changeDetectorRef.detectChanges();
   }
 
@@ -159,9 +161,7 @@ export class MeetingDetailComponent extends UIComponent {
       let start =
         this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
       let end =
-        this.addZero(eDate.getHours()) +
-        ':' +
-        this.addZero(eDate.getMinutes());
+        this.addZero(eDate.getHours()) + ':' + this.addZero(eDate.getMinutes());
       this.startTime = start + ' - ' + end;
     }
     return this.startTime;
@@ -207,12 +207,14 @@ export class MeetingDetailComponent extends UIComponent {
     });
   }
 
-  lstComment:any = [];
-  getListComment(){
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
-    .subscribe((res:any[]) => {
-      console.log(res);
-      this.lstComment = res;
-    })
+  lstComment: any = [];
+  getListComment() {
+    var objectID = this.meetingID;
+    this.api
+      .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetHistoryByObjectIDAsync', [objectID,'C'])
+      .subscribe((res: any[]) => {
+        console.log(res);
+        this.lstComment = res;
+      });
   }
 }

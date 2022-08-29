@@ -80,9 +80,9 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         },
       },
     ];
-    this.button = {
-      id: 'btnAdd',
-    };
+    // this.button = {
+    //   id: 'btnAdd',
+    // };
     this.getGridViewSetup(this.view.formModel.funcID);
     this.detectorRef.detectChanges();
   }
@@ -197,7 +197,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     if (data.processType == 'ES_SignFiles') {
       //Kys
       if (
-        funcID == 'SYS202' ||
+        funcID == 'SYS201' ||
         funcID == 'SYS205' ||
         funcID == 'SYS206' ||
         funcID == 'SYS204' ||
@@ -222,16 +222,23 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             recID: data.transID,
             title: data.htmlView,
             status: data.status,
+            stepType: data.stepType,
           },
           '',
           dialogModel
         );
         dialogApprove.closed.subscribe((x) => {
           if (x.event) {
-            debugger;
-            delete x.event._uuid;
-            this.view.dataService.add(x.event, 0).subscribe();
-            //this.getDtDis(x.event?.recID)
+            console.log(x.event);
+
+            /*return {
+              result: true,
+              mode: 1
+            }
+
+            mode: 1. Ký
+                2. Từ chối
+                3. Làm lại */
           }
         });
       }

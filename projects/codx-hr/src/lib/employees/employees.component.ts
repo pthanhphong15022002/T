@@ -122,12 +122,7 @@ export class EmployeesComponent implements OnInit {
     return moment(value).fromNow(true);
   }
 
-  changeView(evt: any) { }
-
-  requestEnded(evt: any) {
-  }
-
-  edit(data) {
+  edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -137,6 +132,9 @@ export class EmployeesComponent implements OnInit {
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
+      this.dialog.closed.subscribe((e) => {
+        console.log(e);
+      })
     });
     this.changedt.detectChanges();
   }

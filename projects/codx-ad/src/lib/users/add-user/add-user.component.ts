@@ -71,6 +71,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
   formUser: FormGroup;
   checkValueChangeUG = false;
   dataUG: any = [];
+  comments: any;
+  tmpPost: any;
 
   constructor(
     private injector: Injector,
@@ -92,7 +94,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
-    }
+    } else this.adUser.buid = '';
     this.dialog = dialog;
     this.user = auth.get();
 
@@ -328,8 +330,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
       return;
     } else {
       if (this.isAddMode) {
-        if (this.checkBtnAdd == false) return this.onAdd();
-        else {
+        if (this.checkBtnAdd == false) {
+          this.onAdd();
+        } else {
           if (
             this.countListViewChooseRoleApp > 0 ||
             this.countListViewChooseRoleService > 0
@@ -348,10 +351,87 @@ export class AddUserComponent extends UIComponent implements OnInit {
               });
           }
           this.notification.notifyCode('SYS006');
-          
         }
+        this.getHTMLFirstPost(this.adUser);
+        this.adService.createFirstPost(this.tmpPost).subscribe();
       } else this.onUpdate();
     }
+  }
+
+  getHTMLFirstPost(data) {
+    this.comments = `<div class="card border rounded-4 border">
+    <!--begin::Body-->
+    <div class="card-body d-flex">
+      <!--begin::Wrapper-->
+      <div class="d-flex flex-column w-350px me-4">
+        <a href="/" class="mb-2">
+          <img alt="Logo" class="h-15px " src="assets/themes/wp/default/img/WP.svg">
+        </a>
+        <h4 class="fw-bolder text-primary">Chào mừng thành viên mới</h4>
+        <div class="mb-4">Rất hân hạnh chào đón bạn đến với chúng tôi. Chúng tôi tin rằng với khả năng và nhiệt huyết
+          của mình, bạn sẽ là một nhân tố giúp công ty ngày càng phát triển hơn. </div>
+        <!--begin::user center-->
+        <div class="d-flex align-items-center flex-center  py-2 px-6">
+          <div class="symbol symbol-40px symbol-circle me-4">
+            <codx-img #image objectId="ADMIN"></codx-img>
+          </div>
+          <div class="d-flex flex-column w-100">
+            <div class="text-dark fw-bold fs-5">${data.userName}</div>
+            <div class="text-gray-400">${data.positionName ? data.positionName : ''}</div>
+          </div>
+        </div>
+        <!--end::user center-->
+      </div>
+      <!--begin::Wrapper-->
+      <!--begin::Illustration-->
+      <img src="/assets/themes/sys/default/img/Welcome.svg" class="position-absolute me-3  end-0 h-175px" alt="">
+      <!--end::Illustration-->
+    </div>
+    <!--end::Body-->
+  </div>`;
+
+    /*Init first post*/
+    var permissions = [
+      {
+        memberType: '1',
+        objectType: '1',
+        objectID: 'ADMIN',
+        objectName: 'Lê Phạm Hoài Thương',
+        full: true,
+        read: true,
+        write: true,
+        update: true,
+        delete: true,
+        assign: true,
+        share: true,
+        upload: true,
+        download: true,
+        isActive: true,
+      },
+      {
+        MemberType: '2',
+        ObjectType: '7',
+        read: true,
+        share: true,
+        isActive: true,
+      },
+      {
+        MemberType: '2',
+        ObjectType: '9',
+        read: true,
+        share: true,
+        isActive: true,
+      },
+    ];
+    this.tmpPost = {
+      content: this.comments,
+      permissions: permissions,
+      approveControl: '0',
+      isActive: true,
+      category: '1',
+      shareControl: '9',
+    };
+    /*Init first post*/
   }
 
   reloadAvatar(data: any): void {
@@ -412,7 +492,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
   loadUserRole(userID) {
     if (!userID) return;
     this.api
-      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRolesAsync', [userID])
+      .call('ERM.Business.AD', 'UsersBusiness', 'GetModelListRolesAsync', [
+        userID,
+      ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           this.viewChooseRole = res.msgBodyData[0];
@@ -421,7 +503,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
             dt['roleID'] = dt.recIDofRole;
             dt.userID = this.adUser.userID;
           });
-          debugger;
           this.countListViewChooseRoleApp = this.viewChooseRole.length;
           this.changeDetector.detectChanges();
         }

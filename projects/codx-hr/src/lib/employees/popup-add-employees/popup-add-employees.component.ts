@@ -183,16 +183,14 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
 
   OnSaveForm() {
-    // for (var key in this.data) {
-    //   if (Array.isArray(this.data[key]))
-    //     this.data[key] = this.data[key].join(';');
-    // }
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
-      .subscribe();
-    this.detectorRef.detectChanges();
-    this.dialog.close();
-
+      .subscribe((res) => {
+        // if (res) {
+        //   this.dialog.close(res);
+        // }
+        this.dialog.close(res)
+      });
   }
 
   dataChange(e: any, field: string) {
