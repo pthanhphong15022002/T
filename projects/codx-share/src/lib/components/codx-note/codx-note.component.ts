@@ -44,7 +44,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     memo: '',
     status: null,
     textColor: null,
-    format: null,
+    format: '',
     lineType: 'TEXT',
   };
   currentElement: HTMLElement;
@@ -101,8 +101,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       var input = this.currentElement.querySelector(
         '.codx-text'
       ) as HTMLElement;
-      if(input)
-        input.focus();
+      if (input) input.focus();
     }
     this.lineType = type;
     var value: any = input;
@@ -151,6 +150,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
           'important'
         );
       else style.fontWeight = 'normal';
+      this.listNoteTemp.format = this.listNoteTemp.format + ';bolder';
     } else if (font == 'ITALIC') {
       if (style.fontStyle == 'normal')
         this.currentElement.style.setProperty(
@@ -159,6 +159,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
           'important'
         );
       else style.fontStyle = 'normal';
+      this.listNoteTemp.format = this.listNoteTemp.format + ';italic';
     } else if (font == 'UNDERLINE') {
       if (style.textDecorationLine == 'none')
         this.currentElement.style.setProperty(
@@ -167,7 +168,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
           'important'
         );
       else style.textDecorationLine = 'none';
+      this.listNoteTemp.format = this.listNoteTemp.format + ';underline';
     }
+    console.log('check style', this.listNoteTemp.format);
     this.dt.detectChanges();
   }
 
@@ -283,7 +286,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         memo: data,
         status: this.listNoteTemp.status,
         textColor: this.listNoteTemp.textColor,
-        format: null,
+        format: this.listNoteTemp.format,
         lineType: this.lineType,
       };
       if (this.listNote.length >= 2) {
@@ -301,6 +304,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         lineType: this.lineType,
       };
       this.listNote.push(initListNote);
+      console.log('check listNote', this.listNote);
       //reverse
       this.dt.detectChanges();
     }
