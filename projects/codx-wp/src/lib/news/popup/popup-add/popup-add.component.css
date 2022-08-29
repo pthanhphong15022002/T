@@ -18,3 +18,7 @@ div.e-content.e-lib {
     overflow: auto;
     padding-right: 10px;
 }
+
+.add-video {
+    height: calc(100vh - 178px) !important;
+}
