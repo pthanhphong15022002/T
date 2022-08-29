@@ -3,6 +3,7 @@ import {
   Injector,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -13,7 +14,9 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  AuthStore,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { threadId } from 'worker_threads';
 import { CodxEsService } from '../../codx-es.service';
 import { PdfViewComponent } from '../pdf-view/pdf-view.component';
@@ -29,6 +32,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     private inject: Injector,
     private esService: CodxEsService,
     private notify: NotificationsService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -36,10 +40,12 @@ export class PopupSignForApprovalComponent extends UIComponent {
     debugger;
     this.dialog = dialog;
     this.data = dt.data;
+    this.user = this.authStore.get();
   }
 
   @ViewChild('pdfView') pdfView: PdfViewComponent;
 
+  isAfterRender: boolean = false;
   isApprover = true;
   dialog;
   data: any = {};
@@ -71,6 +77,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
         .then((res) => {
           if (res) {
             this.dialogSignFile = res;
+            this.isAfterRender = true;
             this.detectorRef.detectChanges();
           }
         });
@@ -119,6 +126,41 @@ export class PopupSignForApprovalComponent extends UIComponent {
     });
   }
 
+  openTempPopup(mode) {
+    this.mode = mode;
+    this.title = '';
+    this.subTitle = 'Comment khi duyệt';
+    switch (mode) {
+      case 1:
+        this.title = 'Duyệt';
+        break;
+      case 2:
+        this.title = 'Từ chối';
+        break;
+      case 3:
+        this.title = 'Làm lại';
+        break;
+      default:
+        return;
+    }
+    this.onInit1();
+    let dialogPopup = this.callfc.openForm(
+      this.content,
+      this.title,
+      500,
+      500,
+      this.funcID
+    );
+    dialogPopup.closed.subscribe((res) => {
+      if (res.event == 'ok') {
+        console.log('run');
+        this.pdfView.renderAnnotPanel();
+        this.notify.notifyCode('RS002');
+        this.dialog && this.dialog.close();
+      }
+    });
+  }
+
   changeActiveOpenPopup(e) {
     this.canOpenSubPopup = e;
   }
@@ -126,7 +168,63 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.dialog.close();
   }
 
-  close() {
-    this.dialog && this.dialog.close();
+  close(dialog: DialogRef = null) {
+    if (dialog != null) {
+      dialog && dialog.close();
+    } else {
+      this.dialog && this.dialog.close();
+    }
   }
+
+  //#region popup
+
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('popupApprove1', { static: false }) content: TemplateRef<any>;
+
+  okClick = false;
+  title: string;
+  subTitle: string;
+  mode;
+
+  approvalTrans: any = {};
+
+  controlName;
+
+  noteData;
+
+  user;
+  onInit1() {
+    // this.formModel = this.data.formModel;
+    this.formModel.currentData = this.approvalTrans;
+    this.controlName = this.mode == 2 ? 'rejectControl' : 'redoControl';
+
+    this.detectorRef.detectChanges();
+  }
+
+  getfileCount(event) {}
+
+  changeReason(e) {}
+
+  saveDialog1(dialog1: DialogRef) {
+    console.log(this.dialogSignFile);
+
+    this.esService
+      .updateSignFileTrans(
+        this.user.userID,
+        this.recID,
+        this.mode,
+        this.dialogSignFile?.value ? this.dialogSignFile.value.comment : ''
+      )
+      .subscribe((res) => {
+        console.log('approve', res);
+        this.notify.notifyCode('RS002');
+        dialog1 && dialog1.close(res);
+        this.dialog && this.dialog.close(res);
+      });
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
+  }
+  //#endregion
 }
