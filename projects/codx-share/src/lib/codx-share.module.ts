@@ -89,6 +89,7 @@ import { TreeViewComponent } from './components/codx-tasks/tree-view/tree-view.c
 import { CodxCommentHistoryComponent } from './components/codx-comment-history/codx-comment-history.component';
 import { PdfViewerAllModule } from '@syncfusion/ej2-angular-pdfviewer';
 import { CodxTreeHistoryComponent } from './components/codx-tree-history/codx-tree-history.component';
+import { CodxViewAssignComponent } from './components/codx-view-assign/codx-view-assign.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -146,6 +147,7 @@ const T_Component: Type<any>[] = [
   PopupAddComponent,
   CodxTasksComponent,
   TreeViewComponent,
+  CodxViewAssignComponent,
   CodxCommentHistoryComponent,
   CodxTreeHistoryComponent,
 
