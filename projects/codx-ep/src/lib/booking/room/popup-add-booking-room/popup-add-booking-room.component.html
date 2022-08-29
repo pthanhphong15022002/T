@@ -150,8 +150,7 @@
 
       </div>
 
-      <div class="col-2">
-        <codx-label class="fs-6 fw-bold mb-2" default=""> </codx-label>
+      <div class="col-2 d-flex flex-column justify-content-center">
         <codx-input
           #checkbox
           type="checkbox"
@@ -173,15 +172,23 @@
         [formModel]="dialogRef.formModel"
       >
       </codx-label>
+      <!-- <codx-input
+        type="combobox"
+        refValue="ReasonCodes"
+        placeholder="Chọn mục đích"
+        ControlName="reasonID"  
+        [formModel]="dialogRef.formModel"  
+        [Group]="fGroupAddBookingRoom"          
+      >
+      </codx-input> -->
       <codx-input
         type="combobox"
         refValue="ReasonCodes"
         placeholder="Chọn mục đích"
         [multiple]="false"
-        field="reasonID"
+        field="reasonID"        
         [crrValue]="fGroupAddBookingRoom.value.reasonID"
-        (valueChange)="valueChange($event)"
-        
+        (valueChange)="valueChange($event)"        
       >
       </codx-input>
     </div>
@@ -288,52 +295,48 @@
         </div>
       </div>
 
-      <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">        
-        <div
-          class="symbol-group symbol-group-check symbol-hover flex-nowrap"
-          *ngIf="curUser!=null"
-        >
+      <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">     
+
+        <div class="symbol-group"  *ngIf="curUser!=null" >
           <div class="symbol symbol-35px symbol-circle">
             <codx-img
               [objectId]="curUser.id"
               objectName="curUser.text"
               objectType="AD_Users"
             ></codx-img>
-            <span
-              class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"
-            ></span>
+            <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white" ></span>
           </div>
         </div>
-        <div
-          class="symbol-group symbol-group-check symbol-hover flex-nowrap"
-          *ngIf="lstPeople.length >= 1"
-        >
+
+        <div class="symbol-group" *ngIf="lstPeople.length >= 1">
           <div class="symbol symbol-35px symbol-circle" >
             <codx-img
               [objectId]="lstPeople[0].id"
               objectName="lstPeople[0].text"
               objectType="AD_Users"
             ></codx-img>
-            <span
-              class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"
-            ></span>
+            <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
           </div>
         </div>
 
-        <div
-          class="symbol-group symbol-group-check symbol-hover flex-nowrap"
-          *ngIf="lstPeople.length >= 2"
-        >
+        <div class="symbol-group" *ngIf="lstPeople.length >= 2">
+          <div class="symbol symbol-35px symbol-circle" >
+            <codx-img
+              [objectId]="lstPeople[1].id"
+              objectName="lstPeople[1].text"
+              objectType="AD_Users"
+            ></codx-img>
+            <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
+          </div>          
+        </div>
+
+        <div class="symbol-group" *ngIf="lstPeople.length >= 3">
           <span
-            href="#"
             class="symbol symbol-35px symbol-circle"
             data-bs-toggle="modal"
             data-bs-target="#kt_modal_view_users"
           >
-            <span
-              class="symbol-label bg-light-primary text-primary fs-8 fw-bolder"
-              >+{{ lstPeople.length - 1 }}</span
-            >
+            <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder" >+{{ lstPeople.length - 2 }}</span>
           </span>
         </div>
       </div>
@@ -473,7 +476,7 @@
       </div>
     </div>     
 
-    <div class="form-group row"> 
+    <div class="form-group row d-flex flex-row justify-content-start align-items-center"> 
       <div class="col-4">
         <codx-label
           default="Số người tham dự"
@@ -494,8 +497,7 @@
           (valueChange)="valueAttendeesChange($event)"
           >
         </codx-input> 
-      </div>       
-         
+      </div> 
     </div>
 
     <div class="separator my-5"></div>
@@ -505,7 +507,7 @@
           <codx-img
             [objectId]="item.id"
             objectName="item.text"
-            objectType="AD_Users"
+            objectType="EP_Stationery"
           ></codx-img>
         </div>
         <div class="ps-4 flex-grow-2">
@@ -575,9 +577,8 @@
       </codx-input>
     </div>
 
-    <div class="row form-group">        
-      <codx-label default="" fiedName="" [formModel]="form.formModel"> </codx-label>      
-      <div class="col-3 form-group ">    
+    <div class="row form-group d-flex flex-row justify-content-start align-items-center">            
+      <div class="col-1 ">    
         <codx-input  #checkbox
           class="test-switch"
           type="switch"
@@ -587,12 +588,14 @@
           (valueChange)="valueChange($event)"
           >
         </codx-input>
+      </div>
+      <div class="col-2">          
         <codx-label
           fiedName="Repeat"
           default="Lặp lại"
           [formModel]="dialogRef.formModel"
-        ></codx-label>                
-      </div>   
+        ></codx-label>  
+      </div> 
 
       <div class="col-5">
         <codx-input
@@ -602,9 +605,8 @@
           [crrValue]="fGroupAddBookingRoom.value.interval"
           (valueChange)="valueChange($event)"
           [disabled]="!fGroupAddBookingRoom.value.repeat"
-        ></codx-input>
-      </div>
-
+        ></codx-input>        
+      </div> 
     </div>
     
   </ng-template>
