@@ -689,7 +689,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         break;
       }
       //Gửi email
-      case 'sendemail': {
+      case 'SYS004': {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         this.dialog = this.callfunc.openSide(
@@ -826,8 +826,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 '',
                 {
                   oSignFile: signFile,
+                  files: this.data?.files,
                   formModel: this.view?.currentView?.formModel,
-                  cbxCategory: 'ODCategories',
                 },
                 '',
                 dialogModel
@@ -835,13 +835,14 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               dialogApprove.closed.subscribe((res) => {
                 if (res.event == true) {
                   datas.status = '3';
-                  datas.approveStatus = '3'
-                  this.odService.updateDispatch(datas, false).subscribe((item) => {
-                    if (item.status == 0) {
-                     this.view.dataService.update(item?.data).subscribe();
-                    }
-                    else this.notifySvr.notify(item.message);
-                  });
+                  datas.approveStatus = '3';
+                  this.odService
+                    .updateDispatch(datas, false)
+                    .subscribe((item) => {
+                      if (item.status == 0) {
+                        this.view.dataService.update(item?.data).subscribe();
+                      } else this.notifySvr.notify(item.message);
+                    });
                 }
               });
               //this.callfunc.openForm();
@@ -852,9 +853,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         break;
       }
       //Hoàn tất
-      case "ODT112":
-      case "ODT211":
-      {
+      case 'ODT112':
+      case 'ODT211': {
         var option = new DialogModel();
         option.FormModel = this.formModel;
         this.callfunc
@@ -869,9 +869,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             option
           )
           .closed.subscribe((x) => {
-            if (x?.event == 0) 
-            {
-              datas.status = "7";
+            if (x?.event == 0) {
+              datas.status = '7';
               this.view.dataService.update(datas).subscribe();
             }
           });
@@ -965,9 +964,17 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
     if(data?.status == "7")
     {
-      var completed = e.filter((x: { functionID: string }) => x.functionID == 'ODT211' ||  x.functionID == 'ODT112');
-      completed[0].disabled = true
+      var completed = e.filter((x: { functionID: string }) => x.functionID == 'ODT211' ||  x.functionID == 'ODT112' || x.functionID == 'SYS02' || x.functionID == 'SYS03');
+      for(var i =0; i<completed.length ; i++)
+      {
+        completed[i].disabled = true
+      }
     } 
+    if(data?.status == "3")
+    {
+      var completed = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
+      completed[0].disabled = true
+    }  
     //data?.isblur = true
   }
   //Gửi duyệt
@@ -990,12 +997,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
         else {
           data.status = '3';
-          data.approveStatus = '3'
+          data.approveStatus = '3';
           this.odService.updateDispatch(data, false).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();
-            }
-            else this.notifySvr.notify(item.message);
+            } else this.notifySvr.notify(item.message);
           });
         }
         //this.notifySvr.notify(res2?.msgCodeError)

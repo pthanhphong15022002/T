@@ -5,6 +5,7 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
+import { CacheService } from 'codx-core';
 import { last } from 'rxjs';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 
@@ -17,11 +18,14 @@ export class ViewApprovalProcessComponent implements OnInit {
   @Input() transID: string = '';
   @Input() approveStatus: string = '';
 
+  gridViewSetup: any = {};
+
   process: any = [];
   lstStep: any = [];
   constructor(
     private esService: CodxEsService,
-    private cr: ChangeDetectorRef
+    private cr: ChangeDetectorRef,
+    private cache: CacheService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -60,7 +64,6 @@ export class ViewApprovalProcessComponent implements OnInit {
             this.process = res;
             this.lstStep = [];
             this.cr.detectChanges();
-            console.log(this.process);
           }
         });
       }

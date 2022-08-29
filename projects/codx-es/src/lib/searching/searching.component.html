@@ -1,0 +1,48 @@
+<codx-fulltextsearch
+  #view
+  [centerTmp]="centerTmp"
+  [widthItemTmp]="400"
+  [pageSize]="10"
+  [widthLeft]="400"
+  [funcID]="funcID"
+  [service]="service"
+  [entityName]="entityName"
+  (selectedChange)="onSelected($event)"
+>
+</codx-fulltextsearch>
+<!-- <ng-template #menu >
+    <button (click)="testSearch()">test</button>
+</ng-template> -->
+<ng-template #centerTmp let-data>
+  <codx-temp-full
+    [content]="extractContent(data.title)"
+    [desc]="
+      convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)
+    "
+    [status]="data.status"
+    [statusVll]="gridViewSetup['Status']['referedValue']"
+    [date]="data.createdOn"
+    cardCss="card-template border-bottom px-2 py-3"
+    [resources]="getIdUser(data.createdBy, data.owner)"
+    [resourceObjType]="'AD_Users'"
+    [icoStatus]="data?.urgency"
+    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
+    [icoStatus2]="data?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
+    [modeImgs]="false"
+    [bookmark]="data.isBookmark"
+    [titleLine]="2"
+    [dataItem]="data"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #rightTmp>
+  <span class="fs-5 fw-bolder">Tài liệu liên kết</span>
+  <div class="mt-2">
+    <span class="text-muted">Công văn về việc</span>
+  </div>
+  <div class="mt-2 pt-8">
+    <span>Kéo thả liên kết vào vùng này</span>
+  </div>
+</ng-template>
