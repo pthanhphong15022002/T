@@ -1,84 +1,83 @@
-<form [formGroup]="sendEmailForm" (ngSubmit)="onSave($event)" class="h-100">
-    <codx-form headerText="Gửi mail cho người nhận" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-        <ng-template popup adde #body>
-            <div class="request-to">
-                <div class="d-flex align-items-center">
-                    <codx-label default="Gửi đến" class="w-100px"></codx-label>
-                    <codx-input type="Combobox" name="combobox"
-                    [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null" [multiple]="true"
-                    [showInput]="true" refType="P" field="popup" [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
-                  </codx-input>
-                </div>
-                <div class="d-flex align-items-center flex-grow-1 mt-2">
-                    <codx-label default="Từ" style="width:80px"></codx-label>
-                    <div class="d-flex align-items-center me-2 mail-user">
-                        <codx-temp-full 
-                            [imageId]="user.userID"
-                            [imageWidth]="30"
-                            [title]="user.userName"
-                            [subTitle]="job"
-                        >
-                        </codx-temp-full>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex align-items-center flex-grow-1 mt-2">
-                <codx-label default="Công việc" class="w-100px"></codx-label>
-                <div class="d-flex align-items-center w-100">
-                    <codx-input type="text" [Group]="sendEmailForm" ControlName="subject" style="width:100%">
-                    </codx-input>
-                </div>
-            </div>
-            <div class="p-2">
-                <!-- <thumbnail data="{{getJSONString(data.files)}}"></thumbnail>      -->
-            </div>
-            <div class="form-group mt-3 p-2">
-                <div class="d-flex align-items-center justify-content-between">
-                    <label>Nội dung chi tiết</label>
-                    <div class="dropdown">
-                        <span>Chon trường dữ liệu</span>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item">
-                                <div class="d-flex flex-column">
-                                    <span class="text-dark">Cấp quyền xem tài liệu</span>
-                                    <i class="tex font-size-sm mt-1">Xin cấp quyền full xem tài liệu</i>
-                                </div>
-                            </a>
-                            <div class="subheader-separator subheader-separator-ver mt-1 ms-1 bg-gray-400">
-                            </div>
-                            <a class="dropdown-item">
-                                <span class="text-primary">Thêm mẫu mail</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <codx-input type="textarea" [crrValue]="''" [Group]="sendEmailForm" ControlName="content">
+
+<codx-form headerText="Gửi mail cho người nhận" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template popup adde #body>
+        <div class="request-to">
+            <div class="d-flex align-items-center">
+                <codx-label default="Gửi đến" class="w-100px"></codx-label>
+                <codx-input type="Combobox" name="combobox"
+                [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null" [multiple]="true"
+                [showInput]="true" refType="P" field="popup" [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
                 </codx-input>
             </div>
-        </ng-template>
-        <ng-template #footer>
-            <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex justify-content-start align-items-center">
-                    <button type="button" class="btn btn-light-primary ">
-                        <i class="icon-cloud_upload fs-5"></i>Upload file
-                    </button>
-                    <div class="d-flex align-items-center ms-2">
-                        <codx-input type="switch" class="test-check" [Group]="sendEmailForm" ControlName="saveTemplate">
-                        </codx-input>
-                        <codx-label default="Lưu làm template" class="ms-2"></codx-label>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary" type="submit" name="next">
-                        Lưu & tiếp tục
-                    </button>
-                    <button class="btn btn-primary" type="submit">
-                        Lưu
-                    </button>
+            <div class="d-flex align-items-center flex-grow-1 mt-2">
+                <codx-label default="Từ" style="width:80px"></codx-label>
+                <div class="d-flex align-items-center me-2 mail-user">
+                    <codx-temp-full 
+                        [imageId]="user.userID"
+                        [imageWidth]="30"
+                        [title]="user.userName"
+                        [subTitle]="job"
+                    >
+                    </codx-temp-full>
                 </div>
             </div>
-        </ng-template>
-    </codx-form>
-</form>
+        </div>
+        <div class="d-flex align-items-center flex-grow-1 mt-2">
+            <codx-label default="Công việc" class="w-100px"></codx-label>
+            <div class="d-flex align-items-center w-100">
+                <codx-input type="text" [Group]="sendEmailForm" ControlName="subject" style="width:100%">
+                </codx-input>
+            </div>
+        </div>
+        <div class="p-2">
+            <!-- <thumbnail data="{{getJSONString(data.files)}}"></thumbnail>      -->
+        </div>
+        <div class="form-group mt-3 p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <label>Nội dung chi tiết</label>
+                <div class="dropdown">
+                    <span>Chon trường dữ liệu</span>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item">
+                            <div class="d-flex flex-column">
+                                <span class="text-dark">Cấp quyền xem tài liệu</span>
+                                <i class="tex font-size-sm mt-1">Xin cấp quyền full xem tài liệu</i>
+                            </div>
+                        </a>
+                        <div class="subheader-separator subheader-separator-ver mt-1 ms-1 bg-gray-400">
+                        </div>
+                        <a class="dropdown-item">
+                            <span class="text-primary">Thêm mẫu mail</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <codx-input type="textarea" [crrValue]="''" [Group]="sendEmailForm" ControlName="content">
+            </codx-input>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex justify-content-start align-items-center">
+                <button type="button" class="btn btn-light-primary ">
+                    <i class="icon-cloud_upload fs-5"></i>Upload file
+                </button>
+                <div class="d-flex align-items-center ms-2">
+                    <codx-input type="switch" class="test-check" [Group]="sendEmailForm" ControlName="saveTemplate">
+                    </codx-input>
+                    <codx-label default="Lưu làm template" class="ms-2"></codx-label>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit" name="next">
+                    Lưu & tiếp tục
+                </button>
+                <button class="btn btn-primary" type="submit" (click)="onSave()">
+                    Lưu
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</codx-form>
 
 <!-- <attachment #attachment type="center" objectType="TM_Tasks" objectId="628c326c590addf224627f42" functionID="WPT03941" (fileAdded)="fileAdded($event)"></attachment> -->

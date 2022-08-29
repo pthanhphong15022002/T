@@ -74,10 +74,9 @@ export class SendEmailComponent implements OnInit {
   }
   changeValueOwner(event: any) {
     //this.dispatch.owner = event.data?.value[0];
-    this.sendEmailForm.controls['to'].setValue(event.data?.value[0]);
+    this.sendEmailForm.controls['to'].setValue([event.data?.value[0]]);
   }
-  onSave(e: any) {
-    console.log(e);
+  onSave() {
     /*  
    this.dataAssign.recID = this.data.recID;
     this.inforEmail.from = this.user?.userID;
@@ -102,7 +101,7 @@ export class SendEmailComponent implements OnInit {
         this.sendEmailForm.value
       )
       .subscribe((item) => {
-        if (item.status == 0 && e.submitter.name != 'next') this.dialog.close();
+        if (item.status == 0) this.dialog.close();
         this.notifySvr.notify(item.message);
       });
   }
