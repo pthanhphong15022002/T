@@ -25,7 +25,7 @@ export class TaskDailyComponent implements OnInit {
   user: any;
   funcID: any;
   lstPined: any = [];
-  param: any = {};
+  param:{[k: string]: any}  = {};
   print: boolean = false;
   isCollapsed = true;
   titleCollapse: string = 'Đóng hộp tham số';
@@ -111,7 +111,7 @@ export class TaskDailyComponent implements OnInit {
         text: 'Report',
         icon: 'icon-assignment',
         //toolbarTemplate: this.pined,
-        //  // reportView: true,
+        reportView: true,
         model: {
           panelLeftRef: this.report,
         },
@@ -131,13 +131,13 @@ export class TaskDailyComponent implements OnInit {
       });
   }
   paramChange(evt: any) {
+    debugger
     if (!evt.data.data.data) {
       this.param = {};
     } else {
-      this.param = { name: '1' };
-      setTimeout(() => {
-        this.param = {};
-      }, 2000);
+      this.param[evt.data.controlName] = evt.data.data.data;
+
+      this.param = {...this.param};
     }
     // else {
     //   this.param = { name: '1' };
