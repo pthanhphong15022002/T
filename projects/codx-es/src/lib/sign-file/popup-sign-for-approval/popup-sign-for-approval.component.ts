@@ -216,10 +216,25 @@ export class PopupSignForApprovalComponent extends UIComponent {
         this.dialogSignFile?.value ? this.dialogSignFile.value.comment : ''
       )
       .subscribe((res) => {
-        console.log('approve', res);
-        this.notify.notifyCode('RS002');
-        dialog1 && dialog1.close(res);
-        this.dialog && this.dialog.close(res);
+        if (res) {
+          if (res?.msgCodeError == null) {
+            let result = {
+              result: true,
+              mode: this.mode,
+            };
+            this.notify.notifyCode('RS002');
+            dialog1 && dialog1.close(result);
+            this.dialog && this.dialog.close(result);
+          } else {
+            let result = {
+              result: false,
+              mode: this.mode,
+            };
+            this.notify.notify(res?.msgCodeError);
+            dialog1 && dialog1.close(result);
+            this.dialog && this.dialog.close(result);
+          }
+        }
       });
   }
 
