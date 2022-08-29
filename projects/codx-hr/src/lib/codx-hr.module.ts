@@ -34,6 +34,7 @@ import { ProvincesComponent } from './hrparameters/category/provinces/provinces.
 import { ReligionsComponent } from './hrparameters/category/religions/religions.component';
 import { HomeHrparametersComponent } from './hrparameters/home-hrparameters/home-hrparameters.component';
 import { HRParametersComponent } from './hrparameters/hrparameters.component';
+import { OrgorganizationComponent } from './organization/organization.component';
 import { PopupAddPositionsComponent } from './positions/popup-add-positions/popup-add-positions.component';
 import { PositionsComponent } from './positions/positions.component';
 import { LayoutComponent } from './_layout/layout.component';
@@ -71,6 +72,10 @@ export const routes: Routes = [
           //   path: 'contactbook/:funcID',
           //   component: EmpContactsComponent,
           // },
+          {
+            path: 'orgchart/:funcID',
+            component: OrgorganizationComponent,
+          },
           {
             path: 'employee/:funcID',
             component: EmployeesComponent,
@@ -164,7 +169,8 @@ const T_Component: Type<any>[] = [
   ReligionsComponent,
   EthnicGroupsComponent,
   UpdateStatusComponent,
-  NoSubAsideComponent
+  NoSubAsideComponent,
+  OrgorganizationComponent,
 ];
 @NgModule({
   imports: [
@@ -178,7 +184,6 @@ const T_Component: Type<any>[] = [
     CodxShareModule,
     ChartAllModule,
     NgbModule,
-
   ],
   exports: [RouterModule],
   declarations: T_Component,

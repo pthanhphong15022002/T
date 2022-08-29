@@ -1,11 +1,12 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit,  ViewEncapsulation, } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthService, CacheService } from 'codx-core';
 
 @Component({
   selector: 'codx-tree-history',
   templateUrl: './codx-tree-history.component.html',
-  styleUrls: ['./codx-tree-history.component.scss']
+  styleUrls: ['./codx-tree-history.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CodxTreeHistoryComponent implements OnInit {
 
@@ -55,5 +56,10 @@ export class CodxTreeHistoryComponent implements OnInit {
         this.lstHistory = res;
       }
     })
+  }
+
+  replyTo(data) {
+    data.showReply = !data.showReply;
+    this.dt.detectChanges();
   }
 }
