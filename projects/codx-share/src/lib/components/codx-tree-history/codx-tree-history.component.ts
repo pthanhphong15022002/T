@@ -62,4 +62,12 @@ export class CodxTreeHistoryComponent implements OnInit {
     data.showReply = !data.showReply;
     this.dt.detectChanges();
   }
+
+  deleteComment(event: any) {
+
+  }
+
+  sendComment(event:any,data:any = null){
+
+  }
 }

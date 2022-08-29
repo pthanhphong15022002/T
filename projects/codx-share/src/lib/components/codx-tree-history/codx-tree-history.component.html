@@ -10,7 +10,8 @@
             [data]="item"
             [actionType]="item.actionType"
             [type]="'view'"
-            (evtReply)="replyTo"
+            (evtDelete)="deleteComment($event)"
+            (evtReply)="replyTo($event)"
             [viewIcon]="false">
         </codx-comment-history>
         <ng-container *ngFor="let node of item.listSubComment">
@@ -24,7 +25,9 @@
                 [funcID]="'TMT0201'"
                 [actionType]="'C'"
                 [objectID]="'00cfeb10-a433-43e3-b6b3-876e25bf20a3'"
-                [objectType]="'TM_Tasks'">
+                [objectType]="'TM_Tasks'"
+                
+                >
             </codx-comment-history>
           </ng-container>
     </div>

@@ -9,17 +9,12 @@
       'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       data?.icon
     "
-    [status]="data.status"
+    [status]="data?.approveStatus"
     [icoStyle]="setStyles(data.color)"
     [statusVll]="'ES003'"
     [date]="data.createdOn"
     [resources]="data.createdBy != undefined ? data.createdBy : ''"
     [resourceObjType]="'AD_Users'"
-    [icoStatus]="data?.approveStatus"
-    [icoStatusVll]="'ES003'"
-    [icoStatus2]="data?.security"
-    [modeImgs]="false"
-    [bookmark]="data.isBookmark"
     [titleLine]="2"
     [icoDateCss]="'icon-access_alarm'"
     [dataItem]="data"
@@ -27,7 +22,6 @@
     (clickMF)="clickMF($event, data)"
     typeMF="hover"
     [dataItem]="data"
-    [baseHeaderRightTmp]="baseHeaderRight"
   >
   </codx-temp-full>
 </ng-template>
