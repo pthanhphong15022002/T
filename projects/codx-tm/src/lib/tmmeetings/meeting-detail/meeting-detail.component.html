@@ -94,10 +94,5 @@
 </div>
 
 <ng-template #templateMeeting>
-  <div class="text-dark fw-bolder">
-    ĐÃ THỰC HIỆN
-  </div>
-  <div *ngFor="let item of content1">
-    {{item.memo}}
-  </div>
+  <codx-note [showMenu]="true" [showMF]="true"></codx-note>
 </ng-template>
