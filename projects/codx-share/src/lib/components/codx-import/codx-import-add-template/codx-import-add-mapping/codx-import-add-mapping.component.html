@@ -64,7 +64,7 @@
       [dataSource]='dataImport2' 
       height="500" width="100%" 
       [editSettings]='editSettings' 
-      (load)='load($event)' 
+      (load)='load($event)'
       (actionComplete)='onActionComplete($event)' 
       [selectionSettings]='selectionOptions'
       (contextMenuOpen)="contextMenuOpen($event)" 
@@ -72,7 +72,11 @@
       [contextMenuItems]="contextMenuItems"
       > 
       <e-columns>
-        <e-column *ngFor="let item of fieldImport ; let i = index" [field]='item?.text' width="200"  [isPrimaryKey]='i==0?true:false' 
+        <e-column *ngFor="let item of fieldImport ; let i = index" 
+        [field]='item?.text' 
+        width="200"  
+        [isPrimaryKey]='i==0?true:false'
+        [headerText]="getHeaderText(item?.text)" 
         [editType]="getEditType(item?.controlType)" [type]="getType(item?.controlType)" 
         [edit]="(item?.type=='3' || item?.type == '2')?editParams[item?.text]:null" 
         [valueAccessor]="valueAccess"
