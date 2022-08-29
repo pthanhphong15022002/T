@@ -107,23 +107,21 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       if (input) input.focus();
     }
     this.lineType = type;
-    var value: any = input;
-    // if (this.listNote.length == 1)
     this.listNote[this.id].lineType = this.lineType;
-    //this.listNote[this.listNote.length - 1].lineType = this.lineType;
+    this.listNoteTemp.lineType = this.lineType;
+    if (this.lineType != 'TITLE') {
+      var divElement = this.currentElement.children[0] as HTMLElement;
+      var inputElement = divElement.children[0] as HTMLElement;
+      inputElement.style.setProperty('font-size', '13px', 'important');
+    }
 
-    // else {
-    //   this.listNote.forEach((dt) => {
-    //     if (dt.memo == '') dt.lineType = this.lineType;
-    //   });
-    // }
     if (type == 'TEXT') {
       this.setFormat(true, false, false);
     } else if (type == 'CHECKBOX') {
       this.setFormat(false, true, false);
-    } else {
+    } else if (type == 'LIST') {
       this.setFormat(false, false, true);
-    }
+    } else this.setFormat(false, false, false, true);
   }
 
   setFormat(text = true, checkBox = false, list = false, title = false) {
@@ -136,6 +134,12 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     // if (this.format.TEXT) this.currentElement.id = 'TEXT';
     // else if (this.format.LIST) this.currentElement.id = 'LIST';
     // else this.currentElement.id = 'CHECKBOX';
+    if (this.format.TITLE) {
+      var divElement = this.currentElement.children[0] as HTMLElement;
+      var inputElement = divElement.children[0] as HTMLElement;
+      inputElement.style.setProperty('font-size', '24px', 'important');
+      this.listNoteTemp.lineType = this.lineType;
+    }
   }
 
   setFont(bold = false, italic = false, underline = false) {
@@ -346,6 +350,17 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
           this.font.UNDERLINE = !this.font.UNDERLINE;
         }
       });
+      /*set property cho lineTpe là TITLE*/
+      if (this.listNoteTemp.lineType == 'TITLE') {
+        var divLastElement = ele[ele.length - 1].children[0] as HTMLElement;
+        var divElement = ele[ele.length - 2].children[0] as HTMLElement;
+
+        var inputLastElement = divLastElement.children[0] as HTMLElement;
+        inputLastElement.style.setProperty('font-size', '24px', 'important');
+        var inputElement = divElement.children[0] as HTMLElement;
+        inputElement.style.setProperty('font-size', '24px', 'important');
+      }
+      /*set property cho lineTpe là TITLE*/
       this.listNoteTemp.format = '';
       this.setFont();
     }
@@ -392,12 +407,13 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         else this.font.UNDERLINE = false;
         this.setColorForCodxColor(colorOfInputEle);
       }
-      this.lineType = this.listNote[this.id].lineType
+      this.lineType = this.listNote[this.id].lineType;
       if (this.listNote[this.id].lineType == 'TEXT') this.setFormat();
       else if (this.listNote[this.id].lineType == 'LIST')
         this.setFormat(false, false, true);
       else if (this.listNote[this.id].lineType == 'CHECKBOX')
         this.setFormat(false, true, false);
+      else this.setFormat(false, false, false, true);
     }
     this.dt.detectChanges();
   }
