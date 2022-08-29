@@ -572,6 +572,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             option
           )
           .closed.subscribe((x) => {
+            debugger;
             if (x.event) this.view.dataService.update(x.event).subscribe();
           });
         break;
