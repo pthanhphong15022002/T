@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import { AlertConfirmInputConfig, CallFuncService, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
@@ -17,6 +17,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() formModel: any;
   @Input() displayThumb: any;
   @Input() hideDelete = '1';
+  @Output() fileCount = new EventEmitter<any>();
   titleEditFileDialog = "Cập nhật file";
   titleUpdateFile = "Cập nhật file";
   titleUpdateShare = "Chia sẻ";
@@ -114,6 +115,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
               if (index > -1) {
                 list.splice(index, 1);//remove element from array
                 this.files = list;
+                this.fileCount.emit(this.files);
                 this.changeDetectorRef.detectChanges();
               }
             }

@@ -285,7 +285,9 @@ export class IncommingAddComponent implements OnInit {
     }
   }
   getfileCount(e: any) {
-    this.fileCount = e.data.length;
+    debugger
+    if(e && e?.data) this.fileCount = e.data.length;
+    else if(e) this.fileCount = e.length;
   }
   changeFormAgency(val: any) {
     this.showAgency = true;
@@ -310,10 +312,7 @@ export class IncommingAddComponent implements OnInit {
         return this.notifySvr.notifyCode('E0001', 0, field)
       }
     }
-    if((!this.fileCount || this.fileCount ==0) && (this.type == "add" || this.type == "copy")) 
-    {
-      return this.notifySvr.notifyCode('OD022');
-    }
+    if(!this.fileCount || this.fileCount ==0) return this.notifySvr.notifyCode('OD022');
     return true;
   };
 }

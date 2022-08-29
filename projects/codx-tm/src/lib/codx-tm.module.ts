@@ -106,36 +106,7 @@ export const routes: Routes = [
         path: 'compdashboard/:funcID',
         component: CompDashboardComponent,
       },
-      {
-        path: 'setting',
-        component: SettingComponent,
-        children: [
-          {
-            path: ':funcID',
-            component: HomeSettingComponent,
-          },
-          {
-            path: 'taskgroups/:funcID',
-            component: TaskGroupComponent,
-          },
-          {
-            path: 'rangeskanban/:funcID',
-            component: RangesKanbanComponent,
-          },
-          {
-            path: 'tmprojects/:funcID',
-            component: ProjectComponent,
-          },
-          {
-            path: 'projectgroups/:funcID',
-            component: ProjectgroupsComponent,
-          },
-          {
-            path: 'settingcalendar/:funcID',
-            component: CalendarComponent,
-          },
-        ],
-      },
+
       // {
       //   path: 'reports',
       //   component: ReportsComponent,
@@ -182,6 +153,42 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'setting',
+        component: SettingComponent,
+        children: [
+          {
+            path: ':funcID',
+            component: HomeSettingComponent,
+          },
+          {
+            path: 'taskgroups/:funcID',
+            component: TaskGroupComponent,
+          },
+          {
+            path: 'rangeskanban/:funcID',
+            component: RangesKanbanComponent,
+          },
+          {
+            path: 'tmprojects/:funcID',
+            component: ProjectComponent,
+          },
+          {
+            path: 'projectgroups/:funcID',
+            component: ProjectgroupsComponent,
+          },
+          {
+            path: 'settingcalendar/:funcID',
+            component: CalendarComponent,
+          },
+        ],
+      },
+    ],
+  }
 ];
 
 const T_Component: Type<any>[] = [

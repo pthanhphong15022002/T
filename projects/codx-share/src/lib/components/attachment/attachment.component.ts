@@ -1169,6 +1169,7 @@ export class AttachmentComponent implements OnInit {
   }
 
   onDeleteUploaded(file: string) {
+    debugger;
     let index = this.fileUploadList.findIndex(
       (d) => d.fileName.toString() === file.toString()
     ); //find index in your array
@@ -2727,5 +2728,9 @@ export class AttachmentComponent implements OnInit {
   clearData() {
     this.data = [];
     this.fileUploadList = [];
+  }
+  handleDeleteCount(e:any)
+  {
+    this.fileCount.emit(e);
   }
 }

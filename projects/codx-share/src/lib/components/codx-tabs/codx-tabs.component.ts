@@ -69,19 +69,12 @@ export class CodxTabsComponent implements OnInit {
   getfileCount(e: any) {
     console.log(e);
   }
-  lstComment:any = [];
-  // getListComment(){
-  //   this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
-  //   .subscribe((res:any[]) => {
-  //     console.log(res);
-  //     this.lstComment = res;
-  //   })
-  // }
-
+  lstHistory:any = [];
   getHistoryAsync(){
     let objectID = "00cfeb10-a433-43e3-b6b3-876e25bf20a3";
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetTrackLogsByObjectIDAsync" , objectID)
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetTrackLogsByObjectIDAsync" , [objectID])
     .subscribe((res:any[]) => {
+      this.lstHistory = res;
       console.log(res);
     });
   }
