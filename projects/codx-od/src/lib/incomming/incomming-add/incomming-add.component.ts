@@ -39,6 +39,7 @@ export class IncommingAddComponent implements OnInit {
   @ViewChild('myform') myForm: any;
   submitted = false;
   checkAgenciesErrors = false;
+  dltDis = false;
   change = 'ADMIN';
   data: any = {};
   dialog: any;
@@ -108,6 +109,7 @@ export class IncommingAddComponent implements OnInit {
   }
   fileAdded(event: any) {
     if (event?.data) this.hideThumb = true;
+    this.dltDis = false;
   }
 
   //Mở form thêm mới đơn vị / phòng ban
@@ -173,7 +175,6 @@ export class IncommingAddComponent implements OnInit {
   }
   //Các hàm value change
   changeValueAgency(event: any) {
-    debugger;
     //ktra nếu giá trị trả vô = giá trị trả ra return null
     //if(this.dispatch.agencyName == event.data[0]) return;
     if (!event.data) return ;
@@ -259,11 +260,10 @@ export class IncommingAddComponent implements OnInit {
         });
     } 
     else if (this.type == 'edit') {
-      let dltDis = true;
-      if (this.fileCount == 0) dltDis = false;
-      this.odService.updateDispatch(this.dispatch, dltDis).subscribe((item) => {
+      if(this.fileCount>0) this.dltDis = false;
+      this.odService.updateDispatch(this.dispatch, this.dltDis).subscribe((item) => {
         if (item.status == 0) {
-          if (dltDis)
+          if (this.dltDis == false)
           {
             this.attachment.objectId = item.data.recID;
             this.attachment.saveFilesObservable().subscribe((item2:any)=>{
@@ -286,9 +286,9 @@ export class IncommingAddComponent implements OnInit {
     }
   }
   getfileCount(e: any) {
-    debugger
     if(e && e?.data) this.fileCount = e.data.length;
     else if(e) this.fileCount = e.length;
+    if(this.fileCount == 0) this.dltDis = true
   }
   changeFormAgency(val: any) {
     this.showAgency = true;
@@ -306,6 +306,7 @@ export class IncommingAddComponent implements OnInit {
   checkIsRequired(){
     for(var i = 0 ; i< this.objRequied.length ; i++)
     {
+      debugger;
       var field = capitalizeFirstLetter(this.objRequied[i]);
       var data = this.dispatch[field];
       if(!data)
