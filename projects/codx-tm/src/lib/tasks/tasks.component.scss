@@ -51,11 +51,16 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
 
 codx-tabs .tab-comt {
     position: relative;
-    height: 334px;
+    height: 360px;
 
 }
 
 codx-tabs .tab-comt .tab_container {
-    height: 300px;
+    height: 296px;
     overflow: auto;
+}
+
+codx-view-list-detail .codx-detail-footer .tab-content {
+    height: 358px !important;
+    padding: 0 15px 0 10px !important;
 }
