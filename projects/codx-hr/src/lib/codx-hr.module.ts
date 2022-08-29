@@ -65,12 +65,12 @@ export const routes: Routes = [
       },
       {
         path: '',
-        component: LayoutComponent,
+        component: NoSubAsideComponent,
         children: [
-          {
-            path: 'contactbook/:funcID',
-            component: EmpContactsComponent,
-          },
+          // {
+          //   path: 'contactbook/:funcID',
+          //   component: EmpContactsComponent,
+          // },
           {
             path: 'employee/:funcID',
             component: EmployeesComponent,

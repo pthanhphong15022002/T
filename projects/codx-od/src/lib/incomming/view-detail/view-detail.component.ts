@@ -689,7 +689,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         break;
       }
       //Gửi email
-      case 'sendemail': {
+      case 'SYS004': {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         this.dialog = this.callfunc.openSide(
