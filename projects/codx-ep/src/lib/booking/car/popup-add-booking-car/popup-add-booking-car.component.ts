@@ -219,15 +219,6 @@ export class PopupAddBookingCarComponent implements OnInit {
                 this.lstPeople.push(tempPeople);
               });
 
-              // if(this.lstPeople.length == 1){
-              //   this.smallListPeople = this.lstPeople;
-              // }
-
-              // if(this.lstPeople.length >= 2) {
-              //   this.smallListPeople=null;
-              //   this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
-              // }
-
               this.changeDetectorRef.detectChanges();
             }
           });

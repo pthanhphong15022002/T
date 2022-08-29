@@ -126,12 +126,12 @@
       </div>
     </ng-container>
   </ng-container>
-  <ng-container *ngIf="name.toLowerCase() == 'reference'">
+  <ng-container *ngIf="name.toLowerCase() == 'assignto'">
     <ng-container>
-      <codx-references
+      <codx-view-assign
         [dataTree]="dataTree"
         [vllStatus]="vllStatus"
-      ></codx-references>
+      ></codx-view-assign>
       <!-- <div class="tab-tch">
         <div class="d-flex align-items-start justify-content-between">
           <div class="d-flex align-items-top mt-5">

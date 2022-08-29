@@ -37,9 +37,9 @@ export class DynamicSettingComponent implements OnInit {
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private codxService: CodxService
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngAfterViewInit(): void {
     this.views = [
