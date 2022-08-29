@@ -42,7 +42,7 @@ export class UpdateExtendComponent implements OnInit {
   ngOnInit(): void {
     this.updateForm = this.formBuilder.group(
       {
-        updateOn: [new Date() , Validators.required],
+        updateOn: [this.currentDate , Validators.required],
         percentage: [this.data?.percentage  , Validators.min(1)],
         comment: '',
         reporting: false
@@ -65,6 +65,10 @@ export class UpdateExtendComponent implements OnInit {
       if(val == 100) return;
       this.preValue = val;
     });
+  }
+  valueChangeDate(event:any)
+  {
+    this.updateForm.controls[event?.field].setValue(event?.data.fromDate);
   }
   valueChangePercentage100(e:any)
   {

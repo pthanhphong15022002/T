@@ -12,10 +12,11 @@
             <div class="col-5">
                 <codx-label [formModel]="dialog?.formModel" default='Ngày cập nhật'></codx-label>
                 <codx-input 
-                    type="dateTime" 
+                    type="datetime" 
                     format="d" 
-                    ControlName="updateOn"
-                    [Group]="updateForm"
+                    field="updateOn"
+                    (valueChange)="valueChangeDate($event)"
+                    [crrValue]="currentDate"
                     [disabled]="percentage100"
                     [ngClass]="{'is-invalid': submitted && f.updateOn.errors }"
                 >
