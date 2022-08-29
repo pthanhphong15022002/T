@@ -26,7 +26,7 @@
 
 .image-200>img {
     width: 100%;
-    height: 150px !important;
+    height: 200px !important;
 }
 
 .image-180>img {
@@ -41,7 +41,7 @@
 
 .image-125>img {
     width: 100%;
-    height: 125px;
+    height: auto;
 }
 
 .image>img {
@@ -75,3 +75,36 @@ codx-wrapper {
 //     border: 1px aqua solid;
 //     cursor: pointer;
 // }
+.carousel-control-prev,
+.carousel-control-next {
+    height: 200px !important;
+    width: 7%;
+}
+
+.carousel-inner .symbol.symbol-300px>img {
+    width: 100%;
+}
+
+.carousel-inner .video .image-200 {
+    position: relative;
+}
+
+.carousel-inner .video .image-200::before {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: -25px;
+    margin-top: -25px;
+    font-family: "icomoon" !important;
+    content: "\ec9e";
+    font-size: 40px;
+    display: block;
+    color: #fff;
+    opacity: .75;
+}
+
+.carousel-inner .video:hover .image-200::before {
+    opacity: 1;
+}
