@@ -23,10 +23,9 @@ import { AttachmentComponent } from '../attachment/attachment.component';
 })
 export class CodxReferencesComponent implements OnInit {
   @Input() formModel?: FormModel;
-  // @Input() data: any;
+  @Input() listData: any;
   @Input() vllStatus = 'TMT004';
   @Input() vllRefType = 'TM018';
-  dataVll: any;
   @ViewChild('attachment') attachment: AttachmentComponent;
   message: string = '';
   REFERTYPE = {
@@ -35,23 +34,33 @@ export class CodxReferencesComponent implements OnInit {
     APPLICATION: 'application',
   };
   lstFile: any[] = [];
-
-  data ={
-   memo :"Công văn dự án 1000 USD" ,
-   createByName :"Lê Thi Hoài Thương",
-   
-  }
+  //dataAvtar: any;
 
   constructor(private cache: CacheService, private dt: ChangeDetectorRef) {
-    this.cache.valueList(this.vllRefType).subscribe((res) => {
-      if (res) this.dataVll = res;
-    });
+    //data view test
+    this.listData = [
+      {
+        memo: 'Công văn dự án 1000 USD',
+        createByName: 'Lê Thi Hoài Thương',
+        createdOn: new Date(),
+        recID: '00cfeb10-a433-43e3-b6b3-876e25bf20a3',
+      },
+    ];
+
+    // this.cache.valueList(this.vllRefType).subscribe((res) => {
+    //   if (res) {
+    //     var dataVll = res.datas;
+    //     this.dataAvtar = dataVll.find(obj=>obj.value=='OD_Dispatches')
+    //   }
+    // });
   }
 
   ngOnInit(): void {}
   ngAfterViewInit(): void {}
 
-  uploadFile() {}
+  uploadFile() {
+    this.attachment.uploadFile();
+  }
 
   showComments() {}
 
