@@ -1,0 +1,17 @@
+<codx-views
+  #view
+  [autoLoad]="true"
+  entityName="HR_OrganizationUnits"
+  idField="orgUnitID"
+  [views]="views"
+  [selectedFirst]="false"
+  (selectedChange)="onSelectionChanged($event)"
+  [button]="button"
+  (viewChanged)="changeView($event)"
+></codx-views>
+<ng-template #templateDetail>
+  <div>khu vực vẽ org chart</div>
+</ng-template>
+<ng-template #templateTree let-data>
+  <span>{{ data.orgUnitName }}</span>
+</ng-template>
