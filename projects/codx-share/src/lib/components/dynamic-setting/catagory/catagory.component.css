@@ -1,0 +1,12 @@
+.list-item .share-box {
+    margin-left: 10px;
+}
+
+.list-item .share-box .btn.btn-icon {
+    height: 26px !important;
+    width: 26px !important;
+}
+
+.list-item .share-box .btn.btn-icon span {
+    font-size: 16px !important;
+}

@@ -2,53 +2,51 @@
 </codx-views>
 
 <ng-template #template>
-  <div class="content d-flex flex-column flex-column-fluid p-0" id="kt_content">
+  <div class="content h-100 d-flex flex-column flex-column-fluid p-0" id="kt_content">
     <!--<app-subheader></app-subheader>-->
-    <div id="erm_content" class="d-flex flex-column-fluid">
-      <div class="container bg-body rounded-3 p-6">
-        <div class="d-flex">
-          <div class="aside-detail flex-row-auto w-300px me-6">
-            <div class="aside-menu">
-              <ul class="menu-nav p-0">
-                <li class="menu-item" *ngFor="let item of itemMenu" (click)="navigate($event, item)"
-                  [attr.data-id]="item" [ngClass]="catagory === item ? 'menu-item-active' : ''">
-                  <a class="menu-link d-flex align-items-center">
-                    <i class="me-2" [ngClass]="item | vll: listName:'icon' | async"></i>
-                    {{ item | vll: listName:"text" | async }}
-                  </a>
-                </li>
-                <!-- <li class="menu-item">
-                  <a class="menu-link d-flex align-items-center">
-                    <i class="icon-format_list_bulleted icon-20 mr-2"></i>
-                    Danh mục
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a class="menu-link d-flex align-items-center">
-                    <i class="icon-account_balance_wallet icon-20 mr-2"></i>
-                    Ví nhân viên
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a class="menu-link d-flex align-items-center">
-                    <i class="icon-credit_card icon-20 mr-2"></i>
-                    Hạng cống hiến
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a class="menu-link d-flex align-items-center">
-                    <i class="icon-bar_chart icon-20 mr-2"></i>
-                    Thống kê
-                  </a>
-                </li> -->
-              </ul>
-            </div>
+    <div id="erm_content" class="d-flex flex-column-fluid h-100">
+      <div class="d-flex container h-100">
+        <div class="aside-detail flex-row-auto w-250px me-6">
+          <div class="aside-menu">
+            <ul class="menu-nav p-0">
+              <li class="menu-item" *ngFor="let item of itemMenu" (click)="navigate($event, item)" [attr.data-id]="item"
+                [ngClass]="catagory === item ? 'menu-item-active' : ''">
+                <a class="menu-link d-flex align-items-center fw-bold text-dark">
+                  <i class="me-2" [ngClass]="item | vll: listName:'icon' | async"></i>
+                  {{ item | vll: listName:"text" | async }}
+                </a>
+              </li>
+              <!-- <li class="menu-item">
+                <a class="menu-link d-flex align-items-center">
+                  <i class="icon-format_list_bulleted icon-20 mr-2"></i>
+                  Danh mục
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link d-flex align-items-center">
+                  <i class="icon-account_balance_wallet icon-20 mr-2"></i>
+                  Ví nhân viên
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link d-flex align-items-center">
+                  <i class="icon-credit_card icon-20 mr-2"></i>
+                  Hạng cống hiến
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link d-flex align-items-center">
+                  <i class="icon-bar_chart icon-20 mr-2"></i>
+                  Thống kê
+                </a>
+              </li> -->
+            </ul>
           </div>
-          <div class="d-flex flex-column flex-grow-1">
-            <ng-container *ngIf="loaded">
-              <router-outlet></router-outlet>
-            </ng-container>
-          </div>
+        </div>
+        <div class="bg-body rounded-3 p-6 flex-grow-1 h-100">
+          <ng-container *ngIf="loaded">
+            <router-outlet></router-outlet>
+          </ng-container>
         </div>
       </div>
     </div>
