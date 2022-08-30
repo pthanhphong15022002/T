@@ -76,7 +76,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   @Input() className = '';
   @Input() method = '';
   @Input() refID = '';
-  @Input() data = '';
+  @Input() data = [];
   @ViewChild('input') input: any;
 
   constructor(
@@ -110,7 +110,13 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     }
     if (this.data.length > 0) {
       this.listNote = this.data;
+      this.setProperty();
     }
+  }
+
+  setProperty() {
+    var ele = document.querySelectorAll('codx-input[type="text"]');
+    debugger;
   }
 
   chooseType(type: any, ele: any) {
@@ -385,22 +391,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   delete() {}
-
-  refresh() {
-    this.listNote = [
-      {
-        memo: null,
-        status: null,
-        textColor: null,
-        format: null,
-        lineType: null,
-      },
-    ];
-    this.currentElement = null;
-    this.setFont();
-    this.setFormat();
-    this.dt.detectChanges();
-  }
 
   getElement(ele: any) {
     this.currentElement = ele.elRef.nativeElement as HTMLElement;
