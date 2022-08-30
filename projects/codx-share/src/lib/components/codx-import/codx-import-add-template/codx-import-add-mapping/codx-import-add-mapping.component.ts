@@ -21,6 +21,7 @@ import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, DataRequest, DataService, DialogData, DialogModel, DialogRef, NotificationsService } from 'codx-core';
 import { Observable, finalize, map, of } from 'rxjs';
 import { MouseEventArgs } from '@syncfusion/ej2-base';
+import { IETables } from '../../models/import.model';
 @Component({
   selector: 'codx-import-add-mapping',
   templateUrl: './codx-import-add-mapping.component.html',
@@ -50,7 +51,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   sessionID: any;
   mappingTemplate: any;
   dataIEConnection:any = {};
-  dataIETable:any = {};
+  dataIETable:IETables = new IETables();
   dataIEMapping:any = {};
   addMappingForm :any;
   dataCbb= {}
@@ -58,6 +59,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   element:any={};
   dropObj:any={};
   paramsCbb = {};
+  type = 'new';
   public isDropdown = true;
   selectionOptions: SelectionSettingsModel;
   customerIDRules:object;
@@ -75,15 +77,17 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger;
+  
     this.dialog = dialog;
     this.formModel = dt.data?.[0];
-    this.dataIEConnection = dt.data?.[1]
-    this.dataIETable = dt.data?.[2];
-    this.dataIEMapping = dt.data?.[3];
+    this.dataIEConnection = dt.data?.[1];
+    if(dt.data?.[2]) this.dataIETable = dt.data?.[2];
+    if(dt.data?.[3]) this.dataIEMapping = dt.data?.[3];
+    this.type = dt.data?.[4];
   }
   
   ngOnInit(): void {
+    debugger;
     this.formModels = {
       formName: 'ImportFieldMapping',
       gridViewName : 'grvFieldMapping'
@@ -107,8 +111,9 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       { text: 'Copy', target: '.e-content', id: 'customCopy' },
       { text: 'Paste', target: '.e-content', id: 'customPaste' }
     ];
+    this.createData();
     this.addMappingForm = this.formBuilder.group({
-      mappingName: [this.dataIEMapping?.mappingName],
+      mappingName: [this.dataIETable?.mappingName],
       processIndex: [this.dataIETable?.processIndex],
       destinationTable: [this.dataIETable?.destinationTable],
       parentEntity:[this.dataIETable?.parentEntity],
@@ -120,9 +125,18 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
 
   createData()
   {
-    if(!this.dataIETable)
+    if(this.type == "new")
     {
-      var recIDIETables = crypto.randomUUID();
+      //IETable
+      this.dataIETable = new IETables();
+      this.dataIETable.recID = crypto.randomUUID();
+      this.dataIETable.sessionID = this.dataIEConnection.recID;
+      this.dataIETable.mappingTemplate = this.dataIEConnection.mappingTemplate
+      //IEMapping
+      this.dataIEMapping.recID= crypto.randomUUID();
+      this.dataIEMapping.mappingName= "";
+      this.dataIEMapping.tableName = "";
+      this.dataIEMapping.importRule = "";
     }
   }
 
@@ -149,7 +163,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
         dropdownObj.element.focus();
         dropdownObj.showPopup();
     }
-}
+  }
   ngOnChanges(changes: SimpleChanges) { }
  
   fileAdded(event: any) {
@@ -160,15 +174,23 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   onSave()
   {
+    debugger;
     this.grid.endEdit();
+    var result = this.grid.dataSource;
     this.addMappingForm.value.parentEntity = this.addMappingForm.value?.parentEntity[0];
-    this.dataIETable.mappingName = this.addMappingForm.value?.mappingName;
+    this.dataIETable.mappingName = this.dataIEMapping.mappingName = this.addMappingForm.value?.mappingName;
     this.dataIETable.processIndex = this.addMappingForm.value?.processIndex;
-    this.dataIETable.destinationTable = this.addMappingForm.value?.destinationTable;
+    this.dataIETable.destinationTable = this.dataIEMapping.tableName = this.addMappingForm.value?.destinationTable;
     this.dataIETable.parentEntity = this.addMappingForm.value?.parentEntity;
-    this.dataIETable.importRule = this.addMappingForm.value?.importRule;
+    this.dataIETable.importRule = this.dataIEMapping.importRule = this.addMappingForm.value?.importRule;
     this.dataIETable.isSummary = this.addMappingForm.value?.isSummary;
-    this.dialog.close([this.dataIETable , this.grid.dataSource]);
+    for(var i =0 ; i<(result as any).length ; i++)
+    {
+      result[i].recID = this.dataIETable.recID;
+      result[i].sessionID = this.dataIEMapping.recID;
+      result[i].mappingTemplate = this.dataIETable.mappingTemplate;
+    }
+    this.dialog.close([this.dataIETable , this.dataIEMapping , result]);
   }
   addItem()
   {
@@ -246,7 +268,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
                     this.dropObj[keys].destroy(); 
                   }, 
                   write: (args: { rowData: object, column: Column }) => { 
-                    debugger;
                     var fields = {text: 'text', value: 'value'};
                     if(item[keys].referedType=="3") fields = this.paramsCbb[val];
                     this.dropObj[keys] = new DropDownList({ 
@@ -278,12 +299,19 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       item[field] = value[0].text
     }
   }
-  changeValueCBB(data:any , field:any, check=false)
+  changeValueCBB(data:any, check=false)
   {
-    debugger;
-    this.addMappingForm.get(field).setValue(data?.data);
-    if(data?.component?.itemsSelected && check)
-      this.addMappingForm.get("destinationTable").setValue(data?.component?.itemsSelected[0]?.TableName);
+    if(this.addMappingForm)
+    {
+      var result = data?.data;
+      if(data?.component?.itemsSelected && check)
+      {
+        result = data?.component?.itemsSelected[0]?.MappingName;
+        this.addMappingForm.get("destinationTable").setValue(data?.component?.itemsSelected[0]?.TableName);
+      }
+      this.addMappingForm.get(data?.field).setValue(result);
+    }
+    
   }
   clicktest()
   {
