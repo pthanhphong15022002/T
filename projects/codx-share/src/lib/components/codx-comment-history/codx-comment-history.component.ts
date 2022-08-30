@@ -22,6 +22,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() type: "view" | "create" = "view";
   @Input() data:any;
   @Input() viewIcon:boolean = true;
+  @Input()  allowVotes:boolean = true;
   @Output() evtReply = new EventEmitter;
   @Output() evtDelete = new EventEmitter;
   @Output() evtSend = new EventEmitter;
@@ -129,13 +130,12 @@ export class CodxCommentHistoryComponent implements OnInit {
     data.objectType = this.objectType;
     data.actionType = this.actionType;
     data.functionID = this.funcID;
-    data.references = this.reference;
+    data.reference = this.reference;
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
     .subscribe((res1:any) => {
       if(res1){
         if(data.attachments > 0)
         {
-          this.codxATM.functionID = this.objectID;
           this.codxATM.objectId = res1.recID;
           this.codxATM.objectType = "BG_TrackLogs";
           this.codxATM.fileUploadList = this.lstFile;
@@ -175,6 +175,28 @@ export class CodxCommentHistoryComponent implements OnInit {
 
   votePost(data: any, voteType = null) 
   {
-    
+    this.api.execSv(
+      "BG",
+      "ERM.Business.BG",
+      "TrackLogsBusiness",
+      "VoteCommentAsync",
+      [data.recID, voteType])
+      .subscribe((res: any) => {
+        if (res) {
+          data.votes = res[0];
+          data.totalVote = res[1];
+          data.listVoteType = res[2];
+          if (voteType == data.myVotedType) {
+            data.myVotedType = null;
+            data.myVoted = false;
+          }
+          else {
+            data.myVotedType = voteType;
+            data.myVoted = true;
+          }
+          this.dt.detectChanges();
+        }
+
+      });
   }
 }

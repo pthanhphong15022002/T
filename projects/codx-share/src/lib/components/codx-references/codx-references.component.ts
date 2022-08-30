@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import {
   ChangeDetectorRef,
   Component,
@@ -20,9 +21,11 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   selector: 'codx-references',
   templateUrl: './codx-references.component.html',
   styleUrls: ['./codx-references.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CodxReferencesComponent implements OnInit {
-  @Input() formModel?: FormModel// khởi tạo để test,, sau có thể xóa
+  @Input() funcID?: string// khởi tạo để test,, sau có thể xóa
+  @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
   @Input() vllRefType = 'TM018';
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -36,13 +39,13 @@ export class CodxReferencesComponent implements OnInit {
   //dataAvtar: any;
 
   constructor(private cache: CacheService, private dt: ChangeDetectorRef) {
-   
+
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   ngAfterViewInit(): void {
-     //data view test
-     this.dataReferences = [
+    //data view test
+    this.dataReferences = [
       {
         memo: 'Công văn dự án 1000 USD',
         createByName: 'Lê Thi Hoài Thương',
@@ -57,7 +60,7 @@ export class CodxReferencesComponent implements OnInit {
     this.attachment.uploadFile();
   }
 
-  showComments() {}
+  showComments() { }
 
   selectedFiles(event: any) {
     if (event.data.length > 0) {

@@ -191,20 +191,20 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     this.tmService.getDeptDBData(this.model).subscribe((res: any) => {
       const {
         tasksByGroup,
-        tasksByOrgUnit,
+        taskByOrgUnitWithName,
         status,
         dataBarChart,
-        rateDoneOnTime,
-        vltasksByOrgUnit,
-        hoursByOrgUnit,
+        orgUnitRateDoneWithName,
+        vltasksByOrgUnitWithName,
+        hoursByOrgUnitWithName,
         topEmps,
         lastEmps,
       } = res;
       this.tasksByGroup = tasksByGroup;
-      this.tasksByOrgUnit = tasksByOrgUnit;
+      this.tasksByOrgUnit = taskByOrgUnitWithName;
       this.status = status;
       this.dataBarChart = dataBarChart;
-      vltasksByOrgUnit.map((data) => {
+      vltasksByOrgUnitWithName.map((data) => {
         let newTasks = 0;
         let processingTasks = 0;
         let doneTasks = 0;
@@ -231,6 +231,7 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
         });
         this.vlWork.push({
           id: data.id,
+          orgUnitName: data.orgUnitName,
           qtyTasks: data.qtyTasks,
           status: {
             new: (newTasks / data.qtyTasks) * 100,
@@ -241,8 +242,8 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
           },
         });
       });
-      this.hrWork = hoursByOrgUnit;
-      this.groups = rateDoneOnTime;
+      this.hrWork = hoursByOrgUnitWithName;
+      this.groups = orgUnitRateDoneWithName;
       this.topEmps = topEmps;
       this.lastEmps = lastEmps;
       this.detectorRef.detectChanges();
