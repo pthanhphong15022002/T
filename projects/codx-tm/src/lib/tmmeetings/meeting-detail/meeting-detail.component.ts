@@ -49,6 +49,7 @@ export class MeetingDetailComponent extends UIComponent {
   content1: CO_Content[] = [];
   tabControl: TabControl[] = [];
   active = 1;
+  functionParent :any
 
   constructor(
     private injector: Injector,
@@ -62,6 +63,7 @@ export class MeetingDetailComponent extends UIComponent {
     super(injector);
     this.getQueryParams();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.functionParent = this.tmService.functionParent ;
     // this.route.params.subscribe((params) => {
     //   if (params) this.funcID = params['funcID'];
     // });
@@ -209,12 +211,13 @@ export class MeetingDetailComponent extends UIComponent {
 
   lstComment: any = [];
   getListComment() {
-    var objectID = this.meetingID;
-    this.api
-      .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetHistoryByObjectIDAsync', [objectID,'C'])
-      .subscribe((res: any[]) => {
-        console.log(res);
-        this.lstComment = res;
-      });
+    console.log(this.meetingID);
+    // var objectID = this.meetingID;
+    // this.api
+    //   .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetHistoryByObjectIDAsync', [objectID,'C'])
+    //   .subscribe((res: any[]) => {
+    //     console.log(res);
+    //     this.lstComment = res;
+    //   });
   }
 }

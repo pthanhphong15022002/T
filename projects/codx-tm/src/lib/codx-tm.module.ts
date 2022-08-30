@@ -24,6 +24,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { InlineSVGModule } from 'ng-inline-svg';
 import {
   AccumulationChartAllModule,
+  AccumulationTooltipService,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
@@ -62,7 +63,6 @@ import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.co
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
 import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
-import { CodxTasksComponent } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.component';
 
 export const routes: Routes = [
   {
@@ -188,7 +188,7 @@ export const routes: Routes = [
         ],
       },
     ],
-  }
+  },
 ];
 
 const T_Component: Type<any>[] = [
@@ -249,10 +249,11 @@ const T_Component: Type<any>[] = [
     FormsModule,
     NgbModule,
     SplitterModule,
-    CodxReportModule
+    CodxReportModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,
+  providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class TMModule {

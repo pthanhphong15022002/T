@@ -58,6 +58,7 @@ export class SprintsComponent extends UIComponent {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.tmSv.functionParent = this.funcID ;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
         this.tmSv.urlback = f.url;

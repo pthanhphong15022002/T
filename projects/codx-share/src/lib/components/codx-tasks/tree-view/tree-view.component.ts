@@ -20,7 +20,7 @@ import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel, View
 export class TreeViewComponent implements OnInit, AfterViewInit {
 
   //#region Constructor
-  @Input() id: any
+  @Input() data: any
   @Input() formModel?: FormModel;
   @Input() dataService: DataService;
   @Input() vllStatus?: any;
@@ -29,7 +29,6 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
   listDataTree: any[] = [];
   dataTree: any[] = [];
-  data: any;
   dialog: any;
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() clickShowTaskChildren = new EventEmitter<any>();
@@ -52,13 +51,13 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         'TM',
         'ERM.Business.TM',
         'TaskBusiness',
-        'GetListTree',
-        this.id
+        'GetListTasksChildrenDeTailsTreeOneStepAsync',
+        this.data.taskID
       )
       .subscribe((res) => {
         if (res) {
-          // this.data.items = res;
-          // this.listDataTree.push(this.data)
+          this.data.items = res;
+          this.listDataTree.push(this.data)
         }
       });
   }
@@ -106,7 +105,6 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
           var index = this.listDataTree.findIndex(x => x.taskID == res[0].taskID);
           if (index != -1)
             this.listDataTree[index] = res[0];
-          //  this.changeDetectorRef.detectChanges();
         }
       });
   }

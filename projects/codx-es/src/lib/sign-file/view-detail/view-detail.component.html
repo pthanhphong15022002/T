@@ -293,11 +293,11 @@
         </ng-container> -->
       </div>
       <div *ngIf="itemDetailStt == '3'" class="mb-2">
-        <lib-view-approval-process
+        <codx-approval-step
           [transID]="transID"
           [approveStatus]="itemDetail?.approveStatus"
         >
-        </lib-view-approval-process>
+        </codx-approval-step>
       </div>
     </div>
   </ng-template>
