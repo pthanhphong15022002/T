@@ -112,7 +112,7 @@
   </ng-container>
   <ng-container *ngIf="name.toLowerCase() == 'references'">
     <ng-container>
-      <codx-references [formModel]="formModel" [dataReferences]="dataReferences"  [vllRefType]="vllRefType"></codx-references>
+      <codx-references [entityName]="'OD_Dispatches'" [funcID]="funcID" [dataReferences]="dataReferences"  [vllRefType]="vllRefType"></codx-references>
     </ng-container>
   </ng-container>
   <ng-container *ngIf="name.toLowerCase() == 'approve'">
