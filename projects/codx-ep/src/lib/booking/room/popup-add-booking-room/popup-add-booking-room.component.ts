@@ -145,7 +145,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
         console.log('grvEPT1', res);
         this.grvBookingRoom=res;
       })
-
       this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
@@ -207,11 +206,34 @@ export class PopupAddBookingRoomComponent implements OnInit {
                 objectType:undefined,
                 objectName:undefined
               };
-              this.lstPeople.push(tempPeople);
+              if(this.authService.userValue.userID==people.userID){
+                this.curUser=tempPeople;
+              }
+              else{
+                this.lstPeople.push(tempPeople);
+              }
             });      
             this.changeDetectorRef.detectChanges();
           }
-        });           
+        });
+        
+        this.apiHttpService
+        .callSv('EP', 'ERM.Business.EP', 'BookingItemsBusiness','GetAsync', [this.data.recID])
+        .subscribe((res) => {
+          if(res){
+            res.msgBodyData[0].forEach(stationery=>{
+              let order :{id: string, quantity:number, text: string, objectType: string, objectName: string}={                
+                id:stationery.itemID,
+                text:stationery.itemName,
+                quantity:stationery.quantity,
+                objectType:undefined,
+                objectName:undefined
+              };
+              this.lstStationery.push(order);
+            });      
+            this.changeDetectorRef.detectChanges();
+          }
+        });  
       }
       this.initForm();      
     });
@@ -247,8 +269,10 @@ export class PopupAddBookingRoomComponent implements OnInit {
           if(!this.isAdd){            
             if(this.fGroupAddBookingRoom.value.hours==24){
               this.isFullDay=true;
-            }         
-            //this.startTime=this.fGroupAddBookingRoom.value.startDate.getHours()+':'+this.fGroupAddBookingRoom.value.startDate.getMinutes();
+            }     
+            this.startTime=this.fGroupAddBookingRoom.value.startDate.toString().slice(16,21);
+            this.endTime=this.fGroupAddBookingRoom.value.endDate.toString().slice(16,21);
+                      
           }
         } 
       });     
@@ -269,10 +293,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
         this.strAttendees += ';' + people.id;
       }
     });
-    
-    console.log('data',this.fGroupAddBookingRoom.value);
-    console.log('people',this.strAttendees);
-    console.log('orderStationery',this.lstStationery);
     
     // if (this.fGroupAddBookingRoom.invalid == true) {
     //   return;
@@ -306,12 +326,12 @@ export class PopupAddBookingRoomComponent implements OnInit {
       }
     });
     this.fGroupAddBookingRoom.patchValue({ equipments: availableEquip + '|' + pickedEquip });
+    this.fGroupAddBookingRoom.patchValue({resourceID: this.fGroupAddBookingRoom.value.resourceID[0]}); 
     if (this.isAdd) {
       this.fGroupAddBookingRoom.patchValue({
         category: '1',
         status: '1',
         resourceType: '1',
-        resourceID: this.fGroupAddBookingRoom.value.resourceID[0],
         attendees:this.lstPeople.length +1,
       });      
     }

@@ -71,10 +71,15 @@ export class MeetingDetailComponent extends UIComponent {
     //   }
     // });
     this.urlDetail = 'tm/sprintdetails/TMT03011';
+    this.loadData();
   }
 
   onInit(): void {
-    this.loadData();
+    this.getListComment();
+
+  }
+
+  ngAfterViewInit(): void {
     if (this.tabControl.length == 0) {
       this.all.forEach((res, index) => {
         var tabModel = new TabControl();
@@ -89,10 +94,6 @@ export class MeetingDetailComponent extends UIComponent {
       );
     }
     this.changeDetectorRef.detectChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.getListComment();
   }
 
   loadData() {
@@ -139,6 +140,7 @@ export class MeetingDetailComponent extends UIComponent {
 
   clickMenu(item) {
     this.name = item.name;
+
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {
         obj.isActive = false;
@@ -146,6 +148,7 @@ export class MeetingDetailComponent extends UIComponent {
       }
     });
     item.isActive = true;
+
     this.changeDetectorRef.detectChanges();
   }
 
@@ -206,8 +209,9 @@ export class MeetingDetailComponent extends UIComponent {
 
   lstComment: any = [];
   getListComment() {
+    var objectID = this.meetingID;
     this.api
-      .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetHistoryByObjectIDAsync', [this.meeting.recID,'C'])
+      .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetHistoryByObjectIDAsync', [objectID,'C'])
       .subscribe((res: any[]) => {
         console.log(res);
         this.lstComment = res;

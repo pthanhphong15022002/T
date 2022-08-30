@@ -34,10 +34,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   endMonth: Date;
   user: any;
   isDesc: boolean = true;
-  availability: number = 0;
-  performance: number = 0;
-  quality: number = 0;
-  kpi: number = 0;
   tasksByGroup: object;
   status: any = {
     doneTasks: 0,
@@ -208,10 +204,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
           vltasksByEmp,
           hoursByEmp,
         } = res;
-        this.availability = efficiency.availability.toFixed(2);
-        this.performance = efficiency.performance.toFixed(2);
-        this.quality = efficiency.quality.toFixed(2);
-        this.kpi = efficiency.kpi.toFixed(2);
         this.tasksByGroup = tasksByGroup;
         this.status = status;
         this.dataBarChart = dataBarChart;
@@ -244,7 +236,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
           let processingTasks = 0;
           let doneTasks = 0;
           let postponeTasks = 0;
-          let cancelTasks = 0;
           task.tasks.map((task) => {
             switch (task.status) {
               case StatusTask.New:
@@ -259,9 +250,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
               case StatusTask.Postpone:
                 postponeTasks = postponeTasks + 1;
                 break;
-              case StatusTask.Cancelled:
-                cancelTasks = cancelTasks + 1;
-                break;
             }
           });
           this.vlWork.push({
@@ -271,12 +259,11 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
               new: (newTasks / task.qtyTasks) * 100,
               processing: (processingTasks / task.qtyTasks) * 100,
               done: (doneTasks / task.qtyTasks) * 100,
-              postpone: (postponeTasks / task.qtyTasks) * 100,
-              cancel: (cancelTasks / task.qtyTasks) * 100,
             },
           });
         });
         this.hrWork = hoursByEmp;
+        console.log(this.vlWork)
         this.detectorRef.detectChanges();
       }
     });

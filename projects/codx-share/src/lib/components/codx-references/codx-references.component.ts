@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
@@ -7,6 +14,7 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
+import { AttachmentComponent } from '../attachment/attachment.component';
 
 @Component({
   selector: 'codx-references',
@@ -15,17 +23,67 @@ import {
 })
 export class CodxReferencesComponent implements OnInit {
   @Input() formModel?: FormModel;
-  @Input() data : any;
+  @Input() dataReferences: any[];
   @Input() vllStatus = 'TMT004';
   @Input() vllRefType = 'TM018';
-  dataVll: any;
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  message: string = '';
+  REFERTYPE = {
+    IMAGE: 'image',
+    VIDEO: 'video',
+    APPLICATION: 'application',
+  };
+  lstFile: any[] = [];
+  //dataAvtar: any;
 
-  constructor(private cache: CacheService) {
-    this.cache.valueList(this.vllRefType).subscribe((res) => {
-      if (res) this.dataVll = res;
-    });
+  constructor(private cache: CacheService, private dt: ChangeDetectorRef) {
+   
+
+    // this.cache.valueList(this.vllRefType).subscribe((res) => {
+    //   if (res) {
+    //     var dataVll = res.datas;
+    //     this.dataAvtar = dataVll.find(obj=>obj.value=='OD_Dispatches')
+    //   }
+    // });
   }
 
   ngOnInit(): void {}
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+     //data view test
+     this.dataReferences = [
+      {
+        memo: 'Công văn dự án 1000 USD',
+        createByName: 'Lê Thi Hoài Thương',
+        createdOn: new Date(),
+        recID: '00cfeb10-a433-43e3-b6b3-876e25bf20a3',
+      },
+    ];
+  }
+
+  uploadFile() {
+    this.attachment.uploadFile();
+  }
+
+  showComments() {}
+
+  selectedFiles(event: any) {
+    if (event.data.length > 0) {
+      let files = event.data;
+      files.map((e: any) => {
+        if (e.mimeType.indexOf('image') >= 0) {
+          e['referType'] = this.REFERTYPE.IMAGE;
+        } else if (e.mimeType.indexOf('video') >= 0) {
+          e['referType'] = this.REFERTYPE.VIDEO;
+        } else {
+          e['referType'] = this.REFERTYPE.APPLICATION;
+        }
+      });
+      this.lstFile = files;
+      this.dt.detectChanges();
+    }
+  }
+  removeFile(file: any) {
+    this.lstFile = this.lstFile.filter((e: any) => e.fileName != file.fileName);
+    this.dt.detectChanges();
+  }
 }

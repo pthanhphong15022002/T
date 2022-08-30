@@ -50,14 +50,16 @@ td {
 .e-grid td.e-active {
   background: #f2f9fb;
 }
+
 /***/
-.rowphoto{
+.rowphoto {
   padding: 0.75rem 0.75rem;
   background-color: var(--bs-table-bg);
   border-bottom-width: 1px;
-  border-bottom-color: rgba(0,0,0,0.08);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
   box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
 }
+
 .e-columnheader {
   background-color: #f1f1f1;
   border-bottom-color: #dee2e6;
@@ -75,6 +77,8 @@ td {
 .center {
   margin: auto;
   width: 50%;
+  display: flex;
+  justify-content: center;
 }
 
 .w-20 {

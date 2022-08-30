@@ -1,10 +1,11 @@
 .user-inf {
     margin-top: -75px;
 }
-.edit-btn-float{       
+
+.edit-btn-float {
     position: fixed;
-    bottom:10px;
-	right:10px;
+    bottom: 10px !important;
+    right: -36px;
     cursor: pointer;
     z-index: 100;
     display: -webkit-inline-box;
@@ -20,15 +21,16 @@
     font-size: 24px;
     border-radius: 100%;
     -webkit-box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);  
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
+
 .edit-btn-float:hover {
     background-color: #03a9f4;
 }
 
 .edit-btn-float span {
     color: #fff;
-    font-size: 24px!important;
+    font-size: 24px !important;
 }
 
 .edit-btn-float[data-title]:hover:before {
@@ -55,4 +57,3 @@
     border: 8px solid transparent;
     border-top: 8px solid #252d42;
 }
-

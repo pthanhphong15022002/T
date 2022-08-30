@@ -44,7 +44,7 @@ export class PopupAddMeetingComponent implements OnInit {
   title = '';
   showPlan = true;
   data: any;
-  readOnly= false;
+  readOnly = false;
   isFullDay: boolean;
   beginHour = 0;
   beginMinute = 0;
@@ -65,6 +65,9 @@ export class PopupAddMeetingComponent implements OnInit {
   templateName: any;
   isCheckTask = true;
   selectedDate = new Date();
+  isHaveFile = false;
+  showLabelAttacment = false;
+
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -170,13 +173,11 @@ export class PopupAddMeetingComponent implements OnInit {
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       this.meeting.meetingType = '1';
-      this.meeting.resources['taskControl'] = this.isCheckTask;
       data = [this.meeting, this.functionID];
     } else if (this.action == 'edit') {
       op.method = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
-      this.meeting.resources['taskControl'] = this.isCheckTask;
-      data = [this.meeting];
+      data = [this.meeting, this.functionID];
     }
 
     op.data = data;
@@ -189,6 +190,7 @@ export class PopupAddMeetingComponent implements OnInit {
       .subscribe((res) => {
         this.dialog.dataService.addDatas.clear();
         this.dialog.close(res.save[0]);
+        this.attachment.clearData();
       });
   }
 
@@ -198,15 +200,26 @@ export class PopupAddMeetingComponent implements OnInit {
       .subscribe((res) => {
         this.dialog.dataService.addDatas.clear();
         if (res.update) {
-          this.meeting == res.update[0];
+          this.meeting == res.update;
           this.dialog.close(this.meeting);
+          this.attachment.clearData();
         }
       });
   }
 
   onSave() {
-    if (this.action === 'add') return this.onAdd();
-    return this.onUpdate();
+    if (this.attachment.fileUploadList.length)
+      this.attachment.saveFilesObservable().subscribe((res) => {
+        if (res) {
+          this.meeting.attachments = Array.isArray(res) ? res.length : 1;
+          if (this.action === 'add') this.onAdd();
+          else this.onUpdate();
+        }
+      });
+    else {
+      if (this.action === 'add') this.onAdd();
+      else this.onUpdate();
+    }
   }
 
   tabInfo: any[] = [
@@ -218,7 +231,6 @@ export class PopupAddMeetingComponent implements OnInit {
     },
     { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'Open' },
     { icon: 'icon-playlist_add_check', text: 'Công việc review', name: 'Job' },
-
   ];
 
   setTitle(e: any) {
@@ -230,7 +242,7 @@ export class PopupAddMeetingComponent implements OnInit {
     this.changDetec.detectChanges();
   }
 
-  valueCbx(id,e) {
+  valueCbx(id, e) {
     console.log(e);
     this.meeting.resources.forEach((res) => {
       if (res.resourceID == id) res.taskControl = e.data;
@@ -510,5 +522,14 @@ export class PopupAddMeetingComponent implements OnInit {
 
   addFile(evt: any) {
     this.attachment.uploadFile();
+  }
+
+  fileAdded(e) {
+    console.log(e);
+  }
+  getfileCount(e) {
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    if (this.action != 'edit') this.showLabelAttacment = this.isHaveFile;
   }
 }
