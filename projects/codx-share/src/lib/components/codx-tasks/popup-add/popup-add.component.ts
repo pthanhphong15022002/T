@@ -769,7 +769,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         'HR',
         'EmployeesBusiness',
         'GetListEmployeesByUserIDAsync',
-        JSON.stringify(listUser)
+        JSON.stringify(this.listUser)
       )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);

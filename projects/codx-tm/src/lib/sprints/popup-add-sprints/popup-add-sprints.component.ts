@@ -170,7 +170,7 @@ export class PopupAddSprintsComponent implements OnInit {
         'HR',
         'EmployeesBusiness',
         'GetListEmployeesByUserIDAsync',
-        JSON.stringify(listUser)
+        JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);
