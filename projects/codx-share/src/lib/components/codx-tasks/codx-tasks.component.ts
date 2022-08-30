@@ -1314,6 +1314,7 @@ export class CodxTasksComponent
 
   //#region  tree
   loadTreeView() {
+    this.dataTree =[]
     if (!this.itemSelected || !this.itemSelected?.taskID) return;
     this.api
       .execSv<any>(
@@ -1479,7 +1480,7 @@ export class CodxTasksComponent
             ref.recIDReferences = res.recID;
             ref.refType = 'TM_Tasks';
             ref.createdOn = res.createdOn;
-            ref.memo = res.title;
+            ref.memo = res.taskName;
             ref.createdBy = res.createdBy;
             this.api
               .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
