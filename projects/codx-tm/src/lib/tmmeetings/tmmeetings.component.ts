@@ -94,9 +94,11 @@ export class TMMeetingsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.tmService.functionParent = this.funcID ;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
        this.tmService.urlback = f.url ;
+      
       }
     });
     if (this.funcID == 'TMT03011') {
