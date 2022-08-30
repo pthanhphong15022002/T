@@ -14,7 +14,12 @@
         <e-tabitems>
           <e-tabitem>
             <ng-template #headerText>
-              {{ headerLeftName[0].text }}
+              <codx-label
+                name="lblHeaderLeft0"
+                [formModel]=""
+                [default]="headerLeftName[0].text"
+                class="fw-bold text-primary"
+              ></codx-label>
             </ng-template>
             <ng-template #content>
               <div
@@ -26,7 +31,12 @@
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
-              {{ headerLeftName[1].text }}
+              <codx-label
+                name="lblHeaderLeft1"
+                [formModel]=""
+                [default]="headerLeftName[1].text"
+                class="fw-bold text-primary"
+              ></codx-label>
             </ng-template>
             <ng-template #content>
               <ng-container>
@@ -111,12 +121,12 @@
               >
               </e-item>
 
-              <!-- <e-item
+              <e-item
                 prefixIcon="icon-article icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 (click)="show($event)"
                 [disabled]="cannotAct"
               >
-              </e-item> -->
+              </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
@@ -240,7 +250,12 @@
         <e-tabitems>
           <e-tabitem *ngIf="!isDisable">
             <ng-template #headerText>
-              {{ headerRightName[0].text }}
+              <codx-label
+                name="lblHeaderRight0"
+                [formModel]=""
+                [default]="headerRightName[0].text"
+                class="fw-bold text-primary"
+              ></codx-label>
             </ng-template>
 
             <ng-template #content>
@@ -369,7 +384,12 @@
 
           <e-tabitem>
             <ng-template #headerText>
-              {{ headerRightName[1].text }}
+              <codx-label
+                name="lblHeaderRight1"
+                [formModel]=""
+                [default]="headerRightName[1].text"
+                class="fw-bold text-primary"
+              ></codx-label>
             </ng-template>
             <ng-template #content>
               <ng-container>
@@ -586,14 +606,24 @@
 
           <e-tabitem *ngIf="isApprover">
             <ng-template #headerText>
-              {{ headerRightName[2].text }}
+              <codx-label
+                name="lblHeaderRight2"
+                [formModel]=""
+                [default]="headerRightName[2].text"
+                class="fw-bold text-primary"
+              ></codx-label>
             </ng-template>
             <ng-template #content></ng-template>
           </e-tabitem>
 
           <e-tabitem *ngIf="isApprover">
             <ng-template #headerText>
-              {{ headerRightName[3].text }}
+              <codx-label
+                name="lblHeaderRight3"
+                [formModel]=""
+                [default]="headerRightName[3].text"
+                class="fw-bold text-primary"
+              ></codx-label>
             </ng-template>
             <ng-template #content></ng-template>
           </e-tabitem>

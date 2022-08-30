@@ -237,7 +237,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
             };
             this.notify.notifyCode('RS002');
             dialog1 && dialog1.close(result);
-            this.dialog && this.dialog.close(result);
+            this.dialog && this.dialog.close(value);
           }
           // if (res) {
           //   if (res?.msgCodeError == null) {
