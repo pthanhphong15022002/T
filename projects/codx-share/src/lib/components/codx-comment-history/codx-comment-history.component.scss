@@ -19,6 +19,13 @@
     position: relative;
 }
 
+.comment{
+    margin-top: 12px;
+    background-color: #ecf0f1ea;
+    padding: 4px;
+    border-radius: 4px;
+}
+
 .comment-thumb {
     position: absolute;
     background-color: #fff;
@@ -117,4 +124,12 @@
     position: absolute;
     top: 2px;
     right: 2px;
+}
+.btn-seen{
+    background-color: #dde7e9;
+    border-radius: 4px;
+}
+.iconHistory{
+    width: 40px;
+    height: 40px;
 }

@@ -15,7 +15,6 @@ import {
   AnnotationDataFormat,
   PdfViewerComponent,
   LinkAnnotationService,
-  BookmarkViewService,
   MagnificationService,
   ThumbnailViewService,
   ToolbarService,
@@ -41,7 +40,6 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { qr } from './model/mode';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 @Component({
   selector: 'lib-pdf-view',
   templateUrl: './pdf-view.component.html',
@@ -62,6 +60,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   public service: string = environment.pdfUrl;
   @Input() recID = '';
   @Input() isApprover;
+  @Input() isDisable = false;
   @Output() isActiveToSign = new EventEmitter();
 
   user?: any;
@@ -313,6 +312,11 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     // this.pageInput.appendTo('#numeric');
   }
 
+  reload() {
+    this.pdfviewerControl.load(this.fileInfo.fileID, '');
+    this.cannotAct = false;
+  }
+
   loadingAnnot(e: any) {
     this.pageMax = this.pdfviewerControl?.pageCount;
     this.esService.getSignFormat().subscribe((res) => {
@@ -434,9 +438,11 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           this.pdfviewerControl.freeTextSettings.enableAutoFit = true;
           this.pdfviewerControl.addAnnotation({ ...anno });
         });
+
         this.detectorRef.detectChanges();
       });
-    // this.pdfviewerControl?.formFieldsModule?.clearFormFields();
+
+    this.pdfviewerControl?.formFieldsModule?.clearFormFields();
   }
 
   getAreaOwnerName(authorID) {
@@ -1170,14 +1176,14 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             break;
           case 3:
             this.pdfviewerControl.freeTextSettings.defaultText =
-              this.vllActions[type - 1]?.text +
-              ': ' +
+              // this.vllActions[type - 1]?.text +
+              // ': ' +
               this.signerInfo?.fullName;
             break;
           case 4:
             this.pdfviewerControl.freeTextSettings.defaultText =
-              this.vllActions[type - 1]?.text +
-              ': ' +
+              // this.vllActions[type - 1]?.text +
+              // ': ' +
               this.signerInfo?.position;
             break;
           case 5:
@@ -1190,7 +1196,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
             break;
           case 7:
             this.pdfviewerControl.freeTextSettings.defaultText =
-              this.vllActions[type - 1]?.text + ': ' + this.fileInfo.fileRefNum;
+              // this.vllActions[type - 1]?.text +
+              'Số';
+            ': ' + this.fileInfo.fileRefNum;
             break;
           default:
             this.pdfviewerControl.freeTextSettings.defaultText =
@@ -1448,16 +1456,17 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   clickDownload() {
     this.pdfviewerControl.downloadFileName = this.fileInfo.fileName;
-    this.beforeDownLoad()
-      .then((annots) => {
-        this.pdfviewerControl.download();
-        return annots;
-      })
-      .then((annotations) => {
-        annotations.forEach((item) => {
-          this.pdfviewerControl.addAnnotation(item);
-        });
-      });
+    this.pdfviewerControl.download();
+    // this.beforeDownLoad()
+    //   .then((annots) => {
+    //     this.pdfviewerControl.download();
+    //     return annots;
+    //   })
+    //   .then((annotations) => {
+    //     annotations.forEach((item) => {
+    //       this.pdfviewerControl.addAnnotation(item);
+    //     });
+    //   });
   }
 
   async beforeDownLoad() {
@@ -1470,6 +1479,38 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       }
     });
     return tmpCollections;
+  }
+
+  signPDF(mode, comment): Promise<any> {
+    return new Promise<any>((resolve, rejects) => {
+      let annotationDataFormat: AnnotationDataFormat;
+      let tmpCollections = this.pdfviewerControl.annotationCollection;
+      this.pdfviewerControl.deleteAnnotations();
+      tmpCollections?.forEach((annot) => {
+        if (
+          annot.customData.split(':')[1] != '1' &&
+          annot.customData.split(':')[1] != '2'
+        ) {
+          annot.annotationSettings.isLock = true;
+          this.pdfviewerControl.addAnnotation(annot);
+        }
+      });
+      this.pdfviewerControl
+        .exportAnnotationsAsBase64String(annotationDataFormat)
+        .then((base64) => {
+          this.esService
+            .updateSignFileTrans(
+              base64.replace('data:application/pdf;base64,', ''),
+              this.user.userID,
+              this.recID,
+              mode,
+              comment
+            )
+            .subscribe((status) => {
+              resolve(status);
+            });
+        });
+    });
   }
 
   clickPrint(args) {}
@@ -1550,12 +1591,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   show(e: any) {
     console.log('collection', this.pdfviewerControl.annotationCollection);
     console.log('handwrittent', this.pdfviewerControl.formFieldCollections);
-    let annotationDataFormat: AnnotationDataFormat;
-    this.pdfviewerControl
-      .exportAnnotationsAsBase64String(annotationDataFormat)
-      .then((res) => {
-        console.log('base64 new pdf', res);
-      });
+    console.log('page size', this.pdfviewerControl.viewerBase.pageSize);
   }
 
   closeAddForm(event) {

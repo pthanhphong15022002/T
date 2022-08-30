@@ -104,6 +104,7 @@ export class AttachmentComponent implements OnInit {
   @Input() hideUploadBtn = '0';
   @Input() hideFolder = '0';
   @Input() hideDes = '0';
+  @Input() hideDelete = '0';
   @Input() hideImageUpload = '0';
   @Input() hideImageThumb = '0';
   @Input() showMessage = '1';
@@ -1151,6 +1152,7 @@ export class AttachmentComponent implements OnInit {
   }
 
   onDeleteUploaded(file: string) {
+    debugger;
     let index = this.fileUploadList.findIndex(
       (d) => d.fileName.toString() === file.toString()
     ); //find index in your array
@@ -2710,5 +2712,9 @@ export class AttachmentComponent implements OnInit {
   clearData() {
     this.data = [];
     this.fileUploadList = [];
+  }
+  handleDeleteCount(e:any)
+  {
+    this.fileCount.emit(e);
   }
 }

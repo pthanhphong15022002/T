@@ -122,12 +122,7 @@ export class EmployeesComponent implements OnInit {
     return moment(value).fromNow(true);
   }
 
-  changeView(evt: any) { }
-
-  requestEnded(evt: any) {
-  }
-
-  edit(data) {
+  edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -137,8 +132,25 @@ export class EmployeesComponent implements OnInit {
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+          if (e?.event && e?.event != null && e.event.update) {
+            this.view.dataService.update(e.event.update.InfoPersonal).subscribe();
+            // e?.event.update.forEach((obj) => {
+            //   this.view.dataService.update(obj.Employee).subscribe();
+            // });
+            // this.meeting = e?.event;
+          }
+          this.changedt.detectChanges();
+        });
+
+    
     });
-    this.changedt.detectChanges();
+    // this.changedt.detectChanges();
   }
 
   copy(data) {

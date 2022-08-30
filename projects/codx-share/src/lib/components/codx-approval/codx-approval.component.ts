@@ -12,6 +12,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
   ButtonModel,
@@ -80,9 +81,9 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         },
       },
     ];
-    this.button = {
-      id: 'btnAdd',
-    };
+    // this.button = {
+    //   id: 'btnAdd',
+    // };
     this.getGridViewSetup(this.view.formModel.funcID);
     this.detectorRef.detectChanges();
   }
@@ -104,7 +105,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-      debugger;
       if (fuc) {
         var params;
         if (fuc?.url) {
@@ -154,22 +154,20 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     };
     return styles;
   }
-  changeMF(data: any, value: object = null) {
+  changeMF(data: any, value: object | any = null) {
+    debugger;
     var datas = this.dataItem;
     if (value) datas = value;
     if (datas) {
       var list = data.filter(
-        (x) =>
-          x.data != null &&
-          x.data.formName == 'Approvals'
+        (x) => x.data != null && x.data.formName == 'Approvals'
       );
       for (var i = 0; i < list.length; i++) {
         list[i].isbookmark = true;
-        if(list[i].functionID != 'SYS206' &&
-        list[i].functionID != 'SYS205')
-        {
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
-          if (
+          if (value.status == '5') list[i].disabled = true;
+          else if (
             ((datas?.stepType == 'S1' || datas?.stepType == 'S2') &&
               list[i].functionID == 'SYS202') ||
             ((datas?.stepType == 'A1' ||
@@ -180,10 +178,10 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             (datas?.stepType == 'A2' && list[i].functionID == 'SYS201')
           ) {
             list[i].disabled = false;
-          
           }
-        }
+        } else if (value.status == '5') list[i].disabled = true;
       }
+      //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>
           x.functionID == 'SYS02' ||
@@ -202,7 +200,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     if (data.processType == 'ES_SignFiles') {
       //Kys
       if (
-        funcID == 'SYS202' ||
+        funcID == 'SYS201' ||
         funcID == 'SYS205' ||
         funcID == 'SYS206' ||
         funcID == 'SYS204' ||
@@ -226,17 +224,36 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             funcID: 'EST021',
             recID: data.transID,
             title: data.htmlView,
+            status: data.status,
+            stepType: data.stepType,
           },
           '',
           dialogModel
         );
         dialogApprove.closed.subscribe((x) => {
-          if (x.event) {
-            debugger;
-            delete x.event._uuid;
-            this.view.dataService.add(x.event,0).subscribe();
-            //this.getDtDis(x.event?.recID)
+          debugger;
+          if (x.event && x.event?.result) {
+            if (x.event?.mode == 1) {
+              //Ký
+              data.status = '5';
+            } else if (x.event?.mode == 2) {
+              //Từ chối
+              data.status = '4';
+            } else if (x.event?.mode == 3) {
+              //làm lại
+              data.status = '2';
+            }
+            this.view.dataService.update(data).subscribe();
           }
+
+          /*return {
+            result: true,
+            mode: 1
+          }
+
+          mode: 1. Ký
+              2. Từ chối
+              3. Làm lại */
         });
       }
 

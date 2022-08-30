@@ -712,7 +712,7 @@ export class CodxEsService {
     );
   }
 
-  getSFByID(data) {
+  getSFByID(data): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
@@ -913,8 +913,8 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(userID, sfID, mode, comment) {
-    let data = [userID, sfID, mode, comment];
+  updateSignFileTrans(newcontent, userID, sfID, mode, comment) {
+    let data = [newcontent, userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

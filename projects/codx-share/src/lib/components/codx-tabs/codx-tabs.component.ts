@@ -23,6 +23,9 @@ export class CodxTabsComponent implements OnInit {
   //tree task
   @Input() dataTree: any[];
   @Input() vllStatus: any;
+  //references
+  @Input() dataReferences: any[];
+  @Input() vllRefType: any = 'TM018';
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
@@ -34,12 +37,14 @@ export class CodxTabsComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: true },
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-    { name: 'Reference', textDefault: 'Công việc', isActive: false },
+    { name: 'AssignTo', textDefault: 'Công việc', isActive: false },
+    { name: 'References', textDefault: 'Tham chiếu', isActive: false },
     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
   constructor(
     injector: Injector,
     private api:ApiHttpService,
+    private dt:ChangeDetectorRef,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -58,7 +63,6 @@ export class CodxTabsComponent implements OnInit {
         (x: TabModel) => x.isActive == true
       );
     }
-    this.getHistoryAsync();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -68,22 +72,6 @@ export class CodxTabsComponent implements OnInit {
 
   getfileCount(e: any) {
     console.log(e);
-  }
-  lstComment:any = [];
-  // getListComment(){
-  //   this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetListAsync")
-  //   .subscribe((res:any[]) => {
-  //     console.log(res);
-  //     this.lstComment = res;
-  //   })
-  // }
-
-  getHistoryAsync(){
-    let objectID = "00cfeb10-a433-43e3-b6b3-876e25bf20a3";
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetTrackLogsByObjectIDAsync" , objectID)
-    .subscribe((res:any[]) => {
-      console.log(res);
-    });
   }
   
 }

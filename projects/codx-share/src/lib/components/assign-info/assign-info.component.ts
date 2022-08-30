@@ -57,7 +57,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   isHaveFile = false;
   taskParent: any;
   refID = '';
-  refType = '';
+  refType = 'TM_Tasks';
   dueDate: Date;
   taskType = '1';
   vllPriority = 'TM005';
@@ -81,7 +81,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       ...dt?.data[0],
     };
     this.refID = this.task?.refID;
-    this.refType = this.task?.refType;
+    this.refType = this.task?.refType || this.refType;
     this.dueDate = this.task?.dueDate;
     if (dt?.data[0]?.taskID) this.taskParent = dt?.data[0];
 
@@ -107,7 +107,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   ngAfterViewInit(): void {
     this.setDefault();
   }
@@ -128,6 +128,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           //   return response[response.taskID] != response['_uuid'];
           // };
           this.task = response;
+         
           this.loadingAll = true;
           this.openInfo();
         }
@@ -152,7 +153,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.refID = this.refID;
     this.task.refType = this.refType;
     if (this.taskParent) {
-      this.task.parentID = this.taskParent.recID ;
+      // this.task.parentID = this.taskParent.recID ;
       this.task.dueDate = this.taskParent.dueDate;
       this.task.endDate = this.taskParent.endDate;
       this.task.startDate = this.taskParent.startDate;
@@ -164,8 +165,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.task.projectID = this.taskParent.projectID;
       this.task.location = this.taskParent.location;
       this.task.tags = this.taskParent.tags;
-      this.task.refID = this.taskParent.refID;
-      this.task.refNo = this.taskParent.refNo;
+      this.task.refID = this.refID ? this.refID : this.taskParent.recID;
+      this.task.refNo = this.taskParent.taskID;
       this.task.taskType = this.taskParent.taskType;
       this.copyListTodo(this.taskParent.taskID);
       if (this.task.startDate && this.task.endDate) this.changTimeCount = 0;
@@ -256,7 +257,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  changeVLL(e) {}
+  changeVLL(e) { }
 
   saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
@@ -317,7 +318,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     if (this.isHaveFile)
       this.attachment.saveFilesObservable().subscribe((res) => {
         if (res) {
-          this.task.attachments = Array.isArray(res) ? res.length : 1 ;
+          this.task.attachments = Array.isArray(res) ? res.length : 1;
           this.actionSaveAssign(taskIDParent, isContinue);
         }
       });

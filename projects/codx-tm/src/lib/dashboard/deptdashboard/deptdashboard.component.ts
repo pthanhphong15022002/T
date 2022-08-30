@@ -4,12 +4,7 @@ import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { ViewChild } from '@angular/core';
 import { TemplateRef } from '@angular/core';
-import {
-  AnimationModel,
-  ILoadedEventArgs,
-  ProgressTheme,
-  RangeColorModel,
-} from '@syncfusion/ej2-angular-progressbar';
+import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { StatusTask } from '../../models/enum/enum';
 
 @Component({
@@ -32,10 +27,6 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   month: number;
   beginMonth: Date;
   endMonth: Date;
-  availability: number = 0;
-  performance: number = 0;
-  quality: number = 0;
-  kpi: number = 0;
   tasksByGroup: object;
   tasksByOrgUnit: object;
   status: any = {
@@ -45,13 +36,14 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   dataBarChart: any = {};
   vlWork = [];
   hrWork = [];
+  topEmps: [];
+  lastEmps: [];
   user: any;
   tasksByEmp: any;
   isDesc: boolean = true;
   data: any;
   dbData: any;
-
-  top3: any;
+  isTopEmp: boolean = true;
   groups: any;
 
   animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
@@ -183,7 +175,7 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     this.user = this.auth.get();
     this.model = new DataRequest();
     this.model.predicate = 'DepartmentID = @0';
-    this.model.dataValue = this.user.employee?.departmentID;
+    this.model.dataValue = this.user.employee?.departmentID || 'THUONG004';
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
@@ -192,39 +184,27 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.getGeneralData();
-    this.top3 = [
-      { id: 'ADMIN', name: 'Lê Phạm Hoài Thương', role: 'BA', kpi: 123 },
-      { id: 'NHBUU', name: 'Nguyễn Hoàng Bửu', role: 'Dev', kpi: 120 },
-      { id: 'NNPSY', name: 'Nguyễn Ngọc Phú Sỹ', role: 'Dev', kpi: 119 },
-    ];
-    this.groups = [
-      { id: 'QC', name: 'Nhóm kiểm tra chất lượng', rate: 70 },
-      { id: 'WEB', name: 'Nhóm phát triển web', rate: 95 },
-      { id: 'MOBILE', name: 'Nhóm phát triển mobile', rate: 50 },
-    ];
+    this.groups = [];
   }
 
   private getGeneralData() {
     this.tmService.getDeptDBData(this.model).subscribe((res: any) => {
       const {
-        efficiency,
         tasksByGroup,
-        tasksByOrgUnit,
+        taskByOrgUnitWithName,
         status,
         dataBarChart,
-        rateDoneOnTime,
-        vltasksByOrgUnit,
-        hoursByOrgUnit,
+        orgUnitRateDoneWithName,
+        vltasksByOrgUnitWithName,
+        hoursByOrgUnitWithName,
+        topEmps,
+        lastEmps,
       } = res;
-      this.availability = efficiency.availability.toFixed(2);
-      this.performance = efficiency.performance.toFixed(2);
-      this.quality = efficiency.quality.toFixed(2);
-      this.kpi = efficiency.kpi.toFixed(2);
       this.tasksByGroup = tasksByGroup;
-      this.tasksByOrgUnit = tasksByOrgUnit;
+      this.tasksByOrgUnit = taskByOrgUnitWithName;
       this.status = status;
       this.dataBarChart = dataBarChart;
-      vltasksByOrgUnit.map((data) => {
+      vltasksByOrgUnitWithName.map((data) => {
         let newTasks = 0;
         let processingTasks = 0;
         let doneTasks = 0;
@@ -251,6 +231,7 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
         });
         this.vlWork.push({
           id: data.id,
+          orgUnitName: data.orgUnitName,
           qtyTasks: data.qtyTasks,
           status: {
             new: (newTasks / data.qtyTasks) * 100,
@@ -261,7 +242,10 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
           },
         });
       });
-      this.hrWork = hoursByOrgUnit;
+      this.hrWork = hoursByOrgUnitWithName;
+      this.groups = orgUnitRateDoneWithName;
+      this.topEmps = topEmps;
+      this.lastEmps = lastEmps;
       this.detectorRef.detectChanges();
     });
   }
@@ -270,13 +254,17 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
-  closeTooltip() {
-  }
+  closeTooltip() {}
 
   sort() {
     this.isDesc = !this.isDesc;
     this.vlWork = this.vlWork.reverse();
     this.hrWork = this.hrWork.reverse();
+    this.detectorRef.detectChanges();
+  }
+
+  switchEmp() {
+    this.isTopEmp = !this.isTopEmp;
     this.detectorRef.detectChanges();
   }
 }

@@ -15,7 +15,7 @@ export class CO_Meetings{
     link2: string;
     memo: string;
     templateID: string;
-    contents: string;
+    contents: any = [];
     permissions: string;
     resources: CO_Resources[];
     refType: string;
@@ -27,7 +27,7 @@ export class CO_Meetings{
     repeated: boolean;
     scheduleID: string;
     comments: number;
-    attachments: string;
+    attachments: number;
     createOn: Date;
     createBy: string;
     modifiedBy: Date;
@@ -53,7 +53,7 @@ export class CO_Resources{
 }
 
 export class TabControl{
-  name: 'Bình luận' | 'Họp định kì' | 'Dashboard' | 'Công việc' |string;
+  name: 'Nội dung họp' | 'Thảo luận' |string;
   textDefault: string;
   isActive: boolean;
 }

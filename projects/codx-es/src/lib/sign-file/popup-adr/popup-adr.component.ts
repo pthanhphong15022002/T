@@ -39,8 +39,8 @@ export class PopupADRComponent extends UIComponent {
 
   okClick = false;
   data;
-  title;
-  subTitle;
+  title: string;
+  subTitle: string;
   mode;
   funcID;
   recID;
@@ -79,19 +79,7 @@ export class PopupADRComponent extends UIComponent {
   changeReason(e) {}
 
   saveDialog() {
-    console.log(this.dialogSignFile);
-
-    this.esService
-      .updateSignFileTrans(
-        this.user.userID,
-        this.recID,
-        this.mode,
-        this.dialogSignFile?.value ? this.dialogSignFile.value.comment : ''
-      )
-      .subscribe((res) => {
-        console.log('res');
-        this.dialog.close('ok');
-      });
+    this.dialog.close(this.mode);
   }
 
   popupUploadFile() {

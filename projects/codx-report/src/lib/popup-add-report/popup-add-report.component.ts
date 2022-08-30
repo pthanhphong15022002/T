@@ -21,7 +21,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   tabContent: any[] = [];
   tabTitle: any[] = [];
   dialog: any;
-  data?: any ;
+  data : any ;
   fuctionItem:any = {};
   reportID: any;
   recID: any;
@@ -72,23 +72,11 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     if(this.dialog.formModel){
       this.funcID = this.dialog.formModel.funcID;
     }
-
+   
   }
 
   ngOnInit(): void {
-    if(this.reportID){
-      this.api.execSv("SYS", "ERM.Business.SYS", "ReportListBusiness", "GetByReportIDAsync", this.reportID).subscribe((res: any) => {
-        if (res) {
-         this.data = res;
-         this.recID = this.data.recID;
-        }
-      });
-      this.api.execSv("SYS", "ERM.Business.SYS", "ReportParametersBusiness", "GetReportParamAsync", this.reportID).subscribe((res: any) => {
-        if (res) {
-         this.parameters = res.parameters;
-        }
-      });
-      }
+    
   }
 
   ngAfterViewInit(): void {
@@ -102,25 +90,39 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       this.menuParam,
       this.menuSignature
     ];
+ 
 
-
-    if(!this.recID){
-      this.recID= Util.uid();
-      this.data = {};
-      this.data.description = null;
-
-      this.cache.functionList(this.funcID).subscribe(res=>{
-       if(res){
-        this.moduleName = res.module;
-       }
-
+    if(this.reportID){
+      this.api.execSv("SYS", "ERM.Business.SYS", "ReportListBusiness", "GetByReportIDAsync", this.reportID).subscribe((res: any) => {
+        if (res) {
+         this.data = res;
+         this.recID = this.data.recID;
+        }else{
+         this.setDefaut() ;
+        }
       });
+      this.api.execSv("SYS", "ERM.Business.SYS", "ReportParametersBusiness", "GetReportParamAsync", this.reportID).subscribe((res: any) => {
+        if (res) {
+         this.parameters = res.parameters;
+        }
+      });
+    }else this.setDefaut() ;
+  }
+  setDefaut(){
+    this.recID= Util.uid();
+    this.data = {};
+    this.data.description = null;
+
+    this.cache.functionList(this.funcID).subscribe(res=>{
+     if(res){
+      this.moduleName = res.module;
       this.api.execSv("SYS","ERM.Business.SYS","ReportListBusiness","CreateFunctionIDAsync",[this.moduleName, 'R'] ).subscribe(res=>{
         if(res){
           this.data.reportID = res;
         }
       })
-    }
+     }  
+    });
   }
 
   setTitle(evt:any){

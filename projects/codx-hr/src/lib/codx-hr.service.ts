@@ -29,17 +29,17 @@ export class CodxHrService {
 
   }
   loadEmployByCountStatus(positionID: string, _status: any): Observable<any> {
-
-    return this.api.call('ERM.Business.HR', 'PositionsBusiness', 'GetEmployeeListByPosAsync', [positionID, _status]).pipe(
-      map((data) => {
-        if (data.error) return;
-        return data.msgBodyData[0];
-      }),
-      catchError((err) => {
-        return of(undefined);
-      }),
-      finalize(() => null)
-    ); 
+    return this.api.execSv("HR",'ERM.Business.HR', 'PositionsBusiness', 'GetEmployeeListByPosAsync', [positionID, _status])
+    // return this.api.call('ERM.Business.HR', 'PositionsBusiness', 'GetEmployeeListByPosAsync', [positionID, _status]).pipe(
+    //   map((data) => {
+    //     if (data.error) return;
+    //     return data.msgBodyData[0];
+    //   }),
+    //   catchError((err) => {
+    //     return of(undefined);
+    //   }),
+    //   finalize(() => null)
+    // ); 
 
   }
 

@@ -56,8 +56,8 @@
       <div class="col-4">
         <div class="d-flex justify-content-end">
           <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="meeting.avataResource"
-          objectType="AD_Users" [numberImages]="6">
-        </codx-imgs>
+            objectType="AD_Users" [numberImages]="6">
+          </codx-imgs>
         </div>
 
         <div class="d-flex justify-content-end" style="padding-top: 40px;">
@@ -74,30 +74,20 @@
       <ng-container *ngIf="name=='Thảo luận'">
         <div class="tab_container">
           <div class="tab_body" *ngFor="let cmt of lstComment">
-            <codx-comment-history
-              [data]="cmt"
-              [type]="'view'"
-            ></codx-comment-history>
+            <codx-comment-history [data]="cmt" [actionType]="'C'" [type]="'view'"></codx-comment-history>
           </div>
           <div class="tab_footer">
-            <codx-comment-history
-              [objectID]="'TMT05011'"
-              [objectType]="'CO_Meetings'"
-              [type]="'create'"
-            ></codx-comment-history>
+            <codx-comment-history [objectID]="meeting.meetingID" [objectType]="'CO_Meetings'" [type]="'create'"
+              [actionType]="'C'"></codx-comment-history>
           </div>
         </div>
       </ng-container>
-
     </div>
   </div>
 </div>
 
 <ng-template #templateMeeting>
-  <div class="text-dark fw-bolder">
-    ĐÃ THỰC HIỆN
-  </div>
-  <div *ngFor="let item of content1">
-    {{item.memo}}
-  </div>
+  <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO" className="MeetingsBusiness"
+    method="UpdateContentMeetingAsync" [refID]="meetingID" [data]="meeting.contents">
+  </codx-note>
 </ng-template>

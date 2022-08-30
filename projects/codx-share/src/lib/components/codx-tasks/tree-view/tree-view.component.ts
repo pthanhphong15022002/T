@@ -48,7 +48,21 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
   }
   ngAfterViewInit(): void {
-    this.listDataTree.push(this.data);
+    // this.view.dataService.data.forEach(obj=>{
+      this.api
+    .execSv<any>(
+      'TM',
+      'ERM.Business.TM',
+      'TaskBusiness',
+      'GetListTasksChildrenDeTailsTreeOneStepAsync',
+      this.data.taskID
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.data.items = res;
+        this.listDataTree.push(this.data)
+      }
+    });
   }
   // loadTreeView(item) {
   //   this.api

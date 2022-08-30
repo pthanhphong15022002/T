@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
@@ -49,7 +50,6 @@ export class PopupAddSignFileComponent implements OnInit {
   formModel: FormModel;
   isAfterRender = false;
   cbxName: any = {};
-  cbxCategory: string;
   dialogSignFile: FormGroup;
   lstDataFile = [];
   isAddNew: boolean = true;
@@ -57,6 +57,8 @@ export class PopupAddSignFileComponent implements OnInit {
   transID: String = '';
   isSaved = false;
   gvSetup: any;
+
+  lstFile: any = [];
 
   templateName: string = '';
 
@@ -81,6 +83,7 @@ export class PopupAddSignFileComponent implements OnInit {
     private callfuncService: CallFuncService,
     public dmSV: CodxDMService,
     private notify: NotificationsService,
+    private fileService: FileService,
     private cache: CacheService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
@@ -93,9 +96,9 @@ export class PopupAddSignFileComponent implements OnInit {
     this.oSignFile = data?.data?.oSignFile;
 
     if (this.oSignFile) {
-      this.cbxCategory = data?.data?.cbxCategory;
       this.currentTab = 1;
       this.processTab = 1;
+      this.lstFile = data?.data?.files;
     } else if (!this.isAddNew) {
       this.data = data?.data.dataSelected;
       this.processTab = 4;
@@ -107,11 +110,11 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.oSignFile) {
       this.esService.getFormModel('EST011').then((formModel) => {
         this.formModel = formModel;
-        this.esService
-          .getDataDefault('EST01', this.formModel.entityName, 'recID')
-          .subscribe((dataDefault) => {
-            if (dataDefault) {
-              this.data = dataDefault;
+        let sf = this.esService
+          .getSFByID(this.oSignFile.recID)
+          .subscribe((signFile) => {
+            if (signFile && signFile?.signFile?.approveStatus == '1') {
+              this.data = signFile?.signFile;
               this.data.recID = this.oSignFile.recID;
               this.data.title = this.oSignFile.title;
               this.data.categoryID = this.oSignFile.categoryID;
@@ -119,9 +122,43 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.refId = this.oSignFile.refId;
               this.data.refDate = this.oSignFile.refDate;
               this.data.refNo = this.oSignFile.refNo;
+              this.isSaved = true;
+              this.isAddNew = false;
               this.initForm();
+            } else {
+              this.esService
+                .getDataDefault('EST01', this.formModel.entityName, 'recID')
+                .subscribe((dataDefault) => {
+                  if (dataDefault) {
+                    this.data = dataDefault;
+                    this.data.recID = this.oSignFile.recID;
+                    this.data.title = this.oSignFile.title;
+                    this.data.categoryID = this.oSignFile.categoryID;
+                    this.data.files = this.oSignFile.files;
+                    this.data.refId = this.oSignFile.refId;
+                    this.data.refDate = this.oSignFile.refDate;
+                    this.data.refNo = this.oSignFile.refNo;
+                    this.initForm();
+                  }
+                });
+              // if (this.lstFile.length > 0) {
+              //   this.fileService
+              //     .copyFile(
+              //       this.oSignFile.files[0].fileID,
+              //       this.oSignFile.files[0].fileName,
+              //       this.oSignFile.recID,
+              //       1
+              //     )
+              //     .subscribe((newFile) => {
+              //       if (newFile) {
+              //         console.log('111', newFile);
+
+              //       }
+              //     });
+              // }
             }
           });
+
         this.esService
           .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
           .then((res) => {
