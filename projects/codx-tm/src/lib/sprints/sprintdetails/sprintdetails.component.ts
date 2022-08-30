@@ -26,6 +26,7 @@ import { TabModelSprints } from '../../models/TM_Sprints.model';
 export class SprintDetailsComponent implements OnInit, AfterViewInit {
   active = 1;
   iterationID: any;
+  functionParent:any
   data: any;
   meetingID: any;
   dataObj: any;
@@ -71,8 +72,9 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.layout.setUrl(this.tmSv.urlback);
-    this.cache.functionList(this.funcID).subscribe(f => {
-      if (f) this.layout.setLogo(f.smallIcon);
+    this.functionParent = this.tmSv.functionParent ;
+    this.cache.functionList(this.funcID).subscribe(f=>{
+        if(f) this.layout.setLogo(f.smallIcon);
     })
     this.activedRouter.queryParams.subscribe((params) => {
       if (params) {
@@ -193,8 +195,9 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
 
   getListUserByResource(resources) {
     this.api
-      .exec<any>(
+      .execSv<any>(
         'HR',
+        'ERM.Business.HR',
         'EmployeesBusiness',
         'GetListEmployeesByUserIDAsync',
         JSON.stringify(resources.split(';'))

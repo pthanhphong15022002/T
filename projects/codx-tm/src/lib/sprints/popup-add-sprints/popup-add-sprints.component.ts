@@ -166,11 +166,12 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.resources = listUser;
     else this.resources += ';' + listUser;
     this.api
-      .exec<any>(
+      .execSv<any>(
         'HR',
+        'ERM.Business.HR',
         'EmployeesBusiness',
         'GetListEmployeesByUserIDAsync',
-        JSON.stringify(listUser)
+        JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);

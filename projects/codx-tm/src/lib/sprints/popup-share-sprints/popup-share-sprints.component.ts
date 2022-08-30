@@ -149,12 +149,13 @@ export class PopupShareSprintsComponent implements OnInit {
     }
     this.listIdUser = this.listIdUser.concat(listUser.split(";"));
     this.api
-      .exec<any>(
-        'HR',
-        'EmployeesBusiness',
-        'GetListEmployeesByUserIDAsync',
-        JSON.stringify(this.listIdUser)
-      )
+    .execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'GetListEmployeesByUserIDAsync',
+      JSON.stringify(listUser.split(';'))
+    )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);
       });

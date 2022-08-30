@@ -84,12 +84,13 @@ export class SignFileComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-    this.esService.getSFByUserID(['ADMIN', '5']).subscribe((res) => {
-      console.log('kq', res);
-    });
-    this.cache.functionList('EST021').subscribe((res) => {
-      console.log('funcList', res);
-    });
+
+    // this.esService.getSFByUserID(['ADMIN', '5']).subscribe((res) => {
+    //   console.log('kq', res);
+    // });
+    // this.cache.functionList('EST021').subscribe((res) => {
+    //   console.log('funcList', res);
+    // });
   }
 
   ngAfterViewInit(): void {
