@@ -27,10 +27,9 @@
   </share-view-list>
 </ng-template>
 
-<ng-template *ngIf="funcID == 'TMT0203'" #treeView let-data>
+<ng-template *ngIf="funcID == 'TMT0203'" #treeView>
   <share-tree-view
     [formModel]="view.formModel"
-    [data]="data"
     [vllStatus]="vllStatus"
     (clickMoreFunction)="receiveMF($event)"
   >
@@ -300,7 +299,7 @@
   idField="taskID"
   assemblyName="ERM.Business.TM"
   className="TaskBusiness"
-  method="GetListDetailTasksAsync"
+  method="GetTasksAsync"
   [views]="views"
   [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)"
