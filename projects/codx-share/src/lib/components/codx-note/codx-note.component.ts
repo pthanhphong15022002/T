@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ApiHttpService, CacheService, CodxInputComponent } from 'codx-core';
+import { iif } from 'rxjs';
 import { createTrue } from 'typescript';
 import { CO_Contents } from './model/CO_Contents.model';
 
@@ -16,7 +17,7 @@ import { CO_Contents } from './model/CO_Contents.model';
   styleUrls: ['./codx-note.component.scss'],
 })
 export class CodxNoteComponent implements OnInit, AfterViewInit {
-  message: any;
+  icon = '';
   showEmojiPicker = false;
   gridViewSetup: any;
   sets = [
@@ -54,7 +55,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     BOLD: false,
     ITALIC: false,
     UNDERLINE: false,
-    COLOR: 'sunset',
+    COLOR: '#000000',
   };
   format = {
     TEXT: true,
@@ -221,30 +222,14 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  setColorForCodxColor(color) {
-    if (this.elementColor)
-      this.currentElementColor = this.elementColor.elRef.nativeElement;
-    if (this.currentElementColor) {
-      var divColor = this.currentElementColor.querySelector(
-        'div.codx-colorpicker'
-      ) as HTMLElement;
-      var childrenDivColor = divColor.children[0] as HTMLElement;
-      var grandChildrenDivColor = childrenDivColor.children[0] as HTMLElement;
-      var inputColor = grandChildrenDivColor.children[1] as HTMLElement;
-      this.currentElementColor = inputColor;
-      this.currentElementColor.style.setProperty(
-        'background-color',
-        color,
-        'important'
-      );
-    }
-  }
-
   popupFile() {}
 
-  addEmoji(event) {
-    this.message += event.emoji.native;
-    this.dt.detectChanges();
+  addEmoji(event, ele) {
+    // var emoij = event.emoji.native.replace('undefined', '');
+    // this.icon += event.emoji.native;
+    this.listNote[this.id].memo = this.listNoteTemp.memo;
+    this.listNote[this.id].memo += event.emoji.native;
+    console.log('check message', this.icon);
   }
 
   toggleEmojiPicker() {
@@ -257,7 +242,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       var dt = event?.data;
       var field = event?.field;
       this.listNoteTemp.lineType = this.lineType;
-      if (event?.field != 'memo') this.listNoteTemp[field] = dt;
+      //if (event?.field != 'memo')
+      this.listNoteTemp[field] = dt;
     }
   }
 
@@ -281,7 +267,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       var obj = {
         memo: data,
         status: this.listNoteTemp.status,
-        textColor: this.listNoteTemp.textColor,
+        textColor: this.font.COLOR,
         format: this.listNoteTemp.format,
         lineType: this.lineType,
       };
@@ -361,7 +347,20 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         inputElement.style.setProperty('font-size', '24px', 'important');
       }
       /*set property cho lineTpe là TITLE*/
+
+      var colorTemp = JSON.parse(JSON.stringify(this.font.COLOR));
       this.listNoteTemp.format = '';
+      var codxInputElement = ele[ele.length - 2] as HTMLElement;
+      var divElement = codxInputElement.children[0] as HTMLElement;
+      var inputElement = divElement.children[0] as HTMLElement;
+      inputElement.style.setProperty('color', colorTemp, 'important');
+
+      colorTemp = '#000000';
+      var lastCodxInputElement = ele[ele.length - 1] as HTMLElement;
+      var lastDivElement = lastCodxInputElement.children[0] as HTMLElement;
+      var lastInputElement = lastDivElement.children[0] as HTMLElement;
+      lastInputElement.style.setProperty('color', colorTemp, 'important');
+      this.setColorForCodxColor(colorTemp);
       this.setFont();
     }
   }
@@ -416,5 +415,32 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       else this.setFormat(false, false, false, true);
     }
     this.dt.detectChanges();
+  }
+
+  setColorForCodxColor(color) {
+    if (color == '' || color == null) color = '#000000';
+    if (this.elementColor)
+      this.currentElementColor = this.elementColor.elRef.nativeElement;
+    if (this.currentElementColor) {
+      var divColor = this.currentElementColor.querySelector(
+        'div.codx-colorpicker'
+      ) as HTMLElement;
+      // var childrenDivColor = divColor.children[0] as HTMLElement;
+      // var grandChildrenDivColor = childrenDivColor.children[0] as HTMLElement;
+      // var inputColor = grandChildrenDivColor.children[1] as HTMLElement;
+
+      var divElement = divColor.children[0] as HTMLElement;
+      var divChildElement = divElement.children[1] as HTMLElement;
+      var buttonElement = divChildElement.children[0] as HTMLElement;
+      var spanElement = buttonElement.children[0] as HTMLElement;
+      var colorOfSpanEle = spanElement.children[0] as HTMLElement;
+
+      this.currentElementColor = colorOfSpanEle;
+      this.currentElementColor.style.setProperty(
+        'background-color',
+        color,
+        'important'
+      );
+    }
   }
 }
