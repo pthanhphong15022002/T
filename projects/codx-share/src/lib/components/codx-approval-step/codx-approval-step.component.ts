@@ -20,6 +20,10 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import {
+  CodxEsService,
+  GridModels,
+} from 'projects/codx-es/src/lib/codx-es.service';
 import { formatDtDis } from '../../../../../codx-od/src/lib/function/default.function';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
@@ -31,52 +35,74 @@ import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatc
 export class CodxApprovalStepComponent
   implements OnInit, OnChanges, AfterViewInit
 {
-  @Input() transID: string;
-  data: any = {};
+  @Input() transID: string = '';
+  @Input() approveStatus: string = '';
+
+  gridViewSetup: any = {};
+
+  process: any = [];
+  lstStep: any = [];
   constructor(
-    private api: ApiHttpService,
-    private detectorRef: ChangeDetectorRef
+    private esService: CodxEsService,
+    private cr: ChangeDetectorRef,
+    private cache: CacheService
   ) {}
-  ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['transID'] &&
-      changes['transID']?.currentValue != changes['transID']?.previousValue
-    ) {
-      this.data = {};
-      this.transID = changes['transID']?.currentValue;
-      this.getApprovalTransByID();
-      this.detectorRef.detectChanges();
-    }
-  }
-  ngOnInit(): void {
-    this.data = {};
-    //if(this.transID) this.getApprovalTransByID();
-  }
   ngAfterViewInit(): void {}
-  getApprovalTransByID() {
-    this.api
-      .execSv(
-        'ES',
-        'ES',
-        'ApprovalTransBusiness',
-        'GetByTransIDAsync',
-        this.transID
-      )
-      .subscribe((item) => {
-        if (item) this.formatApproval(item);
-      });
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.initForm();
   }
-  formatApproval(data) {
-    for (var i = 0; i < data.length; i++) {
-      if (!(data[i].stepNo in this.data)) {
-        this.data[data[i].stepNo] = {};
-        this.data[data[i].stepNo].data = [];
-        this.data[data[i].stepNo].name = data[i].stepNote;
-        this.data[data[i].stepNo].data.push(data[i]);
-      } else this.data[data[i].stepNo].data.push(data[i]);
+
+  initForm() {
+    if (this.transID != null) {
+      if (this.approveStatus == '1') {
+        this.esService.getFormModel('EST04').then((res) => {
+          if (res) {
+            let fmApprovalStep = res;
+            let gridModels = new GridModels();
+            gridModels.dataValue = this.transID;
+            gridModels.predicate = 'TransID=@0';
+            gridModels.funcID = fmApprovalStep.funcID;
+            gridModels.entityName = fmApprovalStep.entityName;
+            gridModels.gridViewName = fmApprovalStep.gridViewName;
+            gridModels.pageSize = 20;
+
+            if (gridModels.dataValue != null) {
+              this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+                if (res && res?.length >= 0) {
+                  this.lstStep = res;
+                  this.process = [];
+                  this.cr.detectChanges();
+                }
+              });
+            }
+          }
+        });
+      } else {
+        this.esService.getApprovalTrans(this.transID).subscribe((res) => {
+          if (res) {
+            this.process = res;
+            this.lstStep = [];
+            this.cr.detectChanges();
+          }
+        });
+      }
     }
   }
-  aaa(data: any) {
-    console.log(data);
+
+  ngOnInit(): void {
+    this.initForm();
+  }
+
+  getHour(date, leadtime: number) {
+    var res = new Date(date);
+
+    let lastTime = new Date(date);
+    lastTime.setHours(res.getHours() + leadtime);
+    let hour2 = lastTime.getHours();
+    let minute2 = lastTime.getMinutes();
+
+    res.setHours(hour2, minute2);
+    return res;
   }
 }

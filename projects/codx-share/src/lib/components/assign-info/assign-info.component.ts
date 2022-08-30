@@ -146,6 +146,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.task.dueDate = moment(new Date())
         .set({ hour: 23, minute: 59, second: 59 })
         .toDate();
+
+    if (this.param?.PlanControl == "0") this.task.estimated = 0;
     this.listUser = [];
     this.listTaskResources = [];
     this.task.category = '3';
@@ -492,11 +494,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var arrUser = listUser.split(';');
     this.listUser = this.listUser.concat(arrUser);
     this.api
-      .exec<any>(
+      .execSv<any>(
         'HR',
+        'ERM.Business.HR',
         'EmployeesBusiness',
         'GetListEmployeesByUserIDAsync',
-        JSON.stringify(this.listUser)
+        JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);
