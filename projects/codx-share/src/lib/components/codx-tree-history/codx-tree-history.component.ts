@@ -17,6 +17,8 @@ export class CodxTreeHistoryComponent implements OnInit {
   @Input() actionType:string;
   @Input() addNew:boolean = false;
   @Input() viewIcon:boolean = false;
+  @Input() viewVote:boolean = false;
+
   /////////////////////////////
   service = "BG";
   assemply = "ERM.Business.BG";
@@ -50,7 +52,6 @@ export class CodxTreeHistoryComponent implements OnInit {
       if(res) {
         this.lstHistory = res;
         this.root.listSubComment = res;
-        console.log(res);
 
       }
     })
@@ -62,7 +63,6 @@ export class CodxTreeHistoryComponent implements OnInit {
       if(res) {
         this.lstHistory = res;
         this.root.listSubComment = res;
-        console.log(res);
       }
     })
   }
@@ -95,7 +95,7 @@ export class CodxTreeHistoryComponent implements OnInit {
   setNodeTree(newNode: any) {
     if (!newNode) return;
     var id = newNode["recID"],
-      parentId = newNode["references"];
+      parentId = newNode["reference"];
     this.dicDatas[id] = newNode;
     var t = this;
     var parent = this.dicDatas[parentId];

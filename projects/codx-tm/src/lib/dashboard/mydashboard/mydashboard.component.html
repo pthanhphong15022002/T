@@ -90,8 +90,10 @@
         <div class="rounded-2 bg-body" style="position: relative; width: 50%">
           <ejs-accumulationchart
             id="chart-task-group"
-            [legendSettings]="legendSettings2"
             width="70%"
+            [legendSettings]="legendSettings2"
+            [title]="'Công việc'"
+            [subTitle]="data?.qtyTasks"
           >
             <e-accumulation-series-collection>
               <e-accumulation-series
@@ -103,19 +105,6 @@
               ></e-accumulation-series>
             </e-accumulation-series-collection>
           </ejs-accumulationchart>
-          <div
-            style="
-              position: absolute;
-              top: 50%;
-              left: 150px;
-              transform: translate(-50%, -50%);
-            "
-          >
-            <div class="text-center">
-              <p class="text-gray-900 fw-bolder fs-2">{{ data?.qtyTasks }}</p>
-              <codx-label name="lblTasks" default="Công việc"> </codx-label>
-            </div>
-          </div>
         </div>
         <div class="bg-body rounded-2" style="position: relative; width: 50%">
           <div class="row">

@@ -37,18 +37,18 @@ let data: any[] = [
   styleUrls: ['./organize-detail.component.css'],
 })
 export class OrganizeDetailComponent implements OnInit {
-  @Input() width = 100;
-  @Input() height = 100;
-  @Input() maxWidth = 100;
-  @Input() maxHeight = 100;
+  @Input() width = 250;
+  @Input() height = 250;
+  @Input() maxWidth = 250;
+  @Input() maxHeight = 250;
   @Input() minWidth = 100;
   @Input() minHeight = 100;
 
   datasetting: any = null;
   layout: Object = {
     type: 'HierarchicalTree',
-    verticalSpacing: 30,
-    horizontalSpacing: 40,
+    // verticalSpacing: 30,
+    // horizontalSpacing: 40,
     enableAnimation: true,
   };
   snapSettings: SnapSettingsModel = {
