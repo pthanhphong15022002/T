@@ -191,7 +191,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (this.action == 'add') {
       this.titleAction = 'Thêm';
-      this.task.recID= Util.uid();
       if (this.functionID == 'TMT0203') {
         this.task.category = '3';
       } else {
@@ -201,7 +200,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     } else if (this.action == 'copy') {
       this.titleAction = 'Sao chép';
       this.task.status = '10';
-      this.task.recID= Util.uid();
       if (this.functionID == 'TMT0203') {
         this.task.category = '3';
       } else {

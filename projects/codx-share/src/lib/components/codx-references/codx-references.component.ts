@@ -22,9 +22,8 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   styleUrls: ['./codx-references.component.css'],
 })
 export class CodxReferencesComponent implements OnInit {
-  @Input() formModel?: FormModel;
+  @Input() formModel?: FormModel// khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
-  @Input() vllStatus = 'TMT004';
   @Input() vllRefType = 'TM018';
   @ViewChild('attachment') attachment: AttachmentComponent;
   message: string = '';
@@ -38,13 +37,6 @@ export class CodxReferencesComponent implements OnInit {
 
   constructor(private cache: CacheService, private dt: ChangeDetectorRef) {
    
-
-    // this.cache.valueList(this.vllRefType).subscribe((res) => {
-    //   if (res) {
-    //     var dataVll = res.datas;
-    //     this.dataAvtar = dataVll.find(obj=>obj.value=='OD_Dispatches')
-    //   }
-    // });
   }
 
   ngOnInit(): void {}
@@ -58,6 +50,7 @@ export class CodxReferencesComponent implements OnInit {
         recID: '00cfeb10-a433-43e3-b6b3-876e25bf20a3',
       },
     ];
+    //end data test
   }
 
   uploadFile() {
