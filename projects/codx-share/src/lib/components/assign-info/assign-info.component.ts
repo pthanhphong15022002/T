@@ -146,8 +146,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.task.dueDate = moment(new Date())
         .set({ hour: 23, minute: 59, second: 59 })
         .toDate();
-
-    if(this.param?.PlanControl =="0") this.task.estimated = 0 ;
     this.listUser = [];
     this.listTaskResources = [];
     this.task.category = '3';
