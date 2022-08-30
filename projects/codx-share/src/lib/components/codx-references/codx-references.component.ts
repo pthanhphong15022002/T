@@ -24,7 +24,8 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   encapsulation: ViewEncapsulation.None
 })
 export class CodxReferencesComponent implements OnInit {
-  @Input() formModel?: FormModel// khởi tạo để test,, sau có thể xóa
+  @Input() funcID?: string// khởi tạo để test,, sau có thể xóa
+  @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
   @Input() vllRefType = 'TM018';
   @ViewChild('attachment') attachment: AttachmentComponent;
