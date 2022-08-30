@@ -86,7 +86,8 @@
                                             <ng-container *ngIf="showEmojiPicker">
                                                 <div class="emoji">
                                                     <emoji-mart [showSingleCategory]="true" [showPreview]="false"
-                                                        [set]="set" [perLine]="7" (emojiSelect)="addEmoji($event, input)">
+                                                        [set]="set" [perLine]="7"
+                                                        (emojiSelect)="addEmoji($event, input)">
                                                     </emoji-mart>
                                                 </div>
                                             </ng-container>
@@ -120,9 +121,9 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="text">
-                        <div class="d-flex">
-                            <div class="check-box" *ngIf="item?.lineType == 'CHECKBOX'">
+                    <div class="text w-100 add-text-note">
+                        <div class="d-flex w-100">
+                            <div class="check-box ms-0" *ngIf="item?.lineType == 'CHECKBOX'">
                                 <codx-input #noteAddText type="checkBox" [crrValue]="" field="status"
                                     labelPosition="Before" class="test-check" (valueChange)="valueChangeStatus($event)">
                                 </codx-input>
