@@ -23,6 +23,9 @@ export class CodxTabsComponent implements OnInit {
   //tree task
   @Input() dataTree: any[];
   @Input() vllStatus: any;
+  //references
+  @Input() dataReferences: any[];
+  @Input() vllRefType: any = 'TM018';
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
@@ -35,6 +38,7 @@ export class CodxTabsComponent implements OnInit {
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
     { name: 'AssignTo', textDefault: 'Công việc', isActive: false },
+    { name: 'References', textDefault: 'Tham chiếu', isActive: false },
     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
   constructor(

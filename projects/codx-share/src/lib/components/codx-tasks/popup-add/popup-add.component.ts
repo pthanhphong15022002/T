@@ -191,7 +191,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (this.action == 'add') {
       this.titleAction = 'Thêm';
-      //this.task.recID= Util.uid();
+      this.task.recID= Util.uid();
       if (this.functionID == 'TMT0203') {
         this.task.category = '3';
       } else {
@@ -199,14 +199,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openTask();
     } else if (this.action == 'copy') {
+      this.titleAction = 'Sao chép';
       this.task.status = '10';
-    //  this.task.recID= Util.uid();
+      this.task.recID= Util.uid();
       if (this.functionID == 'TMT0203') {
         this.task.category = '3';
       } else {
         this.task.category = '1';
       }
-      this.titleAction = 'Sao chép';
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
       this.titleAction = this.action == 'edit' ? 'Chỉnh sửa' : 'Xem chi tiết';
@@ -366,7 +366,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             'DM',
             'FileBussiness',
             'GetFilesByObjectIDAsync',
-            [this.task.taskID]
+            [this.task.recID]
           )
           .subscribe((res) => {
             if (res && res.length > 0) this.showLabelAttacment = true;

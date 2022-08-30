@@ -21,7 +21,6 @@ import { Observable, finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
 import * as XLSX from 'xlsx';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'codx-import-add-template',
@@ -72,6 +71,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
      //Tạo formGroup
      this.importAddTmpGroup = this.formBuilder.group({
       nameTmp: ['', Validators.required],
+      sheetImport: ''
     });
     this.columnsGrid = [
       {
@@ -137,9 +137,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       reader.readAsBinaryString(dt);
       reader.onload = (e: any) => {
         /* create workbook */
+        debugger;
         const binarystr: string = e.target.result;
         const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
         this.sheet = wb.SheetNames;
+        this.importAddTmpGroup.controls["sheetImport"].setValue(this.sheet[0]);
       };
     }
   }
@@ -149,6 +151,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     var b = this.dataIEMapping;
     var c = this.dataIETables;
     debugger;
+  }
+  changeSheetImport(e:any)
+  {
+    this.importAddTmpGroup.controls["sheetImport"].setValue(e);
   }
   getGridViewSetup()
   {
@@ -263,13 +269,16 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   openFormUploadFile() {
     this.attachment.uploadFile();
   }
+  //Thêm mới template
   openFormAddTemplate()
   {
-    this.callfunc.openForm(CodxImportAddMappingComponent,null,1000,800,"",[this.formModel,{recID:this.dataIETables?.recID},null],null).closed.subscribe(item=>{
-      debugger;
+    debugger;
+    if(!this.importAddTmpGroup.value.sheetImport) return this.notifySvr.notify("sheet import không được trống");
+    this.callfunc.openForm(CodxImportAddMappingComponent,null,1000,800,"",[this.formModel,this.dataIEConnections,null,null],null).closed.subscribe(item=>{
       if(item?.event)
       {
-        var result0 = item?.event[0];
+        debugger;
+       /*  var result0 = item?.event[0];
         if(result0)
         {
           var recIDIETables = crypto.randomUUID();
@@ -289,7 +298,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           }
           this.gridView.dataService.data = [IETables,...this.gridView.dataService.data]
           this.ref.detectChanges();
-        }
+        } */
       }
     });
   }
