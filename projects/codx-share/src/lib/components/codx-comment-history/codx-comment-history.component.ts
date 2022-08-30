@@ -1,6 +1,6 @@
 import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ApiHttpService, AuthService, CacheService, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, FormModel, NotificationsService } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { tmpHistory } from '../../models/tmpComments.model';
 import { AttachmentComponent } from '../attachment/attachment.component';
@@ -19,6 +19,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() objectType: string;
   @Input() actionType:string;
   @Input() reference:string;
+  @Input() formModel:FormModel;
   @Input() type: "view" | "create" = "view";
   @Input() data:any;
   @Input() viewIcon:boolean = true;
@@ -60,7 +61,12 @@ export class CodxCommentHistoryComponent implements OnInit {
       this.getFileByObjectID();
     }
   }
-
+  grdSetUp:any;
+  getGrdViewSetUp(){
+    this.cache.gridViewSetup(this.formModel.formName,this.formModel.gridViewName).subscribe((grd:any) => {
+      this.grdSetUp = grd;
+    })
+  }
   getFileByObjectID(){
     this.api.execSv(
       "DM","ERM.Business.DM",

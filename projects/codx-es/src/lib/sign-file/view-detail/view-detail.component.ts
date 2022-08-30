@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   CallFuncService,
   DialogModel,
@@ -28,8 +29,12 @@ export class ViewDetailComponent implements OnInit {
   constructor(
     private esService: CodxEsService,
     private df: ChangeDetectorRef,
-    private callfunc: CallFuncService
-  ) {}
+    private callfunc: CallFuncService,
+    private router: ActivatedRoute
+  ) {
+    this.funcID = this.router.snapshot.params['funcID'];
+    console.log(this.funcID);
+  }
 
   @Input() itemDetail: any;
   @Input() funcID;
@@ -45,7 +50,7 @@ export class ViewDetailComponent implements OnInit {
   itemDetailStt;
   taskViews = [];
   files = [];
-  process;
+  process = [];
   itemDetailDataStt;
   dialog: DialogRef;
   lstStep = [];
@@ -58,7 +63,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.formModel) {
       this.initForm();
     } else {
-      this.esService.getFormModel('EST021').then((formModel) => {
+      this.esService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) this.formModel = formModel;
         this.initForm();
       });
@@ -69,7 +74,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.formModel) {
       this.initForm();
     } else {
-      this.esService.getFormModel('EST021').then((formModel) => {
+      this.esService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) this.formModel = formModel;
         this.initForm();
       });
@@ -113,18 +118,18 @@ export class ViewDetailComponent implements OnInit {
     //   console.log('task', res);
     // });
 
-    this.esService
-      .getFiles(
-        this.formModel.funcID,
-        this.itemDetail?.recID,
-        this.formModel.entityName
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.files = res;
-        }
-      });
     if (this.itemDetail && this.itemDetail !== null) {
+      if (this.itemDetail?.files?.length > 0) {
+        this.esService
+          .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
+          .subscribe((res) => {
+            console.log('get file', res);
+
+            if (res) {
+              this.files = res;
+            }
+          });
+      }
       this.esService
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {

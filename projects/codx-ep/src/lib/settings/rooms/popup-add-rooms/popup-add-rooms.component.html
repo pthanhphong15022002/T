@@ -154,9 +154,9 @@
             [Group]="dialogAddRoom"
           >
           </codx-input>
-          <div class="position-absolute translate-middle-y top-50 end-0 me-3">
+          <!-- <div class="position-absolute translate-middle-y top-50 end-0 me-3">
             <span class="icon-person_pin_circle"> </span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -181,7 +181,7 @@
       class="d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2"
     >
       <codx-label
-        name="lblEqiupment"
+        fiedName="Equipment"
         default="Thiết bị"
         [formModel]="dialog.formModel"
       ></codx-label>
@@ -207,9 +207,9 @@
             [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
           >
             <span
-              class="icon-wifi me-1"
-              [ngClass]="item.isSelected ? 'text-primary' : ''"
-            >
+            class="me-1"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']"
+          >
             </span
             >{{ item.text }}
           </span>
@@ -265,7 +265,8 @@
       <div class="py-2" *ngFor="let item of tmplstDevice">
         <div class="d-flex flex-stack">
           <div class="d-flex">
-            <span class="text-dark icon-wifi me-2 p-1"></span>
+            <span class="text-dark me-2 p-1" [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
+            </span>
             <div class="d-flex flex-column">
               <a href="#" class="text-dark text-hover-primary fw-bolder">{{
                 item.text

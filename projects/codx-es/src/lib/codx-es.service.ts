@@ -722,6 +722,16 @@ export class CodxEsService {
     );
   }
 
+  getListSFByID(lstID: string[]): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetLstSignFileByIDAsync',
+      JSON.stringify(lstID)
+    );
+  }
+
   getSignFormat() {
     return this.api.execSv(
       'ES',
@@ -937,6 +947,7 @@ export class CodxEsService {
   }
   //#endregion
 
+  //#region File
   getFiles(funcID: string, objectId: string, objectType): Observable<any> {
     return this.api.execSv(
       'DM',
@@ -946,6 +957,17 @@ export class CodxEsService {
       [funcID, objectId, objectType]
     );
   }
+
+  getLstFileByID(lstID: string[]): Observable<any> {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetListFileByIDAsync',
+      [JSON.stringify(lstID)]
+    );
+  }
+  //#endregion
 }
 export class LayoutModel {
   isChange: boolean = false;
