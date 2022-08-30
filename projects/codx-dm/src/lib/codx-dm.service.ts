@@ -15,6 +15,7 @@ import { PropertiesComponent } from "./properties/properties.component";
 import { MoveComponent } from "./move/move.component";
 import { VersionComponent } from "./version/version.component";
 import { ShareComponent } from "./share/share.component";
+import { lvFileClientAPI } from "@shared/services/lv.component";
 
 @Injectable({
     providedIn: 'root'
@@ -1049,6 +1050,15 @@ export class CodxDMService {
           }
         });
       }
+    }
+    
+    async getToken() {
+      lvFileClientAPI.setUrl(this.urlUpload); //"http://192.168.18.36:8011");
+      var retToken = await lvFileClientAPI.formPost("api/accounts/token",{
+          username: "admin/root",
+          password: "root"
+      });
+      window.localStorage.setItem('lv-file-api-token', retToken.access_token);
     }
     
    clickMF($event, data: any) {        

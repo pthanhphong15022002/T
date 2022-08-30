@@ -80,16 +80,17 @@
             <codx-comment-history [objectID]="meeting.meetingID" [objectType]="'CO_Meetings'" [type]="'create'"
               [actionType]="'C'"></codx-comment-history>
           </div> -->
-          <codx-tree-history
-          [objectID]="meetingID"
-          [objectType]="'CO_Meetings'"
-          [actionType]="'C'"
-          [addNew]="true"
-          [viewIcon]="false"
-          [viewVote]="true"
-          [funcID]="functionParent"
-        >
-      </codx-tree-history>
+
+          <!-- Phúc gắn lại objectID, funcID giúp Lộc nha -->
+          <codx-tree-history 
+              [objectID]="'MEET2208-0348'"  
+              [objectType]="'CO_Meetings'"
+              [actionType]="'C'"
+              [addNew]="true" 
+              [viewIcon]="false"
+              [viewVote]="true"
+              [funcID]="'TMT0501'">
+          </codx-tree-history>
         </div>
       </ng-container>
     </div>

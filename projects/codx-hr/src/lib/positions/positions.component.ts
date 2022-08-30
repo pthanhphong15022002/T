@@ -196,8 +196,8 @@ export class PositionsComponent implements OnInit {
     this.codxHr.loadEmployByCountStatus(posID, stt)
       .subscribe(response => {
 
-        this.listEmployee = response || [];
-        this.listEmployeeSearch = this.listEmployee ;
+        this.listEmployee = response;
+        this.listEmployeeSearch = response;
         this.countResource = response.length;
         
         p.open();
