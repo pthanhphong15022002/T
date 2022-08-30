@@ -105,7 +105,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-      debugger;
       if (fuc) {
         var params;
         if (fuc?.url) {
