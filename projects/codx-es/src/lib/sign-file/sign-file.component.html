@@ -18,7 +18,11 @@
     [titleLine]="2"
     [icoDateCss]="'icon-access_alarm'"
     [dataItem]="data"
-    [formModel]="view.formModel"
+    [formModel]="
+      data?.approveStatus != '3' && data?.approveStatus != '5'
+        ? view.formModel
+        : null
+    "
     (clickMF)="clickMF($event, data)"
     typeMF="hover"
     [dataItem]="data"
