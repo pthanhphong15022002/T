@@ -1,6 +1,12 @@
 import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
-import { AuthStore, DataRequest, UIComponent } from 'codx-core';
+import {
+  AuthStore,
+  DataRequest,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { ViewChild } from '@angular/core';
 import { TemplateRef } from '@angular/core';
@@ -15,7 +21,8 @@ import { StatusTask } from '../../models/enum/enum';
   providers: [GradientService],
 })
 export class DeptDashboardComponent extends UIComponent implements OnInit {
-  @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  @ViewChild('content') content: TemplateRef<any>;
+  views: Array<ViewModel> = [];
   funcID: string;
   model: DataRequest;
   daySelected: Date;
@@ -51,6 +58,10 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
   isGradient: boolean = true;
 
   //#region gauge
+  tooltip: Object = {
+    enable: true,
+  };
+
   font1: Object = {
     size: '15px',
     color: '#00CC66',
@@ -122,7 +133,11 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     visible: true,
   };
   legendRateDoneSettings: Object = {
+    position: 'Right',
     visible: true,
+    textWrap: 'Wrap',
+    height: '30%',
+    width: '50%',
   };
 
   //#region chartcolumn
@@ -187,6 +202,20 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     this.groups = [];
   }
 
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.content,
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
+  }
+
   private getGeneralData() {
     this.tmService.getDeptDBData(this.model).subscribe((res: any) => {
       const {
@@ -249,12 +278,6 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
       this.detectorRef.detectChanges();
     });
   }
-
-  openTooltip() {
-    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
-  }
-
-  closeTooltip() {}
 
   sort() {
     this.isDesc = !this.isDesc;

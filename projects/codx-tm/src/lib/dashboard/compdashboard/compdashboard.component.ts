@@ -6,9 +6,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
-import { AuthStore, DataRequest, UIComponent } from 'codx-core';
+import {
+  AuthStore,
+  DataRequest,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
+import { StatusTask } from '../../models/enum/enum';
 
 @Component({
   selector: 'compdashboard',
@@ -17,7 +24,8 @@ import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
   providers: [GradientService],
 })
 export class CompDashboardComponent extends UIComponent implements OnInit {
-  @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  @ViewChild('content') content: TemplateRef<any>;
+  views: Array<ViewModel> = [];
   funcID: string;
   model: DataRequest;
   daySelected: Date;
@@ -29,16 +37,23 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
   month: number;
   beginMonth: Date;
   endMonth: Date;
+  tasksByGroup: object;
+  tasksByOrgUnit: object;
+  status: any = {
+    doneTasks: 0,
+    overdueTasks: 0,
+  };
+  dataBarChart: any = {};
   vlWork = [];
   hrWork = [];
+  topEmps: [];
+  lastEmps: [];
   user: any;
   tasksByEmp: any;
   isDesc: boolean = true;
-  data: object[] = [];
-
+  data: any;
   dbData: any;
-
-  top3: any;
+  isTopEmp: boolean = true;
   groups: any;
 
   animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
@@ -46,6 +61,10 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
   isGradient: boolean = true;
 
   //#region gauge
+  tooltip: Object = {
+    enable: true,
+  };
+
   font1: Object = {
     size: '15px',
     color: '#00CC66',
@@ -96,7 +115,7 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
 
   labelStyle1: Object = { position: 'Outside', font: { size: '8px' } };
   labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
-  //#endregion gauge
+  //#region gauge
 
   legendSettings1: Object = {
     position: 'Top',
@@ -117,15 +136,12 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
     visible: true,
   };
   legendRateDoneSettings: Object = {
+    position: 'Right',
     visible: true,
+    textWrap: 'Wrap',
+    height: '30%',
+    width: '50%',
   };
-
-  openTooltip() {
-    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
-  }
-
-  closeTooltip() {
-  }
 
   //#region chartcolumn
   dataColumn: Object[] = [];
@@ -176,10 +192,8 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.auth.get();
     this.model = new DataRequest();
-    this.model.predicate = 'DepartmentID = @0';
+    this.model.predicate = 'OrgUnitID = @0';
     this.model.dataValue = this.user.employee?.departmentID || 'THUONG001';
-    this.model.predicates = 'OrgUnitID = @0';
-    this.model.dataValues = this.user.buid;
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';
@@ -188,24 +202,95 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.getGeneralData();
-    this.top3 = [
-      { name: 'Lê Phạm Hoài Thương', role: 'BA', kpi: 123 },
-      { name: 'Nguyễn Hoàng Bửu', role: 'Dev', kpi: 120 },
-      { name: 'Nguyễn Ngọc Phú Sỹ', role: 'Dev', kpi: 119 },
+    this.groups = [];
+  }
+
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.content,
+        },
+      },
     ];
-    this.groups = [
-      { id: '', name: 'Nhóm kiểm tra chất lượng', rate: 70 },
-      { id: '', name: 'Nhóm phát triển web', rate: 95 },
-      { id: '', name: 'Nhóm phát triển mobile', rate: 50 },
-    ];
+    this.detectorRef.detectChanges();
   }
 
   private getGeneralData() {
-    this.tmService.getDeptDBData(this.model).subscribe((res) => {
+    this.tmService.getCompDBData(this.model).subscribe((res: any) => {
+      const {
+        tasksByGroup,
+        taskByOrgUnitWithName,
+        status,
+        dataBarChart,
+        orgUnitRateDoneWithName,
+        vltasksByOrgUnitWithName,
+        hoursByOrgUnitWithName,
+        topEmps,
+        lastEmps,
+      } = res;
+      this.tasksByGroup = tasksByGroup;
+      this.tasksByOrgUnit = taskByOrgUnitWithName;
+      this.status = status;
+      this.dataBarChart = dataBarChart;
+      vltasksByOrgUnitWithName.map((data) => {
+        let newTasks = 0;
+        let processingTasks = 0;
+        let doneTasks = 0;
+        let postponeTasks = 0;
+        let cancelTasks = 0;
+        data.tasks.map((task) => {
+          switch (task.status) {
+            case StatusTask.New:
+              newTasks = newTasks + 1;
+              break;
+            case StatusTask.Processing:
+              processingTasks = processingTasks + 1;
+              break;
+            case StatusTask.Done:
+              doneTasks = doneTasks + 1;
+              break;
+            case StatusTask.Postpone:
+              postponeTasks = postponeTasks + 1;
+              break;
+            case StatusTask.Cancelled:
+              cancelTasks = cancelTasks + 1;
+              break;
+          }
+        });
+        this.vlWork.push({
+          id: data.id,
+          orgUnitName: data.orgUnitName,
+          qtyTasks: data.qtyTasks,
+          status: {
+            new: (newTasks / data.qtyTasks) * 100,
+            processing: (processingTasks / data.qtyTasks) * 100,
+            done: (doneTasks / data.qtyTasks) * 100,
+            postpone: (postponeTasks / data.qtyTasks) * 100,
+            cancel: (cancelTasks / data.qtyTasks) * 100,
+          },
+        });
+      });
+      this.hrWork = hoursByOrgUnitWithName;
+      this.groups = orgUnitRateDoneWithName;
+      this.topEmps = topEmps;
+      this.lastEmps = lastEmps;
+      this.detectorRef.detectChanges();
     });
   }
 
   sort() {
     this.isDesc = !this.isDesc;
+    this.vlWork = this.vlWork.reverse();
+    this.hrWork = this.hrWork.reverse();
+    this.detectorRef.detectChanges();
+  }
+
+  switchEmp() {
+    this.isTopEmp = !this.isTopEmp;
+    this.detectorRef.detectChanges();
   }
 }
