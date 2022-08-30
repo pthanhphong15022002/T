@@ -1,27 +1,19 @@
 <ng-container *ngFor="let data of dataReferences">
   <div class="tab-tch mt-3 border-bottom">
-    <div class="d-flex align-items-start justify-content-between mb-3 w-100" >
+    <div class="d-flex align-items-start justify-content-between mb-3 w-100">
       <div class="d-flex align-items-start">
         <div class="d-flex align-items-top w-100 pe-9">
-          <div class="me-3">
-            <codx-vll
-            [name]="vllRefType"
-            [value]="'OD_Dispatches'"
-            [showIcon]="true"
-            [showBgColor]="true"
-            class="symbol symbol-35px symbol-circle"
-          >
-          </codx-vll>
+          <div class="me-2">
+            <codx-vll [name]="vllRefType" [value]="'OD_Dispatches'" [showIcon]="true" [showBgColor]="true"
+              class="h-20px pic-ref">
+            </codx-vll>
           </div>
           <div class="d-flex flex-column flex-grow-1">
             <div class="d-flex align-items-center">
-               <span > <codx-vll
-                [name]="vllRefType"
-                [value]="'OD_Dispatches'"
-                [showText]="true"
-                class="text-gray-600 fw-bold"
-              >
-              </codx-vll></span> 
+              <span>
+                <codx-vll [name]="vllRefType" [value]="'OD_Dispatches'" [showText]="true" class="text-gray-600 fw-bold">
+                </codx-vll>
+              </span>
             </div>
             <div class="text-dark">
               {{data?.memo }}
@@ -36,8 +28,7 @@
         <div class="me-3">
           <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
           <span class="text-gray-600" #createdOn>
-            {{ data?.createdOn | date: "dd/MM/yyyy" }}</span
-          >
+            {{ data?.createdOn | date: "dd/MM/yyyy" }}</span>
         </div>
         <div class="me-3">
           <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
@@ -46,35 +37,17 @@
       </div>
       <div>
         <div class="feed-icon ">
-          <span
-            class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
-            (click)="uploadFile()"
-          >
+          <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary" (click)="uploadFile()">
             <span class="icon-attach_file icon-18"></span>
           </span>
-          <span
-            class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
-            (click)="showComments()"
-          >
+          <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary" (click)="showComments()">
             <span class="icon-chat_bubble_outline icon-18"></span>
           </span>
         </div>
-        <codx-attachment
-          #attachment
-          [functionID]="data.recID"
-          [objectType]="formModel?.entityName"
-          [hideFolder]="'1'"
-          [hideUploadBtn]="'1'"
-          [hideDes]="'1'"
-          [type]="'inline'"
-          allowExtensions=".jpg,.png"
-          [allowMultiFile]="'1'"
-          [hideImageUpload]="'1'"
-          [hideBtnSave]="'1'"
-          [hideImageThumb]="'1'"
-          [showMessage]="'0'"
-          (fileCount)="selectedFiles($event)"
-        >
+        <codx-attachment #attachment [functionID]="data.recID" [objectType]="formModel?.entityName" [hideFolder]="'1'"
+          [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" allowExtensions=".jpg,.png" [allowMultiFile]="'1'"
+          [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'"
+          (fileCount)="selectedFiles($event)">
         </codx-attachment>
         <!-- <ng-container *ngIf="lstFile">
           <div class="row px-4 ms-10 justify-content-between">
