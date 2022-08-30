@@ -45,7 +45,7 @@ import {
 } from '@syncfusion/ej2-angular-inputs';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { map, Observable } from 'rxjs';
+import { from, map, mergeMap, Observable } from 'rxjs';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
@@ -679,6 +679,7 @@ export class AttachmentComponent implements OnInit {
         })
       );
     } else if (total == 1) {
+      //return this.addFileLargeLong(this.fileUploadList[0]);
       return this.addFileObservable(this.fileUploadList[0]);
       // this.atSV.fileList.next(this.fileUploadList);
     } else {
@@ -851,32 +852,99 @@ export class AttachmentComponent implements OnInit {
   }
 
   addFileObservable(fileItem: any): Observable<any[]> {
+    var ret = fileItem;
+    var fileSize = parseInt(fileItem.fileSize);
     var that = this;
-    return this.fileService.addFileObservable(fileItem).pipe(
-      map((item) => {
-        if (item.status == 0) {
-          if (this.showMessage == '1')
-            this.notificationsService.notify(item.message);
-          this.fileUploadList[0].recID = item.data.recID;
-          this.atSV.fileListAdded.push(Object.assign({}, item));
-          this.data.push(Object.assign({}, item));
-          this.fileUploadList = [];
-          return item;
-        } else if (item.status == 6) {
-          // ghi đè
-          fileItem.recID = item.data.recID;
-          return this.rewriteFileObservable(
-            this.titlemessage,
-            item.message,
-            fileItem
-          );
-        } else {
-          this.notificationsService.notify(item.message);
-        }
+    fileItem.uploadId = "";
+    // function isAllowAddFileAsync() {
+    //   return new Promise((resole, reject) => {
+    //     that.fileService.isAllowAddFile(fileSize).subscribe(item => {
+    //       if (item == "ok") {
+    //         resole(item);
+    //       }
+    //       else {
+    //         reject(item);
+    //       }
+    //     });
+    //   });
+    // };
+    this.dmSV.getToken();      
+    var appName="hps-file-test";// Tam thoi de hard        
+    var ChunkSizeInKB = 2*1024;
+    var uploadFile = fileItem.item.rawFile;
+    var obj = from(lvFileClientAPI.postAsync(`api/${appName}/files/register`, {        
+      "Data": {
+        "FileName":  uploadFile.name,
+        "ChunkSizeInKB": ChunkSizeInKB,
+        "FileSize": uploadFile.size,
+        'thumbSize': {
+          'width': 200, //Kích thước của file ảnh Thum bề ngang
+          'height': 200//Kích thước của file ảnh Thum bề dọc
+        },
+        "IsPublic": true          
+      }
+    }));
+    var chunSizeInfBytes = ChunkSizeInKB * 1024;
+    var sizeInBytes = 0;
+    return obj.pipe(mergeMap((retUpload, i)=>{
+      debugger
+      // update len server urs và thumbnail
+      fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
+      fileItem.uploadId = retUpload.Data.UploadId;//"";
+      fileItem.urlPath = retUpload.Data.RelUrlOfServerPath;//"";      
 
-        return null;
-      })
-    );
+      //this.displayThumbnail(res.recID, res.pathDisk);      
+      var sizeInBytes = uploadFile.size;
+     
+      var numOfChunks = Math.floor(uploadFile.size/chunSizeInfBytes);
+      if(uploadFile.size % chunSizeInfBytes>0){
+        numOfChunks++;
+      }
+      //api/lv-docs/files/upload     
+      for (var i = 0; i < numOfChunks; i++) {
+        var start = i * chunSizeInfBytes;//Vị trí bắt đầu băm file
+        var end = start + chunSizeInfBytes;//Vị trí cuối
+        if (end > sizeInBytes)
+          end = sizeInBytes;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+        var blogPart = uploadFile.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
+        var fileChunk = new File(
+          [ blogPart ],
+          uploadFile.name,
+          { type: uploadFile.type });//Gói lại thành 1 file chunk để upload
+          var uploadChunk = lvFileClientAPI.formPostWithToken(`api/${appName}/files/upload`,{      
+            FilePart: fileChunk,
+            UploadId: retUpload.Data.UploadId,
+            Index: i          
+          });
+        console.log(uploadChunk);
+      }
+
+      return this.fileService.addFileObservable(fileItem).pipe(
+        map((item) => {
+          if (item.status == 0) {
+            if (this.showMessage == '1')
+              this.notificationsService.notify(item.message);
+            this.fileUploadList[0].recID = item.data.recID;
+            this.atSV.fileListAdded.push(Object.assign({}, item));
+            this.data.push(Object.assign({}, item));
+            this.fileUploadList = [];
+            return item;
+          } else if (item.status == 6) {
+            // ghi đè
+            fileItem.recID = item.data.recID;
+            return this.rewriteFileObservable(
+              this.titlemessage,
+              item.message,
+              fileItem
+            );
+          } else {
+            this.notificationsService.notify(item.message);
+          }
+  
+          return null;
+        })
+      );
+    }));
   }
 
   rewriteFileObservable(
@@ -911,6 +979,15 @@ export class AttachmentComponent implements OnInit {
     this.dmSV.setThumbnailWait.next(data);
   }
 
+  // async getToken() {
+  //   lvFileClientAPI.setUrl(this.dmSV.urlUpload); //"http://192.168.18.36:8011");
+  //   var retToken = await lvFileClientAPI.formPost("api/accounts/token",{
+  //       username: "admin/root",
+  //       password: "root"
+  //   });
+  //   window.localStorage.setItem('lv-file-api-token', retToken.access_token);
+  // }
+  
   async addFileLargeLong(fileItem: FileUpload) {
     // check dung luong dia cung
     var ret = fileItem;
@@ -931,16 +1008,9 @@ export class AttachmentComponent implements OnInit {
     };
 
     try {      
-      lvFileClientAPI.setUrl(this.dmSV.urlUpload); //"http://192.168.18.36:8011");
-      var retToken = await lvFileClientAPI.formPost("api/accounts/token",{
-          username: "admin/root",
-          password: "root"
-      });
-      window.localStorage.setItem('lv-file-api-token', retToken.access_token);
-
-      //var access_token = retToken.access_token;
-      var appName="hps-file-test";// Tam thoi de hard  
-      //http://192.168.18.36:8011/api/lv-docs/files/register
+      var item = await isAllowAddFileAsync();
+      this.dmSV.getToken();      
+      var appName="hps-file-test";// Tam thoi de hard        
       var ChunkSizeInKB = 2*1024;
       var uploadFile = fileItem.item.rawFile;
       var retUpload = await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {        
