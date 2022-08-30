@@ -5,7 +5,7 @@
 </ng-container>
 
 <ng-template #templateTreeView let-item>
-  <div class="d-flex flex-row align-items-top p-3 border-bottom" (click)="showTaskChildren(item)">
+  <div class="d-flex flex-row align-items-top p-3 border-bottom">
     <div class="w-50px min-w-50px">
       <span *ngIf="item?.isAssign ">
         <span class="icon-18 icon-add_box me-2 align-items-start"></span>
@@ -20,7 +20,7 @@
     </div>
     <div class="w-100px min-w-100px">
       <div>
-        <div *ngIf="item.category == '3'" class="" (click)="openViewListTaskResource(data)">
+        <div *ngIf="item.category == '3'" class="" >
           <codx-imgs [objectId]="item?.assignTo" objectType="AD_Users" [numberImages]="4">
           </codx-imgs>
         </div>

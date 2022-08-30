@@ -2,17 +2,11 @@
   <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav nav-tabs">
     <ng-container *ngFor="let item of TabControl; let i = index">
       <li [ngbNavItem]="i + 1" class="nav-item">
-        <a ngbNavLink class="nav-link"
-          ><codx-label
-            [name]="'tab' + item.name"
-            [formName]="'SYS'"
-            [default]="item.textDefault || item.name"
-          ></codx-label
-        ></a>
+        <a ngbNavLink class="nav-link"></a>
+        <codx-label [name]="'tab' + item.name" [formName]="'SYS'" [default]="item.textDefault || item.name">
+        </codx-label>
         <ng-template ngbNavContent>
-          <ng-container
-            *ngTemplateOutlet="tab; context: { $implicit: item.name }"
-          >
+          <ng-container *ngTemplateOutlet="tab; context: { $implicit: item.name }">
           </ng-container>
         </ng-template>
       </li>
@@ -24,22 +18,10 @@
 <ng-template #tab let-name>
   <ng-container *ngIf="name.toLowerCase() == 'attachment'">
     <ng-container>
-      <codx-attachment
-        #attachment
-        [objectType]="entityName"
-        [objectId]="objectID"
-        [hideFolder]="1"
-        [hideUploadBtn]="0"
-        [hideDes]="hideFolder"
-        [type]="type"
-        [allowExtensions]="allowExtensions"
-        [allowMultiFile]="allowMultiFile"
-        [formModel]="formModel"
-        [functionID]="funcID"
-        (fileAdded)="fileAdded($event)"
-        (fileCount)="getfileCount($event)"
-        [displayThumb]="displayThumb"
-      >
+      <codx-attachment #attachment [objectType]="entityName" [objectId]="objectID" [hideFolder]="1" [hideUploadBtn]="0"
+        [hideDes]="hideFolder" [type]="type" [allowExtensions]="allowExtensions" [allowMultiFile]="allowMultiFile"
+        [formModel]="formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
+        [displayThumb]="displayThumb">
       </codx-attachment>
 
       <div class="tab-att">
@@ -49,22 +31,14 @@
               <codx-img class="h-35px me-3" #image objectId="ADMIN"></codx-img>
               <div class="d-flex flex-column flex-grow-1">
                 <span class="text-dark fw-bold">Taptindinhkem.pdf</span>
-                <span class="text-gray-700"
-                  >Bảng báo giá quà tặng của nhà cung cấp</span
-                >
+                <span class="text-gray-700">Bảng báo giá quà tặng của nhà cung cấp</span>
                 <div class="d-flex text-gray-400">
                   <div class="text-italic me-2">LHThuong</div>
                   <div>20/07/2021</div>
                 </div>
               </div>
               <div ngbDropdown class="dropdown ms-6">
-                <button
-                  ngbDropdownToggle
-                  class="btn"
-                  type="button"
-                  id="dropdownMenuButton1"
-                  aria-expanded="false"
-                >
+                <button ngbDropdownToggle class="btn" type="button" id="dropdownMenuButton1" aria-expanded="false">
                   <span class="icon-more_vert icon-18"></span>
                 </button>
                 <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
@@ -128,10 +102,7 @@
   </ng-container>
   <ng-container *ngIf="name.toLowerCase() == 'assignto'">
     <ng-container>
-      <codx-view-assign
-        [dataTree]="dataTree"
-        [vllStatus]="vllStatus"
-      ></codx-view-assign>
+      <codx-view-assign [dataTree]="dataTree" [vllStatus]="vllStatus"></codx-view-assign>
       <!-- <div class="tab-tch">
         <div class="d-flex align-items-start justify-content-between">
           <div class="d-flex align-items-top mt-5">

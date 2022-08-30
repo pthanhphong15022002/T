@@ -86,7 +86,7 @@
                                             <ng-container *ngIf="showEmojiPicker">
                                                 <div class="emoji">
                                                     <emoji-mart [showSingleCategory]="true" [showPreview]="false"
-                                                        [set]="set" [perLine]="7" (emojiSelect)="addEmoji($event)">
+                                                        [set]="set" [perLine]="7" (emojiSelect)="addEmoji($event, input)">
                                                     </emoji-mart>
                                                 </div>
                                             </ng-container>
@@ -174,7 +174,7 @@
             " (click)="checkFont('ITALIC', input)" [class.active]="font.ITALIC ? 'active' : ''"></span>
             <span class="icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative
             " (click)="checkFont('UNDERLINE', input)" [class.active]="font.UNDERLINE ? 'active' : ''"></span>
-            <codx-input #colorPicker type="colorpicker" [showText]="true" [modeSwitcher]="true" [crrValue]="font.COLOR"
+            <codx-input #colorPicker type="colorpicker" [showText]="false" [modeSwitcher]="true" [crrValue]="font.COLOR"
                 field="color" (valueChange)="valueChangeColor($event, input, colorPicker)">
             </codx-input>
             <div class="btn-emoji">
@@ -185,7 +185,7 @@
                 <ng-container *ngIf="showEmojiPicker">
                     <div class="emoji">
                         <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set" [perLine]="7"
-                            (emojiSelect)="addEmoji($event)"></emoji-mart>
+                            (emojiSelect)="addEmoji($event, input)"></emoji-mart>
                     </div>
                 </ng-container>
             </div>
