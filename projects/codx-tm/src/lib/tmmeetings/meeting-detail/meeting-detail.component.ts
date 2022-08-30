@@ -211,12 +211,13 @@ export class MeetingDetailComponent extends UIComponent {
 
   lstComment: any = [];
   getListComment() {
-    var objectID = this.meetingID;
-    this.api
-      .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetHistoryByObjectIDAsync', [objectID,'C'])
-      .subscribe((res: any[]) => {
-        console.log(res);
-        this.lstComment = res;
-      });
+    console.log(this.meetingID);
+    // var objectID = this.meetingID;
+    // this.api
+    //   .execSv('BG', 'ERM.Business.BG', 'TrackLogsBusiness', 'GetHistoryByObjectIDAsync', [objectID,'C'])
+    //   .subscribe((res: any[]) => {
+    //     console.log(res);
+    //     this.lstComment = res;
+    //   });
   }
 }

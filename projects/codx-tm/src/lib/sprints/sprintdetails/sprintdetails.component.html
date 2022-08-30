@@ -85,16 +85,13 @@
       <ng-container *ngIf="name == 'Lịch sử'">
         <ng-container>
           <ng-container>
-            <codx-tree-history
-              [objectID]="iterationID"
-              [objectType]="'TM_Sprints'"
-              [actionType]="'C'"
-              [addNew]="true"
-              [viewIcon]="false"
-              [viewVote]="true"
-              [funcID]="functionParent"
-            >
-            </codx-tree-history
+            <codx-tree-history 
+            [objectID]="iterationID" 
+            [objectType]="'TM_Sprints'"
+            [actionType]=""
+            [viewIcon]="true" 
+            [funcID]="functionParent">
+          </codx-tree-history>
           ></ng-container>
         </ng-container>
       </ng-container>

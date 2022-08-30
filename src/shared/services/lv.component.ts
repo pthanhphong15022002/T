@@ -191,6 +191,18 @@ var lvFileClientAPI = {
 
             throw (e);
         }
+    },
+    post: async (apiPath, data) => {
+        var sender = undefined;
+       
+        try {
+            var ret = await lvFileClientAPI.__post__(apiPath, data);
+            return ret;
+        }
+        catch (e) {
+
+            throw (e);
+        }
     }
 }
 export {lvFileClientAPI}
