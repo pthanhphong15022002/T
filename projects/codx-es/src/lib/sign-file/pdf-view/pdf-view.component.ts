@@ -1498,8 +1498,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.pdfviewerControl
         .exportAnnotationsAsBase64String(annotationDataFormat)
         .then((base64) => {
-          console.log(base64);
-
           this.esService
             .updateSignFileTrans(
               base64.replace('data:application/pdf;base64,', ''),

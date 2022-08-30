@@ -182,21 +182,32 @@ export class PositionsComponent implements OnInit {
       );
   }
 
-  loadEmployByCountStatus(el, posID, status) {
+  loadEmployByCountStatus(p, posID, status) {
     var stt = status.split(';');
-    this.popover["_elementRef"] = new ElementRef(el);
-    if (this.popover.isOpen()) {
+    // this.popover["_elementRef"] = new ElementRef(el);
+    
+    if (this.popover && this.popover.isOpen()) {
       this.popover.close();
     }
     this.posInfo = {};
-    this.employees = [];
-    this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
+    this.listEmployee = [];
+    this.listEmployeeSearch = [];
+    this.codxHr.loadEmployByCountStatus(posID, stt)
       .subscribe(response => {
 
-        this.employees = response || [];
-        this.popover.open();
+        this.listEmployee = response || [];
+        this.listEmployeeSearch = this.listEmployee 
+        p.open();
+        this.popover = p
 
       });
+    // this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
+    //   .subscribe(response => {
+
+    //     this.employees = response || [];
+    //     this.popover.open();
+
+    //   });
   }
 
   // requestEnded(evt: any) {

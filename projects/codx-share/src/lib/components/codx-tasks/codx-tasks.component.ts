@@ -48,7 +48,8 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -122,7 +123,7 @@ export class CodxTasksComponent
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
-    private tmSv: CodxTasksService,
+    private tmSv: CodxTasksService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -174,7 +175,6 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
@@ -228,7 +228,7 @@ export class CodxTasksComponent
           template: this.eventTemplate,
           template3: this.cellTemplate,
         },
-      }
+      },
     ];
 
     var viewDefaultID = '2';
@@ -652,8 +652,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -726,7 +726,7 @@ export class CodxTasksComponent
   //#endregion
   //#region Event
   changeView(evt: any) {
-    let idx = this.viewsActive.findIndex(x => x.id === '16');
+    let idx = this.viewsActive.findIndex((x) => x.id === '16');
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.funcID == 'TMT0203') {
       if (idx > -1) return;
@@ -735,20 +735,19 @@ export class CodxTasksComponent
         type: ViewType.listdetail,
         active: false,
         sameData: true,
-        text: "Cây-Tree",
-        icon: "icon-account_tree",
+        text: 'Cây-Tree',
+        icon: 'icon-account_tree',
         model: {
           template: this.treeView,
         },
       };
       this.viewsActive.push(tree);
     } else {
-      if (idx > -1)
-        this.viewsActive.splice(idx, 1);
+      if (idx > -1) this.viewsActive.splice(idx, 1);
     }
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1426,22 +1425,22 @@ export class CodxTasksComponent
   }
   //#endregion schedule
 
-  receiveShowTaskChildren(e) {
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTasksTreeAsync',
-        e.item.taskID
-      )
-      .subscribe((res) => {
-        if (res) {
-          // this.view.dataService.update(res[0]) ;
-          var index = this.view.dataService.data.findIndex((x) => x.taskID == res[0].taskID);
-          if (index != -1) this.view.dataService.data[index] = res[0];
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
+  // receiveShowTaskChildren(e) {
+  //   this.api
+  //     .execSv<any>(
+  //       'TM',
+  //       'ERM.Business.TM',
+  //       'TaskBusiness',
+  //       'GetListTasksTreeAsync',
+  //       e.item.taskID
+  //     )
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         // this.view.dataService.update(res[0]) ;
+  //         var index = this.view.dataService.data.findIndex((x) => x.taskID == res[0].taskID);
+  //         if (index != -1) this.view.dataService.data[index] = res[0];
+  //         this.detectorRef.detectChanges();
+  //       }
+  //     });
+  // }
 }
