@@ -743,7 +743,7 @@ export class CodxTasksComponent
           className: 'TaskBusiness',
           method: 'GetTasksAsync',
           autoLoad: true,
-          dataObj: null
+          dataObj: null,
         },
         model: {
           template: this.itemViewList,
@@ -1314,7 +1314,7 @@ export class CodxTasksComponent
 
   //#region  tree
   loadTreeView() {
-    this.dataTree =[]
+    this.dataTree = [];
     if (!this.itemSelected || !this.itemSelected?.taskID) return;
     this.api
       .execSv<any>(
@@ -1461,11 +1461,7 @@ export class CodxTasksComponent
       return;
     }
     this.dataReferences = [];
-    if (
-      this.itemSelected.category == '2' ||
-      (this.itemSelected.category == '3' &&
-        this.itemSelected.refType == 'TM_Tasks')
-    ) {
+    if (this.itemSelected.category == '2') {
       this.api
         .execSv<any>(
           'TM',
@@ -1538,13 +1534,44 @@ export class CodxTasksComponent
                   ref.recIDReferences = x.recID;
                   ref.refType = 'ES_SignFiles';
                   ref.createdOn = x.createdOn;
-                  ref.memo = x.taskName;
+                  ref.memo = x.title;
                   ref.createdBy = x.createdBy;
                   this.dataReferences.push(ref);
                   if (listUser.findIndex((p) => p == ref.createdBy) == -1)
                     listUser.push(ref.createdBy);
                   this.getUserByListCreateBy(listUser);
                 });
+              }
+            });
+          break;
+        case 'TM_Tasks':
+          this.api
+            .execSv<any>(
+              'TM',
+              'TM',
+              'TaskBusiness',
+              'GetTaskByRefIDAsync',
+              this.itemSelected.refID
+            )
+            .subscribe((result) => {
+              if (result) {
+                  var ref = new tmpReferences();
+                  ref.recIDReferences = result.recID;
+                  ref.refType = 'TM_Tasks';
+                  ref.createdOn = result.createdOn;
+                  ref.memo = result.taskName;
+                  ref.createdBy = result.createdBy;
+                
+                  this.api
+                    .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+                      ref.createdBy,
+                    ])
+                    .subscribe((user) => {
+                      if (user) {
+                        ref.createByName = user.userName;
+                        this.dataReferences.push(ref);
+                      }
+                    });
               }
             });
           break;
