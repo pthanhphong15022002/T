@@ -45,7 +45,7 @@
     [header]="header"
     [dataItem]="dataItem"
     [formModel]="view?.formModel"
-    (changeDataMF)="changeMF($event)"
+    (changeDataMF)="changeMF($event,dataItem)"
     [body]="body"
     [footer]="footer"
     (clickMF)="clickMF($event, dataItem)"

@@ -260,10 +260,9 @@ export class IncommingAddComponent implements OnInit {
         });
     } 
     else if (this.type == 'edit') {
-      if(this.fileCount>0) this.dltDis = false;
-      this.odService.updateDispatch(this.dispatch, this.dltDis).subscribe((item) => {
+      this.odService.updateDispatch(this.dispatch, false).subscribe((item) => {
         if (item.status == 0) {
-          if (this.dltDis == false)
+          if (this.dltDis)
           {
             this.attachment.objectId = item.data.recID;
             this.attachment.saveFilesObservable().subscribe((item2:any)=>{

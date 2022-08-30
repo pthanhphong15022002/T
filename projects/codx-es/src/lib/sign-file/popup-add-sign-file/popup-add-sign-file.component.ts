@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ApiHttpService,
@@ -82,6 +83,7 @@ export class PopupAddSignFileComponent implements OnInit {
     private callfuncService: CallFuncService,
     public dmSV: CodxDMService,
     private notify: NotificationsService,
+    private fileService: FileService,
     private cache: CacheService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
@@ -121,6 +123,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.refDate = this.oSignFile.refDate;
               this.data.refNo = this.oSignFile.refNo;
               this.isSaved = true;
+              this.isAddNew = false;
               this.initForm();
             } else {
               this.esService
@@ -138,6 +141,21 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.initForm();
                   }
                 });
+              // if (this.lstFile.length > 0) {
+              //   this.fileService
+              //     .copyFile(
+              //       this.oSignFile.files[0].fileID,
+              //       this.oSignFile.files[0].fileName,
+              //       this.oSignFile.recID,
+              //       1
+              //     )
+              //     .subscribe((newFile) => {
+              //       if (newFile) {
+              //         console.log('111', newFile);
+
+              //       }
+              //     });
+              // }
             }
           });
 
