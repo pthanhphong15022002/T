@@ -18,11 +18,14 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() objectID: string;
   @Input() objectType: string;
   @Input() actionType:string;
+  @Input() reference:string;
   @Input() type: "view" | "create" = "view";
   @Input() data:any;
   @Input() viewIcon:boolean = true;
   @Output() evtReply = new EventEmitter;
   @Output() evtDelete = new EventEmitter;
+  @Output() evtSend = new EventEmitter;
+
 
   user: any = null;
   message: string = "";
@@ -126,6 +129,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     data.objectType = this.objectType;
     data.actionType = this.actionType;
     data.functionID = this.funcID;
+    data.references = this.reference;
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
     .subscribe((res1:any) => {
       if(res1){
@@ -137,6 +141,7 @@ export class CodxCommentHistoryComponent implements OnInit {
           this.codxATM.fileUploadList = this.lstFile;
           this.codxATM.saveFilesObservable().subscribe((res2:any) => {
             if(res2){
+              this.evtSend.emit(res1);
               this.notifySV.notifyCode("SYS006"); 
               this.clearData();   
             }
@@ -144,8 +149,9 @@ export class CodxCommentHistoryComponent implements OnInit {
         }
         else
         {
-              this.notifySV.notifyCode("SYS006");
-              this.clearData();   
+            this.evtSend.emit(res1);
+            this.notifySV.notifyCode("SYS006");
+            this.clearData();   
         }
       }
       else {
