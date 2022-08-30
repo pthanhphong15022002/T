@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
@@ -185,6 +186,7 @@ const T_Component: Type<any>[] = [
     RouterModule.forChild(routes),
     CodxShareModule,
     ChartAllModule,
+    DiagramAllModule,
     NgbModule,
   ],
   exports: [RouterModule],

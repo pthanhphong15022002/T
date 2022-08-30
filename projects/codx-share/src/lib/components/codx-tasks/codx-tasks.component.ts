@@ -1304,11 +1304,11 @@ export class CodxTasksComponent
         'TM',
         'ERM.Business.TM',
         'TaskBusiness',
-        'GetListTasksTreeAsync',
+        'GetTreeAssignByTaskIDAsync',
         this.itemSelected?.taskID
       )
       .subscribe((res) => {
-        if (res) this.dataTree = res;
+        if (res) this.dataTree = res||[];
       });
   }
   //#endregion

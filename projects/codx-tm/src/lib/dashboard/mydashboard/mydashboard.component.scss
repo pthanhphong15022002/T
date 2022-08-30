@@ -18,3 +18,17 @@
   max-height: calc(100vh - 250px);
   overflow: auto;
 }
+
+.rateDoneTask_wrap {
+  margin-left: 40px;
+}
+
+@media (max-width: 1366px) {
+  .rateDoneTask {
+    font-size: 10px;
+  }
+
+  .rateDoneTask_wrap {
+    margin-left: 10px;
+  }
+}
