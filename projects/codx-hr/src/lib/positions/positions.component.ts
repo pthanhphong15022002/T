@@ -53,29 +53,29 @@ export class PositionsComponent implements OnInit {
     };
   }
 
-  popoverEmpList(p: any, emp) {
-    this.listEmployeeSearch = [];
-    this.countResource = 0;
-    if (this.popoverCrr) {
-      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
-    }
-    this.api
-      .execSv<any>(
-        'HR',
-        'ERM.Business.HR',
-        'EmployeesBusiness',
-        'GetByUserAsync',
-        emp.employeeID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.listEmployee = res;
-          this.listEmployeeSearch = res;
-          this.countResource = res.length;
-          p.open();
-        }
-      });
-  }
+  // popoverEmpList(p: any, emp) {
+  //   this.listEmployeeSearch = [];
+  //   this.countResource = 0;
+  //   if (this.popoverCrr) {
+  //     if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+  //   }
+  //   this.api
+  //     .execSv<any>(
+  //       'HR',
+  //       'ERM.Business.HR',
+  //       'EmployeesBusiness',
+  //       'GetByUserAsync',
+  //       emp.employeeID
+  //     )
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.listEmployee = res;
+  //         this.listEmployeeSearch = res;
+  //         this.countResource = res.length;
+  //         p.open();
+  //       }
+  //     });
+  // }
 
   searchName(e) {
     var listEmployeeSearch = [];
@@ -182,42 +182,40 @@ export class PositionsComponent implements OnInit {
       );
   }
 
-  loadEmployByCountStatus(el, posID, status) {
+  loadEmployByCountStatus(p, posID, status) {
+    this.listEmployee = [];
+    this.listEmployeeSearch = [];
     var stt = status.split(';');
-    this.popover["_elementRef"] = new ElementRef(el);
-    if (this.popover.isOpen()) {
-      this.popover.close();
-    }
-    this.posInfo = {};
-    this.employees = [];
-    this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
+    // this.popover["_elementRef"] = new ElementRef(el);
+    
+    // if (p.isOpen()) {
+    //   p.close();
+    // }
+    // this.posInfo = {};
+   
+    this.codxHr.loadEmployByCountStatus(posID, stt)
       .subscribe(response => {
 
-        this.employees = response || [];
-        this.popover.open();
+        this.listEmployee = response || [];
+        this.listEmployeeSearch = this.listEmployee ;
+        this.countResource = response.length;
+        
+        p.open();
+        this.popover = p;  
 
       });
-  }
+    // this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
+    //   .subscribe(response => {
 
-  // requestEnded(evt: any) {
-  //   this.view.currentView;
-  // }
+    //     this.employees = response || [];
+    //     this.popover.open();
+
+    //   });
+  }
 
   selectedChange(val: any) {
     // this.itemSelected = val.data;
     // this.dt.detectChanges();
-  }
-
-  onDragDrop(e: any) {
-    // if (e.type == 'drop') {
-    //   this.api
-    //     .execSv<any>('ERM.Business.HR','PositionsBusiness', 'UpdateAsync', e.data)
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         this.view.dataService.update(e.data);
-    //       }
-    //     });
-    // }
   }
 
   click(evt: ButtonModel) {

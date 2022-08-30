@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import {
   ChangeDetectorRef,
   Component,
@@ -20,13 +21,13 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   selector: 'codx-references',
   templateUrl: './codx-references.component.html',
   styleUrls: ['./codx-references.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CodxReferencesComponent implements OnInit {
-  @Input() formModel?: FormModel;
-  // @Input() data: any;
-  @Input() vllStatus = 'TMT004';
+  @Input() funcID?: string// khởi tạo để test,, sau có thể xóa
+  @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
+  @Input() dataReferences: any[];
   @Input() vllRefType = 'TM018';
-  dataVll: any;
   @ViewChild('attachment') attachment: AttachmentComponent;
   message: string = '';
   REFERTYPE = {
@@ -35,25 +36,31 @@ export class CodxReferencesComponent implements OnInit {
     APPLICATION: 'application',
   };
   lstFile: any[] = [];
-
-  data ={
-   memo :"Công văn dự án 1000 USD" ,
-   createByName :"Lê Thi Hoài Thương",
-   
-  }
+  //dataAvtar: any;
 
   constructor(private cache: CacheService, private dt: ChangeDetectorRef) {
-    this.cache.valueList(this.vllRefType).subscribe((res) => {
-      if (res) this.dataVll = res;
-    });
+
   }
 
-  ngOnInit(): void {}
-  ngAfterViewInit(): void {}
+  ngOnInit(): void { }
+  ngAfterViewInit(): void {
+    //data view test
+    this.dataReferences = [
+      {
+        memo: 'Công văn dự án 1000 USD',
+        createByName: 'Lê Thi Hoài Thương',
+        createdOn: new Date(),
+        recID: '00cfeb10-a433-43e3-b6b3-876e25bf20a3',
+      },
+    ];
+    //end data test
+  }
 
-  uploadFile() {}
+  uploadFile() {
+    this.attachment.uploadFile();
+  }
 
-  showComments() {}
+  showComments() { }
 
   selectedFiles(event: any) {
     if (event.data.length > 0) {

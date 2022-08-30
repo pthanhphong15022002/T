@@ -1,6 +1,6 @@
 import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ApiHttpService, AuthService, CacheService, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, FormModel, NotificationsService } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { tmpHistory } from '../../models/tmpComments.model';
 import { AttachmentComponent } from '../attachment/attachment.component';
@@ -18,11 +18,16 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() objectID: string;
   @Input() objectType: string;
   @Input() actionType:string;
+  @Input() reference:string;
+  @Input() formModel:FormModel;
   @Input() type: "view" | "create" = "view";
   @Input() data:any;
   @Input() viewIcon:boolean = true;
+  @Input()  allowVotes:boolean = true;
   @Output() evtReply = new EventEmitter;
   @Output() evtDelete = new EventEmitter;
+  @Output() evtSend = new EventEmitter;
+
 
   user: any = null;
   message: string = "";
@@ -56,7 +61,12 @@ export class CodxCommentHistoryComponent implements OnInit {
       this.getFileByObjectID();
     }
   }
-
+  grdSetUp:any;
+  getGrdViewSetUp(){
+    this.cache.gridViewSetup(this.formModel.formName,this.formModel.gridViewName).subscribe((grd:any) => {
+      this.grdSetUp = grd;
+    })
+  }
   getFileByObjectID(){
     this.api.execSv(
       "DM","ERM.Business.DM",
@@ -126,17 +136,18 @@ export class CodxCommentHistoryComponent implements OnInit {
     data.objectType = this.objectType;
     data.actionType = this.actionType;
     data.functionID = this.funcID;
+    data.reference = this.reference;
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
     .subscribe((res1:any) => {
       if(res1){
         if(data.attachments > 0)
         {
-          this.codxATM.functionID = this.objectID;
           this.codxATM.objectId = res1.recID;
           this.codxATM.objectType = "BG_TrackLogs";
           this.codxATM.fileUploadList = this.lstFile;
           this.codxATM.saveFilesObservable().subscribe((res2:any) => {
             if(res2){
+              this.evtSend.emit(res1);
               this.notifySV.notifyCode("SYS006"); 
               this.clearData();   
             }
@@ -144,8 +155,9 @@ export class CodxCommentHistoryComponent implements OnInit {
         }
         else
         {
-              this.notifySV.notifyCode("SYS006");
-              this.clearData();   
+            this.evtSend.emit(res1);
+            this.notifySV.notifyCode("SYS006");
+            this.clearData();   
         }
       }
       else {
@@ -169,6 +181,28 @@ export class CodxCommentHistoryComponent implements OnInit {
 
   votePost(data: any, voteType = null) 
   {
-    
+    this.api.execSv(
+      "BG",
+      "ERM.Business.BG",
+      "TrackLogsBusiness",
+      "VoteCommentAsync",
+      [data.recID, voteType])
+      .subscribe((res: any) => {
+        if (res) {
+          data.votes = res[0];
+          data.totalVote = res[1];
+          data.listVoteType = res[2];
+          if (voteType == data.myVotedType) {
+            data.myVotedType = null;
+            data.myVoted = false;
+          }
+          else {
+            data.myVotedType = voteType;
+            data.myVoted = true;
+          }
+          this.dt.detectChanges();
+        }
+
+      });
   }
 }

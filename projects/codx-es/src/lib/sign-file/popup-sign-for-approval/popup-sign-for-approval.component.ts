@@ -194,7 +194,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
   //#region popup
 
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('popupApprove1', { static: false }) content: TemplateRef<any>;
+  //@ViewChild('popupApprove1', { static: false }) content: TemplateRef<any>;
+  @ViewChild('popupApprove', { static: false }) content: TemplateRef<any>;
 
   okClick = false;
   title: string;
@@ -220,61 +221,28 @@ export class PopupSignForApprovalComponent extends UIComponent {
   changeReason(e) {}
 
   saveDialog1(dialog1: DialogRef) {
-    console.log(this.dialogSignFile);
-    if (this.mode == 1) {
+    if (this.mode) {
       this.pdfView
         .signPDF(this.mode, this.dialogSignFile.value.comment)
         .then((value) => {
           console.log('da ki', value);
           if (value) {
-            // this.notify.notifyCode('RS002');
-            // this.canOpenSubPopup = false;
-            // this.pdfView.reload();
-            // this.detectorRef.detectChanges();
             let result = {
-              result: value,
+              result: true,
               mode: this.mode,
             };
             this.notify.notifyCode('RS002');
+            this.canOpenSubPopup = false;
+            //this.pdfView.reload();
             dialog1 && dialog1.close(result);
-            this.dialog && this.dialog.close(value);
-          }
-          // if (res) {
-          //   if (res?.msgCodeError == null) {
-          //     let result = {
-          //       result: true,
-          //       mode: this.mode,
-          //     };
-          //     this.notify.notifyCode('RS002');
-          //     dialog1 && dialog1.close(result);
-          //     this.dialog && this.dialog.close(result);
-          //   } else {
-          //     let result = {
-          //       result: false,
-          //       mode: this.mode,
-          //     };
-          //     this.notify.notify(res?.msgCodeError);
-          //     dialog1 && dialog1.close(result);
-          //     this.dialog && this.dialog.close(result);
-          //   }
-          // }
-        });
-    } else {
-      this.esService
-        .updateSignFileTrans(
-          null,
-          this.user.userID,
-          this.recID,
-          this.mode,
-          this.dialogSignFile?.value ? this.dialogSignFile.value.comment : ''
-        )
-        .subscribe((res) => {
-          if (res) {
+            this.dialog && this.dialog.close(result);
+          } else {
+            this.canOpenSubPopup = false;
             let result = {
-              result: res,
+              result: false,
               mode: this.mode,
             };
-            this.notify.notifyCode('RS002');
+            this.notify.notifyCode('E04372');
             dialog1 && dialog1.close(result);
             this.dialog && this.dialog.close(result);
           }

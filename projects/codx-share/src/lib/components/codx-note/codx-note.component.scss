@@ -19,6 +19,7 @@
   .check-box {
     margin-top: 5px;
     margin-left: 10px;
+    width: 25px;
   }
 
   .text-after-check-box {
@@ -55,15 +56,20 @@
 
 .action-menu-1 {
   position: absolute;
-  width: 40px;
+  width: 18px;
   z-index: 99;
   opacity: 0;
 }
 
 .has-action-menu:hover .action-menu-1 {
-    opacity: 1;
+  opacity: 1;
 }
 
 .text {
-  margin-left: 20px;
+  margin-left: 25px;
+}
+
+.card-note .emoji {
+  position: absolute;
+  top: 206px;
 }

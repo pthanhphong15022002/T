@@ -158,8 +158,8 @@
           labelPosition="after"
           field="day"
           class="test-check"
-          (valueChange)="valueChange($event)"
-          [crrValue]="isFullDay"
+          (valueChange)="valueAllDayChange($event)"
+          [checked]="fGroupAddBookingRoom.value.isFullDay"
         >
         </codx-input>
       </div>
@@ -276,7 +276,7 @@
       <div
         class="d-flex justify-content-between align-items-center mb-2 form-group"
       >
-        <codx-label default="Lái xe & người đi cùng" fiedName="Note">
+        <codx-label default="Người tham dự" fiedName="Note">
         </codx-label>
         <div class="d-flex flex-row text-end align-items-end">
           <span class="mx-2">
@@ -349,32 +349,62 @@
           [formModel]="dialogRef.formModel"
         >
         </codx-label>
-        <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary" >
-          <span class="icon-cloud_upload btn-text-primary me-2"  (click)="popup($event)" ></span>
+        <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+          <span class="icon-cloud_upload btn-text-primary me-2"  (click)="popupUploadFile($event)" ></span>
           <codx-label fiedName="Upload" default="Upload file" [formModel]="dialogRef.formModel"></codx-label>
         </a>
       </div>
       <!--end::Title-->
       <div class="AttachmentFile-group flex-nowrap">
-        <!--begin::Users group-->
-        <div class="d-flex align-items-center mb-2">
-          <!--begin::Svg Icon | path: icons/duotune/files/fil003.svg-->
+        <!-- <codx-attachment
+            #attSignature1
+            idBrowse="attSignature1"
+            [objectType]="dialogRef.formModel.entityName"
+            [objectId]="data.recID"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="0"
+            [functionID]="dialogRef.formModel.funcID"
+            (fileAdded)="fileAdded($event)"
+            type="inline"
+            hideImageUpload="0"
+            (fileCount)="fileCount($event)"
+            allowMultiFile="0"
+          >
+          </codx-attachment> -->
+          
+          <codx-attachment
+            #attachment
+            [objectType]="'EP_BookingRooms'"
+            [functionID]="dialogRef.formModel.funcID"
+            [objectId]="data.recID"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            hideImageUpload="0"
+            hideImageThumb="1"
+            [allowMultiFile]="0"
+            [idBrowse]="'add'"
+            allowExtensions=""
+            type="inline" 
+            (fileCount)="fileCount($event)"
+            (fileAdded)="fileAdded($event)"
+          >
+          </codx-attachment> 
+
+        <!-- <div class="d-flex align-items-center mb-2">
           <span class="me-4 icon-file-excel"> </span>
-          <!--end::Svg Icon-->
           <a href="#" class="text-gray-800 text-hover-primary"
             >Báo cáo doanh số tháng 3 <span>(1MB)</span></a
           >
         </div>
         <div class="d-flex align-items-center mb-2">
-          <!--begin::Svg Icon | path: icons/duotune/files/fil003.svg-->
           <span class="me-4 icon-file-excel">
-            <!-- <img alt="Pic" src="../../../assets/themes/sys/default/light/img/avatar_default.svg"> -->
           </span>
-          <!--end::Svg Icon-->
           <a href="#" class="text-gray-800 text-hover-primary"
-            >Báo cáo doanh số tháng 3 <span>(1MB)</span></a
-          >
-        </div>
+            >Báo cáo doanh số tháng 3 <span>(1MB)</span></a  >
+        </div> -->
       </div>
     </div>
   </ng-template>

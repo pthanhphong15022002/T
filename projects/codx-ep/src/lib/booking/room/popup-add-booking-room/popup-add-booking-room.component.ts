@@ -10,7 +10,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -259,6 +259,16 @@ export class PopupAddBookingRoomComponent implements OnInit {
         if (this.data) {
           console.log('fgroupEPT1', this.data)
           this.fGroupAddBookingRoom.patchValue(this.data);
+          if(this.data.hours==24){
+            this.isFullDay=true;
+          }
+          else{            
+            this.isFullDay=false;
+          }
+          this.fGroupAddBookingRoom.addControl(
+            'isFullDay',
+            new FormControl(this.isFullDay)
+          );
           if(this.isAdd){            
             this.fGroupAddBookingRoom.patchValue({attendees:1});            
             this.link = null;
@@ -269,10 +279,12 @@ export class PopupAddBookingRoomComponent implements OnInit {
           if(!this.isAdd){            
             if(this.fGroupAddBookingRoom.value.hours==24){
               this.isFullDay=true;
+              
+              this.changeDetectorRef.detectChanges();  
             }     
             this.startTime=this.fGroupAddBookingRoom.value.startDate.toString().slice(16,21);
             this.endTime=this.fGroupAddBookingRoom.value.endDate.toString().slice(16,21);
-                      
+                     
           }
         } 
       });     
@@ -343,6 +355,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
           this.isSaveSuccess = true;
         }
       });
+    //this.attachment.saveFilesObservable().subscribe(res=>{})
   }
   changeTime(data) {
     if (!data.field || !data.data) return;
@@ -396,6 +409,16 @@ export class PopupAddBookingRoomComponent implements OnInit {
   }
 
   valueChange(event) {
+    if (event?.field) {
+      if (event.data instanceof Object) {
+        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data.value });
+      } else {
+        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data });
+      }
+    }  
+    this.changeDetectorRef.detectChanges();
+  }
+  valueAllDayChange(event) {
     if (event?.field == 'day') {
       this.isFullDay = event.data;
       if (this.isFullDay) {
@@ -406,16 +429,9 @@ export class PopupAddBookingRoomComponent implements OnInit {
         this.endTime = null;
         this.startTime = null;
       }
-    } else if (event?.field) {
-      if (event.data instanceof Object) {
-        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data.value });
-      } else {
-        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data });
-      }
-    }  
+    } 
     this.changeDetectorRef.detectChanges();
   }
-
   valueCbxRoomChange(event?) {  
     if(event?.data!=null && event?.data !=""){      
       this.tmplstDevice=[];
@@ -590,7 +606,11 @@ export class PopupAddBookingRoomComponent implements OnInit {
   popup(evt: any) {
     this.attachment.openPopup();
   }
-
+  popupUploadFile(evt:any) {
+    this.attachment.uploadFile();
+  } 
   fileAdded(evt: any) {
+  }
+  fileCount(evt: any) {
   }
 }

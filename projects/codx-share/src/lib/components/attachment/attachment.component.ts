@@ -46,7 +46,7 @@ import {
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { map, Observable } from 'rxjs';
-import { LV } from '@shared/services/lv.component';
+import { lvFileClientAPI } from '@shared/services/lv.component';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -77,6 +77,7 @@ export class AttachmentComponent implements OnInit {
   title2 = 'Vui lòng chọn file tải lên';
   titleUpload = 'Upload';
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
+  urlUpload = '';
   interval: ItemInterval[];
   intervalCount = 0;
   fileUploadList: FileUpload[];
@@ -152,7 +153,7 @@ export class AttachmentComponent implements OnInit {
     if (data?.data != null) {
       this.objectType = data?.data.objectType;
       this.objectId = data?.data.objectId;
-      this.folderType = data?.data.folderType;
+    //  this.folderType = data?.data.folderType;
       this.functionID = data?.data.functionID;
       this.type = data?.data.type;
       this.popup = data?.data.popup;
@@ -160,8 +161,9 @@ export class AttachmentComponent implements OnInit {
     }
 
     this.fileUploadList = [];
+    this.folderType = this.dmSV.idMenuActive;
     if (this.folderType == null || this.folderType == "")
-      this.folderType = "3";
+      this.folderType = "DMT02";
 
     if (this.type == null || this.type == '') this.type = 'center';
 
@@ -837,8 +839,8 @@ export class AttachmentComponent implements OnInit {
           }
         });
     } else if (total == 1) {
-      //this.addFileLargeLong(this.fileUploadList[0]);
-      this.addFile(this.fileUploadList[0]);
+      this.addFileLargeLong(this.fileUploadList[0]);
+      //this.addFile(this.fileUploadList[0]);
       
       this.atSV.fileList.next(this.fileUploadList);
     } else {
@@ -927,71 +929,72 @@ export class AttachmentComponent implements OnInit {
         });
       });
     };
-    try {
-      // http://192.168.18.36:8011/
-    //  http://192.168.18.36:8011
-      var item = await isAllowAddFileAsync();
-      var host = "http://192.168.18.36:8011";//"http://172.16.7.91:8008";//http://192.168.18.36:5010";
-      LV.Files.API.setHostApiUrl(host);
-      var AccessTokenkey = "b5a54909-96bd-4d6a-91b4-1318bda5012c";
-      var fileToUpload = fileItem;
-      // console.log(URL.createObjectURL(fileToUpload.item));
 
-      var regUploadInfo = await LV.Files.API.callApi(
-        LV.Files.APINames.registerUpload,
-        {
+    try {      
+      lvFileClientAPI.setUrl(this.dmSV.urlUpload); //"http://192.168.18.36:8011");
+      var retToken = await lvFileClientAPI.formPost("api/accounts/token",{
+          username: "admin/root",
+          password: "root"
+      });
+      window.localStorage.setItem('lv-file-api-token', retToken.access_token);
 
-          accessToken: AccessTokenkey,
-          registerInfo: {
-            isPublic: true,//false:Muốn truy cập vào nội dung file phải login,true:Công cộng
-            fileName: fileToUpload.item.name, //tên file,
-            sizeInBytes: fileToUpload.item.size, //Kích thước file,
-            chunkSizeInKB: 1024 * 2, //512KB,
-            thumbSize: {
-              width: 200, //Kích thước của file ảnh Thum bề ngang
-              height: 100//Kích thước của file ảnh Thum bề dọc
-            }
-          }
-        });
-      console.log(regUploadInfo);
-      fileItem.thumbnail = regUploadInfo.relUrlShortThumb;
-      fileItem.uploadId = regUploadInfo.id;
-      fileItem.extension = regUploadInfo.fileExt;
-      fileItem.data = "";
-      fileItem.urlPath = regUploadInfo.fullFileName;
-      // play = `{0}
-      // `${host}/api/default/lv-media/content/directory/${app}/${fileName}`
-      for (var i = 0; i < regUploadInfo.numOfChunks; i++) {
-        var start = i * regUploadInfo.chunkSizeInBytes;//Vị trí bắt đầu băm file
-        var end = start + regUploadInfo.chunkSizeInBytes;//Vị trí cuối
-        if (end > regUploadInfo.sizeInBytes)
-          end = regUploadInfo.sizeInBytes;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
-        var blogPart = fileToUpload.item.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
+      //var access_token = retToken.access_token;
+      var appName="hps-file-test";// Tam thoi de hard  
+      //http://192.168.18.36:8011/api/lv-docs/files/register
+      var ChunkSizeInKB = 2*1024;
+      var uploadFile = fileItem.item.rawFile;
+      var retUpload = await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {        
+        "Data": {
+          "FileName":  uploadFile.name,
+          "ChunkSizeInKB": ChunkSizeInKB,
+          "FileSize": uploadFile.size,
+          'thumbSize': {
+            'width': 200, //Kích thước của file ảnh Thum bề ngang
+            'height': 200//Kích thước của file ảnh Thum bề dọc
+          },
+          "IsPublic": true          
+        }
+      });
+      
+      console.log(retUpload);
+      // update len server urs và thumbnail
+      fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
+      fileItem.uploadId = retUpload.Data.UploadId;//"";
+      fileItem.urlPath = retUpload.Data.RelUrlOfServerPath;//"";
+      this.addFile(fileItem);
+
+      //this.displayThumbnail(res.recID, res.pathDisk);      
+      var sizeInBytes = uploadFile.size;
+      var chunSizeInfBytes = ChunkSizeInKB * 1024;
+      var numOfChunks = Math.floor(uploadFile.size/chunSizeInfBytes);
+      if(uploadFile.size % chunSizeInfBytes>0){
+        numOfChunks++;
+      }
+
+      //api/lv-docs/files/upload     
+      for (var i = 0; i < numOfChunks; i++) {
+        var start = i * chunSizeInfBytes;//Vị trí bắt đầu băm file
+        var end = start + chunSizeInfBytes;//Vị trí cuối
+        if (end > sizeInBytes)
+          end = sizeInBytes;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+        var blogPart = uploadFile.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
         var fileChunk = new File(
-          [blogPart],
-          fileToUpload.fileName,
-          { type: fileToUpload.type });//Gói lại thành 1 file chunk để upload
-        var uploadChunckInfo = await LV.Files.API.callApi(
-          LV.Files.APINames.uploadChunk,
-          {
-            accessToken: AccessTokenkey,
-            data: {
-              uploadId: regUploadInfo.id,//UploadId lấy từ phần đăng ký
-              index: i//Chỉ mục của chunk
-            },
-            filePart: fileChunk //Dữ liệu củ file chunk đã được gói lại trong file
-          }
-        );
+          [ blogPart ],
+          uploadFile.name,
+          { type: uploadFile.type });//Gói lại thành 1 file chunk để upload
+          var uploadChunk = await lvFileClientAPI.formPostWithToken(`api/${appName}/files/upload`,{      
+            FilePart: fileChunk,
+            UploadId: retUpload.Data.UploadId,
+            Index: i          
+          });
+        console.log(uploadChunk);
       }
     }
     catch (ex) {
       fileItem.uploadId = "0";
       this.notificationsService.notify(ex);
     }
-
-
-    return ret;
-    //this.displayThumbnail(res.recID, res.pathDisk);
+    return ret;    
   }
 
   addFileLarge(fileItem: FileUpload) {
@@ -1056,19 +1059,14 @@ export class AttachmentComponent implements OnInit {
             var files = this.dmSV.listFiles;
             if (files == null) files = [];
             var res = item.data;
+            var thumbnail = res.thumbnail;
             res.thumbnail = '../../../assets/img/loader.gif';
             files.push(Object.assign({}, res));
             this.dmSV.listFiles = files;
-            this.dmSV.ChangeData.next(true);
-            //this.fileUploadList = [];
-            //  that.displayThumbnail(res.recID, res.pathDisk);
-            // this.notificationsService.notify(item.message);
-            // this.fileUploadList[0].recID = item.data.recID;
-            // list.push(Object.assign({}, res));
-            this.atSV.fileListAdded.push(Object.assign({}, item));
-            // for(var i=0; i<addList.length; i++) {
+            this.dmSV.ChangeData.next(true);           
+            this.atSV.fileListAdded.push(Object.assign({}, item));            
             this.data.push(Object.assign({}, item));
-
+            item.data.thumbnail = thumbnail;
             this.displayThumbnail(item.data);
             this.dmSV.updateHDD.next(item.messageHddUsed);
             this.notificationsService.notify(item.message);
@@ -1085,22 +1083,6 @@ export class AttachmentComponent implements OnInit {
     }
     this.closePopup();
   }
-
-  // ngOnDestroy(): void {
-  //   var data = new DataItem();
-  //   data.recID = "";
-  //   data.type = "folder";
-  //   data.fullName = "";
-  //   data.copy = false;
-  //   data.dialog = "closeAll";
-  //   data.id_to = "";
-  //   this.dmSV.setOpenDialog.next(data);
-  //   if (this.interval?.length > 0) {
-  //     this.interval.forEach(element => {
-  //       clearInterval(element.instant);
-  //     });
-  //   }
-  // }
 
   rewriteFile(title: any, message: any, item: FileUpload) {
     var config = new AlertConfirmInputConfig();
@@ -2687,7 +2669,7 @@ export class AttachmentComponent implements OnInit {
         fileUpload.folderType = this.folderType;
         fileUpload.referType = this.referType;
         fileUpload.reWrite = false;
-        fileUpload.data = data.toString();
+        fileUpload.data = '';
         fileUpload.item = files[i];
         //fileUpload.folderId = this.folderId;
         fileUpload.folderId = this.dmSV.folderId.getValue();
@@ -2726,6 +2708,7 @@ export class AttachmentComponent implements OnInit {
 
     return false;
   }
+
   clearData() {
     this.data = [];
     this.fileUploadList = [];
