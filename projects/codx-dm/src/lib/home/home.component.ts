@@ -760,7 +760,7 @@ export class HomeComponent extends UIComponent {
   requestEnded(e: any) {
     if(e.type === "read"){     
       this.data = [];    
-      this.dmSV.listFolder = []; 
+     // this.dmSV.listFolder = []; 
       this.dmSV.listFiles = [];      
       // npm i ngx-infinite-scroll@10.0.0
       this.changeDetectorRef.detectChanges();
@@ -806,13 +806,12 @@ export class HomeComponent extends UIComponent {
       }
 
       this.changeDetectorRef.detectChanges();     
-      this._beginDrapDrop();        
-      this.dmSV.idMenuActive = this.view.funcID;     
+      this._beginDrapDrop();           
       this.dmSV.folderId.next('');
       this.dmSV.folderID = "";
       this.dmSV.loadedFolder = true;      
       this.dmSV.menuIdActive.next(this.view.funcID);
-      this.dmSV.idMenuActive = this.view.funcID;;
+      this.dmSV.idMenuActive = this.view.funcID;
       var breadcumb = [];      
       breadcumb.push(this.view.function.customName);
       this.dmSV.menuActive.next(this.view.function.customName);
