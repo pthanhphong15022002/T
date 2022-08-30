@@ -69,7 +69,7 @@
     <div class="m-0 bg-body rounded-2 h-100">
       <ng-container *ngIf="name=='Nội dung họp'">
         <ng-container *ngTemplateOutlet="templateMeeting">
-          ...
+          <codx-note [showMenu]="true" [showMF]="true"></codx-note>
         </ng-container>
       </ng-container>
       <ng-container *ngIf="name=='Thảo luận'">

@@ -175,7 +175,7 @@
             <span class="icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative
             " (click)="checkFont('UNDERLINE', input)" [class.active]="font.UNDERLINE ? 'active' : ''"></span>
             <codx-input #colorPicker type="colorpicker" [showText]="false" [modeSwitcher]="true" [crrValue]="font.COLOR"
-                field="color" (valueChange)="valueChangeColor($event, input, colorPicker)">
+                field="textColor" (valueChange)="valueChangeColor($event, input, colorPicker)">
             </codx-input>
             <div class="btn-emoji">
                 <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"

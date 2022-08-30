@@ -207,6 +207,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         ) as HTMLElement;
         this.currentElement.focus();
         this.listNoteTemp[event?.field] = event?.data;
+        /*Set lại color cho memo khi edit color*/
+        this.listNote[this.id].textColor = event?.data;
+        /*Set lại color cho memo khi edit color*/
         this.elementColor = elementColor;
         this.chooseColor(event?.data);
       }
@@ -348,19 +351,18 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       }
       /*set property cho lineTpe là TITLE*/
 
-      var colorTemp = JSON.parse(JSON.stringify(this.font.COLOR));
       this.listNoteTemp.format = '';
       var codxInputElement = ele[ele.length - 2] as HTMLElement;
       var divElement = codxInputElement.children[0] as HTMLElement;
       var inputElement = divElement.children[0] as HTMLElement;
-      inputElement.style.setProperty('color', colorTemp, 'important');
+      inputElement.style.setProperty('color', this.font.COLOR, 'important');
 
-      colorTemp = '#000000';
+      this.font.COLOR = '#000000';
       var lastCodxInputElement = ele[ele.length - 1] as HTMLElement;
       var lastDivElement = lastCodxInputElement.children[0] as HTMLElement;
       var lastInputElement = lastDivElement.children[0] as HTMLElement;
-      lastInputElement.style.setProperty('color', colorTemp, 'important');
-      this.setColorForCodxColor(colorTemp);
+      lastInputElement.style.setProperty('color', this.font.COLOR, 'important');
+      this.setColorForCodxColor(this.font.COLOR);
       this.setFont();
     }
   }
