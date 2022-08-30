@@ -120,7 +120,7 @@
             Tỷ lệ hoàn thành đúng hạn
           </div>
           <div class="text-primary fw-bolder fs-header text-center mt-2">
-            {{ rateDoneTaskOnTime }} %
+            {{ rateDoneTaskOnTime | number }} %
           </div>
         </div>
         <div class="w-50 p-3">
@@ -171,11 +171,11 @@
   <div class="d-flex flex-column" *ngFor="let item of vlWork">
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center justify-content-end">
-        <span class="me-3">{{ item?.id }}</span>
+        <span class="me-3">{{ item?.owner ? item?.owner : item?.id}}</span>
         <codx-img
           [width]="25"
           [objectId]="item?.id"
-          [objectName]="item?.id"
+          [objectName]="item?.owner"
           [objectType]="'AD_Users'"
         ></codx-img>
       </div>
@@ -204,11 +204,11 @@
   <div class="d-flex flex-column" *ngFor="let item of hrWork">
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center justify-content-end">
-        <span class="me-3">{{ item?.id }}</span>
+        <span class="me-3">{{ item?.owner ? item?.owner : item?.id }}</span>
         <codx-img
           [width]="25"
           [objectId]="item?.id"
-          [objectName]="item?.id"
+          [objectName]="item?.owner"
           [objectType]="'AD_Users'"
         ></codx-img>
       </div>
