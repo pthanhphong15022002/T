@@ -228,7 +228,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
           console.log('da ki', value);
           if (value) {
             let result = {
-              result: false,
+              result: true,
               mode: this.mode,
             };
             this.notify.notifyCode('RS002');
