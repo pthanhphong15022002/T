@@ -5,7 +5,6 @@
         <a ngbNavLink class="nav-link"></a>
         <codx-label [name]="'tab' + item.name" [formName]="'SYS'" [default]="item.textDefault || item.name">
         </codx-label>
-        </a>
         <ng-template ngbNavContent>
           <ng-container *ngTemplateOutlet="tab; context: { $implicit: item.name }">
           </ng-container>
