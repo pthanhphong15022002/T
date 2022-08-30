@@ -17,7 +17,7 @@ import { StatusTask } from '../../models/enum/enum';
   templateUrl: './teamdashboard.component.html',
   styleUrls: ['./teamdashboard.component.scss'],
   providers: [GradientService],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class TeamDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
@@ -129,8 +129,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
   }
 
-  closeTooltip() {
-  }
+  closeTooltip() {}
 
   //#region chartcolumn
   columnXAxis: Object = {
@@ -201,13 +200,13 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
           dataBarChart,
           rateDoneTaskOnTime,
           qtyTasks,
-          vltasksByEmp,
-          hoursByEmp,
+          vltasksByEmpWithName,
+          hoursByEmpWithName,
         } = res;
         this.tasksByGroup = tasksByGroup;
         this.status = status;
         this.dataBarChart = dataBarChart;
-        this.rateDoneTaskOnTime = rateDoneTaskOnTime.toFixed(2);
+        this.rateDoneTaskOnTime = rateDoneTaskOnTime;
         this.qtyTasks = qtyTasks;
         this.piedata = [
           {
@@ -231,39 +230,44 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
             y: status.canceledTasks,
           },
         ];
-        vltasksByEmp.map((task) => {
-          let newTasks = 0;
-          let processingTasks = 0;
-          let doneTasks = 0;
-          let postponeTasks = 0;
-          task.tasks.map((task) => {
-            switch (task.status) {
-              case StatusTask.New:
-                newTasks = newTasks + 1;
-                break;
-              case StatusTask.Processing:
-                processingTasks = processingTasks + 1;
-                break;
-              case StatusTask.Done:
-                doneTasks = doneTasks + 1;
-                break;
-              case StatusTask.Postpone:
-                postponeTasks = postponeTasks + 1;
-                break;
-            }
+        if (vltasksByEmpWithName) {
+          vltasksByEmpWithName.map((task) => {
+            console.log('Task', task);
+            let newTasks = 0;
+            let processingTasks = 0;
+            let doneTasks = 0;
+            let postponeTasks = 0;
+            task.tasks.map((task) => {
+              switch (task.status) {
+                case StatusTask.New:
+                  newTasks = newTasks + 1;
+                  break;
+                case StatusTask.Processing:
+                  processingTasks = processingTasks + 1;
+                  break;
+                case StatusTask.Done:
+                  doneTasks = doneTasks + 1;
+                  break;
+                case StatusTask.Postpone:
+                  postponeTasks = postponeTasks + 1;
+                  break;
+              }
+            });
+            this.vlWork.push({
+              id: task.id,
+              qtyTasks: task.qtyTasks,
+              owner: task.owner,
+              status: {
+                new: (newTasks / task.qtyTasks) * 100,
+                processing: (processingTasks / task.qtyTasks) * 100,
+                done: (doneTasks / task.qtyTasks) * 100,
+              },
+            });
           });
-          this.vlWork.push({
-            id: task.id,
-            qtyTasks: task.qtyTasks,
-            status: {
-              new: (newTasks / task.qtyTasks) * 100,
-              processing: (processingTasks / task.qtyTasks) * 100,
-              done: (doneTasks / task.qtyTasks) * 100,
-            },
-          });
-        });
-        this.hrWork = hoursByEmp;
-        console.log(this.vlWork)
+        }
+        if (hoursByEmpWithName) {
+          this.hrWork = hoursByEmpWithName;
+        }
         this.detectorRef.detectChanges();
       }
     });
