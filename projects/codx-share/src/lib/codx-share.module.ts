@@ -148,6 +148,7 @@ const T_Component: Type<any>[] = [
   TreeViewComponent,
   CodxViewAssignComponent,
   CodxCommentHistoryComponent,
+  CodxTreeHistoryComponent,
 
 ];
 
