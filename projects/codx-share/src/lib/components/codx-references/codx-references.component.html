@@ -44,7 +44,7 @@
             <span class="icon-chat_bubble_outline icon-18"></span>
           </span>
         </div>
-        <codx-attachment #attachment [functionID]="data.recID" [objectType]="formModel?.entityName" [hideFolder]="'1'"
+        <codx-attachment #attachment [functionID]="data.recID" [objectType]="entityName" [hideFolder]="'1'"
           [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" allowExtensions=".jpg,.png" [allowMultiFile]="'1'"
           [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'"
           (fileCount)="selectedFiles($event)">
