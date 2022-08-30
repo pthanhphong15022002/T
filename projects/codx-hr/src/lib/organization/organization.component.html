@@ -10,7 +10,9 @@
   (viewChanged)="changeView($event)"
 ></codx-views>
 <ng-template #templateDetail>
-  <div><lib-organize-detail></lib-organize-detail></div>
+  <ng-container *ngIf="orgUnitID">
+    <lib-organize-detail [orgUnitID]="orgUnitID"></lib-organize-detail>
+  </ng-container>
   <ng-template #nodeTemplate let-data>
     <div
       class="department-card border border-gray-300 w-250px position-relative"
