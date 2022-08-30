@@ -73,13 +73,23 @@
       </ng-container>
       <ng-container *ngIf="name=='Thảo luận'">
         <div class="tab_container">
-          <div class="tab_body" *ngFor="let cmt of lstComment">
+          <!-- <div class="tab_body" *ngFor="let cmt of lstComment">
             <codx-comment-history [data]="cmt" [actionType]="'C'" [type]="'view'"></codx-comment-history>
           </div>
           <div class="tab_footer">
             <codx-comment-history [objectID]="meeting.meetingID" [objectType]="'CO_Meetings'" [type]="'create'"
               [actionType]="'C'"></codx-comment-history>
-          </div>
+          </div> -->
+          <codx-tree-history
+          [objectID]="meetingID"
+          [objectType]="'CO_Meetings'"
+          [actionType]="'C'"
+          [addNew]="true"
+          [viewIcon]="false"
+          [viewVote]="true"
+          [funcID]="functionParent"
+        >
+      </codx-tree-history>
         </div>
       </ng-container>
     </div>
