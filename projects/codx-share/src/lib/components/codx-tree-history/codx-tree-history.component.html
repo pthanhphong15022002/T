@@ -10,7 +10,7 @@
             <codx-comment-history
                 [type]="'create'"
                 [funcID]="funcID"
-                [actionType]="'C'"
+                [actionType]="actionType"
                 [objectID]="objectID"
                 [objectType]="objectType"
                 [reference]="null"
@@ -39,8 +39,8 @@
         <ng-container *ngIf="item.showReply">
             <codx-comment-history
                 [type]="'create'"
-                [funcID]="item.funtionID"
-                [actionType]="'C'"
+                [funcID]="funcID"
+                [actionType]="actionType"
                 [objectID]="item.objectID"
                 [objectType]="item.objectType"
                 [reference]="item.recID"

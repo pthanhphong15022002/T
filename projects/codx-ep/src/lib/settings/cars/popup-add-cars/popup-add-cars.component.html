@@ -250,7 +250,7 @@
           >
             <span
             class="me-1"
-            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']"
           >
             </span
             >{{ item.text }}
@@ -307,7 +307,7 @@
       <div class="py-2" *ngFor="let item of tmplstDevice">
         <div class="d-flex flex-stack">
           <div class="d-flex">
-            <span class="text-dark me-2 p-1" [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-videocam' : item.id=='4' ? 'icon-video_settings' : ' icon-thermostat']">
+            <span class="text-dark me-2 p-1" [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
             </span>
             <div class="d-flex flex-column justify-content-center">
               <span href="#" class="text-dark fw-bolder">{{

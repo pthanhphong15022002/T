@@ -29,6 +29,7 @@ export class CodxTMService {
   aside = new BehaviorSubject<any>(null);
   toolbar = new BehaviorSubject<any>(null);
   urlback = '';
+  functionParent ="TMT0301"
   constructor(
     private api: ApiHttpService,
     private authStore: AuthStore,
@@ -72,7 +73,7 @@ export class CodxTMService {
   loadTaskByAuthen(data) {
     return this.execTM(
       APICONSTANT.BUSINESS.TM.Task,
-      'GetListDetailTasksAsync',
+      'GetTasksAsync',
       [data]
     );
   }

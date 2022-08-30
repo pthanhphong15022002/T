@@ -111,22 +111,22 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   saveMaster(isAdd: boolean) {
-    this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(up=>{
+    this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(up => {
       this.dialog.dataService
-      .save((option: any) => this.beforeSave(option, isAdd), isAdd ? 0 : null) //Hảo code mới
-      .subscribe((res) => {
-        if (res) {
-          // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
-          if (isAdd && this.funcID != 'TMT0301') {
-            var dataNew = this.dialog.dataService.data[0];
-            this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
-            this.dialog.dataService.data[1] = dataNew;
+        .save((option: any) => this.beforeSave(option, isAdd), isAdd ? 0 : null) //Hảo code mới
+        .subscribe((res) => {
+          if (res) {
+            // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
+            if (isAdd && this.funcID != 'TMT0301') {
+              var dataNew = this.dialog.dataService.data[0];
+              this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
+              this.dialog.dataService.data[1] = dataNew;
+            }
+            this.dialog.close();
           }
-          this.dialog.close();
-        }
-      });
+        });
     })
-   
+
     // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
     //   if (res) {
     //     if(isAdd){
@@ -167,11 +167,11 @@ export class PopupAddSprintsComponent implements OnInit {
     else this.resources += ';' + listUser;
     this.api
       .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListUserDetailAsync',
-        listUser
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);
@@ -308,7 +308,7 @@ export class PopupAddSprintsComponent implements OnInit {
   valueSelectUserCombobox(arrResources: any[]) {
     var resources = '';
     if (arrResources.length > 0) {
-      if (this.master.resources!=null && this.master.resources != '') {
+      if (this.master.resources != null && this.master.resources != '') {
         var arrNew = [];
         arrResources.forEach((e) => {
           if (!this.master.resources.includes(e)) {

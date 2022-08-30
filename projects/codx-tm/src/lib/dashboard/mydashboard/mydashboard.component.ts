@@ -1,20 +1,15 @@
 import { CodxTMService } from '../../codx-tm.service';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
 import { Component, ViewChild, TemplateRef, Injector } from '@angular/core';
-import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { ViewModel } from 'codx-core';
 import { ViewType } from 'codx-core';
-
 @Component({
   selector: 'mydashboard',
   templateUrl: './mydashboard.component.html',
   styleUrls: ['./mydashboard.component.scss'],
-  providers: [GradientService],
 })
 export class MyDashboardComponent extends UIComponent {
-  @ViewChild('tooltip') tooltip: TemplateRef<any>;
   @ViewChild('content') content: TemplateRef<any>;
-
   model: DataRequest;
   funcID: string;
   user: any;
@@ -32,23 +27,23 @@ export class MyDashboardComponent extends UIComponent {
   views: Array<ViewModel> = [];
 
   //#region gauge
-
-  rangeLinearGradient1: Object = {
-    startValue: '0%',
-    endValue: '100%',
-    colorStop: [
-      { color: '#5465FF', offset: '0%', opacity: 0.9 },
-      { color: '#04DEB7', offset: '90%', opacity: 0.9 },
-    ],
+  tooltip: Object = {
+    enable: true,
   };
 
-  rangeLinearGradient2: Object = {
-    startValue: '0%',
-    endValue: '100%',
-    colorStop: [
-      { color: '#FF8008', offset: '0%', opacity: 0.9 },
-      { color: '#FFC837', offset: '90%', opacity: 0.9 },
-    ],
+  labelStyle: Object = {
+    position: 'Inside',
+    useRangeColor: true,
+    font: {
+      size: '0px',
+      color: 'white',
+      fontFamily: 'Roboto',
+      fontStyle: 'Regular',
+    },
+  };
+
+  majorTicks: Object = {
+    height: 0,
   };
 
   minorTicks: Object = {
@@ -82,6 +77,11 @@ export class MyDashboardComponent extends UIComponent {
   legendSettings2: Object = {
     position: 'Right',
     visible: true,
+    textWrap: 'Wrap',
+    height: '30%',
+    width: '50%',
+    shapeHeight: 7,
+    shapeWidth: 7,
   };
 
   radius: Object = { topLeft: 10, topRight: 10 };
@@ -161,10 +161,6 @@ export class MyDashboardComponent extends UIComponent {
       });
   }
 
-  openTooltip() {
-    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
-  }
-
   onChangeValueSelectedWeek(data) {
     this.fromDate = this.toDate = data?.toDate;
     this.daySelected = data?.daySelected;
@@ -174,12 +170,6 @@ export class MyDashboardComponent extends UIComponent {
     this.month = data?.month + 1;
     this.beginMonth = data?.beginMonth;
     this.endMonth = data?.endMonth;
-    this.tmService
-      .getMyDBData(this.model, this.daySelected)
-      .subscribe((res) => {
-        this.data = res;
-        console.log(this.data);
-        this.detectorRef.detectChanges();
-      });
+    this.getGeneralData();
   }
 }

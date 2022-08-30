@@ -766,11 +766,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.listUser = this.listUser.concat(arrUser);
     this.api
       .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListUserDetailAsync',
-        listUser
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);

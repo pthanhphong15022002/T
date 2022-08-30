@@ -1,13 +1,24 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ClickEventArgs } from '@syncfusion/ej2-angular-buttons';
 import {
   ConnectorModel,
   Diagram,
+  DiagramTools,
   NodeModel,
   SnapConstraints,
   SnapSettingsModel,
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
+import { ApiHttpService } from 'codx-core';
+import { map, Observable } from 'rxjs';
 let data: any[] = [
   { Name: 'Species', fillColor: '#3DD94A' },
   { Name: 'Plants', Category: 'Species' },
@@ -35,32 +46,43 @@ let data: any[] = [
   selector: 'lib-organize-detail',
   templateUrl: './organize-detail.component.html',
   styleUrls: ['./organize-detail.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class OrganizeDetailComponent implements OnInit {
-  @Input() width = 250;
-  @Input() height = 250;
-  @Input() maxWidth = 250;
-  @Input() maxHeight = 250;
+export class OrganizeDetailComponent implements OnInit, OnChanges {
+  @Input() width = 260;
+  @Input() height = 300;
+  @Input() maxWidth = 300;
+  @Input() maxHeight = 300;
   @Input() minWidth = 100;
-  @Input() minHeight = 100;
+  @Input() minHeight = 300;
+  @Input() node?: any;
+  @Input() orgUnitID!: string;
+  @Input() numberLV: string = '3';
+  @Input() parentID: string = '';
+  @Input() onlyDepartment?: boolean;
 
+  data: any[] = [];
   datasetting: any = null;
   layout: Object = {
     type: 'HierarchicalTree',
-    // verticalSpacing: 30,
-    // horizontalSpacing: 40,
+    verticalSpacing: 30,
+    horizontalSpacing: 40,
     enableAnimation: true,
   };
   snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
-  constructor() {}
+  tool: DiagramTools = DiagramTools.ZoomPan;
+  constructor(
+    private api: ApiHttpService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.datasetting = {
-      id: 'Name',
-      parentId: 'Category',
-      dataManager: new DataManager(data as JSON[]),
+      id: 'departmentCode',
+      parentId: 'parentID',
+      dataManager: new DataManager(this.data as JSON[]),
       //binds the external data with node
       doBinding: (nodeModel: NodeModel, data: any, diagram: Diagram) => {
         nodeModel.data = data;
@@ -78,6 +100,46 @@ export class OrganizeDetailComponent implements OnInit {
         };
       },
     };
+    // this.loadOrgchart().subscribe((res) => {
+    //   if (res) {
+    //     this.data = res.Data as any[];
+    //     this.datasetting.dataManager = new DataManager(this.data as JSON[]);
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.loadOrgchart().subscribe((res) => {
+      if (res) {
+        this.data = res.Data as any[];
+        this.datasetting.dataManager = new DataManager(this.data as JSON[]);
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
+  loadOrgchart(): Observable<any> {
+    return this.api
+      .callSv(
+        'HR',
+        'ERM.Business.HR',
+        'OrganizationUnitsBusiness',
+        'GetDataDiagramAsync',
+        [
+          this.orgUnitID,
+          this.numberLV,
+          this.parentID,
+          this.onlyDepartment,
+          true,
+        ]
+      )
+      .pipe(
+        map((data) => {
+          if (data.error) return;
+          return data.msgBodyData[0];
+        })
+      );
   }
 
   public connDefaults(
@@ -113,5 +175,9 @@ export class OrganizeDetailComponent implements OnInit {
   }
   public click(arg: ClickEventArgs) {
     console.log(arg.element?.id);
+  }
+
+  test(data) {
+    debugger;
   }
 }

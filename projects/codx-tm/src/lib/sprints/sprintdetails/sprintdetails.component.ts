@@ -26,6 +26,7 @@ import { TabModelSprints } from '../../models/TM_Sprints.model';
 export class SprintDetailsComponent implements OnInit, AfterViewInit {
   active = 1;
   iterationID: any;
+  functionParent:any
   data: any;
   meetingID: any;
   dataObj: any;
@@ -71,6 +72,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.layout.setUrl(this.tmSv.urlback);
+    this.functionParent = this.tmSv.functionParent ;
     this.cache.functionList(this.funcID).subscribe(f=>{
         if(f) this.layout.setLogo(f.smallIcon);
     })
@@ -131,7 +133,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadTabView();
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
   loadTabView() {
     // if(this.showTabDasboard)this.all.push('Dashboard')
     // if(this.showTabTasks)this.all.push('Công việc')

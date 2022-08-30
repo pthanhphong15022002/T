@@ -128,7 +128,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           //   return response[response.taskID] != response['_uuid'];
           // };
           this.task = response;
-         
+
           this.loadingAll = true;
           this.openInfo();
         }
@@ -493,11 +493,11 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.listUser = this.listUser.concat(arrUser);
     this.api
       .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListUserDetailAsync',
-        listUser
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(listUser.split(';'))
       )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);
@@ -515,42 +515,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  //Form Old
-  // getListUser(listUser) {
-  //   while (listUser.includes(' ')) {
-  //     listUser = listUser.replace(' ', '');
-  //   }
-  //   var arrUser = listUser.split(';');
-  //   this.listUser = this.listUser.concat(arrUser);
-  //   // arrUser.forEach((u) => {
-  //   //   var taskResource = new tmpTaskResource();
-  //   //   taskResource.resourceID = u;
-  //   //   taskResource.roleType = 'R';
-  //   //   this.listTaskResources.push(taskResource);
-  //   // });
-  //   this.api
-  //     .execSv<any>(
-  //       'TM',
-  //       'ERM.Business.TM',
-  //       'TaskBusiness',
-  //       'GetListUserDetailAsync',
-  //       listUser
-  //     )
-  //     .subscribe((res) => {
-  //       if (res && res.length > 0) {
-  //         for (var i = 0; i < res.length; i++) {
-  //           let emp = res[i];
-  //           var taskResource = new tmpTaskResource();
-  //           taskResource.resourceID = emp.userID;
-  //           taskResource.resourceName = emp.userName;
-  //           taskResource.positionName = emp.positionName;
-  //           taskResource.roleType = 'R';
-  //           this.listTaskResources.push(taskResource);
-  //         };
-  //       }
-  //       // this.listUserDetail = this.listUserDetail.concat(res);
-  //     });
-  // }
+
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
     if (userID) this.idUserSelected = userID;
