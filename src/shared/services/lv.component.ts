@@ -1,78 +1,196 @@
-var LV = {} as any;
-LV.Files = {};
-LV.Ajax = {
-    post: function (url, data) {
-        var formData = new FormData();
-        var postData = {};
-        var keys = Object.keys(data || {});
-        var files = {};
-        var hasFile = false;
-        keys.forEach(function (k, i) {
-            if (data[k] instanceof (File)) {
-                formData.append(k, data[k], data[k].name);
-                hasFile = true;
+var lvFileClientAPI = {
+    serverApIHostUrl: "",
+    _onBeforeCall: () => { },
+    getToken: () => {
+        return window.localStorage['lv-file-api-token']
+    },
+    setUrl: (url) => {
+        lvFileClientAPI.serverApIHostUrl = url
+    },
+    getUrl: () => {
+        return lvFileClientAPI.serverApIHostUrl;
+    },
+    formPostAsync: async (apiPath, data) => {
+        var url = lvFileClientAPI.serverApIHostUrl + "/" + apiPath;
+        var formData = new FormData()
+        var keys = Object.keys(data)
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i]
+            var val = data[key]
+            formData.append(key, val);
+
+        }
+        var sender = undefined;
+        
+        try {
+            var fetcher = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+           
+            if (fetcher.status >= 200 && fetcher.status < 300) {
+                return await fetcher.json();
+
             }
             else {
-                postData[k] = data[k];
+                var err = await fetcher.json()
+                throw (err)
             }
-        });
-        var settings = {
-            url: url,
-            type: 'POST',
-            cache: false,
-            contentType: false,
-            processData: false
-        } as any;
-        if (hasFile) {
-            formData.append("data", JSON.stringify(postData));
-            settings.data = formData;
+
+        }
+        catch (e) {
+
+           
+            throw (e)
+        }
+    },
+    __post__: async (apiPath,data) => {
+        debugger
+        var url = lvFileClientAPI.serverApIHostUrl + "/" + apiPath;
+        function checkHasFile() {
+            var retData = {}
+            var files = undefined
+            var keys = Object.keys(data);
+            for (var i = 0; i < keys.length; i++) {
+                var val = data[keys[i]];
+                if (val instanceof File) {
+                    if (!files) files = {}
+                    files[keys[i]] = val
+                }
+                else {
+                    retData[keys[i]] = val
+                }
+            }
+            return {
+                data: retData,
+                files: files
+            }
+        }
+        var checkData = checkHasFile()
+        if (!checkData.files) {
+
+            var fetcher = await fetch(url, {
+                method: 'POST',
+                //mode: 'no-cors', // this is to prevent browser from sending 'OPTIONS' method request first
+                //credentials: "include",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + lvFileClientAPI.getToken()
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (fetcher.status >= 200 && fetcher.status < 300) {
+                return await fetcher.json();
+
+            }
+            else {
+                if (fetcher.status == 401) {
+                    throw (err);
+                }
+                var err = await fetcher.json()
+                throw (err)
+            }
+
         }
         else {
-            settings.data = JSON.stringify(postData);
-            settings.contentType = "application/json; charset=utf-8";
-            settings.dataType = "json";
+            var formData = new FormData()
+            var fileKeys = Object.keys(checkData.files)
+            for (var i = 0; i < fileKeys.length; i++) {
+                formData.append(fileKeys[i], checkData.files[fileKeys[i]]);
+            }
+            formData.append('data', JSON.stringify(checkData.data))
+
+            var fetcher = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            return await fetcher.json();
+        }
+    },
+    formPost: async (apiPath, data) => {
+        var url = lvFileClientAPI.serverApIHostUrl + "/" + apiPath;
+        var formData = new FormData()
+        var keys = Object.keys(data)
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i]
+            var val = data[key]
+            formData.append(key, val);
 
         }
+        var sender = undefined;
+        try {
+            var fetcher = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            if (fetcher.status >= 200 && fetcher.status < 300) {
+                return await fetcher.json();
 
-        return new Promise(function (resolve, reject) {
-            settings.success = function (result) {
-                resolve(result);
-            };
-            settings.error = function (xhr, ajaxOptions, thrownError) {
-                reject({
-                    xhr: xhr,
-                    ajaxOptions: ajaxOptions,
-                    thrownError: thrownError
-                });
-            };
-            $.ajax(settings);
+            }
+            else {
+                var err = await fetcher.json()
+                throw (err)
+            }
 
-        });
-    }
-};
-LV.Files.APINames = {
-    registerUpload: "/api/default/LV-Media/content/Register",
-    uploadChunk: "/api/default/LV-Media/content/UploadChunk"
-}
-LV.Files.API = {
-    hostApiUrl: "",
-    setHostApiUrl: function (url) {
-        LV.Files.API.hostApiUrl = url;
+        }
+        catch (e) {
+
+          
+            throw (e)
+        }
     },
-    /**
-     * Api dùng để Upload
-     * @param {any} regisData
-     */
-    callApi: async function (relApiPath, regisData) {
-        if (LV.Files.API.hostApiUrl == "")
-            throw "Gọi hàm 'LV.Files.API.setHostApiUrl trỏ đến server upload'";
-        var fullUrl = LV.Files.API.hostApiUrl + relApiPath;
-        var ret = await LV.Ajax.post(fullUrl, regisData);
-        if (ret.error && ret.error != null)
-            throw ret.error;
-        else
-            return ret.data;
-    }
-};
+    formPostWithToken: async (apiPath, data) => {
+        var url = lvFileClientAPI.serverApIHostUrl + "/" + apiPath;
+        var formData = new FormData()
+        var keys = Object.keys(data)
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i]
+            var val = data[key]
+            formData.append(key, val);
 
-export { LV }
+        }
+        var sender = undefined;
+        var header= {
+            // 'Accept': 'multipart/form-data',
+            // 'Content-Type': 'multipart/form-data',
+            'Authorization': 'Bearer ' + lvFileClientAPI.getToken()
+        };
+        formData.append('Authorization', 'Bearer ' + lvFileClientAPI.getToken());
+        try {
+            var fetcher = await fetch(url, {
+                method: 'POST',
+                headers:header,
+                body: formData
+            });
+            if (fetcher.status >= 200 && fetcher.status < 300) {
+                return await fetcher.json();
+
+            }
+            else {
+                var err = await fetcher.json()
+                throw (err)
+            }
+
+        }
+        catch (e) {
+
+          
+            throw (e)
+        }
+    },
+    postAsync: async (apiPath, data) => {
+        var sender = undefined;
+       
+        try {
+            var ret = await lvFileClientAPI.__post__(apiPath, data);
+            return ret;
+        }
+        catch (e) {
+
+            throw (e);
+        }
+    }
+}
+export {lvFileClientAPI}

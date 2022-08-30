@@ -5,16 +5,19 @@
             <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
         </ng-container>
     </div>
-    <div class="tree-footer">
-        <codx-comment-history
-            [type]="'create'"
-            [funcID]="funcID"
-            [actionType]="'C'"
-            [objectID]="objectID"
-            [objectType]="objectType"
-            (evtSend)="sendComment($event)">
-        </codx-comment-history>
-    </div>
+    <ng-container *ngIf="addNew">
+        <div class="tree-footer">
+            <codx-comment-history
+                [type]="'create'"
+                [funcID]="funcID"
+                [actionType]="actionType"
+                [objectID]="objectID"
+                [objectType]="objectType"
+                [reference]="null"
+                (evtSend)="sendComment($event)">
+            </codx-comment-history>
+        </div>
+    </ng-container>
 </div>
 <ng-template #NodeHistory let-item>
     <div class="c1" [attr.dt]="setDicData(item)">
@@ -24,7 +27,9 @@
             [type]="'view'"
             (evtDelete)="deleteComment($event)"
             (evtReply)="replyTo($event)"
-            [viewIcon]="viewIcon">
+            [viewIcon]="viewIcon"
+            [allowVotes]="viewVote"
+            >
         </codx-comment-history>
         <ng-container *ngFor="let node of item.listSubComment">
             <div class="ms-10">
@@ -35,7 +40,7 @@
             <codx-comment-history
                 [type]="'create'"
                 [funcID]="item.funtionID"
-                [actionType]="'C'"
+                [actionType]="actionType"
                 [objectID]="item.objectID"
                 [objectType]="item.objectType"
                 [reference]="item.recID"

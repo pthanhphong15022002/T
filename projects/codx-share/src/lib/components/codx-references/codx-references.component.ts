@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import {
   ChangeDetectorRef,
   Component,
@@ -20,11 +21,12 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   selector: 'codx-references',
   templateUrl: './codx-references.component.html',
   styleUrls: ['./codx-references.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CodxReferencesComponent implements OnInit {
-  @Input() formModel?: FormModel;
+  @Input() funcID?: string// khởi tạo để test,, sau có thể xóa
+  @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
-  @Input() vllStatus = 'TMT004';
   @Input() vllRefType = 'TM018';
   @ViewChild('attachment') attachment: AttachmentComponent;
   message: string = '';
@@ -37,20 +39,13 @@ export class CodxReferencesComponent implements OnInit {
   //dataAvtar: any;
 
   constructor(private cache: CacheService, private dt: ChangeDetectorRef) {
-   
 
-    // this.cache.valueList(this.vllRefType).subscribe((res) => {
-    //   if (res) {
-    //     var dataVll = res.datas;
-    //     this.dataAvtar = dataVll.find(obj=>obj.value=='OD_Dispatches')
-    //   }
-    // });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   ngAfterViewInit(): void {
-     //data view test
-     this.dataReferences = [
+    //data view test
+    this.dataReferences = [
       {
         memo: 'Công văn dự án 1000 USD',
         createByName: 'Lê Thi Hoài Thương',
@@ -58,13 +53,14 @@ export class CodxReferencesComponent implements OnInit {
         recID: '00cfeb10-a433-43e3-b6b3-876e25bf20a3',
       },
     ];
+    //end data test
   }
 
   uploadFile() {
     this.attachment.uploadFile();
   }
 
-  showComments() {}
+  showComments() { }
 
   selectedFiles(event: any) {
     if (event.data.length > 0) {

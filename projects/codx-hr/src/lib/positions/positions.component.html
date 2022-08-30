@@ -1,7 +1,7 @@
 <codx-views #view [funcID]="funcID" service="HR" entityName="HR_Positions" idField="positionID"
     [itemSelected]="itemSelected" assemblyName="ERM.Business.HR" className="PositionsBusiness"
     method="GetModelFormPositionsAsync" [views]="views" [button]="button" (buttonClick)="click($event)"
-    [moreFuncs]="moreFuncs" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
+    [moreFuncs]="moreFuncs" (selectedChange)="selectedChange($event)" 
     [selectedFirst]="true">
 </codx-views>
 
@@ -76,58 +76,57 @@
                             <codx-label name="lblHeadcounts" formName="Positions" default="Định biên">
                             </codx-label>
                         </div>
-
                     </div>
-                    <div class="d-flex flex-column align-items-center pos-item w-100px" #c
-                        (click)="loadEmployByCountStatus(c,data.positionID,'50;60')">
+
+                    <div class="d-flex flex-column align-items-center pos-item w-100px">
                         <div class="pos-number text-primary fs-2 fw-bold">{{data.currentcounts}}</div>
                         <div class="text-gray-600 mt-1">
                             <codx-label name="lblCurrentcounts" formName="Positions" default="Chính thức">
                             </codx-label>
                         </div>
-                        <div *ngIf="data.currentEmpcounts>0" class="symbol-group symbol-hover mt-2">
+                        <div *ngIf="data.currentcounts>0" class="symbol-group symbol-hover mt-2">
                             <!-- <codx-imgs [width]="30" [objectId]="data.currentEmpID" [objectName]="data.currentEmpName" [numberImages]="2"
                                 objectType="HR_Employees">
                             </codx-imgs> -->
                             <codx-img [width]="30" [objectId]="data.currentEmpID" objectType="HR_Employees"
-                                [numberImages]="7" placement="bottom" container="body" autoClose="outside"
+                                [numberImages]="2" placement="bottom" container="body" autoClose="outside"
                                 [openDelay]="500">
                             </codx-img>
-                            <div *ngIf="data.currentEmpcounts>1" (mouseenter)="loadEmployByCountStatus(popEmpList,data.positionID,'50;60')"
-                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
+                            <div *ngIf="data.currentcounts>1" (click)="loadEmployByCountStatus(popEmpList,data.positionID,'50;60')"
+                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover" autoClose="outside"
                                 class="symbol w-30px h-30px symbol-circle border-white bg-light justify-content-center d-flex align-items-center">
                                 {{data.currentcounts-1}}+</div>
                         </div>
                     </div>
-                    <div class="d-flex flex-column align-items-center pos-item w-100px" #o
-                        (click)="loadEmployByCountStatus(o,data.positionID,'20;30')">
+
+                    <div class="d-flex flex-column align-items-center pos-item w-100px">
                         <div class="pos-number text-warning fs-2 fw-bold">{{data.onboard}}</div>
                         <div class="text-gray-600 mt-1">
                             <codx-label name="lblOnboard" formName="Positions" default="Onboard">
                             </codx-label>
                         </div>
-                        <div *ngIf="data.onboardEmpcounts>0" class="symbol-group symbol-hover mt-2">
+                        <div *ngIf="data.onboard>0" class="symbol-group symbol-hover mt-2">
                             <!-- <codx-img [width]="30" [objectId]="data.onboardEmpID" [objectName]="data.onboardEmpName"
                                 objectType="HR_Employees">
                             </codx-img> -->
                             <codx-img [width]="30" [objectId]="data.onboardEmpID" objectType="HR_Employees"
-                                [numberImages]="7" (mouseenter)="loadEmployByCountStatus(popEmpList,data.positionID,'20;30')"
+                                [numberImages]="2" (click)="loadEmployByCountStatus(popEmpList,data.positionID,'20;30')"
                                 [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
                                 placement="bottom" container="body" autoClose="outside" [openDelay]="500">
                             </codx-img>
-                            <div *ngIf="data.onboardEmpcounts>1"
+                            <div *ngIf="data.onboard>1"
                                 class="symbol w-30px h-30px symbol-circle border-white bg-light justify-content-center d-flex align-items-center">
-                                {{data.onboardEmpcounts-1}}+</div>
+                                {{data.onboard-1}}+</div>
                         </div>
                     </div>
-                    <div class="d-flex flex-column align-items-center pos-item w-100px" #f
-                        (click)="loadEmployByCountStatus(f,data.positionID,'70')">
+                    
+                    <div class="d-flex flex-column align-items-center pos-item w-100px">
                         <div class="pos-number text-danger fs-2 fw-bold">{{data.offboard}}</div>
                         <div class="text-gray-600 mt-1">
                             <codx-label name="lblOffboard" formName="Positions" default="Offboard">
                             </codx-label>
                         </div>
-                        <div *ngIf="data.offboardEmpcounts>0" class="symbol-group symbol-hover mt-2">
+                        <div *ngIf="data.offboard>0" class="symbol-group symbol-hover mt-2">
                             <!-- <codx-img [width]="30" [objectId]="data.offboardEmpID" [objectName]="data.offboardEmpName"
                                 objectType="HR_Employees">
                             </codx-img> -->
@@ -136,8 +135,8 @@
                                 [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
                                 placement="bottom" container="body" autoClose="outside" [openDelay]="500">
                             </codx-img>
-                            <div *ngIf="data.offboardEmpcounts>1"
-                                class="symbol w-30px h-30px border-white symbol-circle">{{data.offboardEmpcounts-1}}+
+                            <div *ngIf="data.offboard>1"
+                                class="symbol w-30px h-30px border-white symbol-circle">{{data.offboard-1}}+
                             </div>
                         </div>
                     </div>
