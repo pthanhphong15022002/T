@@ -15,6 +15,7 @@ import { ButtonModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 export class OrgorganizationComponent extends UIComponent {
   views: Array<ViewModel> = [];
   button?: ButtonModel;
+  orgUnitID: string = '';
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
   constructor(inject: Injector) {
@@ -43,7 +44,12 @@ export class OrgorganizationComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  onSelectionChanged(evt: any) {}
+  onSelectionChanged(evt: any) {
+    if (evt && evt.data) {
+      this.orgUnitID = evt.data.orgUnitID;
+      this.detectorRef.detectChanges();
+    }
+  }
 
   changeView(evt: any) {}
 }

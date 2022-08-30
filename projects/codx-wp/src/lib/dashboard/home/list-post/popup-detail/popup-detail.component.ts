@@ -37,6 +37,7 @@ export class PopupDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger;
     this.getPostByID(this.file.objectID);
   }
 

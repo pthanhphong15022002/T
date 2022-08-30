@@ -60,7 +60,6 @@ export class ViewApprovalProcessComponent implements OnInit {
       } else {
         this.esService.getApprovalTrans(this.transID).subscribe((res) => {
           if (res) {
-            debugger;
             this.process = res;
             this.lstStep = [];
             this.cr.detectChanges();

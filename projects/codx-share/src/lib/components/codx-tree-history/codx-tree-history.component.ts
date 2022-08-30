@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit,  ViewEncapsulation, } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit,  SimpleChanges,  ViewEncapsulation, } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthService, CacheService } from 'codx-core';
 import { tmpHistory } from '../../models/tmpComments.model';
@@ -9,7 +9,7 @@ import { tmpHistory } from '../../models/tmpComments.model';
   styleUrls: ['./codx-tree-history.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxTreeHistoryComponent implements OnInit {
+export class CodxTreeHistoryComponent implements OnInit, OnChanges {
 
   @Input() funcID:string;
   @Input() objectType:string;
@@ -17,6 +17,8 @@ export class CodxTreeHistoryComponent implements OnInit {
   @Input() actionType:string;
   @Input() addNew:boolean = false;
   @Input() viewIcon:boolean = false;
+  @Input() viewVote:boolean = false;
+
   /////////////////////////////
   service = "BG";
   assemply = "ERM.Business.BG";
@@ -33,8 +35,17 @@ export class CodxTreeHistoryComponent implements OnInit {
     private dt:ChangeDetectorRef,
   ) 
   { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes.objectID.previousValue != changes.objectID.currentValue ){
+      this.getDataAsync();
+    }
+  }
 
   ngOnInit(): void {
+    this.getDataAsync();
+  }
+
+  getDataAsync(){
     if(this.actionType){
       this.GetCommentTrackLogByObjectIDAsync();
     }
@@ -42,15 +53,12 @@ export class CodxTreeHistoryComponent implements OnInit {
       this.getTrackLogAsync();
     }
   }
-
-
   getTrackLogAsync(){
     this.api.execSv(this.service,this.assemply,this.className,"GetTrackLogsByObjectIDAsync",this.objectID).
     subscribe((res:any[]) =>{
       if(res) {
         this.lstHistory = res;
         this.root.listSubComment = res;
-        console.log(res);
 
       }
     })
@@ -62,7 +70,6 @@ export class CodxTreeHistoryComponent implements OnInit {
       if(res) {
         this.lstHistory = res;
         this.root.listSubComment = res;
-        console.log(res);
       }
     })
   }
@@ -95,7 +102,7 @@ export class CodxTreeHistoryComponent implements OnInit {
   setNodeTree(newNode: any) {
     if (!newNode) return;
     var id = newNode["recID"],
-      parentId = newNode["references"];
+      parentId = newNode["reference"];
     this.dicDatas[id] = newNode;
     var t = this;
     var parent = this.dicDatas[parentId];

@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, CodxInputComponent } from 'codx-core';
 import { iif } from 'rxjs';
 import { createTrue } from 'typescript';
@@ -70,22 +71,35 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   @Input() showMenu = true;
   @Input() showMF = true;
+  @Input() service = '';
+  @Input() assembly = '';
+  @Input() className = '';
+  @Input() method = '';
+  @Input() refID = '';
+  @Input() data = [];
   @ViewChild('input') input: any;
 
   constructor(
     private dt: ChangeDetectorRef,
     private cache: CacheService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private route: ActivatedRoute
   ) {
     this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
-        console.log('check gridViewSetup', this.gridViewSetup);
+      }
+    });
+    this.route.queryParams.subscribe((params) => {
+      if (params) {
+        this.refID = params.meetingID;
       }
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setFont();
+  }
 
   ngAfterViewInit(): void {
     if (this.input) this.currentElement = this.input.elRef.nativeElement;
@@ -95,6 +109,41 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       ) as HTMLElement;
       input.focus();
       this.currentElement.id = '0';
+    }
+    if (this.data.length > 0) {
+      this.listNote = this.data;
+      this.setFont();
+      this.dt.detectChanges();
+      this.setPropertyForView();
+    }
+  }
+
+  setPropertyForView() {
+    var ele: any = document.querySelectorAll('codx-input[type="text"]');
+    for (let i = 0; i < this.listNote.length; i++) {
+      /* set title */
+      if (this.listNote[i].lineType == 'TITLE') {
+        var divElement = ele[i + 1].children[0] as HTMLElement;
+        var inputElement = divElement.children[0] as HTMLElement;
+        inputElement.style.setProperty('font-size', '24px', 'important');
+      }
+
+      /* set color */
+      if (this.listNote[i].textColor) {
+        var divElement = ele[i + 1].children[0] as HTMLElement;
+        var inputElement = divElement.children[0] as HTMLElement;
+        inputElement.style.setProperty(
+          'color',
+          this.listNote[i].textColor,
+          'important'
+        );
+      }
+
+      /* set font */
+      if (this.listNote[i].format) {
+        var font = this.listNote[i].format.split(';');
+        this.setFontProperty(font, ele[i + 1]);
+      }
     }
   }
 
@@ -132,9 +181,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.format.TITLE = title;
     if (!this.currentElement) return;
     this.currentElement.focus();
-    // if (this.format.TEXT) this.currentElement.id = 'TEXT';
-    // else if (this.format.LIST) this.currentElement.id = 'LIST';
-    // else this.currentElement.id = 'CHECKBOX';
     if (this.format.TITLE) {
       var divElement = this.currentElement.children[0] as HTMLElement;
       var inputElement = divElement.children[0] as HTMLElement;
@@ -207,10 +253,18 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         ) as HTMLElement;
         this.currentElement.focus();
         this.listNoteTemp[event?.field] = event?.data;
+        /*Set lại color cho memo khi edit color*/
+        this.listNote[this.id].textColor = event?.data;
+        /*Set lại color cho memo khi edit color*/
         this.elementColor = elementColor;
         this.chooseColor(event?.data);
+        var value: any = this.currentElement;
+        if (value.value) {
+          this.listNote[this.id].textCorlor = event?.data;
+          if (this.refID) this.updateContent(this.refID, this.listNote);
+        }
       }
-      if (this.listNoteTemp.memo != null) this.updateContent(this.listNoteTemp);
+      // if (this.listNoteTemp.memo != null)
     }
   }
 
@@ -224,12 +278,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   popupFile() {}
 
-  addEmoji(event, ele) {
-    // var emoij = event.emoji.native.replace('undefined', '');
-    // this.icon += event.emoji.native;
-    this.listNote[this.id].memo = this.listNoteTemp.memo;
+  addEmoji(event) {
+    this.listNoteTemp.memo = '';
+    if (this.listNote[this.id].memo == null || this.listNote[this.id].memo == '')
+      this.listNote[this.id].memo = this.listNoteTemp.memo;
     this.listNote[this.id].memo += event.emoji.native;
-    console.log('check message', this.icon);
   }
 
   toggleEmojiPicker() {
@@ -237,20 +290,22 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  valueChange(event, ele) {
+  valueChange(event) {
     if (event?.data) {
       var dt = event?.data;
       var field = event?.field;
       this.listNoteTemp.lineType = this.lineType;
       //if (event?.field != 'memo')
       this.listNoteTemp[field] = dt;
+      this.listNote[this.id].memo = event?.data;
+      this.updateContent(this.refID, this.listNote);
     }
   }
 
   valueChangeStatus(event) {
     if (event?.data != null) {
       this.listNoteTemp[event?.field] = event?.data;
-      if (this.listNoteTemp.memo != null) this.updateContent(this.listNoteTemp);
+      // if (this.listNoteTemp.memo != null)
     }
   }
 
@@ -288,16 +343,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.listNote.push(initListNote);
       this.id = `${this.listNote.length - 1}`;
       //reverse
-      console.log('check listNote', this.listNote);
       this.dt.detectChanges();
     }
-    // this.api
-    //   .execSv('CO', 'ERM.Business.CO', 'ContentsBusiness', 'SaveAsync', data)
-    //   .subscribe((res) => {
-    //     if (res) {
-
-    //     }
-    //   });
+    if (this.refID) this.updateContent(this.refID, this.listNote);
   }
 
   setPropertyAfterAdd() {
@@ -312,30 +360,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
       var htmlElementBefore = ele[ele.length - 2] as HTMLElement;
       var lstFormat = this.listNoteTemp.format.split(';');
-      lstFormat.forEach((res) => {
-        if (res == 'bolder') {
-          htmlElementBefore.style.setProperty(
-            'font-weight',
-            'bolder',
-            'important'
-          );
-          this.font.BOLD = !this.font.BOLD;
-        } else if (res == 'italic') {
-          htmlElementBefore.style.setProperty(
-            'font-style',
-            'italic',
-            'important'
-          );
-          this.font.ITALIC = !this.font.ITALIC;
-        } else if (res == 'underline') {
-          htmlElementBefore.style.setProperty(
-            'text-decoration-line',
-            'underline',
-            'important'
-          );
-          this.font.UNDERLINE = !this.font.UNDERLINE;
-        }
-      });
+      this.setFontProperty(lstFormat, htmlElementBefore);
       /*set property cho lineTpe là TITLE*/
       if (this.listNoteTemp.lineType == 'TITLE') {
         var divLastElement = ele[ele.length - 1].children[0] as HTMLElement;
@@ -348,43 +373,54 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       }
       /*set property cho lineTpe là TITLE*/
 
-      var colorTemp = JSON.parse(JSON.stringify(this.font.COLOR));
       this.listNoteTemp.format = '';
       var codxInputElement = ele[ele.length - 2] as HTMLElement;
       var divElement = codxInputElement.children[0] as HTMLElement;
       var inputElement = divElement.children[0] as HTMLElement;
-      inputElement.style.setProperty('color', colorTemp, 'important');
+      inputElement.style.setProperty('color', this.font.COLOR, 'important');
 
-      colorTemp = '#000000';
+      this.font.COLOR = '#000000';
       var lastCodxInputElement = ele[ele.length - 1] as HTMLElement;
       var lastDivElement = lastCodxInputElement.children[0] as HTMLElement;
       var lastInputElement = lastDivElement.children[0] as HTMLElement;
-      lastInputElement.style.setProperty('color', colorTemp, 'important');
-      this.setColorForCodxColor(colorTemp);
+      lastInputElement.style.setProperty('color', this.font.COLOR, 'important');
+      this.setColorForCodxColor(this.font.COLOR);
       this.setFont();
     }
   }
 
-  updateContent(data) {
-    data;
+  setFontProperty(lstFormat, htmlElementBefore) {
+    lstFormat.forEach((res) => {
+      if (res == 'bolder') {
+        htmlElementBefore.style.setProperty(
+          'font-weight',
+          'bolder',
+          'important'
+        );
+        this.font.BOLD = !this.font.BOLD;
+      } else if (res == 'italic') {
+        htmlElementBefore.style.setProperty(
+          'font-style',
+          'italic',
+          'important'
+        );
+        this.font.ITALIC = !this.font.ITALIC;
+      } else if (res == 'underline') {
+        htmlElementBefore.style.setProperty(
+          'text-decoration-line',
+          'underline',
+          'important'
+        );
+        this.font.UNDERLINE = !this.font.UNDERLINE;
+      }
+    });
   }
 
-  delete() {}
-
-  refresh() {
-    this.listNote = [
-      {
-        memo: null,
-        status: null,
-        textColor: null,
-        format: null,
-        lineType: null,
-      },
-    ];
-    this.currentElement = null;
-    this.setFont();
-    this.setFormat();
-    this.dt.detectChanges();
+  delete(index) {
+    if (this.listNote) {
+      this.listNote.splice(index, 1);
+      if (this.refID) this.updateContent(this.refID, this.listNote);
+    }
   }
 
   getElement(ele: any) {
@@ -425,10 +461,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       var divColor = this.currentElementColor.querySelector(
         'div.codx-colorpicker'
       ) as HTMLElement;
-      // var childrenDivColor = divColor.children[0] as HTMLElement;
-      // var grandChildrenDivColor = childrenDivColor.children[0] as HTMLElement;
-      // var inputColor = grandChildrenDivColor.children[1] as HTMLElement;
-
       var divElement = divColor.children[0] as HTMLElement;
       var divChildElement = divElement.children[1] as HTMLElement;
       var buttonElement = divChildElement.children[0] as HTMLElement;
@@ -442,5 +474,34 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         'important'
       );
     }
+  }
+
+  clickFunction(
+    type = null,
+    format = null,
+    ele = null,
+    item = null,
+    index = null
+  ) {
+    var input = this.currentElement.querySelector(
+      'input.codx-text'
+    ) as HTMLElement;
+    var value: any = input;
+    if (type == 'format') this.chooseType(format, ele);
+    else if (type == 'font') this.checkFont(format, ele);
+    else if (type == 'delete') this.delete(index);
+    if (value.value) {
+      this.listNote[this.id].format = this.listNoteTemp.format;
+      if (this.refID) this.updateContent(this.refID, this.listNote);
+    }
+  }
+
+  updateContent(refID, listContent) {
+    this.api
+      .execSv(this.service, this.assembly, this.className, this.method, [
+        refID,
+        listContent,
+      ])
+      .subscribe();
   }
 }
