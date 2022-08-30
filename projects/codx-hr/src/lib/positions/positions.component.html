@@ -86,14 +86,14 @@
                             </codx-label>
                         </div>
                         <div *ngIf="data.currentEmpcounts>0" class="symbol-group symbol-hover mt-2">
-                            <!-- <codx-img [width]="30" [objectId]="data.currentEmpID" [objectName]="data.currentEmpName"
+                            <!-- <codx-imgs [width]="30" [objectId]="data.currentEmpID" [objectName]="data.currentEmpName" [numberImages]="2"
                                 objectType="HR_Employees">
-                            </codx-img> -->
+                            </codx-imgs> -->
                             <codx-img [width]="30" [objectId]="data.currentEmpID" objectType="HR_Employees"
                                 [numberImages]="7" placement="bottom" container="body" autoClose="outside"
                                 [openDelay]="500">
                             </codx-img>
-                            <div *ngIf="data.currentEmpcounts>1" (mouseenter)="popoverEmpList(popoverList, data)"
+                            <div *ngIf="data.currentEmpcounts>1" (mouseenter)="loadEmployByCountStatus(popEmpList,data.positionID,'50;60')"
                                 [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
                                 class="symbol w-30px h-30px symbol-circle border-white bg-light justify-content-center d-flex align-items-center">
                                 {{data.currentcounts-1}}+</div>
@@ -111,7 +111,7 @@
                                 objectType="HR_Employees">
                             </codx-img> -->
                             <codx-img [width]="30" [objectId]="data.onboardEmpID" objectType="HR_Employees"
-                                [numberImages]="7" (mouseenter)="popoverEmpList(popoverList, itemSelected)"
+                                [numberImages]="7" (mouseenter)="loadEmployByCountStatus(popEmpList,data.positionID,'20;30')"
                                 [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
                                 placement="bottom" container="body" autoClose="outside" [openDelay]="500">
                             </codx-img>
@@ -132,7 +132,7 @@
                                 objectType="HR_Employees">
                             </codx-img> -->
                             <codx-img [width]="30" [objectId]="data.offboardEmpID" objectType="HR_Employees"
-                                [numberImages]="7" (mouseenter)="popoverEmpList(popoverList, itemSelected)"
+                                [numberImages]="7" (mouseenter)="loadEmployByCountStatus(popEmpList,data.positionID,'70')"
                                 [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
                                 placement="bottom" container="body" autoClose="outside" [openDelay]="500">
                             </codx-img>
@@ -158,11 +158,12 @@
     <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listEmployeeSearch">
         <div class="me-3">
             <div>
-                <codx-img class="" [objectId]="item?.currentEmpID" objectType="HR_Employees">
+                <codx-img class="" [objectId]="item?.domainUser" objectType="HR_Employees">
                 </codx-img>
             </div>
         </div>
         <div class="d-flex flex-column flex-grow-1">
+            <div class="text-gray-600 fs-7">{{ item?.employeeName }}</div>
             <div class="text-gray-600 fs-7">{{ item?.positionName }}</div>
         </div>
     </div>
