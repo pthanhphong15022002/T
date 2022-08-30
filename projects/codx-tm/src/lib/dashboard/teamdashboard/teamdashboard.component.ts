@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
-import { AuthStore, DataRequest, UIComponent } from 'codx-core';
+import { AuthStore, DataRequest, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { StatusTask } from '../../models/enum/enum';
 
@@ -20,7 +20,8 @@ import { StatusTask } from '../../models/enum/enum';
   encapsulation: ViewEncapsulation.None,
 })
 export class TeamDashboardComponent extends UIComponent implements OnInit {
-  @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  @ViewChild('content') content: TemplateRef<any>;
+  views: Array<ViewModel> = [];
   funcID: string;
   model: DataRequest;
   daySelected: Date;
@@ -53,6 +54,10 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   isGradient: boolean = true;
 
   //#region gauge
+  tooltip: Object = {
+    enable: true,
+  };
+
   font1: Object = {
     size: '15px',
     color: '#00CC66',
@@ -122,14 +127,12 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     visible: true,
   };
   legendRateDoneSettings: Object = {
+    position: 'Right',
     visible: true,
+    textWrap: 'Wrap',
+    height: '30%',
+    width: '50%',
   };
-
-  openTooltip() {
-    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
-  }
-
-  closeTooltip() {}
 
   //#region chartcolumn
   columnXAxis: Object = {
@@ -188,6 +191,20 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.getGeneralData();
+  }
+
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.content,
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
   }
 
   private getGeneralData() {
