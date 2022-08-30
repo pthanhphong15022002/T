@@ -11,7 +11,7 @@
                             </a>
                             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                 <li>
-                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                    <button (click)="clickFunction('delete', '', '', item, i)" class="dropdown-item text-hover-primary d-flex align-items-center">
                                         <span [class]="'icon-clear icon-20 me-2'" [style.color]="'red'"></span>
                                         <span class="show-customName">{{'Xóa'}}</span>
                                     </button>
@@ -78,8 +78,7 @@
                                             <ng-container *ngIf="showEmojiPicker">
                                                 <div class="emoji">
                                                     <emoji-mart [showSingleCategory]="true" [showPreview]="false"
-                                                        [set]="set" [perLine]="7"
-                                                        (emojiSelect)="addEmoji($event, input)">
+                                                        [set]="set" [perLine]="7" (emojiSelect)="addEmoji($event)">
                                                     </emoji-mart>
                                                 </div>
                                             </ng-container>
@@ -127,7 +126,7 @@
                                 <codx-input #input type="text" [class]="'border-0'" class="test-textbox input-note memo"
                                     style="font-weight:normal; font-style:normal; text-decoration-line:none; color: #000000"
                                     (keyUpEnter)="keyUpEnter($event)" [crrValue]="item.memo" field="memo" id="{{i}}"
-                                    (valueChange)="valueChange($event, input)"
+                                    (valueChange)="valueChange($event)"
                                     [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                 </codx-input>
                             </div>
@@ -171,20 +170,17 @@
             <codx-input #colorPicker type="colorpicker" [showText]="false" [modeSwitcher]="true" [crrValue]="font.COLOR"
                 field="textColor" (valueChange)="valueChangeColor($event, input, colorPicker)">
             </codx-input>
-            <div class="btn-emoji">
-                <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"
-                    class="btn btn-icon btn-md ms-2 btn-emoji">
+            <div ngbDropdown class="d-inline-block">
+                <button type="button" data-toggle="tooltip" title="Icon" class="btn btn-icon btn-md ms-2 btn-emoji"
+                    id="dropdownBasic1" ngbDropdownToggle>
                     <i class="icon-tag_faces icon-24 text-warning"></i>
                 </button>
-                <ng-container *ngIf="showEmojiPicker">
-                    <div class="emoji">
-                        <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set" [perLine]="7"
-                            (emojiSelect)="addEmoji($event, input)"></emoji-mart>
-                    </div>
-                </ng-container>
+                <div ngbDropdownMenu>
+                    <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set" [perLine]="7"
+                        (emojiSelect)="addEmoji($event)"></emoji-mart>
+                </div>
             </div>
+            <span
+                class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span>
         </div>
-        <span
-        class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span>
     </div>
-</div>
