@@ -48,8 +48,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -152,7 +151,7 @@ export class CodxTasksComponent
     this.request.service = 'TM';
     this.request.assemblyName = 'TM';
     this.request.className = 'TaskBusiness';
-    this.request.method = 'GetListDetailTasksAsync';
+    this.request.method = 'GetTasksAsync';
     this.request.idField = 'taskID';
 
     this.requestTree = new ResourceModel();
@@ -162,12 +161,6 @@ export class CodxTasksComponent
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
 
-    // this.request = new ResourceModel();
-    // this.request.service = 'TM';
-    // this.request.assemblyName = 'CM';
-    // this.request.className = 'DataBusiness';
-    // this.request.method = 'LoadDataAsync';
-    // this.request.idField = 'taskID';
     this.button = {
       id: 'btnAdd',
     };
@@ -652,8 +645,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -732,7 +725,7 @@ export class CodxTasksComponent
       if (idx > -1) return;
       var tree = {
         id: '16',
-        type: ViewType.listdetail,
+        type: ViewType.content,
         active: false,
         sameData: true,
         text: 'Cây-Tree',
@@ -747,7 +740,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {

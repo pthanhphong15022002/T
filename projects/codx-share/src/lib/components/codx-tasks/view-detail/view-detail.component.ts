@@ -43,7 +43,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   itemSelected: any;
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
-  firstLoad = true ;
+  firstLoad = true;
 
   constructor(
     private api: ApiHttpService,
@@ -54,17 +54,17 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#endregion
   //#region Init
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['taskID'] && changes['taskID'].currentValue && !this.firstLoad) {
-     if (changes['taskID'].currentValue === this.id) return;
+      if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
     }
-    this.firstLoad = false ;
+    this.firstLoad = false;
   }
   //#region
   //#region Method
@@ -76,16 +76,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       });
   }
 
-  // openViewListTaskResource(data) {
-  //   this.dialog = this.callfc.openForm(
-  //     PopupViewTaskResourceComponent,
-  //     '',
-  //     400,
-  //     500,
-  //     '',
-  //     [data, this.formModel.funcID]
-  //   );
-  // }
 
   popoverEmpList(p: any, task) {
     this.listTaskResousceSearch = [];
@@ -142,12 +132,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         }
         //danh cho taskExtend
         if (
-          (x.functionID == 'SYS02' || x.functionID == 'SYS03'|| x.functionID == 'SYS04') &&
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03' || x.functionID == 'SYS04') &&
           this.taskExtends
         ) {
           x.disabled = true;
         }
-        if((x.functionID == 'TMT04011' ||  x.functionID == 'TMT04012') &&  this.taskExtends.status !='3' ){
+        if ((x.functionID == 'TMT04011' || x.functionID == 'TMT04012') && this.taskExtends.status != '3') {
           x.disabled = true;
         }
         //tắt duyệt xác nhận
@@ -157,13 +147,13 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         ) {
           x.disabled = true;
         }
-           //tắt duyệt đánh giá
-           if (
-            (x.functionID == 'TMT04021' || x.functionID == 'TMT04022'  || x.functionID == 'TMT04023') &&
-            data.approveStatus != '3'
-          ) {
-            x.disabled = true;
-          }
+        //tắt duyệt đánh giá
+        if (
+          (x.functionID == 'TMT04021' || x.functionID == 'TMT04022' || x.functionID == 'TMT04023') &&
+          data.approveStatus != '3'
+        ) {
+          x.disabled = true;
+        }
       });
     }
   }

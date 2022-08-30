@@ -27,7 +27,7 @@ export class PopupShareSprintsComponent implements OnInit {
   userID = '';
   listUserDetail = [];
   taskBoard: any;
-  vllShare : any ;
+  vllShare: any;
   constructor(
     private api: ApiHttpService,
     private tmSv: CodxTMService,
@@ -39,8 +39,8 @@ export class PopupShareSprintsComponent implements OnInit {
     this.data = dt?.data;
     this.dialog = dialog;
     this.taskBoard = this.data.boardAction;
-    this.title =  this.data?.title ;
-    this.vllShare =  this.data?.vllShare ;
+    this.title = this.data?.title;
+    this.vllShare = this.data?.vllShare;
     this.listUserDetailOld = this.data.listUserDetail;
     this.listUserDetail = this.listUserDetailOld;
     for (var i = 0; i < this.listUserDetail.length; i++) {
@@ -124,9 +124,9 @@ export class PopupShareSprintsComponent implements OnInit {
   valueSelectUser(resources) {
     if (resources != '') {
       if (this.listIdUser.length > 0) {
-        var arrResource= resources.split(';');
+        var arrResource = resources.split(';');
         var arrNew = [];
-        var oldListUser = this.listIdUser.join(";") ;
+        var oldListUser = this.listIdUser.join(";");
         arrResource.forEach((e) => {
           if (!oldListUser.includes(e)) {
             arrNew.push(e);
@@ -149,12 +149,11 @@ export class PopupShareSprintsComponent implements OnInit {
     }
     this.listIdUser = this.listIdUser.concat(listUser.split(";"));
     this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListUserDetailAsync',
-        listUser
+      .exec<any>(
+        'HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(this.listIdUser)
       )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);
