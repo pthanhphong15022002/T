@@ -192,12 +192,12 @@ export class CodxCommentHistoryComponent implements OnInit {
           data.votes = res[0];
           data.totalVote = res[1];
           data.listVoteType = res[2];
-          if (voteType == data.myVotedType) {
-            data.myVotedType = null;
+          if (voteType == data.myVoteType) {
+            data.myVoteType = null;
             data.myVoted = false;
           }
           else {
-            data.myVotedType = voteType;
+            data.myVoteType = voteType;
             data.myVoted = true;
           }
           this.dt.detectChanges();

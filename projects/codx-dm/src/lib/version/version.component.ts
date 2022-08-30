@@ -13,6 +13,7 @@ import { FileUpload, ItemInterval } from '@shared/models/file.model';
 import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
 import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from '@syncfusion/ej2-base';
 import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-angular-inputs';
+import { lvFileClientAPI } from '@shared/services/lv.component';
 
 @Component({
   selector: 'version',
@@ -226,6 +227,90 @@ export class VersionComponent implements OnInit {
     });
   } 
 
+  updateVersion() {
+
+  }
+
+  async addFileLargeLong() {
+    // check dung luong dia cung
+    var ret = this.fileEditing;
+    var fileSize = parseInt(this.fileEditing.fileSize);
+    var that = this;
+    this.fileEditing.uploadId = "";
+    function isAllowAddFileAsync() {
+      return new Promise((resole, reject) => {
+        that.fileService.isAllowAddFile(fileSize).subscribe(item => {
+          if (item == "ok") {
+            resole(item);
+          }
+          else {
+            reject(item);
+          }
+        });
+      });
+    };
+
+    try {      
+      var item = await isAllowAddFileAsync();      
+      this.dmSV.getToken();      
+      var appName="hps-file-test";// Tam thoi de hard        
+      var ChunkSizeInKB = 2*1024;
+      var uploadFile = this.fileEditing.item.rawFile;
+      var retUpload = await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {        
+        "Data": {
+          "FileName":  uploadFile.name,
+          "ChunkSizeInKB": ChunkSizeInKB,
+          "FileSize": uploadFile.size,
+          'thumbSize': {
+            'width': 200, //Kích thước của file ảnh Thum bề ngang
+            'height': 200//Kích thước của file ảnh Thum bề dọc
+          },
+          "IsPublic": true          
+        }
+      });
+      
+      console.log(retUpload);
+      // update len server urs và thumbnail
+      this.fileEditing.thumbnail = retUpload.Data.RelUrlThumb; //"";
+      this.fileEditing.uploadId = retUpload.Data.UploadId;//"";
+      this.fileEditing.urlPath = retUpload.Data.RelUrlOfServerPath;//"";
+      this.fileEditing.data = '';
+      this.versionFile();
+
+      //this.displayThumbnail(res.recID, res.pathDisk);      
+      var sizeInBytes = uploadFile.size;
+      var chunSizeInfBytes = ChunkSizeInKB * 1024;
+      var numOfChunks = Math.floor(uploadFile.size/chunSizeInfBytes);
+      if(uploadFile.size % chunSizeInfBytes>0){
+        numOfChunks++;
+      }
+
+      //api/lv-docs/files/upload     
+      for (var i = 0; i < numOfChunks; i++) {
+        var start = i * chunSizeInfBytes;//Vị trí bắt đầu băm file
+        var end = start + chunSizeInfBytes;//Vị trí cuối
+        if (end > sizeInBytes)
+          end = sizeInBytes;//Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+        var blogPart = uploadFile.slice(start, end);//Lấy dữ liệu của chunck dựa vào đầu cuối
+        var fileChunk = new File(
+          [ blogPart ],
+          uploadFile.name,
+          { type: uploadFile.type });//Gói lại thành 1 file chunk để upload
+          var uploadChunk = await lvFileClientAPI.formPostWithToken(`api/${appName}/files/upload`,{      
+            FilePart: fileChunk,
+            UploadId: retUpload.Data.UploadId,
+            Index: i          
+          });
+        console.log(uploadChunk);
+      }
+    }
+    catch (ex) {
+      this.fileEditing.uploadId = "0";
+      this.notificationsService.notify(ex);
+    }
+    return ret;    
+  }
+  
   async handleFileInput(files: FileInfo[]) {    
     var file = files[0];    
     var data = await this.convertBlobToBase64(file.rawFile);  
@@ -240,8 +325,9 @@ export class VersionComponent implements OnInit {
     this.fileEditing.type = file.type;
     this.fileEditing.fileSize = file.size;
     this.fileEditing.fileName = file.name;
-    this.fileEditing.data = data.toString();
+    this.fileEditing.data = '';
     this.fileEditing.reWrite = false;
+    this.fileEditing.item = file;
     this.fileEditing.folderId = this.dmSV.folderId.getValue();   
     this.updateversion = true;
     this.changeDetectorRef.detectChanges();

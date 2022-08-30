@@ -730,13 +730,23 @@ export class CodxTasksComponent
       if (idx > -1) return;
       var tree = {
         id: '16',
-        type: ViewType.content,
+        type: ViewType.listtree,
         active: false,
-        sameData: true,
+        sameData: false,
         text: 'Cây-Tree',
         icon: 'icon-account_tree',
+        request: {
+          idField: 'taskID',
+          parentIDField: 'ParentID',
+          service: 'TM',
+          assemblyName: 'TM',
+          className: 'TaskBusiness',
+          method: 'GetTasksAsync',
+          autoLoad: true,
+          dataObj: null
+        },
         model: {
-          template: this.treeView,
+          template: this.itemViewList,
         },
       };
       this.viewsActive.push(tree);

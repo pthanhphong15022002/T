@@ -968,6 +968,16 @@ export class CodxEsService {
     );
   }
   //#endregion
+
+  getEmployee(userID: string): Observable<any> {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'GetEmpUsers',
+      userID
+    );
+  }
 }
 export class LayoutModel {
   isChange: boolean = false;
