@@ -67,11 +67,11 @@ export class ViewFileDialogComponent implements OnInit {
       this.data = data;
 
     this.id = this.data.recID;
-    this.fileService.getFile(this.id).subscribe(item => {
-      if (item != null) {
-        this.data = item;
-      }
-    });
+    // this.fileService.getFile(this.id).subscribe(item => {
+    //   if (item != null) {
+    //     this.data = item;
+    //   }
+    // });
     
     this.dialog = dialog;
     //  var data: any = this.auth.user$;
@@ -317,17 +317,19 @@ export class ViewFileDialogComponent implements OnInit {
     this.isVideo = false;
     this.srcVideo = "";
     this.linkViewImage = "";
+    
     this.changeDetectorRef.detectChanges();
     if (this.ext == ".mp4") {
       this.isVideo = true;
-      this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${this.id}?access_token=${this.auth.userValue.token}`;
+      this.srcVideo = `${this.dmSV.urlFile}/${this.data.pathDisk}`;
+      //this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${this.id}?access_token=${this.auth.userValue.token}`;
     } else if (this.ext == ".png"
       || this.ext == ".jpeg"
       || this.ext == ".jpg"
       || this.ext == ".bmp"
     ) {
-      // this.data.thumbnail;//
-      this.linkViewImage = this.data.thumbnail; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
+      // this.data.thumbnail;//      
+      this.linkViewImage = `${this.dmSV.urlFile}/${this.data.pathDisk}`; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
     else if (this.ext == ".pdf111") {
       this.isPdf = true;

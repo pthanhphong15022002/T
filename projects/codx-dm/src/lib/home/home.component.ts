@@ -263,7 +263,7 @@ export class HomeComponent extends UIComponent {
 
     this.dmSV.isSetThumbnailWait.subscribe(item => {
       if (item != null) {
-        this.displayThumbnail(item.recID, item.pathDisk);
+        this.displayThumbnail(item.recID, item.thumbnail);
       }
     });
 
@@ -656,12 +656,12 @@ export class HomeComponent extends UIComponent {
     }
   }
 
-  displayThumbnail(id, pathDisk) {
+  displayThumbnail(id, thumnail) {
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(() => {
-      that.fileService.getThumbnail(id, pathDisk).subscribe((item) => {
+      that.fileService.getThumbnail(id, thumnail).subscribe((item) => {
         if (item != null && item != '') {
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
@@ -738,7 +738,7 @@ export class HomeComponent extends UIComponent {
   }
 
   searchChange($event) { 
-    var text = '';
+    var text = $event;
     this.data = [];
     this.dmSV.loadedFolder = true;
     this.dmSV.loadedFile = false;
