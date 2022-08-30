@@ -166,7 +166,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         list[i].isbookmark = true;
         if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
-          if(value.status == "5") list[i].disabled = true;
+          if (value.status == '5') list[i].disabled = true;
           else if (
             ((datas?.stepType == 'S1' || datas?.stepType == 'S2') &&
               list[i].functionID == 'SYS202') ||
@@ -179,8 +179,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           ) {
             list[i].disabled = false;
           }
-        }
-        else if(value.status == "5") list[i].disabled = true;
+        } else if (value.status == '5') list[i].disabled = true;
       }
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
@@ -232,26 +231,21 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           dialogModel
         );
         dialogApprove.closed.subscribe((x) => {
-          if(x.event && x.event?.result)
-          {
-            if(x.event?.mode == 1)
-            {
+          debugger;
+          if (x.event && x.event?.result) {
+            if (x.event?.mode == 1) {
               //Ký
-              data.status = "5";
-            }
-            else if(x.event?.mode == 2)
-            {
+              data.status = '5';
+            } else if (x.event?.mode == 2) {
               //Từ chối
-              data.status = "4";
-            }
-            else if(x.event?.mode == 3)
-            {
+              data.status = '4';
+            } else if (x.event?.mode == 3) {
               //làm lại
-              data.status = "2";
+              data.status = '2';
             }
             this.view.dataService.update(data).subscribe();
           }
-          
+
           /*return {
             result: true,
             mode: 1

@@ -14,7 +14,7 @@
           (click)="openTempPopup(1)"
         >
           <codx-vll
-            *ngIf="data?.stepType == 'S1' && data?.stepType == 'S2'"
+            *ngIf="data?.stepType != 'S1' && data?.stepType != 'S2'"
             [name]="'ES002'"
             [value]="data?.stepType"
             [showText]="true"
