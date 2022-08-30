@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
-import { AuthStore, DataRequest, UIComponent } from 'codx-core';
+import { AuthStore, DataRequest, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { StatusTask } from '../../models/enum/enum';
 
@@ -17,10 +17,11 @@ import { StatusTask } from '../../models/enum/enum';
   templateUrl: './teamdashboard.component.html',
   styleUrls: ['./teamdashboard.component.scss'],
   providers: [GradientService],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class TeamDashboardComponent extends UIComponent implements OnInit {
-  @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  @ViewChild('content') content: TemplateRef<any>;
+  views: Array<ViewModel> = [];
   funcID: string;
   model: DataRequest;
   daySelected: Date;
@@ -53,6 +54,10 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   isGradient: boolean = true;
 
   //#region gauge
+  tooltip: Object = {
+    enable: true,
+  };
+
   font1: Object = {
     size: '15px',
     color: '#00CC66',
@@ -122,15 +127,12 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     visible: true,
   };
   legendRateDoneSettings: Object = {
+    position: 'Right',
     visible: true,
+    textWrap: 'Wrap',
+    height: '30%',
+    width: '50%',
   };
-
-  openTooltip() {
-    this.callfc.openForm(this.tooltip, 'Đánh giá hiệu quả làm việc', 500, 700);
-  }
-
-  closeTooltip() {
-  }
 
   //#region chartcolumn
   columnXAxis: Object = {
@@ -191,6 +193,20 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     this.getGeneralData();
   }
 
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.content,
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
+  }
+
   private getGeneralData() {
     this.tmService.getTeamDBData(this.model).subscribe((res: any) => {
       if (res) {
@@ -201,13 +217,13 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
           dataBarChart,
           rateDoneTaskOnTime,
           qtyTasks,
-          vltasksByEmp,
-          hoursByEmp,
+          vltasksByEmpWithName,
+          hoursByEmpWithName,
         } = res;
         this.tasksByGroup = tasksByGroup;
         this.status = status;
         this.dataBarChart = dataBarChart;
-        this.rateDoneTaskOnTime = rateDoneTaskOnTime.toFixed(2);
+        this.rateDoneTaskOnTime = rateDoneTaskOnTime;
         this.qtyTasks = qtyTasks;
         this.piedata = [
           {
@@ -231,39 +247,44 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
             y: status.canceledTasks,
           },
         ];
-        vltasksByEmp.map((task) => {
-          let newTasks = 0;
-          let processingTasks = 0;
-          let doneTasks = 0;
-          let postponeTasks = 0;
-          task.tasks.map((task) => {
-            switch (task.status) {
-              case StatusTask.New:
-                newTasks = newTasks + 1;
-                break;
-              case StatusTask.Processing:
-                processingTasks = processingTasks + 1;
-                break;
-              case StatusTask.Done:
-                doneTasks = doneTasks + 1;
-                break;
-              case StatusTask.Postpone:
-                postponeTasks = postponeTasks + 1;
-                break;
-            }
+        if (vltasksByEmpWithName) {
+          vltasksByEmpWithName.map((task) => {
+            console.log('Task', task);
+            let newTasks = 0;
+            let processingTasks = 0;
+            let doneTasks = 0;
+            let postponeTasks = 0;
+            task.tasks.map((task) => {
+              switch (task.status) {
+                case StatusTask.New:
+                  newTasks = newTasks + 1;
+                  break;
+                case StatusTask.Processing:
+                  processingTasks = processingTasks + 1;
+                  break;
+                case StatusTask.Done:
+                  doneTasks = doneTasks + 1;
+                  break;
+                case StatusTask.Postpone:
+                  postponeTasks = postponeTasks + 1;
+                  break;
+              }
+            });
+            this.vlWork.push({
+              id: task.id,
+              qtyTasks: task.qtyTasks,
+              owner: task.owner,
+              status: {
+                new: (newTasks / task.qtyTasks) * 100,
+                processing: (processingTasks / task.qtyTasks) * 100,
+                done: (doneTasks / task.qtyTasks) * 100,
+              },
+            });
           });
-          this.vlWork.push({
-            id: task.id,
-            qtyTasks: task.qtyTasks,
-            status: {
-              new: (newTasks / task.qtyTasks) * 100,
-              processing: (processingTasks / task.qtyTasks) * 100,
-              done: (doneTasks / task.qtyTasks) * 100,
-            },
-          });
-        });
-        this.hrWork = hoursByEmp;
-        console.log(this.vlWork)
+        }
+        if (hoursByEmpWithName) {
+          this.hrWork = hoursByEmpWithName;
+        }
         this.detectorRef.detectChanges();
       }
     });

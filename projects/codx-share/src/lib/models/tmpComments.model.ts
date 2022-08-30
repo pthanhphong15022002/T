@@ -6,7 +6,7 @@ export class tmpHistory{
     public comment:string;
     public actionType:string;
     public attachments:number;
-    public references:string;
+    public reference:string;
     public functionID:string;
 
 }

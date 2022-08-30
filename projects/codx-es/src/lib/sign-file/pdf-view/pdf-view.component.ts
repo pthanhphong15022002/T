@@ -384,6 +384,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
           if (!['1', '2', '8'].includes(item.labelType)) {
             anno.shapeAnnotationType = 'FreeText';
             anno.dynamicText = item.labelValue;
+
             anno.subject = 'Text Box';
           } else {
             let curSignerInfo = this.lstSigners.find(
@@ -442,7 +443,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         this.detectorRef.detectChanges();
       });
 
-    this.pdfviewerControl?.formFieldsModule?.clearFormFields();
+    // this.pdfviewerControl?.formFieldsModule?.clearFormFields();
   }
 
   getAreaOwnerName(authorID) {
@@ -1378,6 +1379,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       case 'annotationPropertiesChange':
         if (e.currentText) {
           this.curSelectedAnno.dynamicText = e.currentText;
+          this.curSelectedAnno.bounds =
+            this.pdfviewerControl.annotationCollection[curIndex].bounds;
         }
         break;
       default:
@@ -1498,8 +1501,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.pdfviewerControl
         .exportAnnotationsAsBase64String(annotationDataFormat)
         .then((base64) => {
-          console.log(base64);
-
           this.esService
             .updateSignFileTrans(
               base64.replace('data:application/pdf;base64,', ''),
