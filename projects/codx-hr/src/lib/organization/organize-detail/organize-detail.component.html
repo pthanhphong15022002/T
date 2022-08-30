@@ -1,0 +1,21 @@
+<ng-container *ngIf="datasetting">
+  <ejs-diagram
+    #diagram
+    width="100%"
+    height="400px"
+    [getConnectorDefaults]="connDefaults"
+    [getNodeDefaults]="nodeDefaults"
+    [layout]="layout"
+    [snapSettings]="snapSettings"
+    [dataSourceSettings]="datasetting"
+    (click)="click($event)"
+  >
+    <ng-template #nodeTemplate let-data>
+      <div>
+        <div>dòng 1</div>
+        <div>dòng 2</div>
+        <div>dòng 3</div>
+      </div>
+    </ng-template>
+  </ejs-diagram>
+</ng-container>
