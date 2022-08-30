@@ -155,7 +155,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     };
     return styles;
   }
-  changeMF(data: any, value: object = null) {
+  changeMF(data: any, value: object | any = null) {
+    debugger;
     var datas = this.dataItem;
     if (value) datas = value;
     if (datas) {
@@ -166,7 +167,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         list[i].isbookmark = true;
         if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
-          if (
+          if(value.status == "5") list[i].disabled = true;
+          else if (
             ((datas?.stepType == 'S1' || datas?.stepType == 'S2') &&
               list[i].functionID == 'SYS202') ||
             ((datas?.stepType == 'A1' ||
@@ -179,6 +181,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             list[i].disabled = false;
           }
         }
+        else if(value.status == "5") list[i].disabled = true;
       }
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
