@@ -45,6 +45,7 @@ export class CodxDMService {
     public titleShareBy = "Tài liệu được chia sẻ";
     public titleRequestShare = "Tài liệu yêu cầu chia sẻ";
     public titleRequestBy = "Tài liệu được yêu cầu"; 
+    
     public formModel: FormModel;    
     public dataService: any;
     isData = this.data.asObservable();   
@@ -94,12 +95,18 @@ export class CodxDMService {
     public dataFileEditing: FileUpload;
     public listFolder = [];
     public listFiles = [];
+    public urlUpload = "http://192.168.18.36:8011";
+    //public urlThumbnail = 'http://192.168.18.36:8011/api/';
+    public urlTenant = '';
+    public urlThumbnail = 'http://192.168.18.36:8011';
+    //public urlFile = 'http://192.168.18.36:8011/api/';
+    public urlFile = 'http://192.168.18.36:8011';
     page = 1;
     totalPage = 1;    
     revision: boolean;
     moveable = false;
     itemRight: ItemRight;
-    path: string;
+    path: string;    
     // public confirmationDialogService: ConfirmationDialogService;
     public ChangeData = new BehaviorSubject<boolean>(null);
     isChangeData = this.ChangeData.asObservable();
@@ -362,8 +369,9 @@ export class CodxDMService {
 
     getThumbnail(data, ext) {
         if (data != "") {
-            var url = 'data:image/png;base64,' + data;
-            return this.domSanitizer.bypassSecurityTrustUrl(data);
+            return `${this.urlThumbnail}/${data}`;
+            //var url = 'data:image/png;base64,' + data;
+            //return this.domSanitizer.bypassSecurityTrustUrl(data);
         }
         else
             return `../../../assets/codx/dms/${this.getAvatar(ext)}`;//this.getAvatar(ext);
@@ -819,7 +827,10 @@ export class CodxDMService {
       if (data.folderName != undefined)
         return '../../../assets/codx/dms/folder.svg';
       else
-        return this.getThumbnail(data.thumbnail, data.extension);
+        if (data.thumbnail.indexOf("../../../") > - 1)
+          return data.thumbnail;
+        else return `${this.urlThumbnail}/${data.thumbnail}`;
+        //return `${this.urlThumbnail}${data.thumbnail}`;//this.getThumbnail(data.thumbnail, data.extension);
     }
 
     getSvg(icon) {
@@ -1062,6 +1073,7 @@ export class CodxDMService {
               if (files != null) {
                 let index = files.findIndex(d => d.recID.toString() === data.recID);
                 if (index != -1) {
+                  //var thumnail = files[index].thumbnail;
                   files[index] = data;
                 }
                 this.listFiles = files;                    
@@ -1075,14 +1087,14 @@ export class CodxDMService {
               var that = this;
               if (this.checkDownloadRight(file)) {
               this.fileService.downloadFile(id).subscribe(async res => {
-                  if (res && res.content != null) {
-                    let json = JSON.parse(res.content);
-                    var bytes = that.base64ToArrayBuffer(json);
-                    let blob = new Blob([bytes], { type: res.mimeType });
-                    let url = window.URL.createObjectURL(blob);
+                  if (res) {
+                    //let json = JSON.parse(res.content);
+                    //var bytes = that.base64ToArrayBuffer(json);
+                    //let blob = new Blob([bytes], { type: res.mimeType });
+                   // let url = window.URL.createObjectURL(res);
                     var link = document.createElement("a");
-                    link.setAttribute("href", url);
-                    link.setAttribute("download", res.fileName);
+                    link.setAttribute("href", res);
+                    link.setAttribute("download", data.fileName);
                     link.style.display = "none";
                     document.body.appendChild(link);
                     link.click();
