@@ -1,5 +1,5 @@
-<div class="rounded-2 bg-body border border-1 border-gray-300">
-    <div class="rounded-2 bg-body border border-1 m-h-400 p-3">
+<div class="card-note h-100">
+    <div class="rounded-2 bg-body border border-1 h-100 overflow-auto p-3">
         <div *ngFor="let item of listNote; index as i">
             <div class="has-action-menu">
                 <div class="d-flex align-items-top">
@@ -11,49 +11,49 @@
                             </a>
                             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                 <li>
-                                    <button class="dropdown-item d-flex align-items-center">
-                                        <span [class]="'icon-clear icon-20'" [style.color]="'red'"></span>
+                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <span [class]="'icon-clear icon-20 me-2'" [style.color]="'red'"></span>
                                         <span class="show-customName">{{'Xóa'}}</span>
                                     </button>
                                 </li>
                                 <hr class="dropdown-divider">
                                 <li>
-                                    <button class="dropdown-item d-flex align-items-center">
-                                        <span class="icon-edit icon-20" [style.color]=""></span>
+                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <span class="icon-edit icon-20 me-2" [style.color]=""></span>
                                         <span class="show-customName">{{'Thêm diễn giải'}}</span>
                                     </button>
                                 </li>
                                 <hr class="dropdown-divider">
                                 <li>
-                                    <button class="dropdown-item d-flex align-items-center">
-                                        <span [class]="'icon-title  icon-20'" [style.color]=""></span>
+                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <span [class]="'icon-title icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Tiêu đề'}}</span>
                                     </button>
                                 </li>
                                 <li>
-                                    <button class="dropdown-item d-flex align-items-center">
-                                        <span [class]="'icon-format_size icon-20'" [style.color]=""></span>
+                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <span [class]="'icon-format_size icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Dữ liệu thường'}}</span>
                                     </button>
                                 </li>
                                 <li>
-                                    <button class="dropdown-item d-flex align-items-center">
-                                        <span [class]="'icon-check_box  icon-20'" [style.color]=""></span>
+                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <span [class]="'icon-check_box  icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Check list'}}</span>
                                     </button>
                                 </li>
                                 <li>
-                                    <button class="dropdown-item d-flex align-items-center">
-                                        <span [class]="'icon-list_alt  icon-20'" [style.color]=""></span>
+                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <span [class]="'icon-list_alt  icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Danh sách'}}</span>
                                     </button>
                                 </li>
-                                <li>
-                                    <button class="dropdown-item d-flex align-items-center">
-                                        <span [class]="'icon-format_list_numbered icon-20'" [style.color]=""></span>
+                                <!-- <li>
+                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <span [class]="'icon-format_list_numbered icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Số thứ tự'}}</span>
                                     </button>
-                                </li>
+                                </li> -->
                                 <hr class="dropdown-divider">
                                 <li>
                                     <div class="d-flex">
@@ -79,7 +79,6 @@
                                                 <div class="emoji">
                                                     <emoji-mart [showSingleCategory]="true" [showPreview]="false"
                                                         [set]="set" [perLine]="7"
-                                                       
                                                         (emojiSelect)="addEmoji($event, input)">
                                                     </emoji-mart>
                                                 </div>
@@ -90,22 +89,22 @@
                                 <hr>
                                 <ng-container *ngIf="showMF">
                                     <li>
-                                        <button class="dropdown-item d-flex align-items-center">
-                                            <span [class]="'icon-person_add_alt_1 icon-20'"
+                                        <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                            <span [class]="'icon-person_add_alt_1 icon-20 me-2'"
                                                 [style.color]="'dodgerblue'"></span>
                                             <span class="show-customName">{{'Giao việc'}}</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <button class="dropdown-item d-flex align-items-center">
-                                            <span [class]="'icon-chat_bubble_outline icon-20'"
+                                        <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                            <span [class]="'icon-chat_bubble_outline icon-20 me-2'"
                                                 [style.color]="'dodgerblue'"></span>
                                             <span class="show-customName">{{'Thêm bình luận'}}</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <button class="dropdown-item d-flex align-items-center">
-                                            <span [class]="'icon-attach_file icon-20'"
+                                        <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                            <span [class]="'icon-attach_file icon-20 me-2'"
                                                 [style.color]="'dodgerblue'"></span>
                                             <span class="show-customName">{{'Đính kèm file'}}</span>
                                         </button>
@@ -138,7 +137,7 @@
             </div>
         </div>
     </div>
-    <div class="d-flex note-action border align-items-center justify-content-between" #menu *ngIf="showMenu">
+    <div class="d-flex note-action h-45px border align-items-center justify-content-between" #menu *ngIf="showMenu">
         <div class="d-flex">
             <div [class.active]="format.TITLE ? 'active' : ''">
                 <span (click)="clickFunction('format', 'TITLE', input)"
@@ -161,13 +160,14 @@
             </span>
             <span class="icon-attach_file icon-18 btn btn-icon btn-active-light-primary position-relative">
             </span>
-            <span>|</span>
+            <span class="border-right border-gray-200 mx-1"></span>
             <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative
             " (click)="clickFunction('font', 'BOLD', input)" [class.active]="font.BOLD ? 'active' : ''"></span>
             <span class="icon-format_italic icon-20 btn btn-icon btn-active-light-primary position-relative
             " (click)="clickFunction('font', 'ITALIC', input)" [class.active]="font.ITALIC ? 'active' : ''"></span>
             <span class="icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative
-            " (click)="clickFunction('font', 'UNDERLINE', input)" [class.active]="font.UNDERLINE ? 'active' : ''"></span>
+            " (click)="clickFunction('font', 'UNDERLINE', input)"
+                [class.active]="font.UNDERLINE ? 'active' : ''"></span>
             <codx-input #colorPicker type="colorpicker" [showText]="false" [modeSwitcher]="true" [crrValue]="font.COLOR"
                 field="textColor" (valueChange)="valueChangeColor($event, input, colorPicker)">
             </codx-input>
@@ -183,10 +183,8 @@
                     </div>
                 </ng-container>
             </div>
-            <span
-                class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span>
-            <span class="icon-refresh icon-18 btn btn-icon btn-active-light-primary position-relative
-                " (click)="refresh()"></span>
         </div>
+        <span
+        class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span>
     </div>
 </div>

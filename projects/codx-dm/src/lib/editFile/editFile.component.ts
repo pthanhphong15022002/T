@@ -337,18 +337,21 @@ export class EditFileComponent implements OnInit {
 
     }
     else {
-      //  this.dmSV.fileEditing.next(this.fileEditing);
-      let index = this.fileUploadList.findIndex(d => d.order.toString() === this.fileEditing.order.toString()); //find index in your array
-      if (index > -1) {
-        this.fileUploadList.splice(index, 1);//remove element from array
-        // this.fileUploadList.push(new Object(), this.fileEditing);
-        this.fileUploadList.push(Object.assign({}, this.fileEditing));
-      //  this.dmSV.fileUploadListAdd.next(true);
-      }
       this.dialog.close();
-      // if (modal != null)
-      //   modal.dismiss('Cross click');//modal.close();
     }
+    // else {
+    //   //  this.dmSV.fileEditing.next(this.fileEditing);
+    //   let index = this.fileUploadList.findIndex(d => d.order.toString() === this.fileEditing.order.toString()); //find index in your array
+    //   if (index > -1) {
+    //     this.fileUploadList.splice(index, 1);//remove element from array
+    //     // this.fileUploadList.push(new Object(), this.fileEditing);
+    //     this.fileUploadList.push(Object.assign({}, this.fileEditing));
+    //   //  this.dmSV.fileUploadListAdd.next(true);
+    //   }
+    //   this.dialog.close();
+    //   // if (modal != null)
+    //   //   modal.dismiss('Cross click');//modal.close();
+    // }
 
   }
   

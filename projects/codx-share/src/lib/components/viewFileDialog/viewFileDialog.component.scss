@@ -78,3 +78,10 @@ ngb-modal-window {
     }
 }
     
+#viewfiledalog{
+    height: calc(100vh - 110px);
+}
+#viewfiledalog video.viewfileiframe{
+    height: auto !important;
+    max-height: 100%;
+}

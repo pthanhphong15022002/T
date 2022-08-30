@@ -71,8 +71,8 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.layout.setUrl(this.tmSv.urlback);
-    this.cache.functionList(this.funcID).subscribe(f=>{
-        if(f) this.layout.setLogo(f.smallIcon);
+    this.cache.functionList(this.funcID).subscribe(f => {
+      if (f) this.layout.setLogo(f.smallIcon);
     })
     this.activedRouter.queryParams.subscribe((params) => {
       if (params) {
@@ -131,7 +131,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadTabView();
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
   loadTabView() {
     // if(this.showTabDasboard)this.all.push('Dashboard')
     // if(this.showTabTasks)this.all.push('Công việc')
@@ -193,9 +193,8 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
 
   getListUserByResource(resources) {
     this.api
-      .execSv<any>(
+      .exec<any>(
         'HR',
-        'ERM.Business.HR',
         'EmployeesBusiness',
         'GetListEmployeesByUserIDAsync',
         JSON.stringify(resources.split(';'))

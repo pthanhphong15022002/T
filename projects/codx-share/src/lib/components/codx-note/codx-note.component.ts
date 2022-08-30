@@ -76,7 +76,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   @Input() className = '';
   @Input() method = '';
   @Input() refID = '';
-  @Input() data = '';
+  @Input() data = [];
   @ViewChild('input') input: any;
 
   constructor(
@@ -110,7 +110,38 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     }
     if (this.data.length > 0) {
       this.listNote = this.data;
+      this.dt.detectChanges();
+      this.setPropertyForView();
     }
+  }
+
+  setPropertyForView() {
+    var ele: any = document.querySelectorAll('codx-input[type="text"]');
+    for (let i = 0; i < this.listNote.length; i++) {
+      /* set title */
+      if (this.listNote[i].lineType == 'TITLE') {
+        var divElement = ele[i+1].children[0] as HTMLElement;
+        var inputElement = divElement.children[0] as HTMLElement;
+        inputElement.style.setProperty('font-size', '24px', 'important');
+      }
+
+      /* set color */
+      if (this.listNote[i].textColor !== '' || this.listNote[i].textColor !== null) {
+        var divElement = ele[i+1].children[0] as HTMLElement;
+        var inputElement = divElement.children[0] as HTMLElement;
+        inputElement.style.setProperty('color', this.listNote[i].textColor, 'important');
+      }
+
+      /* set font */
+      if (this.listNote[i].format !== '' || this.listNote[i].format !== null) {
+        var font = this.listNote[i].format.slpit(';');
+        debugger;
+        var divElement = ele[i+1].children[0] as HTMLElement;
+        var inputElement = divElement.children[0] as HTMLElement;
+        inputElement.style.setProperty('color', this.listNote[i].textColor, 'important');
+      }
+    }
+    console.log(ele);
   }
 
   chooseType(type: any, ele: any) {
@@ -385,22 +416,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   delete() {}
-
-  refresh() {
-    this.listNote = [
-      {
-        memo: null,
-        status: null,
-        textColor: null,
-        format: null,
-        lineType: null,
-      },
-    ];
-    this.currentElement = null;
-    this.setFont();
-    this.setFormat();
-    this.dt.detectChanges();
-  }
 
   getElement(ele: any) {
     this.currentElement = ele.elRef.nativeElement as HTMLElement;
