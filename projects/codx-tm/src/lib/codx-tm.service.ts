@@ -73,7 +73,7 @@ export class CodxTMService {
   loadTaskByAuthen(data) {
     return this.execTM(
       APICONSTANT.BUSINESS.TM.Task,
-      'GetListDetailTasksAsync',
+      'GetTasksAsync',
       [data]
     );
   }

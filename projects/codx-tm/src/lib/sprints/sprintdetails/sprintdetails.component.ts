@@ -133,7 +133,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadTabView();
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
   loadTabView() {
     // if(this.showTabDasboard)this.all.push('Dashboard')
     // if(this.showTabTasks)this.all.push('Công việc')
