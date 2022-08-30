@@ -105,7 +105,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-      debugger;
       if (fuc) {
         var params;
         if (fuc?.url) {
@@ -156,7 +155,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     return styles;
   }
   changeMF(data: any, value: object | any = null) {
-    debugger;
     var datas = this.dataItem;
     if (value) datas = value;
     if (datas) {
@@ -232,7 +230,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           dialogModel
         );
         dialogApprove.closed.subscribe((x) => {
-          debugger;
           if (x.event && x.event?.result) {
             if (x.event?.mode == 1) {
               //Ký
@@ -283,7 +280,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         )
         .subscribe((res2: any) => {
           if (!res2?.msgCodeError) {
-            debugger;
             data.status = status;
             this.view.dataService.update(data).subscribe();
             this.notifySvr.notifyCode('SYS007');

@@ -240,7 +240,11 @@
         <e-tabitems>
           <e-tabitem *ngIf="!isDisable">
             <ng-template #headerText>
-              {{ headerRightName[0].text }}
+              <codx-label
+                name="lblheader"
+                [formModel]=""
+                [default]="headerRightName[0].text"
+              ></codx-label>
             </ng-template>
 
             <ng-template #content>
