@@ -310,35 +310,40 @@ export class VersionComponent implements OnInit {
     // }
   }
 
-  displayThumbnail(id, pathDisk) {
-    var that = this;
-    if (this.interval == null)
-      this.interval = [];
-    var files = this.dmSV.listFiles;
-    var index = setInterval(() => {
-      that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
-        if (item != null && item != "") {
-          let index = files.findIndex(d => d.recID.toString() === id);
-          if (index != -1) {
-            files[index].thumbnail = item;
-            that.dmSV.listFiles = files;
-            that.dmSV.ChangeData.next(true);
-            that.changeDetectorRef.detectChanges();
-          }
-          let indexInterval = this.interval.findIndex(d => d.id === id);
-          if (indexInterval > -1) {
-            clearInterval(this.interval[indexInterval].instant);
-            this.interval.splice(indexInterval, 1);
-          }
-        }
-      })
-    }, 3000);
-
-    var interval = new ItemInterval();
-    interval.id = id;
-    interval.instant = index;
-    this.interval.push(Object.assign({}, interval));
+  displayThumbnail(data) {
+    this.dmSV.setThumbnailWait.next(data);
   }
+
+
+  // displayThumbnail(id, pathDisk) {
+  //   var that = this;
+  //   if (this.interval == null)
+  //     this.interval = [];
+  //   var files = this.dmSV.listFiles;
+  //   var index = setInterval(() => {
+  //     that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
+  //       if (item != null && item != "") {
+  //         let index = files.findIndex(d => d.recID.toString() === id);
+  //         if (index != -1) {
+  //           files[index].thumbnail = item;
+  //           that.dmSV.listFiles = files;
+  //           that.dmSV.ChangeData.next(true);
+  //           that.changeDetectorRef.detectChanges();
+  //         }
+  //         let indexInterval = this.interval.findIndex(d => d.id === id);
+  //         if (indexInterval > -1) {
+  //           clearInterval(this.interval[indexInterval].instant);
+  //           this.interval.splice(indexInterval, 1);
+  //         }
+  //       }
+  //     })
+  //   }, 3000);
+
+  //   var interval = new ItemInterval();
+  //   interval.id = id;
+  //   interval.instant = index;
+  //   this.interval.push(Object.assign({}, interval));
+  // }
 
   versionFile() {
     var that = this;
@@ -353,7 +358,7 @@ export class VersionComponent implements OnInit {
             files[index].recID = res.data.recID; // thumbmail
             files[index].fileName = res.data.fileName;
             files[index].thumbnail = "../../../assets/img/loader.gif";//res.data.thumbnail;
-            that.displayThumbnail(res.data.recID, res.data.pathDisk);
+            that.displayThumbnail(res.data);
             this.dmSV.ChangeData.next(true);
           }
           // thumbmail
