@@ -15,7 +15,7 @@ export class CO_Meetings{
     link2: string;
     memo: string;
     templateID: string;
-    contents: string;
+    contents: any = [];
     permissions: string;
     resources: CO_Resources[];
     refType: string;

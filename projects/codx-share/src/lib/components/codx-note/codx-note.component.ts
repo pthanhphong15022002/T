@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, CodxInputComponent } from 'codx-core';
 import { iif } from 'rxjs';
 import { createTrue } from 'typescript';
@@ -70,17 +71,28 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   @Input() showMenu = true;
   @Input() showMF = true;
+  @Input() service = '';
+  @Input() assembly = '';
+  @Input() className = '';
+  @Input() method = '';
+  @Input() refID = '';
+  @Input() data = '';
   @ViewChild('input') input: any;
 
   constructor(
     private dt: ChangeDetectorRef,
     private cache: CacheService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private route: ActivatedRoute
   ) {
     this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
-        console.log('check gridViewSetup', this.gridViewSetup);
+      }
+    });
+    this.route.queryParams.subscribe((params) => {
+      if (params) {
+        this.refID = params.meetingID;
       }
     });
   }
@@ -95,6 +107,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       ) as HTMLElement;
       input.focus();
       this.currentElement.id = '0';
+    }
+    if (this.data.length > 0) {
+      this.listNote = this.data;
     }
   }
 
@@ -132,9 +147,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.format.TITLE = title;
     if (!this.currentElement) return;
     this.currentElement.focus();
-    // if (this.format.TEXT) this.currentElement.id = 'TEXT';
-    // else if (this.format.LIST) this.currentElement.id = 'LIST';
-    // else this.currentElement.id = 'CHECKBOX';
     if (this.format.TITLE) {
       var divElement = this.currentElement.children[0] as HTMLElement;
       var inputElement = divElement.children[0] as HTMLElement;
@@ -291,16 +303,17 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.listNote.push(initListNote);
       this.id = `${this.listNote.length - 1}`;
       //reverse
-      console.log('check listNote', this.listNote);
       this.dt.detectChanges();
     }
-    // this.api
-    //   .execSv('CO', 'ERM.Business.CO', 'ContentsBusiness', 'SaveAsync', data)
-    //   .subscribe((res) => {
-    //     if (res) {
-
-    //     }
-    //   });
+    this.api
+      .execSv(this.service, this.assembly, this.className, this.method, [
+        this.refID,
+        this.listNote,
+      ])
+      .subscribe((res) => {
+        if (res) {
+        }
+      });
   }
 
   setPropertyAfterAdd() {
@@ -444,5 +457,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         'important'
       );
     }
+  }
+
+  clickFunction(type, format, ele) {
+    if (type == 'format') this.chooseType(format, ele);
+    else if (type == 'font') this.checkFont(format, ele);
   }
 }
