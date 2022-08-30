@@ -1,3 +1,4 @@
+import { I } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -9,6 +10,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { isOffline } from '@syncfusion/ej2/treegrid';
 import {
   ApiHttpService,
   AuthStore,
@@ -73,7 +75,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   option: SidebarModel;
   oSignFile: ES_SignFile;
-
+  user: any = {};
   showPlan: boolean = true;
   constructor(
     private auth: AuthStore,
@@ -94,6 +96,18 @@ export class PopupAddSignFileComponent implements OnInit {
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
+
+    this.user = this.auth.get();
+    if (!this.user.employee || this.user.employee == null) {
+      this.user.employee = null;
+      this.esService.getEmployee(this.user?.userID).subscribe((emp) => {
+        console.log('employee', emp);
+
+        if (emp) {
+          this.user.employee = emp;
+        }
+      });
+    }
 
     if (this.oSignFile) {
       this.currentTab = 1;
@@ -180,7 +194,6 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   initForm() {
-    const user = this.auth.get();
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
@@ -200,11 +213,11 @@ export class PopupAddSignFileComponent implements OnInit {
               priority: '1',
               approveStatus: '1',
               approveControl: '3',
-              employeeID: user.employee?.employeeID,
-              orgUnitID: user.employee?.orgUnitID,
-              deptID: user.employee?.departmentID,
-              divisionID: user.employee?.divisionID,
-              companyID: user.employee?.companyID,
+              employeeID: this.user.employee?.employeeID,
+              orgUnitID: this.user.employee?.orgUnitID,
+              deptID: this.user.employee?.departmentID,
+              divisionID: this.user.employee?.divisionID,
+              companyID: this.user.employee?.companyID,
             });
 
             this.isAfterRender = true;
@@ -218,11 +231,11 @@ export class PopupAddSignFileComponent implements OnInit {
                 priority: '1',
                 approveStatus: '1',
                 categoryID: null,
-                employeeID: user.employee?.employeeID,
-                orgUnitID: user.employee?.orgUnitID,
-                deptID: user.employee?.departmentID,
-                divisionID: user.employee?.divisionID,
-                companyID: user.employee?.companyID,
+                employeeID: this.user.employee?.employeeID,
+                orgUnitID: this.user.employee?.orgUnitID,
+                deptID: this.user.employee?.departmentID,
+                divisionID: this.user.employee?.divisionID,
+                companyID: this.user.employee?.companyID,
                 refDate: new Date(),
               });
               this.codxService
