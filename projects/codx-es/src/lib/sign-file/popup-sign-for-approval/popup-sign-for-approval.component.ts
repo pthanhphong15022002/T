@@ -134,8 +134,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
               this.notify.notifyCode('RS002');
               this.canOpenSubPopup = false;
               this.pdfView.reload();
-              this.dialog && this.dialog?.close();
-              this.detectorRef.detectChanges();
+              this.dialog?.close();
             }
           });
       }

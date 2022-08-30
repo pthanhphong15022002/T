@@ -746,7 +746,6 @@ export class CodxTasksComponent
       if (idx > -1)
         this.viewsActive.splice(idx, 1);
     }
-
   }
 
   requestEnded(evt: any) { }
