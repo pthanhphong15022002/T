@@ -9,8 +9,6 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { isOffline } from '@syncfusion/ej2/treegrid';
 import {
   ApiHttpService,
   AuthStore,
