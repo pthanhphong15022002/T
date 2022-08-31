@@ -28,6 +28,8 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     listSubComment: [],
     recID: ""
   }
+  dicDatas = {};
+
   constructor(
     private api:ApiHttpService,
     private cache:CacheService,
@@ -36,6 +38,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   ) 
   { }
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
     if(changes.objectID.previousValue != changes.objectID.currentValue ){
       this.getDataAsync();
     }
@@ -93,7 +96,6 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     this.dt.detectChanges();
   }
 
-  dicDatas = {};
 
   setDicData(data) {
     this.dicDatas[data["recID"]] = data;
