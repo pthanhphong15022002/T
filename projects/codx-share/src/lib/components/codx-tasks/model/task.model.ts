@@ -300,3 +300,14 @@ export class TM_TaskGroups {
   stop: boolean;
   createName: string;
 }
+
+export class tmpReferences { 
+  recIDReferences : string ;
+  refType : string ;
+  memo :string ;
+  createdBy :string ;
+  createByName: string ;
+  createdOn :Date ;
+}
+
+

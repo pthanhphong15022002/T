@@ -25,7 +25,7 @@ import { AttachmentComponent } from '../attachment/attachment.component';
 })
 export class CodxReferencesComponent implements OnInit {
   @Input() funcID?: string// khởi tạo để test,, sau có thể xóa
-  @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
+  // @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
   @Input() vllRefType = 'TM018';
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -45,14 +45,15 @@ export class CodxReferencesComponent implements OnInit {
   ngOnInit(): void { }
   ngAfterViewInit(): void {
     //data view test
-    this.dataReferences = [
-      {
-        memo: 'Công văn dự án 1000 USD',
-        createByName: 'Lê Thi Hoài Thương',
-        createdOn: new Date(),
-        recID: '00cfeb10-a433-43e3-b6b3-876e25bf20a3',
-      },
-    ];
+    // this.dataReferences = [
+    //   {
+    //     refType : "OD_Dispatches",
+    //     memo: 'Công văn dự án 1000 USD',
+    //     createByName: 'Lê Thi Hoài Thương',
+    //     createdOn: new Date(),
+    //     recID: '00cfeb10-a433-43e3-b6b3-876e25bf20a3',
+    //   },
+    // ];
     //end data test
   }
 
