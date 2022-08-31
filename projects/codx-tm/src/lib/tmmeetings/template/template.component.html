@@ -25,7 +25,7 @@
             <div class="body_detail p-6">
               <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO"
                 className="MeetingsBusiness" method="UpdateContentMeetingAsync" [refID]="item.templateID"
-                [data]="data.contents">
+                [data]="data.contents" (getContent)="getContent($event)">
               </codx-note>
             </div>
           </ng-template>
