@@ -103,34 +103,8 @@ export class CopyComponent implements OnInit {
     this.user = this.auth.get();
   }
 
-  displayThumbnail(id, pathDisk) {
-    var that = this;
-    if (this.interval == null)
-      this.interval = [];
-    var files = this.dmSV.listFiles;
-    var index = setInterval(() => {
-      that.fileService.getThumbnail(id, pathDisk).subscribe(item => {
-        if (item != null && item != "") {
-          let index = files.findIndex(d => d.recID.toString() === id);
-          if (index != -1) {
-            files[index].thumbnail = item;
-            that.dmSV.listFiles = files;
-            that.dmSV.ChangeData.next(true);
-            that.changeDetectorRef.detectChanges();
-          }
-          let indexInterval = this.interval.findIndex(d => d.id === id);
-          if (indexInterval > -1) {
-            clearInterval(this.interval[indexInterval].instant);
-            this.interval.splice(indexInterval, 1);
-          }
-        }
-      })
-    }, 3000);
-
-    var interval = new ItemInterval();
-    interval.id = id;
-    interval.instant = index;
-    this.interval.push(Object.assign({}, interval));
+  displayThumbnail(data) {
+    this.dmSV.setThumbnailWait.next(data);
   }
 
   SaveData() {
@@ -151,7 +125,7 @@ export class CopyComponent implements OnInit {
             files.push(Object.assign({}, res.data));
             this.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
-            that.displayThumbnail(res.data.recID, res.data.pathDisk);
+            that.displayThumbnail(res.data);
             this.dialog.close();
             that.notificationsService.notify(res.message);
           }
@@ -175,7 +149,7 @@ export class CopyComponent implements OnInit {
                     if (index != -1) {
                       item.data.thumbnail = "../../../assets/img/loader.gif";
                       files[index] = item.data;
-                      that.displayThumbnail(item.data.recID, item.data.pathDisk);
+                      that.displayThumbnail(item.data);
                       that.dmSV.listFiles = files;
                       that.dmSV.ChangeData.next(true);
                     }

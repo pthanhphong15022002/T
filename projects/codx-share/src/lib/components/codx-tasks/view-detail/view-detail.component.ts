@@ -34,6 +34,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() vllExtendStatus?: any;
   @Input() vllApproveStatus?: any;
   @Input() dataTree?: any[];
+  @Input() dataReferences?: any[];
   @Input() taskID: string;
   popoverDataSelected: any;
   listTaskResousceSearch = [];

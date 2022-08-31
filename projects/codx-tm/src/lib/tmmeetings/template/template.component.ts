@@ -40,11 +40,6 @@ export class TemplateComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    // let data = new DataRequest();
-    // data.page = 1;
-    // data.pageSize = 10;
-    // data.comboboxName = 'TM_MeetingTemplates';
-    // this.options = data;
     this.loadData();
   }
 

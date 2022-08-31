@@ -18,6 +18,21 @@
 </div>
 
 <ng-template #tab let-name>
+  <ng-container *ngIf="name.toLowerCase() == 'history'">
+    <ng-container>
+      <div class="tab-his">
+        <div class="tab_body">
+          <codx-tree-history 
+            [objectID]="objectID" 
+            [objectType]="entityName"
+            [actionType]="'C1'"
+            [viewIcon]="true" 
+            [funcID]="funcID">
+          </codx-tree-history>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
   <ng-container *ngIf="name.toLowerCase() == 'attachment'">
     <ng-container>
       <codx-attachment #attachment [objectType]="entityName" [objectId]="objectID" [hideFolder]="1" [hideUploadBtn]="0"
@@ -25,7 +40,6 @@
         [formModel]="formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
         [displayThumb]="displayThumb">
       </codx-attachment>
-
       <div class="tab-att">
         <div class="tab_container">
           <div class="tab_body">
@@ -62,21 +76,6 @@
       </div>
     </ng-container>
   </ng-container>
-  <ng-container *ngIf="name.toLowerCase() == 'history'">
-    <ng-container>
-      <div class="tab-his">
-        <div class="tab_body">
-          <codx-tree-history 
-            [objectID]="objectID" 
-            [objectType]="entityName"
-            [actionType]=""
-            [viewIcon]="true" 
-            [funcID]="funcID">
-          </codx-tree-history>
-        </div>
-      </div>
-    </ng-container>
-  </ng-container>
   <ng-container *ngIf="name.toLowerCase() == 'comment'">
     <ng-container>
       <div class="tab-comt">
@@ -104,7 +103,7 @@
   </ng-container>
   <ng-container *ngIf="name.toLowerCase() == 'references'">
     <ng-container>
-      <codx-references [entityName]="'OD_Dispatches'" [funcID]="funcID" [dataReferences]="dataReferences"  [vllRefType]="vllRefType"></codx-references>
+      <codx-references  [funcID]="funcID" [dataReferences]="dataReferences"  [vllRefType]="vllRefType"></codx-references>
     </ng-container>
   </ng-container>
   <ng-container *ngIf="name.toLowerCase() == 'approve'">
