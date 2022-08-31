@@ -157,6 +157,9 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     var b = this.dataIEMapping;
     var c = this.dataIETables;
     debugger;
+    this.api.execSv<any>("SYS","AD","IEConnectionsBusiness","AddItemAsync",this.dataIEConnections).subscribe(item=>{
+      debugger;
+    })
   }
   changeSheetImport(e:any)
   {
@@ -206,8 +209,8 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           mappingTemplate: mappingTemplate,
           importRule : this.importRule[0]?.value,
           isSummary: false,
-          formName: this.formModel.formName,
-          gridViewName: this.formModel.gridViewName,
+          formName: "PurchaseInvoices",
+          gridViewName: "grvPurchaseInvoices",
 
         };
         this.dataIEConnections = {...objConnections , ...this.dataIEConnections}

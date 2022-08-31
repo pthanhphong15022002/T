@@ -562,7 +562,8 @@ export class AttachmentComponent implements OnInit {
   //fetch () : Observable<any[]>
   saveFilesObservable(): Observable<any[]> {
     this.atSV.fileListAdded = [];
-    return this.onMultiFileSaveObservable();
+    return this.addFileObservable(this.fileUploadList[0]);
+    //return this.onMultiFileSaveObservable();
   }
 
   onMultiFileSaveObservable(): Observable<any[]> {
