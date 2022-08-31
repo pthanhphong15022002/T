@@ -156,7 +156,16 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     var a = this.dataIEConnections;
     var b = this.dataIEMapping;
     var c = this.dataIETables;
-    debugger;
+    this.attachment.saveFilesObservable().subscribe((item:any)=>{
+      if(item?.status == 0)
+      {
+        this.api.execSv<any>("SYS","AD","IEConnectionsBusiness","AddItemAsync",this.dataIEConnections).subscribe(item=>{
+          if(item) this.notifySvr.notifyCode('OD008');
+        })
+      }
+      else this.notifySvr.notify("Vui lòng đính kèm file");
+    })
+   
   }
   changeSheetImport(e:any)
   {
@@ -206,8 +215,8 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           mappingTemplate: mappingTemplate,
           importRule : this.importRule[0]?.value,
           isSummary: false,
-          formName: this.formModel.formName,
-          gridViewName: this.formModel.gridViewName,
+          formName: "PurchaseInvoices",
+          gridViewName: "grvPurchaseInvoices",
 
         };
         this.dataIEConnections = {...objConnections , ...this.dataIEConnections}
