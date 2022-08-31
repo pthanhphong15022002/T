@@ -575,6 +575,10 @@ export class AttachmentComponent implements OnInit {
      // upload file uri from Mr Long
 
     }
+
+    this.atSV.fileListAdded = [];
+    return this.addFileObservable(this.fileUploadList[0]);
+    //return this.onMultiFileSaveObservable();
   }
 
   onMultiFileSaveObservable(): Observable<any[]> {

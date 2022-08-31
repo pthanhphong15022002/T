@@ -1,22 +1,16 @@
 <div class="row border p-4">
-    <div class="col-8  px-6 py-4 bg-secondary position-relative">
+    <div class="col-8 px-6 py-4 bg-gray-200 position-relative">
         <ng-container [ngSwitch]="file.referType">
             <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
-                <div class="w-100 vh-100">
+                <div class="w-100 vh-100 img-full">
                     <!-- <img [src]="file.thumbnail" alt="" class="w-100 image"> -->
-                    <codx-img  
-                    [recId]="file.recID" 
-                    [objectId]="file.objectID" 
-                    objectType="WP_Comments"
-                    imageType="square"
-                    [width]="0"
-                    cssClass="w-100 vh-100 image"
-                    ></codx-img>
+                    <codx-img [recId]="file.recID" [objectId]="file.objectID" objectType="WP_Comments"
+                        imageType="square" [width]="0" cssClass="w-100 h-auto image"></codx-img>
                 </div>
             </ng-container>
             <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
-                <div class="w-100 h-100">
-                    <video class="w-100 h-100" controls>
+                <div class="w-100 vh-100 video-full">
+                    <video class="w-100 h-auto video" controls>
                         <source [src]="file.thumbnail" type="video/mp4">
                     </video>
                 </div>
@@ -24,10 +18,8 @@
             <ng-container *ngSwitchDefault>
                 <div class="mt-2 d-flex">
                     <div class="me-2">
-                        <codx-temp-full 
-                        imageSrc="{{file.extension | avtFile}}" 
-                        imgCss="w-20px me-3 cursor-pointer"
-                        title="{{file.fileName}}" [descLine]="1">
+                        <codx-temp-full imageSrc="{{file.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
+                            title="{{file.fileName}}" [descLine]="1">
                         </codx-temp-full>
                     </div>
                 </div>
@@ -42,7 +34,7 @@
                 </div>
                 <div class="">
                     <span class="rounded-circle bg-secondary">
-                        <a href="javascript:void(0)" >
+                        <a href="javascript:void(0)">
                             <i class="icon-zoom_in"></i>
                         </a>
                     </span>
@@ -70,10 +62,10 @@
                 <div class="">
                     <span class="fw-bolder fs-7 me-2">{{parentPost.createdName}}</span>
                     <ng-container *ngIf="parentPost.shareName">
-                        <span [innerHTML]="parentPost.shareName" ></span>
+                        <span [innerHTML]="parentPost.shareName"></span>
                     </ng-container>
                 </div>
-                <div  class="mt-2">
+                <div class="mt-2">
                     <span class="text-gray-600 fs-7 me-2">{{parentPost.createdOn | timefrom}}</span>
                     <span class="rounded-1 py-1 px-2 bg-gray-200">
                         <span class="symbol symbol-circle ">
@@ -89,9 +81,7 @@
         </div>
         <!-- child post -->
         <div *ngIf="childPost">
-            <treeview-comment 
-                [rootData]="childPost.listComment" 
-                [dataComment]="childPost" 
+            <treeview-comment [rootData]="childPost.listComment" [dataComment]="childPost"
                 (pushComment)="pushComment($event)">
             </treeview-comment>
         </div>
