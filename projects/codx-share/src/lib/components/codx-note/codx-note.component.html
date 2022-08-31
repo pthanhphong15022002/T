@@ -26,25 +26,29 @@
                                 </li> -->
                                 <hr class="dropdown-divider">
                                 <li>
-                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                    <button (click)="clickFunction('format', 'TITLE', input)"
+                                        class="dropdown-item text-hover-primary d-flex align-items-center">
                                         <span [class]="'icon-title icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Tiêu đề'}}</span>
                                     </button>
                                 </li>
                                 <li>
-                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                    <button (click)="clickFunction('format', 'TEXT', input)"
+                                        class="dropdown-item text-hover-primary d-flex align-items-center">
                                         <span [class]="'icon-format_size icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Dữ liệu thường'}}</span>
                                     </button>
                                 </li>
                                 <li>
-                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                    <button (click)="clickFunction('format', 'CHECKBOX', input)"
+                                        class="dropdown-item text-hover-primary d-flex align-items-center">
                                         <span [class]="'icon-check_box  icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Check list'}}</span>
                                     </button>
                                 </li>
                                 <li>
-                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                    <button (click)="clickFunction('format', 'LIST', input)"
+                                        class="dropdown-item text-hover-primary d-flex align-items-center">
                                         <span [class]="'icon-list_alt  icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Danh sách'}}</span>
                                     </button>
@@ -58,31 +62,30 @@
                                 <hr class="dropdown-divider">
                                 <li>
                                     <div class="d-flex">
-                                        <span
+                                        <span (click)="clickFunction('font', 'BOLD', input)"
                                             [class]="'icon-format_bold icon-18 btn btn-icon btn-active-light-primary position-relative'"
                                             [style.color]=""></span>
-                                        <span
+                                        <span (click)="clickFunction('font', 'ITALIC', input)"
                                             [class]="'icon-format_italic icon-18 btn btn-icon btn-active-light-primary position-relative'"
                                             [style.color]=""></span>
-                                        <span
+                                        <span (click)="clickFunction('font', 'UNDERLINE', input)"
                                             [class]="'icon-format_underlined icon-18 btn btn-icon btn-active-light-primary position-relative'"
                                             [style.color]=""></span>
-                                        <codx-input #elm [ele]="" type="colorpicker"
-                                            class="form-control text-white color-large" field="color" [crrValue]=""
-                                            dataformat="hex">
+                                        <codx-input #colorPicker type="colorpicker" [showText]="false"
+                                            [modeSwitcher]="true" [crrValue]="font.COLOR" field="textColor"
+                                            (valueChange)="valueChangeColor($event, input, colorPicker)">
                                         </codx-input>
-                                        <div class="btn-emoji">
-                                            <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip"
-                                                title="Icon" class="btn btn-icon btn-md ms-2 btn-emoji">
+                                        <div ngbDropdown class="d-inline-block">
+                                            <button type="button" data-toggle="tooltip" title="Icon"
+                                                class="btn btn-icon btn-md ms-2 btn-emoji" id="dropdownBasic1"
+                                                ngbDropdownToggle>
                                                 <i class="icon-tag_faces icon-24 text-warning"></i>
                                             </button>
-                                            <ng-container *ngIf="showEmojiPicker">
-                                                <div class="emoji">
-                                                    <emoji-mart [showSingleCategory]="true" [showPreview]="false"
-                                                        [set]="set" [perLine]="7" (emojiSelect)="addEmoji($event)">
-                                                    </emoji-mart>
-                                                </div>
-                                            </ng-container>
+                                            <div ngbDropdownMenu>
+                                                <emoji-mart [showSingleCategory]="true" [showPreview]="false"
+                                                    [set]="set" [perLine]="7" (emojiSelect)="addEmoji($event)">
+                                                </emoji-mart>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
