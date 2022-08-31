@@ -119,17 +119,17 @@ export class ViewDetailComponent implements OnInit {
     // });
 
     if (this.itemDetail && this.itemDetail !== null) {
-      if (this.itemDetail?.files?.length > 0) {
-        this.esService
-          .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
-          .subscribe((res) => {
-            console.log('get file', res);
+      // if (this.itemDetail?.files?.length > 0) {
+      //   this.esService
+      //     .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
+      //     .subscribe((res) => {
+      //       console.log('get file', res);
 
-            if (res) {
-              this.files = res;
-            }
-          });
-      }
+      //       if (res) {
+      //         this.files = res;
+      //       }
+      //     });
+      // }
       this.esService
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {
