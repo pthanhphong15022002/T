@@ -946,6 +946,8 @@ export class AttachmentComponent implements OnInit {
                 this.notificationsService.notify(item.message);
               this.fileUploadList[0].recID = item.data.recID;
               //this.atSV.fileListAdded.push(Object.assign({}, item));
+              if (this.data == undefined || this.data == null)
+                this.data = [];
               this.data.push(Object.assign({}, item));
               this.fileUploadList = [];
               return item;
