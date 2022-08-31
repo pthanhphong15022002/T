@@ -98,7 +98,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.setFont();
   }
 
   ngAfterViewInit(): void {
@@ -145,6 +144,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.setFontProperty(font, ele[i + 1]);
       }
     }
+    this.setFont();
   }
 
   chooseType(type: any, ele: any) {
@@ -295,17 +295,18 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       var dt = event?.data;
       var field = event?.field;
       this.listNoteTemp.lineType = this.lineType;
-      //if (event?.field != 'memo')
       this.listNoteTemp[field] = dt;
-      this.listNote[this.id].memo = event?.data;
+      this.listNote[this.id].memo = dt;
       this.updateContent(this.refID, this.listNote);
+      this.id += 1;
     }
   }
 
-  valueChangeStatus(event) {
+  valueChangeStatus(event, index) {
     if (event?.data != null) {
-      this.listNoteTemp[event?.field] = event?.data;
-      // if (this.listNoteTemp.memo != null)
+      this.listNoteTemp['status'] = event?.data;
+      this.listNote[index].status = event?.data;
+      this.updateContent(this.refID, this.listNote);
     }
   }
 

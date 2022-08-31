@@ -16,13 +16,13 @@
                                         <span class="show-customName">{{'Xóa'}}</span>
                                     </button>
                                 </li>
-                                <hr class="dropdown-divider">
+                                <!-- <hr class="dropdown-divider">
                                 <li>
                                     <button class="dropdown-item text-hover-primary d-flex align-items-center">
                                         <span class="icon-edit icon-20 me-2" [style.color]=""></span>
                                         <span class="show-customName">{{'Thêm diễn giải'}}</span>
                                     </button>
-                                </li>
+                                </li> -->
                                 <hr class="dropdown-divider">
                                 <li>
                                     <button class="dropdown-item text-hover-primary d-flex align-items-center">
@@ -115,8 +115,8 @@
                     <div class="text w-100 add-text-note">
                         <div class="d-flex w-100">
                             <div class="check-box ms-0" *ngIf="item?.lineType == 'CHECKBOX'">
-                                <codx-input #noteAddText type="checkBox" [crrValue]="" field="status"
-                                    labelPosition="Before" class="test-check" (valueChange)="valueChangeStatus($event)">
+                                <codx-input #noteAddText type="checkBox" [crrValue]="item.status" field="status"
+                                    labelPosition="Before" class="test-check" (valueChange)="valueChangeStatus($event, i)">
                                 </codx-input>
                             </div>
                             <div class="li" *ngIf="item?.lineType =='LIST'">
@@ -154,11 +154,11 @@
                 <span (click)="clickFunction('format', 'CHECKBOX', input)"
                     class="icon-check_box icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
             </div>
-            <span class="icon-image icon-18 btn btn-icon btn-active-light-primary position-relative"
+            <!-- <span class="icon-image icon-18 btn btn-icon btn-active-light-primary position-relative"
                 (click)="popupFile()">
             </span>
             <span class="icon-attach_file icon-18 btn btn-icon btn-active-light-primary position-relative">
-            </span>
+            </span> -->
             <span class="border-right border-gray-200 mx-1"></span>
             <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative
             " (click)="clickFunction('font', 'BOLD', input)" [class.active]="font.BOLD ? 'active' : ''"></span>
@@ -180,7 +180,7 @@
                         (emojiSelect)="addEmoji($event)"></emoji-mart>
                 </div>
             </div>
-            <span
-                class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span>
+            <!-- <span
+                class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span> -->
         </div>
     </div>
