@@ -175,7 +175,7 @@
           field="linkID"
           placeholder="Chọn lái xe tham chiếu"
           [crrValue]="this.fGroupAddCar.value.linkID"
-          (valueChange)="valueCbxChange($event)"  
+          (valueChange)="valueChange($event)"  
           [multiple]="false" 
         >
         </codx-input>
@@ -210,13 +210,13 @@
           default="Mô tả"
         ></codx-label>
         <codx-input
-          type="textarea"
-          rows="3"
-          ControlName="note"
-          [formModel]="form.formModel"
-          [Group]="fGroupAddCar"
-        >
-        </codx-input>
+        type="textarea" format="ed2" rows="3"
+        field="note"
+        placeholder="Ghi chú"
+        [crrValue]="fGroupAddCar.value.note"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
       </div>
     </div>
     <div

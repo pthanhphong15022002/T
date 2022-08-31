@@ -15,6 +15,7 @@ import {
   CallFuncService,
   CodxGridviewComponent,
   DialogRef,
+  FormModel,
   SidebarModel,
   ViewModel,
   ViewsComponent,
@@ -56,8 +57,13 @@ export class CarsComponent implements OnInit, AfterViewInit {
   dialog!: DialogRef;
   isAdd = true;
   funcID: string;
-  columnsGrid: any;
-
+  columnsGrid;
+  grView:any;
+  formModel: FormModel;
+  // fGroupAddDriver: FormGroup;
+  // dialogRef: DialogRef;
+  isAfterRender = false;
+  str:string;
   dataSelected: any;
   devices: any;
   tmplstDevice = [];
@@ -70,6 +76,13 @@ export class CarsComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+        this.isAfterRender = true;
+      }
+    });
+    
   }
 
   ngOnInit(): void {}
@@ -79,19 +92,17 @@ export class CarsComponent implements OnInit, AfterViewInit {
 
     this.buttons = {
       id: 'btnAdd',
-    };
-
-    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
-
+    }; 
+    this.codxEpService.getFormModel(this.funcID).then((fModel) => {
       this.cacheService
-        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .gridViewSetup(fModel.formName, fModel.gridViewName)
         .subscribe((gv) => {
-          console.log(gv);
-
+          this.grView=gv;          
+          });
           this.columnsGrid = [
             {
               field: 'resourceID',
-              headerText: 'Tên lái xe', //gv['resourceID'].headerText,
+              headerText: 'Mã xe',
             },
             // {
             //   field: 'icon',
@@ -100,18 +111,22 @@ export class CarsComponent implements OnInit, AfterViewInit {
             // },
             {
               field: 'resourceName',
-              headerText: gv['ResourceName'].headerText,
+              headerText: 'Tên xe',
             },
+            {
+              field: 'capacity',
+              headerText: 'Số chỗ',
+            },        
             {
               field: 'code',
               headerText: 'Biển số',
             },
             {
-              headerText: gv['Status'].headerText,
+              headerText: 'Trạng thái',
               template: this.statusCol,
             },
             {
-              headerText: gv['Ranking'].headerText,
+              headerText: 'Xếp hạng',
               template: this.rankingCol,
             },
             {
@@ -119,22 +134,21 @@ export class CarsComponent implements OnInit, AfterViewInit {
               template: this.categoryCol,
             },
           ];
-
+      
           this.views = [
             {
-              id: '1',
               sameData: true,
               type: ViewType.grid,
               active: true,
               model: {
                 resources: this.columnsGrid,
               },
-            },
+            },        
           ];
           this.changeDetectorRef.detectChanges();
-        });
-    });
-  }
+      });  
+      
+   }
 
   click(event: ButtonModel) {
     switch (event.id) {

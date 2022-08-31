@@ -24,7 +24,10 @@ import {
 } from '@angular/forms';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { DispatchService } from '../../services/dispatch.service';
-import { capitalizeFirstLetter, getJSONString } from '../../function/default.function';
+import {
+  capitalizeFirstLetter,
+  getJSONString,
+} from '../../function/default.function';
 
 @Component({
   selector: 'app-imcomming-add',
@@ -76,11 +79,10 @@ export class IncommingAddComponent implements OnInit {
   ngOnInit(): void {
     if (this.data.data) this.dispatch = this.data.data;
     else this.dispatch = this.dialog.dataService.dataSelected;
-   
+
     var user = this.auth.get();
-    if(user?.userID)
-      this.dispatch.createdBy = user?.userID;
-    
+    if (user?.userID) this.dispatch.createdBy = user?.userID;
+
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
     this.subHeaderText = this.data?.subHeaderText;
@@ -104,7 +106,7 @@ export class IncommingAddComponent implements OnInit {
     } else if (this.type == 'edit') {
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
     }
-    
+
     this.getKeyRequied();
   }
   fileAdded(event: any) {
@@ -177,7 +179,7 @@ export class IncommingAddComponent implements OnInit {
   changeValueAgency(event: any) {
     //ktra nếu giá trị trả vô = giá trị trả ra return null
     //if(this.dispatch.agencyName == event.data[0]) return;
-    if (!event.data) return ;
+    if (!event.data) return;
 
     if (event.data.length == 0) {
       this.hidepb = true;
@@ -212,13 +214,12 @@ export class IncommingAddComponent implements OnInit {
     }
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
   }
-  valueChangeDate(event:any)
-  {
+  valueChangeDate(event: any) {
     this.dispatch[event?.field] = event?.data.fromDate;
   }
   /////// lưu/câp nhật công văn
   onSave() {
-    if(!this.checkIsRequired()) return;
+    if (!this.checkIsRequired()) return;
     /*  this.submitted = true;
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
     if(this.dispatchForm.invalid || this.checkAgenciesErrors) return; */
@@ -238,7 +239,8 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.views = null;
         this.dispatch.percentage = 0;
       }
-      if (this.type == 'add') this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
+      if (this.type == 'add')
+        this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
       this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       this.odService
@@ -247,73 +249,59 @@ export class IncommingAddComponent implements OnInit {
           if (item.status == 0) {
             this.data = item;
             this.attachment.objectId = item.data.recID;
-            this.attachment.saveFilesObservable().subscribe((item2:any)=>{
-              if(item2?.status == 0)
-              {
+            this.attachment.saveFilesObservable().subscribe((item2: any) => {
+              if (item2?.status == 0) {
                 this.dialog.close(item.data);
                 this.notifySvr.notify(item.message);
-              }
-              else this.notifySvr.notify(item2.message);
+              } else this.notifySvr.notify(item2.message);
             });
-          }
-          else this.notifySvr.notify(item.message);
+          } else this.notifySvr.notify(item.message);
         });
-    } 
-    else if (this.type == 'edit') {
+    } else if (this.type == 'edit') {
       this.odService.updateDispatch(this.dispatch, false).subscribe((item) => {
         if (item.status == 0) {
-          if (this.dltDis)
-          {
+          if (this.dltDis) {
             this.attachment.objectId = item.data.recID;
-            this.attachment.saveFilesObservable().subscribe((item2:any)=>{
-              if(item2?.status == 0)
-              {
+            this.attachment.saveFilesObservable().subscribe((item2: any) => {
+              if (item2?.status == 0) {
                 this.dialog.close(item.data);
                 this.notifySvr.notify(item.message);
-              }
-              else this.notifySvr.notify(item2.message);
+              } else this.notifySvr.notify(item2.message);
             });
-          }
-          else
-          {
+          } else {
             this.dialog.close(item.data);
             this.notifySvr.notify(item.message);
-          } 
-        }
-        else this.notifySvr.notify(item.message);
+          }
+        } else this.notifySvr.notify(item.message);
       });
     }
   }
   getfileCount(e: any) {
-    if(e && e?.data) this.fileCount = e.data.length;
-    else if(e) this.fileCount = e.length;
-    if(this.fileCount == 0) this.dltDis = true
+    if (e && e?.data) this.fileCount = e.data.length;
+    else if (e) this.fileCount = e.length;
+    if (this.fileCount == 0) this.dltDis = true;
   }
   changeFormAgency(val: any) {
     this.showAgency = true;
     if (val == 'dv') this.showAgency = false;
   }
-  getKeyRequied()
-  {
+  getKeyRequied() {
     var objKey = Object.keys(this.gridViewSetup);
-    for(var i = 0 ; i<objKey.length;i++)
-    {
-      if(this.gridViewSetup[objKey[i]].isRequire)
+    for (var i = 0; i < objKey.length; i++) {
+      if (this.gridViewSetup[objKey[i]].isRequire)
         this.objRequied.push(objKey[i]);
     }
   }
-  checkIsRequired(){
-    for(var i = 0 ; i< this.objRequied.length ; i++)
-    {
-      debugger;
+  checkIsRequired() {
+    for (var i = 0; i < this.objRequied.length; i++) {
       var field = capitalizeFirstLetter(this.objRequied[i]);
       var data = this.dispatch[field];
-      if(!data)
-      {
-        return this.notifySvr.notifyCode('E0001', 0, field)
+      if (!data) {
+        return this.notifySvr.notifyCode('E0001', 0, field);
       }
     }
-    if(!this.fileCount || this.fileCount ==0) return this.notifySvr.notifyCode('OD022');
+    if (!this.fileCount || this.fileCount == 0)
+      return this.notifySvr.notifyCode('OD022');
     return true;
-  };
+  }
 }
