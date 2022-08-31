@@ -1,0 +1,4 @@
+lib-meeting-detail .card-note .bg-body {
+    height: calc(100vh - 255px) !important;
+    overflow: auto !important;
+}
