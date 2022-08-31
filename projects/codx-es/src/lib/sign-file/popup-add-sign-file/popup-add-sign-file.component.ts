@@ -502,12 +502,14 @@ export class PopupAddSignFileComponent implements OnInit {
             this.dialogSignFile.patchValue(res);
             if (this.attachment.fileUploadList.length > 0) {
               this.attachment.objectId = res.recID;
-              this.attachment.saveFilesObservable().subscribe((file) => {
-                if (file) {
-                  this.fileAdded(file);
-                  console.log(this.attachment.fileUploadList);
-                }
-              });
+              this.attachment
+                .addFileObservable(this.attachment.fileUploadList[0])
+                .subscribe((file) => {
+                  if (file) {
+                    this.fileAdded(file);
+                    console.log(this.attachment.fileUploadList);
+                  }
+                });
             }
             if (this.currentTab == 1) {
               this.updateNodeStatus(this.oldNode, this.newNode);
