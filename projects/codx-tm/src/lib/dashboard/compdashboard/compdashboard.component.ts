@@ -191,7 +191,6 @@ export class CompDashboardComponent extends UIComponent implements OnInit {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.auth.get();
-    console.log(this.user);
     this.model = new DataRequest();
     this.model.predicate = 'CompanyID = @0';
     this.model.dataValue = this.user.employee?.companyID;

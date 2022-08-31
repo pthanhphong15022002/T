@@ -135,7 +135,6 @@ export class MyDashboardComponent extends UIComponent {
   }
 
   onInit(): void {
-    console.log(this.user);
   }
 
   ngAfterViewInit(): void {
@@ -157,6 +156,7 @@ export class MyDashboardComponent extends UIComponent {
       .getMyDBData(this.model, this.daySelected)
       .subscribe((res) => {
         this.data = res;
+        console.log(this.data)
         this.detectorRef.detectChanges();
       });
   }

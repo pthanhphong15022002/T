@@ -249,7 +249,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
         ];
         if (vltasksByEmpWithName) {
           vltasksByEmpWithName.map((task) => {
-            console.log('Task', task);
             let newTasks = 0;
             let processingTasks = 0;
             let doneTasks = 0;
