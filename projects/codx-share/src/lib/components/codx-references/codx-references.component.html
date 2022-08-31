@@ -6,7 +6,7 @@
           <div class="me-2">
             <codx-vll
               [name]="vllRefType"
-              [value]="entityName"
+              [value]="data.refType"
               [showIcon]="true"
               [showBgColor]="true"
               class="h-20px pic-ref"
@@ -18,7 +18,7 @@
               <span>
                 <codx-vll
                   [name]="vllRefType"
-                  [value]="entityName"
+                  [value]="data.refType"
                   [showText]="true"
                   class="text-gray-600 fw-bold"
                 >
@@ -64,7 +64,7 @@
         <codx-attachment
           #attachment
           [objectId]="data.recID"
-          [objectType]="entityName"
+          [objectType]="data.referType"
           [hideFolder]="'1'"
           [hideUploadBtn]="'1'"
           [hideDes]="'1'"

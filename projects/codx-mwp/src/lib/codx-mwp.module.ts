@@ -59,6 +59,7 @@ import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-sk
 import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { TasksComponent } from './tasks/tasks.component';
 
 export const routes: Routes = [
   {
@@ -78,6 +79,10 @@ export const routes: Routes = [
       {
         path: 'personals/:funcID',
         component: PersonalsComponent,
+      },
+      {
+        path: 'tasks/:funcID',
+        component: TasksComponent,
       },
       // {
       //   path: 'employeeinfomation/:funcID',
@@ -121,6 +126,7 @@ const Component: Type<any>[] = [
   EditHobbyComponent,
   EditExperenceComponent,
   EditRelationComponent,
+  TasksComponent
 ];
 
 @NgModule({
@@ -143,7 +149,7 @@ const Component: Type<any>[] = [
     NgbModule,
   ],
   exports: [RouterModule],
-  declarations: [Component, EditSkillComponent, PopAddSkillComponent],
+  declarations: [Component, EditSkillComponent, PopAddSkillComponent, ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     AreaSeriesService,
