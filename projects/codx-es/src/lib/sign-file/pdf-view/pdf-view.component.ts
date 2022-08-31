@@ -156,6 +156,10 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   curFileID;
   curSignerID;
 
+  signPerRow;
+  direction;
+  align;
+
   //vung ky
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
   codxServiceString = 'ES';
@@ -319,9 +323,13 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   loadingAnnot(e: any) {
     this.pageMax = this.pdfviewerControl?.pageCount;
-    this.esService.getSignFormat().subscribe((res) => {
-      console.log('res', res);
+    this.esService.getSignFormat().subscribe((res: any) => {
+      this.signPerRow = res.signPerRow;
+      this.align = res.align;
+      this.direction = res.direction;
+      this.detectorRef.detectChanges();
     });
+
     this.esService
       .getSignAreas(
         this.recID,
@@ -794,8 +802,6 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         selectionBorderThickness: 1,
       },
       annotationSettings: {
-        minWidth: 100,
-        minHeight: 100,
         isLock: false,
       },
       comments: [],
@@ -900,19 +906,16 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     let pageHeight = this.pdfviewerControl.viewerBase.pageSize[0].height;
     let areas: any = [];
 
-    let signPerRow = 3;
-    let direct = 1;
-    let align = 3;
     while (numberOfSignatures > 0 && pageHeight - top >= width + 10) {
       let res = this.suggestAreasVer2(
         numberOfSignatures,
-        signPerRow,
-        direct,
+        this.signPerRow,
+        this.direction,
         top,
         width,
         height,
         pageWidth,
-        align
+        this.align
       );
       areas = areas.concat(res[0]);
       top = res[1];
