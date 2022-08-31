@@ -15,6 +15,7 @@ import {
   CacheService,
   CallFuncService,
   DialogRef,
+  FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -55,7 +56,11 @@ export class DriversComponent  implements OnInit, AfterViewInit {
   columnsGrid;
   dataSelected: any;
   dialog!: DialogRef;
-
+  formModel: FormModel;
+  // fGroupAddDriver: FormGroup;
+  // dialogRef: DialogRef;
+  isAfterRender = false;
+  
   constructor(  
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -64,6 +69,12 @@ export class DriversComponent  implements OnInit, AfterViewInit {
     private codxEpService: CodxEpService
     ) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+      this.codxEpService.getFormModel(this.funcID).then((res) => {
+        if (res) {
+          this.formModel = res;
+          this.isAfterRender = true;
+        }
+      });
     }
 
   ngOnInit(): void { }
@@ -77,53 +88,53 @@ export class DriversComponent  implements OnInit, AfterViewInit {
       id: 'btnAdd',
     };
 
-    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
+    this.codxEpService.getFormModel(this.funcID).then((fModel) => {
       this.cacheService
-        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .gridViewSetup(fModel.formName, fModel.gridViewName)
         .subscribe((gv) => {
-          console.log(gv);
+          console.log(gv);                  
+          });
+              
+        this.columnsGrid = [
+          {
+            field: 'resourceID',
+            headerText: 'Mã lái xe',//gv['resourceID'].headerText,
+          },
+          // {
+          //   field: 'icon',
+          //   headerText: "Ảnh đại diện",
+          //   template: this.icon,
+          // },
+          {
+            field: 'resourceName',
+            headerText: 'Tên lái xe',
+          }, 
+          {
+            headerText: 'Tình trạng',
+            template: this.statusCol,
+          },
+          {
+            headerText: 'Xếp hạng',
+            template: this.rankingCol,
+          },
+          {
+            headerText: 'Nguồn',
+            template: this.categoryCol,
+          },
+        ];
 
-          this.columnsGrid = [
-            {
-              field: 'resourceID',
-              headerText: 'Mã lái xe',//gv['resourceID'].headerText,
+        this.views = [            
+          {
+            sameData: true,
+            type: ViewType.grid,
+            active: true,
+            model: {
+              resources: this.columnsGrid,
             },
-            // {
-            //   field: 'icon',
-            //   headerText: "Ảnh đại diện",
-            //   template: this.icon,
-            // },
-            {
-              field: 'resourceName',
-              headerText: 'Tên lái xe',
-            }, 
-            {
-              headerText: 'Tình trạng',
-              template: this.statusCol,
-            },
-            {
-              headerText: 'Xếp hạng',
-              template: this.rankingCol,
-            },
-            {
-              headerText: 'Nguồn',
-              template: this.categoryCol,
-            },
-          ];
-
-          this.views = [            
-            {
-              sameData: true,
-              type: ViewType.grid,
-              active: true,
-              model: {
-                resources: this.columnsGrid,
-              },
-            },
-          ];
-          this.changeDetectorRef.detectChanges();
-        });
-    });
+          },
+        ];
+        this.changeDetectorRef.detectChanges();
+      });
   }
 
 

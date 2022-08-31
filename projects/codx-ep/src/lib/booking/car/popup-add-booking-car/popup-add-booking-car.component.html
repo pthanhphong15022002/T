@@ -451,10 +451,11 @@
     <div class="form-group">
       <codx-label default="Ghi chú" fiedName="Note"> </codx-label>
       <codx-input
-        type="textarea"
-        ControlName="note"
-        [formModel]="form.formModel"
-        [Group]="fGroupAddBookingCar"
+        type="textarea" format="ed2" rows="3"
+        field="note"
+        placeholder="Ghi chú"
+        [crrValue]="fGroupAddBookingCar.value.note"
+        (valueChange)="valueChange($event)"
       >
       </codx-input>
     </div>
