@@ -75,7 +75,7 @@
                                         </codx-img>
                                     </ng-container>
                                     <ng-template #imageSrc>
-                                        <img [src]="item.data || item.thumbnail" alt="" class="image">
+                                        <img [src]="item.data || item.avatar" alt="" class="image">
                                     </ng-template>
                                 </ng-container>
                                 <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
@@ -155,7 +155,7 @@
                                                         </codx-img>
                                                     </ng-container>
                                                     <ng-template #imageSrc>
-                                                        <img [src]="item.data || item.thumbnail" alt="" class="image">
+                                                        <img [src]="item.data || item.avatar" alt="" class="image">
                                                     </ng-template>
                                                 </ng-container>
                                                 <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
@@ -418,7 +418,7 @@
                                             </codx-img>
                                         </ng-container>
                                         <ng-template #imageSrc>
-                                            <img [src]="item.data || item.thumbnail" alt="" class="image">
+                                            <img [src]="item.data || item.avatar" alt="" class="image">
                                         </ng-template>
                                     </ng-container>
                                     <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
