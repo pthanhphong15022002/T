@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, Type, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Type,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Switch } from '@syncfusion/ej2-angular-buttons';
 import {
@@ -15,7 +21,7 @@ import { stringify } from 'querystring';
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
   styleUrls: ['./catagory.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class CatagoryComponent implements OnInit {
   private components = {
@@ -39,11 +45,10 @@ export class CatagoryComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
     private layout: LayoutService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((routeParams) => {
-      debugger;
       this.layout.setLogo(null);
       this.urlOld = '..' + window.location.pathname;
       var state = history.state;
