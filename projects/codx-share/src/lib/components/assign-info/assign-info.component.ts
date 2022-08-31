@@ -148,6 +148,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         .toDate();
     this.listUser = [];
     this.listTaskResources = [];
+    this.task.estimated =0;
     this.task.category = '3';
     this.task.status = '10';
     this.task.refID = this.refID;
