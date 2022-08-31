@@ -223,7 +223,4 @@ export class MeetingDetailComponent extends UIComponent {
     //   });
   }
 
-  getContent(event){
-    console.log("check getContent", event)
-  }
 }
