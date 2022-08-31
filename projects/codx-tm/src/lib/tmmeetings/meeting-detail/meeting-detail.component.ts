@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import {
   CO_MeetingTemplates,
   CO_Content,
@@ -20,6 +21,7 @@ import { UIComponent, ViewType, AuthStore, DialogData } from 'codx-core';
   selector: 'lib-meeting-detail',
   templateUrl: './meeting-detail.component.html',
   styleUrls: ['./meeting-detail.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MeetingDetailComponent extends UIComponent {
   funcID = '';
@@ -49,7 +51,7 @@ export class MeetingDetailComponent extends UIComponent {
   content1: CO_Content[] = [];
   tabControl: TabControl[] = [];
   active = 1;
-  functionParent :any
+  functionParent: any
 
   constructor(
     private injector: Injector,
@@ -63,7 +65,7 @@ export class MeetingDetailComponent extends UIComponent {
     super(injector);
     this.getQueryParams();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.functionParent = this.tmService.functionParent ;
+    this.functionParent = this.tmService.functionParent;
     // this.route.params.subscribe((params) => {
     //   if (params) this.funcID = params['funcID'];
     // });
@@ -220,4 +222,5 @@ export class MeetingDetailComponent extends UIComponent {
     //     this.lstComment = res;
     //   });
   }
+
 }

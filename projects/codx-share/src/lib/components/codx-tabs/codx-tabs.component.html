@@ -18,6 +18,21 @@
 </div>
 
 <ng-template #tab let-name>
+  <ng-container *ngIf="name.toLowerCase() == 'history'">
+    <ng-container>
+      <div class="tab-his">
+        <div class="tab_body">
+          <codx-tree-history 
+            [objectID]="objectID" 
+            [objectType]="entityName"
+            [actionType]="'C1'"
+            [viewIcon]="true" 
+            [funcID]="funcID">
+          </codx-tree-history>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
   <ng-container *ngIf="name.toLowerCase() == 'attachment'">
     <ng-container>
       <codx-attachment #attachment [objectType]="entityName" [objectId]="objectID" [hideFolder]="1" [hideUploadBtn]="0"
@@ -25,7 +40,6 @@
         [formModel]="formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
         [displayThumb]="displayThumb">
       </codx-attachment>
-
       <div class="tab-att">
         <div class="tab_container">
           <div class="tab_body">
@@ -58,21 +72,6 @@
               <i class="icon-cloud_upload icon-16 me-1"></i>Upload file
             </button>
           </div>
-        </div>
-      </div>
-    </ng-container>
-  </ng-container>
-  <ng-container *ngIf="name.toLowerCase() == 'history'">
-    <ng-container>
-      <div class="tab-his">
-        <div class="tab_body">
-          <codx-tree-history 
-            [objectID]="objectID" 
-            [objectType]="entityName"
-            [actionType]="'C1'"
-            [viewIcon]="true" 
-            [funcID]="funcID">
-          </codx-tree-history>
         </div>
       </div>
     </ng-container>

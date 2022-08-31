@@ -49,17 +49,18 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
     padding: 15px;
 }
 
-codx-tabs .tab-comt {
-    position: relative;
-    height: 360px;
-
-}
-
-codx-tabs .tab-comt .tab_container {
-    height: 296px;
-    overflow: auto;
-}
-
 codx-view-list-detail .codx-detail-footer .tab-content {
     height: 360px !important;
+    padding: 10px !important;
+}
+
+codx-tabs .tab-comt {
+    position: relative;
+    height: 338px;
+}
+
+codx-tabs .tab-comt .tab_container .tree-body {
+    height: 290px;
+    overflow: auto;
+    overflow-x: hidden;
 }

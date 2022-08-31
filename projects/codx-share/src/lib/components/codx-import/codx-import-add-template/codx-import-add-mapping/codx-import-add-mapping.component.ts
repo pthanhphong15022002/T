@@ -174,7 +174,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   onSave()
   {
-    debugger;
     this.grid.endEdit();
     var result = this.grid.dataSource;
     this.addMappingForm.value.parentEntity = this.addMappingForm.value?.parentEntity[0];

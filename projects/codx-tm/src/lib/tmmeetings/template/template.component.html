@@ -22,9 +22,11 @@
                 {{item.descriptions}}
               </div>
             </div>
-            <div class="form-group" *ngFor="let item1 of item.content">
-              <div>
-              </div>
+            <div class="body_detail p-6">
+              <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO"
+                className="MeetingsBusiness" method="UpdateContentMeetingAsync" [refID]="item.templateID"
+                [data]="data.contents" (getContent)="getContent($event)">
+              </codx-note>
             </div>
           </ng-template>
         </e-tabitem>
