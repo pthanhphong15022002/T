@@ -32,10 +32,11 @@ export class CodxTabsComponent implements OnInit {
   @Input() allowExtensions: string = '.jpg,.png';
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
+  opened=false;
 
   private all: TabModel[] = [
-    { name: 'Attachment', textDefault: 'Đính kèm', isActive: true },
-    { name: 'History', textDefault: 'Lịch sử', isActive: false },
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
     { name: 'AssignTo', textDefault: 'Công việc', isActive: false },
     { name: 'References', textDefault: 'Tham chiếu', isActive: false },
