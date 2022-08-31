@@ -42,8 +42,7 @@
         <div class="row">
           <div class="d-flex col-4">
             <ng-container *ngFor="let item of tabControl; let i = index">
-              <a
-                [class]="'m-3 text-gray-800 text-hover-primary btn-light-primary'+' '+(item.isActive?'text-primary':'')">
+              <a [class]="'btn btn-sm btn-light-primary my-3 me-2'+' '+(item.isActive?'active':'')">
                 <codx-label [name]="'lbl'+ item.name" [formName]="'SYS'" [default]="item.textDefault"
                   (click)="clickMenu(item)">
                 </codx-label>
@@ -66,7 +65,7 @@
         </div>
       </div>
     </div>
-    <div class="m-0 bg-body rounded-2 h-100">
+    <div class="m-0 bg-body rounded-2">
       <ng-container *ngIf="name=='Nội dung họp'">
         <ng-container *ngTemplateOutlet="templateMeeting">
         </ng-container>
@@ -82,14 +81,8 @@
           </div> -->
 
           <!-- Phúc gắn lại objectID, funcID giúp Lộc nha -->
-          <codx-tree-history
-              [objectID]="meetingID"
-              [objectType]="'CO_Meetings'"
-              [actionType]="'C'"
-              [addNew]="true"
-              [viewIcon]="false"
-              [viewVote]="true"
-              [funcID]="'TMT0501'">
+          <codx-tree-history [objectID]="meetingID" [objectType]="'CO_Meetings'" [actionType]="'C'" [addNew]="true"
+            [viewIcon]="false" [viewVote]="true" [funcID]="'TMT0501'">
           </codx-tree-history>
         </div>
       </ng-container>
