@@ -153,21 +153,31 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.initForm();
                   }
                 });
-              // if (this.lstFile.length > 0) {
-              //   this.fileService
-              //     .copyFile(
-              //       this.oSignFile.files[0].fileID,
-              //       this.oSignFile.files[0].fileName,
-              //       this.oSignFile.recID,
-              //       1
-              //     )
-              //     .subscribe((newFile) => {
-              //       if (newFile) {
-              //         console.log('111', newFile);
+              if (this.lstFile.length > 0) {
+                this.fileService
+                  .copyFile(
+                    this.oSignFile.files[0].fileID,
+                    this.oSignFile.files[0].fileName,
+                    this.oSignFile.recID,
+                    1
+                  )
+                  .subscribe((newFile) => {
+                    if (newFile && newFile?.data) {
+                      let nFile = newFile?.data;
+                      let files = [];
+                      let file = new File();
+                      file.fileID = nFile.recID;
+                      file.fileName = nFile.fileName;
+                      file.eSign = true;
 
-              //       }
-              //     });
-              // }
+                      debugger;
+                      files.push(file);
+
+                      this.dialogSignFile &&
+                        this.dialogSignFile.patchValue({ files: files });
+                    }
+                  });
+              }
             }
           });
 
@@ -502,12 +512,14 @@ export class PopupAddSignFileComponent implements OnInit {
             this.dialogSignFile.patchValue(res);
             if (this.attachment.fileUploadList.length > 0) {
               this.attachment.objectId = res.recID;
-              this.attachment.saveFilesObservable().subscribe((file) => {
-                if (file) {
-                  this.fileAdded(file);
-                  console.log(this.attachment.fileUploadList);
-                }
-              });
+              this.attachment
+                .addFileObservable(this.attachment.fileUploadList[0])
+                .subscribe((file) => {
+                  if (file) {
+                    this.fileAdded(file);
+                    console.log(this.attachment.fileUploadList);
+                  }
+                });
             }
             if (this.currentTab == 1) {
               this.updateNodeStatus(this.oldNode, this.newNode);

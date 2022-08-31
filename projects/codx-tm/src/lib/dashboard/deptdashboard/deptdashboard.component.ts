@@ -190,7 +190,7 @@ export class DeptDashboardComponent extends UIComponent implements OnInit {
     this.user = this.auth.get();
     this.model = new DataRequest();
     this.model.predicate = 'DepartmentID = @0';
-    this.model.dataValue = this.user.employee?.departmentID || 'THUONG004';
+    this.model.dataValue = this.user.employee?.departmentID;
     this.model.formName = 'Tasks';
     this.model.gridViewName = 'grvTasks';
     this.model.entityName = 'TM_Tasks';

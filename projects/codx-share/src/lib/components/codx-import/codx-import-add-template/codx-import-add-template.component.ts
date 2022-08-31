@@ -169,6 +169,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     var a = this.dataIEConnections;
     var b = this.dataIEMapping;
     var c = this.dataIETables;
+    debugger;
   }
   changeSheetImport(e: any) {
     this.importAddTmpGroup.controls['sheetImport'].setValue(e);

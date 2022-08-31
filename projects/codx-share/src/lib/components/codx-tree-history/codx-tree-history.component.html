@@ -1,7 +1,7 @@
 
 <div>
     <div class="tree-body">
-        <ng-container *ngFor="let node of lstHistory">
+        <ng-container *ngFor="let node of root.listSubComment">
             <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
         </ng-container>
     </div>
