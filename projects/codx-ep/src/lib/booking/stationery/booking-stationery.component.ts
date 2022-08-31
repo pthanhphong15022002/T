@@ -38,12 +38,12 @@ export class BookingStationeryComponent extends UIComponent {
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
-  entityName = 'EP_Resources';
+  entityName = 'EP_Bookings';
   predicate = 'ResourceType=@0';
   dataValue = '6';
   idField = 'recID';
-  className = 'ResourcesBusiness';
-  method = 'GetListAsync';
+  className = 'BookingsBusiness';
+  method = 'GetAllAsync';
 
   constructor(
     private injector: Injector,
