@@ -83,7 +83,8 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   }
 
   deleteComment(event: any) {
-
+    this.removeNodeTree(event.recID);
+    this.dt.detectChanges();
   }
 
   sendComment(event:any,data:any = null){
@@ -153,14 +154,13 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     var data = this.dicDatas[id],
       parentId = data["reference"];
     if (data) {
-      var t = this;
       var parent = this.dicDatas[parentId];
       if (parent) {
         parent.listSubComment = parent.listSubComment.filter(function (element: any, index: any) {
           return element["recID"] != id;
         });
       } else {
-        if (!this.lstHistory) return;
+        if (!this.root.listSubComment) return;
         this.root.listSubComment = this.root.listSubComment.filter(function (element: any, index: any) {
           return element["recID"] != id;
         });

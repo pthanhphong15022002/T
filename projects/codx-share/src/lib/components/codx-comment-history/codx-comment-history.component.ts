@@ -88,15 +88,19 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
 
   deleteComment(item:any){
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item.recID)
-    .subscribe((res:any) => {
-      if(res)
-      {
-        this.evtDelete.emit(item);
-      }
-      else 
-        this.notifySV.notifyCode("SYS022");
-    })
+    this.notifySV.alertCode('Xóa bình luận?').subscribe((res) => {
+      if (res.event.status == "Y"){
+        this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item.recID)
+        .subscribe((res:any) => {
+          if(res)
+          {
+            this.evtDelete.emit(item);
+          }
+          else 
+            this.notifySV.notifyCode("SYS022");
+        })};
+    });
+    
   }
 
   valueChange(event: any) {
