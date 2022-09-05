@@ -1085,7 +1085,7 @@ export class AttachmentComponent implements OnInit {
       }
     } catch (ex) {
       fileItem.uploadId = '0';
-      this.notificationsService.notify(ex);
+     // this.notificationsService.notify(ex);
     }
     return ret;
   }
