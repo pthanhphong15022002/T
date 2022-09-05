@@ -1,25 +1,34 @@
 <ng-container>
-  <ejs-diagram
-    #diagram
-    width="100%"
-    height="500px"
-    [getConnectorDefaults]="connDefaults"
-    [getNodeDefaults]="nodeDefaults"
-    [layout]="layout"
-    [tool]="tool"
-    [snapSettings]="snapSettings"
-    [dataSourceSettings]="datasetting"
-    (click)="click($event)"
+  <div
+    [ngbPopover]="popContent"
+    autoClose="outside"
+    popoverClass="empPopoverClass"
+    [popoverTitle]="popTitle"
+    #p="ngbPopover"
+    triggers="manual"
   >
-    <ng-template #nodeTemplate let-node>
-      <ng-container
-        *ngIf="node?.data"
-        [ngTemplateOutlet]="template"
-        [ngTemplateOutletContext]="{ $implicit: node.data, node: node }"
-      >
-      </ng-container>
-    </ng-template>
-  </ejs-diagram>
+    <ejs-diagram
+      #diagram
+      width="100%"
+      height="500px"
+      [getConnectorDefaults]="connDefaults"
+      [getNodeDefaults]="nodeDefaults"
+      [layout]="layout"
+      [tool]="tool"
+      [snapSettings]="snapSettings"
+      [dataSourceSettings]="datasetting"
+      (click)="orgClick($event)"
+    >
+      <ng-template #nodeTemplate let-node>
+        <ng-container
+          *ngIf="node?.data"
+          [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{ $implicit: node.data, node: node }"
+        >
+        </ng-container>
+      </ng-template>
+    </ejs-diagram>
+  </div>
 </ng-container>
 <ng-template #template let-data let-node="node">
   <div class="department-card border border-gray-300 w-250px position-relative">
@@ -73,8 +82,8 @@
             data-toggle="tooltip"
             title="Định biên"
             data-status=""
-            data-orgid="BGĐ"
-            data-headcounts="35"
+            [attr.data-orgid]="data.departmentCode"
+            [attr.data-headcounts]="data.headcounts"
           >
             <i class="icon-account_tree icon-16 me-1"></i>
             <span class="font-weight-bold text-primary">{{
@@ -87,7 +96,7 @@
             data-toggle="tooltip"
             title="Chính thức"
             data-status=""
-            data-orgid="BGĐ"
+            [attr.data-orgid]="data.departmentCode"
           >
             <i class="icon-perm_contact_calendar icon-16 me-1"></i>
             <span class="font-weight-bold text-primary">{{
@@ -100,7 +109,7 @@
         <div
           class="d-flex flex-column align-items-center counter"
           data-status="50"
-          data-orgid="BGĐ"
+          [attr.data-orgid]="data.departmentCode"
         >
           <h3 class="text-primary">{{ data.counts }}</h3>
           <span class="text-dark-75 mt-1">Chính thức</span>
@@ -108,7 +117,7 @@
         <div
           class="d-flex flex-column align-items-center counter"
           data-status="30"
-          data-orgid="BGĐ"
+          [attr.data-orgid]="data.departmentCode"
         >
           <h3 class="text-success">{{ data.onboard }}</h3>
           <span class="text-dark-75 mt-1">Onboard</span>
@@ -116,7 +125,7 @@
         <div
           class="d-flex flex-column align-items-center counter"
           data-status="70"
-          data-orgid="BGĐ"
+          [attr.data-orgid]="data.departmentCode"
         >
           <h3 class="text-danger">{{ data.offboard }}</h3>
           <span class="text-dark-75 mt-1">Offboard</span>
@@ -132,5 +141,205 @@
         (click)="loadDataChild(data, node)"
       ></span>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #popEmpContent>
+  <div class="d-flex flex-column">
+    <div class="d-flex align-items-center mt-2">
+      <span class="text-dark-50 mr-2">Ngày sinh:</span>
+      <span class="text-dark" *ngIf="imployeeInfo.birthday">{{
+        imployeeInfo.birthday | date: "dd/MM/yyyy"
+      }}</span>
+      <!-- <span class="text-muted" *ngIf="!imployeeInfo.birthday">{{
+        imployeeInfo.birthday
+      }}</span> -->
+    </div>
+    <div class="mr-5 d-flex align-items-center mt-2">
+      <span class="text-dark-50 mr-2">Ngày vào làm:</span>
+      <span class="text-dark" *ngIf="imployeeInfo.joinedOn">{{
+        imployeeInfo.joinedOn | date: "dd/MM/yyyy"
+      }}</span>
+      <!-- <span class="text-muted" *ngIf="!imployeeInfo.joinedOn">{{
+        imployeeInfo.joinedOn
+      }}</span> -->
+    </div>
+    <div class="mr-5 d-flex align-items-center mt-2">
+      <span class="text-dark-50 mr-2">Tình trạng:</span>
+      <span class="text-dark">{{ imployeeInfo.status }}</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #popEmpTitle>
+  <div class="d-flex align-items-top">
+    <div class="d-flex align-items-start user-card">
+      <codx-img
+        class="symbol symbol-40 symbol-circle me-3"
+        [width]="40"
+        [objectId]="imployeeInfo.employeeID"
+        [objectName]="imployeeInfo.employeeName"
+        [objectType]="'HR_Employees'"
+      >
+      </codx-img>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex align-items-center">
+          <div class="text-dark font-weight-bold mb-1">
+            {{ imployeeInfo.employeeName }}
+          </div>
+        </div>
+        <div class="text-dark-75" *ngIf="imployeeInfo.positionName != '---'">
+          {{ imployeeInfo.positionName }}
+        </div>
+        <!-- <div
+          class="text-75 text-muted font-weight-normal"
+          *ngIf="imployeeInfo.positionName == '---'"
+        >
+          Chức vụ
+        </div> -->
+        <div
+          class="text-dark-50 font-weight-normal"
+          *ngIf="imployeeInfo.organizationName != '---'"
+        >
+          {{ imployeeInfo.organizationName }}
+        </div>
+        <!-- <div
+          class="text-50 text-muted font-weight-normal"
+          *ngIf="imployeeInfo.organizationName == '---'"
+        >
+          Bộ phận
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="d-flex flex-column employee-add mt-2">
+    <div class="d-flex align-items-center mt-2">
+      <span class="icon-email icon-16 mr-2"></span>
+      <div class="text-dark-50" *ngIf="imployeeInfo.email != '---'">
+        {{ imployeeInfo.email }}
+      </div>
+      <!-- <div
+        class="text-50 text-muted font-weight-normal"
+        *ngIf="imployeeInfo.email == '---'"
+      >
+        Email
+      </div> -->
+    </div>
+    <div class="d-flex align-items-center mt-2">
+      <span class="icon-phone_android icon-16 mr-2"></span>
+      <div class="text-dark-50" *ngIf="imployeeInfo.phone != '---'">
+        {{ imployeeInfo.phone }}
+      </div>
+      <!-- <div
+        class="text-50 text-muted font-weight-normal"
+        *ngIf="imployeeInfo.phone == '---'"
+      >
+        Số điện thoại
+      </div> -->
+    </div>
+    <div class="d-flex align-items-top mt-2">
+      <span class="icon-place icon-16 mr-2"></span>
+      <div class="text-dark-50" *ngIf="imployeeInfo.street != '---'">
+        {{ imployeeInfo.street }}
+      </div>
+      <!-- <div
+        class="text-50 text-muted font-weight-normal"
+        *ngIf="imployeeInfo.street == '---'"
+      >
+        Địa chỉ thường trú
+      </div> -->
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #popContent>
+  <div>
+    <ng-container *ngFor="let item of employOrg">
+      <div *ngIf="show(item)">
+        <div
+          class="d-flex align-items-center justify-content-between list-title my-2"
+        >
+          <div class="text-primary font-weight-bold">
+            {{ item != "_" ? item : null }}
+          </div>
+        </div>
+        <div class="row">
+          <div
+            *ngFor="
+              let emp of employees
+                | filter: item:'positionName':searchField:'employeeName'
+            "
+            class="p-2 full"
+          >
+            <div
+              *ngIf="emp.employeeName"
+              class="d-flex justify-content-between align-items-top"
+              popoverClass="userPopoverClass"
+              [ngbPopover]="popEmpContent"
+              placement="right left"
+              [popoverTitle]="popEmpTitle"
+              #pemp="ngbPopover"
+              triggers="manual"
+              (click)="showEmploy(pemp, emp)"
+            >
+              <div class="d-flex flex-column org-card flex-grow-1">
+                <div class="d-flex align-items-start">
+                  <codx-img
+                    class="symbol symbol-40 symbol-circle me-3"
+                    [width]="40"
+                    [objectId]="emp.employeeID"
+                    [objectName]="emp.employeeName"
+                    [objectType]="'HR_Employees'"
+                  >
+                  </codx-img>
+                  <div class="d-flex flex-column flex-grow-1">
+                    <div class="text-dark">{{ emp.employeeName }}</div>
+                    <div class="text-dark-50">{{ emp.positionName }}</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <a class="text-dark-50">
+                  <span class="icon-keyboard_arrow_right icon-20"></span>
+                </a>
+              </div>
+            </div>
+            <div
+              *ngIf="!emp.employeeName"
+              class="d-flex justify-content-between align-items-top"
+            >
+              <div class="d-flex flex-column org-card flex-grow-1">
+                <div class="d-flex align-items-start">
+                  <codx-img
+                    class="symbol symbol-40 symbol-circle me-3"
+                    [width]="40"
+                    [objectId]="''"
+                    [objectName]="''"
+                    [objectType]="'HR_Employees'"
+                  >
+                  </codx-img>
+                  <div class="d-flex flex-column flex-grow-1">
+                    <div class="text-50 text-muted">Tên nhân viên</div>
+                    <div class="text-50 text-muted">Chức vụ</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #popTitle>
+  <div class="text-dark mb-2">Danh sách nhân viên</div>
+  <div>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="searchField"
+      placeholder="Tìm kiếm"
+    />
   </div>
 </ng-template>
