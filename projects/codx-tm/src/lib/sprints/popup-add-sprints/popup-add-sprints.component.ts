@@ -87,13 +87,14 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region init
   ngOnInit(): void {
+    
     if (this.action == 'add') {
       this.master.viewMode = '1';
-    } else {
-      if (this.action == 'copy')
-        this.getSprintsCoppied(this.master.iterationID);
-      else this.openInfo(this.master.iterationID, this.action);
-    }
+      if(this.funcID=='TMT0301') this.master.iterationType ='1' ;
+      if(this.funcID=='TMT0302') this.master.iterationType ='0';
+    } else if (this.action == 'copy')
+      this.getSprintsCoppied(this.master.iterationID);
+    else this.openInfo(this.master.iterationID, this.action);
   }
   //#endregion
 
