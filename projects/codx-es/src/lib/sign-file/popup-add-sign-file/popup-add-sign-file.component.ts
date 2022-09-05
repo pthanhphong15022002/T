@@ -153,21 +153,31 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.initForm();
                   }
                 });
-              // if (this.lstFile.length > 0) {
-              //   this.fileService
-              //     .copyFile(
-              //       this.oSignFile.files[0].fileID,
-              //       this.oSignFile.files[0].fileName,
-              //       this.oSignFile.recID,
-              //       1
-              //     )
-              //     .subscribe((newFile) => {
-              //       if (newFile) {
-              //         console.log('111', newFile);
+              if (this.lstFile.length > 0) {
+                this.fileService
+                  .copyFile(
+                    this.oSignFile.files[0].fileID,
+                    this.oSignFile.files[0].fileName,
+                    this.oSignFile.recID,
+                    1
+                  )
+                  .subscribe((newFile) => {
+                    if (newFile && newFile?.data) {
+                      let nFile = newFile?.data;
+                      let files = [];
+                      let file = new File();
+                      file.fileID = nFile.recID;
+                      file.fileName = nFile.fileName;
+                      file.eSign = true;
 
-              //       }
-              //     });
-              // }
+                      debugger;
+                      files.push(file);
+
+                      this.dialogSignFile &&
+                        this.dialogSignFile.patchValue({ files: files });
+                    }
+                  });
+              }
             }
           });
 
