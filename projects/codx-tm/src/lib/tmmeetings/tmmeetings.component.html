@@ -50,6 +50,7 @@
         <codx-label name="tag" default="Tag" [disabled]="true">
         </codx-label>
       </div> -->
+      <div *ngIf="!data.tags"></div>
       <div class="position-relative" *ngIf="data.attachments > 0">
         <span class="icon-link icon-24"> </span>
         <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">

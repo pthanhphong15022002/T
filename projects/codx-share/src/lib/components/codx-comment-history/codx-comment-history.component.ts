@@ -148,7 +148,12 @@ export class CodxCommentHistoryComponent implements OnInit {
         {
           this.codxATM.objectId = res1.recID;
           this.codxATM.objectType = "BG_TrackLogs";
+
+          this.lstFile.map((e:any) => {
+            e.objectId = res1.recID;
+          })
           this.codxATM.fileUploadList = this.lstFile;
+          
           this.codxATM.saveFilesObservable().subscribe((res2:any) => {
             if(res2){
               this.evtSend.emit(res1);

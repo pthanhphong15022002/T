@@ -12,110 +12,118 @@
     (click)="click($event)"
   >
     <ng-template #nodeTemplate let-node>
-      <div
-        class="department-card border border-gray-300 w-250px position-relative"
+      <ng-container
+        *ngIf="node?.data"
+        [ngTemplateOutlet]="template"
+        [ngTemplateOutletContext]="{ $implicit: node.data }"
       >
-        <div
-          class="d-flex align-items-center p-3 w-100"
-          style="background-color: #03a9f4"
-        >
-          <i class="fas fa-building text-white me-2"></i>
-          <div class="d-flex flex-grow-1 text-white fs-5">
-            {{ node?.data?.departmentName }}
-          </div>
-        </div>
-        <div class="p-3 department-card-main mb-3">
-          <div class="d-flex flex-column flex-grow-1 align-items-center">
-            <codx-img
-              #imageUpload
-              class="symbol symbol-60 symbol-circle me-2"
-              [width]="60"
-              [objectId]="node?.data?.employeeID"
-              [objectName]="node?.data?.employeeName"
-              [objectType]="'HR_Employees'"
-            >
-            </codx-img>
-            <h5 class="text-dark mt-4" style="opacity: 0.3">
-              {{ node?.data?.employeeName }}
-            </h5>
-            <div class="text-gray-600" style="opacity: 0.3">
-              {{ node?.data?.positionName }}
-            </div>
-            <div class="d-flex align-items-center mt-2">
-              <div
-                class="btn btn-sm btn-light-primary me-3 counter"
-                style="cursor: pointer"
-                data-toggle="tooltip"
-                title="Định biên"
-                data-status=""
-                data-orgid="BGĐ"
-                data-headcounts="35"
-              >
-                <i class="icon-account_tree icon-16 me-1"></i>
-                <span class="font-weight-bold text-primary">{{
-                  node?.data?.headcounts
-                }}</span>
-              </div>
-              <div
-                class="btn btn-sm btn-light-primary counter"
-                style="cursor: pointer"
-                data-toggle="tooltip"
-                title="Chính thức"
-                data-status=""
-                data-orgid="BGĐ"
-              >
-                <i class="icon-perm_contact_calendar icon-16 me-1"></i>
-                <span class="font-weight-bold text-primary">{{
-                  node?.data?.filledCounts
-                }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-between mt-6 px-3">
-            <div
-              class="d-flex flex-column align-items-center counter"
-              data-status="50"
-              data-orgid="BGĐ"
-            >
-              <h3 class="text-primary">{{ node?.data?.counts }}</h3>
-              <span class="text-dark-75 mt-1">Chính thức</span>
-            </div>
-            <div
-              class="d-flex flex-column align-items-center counter"
-              data-status="30"
-              data-orgid="BGĐ"
-            >
-              <h3 class="text-success">{{ node?.data?.onboard }}</h3>
-              <span class="text-dark-75 mt-1">Onboard</span>
-            </div>
-            <div
-              class="d-flex flex-column align-items-center counter"
-              data-status="70"
-              data-orgid="BGĐ"
-            >
-              <h3 class="text-danger">{{ node?.data?.offboard }}</h3>
-              <span class="text-dark-75 mt-1">Offboard</span>
-            </div>
-          </div>
-        </div>
-        <div
-          *ngIf="node?.data?.isChildren"
-          class="department-card-info ec"
-          style="
-            position: absolute;
-            left: 50%;
-            bottom: -14px;
-            margin-left: -8px;
-            background-color: white;
-            cursor: pointer;
-          "
-        >
-          <span
-            class="icon-20 icon-do_disturb_on"
-            (click)="loadDataChild(node?.data, node)"
-          ></span>
-        </div>
-      </div>
+      </ng-container>
     </ng-template>
   </ejs-diagram>
 </ng-container>
+<ng-template #template let-data>
+  <div class="department-card border border-gray-300 w-250px position-relative">
+    <div
+      class="d-flex align-items-center p-3 w-100"
+      style="background-color: #03a9f4"
+    >
+      <i class="fas fa-building text-white me-2"></i>
+      <div class="d-flex flex-grow-1 text-white fs-5">
+        {{
+          data.departmentName || "Phòng ban"
+            | lang: "txtOrgUnitName":formModel.formName
+            | async
+        }}
+      </div>
+    </div>
+    <div class="p-3 department-card-main mb-3">
+      <div class="d-flex flex-column flex-grow-1 align-items-center">
+        <codx-img
+          #imageUpload
+          class="symbol symbol-60 symbol-circle me-2"
+          [width]="60"
+          [objectId]="data.employeeID"
+          [objectName]="data.employeeName"
+          [objectType]="'HR_Employees'"
+        >
+        </codx-img>
+        <h5 class="text-dark mt-4" style="opacity: 0.3">
+          {{
+            data.employeeName || "Tên Nhân Viên"
+              | lang: "txtEmployeeName":formModel.formName
+              | async
+          }}
+        </h5>
+        <div class="text-gray-600" style="opacity: 0.3">
+          {{
+            data.positionName || "Chức vụ"
+              | lang: "txtPositionName":formModel.formName
+              | async
+          }}
+        </div>
+        <div class="d-flex align-items-center mt-2">
+          <div
+            class="btn btn-sm btn-light-primary me-3 counter"
+            style="cursor: pointer"
+            data-toggle="tooltip"
+            title="Định biên"
+            data-status=""
+            data-orgid="BGĐ"
+            data-headcounts="35"
+          >
+            <i class="icon-account_tree icon-16 me-1"></i>
+            <span class="font-weight-bold text-primary">{{
+              data.headcounts
+            }}</span>
+          </div>
+          <div
+            class="btn btn-sm btn-light-primary counter"
+            style="cursor: pointer"
+            data-toggle="tooltip"
+            title="Chính thức"
+            data-status=""
+            data-orgid="BGĐ"
+          >
+            <i class="icon-perm_contact_calendar icon-16 me-1"></i>
+            <span class="font-weight-bold text-primary">{{
+              data.filledCounts
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between mt-6 px-3">
+        <div
+          class="d-flex flex-column align-items-center counter"
+          data-status="50"
+          data-orgid="BGĐ"
+        >
+          <h3 class="text-primary">{{ data.counts }}</h3>
+          <span class="text-dark-75 mt-1">Chính thức</span>
+        </div>
+        <div
+          class="d-flex flex-column align-items-center counter"
+          data-status="30"
+          data-orgid="BGĐ"
+        >
+          <h3 class="text-success">{{ data.onboard }}</h3>
+          <span class="text-dark-75 mt-1">Onboard</span>
+        </div>
+        <div
+          class="d-flex flex-column align-items-center counter"
+          data-status="70"
+          data-orgid="BGĐ"
+        >
+          <h3 class="text-danger">{{ data.offboard }}</h3>
+          <span class="text-dark-75 mt-1">Offboard</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="data.isChildren" class="department-card-info ec connector">
+      <span
+        class="icon-20"
+        [ngClass]="classIcon(data)"
+        (click)="loadDataChild(data, node)"
+      ></span>
+    </div>
+  </div>
+</ng-template>
