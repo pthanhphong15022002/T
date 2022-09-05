@@ -48,11 +48,10 @@ export class PopupAddSprintsComponent implements OnInit {
   isUploadImg = false;
   gridViewSetup: any;
   imageUpload: UploadFile = new UploadFile();
-  showLabelAttachment  = false ;
-  isHaveFile = false ;
+  showLabelAttachment = false;
+  isHaveFile = false;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
-
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -111,26 +110,32 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
-    this.attachment.saveFiles() ;
+    if (this.attachment.fileUploadList.length) this.attachment.saveFiles();
     this.saveMaster(isAdd);
   }
 
   saveMaster(isAdd: boolean) {
-    this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(up => {
-      this.dialog.dataService
-        .save((option: any) => this.beforeSave(option, isAdd), isAdd ? 0 : null) //Hảo code mới
-        .subscribe((res) => {
-          if (res) {
-            // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
-            if (isAdd && this.funcID != 'TMT0301') {
-              var dataNew = this.dialog.dataService.data[0];
-              this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
-              this.dialog.dataService.data[1] = dataNew;
+    this.imageAvatar
+      .updateFileDirectReload(this.master.iterationID)
+      .subscribe((up) => {
+        this.dialog.dataService
+          .save(
+            (option: any) => this.beforeSave(option, isAdd),
+            isAdd ? 0 : null
+          ) //Hảo code mới
+          .subscribe((res) => {
+            if (res) {
+              // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
+              if (isAdd && this.funcID != 'TMT0301') {
+                var dataNew = this.dialog.dataService.data[0];
+                this.dialog.dataService.data[0] =
+                  this.dialog.dataService.data[1];
+                this.dialog.dataService.data[1] = dataNew;
+              }
+              this.dialog.close();
             }
-            this.dialog.close();
-          }
-        });
-    })
+          });
+      });
 
     // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
     //   if (res) {
@@ -208,17 +213,17 @@ export class PopupAddSprintsComponent implements OnInit {
       if (res) {
         this.master = res;
         this.api
-        .execSv<any[]>(
-          'DM',
-          'DM',
-          'FileBussiness',
-          'GetFilesByObjectIDAsync',
-          [iterationID]
-        )
-        .subscribe((res) => {
-          if (res && res.length > 0) this.showLabelAttachment = true;
-          else this.showLabelAttachment = false;
-        });
+          .execSv<any[]>(
+            'DM',
+            'DM',
+            'FileBussiness',
+            'GetFilesByObjectIDAsync',
+            [iterationID]
+          )
+          .subscribe((res) => {
+            if (res && res.length > 0) this.showLabelAttachment = true;
+            else this.showLabelAttachment = false;
+          });
         if (this.master.resources) this.getListUser(this.master.resources);
         else this.listUserDetail = [];
         this.changeDetectorRef.detectChanges();
