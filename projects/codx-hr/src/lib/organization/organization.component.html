@@ -11,7 +11,10 @@
 ></codx-views>
 <ng-template #templateDetail>
   <ng-container *ngIf="orgUnitID">
-    <lib-organize-detail [orgUnitID]="orgUnitID"></lib-organize-detail>
+    <lib-organize-detail
+      [orgUnitID]="orgUnitID"
+      [formModel]="view.formModel"
+    ></lib-organize-detail>
   </ng-container>
 </ng-template>
 <ng-template #templateTree let-data>

@@ -5,7 +5,11 @@ export const environment = {
   dfPe: '',
   appVersion: 'v101lv',
   TNDATA_KEY: 'tnf649fc9a5f55',
+<<<<<<< HEAD
   //apiUrl: 'http://localhost:8011',
+=======
+  apiUrl: 'http://localhost:8011',
+>>>>>>> 1d62e5218845244b7648c35f81fa0ba0024c46e9
   //apiUrl: 'http://172.16.7.34:8011',
   //shopping: 'https://localhost:44317/Shopping',
   shopping: 'https://172.16.7.34:8111/Shopping',

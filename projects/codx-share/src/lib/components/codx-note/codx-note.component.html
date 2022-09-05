@@ -17,13 +17,6 @@
                                         <span class="show-customName">{{'Xóa'}}</span>
                                     </button>
                                 </li>
-                                <!-- <hr class="dropdown-divider">
-                                <li>
-                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
-                                        <span class="icon-edit icon-20 me-2" [style.color]=""></span>
-                                        <span class="show-customName">{{'Thêm diễn giải'}}</span>
-                                    </button>
-                                </li> -->
                                 <hr class="dropdown-divider">
                                 <li>
                                     <button (click)="clickFunction('format', 'TITLE', input)"
@@ -53,12 +46,12 @@
                                         <span class="show-customName">{{'Danh sách'}}</span>
                                     </button>
                                 </li>
-                                <!-- <li>
+                                <li>
                                     <button class="dropdown-item text-hover-primary d-flex align-items-center">
                                         <span [class]="'icon-format_list_numbered icon-20 me-2'" [style.color]=""></span>
                                         <span class="show-customName">{{'Số thứ tự'}}</span>
                                     </button>
-                                </li> -->
+                                </li>
                                 <hr class="dropdown-divider">
                                 <li>
                                     <div class="d-flex">
@@ -160,10 +153,15 @@
                     class="icon-check_box icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
             </div>
             <!-- <span class="icon-image icon-18 btn btn-icon btn-active-light-primary position-relative"
-                (click)="popupFile()">
-            </span>
-            <span class="icon-attach_file icon-18 btn btn-icon btn-active-light-primary position-relative">
+                (click)="clickFunction('img', '', input)">
             </span> -->
+            <div class="upload-img">
+                <codx-img #imageUpLoad [width]="35" [objectType]="objectType" aria-disabled="true"
+                    [funcId]="funcID" [isAllowEdit]="true" [objectId]="objectID">
+                </codx-img>
+            </div>
+            <span class="icon-attach_file icon-18 btn btn-icon btn-active-light-primary position-relative">
+            </span>
             <span class="border-right border-gray-200 mx-1"></span>
             <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative
             " (click)="clickFunction('font', 'BOLD', input)" [class.active]="font.BOLD ? 'active' : ''"></span>
@@ -185,7 +183,7 @@
                         (emojiSelect)="addEmoji($event)"></emoji-mart>
                 </div>
             </div>
-            <!-- <span
-                class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span> -->
+            <span
+                class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span>
         </div>
     </div>
