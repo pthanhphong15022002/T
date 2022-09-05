@@ -5,19 +5,21 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { ClickEventArgs } from '@syncfusion/ej2-angular-buttons';
 import {
   ConnectorModel,
   Diagram,
+  DiagramComponent,
   DiagramTools,
   NodeModel,
   SnapConstraints,
   SnapSettingsModel,
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, FormModel } from 'codx-core';
 import { map, Observable } from 'rxjs';
 let data: any[] = [
   { Name: 'Species', fillColor: '#3DD94A' },
@@ -60,6 +62,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   @Input() numberLV: string = '3';
   @Input() parentID: string = '';
   @Input() onlyDepartment?: boolean;
+  @Input() formModel!: FormModel;
 
   data: any[] = [];
   datasetting: any = null;
@@ -73,13 +76,26 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
     constraints: SnapConstraints.None,
   };
   tool: DiagramTools = DiagramTools.ZoomPan;
+
+  @ViewChild('diagram') diagram: any;
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.datasetting = {
+    this.datasetting = this.newDataManager();
+    // this.loadOrgchart().subscribe((res) => {
+    //   if (res) {
+    //     this.data = res.Data as any[];
+    //     this.datasetting.dataManager = new DataManager(this.data as JSON[]);
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // });
+  }
+
+  newDataManager(): any {
+    return {
       id: 'departmentCode',
       parentId: 'parentID',
       dataManager: new DataManager(this.data as JSON[]),
@@ -100,20 +116,17 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
         };
       },
     };
-    // this.loadOrgchart().subscribe((res) => {
-    //   if (res) {
-    //     this.data = res.Data as any[];
-    //     this.datasetting.dataManager = new DataManager(this.data as JSON[]);
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.loadOrgchart().subscribe((res) => {
       if (res) {
         this.data = res.Data as any[];
-        this.datasetting.dataManager = new DataManager(this.data as JSON[]);
+        //this.datasetting.dataManager = new DataManager(this.data as JSON[]);
+        var setting = this.newDataManager();
+        setting.dataManager = new DataManager(this.data as JSON[]);
+        this.datasetting = setting;
+        //this.diagram.refresh();
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -142,6 +155,48 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
       );
   }
 
+  loadDataChild(dataNode: any, node: any) {
+    //this.orgUnitID = dataNode.departmentCode;
+    //this.diagram.tool =
+    this.parentID = dataNode.departmentCode;
+    var exist = this.checkExistParent(this.parentID);
+    if (!exist) {
+      this.loadOrgchart().subscribe((res) => {
+        var arrDt = res.Data as any[];
+        this.data = [...this.data, ...arrDt];
+        var setting = this.newDataManager();
+        setting.dataManager = new DataManager(this.data as JSON[]);
+        this.datasetting = setting;
+        //this.datasetting.dataManager = new DataManager(this.data as JSON[]);
+        // this.diagram.destroy();
+        // this.diagram.render();
+        // arrDt.forEach((element, idx) => {
+        //   if (idx > 0) return;
+        //   const nodeCopy = JSON.parse(JSON.stringify(node)) as NodeModel;
+        //   nodeCopy.data = element;
+        //   //this.diagram.add(nodeCopy);
+        //   //this.diagram.addChild(node, nodeCopy);
+        // });
+        this.changeDetectorRef.detectChanges();
+      });
+    } else {
+      node.isExpanded = true;
+      //this.diagram.commandHandler.expandNode(node, this.diagram);
+    }
+  }
+
+  mouseUp(evt: any) {
+    var a = this.diagram.getTool('LayoutAnimation');
+    this.diagram.eventHandler.tool = a;
+    this.diagram.mouseUp(evt);
+  }
+
+  checkExistParent(parentID: string): boolean {
+    var dt = this.data.filter((x) => x.parentID === parentID);
+    if (dt && dt.length > 0) return true;
+    return false;
+  }
+
   public connDefaults(
     connector: ConnectorModel,
     diagram: Diagram
@@ -161,6 +216,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
     //   shape: 'Plus',
     //   fill: 'lightgray',
     //   offset: { x: 0.5, y: 1 },
+    //   content: 'sssss',
     // };
     // obj.collapseIcon = {
     //   height: 10,
@@ -168,16 +224,21 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
     //   shape: 'Minus',
     //   fill: 'lightgray',
     //   offset: { x: 0.5, y: 1 },
+    //   content: 'sssss',
     // };
 
-    // // return obj;
     return obj;
   }
+
+  classIcon(dt: any): string {
+    var exist = this.checkExistParent(dt.departmentCode);
+    if (exist) return 'icon-do_disturb_on';
+    else return 'icon-add_circle_outline';
+  }
+
   public click(arg: ClickEventArgs) {
     console.log(arg.element?.id);
   }
 
-  test(data) {
-    debugger;
-  }
+  test(data) {}
 }

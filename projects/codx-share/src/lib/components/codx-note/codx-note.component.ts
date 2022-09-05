@@ -60,7 +60,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   co_content: CO_Contents = new CO_Contents();
   test: any;
   fontTemp: any;
-  id = '0';
+  id = 0;
 
   @Input() contents: any = [
     {
@@ -79,7 +79,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   @Input() method = '';
   @Input() refID = '';
   @Input() data = [];
-  @Input() mode = 'add';
+  @Input() mode = 'edit';
+  @Input() funcID = '';
+  @Input() objectID = '';
+  @Input() objectType = '';
   @Output() getContent = new EventEmitter();
   @ViewChild('input') input: any;
 
@@ -254,7 +257,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.currentElement = this.currentElement.querySelector(
           'input.codx-text'
         ) as HTMLElement;
-        this.currentElement.focus();
+        if (this.currentElement) this.currentElement.focus();
         this.listNoteTemp[event?.field] = event?.data;
         /*Set lại color cho memo khi edit color*/
         this.contents[this.id].textColor = event?.data;
@@ -262,7 +265,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.elementColor = elementColor;
         this.chooseColor(event?.data);
         var value: any = this.currentElement;
-        if (value.value) {
+        if (value) {
           this.contents[this.id].textCorlor = event?.data;
           if (this.mode == 'edit') {
             if (this.refID) this.updateContent(this.refID, this.contents);
@@ -281,7 +284,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  popupFile() {}
+  popupImg() {}
 
   addEmoji(event) {
     this.listNoteTemp.memo = '';
@@ -352,14 +355,14 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         lineType: this.lineType,
       };
       this.contents.push(initListNote);
-      this.id = `${this.contents.length - 1}`;
+      this.id = this.contents.length - 1;
       //reverse
       this.dt.detectChanges();
     }
     if (this.mode == 'edit') {
       if (this.refID) this.updateContent(this.refID, this.contents);
     }
-    this.getContent.emit(this.contents)
+    this.getContent.emit(this.contents);
   }
 
   setPropertyAfterAdd() {
@@ -500,20 +503,21 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     item = null,
     index = null
   ) {
-    var input = this.currentElement.querySelector(
-      'input.codx-text'
-    ) as HTMLElement;
-    var value: any = input;
+    // var input = this.currentElement.querySelector(
+    //   'input.codx-text'
+    // ) as HTMLElement;
+    // var value: any = input;
     if (type == 'format') this.chooseType(format, ele);
     else if (type == 'font') this.checkFont(format, ele);
     else if (type == 'delete') this.delete(index);
-    if (value.value) {
-      this.contents[this.id].format = this.listNoteTemp.format;
-      if (this.mode == 'edit') {
-        if (this.refID) this.updateContent(this.refID, this.contents);
-      }
-      this.getContent.emit(this.contents);
+    else if (type == 'img') this.popupImg();
+    // if (value) {
+    this.contents[this.id].format = this.listNoteTemp.format;
+    if (this.mode == 'edit' && type != 'delete') {
+      if (this.refID) this.updateContent(this.refID, this.contents);
     }
+    this.getContent.emit(this.contents);
+    // }
   }
 
   updateContent(refID, listContent) {

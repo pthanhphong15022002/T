@@ -213,7 +213,7 @@ export class UserComponent extends UIComponent {
   }
 
   selectedChange(val: any) {
-    this.itemSelected = val.data;
+    this.itemSelected = val?.data;
     this.dt.detectChanges();
   }
 

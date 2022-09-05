@@ -111,36 +111,36 @@ export class ViewDetailComponent implements OnInit {
   }
 
   initForm() {
-    // this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
-    //   if (res) {
-    //     this.taskViews = res;
-    //   }
-    //   console.log('task', res);
-    // });
+    if (this.itemDetail?.recID) {
+      this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
+        this.taskViews = res;
+        this.df.detectChanges();
+      });
+    }
 
     if (this.itemDetail && this.itemDetail !== null) {
-      this.esService
-        .getFiles(
-          this.formModel.funcID,
-          this.itemDetail?.recID,
-          this.formModel.entityName
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.files = res;
-          }
-        });
-      // if (this.itemDetail?.files?.length > 0) {
-      //   this.esService
-      //     .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
-      //     .subscribe((res) => {
-      //       console.log('get file', res);
+      // this.esService
+      //   .getFiles(
+      //     this.formModel.funcID,
+      //     this.itemDetail?.recID,
+      //     this.formModel.entityName
+      //   )
+      //   .subscribe((res) => {
+      //     if (res) {
+      //       this.files = res;
+      //     }
+      //   });
+      if (this.itemDetail?.files?.length > 0) {
+        this.esService
+          .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
+          .subscribe((res) => {
+            console.log('get file', res);
 
-      //       if (res) {
-      //         this.files = res;
-      //       }
-      //     });
-      // }
+            if (res) {
+              this.files = res;
+            }
+          });
+      }
       this.esService
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {

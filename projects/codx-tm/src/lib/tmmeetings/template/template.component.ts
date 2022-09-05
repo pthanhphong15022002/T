@@ -44,6 +44,8 @@ export class TemplateComponent extends UIComponent implements OnInit {
 
     this.dialog = dialog;
     this.data = dt?.data;
+    this.content = this.data.contents;
+
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
@@ -92,7 +94,7 @@ export class TemplateComponent extends UIComponent implements OnInit {
   }
 
   onSave() {
-    if (this.data == null) {
+    if (this.data.templateID == null) {
       this.dialog.close(this.tempID);
     } else {
       var config = new AlertConfirmInputConfig();
@@ -112,6 +114,6 @@ export class TemplateComponent extends UIComponent implements OnInit {
   }
 
   getContent(event) {
-    console.log('check getContent', event);
+    this.data.contents = event;
   }
 }

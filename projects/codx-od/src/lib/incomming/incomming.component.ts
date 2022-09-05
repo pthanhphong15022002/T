@@ -128,7 +128,7 @@ export class IncommingComponent
   notifySvr: NotificationsService;
   atSV: AttachmentService;
   fileService: FileService;
-  constructor(inject: Injector, private route: ActivatedRoute,) {
+  constructor(inject: Injector, private route: ActivatedRoute) {
     super(inject);
     this.odService = inject.get(DispatchService);
     this.agService = inject.get(AgencyService);
@@ -220,46 +220,58 @@ export class IncommingComponent
       });
     });
   }
-  changeDataMF(e:any,data:any)
-  {
-    var bm = e.filter((x: { functionID: string }) => x.functionID == 'ODT110' || x.functionID == 'ODT209');
-    var unbm = e.filter((x: { functionID: string }) => x.functionID == 'ODT111' || x.functionID == 'ODT210');
-   /*  var blur =  e.filter((x: { functionID: string }) => x.functionID == 'ODT108');
+  changeDataMF(e: any, data: any) {
+    var bm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ODT110' || x.functionID == 'ODT209'
+    );
+    var unbm = e.filter(
+      (x: { functionID: string }) =>
+        x.functionID == 'ODT111' || x.functionID == 'ODT210'
+    );
+    /*  var blur =  e.filter((x: { functionID: string }) => x.functionID == 'ODT108');
     blur[0].isblur = true; */
-    if(data?.isBookmark)
-    {
+    if (data?.isBookmark) {
       bm[0].disabled = true;
       unbm[0].disabled = false;
-    }
-    else
-    {
+    } else {
       unbm[0].disabled = true;
       bm[0].disabled = false;
     }
-    if(this.view.formModel.funcID == "ODT41" && data?.status != "1" && data?.status != "2")
-    {
-      var approvel = e.filter((x: { functionID: string }) => x.functionID == 'ODT201');
-      approvel[0].disabled = true
+    if (
+      this.view.formModel.funcID == 'ODT41' &&
+      data?.status != '1' &&
+      data?.status != '2'
+    ) {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT201'
+      );
+      approvel[0].disabled = true;
     }
-    if(data?.status == "7")
-    {
-      var completed = e.filter((x: { functionID: string }) => x.functionID == 'ODT211' ||  x.functionID == 'ODT112' || x.functionID == 'SYS02' || x.functionID == 'SYS03');
-      for(var i =0; i<completed.length ; i++)
-      {
-        completed[i].disabled = true
+    if (data?.status == '7') {
+      var completed = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'ODT211' ||
+          x.functionID == 'ODT112' ||
+          x.functionID == 'SYS02' ||
+          x.functionID == 'SYS03'
+      );
+      for (var i = 0; i < completed.length; i++) {
+        completed[i].disabled = true;
       }
-    } 
-    if(data?.status == "3")
-    {
-      var completed = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
-      completed[0].disabled = true
-    }  
+    }
+    if (data?.status == '3') {
+      var completed = e.filter(
+        (x: { functionID: string }) => x.functionID == 'SYS02'
+      );
+      completed[0].disabled = true;
+    }
   }
-  aaaa(e:any)
-  {
-    if(e)
-    {
-      var foundIndex = e.findIndex((x: { functionID: string }) => x.functionID == 'SYS001');
+  aaaa(e: any) {
+    if (e) {
+      var foundIndex = e.findIndex(
+        (x: { functionID: string }) => x.functionID == 'SYS001'
+      );
       e[foundIndex].disabled = true;
     }
   }
@@ -277,7 +289,6 @@ export class IncommingComponent
       this.cache
         .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
-          debugger;
           this.gridViewSetup = grd;
           if (grd['Security']['referedValue'] != undefined)
             this.cache
@@ -468,12 +479,10 @@ export class IncommingComponent
     //this.view.dataService.setPredicates(['Status=@0'],['1']).subscribe();
     //this.activeDiv = "1";
   }
-  checkDeadLine(time:any)
-  {
-    if(new Date(time).getTime() < new Date().getTime() || !time)
-    {
-      return "icon-access_alarm"
+  checkDeadLine(time: any) {
+    if (new Date(time).getTime() < new Date().getTime() || !time) {
+      return 'icon-access_alarm';
     }
-    return ""
+    return '';
   }
 }
