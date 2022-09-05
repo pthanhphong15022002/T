@@ -20,7 +20,8 @@ export class Post {
   fileSize: string;
   refID: string;
   refType: string;
-  shareControl: string
+  shareControl: string;
+  objectType: string;
   createdOn: Date;
   modifiedOn: string;
   modifiedBy: string;
@@ -36,6 +37,7 @@ export class Post {
   parentID:string ="";
   totalRecord: number = 0;
   tags: string;
+  listTag:any[];
   shares:any;
   shared: number = 0;
   card: any;

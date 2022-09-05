@@ -186,7 +186,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     this.model.entityName = 'TM_Tasks';
     this.model.pageLoading = false;
     this.model.predicate = 'OrgUnitID = @0';
-    this.model.dataValue = this.user.buid;
+    this.model.dataValue = this.user.employee?.orgUnitID;
   }
 
   onInit(): void {
@@ -249,7 +249,6 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
         ];
         if (vltasksByEmpWithName) {
           vltasksByEmpWithName.map((task) => {
-            console.log('Task', task);
             let newTasks = 0;
             let processingTasks = 0;
             let doneTasks = 0;

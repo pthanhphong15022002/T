@@ -35,6 +35,7 @@ export class OrgorganizationComponent extends UIComponent {
         sameData: true,
         active: true,
         model: {
+          resizable: true,
           template: this.templateTree,
           panelRightRef: this.templateDetail,
         },

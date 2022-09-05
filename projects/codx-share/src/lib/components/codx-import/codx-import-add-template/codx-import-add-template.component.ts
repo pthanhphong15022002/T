@@ -13,10 +13,32 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { GridComponent, SelectionSettingsModel } from '@syncfusion/ej2-angular-grids';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import {
+  GridComponent,
+  SelectionSettingsModel,
+} from '@syncfusion/ej2-angular-grids';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, CodxService, DataRequest, DataService, DialogData, DialogModel, DialogRef, NotificationsService } from 'codx-core';
+import {
+  AlertConfirmInputConfig,
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  CodxGridviewComponent,
+  CodxService,
+  DataRequest,
+  DataService,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  NotificationsService,
+} from 'codx-core';
 import { Observable, finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
@@ -35,20 +57,20 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   submitted = false;
   gridModel: any;
   formModel: any;
-  recID: any
+  recID: any;
   data = {};
-  grd : any;
+  grd: any;
   hideThumb = false;
   fileCount = 0;
-  headerText: string = "Thêm mới template"
+  headerText: string = 'Thêm mới template';
   columnsGrid: any;
   editSettings: any;
   dataIEConnections: any = {};
   dataIETables: any = {};
   dataIEMapping: any = {};
-  sheet:any;
-  mappingTemplate:any;
-  importRule :any;
+  sheet: any;
+  mappingTemplate: any;
+  importRule: any;
   importAddTmpGroup: FormGroup;
   formModels: any;
   dataSave = 
@@ -80,42 +102,41 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     if(dt.data?.[2])
       this.recID=dt.data?.[2];
   }
-  
-  
+
   ngOnInit(): void {
-     //Tạo formGroup
-     this.importAddTmpGroup = this.formBuilder.group({
+    //Tạo formGroup
+    this.importAddTmpGroup = this.formBuilder.group({
       nameTmp: ['', Validators.required],
-      sheetImport: ''
+      sheetImport: '',
     });
     this.columnsGrid = [
       {
-        headerText: "ProcessIndex",
+        headerText: 'ProcessIndex',
         width: '15%',
       },
       {
-        headerText: "DestinationTable",
+        headerText: 'DestinationTable',
         width: '20%',
       },
       {
-        headerText: "ParentEntity",
+        headerText: 'ParentEntity',
         width: '15%',
       },
       {
-        headerText: "MappingTemplate",
+        headerText: 'MappingTemplate',
         width: '20%',
       },
       {
-        headerText: "ImportRule",
+        headerText: 'ImportRule',
         width: '15%',
       },
       {
-        headerText: "IsSummary",
+        headerText: 'IsSummary',
         width: '10%',
       },
     ];
     this.getDataCbb();
-    
+
     this.editSettings = {
       allowEditing: true,
       allowAdding: true,
@@ -154,11 +175,9 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   getfileCount(e: any) {
     this.fileCount = e.data.length;
   }
-  getfilePrimitive(e:any)
-  {
+  getfilePrimitive(e: any) {
     var dt = e[0]?.rawFile;
-    if(dt)
-    {
+    if (dt) {
       const reader: FileReader = new FileReader();
       reader.readAsBinaryString(dt);
       reader.onload = (e: any) => {
@@ -166,7 +185,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         const binarystr: string = e.target.result;
         const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
         this.sheet = wb.SheetNames;
-        this.importAddTmpGroup.controls["sheetImport"].setValue(this.sheet[0]);
+        this.importAddTmpGroup.controls['sheetImport'].setValue(this.sheet[0]);
         this.dataIETables.sourceTable = this.sheet[0];
       };
     }
@@ -297,11 +316,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     this.dataSave.dataIEMapping.push(this.dataIEMapping);
     //this.gridView.addHandler(sdata,true,"recID")
   }
-  getDataCbb()
-  {
+  getDataCbb() {
     var request = new DataRequest();
-    request.comboboxName = "MappingTemplate";
-    request.page=1;
+    request.comboboxName = 'MappingTemplate';
+    request.page = 1;
     request.pageSize = 5;
     this.api
     .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
@@ -322,13 +340,13 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
       if(item[0])
       {
-       debugger;
+       
       }
         
     }) */
-    this.cache.valueList("SYS010").subscribe((item) => {
+    this.cache.valueList('SYS010').subscribe((item) => {
       if (item) {
-       this.importRule = item.datas
+        this.importRule = item.datas;
       }
     });
   }
@@ -352,19 +370,31 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       }
     });
   }
-  getTextImportRule(id:any)
-  {
-    var data = this.importRule.filter(x=>x.value == id);
-    if(data) return data[0].text;
-    return "";
+  getTextImportRule(id: any) {
+    var data = this.importRule.filter((x) => x.value == id);
+    if (data) return data[0].text;
+    return '';
   }
-  edit(data:any)
-  {
-    this.callfunc.openForm(CodxImportAddMappingComponent,null,1000,800,"",[this.formModel,this.dataIEConnections,this.dataIETables,this.dataIEMapping,"edit"],null).closed.subscribe(item=>{
-      if(item?.event)
-      {
-        debugger;
-      }
-    });
+  edit(data: any) {
+    this.callfunc
+      .openForm(
+        CodxImportAddMappingComponent,
+        null,
+        1000,
+        800,
+        '',
+        [
+          this.formModel,
+          this.dataIEConnections,
+          this.dataIETables,
+          this.dataIEMapping,
+          'edit',
+        ],
+        null
+      )
+      .closed.subscribe((item) => {
+        if (item?.event) {
+        }
+      });
   }
 }

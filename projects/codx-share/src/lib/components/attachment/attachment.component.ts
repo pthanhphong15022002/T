@@ -563,7 +563,7 @@ export class AttachmentComponent implements OnInit {
   }
   //fetch () : Observable<any[]>
   saveFilesObservable(): Observable<any[]> {
-    this.atSV.fileListAdded = [];    
+    this.atSV.fileListAdded = [];
     return this.addFileObservable(this.fileUploadList[0]);
     //return this.onMultiFileSaveObservable();
   }
@@ -572,9 +572,8 @@ export class AttachmentComponent implements OnInit {
     let total = this.fileUploadList.length;
     //  var that = this;
     this.dmSV.getToken();
-    for (var i = 0; i < total; i++) {     
-     // upload file uri from Mr Long
-
+    for (var i = 0; i < total; i++) {
+      // upload file uri from Mr Long
     }
 
     this.atSV.fileListAdded = [];
@@ -887,10 +886,10 @@ export class AttachmentComponent implements OnInit {
     //   });
     // };
     this.dmSV.getToken();
-    var appName = this.appName; //'hps-file-test'; // Tam thoi de hard
+    var appName = 'hps-file-test'; // Tam thoi de hard
     var ChunkSizeInKB = 2 * 1024;
     var uploadFile = fileItem.item.rawFile;
-    var obj = from (
+    var obj = from(
       lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
         Data: {
           FileName: uploadFile.name,
@@ -946,9 +945,7 @@ export class AttachmentComponent implements OnInit {
               if (this.showMessage == '1')
                 this.notificationsService.notify(item.message);
               this.fileUploadList[0].recID = item.data.recID;
-              //this.atSV.fileListAdded.push(Object.assign({}, item));
-              if (this.data == undefined || this.data == null)
-                this.data = [];
+              this.atSV.fileListAdded.push(Object.assign({}, item));
               this.data.push(Object.assign({}, item));
               this.fileUploadList = [];
               return item;
@@ -1033,7 +1030,7 @@ export class AttachmentComponent implements OnInit {
     try {
       var item = await isAllowAddFileAsync();
       this.dmSV.getToken();
-      var appName = this.appName;//'hps-file-test'; // Tam thoi de hard
+      var appName = 'hps-file-test'; // Tam thoi de hard
       var ChunkSizeInKB = 2 * 1024;
       var uploadFile = fileItem.item.rawFile;
       var retUpload = await lvFileClientAPI.postAsync(
@@ -1096,6 +1093,7 @@ export class AttachmentComponent implements OnInit {
   addFileLarge(fileItem: FileUpload) {
     // let no = 0;
     // let total = this.fileUploadList.length;
+
     var that = this;
     var size = 1048576; // 1MB
     var totalChunk = 0;

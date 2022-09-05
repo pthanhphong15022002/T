@@ -1,4 +1,4 @@
-<ng-container *ngIf="data.length > 0">
+<ng-container>
   <ejs-diagram
     #diagram
     width="100%"
@@ -99,6 +99,7 @@
           </div>
         </div>
         <div
+          *ngIf="node?.data?.isChildren"
           class="department-card-info ec"
           style="
             position: absolute;
@@ -106,9 +107,13 @@
             bottom: -14px;
             margin-left: -8px;
             background-color: white;
+            cursor: pointer;
           "
         >
-          <span class="icon-20 icon-do_disturb_on"></span>
+          <span
+            class="icon-20 icon-do_disturb_on"
+            (click)="loadDataChild(node?.data, node)"
+          ></span>
         </div>
       </div>
     </ng-template>
