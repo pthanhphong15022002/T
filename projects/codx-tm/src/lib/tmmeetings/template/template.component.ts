@@ -114,7 +114,6 @@ export class TemplateComponent extends UIComponent implements OnInit {
   }
 
   getContent(event) {
-    console.log('check getContent', event);
     this.data.contents = event;
   }
 }

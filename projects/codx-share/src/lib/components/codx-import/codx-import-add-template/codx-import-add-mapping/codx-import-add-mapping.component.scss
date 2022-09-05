@@ -62,10 +62,11 @@
 {
   border-right: none !important;
 }
-// .e-grid .e-headercell {
-//   padding: 8px 8px 8px 0 !important;
-// }
-// .e-grid .e-rowcell
-// {
-//   padding-left: 0 !important;
-// }
+.e-grid .e-headercell {
+  background-color: #f5f8fa;
+}
+.e-grid .e-rowcell
+{
+  border-right: solid 1px #dee2e6;
+  //padding-left: 0 !important;
+}
