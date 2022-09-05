@@ -1,0 +1,10 @@
+.connector {
+  position: absolute;
+  background-color: #fff;
+  width: 20px;
+  height: 20px;
+  left: 50%;
+  bottom: -10px;
+  margin-left: -5px;
+  cursor: pointer;
+}

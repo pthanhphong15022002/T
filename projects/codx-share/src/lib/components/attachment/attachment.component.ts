@@ -183,6 +183,7 @@ export class AttachmentComponent implements OnInit {
   ngAfterViewInit(): void {
     if (this.objectId != '' && this.objectId != undefined) {
       this.fileService.getFileNyObjectID(this.objectId).subscribe((res) => {
+        debugger;
         if (res) {
           this.data = res;
           this.fileGet.emit(this.data);
@@ -871,6 +872,7 @@ export class AttachmentComponent implements OnInit {
     var fileSize = parseInt(fileItem.fileSize);
     var that = this;
     fileItem.uploadId = '';
+    fileItem.objectID = this.objectId;
     // function isAllowAddFileAsync() {
     //   return new Promise((resole, reject) => {
     //     that.fileService.isAllowAddFile(fileSize).subscribe(item => {
@@ -905,7 +907,6 @@ export class AttachmentComponent implements OnInit {
     var sizeInBytes = 0;
     return obj.pipe(
       mergeMap((retUpload, i) => {
-        debugger;
         // update len server urs và thumbnail
         fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
         fileItem.uploadId = retUpload.Data.UploadId; //"";
@@ -1084,7 +1085,7 @@ export class AttachmentComponent implements OnInit {
       }
     } catch (ex) {
       fileItem.uploadId = '0';
-      this.notificationsService.notify(ex);
+     // this.notificationsService.notify(ex);
     }
     return ret;
   }
@@ -2774,7 +2775,7 @@ export class AttachmentComponent implements OnInit {
         this.fileUploadList.push(Object.assign({}, fileUpload));
       }
     }
-    //   this.fileAdded.emit({ data: this.fileUploadList });
+     this.fileAdded.emit({ data: this.fileUploadList });
     //  this.fileCount.emit(data: addedList);
     //tbchung thêm vào để xử lý bên import template
     this.filePrimitive.emit(files);
