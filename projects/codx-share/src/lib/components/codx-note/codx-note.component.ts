@@ -178,6 +178,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     } else if (type == 'LIST') {
       this.setFormat(false, false, true);
     } else this.setFormat(false, false, false, true);
+    if (this.refID) this.updateContent(this.refID, this.contents);
   }
 
   setFormat(text = true, checkBox = false, list = false, title = false) {
@@ -233,6 +234,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       else style.textDecorationLine = 'none';
       this.listNoteTemp.format = this.listNoteTemp.format + 'underline;';
     }
+    this.contents[this.id].format = this.listNoteTemp.format;
+    if (this.refID) this.updateContent(this.refID, this.contents);
     this.dt.detectChanges();
   }
 
@@ -308,7 +311,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.listNoteTemp.lineType = this.lineType;
       this.listNoteTemp[field] = dt;
       this.contents[this.id].memo = dt;
-      if (this.mode == 'edit') this.updateContent(this.refID, this.contents);
+      // if (this.mode == 'edit') this.updateContent(this.refID, this.contents);
       this.id += 1;
       this.getContent.emit(this.contents);
     }
@@ -327,7 +330,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     if (event?.data) {
       this.addContent(event?.data);
     }
-    this.setPropertyAfterAdd();
+    // this.setPropertyAfterAdd();
   }
 
   addContent(data) {
@@ -359,9 +362,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       //reverse
       this.dt.detectChanges();
     }
-    if (this.mode == 'edit') {
-      if (this.refID) this.updateContent(this.refID, this.contents);
-    }
+    // if (this.mode == 'edit') {
+    //   if (this.refID) this.updateContent(this.refID, this.contents);
+    // }
     this.getContent.emit(this.contents);
   }
 
@@ -503,21 +506,23 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     item = null,
     index = null
   ) {
-    // var input = this.currentElement.querySelector(
-    //   'input.codx-text'
-    // ) as HTMLElement;
-    // var value: any = input;
-    if (type == 'format') this.chooseType(format, ele);
-    else if (type == 'font') this.checkFont(format, ele);
-    else if (type == 'delete') this.delete(index);
-    else if (type == 'img') this.popupImg();
-    // if (value) {
-    this.contents[this.id].format = this.listNoteTemp.format;
-    if (this.mode == 'edit' && type != 'delete') {
-      if (this.refID) this.updateContent(this.refID, this.contents);
+    switch (type) {
+      case 'format':
+        this.chooseType(format, ele);
+        break;
+      case 'font':
+        this.checkFont(format, ele);
+        break;
+      case 'delete':
+        this.delete(index);
+        break;
+      case 'img':
+        this.popupImg();
+        break;
+      case 'comment':
+        this.comment();
     }
     this.getContent.emit(this.contents);
-    // }
   }
 
   updateContent(refID, listContent) {
@@ -528,4 +533,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       ])
       .subscribe();
   }
+
+  comment() {}
 }
