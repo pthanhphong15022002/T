@@ -428,9 +428,4 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     if(type=="CheckBox") return "center";
     return 'left';
   }
-  getTextAligin(type:any)
-  {
-    if(type=="CheckBox") return "center";
-    return 'left';
-  }
 }
