@@ -44,8 +44,6 @@ export class ImgComponent implements OnInit, AfterViewInit {
   predicate = `ObjectType=@0 && IsDelete=@1 && CreatedBy=@2 && ReferType=@3`;
   dataValue: any;
   dtService: CRUDService;
-  // x =>  x.ObjectType == objectType && x.IsDelete == false &&
-  //          x.CreatedBy == UserID && (x.ReferType == "image" || x.ReferType == "video"
 
   @ViewChild('listView') listView: CodxListviewComponent;
 
