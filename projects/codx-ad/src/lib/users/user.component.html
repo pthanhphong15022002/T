@@ -4,9 +4,9 @@
 </codx-views>
 
 <ng-template #itemTemplate let-data>
-  <div class="px-5">
-    <div class="d-flex justify-content-between align-items-center flex-wrap  pt-4 pb-2">
-      <div class=" justify-content-start">
+  <div class="py-3 px-5 rounded-2">
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+      <div class=" justify-content-start min-w-450px">
         <codx-temp-full cardCss="card-template" (clickMF)="clickMF($event,data)" [imageId]="data.userID"
           imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.buName)" [typeMF]="'hover'"
           [formModel]="view.formModel" [dataItem]="data" [footer]="footer" [imgOn]="data?.modifiedOn" #tempFull>
@@ -21,8 +21,8 @@
               </a>
             </ng-container>
             <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
-              [numberImages]="5" (click)="openPopup(data)">
-            </codx-imgs> -->
+            [numberImages]="5" (click)="openPopup(data)">
+          </codx-imgs> -->
           </div>
           <div class="" *ngIf="data.chooseRoles && data.chooseRoles.length > 5">
             <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
@@ -37,8 +37,8 @@
               </a>
             </ng-container>
             <!-- <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="data.resource" objectType="AD_Users"
-              [numberImages]="5" (click)="openPopup(data)">
-            </codx-imgs> -->
+            [numberImages]="5" (click)="openPopup(data)">
+          </codx-imgs> -->
           </div>
         </div>
         <div class="d-flex flex-column text-right ms-6" *ngIf="data.status=='1'">
@@ -54,8 +54,8 @@
         </div>
       </div>
     </div>
-    <div class="separator"></div>
   </div>
+  <div class="separator"></div>
 </ng-template>
 
 <ng-template #titleTmp let-data>

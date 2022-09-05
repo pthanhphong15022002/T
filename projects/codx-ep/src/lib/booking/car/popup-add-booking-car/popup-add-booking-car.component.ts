@@ -82,6 +82,10 @@ export class PopupAddBookingCarComponent implements OnInit {
   CbxName: any;
   isAfterRender = false;
 
+
+  tempAtender:{userId: string, userName:string, roleType:string,status:string,objectType:string};
+  attendeesList=[];
+
   grvBookingCar: any;
   strAttendees: string = '';
   vllDevices = [];
@@ -121,18 +125,14 @@ export class PopupAddBookingCarComponent implements OnInit {
       }
       if (this.isAdd) {
         let people = this.authService.userValue;
-        var user: {
-          id: string;
-          text: string;
-          objectType: string;
-          objectName: string;
-        } = {
-          id: people.userID,
-          text: people.userName,
-          objectType: undefined,
-          objectName: undefined,
+        this.tempAtender = {
+          userId: people.userID,
+          userName: people.userName,
+          status:"1",
+          objectType: 'AD_Users',
+          roleType:'2'
         };
-        this.curUser = user;
+        this.curUser = this.tempAtender;
         this.changeDetectorRef.detectChanges();
       }
       this.cacheService.valueList('EP012').subscribe((res) => {
@@ -205,18 +205,14 @@ export class PopupAddBookingCarComponent implements OnInit {
             if (res) {
               this.peopleAttend = res.msgBodyData[0];
               this.peopleAttend.forEach((people) => {
-                let tempPeople: {
-                  id: string;
-                  text: string;
-                  objectType: string;
-                  objectName: string;
-                } = {
-                  id: people.userID,
-                  text: people.userName,
-                  objectType: undefined,
-                  objectName: undefined,
+                this.tempAtender= {
+                  userId: people.userID,
+                  userName: people.userName,
+                  status:"1",
+                  objectType: 'AD_Users',
+                  roleType:'2'
                 };
-                this.lstPeople.push(tempPeople);
+                this.lstPeople.push(this.tempAtender);
               });
 
               this.changeDetectorRef.detectChanges();
@@ -249,7 +245,7 @@ export class PopupAddBookingCarComponent implements OnInit {
   beforeSave(option: RequestOption) {
     let itemData = this.fGroupAddBookingCar.value;
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd, this.strAttendees];
+    option.data = [itemData, this.isAdd, this.attendeesList];
     return true;
   }
 
@@ -292,13 +288,11 @@ export class PopupAddBookingCarComponent implements OnInit {
       );
     }
 
-    this.lstPeople.forEach((people) => {
-      if (this.strAttendees == '') {
-        this.strAttendees += people.id;
-      } else {
-        this.strAttendees += ';' + people.id;
-      }
-    });
+    this.attendeesList.push(this.curUser);
+    this.lstPeople.forEach(people=>{
+      this.attendeesList.push(people);
+    })
+    
 
     let pickedEquip = '';
     let availableEquip = '';
@@ -389,7 +383,7 @@ export class PopupAddBookingCarComponent implements OnInit {
           var x = res;
           let driverInfo: {
             id: string;
-            text: string;
+            text: string;            
             objectType: string;
             objectName: string;
           } = {
@@ -404,14 +398,17 @@ export class PopupAddBookingCarComponent implements OnInit {
       });
   }
   valueCbxUserChange(event?) {
-    this.lstPeople = event.data.dataSelected;
-    // if(this.lstPeople.length == 1){
-    //   this.smallListPeople = this.lstPeople;
-    // }
-    // if(this.lstPeople.length >= 2) {
-    //   this.smallListPeople=null;
-    //   this.smallListPeople = [this.lstPeople[0],this.lstPeople[1]];
-    // }
+    event.data.dataSelected.forEach((people) => {
+      this.tempAtender = {
+        userId: people.id,
+        userName: people.text,
+        status:"1",
+        objectType: 'AD_Users',
+        roleType:'3'
+      };
+      this.lstPeople.push(this.tempAtender);
+    });
+    
 
     this.changeDetectorRef.detectChanges();
   }

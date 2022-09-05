@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   OnInit,
@@ -8,6 +9,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { ClickEventArgs } from '@syncfusion/ej2-angular-buttons';
 import {
   ConnectorModel,
@@ -66,6 +68,10 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   @Input() formModel!: FormModel;
 
   data: any[] = [];
+  imployeeInfo: any = {};
+  employOrg: any = [];
+  employees: any = [];
+  searchField = '';
   datasetting: any = null;
   layout: Object = {
     type: 'HierarchicalTree',
@@ -80,6 +86,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   isClick: boolean = false;
 
   @ViewChild('diagram') diagram: any;
+  @ViewChild('p') public popover: NgbPopover;
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef
@@ -87,13 +94,6 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.datasetting = this.newDataManager();
-    // this.loadOrgchart().subscribe((res) => {
-    //   if (res) {
-    //     this.data = res.Data as any[];
-    //     this.datasetting.dataManager = new DataManager(this.data as JSON[]);
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // });
   }
 
   newDataManager(): any {
@@ -158,8 +158,6 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   }
 
   loadDataChild(dataNode: any, node: any) {
-    //this.orgUnitID = dataNode.departmentCode;
-    //this.diagram.action = 'LayoutAnimation';
     this.parentID = dataNode.departmentCode;
     var exist = this.checkExistParent(this.parentID);
     if (!exist) {
@@ -172,8 +170,6 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
         this.changeDetectorRef.detectChanges();
       });
     } else {
-      // node.isExpanded = true;
-      // this.diagram.commandHandler.expandNode(node, this.diagram);
     }
   }
 
@@ -186,17 +182,6 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
       var tool = this.diagram.getTool('LayoutAnimation');
       tool.mouseUp(this.diagram.eventHandler.eventArgs);
     }
-  }
-
-  testMouseDown(evt: any) {
-    // if (this.diagram) {
-    //   this.diagram.eventHandler.action = 'LayoutAnimation';
-    //   this.diagram.eventHandler.inAction = true;
-    //   //this.diagram.eventHandler.mouseDown(evt);
-    //   // var a = this.diagram.getTool('LayoutAnimation');
-    //   // this.diagram.eventHandler.tool = a;
-    //   //this.diagram.mouseUp(evt);
-    // }
   }
 
   checkExistParent(parentID: string): boolean {
@@ -255,9 +240,127 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
     }
   }
 
+  showEmploy(p: any, emp) {
+    this.api
+      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'GetByUserAsync', [
+        emp.employeeID,
+        '',
+        '0',
+      ])
+      .subscribe((res: any) => {
+        if (res != null) {
+          this.imployeeInfo = res.InfoPersonal;
+          this.changeDetectorRef.detectChanges();
+          p.open();
+        }
+      });
+  }
+  show(orgName) {
+    if (this.searchField == '' || this.searchField == null) return true;
+    for (let index = 0; index < this.employees.length; index++) {
+      const element: any = this.employees[index];
+      if (
+        element.orgUnitName != null &&
+        element.positionName == orgName &&
+        element.employeeName != null &&
+        element.employeeName
+          .toLowerCase()
+          .includes(this.searchField.toLowerCase())
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  loadEmploy(el) {
+    var dataset = el[0].dataset;
+    this._loadEmploy(el, dataset.orgid, dataset.status);
+  }
+  _loadEmploy(el, orgid, status) {
+    this.popover['_elementRef'] = new ElementRef(el[0]);
+    if (this.popover.isOpen()) {
+      this.popover.close();
+    }
+
+    var headcounts = $(el[0]).data('headcounts');
+    this.api
+      .execSv(
+        'HR',
+        'ERM.Business.HR',
+        'OrganizationUnitsBusiness',
+        'GetEmployeeListByOrgAsync',
+        [orgid, status, '', this.onlyDepartment]
+      )
+      .subscribe((res: any) => {
+        if (res != null) {
+          if (res.length > 0 || headcounts > 0) {
+            this.employOrg = [];
+            this.employees = res;
+
+            var obj: any = {};
+            for (let index = 0; index < this.employees.length; index++) {
+              const element: any = this.employees[index];
+              if (!obj[element.positionName]) {
+                obj[element.positionName] = 1;
+                this.employOrg.push(element.positionName || '_');
+
+                var c = 0;
+                for (let j = 0; j < this.employees.length; j++) {
+                  if (
+                    this.employees[j]['positionName'] == element.positionName
+                  ) {
+                    c = c + 1;
+                  }
+                }
+
+                if (element.headcounts > c) {
+                  for (
+                    let x = element.headcounts - c;
+                    x < element.headcounts;
+                    x++
+                  ) {
+                    this.employees.push({ positionName: element.positionName });
+                  }
+                }
+              }
+            }
+
+            this.changeDetectorRef.detectChanges();
+
+            this.popover.open();
+          }
+        }
+      });
+  }
+
+  orgClick($event) {
+    var ele = $($event.target).closest('.ec');
+    if (ele.length > 0) {
+      // $event.preventDefault();
+      // var node = $($event.target).closest(".node");
+      // if ($(ele).find("span").hasClass("icon-do_disturb_on")) {
+      //   this.collapseNode(node);
+      // } else {
+      //   var child = $(ele).closest("li").find("ul");
+      //   if (child.length == 0) {
+      //     this.loadChild($(node).data("id"), node);
+      //   } else {
+      //     this.oc.showChildren(node);
+      //   }
+      //   $(node).find(".ec").find("span").removeClass("icon-do_disturb_on");
+      //   $(node).find(".ec").find("span").removeClass("icon-add_circle_outline");
+      //   $(node).find(".ec").find("span").addClass("icon-do_disturb_on");
+      // }
+    } else {
+      ele = $($event.target).closest('.counter');
+      if (ele.length > 0) {
+        this.loadEmploy(ele);
+      }
+    }
+  }
+
   public click(arg: ClickEventArgs) {
     console.log(arg.element?.id);
   }
-
-  test(data) {}
 }
