@@ -19,7 +19,7 @@ import {
   SnapSettingsModel,
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, FormModel } from 'codx-core';
 import { map, Observable } from 'rxjs';
 let data: any[] = [
   { Name: 'Species', fillColor: '#3DD94A' },
@@ -62,6 +62,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   @Input() numberLV: string = '3';
   @Input() parentID: string = '';
   @Input() onlyDepartment?: boolean;
+  @Input() formModel!: FormModel;
 
   data: any[] = [];
   datasetting: any = null;
@@ -228,6 +229,13 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
 
     return obj;
   }
+
+  classIcon(dt: any): string {
+    var exist = this.checkExistParent(dt.departmentCode);
+    if (exist) return 'icon-do_disturb_on';
+    else return 'icon-add_circle_outline';
+  }
+
   public click(arg: ClickEventArgs) {
     console.log(arg.element?.id);
   }
