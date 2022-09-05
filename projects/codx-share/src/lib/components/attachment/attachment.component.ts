@@ -741,7 +741,7 @@ export class AttachmentComponent implements OnInit {
 
                 if (item.status == 0) {
                   if (item.data.fileName != null && item.data.fileName != '') {
-                    item.data.thumbnail = '../../../assets/img/loader.gif';
+                    item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(item.data.extension)}`;//'../../../assets/img/loader.gif';
                     that.displayThumbnail(item.data);
                     files.push(Object.assign({}, item.data));
                   }
@@ -1085,7 +1085,7 @@ export class AttachmentComponent implements OnInit {
       }
     } catch (ex) {
       fileItem.uploadId = '0';
-      this.notificationsService.notify(ex);
+     // this.notificationsService.notify(ex);
     }
     return ret;
   }
@@ -1150,7 +1150,7 @@ export class AttachmentComponent implements OnInit {
             if (files == null) files = [];
             var res = item.data;
             var thumbnail = res.thumbnail;
-            res.thumbnail = '../../../assets/img/loader.gif';
+            res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.extension)}`;//'../../../assets/img/loader.gif';
             files.push(Object.assign({}, res));
             this.dmSV.listFiles = files;
             this.dmSV.ChangeData.next(true);
@@ -1191,7 +1191,7 @@ export class AttachmentComponent implements OnInit {
                   (d) => d.recID.toString() === item.recID
                 );
                 if (index != -1) {
-                  res.data.thumbnail = '../../../assets/img/loader.gif';
+                  res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//'../../../assets/img/loader.gif';
                   this.displayThumbnail(res.data);
                   files[index] = res.data;
                   files[index].recID = res.data.recID;
