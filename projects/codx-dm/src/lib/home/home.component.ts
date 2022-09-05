@@ -676,7 +676,7 @@ export class HomeComponent extends UIComponent {
         if (blob.type != '') {       
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = thumnail;
+            files[index].thumbnail = url;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
