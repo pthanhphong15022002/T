@@ -20,6 +20,7 @@ import {
   UploadFile,
   ViewsComponent,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { Observable } from 'rxjs';
 import { CodxTMService } from '../../codx-tm.service';
@@ -47,7 +48,10 @@ export class PopupAddSprintsComponent implements OnInit {
   isUploadImg = false;
   gridViewSetup: any;
   imageUpload: UploadFile = new UploadFile();
+  showLabelAttachment  = false ;
+  isHaveFile = false ;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
 
   constructor(
@@ -107,6 +111,7 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
+    this.attachment.saveFiles() ;
     this.saveMaster(isAdd);
   }
 
@@ -196,14 +201,24 @@ export class PopupAddSprintsComponent implements OnInit {
     } else this.resources = '';
   }
 
-  openInfo(interationID, action) {
-    // this.taskBoard = new TM_Sprints();
-
+  openInfo(iterationID, action) {
     this.readOnly = false;
     this.title = 'Chỉnh sửa task board';
-    this.tmSv.getSprints(interationID).subscribe((res) => {
+    this.tmSv.getSprints(iterationID).subscribe((res) => {
       if (res) {
         this.master = res;
+        this.api
+        .execSv<any[]>(
+          'DM',
+          'DM',
+          'FileBussiness',
+          'GetFilesByObjectIDAsync',
+          [iterationID]
+        )
+        .subscribe((res) => {
+          if (res && res.length > 0) this.showLabelAttachment = true;
+          else this.showLabelAttachment = false;
+        });
         if (this.master.resources) this.getListUser(this.master.resources);
         else this.listUserDetail = [];
         this.changeDetectorRef.detectChanges();
@@ -327,5 +342,17 @@ export class PopupAddSprintsComponent implements OnInit {
       }
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {
+    console.log(e);
+  }
+  getfileCount(e) {
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
 }
