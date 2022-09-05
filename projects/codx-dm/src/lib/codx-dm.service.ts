@@ -834,7 +834,8 @@ export class CodxDMService {
     }
 
     checkUrl(url, data) {
-      var ret = '../../../assets/img/loader.gif';
+      //return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
+      var ret = `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//'../../../assets/img/loader.gif';
       try {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', url, false);
@@ -845,8 +846,8 @@ export class CodxDMService {
         return ret;
       }
       catch {
-        if (ret == '../../../assets/img/loader.gif')
-          this.setThumbnailWait.next(data);
+       // if (ret == '../../../assets/img/loader.gif')
+        this.setThumbnailWait.next(data);
         return ret;
       }
       // var http = new XMLHttpRequest();

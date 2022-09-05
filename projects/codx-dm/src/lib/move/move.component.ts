@@ -185,7 +185,7 @@ export class MoveComponent implements OnInit {
           if (res.status == 0) {
             var files = that.dmSV.listFiles;
             if (files == null) files = [];
-            res.data.thumbnail = "../../../assets/img/loader.gif";
+            res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";
             files.push(Object.assign({}, res.data));
             this.dmSV.listFiles = files;
             this.dmSV.ChangeData.next(true);
@@ -210,7 +210,7 @@ export class MoveComponent implements OnInit {
 
                     let index = files.findIndex(d => d.recID.toString() === item.data.recID);
                     if (index != -1) {
-                      item.data.thumbnail = "../../../assets/img/loader.gif";
+                      item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(item.data.extension)}`;//"../../../assets/img/loader.gif";
                       files[index] = item.data;
                       that.displayThumbnail(item.data.recID, item.data.pathDisk);
                       that.dmSV.listFiles = files;
