@@ -23,7 +23,8 @@
               </div>
               <div class="text-gray-600 text-italic fs-7">{{data?.positionName}}</div>
               <div class="text-dark">
-                {{ data?.taskName }}
+                <span *ngIf="data.category =='1' || data.category =='3'"> {{ data?.taskName }}</span>
+                <span *ngIf="data.category =='2'"> {{ data?.memo2 }}</span>
               </div>
             </div>
           </div>

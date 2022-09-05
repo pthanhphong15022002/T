@@ -72,7 +72,6 @@ export class CalendarComponent
 
   onInit(): void {
     this.route.params.subscribe((routeParams) => {
-      debugger;
       var state = history.state;
       if (state) {
         this.calendarID = state.dataValue || '';
