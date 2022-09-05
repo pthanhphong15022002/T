@@ -60,6 +60,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   dropObj:any={};
   paramsCbb = {};
   type = 'new';
+  columnField = '';
   public isDropdown = true;
   selectionOptions: SelectionSettingsModel;
   customerIDRules:object;
@@ -87,7 +88,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   
   ngOnInit(): void {
-    debugger;
     this.formModels = {
       formName: 'ImportFieldMapping',
       gridViewName : 'grvFieldMapping'
@@ -113,12 +113,12 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     ];
     this.createData();
     this.addMappingForm = this.formBuilder.group({
-      mappingName: [this.dataIETable?.mappingName],
-      processIndex: [this.dataIETable?.processIndex],
-      destinationTable: [this.dataIETable?.destinationTable],
-      parentEntity:[this.dataIETable?.parentEntity],
-      importRule: [this.dataIETable?.importRule],
-      isSummary: [this.dataIETable?.isSummary]
+      mappingName: [!this.dataIETable?.mappingName?"": this.dataIETable?.mappingName],
+      processIndex: [!this.dataIETable?.processIndex?"": this.dataIETable?.processIndex],
+      destinationTable: [!this.dataIETable?.destinationTable?"": this.dataIETable?.destinationTable],
+      parentEntity:[!this.dataIETable?.parentEntity?"": this.dataIETable?.parentEntity],
+      importRule: [!this.dataIETable?.importRule?"": this.dataIETable?.importRule],
+      isSummary: [!this.dataIETable?.isSummary?false: this.dataIETable?.isSummary]
     });
     this.getGridViewSetup();
   }
@@ -143,25 +143,30 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   load(args){
     this.grid.element.addEventListener('mouseup', (e: MouseEventArgs) => {
       if ((e.target as HTMLElement).classList.contains("e-rowcell")) {
+        debugger;
         if (this.grid.isEdit)
             this.grid.endEdit();
         let rowInfo = this.grid.getRowInfo(e.target) as any;
+        let colindex: number = parseInt((e.target as HTMLElement).getAttribute("aria-colindex"));
         var check = this.fieldImport.filter(x=>(x.type == "3" || x.type == "2") && x.text == rowInfo.column.field);
         if(check!=null&& check.length>0)  this.isDropdown = true;
+        this.columnField = rowInfo.column.field
         // if (rowInfo.column.field === "CreatedBy")
         //     this.isDropdown = true;
         this.grid.selectRow(rowInfo.rowIndex);
+        //this.grid.selectCell({ rowIndex: rowInfo.rowIndex, cellIndex:rowInfo.cellIndex });
         this.grid.startEdit();
       }
   });
   }
 
   onActionComplete(args) {
-    if (args.requestType =="beginEdit" && this.isDropdown) {
+    if (args.requestType =="beginEdit") {
         this.isDropdown = false;
-        let dropdownObj = args.form.querySelector('.e-dropdownlist').ej2_instances[0];
-        dropdownObj.element.focus();
-        dropdownObj.showPopup();
+        args.form.querySelector('#'+this.grid.element.id+this.columnField).focus();
+        // let dropdownObj = args.form.querySelector('.e-dropdownlist').ej2_instances[0];
+        // dropdownObj.element.focus();
+        // dropdownObj.showPopup();
     }
   }
   ngOnChanges(changes: SimpleChanges) { }
@@ -174,13 +179,15 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   onSave()
   {
+    debugger;
     this.grid.endEdit();
     var result = this.grid.dataSource;
-    this.addMappingForm.value.parentEntity = this.addMappingForm.value?.parentEntity[0];
+    if(this.addMappingForm.value?.parentEntity[0])
+      this.addMappingForm.value.parentEntity = this.addMappingForm.value?.parentEntity[0];
     this.dataIETable.mappingName = this.dataIEMapping.mappingName = this.addMappingForm.value?.mappingName;
     this.dataIETable.processIndex = this.addMappingForm.value?.processIndex;
     this.dataIETable.destinationTable = this.dataIEMapping.tableName = this.addMappingForm.value?.destinationTable;
-    this.dataIETable.parentEntity = this.addMappingForm.value?.parentEntity;
+    this.dataIETable.parentEntity = this.addMappingForm.value?.parentEntity.length == 0 ?"":this.addMappingForm.value?.parentEntity;
     this.dataIETable.importRule = this.dataIEMapping.importRule = this.addMappingForm.value?.importRule;
     this.dataIETable.isSummary = this.addMappingForm.value?.isSummary;
     for(var i =0 ; i<(result as any).length ; i++)
@@ -402,5 +409,10 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   {
     if(e =='3' || e == '2') return this.editParams[field] 
     return null;
+  }
+  getTextAligin(type:any)
+  {
+    if(type=="CheckBox") return "center";
+    return 'left';
   }
 }
