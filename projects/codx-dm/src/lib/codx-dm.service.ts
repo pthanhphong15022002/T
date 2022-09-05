@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Injectable, NgModule, OnInit } from "@angular/core";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject, windowWhen } from "rxjs";
 import { DomSanitizer } from "@angular/platform-browser";
 import { DataItem, FolderInfo, ItemRight, NodeTree } from "@shared/models/folder.model";
 import { FolderService } from "@shared/services/folder.service";
@@ -368,14 +368,23 @@ export class CodxDMService {
         }
     }
 
-    getThumbnail(data, ext) {
-        if (data != "") {
-            return `${this.urlThumbnail}/${data}`;
-            //var url = 'data:image/png;base64,' + data;
-            //return this.domSanitizer.bypassSecurityTrustUrl(data);
+   getThumbnail(data) {
+        if (data.thumbnail != "") {
+          let url = `${this.urlThumbnail}/${data.thumbnail}`;
+          return this.checkUrl(url, data);
+          // let blob = await fetch(url).then(r => r.blob());     
+          // if (blob.type != '') { 
+          //   return url;
+          // }
+          // else {
+          //   return '../../../assets/img/loader.gif';
+          // }
+          //return `${this.urlThumbnail}/${data}`;
+          //var url = 'data:image/png;base64,' + data;
+          //return this.domSanitizer.bypassSecurityTrustUrl(data);
         }
         else
-            return `../../../assets/codx/dms/${this.getAvatar(ext)}`;//this.getAvatar(ext);
+            return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
     }
 
     deniedRight() {
@@ -824,14 +833,46 @@ export class CodxDMService {
       }
     }
 
+    checkUrl(url, data) {
+      var ret = '../../../assets/img/loader.gif';
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false);
+        xhr.onload = () => {
+          ret = xhr.responseURL; // http://example.com/test
+        };
+        xhr.send(null);
+        return ret;
+      }
+      catch {
+        if (ret == '../../../assets/img/loader.gif')
+          this.setThumbnailWait.next(data);
+        return ret;
+      }
+      // var http = new XMLHttpRequest();
+      // http.open('HEAD', url, false);
+      // http.send();
+      // return http.status!=404;
+
+      // var http = new XMLHttpRequest();
+      // http.open('HEAD', url, false);
+      // http.send();
+    //  console.log(url);
+    //  console.log(http.status);
+      
+    }
+
     getImage(data) {
       if (data.folderName != undefined)
         return '../../../assets/codx/dms/folder.svg';
-      else
+      else {
         if (data.thumbnail.indexOf("../../../") > - 1)
           return data.thumbnail;
-        else return `${this.urlThumbnail}/${data.thumbnail}`;
-        //return `${this.urlThumbnail}${data.thumbnail}`;//this.getThumbnail(data.thumbnail, data.extension);
+        else {
+          let url = `${this.urlThumbnail}${data.thumbnail}`;                
+          return this.checkUrl(url, data);
+        }        
+      }        
     }
 
     getSvg(icon) {
@@ -1092,18 +1133,43 @@ export class CodxDMService {
           });
           break;
         case "DMT0211": // download
+          // const downloadFile = (url, filename = '') => {
+          //   if (filename.length === 0) filename = url.split('/').pop();
+          //   const req = new XMLHttpRequest();
+          //   req.open('GET', url, true);
+          //   req.responseType = 'blob';
+          //   req.onload = function () {
+          //     const blob = new Blob([req.response], {
+          //       type: 'application/pdf',
+          //     });
+              
+          //     const isIE = false || !!window.document.documentElement.DOCUMENT_NODE;
+          //     if (isIE) {
+          //       window.navigator.msSaveBlob(blob, filename);
+          //     } else {
+          //       const windowUrl = window.URL || window.webkitURL;
+          //       const href = windowUrl.createObjectURL(blob);
+          //       const a = document.createElement('a');
+          //       a.setAttribute('download', filename);
+          //       a.setAttribute('href', href);
+          //       document.body.appendChild(a);
+          //       a.click();
+          //       document.body.removeChild(a);
+          //     }
+          //   };
+          //   req.send();
+          // };
+        
           this.fileService.getFile(data.recID).subscribe(file => {      
               var id = file.recID;
               var that = this;
               if (this.checkDownloadRight(file)) {
               this.fileService.downloadFile(id).subscribe(async res => {
-                  if (res) {
-                    //let json = JSON.parse(res.content);
-                    //var bytes = that.base64ToArrayBuffer(json);
-                    //let blob = new Blob([bytes], { type: res.mimeType });
-                   // let url = window.URL.createObjectURL(res);
+                  if (res) {                   
+                    let blob = await fetch(res).then(r => r.blob());                
+                    let url = window.URL.createObjectURL(blob);
                     var link = document.createElement("a");
-                    link.setAttribute("href", res);
+                    link.setAttribute("href", url);
                     link.setAttribute("download", data.fileName);
                     link.style.display = "none";
                     document.body.appendChild(link);
