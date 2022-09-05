@@ -777,6 +777,11 @@ export class HomeComponent extends UIComponent {
       this.clearWaitingThumbnail();
      // this.dmSV.listFolder = []; 
       this.dmSV.listFiles = [];      
+      this.fileService.getTotalHdd().subscribe(item => {
+        //  totalUsed: any;
+        // totalHdd: any;
+        this.dmSV.updateHDD.next(item);        
+      })
       // npm i ngx-infinite-scroll@10.0.0
       this.changeDetectorRef.detectChanges();
       this.dmSV.page = 1;

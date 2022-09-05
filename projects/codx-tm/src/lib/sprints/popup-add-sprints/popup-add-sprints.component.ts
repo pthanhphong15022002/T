@@ -20,6 +20,7 @@ import {
   UploadFile,
   ViewsComponent,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { Observable } from 'rxjs';
 import { CodxTMService } from '../../codx-tm.service';
@@ -47,8 +48,10 @@ export class PopupAddSprintsComponent implements OnInit {
   isUploadImg = false;
   gridViewSetup: any;
   imageUpload: UploadFile = new UploadFile();
+  showLabelAttachment = false;
+  isHaveFile = false;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
-
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -84,13 +87,14 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region init
   ngOnInit(): void {
+    
     if (this.action == 'add') {
       this.master.viewMode = '1';
-    } else {
-      if (this.action == 'copy')
-        this.getSprintsCoppied(this.master.iterationID);
-      else this.openInfo(this.master.iterationID, this.action);
-    }
+      if(this.funcID=='TMT0301') this.master.iterationType ='1' ;
+      if(this.funcID=='TMT0302') this.master.iterationType ='0';
+    } else if (this.action == 'copy')
+      this.getSprintsCoppied(this.master.iterationID);
+    else this.openInfo(this.master.iterationID, this.action);
   }
   //#endregion
 
@@ -107,25 +111,32 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
+    if (this.attachment.fileUploadList.length) this.attachment.saveFiles();
     this.saveMaster(isAdd);
   }
 
   saveMaster(isAdd: boolean) {
-    this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(up => {
-      this.dialog.dataService
-        .save((option: any) => this.beforeSave(option, isAdd), isAdd ? 0 : null) //Hảo code mới
-        .subscribe((res) => {
-          if (res) {
-            // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
-            if (isAdd && this.funcID != 'TMT0301') {
-              var dataNew = this.dialog.dataService.data[0];
-              this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
-              this.dialog.dataService.data[1] = dataNew;
+    this.imageAvatar
+      .updateFileDirectReload(this.master.iterationID)
+      .subscribe((up) => {
+        this.dialog.dataService
+          .save(
+            (option: any) => this.beforeSave(option, isAdd),
+            isAdd ? 0 : null
+          ) //Hảo code mới
+          .subscribe((res) => {
+            if (res) {
+              // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
+              if (isAdd && this.funcID != 'TMT0301') {
+                var dataNew = this.dialog.dataService.data[0];
+                this.dialog.dataService.data[0] =
+                  this.dialog.dataService.data[1];
+                this.dialog.dataService.data[1] = dataNew;
+              }
+              this.dialog.close();
             }
-            this.dialog.close();
-          }
-        });
-    })
+          });
+      });
 
     // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
     //   if (res) {
@@ -196,14 +207,24 @@ export class PopupAddSprintsComponent implements OnInit {
     } else this.resources = '';
   }
 
-  openInfo(interationID, action) {
-    // this.taskBoard = new TM_Sprints();
-
+  openInfo(iterationID, action) {
     this.readOnly = false;
     this.title = 'Chỉnh sửa task board';
-    this.tmSv.getSprints(interationID).subscribe((res) => {
+    this.tmSv.getSprints(iterationID).subscribe((res) => {
       if (res) {
         this.master = res;
+        this.api
+          .execSv<any[]>(
+            'DM',
+            'DM',
+            'FileBussiness',
+            'GetFilesByObjectIDAsync',
+            [iterationID]
+          )
+          .subscribe((res) => {
+            if (res && res.length > 0) this.showLabelAttachment = true;
+            else this.showLabelAttachment = false;
+          });
         if (this.master.resources) this.getListUser(this.master.resources);
         else this.listUserDetail = [];
         this.changeDetectorRef.detectChanges();
@@ -327,5 +348,17 @@ export class PopupAddSprintsComponent implements OnInit {
       }
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {
+    console.log(e);
+  }
+  getfileCount(e) {
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
 }
