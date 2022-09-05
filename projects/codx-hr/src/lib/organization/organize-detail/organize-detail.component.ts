@@ -20,6 +20,7 @@ import {
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
 import { ApiHttpService, FormModel } from 'codx-core';
+import { AnyNaptrRecord } from 'dns';
 import { map, Observable } from 'rxjs';
 let data: any[] = [
   { Name: 'Species', fillColor: '#3DD94A' },
@@ -76,6 +77,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
     constraints: SnapConstraints.None,
   };
   tool: DiagramTools = DiagramTools.ZoomPan;
+  isClick: boolean = false;
 
   @ViewChild('diagram') diagram: any;
   constructor(
@@ -157,7 +159,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
 
   loadDataChild(dataNode: any, node: any) {
     //this.orgUnitID = dataNode.departmentCode;
-    //this.diagram.tool =
+    //this.diagram.action = 'LayoutAnimation';
     this.parentID = dataNode.departmentCode;
     var exist = this.checkExistParent(this.parentID);
     if (!exist) {
@@ -167,28 +169,34 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
         var setting = this.newDataManager();
         setting.dataManager = new DataManager(this.data as JSON[]);
         this.datasetting = setting;
-        //this.datasetting.dataManager = new DataManager(this.data as JSON[]);
-        // this.diagram.destroy();
-        // this.diagram.render();
-        // arrDt.forEach((element, idx) => {
-        //   if (idx > 0) return;
-        //   const nodeCopy = JSON.parse(JSON.stringify(node)) as NodeModel;
-        //   nodeCopy.data = element;
-        //   //this.diagram.add(nodeCopy);
-        //   //this.diagram.addChild(node, nodeCopy);
-        // });
         this.changeDetectorRef.detectChanges();
       });
     } else {
-      node.isExpanded = true;
-      //this.diagram.commandHandler.expandNode(node, this.diagram);
+      // node.isExpanded = true;
+      // this.diagram.commandHandler.expandNode(node, this.diagram);
     }
   }
 
-  mouseUp(evt: any) {
-    var a = this.diagram.getTool('LayoutAnimation');
-    this.diagram.eventHandler.tool = a;
-    this.diagram.mouseUp(evt);
+  mouseUp(dataNode: any, evt: any) {
+    //eventArgs
+    // this.isClick = true;
+    this.parentID = dataNode.departmentCode;
+    var exist = this.checkExistParent(this.parentID);
+    if (this.diagram && exist) {
+      var tool = this.diagram.getTool('LayoutAnimation');
+      tool.mouseUp(this.diagram.eventHandler.eventArgs);
+    }
+  }
+
+  testMouseDown(evt: any) {
+    // if (this.diagram) {
+    //   this.diagram.eventHandler.action = 'LayoutAnimation';
+    //   this.diagram.eventHandler.inAction = true;
+    //   //this.diagram.eventHandler.mouseDown(evt);
+    //   // var a = this.diagram.getTool('LayoutAnimation');
+    //   // this.diagram.eventHandler.tool = a;
+    //   //this.diagram.mouseUp(evt);
+    // }
   }
 
   checkExistParent(parentID: string): boolean {
@@ -230,10 +238,21 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
     return obj;
   }
 
-  classIcon(dt: any): string {
-    var exist = this.checkExistParent(dt.departmentCode);
-    if (exist) return 'icon-do_disturb_on';
-    else return 'icon-add_circle_outline';
+  classIcon(dt: any, ele: HTMLElement): string {
+    if (this.isClick) {
+      var cls = ele.classList;
+      if (cls.contains('icon-do_disturb_on')) {
+        cls.remove('icon-do_disturb_on');
+        return 'icon-add_circle_outline';
+      } else {
+        cls.remove('icon-add_circle_outline');
+        return 'icon-do_disturb_on';
+      }
+    } else {
+      var exist = this.checkExistParent(dt.departmentCode);
+      if (exist) return 'icon-do_disturb_on';
+      else return 'icon-add_circle_outline';
+    }
   }
 
   public click(arg: ClickEventArgs) {
