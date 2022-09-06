@@ -66,7 +66,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   isAdd = false;
   crrEstimated: any;
   isHaveFile = false;
-  showLabelAttacment = false;
+  showLabelAttachment = false;
   crrIndex: number;
   popover: any;
   vllShare = 'TM003';
@@ -367,8 +367,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             [this.task.recID]
           )
           .subscribe((res) => {
-            if (res && res.length > 0) this.showLabelAttacment = true;
-            else this.showLabelAttacment = false;
+            if (res && res.length > 0) this.showLabelAttachment = true;
+            else this.showLabelAttachment = false;
           });
 
         if (this.action == 'edit' && this.task.category == '2') {
@@ -855,7 +855,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit') this.showLabelAttacment = this.isHaveFile;
+    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
   showPoppoverDelete(p, i) {
     if (i == null) return;

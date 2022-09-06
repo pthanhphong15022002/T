@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   UIComponent,
@@ -33,6 +34,7 @@ import { CodxAdService } from '../codx-ad.service';
   selector: 'lib-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class UserComponent extends UIComponent {
   // @Input() formModel: any;
@@ -213,7 +215,7 @@ export class UserComponent extends UIComponent {
   }
 
   selectedChange(val: any) {
-    this.itemSelected = val.data;
+    this.itemSelected = val?.data;
     this.dt.detectChanges();
   }
 

@@ -1,55 +1,62 @@
 <ng-template #body>
   <div class="p-4">
     <div>
-      <ng-container *ngIf="lstNotify.length > 0">
-        <div>
-            <div>
-              <codx-label class="fw-bolder fs-5" [formModel]="" name="lblNew" default="Mới"></codx-label>
-            <div>
-              <ng-container *ngFor="let item of lstNewNotify; index as i">
-                <div class="row p-4 my-2">
-                  <div class="col-1">
-                    <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
-                  </div>
-                  <div class="col-10">
-                    <div [innerHTML]="item.text">        
-                    </div>
-                    <div>
-                      <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
-                    </div>
-                  </div>
-                  <div class="col-1" *ngIf="!item.isRead">
-                    <span class="dots"></span>
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
+      <div>
           <div>
-              <codx-label class="fw-bolder fs-5" [formModel]="" name="lblOld" default="Trước đây"></codx-label>
-            <div>
-              <ng-container *ngFor="let item of lstOldNotify; index as i">
-                <div class="row p-4 my-2">
-                  <div class="col-1">
-                    <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+            <codx-label class="fw-bolder fs-5" [formModel]="" name="lblNew" default="Mới"></codx-label>
+          <div>
+            <ng-container *ngFor="let item of lstNotify">
+              <div class="row p-4 my-2">
+                <div class="col-1">
+                  <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+                </div>
+                <div class="col-10">
+                  <div [innerHTML]="item.text">        
                   </div>
-                  <div class="col-10">
-                    <div [innerHTML]="item.text">       
-                    </div>
-                    <div>
-                      <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
-                    </div>
-                  </div>
-                  <div class="col-1" *ngIf="!item.isRead">
-                    <span class="dots"></span>
+                  <div>
+                    <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
                   </div>
                 </div>
-              </ng-container>
-            </div>
+                <div class="col-1" *ngIf="!item.isRead">
+                  <span class="dots"></span>
+                </div>
+              </div>
+            </ng-container>
           </div>
         </div>
-      </ng-container>
+        <div>
+          <codx-label class="fw-bolder fs-5" [formModel]="" name="lblOld" default="Trước đây"></codx-label>
+          <div>
+            <codx-listview 
+              entityName="BKD_Notification" 
+              service="BG" 
+              assemblyName="ERM.Business.BG"
+              className="TrackLogsBusiness"
+              method="GetNotiAsync"
+              [itemTemplate]="itemTemplate">
+            </codx-listview>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
 <codx-form [body]="body" [headerText]="'Thông báo'" [dialog]="dialog"></codx-form>
+
+<ng-template #itemTemplate let-item>
+  <div class="row p-4 my-2">
+    <div class="col-1">
+      <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+    </div>
+    <div class="col-10">
+      <div [innerHTML]="item.text">       
+      </div>
+      <div>
+        <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
+      </div>
+    </div>
+    <div class="col-1" *ngIf="!item.isRead">
+      <span class="dots"></span>
+    </div>
+  </div>
+</ng-template>

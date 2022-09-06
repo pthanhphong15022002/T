@@ -154,16 +154,12 @@
       </div>
       <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
         <div class="d-flex align-items-end me-2 codx-badge">
-          <span>
-            <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data?.status" [showText]="true"
-              [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2">
-            </codx-vll>
-          </span>
-          <span>
-            <span class="text-gray-700">{{
-              item.dueDate | date: "dd/MM/yyyy"
-              }}</span>
-          </span>
+          <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data?.status" [showText]="true" [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 me-2">
+          </codx-vll>
+          <span class="text-gray-700">{{
+            item.dueDate | date: "dd/MM/yyyy"
+            }}</span>
         </div>
       </div>
     </div>

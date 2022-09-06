@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { WPService } from '@core/services/signalr/apiwp.service';
 import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Permission } from '@shared/models/file.model';
-import { ButtonModel, ViewModel, CodxListviewComponent, ViewsComponent, ApiHttpService, NotificationsService, AuthStore, CallFuncService, FilesService, CacheService, DataRequest, ViewType, UIComponent, SidebarModel } from 'codx-core';
+import { ButtonModel, ViewModel, CodxListviewComponent, ViewsComponent, ApiHttpService, NotificationsService, AuthStore, CallFuncService, FilesService, CacheService, DataRequest, ViewType, UIComponent, SidebarModel, AuthService } from 'codx-core';
 import { FD_Permissions } from '../models/FD_Permissionn.model';
 import { FED_Card } from '../models/FED_Card.model';
 import { CardType, FunctionName, Valuelist } from '../models/model';
@@ -17,7 +17,7 @@ import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.compon
   styleUrls: ['./cards.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class CardsComponent extends UIComponent implements OnInit {
+export class CardsComponent implements OnInit {
 
 
   public ratingVll: string = "";
@@ -98,17 +98,17 @@ export class CardsComponent extends UIComponent implements OnInit {
   moreFunction = [];
   isDropdowMenu = false;
   constructor(
-    private injector: Injector,
+    private api: ApiHttpService,
+    private cache: CacheService,
     private dt: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private auth: AuthStore,
+    private auth: AuthService,
     private callc: CallFuncService,
     private fileSV: FilesService,
-    private at: ActivatedRoute,
+    private route: ActivatedRoute,
     private modalService: NgbModal,
   ) {
-    super(injector)
-    this.user = this.auth.get();
+    this.user = this.auth.userValue;
     this.api
       .callSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [
         "FED_Parameters",
@@ -127,9 +127,8 @@ export class CardsComponent extends UIComponent implements OnInit {
   }
 
 
-  onInit(): void {
-    this.userGroupOfAccount = this.user.groupID;
-    this.at.params.subscribe((params) => {
+  ngOnInit(): void {
+    this.route.params.subscribe((params) => {
       var funcID = params.funcID;
       if (params.funcID != this.functionID) {
         this.functionID = funcID;
@@ -138,40 +137,45 @@ export class CardsComponent extends UIComponent implements OnInit {
         switch (funcID) {
           case "FDT02":
             this.title = "Tuyên dương";
-            this.dataValue = "1";
+            this.dataValue = this.CARDTYPE_EMNUM.CommentForChange;
             break;
           case "FDT03":
             this.title = "Lời cảm ơn";
             this.vll = 'L1419';
+            this.dataValue = this.CARDTYPE_EMNUM.Thankyou;
             break;
           case "FDT04":
             this.title = "Góp ý thay đổi";
             this.vll = "L1424";
+            this.dataValue = this.CARDTYPE_EMNUM.CommentForChange;
             break;
           case "FDT05":
             this.title = "Đề xuất cải tiến";
             this.isShowCard = false;
-
+            this.dataValue = this.CARDTYPE_EMNUM.SuggestionImprovement;
             break;
           case "FDT06":
             this.title = "Chia sẻ";
             this.isShowCard = false;
+            this.dataValue = this.CARDTYPE_EMNUM.Share;
             break;
           case "FDT07":
             this.title = "Chúc mừng";
+            this.dataValue = this.CARDTYPE_EMNUM.Congratulation;
             break;
           case "FDT06":
             this.title = "Radio yêu thương";
+            this.dataValue = this.CARDTYPE_EMNUM.Radio;
             break;
           default:
             this.title = "";
             break;
         }
+        this.userGroupOfAccount = this.user.groupID;
         this.functionID = params.funcID;
         this.cache.functionList(this.functionID).subscribe(res => {
           if (res) {
             this.cardType = res.dataValue;
-            // this.dataValue = res.dataValue;
             this.entityPer = res.entityName;
             if (this.vll != "") {
               this.cache.valueList(this.vll).subscribe((res) => {
@@ -180,7 +184,7 @@ export class CardsComponent extends UIComponent implements OnInit {
                 }
               });
             }
-            this.loadParameter("FED_Parameters", this.cardType, "1");
+            this.loadParameter("FD_Parameters", this.cardType, "1");
             this.checkTabApporval(this.cardType);
             this.getStatusValuelistName();
             this.isShowCard = true;
@@ -200,9 +204,10 @@ export class CardsComponent extends UIComponent implements OnInit {
       this.cardSelected = null;
       this.initForm();
       this.dt.detectChanges();
-
+      if(this.codxViews){
+        this.codxViews.dataService.setPredicate(this.predicate,[this.dataValue]);
+      }
     });
-
   }
   ngAfterViewInit() {
     this.buttonAdd = {
@@ -331,24 +336,7 @@ export class CardsComponent extends UIComponent implements OnInit {
       });
   }
 
-  DeleteCard(item) {
-    // this.notificationsService.alert("DoYouWantToDelete", "Bạn có muốn xóa ?").subscribe((confirmed) => {
-    //   if (confirmed) {
-    //     this.api
-    //       .execSv<any>(
-    //         "FED",
-    //         "ERM.Business.FED",
-    //         "CardsBusiness",
-    //         "DeleteCardAsync",
-    //         item.recID
-    //       )
-    //       .subscribe((res) => {
-    //         this.listviewComponent.onChangeSearch();
-    //       });
-    //   }
-    // });
-
-  }
+  DeleteCard(item) {}
   selectedItem(data: any) {
     console.log('selectedItem: ', data);
     return this.api

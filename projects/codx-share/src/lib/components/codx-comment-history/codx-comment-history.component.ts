@@ -95,6 +95,7 @@ export class CodxCommentHistoryComponent implements OnInit {
           if(res)
           {
             this.evtDelete.emit(item);
+            this.notifySV.notifyCode("SYS008");
           }
           else 
             this.notifySV.notifyCode("SYS022");
@@ -133,6 +134,10 @@ export class CodxCommentHistoryComponent implements OnInit {
     this.dt.detectChanges();
   }
   sendComments() {
+    if(!this.message && this.lstFile.length == 0){
+      this.notifySV.notifyCode("SYS010");
+      return;
+    }
     let data = new tmpHistory();
     data.comment = this.message;
     data.attachments = this.lstFile.length;
@@ -148,12 +153,10 @@ export class CodxCommentHistoryComponent implements OnInit {
         {
           this.codxATM.objectId = res1.recID;
           this.codxATM.objectType = "BG_TrackLogs";
-
           this.lstFile.map((e:any) => {
             e.objectId = res1.recID;
           })
           this.codxATM.fileUploadList = this.lstFile;
-          
           this.codxATM.saveFilesObservable().subscribe((res2:any) => {
             if(res2){
               this.evtSend.emit(res1);

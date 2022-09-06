@@ -585,9 +585,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         p.objectID = x.UserID;
         p.objectName = x.UserName;
         p.memberType = this.MEMBERTYPE.TAGS;
-        p.read = true;
-        p.share = true;
-        p.isActive = true;
         p.createdBy = this.user.userID;
         p.createdOn = new Date();
         this.tags.push(p);
