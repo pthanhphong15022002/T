@@ -591,7 +591,7 @@ export class AttachmentComponent implements OnInit {
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectId = this.objectId;
       this.addFileObservable(this.fileUploadList[i], false, i).subscribe(item =>{
-        
+        console.log(item);
       });
     }
 
