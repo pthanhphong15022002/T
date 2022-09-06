@@ -5,13 +5,8 @@ export const environment = {
   dfPe: '',
   appVersion: 'v101lv',
   TNDATA_KEY: 'tnf649fc9a5f55',
-<<<<<<< HEAD
   //apiUrl: 'http://localhost:8011',
   //apiUrl: 'http://172.16.7.34:8011',
-=======
-  apiUrl: 'http://localhost:8011',
-  // apiUrl: 'http://172.16.12.86:8011',
->>>>>>> 23575672a2f01cc632c3c6bb009aaa2e14e2bc07
   //shopping: 'https://localhost:44317/Shopping',
   shopping: 'https://172.16.7.34:8111/Shopping',
   apiUrl: 'http://172.16.7.34:8011',
@@ -155,7 +150,7 @@ export const environment = {
       show: true,
       moreFuntion: true,
     },
-    {  
+    {
       name: 'Users',
       value: 'U',
       icon: 'person',
