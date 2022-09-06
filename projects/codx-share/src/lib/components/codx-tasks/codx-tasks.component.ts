@@ -409,20 +409,21 @@ export class CodxTasksComponent
           false
         );
       if (e?.event && e?.event != null && e?.event[1] != null) {
-        let listTask = e?.event[1];
-        let newTasks = [];
-        for (var i = 0; i < listTask.length; i++) {
-          if (listTask[i].taskID == data.taskID) {
-            this.view.dataService.update(listTask[i]).subscribe();
-            this.view.dataService.setDataSelected(listTask[i]);
-          } else newTasks.push(listTask[i]);
-        }
-        if (newTasks.length > 0) {
-          this.view.dataService.data = newTasks.concat(
-            this.dialog.dataService.data
-          );
-          this.view.dataService.afterSave.next(newTasks);
-        }
+        //cai này cần dùng khi TMT0202
+        // let listTask = e?.event[1];
+        // let newTasks = [];
+        // for (var i = 0; i < listTask.length; i++) {
+        //   if (listTask[i].taskID == data.taskID) {
+        //     this.view.dataService.update(listTask[i]).subscribe();
+        //     this.view.dataService.setDataSelected(listTask[i]);
+        //   } else newTasks.push(listTask[i]);
+        // }
+        // if (newTasks.length > 0) {
+        //   this.view.dataService.data = newTasks.concat(
+        //     this.dialog.dataService.data
+        //   );
+        //   this.view.dataService.afterSave.next(newTasks);
+        // }
         this.detectorRef.detectChanges();
       }
     });

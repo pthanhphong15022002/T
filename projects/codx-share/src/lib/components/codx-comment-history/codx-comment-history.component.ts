@@ -147,7 +147,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     data.functionID = this.funcID;
     data.reference = this.reference;
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
-    .subscribe((res1:any) => {
+    .subscribe(async (res1:any) => {
       if(res1){
         if(data.attachments > 0)
         {
@@ -156,7 +156,7 @@ export class CodxCommentHistoryComponent implements OnInit {
           this.lstFile.map((e:any) => {
             e.objectId = res1.recID;
           })
-          this.codxATM.fileUploadList = this.lstFile;
+          this.codxATM.fileUploadList = this.lstFile;          
           this.codxATM.saveFilesObservable().subscribe((res2:any) => {
             if(res2){
               this.evtSend.emit(res1);

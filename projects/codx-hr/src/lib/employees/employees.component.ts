@@ -139,7 +139,7 @@ export class EmployeesComponent implements OnInit {
               false
             );
           if (e?.event && e?.event != null && e.event.update) {
-            this.view.dataService.update(e.event.update.InfoPersonal).subscribe();
+            this.view.dataService.update(e.event.update.InfoPersonal && e.event.update.Employee).subscribe();
             // e?.event.update.forEach((obj) => {
             //   this.view.dataService.update(obj.Employee).subscribe();
             // });
