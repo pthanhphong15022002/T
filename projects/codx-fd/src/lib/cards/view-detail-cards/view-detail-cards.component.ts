@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CardType, Valuelist } from '../../models/model';
 
 @Component({
@@ -6,24 +6,32 @@ import { CardType, Valuelist } from '../../models/model';
   templateUrl: './view-detail-cards.component.html',
   styleUrls: ['./view-detail-cards.component.scss']
 })
-export class ViewDetailCardsComponent implements OnInit {
+export class ViewDetailCardsComponent implements OnInit,OnChanges {
 
   @Input() itemSelected: any = null;
+  @Input() cardType:string ="";
   isShowCard:boolean = true;
   ratingVll:string ="";
   constructor() { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes.cardType.currentValue != changes.cardType.previousValue){
+      this.handleVllRating(this.itemSelected.cardType);
+    }
+  }
 
   ngOnInit(): void {
+    this.handleVllRating(this.itemSelected.cardType);
   }
 
   handleVllRating(cardType: string): void {
     if (cardType == CardType.Thankyou) {
       this.ratingVll = Valuelist.RatingThankYou;
-      return;
     }
-    if (cardType == CardType.CommentForChange) {
+    else if (cardType == CardType.CommentForChange) {
       this.ratingVll = Valuelist.RatingCommentForChange;
-      return;
+    }
+    else{
+      this.ratingVll = Valuelist.CardType;
     }
   }
 
