@@ -92,6 +92,7 @@
 
 <ng-template #templateMeeting>
   <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO" className="MeetingsBusiness"
-    method="UpdateContentMeetingAsync" [refID]="meetingID" [data]="meeting.contents">
+    method="UpdateContentMeetingAsync" [objectParentID]="meetingID" [data]="meeting.contents" [objectID]=""
+    [objectType]="'CO_Meetings'" [vllControlShare]="'TM003'" [vllRose]="'TM002'">
   </codx-note>
 </ng-template>

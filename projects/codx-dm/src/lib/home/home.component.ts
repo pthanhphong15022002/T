@@ -416,8 +416,8 @@ export class HomeComponent extends UIComponent {
     console.log($event);    
   }
 
-  saveFile1() {
-    this.attachment1.saveFilesObservable().subscribe((item) => {
+  async saveFile1() {
+    (await (this.attachment1.saveFilesObservable())).subscribe((item) => {
       console.log(item);
     });
      this.attachment.saveFiles();
@@ -676,7 +676,7 @@ export class HomeComponent extends UIComponent {
         if (blob.type != '') {       
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = url;
+            files[index].thumbnail = thumnail;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();

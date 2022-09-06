@@ -381,13 +381,13 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.permissions = this.permissions;
     post.listTag = this.tags;
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
-      .subscribe((result: any) => {
+      .subscribe(async (result: any) => {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
             this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
-            this.atmCreate.saveFilesObservable().subscribe((res:any)=>{
+            (await this.atmCreate.saveFilesObservable()).subscribe((res:any)=>{
               if(res){
                 (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
                 this.notifySvr.notifyCode('SYS006');
@@ -403,7 +403,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       });
   }
 
-  editPost() {
+  async editPost() {
     if (!this.message && this.dataEdit.files.length <= 0 && this.listFileUpload.length <= 0) {
       this.notifySvr.notifyCode('E0315');
       return;
@@ -417,7 +417,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     if (this.listFileUpload.length > 0) {
       this.atmEdit.objectId = this.dataEdit.recID;
       this.dmSV.fileUploadList = this.listFileUpload;
-      this.atmEdit.saveFilesObservable().subscribe((res:any) => {
+      (await this.atmEdit.saveFilesObservable()).subscribe((res:any) => {
         if(res){
           console.log(res);
         }
@@ -463,13 +463,13 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     post.shares = this.dataShare;
     post.permissions = this.permissions;
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
-      .subscribe((result: any) => {
+      .subscribe(async (result: any) => {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
             this.dmSV.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
-            this.atmCreate.saveFilesObservable().subscribe((res:any)=>{
+            (await this.atmCreate.saveFilesObservable()).subscribe((res:any)=>{
               if(res){
                 (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
                 this.notifySvr.notifyCode('SYS006');
