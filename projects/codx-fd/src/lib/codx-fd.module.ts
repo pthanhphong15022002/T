@@ -20,6 +20,7 @@ import { StatisticalComponent } from './statistical/statistical.component';
 import { ViewDetailCoinsComponent } from './wallets/view-detail-coins/view-detail-coins.component';
 import { WalletsComponent } from './wallets/wallets.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
 
 export const routes: Routes = [
   {
@@ -57,6 +58,7 @@ export const routes: Routes = [
 
 const Component: Type<any>[] = [
   LayoutComponent,
+  LayoutNotoolbar,
   WalletsComponent,
   StatisticalComponent,
   AchievementComponent,

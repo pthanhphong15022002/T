@@ -416,8 +416,8 @@ export class HomeComponent extends UIComponent {
     console.log($event);    
   }
 
-  saveFile1() {
-    this.attachment1.saveFilesObservable().subscribe((item) => {
+  async saveFile1() {
+    (await (this.attachment1.saveFilesObservable())).subscribe((item) => {
       console.log(item);
     });
      this.attachment.saveFiles();
@@ -665,18 +665,18 @@ export class HomeComponent extends UIComponent {
     }
   }
 
-  async displayThumbnail(id, thumnail) {
+  async displayThumbnail(id, thumnbail) {
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(async () => {
-      let url = `${this.dmSV.urlThumbnail}${thumnail}`;      
+      let url = `${this.dmSV.urlThumbnail}${thumnbail}`;      
       try {
         let blob = await fetch(url).then(r => r.blob());           
         if (blob.type != '') {       
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = url;
+            files[index].thumbnail = thumnbail;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();

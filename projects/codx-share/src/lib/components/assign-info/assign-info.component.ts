@@ -58,6 +58,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   taskParent: any;
   refID = '';
   refType = 'TM_Tasks';
+  taskName = "" ;
   dueDate: Date;
   taskType = '1';
   vllPriority = 'TM005';
@@ -83,6 +84,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.refID = this.task?.refID;
     this.refType = this.task?.refType || this.refType;
     this.dueDate = this.task?.dueDate;
+    this.dueDate = this.task?.dueDate;
+    this.taskName = this.task?.taskName ;
     if (dt?.data[0]?.taskID) this.taskParent = dt?.data[0];
 
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
@@ -153,6 +156,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.status = '10';
     this.task.refID = this.refID;
     this.task.refType = this.refType;
+    this.task.taskName = this.taskName ;
     if (this.taskParent) {
       // this.task.parentID = this.taskParent.recID ;
       this.task.dueDate = this.taskParent.dueDate;
@@ -260,7 +264,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
 
   changeVLL(e) { }
 
-  saveAssign(id, isContinue) {
+  async saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       this.notiService.notifyCode('TM027');
       return;
@@ -317,7 +321,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
     if (this.isHaveFile)
-      this.attachment.saveFilesObservable().subscribe((res) => {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.task.attachments = Array.isArray(res) ? res.length : 1;
           this.actionSaveAssign(taskIDParent, isContinue);

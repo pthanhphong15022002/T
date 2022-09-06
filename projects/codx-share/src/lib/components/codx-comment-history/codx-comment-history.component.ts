@@ -95,6 +95,7 @@ export class CodxCommentHistoryComponent implements OnInit {
           if(res)
           {
             this.evtDelete.emit(item);
+            this.notifySV.notifyCode("SYS008");
           }
           else 
             this.notifySV.notifyCode("SYS022");
@@ -132,7 +133,12 @@ export class CodxCommentHistoryComponent implements OnInit {
     this.lstFile = this.lstFile.filter((e: any) => e.fileName != file.fileName);
     this.dt.detectChanges();
   }
-  sendComments() {
+
+  async sendComments() {
+    if(!this.message && this.lstFile.length == 0){
+      this.notifySV.notifyCode("SYS010");
+      return;
+    }
     let data = new tmpHistory();
     data.comment = this.message;
     data.attachments = this.lstFile.length;
@@ -142,19 +148,17 @@ export class CodxCommentHistoryComponent implements OnInit {
     data.functionID = this.funcID;
     data.reference = this.reference;
     this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
-    .subscribe((res1:any) => {
+    .subscribe(async (res1:any) => {
       if(res1){
         if(data.attachments > 0)
         {
           this.codxATM.objectId = res1.recID;
           this.codxATM.objectType = "BG_TrackLogs";
-
           this.lstFile.map((e:any) => {
             e.objectId = res1.recID;
           })
-          this.codxATM.fileUploadList = this.lstFile;
-          
-          this.codxATM.saveFilesObservable().subscribe((res2:any) => {
+          this.codxATM.fileUploadList = this.lstFile;          
+          (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
             if(res2){
               this.evtSend.emit(res1);
               this.notifySV.notifyCode("SYS006"); 

@@ -41,9 +41,9 @@
         <div class="d-flex align-items-center mb-2">
           <span class="text-dark fw-bolder">{{ item.createdName }}</span>
           <div *ngIf="item.tag > 0" class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
-            [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item.recID)">
+            [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item)">
             <div class="tag me-2">
-              <img class="tag-img" src="../../../../assets/img/fed/user-tag.png" />
+              <img class="tag-img" src="/assets/img/fed/user-tag.png" />
             </div>
             <span class="tag-count">{{ item.tag }}</span>
           </div>
@@ -108,14 +108,14 @@
           <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
             <li *ngIf="item.write">
               <a (click)="openEditModal(item)" ngbDropdownItem href="javascript:void(0)">
-                <span class="icon-edit icon-16 me-2"></span>
+                <span class="icon-edit icon-16 me-2 icon-editPost"></span>
                 <codx-label formName="Comments" name="lblEdit_comments" default="Chỉnh sửa">
                 </codx-label>
               </a>
             </li>
             <li *ngIf="item.delete">
               <a (click)="removePost(item)" ngbDropdownItem href="javascript:void(0)">
-                <span class="icon-delete icon-16 me-2"></span>
+                <span class="icon-delete icon-16 me-2 icon-removePost"></span>
                 <codx-label formName="Comments" name="lblDelete_comments" default="Xóa"></codx-label>
               </a>
             </li>
@@ -266,9 +266,8 @@
               </read-more>
             </div>
             <div class="d-flex align-items-center group-hasGift mt-6">
-              <div class="d-flex align-items-center ion-wrap me-2" *ngIf="
-                  item?.card?.cardType == '2' || item?.card?.cardType == '3'
-                ">
+              <div class="d-flex align-items-center justify-content-center w-100 ion-wrap me-2" 
+              *ngIf="item?.card?.cardType == '2' || item?.card?.cardType == '3'">
                 <div class="symbol symbol-30 me-2">
                   <img class="w-100" src="/assets/themes/fd/default/img/{{
                       item?.card?.rating

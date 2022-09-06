@@ -143,7 +143,7 @@ export class CodxImportComponent implements OnInit, OnChanges {
     switch (val) {
       case 'add':
       case 'edit': {
-        this.callfunc.openForm(CodxImportAddTemplateComponent,null,900,800,"",["edit",this.formModel,data.recID],null);
+        this.callfunc.openForm(CodxImportAddTemplateComponent,null,900,800,"",["edit",this.formModel,data.recID,data],null);
         break;
       }
       case 'delete': {

@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { WPService } from '@core/services/signalr/apiwp.service';
 import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Permission } from '@shared/models/file.model';
-import { ButtonModel, ViewModel, CodxListviewComponent, ViewsComponent, ApiHttpService, NotificationsService, AuthStore, CallFuncService, FilesService, CacheService, DataRequest, ViewType, UIComponent, SidebarModel } from 'codx-core';
+import { ButtonModel, ViewModel, CodxListviewComponent, ViewsComponent, ApiHttpService, NotificationsService, AuthStore, CallFuncService, FilesService, CacheService, DataRequest, ViewType, UIComponent, SidebarModel, AuthService } from 'codx-core';
 import { FD_Permissions } from '../models/FD_Permissionn.model';
 import { FED_Card } from '../models/FED_Card.model';
 import { CardType, FunctionName, Valuelist } from '../models/model';
@@ -17,7 +17,7 @@ import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.compon
   styleUrls: ['./cards.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class CardsComponent extends UIComponent implements OnInit {
+export class CardsComponent implements OnInit {
 
 
   public ratingVll: string = "";
@@ -39,7 +39,7 @@ export class CardsComponent extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
   totalRecorItem = 4;
   showNavigationArrows = false;
-  itemSelected: any;
+  itemSelected: any = null;
   cardType = "";
   gridViewName = "";
   formName = "";
@@ -53,8 +53,7 @@ export class CardsComponent extends UIComponent implements OnInit {
   isShowCard: boolean = true;
   NameValuelistStatus = "";
   TypeValuelistStatus = "";
-  functionID = "FD";
-  isOpen = false;
+  functionID:string = "";
   quantity = 1;
   price = 0;
   totalCoint = 0;
@@ -85,7 +84,6 @@ export class CardsComponent extends UIComponent implements OnInit {
   objectID = "";
   objectIDReciver = "";
   userReciverName = "";
-  currentlyChecked: CardType;
   @ViewChild("templateChooseUser") chooseUser;
   @ViewChild("templateGivePrice") tmlgivePrice;
   @ViewChild('sideBarRightRef') sideBarRightRef: TemplateRef<any>;
@@ -94,21 +92,17 @@ export class CardsComponent extends UIComponent implements OnInit {
   @ViewChild('codxViews') codxViews: ViewsComponent;
   @ViewChild('carousel') carousel: NgbCarousel;
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
-  menuAppend = []
-  moreFunction = [];
-  isDropdowMenu = false;
   constructor(
-    private injector: Injector,
+    private api: ApiHttpService,
+    private cache: CacheService,
     private dt: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private auth: AuthStore,
-    private callc: CallFuncService,
-    private fileSV: FilesService,
-    private at: ActivatedRoute,
+    private auth: AuthService,
+    private callcSV: CallFuncService,
+    private route: ActivatedRoute,
     private modalService: NgbModal,
   ) {
-    super(injector)
-    this.user = this.auth.get();
+    this.user = this.auth.userValue;
     this.api
       .callSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [
         "FED_Parameters",
@@ -127,9 +121,8 @@ export class CardsComponent extends UIComponent implements OnInit {
   }
 
 
-  onInit(): void {
-    this.userGroupOfAccount = this.user.groupID;
-    this.at.params.subscribe((params) => {
+  ngOnInit(): void {
+    this.route.params.subscribe((params) => {
       var funcID = params.funcID;
       if (params.funcID != this.functionID) {
         this.functionID = funcID;
@@ -138,40 +131,45 @@ export class CardsComponent extends UIComponent implements OnInit {
         switch (funcID) {
           case "FDT02":
             this.title = "Tuyên dương";
-            this.dataValue = "1";
+            this.dataValue = this.CARDTYPE_EMNUM.Commendation;
             break;
           case "FDT03":
             this.title = "Lời cảm ơn";
             this.vll = 'L1419';
+            this.dataValue = this.CARDTYPE_EMNUM.Thankyou;
             break;
           case "FDT04":
             this.title = "Góp ý thay đổi";
             this.vll = "L1424";
+            this.dataValue = this.CARDTYPE_EMNUM.CommentForChange;
             break;
           case "FDT05":
             this.title = "Đề xuất cải tiến";
             this.isShowCard = false;
-
+            this.dataValue = this.CARDTYPE_EMNUM.SuggestionImprovement;
             break;
           case "FDT06":
             this.title = "Chia sẻ";
             this.isShowCard = false;
+            this.dataValue = this.CARDTYPE_EMNUM.Share;
             break;
           case "FDT07":
             this.title = "Chúc mừng";
+            this.dataValue = this.CARDTYPE_EMNUM.Congratulation;
             break;
           case "FDT06":
             this.title = "Radio yêu thương";
+            this.dataValue = this.CARDTYPE_EMNUM.Radio;
             break;
           default:
             this.title = "";
             break;
         }
+        this.userGroupOfAccount = this.user.groupID;
         this.functionID = params.funcID;
         this.cache.functionList(this.functionID).subscribe(res => {
           if (res) {
             this.cardType = res.dataValue;
-            // this.dataValue = res.dataValue;
             this.entityPer = res.entityName;
             if (this.vll != "") {
               this.cache.valueList(this.vll).subscribe((res) => {
@@ -180,7 +178,6 @@ export class CardsComponent extends UIComponent implements OnInit {
                 }
               });
             }
-            this.loadParameter("FED_Parameters", this.cardType, "1");
             this.checkTabApporval(this.cardType);
             this.getStatusValuelistName();
             this.isShowCard = true;
@@ -200,9 +197,10 @@ export class CardsComponent extends UIComponent implements OnInit {
       this.cardSelected = null;
       this.initForm();
       this.dt.detectChanges();
-
+      if(this.codxViews){
+        this.codxViews.dataService.setPredicate(this.predicate,[this.dataValue]);
+      }
     });
-
   }
   ngAfterViewInit() {
     this.buttonAdd = {
@@ -331,24 +329,7 @@ export class CardsComponent extends UIComponent implements OnInit {
       });
   }
 
-  DeleteCard(item) {
-    // this.notificationsService.alert("DoYouWantToDelete", "Bạn có muốn xóa ?").subscribe((confirmed) => {
-    //   if (confirmed) {
-    //     this.api
-    //       .execSv<any>(
-    //         "FED",
-    //         "ERM.Business.FED",
-    //         "CardsBusiness",
-    //         "DeleteCardAsync",
-    //         item.recID
-    //       )
-    //       .subscribe((res) => {
-    //         this.listviewComponent.onChangeSearch();
-    //       });
-    //   }
-    // });
-
-  }
+  DeleteCard(item) {}
   selectedItem(data: any) {
     console.log('selectedItem: ', data);
     return this.api
@@ -504,123 +485,6 @@ export class CardsComponent extends UIComponent implements OnInit {
       })
   }
 
-  extendShow(): void {
-    //this.loadAttachment();
-    // var body = $("#FormEdit");
-    // if (body.length == 0) return;
-    // if (body.hasClass("extend-show")) body.removeClass("extend-show");
-    // else body.addClass("extend-show");
-  }
-
-  Save() {
-    if (!this.userReciver && this.cardType != "5" && this.cardType != "4") {
-      this.notificationsService.notify("Vui lòng chọn người nhận trước !");
-      return;
-    }
-
-    else if (!this.refValue && this.cardType != "5" && this.cardType != "4") {
-      if (!this.form.value["behavior"]) {
-        this.notificationsService.notify("Vui lòng chọn hành vi!");
-        return;
-      }
-    }
-    else if (!this.situation) {
-      this.notificationsService.notify("Vui lòng nhập nội dụng!");
-      return;
-    }
-    else {
-      if (this.gift) {
-        this.gift.Quanlity = this.quantity;
-        this.gift.Price = this.price * this.quantity;
-        var lstGift = [];
-        lstGift.push(this.gift);
-      }
-      let card = new FED_Card();
-      card = this.form.value;
-      card.functionID = this.functionID;
-      card.entityName = this.entityName;
-      card.entityPer = this.entityPer;
-      card.cardType = this.cardType;
-      card.coins = this.givePrice;
-      card.gifts = lstGift;
-      card.shareds = card.comment;
-      var lstPermissions: FD_Permissions[] = [];
-      // sender
-      var per1 = new FD_Permissions();
-      per1.objectType = '1';
-      per1.objectID = this.user.userID;
-      per1.objectName = this.user.userName;
-      per1.memberType = "1";
-      per1.read = true;
-      per1.update = true;
-      per1.delete = true;
-      per1.share = true;
-      per1.createdBy = this.user.userID;
-      per1.isActive = true;
-      per1.createdOn = new Date();
-      // reciver
-      var per2 = new FD_Permissions();
-      per2.objectType = 'U';
-      per2.objectID = this.userReciver;
-      per2.objectName = this.userReciver;
-      per2.isActive = true;
-      per2.read = true;
-      per2.share = true;
-      if (this.cardType == this.CARDTYPE_EMNUM.Congratulation) {
-        per2.memberType = "3";
-      }
-      else {
-        per2.memberType = "2";
-      }
-      // ADMIN
-      var per3 = new FD_Permissions();
-      per3.objectType = '7';
-      per3.memberType = "3";
-      per3.read = true;
-      per3.share = true;
-      per3.isActive = true;
-      per3.createdOn = new Date();
-      lstPermissions.push(per1);
-      lstPermissions.push(per2);
-      lstPermissions.push(per3)
-      card.permissions = lstPermissions;
-      if (!card.pattern && this.cardType != this.CARDTYPE_EMNUM.Share && this.cardType != this.CARDTYPE_EMNUM.Congratulation) {
-        card.pattern = this.cardSelected.patternID;
-      }
-      // this.api
-      //   .execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddAsync", card)
-      //   .subscribe((res) => {
-      //     if (res) {
-      //       var cardID = res[1];
-      //       this.listviewComponent.addHandler(res[4], true, "recID");
-      //       this.closeForm();
-      //       this.dt.detectChanges();
-      //       this.postFeedBack(cardID);
-      //     }
-      //   });
-    }
-
-  }
-
-
-  postFeedBack(cardID, type = "3") {
-    this.api
-      .execSv("WP", "ERM.Business.WP", "CommentBusiness", "FeedBackPostAsync", [cardID, type])
-      .subscribe((res) => {
-        if (res) {
-          this.notificationsService.notify("Thêm thành công!");
-        }
-      })
-  }
-  closeForm(check = false): void {
-    if (check) {
-      this.itemIDNew = "";
-      this.quantityNew = 0;
-      this.updateQuantity();
-    }
-    this.gift = null;
-    // this.codxViews.currentView.closeSidebarRight();
-  }
 
 
   updateQuantity() {
@@ -636,21 +500,6 @@ export class CardsComponent extends UIComponent implements OnInit {
 
   parameter: any;
   totalCointGived = 0;
-  loadParameter(formName = "FED_Parameters", transType = "1", category = "1") {
-    this.api.execSv("FD", "ERM.Business.FD", "WalletsBusiness", "GetParameterByWebAsync", [formName, transType, category])
-      .subscribe((res: any) => {
-        if (res) {
-          console.log('loadParameter: ', res)
-          // this.parameter = JSON.parse(res[0]);
-          // this.totalCointGived = res[1];
-        }
-        else {
-          this.parameter = null;
-        }
-      });
-    this.dt.detectChanges();
-  }
-
   LoadDataCard() {
     this.api
       .execSv("FD", "ERM.Business.FD", "PatternsBusiness", "GetCardTypeAsync", [
@@ -763,8 +612,6 @@ export class CardsComponent extends UIComponent implements OnInit {
       userReciver: userReciver,
       situation: this.situation
     }
-    // this.callc.openForm(ViewCardComponent,"",300,0,this.functionID,obj).subscribe((dt) => {
-    // });
     this.dt.detectChanges();
   }
 
@@ -776,76 +623,10 @@ export class CardsComponent extends UIComponent implements OnInit {
   }
 
   changeOptionStatus(status: string) {
-    // this.listviewComponent.currentValue = status;
-    // this.listviewComponent.onChangeSearch();
-    // this.dt.detectChanges();
-    // return;
+
   }
-  parseJson(data) {
-    var name = JSON.parse(data);
-    return name[0];
-  }
-  getParams() {
-    const t = this;
-    let predicate =
-      "FormName=@0 and FieldName=@1 or FieldName=@2 or FieldName=@3";
-    let dataValue = "FED_Parameters;PolicyControl;ActiveCoins;ActiveMyKudos";
-    this.api
-      .execSv<any>(
-        "SYS",
-        "ERM.Business.CM",
-        "ParametersBusiness",
-        "GetByPredicate",
-        [predicate, dataValue]
-      )
-      .subscribe((res) => {
-        // if (res) {
-        //   _.filter(res, function (o) {
-        //     if (
-        //       o.fieldName === "PolicyControl" &&
-        //       o.refType == t.itemSelected.cardType
-        //     )
-        //       t.policyControl = o.fieldValue;
-        //     if (o.fieldName === "ActiveCoins") t.activeCoins = o.fieldValue;
-        //     if (o.fieldName === "ActiveMyKudos") t.activeMyKudos = o.fieldValue;
-        //   });
-        // }
-      });
-  }
-  changeStatusApprovel(status) {
-    let notification =
-      status == "1" ? "Xác nhận đồng thuận?" : "Xác nhận không đồng thuận";
-    // this.notificationsService
-    //   .alert("Thông báo", notification)
-    //   .subscribe((ok) => {
-    //     if (ok) {
-    //       if (status == "2") this.approvalCard(status);
-    //       else {
-    //         switch (this.policyControl) {
-    //           case "0":
-    //             //this.openSendPoint();
-    //             console.log("");
-    //             break;
-    //           case "1":
-    //             this.approvalCard(status);
-    //             break;
-    //           case "2":
-    //             if (this.activeMyKudos == "1")
-    //               //this.openSendPoint();
-    //               console.log("");
-    //             else this.approvalCard(status);
-    //             break;
-    //           case "3":
-    //             if (this.activeCoins == "1")
-    //               //this.openSendPoint();
-    //               console.log("");
-    //             else this.approvalCard(status);
-    //             break;
-    //         }
-    //       }
-    //     }
-    //   });
-  }
+
+
   approvalCard(status) {
     this.api
       .execSv<any>(
@@ -857,10 +638,6 @@ export class CardsComponent extends UIComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res.error == false) {
-          // let indexChange = this.listviewComponent.data.findIndex(
-          //   (obj) => obj.recID == this.itemSelected.recID
-          // );
-          // this.listviewComponent.data[indexChange].approveStatus = status;
           this.dt.detectChanges();
           this.itemSelected.approveStatus = status;
           if (status == "1") this.notificationsService.notify("Đã đồng thuận");
@@ -891,7 +668,6 @@ export class CardsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.isShowCard = true;
-          console.log('getOneCard: ', res);
           this.itemSelected = res;
           this.handleVllRating(this.itemSelected.cardType);
           this.dt.detectChanges();
@@ -901,10 +677,6 @@ export class CardsComponent extends UIComponent implements OnInit {
           if (this.itemSelected.industry) {
             this.getIndustry(this.itemSelected.industry);
           }
-          // if (this.approver) {
-          //   this.getParams();
-          // }
-          return;
         } else {
           this.itemSelected = null;
         }
@@ -923,9 +695,6 @@ export class CardsComponent extends UIComponent implements OnInit {
       return;
     }
   }
-  getAvatar(ext) {
-    // return this.fileSV.getAvatar(ext);
-  }
   getIndustry(industry) {
     return this.api
       .execSv<any>("BS", "BS", "IndustriesBusiness", "GetAsync", industry)
@@ -934,29 +703,6 @@ export class CardsComponent extends UIComponent implements OnInit {
         this.dt.detectChanges();
       });
   }
-  downloadFile(data) {
-    let json = JSON.parse(data.fileBytes);
-    var bytes = this.fileSV.base64ToArrayBuffer(json);
-    let blob = new Blob([bytes], { type: data.fileType });
-    let url = window.URL.createObjectURL(blob);
-    var link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", data.fileName);
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-  selectCheckBox(targetType: CardType) {
-    if (this.currentlyChecked === targetType) {
-      this.currentlyChecked = null;
-      return;
-    }
-
-    this.currentlyChecked = targetType;
-  }
-
-
   clickShowAssideRight() {
     let option = new SidebarModel();
     option.DataService = this.codxViews.dataService;
@@ -968,11 +714,10 @@ export class CardsComponent extends UIComponent implements OnInit {
       cardType: this.cardType,
       valueList: this.vll
     };
-    this.callc.openSide(PopupAddCardsComponent, data, option);
+    this.callcSV.openSide(PopupAddCardsComponent, data, option);
   }
   clickCloseAssideRight() {
     this.clearValueForm();
-    // this.codxViews.currentView.closeSidebarRight();
   }
 
   initForm() {
