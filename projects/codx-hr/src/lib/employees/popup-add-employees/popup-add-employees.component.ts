@@ -37,7 +37,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     },
   ];
   dialog: any;
-  employee: HR_Employees = new HR_Employees();
+  employee: any;
   readOnly = false;
   showAssignTo = false;
   isSaving: boolean = false;
