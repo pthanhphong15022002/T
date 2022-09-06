@@ -51,6 +51,7 @@ import { IETables } from '../../models/import.model';
 })
 export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   @ViewChild('grid') grid: GridComponent;
+  service = "SYS";
   active = '1';
   dialog: any;
   submitted = false;
@@ -62,7 +63,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   data = {};
   hideThumb = false;
   fileCount = 0;
-  headerText: string = 'Thêm mới template';
+  headerText: string = 'Thêm mới';
   columnsGrid: any;
   editSettings: any;
   dataService: any = { data: null };
@@ -75,6 +76,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   dataIEConnection: any = {};
   dataIETable: IETables = new IETables();
   dataIEMapping: any = {};
+  dataIEFieldMapping: any;
   addMappingForm: any;
   dataCbb = {};
   editParams: any = {};
@@ -109,6 +111,8 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    if(this.type == "edit")
+      this.headerText = "Chỉnh sửa"
     this.formModels = {
       formName: 'ImportFieldMapping',
       gridViewName: 'grvFieldMapping',
@@ -137,18 +141,30 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       { text: 'Copy', target: '.e-content', id: 'customCopy' },
       { text: 'Paste', target: '.e-content', id: 'customPaste' },
     ];
-    this.createData();
     this.addMappingForm = this.formBuilder.group({
-      mappingName: [!this.dataIETable?.mappingName?"": this.dataIETable?.mappingName],
-      processIndex: [!this.dataIETable?.processIndex?"": this.dataIETable?.processIndex],
-      destinationTable: [!this.dataIETable?.destinationTable?"": this.dataIETable?.destinationTable],
-      parentEntity:[!this.dataIETable?.parentEntity?"": this.dataIETable?.parentEntity],
-      importRule: [!this.dataIETable?.importRule?"": this.dataIETable?.importRule],
-      isSummary: [!this.dataIETable?.isSummary?false: this.dataIETable?.isSummary]
+      mappingName: ["" , Validators.required],
+      processIndex: [""],
+      destinationTable: [""],
+      parentEntity:[""],
+      importRule: [""],
+      isSummary: [false]
     });
+    if(this.type == 'new') this.createData();
+    if(this.type == "edit") this.getDataEdit();
     this.getGridViewSetup();
   }
-
+  getDataEdit()
+  {
+    this.api.execSv<any>(this.service,"AD","IEFieldMappingBusiness","GetItemByIETableAsync",this.dataIETable?.recID).subscribe(item=>{
+      if(item) 
+      {
+        debugger;
+        this.dataIEFieldMapping = item
+        //this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
+      }
+    })
+    alert(this.dataIETable.recID);
+  }
   createData() {
     if (this.type == 'new') {
       //IETable
@@ -203,7 +219,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   onSave()
   {
-    debugger;
     this.grid.endEdit();
     var result = this.grid.dataSource;
     if(this.addMappingForm.value?.parentEntity[0])

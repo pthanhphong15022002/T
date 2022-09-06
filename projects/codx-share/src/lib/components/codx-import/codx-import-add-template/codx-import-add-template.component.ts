@@ -62,7 +62,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   grd: any;
   hideThumb = false;
   fileCount = 0;
-  headerText: string = 'Thêm mới template';
+  headerText: string = 'Thêm mới';
   columnsGrid: any;
   editSettings: any;
   dataIEConnections: any = {};
@@ -73,12 +73,13 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   importRule: any;
   importAddTmpGroup: FormGroup;
   formModels: any;
+  selectedSheet: any;
   dataSave = 
   {
     dataIEMapping:[],
     dataIEFieldMapping:[],
   }
-
+  sourceField : any;
   //////////////////////
   service = 'SYS'
   /////////////////////
@@ -100,14 +101,20 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     if(dt.data[0]) this.type = dt.data[0];
     this.formModel = dt.data?.[1];
     if(dt.data?.[2])
-      this.recID=dt.data?.[2];
+      this.recID = dt.data?.[2];
+    if(dt.data?.[3])
+      this.dataIEConnections = dt.data?.[3]
   }
 
   ngOnInit(): void {
+    if(this.type == "edit")
+      this.headerText = "Chỉnh sửa"
     //Tạo formGroup
     this.importAddTmpGroup = this.formBuilder.group({
       nameTmp: ['', Validators.required],
       sheetImport: '',
+      password:[''],
+      firstRowHeader: 1
     });
     this.columnsGrid = [
       {
@@ -157,12 +164,19 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     request.page = 0;
     request.pageSize = 20;
     this.api.execSv<any>(this.service,"AD","IETablesBusiness","GetItemByIEConnectionAsync",[request,this.recID]).subscribe(item=>{
-      if(item && item[0])
+      if(item && item[0]) 
       {
-        this.gridView.dataService.data = item[0]
+        this.gridView.dataService.data = item[0];
+        this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
       }
-      // if(item) this.notifySvr.notifyCode('OD008');
-      // else this.notifySvr.notifyCode('SYS021');
+    })
+    this.importAddTmpGroup.controls['nameTmp'].setValue(this.dataIEConnections?.description);
+    this.importAddTmpGroup.controls['password'].setValue(this.dataIEConnections?.password);
+    this.api.execSv<any>(this.service,"AD","IEMappingsBusiness","GetItemByMappingTemplateAsync",this.dataIEConnections?.mappingTemplate).subscribe(item2=>{
+      if(item2) 
+      {
+        this.dataSave.dataIEMapping = item2
+      }
     })
   }
   ngOnChanges(changes: SimpleChanges) { }
@@ -184,9 +198,12 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         /* create workbook */
         const binarystr: string = e.target.result;
         const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
+      
         this.sheet = wb.SheetNames;
         this.importAddTmpGroup.controls['sheetImport'].setValue(this.sheet[0]);
+        this.selectedSheet = this.sheet[0]
         this.dataIETables.sourceTable = this.sheet[0];
+        this.sourceField = XLSX.utils.sheet_to_json(wb.Sheets[this.sheet[0]],{header:1});
       };
     }
   }
@@ -195,10 +212,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     this.attachment.objectId = this.dataIEConnections.recID;
     for(var i =0 ; i< this.gridView.dataService.data.length ; i++)
     {
+      this.gridView.dataService.data[i].sourceTable = this.importAddTmpGroup.value.sheetImport;
       delete this.gridView.dataService.data[i].mappingName;
     }
     this.dataIEConnections.description = this.importAddTmpGroup.value.nameTmp;
-   
+    this.dataIEConnections.password = this.importAddTmpGroup.value.password;
     this.attachment.saveFilesObservable().subscribe((item:any)=>{
       if(item?.status == 0)
       {
@@ -386,8 +404,8 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         [
           this.formModel,
           this.dataIEConnections,
-          this.dataIETables,
-          this.dataIEMapping,
+          data,
+          null,
           'edit',
         ],
         null
@@ -397,4 +415,32 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         }
       });
   }
+  getfileGet(e:any)
+  {
+    //var arr = [];
+   
+    var recID = e[0]?.recID;
+    this.api.exec<any>("DM","FileBussiness","GetFileBase64Async",recID).subscribe(item=>{
+      if(item)
+      {
+        fetch(item)
+        .then(res => res.blob()) // Gets the response and returns it as a blob
+        .then(blob => {
+          let metadata = {
+            type: e[0]?.extension
+          };
+          let file = new File([blob], e[0]?.fileName, metadata);
+          const reader: FileReader = new FileReader();
+          reader.readAsBinaryString(file);
+          reader.onload = (e: any) => {
+            const binarystr: string = e.target.result;
+            const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
+            this.sheet = wb.SheetNames;
+            this.selectedSheet= this.gridView.dataService.data[0].sourceTable
+          };
+        });
+      }
+    })
+  }
+  
 }
