@@ -190,7 +190,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       };
     }
   }
-  onSave()
+  async onSave()
   {
     this.attachment.objectId = this.dataIEConnections.recID;
     for(var i =0 ; i< this.gridView.dataService.data.length ; i++)
@@ -199,7 +199,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     }
     this.dataIEConnections.description = this.importAddTmpGroup.value.nameTmp;
    
-    this.attachment.saveFilesObservable().subscribe((item:any)=>{
+    (await this.attachment.saveFilesObservable()).subscribe((item:any)=>{
       if(item?.status == 0)
       {
         //Lưu IEConnections

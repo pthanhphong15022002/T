@@ -115,7 +115,7 @@ export class CodxCommentsComponent implements OnInit {
         'PublishCommentAsync',
         [tmpPost]
       )
-      .subscribe((res) => {
+      .subscribe(async (res) => {
         if (res) {
           if(this.data && this.edit){ // chỉnh sửa
             this.data = res;
@@ -125,7 +125,7 @@ export class CodxCommentsComponent implements OnInit {
               "ERM.Business.DM",
               "FileBussiness",
               "DeleteByObjectIDAsync",
-              [this.data.recID.toString(), 'WP_Comments', true]).subscribe((result:any) => {
+              [this.data.recID.toString(), 'WP_Comments', true]).subscribe(async (result:any) => {
                 if(result)
                 {
                   if(this.fileUpload){
@@ -134,7 +134,7 @@ export class CodxCommentsComponent implements OnInit {
                     files.push(this.fileUpload);
                     this.codxATM.fileUploadList = files;
                     this.codxATM.objectType = this.objectType;
-                    this.codxATM.saveFilesObservable().subscribe((result:any)=>{
+                    (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
                       if(result){
                         this.fileUpload = result.data;
                         this.dt.detectChanges();
@@ -155,7 +155,7 @@ export class CodxCommentsComponent implements OnInit {
               files.push(this.fileUpload);
               this.codxATM.fileUploadList = files;
               this.codxATM.objectType = this.objectType;
-              this.codxATM.saveFilesObservable().subscribe((result:any)=>{
+              (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
                 if(result){
                   this.message = "";
                   this.fileUpload = null;
