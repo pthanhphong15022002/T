@@ -1,255 +1,19 @@
 
-    <codx-views #codxViews  
-[entityName]="entityName" 
-[views]="views" 
-[idField]="'recID'"
-[autoLoad]="true"
-[button]="buttonAdd" 
-service="FD"
-assemblyName="ERM.Business.FD" 
-className="CardsBusiness" 
-method="GetListDataByWebAsync"
-[predicate]="predicate" 
-[dataValue]="dataValue" 
-[entityName]="entityName"
-(buttonClick)="clickShowAssideRight()">
+<codx-views #codxViews  
+    [entityName]="entityName" 
+    [views]="views" 
+    [idField]="'recID'"
+    [autoLoad]="true"
+    [button]="buttonAdd" 
+    service="FD"
+    assemblyName="ERM.Business.FD" 
+    className="CardsBusiness" 
+    method="GetListDataByWebAsync"
+    [predicate]="predicate" 
+    [dataValue]="dataValue" 
+    [entityName]="entityName"
+    (buttonClick)="clickShowAssideRight()">
 </codx-views>
-
-<!-- <ng-template #panelLeftRef>
-    <div class="page-home page-master">
-        <div class="d-flex flex-row">
-            <div id="erm_tree" class="min-w-350px w-350px">
-                <div class="tab-horizone">
-                    <ul class="nav nav-tabs nav-tabs-line row">
-                        <li class="nav-item col">
-                            <a class="nav-link " *ngIf="tabApproval" [class.active]="tabActive == STATUS_ACTIVE.CARD"
-                                data-toggle="tab" href="#gift_1" (click)="changeOptionStatus(STATUS_ACTIVE.CARD)">
-                                <span class="nav-text">{{functionID == functionName.Share ?
-                                    'Nhận chia sẻ':"Phiếu"}}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item col" *ngIf="tabApproval">
-                            <a class="nav-link" [class.active]="tabActive == STATUS_ACTIVE.APPROVER" data-toggle="tab"
-                                href="#gift_3" (click)="changeOptionStatus(STATUS_ACTIVE.APPROVER)">
-                                <span class="nav-text">
-                                    <codx-label formName="" name="lblApprove" default="Xét duyệt"></codx-label>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="gift_1" role="tabpanel">
-                        </div>
-                        <div class="tab-pane fade" id="gift_2" role="tabpanel">
-                        </div>
-                        <div class="tab-pane fade" id="gift_3" role="tabpanel">
-                        </div>
-    
-                    </div>
-                </div>
-                <ng-container *ngIf="cardType && entityPer">
-                    <div class="card-with-1">
-                        <codx-listview (changeRowSelected)="onEmitWhenEmpty($event)" [itemTemplate]="templateItem"
-                            [selectFirst]=true #listview  [pageSize]=10 service="FD"
-                            assemblyName="ERM.Business.FD" className="CardsBusiness" method="GetListDataByWebAsync"
-                            [predicate]="predicate" [dataValue]="dataValue" [entityName]="entityName" [entityPer]="entityPer"
-                            [itemTemplateLoading]="templateloading" [formName]="formName"
-                            [funcId]="functionID" [gridViewName]="gridViewName" [currentValue]="tabActive">
-                        </codx-listview>
-                    </div>
-                </ng-container>
-            </div>
-            <div class="w-100 d-flex flex-column" id="erm_content">
-                <ng-container *ngIf="itemSelected == null then emptySelected ; else templateItemView">
-                </ng-container>
-                <ng-template class="container" #templateItemView>
-                    <div class="p-6">
-                        <div class="d-flex">
-                            <ng-container *ngIf="isShowCard">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="modal-card-img card-img-overlay" *ngIf="itemSelected.background"
-                                            [style.background]="itemSelected.background | backgroundImage:itemSelected?.backgroundColor">
-                                        </div>
-                                        <div class="row" [style.background]="itemSelected.background | backgroundImage:itemSelected?.backgroundColor">
-                                            <div class="card-title fw-bolder display-6"
-                                                [style.color]="itemSelected?.pattern?.headerColor">
-                                                {{itemSelected?.cardType | vll:'L1422':'text'|async}}
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <codx-img class="symbol symbol-40 symbol-circle"
-                                                    [objectId]="itemSelected?.sender?.domainUser" objectType="AD_Users"
-                                                    [width]="60">
-                                                </codx-img>
-                                                <div class="pic-send mx-3">
-                                                    <img alt="Pic" src=".../../../assets/demos/card/icon-send.png">
-                                                </div>
-                                                <codx-img class="symbol symbol-40 symbol-circle"
-                                                    [objectId]="itemSelected?.receiver?.domainUser" objectType="AD_Users"
-                                                    [width]="60">
-                                                </codx-img>
-                                            </div>
-                                            <div class="text-dark modal-card-sms mt-6"
-                                                [style.color]="itemSelected?.pattern?.textColor"
-                                                [innerHTML]="itemSelected?.situation">
-                                            </div>
-                                            <div class="d-flex align-items-center group-hasGift mt-6">
-                                                <div class="d-flex align-items-center mr-3" *ngIf="itemSelected?.rating">
-                                                    <img class="w-30px h-30px mr-2" src="../../../../assets/demos/card/rating/{{itemSelected?.rating | vll:ratingVll:'icon'
-                                            |async}}" />
-                                                    <span class="label label-xxs label-pill label-inline label-danger">
-                                                        {{itemSelected?.rating | vll:ratingVll:'text'|async}}
-                                                    </span>
-                                                </div>
-    
-                                                <div class="d-flex align-items-start">
-                                                    <img src="../../../../assets/img/feedback/gift 1.png"
-                                                        *ngIf="itemSelected?.hasGift"
-                                                        class="symbol-image icon-surface1 h-30px mr-2" />
-                                                    <img src="../../../../assets/img/feedback/money-1.png"
-                                                        *ngIf="itemSelected?.hasPoint"
-                                                        class="symbol-image icon-money-1 h-30px mr-2" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ng-container>
-                            <div class="flex-grow-1">
-                                <div class="text-primary fw-bolder">
-                                    <codx-label formName="" name="lblSender" default="Người gửi"></codx-label>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2">
-                                    <div class="d-flex align-items-center user-card py-3">
-                                        <codx-img class="symbol symbol-40 symbol-circle"
-                                            [objectId]="itemSelected?.sender?.domainUser" objectType="AD_Users"
-                                            [width]="60">
-                                        </codx-img>
-                                        <div class="d-flex flex-column flex-grow-1 ms-2">
-                                            <div class="text-dark fw-bolder">
-                                                {{itemSelected?.sender?.employeeName}}</div>
-                                            <div class="text-dark">{{itemSelected?.sender.positionName}}
-                                            </div>
-                                        </div>
-                                        <div *ngIf="tabActive == STATUS_ACTIVE.APPROVER">
-                                            <ng-container *ngIf="itemSelected?.approveStatus == '0';else Approval">
-                                                <div class="d-flex flex-column ml-6"
-                                                    *ngIf="approver && tabActive == STATUS_ACTIVE.APPROVER && itemSelected?.approveStatus == '0'">
-                                                    <button class="btn btn-sm mb-2 btn-outline-success"
-                                                        (click)="changeStatusApprovel('1')">
-                                                        <span>Đồng thuận</span>
-                                                    </button>
-                                                    <button class="btn btn-sm mb-2 btn-outline-success"
-                                                        (click)="changeStatusApprovel('2')">
-                                                        <span>Không đồng thuận</span>
-                                                    </button>
-                                                </div>
-                                            </ng-container>
-                                            <ng-template #Approval>
-                                                <div class="pl-20">
-                                                    <p>Đã xét duyệt: {{itemSelected?.approveStatus | vll:'L1425':'text'
-                                                        |async}}</p>
-                                                </div>
-                                            </ng-template>
-                                        </div>
-    
-                                    </div>
-                                </div>
-                                <ng-container *ngIf="itemSelected?.receiver">
-                                    <div class="text-primary fw-bolder mt-6"><codx-label formName="" name="lblReciver" default="Người nhận"></codx-label></div>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="d-flex align-items-center user-card py-3">
-                                            <codx-img class="symbol symbol-40 symbol-circle mr-3"
-                                                [objectId]="itemSelected?.receiver?.domainUser" objectType="AD_Users"
-                                                [width]="60">
-                                            </codx-img>
-                                            <div class="d-flex flex-column flex-grow-1 ms-2">
-                                                <div class="text-dark fw-bolder">
-                                                    {{itemSelected?.receiver?.employeeName}}</div>
-                                                <div class="text-dark">
-                                                    {{itemSelected?.receiver?.positionName}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-container>
-                                <ng-container *ngIf="itemSelected?.industry">
-                                    <div class="text-primary font-weight-bold mt-6">
-                                        {{itemSelected?.cardType == "4" ? "Lĩnh vực cải tiến":"Lĩnh vực chia sẻ"}}</div>
-                                    <div class="mt-3 group-files">
-                                        <div class="text-dark font-weight-bold">{{itemSelected?.industryName}}
-                                        </div>
-                                    </div>
-                                </ng-container>
-                                <ng-container *ngIf="itemSelected?.behavior  && itemSelected?.behavior.length">
-                                    <div class="text-primary fw-bolder mt-6"><codx-label formName="" name="lblBehavior" default="Quy tắc ứng xử"></codx-label></div>
-                                    <div class="mt-3 group-files" *ngFor="let item of itemSelected?.behavior">
-                                        <div class="text-dark">{{item?.name}}</div>
-                                    </div>
-                                </ng-container>
-                                <div class="mt-3">
-                                    <ng-container *ngIf="itemSelected?.files  && itemSelected?.files.length">
-                                        <div class="text-primary fw-bolder mt-6 mb-2"><codx-label formName="" name="lblFiles" default="Tệp tin"></codx-label></div>
-                                        <div class="mt-3 group-files" *ngFor="let item of itemSelected?.files">
-                                            <ng-container *ngTemplateOutlet="templateFile; context:{item:item}">
-                                            </ng-container>
-                                        </div>
-                                    </ng-container>
-                                </div>
-                                <ng-container *ngIf="!isShowCard">
-                                    <div class="text-primary fw-bolder mt-4"><codx-label formName="" name="lblSituation" default="Nội dung"></codx-label></div>
-                                    <div class="modal-card-sms mt-3" [style.color]="itemSelected?.pattern?.textColor"
-                                        [innerHTML]="itemSelected?.situation">
-                                    </div>
-                                </ng-container>
-                            </div>
-                            
-                        </div>
-    
-                        <div class="mt-6 clear">
-                            <ng-container *ngIf="itemSelected?.sharedWiths  && itemSelected?.sharedWiths.length">
-                                <div class="text-primary fw-bolder mb-4"><codx-label formName="" name="lblShare" default="Chia sẻ"></codx-label></div>
-                                <div class="share-item" *ngFor="let item of itemSelected?.sharedWiths">
-                                    <ng-container *ngTemplateOutlet="templateShare; context:{item:item}"></ng-container>
-                                </div>
-                            </ng-container>
-                        </div>
-                        <div class="mt-6 clear">
-                            <ng-container *ngIf="itemSelected?.gifts  && itemSelected?.gifts.length">
-                                <div class="text-primary fw-bolder"><codx-label formName="" name="lblGift" default="Quà tặng"></codx-label></div>
-                                <div class="mt-9 group-gifts" *ngFor="let item of itemSelected?.gifts">
-                                    <ng-container *ngTemplateOutlet="templateGift  context:{ $implicit: item}"></ng-container>
-                                </div>
-                            </ng-container>
-                        </div>
-    
-                        <div class="mt-6 clear" *ngIf="itemSelected?.point">
-                            <div class="text-primary fw-bolder mb-2">
-                                <codx-label formName="" name="lblGiftCoins1" default="Tặng xu"></codx-label>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <div class="w-20px ml-4">
-                                        <img alt="Pic" src=".../../../assets/demos/svg/dollar.png">
-                                    </div>
-                                    <div class="ms-5 fw-bolder">
-                                        <codx-label formName="" name="lblGiftCoins2" default="Tặng xu"></codx-label>
-                                    </div>
-                                </div>
-                                <div class="ms-3">{{itemSelected.point}}</div>
-                            </div>
-                        </div>
-                    </div>
-    
-                </ng-template>
-    
-            </div>
-        </div>
-    </div>
-    <div class="offcanvas-overlay"></div>
-</ng-template> -->
-
-
 
 <ng-template #templateItem let-item>
     <div id="listItemOfGifts" (click)="clickItem(item.recID)">
@@ -309,7 +73,6 @@ method="GetListDataByWebAsync"
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </ng-template>
@@ -694,5 +457,7 @@ method="GetListDataByWebAsync"
 
 
 <ng-template #panelRightRef>
-    <lib-view-detail-cards [itemSelected]="itemSelected"></lib-view-detail-cards>
+    <ng-container *ngIf="itemSelected">
+        <lib-view-detail-cards [itemSelected]="itemSelected" [cardType]="itemSelected.cardType"></lib-view-detail-cards>
+    </ng-container>
 </ng-template>
