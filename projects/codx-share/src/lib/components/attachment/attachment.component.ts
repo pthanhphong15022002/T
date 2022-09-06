@@ -183,6 +183,7 @@ export class AttachmentComponent implements OnInit {
   ngAfterViewInit(): void {
     if (this.objectId != '' && this.objectId != undefined) {
       this.fileService.getFileNyObjectID(this.objectId).subscribe((res) => {
+        debugger;
         if (res) {
           this.data = res;
           this.fileGet.emit(this.data);
@@ -562,7 +563,8 @@ export class AttachmentComponent implements OnInit {
   }
   //fetch () : Observable<any[]>
   saveFilesObservable(): Observable<any[]> {
-    this.atSV.fileListAdded = [];
+    this.atSV.fileListAdded = [];   
+    this.fileUploadList[0].objectId = this.objectId; 
     return this.addFileObservable(this.fileUploadList[0]);
     //return this.onMultiFileSaveObservable();
   }
@@ -571,8 +573,9 @@ export class AttachmentComponent implements OnInit {
     let total = this.fileUploadList.length;
     //  var that = this;
     this.dmSV.getToken();
-    for (var i = 0; i < total; i++) {
-      // upload file uri from Mr Long
+    for (var i = 0; i < total; i++) {     
+     // upload file uri from Mr Long
+
     }
 
     this.atSV.fileListAdded = [];
@@ -740,7 +743,7 @@ export class AttachmentComponent implements OnInit {
 
                 if (item.status == 0) {
                   if (item.data.fileName != null && item.data.fileName != '') {
-                    item.data.thumbnail = '../../../assets/img/loader.gif';
+                    item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(item.data.extension)}`;//'../../../assets/img/loader.gif';
                     that.displayThumbnail(item.data);
                     files.push(Object.assign({}, item.data));
                   }
@@ -884,10 +887,10 @@ export class AttachmentComponent implements OnInit {
     //   });
     // };
     this.dmSV.getToken();
-    var appName = 'hps-file-test'; // Tam thoi de hard
+    var appName = this.appName; //'hps-file-test'; // Tam thoi de hard
     var ChunkSizeInKB = 2 * 1024;
     var uploadFile = fileItem.item.rawFile;
-    var obj = from(
+    var obj = from (
       lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
         Data: {
           FileName: uploadFile.name,
@@ -905,7 +908,6 @@ export class AttachmentComponent implements OnInit {
     var sizeInBytes = 0;
     return obj.pipe(
       mergeMap((retUpload, i) => {
-        debugger;
         // update len server urs và thumbnail
         fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
         fileItem.uploadId = retUpload.Data.UploadId; //"";
@@ -944,7 +946,9 @@ export class AttachmentComponent implements OnInit {
               if (this.showMessage == '1')
                 this.notificationsService.notify(item.message);
               this.fileUploadList[0].recID = item.data.recID;
-              this.atSV.fileListAdded.push(Object.assign({}, item));
+              //this.atSV.fileListAdded.push(Object.assign({}, item));
+              if (this.data == undefined || this.data == null)
+                this.data = [];
               this.data.push(Object.assign({}, item));
               this.fileUploadList = [];
               return item;
@@ -1029,7 +1033,7 @@ export class AttachmentComponent implements OnInit {
     try {
       var item = await isAllowAddFileAsync();
       this.dmSV.getToken();
-      var appName = 'hps-file-test'; // Tam thoi de hard
+      var appName = this.appName;//'hps-file-test'; // Tam thoi de hard
       var ChunkSizeInKB = 2 * 1024;
       var uploadFile = fileItem.item.rawFile;
       var retUpload = await lvFileClientAPI.postAsync(
@@ -1084,7 +1088,7 @@ export class AttachmentComponent implements OnInit {
       }
     } catch (ex) {
       fileItem.uploadId = '0';
-      this.notificationsService.notify(ex);
+     // this.notificationsService.notify(ex);
     }
     return ret;
   }
@@ -1092,7 +1096,6 @@ export class AttachmentComponent implements OnInit {
   addFileLarge(fileItem: FileUpload) {
     // let no = 0;
     // let total = this.fileUploadList.length;
-
     var that = this;
     var size = 1048576; // 1MB
     var totalChunk = 0;
@@ -1149,7 +1152,7 @@ export class AttachmentComponent implements OnInit {
             if (files == null) files = [];
             var res = item.data;
             var thumbnail = res.thumbnail;
-            res.thumbnail = '../../../assets/img/loader.gif';
+            res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.extension)}`;//'../../../assets/img/loader.gif';
             files.push(Object.assign({}, res));
             this.dmSV.listFiles = files;
             this.dmSV.ChangeData.next(true);
@@ -1190,7 +1193,7 @@ export class AttachmentComponent implements OnInit {
                   (d) => d.recID.toString() === item.recID
                 );
                 if (index != -1) {
-                  res.data.thumbnail = '../../../assets/img/loader.gif';
+                  res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//'../../../assets/img/loader.gif';
                   this.displayThumbnail(res.data);
                   files[index] = res.data;
                   files[index].recID = res.data.recID;
@@ -2774,7 +2777,7 @@ export class AttachmentComponent implements OnInit {
         this.fileUploadList.push(Object.assign({}, fileUpload));
       }
     }
-    //   this.fileAdded.emit({ data: this.fileUploadList });
+     this.fileAdded.emit({ data: this.fileUploadList });
     //  this.fileCount.emit(data: addedList);
     //tbchung thêm vào để xử lý bên import template
     this.filePrimitive.emit(files);

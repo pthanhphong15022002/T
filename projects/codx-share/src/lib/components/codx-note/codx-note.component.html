@@ -1,5 +1,5 @@
 <div class="card-note">
-    <div class="rounded-2 bg-body border border-1 h-100 overflow-auto p-3">
+    <div class="rounded-2 bg-body border border-1 h-400px overflow-auto p-3">
         <div *ngFor="let item of contents; index as i">
             <div class="has-action-menu">
                 <div class="d-flex align-items-center">
@@ -17,13 +17,6 @@
                                         <span class="show-customName">{{'Xóa'}}</span>
                                     </button>
                                 </li>
-                                <!-- <hr class="dropdown-divider">
-                                <li>
-                                    <button class="dropdown-item text-hover-primary d-flex align-items-center">
-                                        <span class="icon-edit icon-20 me-2" [style.color]=""></span>
-                                        <span class="show-customName">{{'Thêm diễn giải'}}</span>
-                                    </button>
-                                </li> -->
                                 <hr class="dropdown-divider">
                                 <li>
                                     <button (click)="clickFunction('format', 'TITLE', input)"
@@ -53,12 +46,13 @@
                                         <span class="show-customName">{{'Danh sách'}}</span>
                                     </button>
                                 </li>
-                                <!-- <li>
+                                <li>
                                     <button class="dropdown-item text-hover-primary d-flex align-items-center">
-                                        <span [class]="'icon-format_list_numbered icon-20 me-2'" [style.color]=""></span>
+                                        <span [class]="'icon-format_list_numbered icon-20 me-2'"
+                                            [style.color]=""></span>
                                         <span class="show-customName">{{'Số thứ tự'}}</span>
                                     </button>
-                                </li> -->
+                                </li>
                                 <hr class="dropdown-divider">
                                 <li>
                                     <div class="d-flex">
@@ -71,10 +65,10 @@
                                         <span (click)="clickFunction('font', 'UNDERLINE', input)"
                                             [class]="'icon-format_underlined icon-18 btn btn-icon btn-active-light-primary position-relative'"
                                             [style.color]=""></span>
-                                        <codx-input #colorPicker type="colorpicker" [showText]="false"
+                                        <!-- <codx-input #colorPicker type="colorpicker" [showText]="false"
                                             [modeSwitcher]="true" [crrValue]="font.COLOR" field="textColor"
                                             (valueChange)="valueChangeColor($event, input, colorPicker)">
-                                        </codx-input>
+                                        </codx-input> -->
                                         <div ngbDropdown class="d-inline-block">
                                             <button type="button" data-toggle="tooltip" title="Icon"
                                                 class="btn btn-icon btn-md ms-2 btn-emoji" id="dropdownBasic1"
@@ -92,7 +86,8 @@
                                 <hr>
                                 <ng-container *ngIf="showMF">
                                     <li>
-                                        <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <button class="dropdown-item text-hover-primary d-flex align-items-center"
+                                            (click)="clickFunction('assign', '', input, '', i)">
                                             <span [class]="'icon-person_add_alt_1 icon-20 me-2'"
                                                 [style.color]="'dodgerblue'"></span>
                                             <span class="show-customName">{{'Giao việc'}}</span>
@@ -134,6 +129,8 @@
                                     (valueChange)="valueChange($event)"
                                     [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                 </codx-input>
+                                <!-- <codx-tree-history [funcID]="" [objectID]="" [objectType]="" addNew="true">
+                                </codx-tree-history> -->
                             </div>
                         </div>
                     </div>
@@ -159,11 +156,11 @@
                 <span (click)="clickFunction('format', 'CHECKBOX', input)"
                     class="icon-check_box icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
             </div>
-            <!-- <span class="icon-image icon-18 btn btn-icon btn-active-light-primary position-relative"
-                (click)="popupFile()">
+            <span class="icon-image icon-18 btn btn-icon btn-active-light-primary position-relative"
+                (click)="clickFunction('img', '', input)">
             </span>
             <span class="icon-attach_file icon-18 btn btn-icon btn-active-light-primary position-relative">
-            </span> -->
+            </span>
             <span class="border-right border-gray-200 mx-1"></span>
             <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative
             " (click)="clickFunction('font', 'BOLD', input)" [class.active]="font.BOLD ? 'active' : ''"></span>
@@ -185,7 +182,7 @@
                         (emojiSelect)="addEmoji($event)"></emoji-mart>
                 </div>
             </div>
-            <!-- <span
-                class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span> -->
+            <span (click)="clickFunction('comment', '', input)"
+                class="icon-chat_bubble_outline icon-18 btn btn-icon btn-active-light-primary position-relative"></span>
         </div>
     </div>

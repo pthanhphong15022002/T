@@ -232,6 +232,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.permissions = [];
     let data = event[0];
     this.shareControl = data.objectType;
+    this.objectType = data.objectType;
     this.shareIcon = data.icon;
     this.shareText = data.objectName;
     var countPermission = 0;
@@ -240,54 +241,22 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     switch (this.shareControl) {
       case this.SHARECONTROLS.OWNER:
-        break;
       case this.SHARECONTROLS.EVERYONE:
-        let evrPermission = new Permission();
-        evrPermission.objectType = this.shareControl;
-        evrPermission.memberType = this.MEMBERTYPE.SHARE;
-        evrPermission.read = true;
-        evrPermission.share = true;
-        evrPermission.isActive = true;
-        evrPermission.createdBy = this.user.userID;
-        evrPermission.createdOn = new Date();
-        this.shareWith = "";
-        this.permissions.push(this.myPermission);
-        this.permissions.push(this.adminPermission);
-        this.permissions.push(evrPermission);
         break;
       case this.SHARECONTROLS.MYGROUP:
       case this.SHARECONTROLS.MYTEAM:
       case this.SHARECONTROLS.MYDEPARMENTS:
       case this.SHARECONTROLS.MYDIVISION:
       case this.SHARECONTROLS.MYCOMPANY:
-        let permission = new Permission();
-        permission.objectType = this.shareControl;
-        permission.memberType = this.MEMBERTYPE.SHARE;
-        permission.read = true;
-        permission.share = true;
-        permission.isActive = true;
-        permission.createdBy = this.user.userID;
-        permission.createdOn = new Date();
-        this.shareWith = "";
-        this.permissions.push(this.myPermission);
-        this.permissions.push(this.adminPermission);
-        this.permissions.push(permission);
         break;
       case this.SHARECONTROLS.OGRHIERACHY:
       case this.SHARECONTROLS.DEPARMENTS:
         data.dataSelected.forEach((x: any) => {
           let p = new Permission();
-          p.objectType = this.shareControl;
+          p.objectType = this.objectType;
           p.objectID = x.OrgUnitID;
           p.objectName = x.OrgUnitName;
           p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.share = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
-          this.permissions.push(this.myPermission);
-          this.permissions.push(this.adminPermission);
           this.permissions.push(p);
         });
         if (countPermission > 1) {
@@ -306,17 +275,10 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       case this.SHARECONTROLS.POSITIONS:
         data.dataSelected.forEach((x: any) => {
           let p = new Permission();
-          p.objectType = this.shareControl;
+          p.objectType = this.objectType;
           p.objectID = x.PositionID;
           p.objectName = x.PositionName;
           p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.share = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
-          this.permissions.push(this.myPermission);
-          this.permissions.push(this.adminPermission);
           this.permissions.push(p);
 
         });
@@ -336,17 +298,10 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       case this.SHARECONTROLS.ROLES:
         data.dataSelected.forEach((x: any) => {
           let p = new Permission();
-          p.objectType = this.shareControl;
+          p.objectType = this.objectType;
           p.objectID = x.RoleID;
           p.objectName = x.RoleName;
           p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.share = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
-          this.permissions.push(this.myPermission);
-          this.permissions.push(this.adminPermission);
           this.permissions.push(p);
         });
         if (countPermission > 1) {
@@ -369,13 +324,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           p.objectID = x.UserID;
           p.objectName = x.UserName;
           p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.share = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
           this.permissions.push(p);
-
         });
         if (countPermission > 1) {
           this.cache.message('WP002').subscribe((mssg: any) => {
@@ -393,17 +342,10 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       default:
         data.dataSelected.forEach((x: any) => {
           let p = new Permission();
-          p.objectType = this.shareControl;
+          p.objectType = this.objectType;
           p.objectID = x.UserID;
           p.objectName = x.UserName;
           p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.share = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
-          this.permissions.push(this.myPermission);
-          this.permissions.push(this.adminPermission);
           this.permissions.push(p);
         });
         if (countPermission > 1) {
@@ -432,10 +374,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     var post = new Post();
     post.content = this.message;
     post.shareControl = this.shareControl;
+    post.objectType = this.objectType;
     post.category = this.CATEGORY.POST;
     post.approveControl = "0";
     post.refType = this.entityName;
-    post.permissions = this.permissions.concat(this.tags);
+    post.permissions = this.permissions;
+    post.listTag = this.tags;
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe((result: any) => {
         if (result) {
@@ -641,9 +585,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         p.objectID = x.UserID;
         p.objectName = x.UserName;
         p.memberType = this.MEMBERTYPE.TAGS;
-        p.read = true;
-        p.share = true;
-        p.isActive = true;
         p.createdBy = this.user.userID;
         p.createdOn = new Date();
         this.tags.push(p);

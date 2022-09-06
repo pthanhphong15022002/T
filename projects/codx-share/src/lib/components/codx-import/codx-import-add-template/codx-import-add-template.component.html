@@ -1,12 +1,12 @@
-<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel"
+<codx-form #form [headerText]="headerText + ' template'" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel"
   [data]="data"></codx-form>
 <ng-template popup adde #body>
   <div class="d-flex align-items-center justify-content-between py-2">
     <div class="hideAttachment w-100 me-2">
       <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0"
-        hideBtnSave="1" hideFolder="1" hideUploadBtn="1" hideDes="1" [functionID]="formModel?.funcID"
-        (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (filePrimitive)="getfilePrimitive($event)"
-        [objectId]="null" [allowMultiFile]="0" [idBrowse]="'addTemplateImport'" >
+        hideBtnSave="1" hideFolder="1" hideUploadBtn="1" hideDes="1"  [functionID]="formModel?.funcID" [hideDelete]="'1'"
+        (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (fileGet)="getfileGet($event)" (filePrimitive)="getfilePrimitive($event)"
+        [objectId]="recID" [allowMultiFile]="0" [idBrowse]="'addTemplateImport'" >
       </codx-attachment>
     </div>
     <button type="button" class="btn btn-outline-primary" style="width: 100px;" (click)="openFormUploadFile()">
@@ -26,7 +26,7 @@
         <codx-label [formModel]="formModel" [fiedName]="'sheetimport'" default="Sheet import" class="fw-bold">
         </codx-label>
         <select class="form-select select-sheet" aria-label="Sheet Import"  #mySelect
-          (change)="changeSheetImport(mySelect.value)"
+          (change)="changeSheetImport(mySelect.value)" [(ngModel)]="selectedSheet"
         >
           <ng-container *ngIf="sheet">
             <option *ngFor="let item of sheet" [ngValue]="item">{{item}}</option>
@@ -35,7 +35,7 @@
       </div>
       <div class="col-3">
         <codx-label [formModel]="formModel" [fiedName]="'title'" default="Dòng tiêu đề" class="fw-bold"></codx-label>
-        <codx-input type="text"></codx-input>
+        <codx-input type="number" [Group]="importAddTmpGroup" ControlName="firstRowHeader"></codx-input>
       </div>
       <div class="col-3">
         <codx-label [formModel]="formModel" [fiedName]="'password'" default="Định dạng mật khẩu" class="fw-bold">
@@ -45,7 +45,7 @@
       <div class="col-3">
         <codx-label [formModel]="formModel" [fiedName]="'dfpassword'" default="Mật khẩu mặc định" class="fw-bold">
         </codx-label>
-        <codx-input type="text"></codx-input>
+        <codx-input type="text" [Group]="importAddTmpGroup" ControlName="password"></codx-input>
       </div>
     </div>
   </div>

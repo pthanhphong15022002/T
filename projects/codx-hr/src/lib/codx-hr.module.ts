@@ -37,6 +37,7 @@ import { HomeHrparametersComponent } from './hrparameters/home-hrparameters/home
 import { HRParametersComponent } from './hrparameters/hrparameters.component';
 import { OrgorganizationComponent } from './organization/organization.component';
 import { OrganizeDetailComponent } from './organization/organize-detail/organize-detail.component';
+import { FilterPipe } from './organization/pipes/filterObject.pipe';
 import { PopupAddPositionsComponent } from './positions/popup-add-positions/popup-add-positions.component';
 import { PositionsComponent } from './positions/positions.component';
 import { LayoutComponent } from './_layout/layout.component';
@@ -174,6 +175,7 @@ const T_Component: Type<any>[] = [
   NoSubAsideComponent,
   OrgorganizationComponent,
   OrganizeDetailComponent,
+  FilterPipe,
 ];
 @NgModule({
   imports: [
