@@ -342,6 +342,7 @@
                       type="switch"
                       labelPosition="After"
                       field=""
+                      [disabled]="isDisable"
                       [crrValue]="needSuggest"
                       (valueChange)="changeSuggestState($event)"
                     >
@@ -364,6 +365,7 @@
                     <codx-input
                       type="switch"
                       field="autoSignLastLine"
+                      [disabled]="isDisable"
                       [crrValue]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>
