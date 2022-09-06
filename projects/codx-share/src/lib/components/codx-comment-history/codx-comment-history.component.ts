@@ -133,7 +133,8 @@ export class CodxCommentHistoryComponent implements OnInit {
     this.lstFile = this.lstFile.filter((e: any) => e.fileName != file.fileName);
     this.dt.detectChanges();
   }
-  sendComments() {
+
+  async sendComments() {
     if(!this.message && this.lstFile.length == 0){
       this.notifySV.notifyCode("SYS010");
       return;
@@ -157,7 +158,7 @@ export class CodxCommentHistoryComponent implements OnInit {
             e.objectId = res1.recID;
           })
           this.codxATM.fileUploadList = this.lstFile;          
-          this.codxATM.saveFilesObservable().subscribe((res2:any) => {
+          (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
             if(res2){
               this.evtSend.emit(res1);
               this.notifySV.notifyCode("SYS006"); 

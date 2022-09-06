@@ -6,7 +6,7 @@
   [subHeader]=""
   [footer]="footer"
   [dialog]="dialogRef"
-  [openMore]="false"
+  [openMore]="true"
   (buttonClick)="buttonClick($event)"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]"
   (setTitle)="setTitle($event)"
@@ -14,14 +14,7 @@
 
 >
   <ng-template #tabGeneralInfo>
-    <div id="GeneralInfo">
-      <codx-label
-        class="mb-3 fs-5 fw-bold"
-        name="lblGeneralInfo"
-        default="Thông tin chung"
-      >
-      </codx-label>
-    </div>
+    
     <div class="form-group mb-2">
       <div class="d-flex justify-content-between align-items-center">
         <codx-label
@@ -37,11 +30,8 @@
         }}</span>
       </div>
       <codx-input
-        type="combobox"
-        refValue="EP_Rooms"
         ControlName="resourceID"
-        [formModel]="form.formModel"   
-        [multiple]="false"     
+        [formModel]="form.formModel" 
         [Group]="fGroupAddBookingRoom"      
         (valueChange)="valueCbxRoomChange($event)"
       >
@@ -101,6 +91,13 @@
           [formModel]="form.formModel"
         >
         </codx-label>
+        <!-- <codx-input
+          ControlName="bookingOn"
+          [formModel]="form.formModel" 
+          [Group]="fGroupAddBookingRoom"      
+          (valueChange)="valueDateChange($event)"
+        >
+        </codx-input> -->
         <codx-input
           type="datetime"
           class="form-control test-datetime"
@@ -119,6 +116,13 @@
           [formModel]="dialogRef.formModel"
         >
         </codx-label>
+        <!-- <codx-input          
+          ControlName="startDate"
+          [formModel]="form.formModel" 
+          [Group]="fGroupAddBookingRoom"  
+          (valueChange)="valueTimeChange($event)"
+        >
+        </codx-input> -->
         <codx-input
           type="datetime"
           class="test-datetime"
@@ -173,9 +177,7 @@
       >
       </codx-label>
       <!-- <codx-input
-        type="combobox"
         refValue="ReasonCodes"
-        placeholder="Chọn mục đích"
         ControlName="reasonID"  
         [formModel]="dialogRef.formModel"  
         [Group]="fGroupAddBookingRoom"          
@@ -287,7 +289,8 @@
               [multiple]="false"
               [showInput]="false"
               refType="P"
-              (valueChange)="valueCbxHostChange($event)"
+              [title]="'Không bắt buộc tham dự'"
+              (valueChange)="valueCbxUserOptionalChange($event)"
             >
             </codx-input>
           </div>
@@ -299,6 +302,7 @@
               [multiple]="true"
               [showInput]="false"
               refType="P"
+              [title]="'Bắt buộc tham dự'"
               (valueChange)="valueCbxUserChange($event)"
             >
             </codx-input>
@@ -308,7 +312,7 @@
 
       <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">   
 
-        <div class="symbol-group"  *ngIf="hostUser!=null" >
+        <!-- <div class="symbol-group"  *ngIf="hostUser!=null" >
           <div class="symbol symbol-35px symbol-circle">
             <codx-img
               [objectId]="hostUser.userId"
@@ -316,7 +320,7 @@
             ></codx-img>
             <span class="symbol-badge badge badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white" ></span>
           </div>
-        </div>
+        </div> -->
 
         <div class="symbol-group"  *ngIf="curUser!=null" >
           <div class="symbol symbol-35px symbol-circle">
@@ -328,24 +332,32 @@
           </div>
         </div>
 
-        <div class="symbol-group" *ngIf="lstPeople.length >= 1">
+        <div class="symbol-group" *ngIf="attendeesList.length >= 1">
           <div class="symbol symbol-35px symbol-circle" >
             <codx-img
-              [objectId]="lstPeople[0].userId"
+              [objectId]="attendeesList[0].userId"
+              objectType="AD_Users"
+            ></codx-img>
+            <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
+          </div>
+        </div>
+        <div class="symbol-group" *ngIf="attendeesList.length >= 2">
+          <div class="symbol symbol-35px symbol-circle" >
+            <codx-img
+              [objectId]="attendeesList[1].userId"
               objectType="AD_Users"
             ></codx-img>
             <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
           </div>
         </div>
 
-
-        <div class="symbol-group" *ngIf="lstPeople.length >= 2">
+        <div class="symbol-group" *ngIf="attendeesList.length >= 3">
           <span
             class="symbol symbol-35px symbol-circle"
             data-bs-toggle="modal"
             data-bs-target="#kt_modal_view_users"
           >
-            <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder" >+{{ lstPeople.length - 1 }}</span>
+            <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder" >+{{ lstUser.length + lstUserOptional?.length - 2 }}</span>
           </span>
         </div>
       </div>
@@ -358,10 +370,10 @@
           [formModel]="dialogRef.formModel"
         >
         </codx-label>
-        <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+        <!-- <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
           <span class="icon-cloud_upload btn-text-primary me-2"  (click)="popupUploadFile($event)" ></span>
           <codx-label fiedName="Upload" default="Upload file" [formModel]="dialogRef.formModel"></codx-label>
-        </a>
+        </a> -->
       </div>
       <!--end::Title-->
       <div class="AttachmentFile-group flex-nowrap">
@@ -427,23 +439,21 @@
         <div class="mx-2">
           <codx-input
             type="Combobox"
-            name="hostUser"
             [refValue]="'Users'"
-            [multiple]="false"
             [showInput]="false"
-            refType="P"
-            (valueChange)="valueCbxHostChange($event)"
+            [title]="'Không bắt buộc tham dự'"
+            [refType]="'P'"
+            (valueChange)="valueCbxUserOptionalChange($event)"
           >
           </codx-input>
         </div>
         <div class="mx-2">          
           <codx-input
             type="Combobox"
-            name="combobox"
             [refValue]="'MultiUsers'"
-            [multiple]="true"
             [showInput]="false"
-            refType="P"
+            [refType]="'P'"
+            [title]="'Bắt buộc tham dự'"
             (valueChange)="valueCbxUserChange($event)"
           >
           </codx-input>
@@ -452,7 +462,7 @@
       </div>
     </div>
 
-    <div class="d-flex align-items-center mb-4" *ngIf="hostUser!=null">
+    <!-- <div class="d-flex align-items-center mb-4" *ngIf="hostUser!=null">
       <div class="symbol symbol-35px symbol-circle me-4">
         <codx-img
           [objectId]="hostUser.userId"
@@ -479,7 +489,7 @@
         >
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
-    </div>
+    </div>-->
 
     <div class="d-flex align-items-center mb-4" *ngIf="curUser!=null">
       <div class="symbol symbol-35px symbol-circle me-4">
@@ -487,9 +497,7 @@
           [objectId]="curUser.userId"
           objectType="AD_Users"
         ></codx-img>
-        <span
-          class="symbol-badge badge badge-circle bg-success top-100 start-100 text-white fs-8"
-          >S</span
+        <span class="symbol-badge badge badge-circle bg-danger top-100 start-100 text-white fs-8">A</span
         >
       </div>
 
@@ -497,28 +505,58 @@
         <div class="text-dark fw-bold fs-6 fw-bolder">
           {{ curUser.userName }}
         </div>
-        <span class="text-muted fw-bold">Thư kí</span>
+        <div *ngIf="curUser.roleType=='1'">          
+          <span class="text-muted fw-bold">Người chủ trì</span>
+        </div>
+        <div *ngIf="curUser.roleType=='2'">          
+          <span class="text-muted fw-bold">Thư kí</span>
+        </div>
       </div>
 
       <div class="d-flex flex-column justify-content-end">
-        <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >{{
-            curUser.status | vll: "EP011":"text" | async
-          }}</span
-        >
+        <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
-    </div>
+    </div> 
     
-    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">
+    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstUser">
       <div class="symbol symbol-35px symbol-circle me-4">
         <codx-img
           [objectId]="item.userId"
           objectType="AD_Users"
         ></codx-img>
-        <span
-          class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
-          >P</span
+        <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>        
+      </div>
+
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6 fw-bolder">
+          {{ item.userName }}
+        </div>
+        <div *ngIf="item.roleType=='1'">          
+          <span class="text-muted fw-bold">Người chủ trì</span>
+        </div>
+        <div *ngIf="item.roleType=='2'">          
+          <span class="text-muted fw-bold">Thư kí</span>
+        </div>
+        <div *ngIf="item.roleType=='3'">          
+          <span class="text-muted fw-bold">Người tham dự</span>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column justify-content-end">
+        
+        <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
+        <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstUserOptional">
+      <div class="symbol symbol-35px symbol-circle me-4">
+        <codx-img
+          [objectId]="item.userId"
+          objectType="AD_Users"
+        ></codx-img>
+        <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8" >P</span
         >
       </div>
 
@@ -531,9 +569,7 @@
 
       <div class="d-flex flex-column justify-content-end">
         <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >{{
-            item.status | vll: "EP011":"text" | async
-          }}</span>
+          >Không bắt buộc</span>
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
     </div>
@@ -709,8 +745,12 @@
     
   </ng-template>
 
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
+  <ng-template #footer>   
+    <div class="d-flex justify-content-between">
+      <a class=" btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+        <span class="icon-cloud_upload btn-text-primary me-2"  (click)="popupUploadFile($event)" ></span>
+        <codx-label fiedName="Upload" default="Upload file" [formModel]="dialogRef.formModel"></codx-label>
+      </a>
       <button class="btn btn-light-primary" (click)="onSaveForm()">Lưu</button>
     </div>
   </ng-template>
