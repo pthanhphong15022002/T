@@ -859,7 +859,7 @@ export class CodxTasksComponent
   // }
 
   popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
+    this.listTaskResousceSearch = []; 
     this.countResource = 0;
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
