@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Template
 import { WPService } from '@core/services/signalr/apiwp.service';
 import { SignalRService } from '@core/services/signalr/signalr.service';
 import { Post } from '@shared/models/post';
-import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewModel, ViewType, UIComponent, ButtonModel } from 'codx-core';
+import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewModel, ViewType, UIComponent, ButtonModel, CRUDService, RequestOption, NotificationsService, ViewsComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-dashboard',
@@ -13,10 +13,10 @@ import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewMo
 export class DashboardComponent extends UIComponent implements OnInit, AfterViewInit {
 
 
-  predicate = `Category =@0 `;
+  predicate = `Category =@0 && Stop=false`;
   dataValue = "3";
   memberType = "3";
-  predicateCoins = `UserID=@0 AND ( TransType = "1" OR TransType = "2" OR TransType = "4" OR TransType = "5" OR TransType = "6")`;
+  predicateCoins = `Owner=@0`;
   dataValueCoins = "";
   arrVll = ["L1422", "L1419"];
   reciver = [];
@@ -33,31 +33,24 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
   };
 
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
-  @ViewChild('listviewCoins') listviewComponent: CodxListviewComponent;
-  @ViewChild('listview') listview: CodxListviewComponent;
+  @ViewChild('listview') listview: ViewsComponent;
   dataRef: Post;
   isLoading = true;
   crrId = "";
   constructor(
     private injector: Injector,
-    private dr: ChangeDetectorRef,
+    private dt: ChangeDetectorRef,
     private auth: AuthService,
     private signalRApi: WPService,
-    private signalR: SignalRService,
-
+    private notifiSV: NotificationsService
   ) {
     super(injector)
     this.dataValueCoins = this.auth.userValue.userID;
-    this.subscribeToEvents();
   }
   ngAfterViewInit(): void {
-    this.buttonAdd = {
-      id: 'btnAdd',
-    };
     this.views = [{
       type: ViewType.content,
       active: true,
-      showButton: true,
       model: {
         panelLeftRef: this.panelContent
       }
@@ -65,78 +58,36 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
 
   }
   onInit(): void {
-
     this.user = this.auth.userValue;
     this.api.call("ERM.Business.FD", "CardsBusiness", "GetDataForWebAsync", []).subscribe(res => {
       if (res && res.msgBodyData != null && res.msgBodyData.length > 0) {
         var data = res.msgBodyData[0] as [];
         this.reciver = data['fbReceiver'];
         this.sender = data['fbSender'];
-        this.dr.detectChanges();
+        this.dt.detectChanges();
       }
     });
   }
 
-
-  async showWith(id, memberType) {
-    console.log('id, memberType: ', id, memberType);
+  lstTagUser:any[] = [];
+  searchField:string ="";
+  clickShowTag(card:any) {
+    this.lstTagUser = card.listTag;
+    this.dt.detectChanges();
   }
 
-
-
-  votePost(id) {
-    this.signalRApi.votePost(id).subscribe(res => { });
+  beforDelete(option:RequestOption,data:any){
+    option.service = "WP";
+    option.assemblyName = "ERM.Business.WP";
+    option.className = "CommentsBusiness";
+    option.methodName = "DeletePostAsync";
+    option.data = data;
+    return true;
   }
-
-  removePost(data) {
-    this.signalRApi.deletePost(data.id).subscribe(res => {
-      if (!res.error) {
-        // this.listview.removeHandler(data, 'id');
-      }
-    });
-  }
-
-
-  showContent(e) {
-    e.toggleContent();
-  }
-
-
-  replyTo(parent, id) {
-    // this.crrId = id;
-    // $('#' + parent).find('.input-comment').focus();
-  }
-
-  sendComment(id, input: any) {
-    let text = input.value;
-    if (!text) {
-      alert("Vui lòng nhập nội dung");
-      return;
-    }
-    let recID = this.crrId || id;
-    if (recID)
-      this.signalRApi.postComment(recID, text, this.crrId).subscribe(res => {
-        input.value = '';
-      })
-  }
-  //#region communication
-  private subscribeToEvents(): void {
-    const t = this;
-    this.signalR.signalData.subscribe((post: Post) => {
-      if (post.category != "2") {
-        // t.listview.addHandler(post, true, 'id');
-      }
-    });
-  }
-
-
-
-  clickShowItem(data: any) {
-    console.log('tmpCardDetail: ', data)
-  }
-
-  clickShowPupopAdd(event: any) {
-    console.log(event)
+  removePost(data: any) {
+    (this.listview.dataService as CRUDService).
+    delete([data],true,(op:any)=>this.beforDelete(op,data)).
+    subscribe();
   }
 
 }

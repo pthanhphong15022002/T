@@ -29,10 +29,13 @@
           <div>
             <codx-listview 
               entityName="BKD_Notification" 
-              service="BG" 
-              assemblyName="ERM.Business.BG"
-              className="TrackLogsBusiness"
-              method="GetNotiAsync"
+              service="Background" 
+              assemblyName="ERM.Business.Background"
+              className="NotificationBusinesss"
+              method="GetAsync"
+              [predicate]="predicate"
+              [dataValue]="dataValue"
+              [funcId]="funcID"
               [itemTemplate]="itemTemplate">
             </codx-listview>
           </div>
