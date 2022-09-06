@@ -1,3 +1,4 @@
+import { Optional, TemplateRef } from '@angular/core';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -16,11 +17,13 @@ import {
   SidebarModel,
   DialogRef,
   CallFuncService,
+  DialogModel,
 } from 'codx-core';
 import { iif } from 'rxjs';
 import { createTrue } from 'typescript';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import { TM_Tasks } from '../codx-tasks/model/task.model';
+import { CodxTreeHistoryComponent } from '../codx-tree-history/codx-tree-history.component';
 import { CO_Contents } from './model/CO_Contents.model';
 
 @Component({
@@ -71,6 +74,17 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   fontTemp: any;
   id = 0;
   dialog!: DialogRef;
+  countResource = 0;
+  listTask: any;
+  popoverCrr: any;
+  popoverDataSelected: any;
+  vllStatus = 'TM004';
+  vllApproveStatus = 'TM011';
+  listTaskResourceSearch: any;
+  listTaskResource: any;
+  searchField = '';
+  listRoles = [];
+  vllRole = 'TM002';
 
   @Input() contents: any = [
     {
@@ -97,14 +111,17 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   @Input() vllRose = '';
   @Output() getContent = new EventEmitter();
   @ViewChild('input') input: any;
+  @ViewChild('popupComment') popupComment: TemplateRef<any>;
 
   constructor(
     private dt: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
     private route: ActivatedRoute,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    @Optional() dtR?: DialogRef
   ) {
+    // this.dialog = dtR;
     this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
       if (res) this.gridViewSetup = res;
     });
@@ -113,7 +130,13 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cache.valueList(this.vllRole).subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     if (this.input) this.currentElement = this.input.elRef.nativeElement;
@@ -130,6 +153,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.dt.detectChanges();
       this.setPropertyForView();
     }
+    this.getAssign('');
   }
 
   setPropertyForView() {
@@ -534,7 +558,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.popupImg();
         break;
       case 'comment':
-        this.comment();
+        this.comment(index);
         break;
       case 'assign':
         this.assign(index);
@@ -552,7 +576,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  comment() {}
+  comment(index) {
+    this.id = index;
+    this.callfunc.openForm(this.popupComment, '', 420, window.innerHeight);
+  }
 
   assign(index) {
     var task = new TM_Tasks();
@@ -564,8 +591,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     var title = '';
     let option = new SidebarModel();
     var objFormModel = {
-      entityName: this.objectType
-    }
+      entityName: this.objectType,
+    };
     option.FormModel = objFormModel;
     option.Width = '550px';
     this.dialog = this.callfunc.openSide(
@@ -573,6 +600,89 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       [task, vllControlShare, vllRose, title],
       option
     );
-    this.dialog.closed.subscribe((e) => {});
+    this.dialog.closed.subscribe((e) => {
+      if (e.event) {
+        var dt = e.event;
+        if (dt[0] == true && dt[1].length > 0) {
+          this.contents[index].tasks++;
+          this.updateContent(this.objectParentID, this.contents);
+          this.dt.detectChanges();
+        }
+      }
+    });
+  }
+
+  getAssign(recID) {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskByRefIDAsync',
+        recID
+      )
+      .subscribe((res) => {});
+  }
+
+  popoverListTask(recID) {
+    this.countResource = 0;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskByRefIDAsync',
+        recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTask = res;
+          this.countResource = res.length;
+        }
+      });
+  }
+
+  popoverEmpList(p: any, task) {
+    this.listTaskResourceSearch = [];
+    this.countResource = 0;
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    }
+    if (this.popoverDataSelected) {
+      if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
+    }
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskResourcesBusiness',
+        'GetListTaskResourcesByTaskIDAsync',
+        task.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTaskResource = res;
+          this.listTaskResourceSearch = res;
+          this.countResource = res.length;
+          p.open();
+          this.popoverCrr = p;
+        }
+      });
+  }
+
+  searchName(e) {
+    var listTaskResourceSearch = [];
+    this.searchField = e;
+    if (this.searchField.trim() == '') {
+      this.listTaskResourceSearch = this.listTaskResource;
+      return;
+    }
+    this.listTaskResource.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
+        listTaskResourceSearch.push(res);
+      }
+    });
+    this.listTaskResourceSearch = listTaskResourceSearch;
   }
 }

@@ -342,6 +342,7 @@
                       type="switch"
                       labelPosition="After"
                       field=""
+                      [disabled]="isDisable"
                       [crrValue]="needSuggest"
                       (valueChange)="changeSuggestState($event)"
                     >
@@ -364,6 +365,7 @@
                     <codx-input
                       type="switch"
                       field="autoSignLastLine"
+                      [disabled]="isDisable"
                       [crrValue]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>
@@ -372,7 +374,7 @@
                   <div class="text-gray-800 text-nowrap">
                     <codx-label
                       name="lblSignLastLine"
-                      default="Ký dòng cuối cùng"
+                      default="Chèn chữ ký tự động"
                       class="fw-bold"
                     ></codx-label>
                   </div>

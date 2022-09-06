@@ -73,3 +73,12 @@
   position: absolute;
   top: 26%;
 }
+
+.darkgray {
+  color: darkgray;
+}
+.badge-primary.badge-outline {
+  border: 1px solid var(--text-primary);
+  color: var(--text-primary);
+  background-color: transparent;
+}

@@ -89,6 +89,7 @@ import { CodxCommentHistoryComponent } from './components/codx-comment-history/c
 import { PdfViewerAllModule } from '@syncfusion/ej2-angular-pdfviewer';
 import { CodxTreeHistoryComponent } from './components/codx-tree-history/codx-tree-history.component';
 import { CodxViewAssignComponent } from './components/codx-view-assign/codx-view-assign.component';
+import { CommentsComponent } from './components/codx-note/comments/comments.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -155,7 +156,7 @@ const T_Component: Type<any>[] = [
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe,],
+  declarations: [T_Component, T_Pipe, CommentsComponent,],
   imports: [
     CommonModule,
     NgbModule,

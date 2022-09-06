@@ -6,22 +6,14 @@
   [subHeader]=""
   [footer]="footer"
   [dialog]="dialogRef"
-  [openMore]="false"
+  [openMore]="true"
   (buttonClick)="buttonClick($event)"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabMoreInfo]"
   (setTitle)="setTitle($event)"
   [data]="data"
 
 >
-  <ng-template #tabGeneralInfo>
-    <div id="GeneralInfo">
-      <codx-label
-        class="mb-3 fs-5 fw-bold"
-        name="lblGeneralInfo"
-        default="Thông tin chung"
-      >
-      </codx-label>
-    </div>
+  <ng-template #tabGeneralInfo>    
       <div class="form-group mb-2">
         <div class="d-flex justify-content-between align-items-center">
           <codx-label
@@ -140,7 +132,7 @@
       </codx-label>
       <codx-input
         type="combobox"
-        refValue="ReasonCodes"
+        refValue="EP_BookingCars"
         placeholder="Chọn mục đích"
         [multiple]="false"
         field="reasonID"
@@ -175,13 +167,11 @@
       </codx-label>
       <codx-input
         type="combobox"
-        [multiple]="false"
         refValue="AgencyNames"
         ControlName="agencyName"
         [formModel]="form.formModel"
         [Group]="fGroupAddBookingCar"
         (valueChange)="valueChange($event)"
-        [pageSize]="5"
       >
       </codx-input>
     </div>

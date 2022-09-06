@@ -2,7 +2,7 @@
     <div class="d-flex align-items-center ms-1">
         <ng-container *ngIf="dataComment.totalVote == 0;else Vote">
             <div class="flex align-items-center">
-                <span class="me-2">
+                <span>
                     <img src="assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
                         style="width: 18px; height: 18x;">
                 </span>
@@ -11,14 +11,14 @@
         <ng-template #Vote>
             <div class="flex align-items-center">
                 <div *ngFor="let votedType of dataComment.listVoteType">
-                    <a class="me-2" (click)="showVotes(dataComment)">
+                    <a (click)="showVotes(dataComment)">
                         <img src="/assets/themes/wp/default/img/{{(votedType | vll:'L1480':'icon' | async)}}"
                             alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
                     </a>
                 </div>
             </div>
         </ng-template>
-        <span>{{dataComment.totalVote}}</span>
+        <span class="ms-2">{{dataComment.totalVote}}</span>
     </div>
     <div class="d-flex align-items-center text-hover-underline me-1" (click)="showComments(dataComment)">
         <span>{{dataComment.totalComment}}</span>
@@ -70,14 +70,8 @@
     </div>
 </div>
 <div class="isHiden border-top" [class.isShow]="dataComment.isShowComment">
-    <codx-comments 
-        [funcID]="funcID"
-        [objectType]="objectType" 
-        [new]="true" 
-        [formModel]="fromModel"
-        (evtSendComment)="sendComment($event)" 
-        [parentID]="dataComment.recID" 
-        [refID]="dataComment.recID">
+    <codx-comments [funcID]="funcID" [objectType]="objectType" [new]="true" [formModel]="fromModel"
+        (evtSendComment)="sendComment($event)" [parentID]="dataComment.recID" [refID]="dataComment.recID">
     </codx-comments>
     <ng-container *ngFor="let cm of dataComment.listComment">
         <ng-container *ngTemplateOutlet="cmt; context: { $implicit: cm }">
@@ -86,15 +80,8 @@
 </div>
 <ng-template #cmt let-data>
     <div class="c1" [attr.dt]="setDicData(data)" id="{{data.recID}}">
-        <codx-comments 
-            [funcID]="funcID" 
-            [objectType]="objectType"
-            [data]="data" 
-            [parentID]="data.parentID" 
-            [refID]="data.recID"
-            [new]="false" 
-            [formModel]="fromModel"
-            (evtDeleteComment)="deleteComment($event)"
+        <codx-comments [funcID]="funcID" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
+            [refID]="data.recID" [new]="false" [formModel]="fromModel" (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)">
         </codx-comments>
         <div class="c2 ms-10" *ngFor="let item of data.listComment">
@@ -102,17 +89,12 @@
             </ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
-          <codx-comments 
-            [funcID]="funcID" 
-            [objectType]="objectType"
-            (evtDeleteComment)="deleteComment($event)"
-            (evtSendComment)="sendComment($event,data)" 
-            [new]="true" [parentID]="data.parentID" 
-            [refID]="data.recID"
-            [formModel]="fromModel">
+            <codx-comments [funcID]="funcID" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
+                (evtSendComment)="sendComment($event,data)" [new]="true" [parentID]="data.parentID" [refID]="data.recID"
+                [formModel]="fromModel">
             </codx-comments>
         </ng-container>
-      </div>
+    </div>
 </ng-template>
 <ng-template #popContentListVoted let-dialog>
     <codx-form headerText="Danh sách" [body]="body" [dialog]="dialog">
