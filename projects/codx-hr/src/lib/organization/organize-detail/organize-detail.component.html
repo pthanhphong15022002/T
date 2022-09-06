@@ -166,7 +166,9 @@
     </div>
     <div class="mr-5 d-flex align-items-center mt-2">
       <span class="text-dark-50 mr-2">Tình trạng:</span>
-      <span class="text-dark">{{ imployeeInfo.status }}</span>
+      <span class="text-dark">{{
+        imployeeInfo.status | vll: "L0225":"text" | async
+      }}</span>
     </div>
   </div>
 </ng-template>

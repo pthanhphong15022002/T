@@ -9,12 +9,12 @@
                             <div class="modal-card-img card-img-overlay" *ngIf="itemSelected.background"
                                 [style.background]="itemSelected.background | backgroundImage:itemSelected?.backgroundColor">
                             </div>
-                            <div class="row h-100 p-4" [style.background]="itemSelected.background | backgroundImage:itemSelected?.backgroundColor">
+                            <div class="row h-100 p-4 d-flex align-items-center justify-content-center text-center" [style.background]="itemSelected.background | backgroundImage:itemSelected?.backgroundColor">
                                 <div class="card-title fw-bolder display-6"
                                     [style.color]="itemSelected?.pattern?.headerColor">
                                     {{itemSelected?.cardType | vll:'L1422':'text'|async}}
                                 </div>
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center justify-content-center">
                                     <codx-img class="symbol symbol-40 symbol-circle"
                                         [objectId]="itemSelected?.sender?.domainUser" objectType="AD_Users"
                                         [width]="35">
@@ -31,20 +31,19 @@
                                     [style.color]="itemSelected?.pattern?.textColor"
                                     [innerHTML]="itemSelected?.situation">
                                 </div>
-                                <div class="d-flex align-items-center group-hasGift mt-6">
+                                <div class="d-flex align-items-center justify-content-center group-hasGift mt-6">
                                     <div class="d-flex align-items-center mr-3" *ngIf="itemSelected?.rating">
-                                        <img class="w-30px h-30px mr-2" src="../../../../assets/demos/card/rating/{{itemSelected?.rating | vll:ratingVll:'icon'
-                                |async}}" />
+                                        <img class="w-30px h-30px mr-2" src="/assets/themes/fd/default/img/{{itemSelected.rating | vll:ratingVll:'icon' | async}}" />
                                         <span class="label label-xxs label-pill label-inline label-danger">
                                             {{itemSelected?.rating | vll:ratingVll:'text'|async}}
                                         </span>
                                     </div>
     
                                     <div class="d-flex align-items-start">
-                                        <img src="../../../../assets/img/feedback/gift 1.png"
+                                        <img src="/assets/img/feedback/gift 1.png"
                                             *ngIf="itemSelected?.hasGift"
                                             class="symbol-image icon-surface1 h-30px mr-2" />
-                                        <img src="../../../../assets/img/feedback/money-1.png"
+                                        <img src="/assets/img/feedback/money-1.png"
                                             *ngIf="itemSelected?.hasPoint"
                                             class="symbol-image icon-money-1 h-30px mr-2" />
                                     </div>
@@ -145,9 +144,9 @@
             <div class="mt-6 clear">
                 <ng-container *ngIf="itemSelected?.sharedWiths  && itemSelected.sharedWiths.length">
                     <div class="text-primary fw-bolder mb-4"><codx-label formName="" name="lblShare" default="Chia sẻ"></codx-label></div>
-                    <div class="share-item" *ngFor="let item of itemSelected?.sharedWiths">
+                    <ng-container *ngFor="let item of itemSelected?.sharedWiths">
                         <ng-container *ngTemplateOutlet="templateShare; context:{$implicit:item}"></ng-container>
-                    </div>
+                    </ng-container>
                 </ng-container>
             </div>
             <div class="mt-6 clear">
@@ -197,11 +196,11 @@
 
 
 <ng-template #templateShare let-item>
-    <div class="">
+    <span class="me-2">
         <codx-img objectType="AD_Users" [objectId]="item.objectID"
             class="symbol symbol-circle symbol-30 mr-3" [width]="35">
         </codx-img>
-    </div>
+    </span>
 </ng-template>
 
 

@@ -249,71 +249,13 @@ export class PopupAddSprintsComponent implements OnInit {
 
   valueChangeSharedResource(e) {
     this.master.isShared = e.data;
-    if (!this.master.isShared) {
-      this.master.resources = null;
-      this.listUserDetail = [];
-    }
+    //bỏ luôn
+    // if (!this.master.isShared) {
+    //   this.master.resources = null;
+    //   this.listUserDetail = [];
+    // }
   }
 
-  // eventApply(e: any) {
-  //   var resources = '';
-  //   var listDepartmentID = '';
-  //   var listUserID = '';
-
-  //   e?.data?.forEach((obj) => {
-  //     // if (obj?.data && obj?.data != '') {
-  //     switch (obj.objectType) {
-  //       case 'U':
-  //         listUserID += obj.id + ';';
-  //         break;
-  //       case 'O':
-  //       case 'D':
-  //         listDepartmentID += obj.id + ';';
-  //         break;
-  //     }
-  //     //  }
-  //   });
-  //   if (listUserID != '')
-  //     listUserID = listUserID.substring(0, listUserID.length - 1);
-  //   if (listDepartmentID != '')
-  //     listDepartmentID = listDepartmentID.substring(
-  //       0,
-  //       listDepartmentID.length - 1
-  //     );
-  //   if (listDepartmentID != '') {
-  //     this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
-  //       if (res) {
-  //         resources += res;
-  //         if (listUserID != '') resources += ';' + listUserID;
-  //         this.valueSelectUser(resources);
-  //       }
-  //     });
-  //   } else this.valueSelectUser(listUserID);
-  // }
-
-  // valueSelectUser(resources) {
-  //   if (resources != '') {
-  //     if (this.master.resources && this.master.resources != '') {
-  //       var arrAssign = resources.split(';');
-  //       var arrNew = [];
-  //       arrAssign.forEach((e) => {
-  //         if (!this.master.resources.includes(e)) {
-  //           arrNew.push(e);
-  //         }
-  //       });
-  //       if (arrNew.length > 0) {
-  //         resources = arrNew.join(';');
-  //         this.master.resources += ';' + resources;
-  //         this.getListUser(resources);
-  //       }
-  //     } else {
-  //       this.master.resources = resources;
-  //       this.getListUser(resources);
-  //     }
-  //   }
-  //   this.changeDetectorRef.detectChanges();
-  // }
-  //#endregion
 
   changeMemo(e) {
     this.master.memo = e?.data;
