@@ -134,14 +134,14 @@ export class PopupEditComponent implements OnInit {
         'UpdateNewsAsync',
         this.data
       )
-      .subscribe((res: any) => {
+      .subscribe(async (res: any) => {
         if (res) {
           let result = res;
           if(this.fileUpload.length > 0){
             this.deleteFileByObjectID(this.data.recID);
             this.dmSV.fileUploadList = [...this.fileUpload];
-            this.codxAttm.saveFilesObservable().subscribe((res2:any) =>
-            {
+            (await (this.codxAttm.saveFilesObservable())).subscribe((res2:any) =>
+            { 
               if(res2)
               {
                 this.initForm();
