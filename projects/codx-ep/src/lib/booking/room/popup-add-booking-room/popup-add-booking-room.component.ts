@@ -448,6 +448,16 @@ export class PopupAddBookingRoomComponent implements OnInit {
       this.lstUserOptional.push(this.tempAtender);
     });
     this.fGroupAddBookingRoom.value.attendees=this.lstUser.length + this.lstUserOptional.length;
+    if(this.lstUserOptional!=null){
+      this.lstUser?.forEach(people=>{
+        this.attendeesList.push(people);
+      })
+    };
+    if(this.lstUserOptional!=null){
+      this.lstUserOptional.forEach(people=>{
+        this.attendeesList.push(people);
+      })  
+    };    
     this.changeDetectorRef.detectChanges();
   }
   valueCbxStationeryChange(event?) {
