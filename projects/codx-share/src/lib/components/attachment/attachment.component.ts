@@ -590,7 +590,9 @@ export class AttachmentComponent implements OnInit {
     this.dmSV.getToken();
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectId = this.objectId;
-      this.addFileObservable(this.fileUploadList[i], false, i);
+      this.addFileObservable(this.fileUploadList[i], false, i).subscribe(item =>{
+        
+      });
     }
 
     if (total > 1) {
