@@ -65,10 +65,10 @@
                                         <span (click)="clickFunction('font', 'UNDERLINE', input)"
                                             [class]="'icon-format_underlined icon-18 btn btn-icon btn-active-light-primary position-relative'"
                                             [style.color]=""></span>
-                                        <codx-input #colorPicker type="colorpicker" [showText]="false"
+                                        <!-- <codx-input #colorPicker type="colorpicker" [showText]="false"
                                             [modeSwitcher]="true" [crrValue]="font.COLOR" field="textColor"
                                             (valueChange)="valueChangeColor($event, input, colorPicker)">
-                                        </codx-input>
+                                        </codx-input> -->
                                         <div ngbDropdown class="d-inline-block">
                                             <button type="button" data-toggle="tooltip" title="Icon"
                                                 class="btn btn-icon btn-md ms-2 btn-emoji" id="dropdownBasic1"
@@ -86,7 +86,8 @@
                                 <hr>
                                 <ng-container *ngIf="showMF">
                                     <li>
-                                        <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <button class="dropdown-item text-hover-primary d-flex align-items-center"
+                                            (click)="clickFunction('assign', '', input, '', i)">
                                             <span [class]="'icon-person_add_alt_1 icon-20 me-2'"
                                                 [style.color]="'dodgerblue'"></span>
                                             <span class="show-customName">{{'Giao việc'}}</span>
@@ -128,8 +129,8 @@
                                     (valueChange)="valueChange($event)"
                                     [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                 </codx-input>
-                                <codx-tree-history [funcID]="" [objectID]="" [objectType]="" addNew="true">
-                                </codx-tree-history>
+                                <!-- <codx-tree-history [funcID]="" [objectID]="" [objectType]="" addNew="true">
+                                </codx-tree-history> -->
                             </div>
                         </div>
                     </div>
