@@ -35,7 +35,7 @@
       </div>
       <div class="col-3">
         <codx-label [formModel]="formModel" [fiedName]="'title'" default="Dòng tiêu đề" class="fw-bold"></codx-label>
-        <codx-input type="number" [Group]="importAddTmpGroup" ControlName="firstRowHeader"></codx-input>
+        <codx-input type="number" [Group]="importAddTmpGroup" ControlName="firstCell" [min]="1"></codx-input>
       </div>
       <div class="col-3">
         <codx-label [formModel]="formModel" [fiedName]="'password'" default="Định dạng mật khẩu" class="fw-bold">

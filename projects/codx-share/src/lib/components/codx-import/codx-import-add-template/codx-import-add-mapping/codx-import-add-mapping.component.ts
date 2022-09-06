@@ -85,28 +85,27 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   paramsCbb = {};
   type = 'new';
   columnField = '';
-  public isDropdown = true;
   selectionOptions: SelectionSettingsModel;
   customerIDRules: object;
+  sourceField: any;
   public contextMenuItems: any;
   public rowIndex: number;
   public cellIndex: number;
+  public isDropdown = true;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
   constructor(
-    private callfunc: CallFuncService,
     private cache: CacheService,
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
-    private notifySvr: NotificationsService,
-    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.formModel = dt.data?.[0];
     this.dataIEConnection = dt.data?.[1];
-    if (dt.data?.[2]) this.dataIETable = dt.data?.[2];
-    if (dt.data?.[3]) this.dataIEMapping = dt.data?.[3];
+    if(dt.data?.[2]) this.dataIETable = dt.data?.[2];
+    if(dt.data?.[3]) this.dataIEMapping = dt.data?.[3];
+    if(dt.data?.[5]) this.sourceField = dt.data?.[5];
     this.type = dt.data?.[4];
   }
 
@@ -151,7 +150,25 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     });
     if(this.type == 'new') this.createData();
     if(this.type == "edit") this.getDataEdit();
+    this.formatSourceField();
     this.getGridViewSetup();
+  }
+  formatSourceField()
+  {
+    if(this.sourceField)
+    {
+      var cbb = [];
+      for(var i = 0 ; i< this.sourceField.length ; i++)
+      {
+        var obj = 
+        {
+          text : this.sourceField[i],
+          value : this.sourceField[i],
+        }
+        cbb.push(obj);
+      }
+      this.dataCbb["SourceField"] = cbb;
+    }
   }
   getDataEdit()
   {
@@ -183,12 +200,11 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   load(args) {
     this.grid.element.addEventListener('mouseup', (e: MouseEventArgs) => {
       if ((e.target as HTMLElement).classList.contains("e-rowcell")) {
-        debugger;
         if (this.grid.isEdit)
             this.grid.endEdit();
         let rowInfo = this.grid.getRowInfo(e.target) as any;
         let colindex: number = parseInt((e.target as HTMLElement).getAttribute("aria-colindex"));
-        var check = this.fieldImport.filter(x=>(x.type == "3" || x.type == "2") && x.text == rowInfo.column.field);
+        var check = this.fieldImport.filter(x=>(x.type == "3" || x.type == "2" || x.type=="SourceField") && x.text == rowInfo.column.field);
         if(check!=null&& check.length>0)  this.isDropdown = true;
         this.columnField = rowInfo.column.field
         // if (rowInfo.column.field === "CreatedBy")
@@ -230,9 +246,8 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     this.dataIETable.importRule = this.dataIEMapping.importRule = this.addMappingForm.value?.importRule;
     this.dataIETable.isSummary = this.addMappingForm.value?.isSummary;
     for (var i = 0; i < (result as any).length; i++) {
-      result[i].recID = this.dataIETable.recID;
-      result[i].sessionID = this.dataIEMapping.recID;
-      result[i].mappingTemplate = this.dataIETable.mappingTemplate;
+      result[i].sessionID = this.dataIETable.recID;
+      result[i].mappingTemplate = "";
     }
     this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
   }
@@ -247,8 +262,10 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
           var key = Object.keys(item);
           for (var i = 0; i < key.length; i++) {
             if (item[key[i]]?.isImport) {
+              debugger;
               var obj = {
-                destinationField: key[i],
+                destinationfield: key[i],
+                sourcefield:item[key[i]].headerText
               };
               this.dataImport.push(obj);
             }
@@ -263,18 +280,23 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
                 this.gridViewSetup = item;
                 var key = Object.keys(item);
                 for (var i = 0; i < key.length; i++) {
-                  if (item[key[i]]?.isVisible) {
+                  if (item[key[i]]?.isVisible) 
+                  {
                     this.dataImport2 = this.dataImport;
                     let val = item[key[i]].referedValue;
                     let keys = key[i];
                     for (var x = 0; x < this.dataImport2.length; x++) {
                       if (item[keys]?.controlType == 'CheckBox')
                         this.dataImport2[x][keys] = false;
-                      else if (keys == 'DestinationField') {
-                        this.dataImport2[x][keys] =
-                          this.dataImport2[x]['destinationField'];
-                        delete this.dataImport2[x]['destinationField'];
-                      } else this.dataImport2[x][key[i]] = '';
+                      else if (keys == 'DestinationField' || keys == "SourceField") 
+                      {
+                        var keyss = keys.toLowerCase();
+                        this.dataImport2[x][keys] = this.dataImport2[x][keyss];
+                        if(this.sourceField.includes(this.dataImport2[x][keyss]) == false && keys == "SourceField") 
+                          this.dataImport2[x][keys] = "";
+                        delete this.dataImport2[x][keyss];
+                      } 
+                      else this.dataImport2[x][keys] = '';
                     }
                     var field2 = {
                       text: key[i],
@@ -283,11 +305,17 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
                       value: item[keys]?.referedValue,
                       require: item[keys]?.isRequire,
                     };
+                    if(keys == "SourceField")
+                    {
+                      field2.controlType = "ComboBox"
+                      field2.value = "SourceField";
+                      field2.type = "SourceField";
+                      val = "SourceField";
+                    }
                     if (
-                      (item[key[i]].referedType == '3' ||
-                        item[key[i]].referedType == '2') &&
-                      val &&
-                      !(keys in this.editParams)
+                      ((item[key[i]].referedType == '3' ||
+                        item[key[i]].referedType == '2') && val && !(keys in this.editParams))
+                      || (keys == "SourceField" && !(keys in this.editParams))
                     ) {
                       if (item[key[i]].referedType == '3') {
                         this.getDataCBB(val);
@@ -297,7 +325,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
                       }
                       this.element[keys] = null as HTMLElement;
                       this.dropObj[keys] = null as DropDownList;
-
                       this.editParams[keys] = {
                         create: () => {
                           this.element[keys] = document.createElement('input');
@@ -310,6 +337,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
                           this.dropObj[keys].destroy();
                         },
                         write: (args: { rowData: object; column: Column }) => {
+                          debugger;
                           var fields = { text: 'text', value: 'value' };
                           if (item[keys].referedType == '3')
                             fields = this.paramsCbb[val];
@@ -363,7 +391,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     let html = `<codx-input type="text"></codx-input>`;
     child.innerHTML = html;
   }
-  aaa(a: any) {}
   getDataCBB(cbb: any) {
     var request = new DataRequest();
     request.comboboxName = cbb;
@@ -435,7 +462,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     return this.gridViewSetup[e].headerText;
   }
   getEdit(e: any, field: any) {
-    if (e == '3' || e == '2') return this.editParams[field];
+    if (e == '3' || e == '2' || e=="SourceField") return this.editParams[field];
     return null;
   }
   getTextAligin(type:any)

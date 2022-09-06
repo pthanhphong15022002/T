@@ -1,45 +1,29 @@
 import {
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  HostListener,
-  Injector,
-  Input,
   OnChanges,
   OnInit,
   Optional,
-  Output,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
 import {
-  GridComponent,
-  SelectionSettingsModel,
-} from '@syncfusion/ej2-angular-grids';
-import { DialogModule } from '@syncfusion/ej2-angular-popups';
-import {
-  AlertConfirmInputConfig,
   ApiHttpService,
   CacheService,
   CallFuncService,
   CodxGridviewComponent,
   CodxService,
   DataRequest,
-  DataService,
   DialogData,
-  DialogModel,
   DialogRef,
   NotificationsService,
 } from 'codx-core';
-import { Observable, finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
 import * as XLSX from 'xlsx';
@@ -53,6 +37,7 @@ import { IETables } from '../models/import.model';
 export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   type = "add";
   active = "1";
+  wb:any;
   dialog: any;
   submitted = false;
   gridModel: any;
@@ -62,23 +47,23 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   grd: any;
   hideThumb = false;
   fileCount = 0;
-  headerText: string = 'Thêm mới template';
+  headerText: string = 'Thêm mới';
   columnsGrid: any;
   editSettings: any;
   dataIEConnections: any = {};
   dataIETables: any = {};
-  dataIEMapping: any = {};
   sheet: any;
   mappingTemplate: any;
   importRule: any;
   importAddTmpGroup: FormGroup;
   formModels: any;
+  selectedSheet: any;
   dataSave = 
   {
     dataIEMapping:[],
     dataIEFieldMapping:[],
   }
-
+  sourceField : any;
   //////////////////////
   service = 'SYS'
   /////////////////////
@@ -95,19 +80,24 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger;
     this.dialog = dialog;
     if(dt.data[0]) this.type = dt.data[0];
     this.formModel = dt.data?.[1];
     if(dt.data?.[2])
-      this.recID=dt.data?.[2];
+      this.recID = dt.data?.[2];
+    if(dt.data?.[3])
+      this.dataIEConnections = dt.data?.[3]
   }
 
   ngOnInit(): void {
+    if(this.type == "edit")
+      this.headerText = "Chỉnh sửa"
     //Tạo formGroup
     this.importAddTmpGroup = this.formBuilder.group({
       nameTmp: ['', Validators.required],
       sheetImport: '',
+      password:[''],
+      firstCell: 1
     });
     this.columnsGrid = [
       {
@@ -148,7 +138,6 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       formName: "IEConnections",
       gridViewName: "grvIEConnections"
     }
-
     if(this.recID) this.getDataEdit();
   }
   getDataEdit()
@@ -157,13 +146,20 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     request.page = 0;
     request.pageSize = 20;
     this.api.execSv<any>(this.service,"AD","IETablesBusiness","GetItemByIEConnectionAsync",[request,this.recID]).subscribe(item=>{
-      if(item && item[0])
+      if(item && item[0]) 
       {
-        this.gridView.dataService.data = item[0]
+        this.gridView.dataService.data = item[0];
+        this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
       }
-      // if(item) this.notifySvr.notifyCode('OD008');
-      // else this.notifySvr.notifyCode('SYS021');
     })
+    this.importAddTmpGroup.controls['nameTmp'].setValue(this.dataIEConnections?.description);
+    this.importAddTmpGroup.controls['password'].setValue(this.dataIEConnections?.password);
+   /*  this.api.execSv<any>(this.service,"AD","IEMappingsBusiness","GetItemByMappingTemplateAsync",this.dataIEConnections?.mappingTemplate).subscribe(item2=>{
+      if(item2) 
+      {
+        this.dataSave.dataIEMapping = item2
+      }
+    }) */
   }
   ngOnChanges(changes: SimpleChanges) { }
   get f(): { [key: string]: AbstractControl } {
@@ -183,23 +179,26 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       reader.onload = (e: any) => {
         /* create workbook */
         const binarystr: string = e.target.result;
-        const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
-        this.sheet = wb.SheetNames;
+        (this.wb as XLSX.WorkBook) = XLSX.read(binarystr, { type: 'binary' });
+        this.sheet = this.wb.SheetNames;
         this.importAddTmpGroup.controls['sheetImport'].setValue(this.sheet[0]);
+        this.selectedSheet = this.sheet[0]
         this.dataIETables.sourceTable = this.sheet[0];
+       
       };
     }
   }
-  async onSave()
+  onSave()
   {
     this.attachment.objectId = this.dataIEConnections.recID;
     for(var i =0 ; i< this.gridView.dataService.data.length ; i++)
     {
+      this.gridView.dataService.data[i].sourceTable = this.importAddTmpGroup.value.sheetImport;
       delete this.gridView.dataService.data[i].mappingName;
     }
     this.dataIEConnections.description = this.importAddTmpGroup.value.nameTmp;
-   
-    (await this.attachment.saveFilesObservable()).subscribe((item:any)=>{
+    this.dataIEConnections.password = this.importAddTmpGroup.value.password;
+    this.attachment.saveFilesObservable().subscribe((item:any)=>{
       if(item?.status == 0)
       {
         //Lưu IEConnections
@@ -213,11 +212,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           // if(item) this.notifySvr.notifyCode('OD008');
           // else this.notifySvr.notifyCode('SYS021');
         })
-        this.api.execSv<any>("SYS","AD","IEMappingsBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEMapping)).subscribe(item=>{
-          debugger;
-          // if(item) this.notifySvr.notifyCode('OD008');
-          // else this.notifySvr.notifyCode('SYS021');
-        })
+        // this.api.execSv<any>("SYS","AD","IEMappingsBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEMapping)).subscribe(item=>{
+        //   debugger;
+        //   // if(item) this.notifySvr.notifyCode('OD008');
+        //   // else this.notifySvr.notifyCode('SYS021');
+        // })
         if(this.dataSave.dataIEFieldMapping.length>0)
         {
           this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",this.dataSave.dataIEFieldMapping).subscribe(item=>{
@@ -304,16 +303,16 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     objIETables.processIndex = 1,
     objIETables.isSummary = false,
     this.dataIETables = {...objIETables , ...this.dataIETables}
-    var objIEMapping = 
-    {
-      recID : this.dataIEConnections.mappingTemplate,
-      tableName : this.mappingTemplate?.TableName,
-      importRule: this.importRule[0]?.value,
-      addBatchLink: false
-    }
-    this.dataIEMapping = {...objIEMapping , ...this.dataIEMapping}
+    // var objIEMapping = 
+    // {
+    //   recID : this.dataIEConnections.mappingTemplate,
+    //   tableName : this.mappingTemplate?.TableName,
+    //   importRule: this.importRule[0]?.value,
+    //   addBatchLink: false
+    // }
+    // this.dataIEMapping = {...objIEMapping , ...this.dataIEMapping}
     this.gridView.dataService.data.push(this.dataIETables);
-    this.dataSave.dataIEMapping.push(this.dataIEMapping);
+    // this.dataSave.dataIEMapping.push(this.dataIEMapping);
     //this.gridView.addHandler(sdata,true,"recID")
   }
   getDataCbb() {
@@ -327,10 +326,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       {
         var data = JSON.parse(item[0]);
         //Nhớ sửa lại lấy cái đầu tiên
-        this.mappingTemplate = data[1];
+        this.mappingTemplate = data[0];
         this.importAddTmpGroup.controls['nameTmp'].setValue(this.mappingTemplate?.MappingName);
         this.dataIEConnections.mappingName = this.mappingTemplate?.MappingName;
-        this.dataIEMapping.mappingName = this.mappingTemplate?.MappingName;
+        //this.dataIEMapping.mappingName = this.mappingTemplate?.MappingName;
         this.dataIETables.mappingName = this.mappingTemplate?.MappingName;
         this.getGridViewSetup();
       }
@@ -356,16 +355,17 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   //Thêm mới template
   openFormAddTemplate()
   {
+    this.sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]],{header:this.importAddTmpGroup.value.firstCell});
     if(!this.importAddTmpGroup.value.sheetImport) return this.notifySvr.notify("sheet import không được trống");
     this.dataIETables.sourceTable = this.importAddTmpGroup.value.sheetImport;
-    this.callfunc.openForm(CodxImportAddMappingComponent,null,1000,800,"",[this.formModel,this.dataIEConnections,null,null,"new"],null).closed.subscribe(item=>{
+    this.callfunc.openForm(CodxImportAddMappingComponent,null,1000,800,"",[this.formModel,this.dataIEConnections,null,null,"new",this.sourceField[0]],null).closed.subscribe(item=>{
       if(item?.event)
       {
+        debugger;
         var dataTable = item?.event[0] as IETables;
         dataTable.sourceTable = this.dataIETables.sourceTable;
-        this.dataSave.dataIEMapping.push(item?.event[1]);
+        //this.dataSave.dataIEMapping.push(item?.event[1]);
         this.dataSave.dataIEFieldMapping.push(item?.event[2]);
-        item?.event[0]
         this.gridView.dataService.data = [item?.event[0],...this.gridView.dataService.data]
       }
     });
@@ -386,8 +386,8 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         [
           this.formModel,
           this.dataIEConnections,
-          this.dataIETables,
-          this.dataIEMapping,
+          data,
+          null,
           'edit',
         ],
         null
@@ -397,4 +397,32 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         }
       });
   }
+  getfileGet(e:any)
+  {
+    //var arr = [];
+   
+    var recID = e[0]?.recID;
+    this.api.exec<any>("DM","FileBussiness","GetFileBase64Async",recID).subscribe(item=>{
+      if(item)
+      {
+        fetch(item)
+        .then(res => res.blob()) // Gets the response and returns it as a blob
+        .then(blob => {
+          let metadata = {
+            type: e[0]?.extension
+          };
+          let file = new File([blob], e[0]?.fileName, metadata);
+          const reader: FileReader = new FileReader();
+          reader.readAsBinaryString(file);
+          reader.onload = (e: any) => {
+            const binarystr: string = e.target.result;
+            const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
+            this.sheet = wb.SheetNames;
+            this.selectedSheet= this.gridView.dataService.data[0].sourceTable
+          };
+        });
+      }
+    })
+  }
+  
 }
