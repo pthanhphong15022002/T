@@ -385,6 +385,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
+            this.listFileUpload.map((e:any) => {
+              e.objectId = this.atmCreate.objectId;
+            })
             this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
             (await this.atmCreate.saveFilesObservable()).subscribe((res:any)=>{
