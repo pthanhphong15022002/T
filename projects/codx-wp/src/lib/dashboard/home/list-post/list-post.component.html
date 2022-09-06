@@ -41,9 +41,9 @@
         <div class="d-flex align-items-center mb-2">
           <span class="text-dark fw-bolder">{{ item.createdName }}</span>
           <div *ngIf="item.tag > 0" class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
-            [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item.recID)">
+            [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item)">
             <div class="tag me-2">
-              <img class="tag-img" src="../../../../assets/img/fed/user-tag.png" />
+              <img class="tag-img" src="/assets/img/fed/user-tag.png" />
             </div>
             <span class="tag-count">{{ item.tag }}</span>
           </div>
