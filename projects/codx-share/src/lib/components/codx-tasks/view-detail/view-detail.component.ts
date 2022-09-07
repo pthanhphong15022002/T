@@ -45,6 +45,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
   firstLoad = true;
+  viewTags= '' ;
 
   constructor(
     private api: ApiHttpService,
@@ -70,10 +71,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#region
   //#region Method
   getTaskDetail() {
+    this.viewTags ='' ;
     this.api
       .exec<any>('TM', 'TaskBusiness', 'GetTaskDetailsByTaskIDAsync', this.id)
       .subscribe((res) => {
         this.itemSelected = res;
+        this.viewTags  = this.itemSelected.tags
       });
   }
 
