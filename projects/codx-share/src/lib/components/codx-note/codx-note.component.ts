@@ -710,11 +710,16 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       data: this.contents[index],
       funcID: this.funcID,
       objectType: this.objectType,
-    }
+    };
     this.dialog = this.callfunc.openSide(FileComponent, dt);
-    this.dialog.closed.subscribe(res => {
-      debugger
-    })
+    this.dialog.closed.subscribe((res) => {
+      if (res.event.data) {
+        this.contents[index].attachments += res.event.data.length;
+        this.updateContent(this.objectParentID, this.contents);
+      }
+    });
+
+
   }
 
   popup() {
