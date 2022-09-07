@@ -95,7 +95,7 @@
                                     </li>
                                     <li>
                                         <button class="dropdown-item text-hover-primary d-flex align-items-center"
-                                            (click)="clickFunction('comment', '', input)">
+                                            (click)="clickFunction('comment', '', input, '', i)">
                                             <span [class]="'icon-chat_bubble_outline icon-20 me-2'"
                                                 [style.color]="'dodgerblue'"></span>
                                             <span class="show-customName">{{
@@ -104,7 +104,8 @@
                                         </button>
                                     </li>
                                     <li>
-                                        <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <button (click)="clickFunction('attachment', '', input, '', i)"
+                                            class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-attach_file icon-20 me-2'"
                                                 [style.color]="'dodgerblue'"></span>
                                             <span class="show-customName">{{ "Đính kèm file" }}</span>
@@ -137,10 +138,10 @@
                                     [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                 </codx-input>
                             </div>
-                            <div ngbDropdown class="d-inline-block" *ngIf="item.tasks > 0">
-                                <span class="icon-perm_identity icon-24 position-relative me-6 darkgray"
+                            <div ngbDropdown class="d-inline-block" container="body">
+                                <span class="icon-perm_identity icon-24 position-relative darkgray"
                                     (click)="popoverListTask(item.recID)" id="dropdownForm1" ngbDropdownToggle>
-                                    <span
+                                    <span *ngIf="item.tasks > 0"
                                         class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary">{{item.tasks}}</span></span>
                                 <div ngbDropdownMenu aria-labelledby="dropdownForm1">
                                     <div *ngFor="let data of listTask">
@@ -156,10 +157,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <span class="icon-chat_bubble_outline icon-24 position-relative darkgray me-10"
-                                *ngIf="item.comments > 0">
+                            <span
+                                class="icon-chat_bubble_outline icon-22 position-relative darkgray icon-comment-assign">
                                 <span
-                                    class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary">{{item.comments}}</span></span>
+                                    class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary"
+                                    *ngIf="item.comments > 0">{{item.comments}}</span></span>
                         </div>
                     </div>
                 </div>
@@ -228,9 +230,8 @@
                     }}</span>
             </span>
         </div>
-        <div *ngIf="data.category == '3'" class="" (mouseenter)="popoverEmpList(popoverList, data)"
-            [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="bottom left"
-            container="body" autoClose="outside" [openDelay]="500">
+        <div *ngIf="data.category == '3'" (mouseenter)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList"
+            popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" autoClose="outside">
             <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3">
             </codx-imgs>
         </div>
@@ -281,12 +282,34 @@
         </div>
     </div>
 </ng-template>
+
 <ng-template #popupComment let-dialog>
-    <codx-form [dialog]="dialog" [body]="body">
+    <codx-form [dialog]="dialog" [body]="body" [headerText]="headerComment">
         <ng-template #body>
-            <codx-tree-history [funcID]="funcID" [objectID]="contents[id].recID"
-                [objectType]="objectType" [actionType]="'C'" addNew="true">
+            <codx-tree-history [funcID]="funcID" [objectID]="contents[id].recID" [objectType]="objectType"
+                [actionType]="'C'" addNew="true">
             </codx-tree-history>
+        </ng-template>
+    </codx-form>
+</ng-template>
+
+<ng-template #popupAttachment let-dialog>
+    <codx-form [dialog]="dialog" [body]="body" [headerText]="headerAttachment" [footer]="footer">
+        <ng-template #body>
+            <div class="">
+                <codx-attachment #attachment [objectType]="objectType" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                    hideDes="1" hideImageUpload="0" hideImageThumb="1" [functionID]="funcID"
+                    [objectId]="contents[id].recID" [allowMultiFile]="1" [idBrowse]="'add'">
+                </codx-attachment>
+            </div>
+        </ng-template>
+        <ng-template #footer>
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-light-primary" (click)="popup()">
+                    <i class="icon-add fs-5 me-1"></i>
+                    <codx-label name="lblTitle" formName="Notes" default="Thêm file"></codx-label>
+                </button>
+            </div>
         </ng-template>
     </codx-form>
 </ng-template>
