@@ -71,7 +71,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.formName = this.dialog.formModel.formName;
     this.gridViewName = this.dialog.formModel.gridViewName;
     this.functionID = this.dialog.formModel.funcID;
-    this.data = dialog.dataService!.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.employee = this.data;
   }
 
