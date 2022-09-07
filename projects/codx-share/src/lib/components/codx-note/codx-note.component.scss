@@ -77,8 +77,14 @@
 .darkgray {
   color: darkgray;
 }
+
 .badge-primary.badge-outline {
   border: 1px solid var(--text-primary);
   color: var(--text-primary);
   background-color: transparent;
+}
+
+.icon-comment-assign{
+  margin-right: 4%;
+    padding-left: 13px;
 }

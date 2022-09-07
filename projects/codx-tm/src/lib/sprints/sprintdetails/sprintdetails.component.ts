@@ -125,7 +125,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
             projectID: this.projectID ? this.projectID : '',
             resources: resourceTaskControl.length>0 ? resourceTaskControl.join(";"): '',
             fromDate : res.fromDate ?moment(new Date(res.fromDate)) :'',
-            endDate : res.endDate ? moment(new Date(res.endDate))  :'',
+            endDate : res.toDate ? moment(new Date(res.toDate))  :'',
           };
           if (this.resources != null) {
             this.getListUserByResource(this.resources);

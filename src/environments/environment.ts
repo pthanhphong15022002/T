@@ -9,6 +9,10 @@ export const environment = {
   //apiUrl: 'http://172.16.7.34:8011',
   //shopping: 'https://localhost:44317/Shopping',
   shopping: 'https://172.16.7.34:8111/Shopping',
+<<<<<<< HEAD
+=======
+  //apiUrl: 'http://172.16.7.34:8011',
+>>>>>>> 199bcb80af782279613a1cca7f0b516cfaa97985
   pdfUrl: 'http://localhost:8015/api/pdf',
   librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
   StoreNames: {
