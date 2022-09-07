@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
-import { AttachmentComponent } from './components/attachment/attachment.component';
 import { AssignInfoComponent } from './components/assign-info/assign-info.component';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { SelectweekComponent } from './components/selectweek/selectweek.component';
@@ -89,7 +88,8 @@ import { CodxCommentHistoryComponent } from './components/codx-comment-history/c
 import { PdfViewerAllModule } from '@syncfusion/ej2-angular-pdfviewer';
 import { CodxTreeHistoryComponent } from './components/codx-tree-history/codx-tree-history.component';
 import { CodxViewAssignComponent } from './components/codx-view-assign/codx-view-assign.component';
-import { CommentsComponent } from './components/codx-note/comments/comments.component';
+import { FileComponent } from './components/codx-note/file/file.component';
+import { AttachmentComponent } from './components/attachment/attachment.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -150,13 +150,13 @@ const T_Component: Type<any>[] = [
   CodxViewAssignComponent,
   CodxCommentHistoryComponent,
   CodxTreeHistoryComponent,
-
+  FileComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe, CommentsComponent,],
+  declarations: [T_Component, T_Pipe, CommentsComponent, AttachmentComponent, FileComponent,],
   imports: [
     CommonModule,
     NgbModule,
