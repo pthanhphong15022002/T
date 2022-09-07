@@ -47,13 +47,13 @@ import { FormControl, FormGroup } from '@angular/forms';
   providers: [
     LinkAnnotationService,
     MagnificationService,
-    ThumbnailViewService,
     ToolbarService,
     NavigationService,
     TextSearchService,
     TextSelectionService,
     PrintService,
     AnnotationService,
+    ThumbnailViewService,
   ],
 })
 export class PdfViewComponent extends UIComponent implements AfterViewInit {
