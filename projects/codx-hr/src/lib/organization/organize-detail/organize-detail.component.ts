@@ -360,7 +360,5 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
     }
   }
 
-  public click(arg: ClickEventArgs) {
-    console.log(arg.element?.id);
-  }
+  onSearch(evt: any) {}
 }
