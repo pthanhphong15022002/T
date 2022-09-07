@@ -54,7 +54,7 @@
       </div>
       <div class="col-4">
         <div class="d-flex justify-content-end">
-          <codx-imgs class="symbol symbol-30px symbol-circle ms-1" [objectId]="meeting.avataResource"
+          <codx-imgs class="" [objectId]="meeting.avataResource"
             objectType="AD_Users" [numberImages]="6">
           </codx-imgs>
         </div>
@@ -72,19 +72,14 @@
       </ng-container>
       <ng-container *ngIf="name=='Thảo luận'">
         <div class="tab_container">
-          <!-- <div class="tab_body" *ngFor="let cmt of lstComment">
-            <codx-comment-history [data]="cmt" [actionType]="'C'" [type]="'view'"></codx-comment-history>
-          </div>
-          <div class="tab_footer">
-            <codx-comment-history [objectID]="meeting.meetingID" [objectType]="'CO_Meetings'" [type]="'create'"
-              [actionType]="'C'"></codx-comment-history>
-          </div> -->
-
-          <!-- Phúc gắn lại objectID, funcID giúp Lộc nha -->
-          <codx-tree-history [objectID]="meetingID" [objectType]="'CO_Meetings'" [actionType]="'C'" [addNew]="true"
-            [viewIcon]="false" [viewVote]="true" [funcID]="'TMT0501'">
+          <codx-tree-history [objectID]="meeting.meetingID" [objectType]="'CO_Meetings'" [actionType]="'C'" [addNew]="true"
+            [viewIcon]="false" [viewVote]="true" [funcID]="funcID">
           </codx-tree-history>
         </div>
+      </ng-container>
+      <ng-container *ngIf="name=='Giao việc'">
+        <ng-container *ngTemplateOutlet="templateAssign">
+        </ng-container>
       </ng-container>
     </div>
   </div>
@@ -95,4 +90,12 @@
     method="UpdateContentMeetingAsync" [objectParentID]="meetingID" [data]="meeting.contents" [objectID]=""
     [objectType]="'CO_Meetings'" [vllControlShare]="'TM003'" [vllRose]="'TM002'">
   </codx-note>
+</ng-template>
+
+<ng-template #templateAssign>
+  <!-- mapping sau -->
+  <div class="card-body-nodata text-center">
+    <img src="../../../../assets/img/EmptyDataPortal.png" />
+  </div>
+
 </ng-template>

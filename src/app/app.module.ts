@@ -27,6 +27,7 @@ import { CodxEpModule } from 'projects/codx-ep/src/public-api';
 import { CodxEsModule } from 'projects/codx-es/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
+import { FileComponent } from './file/file.component';
 
 
 //import { ReportComponent } from './modules/report/report.component';
@@ -75,6 +76,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 @NgModule({
   declarations: [
     AppComponent,
+    FileComponent,
   ],
   imports: [
     BrowserModule,
