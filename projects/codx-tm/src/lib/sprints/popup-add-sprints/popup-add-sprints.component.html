@@ -16,6 +16,7 @@
           [disabled]="readOnly"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          (valueChange)="changText($event)"
         >
         </codx-input> </span
       ><span class="col-2">
@@ -70,6 +71,7 @@
         field="viewMode"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="changeViewMode($event)"
       ></codx-input>
     </div>
     <div class="form-group">
@@ -86,6 +88,7 @@
         field="memo"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="changeMemo($event)"
       ></codx-input>
     </div>
     <ng-container >

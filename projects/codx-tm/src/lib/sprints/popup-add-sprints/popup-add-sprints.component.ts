@@ -256,9 +256,14 @@ export class PopupAddSprintsComponent implements OnInit {
     // }
   }
 
-
+  changText(e) {
+    this.master.iterationName = e?.data;
+  }
   changeMemo(e) {
     this.master.memo = e?.data;
+  }
+  changeViewMode(e){
+    this.master.viewMode = e?.data; ;
   }
 
   changeUser(e) {
