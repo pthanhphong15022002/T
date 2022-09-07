@@ -45,7 +45,6 @@ export class BookingRoomComponent extends UIComponent {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
-  @ViewChild('pined') pined?: TemplateRef<any>;
 
   showToolBar = 'true';
   service = 'EP';
@@ -70,8 +69,8 @@ export class BookingRoomComponent extends UIComponent {
   fields: any;
   resourceField: any;
   funcID: string;
-  lstPined : any = [];
-  titleCollapse: string = "Đóng hộp tham số";
+  lstPined: any = [];
+  titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
   constructor(
     private injector: Injector,
@@ -185,20 +184,6 @@ export class BookingRoomComponent extends UIComponent {
           panelLeftRef: this.chart,
         },
       },
-      // {
-      //   sameData: true,
-      //   id: '4',
-      //   type: ViewType.content,
-      //   showButton: false,
-      //   showFilter: false,
-      //   active: false,
-      //   text: 'Report',
-      //   icon: 'icon-assignment',
-      //   toolbarTemplate: this.pined,
-      //   model: {
-      //     panelLeftRef: this.report,
-      //   },
-      // },
     ];
     this.detectorRef.detectChanges();
   }
@@ -230,11 +215,20 @@ export class BookingRoomComponent extends UIComponent {
     }
   }
 
-  addReport(){
+  addReport() {
     let option = new DialogModel();
     option.DataService = this.viewBase.dataService;
     option.FormModel = this.viewBase.formModel;
-    this.callfc.openForm(PopupAddReportComponent,"",screen.width,screen.height,this.funcID,null,"",option);
+    this.callfc.openForm(
+      PopupAddReportComponent,
+      '',
+      screen.width,
+      screen.height,
+      this.funcID,
+      null,
+      '',
+      option
+    );
   }
   addNew(evt?) {
     this.viewBase.dataService.addNew().subscribe((res) => {
