@@ -9,11 +9,12 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
-  CacheService,
   CallFuncService,
   DialogData,
-  DialogRef,
   FormModel,
+  RequestOption,
+  CacheService,
+  DialogRef,
 } from 'codx-core';
 import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -24,7 +25,7 @@ import { CodxEpService } from '../../../codx-ep.service';
   styleUrls: ['popup-add-rooms.component.scss'],
 })
 export class PopupAddRoomsComponent implements OnInit {
-  @Input() data = {};
+  @Input() data!: any;
   @Input() editResources: any;
   @Input() isAdd = true;
   @Output() closeEdit = new EventEmitter();
@@ -35,66 +36,75 @@ export class PopupAddRoomsComponent implements OnInit {
   vllDevices = [];
   lstDevices: [];
   isAfterRender = false;
+
   tmplstDevice = [];
   lstDeviceRoom = [];
-  formModel: FormModel;
-  headerText = 'Thêm mới phòng họp';
-  subHeaderText = 'Thêm mới phòng họp';
+
+  formModel: FormModel;  
+  headerText='';
+  subHeaderText = 'Tạo & upload file văn bản';
 
   constructor(
     private cacheSv: CacheService,
-    private bookingService: CodxEpService,
+    private codxEpService: CodxEpService,
     private callFuncService: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {
-    this.data = dt?.data;
+  ) {    
+    this.data = dt?.data[0];
+    this.isAdd = dt?.data[1];
     this.dialog = dialog;
-    this.formModel = this.dialog.formModel;
+    this.formModel = this.dialog.formModel;    
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.initForm();
-    this.cacheSv.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
+    this.cacheSv.valueList('EP012').subscribe((res) => {      
+      this.vllDevices = res.datas;      
       this.vllDevices.forEach((item) => {
-        console.log(item)
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
-        this.lstDeviceRoom.push(device);
+        if(!this.isAdd)
+        {      
+          this.data.equipments.split(";").forEach((item)=>{
+            if(item == device.id){
+              device.isSelected = true;
+            }
+          }); 
+        }
+        this.lstDeviceRoom.push(device);          
+        this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+      });       
+    }); 
 
-      });
-      this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
-    });
-    this.bookingService
+    this.codxEpService
       .getComboboxName(
         this.dialog.formModel.formName,
         this.dialog.formModel.gridViewName
       )
       .then((res) => {
         this.CbxName = res;
+        console.log('cbx', this.CbxName);
       });
   }
 
   initForm() {
-    this.bookingService
-      .getFormGroup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
+    if(this.isAdd){      
+      this.headerText = "Thêm mới phòng"
+    }
+    else{
+      this.headerText = "Sửa thông tin phòng"
+    }
+
+    this.codxEpService
+    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogAddRoom = item;
-        this.dialogAddRoom.patchValue({
-          ranking: '1',
-          category: '1',
-          owner: '',
-        });
-
         if (this.data) {
           this.dialogAddRoom.patchValue(this.data);
-        }
+        }        
         this.isAfterRender = true;
       });
   }
@@ -112,7 +122,7 @@ export class PopupAddRoomsComponent implements OnInit {
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
     if (index != -1) {
-      this.tmplstDevice[index].isSelected = event.target.checked;
+      this.tmplstDevice[index].isSelected = event.data;
     }
   }
   openPopupDevice(template: any) {
@@ -124,33 +134,37 @@ export class PopupAddRoomsComponent implements OnInit {
       console.log(this.dialogAddRoom);
       return;
     }
-    let equipments = '';
-    this.lstDeviceRoom.forEach((element) => {
+    let lstEquipments = '';
+    this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
-        if (equipments == '') {
-          equipments += element.id;
+        if (lstEquipments == '') {
+          lstEquipments += element.id;
         } else {
-          equipments += ';' + element.id;
+          lstEquipments += ';' + element.id;
         }
       }
+    });    
+    this.dialogAddRoom.patchValue({
+      resourceType:'1',
+      linkType:'0',
+      equipments:lstEquipments,
     });
-    if (!this.dialogAddRoom.value.linkType) {
-      this.dialogAddRoom.value.linkType = '0';
+    
+    this.dialogAddRoom.patchValue({companyID:'chưa có dữ liệu'});
+    if(this.dialogAddRoom.value.owner instanceof Object){
+      this.dialogAddRoom.patchValue({owner:this.dialogAddRoom.value.owner[0]})
     }
-    this.dialogAddRoom.value.resourceType = '1';
+    if (this.dialogAddRoom.value.companyID instanceof Object){
+      this.dialogAddRoom.patchValue({companyID:this.dialogAddRoom.value.companyID[0]})
+    }
 
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe();
   }
 
-  beforeSave(option: any) {
+  beforeSave(option: RequestOption) {
     let itemData = this.dialogAddRoom.value;
-    if (!itemData.resourceID) {
-      this.isAdd = true;
-    } else {
-      this.isAdd = false;
-    }
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;

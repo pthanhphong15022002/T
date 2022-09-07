@@ -20,12 +20,10 @@
       >
       </codx-label>      
       <codx-input
-          type="valuelist"
-          name="valuelist"
-          [crrValue]="fGroupAddDriver.value.category"
           refValue="VL005"
-          field="category"
-          (valueChange)="valueChange($event)"
+          ControlName="category"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddDriver"
         >
         </codx-input>
     </div>
@@ -40,17 +38,15 @@
       <codx-input
         [disabled]="fGroupAddDriver.value.category == 1 ? false :true"
         refValue="AgencyNames"
-        type="combobox"
         [Group]="fGroupAddDriver"
         ControlName="companyID"
         [formModel]="form.formModel"
-        [multiple]="false" 
       >
       </codx-input> 
     </div>
   </div>
   <div class="row">
-    <div class="col-8 form-group">
+    <div class="col-10 form-group">
       <codx-label
         fiedName="ResourceName"
         [formModel]="dialogRef.formModel"
@@ -108,14 +104,10 @@
     <div class="col-8 form-group">
       <codx-label default="Xe" [formModel]="dialogRef.formModel" ></codx-label>
       <codx-input
-        type="combobox"
-        refValue="EP_Cars"
-        placeholder="Chọn xe tham chiếu"
-        field="linkID"        
-        ngDefaultControl
-        [crrValue]="this.fGroupAddDriver.value.linkID"
-        [multiple]="false"         
-        (valueChange)="valueCbxCarChange($event)"  
+        refValue="EP_Drivers"
+        ControlName="linkID"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddDriver"
         >
       </codx-input>      
     </div>
@@ -123,13 +115,9 @@
       <codx-label default="Biển số" fiedName="Code" [formModel]="dialogRef.formModel">
       </codx-label>
       <codx-input
-        type="text"
         ControlName="code"
-        placeholder="Biển số"
         [formModel]="form.formModel"
-        [Group]="fGroupAddDriver"
-        [crrValue]="fGroupAddDriver.value.code"
-        (valueChange)="valueChange($event)"  
+        [Group]="fGroupAddDriver" 
       >
       </codx-input>
     </div>
@@ -141,7 +129,6 @@
       </codx-label>
 
       <codx-input
-        type="combobox"
         refValue="Users"
         ControlName="owner"
         [Group]="fGroupAddDriver"
