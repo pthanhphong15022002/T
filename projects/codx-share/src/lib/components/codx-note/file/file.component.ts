@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
 import { DialogRef, UIComponent, DialogData } from 'codx-core';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 
@@ -16,6 +16,8 @@ export class FileComponent extends UIComponent implements OnInit {
   data: any;
 
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @Output() amountOfFile = new EventEmitter();
+
 
   constructor(private injector: Injector,
     private dt: DialogRef,
@@ -36,6 +38,10 @@ export class FileComponent extends UIComponent implements OnInit {
   fileCount(e) {
     if (e.data.length > 0) {
       this.attachment.objectId = this.data.recID;
+      var obj = {
+        count: e.data.length
+      }
+      this.amountOfFile.emit(obj)
       this.attachment.saveFiles();
     }
   }
