@@ -81,10 +81,13 @@ export class HomeComponent extends UIComponent {
   titleLength = 'Dung lượng';
   sortColumn: string;
   sortDirection: string;
+  textSearch: string;
+  totalSearch: number;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
   //totalPage = 1;
+  isSearch: boolean;
   user: any;
   dialog!: DialogRef;
   interval: ItemInterval[];
@@ -416,8 +419,8 @@ export class HomeComponent extends UIComponent {
     console.log($event);    
   }
 
-  saveFile1() {
-    this.attachment1.saveFilesObservable().subscribe((item) => {
+  async saveFile1() {
+    (await (this.attachment1.saveFilesObservable())).subscribe((item) => {
       console.log(item);
     });
      this.attachment.saveFiles();
@@ -454,6 +457,7 @@ export class HomeComponent extends UIComponent {
     if ($data == null || $data.data == null) {
       return;
     }
+    this.isSearch = false;
     this.clearWaitingThumbnail();
     let id = $data.data.recID;
     let item = $data.data;
@@ -665,18 +669,18 @@ export class HomeComponent extends UIComponent {
     }
   }
 
-  async displayThumbnail(id, thumnail) {
+  async displayThumbnail(id, thumnbail) {
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(async () => {
-      let url = `${this.dmSV.urlThumbnail}${thumnail}`;      
+      let url = `${this.dmSV.urlThumbnail}${thumnbail}`;      
       try {
         let blob = await fetch(url).then(r => r.blob());           
         if (blob.type != '') {       
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = url;
+            files[index].thumbnail = thumnbail;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
@@ -751,24 +755,43 @@ export class HomeComponent extends UIComponent {
  //  console.log($event);
   }
 
+  filterChange($event) {
+    console.log($event);
+  }
+
   searchChange($event) { 
-    var text = $event;
-    this.data = [];
-    this.dmSV.loadedFolder = true;
-    this.dmSV.loadedFile = false;
-    if (this.codxview.currentView.currentComponent.treeView != null)
-      this.codxview.currentView.viewModel.model.panelLeftHide = true;
-   // this.codxview.codxview.
-    this.dmSV.page = 1;
-    this.fileService.options.page = this.dmSV.page;
-    this.fileService.searchFile(text, 1, 100).subscribe(item => {
-      if (item != null) {
-        this.dmSV.loadedFile = true;
-        this.dmSV.listFiles = item.data;
-        this.data = [...this.data, ...this.dmSV.listFiles];
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+    try {
+      this.textSearch = $event;
+      this.data = [];
+      this.dmSV.loadedFolder = true;
+      this.dmSV.loadedFile = false;
+      if (this.codxview.currentView?.currentComponent?.treeView != null)
+        this.codxview.currentView.viewModel.model.panelLeftHide = true;
+     
+      this.isSearch = true;
+      this.dmSV.page = 1;
+      this.fileService.options.page = this.dmSV.page;
+      this.fileService.searchFile(this.textSearch, 1, 100).subscribe(item => {
+        if (item != null) {
+          this.dmSV.loadedFile = true;
+          this.dmSV.listFiles = item.data;
+          this.totalSearch = item.total;
+          this.data = [...this.data, ...this.dmSV.listFiles];
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.dmSV.loadedFile = true;
+          this.totalSearch = 0;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+    }
+    catch(ex) {
+      this.dmSV.loadedFile = true;
+      this.isSearch = false;
+      this.changeDetectorRef.detectChanges();
+      console.log(ex);
+    }   
   }
 
   requestEnded(e: any) {
@@ -785,7 +808,7 @@ export class HomeComponent extends UIComponent {
       // npm i ngx-infinite-scroll@10.0.0
       this.changeDetectorRef.detectChanges();
       this.dmSV.page = 1;
-
+      this.isSearch = false;
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
         if (e.data != null) {

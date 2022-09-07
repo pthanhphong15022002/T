@@ -207,9 +207,9 @@ export class PopupAddMeetingComponent implements OnInit {
       });
   }
 
-  onSave() {
+  async onSave() {
     if (this.attachment.fileUploadList.length)
-      this.attachment.saveFilesObservable().subscribe((res) => {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.meeting.attachments = Array.isArray(res) ? res.length : 1;
           if (this.action === 'add') this.onAdd();
