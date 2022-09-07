@@ -87,9 +87,10 @@
                                 <ng-container *ngIf="showMF">
                                     <li>
                                         <button class="dropdown-item text-hover-primary d-flex align-items-center"
-                                            (click)="clickFunction('assign', '', input, '', i)">
+                                            (click)="clickFunction('assign', '', input, '', i)"
+                                            [disabled]="item.attachments == 0 ? false : true">
                                             <span [class]="'icon-person_add_alt_1 icon-20 me-2'"
-                                                [style.color]="'dodgerblue'"></span>
+                                                [style.color]="item.attachments == 0 ? 'dodgerblue' : 'darkgray'"></span>
                                             <span class="show-customName">{{ "Giao việc" }}</span>
                                         </button>
                                     </li>
@@ -104,7 +105,7 @@
                                         </button>
                                     </li>
                                     <li>
-                                        <button (click)="clickFunction('attachment', '', input, '', i)"
+                                        <button (click)="clickFunction('attachment', '', input, '', i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-attach_file icon-20 me-2'"
                                                 [style.color]="'dodgerblue'"></span>
@@ -129,14 +130,22 @@
                             <div class="w-100 text-after-check-box" (click)="getElement(input)">
                                 <codx-input #input type="text" [class]="'border-0'" class="test-textbox input-note memo"
                                     style="
-                    font-weight: normal;
-                    font-style: normal;
-                    text-decoration-line: none;
-                    color: #000000;
-                  " (keyUpEnter)="keyUpEnter($event)" [crrValue]="item.memo" field="memo" id="{{ i }}"
+                font-weight: normal;
+                font-style: normal;
+                text-decoration-line: none;
+                color: #000000;
+              " (keyUpEnter)="keyUpEnter($event)" [crrValue]="item.memo" field="memo" id="{{ i }}"
                                     (valueChange)="valueChange($event)"
                                     [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                 </codx-input>
+                                <div class="" *ngIf="item.attachments > 0 || i == id">
+                                    <codx-attachment #attachment [objectType]="objectType" hideBtnSave="1"
+                                        hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0"
+                                        hideImageThumb="0" [functionID]="funcID" [objectId]="item.recID"
+                                        [allowMultiFile]="1" [idBrowse]="'add'" (fileCount)="fileCount($event)"
+                                        displayThumb="full">
+                                    </codx-attachment>
+                                </div>
                             </div>
                             <div ngbDropdown class="d-inline-block" container="body">
                                 <span class="icon-perm_identity icon-24 position-relative darkgray"
@@ -158,10 +167,15 @@
                                 </div>
                             </div>
                             <span
-                                class="icon-chat_bubble_outline icon-22 position-relative darkgray icon-comment-assign">
+                                class="icon-chat_bubble_outline icon-22 position-relative darkgray icon-comment">
                                 <span
                                     class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary"
                                     *ngIf="item.comments > 0">{{item.comments}}</span></span>
+                            <span
+                                class="icon-attach_file icon-22 position-relative darkgray icon-file">
+                                <span
+                                    class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary"
+                                    *ngIf="item.attachments > 0">{{item.attachments}}</span></span>
                         </div>
                     </div>
                 </div>
@@ -189,7 +203,8 @@
             <span class="icon-image icon-18 btn btn-icon btn-active-light-primary position-relative"
                 (click)="clickFunction('img', '', input)">
             </span>
-            <span class="icon-attach_file icon-18 btn btn-icon btn-active-light-primary position-relative">
+            <span class="icon-attach_file icon-18 btn btn-icon btn-active-light-primary position-relative"
+                (click)="clickFunction('attachment', '', input, '', '', true)">
             </span>
             <span class="border-right border-gray-200 mx-1"></span>
             <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative"
@@ -293,7 +308,7 @@
     </codx-form>
 </ng-template>
 
-<ng-template #popupAttachment let-dialog>
+<!-- <ng-template #popupAttachment let-dialog>
     <codx-form [dialog]="dialog" [body]="body" [headerText]="headerAttachment" [footer]="footer">
         <ng-template #body>
             <div class="">
@@ -312,4 +327,4 @@
             </div>
         </ng-template>
     </codx-form>
-</ng-template>
+</ng-template> -->
