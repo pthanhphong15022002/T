@@ -94,7 +94,8 @@
                                         </button>
                                     </li>
                                     <li>
-                                        <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <button class="dropdown-item text-hover-primary d-flex align-items-center"
+                                            (click)="clickFunction('comment', '', input)">
                                             <span [class]="'icon-chat_bubble_outline icon-20 me-2'"
                                                 [style.color]="'dodgerblue'"></span>
                                             <span class="show-customName">{{
@@ -155,10 +156,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <span (click)="clickFunction('comment', '', input)"
-                                class="icon-chat_bubble_outline icon-24 position-relative darkgray me-10">
+                            <span class="icon-chat_bubble_outline icon-24 position-relative darkgray me-10"
+                                *ngIf="item.comments > 0">
                                 <span
-                                    class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-info">2</span></span>
+                                    class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary">{{item.comments}}</span></span>
                         </div>
                     </div>
                 </div>
@@ -228,7 +229,7 @@
             </span>
         </div>
         <div *ngIf="data.category == '3'" class="" (mouseenter)="popoverEmpList(popoverList, data)"
-            [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom"
+            [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="bottom left"
             container="body" autoClose="outside" [openDelay]="500">
             <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3">
             </codx-imgs>
@@ -280,6 +281,12 @@
         </div>
     </div>
 </ng-template>
-
-<!-- <codx-tree-history [funcID]="" [objectID]="" [objectType]="" addNew="true">
-</codx-tree-history> -->
+<ng-template #popupComment let-dialog>
+    <codx-form [dialog]="dialog" [body]="body">
+        <ng-template #body>
+            <codx-tree-history [funcID]="funcID" [objectID]="contents[id].recID"
+                [objectType]="objectType" [actionType]="'C'" addNew="true">
+            </codx-tree-history>
+        </ng-template>
+    </codx-form>
+</ng-template>

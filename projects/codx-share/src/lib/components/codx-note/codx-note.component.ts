@@ -1,3 +1,4 @@
+import { Optional, TemplateRef } from '@angular/core';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -110,14 +111,17 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   @Input() vllRose = '';
   @Output() getContent = new EventEmitter();
   @ViewChild('input') input: any;
+  @ViewChild('popupComment') popupComment: TemplateRef<any>;
 
   constructor(
     private dt: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
     private route: ActivatedRoute,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    @Optional() dtR?: DialogRef
   ) {
+    // this.dialog = dtR;
     this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
       if (res) this.gridViewSetup = res;
     });
@@ -554,7 +558,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.popupImg();
         break;
       case 'comment':
-        this.comment();
+        this.comment(index);
         break;
       case 'assign':
         this.assign(index);
@@ -572,21 +576,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  comment() {
-    var obj = {};
-    let option = new DialogModel();
-    // option.DataService = this.lstView.dataService as CRUDService;
-    // option.FormModel = this.lstView.formModel;
-    this.callfunc.openForm(
-      CodxTreeHistoryComponent,
-      '',
-      600,
-      500,
-      '',
-      obj,
-      '',
-      option
-    );
+  comment(index) {
+    this.id = index;
+    this.callfunc.openForm(this.popupComment, '', 420, window.innerHeight);
   }
 
   assign(index) {
