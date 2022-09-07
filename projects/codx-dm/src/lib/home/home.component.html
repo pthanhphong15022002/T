@@ -2,7 +2,8 @@
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views"
   (sortChanged)="sortChanged($event)"  [autoSort]="false" [autoSearch]="false" [selectedFirst]="false"
   (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="addFile($event)"
-  (viewChanged)="changeView($event)" (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)"></codx-views>
+  (viewChanged)="changeView($event)" (filterChange)="filterChange($event)" [autoFilter]="false"
+  (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)"></codx-views>
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
   <ng-template #noContext>
@@ -29,6 +30,17 @@
 
 <ng-template #templateRight>
   <ng-container *ngTemplateOutlet="empty"></ng-container>
+  <div *ngIf="isSearch && this.dmSV.loadedFile">
+    <h5 class="text-warning">
+      <codx-label name="lblSearch1" [formModel]="views" default="Kết quả tìm kiếm:" class="fw-bold"></codx-label>
+      {{this.textSearch}}
+      <div class="result-header font-size-h4 text-dark mb-6">
+        <codx-label name="lblSearch2" [formModel]="views" default="Khoảng" class="fw-bold"></codx-label>
+        {{this.totalSearch}}
+        <codx-label name="lblSearch3" [formModel]="views" default="kết quả được tìm thấy" class="fw-bold"></codx-label>
+      </div>      
+    </h5>    
+  </div>
   <div (scroll)="onScroll($event)"  appDragDropFileUpload (fileDropped)="fileUploadDropped($event)" class="w-100 scroll-y home" data-kt-scroll="true"
     data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
     data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS" data-kt-scroll-offset="0">   
