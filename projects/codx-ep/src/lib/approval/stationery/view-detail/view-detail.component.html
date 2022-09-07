@@ -1,47 +1,20 @@
 <codx-detail-tmp
   #itemDetailTemplate
-  [header]="header"
-  [dataItem]="itemDetail"
   [formModel]="formModel"
+  [dataItem]="itemDetail"
+  [header]="header"
   [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
   (clickMF)="openFormFuncID($event)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
-  class="h-100"
 >
   <ng-template #header>
-    <div class="vmd-detail">
-      <div class="d-flex justify-content-between flex-grow-1 mb-2">
-        <div class="d-flex align-items-center">
-          <codx-temp-full
-            [title]="itemDetail?.title"
-            [icoCss]="
-              'w-20px h-20px fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
-              itemDetail?.icon
-            "
-            [icoStyle]="setStyles(itemDetail?.color)"
-          >
-          </codx-temp-full>
-        </div>
-        <div class="d-flex align-self-center">
-          <codx-vll
-            [showText]="true"
-            [formModel]="formModel"
-            [field]="'ApproveStatus'"
-            [value]="itemDetail?.approveStatus"
-            class="badge badge-light badge-square badge-md fs-7"
-          >
-          </codx-vll>
-        </div>
-      </div>
-    </div>
-
     <div class="d-flex flex-column flex-grow-1 mb-2">
       <codx-temp-full
-        [title]="itemDetail?.ownerName"
-        [subTitle]="itemDetail?.ownerPosition ?? 'Vị trí công việc'"
-        [imageId]="itemDetail?.createdBy"
+        [title]="itemDetail?.userName"
+        [subTitle]="itemDetail?.positionID"
+        [imageId]="itemDetail?.userID"
         imageObjType="AD_Users"
         [imageWidth]="40"
       >
@@ -55,7 +28,7 @@
           <codx-label
             field="OrgUnitID"
             [formModel]="formModel"
-            default="Phòng "
+            default="Đơn vị/ bộ phận "
             class="fw-bold me-1"
             style="font-weight: bold"
           ></codx-label>
@@ -69,7 +42,7 @@
         <codx-label
           field="CreatedOn"
           [formModel]="formModel"
-          default="Ngày yêu cầu"
+          default="Ngày gởi"
           class="fw-bold me-1"
         >
         </codx-label>
@@ -86,65 +59,75 @@
         <codx-label
           field="ExpiredOn"
           [formModel]="formModel"
-          default="Ngày hết hạn"
+          default="Ngày yêu cầu"
           class="fw-bold me-1"
         ></codx-label>
         <span class="text-gray-600">
           :
           {{
-            itemDetail?.permission
-              ? (itemDetail?.permissions?.expiredOn | date: "dd/MM/yyyy")
+            itemDetail?.bookingOn
+              ? (itemDetail?.bookingOn | date: "dd/MM/yyyy")
               : "dd/MM/yyyy"
           }}
         </span>
-      </div>
-      <div class="d-flex text-dark me-6">
-        <codx-label
-          fiedName="Priority"
-          [formModel]="formModel"
-          default="Ưu tiên"
-          class="fw-bold me-1"
-        >
-        </codx-label>
-        :
-        <codx-vll
-          [formModel]="formModel"
-          [field]="'Priority'"
-          [value]="itemDetail?.priority"
-          [showText]="true"
-          class="text-gray-600"
-        >
-        </codx-vll>
       </div>
     </div>
     <div class="d-flex mb-2">
-      <div class="d-flex me-6">
+      <div class="d-flex text-dark me-6">
         <codx-label
-          field="RefNo"
-          [formModel]="itemDetailTemplate.formModel"
-          default="Số văn bản"
+          fiedName="ReasonID"
+          [formModel]="formModel"
+          default="Lý do"
           class="fw-bold me-1"
         >
         </codx-label>
         <span class="text-gray-600">
-          : {{ itemDetail ? itemDetail?.refNo : "" }}
+          :
+          {{ itemDetail?.reasonID }}
         </span>
       </div>
-      <div class="d-flex me-6">
-        <codx-label
-          field="RefDate"
-          [formModel]="itemDetailTemplate.formModel"
-          default="Ngày văn bản"
-          class="fw-bold me-1"
-        ></codx-label>
-        <span class="text-gray-600">
-          :
-          {{
-            itemDetail?.refDate
-              ? (itemDetail?.refDate | date: "dd/MM/yyyy")
-              : "dd/MM/yyyy"
-          }}
-        </span>
+    </div>
+    <div class="codx_e-header mb-2" [class.active]="true">
+      <div class="d-flex align-items-center btn-tabs">
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailStt == '1'"
+          (click)="clickChangeItemViewStatus('1', itemDetail?.recID)"
+        >
+          <i class="icon-info icon-16"></i>
+          <codx-label
+            name="lblAbstract"
+            [formModel]="itemDetailTemplate.formModel"
+            default="Chi tiết"
+            class="ms-1 fw-bold"
+          ></codx-label>
+        </button>
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailStt == '2'"
+          (click)="clickChangeItemViewStatus('2', itemDetail?.recID)"
+        >
+          <i class="icon-format_list_numbered icon-16"></i>
+          <codx-label
+            name="lblBusiness"
+            [formModel]="itemDetailTemplate.formModel"
+            default="Công việc"
+            class="ms-1 fw-bold"
+          ></codx-label>
+        </button>
+        <button
+          class="btn btn-white text-dark me-1"
+          [class.active]="itemDetailStt == '3'"
+          (click)="clickChangeItemViewStatus('3', itemDetail?.recID)"
+        >
+          <i class="icon-people_alt icon-16"></i>
+          <codx-label
+            name="lblApprovalTrans"
+            [formModel]="itemDetailTemplate.formModel"
+            default="Nơi nhận"
+            class="ms-1 fw-bold"
+          ></codx-label>
+        </button>
       </div>
     </div>
   </ng-template>
@@ -167,7 +150,6 @@
           [class.active]="itemDetailDataStt == '1'"
           (click)="clickChangeItemDetailDataStatus('1')"
         >
-          <i class="icon-history icon-16"></i>
           <span class="ms-2 fw-bold">Lịch sử</span>
         </button>
         <button
@@ -175,7 +157,6 @@
           [class.active]="itemDetailDataStt == '3'"
           (click)="clickChangeItemDetailDataStatus('3')"
         >
-          <i class="icon-attachment icon-16"></i>
           <codx-label
             name="lblAttachment"
             [formModel]="itemDetailTemplate.formModel"
@@ -188,7 +169,6 @@
           [class.active]="itemDetailDataStt == '2'"
           (click)="clickChangeItemDetailDataStatus('2')"
         >
-          <i class="icon-message icon-16"></i>
           <codx-label
             name="lblDiscussion"
             [formModel]="itemDetailTemplate.formModel"
@@ -201,7 +181,6 @@
           [class.active]="itemDetailDataStt == '4'"
           (click)="clickChangeItemDetailDataStatus('4')"
         >
-          <i class="icon-insert_link icon-16"></i>
           <codx-label
             name="lblLink"
             [formModel]="itemDetailTemplate.formModel"

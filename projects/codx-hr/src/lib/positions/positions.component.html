@@ -4,26 +4,13 @@
     [moreFuncs]="moreFuncs" (selectedChange)="selectedChange($event)" [selectedFirst]="true">
 </codx-views>
 
-<ng-template #panelLeftRef>
-    <div class="content d-flex flex-column flex-column-fluid paneltree">
-        <div class="searorg">
-            <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-                <div class="input-group input-group-solid background-transparent erm-search">
-                    <span class="icon-search icon-20"></span>
-                    <!-- <input type="text" class="form-control text-dark px-0" #eleSearchChart
-              placeholder="Nhập thông tin bạn muốn tìm..." (keydown)="search($event,eleSearchChart)"> -->
-                </div>
-            </div>
-        </div>
-        <div class="contact-orgchat">
-            <codx-treeview id="treeView" #treeView [pageSize]=10 [itemTemplate]="templateTree"
-                entityName="HR_OrganizationUnits" service="HR" type="treeView" textField="orgUnitName"
-                gridViewName="grvOrganizationUnits" formName="OrganizationUnits" [enableCheck]=false idField="orgUnitID"
-                (onSelectionChanged)="onSelectionChanged($event)">
-            </codx-treeview>
-        </div>
-    </div>
-</ng-template>
+<!-- <ng-template #templateDetail>
+    <codx-treeview id="treeView" #treeView [pageSize]=10 [itemTemplate]="templateTree" entityName="HR_OrganizationUnits"
+        service="HR" type="treeView" textField="orgUnitName" gridViewName="grvOrganizationUnits"
+        formName="OrganizationUnits" [enableCheck]=false idField="orgUnitID"
+        (onSelectionChanged)="onSelectionChanged($event)">
+    </codx-treeview>
+</ng-template> -->
 
 <ng-template #templateTree let-data>
     {{data.orgUnitName}}
@@ -42,9 +29,6 @@
             </div>
 
             <div class="d-flex flex-wrap">
-                <!-- <codx-temp-full cardCss="card-template" [desc]="'Nhóm chức danh: ' + data.jobID"
-                    [desc2]="'Chức vụ: ' + data.jobGroup">
-                </codx-temp-full> -->
                 <div class="d-flex pos-group">
                     <div class="d-flex flex-column align-items-center pos-item">
                         <div class="align-items-center1 fs-7">
@@ -84,12 +68,10 @@
                             </codx-label>
                         </div>
                         <div *ngIf="data.currentcounts>0" class="symbol-group symbol-hover mt-2">
-                            <!-- <codx-imgs [width]="30" [objectId]="data.currentEmpID" [objectName]="data.currentEmpName" [numberImages]="2"
-                                objectType="HR_Employees">
-                            </codx-imgs> -->
                             <codx-img [width]="30" [objectId]="data.currentEmpID" objectType="HR_Employees"
                                 [numberImages]="2" placement="bottom" container="body" autoClose="outside"
-                                [openDelay]="500">
+                                [openDelay]="500" (click)="loadEmployByCountStatus(popEmpList,data.positionID,'50;60')"
+                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover">
                             </codx-img>
                             <div *ngIf="data.currentcounts>1"
                                 (click)="loadEmployByCountStatus(popEmpList,data.positionID,'50;60')"
@@ -107,9 +89,6 @@
                             </codx-label>
                         </div>
                         <div *ngIf="data.onboard>0" class="symbol-group symbol-hover mt-2">
-                            <!-- <codx-img [width]="30" [objectId]="data.onboardEmpID" [objectName]="data.onboardEmpName"
-                                objectType="HR_Employees">
-                            </codx-img> -->
                             <codx-img [width]="30" [objectId]="data.onboardEmpID" objectType="HR_Employees"
                                 [numberImages]="2" placement="bottom" container="body" autoClose="outside"
                                 [openDelay]="500">
@@ -130,9 +109,6 @@
                             </codx-label>
                         </div>
                         <div *ngIf="data.offboard>0" class="symbol-group symbol-hover mt-2">
-                            <!-- <codx-img [width]="30" [objectId]="data.offboardEmpID" [objectName]="data.offboardEmpName"
-                                objectType="HR_Employees">
-                            </codx-img> -->
                             <codx-img [width]="30" [objectId]="data.offboardEmpID" objectType="HR_Employees"
                                 [numberImages]="7" placement="bottom" container="body" autoClose="outside"
                                 [openDelay]="500">
@@ -154,7 +130,6 @@
 <ng-template #popEmpList>
     <div class="fw-bold">
         <codx-label name="Resouces" formName="Employees" default="Danh sách nhân viên"></codx-label>
-        <!-- <span>{{ "(" + countResource + ")" }}</span> -->
     </div>
     <div>
         <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>

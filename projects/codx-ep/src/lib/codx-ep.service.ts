@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { ApiHttpService, AuthStore, CacheService, FormModel, NotificationsService, UploadFile, UserModel } from 'codx-core';
+import { Observable } from 'rxjs/internal/Observable';
 
 export class ModelPage {
   functionID = '';
@@ -188,7 +189,27 @@ export class CodxEpService {
       data
     );
   }
+//#region File
+getFiles(funcID: string, objectId: string, objectType): Observable<any> {
+  return this.api.execSv(
+    'DM',
+    'ERM.Business.DM',
+    'FileBussiness',
+    'GetFilesForOutsideAsync',
+    [funcID, objectId, objectType]
+  );
+}
 
+getLstFileByID(lstID: string[]): Observable<any> {
+  return this.api.execSv(
+    'DM',
+    'ERM.Business.DM',
+    'FileBussiness',
+    'GetListFileByIDAsync',
+    [JSON.stringify(lstID)]
+  );
+}
+//#endregion
   loadBookings(data) {
     return this.execEP(
       APICONSTANT.BUSINESS.EP.Bookings,

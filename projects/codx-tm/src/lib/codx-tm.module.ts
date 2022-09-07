@@ -63,6 +63,7 @@ import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.co
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
 import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
+import { PopupStatusMeetingComponent } from './tmmeetings/popup-status-meeting/popup-status-meeting.component';
 
 export const routes: Routes = [
   {
@@ -229,6 +230,7 @@ const T_Component: Type<any>[] = [
   SprintDetailsComponent,
   ViewWorkComponent,
   DashboardComponent,
+  PopupStatusMeetingComponent
 ];
 @NgModule({
   imports: [
