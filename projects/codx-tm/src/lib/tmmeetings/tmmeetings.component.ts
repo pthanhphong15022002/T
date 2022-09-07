@@ -502,4 +502,8 @@ export class TMMeetingsComponent
       meetingID: data.meetingID,
     });
   }
+
+  //#region hoàn thành cuộc họp
+ 
+  //#region end
 }
