@@ -156,7 +156,7 @@ const T_Component: Type<any>[] = [
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe, CommentsComponent, AttachmentComponent, FileComponent,],
+  declarations: [T_Component, T_Pipe, AttachmentComponent],
   imports: [
     CommonModule,
     NgbModule,
