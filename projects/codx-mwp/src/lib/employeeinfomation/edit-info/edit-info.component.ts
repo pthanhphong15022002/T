@@ -50,7 +50,7 @@ export class EditInfoComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
-    this.data = dialog.dataService!.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.employee = this.data;
     this.dialog = dialog;
 

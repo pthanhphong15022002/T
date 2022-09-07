@@ -14,6 +14,7 @@ import {
   LayoutService,
   NotificationsService,
 } from 'codx-core';
+import moment from 'moment';
 import { CodxTMService } from '../../codx-tm.service';
 import { TabModelSprints } from '../../models/TM_Sprints.model';
 
@@ -110,11 +111,21 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.data = res;
           this.createdByName = res.userName;
           this.nameObj = res.meetingName;
-          this.projectID = res.projectID;
+          this.projectID = res.refID;  // ở meeting là refID
           this.resources = res.avataResource;
+          var resourceTaskControl = [];
+          var arrayResource = res?.resources ;
+          if(arrayResource && arrayResource.length > 0){
+            arrayResource.forEach(data=>{
+              if(data.taskControl) resourceTaskControl.push(data.resourceID) ;
+            })
+          }
+          
           this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
-            resources: this.resources ? this.resources : '',
+            resources: resourceTaskControl.length>0 ? resourceTaskControl.join(";"): '',
+            fromDate : res.fromDate ?moment(new Date(res.fromDate)) :'',
+            endDate : res.toDate ? moment(new Date(res.toDate))  :'',
           };
           if (this.resources != null) {
             this.getListUserByResource(this.resources);

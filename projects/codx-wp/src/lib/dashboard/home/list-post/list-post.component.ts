@@ -245,12 +245,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getTagUser(id) {
-    this.api
-      .execSv("WP","ERM.Business.WP", "CommentsBusiness", "GetTagUserListAsync", id)
-      .subscribe((res) => {
-        if (res) this.tagUsers = res;
-      });
+  getTagUser(item:any) {
+    this.tagUsers = item.listTag;
+    this.dt.detectChanges();
   }
   lstUserShare:any[] = [];
   getShareUser(item:any) {

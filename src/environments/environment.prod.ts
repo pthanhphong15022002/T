@@ -3,14 +3,13 @@ export const environment = {
   isDesign: false,
   mutiTenant: true,
   dfPe: '',
-  appVersion: 'v101lv',
+  appVersion: 'v101lv', 
   TNDATA_KEY: 'tnf649fc9a5f55',
   // apiUrl: 'https://codx.com.vn',
   // shopping: 'https://register.codx.com.vn/shopping',
   librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
   apiUrl: 'http://172.16.7.34:8011',
   pdfUrl: 'http://172.16.7.34:8015/api/pdf',
-
   shopping: 'http://172.16.7.34:8111/Shopping',
   // librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
   StoreNames: {

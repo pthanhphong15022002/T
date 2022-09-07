@@ -245,11 +245,11 @@ export class IncommingAddComponent implements OnInit {
       this.dispatch.approveStatus = '1';
       this.odService
         .saveDispatch(this.dataRq, this.dispatch)
-        .subscribe((item) => {
+        .subscribe(async (item) => {
           if (item.status == 0) {
             this.data = item;
             this.attachment.objectId = item.data.recID;
-            this.attachment.saveFilesObservable().subscribe((item2: any) => {
+            (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
               if (item2?.status == 0) {
                 this.dialog.close(item.data);
                 this.notifySvr.notify(item.message);
@@ -258,11 +258,11 @@ export class IncommingAddComponent implements OnInit {
           } else this.notifySvr.notify(item.message);
         });
     } else if (this.type == 'edit') {
-      this.odService.updateDispatch(this.dispatch, false).subscribe((item) => {
+      this.odService.updateDispatch(this.dispatch, false).subscribe(async (item) => {
         if (item.status == 0) {
           if (this.dltDis) {
             this.attachment.objectId = item.data.recID;
-            this.attachment.saveFilesObservable().subscribe((item2: any) => {
+            (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
               if (item2?.status == 0) {
                 this.dialog.close(item.data);
                 this.notifySvr.notify(item.message);

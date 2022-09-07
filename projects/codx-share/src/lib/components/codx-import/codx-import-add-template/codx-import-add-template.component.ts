@@ -1,45 +1,29 @@
 import {
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  HostListener,
-  Injector,
-  Input,
   OnChanges,
   OnInit,
   Optional,
-  Output,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
 import {
-  GridComponent,
-  SelectionSettingsModel,
-} from '@syncfusion/ej2-angular-grids';
-import { DialogModule } from '@syncfusion/ej2-angular-popups';
-import {
-  AlertConfirmInputConfig,
   ApiHttpService,
   CacheService,
   CallFuncService,
   CodxGridviewComponent,
   CodxService,
   DataRequest,
-  DataService,
   DialogData,
-  DialogModel,
   DialogRef,
   NotificationsService,
 } from 'codx-core';
-import { Observable, finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
 import * as XLSX from 'xlsx';
@@ -53,6 +37,7 @@ import { IETables } from '../models/import.model';
 export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   type = "add";
   active = "1";
+  wb:any;
   dialog: any;
   submitted = false;
   gridModel: any;
@@ -67,7 +52,6 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   editSettings: any;
   dataIEConnections: any = {};
   dataIETables: any = {};
-  dataIEMapping: any = {};
   sheet: any;
   mappingTemplate: any;
   importRule: any;
@@ -96,7 +80,6 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger;
     this.dialog = dialog;
     if(dt.data[0]) this.type = dt.data[0];
     this.formModel = dt.data?.[1];
@@ -114,7 +97,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       nameTmp: ['', Validators.required],
       sheetImport: '',
       password:[''],
-      firstRowHeader: 1
+      firstCell: 1
     });
     this.columnsGrid = [
       {
@@ -155,7 +138,6 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       formName: "IEConnections",
       gridViewName: "grvIEConnections"
     }
-
     if(this.recID) this.getDataEdit();
   }
   getDataEdit()
@@ -172,12 +154,12 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     })
     this.importAddTmpGroup.controls['nameTmp'].setValue(this.dataIEConnections?.description);
     this.importAddTmpGroup.controls['password'].setValue(this.dataIEConnections?.password);
-    this.api.execSv<any>(this.service,"AD","IEMappingsBusiness","GetItemByMappingTemplateAsync",this.dataIEConnections?.mappingTemplate).subscribe(item2=>{
+   /*  this.api.execSv<any>(this.service,"AD","IEMappingsBusiness","GetItemByMappingTemplateAsync",this.dataIEConnections?.mappingTemplate).subscribe(item2=>{
       if(item2) 
       {
         this.dataSave.dataIEMapping = item2
       }
-    })
+    }) */
   }
   ngOnChanges(changes: SimpleChanges) { }
   get f(): { [key: string]: AbstractControl } {
@@ -197,17 +179,17 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       reader.onload = (e: any) => {
         /* create workbook */
         const binarystr: string = e.target.result;
-        const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
-      
-        this.sheet = wb.SheetNames;
+        (this.wb as XLSX.WorkBook) = XLSX.read(binarystr, { type: 'binary' });
+        this.sheet = this.wb.SheetNames;
         this.importAddTmpGroup.controls['sheetImport'].setValue(this.sheet[0]);
         this.selectedSheet = this.sheet[0]
         this.dataIETables.sourceTable = this.sheet[0];
-        this.sourceField = XLSX.utils.sheet_to_json(wb.Sheets[this.sheet[0]],{header:1});
+       
       };
     }
   }
-  onSave()
+
+  async onSave()
   {
     this.attachment.objectId = this.dataIEConnections.recID;
     for(var i =0 ; i< this.gridView.dataService.data.length ; i++)
@@ -217,9 +199,9 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     }
     this.dataIEConnections.description = this.importAddTmpGroup.value.nameTmp;
     this.dataIEConnections.password = this.importAddTmpGroup.value.password;
-    this.attachment.saveFilesObservable().subscribe((item:any)=>{
+    (await this.attachment.saveFilesObservable()).subscribe((item:any)=>{
       if(item?.status == 0)
-      {
+      { 
         //Lưu IEConnections
         this.api.execSv<any>("SYS","AD","IEConnectionsBusiness","AddItemAsync",this.dataIEConnections).subscribe(item=>{
           debugger;
@@ -231,11 +213,11 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           // if(item) this.notifySvr.notifyCode('OD008');
           // else this.notifySvr.notifyCode('SYS021');
         })
-        this.api.execSv<any>("SYS","AD","IEMappingsBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEMapping)).subscribe(item=>{
-          debugger;
-          // if(item) this.notifySvr.notifyCode('OD008');
-          // else this.notifySvr.notifyCode('SYS021');
-        })
+        // this.api.execSv<any>("SYS","AD","IEMappingsBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEMapping)).subscribe(item=>{
+        //   debugger;
+        //   // if(item) this.notifySvr.notifyCode('OD008');
+        //   // else this.notifySvr.notifyCode('SYS021');
+        // })
         if(this.dataSave.dataIEFieldMapping.length>0)
         {
           this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",this.dataSave.dataIEFieldMapping).subscribe(item=>{
@@ -322,16 +304,16 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     objIETables.processIndex = 1,
     objIETables.isSummary = false,
     this.dataIETables = {...objIETables , ...this.dataIETables}
-    var objIEMapping = 
-    {
-      recID : this.dataIEConnections.mappingTemplate,
-      tableName : this.mappingTemplate?.TableName,
-      importRule: this.importRule[0]?.value,
-      addBatchLink: false
-    }
-    this.dataIEMapping = {...objIEMapping , ...this.dataIEMapping}
+    // var objIEMapping = 
+    // {
+    //   recID : this.dataIEConnections.mappingTemplate,
+    //   tableName : this.mappingTemplate?.TableName,
+    //   importRule: this.importRule[0]?.value,
+    //   addBatchLink: false
+    // }
+    // this.dataIEMapping = {...objIEMapping , ...this.dataIEMapping}
     this.gridView.dataService.data.push(this.dataIETables);
-    this.dataSave.dataIEMapping.push(this.dataIEMapping);
+    // this.dataSave.dataIEMapping.push(this.dataIEMapping);
     //this.gridView.addHandler(sdata,true,"recID")
   }
   getDataCbb() {
@@ -345,10 +327,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       {
         var data = JSON.parse(item[0]);
         //Nhớ sửa lại lấy cái đầu tiên
-        this.mappingTemplate = data[1];
+        this.mappingTemplate = data[0];
         this.importAddTmpGroup.controls['nameTmp'].setValue(this.mappingTemplate?.MappingName);
         this.dataIEConnections.mappingName = this.mappingTemplate?.MappingName;
-        this.dataIEMapping.mappingName = this.mappingTemplate?.MappingName;
+        //this.dataIEMapping.mappingName = this.mappingTemplate?.MappingName;
         this.dataIETables.mappingName = this.mappingTemplate?.MappingName;
         this.getGridViewSetup();
       }
@@ -374,16 +356,17 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   //Thêm mới template
   openFormAddTemplate()
   {
+    this.sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]],{header:this.importAddTmpGroup.value.firstCell});
     if(!this.importAddTmpGroup.value.sheetImport) return this.notifySvr.notify("sheet import không được trống");
     this.dataIETables.sourceTable = this.importAddTmpGroup.value.sheetImport;
-    this.callfunc.openForm(CodxImportAddMappingComponent,null,1000,800,"",[this.formModel,this.dataIEConnections,null,null,"new"],null).closed.subscribe(item=>{
+    this.callfunc.openForm(CodxImportAddMappingComponent,null,1000,800,"",[this.formModel,this.dataIEConnections,null,null,"new",this.sourceField[0]],null).closed.subscribe(item=>{
       if(item?.event)
       {
+        debugger;
         var dataTable = item?.event[0] as IETables;
         dataTable.sourceTable = this.dataIETables.sourceTable;
-        this.dataSave.dataIEMapping.push(item?.event[1]);
+        //this.dataSave.dataIEMapping.push(item?.event[1]);
         this.dataSave.dataIEFieldMapping.push(item?.event[2]);
-        item?.event[0]
         this.gridView.dataService.data = [item?.event[0],...this.gridView.dataService.data]
       }
     });
