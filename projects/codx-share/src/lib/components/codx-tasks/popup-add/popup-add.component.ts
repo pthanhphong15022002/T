@@ -382,8 +382,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
   getTaskCoppied(id) {
     const t = this;
-    this.listUser = [];
-    this.listUserDetail = [];
+    this.beforeCopy(this.taskCopy) ;
     this.tmSv.getTask(id).subscribe((res) => {
       if (res && res.length) {
         this.copyListTodo(res[2]);
