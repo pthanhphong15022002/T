@@ -23,7 +23,7 @@ export class EmployeesComponent implements OnInit {
   dataValue = "90";
   predicate = "Status<@0";
   functionID: string;
-  employee: HR_Employees = new HR_Employees();
+  employee: any;
   itemSelected: any;
   formModel: FormModel;
 
@@ -131,24 +131,25 @@ export class EmployeesComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
-      this.dialog.closed.subscribe((e) => {
+      var dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
+      dialog.closed.subscribe((e) => {
         if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null && e.event.update) {
-            this.view.dataService.update(e.event.update.InfoPersonal && e.event.update.Employee).subscribe();
-            // e?.event.update.forEach((obj) => {
-            //   this.view.dataService.update(obj.Employee).subscribe();
-            // });
-            // this.meeting = e?.event;
-          }
+          // this.view.dataService.delete(
+          //   [this.view.dataService.dataSelected],
+          //   false
+          // );
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e.event.update.InfoPersonal && e.event.update.Employee).subscribe();
+          // e?.event.update.forEach((obj) => {
+          //   this.view.dataService.update(obj.Employee).subscribe();
+          // });
+          // this.meeting = e?.event;
           this.changedt.detectChanges();
-        });
+        }
+      
+      });
 
-    
+
     });
     // this.changedt.detectChanges();
   }
