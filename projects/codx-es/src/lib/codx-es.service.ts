@@ -394,6 +394,9 @@ export class CodxEsService {
   public setupAutoNumber = new BehaviorSubject<any>(null);
   isSetupAutoNumber = this.setupAutoNumber.asObservable();
 
+  public setupChange = new BehaviorSubject<any>(null);
+  isSetupChange = this.setupChange.asObservable();
+
   getAutoNoCode(autoNo) {
     this.autoNoCode.next(autoNo);
   }

@@ -74,6 +74,10 @@
   top: 26%;
 }
 
+.card-note {
+  width: 70% !important;
+}
+
 .darkgray {
   color: darkgray;
 }
@@ -84,7 +88,10 @@
   background-color: transparent;
 }
 
-.icon-comment-assign{
-  margin-right: 4%;
-    padding-left: 13px;
+.icon-file {
+  padding-left: 13px;
+}
+
+.icon-comment {
+  padding-left: 13px;
 }
