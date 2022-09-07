@@ -16,8 +16,6 @@ export class FileComponent extends UIComponent implements OnInit {
   data: any;
 
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @Output() amountOfFile = new EventEmitter();
-
 
   constructor(private injector: Injector,
     private dt: DialogRef,
@@ -41,8 +39,8 @@ export class FileComponent extends UIComponent implements OnInit {
       var obj = {
         count: e.data.length
       }
-      this.amountOfFile.emit(obj)
       this.attachment.saveFiles();
     }
+    return e.data;
   }
 }

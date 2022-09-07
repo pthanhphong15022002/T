@@ -107,6 +107,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       lineType: 'TEXT',
       attachments: 0,
       comments: 0,
+      tasks: 0,
     },
   ];
   @Input() showMenu = true;
@@ -710,7 +711,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       funcID: this.funcID,
       objectType: this.objectType,
     }
-    this.callfunc.openSide(FileComponent, dt);
+    this.dialog = this.callfunc.openSide(FileComponent, dt);
+    this.dialog.closed.subscribe(res => {
+      debugger
+    })
   }
 
   popup() {
