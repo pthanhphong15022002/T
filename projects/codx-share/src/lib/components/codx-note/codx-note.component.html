@@ -87,10 +87,8 @@
                                 <ng-container *ngIf="showMF">
                                     <li>
                                         <button class="dropdown-item text-hover-primary d-flex align-items-center"
-                                            (click)="clickFunction('assign', '', input, '', i)"
-                                            [disabled]="item.attachments == 0 ? false : true">
-                                            <span [class]="'icon-person_add_alt_1 icon-20 me-2'"
-                                                [style.color]="item.attachments == 0 ? 'dodgerblue' : 'darkgray'"></span>
+                                            (click)="clickFunction('assign', '', input, '', i)">
+                                            <span [class]="'icon-person_add_alt_1 icon-20 me-2'"></span>
                                             <span class="show-customName">{{ "Giao việc" }}</span>
                                         </button>
                                     </li>
@@ -106,9 +104,10 @@
                                     </li>
                                     <li>
                                         <button (click)="clickFunction('attachment', '', input, '', i, false)"
+                                            [disabled]="(item.lineType == 'FILE' || item.lineType == 'IMAGE') ? false : true"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-attach_file icon-20 me-2'"
-                                                [style.color]="'dodgerblue'"></span>
+                                                [style.color]="(item.lineType !== 'FILE' || item.lineType !== 'IMAGE') ? 'dodgerblue' : 'darkgray'"></span>
                                             <span class="show-customName">{{ "Đính kèm file" }}</span>
                                         </button>
                                     </li>
@@ -142,7 +141,7 @@
                                     <codx-attachment #attachment [objectType]="objectType" hideBtnSave="1"
                                         hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0"
                                         hideImageThumb="0" [functionID]="funcID" [objectId]="item.recID"
-                                        [allowMultiFile]="1" [idBrowse]="'add'" (fileCount)="fileCount($event)"
+                                        [allowMultiFile]="0" [idBrowse]="'add'" (fileCount)="fileCount($event)"
                                         displayThumb="full">
                                     </codx-attachment>
                                 </div>
@@ -166,13 +165,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <span
-                                class="icon-chat_bubble_outline icon-22 position-relative darkgray icon-comment">
+                            <span class="icon-chat_bubble_outline icon-22 position-relative darkgray icon-comment">
                                 <span
                                     class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary"
                                     *ngIf="item.comments > 0">{{item.comments}}</span></span>
-                            <span
-                                class="icon-attach_file icon-22 position-relative darkgray icon-file">
+                            <span class="icon-attach_file icon-22 position-relative darkgray icon-file">
                                 <span
                                     class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary"
                                     *ngIf="item.attachments > 0">{{item.attachments}}</span></span>
