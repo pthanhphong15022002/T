@@ -48,8 +48,8 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "SearchAsync", [textSearch, pageNo, PageSize]);
     }
 
-    searchFileAdv(textSearch: string, pageNo: number, PageSize: number): Observable<any> {
-        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, pageNo, PageSize]);
+    searchFileAdv(textSearch: string, predicates: string, paras: string, pageNo: number, PageSize: number): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, PageSize]);
     }
 
     getTotalHdd(): Observable<any> {

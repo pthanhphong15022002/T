@@ -75,7 +75,7 @@
                     itemSelected?.extendStatus != null &&
                     itemSelected?.extendStatus >= '3'
                   " [name]="vllExtendStatus" [field]="'ExtendStatus'" [value]="itemSelected?.extendStatus"
-                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7">
+                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7"> 
                 </codx-vll>
                 <codx-vll *ngIf="
                     itemSelected?.approveStatus != null &&
@@ -333,8 +333,8 @@
             </div>
           </div>
         </div>
-        <div *ngIf="itemSelected.tags" class="mt-2">
-          <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="itemSelected.tags">
+        <div *ngIf="viewTags !=''" class="mt-2">
+          <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="viewTags" >
           </codx-tag>
         </div>
       </div>

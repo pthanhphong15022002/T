@@ -22,6 +22,7 @@ import {
   CRUDService,
   ScrollComponent,
   DialogModel,
+  Filters,
 } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import {
@@ -47,6 +48,7 @@ import { CommandColumnService } from '@syncfusion/ej2-angular-grids';
 import { threadId } from 'worker_threads';
 import { ActivatedRoute } from '@angular/router';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { computeStyles } from '@popperjs/core';
 
 @Component({
   selector: 'home',
@@ -81,10 +83,13 @@ export class HomeComponent extends UIComponent {
   titleLength = 'Dung lượng';
   sortColumn: string;
   sortDirection: string;
+  textSearch: string;
+  totalSearch: number;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
   //totalPage = 1;
+  isSearch: boolean;
   user: any;
   dialog!: DialogRef;
   interval: ItemInterval[];
@@ -454,6 +459,7 @@ export class HomeComponent extends UIComponent {
     if ($data == null || $data.data == null) {
       return;
     }
+    this.isSearch = false;
     this.clearWaitingThumbnail();
     let id = $data.data.recID;
     let item = $data.data;
@@ -488,24 +494,24 @@ export class HomeComponent extends UIComponent {
       this.dmSV.listFolder = [];
       this.dmSV.listFiles = [];
       if (items == undefined || items.length <= 0) {        
-        this.folderService.options.srtColumns = this.sortColumn;
-        this.folderService.options.srtDirections = this.sortDirection;
-        this.folderService.options.funcID = this.view.funcID;
-        this.folderService.getFolders(id).subscribe(async (res) => {          
-          if (res != null) {            
-            var data = res[0];            
-            this.listFolders = data;
-            this.data = [...this.data, ...data];
-            this.dmSV.listFolder = data;
-            var tree = this.codxview.currentView.currentComponent.treeView;
-            item.items = [];
-            if (tree != undefined) 
-             tree.addChildNodes(item, data);
-            this.changeDetectorRef.detectChanges();   
-            this._beginDrapDrop();         
-          }
-          this.dmSV.loadedFolder = true;  
-        });
+        // this.folderService.options.srtColumns = this.sortColumn;
+        // this.folderService.options.srtDirections = this.sortDirection;
+        // this.folderService.options.funcID = this.view.funcID;
+        // this.folderService.getFolders(id).subscribe(async (res) => {          
+        //   if (res != null) {            
+        //     var data = res[0];            
+        //     this.listFolders = data;
+        //     this.data = [...this.data, ...data];
+        //     this.dmSV.listFolder = data;
+        //     var tree = this.codxview.currentView.currentComponent.treeView;
+        //     item.items = [];
+        //     if (tree != undefined) 
+        //      tree.addChildNodes(item, data);
+        //     this.changeDetectorRef.detectChanges();   
+        //     this._beginDrapDrop();         
+        //   }
+        //   this.dmSV.loadedFolder = true;  
+        // });
       } else {        
         this.data = [...this.data, ...item.items];
         this.dmSV.listFolder = item.items;
@@ -751,24 +757,77 @@ export class HomeComponent extends UIComponent {
  //  console.log($event);
   }
 
+  filterChange($event) {
+    try {
+      if ($event != undefined) {
+        var predicates = $event.predicates;
+        var paras = $event.paras;
+        //$event.paras;
+        var list = [];
+        var item = new Filters;
+        $event?.filters.forEach(ele => {
+          item = ele as Filters;
+          list.push(Object.assign({}, item));        
+        });
+        var text = JSON.stringify(list);
+        this.dmSV.page = 1;
+        this.fileService.searchFileAdv(text, predicates, paras, 1, 20).subscribe(item => { 
+          if (item != null) {
+            this.dmSV.loadedFile = true;
+            this.dmSV.listFiles = item.data;
+            this.totalSearch = item.total;
+            this.data = [...this.data, ...this.dmSV.listFiles];
+            this.changeDetectorRef.detectChanges();
+          }
+          else {
+            this.dmSV.loadedFile = true;
+            this.totalSearch = 0;
+            this.changeDetectorRef.detectChanges();
+          }
+        });      
+      }    
+    }
+    catch(ex) {
+      this.dmSV.loadedFile = true;
+      this.isSearch = false;
+      this.changeDetectorRef.detectChanges();
+      console.log(ex);
+    } 
+  }
+
   searchChange($event) { 
-    var text = $event;
-    this.data = [];
-    this.dmSV.loadedFolder = true;
-    this.dmSV.loadedFile = false;
-    if (this.codxview.currentView.currentComponent.treeView != null)
-      this.codxview.currentView.viewModel.model.panelLeftHide = true;
-   // this.codxview.codxview.
-    this.dmSV.page = 1;
-    this.fileService.options.page = this.dmSV.page;
-    this.fileService.searchFile(text, 1, 100).subscribe(item => {
-      if (item != null) {
-        this.dmSV.loadedFile = true;
-        this.dmSV.listFiles = item.data;
-        this.data = [...this.data, ...this.dmSV.listFiles];
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+    try {
+      this.textSearch = $event;
+      this.data = [];
+      this.dmSV.loadedFolder = true;
+      this.dmSV.loadedFile = false;
+      if (this.codxview.currentView?.currentComponent?.treeView != null)
+        this.codxview.currentView.viewModel.model.panelLeftHide = true;
+     
+      this.isSearch = true;
+      this.dmSV.page = 1;
+      this.fileService.options.page = this.dmSV.page;
+      this.fileService.searchFile(this.textSearch, this.dmSV.page, 20).subscribe(item => {
+        if (item != null) {
+          this.dmSV.loadedFile = true;
+          this.dmSV.listFiles = item.data;
+          this.totalSearch = item.total;
+          this.data = [...this.data, ...this.dmSV.listFiles];
+          this.changeDetectorRef.detectChanges();
+        }
+        else {
+          this.dmSV.loadedFile = true;
+          this.totalSearch = 0;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+    }
+    catch(ex) {
+      this.dmSV.loadedFile = true;
+      this.isSearch = false;
+      this.changeDetectorRef.detectChanges();
+      console.log(ex);
+    }   
   }
 
   requestEnded(e: any) {
@@ -785,7 +844,7 @@ export class HomeComponent extends UIComponent {
       // npm i ngx-infinite-scroll@10.0.0
       this.changeDetectorRef.detectChanges();
       this.dmSV.page = 1;
-
+      this.isSearch = false;
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
         if (e.data != null) {
