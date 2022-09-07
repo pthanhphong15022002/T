@@ -1,1 +1,19 @@
-<p>file works!</p>
+<codx-form [dialog]="dialog" [body]="body" [headerText]="headerAttachment" [footer]="footer">
+    <ng-template #body>
+        <div class="">
+            <codx-attachment #attachment [objectType]="objectType" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
+                [objectId]="data.recID" [allowMultiFile]="1" [idBrowse]="'add'"
+                displayThumb="full" (fileCount)="fileCount($event)">
+            </codx-attachment>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-light-primary" (click)="popup()">
+                <i class="icon-add fs-5 me-1"></i>
+                <codx-label name="lblTitle" formName="Notes" default="Thêm file"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

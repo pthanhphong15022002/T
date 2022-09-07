@@ -25,6 +25,7 @@ import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { TM_Tasks } from '../codx-tasks/model/task.model';
 import { CodxTreeHistoryComponent } from '../codx-tree-history/codx-tree-history.component';
+import { FileComponent } from './file/file.component';
 import { CO_Contents } from './model/CO_Contents.model';
 
 @Component({
@@ -88,8 +89,14 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   listRoles = [];
   vllRole = 'TM002';
   headerComment = '';
-  headerAttachment = 'Danh sách file đính kèm';
   checkFile = false;
+  initListNote = {
+    memo: '',
+    status: null,
+    textColor: null,
+    format: null,
+    lineType: this.lineType,
+  };
 
   @Input() contents: any = [
     {
@@ -98,6 +105,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       textColor: null,
       format: null,
       lineType: 'TEXT',
+      attachments: 0,
+      comments: 0,
     },
   ];
   @Input() showMenu = true;
@@ -126,7 +135,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     private cache: CacheService,
     private api: ApiHttpService,
     private route: ActivatedRoute,
-    private callfunc: CallFuncService,
+    private callfunc: CallFuncService
   ) {
     this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
       if (res) this.gridViewSetup = res;
@@ -134,7 +143,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.cache.gridViewSetup('Comments', 'grvComments').subscribe((res) => {
       if (res) {
         this.gridViewSetupComment = res;
-        this.headerComment = this.gridViewSetupComment.Comments.headerText;  
+        this.headerComment = this.gridViewSetupComment.Comments.headerText;
       }
     });
     this.route.queryParams.subscribe((params) => {
@@ -161,11 +170,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     }
     if (this.data.length > 0) {
       this.contents = this.data;
-      this.setFont();
       this.dt.detectChanges();
       this.setPropertyForView();
     }
-    this.getAssign('');
   }
 
   setPropertyForView() {
@@ -399,14 +406,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.contents.push(obj);
       // reverse
       if (checkFirstNote == false) this.contents.shift();
-      var initListNote = {
-        memo: '',
-        status: null,
-        textColor: null,
-        format: null,
-        lineType: this.lineType,
-      };
-      this.contents.push(initListNote);
+      this.contents.push(this.initListNote);
       this.id = this.contents.length - 1;
       //reverse
       this.dt.detectChanges();
@@ -555,7 +555,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     format = null,
     ele = null,
     item = null,
-    index = null
+    index = null,
+    menu = null
   ) {
     switch (type) {
       case 'format':
@@ -577,7 +578,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.assign(index);
         break;
       case 'attachment':
-        this.openPopupAttachment(index);
+        if (menu == false) this.openPopupAttachment(index);
+        else this.popup();
     }
     this.getContent.emit(this.contents);
   }
@@ -703,11 +705,28 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   openPopupAttachment(index) {
     this.id = index;
-    this.callfunc.openSide(this.popupAttachment);
+    var dt = {
+      data: this.contents[index],
+      funcID: this.funcID,
+      objectType: this.objectType,
+    }
+    this.callfunc.openSide(FileComponent, dt);
   }
 
   popup() {
     this.attachment.uploadFile();
     this.checkFile = true;
+  }
+
+  fileCount(e) {
+    if (e.data.length > 0) {
+      this.attachment.objectId = this.contents[this.id].recID;
+      this.attachment.saveFiles();
+      this.contents[this.id].lineType = 'FILE';
+      this.contents[this.id].attachments++;
+      this.contents.push(this.initListNote);
+      this.updateContent(this.objectParentID, this.contents);
+      this.dt.detectChanges();
+    }
   }
 }
