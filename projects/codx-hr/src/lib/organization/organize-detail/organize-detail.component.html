@@ -257,14 +257,15 @@
 <ng-template #popContent>
   <div>
     <ng-container *ngFor="let item of employOrg">
-      <div *ngIf="show(item)">
-        <div
+      <div>
+        <!-- <div *ngIf="show(item)"> -->
+        <!-- <div
           class="d-flex align-items-center justify-content-between list-title my-2"
         >
           <div class="text-primary font-weight-bold">
             {{ item != "_" ? item : null }}
           </div>
-        </div>
+        </div> -->
         <div class="row">
           <div
             *ngFor="
@@ -337,11 +338,12 @@
 <ng-template #popTitle>
   <div class="text-dark mb-2">Danh sách nhân viên</div>
   <div>
-    <input
+    <!-- <input
       type="text"
       class="form-control"
       [(ngModel)]="searchField"
       placeholder="Tìm kiếm"
-    />
+    /> -->
+    <codx-searchbar (searchEvent)="onSearch($event)"></codx-searchbar>
   </div>
 </ng-template>
