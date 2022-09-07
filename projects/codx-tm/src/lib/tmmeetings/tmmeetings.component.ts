@@ -26,7 +26,7 @@ import { PopupAddMeetingComponent } from './popup-add-meeting/popup-add-meeting.
 import { CO_Meetings, CO_Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
 import { APICONSTANT } from '@shared/constant/api-const';
-
+import { PopupStatusMeetingComponent } from './popup-status-meeting/popup-status-meeting.component';
 @Component({
   selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
@@ -34,7 +34,8 @@ import { APICONSTANT } from '@shared/constant/api-const';
 })
 export class TMMeetingsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @Input() meeting = new CO_Meetings();
 
   @Input() dataObj?: any;
@@ -94,11 +95,10 @@ export class TMMeetingsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.tmService.functionParent = this.funcID ;
+    this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
-       this.tmService.urlback = f.url ;
-      
+        this.tmService.urlback = f.url;
       }
     });
     if (this.funcID == 'TMT03011') {
@@ -111,11 +111,10 @@ export class TMMeetingsComponent
     //   }
     // });
 
-    this.urlDetail = 'tm/meetingdetails/TMT05011'
+    this.urlDetail = 'tm/meetingdetails/TMT05011';
 
     this.dataValue = this.user?.userID;
     this.getParams();
-
   }
 
   onInit(): void {
@@ -166,7 +165,7 @@ export class TMMeetingsComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          template7: this.template7
+          template7: this.template7,
         },
       },
       {
@@ -197,7 +196,7 @@ export class TMMeetingsComponent
   }
 
   //#region kanban
-  changeDataMF(e:any,data:any){
+  changeDataMF(e: any, data: any) {
     // console.log(e, data);
   }
   //#end region
@@ -395,7 +394,10 @@ export class TMMeetingsComponent
         this.delete(data);
         break;
       case 'TMT05011':
-        this.viewDetail(e.data,data);
+        this.viewDetail(e.data, data);
+        break;
+      case 'TMT05013':
+        this.updateStatusMeeting(e.data, data);
         break;
     }
   }
@@ -434,9 +436,7 @@ export class TMMeetingsComponent
               objectData[i] = object[i];
             }
           }
-          this.view.dataService.data = e?.event.concat(
-            objectData
-          );
+          this.view.dataService.data = e?.event.concat(objectData);
           this.meeting = objectData[0];
           this.detectorRef.detectChanges();
         }
@@ -475,7 +475,7 @@ export class TMMeetingsComponent
         });
       });
   }
-  copy(data) { }
+  copy(data) {}
   delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -497,13 +497,33 @@ export class TMMeetingsComponent
     return true;
   }
 
-  viewDetail(func,data) {
-    this.codxService.navigate('',func.url, {
+  viewDetail(func, data) {
+    this.codxService.navigate('', func.url, {
       meetingID: data.meetingID,
     });
   }
 
   //#region hoàn thành cuộc họp
- 
+  updateStatusMeeting(moreFunc, data) {
+    var obj = {
+      moreFunc: moreFunc,
+      data: data,
+      vll: 'CO004',
+    };
+    this.dialog = this.callfc.openForm(
+      PopupStatusMeetingComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        /// lam gi do
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
   //#region end
 }
