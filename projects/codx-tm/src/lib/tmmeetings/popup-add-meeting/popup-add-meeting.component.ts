@@ -66,7 +66,7 @@ export class PopupAddMeetingComponent implements OnInit {
   isCheckTask = true;
   selectedDate = new Date();
   isHaveFile = false;
-  showLabelAttacment = false;
+  showLabelAttachment = false;
 
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -207,9 +207,9 @@ export class PopupAddMeetingComponent implements OnInit {
       });
   }
 
-  onSave() {
+  async onSave() {
     if (this.attachment.fileUploadList.length)
-      this.attachment.saveFilesObservable().subscribe((res) => {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.meeting.attachments = Array.isArray(res) ? res.length : 1;
           if (this.action === 'add') this.onAdd();
@@ -530,6 +530,6 @@ export class PopupAddMeetingComponent implements OnInit {
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit') this.showLabelAttacment = this.isHaveFile;
+    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
 }

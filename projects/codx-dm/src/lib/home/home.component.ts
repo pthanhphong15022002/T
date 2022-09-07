@@ -416,8 +416,8 @@ export class HomeComponent extends UIComponent {
     console.log($event);    
   }
 
-  saveFile1() {
-    this.attachment1.saveFilesObservable().subscribe((item) => {
+  async saveFile1() {
+    (await (this.attachment1.saveFilesObservable())).subscribe((item) => {
       console.log(item);
     });
      this.attachment.saveFiles();
@@ -454,7 +454,7 @@ export class HomeComponent extends UIComponent {
     if ($data == null || $data.data == null) {
       return;
     }
-
+    this.clearWaitingThumbnail();
     let id = $data.data.recID;
     let item = $data.data;
     if (item.read) {
@@ -649,6 +649,15 @@ export class HomeComponent extends UIComponent {
 
   ngOnDestroy() {
     //   this.atSV.openForm.unsubscribe();
+    this.clearWaitingThumbnail();
+    // if (this.interval?.length > 0) {
+    //   this.interval.forEach((element) => {
+    //     clearInterval(element.instant);
+    //   });
+    // }
+  }
+
+  clearWaitingThumbnail() {
     if (this.interval?.length > 0) {
       this.interval.forEach((element) => {
         clearInterval(element.instant);
@@ -656,16 +665,18 @@ export class HomeComponent extends UIComponent {
     }
   }
 
-  displayThumbnail(id, thumnail) {
+  async displayThumbnail(id, thumnbail) {
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
-    var index = setInterval(() => {
-      that.fileService.getThumbnail(id, thumnail).subscribe((item) => {
-        if (item != null && item != '') {
+    var index = setInterval(async () => {
+      let url = `${this.dmSV.urlThumbnail}${thumnbail}`;      
+      try {
+        let blob = await fetch(url).then(r => r.blob());           
+        if (blob.type != '') {       
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = item;
+            files[index].thumbnail = thumnbail;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
@@ -676,7 +687,10 @@ export class HomeComponent extends UIComponent {
             this.interval.splice(indexInterval, 1);
           }
         }
-      });
+      }
+      catch {
+
+      }     
     }, 3000);
 
     var interval = new ItemInterval();
@@ -760,8 +774,14 @@ export class HomeComponent extends UIComponent {
   requestEnded(e: any) {
     if(e.type === "read"){     
       this.data = [];    
+      this.clearWaitingThumbnail();
      // this.dmSV.listFolder = []; 
       this.dmSV.listFiles = [];      
+      this.fileService.getTotalHdd().subscribe(item => {
+        //  totalUsed: any;
+        // totalHdd: any;
+        this.dmSV.updateHDD.next(item);        
+      })
       // npm i ngx-infinite-scroll@10.0.0
       this.changeDetectorRef.detectChanges();
       this.dmSV.page = 1;

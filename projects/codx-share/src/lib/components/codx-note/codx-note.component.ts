@@ -1,3 +1,4 @@
+import { Optional, TemplateRef } from '@angular/core';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -9,9 +10,20 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService, CodxInputComponent } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  CodxInputComponent,
+  SidebarModel,
+  DialogRef,
+  CallFuncService,
+  DialogModel,
+} from 'codx-core';
 import { iif } from 'rxjs';
 import { createTrue } from 'typescript';
+import { AssignInfoComponent } from '../assign-info/assign-info.component';
+import { TM_Tasks } from '../codx-tasks/model/task.model';
+import { CodxTreeHistoryComponent } from '../codx-tree-history/codx-tree-history.component';
 import { CO_Contents } from './model/CO_Contents.model';
 
 @Component({
@@ -60,7 +72,19 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   co_content: CO_Contents = new CO_Contents();
   test: any;
   fontTemp: any;
-  id = '0';
+  id = 0;
+  dialog!: DialogRef;
+  countResource = 0;
+  listTask: any;
+  popoverCrr: any;
+  popoverDataSelected: any;
+  vllStatus = 'TM004';
+  vllApproveStatus = 'TM011';
+  listTaskResourceSearch: any;
+  listTaskResource: any;
+  searchField = '';
+  listRoles = [];
+  vllRole = 'TM002';
 
   @Input() contents: any = [
     {
@@ -77,31 +101,42 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   @Input() assembly = '';
   @Input() className = '';
   @Input() method = '';
-  @Input() refID = '';
+  @Input() objectParentID = '';
   @Input() data = [];
-  @Input() mode = 'add';
+  @Input() mode = 'edit';
+  @Input() funcID = '';
+  @Input() objectID = '';
+  @Input() objectType = '';
+  @Input() vllControlShare = '';
+  @Input() vllRose = '';
   @Output() getContent = new EventEmitter();
   @ViewChild('input') input: any;
+  @ViewChild('popupComment') popupComment: TemplateRef<any>;
 
   constructor(
     private dt: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private callfunc: CallFuncService,
+    @Optional() dtR?: DialogRef
   ) {
+    // this.dialog = dtR;
     this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
+      if (res) this.gridViewSetup = res;
     });
     this.route.queryParams.subscribe((params) => {
-      if (params) {
-        this.refID = params.meetingID;
-      }
+      if (params) this.objectParentID = params.meetingID;
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cache.valueList(this.vllRole).subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     if (this.input) this.currentElement = this.input.elRef.nativeElement;
@@ -118,6 +153,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.dt.detectChanges();
       this.setPropertyForView();
     }
+    this.getAssign('');
   }
 
   setPropertyForView() {
@@ -175,6 +211,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     } else if (type == 'LIST') {
       this.setFormat(false, false, true);
     } else this.setFormat(false, false, false, true);
+    if (this.objectParentID)
+      this.updateContent(this.objectParentID, this.contents);
   }
 
   setFormat(text = true, checkBox = false, list = false, title = false) {
@@ -230,6 +268,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       else style.textDecorationLine = 'none';
       this.listNoteTemp.format = this.listNoteTemp.format + 'underline;';
     }
+    this.contents[this.id].format = this.listNoteTemp.format;
+    if (this.objectParentID)
+      this.updateContent(this.objectParentID, this.contents);
     this.dt.detectChanges();
   }
 
@@ -254,7 +295,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.currentElement = this.currentElement.querySelector(
           'input.codx-text'
         ) as HTMLElement;
-        this.currentElement.focus();
+        if (this.currentElement) this.currentElement.focus();
         this.listNoteTemp[event?.field] = event?.data;
         /*Set lại color cho memo khi edit color*/
         this.contents[this.id].textColor = event?.data;
@@ -262,10 +303,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.elementColor = elementColor;
         this.chooseColor(event?.data);
         var value: any = this.currentElement;
-        if (value.value) {
+        if (value) {
           this.contents[this.id].textCorlor = event?.data;
           if (this.mode == 'edit') {
-            if (this.refID) this.updateContent(this.refID, this.contents);
+            if (this.objectParentID)
+              this.updateContent(this.objectParentID, this.contents);
           }
         }
       }
@@ -281,7 +323,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  popupFile() {}
+  popupImg() {}
 
   addEmoji(event) {
     this.listNoteTemp.memo = '';
@@ -305,7 +347,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.listNoteTemp.lineType = this.lineType;
       this.listNoteTemp[field] = dt;
       this.contents[this.id].memo = dt;
-      if (this.mode == 'edit') this.updateContent(this.refID, this.contents);
+      // if (this.mode == 'edit') this.updateContent(this.objectParentID, this.contents);
       this.id += 1;
       this.getContent.emit(this.contents);
     }
@@ -315,7 +357,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     if (event?.data != null) {
       this.listNoteTemp['status'] = event?.data;
       this.contents[index].status = event?.data;
-      if (this.mode == 'edit') this.updateContent(this.refID, this.contents);
+      if (this.mode == 'edit')
+        this.updateContent(this.objectParentID, this.contents);
       this.getContent.emit(this.contents);
     }
   }
@@ -352,14 +395,14 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         lineType: this.lineType,
       };
       this.contents.push(initListNote);
-      this.id = `${this.contents.length - 1}`;
+      this.id = this.contents.length - 1;
       //reverse
       this.dt.detectChanges();
     }
-    if (this.mode == 'edit') {
-      if (this.refID) this.updateContent(this.refID, this.contents);
-    }
-    this.getContent.emit(this.contents)
+    // if (this.mode == 'edit') {
+    //   if (this.objectParentID) this.updateContent(this.objectParentID, this.contents);
+    // }
+    this.getContent.emit(this.contents);
   }
 
   setPropertyAfterAdd() {
@@ -434,7 +477,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     if (this.contents) {
       this.contents.splice(index, 1);
       if (this.mode == 'edit') {
-        if (this.refID) this.updateContent(this.refID, this.contents);
+        if (this.objectParentID)
+          this.updateContent(this.objectParentID, this.contents);
       }
       this.getContent.emit(this.contents);
     }
@@ -500,28 +544,145 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     item = null,
     index = null
   ) {
-    var input = this.currentElement.querySelector(
-      'input.codx-text'
-    ) as HTMLElement;
-    var value: any = input;
-    if (type == 'format') this.chooseType(format, ele);
-    else if (type == 'font') this.checkFont(format, ele);
-    else if (type == 'delete') this.delete(index);
-    if (value.value) {
-      this.contents[this.id].format = this.listNoteTemp.format;
-      if (this.mode == 'edit') {
-        if (this.refID) this.updateContent(this.refID, this.contents);
-      }
-      this.getContent.emit(this.contents);
+    switch (type) {
+      case 'format':
+        this.chooseType(format, ele);
+        break;
+      case 'font':
+        this.checkFont(format, ele);
+        break;
+      case 'delete':
+        this.delete(index);
+        break;
+      case 'img':
+        this.popupImg();
+        break;
+      case 'comment':
+        this.comment(index);
+        break;
+      case 'assign':
+        this.assign(index);
+        break;
     }
+    this.getContent.emit(this.contents);
   }
 
-  updateContent(refID, listContent) {
+  updateContent(objectParentID, listContent) {
     this.api
       .execSv(this.service, this.assembly, this.className, this.method, [
-        refID,
+        objectParentID,
         listContent,
       ])
       .subscribe();
+  }
+
+  comment(index) {
+    this.id = index;
+    this.callfunc.openForm(this.popupComment, '', 420, window.innerHeight);
+  }
+
+  assign(index) {
+    var task = new TM_Tasks();
+    task.refID = this.contents[index].recID;
+    task.refType = this.objectType;
+    task.taskName = this.contents[index].memo;
+    var vllControlShare = this.vllControlShare;
+    var vllRose = this.vllRose;
+    var title = '';
+    let option = new SidebarModel();
+    var objFormModel = {
+      entityName: this.objectType,
+    };
+    option.FormModel = objFormModel;
+    option.Width = '550px';
+    this.dialog = this.callfunc.openSide(
+      AssignInfoComponent,
+      [task, vllControlShare, vllRose, title],
+      option
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e.event) {
+        var dt = e.event;
+        if (dt[0] == true && dt[1].length > 0) {
+          this.contents[index].tasks++;
+          this.updateContent(this.objectParentID, this.contents);
+          this.dt.detectChanges();
+        }
+      }
+    });
+  }
+
+  getAssign(recID) {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskByRefIDAsync',
+        recID
+      )
+      .subscribe((res) => {});
+  }
+
+  popoverListTask(recID) {
+    this.countResource = 0;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskByRefIDAsync',
+        recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTask = res;
+          this.countResource = res.length;
+        }
+      });
+  }
+
+  popoverEmpList(p: any, task) {
+    this.listTaskResourceSearch = [];
+    this.countResource = 0;
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    }
+    if (this.popoverDataSelected) {
+      if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
+    }
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskResourcesBusiness',
+        'GetListTaskResourcesByTaskIDAsync',
+        task.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTaskResource = res;
+          this.listTaskResourceSearch = res;
+          this.countResource = res.length;
+          p.open();
+          this.popoverCrr = p;
+        }
+      });
+  }
+
+  searchName(e) {
+    var listTaskResourceSearch = [];
+    this.searchField = e;
+    if (this.searchField.trim() == '') {
+      this.listTaskResourceSearch = this.listTaskResource;
+      return;
+    }
+    this.listTaskResource.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
+        listTaskResourceSearch.push(res);
+      }
+    });
+    this.listTaskResourceSearch = listTaskResourceSearch;
   }
 }

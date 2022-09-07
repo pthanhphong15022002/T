@@ -67,7 +67,12 @@ db.DM_FolderInfo.updateMany(
     private changeDetectorRef: ChangeDetectorRef,    
   ) {
     this.codxService.init('DM');
-  
+    this.fileService.getTotalHdd().subscribe(item => {
+      //  totalUsed: any;
+      // totalHdd: any;
+      this.getHDDInformaton(item);      
+    })
+
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
 
@@ -104,12 +109,7 @@ db.DM_FolderInfo.updateMany(
       this.getHDDInformaton(item);        
     });
     
-    this.fileService.getTotalHdd().subscribe(item => {
-      //  totalUsed: any;
-      // totalHdd: any;
-      this.getHDDInformaton(item);      
-    })
-
+   
   }
 
   setClassActive() {    

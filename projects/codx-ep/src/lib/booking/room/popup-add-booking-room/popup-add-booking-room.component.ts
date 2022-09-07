@@ -13,6 +13,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DateTime } from '@syncfusion/ej2-charts';
 import {
   ApiHttpService,
   AuthService,
@@ -51,14 +52,18 @@ export class PopupAddBookingRoomComponent implements OnInit {
   dialogRef: DialogRef;
   modelPage: ModelPage;
 
+  tempAtender:{userId: string, userName:string, roleType:string,status:string,objectType:string,optional:boolean};
+  attendeesList=[];
   grvBookingRoom:any;
   peopleAttend =[];
   tempArray=[];
   curUser:any;
-  lstPeople=[];
+  hostUser:any;
+  hostUserId:any;
+  lstUser=[];
+  lstUserOptional=[];
   lstStationery=[];
   strStationery:string;
-  strAttendees:string;
   vllDevices = [];
   lstDeviceRoom = [];
   isAfterRender = false;
@@ -182,13 +187,15 @@ export class PopupAddBookingRoomComponent implements OnInit {
 
       if(this.isAdd){
         let people = this.authService.userValue;
-        var user :{id: string, text: string, objectType: string, objectName: string}={                
-          id:people.userID,
-          text:people.userName,
-          objectType:undefined,
-          objectName:undefined
+        this.tempAtender={                
+          userId:people.userID,
+          userName:people.userName,
+          status:'1',
+          objectType:'AD_Users',
+          roleType:'1',
+          optional:false,
         };
-        this.curUser=user;
+        this.curUser=this.tempAtender;
         this.changeDetectorRef.detectChanges();
         
       } 
@@ -200,17 +207,26 @@ export class PopupAddBookingRoomComponent implements OnInit {
           if(res){
             this.peopleAttend=res.msgBodyData[0];
             this.peopleAttend.forEach(people=>{
-              let tempPeople :{id: string, text: string, objectType: string, objectName: string}={                
-                id:people.userID,
-                text:people.userName,
-                objectType:undefined,
-                objectName:undefined
+              this.tempAtender ={                
+                userId:people.userID,
+                userName:people.userName,
+                status:people.status,
+                objectType:'AD_Users',
+                roleType:people.roleType,
+                optional:people.optional,
               };
-              if(this.authService.userValue.userID==people.userID){
-                this.curUser=tempPeople;
+              if(this.tempAtender.userId!=this.authService.userValue.userID){                
+                this.attendeesList.push(this.tempAtender);
+              }
+              if(this.tempAtender.userId==this.authService.userValue.userID)
+              {
+                this.curUser=this.tempAtender;
+              }
+              else if(people.optional==false){
+                this.lstUser.push(this.tempAtender);
               }
               else{
-                this.lstPeople.push(tempPeople);
+                this.lstUserOptional.push(this.tempAtender);
               }
             });      
             this.changeDetectorRef.detectChanges();
@@ -222,7 +238,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
         .subscribe((res) => {
           if(res){
             res.msgBodyData[0].forEach(stationery=>{
-              let order :{id: string, quantity:number, text: string, objectType: string, objectName: string}={                
+              let order :{id: string, quantity:number, text: string, objectType: string, objectName: string} = {                
                 id:stationery.itemID,
                 text:stationery.itemName,
                 quantity:stationery.quantity,
@@ -272,7 +288,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
           if(this.isAdd){            
             this.fGroupAddBookingRoom.patchValue({attendees:1});            
             this.link = null;
-            this.selectDate = null;
+            this.fGroupAddBookingRoom.value.bookingOn=this.selectDate = new Date();
             this.endTime = null;
             this.startTime = null;
           }
@@ -283,28 +299,31 @@ export class PopupAddBookingRoomComponent implements OnInit {
               this.changeDetectorRef.detectChanges();  
             }     
             this.startTime=this.fGroupAddBookingRoom.value.startDate.toString().slice(16,21);
-            this.endTime=this.fGroupAddBookingRoom.value.endDate.toString().slice(16,21);
-                     
+            this.endTime=this.fGroupAddBookingRoom.value.endDate.toString().slice(16,21);                     
           }
         } 
       });     
     this.changeDetectorRef.detectChanges();   
   }
+  // setStatusTime(modifiedOn: any){
+  //   let dateSent = new Date(modifiedOn);
+  //   let currentDate=new Date();
+  //   var day= Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate()) ) /(1000 * 60 * 60 * 24)).toString();
+  //   if(day!='0'){
+  //     return day+" ngày trước"
+  //   }
+  //   else{
+  //     var hour= currentDate.getHours() - dateSent.getHours();
+  //     return hour+" giờ trước"       
+  //   }
+  // }
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd,this.strAttendees,null,this.lstStationery];
+    option.data = [itemData, this.isAdd,this.attendeesList ,null,this.lstStationery];
     return true;
   }
-  onSaveForm() {
-    this.strAttendees='';
-    this.lstPeople.forEach((people) => {
-      if (this.strAttendees == '') {
-        this.strAttendees += people.id;
-      } else {
-        this.strAttendees += ';' + people.id;
-      }
-    });
+  onSaveForm() {    
     
     // if (this.fGroupAddBookingRoom.invalid == true) {
     //   return;
@@ -320,7 +339,14 @@ export class PopupAddBookingRoomComponent implements OnInit {
     //     this.fGroupAddBookingRoom.patchValue({ hours: hours });
     //   }
     // }
-    
+    this.attendeesList=[];
+    this.attendeesList.push(this.curUser);
+    this.lstUser.forEach(people=>{
+      this.attendeesList.push(people);
+    })
+    this.lstUserOptional.forEach(people=>{
+      this.attendeesList.push(people);
+    })
     let pickedEquip = '';
     let availableEquip = '';
     this.tmplstDevice.forEach((element) => {
@@ -344,15 +370,19 @@ export class PopupAddBookingRoomComponent implements OnInit {
         category: '1',
         status: '1',
         resourceType: '1',
-        attendees:this.lstPeople.length +1,
+        attendees:this.fGroupAddBookingRoom.value.attendees,
       });      
     }
+
     console.log("data",this.fGroupAddBookingRoom.value);
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res: any) => {
-        if (res) {
-          this.isSaveSuccess = true;
+      .subscribe((res) => {
+        if (res.save || res.update) {
+          this.dialogRef && this.dialogRef.close();
+        } else {
+          //this.notificationsService.notifyCode('E0011');
+          return;
         }
       });
     //this.attachment.saveFilesObservable().subscribe(res=>{})
@@ -363,8 +393,71 @@ export class PopupAddBookingRoomComponent implements OnInit {
   }
   
   valueCbxUserChange(event?) {
-    this.lstPeople=event.data.dataSelected;          
-    this.fGroupAddBookingRoom.value.attendees=this.lstPeople.length+1;
+    this.lstUser=[];
+    event.data.dataSelected.forEach((people) => {
+      this.tempAtender = {
+        userId: people.dataSelected.UserID,
+        userName: people.dataSelected.UserName,
+        status:'1',
+        objectType: 'AD_Users',
+        roleType:'3',
+        optional:false,
+      };
+      this.lstUser.push(this.tempAtender);
+
+      if(this.lstUserOptional!=null){
+        this.lstUser?.forEach(people=>{
+          this.attendeesList.push(people);
+        })
+      };
+      if(this.lstUserOptional!=null){
+        this.lstUserOptional.forEach(people=>{
+          this.attendeesList.push(people);
+        })  
+      };    
+    });
+    if(this.lstUserOptional!=null){
+      this.fGroupAddBookingRoom.value.attendees=this.lstUser.length + this.lstUserOptional.length;
+    }
+    else{      
+      this.fGroupAddBookingRoom.value.attendees=this.lstUser.length;
+    }    
+    if(this.lstUserOptional!=null){
+      this.lstUser?.forEach(people=>{
+        this.attendeesList.push(people);
+      })
+    };
+    if(this.lstUserOptional!=null){
+      this.lstUserOptional.forEach(people=>{
+        this.attendeesList.push(people);
+      })  
+    };    
+    this.changeDetectorRef.detectChanges();
+  }
+  valueCbxUserOptionalChange(event?) {
+    this.lstUserOptional=[];
+    event.data.dataSelected.forEach((people) => {
+      this.tempAtender = {
+        userId: people.id,
+        userName: people.text,
+        status:'1',
+        objectType: 'AD_Users',
+        roleType:'3',
+        optional:true,
+      };
+      this.lstUserOptional.push(this.tempAtender);
+    });
+    this.fGroupAddBookingRoom.value.attendees=this.lstUser.length + this.lstUserOptional.length;
+    if(this.lstUserOptional!=null){
+      this.lstUser?.forEach(people=>{
+        this.attendeesList.push(people);
+      })
+    };
+    if(this.lstUserOptional!=null){
+      this.lstUserOptional.forEach(people=>{
+        this.attendeesList.push(people);
+      })  
+    };    
     this.changeDetectorRef.detectChanges();
   }
   valueCbxStationeryChange(event?) {
@@ -379,9 +472,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       }      
       this.lstStationery.push(tempStationery);
     });
-    this.changeDetectorRef.detectChanges();
-    
-    console.log('stationery',this.lstStationery);
+    this.changeDetectorRef.detectChanges();    
   }
 
   valueQuantityChange(event?) {
@@ -390,8 +481,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
         item.quantity=event?.data;
       }
     })
-    console.log('stationery',this.lstStationery);
-
   }
   valueAttendeesChange(event) {
     if (event?.field) {
@@ -407,7 +496,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     
   }
-
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
@@ -489,7 +577,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
     if (this.selectDate) {
       this.fGroupAddBookingRoom.patchValue({ bookingOn: this.selectDate });
     }
-    //this.setDate();
   }
 
   buttonClick(e: any) {
@@ -505,9 +592,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
         this.selectDate=this.fGroupAddBookingRoom.value.bookingOn;
         if (this.selectDate) {
           if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
-            this.startDate = new Date(
-              this.selectDate.setHours(this.beginHour, this.beginMinute, 0)
-            );
+            this.startDate = this.selectDate;
+            this.startDate.setHours(this.beginHour, this.beginMinute, 0);            
             if (this.startDate) {
               this.fGroupAddBookingRoom.patchValue({ startDate: this.startDate });
             }
@@ -522,9 +608,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
         this.selectDate=this.fGroupAddBookingRoom.value.bookingOn;
         if (this.selectDate) {
           if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
-            this.endDate = new Date(
-              this.selectDate.setHours(this.endHour, this.endMinute, 0)
-            );
+            this.endDate = this.selectDate;
+            this.endDate.setHours(this.endHour, this.endMinute, 0);            
             if (this.endDate) {
               this.fGroupAddBookingRoom.patchValue({ endDate: this.endDate });
             }
@@ -586,9 +671,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
       this.fGroupAddBookingRoom.patchValue({ onlineUrl: null });
     this.changeDetectorRef.detectChanges();
   }
-
-  
-
   openPopupLink() {
     this.callFuncService.openForm(this.addLink, '', 500, 250);    
     this.changeDetectorRef.detectChanges();

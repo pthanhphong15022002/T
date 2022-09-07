@@ -1,7 +1,7 @@
 <ng-template #panelContent>
-    <div class="page-home bg-body p-6 rounded-4" [style]="'margin-top:60px'">
+    <div class="page-home bg-body p-6 rounded-4">
         <div class="d-flex">
-            <div class="w-100 home-center">
+            <div class="home-center">
                 <codx-listview [itemTemplate]="tmpPortal" #listview funcId="FDT01" [pageSize]="10" service="WP"
                     assemblyName="ERM.Business.WP" className="CommentsBusiness" [predicate]="predicate"
                     [dataValue]="dataValue" method="GetListFeedBackAsync" entityName="WP_Comments">
@@ -11,7 +11,8 @@
                 <div class="card-box border-bottom mb-6">
                     <div class="box-header d-flex justify-content-between align-items-center mb-4">
                         <h4 class="box-title">
-                            <codx-label name="lblFeedbackMessage" default="Thông điệp phản hồi" formName="">
+                            <codx-label [formModel]="codxViews.formModel" 
+                            name="lblFeedbackMessage" default="Thông điệp phản hồi">
                             </codx-label>
                         </h4>
                     </div>
@@ -85,7 +86,7 @@
                 <div class="card-box mt-6">
                     <div class="box-header d-flex align-items-center justify-content-between mb-5">
                         <h4 class="box-title mb-0">
-                            <codx-label name="lblEmpWalletHistory" default="Giao dịch phát sinh gần nhất" formName="FD">
+                            <codx-label name="lblEmpWalletHistory" default="Giao dịch phát sinh gần nhất" [formModel]="codxViews.formModel">
                             </codx-label>
                         </h4>
                     </div>
@@ -94,44 +95,8 @@
                             <codx-listview [itemTemplate]="templateItemCoin" #listviewCoins [pageSize]=12 service="FD"
                                 assemblyName="ERM.Business.FD" className="KudosTransBusiness"
                                 method="HistoryWalletAsync" [predicate]="predicateCoins" [dataValue]="dataValueCoins"
-                                entityName="FD_KudosTrans" height="300" [itemTemplateLoading]="templateloading">
+                                entityName="FD_KudosTrans">
                             </codx-listview>
-
-                            <ng-template #templateItemCoin let-item>
-                                <div class="d-flex align-items-start wallet-item me-2" (click)="clickShowItem(item)">
-                                    <div class="me-3 max-h-40">
-                                        <img class="w-40px"
-                                            src="../../../assets/demos/svg/{{item.transType | avatarCard:item.cardType }}">
-                                    </div>
-                                    <div class="d-flex flex-column flex-grow-1">
-                                        <div class="text-dark fw-bolder">{{item?.userName}}</div>
-                                        <div class="text-dark-75 font-size-sm">{{item?.cardType|
-                                            vll:'L1422':'text'|async}}</div>
-                                        <div class="text-muted font-size-sm">{{item?.createdOn | fmDT:'dmy'}}</div>
-                                    </div>
-                                    <div class="d-flex align-items-center text-center">
-                                        <ng-container *ngIf="item.transType =='4';else elsTmp">
-                                            <span
-                                                [ngClass]="item?.coCoins > 0 ? 'text-success':'text-danger'">{{item?.coCoins
-                                                > 0?"+":""}}{{item?.coCoins}}
-                                            </span>
-                                            <span
-                                                [ngClass]="item?.coCoins > 0 ? 'text-success ms-1':'text-danger ms-1'">
-                                                <codx-label formName="" name="lblCoins" default="xu"></codx-label>
-                                            </span>
-                                        </ng-container>
-                                        <ng-template #elsTmp>
-                                            <span
-                                                [ngClass]="item?.coins > 0 ? 'text-success':'text-danger'">{{item?.coins
-                                                > 0?"+":""}}{{item?.coins}}
-                                            </span>
-                                            <span [ngClass]="item?.coins > 0 ? 'text-success ms-1':'text-danger ms-1'">
-                                                <codx-label formName="" name="lblCoins" default="xu"></codx-label>
-                                            </span>
-                                        </ng-template>
-                                    </div>
-                                </div>
-                            </ng-template>
                         </div>
                     </div>
                 </div>
@@ -140,7 +105,7 @@
     </div>
 </ng-template>
 <ng-template #tmpPortal let-item>
-    <div class="row" (click)="clickShowItem(item)">
+    <div class="row p-4">
         <div class="d-flex align-items-center">
             <div class="symbol symbol-40 symbol-circle me-3">
                 <codx-img [objectId]="item.createdBy" objectType="AD_Users" [width]="40"
@@ -149,19 +114,20 @@
             </div>
             <div class="d-flex flex-column flex-grow-1">
                 <div class="d-flex align-items-center mb-1">
-                    <span class="text-dark-75 font-size-h6 fw-bolder me-2">{{item.createdName}}</span>
-                    <span class="label label-inline label-light-primary" *ngIf="item.tag > 0">
-                        <img class="me-2 w-15px" src="../../../../assets/img/fed/user-tag.png" />
-                        <span class="text-primary" (click)="showWith(item.id,'3')"> {{item.tag}}</span>
-                    </span>
+                    <div class="text-dark-75 font-size-h6 fw-bolder me-2">{{item.createdName}}</div>
+                    <div *ngIf="item.tag > 0" class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
+                        [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="clickShowTag(item)">
+                        <div class="tag me-2">
+                          <img class="tag-img" src="/assets/img/fed/user-tag.png" />
+                        </div>
+                        <span class="tag-count">{{ item.tag }}</span>
+                    </div>
                 </div>
                 <div class="text-info-date">
                     <span class="text-muted font-size-sm">{{item.createdOn | timefrom}}</span>
                     <span class="label label-xxs label-inline label-light-primary ms-2">{{item.shareControl |
                         sharedControl:'wp' | async}}</span>
-                    <span class="me-2 text-primary text-underline"
-                        (click)="item.shared > 1 ? showWith(item.id,'2') : false" href="javascript:void(0)"
-                        *ngIf="item.tmp">
+                    <span class="me-2 text-primary text-underline" *ngIf="item.tmp">
                         <ng-container *ngIf="item.shared -1 > 0; else elseDisplay">
                             <codx-label formName="" name="lblWiths" default="cùng với ">
                                 <span>{{item.tmp}}</span>
@@ -180,25 +146,22 @@
                 </div>
             </div>
             <div class="more">
-                <div class="dropdown dropdown-inline" data-toggle="tooltip" title="" data-placement="left">
-                    <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
-                        <ul class="navi navi-hover">
-                            <li class="navi-item" *ngIf="user.userID == item.createdBy">
-                                <a href="javascript:void(0)" class="navi-link" (click)="removePost(item)">
-                                    <span class="navi-text">
-                                        <codx-label formName="" name="lblDeletedPost" default="Xóa bài viết">
-                                        </codx-label>
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                <div ngbDropdown class="dropdown">
+                  <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
+                    id="dropdownMenuButton1" aria-expanded="false">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </a>
+                  <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                    <li *ngIf="item.delete">
+                      <a (click)="removePost(item)" ngbDropdownItem href="javascript:void(0)">
+                        <span class="icon-delete icon-16 me-2 icon-removePost"></span>
+                        <codx-label formName="" name="lblDeletedPost" default="Xóa bài viết">
+                        </codx-label>
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-            </div>
+              </div>
         </div>
         <div class="row p-4">
             <div [innerHTML]="item.content"></div>
@@ -229,7 +192,7 @@
                                 </codx-img>
                             </div>
                             <div style="width: 50px;" class="mar-auto text-center ion-justify-content-between">
-                                <img src="../../../../assets/themes/fd/default/img/img_SendCard.svg"
+                                <img src="/assets/themes/fd/default/img/img_SendCard.svg"
                                     class="mt-4 icon-32" />
                             </div>
                             <div class="symbol symbol-40 symbol-circle " *ngIf="item.card.receiverID">
@@ -240,24 +203,23 @@
                         </div>
                         <div class="text-dark text-feed mt-6">
                             <read-more #readmore2 [content]="item.card.situation"
-                                [textColor]="item.card.pattern.textColor" [limit]="800" [completeWords]="true"
-                                (click)="showContent(readmore2)">
+                                [textColor]="item.card.pattern.textColor" [limit]="800" [completeWords]="true">
                             </read-more>
                         </div>
                         <div class="d-flex align-items-center group-hasGift mt-6">
 
-                            <div class="d-flex align-items-center ion-wrap me-2"
+                            <div class="d-flex align-items-center justify-content-center ion-wrap me-2  w-100"
                                 *ngIf="item?.card?.cardType=='2' || item.card.cardType =='3'">
                                 <div class=" symbol symbol-30 me-2">
                                     <img class="w-100"
-                                        src="../../../../assets/demos/card/rating/{{ item.card.rating | vll:item.card.cardType=='2' ?'L1419':'L1424':'icon'| async}}" />
+                                        src="/assets/themes/fd/default/img/{{ item.card.rating | vll:item.card.cardType=='2' ?'L1419':'L1424':'icon'| async}}" />
                                 </div>
                             </div>
                             <ng-container *ngIf="item.card.hasGift || item.card.hasPoint">
                                 <div class="d-flex align-items-center ion-wrap mar-auto">
-                                    <img src="../../../../assets/img/feedback/gift 1.png" *ngIf="item.card.hasGift"
+                                    <img src="/assets/img/feedback/gift 1.png" *ngIf="item.card.hasGift"
                                         class="symbol-image icon-surface1 me-1" />
-                                    <img src="../../../../assets/img/feedback/money-1.png" *ngIf="item.card.hasPoint"
+                                    <img src="/assets/img/feedback/money-1.png" *ngIf="item.card.hasPoint"
                                         class="symbol-image icon-money-1" />
                                 </div>
                             </ng-container>
@@ -268,9 +230,11 @@
             </ng-template>
         </div>
         <div class="row">
-            <!-- <treeview-comment [rootData]="item"></treeview-comment> -->
-            <treeview-comment [funcID]="codxViews.formModel.funcID" [fromModel]="codxViews.formModel"
-                [objectType]="'WP_Comments'" [dataComment]="item">
+            <treeview-comment 
+                [funcID]="codxViews.formModel.funcID" 
+                [fromModel]="codxViews.formModel"
+                [objectType]="'WP_Comments'" 
+                [dataComment]="item">
             </treeview-comment>
         </div>
     </div>
@@ -278,15 +242,65 @@
 
 <ng-template #empty>
     <div class="text-center">
-        <img style="max-width:700px" src="../../../../assets/img/EmptyDataPortal.png" />
+        <img style="max-width:700px" src="/assets/img/EmptyDataPortal.png" />
     </div>
 </ng-template>
-<ng-template #templateloading let-data>
-    <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
-    <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
-    <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
+
+<ng-template #popContent style="width: fit-content; height: fit-content">
+    <div *ngFor="let tagUser of lstTagUser | filter: searchField:'objectName'">
+      <div class="d-flex algin-items-center my-3">
+        <codx-img class="me-3" [width]="30" [objectId]="tagUser.objectID" objectType="AD_Users">
+        </codx-img>
+        <div class="d-flex flex-column">
+          <div class="text-dark fs-6 me-2">{{ tagUser.objectName }}</div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #popTitle>
+    <div class="text-dark mb-2 fs-6">
+      <codx-label formName="Comments" name="lblTag" default="Danh sách người được tag"></codx-label>
+    </div>
+    <div>
+      <input type="text" class="form-control" [(ngModel)]="searchField" placeholder="Tìm kiếm" />
+    </div>
+  </ng-template>
+
+  <ng-template #templateItemCoin let-item>
+    <div class="d-flex align-items-start wallet-item me-2">
+        <div class="me-3 max-h-40">
+            <img class="w-40px"
+                src="/assets/demos/svg/{{item.transType | avatarCard:item.cardType }}">
+        </div>
+        <div class="d-flex flex-column flex-grow-1">
+            <div class="text-dark fw-bolder">{{item?.userName}}</div>
+            <div class="text-dark-75 font-size-sm">{{item?.cardType|
+                vll:'L1422':'text'|async}}</div>
+            <div class="text-muted font-size-sm">{{item?.createdOn | fmDT:'dmy'}}</div>
+        </div>
+        <div class="d-flex align-items-center text-center">
+            <ng-container *ngIf="item.transType =='4';else elsTmp">
+                <span [ngClass]="item?.coCoins > 0 ? 'text-success':'text-danger'">
+                    {{item?.coCoins> 0?"+":""}}{{item?.coCoins}}
+                </span>
+                <span [ngClass]="item?.coCoins > 0 ? 'text-success ms-1':'text-danger ms-1'">
+                    <codx-label [formModel]="codxViews.formModel" name="lblCoins" default="xu"></codx-label>
+                </span>
+            </ng-container>
+            <ng-template #elsTmp>
+                <span [ngClass]="item?.coins > 0 ? 'text-success':'text-danger'">
+                    {{item?.coins > 0?"+":""}}{{item?.coins}}
+                </span>
+                <span [ngClass]="item?.coins > 0 ? 'text-success ms-1':'text-danger ms-1'">
+                    <codx-label [formModel]="codxViews.formModel" name="lblCoins" default="xu"></codx-label>
+                </span>
+            </ng-template>
+        </div>
+    </div>
 </ng-template>
 
-<codx-views #codxViews [views]="views" entityName="WP_Comments" [idField]="'recID'" [button]="buttonAdd"
-    (buttonClick)="clickShowPupopAdd($event)">
+<codx-views #codxViews 
+[views]="views" 
+entityName="WP_Comments" 
+[idField]="'recID'">
 </codx-views>

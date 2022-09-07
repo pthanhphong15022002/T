@@ -391,45 +391,44 @@ export class AddUserComponent extends UIComponent implements OnInit {
   </div>`;
 
     /*Init first post*/
-    var permissions = [
-      {
-        memberType: '1',
-        objectType: '1',
-        objectID: 'ADMIN',
-        objectName: 'Lê Phạm Hoài Thương',
-        full: true,
-        read: true,
-        write: true,
-        update: true,
-        delete: true,
-        assign: true,
-        share: true,
-        upload: true,
-        download: true,
-        isActive: true,
-      },
-      {
-        memberType: '2',
-        objectType: '7',
-        read: true,
-        share: true,
-        isActive: true,
-      },
-      {
-        memberType: '2',
-        objectType: '9',
-        read: true,
-        share: true,
-        isActive: true,
-      },
-    ];
+    // var permissions = [
+    //   {
+    //     memberType: '1',
+    //     objectType: '1',
+    //     objectID: 'ADMIN',
+    //     objectName: 'Lê Phạm Hoài Thương',
+    //     full: true,
+    //     read: true,
+    //     write: true,
+    //     update: true,
+    //     delete: true,
+    //     assign: true,
+    //     share: true,
+    //     upload: true,
+    //     download: true,
+    //     isActive: true,
+    //   },
+    //   {
+    //     memberType: '2',
+    //     objectType: '7',
+    //     read: true,
+    //     share: true,
+    //     isActive: true,
+    //   },
+    //   {
+    //     memberType: '2',
+    //     objectType: '9',
+    //     read: true,
+    //     share: true,
+    //     isActive: true,
+    //   },
+    // ];
     this.tmpPost = {
       content: this.comments,
-      permissions: permissions,
       approveControl: '0',
-      isActive: true,
       category: '1',
       shareControl: '9',
+      listTag: [],
     };
     /*Init first post*/
   }

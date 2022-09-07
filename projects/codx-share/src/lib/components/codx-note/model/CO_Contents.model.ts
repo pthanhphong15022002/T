@@ -8,6 +8,9 @@ export class CO_Contents {
     status: string = null;
     refType: string;
     refID: string;
+    tasks: number = 0;
+    comments: number = 0;
+    attachments: number = 0;
 }
 
 var LINE_TYPE = {

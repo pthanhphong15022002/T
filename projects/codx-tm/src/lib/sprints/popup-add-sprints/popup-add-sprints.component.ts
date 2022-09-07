@@ -20,6 +20,7 @@ import {
   UploadFile,
   ViewsComponent,
 } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { Observable } from 'rxjs';
 import { CodxTMService } from '../../codx-tm.service';
@@ -47,8 +48,10 @@ export class PopupAddSprintsComponent implements OnInit {
   isUploadImg = false;
   gridViewSetup: any;
   imageUpload: UploadFile = new UploadFile();
+  showLabelAttachment = false;
+  isHaveFile = false;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
-
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -62,7 +65,7 @@ export class PopupAddSprintsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.master = dialog.dataService!.dataSelected;
+    this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected)) ;
     this.action = dt?.data[1];
     this.dialog = dialog;
     this.user = this.authStore.get();
@@ -84,13 +87,14 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region init
   ngOnInit(): void {
+    
     if (this.action == 'add') {
       this.master.viewMode = '1';
-    } else {
-      if (this.action == 'copy')
-        this.getSprintsCoppied(this.master.iterationID);
-      else this.openInfo(this.master.iterationID, this.action);
-    }
+      if(this.funcID=='TMT0301') this.master.iterationType ='1' ;
+      if(this.funcID=='TMT0302') this.master.iterationType ='0';
+    } else if (this.action == 'copy')
+      this.getSprintsCoppied(this.master.iterationID);
+    else this.openInfo(this.master.iterationID, this.action);
   }
   //#endregion
 
@@ -107,25 +111,32 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
+    if (this.attachment.fileUploadList.length) this.attachment.saveFiles();
     this.saveMaster(isAdd);
   }
 
   saveMaster(isAdd: boolean) {
-    this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(up => {
-      this.dialog.dataService
-        .save((option: any) => this.beforeSave(option, isAdd), isAdd ? 0 : null) //Hảo code mới
-        .subscribe((res) => {
-          if (res) {
-            // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
-            if (isAdd && this.funcID != 'TMT0301') {
-              var dataNew = this.dialog.dataService.data[0];
-              this.dialog.dataService.data[0] = this.dialog.dataService.data[1];
-              this.dialog.dataService.data[1] = dataNew;
+    this.imageAvatar
+      .updateFileDirectReload(this.master.iterationID)
+      .subscribe((up) => {
+        this.dialog.dataService
+          .save(
+            (option: any) => this.beforeSave(option, isAdd),
+            isAdd ? 0 : null
+          ) //Hảo code mới
+          .subscribe((res) => {
+            if (res) {
+              // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
+              if (isAdd && this.funcID != 'TMT0301') {
+                var dataNew = this.dialog.dataService.data[0];
+                this.dialog.dataService.data[0] =
+                  this.dialog.dataService.data[1];
+                this.dialog.dataService.data[1] = dataNew;
+              }
+              this.dialog.close();
             }
-            this.dialog.close();
-          }
-        });
-    })
+          });
+      });
 
     // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
     //   if (res) {
@@ -196,14 +207,24 @@ export class PopupAddSprintsComponent implements OnInit {
     } else this.resources = '';
   }
 
-  openInfo(interationID, action) {
-    // this.taskBoard = new TM_Sprints();
-
+  openInfo(iterationID, action) {
     this.readOnly = false;
     this.title = 'Chỉnh sửa task board';
-    this.tmSv.getSprints(interationID).subscribe((res) => {
+    this.tmSv.getSprints(iterationID).subscribe((res) => {
       if (res) {
         this.master = res;
+        this.api
+          .execSv<any[]>(
+            'DM',
+            'DM',
+            'FileBussiness',
+            'GetFilesByObjectIDAsync',
+            [iterationID]
+          )
+          .subscribe((res) => {
+            if (res && res.length > 0) this.showLabelAttachment = true;
+            else this.showLabelAttachment = false;
+          });
         if (this.master.resources) this.getListUser(this.master.resources);
         else this.listUserDetail = [];
         this.changeDetectorRef.detectChanges();
@@ -228,71 +249,13 @@ export class PopupAddSprintsComponent implements OnInit {
 
   valueChangeSharedResource(e) {
     this.master.isShared = e.data;
-    if (!this.master.isShared) {
-      this.master.resources = null;
-      this.listUserDetail = [];
-    }
+    //bỏ luôn
+    // if (!this.master.isShared) {
+    //   this.master.resources = null;
+    //   this.listUserDetail = [];
+    // }
   }
 
-  // eventApply(e: any) {
-  //   var resources = '';
-  //   var listDepartmentID = '';
-  //   var listUserID = '';
-
-  //   e?.data?.forEach((obj) => {
-  //     // if (obj?.data && obj?.data != '') {
-  //     switch (obj.objectType) {
-  //       case 'U':
-  //         listUserID += obj.id + ';';
-  //         break;
-  //       case 'O':
-  //       case 'D':
-  //         listDepartmentID += obj.id + ';';
-  //         break;
-  //     }
-  //     //  }
-  //   });
-  //   if (listUserID != '')
-  //     listUserID = listUserID.substring(0, listUserID.length - 1);
-  //   if (listDepartmentID != '')
-  //     listDepartmentID = listDepartmentID.substring(
-  //       0,
-  //       listDepartmentID.length - 1
-  //     );
-  //   if (listDepartmentID != '') {
-  //     this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
-  //       if (res) {
-  //         resources += res;
-  //         if (listUserID != '') resources += ';' + listUserID;
-  //         this.valueSelectUser(resources);
-  //       }
-  //     });
-  //   } else this.valueSelectUser(listUserID);
-  // }
-
-  // valueSelectUser(resources) {
-  //   if (resources != '') {
-  //     if (this.master.resources && this.master.resources != '') {
-  //       var arrAssign = resources.split(';');
-  //       var arrNew = [];
-  //       arrAssign.forEach((e) => {
-  //         if (!this.master.resources.includes(e)) {
-  //           arrNew.push(e);
-  //         }
-  //       });
-  //       if (arrNew.length > 0) {
-  //         resources = arrNew.join(';');
-  //         this.master.resources += ';' + resources;
-  //         this.getListUser(resources);
-  //       }
-  //     } else {
-  //       this.master.resources = resources;
-  //       this.getListUser(resources);
-  //     }
-  //   }
-  //   this.changeDetectorRef.detectChanges();
-  // }
-  //#endregion
 
   changeMemo(e) {
     this.master.memo = e?.data;
@@ -327,5 +290,17 @@ export class PopupAddSprintsComponent implements OnInit {
       }
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {
+    console.log(e);
+  }
+  getfileCount(e) {
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
 }

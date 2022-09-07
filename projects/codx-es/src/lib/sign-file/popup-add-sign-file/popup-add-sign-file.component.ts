@@ -343,7 +343,9 @@ export class PopupAddSignFileComponent implements OnInit {
     // } else {
     this.onSaveSignFile();
     // }
+
     this.currentTab = tabNo;
+
     this.cr.detectChanges();
   }
 
@@ -689,7 +691,8 @@ export class PopupAddSignFileComponent implements OnInit {
           this.currentTab++;
           this.processTab == 2 && this.processTab++;
         }, 800);
-
+        console.log('cur Tab', this.currentTab);
+        console.log('3', this.dialogSignFile);
         break;
       case 3:
         if (this.esService.getApprovalStep) break;

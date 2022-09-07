@@ -443,7 +443,7 @@ export class VersionComponent implements OnInit {
             files[index] = res.data;
             files[index].recID = res.data.recID; // thumbmail
             files[index].fileName = res.data.fileName;
-            files[index].thumbnail = "../../../assets/img/loader.gif";//res.data.thumbnail;
+            files[index].thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";//res.data.thumbnail;
             that.displayThumbnail(res.data);
             this.dmSV.ChangeData.next(true);
           }
