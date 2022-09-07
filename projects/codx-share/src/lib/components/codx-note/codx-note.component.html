@@ -104,7 +104,7 @@
                                     </li>
                                     <li>
                                         <button (click)="clickFunction('attachment', '', input, '', i, false)"
-                                            [disabled]="(item.lineType == 'FILE' || item.lineType == 'IMAGE') ? false : true"
+                                            [disabled]="(item.lineType !== 'FILE' || item.lineType !== 'IMAGE') ? false : true"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-attach_file icon-20 me-2'"
                                                 [style.color]="(item.lineType !== 'FILE' || item.lineType !== 'IMAGE') ? 'dodgerblue' : 'darkgray'"></span>
@@ -137,7 +137,7 @@
                                     (valueChange)="valueChange($event)"
                                     [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                 </codx-input>
-                                <div class="" *ngIf="item.attachments > 0 || i == id">
+                                <div class="" *ngIf="item.lineType == 'FILE' || item.lineType == 'IMAGE' || i == id">
                                     <codx-attachment #attachment [objectType]="objectType" hideBtnSave="1"
                                         hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0"
                                         hideImageThumb="0" [functionID]="funcID" [objectId]="item.recID"
@@ -146,10 +146,10 @@
                                     </codx-attachment>
                                 </div>
                             </div>
-                            <div ngbDropdown class="d-inline-block" container="body">
+                            <div ngbDropdown class="d-inline-block" container="body" *ngIf="item.tasks > 0">
                                 <span class="icon-perm_identity icon-24 position-relative darkgray"
                                     (click)="popoverListTask(item.recID)" id="dropdownForm1" ngbDropdownToggle>
-                                    <span *ngIf="item.tasks > 0"
+                                    <span
                                         class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary">{{item.tasks}}</span></span>
                                 <div ngbDropdownMenu aria-labelledby="dropdownForm1">
                                     <div *ngFor="let data of listTask">
@@ -165,14 +165,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <span class="icon-chat_bubble_outline icon-22 position-relative darkgray icon-comment">
+                            <span *ngIf="item.comments > 0" (click)="comment(i)"
+                                class="icon-chat_bubble_outline icon-22 position-relative darkgray icon-comment">
                                 <span
-                                    class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary"
-                                    *ngIf="item.comments > 0">{{item.comments}}</span></span>
-                            <span class="icon-attach_file icon-22 position-relative darkgray icon-file">
+                                    class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary">{{item.comments}}</span></span>
+                            <span *ngIf="item.lineType == 'FILE'"
+                                class="icon-attach_file icon-22 position-relative darkgray icon-file">
                                 <span
-                                    class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary"
-                                    *ngIf="item.attachments > 0">{{item.attachments}}</span></span>
+                                    class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary">{{item.attachments}}</span></span>
                         </div>
                     </div>
                 </div>
@@ -276,7 +276,6 @@
             <div class="text-dark fw-bold">{{ item?.resourceName }}</div>
             <div class="text-gray-700 fs-7">{{ item?.positionName }}</div>
             <div class="text-gray-500 fs-7">{{ item?.memo }}</div>
-            <!-- || item?.roleType == 'A'  trước đó có A mà giờ ko A vì a ko thực hiện => ko status ? ?? thương-->
             <div class="d-flex align-items-center mt-1" *ngIf="item?.roleType == 'R'">
                 <div class="d-flex align-items-end me-2 codx-badge">
                     <span>
@@ -304,24 +303,3 @@
         </ng-template>
     </codx-form>
 </ng-template>
-
-<!-- <ng-template #popupAttachment let-dialog>
-    <codx-form [dialog]="dialog" [body]="body" [headerText]="headerAttachment" [footer]="footer">
-        <ng-template #body>
-            <div class="">
-                <codx-attachment #attachment [objectType]="objectType" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                    hideDes="1" hideImageUpload="0" hideImageThumb="1" [functionID]="funcID"
-                    [objectId]="contents[id].recID" [allowMultiFile]="1" [idBrowse]="'add'">
-                </codx-attachment>
-            </div>
-        </ng-template>
-        <ng-template #footer>
-            <div class="d-flex justify-content-between">
-                <button class="btn btn-light-primary" (click)="popup()">
-                    <i class="icon-add fs-5 me-1"></i>
-                    <codx-label name="lblTitle" formName="Notes" default="Thêm file"></codx-label>
-                </button>
-            </div>
-        </ng-template>
-    </codx-form>
-</ng-template> -->

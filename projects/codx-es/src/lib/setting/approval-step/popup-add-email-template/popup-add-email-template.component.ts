@@ -10,11 +10,15 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
+import {
+  NodeSelection,
+  RichTextEditorComponent,
+} from '@syncfusion/ej2-angular-richtexteditor';
 import {
   ApiHttpService,
   AuthStore,
   CallFuncService,
+  CodxInputComponent,
   DialogData,
   DialogRef,
   FormModel,
@@ -33,6 +37,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('combobox', { static: false }) itemCombobox: ElementRef;
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
+  @ViewChild('richtexteditor', { static: false })
+  richtexteditor: CodxInputComponent;
 
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
@@ -200,6 +206,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   valueChange(event) {
     if (event?.field && event.component) {
       if (event.field == 'sendTime') {
+        this.insert(null);
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
         });
@@ -210,12 +217,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       } else {
         this.dialogETemplate.patchValue({ [event['field']]: event.data });
       }
-      // const childTwoElement =
-      //   this.textarea.nativeElement.getElementsByClassName('message')[0];
-      // let width =
-      //   (this.textarea.nativeElement as HTMLElement).offsetWidth -
-      //   (this.itemCombobox.nativeElement as HTMLElement).offsetWidth;
-      // this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
     }
   }
 
@@ -407,6 +408,32 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   getfileCount(e: any) {}
+
+  public selection: NodeSelection = new NodeSelection();
+  public range: Range;
+  public saveSelection: NodeSelection;
+
+  getPosition() {
+    this.range = this.selection.getRange(document);
+  }
+
+  insert(evt: any) {
+    this.saveSelection = this.selection.save(this.range, document);
+    this.saveSelection.restore();
+    this.richtexteditor.control.executeCommand('fontColor', 'gray');
+    this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
+  }
+
+  focusCombobox(event) {
+    const childTwoElement =
+      this.textarea.nativeElement.getElementsByClassName('message')[0];
+    if (childTwoElement) {
+      let width =
+        (this.textarea.nativeElement as HTMLElement).offsetWidth -
+        (this.itemCombobox.nativeElement as HTMLElement).offsetWidth;
+      this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
+    }
+  }
 }
 
 export class EmailSendTo {

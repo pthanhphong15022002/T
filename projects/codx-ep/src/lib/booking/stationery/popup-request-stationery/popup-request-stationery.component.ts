@@ -76,8 +76,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (!this.dialogRequest.value.linkType) {
       this.dialogRequest.patchValue({ linkType: '0' });
     }
-    this.dialogRequest.patchValue({ resourceType: '3' });
-    this.dialogRequest.patchValue({ category: '5' });
+    this.dialogRequest.patchValue({ resourceType: '6' });
+    this.dialogRequest.patchValue({ category: '6' });
     this.dialogRequest.patchValue({ hours: '0' });
     //this.dialogRequest.patchValue({ comments: '0' });
     this.dialog.dataService

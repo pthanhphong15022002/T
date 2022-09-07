@@ -38,6 +38,7 @@ export class EmployeesComponent implements OnInit {
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
+  @ViewChild('templateTree') templateTree: TemplateRef<any>;
   employStatus: any;
 
   constructor(
@@ -82,6 +83,9 @@ export class EmployeesComponent implements OnInit {
         active: true,
         sameData: true,
         model: {
+          // resizable: true,
+          // template: this.templateTree,
+          // panelRightRef: this.cardTemp
           panelLeftRef: this.panelLeftRef,
           template: this.cardTemp,
         }
