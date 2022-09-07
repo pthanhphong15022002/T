@@ -201,6 +201,13 @@ export class PopupAddBookingRoomComponent implements OnInit {
       } 
       
       if(!this.isAdd){
+        if (this.data.attachments > 0) {
+          this.codxEpService
+            .getFiles('EPT1',this.data.recID,this.formModel.entityName)
+            .subscribe((res) => {
+              console.log('get file', res); 
+            });
+          }
         this.apiHttpService
         .callSv('EP', 'ERM.Business.EP', 'BookingAttendeesBusiness','GetAsync', [this.data.recID])
         .subscribe((res) => {
@@ -385,7 +392,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
           return;
         }
       });
-    //this.attachment.saveFilesObservable().subscribe(res=>{})
+      this.attachment.saveFiles();
   }
   changeTime(data) {
     if (!data.field || !data.data) return;
@@ -403,8 +410,14 @@ export class PopupAddBookingRoomComponent implements OnInit {
         roleType:'3',
         optional:false,
       };
+      
       this.lstUser.push(this.tempAtender);
-
+      this.attendeesList.forEach(attender =>{
+        if(attender.userId==this.tempAtender)
+        {  
+          this.lstUser.filter(item=> item != this.tempAtender);        
+        }
+      })
       if(this.lstUserOptional!=null){
         this.lstUser?.forEach(people=>{
           this.attendeesList.push(people);
@@ -417,11 +430,12 @@ export class PopupAddBookingRoomComponent implements OnInit {
       };    
     });
     if(this.lstUserOptional!=null){
-      this.fGroupAddBookingRoom.value.attendees=this.lstUser.length + this.lstUserOptional.length;
+      this.fGroupAddBookingRoom.value.attendees=this.lstUser.length + this.lstUserOptional.length+1;
     }
     else{      
-      this.fGroupAddBookingRoom.value.attendees=this.lstUser.length;
+      this.fGroupAddBookingRoom.value.attendees=this.lstUser.length+1;
     }    
+    this.attendeesList=[]
     if(this.lstUserOptional!=null){
       this.lstUser?.forEach(people=>{
         this.attendeesList.push(people);
@@ -431,7 +445,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       this.lstUserOptional.forEach(people=>{
         this.attendeesList.push(people);
       })  
-    };    
+    };  
     this.changeDetectorRef.detectChanges();
   }
   valueCbxUserOptionalChange(event?) {
@@ -445,9 +459,17 @@ export class PopupAddBookingRoomComponent implements OnInit {
         roleType:'3',
         optional:true,
       };
+      
       this.lstUserOptional.push(this.tempAtender);
+      this.attendeesList.forEach(attender =>{
+        if(attender.userId==this.tempAtender)
+        {  
+          this.lstUserOptional.filter(item=> item != this.tempAtender);        
+        }
+      })
     });
-    this.fGroupAddBookingRoom.value.attendees=this.lstUser.length + this.lstUserOptional.length;
+    this.fGroupAddBookingRoom.value.attendees=this.lstUser.length + this.lstUserOptional.length+1;
+    this.attendeesList=[]
     if(this.lstUserOptional!=null){
       this.lstUser?.forEach(people=>{
         this.attendeesList.push(people);
@@ -457,7 +479,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       this.lstUserOptional.forEach(people=>{
         this.attendeesList.push(people);
       })  
-    };    
+    };   
     this.changeDetectorRef.detectChanges();
   }
   valueCbxStationeryChange(event?) {
@@ -628,6 +650,43 @@ export class PopupAddBookingRoomComponent implements OnInit {
     }   
   }
 
+  checkedOnlineChange(event) {
+    this.fGroupAddBookingRoom.patchValue({
+      online: event.data instanceof Object ? event.data.checked : event.data,
+    });
+
+    if (!this.fGroupAddBookingRoom.value.online)
+      this.fGroupAddBookingRoom.patchValue({ onlineUrl: null });
+    this.changeDetectorRef.detectChanges();
+  }
+  openPopupLink() {
+    this.callFuncService.openForm(this.addLink, '', 500, 250);    
+    this.changeDetectorRef.detectChanges();
+  }
+
+  public setdata(data: any) {
+    if (this.isAdd) {
+      this.isAdd = true;
+      this.initForm();
+    } else {
+      this.fGroupAddBookingRoom.patchValue(data);
+    }
+  }
+
+  popup(evt: any) {
+    this.attachment.openPopup();
+  }
+  popupUploadFile(evt:any) {
+    this.attachment.uploadFile();
+  } 
+  fileAdded(evt: any) {
+  }
+  fileCount(event: any) {    
+    this.fGroupAddBookingRoom.value.attachments= event.data[0].data;    
+  }
+
+
+  
   // setDate() {
   //   if (this.startTime) {
   //     this.beginHour = parseInt(this.startTime.split(':')[0]);
@@ -662,37 +721,4 @@ export class PopupAddBookingRoomComponent implements OnInit {
   //   }
   // }
 
-  checkedOnlineChange(event) {
-    this.fGroupAddBookingRoom.patchValue({
-      online: event.data instanceof Object ? event.data.checked : event.data,
-    });
-
-    if (!this.fGroupAddBookingRoom.value.online)
-      this.fGroupAddBookingRoom.patchValue({ onlineUrl: null });
-    this.changeDetectorRef.detectChanges();
-  }
-  openPopupLink() {
-    this.callFuncService.openForm(this.addLink, '', 500, 250);    
-    this.changeDetectorRef.detectChanges();
-  }
-
-  public setdata(data: any) {
-    if (this.isAdd) {
-      this.isAdd = true;
-      this.initForm();
-    } else {
-      this.fGroupAddBookingRoom.patchValue(data);
-    }
-  }
-
-  popup(evt: any) {
-    this.attachment.openPopup();
-  }
-  popupUploadFile(evt:any) {
-    this.attachment.uploadFile();
-  } 
-  fileAdded(evt: any) {
-  }
-  fileCount(evt: any) {
-  }
 }

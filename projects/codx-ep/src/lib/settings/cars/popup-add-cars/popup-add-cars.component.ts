@@ -103,7 +103,7 @@ export class PopupAddCarsComponent implements OnInit {
       this.headerText = "Sửa thông tin xe"
     }
     this.codxEpService
-      .getFormGroup('Resources', 'grvResources')
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.fGroupAddCar = item;
         if (this.data) {
