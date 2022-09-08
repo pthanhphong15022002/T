@@ -20,7 +20,6 @@
       >
       </codx-label>      
       <codx-input
-          refValue="VL005"
           ControlName="category"
           [formModel]="form.formModel"
           [Group]="fGroupAddDriver"
@@ -37,7 +36,6 @@
 
       <codx-input
         [disabled]="fGroupAddDriver.value.category == 1 ? false :true"
-        refValue="AgencyNames"
         [Group]="fGroupAddDriver"
         ControlName="companyID"
         [formModel]="form.formModel"
@@ -104,7 +102,6 @@
     <div class="col-8 form-group">
       <codx-label default="Xe" [formModel]="dialogRef.formModel" ></codx-label>
       <codx-input
-        refValue="EP_Drivers"
         ControlName="linkID"
         [formModel]="form.formModel"
         [Group]="fGroupAddDriver"
@@ -129,7 +126,6 @@
       </codx-label>
 
       <codx-input
-        refValue="Users"
         ControlName="owner"
         [Group]="fGroupAddDriver"
         [formModel]="form.formModel"
