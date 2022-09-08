@@ -38,7 +38,6 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   ) 
   { }
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if(changes.objectID.previousValue != changes.objectID.currentValue ){
       this.getDataAsync();
     }

@@ -28,7 +28,7 @@
                                                 default="Người nhận quà">
                                             </codx-label>
                                             <codx-input type="combobox" class=" form-control borderless p-0"
-                                                [crrValue]="form.value.receiver" [loadFull]="true" ngDefaultControl
+                                                [crrValue]="form.value.receiver" [multiple]="true" [loadFull]="true" ngDefaultControl
                                                 field="receiver" #comboboxUserReciver
                                                 (valueChange)="valueChange($event,comboboxUserReciver)" refValue="Users"
                                                 service="SYS"></codx-input>
@@ -107,25 +107,17 @@
                                                     <span class="icon-person_add_alt_1 icon-18"></span>
                                                 </a>
                                             </div>
-                                            <div class="{{lstUser.length <= 0 ? '' : 'user-mini-group'}}">
-                                                <div class="user-mini-item" *ngFor="let item of lstUser; index as i;">
+                                            <div class="{{lstShare.length <= 0 ? '' : 'user-mini-group'}}">
+                                                <div class="user-mini-item" *ngFor="let item of lstShare; index as i;">
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-30 symbol-circle mr-2">
-                                                            <ng-container
-                                                                *ngIf="item.objectID == null || item.objectID == '';else elsethenAvatar1">
-                                                                <div>
-                                                                    <img class="symbol symbol-30 symbol-circle"
-                                                                        src="../../../assets/demos/user/user-admin.svg">
-                                                                </div>
-                                                            </ng-container>
-                                                            <ng-template #elsethenAvatar1>
-                                                                <div>
-                                                                    <codx-img class="symbol symbol-30 symbol-circle"
-                                                                        [objectId]="item.objectID"
-                                                                        objectType="AD_Users">
-                                                                    </codx-img>
-                                                                </div>
-                                                            </ng-template>
+                                                           
+                                                        <div>
+                                                            <codx-img class="symbol symbol-30 symbol-circle"
+                                                                [objectId]="item.objectID"
+                                                                objectType="AD_Users">
+                                                            </codx-img>
+                                                        </div>
                                                         </div>
                                                         <div class="text-dark-75">{{item.objectName}}</div>
                                                         <span class="icon-close icon-16 ml-2 text-danger"
@@ -143,8 +135,7 @@
                                                 </codx-label>
                                             </div>
                                             <div class="text-right text-primary text-italic pr-2">
-                                                <a class="text-right text-primary text-italic pr-2"
-                                                    (click)="open(cardDisplay)">
+                                                <a class="text-right text-primary text-italic pr-2">
                                                     <codx-label formName="" name="lblViewCard" default="Xem trước">
                                                     </codx-label>
                                                 </a>

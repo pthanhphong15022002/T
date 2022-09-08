@@ -1,10 +1,12 @@
 
 
 <codx-views #view  
-[service]="service" 
-[entityName]="entityName" 
-idField="recID" 
-[views]="views">
+    [service]="service" 
+    [entityName]="entityName" 
+    idField="recID" 
+    [views]="views"
+    [button]="buttonAdd"
+    (buttonClick)="clickBtnAdd()">
 </codx-views>
 
 <ng-template #panelLeftRef>
