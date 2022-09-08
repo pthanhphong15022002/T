@@ -34,10 +34,7 @@ export class FileComponent extends UIComponent implements OnInit {
     })
   }
   
-  ngAfterViewInit() {
-    this.dialog.beforeClose.subscribe(res => {
-      debugger
-    })
+  ngAfterViewInit() {  
   }
 
   popup() {
