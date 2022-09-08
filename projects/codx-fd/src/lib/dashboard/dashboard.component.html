@@ -20,7 +20,7 @@
                         <div class="thongdiep-group ps-6">
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label formName="" name="lblCommendation" default="Tuyên dương"></codx-label>
+                                    <codx-label [formModel]="codxViews.formModel" name="lblCommendation" default="Tuyên dương"></codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
                                     <div class="d-flex align-items-center me-6">
@@ -35,7 +35,7 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label formName="" name="lblThankYouNot" default="Lời cảm ơn"></codx-label>
+                                    <codx-label [formModel]="codxViews.formModel" name="lblThankYouNot" default="Lời cảm ơn"></codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
                                     <div class="d-flex align-items-center me-6">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label formName="lblCommentForChange" name="" default="Góp ý thay đổi">
+                                    <codx-label [formModel]="codxViews.formModel" name="" default="Góp ý thay đổi">
                                     </codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
@@ -66,7 +66,7 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label formName="" name="lblImprovement" default="Đề xuất cải tiến">
+                                    <codx-label [formModel]="codxViews.formModel" name="lblImprovement" default="Đề xuất cải tiến">
                                     </codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
@@ -114,18 +114,23 @@
             </div>
             <div class="d-flex flex-column flex-grow-1">
                 <div class="d-flex align-items-center mb-1">
-                    <div class="text-dark-75 font-size-h6 fw-bolder me-2">{{item.createdName}}</div>
-                    <div *ngIf="item.tag > 0" class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
-                        [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="clickShowTag(item)">
-                        <div class="tag me-2">
-                          <img class="tag-img" src="/assets/img/fed/user-tag.png" />
+                    <div class="text-dark-75 font-size-h6 fw-bolder">{{item.createdName}}</div>
+                    <ng-container *ngIf="item.tag > 1; else tagName">
+                        <div  class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
+                          [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="clickShowTag(item)">
+                          <div class="tag me-2">
+                            <img class="tag-img" src="/assets/img/fed/user-tag.png" />
+                          </div>
+                          <span class="tag-count">{{ item.tag }}</span>
                         </div>
-                        <span class="tag-count">{{ item.tag }}</span>
-                    </div>
+                    </ng-container>
+                    <ng-template #tagName>
+                    <span class="ms-2" [innerHTML]="item.tagName"></span>
+                    </ng-template>
                 </div>
                 <div class="text-info-date">
                     <span class="text-muted font-size-sm">{{item.createdOn | timefrom}}</span>
-                    <span class="label label-xxs label-inline label-light-primary ms-2">{{item.shareControl |
+                    <!-- <span class="label label-xxs label-inline label-light-primary ms-2">{{item.shareControl |
                         sharedControl:'wp' | async}}</span>
                     <span class="me-2 text-primary text-underline" *ngIf="item.tmp">
                         <ng-container *ngIf="item.shared -1 > 0; else elseDisplay">
@@ -142,7 +147,50 @@
                                 <span>{{item.tmp}}</span>
                             </codx-label>
                         </ng-template>
+                    </span> -->
+                    <span class="rounded-1 py-1 px-2 bg-gray-200 ms-2">
+                        <span class="">
+                          <img class="h-13px w-13px" src="assets/themes/sys/default/img/{{
+                              item.shareControl | vll: 'L1901':'icon' | async
+                            }}" />
+                        </span>
+                        <span class="fs-7">
+                          {{ item.shareControl | vll: "L1901":"text" | async }}
+                        </span>
                     </span>
+                    <ng-container *ngIf="item.shareName">
+                        <span class="position-relative">
+                          <span (mouseleave)="closeListShare(item)" (mouseover)="getShareUser(item)" class="ms-2 me-2"
+                            [innerHTML]="item.shareName">
+                          </span>
+                          <ng-container *ngIf="item.isShowShare">
+                            <ng-container *ngIf="item.shareControl=='U' ||
+                              item.shareControl=='G' || item.shareControl=='R' ||
+                              item.shareControl=='P' || item.shareControl=='D' ||
+                              item.shareControl=='O'">
+                              <div class="position-absolute tmpshare w-200px">
+                                <div class="text-dark fw-bold mb-2">
+                                  <codx-label [formModel]="codxViews.formModel" name="lblShare" default="Danh sách người được chia sẻ">
+                                  </codx-label>
+                                </div>
+                                <div class="mb-3">
+                                  <input type="text" class="form-control" [(ngModel)]="searchField" placeholder="Tìm kiếm" />
+                                </div>
+                                <div class="mh-300px" style="overflow: auto;">
+                                  <div class="d-flex align-items-center mb-2" *ngFor="let share of item.userShares">
+                                    <codx-img class="me-2" [width]="25" [imageType]="'circle'" [objectId]="share.objectID"
+                                      objectType="AD_Users">
+                                    </codx-img>
+                                    <div class="text-dark">
+                                      {{ share.objectName }}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                        </span>
+                    </ng-container>
                 </div>
             </div>
             <div class="more">
