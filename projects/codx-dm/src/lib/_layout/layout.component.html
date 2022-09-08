@@ -24,10 +24,10 @@
             {{ titleHddUsed }}
           </div>
         </div>
-        <div class="progress-circle d-flex align-items-center justify-content-center">
+        <!-- <div class="progress-circle d-flex align-items-center justify-content-center">
           <div role="progressbar p-2" attr.aria-valuenow="{{percentUsed}}" aria-valuemin="0" aria-valuemax="100"
             attr.style="--value: {{percentUsed}}"></div>
-        </div>
+        </div> -->
       </ng-template>
 
       <div class="wrapper d-flex flex-column flex-row-fluid">
@@ -35,115 +35,121 @@
           <div class="page-title d-flex align-items-center flex-wrap ms-3">
             <div class="d-flex align-items-center flex-wrap mt-3">
               <div ngbDropdown class="nav-item dropdown mr-1">
-                  <button ngbDropdownToggle [className]="setClassActive()" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      <span class="icon-dashboard icon-20"></span>
-                  </button>
-                  <div ngbDropdownMenu  class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <container-element [ngSwitch]="submenu">
-                          <!-- the same view can be shown in more than one case 
+                <button ngbDropdownToggle [className]="setClassActive()" type="button" id="dropdownMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="icon-dashboard icon-20"></span>
+                </button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <container-element [ngSwitch]="submenu">
+                    <!-- the same view can be shown in more than one case 
                               *ngSwitchCase="'multi-choice' || 'singe-choice'"
                           -->
-                          <some-element *ngSwitchCase="'DMT05'">
-                              <a ngbDropdownItem  class="dropdown-item cursor-pointer"
-                                  (click)="onClick('DMT05', 'Tài liệu chia sẻ', 'Tài liệu được chia sẻ', '1')">
-                                  <div class="d-flex align-items-center">
-                                      <span><codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được chia sẻ">
-                                      </codx-label></span>
-                                  </div>
-                              </a>
-                              <a ngbDropdownItem class="dropdown-item cursor-pointer" (click)="onClick('DMT05', 'Tài liệu chia sẻ', 'Tài liệu chia sẻ', '2')">
-                                  <div class="d-flex align-items-center">
-                                      <span><codx-label fiedName="" formName="" gridViewName="" default="Tài liệu chia sẻ">
-                                      </codx-label></span>
-                                  </div>
-                              </a>
-                          </some-element>                         
-                          <some-other-element *ngSwitchCase="'DMT06'">
-                              <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Tài liệu được yêu cầu', '1')">
-                                  <div class="d-flex align-items-center">
-                                      <span>
-                                          <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
-                                      </codx-label></span>
-                                  </div>
-                              </a>
-                              <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Tài liệu yêu cầu', '2')">
-                                  <div class="d-flex align-items-center">
-                                      <span>
-                                        <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu yêu cầu">
-                                        </codx-label>
-                                      </span>
-                                  </div>
-                              </a>
-                              <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Lịch sử chia sẻ', '3')">
-                                  <div class="d-flex align-items-center">
-                                      <span>
-                                        <codx-label fiedName="" formName="" gridViewName="" default="Lịch sử chia sẻ">
-                                        </codx-label>                                        
-                                      </span>
-                                  </div>
-                              </a>
-                          </some-other-element>
-                          <some-other-element *ngSwitchCase="'DMT07'">
-                              <a class="dropdown-item"
-                                  (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Tài liệu được yêu cầu', '1')">
-                                  <div class="d-flex align-items-center">
-                                      <span>
-                                        <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
-                                        </codx-label>
-                                      </span>
-                                  </div>
-                              </a>
-                              <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Tài liệu chờ duyệt', '2')">
-                                  <div class="d-flex align-items-center">
-                                    <span>
-                                      <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
-                                      </codx-label>
-                                    </span>                                      
-                                  </div>
-                              </a>
-                              <a class="dropdown-item cursor-pointer"
-                                  (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Lịch sử xét duyệt', '3')">
-                                  <div class="d-flex align-items-center">
-                                      <span>
-                                        <codx-label fiedName="" formName="" gridViewName="" default="Lịch sử xét duyệt">
-                                        </codx-label>
-                                      </span>
-                                  </div>
-                              </a>
-                          </some-other-element>
-                          <!--default case when there are no matches -->
-                          <some-element *ngSwitchDefault>
-                              <a class="dropdown-item">
-                                  <div class="d-flex align-items-center">
-                                      <span>Yêu cầu của tôi</span>
-                                  </div>
-                              </a>
-                              <a class="dropdown-item">
-                                  <div class="d-flex align-items-center">
-                                      <span>Yêu cầu chờ tôi cấp</span>
-                                  </div>
-                              </a>
-                          </some-element>
-                      </container-element>
-                  </div>
+                    <some-element *ngSwitchCase="'DMT05'">
+                      <a ngbDropdownItem class="dropdown-item cursor-pointer"
+                        (click)="onClick('DMT05', 'Tài liệu chia sẻ', 'Tài liệu được chia sẻ', '1')">
+                        <div class="d-flex align-items-center">
+                          <span>
+                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được chia sẻ">
+                            </codx-label>
+                          </span>
+                        </div>
+                      </a>
+                      <a ngbDropdownItem class="dropdown-item cursor-pointer"
+                        (click)="onClick('DMT05', 'Tài liệu chia sẻ', 'Tài liệu chia sẻ', '2')">
+                        <div class="d-flex align-items-center">
+                          <span>
+                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu chia sẻ">
+                            </codx-label>
+                          </span>
+                        </div>
+                      </a>
+                    </some-element>
+                    <some-other-element *ngSwitchCase="'DMT06'">
+                      <a class="dropdown-item cursor-pointer"
+                        (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Tài liệu được yêu cầu', '1')">
+                        <div class="d-flex align-items-center">
+                          <span>
+                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
+                            </codx-label>
+                          </span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item cursor-pointer"
+                        (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Tài liệu yêu cầu', '2')">
+                        <div class="d-flex align-items-center">
+                          <span>
+                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu yêu cầu">
+                            </codx-label>
+                          </span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item cursor-pointer"
+                        (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Lịch sử chia sẻ', '3')">
+                        <div class="d-flex align-items-center">
+                          <span>
+                            <codx-label fiedName="" formName="" gridViewName="" default="Lịch sử chia sẻ">
+                            </codx-label>
+                          </span>
+                        </div>
+                      </a>
+                    </some-other-element>
+                    <some-other-element *ngSwitchCase="'DMT07'">
+                      <a class="dropdown-item"
+                        (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Tài liệu được yêu cầu', '1')">
+                        <div class="d-flex align-items-center">
+                          <span>
+                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
+                            </codx-label>
+                          </span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item cursor-pointer"
+                        (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Tài liệu chờ duyệt', '2')">
+                        <div class="d-flex align-items-center">
+                          <span>
+                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
+                            </codx-label>
+                          </span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item cursor-pointer"
+                        (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Lịch sử xét duyệt', '3')">
+                        <div class="d-flex align-items-center">
+                          <span>
+                            <codx-label fiedName="" formName="" gridViewName="" default="Lịch sử xét duyệt">
+                            </codx-label>
+                          </span>
+                        </div>
+                      </a>
+                    </some-other-element>
+                    <!--default case when there are no matches -->
+                    <some-element *ngSwitchDefault>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span>Yêu cầu của tôi</span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span>Yêu cầu chờ tôi cấp</span>
+                        </div>
+                      </a>
+                    </some-element>
+                  </container-element>
+                </div>
               </div>
               <a>
-                  <h4 class="text-dark font-weight-bold my-0 mr-2">{{this.dmSV.menuActive.getValue()}}</h4>
+                <h4 class="text-dark font-weight-bold my-0 mr-2">{{this.dmSV.menuActive.getValue()}}</h4>
               </a>
               <codx-breadcumb notTree="true" link="true" end="2" start="1" max="4"></codx-breadcumb>
             </div>
             <!-- <a>
                 <h4 class="text-dark font-weight-bold my-0 mr-2">{{this.dmSV.menuActive.getValue()}}</h4>
-            </a> -->          
+            </a> -->
           </div>
           <div class="d-flex align-items-stretch flex-shrink-0 mright">
             <ng-container *ngTemplateOutlet="headerRightBar"></ng-container>
-          </div>          
+          </div>
         </div>
         <!-- <codx-header [class]="headerCSSClasses" [headerBar]="null" class="header align-items-stretch"
           [headerRightBar]="headerRightBar" #codxHeader>
