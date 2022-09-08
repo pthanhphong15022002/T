@@ -40,13 +40,18 @@
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex align-items-center mb-2">
           <span class="text-dark fw-bolder">{{ item.createdName }}</span>
-          <div *ngIf="item.tag > 0" class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
-            [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item)">
-            <div class="tag me-2">
-              <img class="tag-img" src="/assets/img/fed/user-tag.png" />
+          <ng-container *ngIf="item.tag > 1; else tagName">
+            <div  class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
+              [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item)">
+              <div class="tag me-2">
+                <img class="tag-img" src="/assets/img/fed/user-tag.png" />
+              </div>
+              <span class="tag-count">{{ item.tag }}</span>
             </div>
-            <span class="tag-count">{{ item.tag }}</span>
-          </div>
+          </ng-container>
+          <ng-template #tagName>
+            <span class="ms-2" [innerHTML]="item.tagName"></span>
+          </ng-template>
         </div>
         <div class="text-info-date d-flex">
           <div>
@@ -95,7 +100,6 @@
                 </ng-container>
               </ng-container>
             </div>
-
           </ng-container>
         </div>
       </div>
