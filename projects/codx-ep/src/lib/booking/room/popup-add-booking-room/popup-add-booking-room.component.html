@@ -127,10 +127,9 @@
           type="datetime"
           class="test-datetime"
           field="startTime"
-          placeholder="datetime"
           [crrValue]="startTime"
           format="t"
-          (valueChange)="valueTimeChange($event)"
+          (valueChange)="valueStartTimeChange($event)"
         >
         </codx-input>
       </div>
@@ -145,12 +144,12 @@
           type="datetime"
           class="test-datetime"
           field="endTime"
-          placeholder="datetime"
           [crrValue]="endTime"
           format="t"
-          (valueChange)="valueTimeChange($event)"
+          (valueChange)="valueEndTimeChange($event)"
         >
         </codx-input>
+       
 
       </div>
 
@@ -284,8 +283,7 @@
           <div class="mx-2">
             <codx-input
               type="Combobox"
-              name="hostUser"
-              [refValue]="'Users'"
+              [refValue]="'MultiUsers'"
               [multiple]="false"
               [showInput]="false"
               refType="P"
@@ -297,9 +295,7 @@
           <div class="mx-2">          
             <codx-input
               type="Combobox"
-              name="combobox"
               [refValue]="'MultiUsers'"
-              [multiple]="true"
               [showInput]="false"
               refType="P"
               [title]="'Bắt buộc tham dự'"
@@ -439,7 +435,7 @@
         <div class="mx-2">
           <codx-input
             type="Combobox"
-            [refValue]="'Users'"
+            [refValue]="'MultiUsers'"
             [showInput]="false"
             [title]="'Không bắt buộc tham dự'"
             [refType]="'P'"
