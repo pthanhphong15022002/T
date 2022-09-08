@@ -227,6 +227,18 @@ export class CodxTasksComponent
           template3: this.cellTemplate,
         },
       },
+      {
+        type: ViewType.calendar,
+        active: false,
+        sameData: true,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
+          // template7: this.template7,
+        },
+      },
     ];
 
     var viewDefaultID = '2';
@@ -867,7 +879,7 @@ export class CodxTasksComponent
   // }
 
   popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = []; 
+    this.listTaskResousceSearch = [];
     this.countResource = 0;
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();
@@ -1549,7 +1561,7 @@ export class CodxTasksComponent
                   ref.createdOn = result.createdOn;
                   ref.memo = result.taskName;
                   ref.createdBy = result.createdBy;
-                
+
                   this.api
                     .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
                       ref.createdBy,

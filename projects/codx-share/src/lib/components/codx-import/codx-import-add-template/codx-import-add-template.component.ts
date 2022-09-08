@@ -61,7 +61,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   dataSave = 
   {
     dataIEMapping:[],
-    dataIEFieldMapping:[],
+    dataIEFieldMapping:null,
   }
   sourceField : any;
   //////////////////////
@@ -218,9 +218,9 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         //   // if(item) this.notifySvr.notifyCode('OD008');
         //   // else this.notifySvr.notifyCode('SYS021');
         // })
-        if(this.dataSave.dataIEFieldMapping.length>0)
+        if(this.dataSave.dataIEFieldMapping)
         {
-          this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",this.dataSave.dataIEFieldMapping).subscribe(item=>{
+          this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEFieldMapping)).subscribe(item=>{
             debugger;
             // if(item) this.notifySvr.notifyCode('OD008');
             // else this.notifySvr.notifyCode('SYS021');
@@ -366,7 +366,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         var dataTable = item?.event[0] as IETables;
         dataTable.sourceTable = this.dataIETables.sourceTable;
         //this.dataSave.dataIEMapping.push(item?.event[1]);
-        this.dataSave.dataIEFieldMapping.push(item?.event[2]);
+        this.dataSave.dataIEFieldMapping = item?.event[2];
         this.gridView.dataService.data = [item?.event[0],...this.gridView.dataService.data]
       }
     });
@@ -377,6 +377,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     return '';
   }
   edit(data: any) {
+    this.sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]],{header:this.importAddTmpGroup.value.firstCell});
     this.callfunc
       .openForm(
         CodxImportAddMappingComponent,
@@ -390,6 +391,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           data,
           null,
           'edit',
+          this.sourceField[0]
         ],
         null
       )
@@ -417,8 +419,8 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           reader.readAsBinaryString(file);
           reader.onload = (e: any) => {
             const binarystr: string = e.target.result;
-            const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
-            this.sheet = wb.SheetNames;
+            (this.wb as XLSX.WorkBook) = XLSX.read(binarystr, { type: 'binary' });
+            this.sheet = this.wb.SheetNames;
             this.selectedSheet= this.gridView.dataService.data[0].sourceTable
           };
         });

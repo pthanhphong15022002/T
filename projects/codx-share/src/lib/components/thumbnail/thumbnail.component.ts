@@ -223,7 +223,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
 
   getExtension(thumbnail, ext) {
     if (thumbnail != "" && thumbnail != undefined)
-      return thumbnail;
+      return `${this.dmSV.urlThumbnail}/${thumbnail}`;
     else {
       ext = ext.substring(1);
       ext = ext.toLocaleLowerCase();

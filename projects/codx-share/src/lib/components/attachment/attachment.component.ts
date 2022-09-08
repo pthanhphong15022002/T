@@ -587,7 +587,7 @@ export class AttachmentComponent implements OnInit {
 
     let total = this.fileUploadList.length;
     //  var that = this;
-    this.dmSV.getToken();
+    await this.dmSV.getToken();
     let ret = new Observable<any[]>();
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectId = this.objectId;
@@ -729,7 +729,7 @@ export class AttachmentComponent implements OnInit {
 
     let total = this.fileUploadList.length;
     var that = this;
-    this.dmSV.getToken();
+    await this.dmSV.getToken();
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectId = this.objectId;   
       if (total > 1) 

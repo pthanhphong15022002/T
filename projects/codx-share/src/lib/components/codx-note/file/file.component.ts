@@ -14,6 +14,7 @@ export class FileComponent extends UIComponent implements OnInit {
   funcID: any;
   objectID: any;
   data: any;
+  files: any;
 
   @ViewChild('attachment') attachment: AttachmentComponent;
 
@@ -27,7 +28,14 @@ export class FileComponent extends UIComponent implements OnInit {
     this.objectType = dialogData.data?.objectType;
   }
 
-  onInit() {}
+  onInit() {
+    this.dialog.beforeClose.subscribe(res => {
+      debugger
+    })
+  }
+  
+  ngAfterViewInit() {  
+  }
 
   popup() {
     this.attachment.uploadFile();
@@ -37,10 +45,16 @@ export class FileComponent extends UIComponent implements OnInit {
     if (e.data.length > 0) {
       this.attachment.objectId = this.data.recID;
       var obj = {
-        count: e.data.length
+        count: e.data.length,
+        data: e.data,
       }
+      this.files = obj;
       this.attachment.saveFiles();
     }
-    return e.data;
+    this.saveFile();
+  }
+
+  saveFile() {
+    this.dialog.close(this.files);
   }
 }

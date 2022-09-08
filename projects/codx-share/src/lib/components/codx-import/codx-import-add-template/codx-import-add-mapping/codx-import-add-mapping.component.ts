@@ -148,10 +148,14 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       importRule: [""],
       isSummary: [false]
     });
-    if(this.type == 'new') this.createData();
-    if(this.type == "edit") this.getDataEdit();
+    if(this.type == 'new') 
+    {
+      this.createData();
+      this.getGridViewSetup();
+    }
+    else if(this.type == "edit") this.getDataEdit();
     this.formatSourceField();
-    this.getGridViewSetup();
+   
   }
   formatSourceField()
   {
@@ -179,8 +183,16 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
         this.dataIEFieldMapping = item
         //this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
       }
+      else this.getGridViewSetup();
     })
-    alert(this.dataIETable.recID);
+    // Pass value IETable
+    this.addMappingForm.controls['mappingName'].setValue(this.dataIETable.mappingTemplate);
+    this.addMappingForm.controls['processIndex'].setValue(this.dataIETable.processIndex);
+    this.addMappingForm.controls['destinationTable'].setValue(this.dataIETable.destinationTable);
+    this.addMappingForm.controls['parentEntity'].setValue(this.dataIETable.parentEntity);
+    this.addMappingForm.controls['importRule'].setValue(this.dataIETable.importRule);
+    this.addMappingForm.controls['isSummary'].setValue(this.dataIETable.isSummary);
+    /////////////////////
   }
   createData() {
     if (this.type == 'new') {
@@ -247,7 +259,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     this.dataIETable.isSummary = this.addMappingForm.value?.isSummary;
     for (var i = 0; i < (result as any).length; i++) {
       result[i].sessionID = this.dataIETable.recID;
-      result[i].mappingTemplate = "";
+      result[i].mappingTemplate = "00000000-0000-0000-0000-000000000000";
     }
     this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
   }
@@ -376,9 +388,12 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       var result = data?.data;
       if (data?.component?.itemsSelected && check) {
         result = data?.component?.itemsSelected[0]?.MappingName;
-        this.addMappingForm
+        if(!this.dataIETable.destinationTable)
+        {
+          this.addMappingForm
           .get('destinationTable')
           .setValue(data?.component?.itemsSelected[0]?.TableName);
+        }
       }
       this.addMappingForm.get(data?.field).setValue(result);
     }
@@ -459,7 +474,17 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     return data[field];
   };
   getHeaderText(e: any) {
-    return this.gridViewSetup[e].headerText;
+    //Viết hoa chữ đầu
+    try
+    {
+      var key = e.charAt(0).toUpperCase() + e.slice(1); 
+      return this.gridViewSetup[key].headerText;
+    }
+    catch(ex)
+    {
+      return e
+    }
+   
   }
   getEdit(e: any, field: any) {
     if (e == '3' || e == '2' || e=="SourceField") return this.editParams[field];

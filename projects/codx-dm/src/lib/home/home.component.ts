@@ -49,6 +49,7 @@ import { threadId } from 'worker_threads';
 import { ActivatedRoute } from '@angular/router';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { computeStyles } from '@popperjs/core';
+import { lvFileClientAPI } from '@shared/services/lv.component';
 
 @Component({
   selector: 'home',
@@ -672,11 +673,15 @@ export class HomeComponent extends UIComponent {
   }
 
   async displayThumbnail(id, thumnbail) {
+
+    // lvFileClientAPI.post(
+
+    // )
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(async () => {
-      let url = `${this.dmSV.urlThumbnail}${thumnbail}`;      
+      let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;      
       try {
         let blob = await fetch(url).then(r => r.blob());           
         if (blob.type != '') {       
