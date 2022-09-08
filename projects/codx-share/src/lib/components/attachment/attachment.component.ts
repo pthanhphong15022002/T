@@ -184,7 +184,6 @@ export class AttachmentComponent implements OnInit {
   ngAfterViewInit(): void {
     if (this.objectId != '' && this.objectId != undefined) {
       this.fileService.getFileNyObjectID(this.objectId).subscribe((res) => {
-        debugger;
         if (res) {
           this.data = res;
           this.fileGet.emit(this.data);
