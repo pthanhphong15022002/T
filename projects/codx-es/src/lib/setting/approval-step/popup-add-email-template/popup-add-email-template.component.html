@@ -401,7 +401,7 @@
         </span>
         <span class="icon-keyboard_arrow_down icon-16 ms-2"></span>
       </button> -->
-      <div #combobox>
+      <div #combobox (click)="focusCombobox()">
         <codx-input
           type="combobox"
           name="combobox"

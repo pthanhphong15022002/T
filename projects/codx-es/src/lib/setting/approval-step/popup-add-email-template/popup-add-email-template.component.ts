@@ -35,7 +35,7 @@ import { CodxEsService } from '../../../codx-es.service';
 export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('combobox', { static: false }) itemCombobox: ElementRef;
+  @ViewChild('combobox', { static: false }) combobox: ElementRef;
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
   @ViewChild('richtexteditor', { static: false })
   richtexteditor: CodxInputComponent;
@@ -80,8 +80,33 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.showIsPublish = data.data?.showIsPublish;
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
+
+    this.renderer.listen('window', 'click', (e: Event) => {
+      /**
+       * Only run when toggleButton is not clicked
+       * If we don't check this, all clicks (even on the toggle button) gets into this
+       * section which in the result we might never see the menu open!
+       * And the menu itself is checked here, and it's where we check just outside of
+       * the menu and button the condition abbove must close the menu
+       */
+      if (e.target !== this.combobox?.nativeElement && this.textarea) {
+        debugger;
+        const childTwoElement =
+          this.textarea.nativeElement.getElementsByClassName('message')[0];
+        if (childTwoElement) {
+          this.renderer.setStyle(childTwoElement, 'width', this.staticWidth);
+        }
+      }
+    });
   }
-  ngAfterViewInit(): void {}
+
+  staticWidth: number = 0;
+  ngAfterViewInit(): void {
+    if (this.textarea && this.staticWidth != 0)
+      this.staticWidth = (
+        this.textarea.nativeElement as HTMLElement
+      ).offsetWidth;
+  }
 
   initForm() {
     this.formModel = new FormModel();
@@ -424,13 +449,14 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     // this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
   }
 
-  focusCombobox(event) {
+  focusCombobox(event = null) {
+    debugger;
     const childTwoElement =
       this.textarea.nativeElement.getElementsByClassName('message')[0];
     if (childTwoElement) {
       let width =
         (this.textarea.nativeElement as HTMLElement).offsetWidth -
-        (this.itemCombobox.nativeElement as HTMLElement).offsetWidth;
+        (this.combobox.nativeElement as HTMLElement).offsetWidth;
       this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
     }
   }
