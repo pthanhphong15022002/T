@@ -13,6 +13,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DateTime } from '@syncfusion/ej2-charts';
 import {
   ApiHttpService,
   AuthService,
@@ -51,7 +52,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
   dialogRef: DialogRef;
   modelPage: ModelPage;
 
-  tempAtender:{userId: string, userName:string, roleType:string,status:string,objectType:string};
+  tempAtender:{userId: string, userName:string, roleType:string,status:string,objectType:string,optional:boolean};
   attendeesList=[];
   grvBookingRoom:any;
   peopleAttend =[];
@@ -59,7 +60,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
   curUser:any;
   hostUser:any;
   hostUserId:any;
-  lstPeople=[];
+  lstUser=[];
+  lstUserOptional=[];
   lstStationery=[];
   strStationery:string;
   vllDevices = [];
@@ -190,7 +192,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
           userName:people.userName,
           status:'1',
           objectType:'AD_Users',
-          roleType:'2'
+          roleType:'1',
+          optional:false,
         };
         this.curUser=this.tempAtender;
         this.changeDetectorRef.detectChanges();
@@ -198,6 +201,13 @@ export class PopupAddBookingRoomComponent implements OnInit {
       } 
       
       if(!this.isAdd){
+        if (this.data.attachments > 0) {
+          this.codxEpService
+            .getFiles('EPT1',this.data.recID,this.formModel.entityName)
+            .subscribe((res) => {
+              console.log('get file', res); 
+            });
+          }
         this.apiHttpService
         .callSv('EP', 'ERM.Business.EP', 'BookingAttendeesBusiness','GetAsync', [this.data.recID])
         .subscribe((res) => {
@@ -210,15 +220,20 @@ export class PopupAddBookingRoomComponent implements OnInit {
                 status:people.status,
                 objectType:'AD_Users',
                 roleType:people.roleType,
+                optional:people.optional,
               };
-              if(this.authService.userValue.userID==people.userID || people.roleType=='2'){
+              if(this.tempAtender.userId!=this.authService.userValue.userID){                
+                this.attendeesList.push(this.tempAtender);
+              }
+              if(this.tempAtender.userId==this.authService.userValue.userID)
+              {
                 this.curUser=this.tempAtender;
               }
-              else if(people.roleType=='1'){
-                this.hostUser=this.tempAtender
+              else if(people.optional==false){
+                this.lstUser.push(this.tempAtender);
               }
               else{
-                this.lstPeople.push(this.tempAtender);
+                this.lstUserOptional.push(this.tempAtender);
               }
             });      
             this.changeDetectorRef.detectChanges();
@@ -230,7 +245,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
         .subscribe((res) => {
           if(res){
             res.msgBodyData[0].forEach(stationery=>{
-              let order :{id: string, quantity:number, text: string, objectType: string, objectName: string}={                
+              let order :{id: string, quantity:number, text: string, objectType: string, objectName: string} = {                
                 id:stationery.itemID,
                 text:stationery.itemName,
                 quantity:stationery.quantity,
@@ -280,7 +295,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
           if(this.isAdd){            
             this.fGroupAddBookingRoom.patchValue({attendees:1});            
             this.link = null;
-            this.selectDate = null;
+            this.fGroupAddBookingRoom.value.bookingOn=this.selectDate = new Date();
             this.endTime = null;
             this.startTime = null;
           }
@@ -291,13 +306,24 @@ export class PopupAddBookingRoomComponent implements OnInit {
               this.changeDetectorRef.detectChanges();  
             }     
             this.startTime=this.fGroupAddBookingRoom.value.startDate.toString().slice(16,21);
-            this.endTime=this.fGroupAddBookingRoom.value.endDate.toString().slice(16,21);
-                     
+            this.endTime=this.fGroupAddBookingRoom.value.endDate.toString().slice(16,21);                     
           }
         } 
       });     
     this.changeDetectorRef.detectChanges();   
   }
+  // setStatusTime(modifiedOn: any){
+  //   let dateSent = new Date(modifiedOn);
+  //   let currentDate=new Date();
+  //   var day= Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate()) ) /(1000 * 60 * 60 * 24)).toString();
+  //   if(day!='0'){
+  //     return day+" ngày trước"
+  //   }
+  //   else{
+  //     var hour= currentDate.getHours() - dateSent.getHours();
+  //     return hour+" giờ trước"       
+  //   }
+  // }
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
     option.methodName = 'AddEditItemAsync';
@@ -320,9 +346,12 @@ export class PopupAddBookingRoomComponent implements OnInit {
     //     this.fGroupAddBookingRoom.patchValue({ hours: hours });
     //   }
     // }
+    this.attendeesList=[];
     this.attendeesList.push(this.curUser);
-    this.attendeesList.push(this.hostUser);
-    this.lstPeople.forEach(people=>{
+    this.lstUser.forEach(people=>{
+      this.attendeesList.push(people);
+    })
+    this.lstUserOptional.forEach(people=>{
       this.attendeesList.push(people);
     })
     let pickedEquip = '';
@@ -363,7 +392,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
           return;
         }
       });
-    //this.attachment.saveFilesObservable().subscribe(res=>{})
+      this.attachment.saveFiles();
   }
   changeTime(data) {
     if (!data.field || !data.data) return;
@@ -371,34 +400,86 @@ export class PopupAddBookingRoomComponent implements OnInit {
   }
   
   valueCbxUserChange(event?) {
+    this.lstUser=[];
+    event.data.dataSelected.forEach((people) => {
+      this.tempAtender = {
+        userId: people.dataSelected.UserID,
+        userName: people.dataSelected.UserName,
+        status:'1',
+        objectType: 'AD_Users',
+        roleType:'3',
+        optional:false,
+      };
+      
+      this.lstUser.push(this.tempAtender);
+      this.attendeesList.forEach(attender =>{
+        if(attender.userId==this.tempAtender)
+        {  
+          this.lstUser.filter(item=> item != this.tempAtender);        
+        }
+      })
+      if(this.lstUserOptional!=null){
+        this.lstUser?.forEach(people=>{
+          this.attendeesList.push(people);
+        })
+      };
+      if(this.lstUserOptional!=null){
+        this.lstUserOptional.forEach(people=>{
+          this.attendeesList.push(people);
+        })  
+      };    
+    });
+    if(this.lstUserOptional!=null){
+      this.fGroupAddBookingRoom.value.attendees=this.lstUser.length + this.lstUserOptional.length+1;
+    }
+    else{      
+      this.fGroupAddBookingRoom.value.attendees=this.lstUser.length+1;
+    }    
+    this.attendeesList=[]
+    if(this.lstUserOptional!=null){
+      this.lstUser?.forEach(people=>{
+        this.attendeesList.push(people);
+      })
+    };
+    if(this.lstUserOptional!=null){
+      this.lstUserOptional.forEach(people=>{
+        this.attendeesList.push(people);
+      })  
+    };  
+    this.changeDetectorRef.detectChanges();
+  }
+  valueCbxUserOptionalChange(event?) {
+    this.lstUserOptional=[];
     event.data.dataSelected.forEach((people) => {
       this.tempAtender = {
         userId: people.id,
         userName: people.text,
         status:'1',
         objectType: 'AD_Users',
-        roleType:'3'
+        roleType:'3',
+        optional:true,
       };
-      this.lstPeople.push(this.tempAtender);
+      
+      this.lstUserOptional.push(this.tempAtender);
+      this.attendeesList.forEach(attender =>{
+        if(attender.userId==this.tempAtender)
+        {  
+          this.lstUserOptional.filter(item=> item != this.tempAtender);        
+        }
+      })
     });
-    if(this.hostUser!=null){
-      this.fGroupAddBookingRoom.value.attendees=this.lstPeople.length +2;
-    }
-    else{      
-      this.fGroupAddBookingRoom.value.attendees=this.lstPeople.length +1;
-    }
-    this.changeDetectorRef.detectChanges();
-  }
-  valueCbxHostChange(event?) {
-    this.tempAtender= {
-      userId: event.data.dataSelected[0].id,
-      userName: event.data.dataSelected[0].text,
-      status:'1',
-      objectType: event.data.dataSelected[0].objectType,
-      roleType:'1',
+    this.fGroupAddBookingRoom.value.attendees=this.lstUser.length + this.lstUserOptional.length+1;
+    this.attendeesList=[]
+    if(this.lstUserOptional!=null){
+      this.lstUser?.forEach(people=>{
+        this.attendeesList.push(people);
+      })
     };
-    this.hostUser=this.tempAtender;
-    this.fGroupAddBookingRoom.value.attendees=this.lstPeople.length+2;
+    if(this.lstUserOptional!=null){
+      this.lstUserOptional.forEach(people=>{
+        this.attendeesList.push(people);
+      })  
+    };   
     this.changeDetectorRef.detectChanges();
   }
   valueCbxStationeryChange(event?) {
@@ -413,8 +494,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       }      
       this.lstStationery.push(tempStationery);
     });
-    this.changeDetectorRef.detectChanges();
-    
+    this.changeDetectorRef.detectChanges();    
   }
 
   valueQuantityChange(event?) {
@@ -423,7 +503,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
         item.quantity=event?.data;
       }
     })
-
   }
   valueAttendeesChange(event) {
     if (event?.field) {
@@ -439,7 +518,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     
   }
-
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
@@ -536,9 +614,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
         this.selectDate=this.fGroupAddBookingRoom.value.bookingOn;
         if (this.selectDate) {
           if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
-            this.startDate = new Date(
-              this.selectDate.setHours(this.beginHour, this.beginMinute, 0)
-            );
+            this.startDate = this.selectDate;
+            this.startDate.setHours(this.beginHour, this.beginMinute, 0);            
             if (this.startDate) {
               this.fGroupAddBookingRoom.patchValue({ startDate: this.startDate });
             }
@@ -553,9 +630,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
         this.selectDate=this.fGroupAddBookingRoom.value.bookingOn;
         if (this.selectDate) {
           if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
-            this.endDate = new Date(
-              this.selectDate.setHours(this.endHour, this.endMinute, 0)
-            );
+            this.endDate = this.selectDate;
+            this.endDate.setHours(this.endHour, this.endMinute, 0);            
             if (this.endDate) {
               this.fGroupAddBookingRoom.patchValue({ endDate: this.endDate });
             }
@@ -574,6 +650,43 @@ export class PopupAddBookingRoomComponent implements OnInit {
     }   
   }
 
+  checkedOnlineChange(event) {
+    this.fGroupAddBookingRoom.patchValue({
+      online: event.data instanceof Object ? event.data.checked : event.data,
+    });
+
+    if (!this.fGroupAddBookingRoom.value.online)
+      this.fGroupAddBookingRoom.patchValue({ onlineUrl: null });
+    this.changeDetectorRef.detectChanges();
+  }
+  openPopupLink() {
+    this.callFuncService.openForm(this.addLink, '', 500, 250);    
+    this.changeDetectorRef.detectChanges();
+  }
+
+  public setdata(data: any) {
+    if (this.isAdd) {
+      this.isAdd = true;
+      this.initForm();
+    } else {
+      this.fGroupAddBookingRoom.patchValue(data);
+    }
+  }
+
+  popup(evt: any) {
+    this.attachment.openPopup();
+  }
+  popupUploadFile(evt:any) {
+    this.attachment.uploadFile();
+  } 
+  fileAdded(evt: any) {
+  }
+  fileCount(event: any) {    
+    this.fGroupAddBookingRoom.value.attachments= event.data[0].data;    
+  }
+
+
+  
   // setDate() {
   //   if (this.startTime) {
   //     this.beginHour = parseInt(this.startTime.split(':')[0]);
@@ -608,37 +721,4 @@ export class PopupAddBookingRoomComponent implements OnInit {
   //   }
   // }
 
-  checkedOnlineChange(event) {
-    this.fGroupAddBookingRoom.patchValue({
-      online: event.data instanceof Object ? event.data.checked : event.data,
-    });
-
-    if (!this.fGroupAddBookingRoom.value.online)
-      this.fGroupAddBookingRoom.patchValue({ onlineUrl: null });
-    this.changeDetectorRef.detectChanges();
-  }
-  openPopupLink() {
-    this.callFuncService.openForm(this.addLink, '', 500, 250);    
-    this.changeDetectorRef.detectChanges();
-  }
-
-  public setdata(data: any) {
-    if (this.isAdd) {
-      this.isAdd = true;
-      this.initForm();
-    } else {
-      this.fGroupAddBookingRoom.patchValue(data);
-    }
-  }
-
-  popup(evt: any) {
-    this.attachment.openPopup();
-  }
-  popupUploadFile(evt:any) {
-    this.attachment.uploadFile();
-  } 
-  fileAdded(evt: any) {
-  }
-  fileCount(evt: any) {
-  }
 }

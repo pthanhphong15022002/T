@@ -24,29 +24,6 @@ import { DataManager } from '@syncfusion/ej2-data';
 import { ApiHttpService, FormModel } from 'codx-core';
 import { AnyNaptrRecord } from 'dns';
 import { map, Observable } from 'rxjs';
-let data: any[] = [
-  { Name: 'Species', fillColor: '#3DD94A' },
-  { Name: 'Plants', Category: 'Species' },
-  { Name: 'Fungi', Category: 'Species' },
-  { Name: 'Lichens', Category: 'Species' },
-  { Name: 'Animals', Category: 'Species' },
-  { Name: 'Mosses', Category: 'Plants' },
-  { Name: 'Ferns', Category: 'Plants' },
-  { Name: 'Gymnosperms', Category: 'Plants' },
-  { Name: 'Dicotyledens', Category: 'Plants' },
-  { Name: 'Monocotyledens', Category: 'Plants' },
-  { Name: 'Invertebrates', Category: 'Animals' },
-  { Name: 'Vertebrates', Category: 'Animals' },
-  { Name: 'Insects', Category: 'Invertebrates' },
-  { Name: 'Molluscs', Category: 'Invertebrates' },
-  { Name: 'Crustaceans', Category: 'Invertebrates' },
-  { Name: 'Others', Category: 'Invertebrates' },
-  { Name: 'Fish', Category: 'Vertebrates' },
-  { Name: 'Amphibians', Category: 'Vertebrates' },
-  { Name: 'Reptiles', Category: 'Vertebrates' },
-  { Name: 'Birds', Category: 'Vertebrates' },
-  { Name: 'Mammals', Category: 'Vertebrates' },
-];
 @Component({
   selector: 'lib-organize-detail',
   templateUrl: './organize-detail.component.html',
@@ -84,6 +61,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   };
   tool: DiagramTools = DiagramTools.ZoomPan;
   isClick: boolean = false;
+  count = 0;
 
   @ViewChild('diagram') diagram: any;
   @ViewChild('p') public popover: NgbPopover;
@@ -290,41 +268,42 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
         'ERM.Business.HR',
         'OrganizationUnitsBusiness',
         'GetEmployeeListByOrgAsync',
-        [orgid, status, '', this.onlyDepartment]
+        [orgid, status, '', this.onlyDepartment, 0]
       )
       .subscribe((res: any) => {
         if (res != null) {
           if (res.length > 0 || headcounts > 0) {
             this.employOrg = [];
-            this.employees = res;
+            this.employees = res[0];
+            this.count = res[1];
 
             var obj: any = {};
-            for (let index = 0; index < this.employees.length; index++) {
-              const element: any = this.employees[index];
-              if (!obj[element.positionName]) {
-                obj[element.positionName] = 1;
-                this.employOrg.push(element.positionName || '_');
+            // for (let index = 0; index < this.employees.length; index++) {
+            //   const element: any = this.employees[index];
+            //   if (!obj[element.positionName]) {
+            //     obj[element.positionName] = 1;
+            //     this.employOrg.push(element.positionName || '_');
 
-                var c = 0;
-                for (let j = 0; j < this.employees.length; j++) {
-                  if (
-                    this.employees[j]['positionName'] == element.positionName
-                  ) {
-                    c = c + 1;
-                  }
-                }
+            //     var c = 0;
+            //     for (let j = 0; j < this.employees.length; j++) {
+            //       if (
+            //         this.employees[j]['positionName'] == element.positionName
+            //       ) {
+            //         c = c + 1;
+            //       }
+            //     }
 
-                if (element.headcounts > c) {
-                  for (
-                    let x = element.headcounts - c;
-                    x < element.headcounts;
-                    x++
-                  ) {
-                    this.employees.push({ positionName: element.positionName });
-                  }
-                }
-              }
-            }
+            //     if (element.headcounts > c) {
+            //       for (
+            //         let x = element.headcounts - c;
+            //         x < element.headcounts;
+            //         x++
+            //       ) {
+            //         this.employees.push({ positionName: element.positionName });
+            //       }
+            //     }
+            //   }
+            // }
 
             this.changeDetectorRef.detectChanges();
 
@@ -360,7 +339,5 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
     }
   }
 
-  public click(arg: ClickEventArgs) {
-    console.log(arg.element?.id);
-  }
+  onSearch(evt: any) {}
 }

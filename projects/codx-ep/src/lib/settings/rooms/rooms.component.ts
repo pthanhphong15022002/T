@@ -124,15 +124,15 @@ export class RoomsComponent extends UIComponent {
     };
   }
 
-  clickMF(evt?: any, data?: any) {
-    switch (evt.functionID) {
-      case 'edit':
+  
+  clickMF(event, data) {
+    console.log(event);
+    switch (event?.functionID) {
+      case 'SYS03':
         this.edit(data);
         break;
-      case 'delete':
+      case 'SYS02':
         this.delete(data);
-        break;
-      default:
         break;
     }
   }
@@ -149,47 +149,48 @@ export class RoomsComponent extends UIComponent {
         break;
     }
   }
-  addNew(evt?) {
-    let dataItem = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      dataItem = evt;
-    }
+  
+  addNew() {
     this.viewBase.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
-        dataItem,
+        [this.dataSelected, true],
         option
       );
     });
   }
 
-  edit(evt?) {
-    let item = this.viewBase.dataService.dataSelected;
-    if (evt) item = evt;
-    this.viewBase.dataService.edit(item).subscribe((res) => {
-      this.dataSelected = item;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfc.openSide(
-        PopupAddRoomsComponent,
-        item,
-        option
-      );
-    });
+  edit(obj?) {
+    if (obj) {
+      this.viewBase.dataService.dataSelected = obj;
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = this.viewBase?.formModel;
+          this.dialog = this.callfc.openSide(
+            PopupAddRoomsComponent,
+            [this.viewBase.dataService.dataSelected, false],
+            option
+          );
+        });
+    }
   }
 
-  delete(evt?) {
-    let delItem = this.viewBase.dataService.dataSelected;
-    if (evt) delItem = evt;
-    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
-      this.dataSelected = res;
-    });
+  delete(obj?) {
+    if (obj) {
+      this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+        console.log(res);
+      });
+    }
   }
 
   closeDialog(evt?) {

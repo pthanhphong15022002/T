@@ -1,3 +1,4 @@
+import { Optional, TemplateRef } from '@angular/core';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -21,8 +22,10 @@ import {
 import { iif } from 'rxjs';
 import { createTrue } from 'typescript';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
+import { AttachmentComponent } from '../attachment/attachment.component';
 import { TM_Tasks } from '../codx-tasks/model/task.model';
 import { CodxTreeHistoryComponent } from '../codx-tree-history/codx-tree-history.component';
+import { FileComponent } from './file/file.component';
 import { CO_Contents } from './model/CO_Contents.model';
 
 @Component({
@@ -34,6 +37,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   icon = '';
   showEmojiPicker = false;
   gridViewSetup: any;
+  gridViewSetupComment: any;
   sets = [
     'native',
     'google',
@@ -84,6 +88,15 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   searchField = '';
   listRoles = [];
   vllRole = 'TM002';
+  headerComment = '';
+  checkFile = false;
+  initListNote = {
+    memo: '',
+    status: null,
+    textColor: null,
+    format: null,
+    lineType: this.lineType,
+  };
 
   @Input() contents: any = [
     {
@@ -92,6 +105,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       textColor: null,
       format: null,
       lineType: 'TEXT',
+      attachments: 0,
+      comments: 0,
+      tasks: 0,
     },
   ];
   @Input() showMenu = true;
@@ -110,6 +126,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   @Input() vllRose = '';
   @Output() getContent = new EventEmitter();
   @ViewChild('input') input: any;
+  @ViewChild('popupComment') popupComment: TemplateRef<any>;
+  @ViewChild('popupAttachment') popupAttachment: TemplateRef<any>;
+  @ViewChild('colorPicker') colorPicker: any;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   constructor(
     private dt: ChangeDetectorRef,
@@ -120,6 +140,12 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   ) {
     this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
       if (res) this.gridViewSetup = res;
+    });
+    this.cache.gridViewSetup('Comments', 'grvComments').subscribe((res) => {
+      if (res) {
+        this.gridViewSetupComment = res;
+        this.headerComment = this.gridViewSetupComment.Comments.headerText;
+      }
     });
     this.route.queryParams.subscribe((params) => {
       if (params) this.objectParentID = params.meetingID;
@@ -145,11 +171,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     }
     if (this.data.length > 0) {
       this.contents = this.data;
-      this.setFont();
       this.dt.detectChanges();
       this.setPropertyForView();
     }
-    this.getAssign('');
   }
 
   setPropertyForView() {
@@ -383,14 +407,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.contents.push(obj);
       // reverse
       if (checkFirstNote == false) this.contents.shift();
-      var initListNote = {
-        memo: '',
-        status: null,
-        textColor: null,
-        format: null,
-        lineType: this.lineType,
-      };
-      this.contents.push(initListNote);
+      this.contents.push(this.initListNote);
       this.id = this.contents.length - 1;
       //reverse
       this.dt.detectChanges();
@@ -511,6 +528,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   setColorForCodxColor(color) {
+    this.elementColor = this.colorPicker;
     if (color == '' || color == null) color = '#000000';
     if (this.elementColor)
       this.currentElementColor = this.elementColor.elRef.nativeElement;
@@ -538,7 +556,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     format = null,
     ele = null,
     item = null,
-    index = null
+    index = null,
+    menu = null
   ) {
     switch (type) {
       case 'format':
@@ -554,11 +573,14 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.popupImg();
         break;
       case 'comment':
-        this.comment();
+        this.comment(index);
         break;
       case 'assign':
         this.assign(index);
         break;
+      case 'attachment':
+        if (menu == false) this.openPopupAttachment(index);
+        else this.popup();
     }
     this.getContent.emit(this.contents);
   }
@@ -572,21 +594,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  comment() {
-    var obj = {};
-    let option = new DialogModel();
-    // option.DataService = this.lstView.dataService as CRUDService;
-    // option.FormModel = this.lstView.formModel;
-    this.callfunc.openForm(
-      CodxTreeHistoryComponent,
-      '',
-      600,
-      500,
-      '',
-      obj,
-      '',
-      option
-    );
+  comment(index) {
+    this.id = index;
+    this.callfunc.openSide(this.popupComment);
   }
 
   assign(index) {
@@ -692,5 +702,40 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       }
     });
     this.listTaskResourceSearch = listTaskResourceSearch;
+  }
+
+  openPopupAttachment(index) {
+    this.id = index;
+    var dt = {
+      data: this.contents[index],
+      funcID: this.funcID,
+      objectType: this.objectType,
+    };
+    this.dialog = this.callfunc.openSide(FileComponent, dt);
+    this.dialog.closed.subscribe((res) => {
+      if (res.event.data) {
+        this.contents[index].attachments += res.event.data.length;
+        this.updateContent(this.objectParentID, this.contents);
+      }
+    });
+
+
+  }
+
+  popup() {
+    this.attachment.uploadFile();
+    this.checkFile = true;
+  }
+
+  fileCount(e) {
+    if (e.data.length > 0) {
+      this.attachment.objectId = this.contents[this.id].recID;
+      this.attachment.saveFiles();
+      this.contents[this.id].lineType = 'FILE';
+      this.contents[this.id].attachments++;
+      this.contents.push(this.initListNote);
+      this.updateContent(this.objectParentID, this.contents);
+      this.dt.detectChanges();
+    }
   }
 }

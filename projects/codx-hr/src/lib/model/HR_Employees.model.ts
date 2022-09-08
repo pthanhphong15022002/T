@@ -38,4 +38,5 @@ export class HR_Employees {
     public roleName: string;
     public fromDate: Date;
     public toDate: Date;
+    public statusName: string;
 }

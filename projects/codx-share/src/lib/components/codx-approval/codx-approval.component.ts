@@ -26,6 +26,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
@@ -63,7 +64,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     private route: ActivatedRoute,
     private codxService: CodxService,
     private notifySvr: NotificationsService,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    private esService: CodxEsService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {}
@@ -242,6 +244,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
               data.status = '2';
             }
             this.view.dataService.update(data).subscribe();
+            this.esService.setupChange.next(true);
           }
 
           /*return {

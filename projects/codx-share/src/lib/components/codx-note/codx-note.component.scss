@@ -74,6 +74,24 @@
   top: 26%;
 }
 
+.card-note {
+  width: 70% !important;
+}
+
 .darkgray {
   color: darkgray;
+}
+
+.badge-primary.badge-outline {
+  border: 1px solid var(--text-primary);
+  color: var(--text-primary);
+  background-color: transparent;
+}
+
+.icon-file {
+  padding-left: 13px;
+}
+
+.icon-comment {
+  padding-left: 13px;
 }
