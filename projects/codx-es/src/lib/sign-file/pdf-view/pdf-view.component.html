@@ -200,7 +200,10 @@
         </div>
       </div>
 
-      <div class="h-100 pdfviewer_Space w-100 flex-row-fluid">
+      <div
+        class="h-100 pdfviewer_Space w-100 flex-row-fluid"
+        *ngIf="!isDisable; else viewMode"
+      >
         <ejs-pdfviewer
           #pdfviewer
           id="pdfViewer"
@@ -237,6 +240,18 @@
         >
         </ejs-pdfviewer>
       </div>
+
+      <ng-template #viewMode>
+        <ngx-extended-pdf-viewer
+          *ngIf="fileInfo?.fileID ? true : false"
+          [(src)]="fileInfo.fileID"
+          [useBrowserLocale]="true"
+          [showOpenFileButton]="true"
+          [showUnverifiedSignatures]="true"
+          [useBrowserLocale]="true"
+        >
+        </ngx-extended-pdf-viewer>
+      </ng-template>
     </div>
     <div
       class="actions flex-column flex-lg-row-auto main-right"

@@ -269,14 +269,11 @@
               objectType="driver.objectType"
             ></codx-img>
             <span
-              class="symbol-badge badge badge-circle bg-success top-100 start-100 icon-check text-white"
+              class="symbol-badge badge badge-circle bg-warning top-100 start-100 icon-check text-white"
             ></span>
           </div>
         </div>
-        <div
-          class="symbol-group symbol-group-check symbol-hover flex-nowrap"
-          *ngIf="curUser!=null"
-        >
+        <div class="symbol-group symbol-group-check symbol-hover flex-nowrap" *ngIf="curUser!=null" >
           <div class="symbol symbol-35px symbol-circle">
             <codx-img
               [objectId]="curUser.userId"
@@ -351,7 +348,7 @@
         ></codx-img>
 
         <span
-          class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8"
+          class="symbol-badge badge badge-circle bg-warning top-100 start-100 text-white fs-8"
           >D</span
         >
       </div>
@@ -394,9 +391,7 @@
 
       <div class="d-flex flex-column justify-content-end">
         <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >{{
-            curUser.status | vll: "EP011":"text" | async
-          }}</span
+          >Bắt buộc</span
         >
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
@@ -423,9 +418,7 @@
 
       <div class="d-flex flex-column justify-content-end" >
         <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >{{
-            item.status | vll: "EP011":"text" | async
-          }}</span
+          >Không bắt buộc</span
         >
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>

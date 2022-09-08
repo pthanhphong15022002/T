@@ -81,6 +81,13 @@ export class ItemInterval {
     id: any;
 }
 
+export class FilterModel
+{
+    field: string;
+    logic: string;
+    value: string;
+}
+
 export class FileUpload {
     order: any;
     isSystem: any;

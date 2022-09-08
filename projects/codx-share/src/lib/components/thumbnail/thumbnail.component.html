@@ -6,13 +6,13 @@
         <div (dblclick)="openFile(item.data.recID)" class="cursor-pointer">
           <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
           <ng-template #simple>
-            <codx-temp-full imageSrc="{{getExtension(item.data.thumbnail, item.data.extension)}}"
+            <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}"
               imgCss="w-20px me-3 cursor-pointer" title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
               [desc]="getSubTitle(item.data.recID)" [descLine]="1">
             </codx-temp-full>
           </ng-template>
           <ng-template #full>
-            <codx-temp-full imageSrc="{{getExtension(item.data.thumbnail, item.data.extension)}}"
+            <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}"
               imgCss="w-25px me-3 cursor-pointer" title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
               subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.userName}}"
               [desc]="getSubTitle(item.data.recID)" [descLine]="1">
@@ -88,13 +88,13 @@
         <div (dblclick)="openFile(item.recID)" class="cursor-pointer">
           <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
           <ng-template #simple>
-            <codx-temp-full imageSrc="{{getExtension(item.thumbnail, item.extension)}}"
+            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}"
               imgCss="w-20px me-3 cursor-pointer" title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
               [descLine]="1">
             </codx-temp-full>
           </ng-template>
           <ng-template #full>
-            <codx-temp-full imageSrc="{{getExtension(item.thumbnail, item.extension)}}"
+            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}"
               imgCss="w-20px me-3 cursor-pointer" title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
               subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.userName}}" [descLine]="1">
             </codx-temp-full>

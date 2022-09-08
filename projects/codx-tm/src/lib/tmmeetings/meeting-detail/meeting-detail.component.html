@@ -54,8 +54,7 @@
       </div>
       <div class="col-4">
         <div class="d-flex justify-content-end">
-          <codx-imgs class="" [objectId]="meeting.avataResource"
-            objectType="AD_Users" [numberImages]="6">
+          <codx-imgs class="" [objectId]="meeting.avataResource" objectType="AD_Users" [numberImages]="6">
           </codx-imgs>
         </div>
 
@@ -72,8 +71,8 @@
       </ng-container>
       <ng-container *ngIf="name=='Thảo luận'">
         <div class="tab_container">
-          <codx-tree-history [objectID]="meeting.meetingID" [objectType]="'CO_Meetings'" [actionType]="'C'" [addNew]="true"
-            [viewIcon]="false" [viewVote]="true" [funcID]="funcID">
+          <codx-tree-history [objectID]="meeting.meetingID" [objectType]="'CO_Meetings'" [actionType]="'C'"
+            [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="funcID">
           </codx-tree-history>
         </div>
       </ng-container>
@@ -86,16 +85,19 @@
 </div>
 
 <ng-template #templateMeeting>
-  <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO" className="MeetingsBusiness"
-    method="UpdateContentMeetingAsync" [objectParentID]="meetingID" [data]="meeting.contents" [objectID]=""
-    [objectType]="'CO_Meetings'" [vllControlShare]="'TM003'" [vllRose]="'TM002'">
-  </codx-note>
+  <div class="">
+    <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO" className="MeetingsBusiness"
+      method="UpdateContentMeetingAsync" [objectParentID]="meetingID" [data]="meeting.contents" [objectID]=""
+      [objectType]="'CO_Meetings'" [vllControlShare]="'TM003'" [vllRose]="'TM002'">
+    </codx-note>
+  </div>
 </ng-template>
 
 <ng-template #templateAssign>
   <!-- mapping sau -->
-  <div class="card-body-nodata text-center">
+  <!-- <div class="card-body-nodata text-center">
     <img src="../../../../assets/img/EmptyDataPortal.png" />
-  </div>
+  </div> -->
+  <view-assign-tasks-meeting [listRecID]="listRecID" ></view-assign-tasks-meeting>
 
 </ng-template>

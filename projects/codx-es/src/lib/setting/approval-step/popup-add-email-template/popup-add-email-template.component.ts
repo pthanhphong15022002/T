@@ -10,11 +10,15 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
+import {
+  NodeSelection,
+  RichTextEditorComponent,
+} from '@syncfusion/ej2-angular-richtexteditor';
 import {
   ApiHttpService,
   AuthStore,
   CallFuncService,
+  CodxInputComponent,
   DialogData,
   DialogRef,
   FormModel,
@@ -31,8 +35,10 @@ import { CodxEsService } from '../../../codx-es.service';
 export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('combobox', { static: false }) itemCombobox: ElementRef;
+  @ViewChild('combobox', { static: false }) combobox: ElementRef;
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
+  @ViewChild('richtexteditor', { static: false })
+  richtexteditor: CodxInputComponent;
 
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
@@ -74,8 +80,47 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.showIsPublish = data.data?.showIsPublish;
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
+
+    // this.renderer.listen('window', 'click', (e: Event) => {
+    //   /**
+    //    * Only run when toggleButton is not clicked
+    //    * If we don't check this, all clicks (even on the toggle button) gets into this
+    //    * section which in the result we might never see the menu open!
+    //    * And the menu itself is checked here, and it's where we check just outside of
+    //    * the menu and button the condition abbove must close the menu
+    //    */
+    //   if (e.target !== this.combobox?.nativeElement && this.textarea) {
+    //     debugger;
+    //     const childTwoElement =
+    //       this.textarea.nativeElement.getElementsByClassName('message')[0];
+    //     if (childTwoElement) {
+    //       this.renderer.setStyle(childTwoElement, 'width', this.staticWidth);
+    //     }
+    //   }
+    // });
   }
-  ngAfterViewInit(): void {}
+
+  staticWidth: number = 0;
+  ngAfterViewInit(): void {
+    if (this.textarea && this.staticWidth != 0)
+      this.staticWidth = (
+        this.textarea.nativeElement as HTMLElement
+      ).offsetWidth;
+
+    var container = document.getElementById('combobox');
+    document.addEventListener('click', function (event) {
+      // console.log(container);
+      if (
+        container &&
+        container !== event.target &&
+        !container.contains(<HTMLInputElement>event.target)
+      ) {
+        console.log('clicking outside the div');
+      } else {
+        console.log('clicking inside the div');
+      }
+    });
+  }
 
   initForm() {
     this.formModel = new FormModel();
@@ -200,6 +245,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   valueChange(event) {
     if (event?.field && event.component) {
       if (event.field == 'sendTime') {
+        this.insert(null);
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
         });
@@ -210,12 +256,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       } else {
         this.dialogETemplate.patchValue({ [event['field']]: event.data });
       }
-      // const childTwoElement =
-      //   this.textarea.nativeElement.getElementsByClassName('message')[0];
-      // let width =
-      //   (this.textarea.nativeElement as HTMLElement).offsetWidth -
-      //   (this.itemCombobox.nativeElement as HTMLElement).offsetWidth;
-      // this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
     }
   }
 
@@ -407,6 +447,33 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   getfileCount(e: any) {}
+
+  public selection: NodeSelection = new NodeSelection();
+  public range: Range;
+  public saveSelection: NodeSelection;
+
+  getPosition() {
+    this.range = this.selection.getRange(document);
+  }
+
+  insert(evt: any) {
+    this.saveSelection = this.selection.save(this.range, document);
+    this.saveSelection.restore();
+    // this.richtexteditor.control.executeCommand('fontColor', 'gray');
+    // this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
+  }
+
+  focusCombobox(event = null) {
+    debugger;
+    const childTwoElement =
+      this.textarea.nativeElement.getElementsByClassName('message')[0];
+    if (childTwoElement) {
+      let width =
+        (this.textarea.nativeElement as HTMLElement).offsetWidth -
+        (this.combobox.nativeElement as HTMLElement).offsetWidth;
+      this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
+    }
+  }
 }
 
 export class EmailSendTo {

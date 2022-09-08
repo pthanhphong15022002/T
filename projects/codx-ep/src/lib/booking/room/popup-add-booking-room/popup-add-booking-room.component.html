@@ -127,10 +127,9 @@
           type="datetime"
           class="test-datetime"
           field="startTime"
-          placeholder="datetime"
           [crrValue]="startTime"
           format="t"
-          (valueChange)="valueTimeChange($event)"
+          (valueChange)="valueStartTimeChange($event)"
         >
         </codx-input>
       </div>
@@ -145,12 +144,12 @@
           type="datetime"
           class="test-datetime"
           field="endTime"
-          placeholder="datetime"
           [crrValue]="endTime"
           format="t"
-          (valueChange)="valueTimeChange($event)"
+          (valueChange)="valueEndTimeChange($event)"
         >
         </codx-input>
+       
 
       </div>
 
@@ -177,7 +176,7 @@
       >
       </codx-label>
       <!-- <codx-input
-        refValue="ReasonCodes"
+        [refValue]="'EP_BookingRooms'"
         ControlName="reasonID"  
         [formModel]="dialogRef.formModel"  
         [Group]="fGroupAddBookingRoom"          
@@ -284,8 +283,7 @@
           <div class="mx-2">
             <codx-input
               type="Combobox"
-              name="hostUser"
-              [refValue]="'Users'"
+              [refValue]="'MultiUsers'"
               [multiple]="false"
               [showInput]="false"
               refType="P"
@@ -297,9 +295,7 @@
           <div class="mx-2">          
             <codx-input
               type="Combobox"
-              name="combobox"
               [refValue]="'MultiUsers'"
-              [multiple]="true"
               [showInput]="false"
               refType="P"
               [title]="'Bắt buộc tham dự'"
@@ -351,7 +347,7 @@
           </div>
         </div>
 
-        <div class="symbol-group" *ngIf="attendeesList.length >= 3">
+        <div class="symbol-group" *ngIf="attendeesList.length > 2">
           <span
             class="symbol symbol-35px symbol-circle"
             data-bs-toggle="modal"
@@ -396,7 +392,7 @@
           
           <codx-attachment
             #attachment
-            [objectType]="'EP_BookingRooms'"
+            [objectType]="'dialogRef.formModel.entityName'"
             [functionID]="dialogRef.formModel.funcID"
             [objectId]="data.recID"
             hideBtnSave="1"
@@ -439,7 +435,7 @@
         <div class="mx-2">
           <codx-input
             type="Combobox"
-            [refValue]="'Users'"
+            [refValue]="'MultiUsers'"
             [showInput]="false"
             [title]="'Không bắt buộc tham dự'"
             [refType]="'P'"
@@ -514,11 +510,48 @@
       </div>
 
       <div class="d-flex flex-column justify-content-end">
-        <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
+        <div >          
+          <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
+        </div>
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
     </div> 
-    
+
+    <div class="d-flex align-items-center mb-4" *ngFor="let item of attendeesList">
+      <div class="symbol symbol-35px symbol-circle me-4">
+        <codx-img
+          [objectId]="item.userId"
+          objectType="AD_Users"
+        ></codx-img>
+        <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>        
+      </div>
+
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6 fw-bolder">
+          {{ item.userName }}
+        </div>
+        <div *ngIf="item.roleType=='1'">          
+          <span class="text-muted fw-bold">Người chủ trì</span>
+        </div>
+        <div *ngIf="item.roleType=='2'">          
+          <span class="text-muted fw-bold">Thư kí</span>
+        </div>
+        <div *ngIf="item.roleType=='3'">          
+          <span class="text-muted fw-bold">Người tham dự</span>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column justify-content-end">
+        <div *ngIf="!item.optional">          
+          <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
+        </div>
+        <div *ngIf="item.optional">          
+          <span class="badge badge-light-success fs-7 fw-bold mb-1">Không bắt buộc</span>
+        </div>
+        <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
+      </div>
+    </div>
+<!--     
     <div class="d-flex align-items-center mb-4" *ngFor="let item of lstUser">
       <div class="symbol symbol-35px symbol-circle me-4">
         <codx-img
@@ -572,7 +605,7 @@
           >Không bắt buộc</span>
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
-    </div>
+    </div> -->
 
     <div class="form-group d-flex flex-row justify-content-center ">
       <div class="note-bar d-flex flex-row justify-content-center align-items-center rounded-right rounded-left shadow p-3 mb-5">
@@ -586,7 +619,7 @@
         </div>
         <div class="mx-2">          
           <span class="symbol-badge badge badge-circle bg-primary text-white fs-8">P</span>
-          <span class="mx-2">Người tham gia</span>
+          <span class="mx-2">Người tham dự</span>
         </div>
       </div>      
     </div>
@@ -624,12 +657,14 @@
         <codx-input
           type="number"
           class="test-number min-w-50px"
-          field="attendees"
+          ControlName="attendees"
           [crrValue]="fGroupAddBookingRoom.value.attendees"
           [cusButton]="true"
           [min]="0"
           [max]="50"
-          (valueChange)="valueAttendeesChange($event)"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingRoom"
+
           >
         </codx-input> 
       </div> 
@@ -681,21 +716,20 @@
       <codx-label default="Số người tham dự" fiedName="Attendees"> </codx-label>
       <codx-input
         type="number"
-        field="attendees"
-        [crrValue]="fGroupAddBookingRoom.value.attendees"     
-        (valueChange)="valueChange($event)"
+        ControlName="attendees"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingRoom"
         >      
       </codx-input>
     </div>    
 
     <div class="form-group">
       <codx-label default="Phân loại" fiedName="Category"></codx-label>
-      <codx-input 
-        type="valuelist"
+      <codx-input         
         refValue="VL005"
-        field="category"
-        [crrValue]="fGroupAddBookingRoom.value.category"
-        (valueChange)="valueChange($event)">
+        ControlName="category"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingRoom">
       </codx-input>
     </div>
 
@@ -732,14 +766,22 @@
       </div> 
 
       <div class="col-5">
-        <codx-input
+        <!-- <codx-input
           type="valuelist"
           [refValue]="CbxName['Interval']"
           field="interval"
           [crrValue]="fGroupAddBookingRoom.value.interval"
           (valueChange)="valueChange($event)"
           [disabled]="!fGroupAddBookingRoom.value.repeat"
-        ></codx-input>        
+        ></codx-input>    -->
+        <codx-input
+          type="valuelist"
+          [refValue]="CbxName['Interval']"
+          ControlName="interval"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddBookingRoom"
+          [disabled]="!fGroupAddBookingRoom.value.repeat"
+        ></codx-input>      
       </div> 
     </div>
     

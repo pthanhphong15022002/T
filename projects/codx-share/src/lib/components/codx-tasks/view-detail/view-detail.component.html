@@ -333,8 +333,8 @@
             </div>
           </div>
         </div>
-        <div *ngIf="itemSelected.tags" class="mt-2">
-          <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="itemSelected.tags" >
+        <div *ngIf="viewTags !=''" class="mt-2">
+          <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="viewTags" >
           </codx-tag>
         </div>
       </div>

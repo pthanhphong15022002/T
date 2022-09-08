@@ -8,7 +8,7 @@ import { CodxEsService } from 'projects/codx-es/src/public-api';
   styleUrls: ['approval-stationery.component.scss'],
 })
 export class ApprovalStationeryComponent extends UIComponent {
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   funcID: string;
@@ -16,13 +16,14 @@ export class ApprovalStationeryComponent extends UIComponent {
   assemblyName = 'EP';
   entity = 'EP_BookingStationery';
   className = 'BookingsBusiness';
-  method = 'GetAsync';
+  method = 'GetListBookingStationeryAsync';
   idField = 'recID';
   taskViewStt;
   jobs;
   itemDetail;
   preStepNo;
   button;
+  itemSelected: any;
 
   constructor(private injector: Injector, private esService: CodxEsService) {
     super(injector);
@@ -43,10 +44,8 @@ export class ApprovalStationeryComponent extends UIComponent {
         sameData: true,
         active: true,
         model: {
-          template: this.template,
-          //panelLeftRef: this.panelLeft,
+          template: this.itemTemplate,
           panelRightRef: this.panelRight,
-          contextMenu: '',
         },
       },
     ];
@@ -57,18 +56,74 @@ export class ApprovalStationeryComponent extends UIComponent {
 
   clickMF(event, data) {}
 
-  changeItemDetail(event) {}
-
   closeAddForm(event) {}
 
-  getDetailSignFile(id: any) {
-    this.esService
-      .getDetailSignFile(this.itemDetail?.recID)
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
+
+  getDetailBooking(event) {
+    this.api
+      .exec<any>(
+        'EP',
+        'BookingsBusiness',
+        'GetBookingByIDAsync',
+        this.itemDetail?.recID
+      )
       .subscribe((res) => {
         if (res) {
           this.itemDetail = res;
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  setStyles(resourceType) {
+    let styles = {};
+    switch (resourceType) {
+      case '1':
+        styles = {
+          backgroundColor: '#104207',
+          color: 'white',
+        };
+        break;
+      case '2':
+        styles = {
+          backgroundColor: '#29b112',
+          color: 'white',
+        };
+        break;
+      case '6':
+        styles = {
+          backgroundColor: '#053b8b',
+          color: 'white',
+        };
+        break;
+      default:
+        styles = {};
+        break;
+    }
+
+    return styles;
+  }
+
+  setIcon(resourceType) {
+    let icon: string = '';
+    switch (resourceType) {
+      case '1':
+        icon = 'icon-calendar_today';
+        break;
+      case '2':
+        icon = 'icon-directions_car';
+        break;
+      case '6':
+        icon = 'icon-desktop_windows';
+        break;
+      default:
+        icon = '';
+        break;
+    }
+
+    return icon;
   }
 }

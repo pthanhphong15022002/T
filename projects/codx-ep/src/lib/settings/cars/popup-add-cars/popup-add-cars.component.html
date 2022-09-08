@@ -11,7 +11,7 @@
 >
   <ng-template #body>
     <div class="row">
-      <div class="col-8 form-group">
+      <div class="col-10 form-group">
         <codx-label
           fiedName="ResourceName"
           [formModel]="dialogRef.formModel"
@@ -19,7 +19,6 @@
         >
         </codx-label>
         <codx-input
-          type="text"
           ControlName="resourceName"
           [formModel]="form.formModel"
           [Group]="fGroupAddCar"
@@ -74,7 +73,6 @@
         >
         </codx-label>
         <codx-input
-          type="text"
           ControlName="code"
           placeholder="Biển số"
           [formModel]="form.formModel"
@@ -96,7 +94,6 @@
           ControlName="capacity"
           [formModel]="form.formModel"
           [Group]="fGroupAddCar"
-          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -109,13 +106,9 @@
         >
         </codx-label>        
         <codx-input
-          type="valuelist"
-          name="ranking"
-          ngDefaultControl
-          [crrValue]="fGroupAddCar.value.ranking"
-          refValue="EP005"
-          field="ranking"
-          (valueChange)="valueChange($event)"
+          ControlName="ranking"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddCar"
         >
         </codx-input>     
       </div>
@@ -130,13 +123,9 @@
         >
         </codx-label>
         <codx-input
-          type="valuelist"
-          name="valuelist"
-          ngDefaultControl
-          [crrValue]="fGroupAddCar.value.category"
-          refValue="VL005"
-          field="category"
-          (valueChange)="valueChange($event)"
+          ControlName="category"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddCar"
         >
         </codx-input>        
       </div>
@@ -149,12 +138,9 @@
         </codx-label>
         <codx-input        
           [disabled]="fGroupAddCar.value.category == 1 ? false :true"
-          refValue="AgencyNames"
-          type="combobox"
           ControlName="companyID"
           [formModel]="form.formModel"
           [Group]="fGroupAddCar"
-          [multiple]="false" 
         >
         </codx-input>        
       </div>
@@ -170,13 +156,10 @@
         </codx-label>          
 
         <codx-input
-          type="combobox"
           refValue="EP_Drivers"
-          field="linkID"
-          placeholder="Chọn lái xe tham chiếu"
-          [crrValue]="this.fGroupAddCar.value.linkID"
-          (valueChange)="valueChange($event)"  
-          [multiple]="false" 
+          ControlName="linkID"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddCar"
         >
         </codx-input>
       </div>
@@ -191,12 +174,10 @@
         >
         </codx-label>
         <codx-input
-          type="combobox"
           refValue="Users"
           ControlName="owner"
           [formModel]="form.formModel"
           [Group]="fGroupAddCar"
-          [multiple]="false" 
         >
         </codx-input>    
         
@@ -210,13 +191,13 @@
           default="Mô tả"
         ></codx-label>
         <codx-input
-        type="textarea" format="ed2" rows="3"
-        field="note"
-        placeholder="Ghi chú"
-        [crrValue]="fGroupAddCar.value.note"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
+          type="textarea" format="ed2" rows="3"
+          field="note"
+          placeholder="Ghi chú"
+          [crrValue]="fGroupAddCar.value.note"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
       </div>
     </div>
     <div
