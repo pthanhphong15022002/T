@@ -16,6 +16,7 @@ export class OrgorganizationComponent extends UIComponent {
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   orgUnitID: string = '';
+  parentID: string = '';
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
   constructor(inject: Injector) {
@@ -46,8 +47,9 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   onSelectionChanged(evt: any) {
-    if (evt && evt.data) {
+    if (evt && evt.data && this.orgUnitID != evt.data.orgUnitID) {
       this.orgUnitID = evt.data.orgUnitID;
+      this.parentID = evt.data.parentID;
       this.detectorRef.detectChanges();
     }
   }
