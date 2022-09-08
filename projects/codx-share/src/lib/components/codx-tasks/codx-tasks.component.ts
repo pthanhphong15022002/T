@@ -42,6 +42,7 @@ import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { X } from '@angular/cdk/keycodes';
 import { create } from 'domain';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -59,6 +60,12 @@ export class CodxTasksComponent
   @Input() showButtonAdd = true;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
+  @Input() service = 'TM';
+  @Input() entityName = 'TM_Tasks';
+  @Input() idField = 'taskID';
+  @Input() assemblyName = 'ERM.Business.TM';
+  @Input() className = 'TaskBusiness';
+  @Input() method = 'GetTasksAsync';
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -1555,23 +1562,23 @@ export class CodxTasksComponent
             )
             .subscribe((result) => {
               if (result) {
-                  var ref = new tmpReferences();
-                  ref.recIDReferences = result.recID;
-                  ref.refType = 'TM_Tasks';
-                  ref.createdOn = result.createdOn;
-                  ref.memo = result.taskName;
-                  ref.createdBy = result.createdBy;
+                var ref = new tmpReferences();
+                ref.recIDReferences = result.recID;
+                ref.refType = 'TM_Tasks';
+                ref.createdOn = result.createdOn;
+                ref.memo = result.taskName;
+                ref.createdBy = result.createdBy;
 
-                  this.api
-                    .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                      ref.createdBy,
-                    ])
-                    .subscribe((user) => {
-                      if (user) {
-                        ref.createByName = user.userName;
-                        this.dataReferences.push(ref);
-                      }
-                    });
+                this.api
+                  .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+                    ref.createdBy,
+                  ])
+                  .subscribe((user) => {
+                    if (user) {
+                      ref.createByName = user.userName;
+                      this.dataReferences.push(ref);
+                    }
+                  });
               }
             });
           break;
