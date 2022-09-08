@@ -51,8 +51,7 @@ import { create } from 'domain';
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -670,8 +669,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -753,10 +752,10 @@ export class CodxTasksComponent
         type: ViewType.listtree,
         active: false,
         sameData: false,
-        text: 'Cây-Tree',
+        text: 'Cây',
         icon: 'icon-account_tree',
         request: {
-          idField: 'taskID',
+          idField: 'recID',
           parentIDField: 'ParentID',
           service: 'TM',
           assemblyName: 'TM',
@@ -775,7 +774,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1555,23 +1554,23 @@ export class CodxTasksComponent
             )
             .subscribe((result) => {
               if (result) {
-                  var ref = new tmpReferences();
-                  ref.recIDReferences = result.recID;
-                  ref.refType = 'TM_Tasks';
-                  ref.createdOn = result.createdOn;
-                  ref.memo = result.taskName;
-                  ref.createdBy = result.createdBy;
+                var ref = new tmpReferences();
+                ref.recIDReferences = result.recID;
+                ref.refType = 'TM_Tasks';
+                ref.createdOn = result.createdOn;
+                ref.memo = result.taskName;
+                ref.createdBy = result.createdBy;
 
-                  this.api
-                    .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                      ref.createdBy,
-                    ])
-                    .subscribe((user) => {
-                      if (user) {
-                        ref.createByName = user.userName;
-                        this.dataReferences.push(ref);
-                      }
-                    });
+                this.api
+                  .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+                    ref.createdBy,
+                  ])
+                  .subscribe((user) => {
+                    if (user) {
+                      ref.createByName = user.userName;
+                      this.dataReferences.push(ref);
+                    }
+                  });
               }
             });
           break;
