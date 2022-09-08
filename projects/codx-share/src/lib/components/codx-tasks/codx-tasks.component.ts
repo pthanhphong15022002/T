@@ -52,8 +52,7 @@ import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -677,8 +676,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -760,10 +759,10 @@ export class CodxTasksComponent
         type: ViewType.listtree,
         active: false,
         sameData: false,
-        text: 'Cây-Tree',
+        text: 'Cây',
         icon: 'icon-account_tree',
         request: {
-          idField: 'taskID',
+          idField: 'recID',
           parentIDField: 'ParentID',
           service: 'TM',
           assemblyName: 'TM',
@@ -782,7 +781,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {

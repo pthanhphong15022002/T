@@ -525,16 +525,21 @@ export class HomeComponent extends UIComponent {
       this.fileService.GetFiles(id).subscribe(async res => {  
         if (res  != null) {
           this.dmSV.listFiles = res[0]; 
-          if (this.sortDirection == null || this.sortDirection == "asc") 
-          {
-            this.data = [...this.dmSV.listFolder, ...res[0]];
-          }        
-          else 
-            this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
-          this.dmSV.totalPage = parseInt(res[1]);    
-          this.dmSV.loadedFile = true;   
-          this.changeDetectorRef.detectChanges(); 
-        }           
+          this.dmSV.totalPage = parseInt(res[1]);            
+        }  
+        else {
+          this.dmSV.listFiles = [];
+        }    
+
+        if (this.sortDirection == null || this.sortDirection == "asc") 
+        {
+          this.data = [...this.dmSV.listFolder, ...res[0]];
+        }        
+        else 
+          this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
+
+        this.dmSV.loadedFile = true;   
+        this.changeDetectorRef.detectChanges();      
       });
     } else {
       if (item.read != null) 
@@ -764,19 +769,26 @@ export class HomeComponent extends UIComponent {
 
   filterChange($event) {
     try {
+      this.data = [];
+      this.isSearch = true;
+      if (this.codxview.currentView?.currentComponent?.treeView != null)
+        this.codxview.currentView.viewModel.model.panelLeftHide = true;
+      this.dmSV.listFiles = [];
+      this.dmSV.listFolder = [];
       if ($event != undefined) {
         var predicates = $event.predicates;
-        var paras = $event.paras;
+        var values = $event.values;
         //$event.paras;
         var list = [];
         var item = new Filters;
-        $event?.filters.forEach(ele => {
+        $event?.filter.forEach(ele => {
           item = ele as Filters;
           list.push(Object.assign({}, item));        
         });
         var text = JSON.stringify(list);
+        
         this.dmSV.page = 1;
-        this.fileService.searchFileAdv(text, predicates, paras, 1, 20).subscribe(item => { 
+        this.fileService.searchFileAdv(text, predicates, values, 1, 20).subscribe(item => {           
           if (item != null) {
             this.dmSV.loadedFile = true;
             this.dmSV.listFiles = item.data;
@@ -788,13 +800,13 @@ export class HomeComponent extends UIComponent {
             this.dmSV.loadedFile = true;
             this.totalSearch = 0;
             this.changeDetectorRef.detectChanges();
-          }
+          }        
         });      
       }    
     }
     catch(ex) {
-      this.dmSV.loadedFile = true;
-      this.isSearch = false;
+      this.dmSV.loadedFile = true;    
+      this.totalSearch = 0;
       this.changeDetectorRef.detectChanges();
       console.log(ex);
     } 
@@ -804,6 +816,8 @@ export class HomeComponent extends UIComponent {
     try {
       this.textSearch = $event;
       this.data = [];
+      this.dmSV.listFiles = [];
+      this.dmSV.listFolder = [];
       this.dmSV.loadedFolder = true;
       this.dmSV.loadedFile = false;
       if (this.codxview.currentView?.currentComponent?.treeView != null)
@@ -824,12 +838,12 @@ export class HomeComponent extends UIComponent {
           this.dmSV.loadedFile = true;
           this.totalSearch = 0;
           this.changeDetectorRef.detectChanges();
-        }
+        }       
       });
     }
     catch(ex) {
       this.dmSV.loadedFile = true;
-      this.isSearch = false;
+      this.totalSearch = 0;
       this.changeDetectorRef.detectChanges();
       console.log(ex);
     }   
@@ -926,18 +940,22 @@ export class HomeComponent extends UIComponent {
         .GetFiles('')
         .subscribe(async (res) => {         
           if (res != null) { 
-            this.dmSV.listFiles = res[0]; 
-            if (this.sortDirection == null || this.sortDirection == "asc") 
-            {
-              if (res[0] != null)
-                this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
-              else 
-                this.data = this.dmSV.listFolder;
-            }        
-            else 
-              this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
+            this.dmSV.listFiles = res[0];            
             this.dmSV.totalPage = parseInt(res[1]);
           }
+          else {
+            this.dmSV.listFiles = [];
+          }
+
+          if (this.sortDirection == null || this.sortDirection == "asc") 
+          {
+            if (res[0] != null)
+              this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
+            else 
+              this.data = this.dmSV.listFolder;
+          }        
+          else 
+            this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
 
           this.dmSV.loadedFile = true;           
           this.changeDetectorRef.detectChanges();

@@ -139,7 +139,7 @@ export class FolderService implements OnDestroy {
     }
 
     updateFolderPermisson(data: any): Observable<any> {
-        return this.api.exec<FolderInfo>("DM", "FolderBussiness", "UpdateFolderPermissionAsync", [data]);
+        return this.api.exec<DataReturn>("DM", "FolderBussiness", "UpdateFolderPermissionAsync", [data]);
     }
 
     addFolder(data: any): Observable<any> {

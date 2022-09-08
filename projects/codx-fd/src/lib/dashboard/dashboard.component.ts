@@ -90,4 +90,24 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
     subscribe();
   }
 
+  closeListShare(item:any){
+    if(item.isShowShare){
+      item.isShowShare = false;
+    }
+  }
+  lstUserShare:any[] = [];
+  getShareUser(item:any) {
+    if(item.shareControl=='U' ||
+      item.shareControl=='G' || item.shareControl=='R' ||
+      item.shareControl=='P' || item.shareControl=='D' ||
+      item.shareControl=='O')
+      {
+        item.isShowShare = !item.isShowShare;
+        this.lstUserShare = item.permissions.filter((p:any) => {
+          return p.memberType == "2";
+        });
+        this.dt.detectChanges();
+    }
+  }
+
 }
