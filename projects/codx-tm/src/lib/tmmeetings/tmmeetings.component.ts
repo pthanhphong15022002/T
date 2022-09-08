@@ -508,8 +508,8 @@ export class TMMeetingsComponent
     var obj = {
       moreFunc: moreFunc,
       data: data,
-      funcID : this.funcID,
-      vll: 'CO004'
+      funcID: this.funcID,
+      vll: 'CO004',
     };
     this.dialog = this.callfc.openForm(
       PopupStatusMeetingComponent,
