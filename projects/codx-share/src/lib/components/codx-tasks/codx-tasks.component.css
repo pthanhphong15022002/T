@@ -45,6 +45,7 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
 }
 
 .listuser-box {
-    max-height: 400px;
+    max-height: 300px;
     overflow: auto;
+    margin-top: 10px;
 }
