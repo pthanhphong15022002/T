@@ -825,6 +825,15 @@ export class CodxDMService {
     }
 
     checkUrl(url, data) {
+      /*
+       var r = await lvFileClientAPI.postAsync(`/api/${this.appName}/files/info`,{
+        UploadId: data.uploadId
+
+      });
+      if(r.HasThumb){
+        alert(1);
+      }
+       */
       //return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
       var ret = `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//'../../../assets/img/loader.gif';
       try {
@@ -837,8 +846,8 @@ export class CodxDMService {
         return ret;
       }
       catch {
-        if (ret == '../../../assets/img/loader.gif')
-          this.setThumbnailWait.next(data);
+      //  if (ret == '../../../assets/img/loader.gif')
+      //    this.setThumbnailWait.next(data);
         return ret;
       }
       // var http = new XMLHttpRequest();
@@ -864,7 +873,7 @@ export class CodxDMService {
         else if (data.thumbnail.indexOf("../../../") > - 1)
           return data.thumbnail;
         else {
-          let url = `${this.urlThumbnail}${data.thumbnail}`;                
+          let url = `${this.urlThumbnail}/${data.thumbnail}`;                
           return this.checkUrl(url, data);
         }        
       }        

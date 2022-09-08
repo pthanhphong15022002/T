@@ -22,6 +22,7 @@ import {
   CRUDService,
   ScrollComponent,
   DialogModel,
+  Filters,
 } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import {
@@ -47,6 +48,8 @@ import { CommandColumnService } from '@syncfusion/ej2-angular-grids';
 import { threadId } from 'worker_threads';
 import { ActivatedRoute } from '@angular/router';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { computeStyles } from '@popperjs/core';
+import { lvFileClientAPI } from '@shared/services/lv.component';
 
 @Component({
   selector: 'home',
@@ -492,24 +495,24 @@ export class HomeComponent extends UIComponent {
       this.dmSV.listFolder = [];
       this.dmSV.listFiles = [];
       if (items == undefined || items.length <= 0) {        
-        this.folderService.options.srtColumns = this.sortColumn;
-        this.folderService.options.srtDirections = this.sortDirection;
-        this.folderService.options.funcID = this.view.funcID;
-        this.folderService.getFolders(id).subscribe(async (res) => {          
-          if (res != null) {            
-            var data = res[0];            
-            this.listFolders = data;
-            this.data = [...this.data, ...data];
-            this.dmSV.listFolder = data;
-            var tree = this.codxview.currentView.currentComponent.treeView;
-            item.items = [];
-            if (tree != undefined) 
-             tree.addChildNodes(item, data);
-            this.changeDetectorRef.detectChanges();   
-            this._beginDrapDrop();         
-          }
-          this.dmSV.loadedFolder = true;  
-        });
+        // this.folderService.options.srtColumns = this.sortColumn;
+        // this.folderService.options.srtDirections = this.sortDirection;
+        // this.folderService.options.funcID = this.view.funcID;
+        // this.folderService.getFolders(id).subscribe(async (res) => {          
+        //   if (res != null) {            
+        //     var data = res[0];            
+        //     this.listFolders = data;
+        //     this.data = [...this.data, ...data];
+        //     this.dmSV.listFolder = data;
+        //     var tree = this.codxview.currentView.currentComponent.treeView;
+        //     item.items = [];
+        //     if (tree != undefined) 
+        //      tree.addChildNodes(item, data);
+        //     this.changeDetectorRef.detectChanges();   
+        //     this._beginDrapDrop();         
+        //   }
+        //   this.dmSV.loadedFolder = true;  
+        // });
       } else {        
         this.data = [...this.data, ...item.items];
         this.dmSV.listFolder = item.items;
@@ -670,11 +673,15 @@ export class HomeComponent extends UIComponent {
   }
 
   async displayThumbnail(id, thumnbail) {
+
+    // lvFileClientAPI.post(
+
+    // )
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(async () => {
-      let url = `${this.dmSV.urlThumbnail}${thumnbail}`;      
+      let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;      
       try {
         let blob = await fetch(url).then(r => r.blob());           
         if (blob.type != '') {       
@@ -756,7 +763,41 @@ export class HomeComponent extends UIComponent {
   }
 
   filterChange($event) {
-    console.log($event);
+    try {
+      if ($event != undefined) {
+        var predicates = $event.predicates;
+        var paras = $event.paras;
+        //$event.paras;
+        var list = [];
+        var item = new Filters;
+        $event?.filters.forEach(ele => {
+          item = ele as Filters;
+          list.push(Object.assign({}, item));        
+        });
+        var text = JSON.stringify(list);
+        this.dmSV.page = 1;
+        this.fileService.searchFileAdv(text, predicates, paras, 1, 20).subscribe(item => { 
+          if (item != null) {
+            this.dmSV.loadedFile = true;
+            this.dmSV.listFiles = item.data;
+            this.totalSearch = item.total;
+            this.data = [...this.data, ...this.dmSV.listFiles];
+            this.changeDetectorRef.detectChanges();
+          }
+          else {
+            this.dmSV.loadedFile = true;
+            this.totalSearch = 0;
+            this.changeDetectorRef.detectChanges();
+          }
+        });      
+      }    
+    }
+    catch(ex) {
+      this.dmSV.loadedFile = true;
+      this.isSearch = false;
+      this.changeDetectorRef.detectChanges();
+      console.log(ex);
+    } 
   }
 
   searchChange($event) { 
@@ -771,7 +812,7 @@ export class HomeComponent extends UIComponent {
       this.isSearch = true;
       this.dmSV.page = 1;
       this.fileService.options.page = this.dmSV.page;
-      this.fileService.searchFile(this.textSearch, 1, 100).subscribe(item => {
+      this.fileService.searchFile(this.textSearch, this.dmSV.page, 20).subscribe(item => {
         if (item != null) {
           this.dmSV.loadedFile = true;
           this.dmSV.listFiles = item.data;

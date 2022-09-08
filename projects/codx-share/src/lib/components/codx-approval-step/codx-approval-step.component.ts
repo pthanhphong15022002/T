@@ -51,6 +51,11 @@ export class CodxApprovalStepComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     this.initForm();
+    this.esService.isSetupChange.subscribe((res) => {
+      if (res == true) {
+        this.initForm();
+      }
+    });
   }
 
   initForm() {

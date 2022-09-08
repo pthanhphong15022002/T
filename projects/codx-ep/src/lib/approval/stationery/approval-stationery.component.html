@@ -2,14 +2,15 @@
   #view
   [views]="views"
   (buttonClick)="click($event)"
-  [button]="button"
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entity"
   [className]="className"
+  [method]="method"
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
+  [autoLoad]="true"
   [idField]="idField"
   (requestEnded)="closeAddForm($event)"
 >
@@ -20,24 +21,18 @@
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (click)="click(data)"
     [typeMF]="'hover'"
-    [title]="data.categoryName"
-    [desc]="data.title"
+    [title]="data?.title"
+    [subTitle]="data?.note"
     [icoCss]="
-      'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
-      data?.icon
+      'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+      setIcon(data?.resourceType)
     "
-    [status]="data.status"
-    [statusVll]="'EP011'"
+    [icoStyle]="setStyles(data?.resourceType)"
+    [status]="data?.status"
+    [statusVll]="'VL003'"
     [date]="data.createdOn"
-    [resources]="data.createdBy != undefined ? data.createdBy : ''"
-    [resourceObjType]="'AD_Users'"
-    [icoStatus]="data?.urgency"
-    [icoStatusVll]="'ES002'"
-    [icoStatus2]="data?.security"
     [modeImgs]="false"
-    [bookmark]="data.isBookmark"
     [titleLine]="2"
-    [icoDateCss]="'icon-access_alarm'"
     [dataItem]="data"
     [formModel]="view.formModel"
     (clickMF)="clickMF($event, data)"
@@ -54,6 +49,6 @@
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
-    (uploaded)="getDetailSignFile($event)"
+    (uploaded)="getDetailBooking($event)"
   ></view-detail>
 </ng-template>
