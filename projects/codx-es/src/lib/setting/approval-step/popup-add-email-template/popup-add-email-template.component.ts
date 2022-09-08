@@ -81,23 +81,23 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
 
-    this.renderer.listen('window', 'click', (e: Event) => {
-      /**
-       * Only run when toggleButton is not clicked
-       * If we don't check this, all clicks (even on the toggle button) gets into this
-       * section which in the result we might never see the menu open!
-       * And the menu itself is checked here, and it's where we check just outside of
-       * the menu and button the condition abbove must close the menu
-       */
-      if (e.target !== this.combobox?.nativeElement && this.textarea) {
-        debugger;
-        const childTwoElement =
-          this.textarea.nativeElement.getElementsByClassName('message')[0];
-        if (childTwoElement) {
-          this.renderer.setStyle(childTwoElement, 'width', this.staticWidth);
-        }
-      }
-    });
+    // this.renderer.listen('window', 'click', (e: Event) => {
+    //   /**
+    //    * Only run when toggleButton is not clicked
+    //    * If we don't check this, all clicks (even on the toggle button) gets into this
+    //    * section which in the result we might never see the menu open!
+    //    * And the menu itself is checked here, and it's where we check just outside of
+    //    * the menu and button the condition abbove must close the menu
+    //    */
+    //   if (e.target !== this.combobox?.nativeElement && this.textarea) {
+    //     debugger;
+    //     const childTwoElement =
+    //       this.textarea.nativeElement.getElementsByClassName('message')[0];
+    //     if (childTwoElement) {
+    //       this.renderer.setStyle(childTwoElement, 'width', this.staticWidth);
+    //     }
+    //   }
+    // });
   }
 
   staticWidth: number = 0;
@@ -106,6 +106,20 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       this.staticWidth = (
         this.textarea.nativeElement as HTMLElement
       ).offsetWidth;
+
+    var container = document.getElementById('combobox');
+    document.addEventListener('click', function (event) {
+      // console.log(container);
+      if (
+        container &&
+        container !== event.target &&
+        !container.contains(<HTMLInputElement>event.target)
+      ) {
+        console.log('clicking outside the div');
+      } else {
+        console.log('clicking inside the div');
+      }
+    });
   }
 
   initForm() {
