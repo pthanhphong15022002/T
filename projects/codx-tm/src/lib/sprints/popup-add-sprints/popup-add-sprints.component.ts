@@ -65,7 +65,7 @@ export class PopupAddSprintsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.master = dialog.dataService!.dataSelected;
+    this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.action = dt?.data[1];
     this.dialog = dialog;
     this.user = this.authStore.get();
@@ -87,11 +87,10 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region init
   ngOnInit(): void {
-    
     if (this.action == 'add') {
       this.master.viewMode = '1';
-      if(this.funcID=='TMT0301') this.master.iterationType ='1' ;
-      if(this.funcID=='TMT0302') this.master.iterationType ='0';
+      if (this.funcID == 'TMT0301') this.master.iterationType = '1';
+      if (this.funcID == 'TMT0302') this.master.iterationType = '0';
     } else if (this.action == 'copy')
       this.getSprintsCoppied(this.master.iterationID);
     else this.openInfo(this.master.iterationID, this.action);
@@ -256,9 +255,17 @@ export class PopupAddSprintsComponent implements OnInit {
     // }
   }
 
-
-  changeMemo(e) {
-    this.master.memo = e?.data;
+  // changText(e) {
+  //   this.master.iterationName = e?.data;
+  // }
+  // changeMemo(e) {
+  //   this.master.memo = e?.data;
+  // }
+  // changeViewMode(e) {
+  //   this.master.viewMode = e?.data;
+  // }
+  changeData(e) {
+    if (e?.field) this.master[e.field] = e?.data;
   }
 
   changeUser(e) {

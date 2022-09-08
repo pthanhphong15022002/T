@@ -333,18 +333,25 @@ export class CodxTasksComponent
             [this.view.dataService.dataSelected],
             false
           );
-        if (e?.event && e?.event != null) {
-          this.view.dataService.data = e?.event.concat(
-            this.view.dataService.data
-          );
-          this.view.dataService.setDataSelected(res[0]);
-          this.view.dataService.afterSave.next(res);
-          this.notiService.notifyCode('TM005');
-
-          this.itemSelected = this.view.dataService.data[0];
-          this.detectorRef.detectChanges();
-        }
       });
+      // this.dialog.closed.subscribe((e) => {
+      //   if (e?.event == null)
+      //     this.view.dataService.delete(
+      //       [this.view.dataService.dataSelected],
+      //       false
+      //     );
+      //   if (e?.event && e?.event != null) {
+      //     this.view.dataService.data = e?.event.concat(
+      //       this.view.dataService.data
+      //     );
+      //     this.view.dataService.setDataSelected(res[0]);
+      //     this.view.dataService.afterSave.next(res);
+      //     this.notiService.notifyCode('TM005');
+
+      //     this.itemSelected = this.view.dataService.data[0];
+      //     this.detectorRef.detectChanges();
+      //   }
+      // });
     });
   }
 
@@ -409,20 +416,21 @@ export class CodxTasksComponent
           false
         );
       if (e?.event && e?.event != null && e?.event[1] != null) {
-        let listTask = e?.event[1];
-        let newTasks = [];
-        for (var i = 0; i < listTask.length; i++) {
-          if (listTask[i].taskID == data.taskID) {
-            this.view.dataService.update(listTask[i]).subscribe();
-            this.view.dataService.setDataSelected(listTask[i]);
-          } else newTasks.push(listTask[i]);
-        }
-        if (newTasks.length > 0) {
-          this.view.dataService.data = newTasks.concat(
-            this.dialog.dataService.data
-          );
-          this.view.dataService.afterSave.next(newTasks);
-        }
+        //cai này cần dùng khi TMT0202
+        // let listTask = e?.event[1];
+        // let newTasks = [];
+        // for (var i = 0; i < listTask.length; i++) {
+        //   if (listTask[i].taskID == data.taskID) {
+        //     this.view.dataService.update(listTask[i]).subscribe();
+        //     this.view.dataService.setDataSelected(listTask[i]);
+        //   } else newTasks.push(listTask[i]);
+        // }
+        // if (newTasks.length > 0) {
+        //   this.view.dataService.data = newTasks.concat(
+        //     this.dialog.dataService.data
+        //   );
+        //   this.view.dataService.afterSave.next(newTasks);
+        // }
         this.detectorRef.detectChanges();
       }
     });
@@ -859,7 +867,7 @@ export class CodxTasksComponent
   // }
 
   popoverEmpList(p: any, task) {
-    this.listTaskResousceSearch = [];
+    this.listTaskResousceSearch = []; 
     this.countResource = 0;
     if (this.popoverCrr) {
       if (this.popoverCrr.isOpen()) this.popoverCrr.close();

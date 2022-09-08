@@ -177,98 +177,10 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   getDataEdit()
   {
     this.api.execSv<any>(this.service,"AD","IEFieldMappingBusiness","GetItemByIETableAsync",this.dataIETable?.recID).subscribe(item=>{
-      if(item && item.length >0) 
+      if(item) 
       {
-        this.dataImport = item;
-        this.cache
-        .gridViewSetup(
-          this.formModels.formName,
-          this.formModels.gridViewName
-        )
-        .subscribe((item2) => {
-          this.gridViewSetup = item2;
-          
-          var keycheck = Object.keys(this.gridViewSetup);
-          for(var i =0 ; i< this.dataImport.length ; i++)
-          {
-            
-            var keyChild = Object.keys( this.dataImport[i]);
-            for(var x = 0 ; x < keyChild.length ; x++)
-            {
-              var text = keyChild[x].charAt(0).toUpperCase() + keyChild[x].slice(1); 
-              if(!keycheck.includes(text) || this.gridViewSetup[text]?.isVisible == false) delete  this.dataImport[i][keyChild[x]];
-              else if(i==0)
-              {
-                let field2 = {
-                  text: keyChild[x],
-                  controlType: this.gridViewSetup[text]?.controlType,
-                  type: this.gridViewSetup[text]?.referedType,
-                  value: this.gridViewSetup[text]?.referedValue,
-                  require: this.gridViewSetup[text]?.isRequire,
-                };
-                debugger;
-                if(keyChild[x] == "sourceField")
-                {
-                  field2.text = text;
-                  field2.controlType = "ComboBox"
-                  field2.value = text;
-                  field2.type = text;
-                
-                }
-                this.fieldImport.push(field2);
-                if (
-                  ((field2.type == '3' ||field2.type == '2')  && !(field2.text in this.editParams))
-                  || (field2.text == "SourceField" && !(field2.text in this.editParams))
-                ) {
-                  if (field2.type == '3') {
-                    this.getDataCBB(field2.value);
-                    this.getParamsCbb(field2.value);
-                  } else if (field2.type == '2') {
-                    this.getDataVll(field2.value);
-                  }
-                  this.element[field2.text] = null as HTMLElement;
-                  this.dropObj[field2.text] = null as DropDownList;
-                  this.editParams[field2.text] = {
-                    create: () => {
-                      this.element[field2.text] = document.createElement('input');
-                      return this.element[field2.text];
-                    },
-                    read: () => {
-                      return this.dropObj[field2.text].value;
-                    },
-                    destroy: () => {
-                      this.dropObj[field2.text].destroy();
-                    },
-                    write: (args: { rowData: object; column: Column }) => {
-                      debugger;
-                      var fields = { text: 'text', value: 'value' };
-                      if (field2.type== '3')
-                        fields = this.paramsCbb[field2.value];
-                        this.dropObj[field2.text] = new DropDownList({
-                        dataSource: this.dataCbb[field2.value],
-                        value: args.rowData[args.column.field],
-                        fields: fields,
-                        floatLabelType: 'Never',
-                      });
-                      this.dropObj[field2.text].appendTo(this.element[field2.text]);
-                    },
-                  };
-                }
-                
-              }
-
-              if(keyChild[x] == "sourceField")
-              {
-                this.dataImport[i]["SourceField"] = this.dataImport[i][keyChild[x]]
-                delete  this.dataImport[i][keyChild[x]];
-              }
-            }
-          }
-          this.dataImport2 = this.dataImport;
-          this.grid.refresh();
-        });
-      
-        //this.getGridViewSetup();
+        debugger;
+        this.dataIEFieldMapping = item
         //this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
       }
       else this.getGridViewSetup();
@@ -362,6 +274,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
           var key = Object.keys(item);
           for (var i = 0; i < key.length; i++) {
             if (item[key[i]]?.isImport) {
+              debugger;
               var obj = {
                 destinationfield: key[i],
                 sourcefield:item[key[i]].headerText

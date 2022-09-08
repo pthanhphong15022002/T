@@ -102,6 +102,7 @@ export class CodxDMService {
     public urlThumbnail = 'http://192.168.18.36:8011';
     //public urlFile = 'http://192.168.18.36:8011/api/';
     public urlFile = 'http://192.168.18.36:8011';
+    appName = 'hps-file-test'; // Tam thoi de hard
     page = 1;
     totalPage = 1;    
     revision: boolean;
@@ -368,23 +369,13 @@ export class CodxDMService {
         }
     }
 
-   getThumbnail(data) {
-        if (data.thumbnail != "") {
-          let url = `${this.urlThumbnail}/${data.thumbnail}`;
-          return this.checkUrl(url, data);
-          // let blob = await fetch(url).then(r => r.blob());     
-          // if (blob.type != '') { 
-          //   return url;
-          // }
-          // else {
-          //   return '../../../assets/img/loader.gif';
-          // }
-          //return `${this.urlThumbnail}/${data}`;
-          //var url = 'data:image/png;base64,' + data;
-          //return this.domSanitizer.bypassSecurityTrustUrl(data);
-        }
-        else
-            return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
+    getThumbnail(data) {
+      if (data.thumbnail != "") {
+        let url = `${this.urlThumbnail}/${data.thumbnail}`;
+        return this.checkUrl(url, data);         
+      }
+      else
+          return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
     }
 
     deniedRight() {
@@ -834,6 +825,15 @@ export class CodxDMService {
     }
 
     checkUrl(url, data) {
+      /*
+       var r = await lvFileClientAPI.postAsync(`/api/${this.appName}/files/info`,{
+        UploadId: data.uploadId
+
+      });
+      if(r.HasThumb){
+        alert(1);
+      }
+       */
       //return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
       var ret = `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//'../../../assets/img/loader.gif';
       try {
@@ -846,8 +846,8 @@ export class CodxDMService {
         return ret;
       }
       catch {
-       // if (ret == '../../../assets/img/loader.gif')
-        this.setThumbnailWait.next(data);
+      //  if (ret == '../../../assets/img/loader.gif')
+      //    this.setThumbnailWait.next(data);
         return ret;
       }
       // var http = new XMLHttpRequest();
@@ -867,10 +867,13 @@ export class CodxDMService {
       if (data.folderName != undefined)
         return '../../../assets/codx/dms/folder.svg';
       else {
-        if (data.thumbnail.indexOf("../../../") > - 1)
+        if (data.thumbnail == null) {
+          return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
+        }
+        else if (data.thumbnail.indexOf("../../../") > - 1)
           return data.thumbnail;
         else {
-          let url = `${this.urlThumbnail}${data.thumbnail}`;                
+          let url = `${this.urlThumbnail}/${data.thumbnail}`;                
           return this.checkUrl(url, data);
         }        
       }        

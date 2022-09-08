@@ -45,7 +45,7 @@ import {
 } from '@syncfusion/ej2-angular-inputs';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { from, map, mergeMap, Observable } from 'rxjs';
+import { from, map, mergeMap, Observable, Observer } from 'rxjs';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
@@ -90,7 +90,8 @@ export class AttachmentComponent implements OnInit {
   fileEditingTemp: FileUpload;
   maxFileSizeUpload = 0;
   maxFileSizeUploadMB = 0;
-  referType: string;
+  referType: string;  
+  ChunkSizeInKB = 1024 * 2; 
   @Input() formModel: any;
   @Input() allowExtensions: string;
   @Input() allowMultiFile = '1';
@@ -562,20 +563,18 @@ export class AttachmentComponent implements OnInit {
     //this.disEdit.agencyName = this.dispatch.AgencyName = event.data
   }
   //fetch () : Observable<any[]>
-  saveFilesObservable(): Observable<any[]> {
-    this.atSV.fileListAdded = [];   
-    this.fileUploadList[0].objectId = this.objectId; 
-    return this.addFileObservable(this.fileUploadList[0]);
-    //return this.onMultiFileSaveObservable();
+  saveFilesObservable(): Promise<Observable<any[]>>{
+    this.atSV.fileListAdded = [];
+   // return this.addFileObservable(this.fileUploadList[0]);
+    return this.onMultiFileSaveObservable();
   }
 
-  updateUrlFileUpload() {
+  updateUrlFileUpload(): Observable<any[]> {
     let total = this.fileUploadList.length;
     //  var that = this;
     this.dmSV.getToken();
-    for (var i = 0; i < total; i++) {     
-     // upload file uri from Mr Long
-
+    for (var i = 0; i < total; i++) {
+      // upload file uri from Mr Long
     }
 
     this.atSV.fileListAdded = [];
@@ -583,13 +582,24 @@ export class AttachmentComponent implements OnInit {
     //return this.onMultiFileSaveObservable();
   }
 
-  onMultiFileSaveObservable(): Observable<any[]> {
+  async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
     //  var that = this;
+    await this.dmSV.getToken();
+    let ret = new Observable<any[]>();
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectId = this.objectId;
+     // await this.serviceAddFile(fileItem);
+     if (total > 1)  
+      this.fileUploadList[i] = await this.addFileLargeLong(this.fileUploadList[i], false);
+      // if (total > 1) {
+      //   this.addFileObservable(this.fileUploadList[i], false, i).subscribe(item => {
+      //     if (i == total -1)
+           
+      //   }); 
+      // } 
     }
 
     if (total > 1) {
@@ -695,7 +705,7 @@ export class AttachmentComponent implements OnInit {
             }
           }
         })
-      );
+           );
     } else if (total == 1) {
       //return this.addFileLargeLong(this.fileUploadList[0]);
       return this.addFileObservable(this.fileUploadList[0]);
@@ -714,14 +724,18 @@ export class AttachmentComponent implements OnInit {
     this.onMultiFileSave();
   }
 
-  onMultiFileSave() {
+  async onMultiFileSave() {
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
     var that = this;
+    await this.dmSV.getToken();
     for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectId = this.objectId;
+      this.fileUploadList[i].objectId = this.objectId;   
+      if (total > 1) 
+        this.fileUploadList[i] = await this.addFileLargeLong(this.fileUploadList[i], false);
     }
+
     this.atSV.fileListAdded = [];
     if (total > 1) {
       var done = this.fileService
@@ -743,8 +757,9 @@ export class AttachmentComponent implements OnInit {
 
                 if (item.status == 0) {
                   if (item.data.fileName != null && item.data.fileName != '') {
-                    item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(item.data.extension)}`;//'../../../assets/img/loader.gif';
+                    //'../../../assets/img/loader.gif';                    
                     that.displayThumbnail(item.data);
+                    item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(item.data.extension)}`;
                     files.push(Object.assign({}, item.data));
                   }
                   // else {
@@ -869,28 +884,50 @@ export class AttachmentComponent implements OnInit {
     }
   }
 
-  addFileObservable(fileItem: any): Observable<any[]> {
+  async serviceAddFile(fileItem: FileUpload) : Promise<FileUpload> {
+    try {    
+      fileItem.uploadId = '';
+      fileItem.objectId = this.objectId;  
+      var appName = this.dmSV.appName; // Tam thoi de hard
+      var ChunkSizeInKB = this.ChunkSizeInKB;
+      var uploadFile = fileItem.item.rawFile;
+      var retUpload = await lvFileClientAPI.postAsync(
+        `api/${appName}/files/register`,
+        {
+          Data: {
+            FileName: uploadFile.name,
+            ChunkSizeInKB: ChunkSizeInKB,
+            FileSize: uploadFile.size,
+            thumbSize: {
+              width: 200, //Kích thước của file ảnh Thum bề ngang
+              height: 200, //Kích thước của file ảnh Thum bề dọc
+            },
+            IsPublic: true,
+          },
+        }
+      );
+      fileItem.fileSize = uploadFile.size;
+      fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
+      fileItem.uploadId = retUpload.Data.UploadId; //"";
+      fileItem.urlPath = retUpload.Data.RelUrlOfServerPath; //"";
+    }
+    catch(ex)
+    {
+      console.log(ex);      
+    }   
+    return fileItem;
+  }
+
+  addFileObservable(fileItem: any, isAddFile: boolean = true, index: number = -1): Observable<any[]> {
     var ret = fileItem;
     var fileSize = parseInt(fileItem.fileSize);
     var that = this;
     fileItem.uploadId = '';
-    // function isAllowAddFileAsync() {
-    //   return new Promise((resole, reject) => {
-    //     that.fileService.isAllowAddFile(fileSize).subscribe(item => {
-    //       if (item == "ok") {
-    //         resole(item);
-    //       }
-    //       else {
-    //         reject(item);
-    //       }
-    //     });
-    //   });
-    // };
-    this.dmSV.getToken();
-    var appName = this.appName; //'hps-file-test'; // Tam thoi de hard
-    var ChunkSizeInKB = 2 * 1024;
+    fileItem.objectId = this.objectId;   
+    var appName = this.dmSV.appName; 
+    var ChunkSizeInKB = this.ChunkSizeInKB;
     var uploadFile = fileItem.item.rawFile;
-    var obj = from (
+    var obj = from(
       lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
         Data: {
           FileName: uploadFile.name,
@@ -904,6 +941,7 @@ export class AttachmentComponent implements OnInit {
         },
       })
     );
+        
     var chunSizeInfBytes = ChunkSizeInKB * 1024;
     var sizeInBytes = 0;
     return obj.pipe(
@@ -915,7 +953,6 @@ export class AttachmentComponent implements OnInit {
 
         //this.displayThumbnail(res.recID, res.pathDisk);
         var sizeInBytes = uploadFile.size;
-
         var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
         if (uploadFile.size % chunSizeInfBytes > 0) {
           numOfChunks++;
@@ -940,33 +977,38 @@ export class AttachmentComponent implements OnInit {
           console.log(uploadChunk);
         }
 
-        return this.fileService.addFileObservable(fileItem).pipe(
-          map((item) => {
-            if (item.status == 0) {
-              if (this.showMessage == '1')
+        if (isAddFile)
+          return this.fileService.addFileObservable(fileItem).pipe(
+            map((item) => {
+              if (item.status == 0) {
+                if (this.showMessage == '1')
+                  this.notificationsService.notify(item.message);
+                this.fileUploadList[0].recID = item.data.recID;
+                this.atSV.fileListAdded.push(Object.assign({}, item));
+                this.data.push(Object.assign({}, item));
+                this.fileUploadList = [];
+                return item;
+              } 
+              else if (item.status == 6) {
+                // ghi đè
+                fileItem.recID = item.data.recID;
+                return this.rewriteFileObservable(
+                  this.titlemessage,
+                  item.message,
+                  fileItem
+                );
+              } 
+              else {
                 this.notificationsService.notify(item.message);
-              this.fileUploadList[0].recID = item.data.recID;
-              //this.atSV.fileListAdded.push(Object.assign({}, item));
-              if (this.data == undefined || this.data == null)
-                this.data = [];
-              this.data.push(Object.assign({}, item));
-              this.fileUploadList = [];
-              return item;
-            } else if (item.status == 6) {
-              // ghi đè
-              fileItem.recID = item.data.recID;
-              return this.rewriteFileObservable(
-                this.titlemessage,
-                item.message,
-                fileItem
-              );
-            } else {
-              this.notificationsService.notify(item.message);
-            }
-
-            return null;
-          })
-        );
+              }
+              return null;
+            })
+          );
+         else {
+          if (index != -1)
+            this.fileUploadList[index] = fileItem;
+          return null;     
+         }        
       })
     );
   }
@@ -1012,8 +1054,8 @@ export class AttachmentComponent implements OnInit {
   //   window.localStorage.setItem('lv-file-api-token', retToken.access_token);
   // }
 
-  async addFileLargeLong(fileItem: FileUpload) {
-    // check dung luong dia cung
+  async addFileLargeLong(fileItem: FileUpload, isAddFile: boolean = true) : Promise<FileUpload> {
+    // check dung luong dia cungs
     var ret = fileItem;
     var fileSize = parseInt(fileItem.fileSize);
     var that = this;
@@ -1031,39 +1073,18 @@ export class AttachmentComponent implements OnInit {
     }
 
     try {
-      var item = await isAllowAddFileAsync();
-      this.dmSV.getToken();
-      var appName = this.appName;//'hps-file-test'; // Tam thoi de hard
-      var ChunkSizeInKB = 2 * 1024;
+      //  var item = await isAllowAddFileAsync();
       var uploadFile = fileItem.item.rawFile;
-      var retUpload = await lvFileClientAPI.postAsync(
-        `api/${appName}/files/register`,
-        {
-          Data: {
-            FileName: uploadFile.name,
-            ChunkSizeInKB: ChunkSizeInKB,
-            FileSize: uploadFile.size,
-            thumbSize: {
-              width: 200, //Kích thước của file ảnh Thum bề ngang
-              height: 200, //Kích thước của file ảnh Thum bề dọc
-            },
-            IsPublic: true,
-          },
-        }
-      );
-
-      console.log(retUpload);
-      // update len server urs và thumbnail
-      fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
-      fileItem.uploadId = retUpload.Data.UploadId; //"";
-      fileItem.urlPath = retUpload.Data.RelUrlOfServerPath; //"";
-      this.addFile(fileItem);
+      var appName = this.dmSV.appName; // Tam thoi de hard
+      fileItem = await this.serviceAddFile(fileItem);
+      if (isAddFile) 
+        this.addFile(fileItem);
 
       //this.displayThumbnail(res.recID, res.pathDisk);
-      var sizeInBytes = uploadFile.size;
-      var chunSizeInfBytes = ChunkSizeInKB * 1024;
-      var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
-      if (uploadFile.size % chunSizeInfBytes > 0) {
+      var sizeInBytes = fileItem.fileSize;// uploadFile.size;
+      var chunSizeInfBytes = this.ChunkSizeInKB * 1024;
+      var numOfChunks = Math.floor(fileItem.fileSize / chunSizeInfBytes);
+      if (fileItem.fileSize % chunSizeInfBytes > 0) {
         numOfChunks++;
       }
 
@@ -1080,7 +1101,7 @@ export class AttachmentComponent implements OnInit {
           `api/${appName}/files/upload`,
           {
             FilePart: fileChunk,
-            UploadId: retUpload.Data.UploadId,
+            UploadId: fileItem.uploadId,
             Index: i,
           }
         );
@@ -1090,12 +1111,13 @@ export class AttachmentComponent implements OnInit {
       fileItem.uploadId = '0';
      // this.notificationsService.notify(ex);
     }
-    return ret;
+    return fileItem;
   }
 
   addFileLarge(fileItem: FileUpload) {
     // let no = 0;
     // let total = this.fileUploadList.length;
+
     var that = this;
     var size = 1048576; // 1MB
     var totalChunk = 0;
@@ -1192,7 +1214,7 @@ export class AttachmentComponent implements OnInit {
                 let index = files.findIndex(
                   (d) => d.recID.toString() === item.recID
                 );
-                if (index != -1) {
+                if (index != -1) {                  
                   res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//'../../../assets/img/loader.gif';
                   this.displayThumbnail(res.data);
                   files[index] = res.data;

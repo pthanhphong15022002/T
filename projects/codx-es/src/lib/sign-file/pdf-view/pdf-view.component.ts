@@ -328,6 +328,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.align = res.align;
       this.direction = res.direction;
       this.detectorRef.detectChanges();
+      console.log('auto sign format', res);
     });
 
     this.esService
@@ -832,6 +833,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       thickness: 1,
     } as any;
     anno.modifiedDate = this.datePipe.transform(new Date(), 'M/d/yy, h:mm a');
+
+    //nguoi da ky
     let signed = this.pdfviewerControl.annotationCollection.filter(
       (annotation) => {
         let signType: string = annotation.customData.split(':')[1];
@@ -841,6 +844,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         );
       }
     );
+
+    //nguoi chua ky
     let unsign = this.lstSigners.filter((signer: any) => {
       return !signed.find((signedPerson) => {
         return signedPerson.author == signer.authorID;
@@ -848,13 +853,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     });
 
     if (unsign.length > 0) {
-      let locations = this.autoSignAreas(
-        this.lstSigners.length,
-        100,
-        100,
-        top,
-        left
-      );
+      let locations = this.autoSignAreas(this.lstSigners.length, top, 100, 100);
 
       for (let i = 0; i < locations.length; i++) {
         let signer = unsign[i] as any;
@@ -897,13 +896,14 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   //create locations for all signatures
   autoSignAreas(
     numberOfSignatures: number,
-    width: number,
-    height: number,
     top: number,
-    left: number
+    width?: number,
+    height?: number
   ) {
     let pageWidth = this.pdfviewerControl.viewerBase.pageSize[0].width;
     let pageHeight = this.pdfviewerControl.viewerBase.pageSize[0].height;
+    width = width ? width : pageWidth / this.signPerRow - 20;
+    height = height ? height : 100;
     let areas: any = [];
 
     while (numberOfSignatures > 0 && pageHeight - top >= width + 10) {

@@ -23,7 +23,7 @@ export class EmployeesComponent implements OnInit {
   dataValue = "90";
   predicate = "Status<@0";
   functionID: string;
-  employee: HR_Employees = new HR_Employees();
+  employee: any;
   itemSelected: any;
   formModel: FormModel;
 
@@ -38,6 +38,7 @@ export class EmployeesComponent implements OnInit {
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
+  @ViewChild('templateTree') templateTree: TemplateRef<any>;
   employStatus: any;
 
   constructor(
@@ -82,6 +83,9 @@ export class EmployeesComponent implements OnInit {
         active: true,
         sameData: true,
         model: {
+          // resizable: true,
+          // template: this.templateTree,
+          // panelRightRef: this.cardTemp
           panelLeftRef: this.panelLeftRef,
           template: this.cardTemp,
         }
@@ -131,24 +135,25 @@ export class EmployeesComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
-      this.dialog.closed.subscribe((e) => {
+      var dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
+      dialog.closed.subscribe((e) => {
         if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null && e.event.update) {
-            this.view.dataService.update(e.event.update.InfoPersonal).subscribe();
-            // e?.event.update.forEach((obj) => {
-            //   this.view.dataService.update(obj.Employee).subscribe();
-            // });
-            // this.meeting = e?.event;
-          }
+          // this.view.dataService.delete(
+          //   [this.view.dataService.dataSelected],
+          //   false
+          // );
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e.event.update.InfoPersonal && e.event.update.Employee).subscribe();
+          // e?.event.update.forEach((obj) => {
+          //   this.view.dataService.update(obj.Employee).subscribe();
+          // });
+          // this.meeting = e?.event;
           this.changedt.detectChanges();
-        });
+        }
+      
+      });
 
-    
+
     });
     // this.changedt.detectChanges();
   }

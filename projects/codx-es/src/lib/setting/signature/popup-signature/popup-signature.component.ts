@@ -47,6 +47,7 @@ export class PopupSignatureComponent extends UIComponent {
   //NHBUU
   vllFontStyle;
   selectedFont;
+  selectedFontIndex = 0;
 
   constructor(
     private inject: Injector,
@@ -62,7 +63,7 @@ export class PopupSignatureComponent extends UIComponent {
     this.dialogSignature = data?.data.model;
     // this.data = dialog.DataService?.dataSelected;
     this.data = data?.data.data;
-    console.log('data', this.data);
+    console.log('dialog add signature', this.dialog);
   }
 
   onInit(): void {
@@ -70,7 +71,6 @@ export class PopupSignatureComponent extends UIComponent {
       this.vllFontStyle = res.datas;
       this.selectedFont = this.vllFontStyle[0]?.text;
       this.detectorRef.detectChanges();
-      console.log('font', this.vllFontStyle);
     });
   }
 
@@ -132,9 +132,8 @@ export class PopupSignatureComponent extends UIComponent {
     this.currentTab = tab;
   }
 
-  changeSelectedFont(font) {
-    console.log('change font', font);
-
+  changeSelectedFont(font, index) {
     this.selectedFont = font;
+    this.selectedFontIndex = index;
   }
 }

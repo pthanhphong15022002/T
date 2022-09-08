@@ -1,3 +1,4 @@
+import { Optional, TemplateRef } from '@angular/core';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -9,9 +10,22 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService, CodxInputComponent } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  CodxInputComponent,
+  SidebarModel,
+  DialogRef,
+  CallFuncService,
+  DialogModel,
+} from 'codx-core';
 import { iif } from 'rxjs';
 import { createTrue } from 'typescript';
+import { AssignInfoComponent } from '../assign-info/assign-info.component';
+import { AttachmentComponent } from '../attachment/attachment.component';
+import { TM_Tasks } from '../codx-tasks/model/task.model';
+import { CodxTreeHistoryComponent } from '../codx-tree-history/codx-tree-history.component';
+import { FileComponent } from './file/file.component';
 import { CO_Contents } from './model/CO_Contents.model';
 
 @Component({
@@ -23,6 +37,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   icon = '';
   showEmojiPicker = false;
   gridViewSetup: any;
+  gridViewSetupComment: any;
   sets = [
     'native',
     'google',
@@ -61,6 +76,27 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   test: any;
   fontTemp: any;
   id = 0;
+  dialog!: DialogRef;
+  countResource = 0;
+  listTask: any;
+  popoverCrr: any;
+  popoverDataSelected: any;
+  vllStatus = 'TM004';
+  vllApproveStatus = 'TM011';
+  listTaskResourceSearch: any;
+  listTaskResource: any;
+  searchField = '';
+  listRoles = [];
+  vllRole = 'TM002';
+  headerComment = '';
+  checkFile = false;
+  initListNote = {
+    memo: '',
+    status: null,
+    textColor: null,
+    format: null,
+    lineType: this.lineType,
+  };
 
   @Input() contents: any = [
     {
@@ -69,6 +105,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       textColor: null,
       format: null,
       lineType: 'TEXT',
+      attachments: 0,
+      comments: 0,
+      tasks: 0,
     },
   ];
   @Input() showMenu = true;
@@ -77,34 +116,49 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   @Input() assembly = '';
   @Input() className = '';
   @Input() method = '';
-  @Input() refID = '';
+  @Input() objectParentID = '';
   @Input() data = [];
   @Input() mode = 'edit';
   @Input() funcID = '';
   @Input() objectID = '';
   @Input() objectType = '';
+  @Input() vllControlShare = '';
+  @Input() vllRose = '';
   @Output() getContent = new EventEmitter();
   @ViewChild('input') input: any;
+  @ViewChild('popupComment') popupComment: TemplateRef<any>;
+  @ViewChild('popupAttachment') popupAttachment: TemplateRef<any>;
+  @ViewChild('colorPicker') colorPicker: any;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   constructor(
     private dt: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private callfunc: CallFuncService
   ) {
     this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
+      if (res) this.gridViewSetup = res;
+    });
+    this.cache.gridViewSetup('Comments', 'grvComments').subscribe((res) => {
       if (res) {
-        this.gridViewSetup = res;
+        this.gridViewSetupComment = res;
+        this.headerComment = this.gridViewSetupComment.Comments.headerText;
       }
     });
     this.route.queryParams.subscribe((params) => {
-      if (params) {
-        this.refID = params.meetingID;
-      }
+      if (params) this.objectParentID = params.meetingID;
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cache.valueList(this.vllRole).subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     if (this.input) this.currentElement = this.input.elRef.nativeElement;
@@ -117,7 +171,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     }
     if (this.data.length > 0) {
       this.contents = this.data;
-      this.setFont();
       this.dt.detectChanges();
       this.setPropertyForView();
     }
@@ -178,7 +231,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     } else if (type == 'LIST') {
       this.setFormat(false, false, true);
     } else this.setFormat(false, false, false, true);
-    if (this.refID) this.updateContent(this.refID, this.contents);
+    if (this.objectParentID)
+      this.updateContent(this.objectParentID, this.contents);
   }
 
   setFormat(text = true, checkBox = false, list = false, title = false) {
@@ -235,7 +289,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.listNoteTemp.format = this.listNoteTemp.format + 'underline;';
     }
     this.contents[this.id].format = this.listNoteTemp.format;
-    if (this.refID) this.updateContent(this.refID, this.contents);
+    if (this.objectParentID)
+      this.updateContent(this.objectParentID, this.contents);
     this.dt.detectChanges();
   }
 
@@ -271,7 +326,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         if (value) {
           this.contents[this.id].textCorlor = event?.data;
           if (this.mode == 'edit') {
-            if (this.refID) this.updateContent(this.refID, this.contents);
+            if (this.objectParentID)
+              this.updateContent(this.objectParentID, this.contents);
           }
         }
       }
@@ -311,7 +367,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.listNoteTemp.lineType = this.lineType;
       this.listNoteTemp[field] = dt;
       this.contents[this.id].memo = dt;
-      // if (this.mode == 'edit') this.updateContent(this.refID, this.contents);
+      // if (this.mode == 'edit') this.updateContent(this.objectParentID, this.contents);
       this.id += 1;
       this.getContent.emit(this.contents);
     }
@@ -321,7 +377,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     if (event?.data != null) {
       this.listNoteTemp['status'] = event?.data;
       this.contents[index].status = event?.data;
-      if (this.mode == 'edit') this.updateContent(this.refID, this.contents);
+      if (this.mode == 'edit')
+        this.updateContent(this.objectParentID, this.contents);
       this.getContent.emit(this.contents);
     }
   }
@@ -330,7 +387,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     if (event?.data) {
       this.addContent(event?.data);
     }
-    // this.setPropertyAfterAdd();
+    this.setPropertyAfterAdd();
   }
 
   addContent(data) {
@@ -350,20 +407,13 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.contents.push(obj);
       // reverse
       if (checkFirstNote == false) this.contents.shift();
-      var initListNote = {
-        memo: '',
-        status: null,
-        textColor: null,
-        format: null,
-        lineType: this.lineType,
-      };
-      this.contents.push(initListNote);
+      this.contents.push(this.initListNote);
       this.id = this.contents.length - 1;
       //reverse
       this.dt.detectChanges();
     }
     // if (this.mode == 'edit') {
-    //   if (this.refID) this.updateContent(this.refID, this.contents);
+    //   if (this.objectParentID) this.updateContent(this.objectParentID, this.contents);
     // }
     this.getContent.emit(this.contents);
   }
@@ -440,7 +490,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     if (this.contents) {
       this.contents.splice(index, 1);
       if (this.mode == 'edit') {
-        if (this.refID) this.updateContent(this.refID, this.contents);
+        if (this.objectParentID)
+          this.updateContent(this.objectParentID, this.contents);
       }
       this.getContent.emit(this.contents);
     }
@@ -477,6 +528,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   setColorForCodxColor(color) {
+    this.elementColor = this.colorPicker;
     if (color == '' || color == null) color = '#000000';
     if (this.elementColor)
       this.currentElementColor = this.elementColor.elRef.nativeElement;
@@ -504,7 +556,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     format = null,
     ele = null,
     item = null,
-    index = null
+    index = null,
+    menu = null
   ) {
     switch (type) {
       case 'format':
@@ -520,19 +573,169 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.popupImg();
         break;
       case 'comment':
-        this.comment();
+        this.comment(index);
+        break;
+      case 'assign':
+        this.assign(index);
+        break;
+      case 'attachment':
+        if (menu == false) this.openPopupAttachment(index);
+        else this.popup();
     }
     this.getContent.emit(this.contents);
   }
 
-  updateContent(refID, listContent) {
+  updateContent(objectParentID, listContent) {
     this.api
       .execSv(this.service, this.assembly, this.className, this.method, [
-        refID,
+        objectParentID,
         listContent,
       ])
       .subscribe();
   }
 
-  comment() {}
+  comment(index) {
+    this.id = index;
+    this.callfunc.openSide(this.popupComment);
+  }
+
+  assign(index) {
+    var task = new TM_Tasks();
+    task.refID = this.contents[index].recID;
+    task.refType = this.objectType;
+    task.taskName = this.contents[index].memo;
+    var vllControlShare = this.vllControlShare;
+    var vllRose = this.vllRose;
+    var title = '';
+    let option = new SidebarModel();
+    var objFormModel = {
+      entityName: this.objectType,
+    };
+    option.FormModel = objFormModel;
+    option.Width = '550px';
+    this.dialog = this.callfunc.openSide(
+      AssignInfoComponent,
+      [task, vllControlShare, vllRose, title],
+      option
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e.event) {
+        var dt = e.event;
+        if (dt[0] == true && dt[1].length > 0) {
+          this.contents[index].tasks++;
+          this.updateContent(this.objectParentID, this.contents);
+          this.dt.detectChanges();
+        }
+      }
+    });
+  }
+
+  getAssign(recID) {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskByRefIDAsync',
+        recID
+      )
+      .subscribe((res) => {});
+  }
+
+  popoverListTask(recID) {
+    this.countResource = 0;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskByRefIDAsync',
+        recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTask = res;
+          this.countResource = res.length;
+        }
+      });
+  }
+
+  popoverEmpList(p: any, task) {
+    this.listTaskResourceSearch = [];
+    this.countResource = 0;
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    }
+    if (this.popoverDataSelected) {
+      if (this.popoverDataSelected.isOpen()) this.popoverDataSelected.close();
+    }
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskResourcesBusiness',
+        'GetListTaskResourcesByTaskIDAsync',
+        task.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.listTaskResource = res;
+          this.listTaskResourceSearch = res;
+          this.countResource = res.length;
+          p.open();
+          this.popoverCrr = p;
+        }
+      });
+  }
+
+  searchName(e) {
+    var listTaskResourceSearch = [];
+    this.searchField = e;
+    if (this.searchField.trim() == '') {
+      this.listTaskResourceSearch = this.listTaskResource;
+      return;
+    }
+    this.listTaskResource.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(this.searchField.toLowerCase())) {
+        listTaskResourceSearch.push(res);
+      }
+    });
+    this.listTaskResourceSearch = listTaskResourceSearch;
+  }
+
+  openPopupAttachment(index) {
+    this.id = index;
+    var dt = {
+      data: this.contents[index],
+      funcID: this.funcID,
+      objectType: this.objectType,
+    };
+    this.dialog = this.callfunc.openSide(FileComponent, dt);
+    this.dialog.closed.subscribe((res) => {
+      if (res.event.data) {
+        this.contents[index].attachments += res.event.data.length;
+        this.updateContent(this.objectParentID, this.contents);
+      }
+    });
+
+
+  }
+
+  popup() {
+    this.attachment.uploadFile();
+    this.checkFile = true;
+  }
+
+  fileCount(e) {
+    if (e.data.length > 0) {
+      this.attachment.objectId = this.contents[this.id].recID;
+      this.attachment.saveFiles();
+      this.contents[this.id].lineType = 'FILE';
+      this.contents[this.id].attachments++;
+      this.contents.push(this.initListNote);
+      this.updateContent(this.objectParentID, this.contents);
+      this.dt.detectChanges();
+    }
+  }
 }
