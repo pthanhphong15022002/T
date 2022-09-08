@@ -81,11 +81,11 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges;
   }
 
-  valueSelected(data) {
-    if (data.data) {
-      this.task.confirmStatus = data?.data;
-    }
-  }
+  // valueSelected(data) {
+  //   if (data.data) {
+  //     this.task.confirmStatus = data?.data;
+  //   }
+  // }
 
   saveData() {
     switch (this.action) {
