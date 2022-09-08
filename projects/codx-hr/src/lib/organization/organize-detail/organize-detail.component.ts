@@ -24,6 +24,7 @@ import { DataManager } from '@syncfusion/ej2-data';
 import { ApiHttpService, FormModel } from 'codx-core';
 import { AnyNaptrRecord } from 'dns';
 import { map, Observable } from 'rxjs';
+import { json } from 'stream/consumers';
 @Component({
   selector: 'lib-organize-detail',
   templateUrl: './organize-detail.component.html',
@@ -104,7 +105,12 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
         this.data = res.Data as any[];
         //this.datasetting.dataManager = new DataManager(this.data as JSON[]);
         var setting = this.newDataManager();
-        setting.dataManager = new DataManager(this.data as JSON[]);
+        var dataManager = JSON.parse(JSON.stringify(this.data)) as JSON[];
+        dataManager = dataManager.filter((item: any) => {
+          if (item.departmentCode === this.orgUnitID) item.parentID = '';
+          return item;
+        });
+        setting.dataManager = new DataManager(dataManager as JSON[]);
         this.datasetting = setting;
         //this.diagram.refresh();
         this.changeDetectorRef.detectChanges();

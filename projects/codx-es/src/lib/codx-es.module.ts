@@ -57,6 +57,10 @@ import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { ESApprovelComponent } from './sign-file/approval/approval.component';
 import { SearchingComponent } from './searching/searching.component';
+import {
+  NgxExtendedPdfViewerModule,
+  NgxExtendedPdfViewerService,
+} from 'ngx-extended-pdf-viewer';
 
 const routes: Routes = [
   {
@@ -151,6 +155,7 @@ const routes: Routes = [
     CodxCoreModule.forRoot({ environment }),
     CommonModule,
     AccumulationChartAllModule,
+    NgxExtendedPdfViewerModule,
     ChartModule,
     FormsModule,
     ReactiveFormsModule,
