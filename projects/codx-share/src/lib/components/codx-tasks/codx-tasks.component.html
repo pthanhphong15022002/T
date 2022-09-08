@@ -113,9 +113,17 @@
     <div class="d-flex align-items-end ms-14 codx-badge">
       <codx-vll [name]="funcID == 'TMT0402' ? vllApproveStatus : vllStatus" [formModel]="view.formModel"
         [field]="funcID == 'TMT0402' ? 'ApproveStatus' : 'Status'"
+<<<<<<< HEAD
         [value]="funcID == 'TMT0402' ? data?.approveStatus : data?.status" [showText]="true" [showBgColor]="true"
         class="badge badge-light badge-md fs-7 me-2">
 
+=======
+        [value]="funcID == 'TMT0402' ? data?.approveStatus : data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-md fs-7 me-2"
+      >
+>>>>>>> 397fd487cf2e4ca2b94d355a3e5335b304e05eca
       </codx-vll>
       <span>
         <span class="fs-7 text-gray-600">{{
@@ -179,9 +187,32 @@
   </div>
 </ng-template>
 
+<<<<<<< HEAD
 <codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
   className="TaskBusiness" method="GetTasksAsync" [views]="views" [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
   [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
   (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
+=======
+<codx-views
+  #view
+  service="TM"
+  entityName="TM_Tasks"
+  assemblyName="ERM.Business.TM"
+  className="TaskBusiness"
+  method="GetTasksAsync"
+  [views]="views"
+  [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)"
+  (viewChanged)="changeView($event)"
+  (requestEnded)="requestEnded($event)"
+  [dataObj]="dataObj"
+  (selectedChange)="selectedChange($event)"
+  (onDragDrop)="onDragDrop($event)"
+  (onActions)="onActions($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+>
+</codx-views>
+>>>>>>> 397fd487cf2e4ca2b94d355a3e5335b304e05eca

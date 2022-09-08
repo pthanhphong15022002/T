@@ -103,16 +103,16 @@
                     height="400px"
                     [width]="width"
                     [legendSettings]="legendSettings"
-                    *ngIf="statDayOfWeek.length > 0"
+                    *ngIf="statDayOfWeek?.length > 0"
                   >
                     <e-series-collection>
                       <e-series
                         *ngFor="let item of statDayOfWeek"
-                        [dataSource]="item.statdata"
+                        [dataSource]="item?.statdata"
                         type="Line"
                         xName="day"
                         yName="count"
-                        [name]="item.resourceName"
+                        [name]="item?.resourceName"
                         width="2"
                         [marker]="marker"
                       >
@@ -175,12 +175,12 @@
               </div>
   
             </div>
-            <div class="container mt-3" *ngIf="statEffenciencyOfResource.length>0">
+            <div class="container mt-3" *ngIf="statEffenciencyOfResource?.length>0">
               <div class="row w-100"  *ngFor='let item of statEffenciencyOfResource'>
   
-                  <span style="font-size:12px; color: rgb(70, 69, 69)">{{item.resourceName}}</span>
+                  <span style="font-size:12px; color: rgb(70, 69, 69)">{{item?.resourceName}}</span>
   
-                  <ejs-progressbar  id='linear{{item.resourceName}}' type='Linear' [maximum]='100' [minimum]='0'
+                  <ejs-progressbar  id='linear{{item?.resourceName}}' type='Linear' [maximum]='100' [minimum]='0'
                   [value]='item.percent' width='100%' [trackThickness]='12' [progressThickness]='12'
                   height='5' [animation]='animation' role="Danger" style="margin: 0 -10px;"></ejs-progressbar>
               </div>
@@ -213,7 +213,7 @@
                 [legendSettings]="legendSettings"
                 [tooltip]="tooltip"
                 (load)="load($event)"
-                *ngIf="statEquipments.length > 0"
+                *ngIf="statEquipments?.length > 0"
               >
                 <e-accumulation-series-collection>
                   <e-accumulation-series
@@ -255,7 +255,7 @@
                 [legendSettings]="legendSettings"
                 [tooltip]="tooltip"
                 (load)="load($event)"
-                *ngIf="statEquipments.length > 0"
+                *ngIf="statEquipments?.length > 0"
               >
                 <e-accumulation-series-collection>
                   <e-accumulation-series
@@ -297,7 +297,7 @@
                 [legendSettings]="legendSettings"
                 [tooltip]="tooltip"
                 (load)="load($event)"
-                *ngIf="statEquipments.length > 0"
+                *ngIf="statEquipments?.length > 0"
               >
                 <e-accumulation-series-collection>
                   <e-accumulation-series
