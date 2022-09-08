@@ -9,8 +9,9 @@
     //"noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    //"resolveJsonModule": true,
+    "resolveJsonModule": true,
     //"esModuleInterop": true,
+
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": false,
