@@ -1236,7 +1236,7 @@ export class CodxDMService {
         case "DMT0207":  // permission
         case "DMT0220":
           this.dataFileEditing = data;            
-          this.callfc.openForm(RolesComponent, "", 950, 650, "", [""], "");
+          this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1"], "");
           break;
 
         case "DMT0205": // bookmark folder
