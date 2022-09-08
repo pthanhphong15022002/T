@@ -508,7 +508,8 @@ export class TMMeetingsComponent
     var obj = {
       moreFunc: moreFunc,
       data: data,
-      vll: 'CO004',
+      funcID : this.funcID,
+      vll: 'CO004'
     };
     this.dialog = this.callfc.openForm(
       PopupStatusMeetingComponent,
@@ -520,7 +521,7 @@ export class TMMeetingsComponent
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        /// lam gi do
+        this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
       }
     });
