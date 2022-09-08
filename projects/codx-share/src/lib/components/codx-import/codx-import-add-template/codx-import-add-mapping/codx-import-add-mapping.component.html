@@ -28,7 +28,7 @@
       </div>
       <div class="col-2">
         <codx-label [formModel]="formModels" [fiedName]="'ImportRule'" class="fw-bold"></codx-label>
-        <codx-input type="valuelist" refValue="SYS010" [crrValue]="dataIEMapping?.importRule" [field]="'importRule'" (valueChange)="changeValueCBB($event)"></codx-input>
+        <codx-input type="valuelist" refValue="SYS010" [crrValue]="dataIETable?.importRule" [field]="'importRule'" (valueChange)="changeValueCBB($event)"></codx-input>
       </div>
       <div class="col-2 d-flex align-items-center">
         <codx-input type="switch" [Group]="addMappingForm" ControlName="isSummary" style="margin-top:6px"></codx-input>
@@ -76,17 +76,17 @@
         [field]='item?.text' 
         width="200"  
         [isPrimaryKey]='i==0?true:false'
-        [headerText]="getHeaderText(item?.text)" 
+        [headerText]="getHeaderText(item?.text)"
         [editType]="getEditType(item?.controlType)" 
         [type]="getType(item?.controlType)" 
         [edit]="getEdit(item?.type,item?.text)" 
-        [valueAccessor]="valueAccess"
+    
         [displayAsCheckBox]="true"
         [validationRules]="item?.require ?customerIDRules:null"
         [textAlign]="getTextAligin(item?.controlType)"
         >
         </e-column>
-     
+        <!--   -->
     </e-columns>   
   </ejs-grid> 
   </div>

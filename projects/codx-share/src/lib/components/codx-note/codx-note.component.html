@@ -137,7 +137,7 @@
                                     (valueChange)="valueChange($event)"
                                     [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                 </codx-input>
-                                <div class="" *ngIf="item.lineType == 'FILE' || item.lineType == 'IMAGE' || i == id">
+                                <div class="" *ngIf="(item.lineType == 'FILE' || item.lineType == 'IMAGE') && i == id">
                                     <codx-attachment #attachment [objectType]="objectType" hideBtnSave="1"
                                         hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0"
                                         hideImageThumb="0" [functionID]="funcID" [objectId]="item.recID"
@@ -169,7 +169,7 @@
                                 class="icon-chat_bubble_outline icon-22 position-relative darkgray icon-comment">
                                 <span
                                     class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary">{{item.comments}}</span></span>
-                            <span *ngIf="item.lineType == 'FILE'"
+                            <span *ngIf="item.lineType == 'FILE' || item.attachments > 0"
                                 class="icon-attach_file icon-22 position-relative darkgray icon-file">
                                 <span
                                     class="position-absolute top-0 start-100 translate-middle badge-sm badge badge-circle badge-outline badge-primary">{{item.attachments}}</span></span>
