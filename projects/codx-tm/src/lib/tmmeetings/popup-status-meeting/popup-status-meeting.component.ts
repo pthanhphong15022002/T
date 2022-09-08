@@ -4,6 +4,7 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  UrlUtil,
 } from 'codx-core';
 
 @Component({
@@ -25,6 +26,7 @@ export class PopupStatusMeetingComponent implements OnInit {
   fieldComment = '';
   defautComment = 'Bình luận';
   comment = '';
+  meeting :any
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -34,10 +36,18 @@ export class PopupStatusMeetingComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.data = dt?.data;
+    this.meeting = this.data?.data
     this.dialog = dialog;
     this.funcID = this.data.funcID;
     this.vllUpdate = this.data.vll;
-    this.valueDefault = "2" ;
+    this.moreFunc = this.data.moreFunc;
+    this.title = this.moreFunc.customName;
+ 
+    this.url = this.moreFunc.url;
+    var fieldDefault = UrlUtil.getUrl('defaultField', this.url);
+    this.fieldDefault =
+      fieldDefault.charAt(0).toLocaleLowerCase() + fieldDefault.slice(1);
+    this.valueDefault = UrlUtil.getUrl('defaultValue', this.url);
   }
   ngOnInit(): void {}
 
@@ -48,11 +58,22 @@ export class PopupStatusMeetingComponent implements OnInit {
     this.changeDetectorRef.detectChanges;
   }
 
-  valueSelected(data) {
-    if (data.data) {
-     ///
-    }
+  saveData() {
+    ///xu ly save
+    this.api
+      .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'SetStatusMeetingAsync', [
+        this.funcID,
+        this.meeting.meetingID,
+        this.valueDefault,
+        this.comment,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.meeting.status = this.valueDefault ;
+          this.dialog.close(this.meeting);
+          this.notiService.notifyCode('SYS007')
+        }  
+        this.dialog.close();
+      }); 
   }
-
-  saveData() {}
 }

@@ -52,6 +52,7 @@ export class MeetingDetailComponent extends UIComponent {
   tabControl: TabControl[] = [];
   active = 1;
   functionParent: any
+  listRecID = [];
 
   constructor(
     private injector: Injector,
@@ -109,7 +110,7 @@ export class MeetingDetailComponent extends UIComponent {
           this.startDateMeeting = this.meeting.startDate;
           this.endDateMeeting = this.meeting.endDate;
           this.userName = this.meeting.userName;
-
+          this.getListRecID(this.meeting);
           if (this.meeting.templateID != null) {
             this.api
               .execSv<any>(
@@ -222,5 +223,17 @@ export class MeetingDetailComponent extends UIComponent {
     //     this.lstComment = res;
     //   });
   }
+
+    //#region get List recID
+    getListRecID(meeting) {
+      this.listRecID.push(meeting.recID);
+      if (meeting.contents) {
+        var contents = meeting.contents;
+        contents.forEach((data) => {
+          this.listRecID.push(data.recID);
+        });
+      }
+    }
+    //#region end
 
 }

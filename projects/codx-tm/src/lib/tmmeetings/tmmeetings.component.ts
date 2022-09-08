@@ -165,7 +165,7 @@ export class TMMeetingsComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          template7: this.template7,
+          // template7: this.template7,
         },
       },
       {
@@ -508,6 +508,7 @@ export class TMMeetingsComponent
     var obj = {
       moreFunc: moreFunc,
       data: data,
+      funcID: this.funcID,
       vll: 'CO004',
     };
     this.dialog = this.callfc.openForm(
@@ -520,7 +521,7 @@ export class TMMeetingsComponent
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        /// lam gi do
+        this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
       }
     });
