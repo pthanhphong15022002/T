@@ -24,7 +24,6 @@ export class StationeryDashboardComponent extends UIComponent {
   statEffenciencyOfResource = [];
   funcID: string;
   model: DataRequest;
-  model2: DataRequest;
 
   constructor(private inject: Injector) {
     super(inject);
@@ -36,12 +35,14 @@ export class StationeryDashboardComponent extends UIComponent {
       if (res) {
         const { formName, gridViewName, entityName } = res;
         this.model = new DataRequest();
+        this.model.funcID = 'EPT3'
         this.model.formName = formName;
         this.model.gridViewName = gridViewName;
         this.model.entityName = entityName;
         this.model.pageLoading = false;
         this.model.predicate = 'ResourceType=@0';
         this.model.dataValue = '6';
+        this.loadChart(this.model);
       }
     });
   }

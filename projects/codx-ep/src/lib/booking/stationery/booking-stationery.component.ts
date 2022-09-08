@@ -102,7 +102,7 @@ export class BookingStationeryComponent extends UIComponent {
         text: 'Dashboard',
         type: ViewType.content,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           panelLeftRef: this.chart,
         },
@@ -112,7 +112,7 @@ export class BookingStationeryComponent extends UIComponent {
         text: 'Card',
         type: ViewType.card,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           template: this.cardItem,
         },
