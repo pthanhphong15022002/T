@@ -170,7 +170,6 @@ export class PopupAddSignFileComponent implements OnInit {
                       file.fileName = nFile.fileName;
                       file.eSign = true;
 
-                      debugger;
                       files.push(file);
 
                       this.dialogSignFile &&
