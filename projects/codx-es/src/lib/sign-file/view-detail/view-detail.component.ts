@@ -33,7 +33,6 @@ export class ViewDetailComponent implements OnInit {
     private router: ActivatedRoute
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
-    console.log(this.funcID);
   }
 
   @Input() itemDetail: any;

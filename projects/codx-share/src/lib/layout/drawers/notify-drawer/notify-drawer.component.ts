@@ -14,7 +14,9 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
   lstOldNotify:any[] = [];
   funcID:string ="";
   entityName:string = "";
-  tableName:String = "";
+  tableName:string = "";
+  predicate:string = "UserID =@0 && TenantID =@1";
+  dataValue:string = "";
   constructor(
     private inject: Injector,
     private dt:ChangeDetectorRef,
@@ -25,6 +27,7 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
     super(inject);
     this.dialog = dialog;
     this.funcID = data?.data;
+    this.dataValue = this.auth.userValue.userID + ";"+this.auth.userValue.tenant;
   }
 
   onInit(): void {

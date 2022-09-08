@@ -43,7 +43,7 @@ export class BookingStationeryComponent extends UIComponent {
   dataValue = '6';
   idField = 'recID';
   className = 'BookingsBusiness';
-  method = 'GetAllAsync';
+  method = 'GetResourceAsync';
 
   constructor(
     private injector: Injector,
@@ -54,9 +54,6 @@ export class BookingStationeryComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      console.log(res);
-    });
     this.button = {
       id: 'btnAdd',
     };
@@ -103,11 +100,11 @@ export class BookingStationeryComponent extends UIComponent {
       {
         id: '1',
         text: 'Dashboard',
-        type: ViewType.chart,
+        type: ViewType.content,
         sameData: true,
         active: false,
         model: {
-          template: this.chart,
+          panelLeftRef: this.chart,
         },
       },
       {

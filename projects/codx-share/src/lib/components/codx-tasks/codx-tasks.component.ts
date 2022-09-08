@@ -227,6 +227,18 @@ export class CodxTasksComponent
           template3: this.cellTemplate,
         },
       },
+      {
+        type: ViewType.calendar,
+        active: false,
+        sameData: true,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
+          // template7: this.template7,
+        },
+      },
     ];
 
     var viewDefaultID = '2';
@@ -333,18 +345,25 @@ export class CodxTasksComponent
             [this.view.dataService.dataSelected],
             false
           );
-        if (e?.event && e?.event != null) {
-          this.view.dataService.data = e?.event.concat(
-            this.view.dataService.data
-          );
-          this.view.dataService.setDataSelected(res[0]);
-          this.view.dataService.afterSave.next(res);
-          this.notiService.notifyCode('TM005');
-
-          this.itemSelected = this.view.dataService.data[0];
-          this.detectorRef.detectChanges();
-        }
       });
+      // this.dialog.closed.subscribe((e) => {
+      //   if (e?.event == null)
+      //     this.view.dataService.delete(
+      //       [this.view.dataService.dataSelected],
+      //       false
+      //     );
+      //   if (e?.event && e?.event != null) {
+      //     this.view.dataService.data = e?.event.concat(
+      //       this.view.dataService.data
+      //     );
+      //     this.view.dataService.setDataSelected(res[0]);
+      //     this.view.dataService.afterSave.next(res);
+      //     this.notiService.notifyCode('TM005');
+
+      //     this.itemSelected = this.view.dataService.data[0];
+      //     this.detectorRef.detectChanges();
+      //   }
+      // });
     });
   }
 
@@ -1542,7 +1561,7 @@ export class CodxTasksComponent
                   ref.createdOn = result.createdOn;
                   ref.memo = result.taskName;
                   ref.createdBy = result.createdBy;
-                
+
                   this.api
                     .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
                       ref.createdBy,

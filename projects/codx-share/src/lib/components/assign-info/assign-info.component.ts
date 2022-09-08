@@ -264,7 +264,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
 
   changeVLL(e) { }
 
-  saveAssign(id, isContinue) {
+  async saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
       this.notiService.notifyCode('TM027');
       return;
@@ -321,7 +321,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
     if (this.isHaveFile)
-      this.attachment.saveFilesObservable().subscribe((res) => {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.task.attachments = Array.isArray(res) ? res.length : 1;
           this.actionSaveAssign(taskIDParent, isContinue);

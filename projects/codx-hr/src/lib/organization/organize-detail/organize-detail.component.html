@@ -256,8 +256,66 @@
 
 <ng-template #popContent>
   <div>
-    <ng-container *ngFor="let item of employOrg">
-      <div *ngIf="show(item)">
+    <div class="row">
+      <div *ngFor="let emp of employees" class="p-2 full">
+        <div
+          *ngIf="emp.employeeName"
+          class="d-flex justify-content-between align-items-top"
+          popoverClass="userPopoverClass"
+          [ngbPopover]="popEmpContent"
+          placement="right left"
+          [popoverTitle]="popEmpTitle"
+          #pemp="ngbPopover"
+          triggers="manual"
+          (click)="showEmploy(pemp, emp)"
+        >
+          <div class="d-flex flex-column org-card flex-grow-1">
+            <div class="d-flex align-items-start">
+              <codx-img
+                class="symbol symbol-40 symbol-circle me-3"
+                [width]="40"
+                [objectId]="emp.employeeID"
+                [objectName]="emp.employeeName"
+                [objectType]="'HR_Employees'"
+              >
+              </codx-img>
+              <div class="d-flex flex-column flex-grow-1">
+                <div class="text-dark">{{ emp.employeeName }}</div>
+                <div class="text-dark-50">{{ emp.positionName }}</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <a class="text-dark-50">
+              <span class="icon-keyboard_arrow_right icon-20"></span>
+            </a>
+          </div>
+        </div>
+        <div
+          *ngIf="!emp.employeeName"
+          class="d-flex justify-content-between align-items-top"
+        >
+          <div class="d-flex flex-column org-card flex-grow-1">
+            <div class="d-flex align-items-start">
+              <codx-img
+                class="symbol symbol-40 symbol-circle me-3"
+                [width]="40"
+                [objectId]="''"
+                [objectName]="''"
+                [objectType]="'HR_Employees'"
+              >
+              </codx-img>
+              <div class="d-flex flex-column flex-grow-1">
+                <div class="text-50 text-muted">Tên nhân viên</div>
+                <div class="text-50 text-muted">Chức vụ</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <ng-container *ngFor="let item of employOrg">
+        <div *ngIf="show(item)">
         <div
           class="d-flex align-items-center justify-content-between list-title my-2"
         >
@@ -330,18 +388,19 @@
           </div>
         </div>
       </div>
-    </ng-container>
+    </ng-container> -->
   </div>
 </ng-template>
 
 <ng-template #popTitle>
   <div class="text-dark mb-2">Danh sách nhân viên</div>
   <div>
-    <input
+    <!-- <input
       type="text"
       class="form-control"
       [(ngModel)]="searchField"
       placeholder="Tìm kiếm"
-    />
+    /> -->
+    <codx-searchbar (searchEvent)="onSearch($event)"></codx-searchbar>
   </div>
 </ng-template>

@@ -16,6 +16,7 @@
           [disabled]="readOnly"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          (valueChange)="changeData($event)"
         >
         </codx-input> </span
       ><span class="col-2">
@@ -54,6 +55,7 @@
         field="projectID"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="changeData($event)"
       ></codx-input>
     </div>
     <div class="form-group">
@@ -70,6 +72,7 @@
         field="viewMode"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="changeData($event)"
       ></codx-input>
     </div>
     <div class="form-group">
@@ -86,6 +89,7 @@
         field="memo"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        (valueChange)="changeData($event)"
       ></codx-input>
     </div>
     <ng-container >

@@ -233,13 +233,13 @@ export class PopupAddComponent implements OnInit {
         'InsertNewsAsync',
         objNews
       )
-      .subscribe((res: any) => {
+      .subscribe(async (res: any) => {
         if (res) {
           let data = res;
           if (this.fileUpload.length > 0) {
             this.codxATMImage.objectId = data.recID;
             this.dmSV.fileUploadList = [...this.fileUpload];
-            this.codxATMImage.saveFilesObservable().subscribe(
+            (await this.codxATMImage.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
                   this.initForm();
@@ -324,13 +324,13 @@ export class PopupAddComponent implements OnInit {
         'InsertNewsAsync',
         objNews
       )
-      .subscribe((res: any) => {
+      .subscribe(async (res: any) => {
         if (res) {
           let data = res;
           if (this.fileUpload.length > 0) {
             this.codxATMImage.objectId = data.recID;
             this.codxATMImage.fileUploadList = [...this.fileUpload];
-            this.codxATMImage.saveFilesObservable().subscribe(
+            (await this.codxATMImage.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
                   this.initForm();

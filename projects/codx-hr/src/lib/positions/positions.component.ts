@@ -26,13 +26,14 @@ export class PositionsComponent implements OnInit {
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
   @ViewChild('p') public popover: NgbPopover;
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
+  @ViewChild('templateTree') templateTree: TemplateRef<any>;
   popoverCrr: any;
   allRoles: any;
   lstRoles: any;
   searchField: any;
   listEmployee = [];
   popoverDataSelected: any;
+  orgUnitID: any;
 
   constructor(
     private changedt: ChangeDetectorRef,
@@ -52,30 +53,6 @@ export class PositionsComponent implements OnInit {
       id: 'btnAdd',
     };
   }
-
-  // popoverEmpList(p: any, emp) {
-  //   this.listEmployeeSearch = [];
-  //   this.countResource = 0;
-  //   if (this.popoverCrr) {
-  //     if (this.popoverCrr.isOpen()) this.popoverCrr.close();
-  //   }
-  //   this.api
-  //     .execSv<any>(
-  //       'HR',
-  //       'ERM.Business.HR',
-  //       'EmployeesBusiness',
-  //       'GetByUserAsync',
-  //       emp.employeeID
-  //     )
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.listEmployee = res;
-  //         this.listEmployeeSearch = res;
-  //         this.countResource = res.length;
-  //         p.open();
-  //       }
-  //     });
-  // }
 
   searchName(e) {
     var listEmployeeSearch = [];
@@ -107,6 +84,7 @@ export class PositionsComponent implements OnInit {
         }
       },
     ];
+    this.view.dataService.parentIdField = 'ParentID';
     this.changedt.detectChanges();
   }
 
@@ -213,9 +191,13 @@ export class PositionsComponent implements OnInit {
     //   });
   }
 
-  selectedChange(val: any) {
+  selectedChange(evt: any) {
     // this.itemSelected = val.data;
     // this.dt.detectChanges();
+    if (evt && evt.data) {
+      this.orgUnitID = evt.data.orgUnitID;
+      this.changedt.detectChanges();
+    }
   }
 
   click(evt: ButtonModel) {
