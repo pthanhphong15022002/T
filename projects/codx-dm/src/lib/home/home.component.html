@@ -227,7 +227,7 @@
   </ng-container>
 </ng-template>
 <ng-template #loading>
-  <ng-container *ngIf="!this.dmSV.loadedFile || !this.dmSV.loadedFolder">
+  <ng-container *ngIf="!this.dmSV.loadedFile && !this.dmSV.loadedFolder">
     <div class="w-100 align-items-center mt-20">
       <div class="text-center">
         <img class="mh-200px" src="../../../assets/img/loader.gif" />

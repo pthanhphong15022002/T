@@ -11,6 +11,7 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     //"esModuleInterop": true,
+
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": false,
@@ -40,6 +41,10 @@
       "codx-ad": [
         "dist/codx-ad/codx-ad",
         "dist/codx-ad"
+      ],
+      "codx-bp": [
+        "dist/codx-bp/codx-bp",
+        "dist/codx-bp"
       ],
       "codx-dm": [
         "dist/codx-dm/codx-dm",

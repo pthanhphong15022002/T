@@ -8,7 +8,7 @@ import { CacheService, LayoutBaseComponent } from 'codx-core';
 })
 export class Layout2Component extends LayoutBaseComponent {
   module = 'WP';
-  override toolbar = false;
+  override toolbar = true;
   override aside = false;
   override asideFixed = false;
   valueList: [];

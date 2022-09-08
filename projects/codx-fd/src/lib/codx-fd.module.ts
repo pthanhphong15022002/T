@@ -10,6 +10,7 @@ import { AccumulationChartModule, ChartAllModule } from '@syncfusion/ej2-angular
 import { ProgressBar, ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
+import path from 'path';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { AchievementComponent } from './achievement/achievement.component';
 import { CardsComponent } from './cards/cards.component';
