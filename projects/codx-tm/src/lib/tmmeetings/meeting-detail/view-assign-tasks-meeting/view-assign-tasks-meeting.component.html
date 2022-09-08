@@ -1,123 +1,62 @@
-<codx-views
-  #view
-  [data]="datas"
-  [selectedFirst]="true"
-  [autoLoad]="true"
->
+<codx-views #view [data]="datas" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
 <ng-template #panelRight>
-    <share-view-detail
-      #detail
-      [taskID]="itemSelected?.taskID"
-      [param]="param"
-      [dataTree]="dataTree"
-      [dataReferences]="dataReferences"
-      [listRoles]="listRoles"
-      [vllApproveStatus]="vllApproveStatus"
-      [vllExtendStatus]="vllExtendStatus"
-      [popoverCrr]="popoverCrr"
-      [vllStatus]="vllStatus"
-      (hoverPopover)="hoverPopover($event)"
-    >
-    </share-view-detail>
-  </ng-template>
-  
-  <ng-template #itemTemplate let-data>
-    <codx-temp-full
-      cardCss="card-template border-bottom p-3 list-task"
-      [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
-      [icoStatus2]="data?.priority"
-      [icoStatusVll2]="'L0186'"
-      [imageId]="data.createdBy"
-      [imageWidth]="35"
-      imgCss="me-3"
-      imageObjType="AD_Users"
-      [title]="data.userNameCreate"
-      [subTitle]="data.positionNameCreate"
-      [content]="data.taskName"
-      [footer]="footerList"
-      [dataItem]="data"
-    >
-    </codx-temp-full>
-  </ng-template>
+  <share-view-detail #detail [taskID]="itemSelected?.taskID" [param]="param" [dataTree]="dataTree"
+    [dataReferences]="dataReferences" [listRoles]="listRoles" [vllApproveStatus]="vllApproveStatus"
+    [vllExtendStatus]="vllExtendStatus" [popoverCrr]="popoverCrr" [vllStatus]="vllStatus"
+    (hoverPopover)="hoverPopover($event)">
+  </share-view-detail>
+</ng-template>
 
-  <ng-template #footerList let-data>
-    <div class="d-flex justify-content-between align-items-end mt-1">
-      <div class="d-flex align-items-end ms-14 codx-badge">
-        <codx-vll
-          [name]="funcID ==  vllStatus"
-          [field]="funcID ==  'Status'"
-          [value]="funcID == data?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-md fs-7 me-2"
-        >
-    
-        </codx-vll>
-        <span>
-          <span class="fs-7 text-gray-600">{{
-            data.dueDate | date: "dd/MM/yyyy"
+<ng-template #itemTemplate let-data>
+  <codx-temp-full cardCss="card-template border-bottom p-3 list-task"
+    [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'L0186'" [imageId]="data.createdBy" [imageWidth]="35" imgCss="me-3" imageObjType="AD_Users"
+    [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.taskName" [footer]="footerList"
+    [dataItem]="data">
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #footerList let-data>
+  <div class="d-flex justify-content-between align-items-end mt-1">
+    <div class="d-flex align-items-end ms-14 codx-badge">
+      <codx-vll [name]="funcID ==  vllStatus" [field]="funcID ==  'Status'" [value]="funcID == data?.status"
+        [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
+
+      </codx-vll>
+      <span>
+        <span class="fs-7 text-gray-600">{{
+          data.dueDate | date: "dd/MM/yyyy"
           }}</span>
-        </span>
-      </div>
-      <div
-        *ngIf="data.category == '3'"
-        class=""
-        (mouseenter)="popoverEmpList(popoverList, data)"
-        [ngbPopover]="popEmpList"
-        popoverClass="empPopoverClass"
-        #popoverList="ngbPopover"
-        placement="right bottom"
-        container="body"
-        autoClose="outside"
-        [openDelay]="500"
-      >
-        <codx-imgs
-          [width]="25"
-          [objectId]="data?.assignTo"
-          objectType="AD_Users"
-          [numberImages]="3"
-        >
-        </codx-imgs>
-      </div>
+      </span>
     </div>
-  </ng-template>
-  
-  <ng-template #popEmpList>
-    <div class="fw-bold mb-1">
-      <codx-label
-        name="AssignmentList"
-        formName="Tasks"
-        default="Danh sách phân công cho"
-      ></codx-label>
-      <span class="">{{ "(" + countResource + ")" }}</span>
+    <div *ngIf="data.category == '3'" class="" (mouseenter)="popoverEmpList(popoverList, data)"
+      [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom"
+      container="body" autoClose="outside" [openDelay]="500">
+      <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3">
+      </codx-imgs>
     </div>
-    <div>
-      <codx-searchbar
-        *ngIf="countResource > 0"
-        (searchEvent)="searchName($event)"
-      ></codx-searchbar>
-    </div>
-    <div
-      class="d-flex align-items-start user-card py-3"
-      *ngFor="let item of listTaskResousceSearch"
-    >
+  </div>
+</ng-template>
+
+<ng-template #popEmpList>
+  <div class="fw-bold mb-1">
+    <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho"></codx-label>
+    <span class="">{{ "(" + countResource + ")" }}</span>
+  </div>
+  <div>
+    <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
+  </div>
+  <div class="listuser-box">
+    <div class="d-flex align-items-start user-card py-2" *ngFor="let item of listTaskResousceSearch">
       <div class="me-3">
         <div style="position: relative">
-          <codx-img
-            [width]="30"
-            [objectId]="item?.resourceID"
-            objectType="AD_Users"
-          >
+          <codx-img [width]="30" [objectId]="item?.resourceID" objectType="AD_Users">
           </codx-img>
           <div style="position: absolute; right: 0px; bottom: 0px">
             <ng-container *ngFor="let role of listRoles">
               <ng-container *ngIf="role.value == item.roleType">
-                <span
-                  ><img
-                    src="/assets/themes/tm/default/img/{{ role.icon }}"
-                    alt=""
-                /></span>
+                <span><img src="/assets/themes/tm/default/img/{{ role.icon }}" alt="" /></span>
               </ng-container>
             </ng-container>
           </div>
@@ -127,28 +66,22 @@
         <div class="text-dark fw-bold">{{ item?.resourceName }}</div>
         <div class="text-gray-700 fs-7">{{ item?.positionName }}</div>
         <div class="text-gray-500 fs-7">{{ item?.memo }}</div>
-       
+
         <div class="d-flex align-items-center mt-1" *ngIf="item?.roleType == 'R'">
           <div class="d-flex align-items-end me-2 codx-badge">
             <span>
-              <codx-vll
-                [name]="vllStatus"
-                [field]="'Status'"
-                [value]="item?.status"
-                [showText]="true"
-                [showBgColor]="true"
-                class="badge badge-light badge-md fs-7 me-2"
-              >
+              <codx-vll [name]="vllStatus" [field]="'Status'" [value]="item?.status" [showText]="true"
+                [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
               </codx-vll>
             </span>
             <span>
               <span class="text-gray-700">{{
                 item.dueDate | date: "dd/MM/yyyy"
-              }}</span>
+                }}</span>
             </span>
           </div>
         </div>
       </div>
     </div>
-  </ng-template>
-  
+  </div>
+</ng-template>

@@ -1,6 +1,7 @@
 :host {
     height: 100%;
 }
+
 .unexpired {
     color: #C9C9D4;
 }
@@ -41,4 +42,9 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content,
 ejs-richtexteditor .e-dialog>.e-footer-content,
 ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
     padding: 15px;
+}
+
+.listuser-box {
+    max-height: 400px;
+    overflow: auto;
 }
