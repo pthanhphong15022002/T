@@ -30,7 +30,7 @@
 
 <!-- cardCenter -->
 <ng-template #cardCenter let-data>
-  <div (dblclick)="doubkeClick(data)">
+  <div (dblclick)="doubleClick(data)">
     <codx-card-center
       cardCss="border w-250px h-100 px-3 py-3 position-relative"
       [formModel]="view.formModel"
@@ -140,25 +140,12 @@
 
 <!-- kanban -->
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img
-    (clickMF)="clickMF($event, data)"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
-    (changeDataMF)="changeDataMF($event, data)"
-    [typeMF]="'hover'"
-    cardCss="border h-100"
-    [title]="data?.meetingName"
-    [status]="data.status"
-    [statusVll]="'CO004'"
-    [icoStatus2]="data?.isOnline"
-    [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-24'"
-    [date]="data.startDate"
-    [rootData]="data"
-    [formModel]="view.formModel"
-    [content]="data.contents"
-    [setting]="setting"
-    [footer]="cardImgFooter"
-    [dataItem]="data"
-  >
+  <codx-card-img (clickMF)="clickMF($event, data)" cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" cardCss="border h-100" [title]="data?.meetingName"
+    [status]="data.status" [statusVll]="'CO004'" [icoStatus2]="data?.isOnline"
+    [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-24'" [date]="data.startDate"
+    [rootData]="data" [formModel]="view.formModel" [setting]="setting"
+    [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
 </ng-template>
 <ng-template #cardImgFooter let-data let-setting="setting">

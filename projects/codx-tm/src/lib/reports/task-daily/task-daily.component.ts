@@ -30,6 +30,8 @@ export class TaskDailyComponent implements OnInit {
   isCollapsed = true;
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
+  predicate = 'Category=@0';
+  dataValue = '1;2';
   constructor(
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,

@@ -160,7 +160,7 @@ export class TMMeetingsComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          // template7: this.template7,
+          template7: this.template7,
         },
       },
       {
@@ -525,7 +525,7 @@ export class TMMeetingsComponent
 
   //#region double click  view detail
 
-  doubkeClick(data) {
+  doubleClick(data) {
     if (this.listMoreFunc.length > 0) {
       this.listMoreFunc.forEach((obj) => {
         if (obj.functionID == 'TMT05011') this.urlView = obj.url;

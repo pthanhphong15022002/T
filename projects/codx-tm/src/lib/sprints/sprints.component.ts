@@ -287,7 +287,7 @@ export class SprintsComponent extends UIComponent {
   }
 
   //#region doubeclick carrd
-  doubkeClick(data) {
+  doubleClick(data) {
     if(this.listMoreFunc.length>0){
       this.listMoreFunc.forEach((obj) => {
         if (obj.functionID == 'TMT03012') this.urlView = obj.url;
