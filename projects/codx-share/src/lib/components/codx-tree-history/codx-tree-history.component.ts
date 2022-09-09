@@ -18,6 +18,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   @Input() addNew:boolean = false;
   @Input() viewIcon:boolean = false;
   @Input() viewVote:boolean = false;
+  @Input() totalComment:number = 0;
 
   /////////////////////////////
   service = "BG";
@@ -59,9 +60,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     this.api.execSv(this.service,this.assemply,this.className,"GetTrackLogsByObjectIDAsync",this.objectID).
     subscribe((res:any[]) =>{
       if(res) {
-        this.lstHistory = res;
-        this.root.listSubComment = res;
-
+        this.root.listSubComment = res[0];
       }
     })
   }
@@ -70,8 +69,9 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     this.api.execSv(this.service,this.assemply,this.className,"GetCommentTrackLogByObjectIDAsync",[this.objectID,this.actionType]).
     subscribe((res:any[]) =>{
       if(res) {
-        this.lstHistory = res;
-        this.root.listSubComment = res;
+        this.root.listSubComment = res[0];
+        this.totalComment = res[1];
+        console.log(this.totalComment)
       }
     })
   }
