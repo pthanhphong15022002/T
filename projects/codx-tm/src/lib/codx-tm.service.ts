@@ -133,6 +133,15 @@ export class CodxTMService {
       id
     );
   }
+  getCOMeetingByID(id) {
+    return this.api.execSv<any>(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'GetCOMeetingByIDAsync',
+      id
+    );
+  }
 
   addTaskGroup(data) {
     return this.api.execSv<any>(

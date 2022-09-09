@@ -1,9 +1,10 @@
 import { E } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ApiHttpService, AuthService, CacheService, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, FormModel, NotificationsService } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { tmpHistory } from '../../models/tmpComments.model';
 import { AttachmentComponent } from '../attachment/attachment.component';
+import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.component';
 
 @Component({
   selector: 'codx-comment-history',
@@ -45,6 +46,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     private auth: AuthService,
     private cache: CacheService,
     private notifySV:NotificationsService,
+    private callFuc:CallFuncService,
     private dt: ChangeDetectorRef
   ) {
 
@@ -217,5 +219,8 @@ export class CodxCommentHistoryComponent implements OnInit {
         }
 
       });
+  }
+  showVotes(data:any){
+    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
   }
 }

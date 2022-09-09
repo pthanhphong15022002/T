@@ -10,6 +10,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  ImageViewerComponent,
   RequestOption,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -25,15 +26,16 @@ import { CodxEpService } from '../../../codx-ep.service';
 })
 export class PopupAddCarsComponent implements OnInit {
   @ViewChild('attachment') attachment : AttachmentComponent; 
-
+  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Input() editResources: any;
   @Input() isAdd = true;
   @Input() data!: any;
   @Output() closeEdit = new EventEmitter();
-  @Output() onDone = new EventEmitter();
+  @Output() onDone = new EventEmitter();  
+  @Output() loadData = new EventEmitter();
 
   headerText='';
-  subHeaderText = 'Tạo & upload file văn bản';
+  subHeaderText = '';
 
   fGroupAddCar: FormGroup;
   formModel: FormModel;
@@ -45,7 +47,7 @@ export class PopupAddCarsComponent implements OnInit {
   vllDevices = [];
   lstDeviceCar = [];
   tmplstDevice = [];
-
+  avatarID:any=null;
   constructor(    
     private callFuncService: CallFuncService,
     private cacheService: CacheService,
@@ -101,6 +103,7 @@ export class PopupAddCarsComponent implements OnInit {
     }
     else{
       this.headerText = "Sửa thông tin xe"
+      this.avatarID= this.data.recID;
     }
     this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -170,31 +173,40 @@ export class PopupAddCarsComponent implements OnInit {
         }
       }
     });
-    this.fGroupAddCar.value.equipments = equipments;
     if(this.fGroupAddCar.value.category!=1){
       this.fGroupAddCar.value.companyID=null;
     }else{      
       this.fGroupAddCar.value.companyID = this.fGroupAddCar.value.companyID[0];
     }
-    this.fGroupAddCar.value.owner = this.fGroupAddCar.value.owner[0];
+    //this.fGroupAddCar.value.owner = this.fGroupAddCar.value.owner[0];
+    
 
-    if (!this.fGroupAddCar.value.linkType) {
-      this.fGroupAddCar.value.linkType = '3';
-    }
-    this.fGroupAddCar.value.resourceType = '2';
+    this.fGroupAddCar.patchValue({
+      resourceType : '2',
+      linkType : '3',
+      owner:this.fGroupAddCar.value.owner[0],
+      linkID:this.fGroupAddCar.value.linkID[0],
+      companyID:'Chưa có dữ liệu',
+      equipments:equipments,
+    });
+
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe(
-        res => {
-          if (res.update) {
-            (this.dialogRef.dataService as CRUDService)
-              .update(res.update)
-              .subscribe();
-          }
-          this.changeDetectorRef.detectChanges();
-        }
-      );      
+      .subscribe((res) => {
+        if (res) {
+          this.imageUpload
+            .updateFileDirectReload(res.update.recID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
+              }
+            });
+          this.dialogRef.close();
+        }        
+        return;
+      });
     //this.attachment.saveFilesObservable().subscribe(res=>{})
+    
   }
 
   fileCount(event){

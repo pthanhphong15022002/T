@@ -14,9 +14,11 @@ import { FormControl, FormGroup } from '@angular/forms';
 import {
   CacheService,
   CallFuncService,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
+  ImageViewerComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
@@ -28,7 +30,8 @@ import { CodxEpService } from '../../../codx-ep.service';
   styleUrls: ['popup-add-drivers.component.scss'],
 })
 export class PopupAddDriversComponent implements OnInit, AfterViewInit {
-  @ViewChild('attachment') attachment: AttachmentComponent
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
 
   @Input() editResources: any;
   @Input() isAdd = true;
@@ -37,7 +40,7 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
   @Output() onDone = new EventEmitter();
 
   headerText = '';
-  subHeaderText = 'Tạo & upload file văn bản';
+  subHeaderText = '';
 
   fGroupAddDriver: FormGroup;
   formModel: FormModel;
@@ -150,6 +153,8 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
       this.fGroupAddDriver.value.companyID = this.fGroupAddDriver.value.companyID[0];
     }
     this.fGroupAddDriver.value.owner = this.fGroupAddDriver.value.owner[0];
+    
+    this.fGroupAddDriver.value.linkID = this.fGroupAddDriver.value.linkID[0];
     this.fGroupAddDriver.value.resourceType = '3';
 
     if (!this.fGroupAddDriver.value.linkType) {
@@ -157,7 +162,19 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
     }
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe();
+      .subscribe((res) => {
+        if (res) {
+          this.imageUpload
+            .updateFileDirectReload(res.update.recID)
+            .subscribe((result) => {
+              if (result) {
+                //this.loadData.emit();
+              }
+            });
+          this.dialogRef.close();
+        }
+        return;
+      });
     //this.attachment.saveFilesObservable().subscribe(res => { })
   }
 

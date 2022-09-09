@@ -3,7 +3,9 @@ import {
   Component,
   Injector,
   Input,
+  OnChanges,
   OnInit,
+  SimpleChanges,
 } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
 import { TabModel } from './model/tabControl.model';
@@ -67,6 +69,7 @@ export class CodxTabsComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  
   fileAdded(e: any) {
     console.log(e);
   }

@@ -805,8 +805,10 @@ export class CodxTasksComponent
 
   selectedChange(task: any) {
     this.itemSelected = task?.data ? task?.data : task;
-    this.loadTreeView();
-    this.loadDataReferences();
+    if(this.itemSelected){
+      this.loadTreeView();
+      this.loadDataReferences();
+    }
     this.detectorRef.detectChanges();
   }
 
