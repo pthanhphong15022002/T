@@ -1,3 +1,4 @@
+import { json } from 'stream/consumers';
 import { formatDate } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -26,13 +27,13 @@ export class TaskDailyComponent implements OnInit {
   user: any;
   funcID: any;
   lstPined: any = [];
-  param:{[k: string]: any}  = {};
+  param: { [k: string]: any } = {};
   print: boolean = false;
   isCollapsed = true;
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
-  predicates : any = [];
-  dataValues : any = [];
+  predicates: any = [];
+  dataValues: any = [];
   predicate = '';
   dataValue = '';
   constructor(
@@ -128,7 +129,10 @@ export class TaskDailyComponent implements OnInit {
     var fromDate = new Date('2022-08-01');
     var toDate = new Date('2022-08-30');
     this.api
-      .callSv('TM', 'TM', 'ReportBusiness', 'ListReportTasksAsync', [fromDate,toDate])
+      .callSv('TM', 'TM', 'ReportBusiness', 'ListReportTasksAsync', [
+        fromDate,
+        toDate,
+      ])
       .subscribe((res) => {
         if (res) {
           console.log(res);
@@ -136,33 +140,63 @@ export class TaskDailyComponent implements OnInit {
       });
   }
   paramChange(evt: any) {
-    debugger
+    debugger;
     console.log(evt);
-    let pre = '';
-    let data ='';
-    if(evt.data.controlName=='DueDate'){
-      this.predicates.push(evt.data.controlName +'>=@0' +'&&' + evt.data.controlName+'<=@1');
-      this.dataValues.push(evt.data.data.fromDate.toJSON() + ';' + evt.data.data.toDate.toJSON());
+
+    if (evt.data.controlName == 'DueDate') {
+      if (this.predicates.length > 0) {
+        this.predicates.forEach((e) => {
+          console.log(e);
+          if (!e.includes('DueDate')) {
+            this.predicates.push(
+              evt.data.controlName + '>=@' + this.predicates.length
+            );
+            this.predicates.push(
+              evt.data.controlName + '<=@' + this.predicates.length
+            );
+          }else{
+            const index = e.indexOf(e.includes('DueDate'));
+            if(index !== -1){
+              this.dataValues[index] = evt.data.data.fromDate.toJSON() + ';' + evt.data.data.toDate.toJSON();
+            }
+          }
+        });
+      }else{
+        this.predicates.push(
+          evt.data.controlName + '>=@' + this.predicates.length
+        );
+        this.predicates.push(
+          evt.data.controlName + '<=@' + this.predicates.length
+        );
+        this.dataValues.push(
+          evt.data.data.fromDate.toJSON() + ';' + evt.data.data.toDate.toJSON()
+        );
+      }
+
     }
-    if(evt.data.controlName=='Owner'){
-      this.predicates.push(evt.data.controlName +'=@'+ (this.predicates.length + 1));
+    if (evt.data.controlName == 'Owner') {
+      this.predicates.push(
+        evt.data.controlName + '=@' + this.predicates.length
+      );
       this.dataValues.push(evt.data.data.data);
     }
 
-    this.predicates.forEach(e => {
-      if(!this.predicate.split('&&').includes(e)){
-        pre += e + '&&';
-      }
-    });
-    this.dataValues.forEach(e => {
-      if(!this.dataValue.split(';').includes(e)){
-        data += e + ';';
-      }
-    });
-    if(pre != '' && data != ''){
-      this.predicate = pre.substring(0,pre.length - 2);
-      this.dataValue = data.substring(0,data.length - 1);
-    }
+    this.predicate = this.predicates.join('&&');
+    this.dataValue = this.dataValues.join(';');
+    // this.predicates.forEach((e,i)=> {
+    //   if(!e[i].includes(e[i+1])){
+    //     pre += e + '&&';
+    //   }
+    // });
+    // this.dataValues.forEach(e => {
+    //   if(!data.split(';').includes(e)){
+    //     data += e + ';';
+    //   }
+    // });
+    // if(pre != '' && data != ''){
+    //   this.predicate = pre.substring(0,pre.length - 2);
+    //   this.dataValue = data.substring(0,data.length - 1);
+    // }
   }
   printReport() {
     this.print = true;
