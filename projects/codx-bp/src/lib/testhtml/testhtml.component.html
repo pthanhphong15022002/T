@@ -1,1 +1,422 @@
-<p>testhtml works!</p>
+<h2 class="text-danger text-center py-4 uppercase fs-1">DP - Qui trình số</h2>
+<div class="p-0">
+    <h2 class="text-danger  py-4 uppercase ">01_BP_Home_Card</h2>
+    <div class="d-flex flex-wrap ">
+        <div class="noDrop pb-6 pe-6">
+            <codx-card-img cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
+                imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                [footer]="footerbg">
+            </codx-card-img>
+        </div>
+        <div class="noDrop pb-6 pe-6">
+            <codx-card-img cardCss="border border-secondary rounded-0 h-100 w-225px card-no-body"
+                imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                [footer]="footerbg">
+            </codx-card-img>
+        </div>
+        <div class="noDrop pb-6 pe-6">
+            <codx-card-img cardCss="border border-info rounded-0 h-100 w-225px card-no-body"
+                imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                [footer]="footerbg">
+            </codx-card-img>
+        </div>
+        <div class="noDrop pb-6 pe-6">
+            <codx-card-img cardCss="border border-danger rounded-0 h-100 w-225px card-no-body"
+                imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                [footer]="footerbg">
+            </codx-card-img>
+        </div>
+        <div class="noDrop pb-6 pe-6">
+            <codx-card-img cardCss="border border-warning rounded-0 h-100 w-225px card-no-body"
+                imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                [footer]="footerbg">
+            </codx-card-img>
+        </div>
+        <div class="noDrop pb-6 pe-6">
+            <codx-card-img cardCss="border border-success rounded-0 h-100 w-225px card-no-body"
+                imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                [footer]="footerbg">
+            </codx-card-img>
+        </div>
+    </div>
+    <ng-template #footerbg>
+        <div class="d-flex bg-footer  m-n3 mt-0">
+            <div class="d-flex flex-column w-100 p-3">
+                <div class="fs-4  fw-bold lh-base">Thống kê công việc</div>
+                <div class="d-flex align-items-center">
+                    <div class="badge  badge-white my-1 me-3">Phiên bản: 1.0</div>
+                    <div class="d-flex align-items-center card-icon-nowrap">
+                        <span class="me-1 icon-16 icon-access_alarm"></span><span class="  line-clamp">17/08/2022</span>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap justify-content-between  my-1">
+                    <div class="d-flex align-items-center">
+                        <div class=" d-flex me-3">
+                            <span class="icon-check-correct text-warning icon-16 me-1"></span>
+                            <span class="">4</span>
+                        </div>
+                        <div class="d-flex me-3">
+                            <span class="icon-attach_file text-primary icon-16 me-1"></span>
+                            <span class=" ">5</span>
+                        </div>
+                    </div>
+                    <codx-imgs [width]="30" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users"
+                        [numberImages]="2">
+                    </codx-imgs>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>
+<div class="separator separator-dotted border-success my-3"></div>
+<div class="p-5">
+    <h2 class="text-danger  py-4 uppercase "> 01_BP_Home_List</h2>
+    <h4>Cột trong 1 list - Tên qui trình</h4>
+    <div class="d-flex flex-column w-100 p-3">
+        <div class="fw-bold lh-base">Qui trình tuyển dụng</div>
+        <div class="d-flex flex-wrap justify-content-between">
+            <div class="d-flex align-items-center">
+                <div class=" d-flex me-3">
+                    <span class="icon-server text-dark icon-16 me-1"></span>
+                    <span class="">4</span>
+                </div>
+                <div class=" d-flex me-3">
+                    <span class="icon-format_list_numbered text-danger icon-16 me-1"></span>
+                    <span class="">4</span>
+                </div>
+                <div class="d-flex me-3">
+                    <span class="icon-attach_file text-primary icon-16 me-1"></span>
+                    <span class=" ">5</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="separator separator-dotted border-success my-3"></div>
+<div class="p-5">
+    <h2 class="text-danger  py-4 uppercase "> 03_BP_Home_Search</h2>
+    <div class="card rounded-0 p-10">
+        <div class="fw-semibold fw-base text-gray-600">4 kết quả được tìm thấy</div>
+        <div class="card-body">
+            <div class="mt-6">
+                <!--begin::Head-->
+                <div class="d-flex align-items-center mb-2">
+                    <!--begin::Title-->
+                    <a href="#" class="fs-5 fw-bold text-primary-darker  text-hover-primary me-1">Qui trình tuyển
+                        dụng</a>
+                    <!--end::Title-->
+                </div>
+                <!--end::Head-->
+                <!--begin::Summary-->
+                <div class="fs-base fw-normal text-gray-700 mb-2">Thực hiện các công việc được quản lý giao, hỗ trợ các
+                    thành viên
+                    trong nhóm, tham gia đóng góp ý tưởng cho việc phát triển công ty</div>
+                <!--end::Summary-->
+                <!--begin::Foot-->
+                <div class="d-flex flex-wrap">
+                    <!--begin::Author-->
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex align-items-center card-icon-nowrap me-3">
+                            <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp">07/12/2021
+                                10:53
+                                AM</span>
+                        </div>
+                        <div class="d-flex align-items-center card-icon-nowrap  px-4 me-2">
+                            <span class="me-1">200</span><span class="line-clamp">lượt xem</span>
+                        </div>
+                        <div class="rating  px-4 me-2">
+                            <div class="rating-label checked">
+                                <i class="icon-star "></i>
+                            </div>
+                            <div class="rating-label checked">
+                                <i class="icon-star "></i>
+                            </div>
+                            <div class="rating-label checked">
+                                <i class="icon-star "></i>
+                            </div>
+                            <div class="rating-label checked">
+                                <i class="icon-star_half "></i>
+                            </div>
+                            <div class="rating-label checked">
+                                <i class="icon-star_border "></i>
+                            </div>
+                        </div>
+                        <span class="badge badge-warning my-1 me-3">Tuyển dụng</span>
+                        <div class="badge  badge-success my-1 me-3">Onboard</div>
+                    </div>
+                </div>
+                <!--end::Foot-->
+            </div>
+            <div class="separator   mt-2"></div>
+            <div class="mt-6">
+                <!--begin::Head-->
+                <div class="d-flex align-items-center mb-2">
+                    <!--begin::Title-->
+                    <a href="#" class="fs-5 fw-bold text-primary-darker  text-hover-primary me-1">Qui trình tuyển
+                        dụng</a>
+                    <!--end::Title-->
+                </div>
+                <!--end::Head-->
+                <!--begin::Summary-->
+                <div class="fs-base fw-normal text-gray-700 mb-2">Thực hiện các công việc được quản lý giao, hỗ trợ các
+                    thành viên
+                    trong nhóm, tham gia đóng góp ý tưởng cho việc phát triển công ty</div>
+                <!--end::Summary-->
+                <!--begin::Foot-->
+                <div class="d-flex flex-wrap">
+                    <!--begin::Author-->
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex align-items-center card-icon-nowrap me-3">
+                            <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp">07/12/2021
+                                10:53
+                                AM</span>
+                        </div>
+                        <div class="d-flex align-items-center card-icon-nowrap  px-4 me-2">
+                            <span class="me-1">200</span><span class="line-clamp">lượt xem</span>
+                        </div>
+                        <div class="rating  px-4 me-2">
+                            <div class="rating-label checked">
+                                <i class="icon-star "></i>
+                            </div>
+                            <div class="rating-label checked">
+                                <i class="icon-star "></i>
+                            </div>
+                            <div class="rating-label checked">
+                                <i class="icon-star "></i>
+                            </div>
+                            <div class="rating-label checked">
+                                <i class="icon-star_half "></i>
+                            </div>
+                            <div class="rating-label checked">
+                                <i class="icon-star_border "></i>
+                            </div>
+                        </div>
+
+                        <span class="badge badge-warning my-1 me-3">Tuyển dụng</span>
+                        <div class="badge  badge-success my-1 me-3">Onboard</div>
+                    </div>
+                </div>
+                <!--end::Foot-->
+            </div>
+            <div class="separator   mt-2"></div>
+        </div>
+        <div class="card-footer border-0">
+            <ul class="pagination pagination-circle pagination-outline">
+                <li class="page-item first disabled m-1">
+                    <a href="#" class="page-link px-0">
+                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr079.svg-->
+                        <span class="icon-first_page"></span>
+                        <!--end::Svg Icon-->
+                    </a>
+                </li>
+                <li class="page-item previous disabled m-1">
+                    <a href="#" class="page-link px-0">
+                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr074.svg-->
+                        <span class="icon-arrow_back_ios"></span>
+                        <!--end::Svg Icon-->
+                    </a>
+                </li>
+                <li class="page-item m-1"><a href="#" class="page-link">1</a></li>
+                <li class="page-item active m-1"><a href="#" class="page-link">2</a></li>
+                <li class="page-item m-1"><a href="#" class="page-link">3</a></li>
+                <li class="page-item m-1"><a href="#" class="page-link">4</a></li>
+                <li class="page-item m-1"><a href="#" class="page-link">5</a></li>
+                <li class="page-item m-1"><a href="#" class="page-link">6</a></li>
+                <li class="page-item next m-1">
+                    <a href="#" class="page-link px-0">
+                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr071.svg-->
+                        <span class="icon-arrow_forward_ios"></span>
+                        <!--end::Svg Icon-->
+                    </a>
+                </li>
+                <li class="page-item last m-1">
+                    <a href="#" class="page-link px-0">
+                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr080.svg-->
+                        <span class="icon-last_page"></span>
+                        <!--end::Svg Icon-->
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="p-5">
+    <h2 class="text-danger  py-4 uppercase "> Thêm qui trình mới</h2>
+    <h4>Nội dung trong form thêm mới</h4>
+    <div class="card" style="width:550px">
+        <div class="card-body">
+            <div class="card-form">
+                <div class="form-group">
+                    <codx-label name="" default="Tên tên qui trình"></codx-label>
+                    <codx-input type="text" [disabled]="false" class="test-textbox" placeholder="textbox" value="123">
+                    </codx-input>
+                </div>
+                <div class="form-group">
+                    <codx-label name="" default="Mô tả"></codx-label>
+                    <codx-input type="textarea" field="textarea" placeholder="textarea">
+                    </codx-input>
+                </div>
+                <div class="form-group">
+                    <label class="codx-label">Quản lý qui trình</label>
+                    <codx-input type="text" [disabled]="false" class="test-textbox" placeholder="textbox" value="123">
+                    </codx-input>
+                </div>
+                <div class="form-group">
+                    <codx-label name="" default="Nhóm qui trình"></codx-label>
+                    <codx-input service="SYS" type="combobox" name="combobox" ngDefaultControl refValue="Users"
+                        [loadFull]="true" field="userID" inputmode="text">
+                    </codx-input>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <codx-label name="" default="Nhóm qui trình"></codx-label>
+                            <codx-input service="SYS" type="combobox" name="combobox" ngDefaultControl refValue="Users"
+                                [loadFull]="true" field="userID" inputmode="text">
+                            </codx-input>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <codx-label name="" default="Ngày hiệu lực"></codx-label>
+                                <codx-input type="datetime" class="test-datetime" field="datetime"
+                                    placeholder="datetime" dataformat="d">
+                                </codx-input>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <codx-label name="" default="Ngày hết hạn"></codx-label>
+                                <codx-input type="datetime" class="test-datetime" field="datetime"
+                                    placeholder="datetime" dataformat="d">
+                                </codx-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="p-5">
+        <h2 class="text-danger  py-4 uppercase "> 12_BP_Home_Properties</h2>
+        <h4>Qui trình tuyển dụng </h4>
+        <div class="card" style="width:550px">
+            <div class="card-body">
+                <div class="mb-0">
+                    <h4 class="fw-bold text-gray-900 mb-10">Đánh giá</h4>
+                    <div class="d-flex flex-stack w-100 me-2">
+                        <!--begin::Section-->
+                        <div class="d-flex flex-column flex-center">
+                            <span class="text-warning fw-bolder d-block fs-3x">3.5</span>
+                            <div class="rating">
+                                <div class="rating-label checked">
+                                    <i class="icon-star "></i>
+                                </div>
+                                <div class="rating-label checked">
+                                    <i class="icon-star "></i>
+                                </div>
+                                <div class="rating-label checked">
+                                    <i class="icon-star "></i>
+                                </div>
+                                <div class="rating-label checked">
+                                    <i class="icon-star_half "></i>
+                                </div>
+                                <div class="rating-label checked">
+                                    <i class="icon-star_border "></i>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center ">
+                                <span class="me-1">200</span><span class="line-clamp">đánh giá</span>
+                            </div>
+                        </div>
+                        <!--end::Section-->
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-end align-items-start flex-wrap">
+                                <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                    <div class="d-flex align-items-center me-3">
+                                        <span class="me-1">5</span>
+                                        <div class="rating-label">
+                                            <i class="icon-star icon-16"></i>
+                                        </div>
+                                    </div>
+                                    <div class="progress h-6px w-100 me-3">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="text-primary fw-bold">50%</span>
+                                </div>
+                                <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                    <div class="d-flex align-items-center me-3">
+                                        <span class="me-1">4</span>
+                                        <div class="rating-label">
+                                            <i class="icon-star icon-16"></i>
+                                        </div>
+                                    </div>
+                                    <div class="progress h-6px w-100 me-3">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="text-primary fw-bold">50%</span>
+                                </div>
+                                <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                    <div class="d-flex align-items-center me-3">
+                                        <span class="me-1">3</span>
+                                        <div class="rating-label">
+                                            <i class="icon-star icon-16"></i>
+                                        </div>
+                                    </div>
+                                    <div class="progress h-6px w-100 me-3">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="text-primary fw-bold">50%</span>
+                                </div>
+                                <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                    <div class="d-flex align-items-center me-3">
+                                        <span class="me-1">2</span>
+                                        <div class="rating-label">
+                                            <i class="icon-star icon-16"></i>
+                                        </div>
+                                    </div>
+                                    <div class="progress h-6px w-100 me-3">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="text-primary fw-bold">50%</span>
+                                </div>
+                                <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                    <div class="d-flex align-items-center me-3">
+                                        <span class="me-1">1</span>
+                                        <div class="rating-label">
+                                            <i class="icon-star icon-16"></i>
+                                        </div>
+                                    </div>
+                                    <div class="progress h-6px w-100 me-3">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="text-primary fw-bold">50%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="separator  my-2"></div>
+                <div class="mb-4">
+                    <div class="d-flex flex-stack flex-wrap">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>

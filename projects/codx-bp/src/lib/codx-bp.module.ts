@@ -13,7 +13,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'testhtnl',
+        path: 'testhtml',
         component: TesthtmlComponent,
       }
     ]
