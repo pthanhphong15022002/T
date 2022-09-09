@@ -1,49 +1,35 @@
 import {
-  ChangeDetectorRef,
   Component,
-  EventEmitter,
-  HostListener,
-  Injector,
-  Input,
   OnChanges,
   OnInit,
   Optional,
-  Output,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
-  FormControl,
-  FormGroup,
   Validators,
 } from '@angular/forms';
-import { Html } from '@syncfusion/ej2-angular-diagrams';
 import { DropDownList } from '@syncfusion/ej2-angular-dropdowns';
 import {
   Column,
   GridComponent,
   SelectionSettingsModel,
 } from '@syncfusion/ej2-angular-grids';
-import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import {
-  AlertConfirmInputConfig,
   ApiHttpService,
   CacheService,
   CallFuncService,
   CodxGridviewComponent,
   DataRequest,
-  DataService,
   DialogData,
-  DialogModel,
   DialogRef,
   NotificationsService,
 } from 'codx-core';
-import { Observable, finalize, map, of } from 'rxjs';
 import { MouseEventArgs } from '@syncfusion/ej2-base';
 import { IETables } from '../../models/import.model';
+import { CodxImportAddMappingTemplateComponent } from './codx-import-add-mapping-template/codx-import-add-mapping-template.component';
+import { BehaviorSubject, finalize, map, Observable, of } from 'rxjs';
 @Component({
   selector: 'codx-import-add-mapping',
   templateUrl: './codx-import-add-mapping.component.html',
@@ -51,11 +37,8 @@ import { IETables } from '../../models/import.model';
 })
 export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   @ViewChild('grid') grid: GridComponent;
-  service = 'SYS';
-  active = '1';
+  service = "SYS";
   dialog: any;
-  submitted = false;
-  gridModel: any;
   gridViewSetup: any;
   formModel: any;
   formModels: any = {};
@@ -64,14 +47,13 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   hideThumb = false;
   fileCount = 0;
   headerText: string = 'Thêm mới';
+  editNew = false;
   columnsGrid: any;
   editSettings: any;
   dataService: any = { data: null };
   fieldImport = [];
   dataImport = [];
   dataImport2 = [];
-  date = new Date();
-  sessionID: any;
   mappingTemplate: any;
   dataIEConnection: any = {};
   dataIETable: IETables = new IETables();
@@ -97,16 +79,19 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     private cache: CacheService,
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
+    private notifySvr: NotificationsService,
+    private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.formModel = dt.data?.[0];
     this.dataIEConnection = dt.data?.[1];
-    if (dt.data?.[2]) this.dataIETable = dt.data?.[2];
-    if (dt.data?.[3]) this.dataIEMapping = dt.data?.[3];
-    if (dt.data?.[5]) this.sourceField = dt.data?.[5];
-    this.type = dt.data?.[4];
+    if(dt.data?.[2]) this.dataIETable = dt.data?.[2];
+    if(dt.data?.[3]) this.dataIEMapping = dt.data?.[3];
+    if(dt.data?.[4]) this.dataImport = dt.data?.[4];
+    if(dt.data?.[6]) this.sourceField = dt.data?.[6];
+    this.type = dt.data?.[5];
   }
 
   ngOnInit(): void {
@@ -166,21 +151,28 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       this.dataCbb['SourceField'] = cbb;
     }
   }
-  getDataEdit() {
-    this.api
-      .execSv<any>(
-        this.service,
-        'AD',
-        'IEFieldMappingBusiness',
-        'GetItemByIETableAsync',
-        this.dataIETable?.recID
-      )
-      .subscribe((item) => {
-        if (item) {
-          this.dataIEFieldMapping = item;
-          //this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
-        } else this.getGridViewSetup();
-      });
+  getDataEdit()
+  {
+   
+    this.api.execSv<any>(this.service,"AD","IEFieldMappingBusiness","GetItemByIETableAsync",this.dataIETable?.recID).subscribe(item=>{
+      if(item && item.length >0) 
+      {
+        this.dataImport = item.sort((a,b)=>a.destinationField.localeCompare(b.destinationField));
+        this.loadDataEdit();
+        //this.getGridViewSetup();
+        //this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
+      }
+      else if(this.dataImport && this.dataImport.length>0)
+      {
+        this.loadDataEdit();
+      }
+      else
+      {
+        this.editNew = true;
+        this.getGridViewSetup();
+      }
+    })
+    
     // Pass value IETable
     this.addMappingForm.controls['mappingName'].setValue(
       this.dataIETable.mappingTemplate
@@ -216,7 +208,92 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       this.dataIEMapping.importRule = '';
     }
   }
-
+  loadDataEdit()
+  {
+    this.cache
+    .gridViewSetup(
+      this.formModels.formName,
+      this.formModels.gridViewName
+    )
+    .subscribe((item2) => {
+      this.gridViewSetup = item2;
+      for(var i =0 ; i< this.dataImport.length ; i++)
+      {
+        var keyChild = Object.keys( this.dataImport[i]);
+        for(var x = 0 ; x < keyChild.length ; x++)
+        {
+          var text = keyChild[x].charAt(0).toUpperCase() + keyChild[x].slice(1); 
+          if(i==0 && this.gridViewSetup[text]?.isVisible == true)
+          {
+            let field2 = {
+              text: keyChild[x],
+              controlType: this.gridViewSetup[text]?.controlType,
+              type: this.gridViewSetup[text]?.referedType,
+              value: this.gridViewSetup[text]?.referedValue,
+              require: this.gridViewSetup[text]?.isRequire,
+            };
+            
+            if(keyChild[x].toLowerCase() === ("sourceField").toLowerCase() )
+            {
+              field2.text = text;
+              field2.controlType = "ComboBox"
+              field2.value = text;
+              field2.type = text;
+            }
+            this.fieldImport.push(field2);
+            if (
+              ((field2.type == '3' ||field2.type == '2')  && !(field2.text in this.editParams))
+              || (field2.text == "SourceField" && !(field2.text in this.editParams))
+            ) {
+              if (field2.type == '3') {
+                this.getDataCBB(field2.value);
+                this.getParamsCbb(field2.value);
+              } else if (field2.type == '2') {
+                this.getDataVll(field2.value);
+              }
+              this.element[field2.text] = null as HTMLElement;
+              this.dropObj[field2.text] = null as DropDownList;
+              this.editParams[field2.text] = {
+                create: () => {
+                  this.element[field2.text] = document.createElement('input');
+                  return this.element[field2.text];
+                },
+                read: () => {
+                  return this.dropObj[field2.text].value;
+                },
+                destroy: () => {
+                  this.dropObj[field2.text].destroy();
+                },
+                write: (args: { rowData: object; column: Column }) => {
+                  var fields = { text: 'text', value: 'value' };
+                  if (field2.type== '3')
+                    fields = this.paramsCbb[field2.value];
+                    this.dropObj[field2.text] = new DropDownList({
+                    dataSource: this.dataCbb[field2.value],
+                    value: args.rowData[args.column.field],
+                    fields: fields,
+                    floatLabelType: 'Never',
+                  });
+                  this.dropObj[field2.text].appendTo(this.element[field2.text]);
+                },
+              };
+            }
+            
+          }
+          if(keyChild[x] == "sourceField")
+          {
+            this.dataImport[i]["SourceField"] = this.dataImport[i][keyChild[x]]
+            delete  this.dataImport[i][keyChild[x]];
+          }
+        }
+      }
+      debugger;
+      var findIndex =  this.fieldImport.findIndex(x=>x.text.toLowerCase() === ("DestinationField").toLowerCase());
+      this.arraymove(this.fieldImport,findIndex,0);
+      this.dataImport2 = this.dataImport;
+      this.grid.refresh();
+    });
+  }
   load(args) {
     this.grid.element.addEventListener('mouseup', (e: MouseEventArgs) => {
       if ((e.target as HTMLElement).classList.contains('e-rowcell')) {
@@ -263,11 +340,9 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   onSave() {
     this.grid.endEdit();
     var result = this.grid.dataSource;
-    if (this.addMappingForm.value?.parentEntity[0])
-      this.addMappingForm.value.parentEntity =
-        this.addMappingForm.value?.parentEntity[0];
-    this.dataIETable.mappingName = this.dataIEMapping.mappingName =
-      this.addMappingForm.value?.mappingName;
+    if(this.addMappingForm.value?.parentEntity[0])
+        this.addMappingForm.value.parentEntity = this.addMappingForm.value?.parentEntity[0];
+    this.dataIETable.mappingName = this.dataIEMapping.mappingName = this.addMappingForm.value?.mappingName;
     this.dataIETable.processIndex = this.addMappingForm.value?.processIndex;
     this.dataIETable.destinationTable = this.dataIEMapping.tableName =
       this.addMappingForm.value?.destinationTable;
@@ -282,10 +357,87 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       result[i].sessionID = this.dataIETable.recID;
       result[i].mappingTemplate = '00000000-0000-0000-0000-000000000000';
     }
-    this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
+    if(this.type == "new")
+    {
+      debugger;
+      this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
+    }
+    else
+    {
+      //this.compare(this.dataEdit,result)
+      this.api
+      .execSv('SYS', 'AD', 'IETablesBusiness', 'UpdateItemAsync', this.dataIETable).subscribe(item=>{
+        if(item)
+        {
+          if(this.editNew)
+          {
+            this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",JSON.stringify(result)).subscribe(item2=>{
+              if(item2)
+              {
+               this.notifySvr.notifyCode("SYS007");
+               this.dialog.close();
+              }
+              else  this.notifySvr.notifyCode("SYS021");
+            })
+          }
+          else
+          {
+            this.api
+            .execSv('SYS', 'AD', 'IEFieldMappingBusiness', 'UpdateItemAsync', JSON.stringify(result)).subscribe(item2=>{
+              if(item2)
+              {
+               this.notifySvr.notifyCode("SYS007");
+               this.dialog.close();
+              }
+              else  this.notifySvr.notifyCode("SYS021");
+            })
+          }
+          
+        }
+        else  this.notifySvr.notifyCode("SYS021");
+      })
+     
+    }
+   
+   
+  }
+  onSaveTemplate()
+  {
+    this.callfunc
+    .openForm(
+      CodxImportAddMappingTemplateComponent,
+      null,
+      1000,
+      800,
+      '',
+      [
+        this.formModel,
+      ],
+      null
+    )
+    .closed.subscribe((item) => {
+      if (item?.event) {
+      }
+    });
   }
   addItem() {
     this.gridView.addRow();
+  }
+  compare(oldD:any, newD:any) {
+    
+    const isSameUser = (a, b) => a.value === b.value && a.display === b.display;
+    // Get items that only occur in the left array,
+    // using the compareFunction to determine equality.
+    const onlyInLeft = (left, right, compareFunction) => 
+      left.filter(leftValue =>
+        !right.some(rightValue => 
+          compareFunction(leftValue, rightValue)));
+
+    const onlyInA = onlyInLeft(oldD, newD, isSameUser);
+    const onlyInB = onlyInLeft(oldD, newD, isSameUser);
+
+    const result = [...onlyInB];
+    debugger;
   }
   getGridViewSetup() {
     this.cache
@@ -514,5 +666,30 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   getTextAligin(type: any) {
     if (type == 'CheckBox') return 'center';
     return 'left';
+  }
+  // private fetch(ass:any,cls:any,mt:any,request:any): Observable<any[]> {
+  //   return this.api
+  //     .execSv<Array<any>>(
+  //       this.service,
+  //       ass,
+  //       cls,
+  //       mt,
+  //       request
+  //     )
+  //     .pipe(
+  //       finalize(() => {
+  //         /*  this.onScrolling = this.loading = false;
+  //         this.loaded = true; */
+  //       }),
+  //       map((response: any) => {
+
+  //           return response;
+  //       })
+  //     );
+  // }
+  arraymove(arr:any, fromIndex:any, toIndex:any) {
+    var element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
   }
 }

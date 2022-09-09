@@ -500,7 +500,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   delete(index) {
     if (this.contents) {
       this.contents.splice(index, 1);
-      if (index == this.contents.length) index -= 1;
+      if (index >= this.contents.length) index = this.contents.length - 1;
       if (this.mode == 'edit') {
         if (this.objectParentID) {
           this.updateContent(this.objectParentID, this.contents).subscribe();
@@ -524,7 +524,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   getElement(ele: any, index = null) {
     var element = document.querySelectorAll('codx-input[type="text"]');
-    if (element.length == index) index -= 1;
+    if (index >= element.length) index = element.length - 1;
     let htmlE = element[index] as HTMLElement;
     // this.currentElement = ele.elRef.nativeElement as HTMLElement;
     this.currentElement = htmlE;
@@ -583,6 +583,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   focus(index) {
     var ele = document.querySelectorAll('codx-input[type="text"]');
     if (ele) {
+      if (index >= ele.length) index = ele.length - 1;
       let htmlE = ele[index] as HTMLElement;
       this.currentElement = htmlE;
       var input = this.currentElement.querySelector(
@@ -807,6 +808,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         JSON.stringify(this.mongoObjectId)
       );
     }
+    console.log('check file', e.data);
     let item = JSON.parse(JSON.stringify(initListNote));
     item.lineType = 'TEXT';
     item.attachments = 0;
