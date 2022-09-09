@@ -236,6 +236,7 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+          // statusColorRef: 'TM004'
         },
       },
       {
@@ -247,6 +248,7 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+          // statusColorRef: 'TM004'
         },
       },
     ];

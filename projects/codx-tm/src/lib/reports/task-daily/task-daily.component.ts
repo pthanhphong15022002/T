@@ -157,7 +157,7 @@ export class TaskDailyComponent implements OnInit {
           }else{
             const index = e.indexOf(e.includes('DueDate'));
             if(index !== -1){
-              this.dataValues[index] = evt.data.data.fromDate.toJSON() + ';' + evt.data.data.toDate.toJSON();
+              this.dataValues[index].push(evt.data.data.fromDate.toJSON() + ';' + evt.data.data.toDate.toJSON());
             }
           }
         });

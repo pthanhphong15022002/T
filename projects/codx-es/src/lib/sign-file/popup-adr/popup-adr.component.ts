@@ -52,7 +52,6 @@ export class PopupADRComponent extends UIComponent {
   dialogSignFile: FormGroup;
   controlName;
 
-  noteData;
   cbxName;
 
   user;

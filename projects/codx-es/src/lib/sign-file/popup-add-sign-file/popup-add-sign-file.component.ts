@@ -55,8 +55,10 @@ export class PopupAddSignFileComponent implements OnInit {
   isAddNew: boolean = true;
   processID: String = '';
   transID: String = '';
-  isSaved = false;
   gvSetup: any;
+
+  isSaved: boolean = false;
+  isEdit: boolean = false;
 
   lstFile: any = [];
 
@@ -398,6 +400,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   valueChange(event) {
     if (event?.field && event?.component && event?.data != '') {
+      this.isEdit = true;
       if (event?.field == 'templateName') {
         this.templateName = event.data;
         return;
@@ -805,10 +808,12 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   close(dialogClose) {
-    if (this.processTab == 0) {
+    if (
+      this.processTab == 0 ||
+      (this.isAddNew == false && this.isEdit == false)
+    ) {
       this.dialog && this.dialog.close();
-    }
-    if (this.processTab > 0) {
+    } else if (this.processTab > 0) {
       this.callfuncService.openForm(dialogClose, '', 500, 250);
     }
   }

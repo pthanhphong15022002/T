@@ -58,3 +58,16 @@ export class ES_SignFile {
   updateColumns = '';
   write = true;
 }
+
+export class EmailSendTo {
+  transID: string;
+  sendType: string;
+  objectType: string;
+  objectID: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+  text: string;
+  icon: string = null;
+}
