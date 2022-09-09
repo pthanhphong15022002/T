@@ -11,6 +11,7 @@ export class CO_Contents {
     tasks: number = 0;
     comments: number = 0;
     attachments: number = 0;
+    recID: string;
 }
 
 var LINE_TYPE = {

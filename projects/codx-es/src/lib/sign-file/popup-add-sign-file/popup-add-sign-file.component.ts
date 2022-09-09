@@ -425,7 +425,7 @@ export class PopupAddSignFileComponent implements OnInit {
           icon: category?.Icon,
           color: category?.Color,
           processID: category?.RecID,
-          categoryName: category?.processID,
+          categoryName: category?.CategoryName,
         });
       }
 
@@ -523,7 +523,6 @@ export class PopupAddSignFileComponent implements OnInit {
               //   });
               (await this.attachment.saveFilesObservable()).subscribe(
                 (item2: any) => {
-                  debugger;
                   if (item2?.status == 0) {
                     this.fileAdded(item2);
                   }

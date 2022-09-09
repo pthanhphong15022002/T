@@ -147,14 +147,13 @@
                     <ul class="nav nav-tabs nav-tabs-line row">
                         <li class="nav-item col">
                             <a class="nav-link " *ngIf="tabApproval" [class.active]="tabActive == STATUS_ACTIVE.CARD"
-                                data-toggle="tab" href="#gift_1" (click)="changeOptionStatus(STATUS_ACTIVE.CARD)">
-                                <span class="nav-text">{{functionID == functionName.Share ?
-                                    'Nhận chia sẻ':"Phiếu"}}</span>
+                                data-toggle="tab" href="#gift_1" >
+                                <span class="nav-text"></span>
                             </a>
                         </li>
                         <li class="nav-item col" *ngIf="tabApproval">
                             <a class="nav-link" [class.active]="tabActive == STATUS_ACTIVE.APPROVER" data-toggle="tab"
-                                href="#gift_3" (click)="changeOptionStatus(STATUS_ACTIVE.APPROVER)">
+                                href="#gift_3" >
                                 <span class="nav-text">
                                     <codx-label formName="" name="lblApprove" default="Xét duyệt"></codx-label>
                                 </span>
@@ -184,6 +183,8 @@
             [typeMF]="'hover'" 
             [formModel]="codxViews.formModel"
             imgCss="me-2"
+            [imageId]="data.createdBy"
+            imageObjType="AD_Users"
             cardCss="card-template border-bottom px-2 py-3" 
             [title]="data.senderName"
             [date]="data.createdOn"

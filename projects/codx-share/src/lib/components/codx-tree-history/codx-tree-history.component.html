@@ -1,10 +1,5 @@
 
 <div>
-    <div class="tree-body">
-        <ng-container *ngFor="let node of root.listSubComment">
-            <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
-        </ng-container>
-    </div>
     <ng-container *ngIf="addNew">
         <div class="tree-footer">
             <codx-comment-history
@@ -18,6 +13,11 @@
             </codx-comment-history>
         </div>
     </ng-container>
+    <div class="tree-body">
+        <ng-container *ngFor="let node of root.listSubComment">
+            <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
+        </ng-container>
+    </div>
 </div>
 <ng-template #NodeHistory let-item>
     <div class="c1" [attr.dt]="setDicData(item)">
