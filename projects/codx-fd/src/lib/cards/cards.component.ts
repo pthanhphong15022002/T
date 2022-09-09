@@ -84,9 +84,6 @@ export class CardsComponent implements OnInit {
   userReciverName = "";
   isWalletReciver = false;
 
-  @ViewChild("templateChooseUser") chooseUser;
-  @ViewChild("templateGivePrice") tmlgivePrice;
-  @ViewChild('sideBarRightRef') sideBarRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('codxViews') codxViews: ViewsComponent;
@@ -105,7 +102,7 @@ export class CardsComponent implements OnInit {
     this.user = this.auth.userValue;
     this.api
       .callSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [
-        "FED_Parameters",
+        "FD_Parameters",
         "1",
         "RuleSelected",
       ])
@@ -212,11 +209,6 @@ export class CardsComponent implements OnInit {
     ];
 
   }
-  openUser(field) {
-    console.log(this.chooseUser);
-    this.field = field;
-    this.modalService.open(this.chooseUser, { centered: true });
-  }
   checkValidateWallet(receiverID: string) {
     if (receiverID) {
       this.api
@@ -273,17 +265,6 @@ export class CardsComponent implements OnInit {
         }
       });
   }
-
-  parameterFD: any;
-  getParameter() {
-    this.api
-      .execSv("SYS", "ERM.Business.CM", "SettingsBusiness", "GetParameterByFDAsync", ["FED_Parameters", this.cardType, "1"])
-      .subscribe((res) => {
-        if (res) {
-          this.parameterFD = res;
-        }
-      })
-  }
   submit() {
     if (this.givePrice > this.wallet.coCoins) {
       this.notificationsService.notify("Vượt quá số xu trong ví");
@@ -307,7 +288,7 @@ export class CardsComponent implements OnInit {
       });
   }
 
-  DeleteCard(item) {}
+
   selectedItem(data: any) {
     return this.api
       .execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardAsync", data.recID)
@@ -316,7 +297,6 @@ export class CardsComponent implements OnInit {
           this.isShowCard = true;
           console.log('getOneCard: ', res);
           this.itemSelected = res;
-          this.handleVllRating(this.itemSelected.cardType);
           if (this.itemSelected.temp) {
             this.getBehavior(this.itemSelected.temp);
           }
@@ -576,7 +556,6 @@ export class CardsComponent implements OnInit {
         if (res) {
           this.isShowCard = true;
           this.itemSelected = res;
-          this.handleVllRating(this.itemSelected.cardType);
           this.dt.detectChanges();
           if (this.itemSelected.temp) {
             this.getBehavior(this.itemSelected.temp);
@@ -588,16 +567,6 @@ export class CardsComponent implements OnInit {
           this.itemSelected = null;
         }
       });
-  }
-  handleVllRating(cardType: string): void {
-    if (cardType == CardType.Thankyou) {
-      this.ratingVll = Valuelist.RatingThankYou;
-      return;
-    }
-    if (cardType == CardType.CommentForChange) {
-      this.ratingVll = Valuelist.RatingCommentForChange;
-      return;
-    }
   }
   getIndustry(industry) {
     return this.api
@@ -619,6 +588,23 @@ export class CardsComponent implements OnInit {
       valueList: this.vll
     };
     this.callcSV.openSide(PopupAddCardsComponent, data, option);
+  }
+
+
+  clickMF(event:any,data:any){
+    switch(event.functionID){
+      case "SYS02":
+        break;
+      case "SYS03":
+        break;
+      default:
+        break;
+
+    }
+  }
+
+  deleteCard(card:any) {
+    
   }
 
 }
