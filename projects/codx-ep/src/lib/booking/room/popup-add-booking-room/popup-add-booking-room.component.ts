@@ -380,11 +380,29 @@ export class PopupAddBookingRoomComponent implements OnInit {
     console.log("attend",this.attendeesList);
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
-        if (res.save || res.update) {
-          this.dialogRef && this.dialogRef.close();
+      .subscribe(async (res) => {
+        if (res) {
+          if (this.attachment.fileUploadList.length > 0) {
+            this.attachment.objectId = res.recID;
+            // this.attachment
+            //   .addFileObservable(this.attachment.fileUploadList[0])
+            //   .subscribe((file) => {
+            //     if (file) {
+            //       this.fileAdded(file);
+            //       console.log(this.attachment.fileUploadList);
+            //     }
+            //   });
+            (await this.attachment.saveFilesObservable()).subscribe(
+              (item2: any) => {
+                if (item2?.status == 0) {
+                  this.fileAdded(item2);
+                }
+              }
+            );
+          }
+          this.dialogRef.close();
         } else {
-          //this.notificationsService.notifyCode('E0011');
+          this.notificationsService.notifyCode('E0011');
           return;
         }
       });

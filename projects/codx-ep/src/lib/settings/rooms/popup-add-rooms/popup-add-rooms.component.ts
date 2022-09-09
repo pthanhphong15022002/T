@@ -152,9 +152,7 @@ export class PopupAddRoomsComponent implements OnInit {
       resourceType:'1',
       linkType:'0',
       equipments:lstEquipments,
-    });
-    
-    this.dialogAddRoom.patchValue({companyID:'chưa có dữ liệu'});
+    });    
     if(this.dialogAddRoom.value.owner instanceof Object){
       this.dialogAddRoom.patchValue({owner:this.dialogAddRoom.value.owner[0]})
     }
