@@ -135,7 +135,7 @@
                 font-style: normal;
                 text-decoration-line: none;
                 color: #000000;
-              " (keyUpEnter)="keyUpEnter($event)" [crrValue]="item.memo" field="memo" id="{{ i }}"
+              " (keyUpEnter)="keyUpEnter($event, i)" [crrValue]="item.memo" field="memo" id="{{ i }}"
                                         (valueChange)="valueChange($event)"
                                         [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                     </codx-input>
