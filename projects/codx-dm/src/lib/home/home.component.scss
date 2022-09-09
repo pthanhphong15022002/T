@@ -26,6 +26,37 @@ codx-treeview .no-permission {
   width: 16px;
 }
 
+.rating-percent {
+  white-space: nowrap;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+.rating-group {
+  margin-left: 5px;
+  position: relative;
+}
+
+.d-flex {
+  display: flex!important;
+}
+
+.text-muted {
+  color: #91919f!important;
+}
+
+.icon-16 {
+  font-size: 16px!important;
+  line-height: 16px!important;
+  height: 16px!important;
+  width: 16px!important;
+}
+
+.text-muted {
+  color: #91919f!important;
+}
 // thead, tbody { display: block; }
 
 // tbody {
