@@ -42,6 +42,7 @@ import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { X } from '@angular/cdk/keycodes';
 import { create } from 'domain';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -58,6 +59,12 @@ export class CodxTasksComponent
   @Input() showButtonAdd = true;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
+  @Input() service = 'TM';
+  @Input() entityName = 'TM_Tasks';
+  @Input() idField = 'taskID';
+  @Input() assemblyName = 'ERM.Business.TM';
+  @Input() className = 'TaskBusiness';
+  @Input() method = 'GetTasksAsync';
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;

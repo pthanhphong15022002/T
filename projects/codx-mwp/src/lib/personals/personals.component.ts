@@ -51,16 +51,6 @@ export class PersonalsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    // this.views = [
-    //   {
-    //     type: ViewType.content,
-    //     active: true,
-    //     sameData: true,
-    //     model: {
-    //       panelLeftRef: this.panelLeftRef,
-    //     },
-    //   },
-    // ]
     this.changedt.detectChanges();
   }
 
