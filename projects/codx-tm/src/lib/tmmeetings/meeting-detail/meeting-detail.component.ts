@@ -21,7 +21,7 @@ import { UIComponent, ViewType, AuthStore, DialogData } from 'codx-core';
   selector: 'lib-meeting-detail',
   templateUrl: './meeting-detail.component.html',
   styleUrls: ['./meeting-detail.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class MeetingDetailComponent extends UIComponent {
   funcID = '';
@@ -42,7 +42,7 @@ export class MeetingDetailComponent extends UIComponent {
   day: any;
   startTime: any;
   name = 'Thảo luận';
-  private all = ['Nội dung họp', 'Thảo luận','Giao việc'];
+  private all = ['Nội dung họp', 'Thảo luận', 'Giao việc'];
   startDateMeeting: any;
   endDateMeeting: any;
   userName: any;
@@ -51,8 +51,15 @@ export class MeetingDetailComponent extends UIComponent {
   content1: CO_Content[] = [];
   tabControl: TabControl[] = [];
   active = 1;
-  functionParent: any
+  functionParent: any;
   listRecID = [];
+  service = 'TM';
+  entityName = 'TM_Tasks';
+  idField = 'taskID';
+  assemblyName = 'ERM.Business.TM';
+  className = 'TaskBusiness';
+  method = 'GetListTaskAssignByByMeetingAsync';
+  dataObj: any;
 
   constructor(
     private injector: Injector,
@@ -81,7 +88,6 @@ export class MeetingDetailComponent extends UIComponent {
 
   onInit(): void {
     this.getListComment();
-
   }
 
   ngAfterViewInit(): void {
@@ -224,16 +230,18 @@ export class MeetingDetailComponent extends UIComponent {
     //   });
   }
 
-    //#region get List recID
-    getListRecID(meeting) {
-      this.listRecID.push(meeting.recID);
-      if (meeting.contents) {
-        var contents = meeting.contents;
-        contents.forEach((data) => {
-          this.listRecID.push(data.recID);
-        });
-      }
+  //#region get List recID
+  getListRecID(meeting) {
+    this.listRecID.push(meeting.recID);
+    if (meeting.contents) {
+      var contents = meeting.contents;
+      contents.forEach((data) => {
+       // if(data.recID !='')
+        this.listRecID.push(data.recID);
+      });
+      var listRecID =   this.listRecID.length > 0 ? this.listRecID.join(";") : '';
+      this.dataObj = { listRecID: listRecID };
     }
-    //#region end
-
+  }
+  //#region end
 }

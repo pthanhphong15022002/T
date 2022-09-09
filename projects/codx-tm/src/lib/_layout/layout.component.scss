@@ -36,3 +36,7 @@ codx-view-list-detail codx-temp-full .text-gray-700.line-clamp {
 codx-view-list-detail .codx-detail-footer {
   overflow: hidden;
 }
+
+codx-view-list-detail ejs-listview .e-ul>li {
+  margin-bottom: 0;
+}

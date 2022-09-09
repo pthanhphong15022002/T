@@ -95,6 +95,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService.setupAutoNumber.next(null);
       this.esService.setLstDeleteStep(null);
       this.esService.setApprovalStep(null);
+      if (this.isSaved) {
+        this.esService.deleteCategory(this.dialogCategory.value.categoryID);
+      }
       if (!this.isSaved && this.isAddAutoNumber) {
         //delete autoNumer đã thiết lập
         this.esService
@@ -288,12 +291,19 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   openPopupApproval() {
+    if (this.isAdd) {
+      this.onSaveForm();
+    }
+    if (this.dialogCategory.invalid == true) {
+      return;
+    }
     let transID = this.dialogCategory.value.recID;
     let data = {
       type: '0',
       transID: transID,
       model: this.dialogCategory,
-      isAddNew: this.isAdd,
+      isAddNew: false,
+      //isAddNew: !this.isSaved,
     };
 
     let dialogModel = new DialogModel();

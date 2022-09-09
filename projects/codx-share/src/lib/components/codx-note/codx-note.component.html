@@ -246,7 +246,7 @@
             </span>
         </div>
         <div *ngIf="data.category == '3'" (mouseenter)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList"
-            popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" autoClose="outside">
+            popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="bottom" autoClose="outside">
             <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3">
             </codx-imgs>
         </div>

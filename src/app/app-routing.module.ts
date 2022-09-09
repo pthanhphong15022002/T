@@ -17,6 +17,14 @@ export const routes: Routes = [
           import('./modules/auth/auth.module').then((m) => m.AuthModule),
       },
       {
+        path: 'bp',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-bp/src/lib/codx-bp.module').then(
+            (m) => m.CodxBpModule
+          ),
+      },
+      {
         path: 'error',
         loadChildren: () =>
           import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
@@ -167,4 +175,4 @@ export const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
