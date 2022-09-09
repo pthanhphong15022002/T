@@ -1,7 +1,5 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit,  SimpleChanges,  ViewEncapsulation, } from '@angular/core';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit,  Output,  SimpleChanges,  ViewEncapsulation, } from '@angular/core';
 import { ApiHttpService, AuthService, CacheService } from 'codx-core';
-import { tmpHistory } from '../../models/tmpComments.model';
 
 @Component({
   selector: 'codx-tree-history',
@@ -18,7 +16,8 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   @Input() addNew:boolean = false;
   @Input() viewIcon:boolean = false;
   @Input() viewVote:boolean = false;
-
+  @Input() totalComment:number = 0;
+  @Output() totalCommentChange = new EventEmitter<number>();
   /////////////////////////////
   service = "BG";
   assemply = "ERM.Business.BG";
@@ -59,9 +58,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     this.api.execSv(this.service,this.assemply,this.className,"GetTrackLogsByObjectIDAsync",this.objectID).
     subscribe((res:any[]) =>{
       if(res) {
-        this.lstHistory = res;
-        this.root.listSubComment = res;
-
+        this.root.listSubComment = res[0];
       }
     })
   }
@@ -70,8 +67,9 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     this.api.execSv(this.service,this.assemply,this.className,"GetCommentTrackLogByObjectIDAsync",[this.objectID,this.actionType]).
     subscribe((res:any[]) =>{
       if(res) {
-        this.lstHistory = res;
-        this.root.listSubComment = res;
+        this.root.listSubComment = res[0];
+        this.totalComment = res[1];
+        this.totalCommentChange.emit(this.totalComment)
       }
     })
   }

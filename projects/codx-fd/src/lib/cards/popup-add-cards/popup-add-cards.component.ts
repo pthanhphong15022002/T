@@ -53,6 +53,21 @@ export class PopupAddCardsComponent implements OnInit {
     SHARE: "2",
     TAGS: "3"
   }
+  SHARECONTROLS = {
+    OWNER: "1",
+    MYGROUP: "2",
+    MYTEAM: "3",
+    MYDEPARMENTS: "4",
+    MYDIVISION: "5",
+    MYCOMPANY: "6",
+    EVERYONE: "9",
+    OGRHIERACHY: "O",
+    DEPARMENTS: "D",
+    POSITIONS: "P",
+    ROLES: "R",
+    GROUPS: "G",
+    USER: "U",
+  }
   @ViewChild("codxViews") codxViews: ViewsComponent;
   constructor(
     private api:ApiHttpService,
@@ -339,7 +354,6 @@ export class PopupAddCardsComponent implements OnInit {
       .subscribe((res:any) => {
         if (res && res.length > 0) {
           this.lstCard = res;
-          console.log(this.lstCard)
           if(this.lstCard.length > this.totalRecorItem){
             this.showNavigationArrows = true;
           }
