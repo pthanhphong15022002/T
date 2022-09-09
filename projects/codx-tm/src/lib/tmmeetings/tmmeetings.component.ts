@@ -525,7 +525,7 @@ export class TMMeetingsComponent
 
   //#region double click  view detail
 
-  doubkeClick(data) {
+  doubleClick(data) {
     if (this.listMoreFunc.length > 0) {
       this.listMoreFunc.forEach((obj) => {
         if (obj.functionID == 'TMT05011') this.urlView = obj.url;
