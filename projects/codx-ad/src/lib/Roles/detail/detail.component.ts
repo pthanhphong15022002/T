@@ -159,23 +159,28 @@ export class RoleDetailComponent
 
   LoadAsside() {
     //$('#kt_aside_menu').empty();
-    this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'FunctionListBusiness',
-        'GetFunctionRoleAsync',
-        [this.recid]
-      )
-      .subscribe((res: any) => {
-        console.log('check GetFunctionRoleAsync', res);
-        if (res) {
-          var data = res;
-          this.myTree = data;
-          this.df.detectChanges();
-          this.loadSource();
-        }
-      });
+    // this.api
+    //   .execSv('BI', 'ERM.Business.BI', 'CubeListBusiness', 'SaveRole', [])
+    //   .subscribe((res: any) => {
+    //     debugger;
+    //   });
+    // this.api
+    //   .execSv(
+    //     'SYS',
+    //     'ERM.Business.SYS',
+    //     'FunctionListBusiness',
+    //     'GetFunctionRoleAsync',
+    //     [this.recid]
+    //   )
+    //   .subscribe((res: any) => {
+    //     console.log('check GetFunctionRoleAsync', res);
+    //     if (res) {
+    //       var data = res;
+    //       this.myTree = data;
+    //       this.df.detectChanges();
+    //       this.loadSource();
+    //     }
+    //   });
   }
   loadSource() {
     var formName = this.RolesService.formName;

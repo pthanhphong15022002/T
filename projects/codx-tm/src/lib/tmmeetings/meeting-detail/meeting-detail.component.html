@@ -31,7 +31,7 @@
   </div>
 </ng-template>
 
-<div class="page-content d-flex flex-row">
+<div class="page-content d-flex flex-row" *ngIf="meeting">
   <div class="w-100">
     <div class="row m-0 bg-body rounded-2 mb-3 p-3">
       <div class="col-8 ">
@@ -94,10 +94,5 @@
 </ng-template>
 
 <ng-template #templateAssign>
-  <!-- mapping sau -->
-  <!-- <div class="card-body-nodata text-center">
-    <img src="../../../../assets/img/EmptyDataPortal.png" />
-  </div> -->
-  <view-assign-tasks-meeting [listRecID]="listRecID" ></view-assign-tasks-meeting>
-
+  <codx-tasks-share [service]="service" [assemblyName]="assemblyName" [idField]="idField" [className]="className" [method]="method" [dataObj]="dataObj"></codx-tasks-share>
 </ng-template>
