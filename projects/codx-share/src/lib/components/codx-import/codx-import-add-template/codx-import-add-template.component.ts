@@ -60,8 +60,9 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   selectedSheet: any;
   dataSave = 
   {
+    dataIETable:[],
     dataIEMapping:[],
-    dataIEFieldMapping:null,
+    dataIEFieldMapping:[],
   }
   sourceField : any;
   //////////////////////
@@ -191,46 +192,69 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
 
   async onSave()
   {
-    this.attachment.objectId = this.dataIEConnections.recID;
-    for(var i =0 ; i< this.gridView.dataService.data.length ; i++)
+    if(this.type == "add")
     {
-      this.gridView.dataService.data[i].sourceTable = this.importAddTmpGroup.value.sheetImport;
-      delete this.gridView.dataService.data[i].mappingName;
-    }
-    this.dataIEConnections.description = this.importAddTmpGroup.value.nameTmp;
-    this.dataIEConnections.password = this.importAddTmpGroup.value.password;
-    (await this.attachment.saveFilesObservable()).subscribe((item:any)=>{
-      if(item?.status == 0)
-      { 
-        //Lưu IEConnections
-        this.api.execSv<any>("SYS","AD","IEConnectionsBusiness","AddItemAsync",this.dataIEConnections).subscribe(item=>{
-          debugger;
-          // if(item) this.notifySvr.notifyCode('OD008');
-          // else this.notifySvr.notifyCode('SYS021');
-        })
-        this.api.execSv<any>("SYS","AD","IETablesBusiness","AddItemAsync",JSON.stringify(this.gridView.dataService.data)).subscribe(item=>{
-          debugger;
-          // if(item) this.notifySvr.notifyCode('OD008');
-          // else this.notifySvr.notifyCode('SYS021');
-        })
-        // this.api.execSv<any>("SYS","AD","IEMappingsBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEMapping)).subscribe(item=>{
-        //   debugger;
-        //   // if(item) this.notifySvr.notifyCode('OD008');
-        //   // else this.notifySvr.notifyCode('SYS021');
-        // })
-        if(this.dataSave.dataIEFieldMapping)
-        {
-          this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEFieldMapping)).subscribe(item=>{
+      this.attachment.objectId = this.dataIEConnections.recID;
+      for(var i =0 ; i< this.gridView.dataService.data.length ; i++)
+      {
+        this.gridView.dataService.data[i].sourceTable = this.importAddTmpGroup.value.sheetImport;
+        delete this.gridView.dataService.data[i].mappingName;
+      }
+      this.dataIEConnections.description = this.importAddTmpGroup.value.nameTmp;
+      this.dataIEConnections.password = this.importAddTmpGroup.value.password;
+      (await this.attachment.saveFilesObservable()).subscribe((item:any)=>{
+        if(item?.status == 0)
+        { 
+          //Lưu IEConnections
+          this.api.execSv<any>("SYS","AD","IEConnectionsBusiness","AddItemAsync",this.dataIEConnections).subscribe(item=>{
             debugger;
             // if(item) this.notifySvr.notifyCode('OD008');
             // else this.notifySvr.notifyCode('SYS021');
           })
+          this.api.execSv<any>("SYS","AD","IETablesBusiness","AddItemAsync",JSON.stringify(this.gridView.dataService.data)).subscribe(item=>{
+            debugger;
+            // if(item) this.notifySvr.notifyCode('OD008');
+            // else this.notifySvr.notifyCode('SYS021');
+          })
+          // this.api.execSv<any>("SYS","AD","IEMappingsBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEMapping)).subscribe(item=>{
+          //   debugger;
+          //   // if(item) this.notifySvr.notifyCode('OD008');
+          //   // else this.notifySvr.notifyCode('SYS021');
+          // })
+          if(this.dataSave.dataIEFieldMapping)
+          {
+            this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEFieldMapping)).subscribe(item=>{
+              debugger;
+              // if(item) this.notifySvr.notifyCode('OD008');
+              // else this.notifySvr.notifyCode('SYS021');
+            })
+          }
+          //
         }
-        //
+        else this.notifySvr.notify("Vui lòng đính kèm file");
+      })
+    }
+    else
+    {
+      this.api.execSv<any>("SYS","AD","IETablesBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIETable)).subscribe(item=>{
+        debugger;
+        // if(item) this.notifySvr.notifyCode('OD008');
+        // else this.notifySvr.notifyCode('SYS021');
+      })
+      // this.api.execSv<any>("SYS","AD","IEMappingsBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEMapping)).subscribe(item=>{
+      //   debugger;
+      //   // if(item) this.notifySvr.notifyCode('OD008');
+      //   // else this.notifySvr.notifyCode('SYS021');
+      // })
+      if(this.dataSave.dataIEFieldMapping)
+      {
+        this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEFieldMapping)).subscribe(item=>{
+          debugger;
+          // if(item) this.notifySvr.notifyCode('OD008');
+          // else this.notifySvr.notifyCode('SYS021');
+        })
       }
-      else this.notifySvr.notify("Vui lòng đính kèm file");
-    })
-   
+    }
   }
   changeSheetImport(e:any)
   {
@@ -359,14 +383,19 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     this.sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]],{header:this.importAddTmpGroup.value.firstCell});
     if(!this.importAddTmpGroup.value.sheetImport) return this.notifySvr.notify("sheet import không được trống");
     this.dataIETables.sourceTable = this.importAddTmpGroup.value.sheetImport;
-    this.callfunc.openForm(CodxImportAddMappingComponent,null,1000,800,"",[this.formModel,this.dataIEConnections,null,null,"new",this.sourceField[0]],null).closed.subscribe(item=>{
+    this.callfunc.openForm(CodxImportAddMappingComponent,null,1000,800,"",[this.formModel,this.dataIEConnections,null,null,null,"new",this.sourceField[0]],null).closed.subscribe(item=>{
       if(item?.event)
       {
-        debugger;
         var dataTable = item?.event[0] as IETables;
         dataTable.sourceTable = this.dataIETables.sourceTable;
         //this.dataSave.dataIEMapping.push(item?.event[1]);
-        this.dataSave.dataIEFieldMapping = item?.event[2];
+        if(item?.event[2] && item?.event[2].length > 0)
+        {
+          item?.event[2].forEach(element => {
+            this.dataSave.dataIEFieldMapping.push(element);
+          });
+        }
+        this.dataSave.dataIETable.push(item?.event[0]);
         this.gridView.dataService.data = [item?.event[0],...this.gridView.dataService.data]
       }
     });
@@ -378,6 +407,8 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   }
   edit(data: any) {
     this.sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]],{header:this.importAddTmpGroup.value.firstCell});
+    var index = this.getIndexIEFieldMapping(data?.recID);
+    debugger;
     this.callfunc
       .openForm(
         CodxImportAddMappingComponent,
@@ -390,6 +421,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           this.dataIEConnections,
           data,
           null,
+          this.dataSave.dataIEFieldMapping[index],
           'edit',
           this.sourceField[0]
         ],
@@ -399,6 +431,17 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
         if (item?.event) {
         }
       });
+  }
+  getIndexIEFieldMapping(id:any)
+  {
+    for(var i = 0 ; i<  this.dataSave.dataIEFieldMapping.length ; i++)
+    {
+      for(var x = 0 ; x < this.dataSave.dataIEFieldMapping[i].length ; x++)
+      {
+        if(this.dataSave.dataIEFieldMapping[i][x].sessionID == id) return i;
+      }
+    }
+    return 0
   }
   getfileGet(e:any)
   {

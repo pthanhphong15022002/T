@@ -90,6 +90,7 @@ import { CodxTreeHistoryComponent } from './components/codx-tree-history/codx-tr
 import { CodxViewAssignComponent } from './components/codx-view-assign/codx-view-assign.component';
 import { FileComponent } from './components/codx-note/file/file.component';
 import { AttachmentComponent } from './components/attachment/attachment.component';
+import { CodxImportAddMappingTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping-template/codx-import-add-mapping-template.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -133,6 +134,7 @@ const T_Component: Type<any>[] = [
   ChatInnerComponent,
   CodxReferencesComponent,
   CodxImportAddTemplateComponent,
+  CodxImportAddMappingTemplateComponent,
   CodxImportAddMappingComponent,
   CodxAlertComponent,
   SettingNotifyDrawerComponent,
