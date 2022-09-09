@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
@@ -11,7 +11,7 @@ import { catchError, map, finalize, Observable, of } from 'rxjs';
   templateUrl: './positions.component.html',
   styleUrls: ['./positions.component.css']
 })
-export class PositionsComponent implements OnInit {
+export class PositionsComponent  extends UIComponent {
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   dialog!: DialogRef;
@@ -23,10 +23,11 @@ export class PositionsComponent implements OnInit {
   countResource = 0;
   listEmployeeSearch = [];
 
-  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
-  @ViewChild('view') view!: ViewsComponent;
+  @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('p') public popover: NgbPopover;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
+  @ViewChild("listview") listview: CodxListviewComponent;
   popoverCrr: any;
   allRoles: any;
   lstRoles: any;
@@ -42,13 +43,13 @@ export class PositionsComponent implements OnInit {
     private codxHr: CodxHrService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
-    private api: ApiHttpService,
+    inject: Injector
   ) {
-
+    super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
@@ -75,16 +76,30 @@ export class PositionsComponent implements OnInit {
     this.views = [
       {
         id: '1',
-        type: ViewType.listdetail,
+        type: ViewType.treedetail,
         active: true,
         sameData: true,
         model: {
           // panelLeftRef: this.panelLeftRef,
-          template: this.itemTemplate,
+          resizable: true,
+          template: this.templateTree,
+          panelRightRef: this.templateDetail
+        }
+      },
+      {
+        id: '2',
+        type: ViewType.treedetail,
+        active: true,
+        sameData: true,
+        model: {
+          // template: this.itemTemplate,
+          resizable: true,
+          template: this.templateTree,
+          panelRightRef: this.panelRightRef,
         }
       },
     ];
-    this.view.dataService.parentIdField = 'ParentID';
+    this.view.dataService.parentIdField = 'ReportTo';
     this.changedt.detectChanges();
   }
 
@@ -209,7 +224,7 @@ export class PositionsComponent implements OnInit {
   }
 
   async onSelectionChanged($event) {
-    await this.setEmployeePredicate($event.dataItem.orgUnitID);
+   // await this.setEmployeePredicate($event.dataItem.orgUnitID);
     // this.employList.onChangeSearch();
   }
 
