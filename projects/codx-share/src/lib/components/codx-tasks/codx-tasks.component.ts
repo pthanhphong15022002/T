@@ -76,7 +76,16 @@ export class CodxTasksComponent
   @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
-  button?: ButtonModel;
+
+  button?: ButtonModel = {
+    id: 'btnAdd',
+    text: 'Thêm mới',
+    items: [{
+      id: 'btnRefesh',
+      text: 'Làm mới',
+    },]
+  };
+
   model?: DataRequest;
   request: ResourceModel;
   requestTree: ResourceModel;
@@ -171,10 +180,6 @@ export class CodxTasksComponent
     this.requestTree.className = 'TaskBusiness';
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
-
-    this.button = {
-      id: 'btnAdd',
-    };
     this.getParams();
   }
 
@@ -242,7 +247,6 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          // template7: this.template7,
         },
       },
     ];
