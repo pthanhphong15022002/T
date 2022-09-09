@@ -10,6 +10,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -42,6 +43,7 @@ export class PopupAddMeetingComponent implements OnInit {
   param: any;
   functionID: string;
   title = '';
+  titleLink ="Link cuộc họp"
   showPlan = true;
   data: any;
   readOnly = false;
@@ -373,7 +375,7 @@ export class PopupAddMeetingComponent implements OnInit {
   }
 
   openPopupLink() {
-    this.callFuncService.openForm(this.addLink, '', 500, 300);
+    this.callFuncService.openForm(this.addLink, '', 500, 10);
   }
 
   openPopupTemplate(item: any) {
