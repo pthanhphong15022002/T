@@ -161,23 +161,10 @@
     </div>
   </ng-container>
   <div>
-    <codx-attachment
-      #attachment
-      [objectType]="dialog.formModel.entityName"
-      [objectId]="meeting?.recID"
-      hideFolder="1"
-      hideImageUpload="0"
-      hideImageThumb="0"
-      hideUploadBtn="1"
-      hideDes="1"
-      type="inline"
-      allowMultiFile="1"
-      [formModel]="dialog.formModel"
-      [functionID]="functionID"
-      (fileAdded)="fileAdded($event)"
-      (fileCount)="getfileCount($event)"
-      displayThumb="full"
-    >
+    <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="meeting?.recID" hideFolder="1"
+      hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
+      [formModel]="dialog.formModel" [functionID]="functionID" (fileAdded)="fileAdded($event)"
+      (fileCount)="getfileCount($event)" displayThumb="full">
     </codx-attachment>
   </div>
 </ng-template>
@@ -314,25 +301,12 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">
-    <button
-      type="button"
-      class="btn btn-light-primary me-3"
-      (click)="addFile($event)"
-    >
-      <i class="icon-cloud_upload fs-5"></i
-      ><span>
-        <codx-label
-          name="UploadFile"
-          formName="Tasks"
-          default="Upload File"
-        ></codx-label>
+    <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
+      <i class="icon-cloud_upload fs-5"></i><span>
+        <codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label>
       </span>
     </button>
-    <button
-      type="button"
-      class="btn btn-primary ms-1"
-      (click)="onSave()"
-    >
+    <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
       <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
     </button>
   </div>
@@ -379,7 +353,7 @@
 <ng-template #popoverSelectRoles>
   <div class="d-flex">
     <ng-container *ngFor="let item of listRoles">
-      <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4"
+      <div class="d-flex align-items-center btn btn-sm btn-white me-4"
         (click)="selectRoseType(idUserSelected,item.value)" style="cursor: pointer;">
         <span inlineSVG="./assets/themes/co/default/img/{{item.icon}}"></span>
         <div class="fs-8 text-gray-500 ms-1">{{item.text}}</div>

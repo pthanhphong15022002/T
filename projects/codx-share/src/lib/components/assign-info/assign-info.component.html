@@ -112,9 +112,9 @@
             </div> -->
 
           </div>
-          <div *ngIf="!readOnly">
+          <div class="ms-3" *ngIf="!readOnly">
             <a class="btn btn-icon btn-sm btn-light-danger" (click)="onDeleteUser(item)" style="cursor: pointer">
-              <span class="icon-close icon-18 text-danger ms-2"></span>
+              <span class="icon-close icon-18"></span>
             </a>
           </div>
         </div>
@@ -242,7 +242,7 @@
 <ng-template #popoverSelectRoles>
   <div class="d-flex" *ngIf="!readOnly">
     <ng-container *ngFor="let item of listRoles">
-      <div class="d-flex align-items-center text-hover-primary btn-light-primary ms-4"
+      <div class="d-flex align-items-center btn btn-sm btn-white me-4"
         (click)="selectRoseType(idUserSelected, item.value)" style="cursor: pointer">
         <span class="me-1"><img src="/assets/themes/tm/default/img/{{ item.icon }}" alt="" /></span>
         <div class="fs-8 text-gray-500">{{ item.text }}</div>
