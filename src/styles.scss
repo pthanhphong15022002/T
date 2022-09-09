@@ -68,9 +68,7 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   --white: #ffffff;
   --black: #0f0f0f;
 
-
-  //
-
+  --bghover: #f4f8ff;
   --fs-7: 12px;
 }
 
@@ -343,4 +341,8 @@ hr {
 
 erm-quick-links-inner .w-250px.dropdown-menu {
   inset: 0px 0px auto auto !important;
+}
+
+.codx-bghover:hover {
+  background-color: var(--bghover);
 }
