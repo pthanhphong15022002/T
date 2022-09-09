@@ -6,7 +6,7 @@
   [subHeader]=""
   [footer]="footer"
   [dialog]="dialog"
-  [openMore]="false"
+  [openMore]="true"
   (buttonClick)="buttonClick($event)"
   [tabContent]="[tabGeneralInfo, tabUsageNorms, tabMoreInfo]"
   (setTitle)="setTitle($event)"
@@ -141,62 +141,32 @@
         </div>
 
         <div class="container">
-          <div class="row">
-            <div class="col-2">
-              <codx-attachment
-                #attachment
-                objectType="ES_Stationery"
-                [objectId]=""
-                hideBtnSave="1"
-                hideFolder="1"
-                hideUploadBtn="1"
-                [functionID]="formModel.funcID"
-                type="inline"
+          <div class="d-flex justify-content-start mb-4">
+            <div class="upload-img">
+              <codx-img
+                #imageUpLoad
+                width="50"
+                imageType="square"
+                [objectType]="formModel?.entityName"
+                [objectId]="data?.recID"
+                aria-disabled="true"
+                [funcId]="'EPS24'"
+                [isAllowEdit]="true"
+                [objectId]="''"
               >
-              </codx-attachment>
+              </codx-img>
             </div>
-            <div class="col-10">
-              <div class="d-flex justify-content-start mb-4">
-                <div class="button-color">
-                  <button
-                    *ngFor="let item of splitColor(this.data.color)"
-                    type="button"
-                    class="btn btn-sm w-30px h-30px mx-2 border"
-                    [ngStyle]="{ 'background-color': item }"
-                    (click)="openPopupColor(popupColor, item)"
-                  ></button>
-                </div>
-              </div>
+            <div class="button-color">
+              <button
+                *ngFor="let item of splitColor(this.data.color)"
+                type="button"
+                class="btn btn-sm w-30px h-30px mx-2 border"
+                [ngStyle]="{ 'background-color': item }"
+                (click)="openPopupColor(popupColor, item)"
+              ></button>
             </div>
           </div>
         </div>
-
-        <button
-          type="button"
-          (click)="popupUploadFile()"
-          class="btn btn-primary"
-        >
-          Icon
-        </button>
-        <codx-attachment
-          #attachment
-          [objectType]="'EP_Stationery'"
-          [functionID]="'EPS24'"
-          [objectId]="dialogAddStationery.value.recID"
-          hideBtnSave="1"
-          hideFolder="1"
-          hideUploadBtn="1"
-          hideDes="1"
-          hideImageUpload="0"
-          hideImageThumb="1"
-          [allowMultiFile]="0"
-          [idBrowse]="'add'"
-          allowExtensions=""
-          type="inline"
-          (fileCount)="fileCount($event)"
-          (fileAdded)="fileAdded($event)"
-        >
-        </codx-attachment>
       </div>
     </div>
   </ng-template>

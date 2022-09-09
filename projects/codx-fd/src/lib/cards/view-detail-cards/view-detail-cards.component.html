@@ -59,37 +59,16 @@
                     <div class="d-flex justify-content-between mb-2">
                         <div class="d-flex align-items-center user-card py-3">
                             <codx-img class="symbol symbol-40 symbol-circle"
-                                [objectId]="itemSelected?.sender?.domainUser" objectType="AD_Users"
+                                [objectId]="itemSelected?.sender?.employeeID" 
+                                [objectType]="'AD_Users'"
                                 [width]="35">
                             </codx-img>
                             <div class="d-flex flex-column flex-grow-1 ms-2">
                                 <div class="text-dark fw-bolder">
                                     {{itemSelected?.sender?.employeeName}}</div>
-                                <div class="text-dark">{{itemSelected?.sender.positionName}}
+                                <div class="text-dark">{{itemSelected?.sender?.positionName}}
                                 </div>
                             </div>
-                            <!-- <div *ngIf="tabActive == STATUS_ACTIVE.APPROVER">
-                                <ng-container *ngIf="itemSelected?.approveStatus == '0';else Approval">
-                                    <div class="d-flex flex-column ml-6"
-                                        *ngIf="approver && tabActive == STATUS_ACTIVE.APPROVER && itemSelected?.approveStatus == '0'">
-                                        <button class="btn btn-sm mb-2 btn-outline-success"
-                                            (click)="changeStatusApprovel('1')">
-                                            <span>Đồng thuận</span>
-                                        </button>
-                                        <button class="btn btn-sm mb-2 btn-outline-success"
-                                            (click)="changeStatusApprovel('2')">
-                                            <span>Không đồng thuận</span>
-                                        </button>
-                                    </div>
-                                </ng-container>
-                                <ng-template #Approval>
-                                    <div class="pl-20">
-                                        <p>Đã xét duyệt: {{itemSelected?.approveStatus | vll:'L1425':'text'
-                                            |async}}</p>
-                                    </div>
-                                </ng-template>
-                            </div> -->
-    
                         </div>
                     </div>
                     <ng-container *ngIf="itemSelected?.receiver">
@@ -196,11 +175,12 @@
 
 
 <ng-template #templateShare let-item>
-    <span class="me-2">
+    <div class="my-2">
         <codx-img objectType="AD_Users" [objectId]="item.objectID"
             class="symbol symbol-circle symbol-30 mr-3" [width]="35">
         </codx-img>
-    </span>
+        <span class="ms-2 fw-bolder">{{item.objectName}}</span>
+    </div>
 </ng-template>
 
 

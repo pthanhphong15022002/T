@@ -1,0 +1,72 @@
+.nav-import .nav-link
+{
+  color: black;
+}
+.nav-import .nav-item
+{
+  min-width: 150px;
+  border-radius: 10px;
+}
+.nav-import .active
+{
+  background-color: #F4F7FF;
+}
+.card-body
+{
+  height: 100%;
+}
+.btn-mgl{
+  margin-left: 166px;
+}
+.hideAttachment
+{
+  background-color: #F5F8FA;
+  min-height: 35px;
+}
+.w-10
+{
+  width: 10%;
+}
+.w-15
+{
+  width: 15%;
+}
+.w-20
+{
+  width: 20%;
+}
+.w-140px
+{
+  width: 140px;
+}
+.tr-ip-add-tmp td
+{
+  padding: 8px;
+}
+.h-feildImport 
+{
+  height: calc(100% - 145px);
+}
+.h-feildImport .table
+{
+  height: calc(100% - 10px);
+}
+.e-grid
+{
+  border: none;
+}
+.e-grid .e-gridheader {
+  border:none;
+}
+.e-grid .e-headercontent
+{
+  border-right: none !important;
+}
+.e-grid .e-headercell {
+  background-color: #f5f8fa;
+}
+.e-grid .e-rowcell
+{
+  border-right: solid 1px #dee2e6;
+  //padding-left: 0 !important;
+}

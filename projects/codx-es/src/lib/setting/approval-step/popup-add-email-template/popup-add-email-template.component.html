@@ -394,22 +394,13 @@
           ></codx-label>
         </span>
       </div>
-      <!-- <button class="btn btn-sm btn-light d-flex align-items-center" type="button">
-        <span>
-          <codx-label default="Chọn trường dữ liệu" name="lblChooseField" formName="EmailTemplates"
-            gridViewName="grvEmailTemplates"></codx-label>
-        </span>
-        <span class="icon-keyboard_arrow_down icon-16 ms-2"></span>
-      </button> -->
-      <div #combobox id="combobox" (click)="focusCombobox()">
+      <div #dataView id="dataView" (click)="focusCombobox()">
         <codx-input
           type="combobox"
-          name="combobox"
           [refValue]="'DataViewItems'"
           field="dataView"
           (valueChange)="valueChange($event)"
           placeholder="Chọn trường dữ liệu"
-          (focus)="focusCombobox($event)"
         >
         </codx-input>
       </div>
@@ -432,7 +423,7 @@
       </codx-attachment>
     </div>
     <div #textarea class="request-box mt-4">
-      <div class="message" (click)="getPosition()">
+      <div class="message" (click)="getPosition()" [style.width.px]="width">
         <codx-input
           #richtexteditor
           type="textarea"
@@ -440,6 +431,7 @@
           format="ed"
           [crrValue]="dialogETemplate.value.message"
           height="250"
+          (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
     </div>

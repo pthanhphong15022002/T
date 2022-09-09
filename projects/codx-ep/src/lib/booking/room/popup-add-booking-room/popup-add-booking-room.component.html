@@ -6,7 +6,7 @@
   [subHeader]=""
   [footer]="footer"
   [dialog]="dialogRef"
-  [openMore]="true"
+  [openMore]="false"
   (buttonClick)="buttonClick($event)"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]"
   (setTitle)="setTitle($event)"
@@ -127,10 +127,9 @@
           type="datetime"
           class="test-datetime"
           field="startTime"
-          placeholder="datetime"
           [crrValue]="startTime"
           format="t"
-          (valueChange)="valueTimeChange($event)"
+          (valueChange)="valueStartTimeChange($event)"
         >
         </codx-input>
       </div>
@@ -145,12 +144,12 @@
           type="datetime"
           class="test-datetime"
           field="endTime"
-          placeholder="datetime"
           [crrValue]="endTime"
           format="t"
-          (valueChange)="valueTimeChange($event)"
+          (valueChange)="valueEndTimeChange($event)"
         >
         </codx-input>
+       
 
       </div>
 
@@ -184,13 +183,9 @@
       >
       </codx-input> -->
       <codx-input
-        type="combobox"
-        refValue="ReasonCodes"
-        placeholder="Chọn mục đích"
-        [multiple]="false"
-        field="reasonID"        
-        [crrValue]="fGroupAddBookingRoom.value.reasonID"
-        (valueChange)="valueChange($event)"        
+        ControlName="reasonID"    
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingRoom"           
       >
       </codx-input>
     </div>
@@ -203,7 +198,6 @@
       >
       </codx-label>
       <codx-input
-        type="text"
         ControlName="title"
         [formModel]="form.formModel"
         [Group]="fGroupAddBookingRoom"
@@ -218,11 +212,9 @@
       >
     </codx-label>
       <codx-input        
-        type="textarea" format="ed2" rows="3"
-        field="memo"
-        placeholder="Diễn giải"
-        [crrValue]="fGroupAddBookingRoom.value.memo"
-        (valueChange)="valueChange($event)"
+        ControlName="memo"        
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingRoom"
       >
       </codx-input>
     </div>
@@ -278,14 +270,13 @@
       <div
         class="d-flex justify-content-between align-items-center mb-2 form-group"
       >
-        <codx-label default="Người tham dự" fiedName="Note">
+        <codx-label default="Người tham dự" >
         </codx-label>
         <div class="d-flex flex-row text-end align-items-end">
           <div class="mx-2">
             <codx-input
               type="Combobox"
-              name="hostUser"
-              [refValue]="'Users'"
+              [refValue]="'MultiUsers'"
               [multiple]="false"
               [showInput]="false"
               refType="P"
@@ -297,9 +288,7 @@
           <div class="mx-2">          
             <codx-input
               type="Combobox"
-              name="combobox"
               [refValue]="'MultiUsers'"
-              [multiple]="true"
               [showInput]="false"
               refType="P"
               [title]="'Bắt buộc tham dự'"
@@ -396,9 +385,9 @@
           
           <codx-attachment
             #attachment
-            [objectType]="'dialogRef.formModel.entityName'"
-            [functionID]="dialogRef.formModel.funcID"
-            [objectId]="data.recID"
+            [objectType]="dialogRef?.formModel.entityName"
+            [functionID]="dialogRef?.formModel.funcID"
+            [objectId]="data?.recID"
             hideBtnSave="1"
             hideFolder="1"
             hideUploadBtn="1"
@@ -439,7 +428,7 @@
         <div class="mx-2">
           <codx-input
             type="Combobox"
-            [refValue]="'Users'"
+            [refValue]="'MultiUsers'"
             [showInput]="false"
             [title]="'Không bắt buộc tham dự'"
             [refType]="'P'"
@@ -661,11 +650,11 @@
         <codx-input
           type="number"
           class="test-number min-w-50px"
-          ControlName="attendees"
           [crrValue]="fGroupAddBookingRoom.value.attendees"
           [cusButton]="true"
           [min]="0"
-          [max]="50"
+          [max]="50"          
+          ControlName="attendees"
           [formModel]="form.formModel"
           [Group]="fGroupAddBookingRoom"
 
@@ -730,7 +719,6 @@
     <div class="form-group">
       <codx-label default="Phân loại" fiedName="Category"></codx-label>
       <codx-input         
-        refValue="VL005"
         ControlName="category"
         [formModel]="form.formModel"
         [Group]="fGroupAddBookingRoom">
@@ -740,11 +728,9 @@
     <div class="form-group">
       <codx-label default="Ghi chú" fiedName="Note"> </codx-label>
       <codx-input
-        type="textarea" format="ed2" rows="3"
-        field="note"
-        placeholder="Ghi chú"
-        [crrValue]="fGroupAddBookingRoom.value.note"
-        (valueChange)="valueChange($event)"
+        ControlName="note"        
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingRoom"
       >
       </codx-input>
     </div>

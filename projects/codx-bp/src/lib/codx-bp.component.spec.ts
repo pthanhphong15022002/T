@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailComponent } from './detail.component';
+import { CodxBpComponent } from './codx-bp.component';
 
-describe('DetailComponent', () => {
-  let component: DetailComponent;
-  let fixture: ComponentFixture<DetailComponent>;
+describe('CodxBpComponent', () => {
+  let component: CodxBpComponent;
+  let fixture: ComponentFixture<CodxBpComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DetailComponent]
+      declarations: [ CodxBpComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DetailComponent);
+    fixture = TestBed.createComponent(CodxBpComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -37,9 +37,12 @@ export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
   @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
+  @ViewChild('avatar') avatar: TemplateRef<any>;
   @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
 
   @Input() data!: any;
+
+  // d703bd83-2ff5-11ed-a503-8cec4b569fde
 
   service = 'EP';
   assemblyName = 'EP';
@@ -104,11 +107,11 @@ export class CarsComponent implements OnInit, AfterViewInit {
               field: 'resourceID',
               headerText: 'Mã xe',
             },
-            // {
-            //   field: 'icon',
-            //   headerText: "Ảnh đại diện",
-            //   template: this.icon,
-            // },
+            {
+              field: 'icon',
+              headerText: "Ảnh đại diện",
+              template: this.avatar,
+            },
             {
               field: 'resourceName',
               headerText: 'Tên xe',
@@ -121,10 +124,10 @@ export class CarsComponent implements OnInit, AfterViewInit {
               field: 'code',
               headerText: 'Biển số',
             },
-            {
-              headerText: 'Trạng thái',
-              template: this.statusCol,
-            },
+            // {
+            //   headerText: 'Trạng thái',
+            //   template: this.statusCol,
+            // },
             {
               headerText: 'Xếp hạng',
               template: this.rankingCol,

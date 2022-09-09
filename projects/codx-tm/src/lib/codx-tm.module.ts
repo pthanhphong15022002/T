@@ -230,7 +230,7 @@ const T_Component: Type<any>[] = [
   SprintDetailsComponent,
   ViewWorkComponent,
   DashboardComponent,
-  PopupStatusMeetingComponent
+  PopupStatusMeetingComponent,
 ];
 @NgModule({
   imports: [

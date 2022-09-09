@@ -10,7 +10,22 @@
   *ngIf="isAfterRender"
 >
 <ng-template #body>
-  
+  <div class="form-group">
+    <codx-label
+      fiedName="ResourceName"
+      [formModel]="dialogRef.formModel"
+      default="Tên lái xe"
+    >
+    </codx-label>
+    <codx-input
+      type="text"
+      ControlName="resourceName"
+      [formModel]="form.formModel"
+      [Group]="fGroupAddDriver"
+    >
+    </codx-input>
+  </div>
+
   <div class="row">
     <div class="col-4 form-group">
       <codx-label
@@ -20,7 +35,6 @@
       >
       </codx-label>      
       <codx-input
-          refValue="VL005"
           ControlName="category"
           [formModel]="form.formModel"
           [Group]="fGroupAddDriver"
@@ -34,10 +48,8 @@
         default="Đơn vị"
         >
       </codx-label>
-
       <codx-input
         [disabled]="fGroupAddDriver.value.category == 1 ? false :true"
-        refValue="AgencyNames"
         [Group]="fGroupAddDriver"
         ControlName="companyID"
         [formModel]="form.formModel"
@@ -45,66 +57,12 @@
       </codx-input> 
     </div>
   </div>
-  <div class="row">
-    <div class="col-10 form-group">
-      <codx-label
-        fiedName="ResourceName"
-        [formModel]="dialogRef.formModel"
-        default="Tên lái xe"
-      >
-      </codx-label>
-
-      <codx-input
-        type="text"
-        ControlName="resourceName"
-        [formModel]="form.formModel"
-        [Group]="fGroupAddDriver"
-      >
-      </codx-input>
-    </div>
     
-    <div class="col-2 form-group d-flex flex-column justify-content-end">
-      <codx-label default="" [formModel]="dialogRef.formModel"> </codx-label>
-      <div class="d-flex flex-column justify-content-end">
-        <codx-input 
-        type="vllicon" 
-        refValue="L1470" 
-        field="icon" 
-        class="btn btn-primary dropdown-toggle"
-        [crrValue]="fGroupAddDriver.value.icon"
-        (valueChange)="valueChange($event)"
-          >
-        </codx-input>
-        <!-- <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button> -->
-        <!-- <codx-attachment
-          #attachment
-          [objectType]="'ES_SignFiles'"
-          [functionID]="dialogRef.formModel.funcID"
-          [objectId]="fGroupAddDriver.value.recID"
-          hideBtnSave="1"
-          hideFolder="1"
-          hideUploadBtn="1"
-          hideDes="1"
-          hideImageUpload="0"
-          hideImageThumb="1"
-          [allowMultiFile]="0"
-          [idBrowse]="'add'"
-          allowExtensions=".svg"
-          type="inline" 
-          (fileCount)="fileCount($event)"
-          (fileAdded)="fileAdded($event)"
-        >
-        </codx-attachment>  -->
-      </div>
-      
-    </div>
-  </div>
 
   <div class="row">
-    <div class="col-8 form-group">
+    <div class="col-9 form-group">
       <codx-label default="Xe" [formModel]="dialogRef.formModel" ></codx-label>
       <codx-input
-        refValue="EP_Drivers"
         ControlName="linkID"
         [formModel]="form.formModel"
         [Group]="fGroupAddDriver"
@@ -116,6 +74,7 @@
       </codx-label>
       <codx-input
         ControlName="code"
+        placeholder="Biển số"
         [formModel]="form.formModel"
         [Group]="fGroupAddDriver" 
       >
@@ -129,7 +88,6 @@
       </codx-label>
 
       <codx-input
-        refValue="Users"
         ControlName="owner"
         [Group]="fGroupAddDriver"
         [formModel]="form.formModel"
@@ -141,16 +99,28 @@
 
   <div class="row">
     <div class="form-group">
-      <codx-label default="Mô tả" fiedName="Note" [formModel]="dialogRef.formModel"></codx-label>      
+      <codx-label default="Mô tả" fiedName="Note" [formModel]="dialogRef.formModel"></codx-label>         
       <codx-input
+        ControlName="note"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddDriver" 
+      >
+      </codx-input>   
+      <!-- <codx-input
         type="textarea" format="ed2" rows="3"
         field="note"
         placeholder="Ghi chú"
         [crrValue]="fGroupAddDriver.value.note"
         (valueChange)="valueChange($event)"
       >
-      </codx-input>
+      </codx-input> -->
     </div>
+  </div>
+  
+  <div class="form-group upload-img">
+    <codx-img #imageUpLoad [width]="100" [objectType]="formModel?.entityName" aria-disabled="false"
+        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="data?.recID">
+    </codx-img>
   </div>
 </ng-template>
 </codx-form>

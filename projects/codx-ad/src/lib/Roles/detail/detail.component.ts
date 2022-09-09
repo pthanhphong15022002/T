@@ -6,21 +6,29 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
-} from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute, ParamMap, Router } from "@angular/router";
-import { NotificationsService, TenantStore, UIComponent, ViewType } from "codx-core";
-import { Subscription } from "rxjs";
-import { RolesService } from "../services/roles.service";
-import { TempService } from "../services/temp.service";
+} from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import {
+  NotificationsService,
+  TenantStore,
+  UIComponent,
+  ViewType,
+} from 'codx-core';
+import { Subscription } from 'rxjs';
+import { RolesService } from '../services/roles.service';
+import { TempService } from '../services/temp.service';
 
 declare var $: any;
 @Component({
-  selector: "app-roles",
-  templateUrl: "./detail.component.html",
-  styleUrls: ["./detail.component.scss"],
+  selector: 'app-roles',
+  templateUrl: './detail.component.html',
+  styleUrls: ['./detail.component.scss'],
 })
-export class RoleDetailComponent extends UIComponent implements OnInit, OnDestroy {
+export class RoleDetailComponent
+  extends UIComponent
+  implements OnInit, OnDestroy
+{
   // dataPermissions: any;
   // dataAdvances: any;
   dataMoreFuntions: any;
@@ -33,8 +41,8 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
   myTree = [];
   form: FormGroup;
   dataFuncRole = [];
-  tenant = "";
-  roleName = "";
+  tenant = '';
+  roleName = '';
   activeSys = true;
   activeExp = true;
   activeMore = true;
@@ -46,7 +54,6 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
 
   @ViewChild('template') template: TemplateRef<any>;
 
-
   constructor(
     private tempService: TempService,
     private df: ChangeDetectorRef,
@@ -56,7 +63,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     private notificationsService: NotificationsService,
     private tenantStore: TenantStore,
     private route: ActivatedRoute,
-    injector: Injector,
+    injector: Injector
   ) {
     // super(
     //   {
@@ -70,10 +77,9 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     //   injector
     // );
     super(injector);
-    this.route.params.subscribe(params => {
-      if (params)
-        this.funcID = params['funcID'];
-    })
+    this.route.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
     this.tenant = this.tenantStore.get()?.tenant;
     this.roleName = this.tempService.roleName;
   }
@@ -85,7 +91,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     this.RolesService.appendPesmission(null);
   }
   onChangeSelectedFunction(data) {
-    this.roleName = this.tempService.roleName + " - " + data.nameFunction;
+    this.roleName = this.tempService.roleName + ' - ' + data.nameFunction;
   }
   onInit(): void {
     var rid = this.at.snapshot.queryParams.recID;
@@ -114,20 +120,20 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
       this.active = true;
       // else
       //   this.active = false;
-      this.checkAndLock("exp", false);
+      this.checkAndLock('exp', false);
 
       this.activeSys = this.RolesService._activeSysFuction;
-      this.checkAndLock("sys", this.activeSys);
+      this.checkAndLock('sys', this.activeSys);
 
       this.activeMore = this.RolesService._activeMoreFuction;
-      this.checkAndLock("more", this.activeMore);
+      this.checkAndLock('more', this.activeMore);
 
-      var sysfunc = $("input[data-funcID]");
+      var sysfunc = $('input[data-funcID]');
 
       var t = this;
 
       $.each(sysfunc, function (i, elm) {
-        var funcID = $(elm).data("funcid");
+        var funcID = $(elm).data('funcid');
         if (funcExp.indexOf(funcID) >= 0) {
           elm.checked = true;
         } else {
@@ -152,29 +158,35 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
   }
 
   LoadAsside() {
-    $('#kt_aside_menu').empty();
-    this.api
-      .call(
-        "ERM.Business.SYS",
-        "FunctionListBusiness",
-        "GetFunctionRoleAsync",
-        [this.recid]
-      )
-      .subscribe((res) => {
-        console.log("check GetFunctionRoleAsync", res)
-        if (res && res.msgBodyData[0]) {
-          var data = res.msgBodyData[0];
-          this.myTree = data;
-          this.df.detectChanges();
-          this.loadSource();
-        }
-      });
+    //$('#kt_aside_menu').empty();
+    // this.api
+    //   .execSv('BI', 'ERM.Business.BI', 'CubeListBusiness', 'SaveRole', [])
+    //   .subscribe((res: any) => {
+    //     debugger;
+    //   });
+    // this.api
+    //   .execSv(
+    //     'SYS',
+    //     'ERM.Business.SYS',
+    //     'FunctionListBusiness',
+    //     'GetFunctionRoleAsync',
+    //     [this.recid]
+    //   )
+    //   .subscribe((res: any) => {
+    //     console.log('check GetFunctionRoleAsync', res);
+    //     if (res) {
+    //       var data = res;
+    //       this.myTree = data;
+    //       this.df.detectChanges();
+    //       this.loadSource();
+    //     }
+    //   });
   }
   loadSource() {
     var formName = this.RolesService.formName;
     var gridViewName = this.RolesService.gridViewName;
     this.api
-      .call("ERM.Business.AD", "RolesBusiness", "GetModelFromRolesAsync", [
+      .call('ERM.Business.AD', 'RolesBusiness', 'GetModelFromRolesAsync', [
         formName,
         gridViewName,
       ])
@@ -191,7 +203,6 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
 
   reloadComponent() {
     // let currentUrl = this.router.url;
-
     //TEMP
     // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     // this.router.onSameUrlNavigation = "reload";
@@ -200,7 +211,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
   }
 
   valueChange(e) {
-    if (e.field == "sys" || e.field == "exp" || e.field == "more")
+    if (e.field == 'sys' || e.field == 'exp' || e.field == 'more')
       this.checkAndLock(e.field, e.data);
     else {
       this.dataPermission[e.field] = e.data.value;
@@ -211,21 +222,21 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     this.RolesService._dataChanged = true;
   }
   activeSysChange(e) {
-    this.checkAndLock("sys", e.srcElement.checked);
+    this.checkAndLock('sys', e.srcElement.checked);
   }
 
   activeMoreChange(e) {
-    this.checkAndLock("more", e.srcElement.checked);
+    this.checkAndLock('more', e.srcElement.checked);
   }
   activeExpChange(e) {
     if (e.srcElement.checked) {
-      $("#penal").removeClass("collapse");
+      $('#penal').removeClass('collapse');
     } else {
-      $("#penal").addClass("collapse");
+      $('#penal').addClass('collapse');
     }
   }
   checkAndLock(t, check) {
-    var eles = $("input[data-funcID]", $("." + t));
+    var eles = $('input[data-funcID]', $('.' + t));
     var a = this.active;
     if (check) {
       $.each(eles, function (i, elm) {
@@ -251,15 +262,15 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     var view = this.dataPermission.read;
     var edit = this.dataPermission.write;
     var deleted = this.dataPermission.delete;
-    var sysfunc = $("input[data-funcID]", $(".sys"));
-    var morefunc = $("input[data-funcID]", $(".more"));
-    var expfunc = $("input[data-funcID]", $(".exp"));
+    var sysfunc = $('input[data-funcID]', $('.sys'));
+    var morefunc = $('input[data-funcID]', $('.more'));
+    var expfunc = $('input[data-funcID]', $('.exp'));
     var t = this;
 
     $.each(sysfunc, function (i, elm) {
       //console.log(elm);
       if (elm.checked) {
-        var funcID = $(elm).data("funcid");
+        var funcID = $(elm).data('funcid');
         t.dataFuncRole.push(funcID);
       }
     });
@@ -267,7 +278,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     $.each(expfunc, function (i, elm) {
       //console.log(elm);
       if (elm.checked) {
-        var funcID = $(elm).data("funcid");
+        var funcID = $(elm).data('funcid');
         t.dataFuncRole.push(funcID);
       }
     });
@@ -275,13 +286,13 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     $.each(morefunc, function (i, elm) {
       //console.log(elm);
       if (elm.checked) {
-        var funcID = $(elm).data("funcid");
+        var funcID = $(elm).data('funcid');
         t.dataFuncRole.push(funcID);
       }
     });
 
     this.api
-      .call("ERM.Business.AD", "RolesBusiness", "SaveRolePermissionAsync", [
+      .call('ERM.Business.AD', 'RolesBusiness', 'SaveRolePermissionAsync', [
         roleID,
         create,
         view,
@@ -297,10 +308,10 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
         t.dataFuncRole = [];
         if (res && res.msgBodyData[0]) {
           $('.check-per[data-id="' + funcID + '"]').addClass(
-            "far fa-check-square"
+            'far fa-check-square'
           );
           this.RolesService._dataChanged = false;
-          this.notificationsService.notifyCode("SYS019");
+          this.notificationsService.notifyCode('SYS019');
         }
       });
   }
@@ -312,7 +323,7 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
     var roleID = this.recid;
     if (!funcID || !roleID) return;
     this.api
-      .call("ERM.Business.AD", "RolesBusiness", "DeleteRolePermissionAsync", [
+      .call('ERM.Business.AD', 'RolesBusiness', 'DeleteRolePermissionAsync', [
         roleID,
         funcID,
         formName,
@@ -320,16 +331,16 @@ export class RoleDetailComponent extends UIComponent implements OnInit, OnDestro
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           $('.check-per[data-id="' + funcID + '"]').removeClass(
-            "far fa-check-square"
+            'far fa-check-square'
           );
-          this.notificationsService.notifyCode("SYS019");
+          this.notificationsService.notifyCode('SYS019');
           this.RolesService._dataChanged = false;
 
           this.api
-            .call("ERM.Business.AD", "RolesBusiness", "GetPermissionAsync", [
+            .call('ERM.Business.AD', 'RolesBusiness', 'GetPermissionAsync', [
               funcID,
               formName,
-              "",
+              '',
               this.recid,
             ])
             .subscribe((res) => {

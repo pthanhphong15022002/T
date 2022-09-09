@@ -21,7 +21,7 @@ import { UIComponent, ViewType, AuthStore, DialogData } from 'codx-core';
   selector: 'lib-meeting-detail',
   templateUrl: './meeting-detail.component.html',
   styleUrls: ['./meeting-detail.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class MeetingDetailComponent extends UIComponent {
   funcID = '';
@@ -42,7 +42,7 @@ export class MeetingDetailComponent extends UIComponent {
   day: any;
   startTime: any;
   name = 'Thảo luận';
-  private all = ['Nội dung họp', 'Thảo luận','Giao việc'];
+  private all = ['Nội dung họp', 'Thảo luận', 'Giao việc'];
   startDateMeeting: any;
   endDateMeeting: any;
   userName: any;
@@ -51,7 +51,15 @@ export class MeetingDetailComponent extends UIComponent {
   content1: CO_Content[] = [];
   tabControl: TabControl[] = [];
   active = 1;
-  functionParent: any
+  functionParent: any;
+  listRecID = [];
+  service = 'TM';
+  entityName = 'TM_Tasks';
+  idField = 'taskID';
+  assemblyName = 'ERM.Business.TM';
+  className = 'TaskBusiness';
+  method = 'GetListTaskAssignByByMeetingAsync';
+  dataObj: any;
 
   constructor(
     private injector: Injector,
@@ -80,7 +88,6 @@ export class MeetingDetailComponent extends UIComponent {
 
   onInit(): void {
     this.getListComment();
-
   }
 
   ngAfterViewInit(): void {
@@ -104,12 +111,10 @@ export class MeetingDetailComponent extends UIComponent {
     if (this.meetingID != null) {
       this.tmService.getMeetingID(this.meetingID).subscribe((res) => {
         if (res) {
-          this.data = res;
-          this.meeting = this.data;
+          this.meeting = res;
           this.startDateMeeting = this.meeting.startDate;
           this.endDateMeeting = this.meeting.endDate;
           this.userName = this.meeting.userName;
-
           if (this.meeting.templateID != null) {
             this.api
               .execSv<any>(
@@ -144,7 +149,9 @@ export class MeetingDetailComponent extends UIComponent {
 
   clickMenu(item) {
     this.name = item.name;
-
+    if (this.name == 'Giao việc') {
+      this.getListRecID(this.meetingID)
+    }
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {
         obj.isActive = false;
@@ -223,4 +230,23 @@ export class MeetingDetailComponent extends UIComponent {
     //   });
   }
 
+  //#region get List recID - chaỵ lại vì khi giao việc nó không cap nhật lúc đó
+  getListRecID(meetingID) {
+    this.tmService.getCOMeetingByID(meetingID).subscribe((res) => {
+      if (res) {
+        this.listRecID.push(res.recID);
+        if (res.contents) {
+          var contents = res.contents;
+          contents.forEach((data) => {
+            // if(data.recID !='')
+            this.listRecID.push(data.recID);
+          });
+        }
+        var listRecID =
+          this.listRecID.length > 0 ? this.listRecID.join(';') : '';
+        this.dataObj = { listRecID: listRecID };
+      }
+    });
+  }
+  //#region end
 }

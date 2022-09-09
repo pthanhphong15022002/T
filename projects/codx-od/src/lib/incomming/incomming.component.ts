@@ -439,6 +439,7 @@ export class IncommingComponent
       recID = dt.recID;
       this.dataItem = dt;
     }
+    debugger;
     this.getDtDis(recID);
   }
   fileAdded(event: any) {

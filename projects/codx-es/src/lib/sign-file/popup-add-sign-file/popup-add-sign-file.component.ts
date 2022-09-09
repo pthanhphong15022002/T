@@ -55,8 +55,10 @@ export class PopupAddSignFileComponent implements OnInit {
   isAddNew: boolean = true;
   processID: String = '';
   transID: String = '';
-  isSaved = false;
   gvSetup: any;
+
+  isSaved: boolean = false;
+  isEdit: boolean = false;
 
   lstFile: any = [];
 
@@ -170,7 +172,6 @@ export class PopupAddSignFileComponent implements OnInit {
                       file.fileName = nFile.fileName;
                       file.eSign = true;
 
-                      debugger;
                       files.push(file);
 
                       this.dialogSignFile &&
@@ -399,6 +400,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   valueChange(event) {
     if (event?.field && event?.component && event?.data != '') {
+      this.isEdit = true;
       if (event?.field == 'templateName') {
         this.templateName = event.data;
         return;
@@ -426,7 +428,7 @@ export class PopupAddSignFileComponent implements OnInit {
           icon: category?.Icon,
           color: category?.Color,
           processID: category?.RecID,
-          categoryName: category?.processID,
+          categoryName: category?.CategoryName,
         });
       }
 
@@ -524,7 +526,6 @@ export class PopupAddSignFileComponent implements OnInit {
               //   });
               (await this.attachment.saveFilesObservable()).subscribe(
                 (item2: any) => {
-                  debugger;
                   if (item2?.status == 0) {
                     this.fileAdded(item2);
                   }
@@ -807,10 +808,12 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   close(dialogClose) {
-    if (this.processTab == 0) {
+    if (
+      this.processTab == 0 ||
+      (this.isAddNew == false && this.isEdit == false)
+    ) {
       this.dialog && this.dialog.close();
-    }
-    if (this.processTab > 0) {
+    } else if (this.processTab > 0) {
       this.callfuncService.openForm(dialogClose, '', 500, 250);
     }
   }

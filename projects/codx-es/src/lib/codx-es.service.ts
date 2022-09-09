@@ -683,6 +683,15 @@ export class CodxEsService {
     );
   }
 
+  editEmailTemplate(data: any, sendTo: any): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'EditEmaiTemplateAsync',
+      [data, sendTo]
+    );
+  }
   //#endregion
 
   //#region ES_SignFiles

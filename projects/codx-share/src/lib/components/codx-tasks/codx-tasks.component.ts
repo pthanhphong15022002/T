@@ -42,6 +42,7 @@ import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { X } from '@angular/cdk/keycodes';
 import { create } from 'domain';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -51,14 +52,19 @@ import { create } from 'domain';
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
+  @Input() service = 'TM';
+  @Input() entityName = 'TM_Tasks';
+  @Input() idField = 'taskID';
+  @Input() assemblyName = 'ERM.Business.TM';
+  @Input() className = 'TaskBusiness';
+  @Input() method = 'GetTasksAsync';
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
@@ -70,7 +76,16 @@ export class CodxTasksComponent
   @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
-  button?: ButtonModel;
+
+  button?: ButtonModel = {
+    id: 'btnAdd',
+    text: 'Thêm mới',
+    items: [{
+      id: 'btnRefesh',
+      text: 'Làm mới',
+    },]
+  };
+
   model?: DataRequest;
   request: ResourceModel;
   requestTree: ResourceModel;
@@ -165,10 +180,6 @@ export class CodxTasksComponent
     this.requestTree.className = 'TaskBusiness';
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
-
-    this.button = {
-      id: 'btnAdd',
-    };
     this.getParams();
   }
 
@@ -225,6 +236,7 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+          // statusColorRef: 'TM004'
         },
       },
       {
@@ -236,7 +248,7 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          // template7: this.template7,
+          // statusColorRef: 'TM004'
         },
       },
     ];
@@ -670,8 +682,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -753,10 +765,10 @@ export class CodxTasksComponent
         type: ViewType.listtree,
         active: false,
         sameData: false,
-        text: 'Cây-Tree',
+        text: 'Cây',
         icon: 'icon-account_tree',
         request: {
-          idField: 'taskID',
+          idField: 'recID',
           parentIDField: 'ParentID',
           service: 'TM',
           assemblyName: 'TM',
@@ -775,7 +787,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -795,8 +807,10 @@ export class CodxTasksComponent
 
   selectedChange(task: any) {
     this.itemSelected = task?.data ? task?.data : task;
-    this.loadTreeView();
-    this.loadDataReferences();
+    if(this.itemSelected){
+      this.loadTreeView();
+      this.loadDataReferences();
+    }
     this.detectorRef.detectChanges();
   }
 
@@ -1555,23 +1569,23 @@ export class CodxTasksComponent
             )
             .subscribe((result) => {
               if (result) {
-                  var ref = new tmpReferences();
-                  ref.recIDReferences = result.recID;
-                  ref.refType = 'TM_Tasks';
-                  ref.createdOn = result.createdOn;
-                  ref.memo = result.taskName;
-                  ref.createdBy = result.createdBy;
+                var ref = new tmpReferences();
+                ref.recIDReferences = result.recID;
+                ref.refType = 'TM_Tasks';
+                ref.createdOn = result.createdOn;
+                ref.memo = result.taskName;
+                ref.createdBy = result.createdBy;
 
-                  this.api
-                    .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                      ref.createdBy,
-                    ])
-                    .subscribe((user) => {
-                      if (user) {
-                        ref.createByName = user.userName;
-                        this.dataReferences.push(ref);
-                      }
-                    });
+                this.api
+                  .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+                    ref.createdBy,
+                  ])
+                  .subscribe((user) => {
+                    if (user) {
+                      ref.createByName = user.userName;
+                      this.dataReferences.push(ref);
+                    }
+                  });
               }
             });
           break;

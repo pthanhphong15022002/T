@@ -29,6 +29,8 @@ export class PopupAddCardsComponent implements OnInit {
   wallet:any;
   behavior = [];
   industry = "";
+  price:number = 0;
+  entityName = "FD_Cards"
   showNavigationArrows:boolean = false;
   dialog: DialogRef;
   title:string ="";
@@ -40,12 +42,32 @@ export class PopupAddCardsComponent implements OnInit {
   userReciverName:string ="";
   vllData: any;
   vll:string = "";
-  lstUser:any[] = [];
+  lstShare:any[] = [];
   gift:any;
   giftCount:number;
   typeCheck:string = "";
-  myPermission:Permission = null;
-  adminPermission:Permission = null;
+  permissions:any[] = [];
+  shareControl:string = "9";
+  MEMBERTYPE = {
+    CREATED: "1",
+    SHARE: "2",
+    TAGS: "3"
+  }
+  SHARECONTROLS = {
+    OWNER: "1",
+    MYGROUP: "2",
+    MYTEAM: "3",
+    MYDEPARMENTS: "4",
+    MYDIVISION: "5",
+    MYCOMPANY: "6",
+    EVERYONE: "9",
+    OGRHIERACHY: "O",
+    DEPARMENTS: "D",
+    POSITIONS: "P",
+    ROLES: "R",
+    GROUPS: "G",
+    USER: "U",
+  }
   @ViewChild("codxViews") codxViews: ViewsComponent;
   constructor(
     private api:ApiHttpService,
@@ -69,7 +91,7 @@ export class PopupAddCardsComponent implements OnInit {
   ngOnInit(): void {
     this.api
       .callSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [
-        "FED_Parameters",
+        "FD_Parameters",
         "1",
         "RuleSelected",
       ])
@@ -98,63 +120,9 @@ export class PopupAddCardsComponent implements OnInit {
         }
         this.LoadDataCard();
         this.loadParameter("FED_Parameters",this.cardType,"1");
-        this.getStatusValuelistName();
       }
     })
-    this.myPermission = new Permission();
-    this.myPermission.objectType = this.SHARECONTROLS.OWNER;
-    this.myPermission.memberType = this.MEMBERTYPE.CREATED;
-    this.myPermission.objectID = this.user.userID;
-    this.myPermission.objectName = this.user.userName;
-    this.myPermission.create = true;
-    this.myPermission.update = true;
-    this.myPermission.delete = true;
-    this.myPermission.upload = true;
-    this.myPermission.download = true;
-    this.myPermission.assign = true;
-    this.myPermission.share = true;
-    this.myPermission.read = true;
-    this.myPermission.isActive = true;
-    this.myPermission.createdBy = this.user.userID;
-    this.myPermission.createdOn = new Date();
-    //admin
-    this.adminPermission = new Permission();
-    this.adminPermission.objectType = "7";
-    this.adminPermission.memberType = this.MEMBERTYPE.SHARE;
-    this.adminPermission.create = true;
-    this.adminPermission.update = true;
-    this.adminPermission.delete = true;
-    this.adminPermission.upload = true;
-    this.adminPermission.download = true;
-    this.adminPermission.assign = true;
-    this.adminPermission.share = true;
-    this.adminPermission.read = true;
-    this.adminPermission.isActive = true;
-    this.adminPermission.createdBy = this.user.userID;
-    this.adminPermission.createdOn = new Date();
-    this.permissions.push(this.myPermission);
-    this.permissions.push(this.adminPermission);
     this.initForm();
-  }
-
-  getStatusValuelistName() {
-    // if (this.tabActive == this.STATUS_ACTIVE.APPROVER) {
-    //   this.TypeValuelistStatus = "approveStatus";
-    //   this.NameValuelistStatus = "L1425";
-    //   return;
-    // }
-    // this.TypeValuelistStatus = "status";
-    // if (this.tabActive != this.STATUS_ACTIVE.APPROVER) {
-    //   if (this.cardType == this.CARD_TYPE.COMMENT_FOR_CHANGE) {
-    //     this.NameValuelistStatus = "L1421";
-    //   } else {
-    //     this.NameValuelistStatus = "L1420";
-    //   }
-    //   return;
-    // }
-  }
-  open(cardDisplay:any){
-
   }
   loadParameter(formName = "FED_Parameters",transType = "1",category = "1"){
     this.api.execSv("FD","ERM.Business.FD","WalletsBusiness","GetParameterByWebAsync",[formName,transType,category])
@@ -172,27 +140,39 @@ export class PopupAddCardsComponent implements OnInit {
     this.dt.detectChanges();
   }
 
+  initForm(){
+    this.form = new FormGroup({
+      receiver: new FormControl(""),
+      behavior : new FormControl(null),
+      situation : new FormControl(""),
+      industry: new FormControl(null),
+      pattern: new FormControl(""),
+      rating: new FormControl(""),
+      gift:new FormControl(""),
+      quanlity: new FormControl(0),
+      coins: new FormControl(0)
+    })
+  }
   valueChange(e, element = null)
   {
-    if(e[0] == ""){
+    if(!e || !e.data){
       return;
     }
-    let field = e.field ? e.field : element?.field;
-      if(field == "rating"){
-        this.form.patchValue({rating : e});
-      }
-      else if (field == "giftID") {
-        var giftID = e[0];
-        // this.getGiftInfor(giftID)
-      } 
-      else if (field == "quantity") {
+    let value = e;
+    let field = value.field;
+    switch(field){
+      case "rating":
+        this.form.patchValue({rating : value.data});
+        break;
+      case "giftID":
+        break;
+      case "quantity":
         if(!this.gift){
           this.form.patchValue({ quanlity : 0});
           this.notifySV.notify("Vui lòng chọn quà tặng trước!");
           return;
         }
-        
-        let quantity = e.data.value;
+        let quantity = value.data;
         if(quantity > this.giftCount){
           this.quantity = this.quantityOld + 1;
           this.totalCoint = this.quantity * this.gift.Price;
@@ -212,18 +192,15 @@ export class PopupAddCardsComponent implements OnInit {
         this.quantity = quantity;
         this.totalCoint = this.quantity * this.gift.Price;
         this.form.patchValue({ quanlity : this.quantity});
-      } 
-      else if (field == "behavior") {
-        this.behavior = e.data;
+        break;
+      case "behavior":
+        this.behavior = value.data;
         this.form.patchValue({behavior: this.behavior});
-      } 
-      else if (field == "industry") {
-        this.industry = e[0];
-        var obj = {};
+        break;
+      case "industry":
+        this.industry = value.data;
+        let obj = {};
         obj[field] = this.industry;
-        if(!this.industry){
-          return;
-        }
         this.api.execSv("BS", "ERM.Business.BS", "IndustriesBusiness", "GetListByID", this.industry).subscribe(
           (res:any) => {
             if(res){
@@ -234,76 +211,52 @@ export class PopupAddCardsComponent implements OnInit {
                     this.form.patchValue({receiver: this.userReciver});
                   }
                 })
-              
             }
           }
         )
         this.form.patchValue(obj);
-  
-      } 
-      else if (field == "situation") {
-        this.situation = e.data;
+        break;
+      case "situation":
+        this.situation = value.data;
         this.form.patchValue({situation: this.situation});
-      } 
-      else if (field == "receiver")
-      {
-        this.userReciver = e.data;
+        break;
+      case "receiver":
+        this.userReciver = value.data;
         this.form.patchValue({receiver: this.userReciver});
         this.checkValidateWallet(this.userReciver);
-      }    
-      else{ return}
-  }
-
-  clickCloseAssideRight(){
-
-  }
-  checkValidateWallet(receiverID:string) {
-    if (receiverID) 
-    {
-      this.api
-        .execSv<any>(
-          "FD",
-          "ERM.Business.FD",
-          "WalletsBusiness",
-          "CheckWallet",
-          receiverID
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.isWalletReciver = true;
-          } else {
-            this.isWalletReciver = false;
-            this.notifySV.notify("Người nhận chưa tích hợp ví");
-          }
-        });
-    } 
-    else {
-      this.notifySV.notify("Vui lòng chọn người nhận trước !");
+        break;
+      default:
+        break;
     }
   }
 
-  initForm(){
-    this.form = new FormGroup({
-      receiver: new FormControl(""),
-      behavior : new FormControl(null),
-      situation : new FormControl(""),
-      industry: new FormControl(null),
-      pattern: new FormControl(""),
-      rating: new FormControl(""),
-      gift:new FormControl(""),
-      quanlity: new FormControl(0),
-      coins: new FormControl(0)
-    })
+  checkValidateWallet(receiverID:string) {
+    this.api
+      .execSv<any>(
+        "FD",
+        "ERM.Business.FD",
+        "WalletsBusiness",
+        "CheckWallet",
+        receiverID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.isWalletReciver = true;
+        } else {
+          this.isWalletReciver = false;
+          this.notifySV.notify("Người nhận chưa tích hợp ví");
+        }
+      });
   }
-  price:number = 0;
-  entityName = "FD_Cards"
 
+  
+  
+  objectType:string ="";
   Save() {
     if (!this.userReciver && this.cardType != "5" && this.cardType != "4") {
       this.notifySV.notify("Vui lòng chọn người nhận trước !");
       return;
     }
-
     else if (!this.refValue && this.cardType != "5" && this.cardType != "4") {
       if (!this.form.value["behavior"]) {
         this.notifySV.notify("Vui lòng chọn hành vi!");
@@ -325,74 +278,16 @@ export class PopupAddCardsComponent implements OnInit {
       let card = new FED_Card();
       card = this.form.value;
       card.functionID = this.funcID;
-      card.entityName = this.entityName;
       card.entityPer = this.entityPer;
       card.cardType = this.cardType;
       card.coins = this.givePrice;
       card.gifts = lstGift;
+      card.listShare = this.lstShare;
+      card.objectType = this.objectType;
       card.shareds = card.comment;
-      var lstPermissions: FD_Permissions[]  = [];
-      // sender
-      var per1 = new FD_Permissions();
-      per1.objectType = '1';
-      per1.objectID = this.user.userID;
-      per1.objectName = this.user.userName;
-      per1.memberType = "1";
-      per1.read = true;
-      per1.update = true;
-      per1.delete = true;
-      per1.share = true;
-      per1.createdBy = this.user.userID;
-      per1.isActive = true;
-      per1.createdOn = new Date();
-      // reciver
-      var per2 = new FD_Permissions();
-      per2.objectType = 'U';
-      per2.objectID = this.userReciver;
-      per2.objectName  = this.userReciver;
-      per2.isActive = true;
-      per2.read = true;
-      per2.share = true;
-      per2.createdBy = this.user.userID;
-      per2.createdOn = new Date();
-      if(this.cardType == this.CARDTYPE_EMNUM.Congratulation){
-        per2.memberType = "3";
-      }
-      else
-      {
-        per2.memberType = "2";
-      }
-      // ADMIN
-      var per3 = new FD_Permissions();
-      per3.objectType = '7';
-      per3.memberType = "3";
-      per3.read = true;
-      per3.share = true;
-      per3.isActive = true;
-      per3.createdBy = this.user.userID;
-      per3.createdOn = new Date();
-      lstPermissions.push(per1);
-      lstPermissions.push(per2);
-      lstPermissions.push(per3)
-      this.lstUser.forEach((x:any) => {
-        var p = new FD_Permissions();
-        p.userID = x.userID;
-        p.objectType = x.objectType;
-        p.objectID = x.objectID;
-        p.objectName  = x.objectName;
-        p.isActive = true;
-        p.read = true;
-        p.share = true;
-        p.memberType = "3";
-        p.createdBy = this.user.userID;
-        p.createdOn = new Date();
-        lstPermissions.push(p)
-      });
-      card.permissions = lstPermissions;
       if(!card.pattern && this.cardType != this.CARDTYPE_EMNUM.Share && this.cardType != this.CARDTYPE_EMNUM.Congratulation){
         card.pattern = this.cardSelected.patternID;
       }
-      console.log('card: ', card);
       this.api
         .execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddAsync", card)
         .subscribe((res) => {
@@ -400,16 +295,15 @@ export class PopupAddCardsComponent implements OnInit {
             var cardID = res[1];
             (this.dialog.dataService as CRUDService).add(res[4], 0).subscribe();
             this.dialog.close();
-            this.dt.detectChanges();
-            this.postFeedBack(cardID);
+            this.postFeedBack(cardID,this.shareControl);
           }
         });
     }
     
   }
-  postFeedBack(cardID, type = "3"){
+  postFeedBack(cardID:string,shareControl:string){
     this.api
-      .execSv("WP", "ERM.Business.WP", "CommentsBusiness", "FeedBackPostAsync", [cardID,type])
+      .execSv("WP", "ERM.Business.WP", "CommentsBusiness", "FeedBackPostAsync", [cardID,shareControl])
       .subscribe((res) => {
         if(res){
           this.notifySV.notify("Thêm thành công!");
@@ -426,55 +320,46 @@ export class PopupAddCardsComponent implements OnInit {
     this.callfc.openForm(content, '', 420, window.innerHeight);
   }
 
-  permissions:any[] = [];
-  shareControl:string = "";
-  MEMBERTYPE = {
-    CREATED: "1",
-    SHARE: "2",
-    TAGS: "3"
-  }
-  SHARECONTROLS = {
-    OWNER: "1",
-    MYGROUP: "2",
-    MYTEAM: "3",
-    MYDEPARMENTS: "4",
-    MYDIVISION: "5",
-    MYCOMPANY: "6",
-    EVERYONE: "9",
-    OGRHIERACHY: "O",
-    DEPARMENTS: "D",
-    POSITIONS: "P",
-    ROLES: "R",
-    GROUPS: "G",
-    USER: "U",
-  }
   eventApply(event: any) {
     if (!event) {
       return;
     }
-    this.permissions = [];
-    let data = event[0];
-    this.shareControl = data.objectType;
-    data.dataSelected.forEach((x: any) => {
-      let p = new FD_Permissions();
-      p.userID = x.userID;
-      p.objectType = this.shareControl;
-      p.objectID = x.UserID;
-      p.objectName = x.UserName;
-      p.memberType = this.MEMBERTYPE.SHARE;
-      p.read = true;
-      p.share = true;
-      p.isActive = true;
-      p.createdBy = this.user.userID;
-      p.createdOn = new Date();
-      this.permissions.push(p);
-      this.lstUser.push(p);
-    });
+    this.lstCard = [];
+    let data = event;
+    this.shareControl = data[0].objectType;
+    this.objectType = data[0].objectType;
+    switch(this.shareControl){
+      case this.SHARECONTROLS.OWNER:
+      case this.SHARECONTROLS.EVERYONE:
+      case this.SHARECONTROLS.MYCOMPANY:
+      case this.SHARECONTROLS.MYDEPARMENTS:
+      case this.SHARECONTROLS.MYDIVISION:
+      case this.SHARECONTROLS.MYGROUP:
+      case this.SHARECONTROLS.MYTEAM:
+        break;
+      case this.SHARECONTROLS.DEPARMENTS:
+      case this.SHARECONTROLS.GROUPS:
+      case this.SHARECONTROLS.ROLES:
+      case this.SHARECONTROLS.OGRHIERACHY:
+      case this.SHARECONTROLS.POSITIONS:
+      case this.SHARECONTROLS.USER:
+        data.forEach((x: any) => {
+          let p = new FD_Permissions();
+          p.objectType = x.objectType;
+          p.objectID = x.id;
+          p.objectName = x.text;
+          p.memberType = this.MEMBERTYPE.SHARE;
+          this.lstShare.push(p);
+        });
+        break;
+      default:
+        break;
+    }
     this.dt.detectChanges();
   }
 
   removeUser(user:any){
-    this.lstUser = this.lstUser.filter((x:any) => x.objectID != user.objectID);
+    this.lstShare = this.lstShare.filter((x:any) => x.objectID != user.objectID);
     this.dt.detectChanges();
   }
 
@@ -489,7 +374,6 @@ export class PopupAddCardsComponent implements OnInit {
       .subscribe((res:any) => {
         if (res && res.length > 0) {
           this.lstCard = res;
-          console.log(this.lstCard)
           if(this.lstCard.length > this.totalRecorItem){
             this.showNavigationArrows = true;
           }
