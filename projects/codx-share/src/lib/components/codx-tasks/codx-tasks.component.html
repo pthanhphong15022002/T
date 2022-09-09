@@ -179,9 +179,24 @@
   </div>
 </ng-template>
 
-<codx-views #view service="TM" entityName="TM_Tasks" idField="taskID" assemblyName="ERM.Business.TM"
-  className="TaskBusiness" method="GetTasksAsync" [views]="views" [button]="showButtonAdd ? button : null"
-  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)"
-  [dataObj]="dataObj" (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)"
-  (onActions)="onActions($event)" [selectedFirst]="true" [autoLoad]="true">
+<codx-views
+  #view
+  [service]="service"
+  [entityName]="entityName"
+  [idField]="idField"
+  [assemblyName]="assemblyName"
+  [className]="className"
+  [method]="method"
+  [views]="views"
+  [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)"
+  (viewChanged)="changeView($event)"
+  (requestEnded)="requestEnded($event)"
+  [dataObj]="dataObj"
+  (selectedChange)="selectedChange($event)"
+  (onDragDrop)="onDragDrop($event)"
+  (onActions)="onActions($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+>
 </codx-views>

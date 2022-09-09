@@ -25,6 +25,7 @@ import {
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { DocumentRegistryBucketKey } from 'typescript';
 import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
@@ -35,7 +36,7 @@ import { CodxEsService } from '../../../codx-es.service';
 export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('combobox', { static: false }) combobox: ElementRef;
+  @ViewChild('dataView', { static: false }) dataView: ElementRef;
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
   @ViewChild('richtexteditor', { static: false })
   richtexteditor: CodxInputComponent;
@@ -56,12 +57,15 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   showBCC = false;
 
   vllShare = 'ES014';
+  container: HTMLElement;
 
   sendType = 'to';
   lstFrom = [];
   lstTo = [];
   lstCc = [];
   lstBcc = [];
+
+  width: any = 'auto';
 
   constructor(
     private api: ApiHttpService,
@@ -81,23 +85,18 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
 
-    // this.renderer.listen('window', 'click', (e: Event) => {
-    //   /**
-    //    * Only run when toggleButton is not clicked
-    //    * If we don't check this, all clicks (even on the toggle button) gets into this
-    //    * section which in the result we might never see the menu open!
-    //    * And the menu itself is checked here, and it's where we check just outside of
-    //    * the menu and button the condition abbove must close the menu
-    //    */
-    //   if (e.target !== this.combobox?.nativeElement && this.textarea) {
-    //     debugger;
-    //     const childTwoElement =
-    //       this.textarea.nativeElement.getElementsByClassName('message')[0];
-    //     if (childTwoElement) {
-    //       this.renderer.setStyle(childTwoElement, 'width', this.staticWidth);
-    //     }
-    //   }
-    // });
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (
+        this.dataView &&
+        e.target !== this.dataView?.nativeElement &&
+        this.textarea &&
+        this.isFocus == false
+      ) {
+        this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
+        this.cr.detectChanges();
+      }
+      this.isFocus = false;
+    });
   }
 
   staticWidth: number = 0;
@@ -106,20 +105,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       this.staticWidth = (
         this.textarea.nativeElement as HTMLElement
       ).offsetWidth;
-
-    var container = document.getElementById('combobox');
-    document.addEventListener('click', function (event) {
-      // console.log(container);
-      if (
-        container &&
-        container !== event.target &&
-        !container.contains(<HTMLInputElement>event.target)
-      ) {
-        console.log('clicking outside the div');
-      } else {
-        console.log('clicking inside the div');
-      }
-    });
   }
 
   initForm() {
@@ -145,17 +130,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   new FormControl(res1[0].recID)
                 );
 
-                // this.api
-                //   .execSv(
-                //     'DM',
-                //     'ERM.Business.DM',
-                //     'FileBussiness',
-                //     'GetFilesByObjectIDImageAsync',
-                //     this.dialogETemplate.value.recID
-                //   )
-                //   .subscribe((f: any[]) => {
-                //     console.log(f);
-                //   });
                 let lstUser = res1[1];
                 if (lstUser.length > 0) {
                   lstUser.forEach((element) => {
@@ -243,6 +217,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
+    debugger;
     if (event?.field && event.component) {
       if (event.field == 'sendTime') {
         this.insert(null);
@@ -459,20 +434,33 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   insert(evt: any) {
     this.saveSelection = this.selection.save(this.range, document);
     this.saveSelection.restore();
-    // this.richtexteditor.control.executeCommand('fontColor', 'gray');
-    // this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
+    this.richtexteditor.control.executeCommand('fontColor', 'gray');
+    this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
   }
 
+  isFocus: boolean = false;
   focusCombobox(event = null) {
-    debugger;
-    const childTwoElement =
-      this.textarea.nativeElement.getElementsByClassName('message')[0];
-    if (childTwoElement) {
-      let width =
+    let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
+    console.log('width', crrWidth);
+
+    if (this.width == crrWidth || this.width == 'auto') {
+      this.width =
         (this.textarea.nativeElement as HTMLElement).offsetWidth -
-        (this.combobox.nativeElement as HTMLElement).offsetWidth;
-      this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
+        (this.dataView.nativeElement as HTMLElement).offsetWidth -
+        5;
     }
+
+    this.isFocus = true;
+    this.cr.detectChanges();
+
+    // const childTwoElement =
+    //   this.textarea.nativeElement.getElementsByClassName('message')[0];
+    // if (childTwoElement) {
+    //   let width =
+    //     (this.textarea.nativeElement as HTMLElement).offsetWidth -
+    //     (this.dataView.nativeElement as HTMLElement).offsetWidth;
+    //   this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
+    // }
   }
 }
 

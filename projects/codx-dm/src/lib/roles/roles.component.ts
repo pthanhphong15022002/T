@@ -586,7 +586,12 @@ export class RolesComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     if (this.modePermission) {
       if (this.type == "file") {
-        this.onSaveEditingFile();
+        this.fileService.updatePermisson(this.fileEditing).subscribe(async res => {
+          if (res != null) {
+            this.notificationsService.notify(res.message);
+          }
+        });
+        //this.onSaveEditingFile();
       }
       else {
         // this.fileEditing.folderName = this.folderName;
@@ -594,6 +599,9 @@ export class RolesComponent implements OnInit {
         // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
         // });
         this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
+          if (res != null) {
+            this.notificationsService.notify(res.message);
+          }
         });
       }
     }
