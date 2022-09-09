@@ -5,6 +5,7 @@ import {
   ButtonModel,
   DataRequest,
   DialogRef,
+  FormModel,
   NotificationsService,
   RequestOption,
   ResourceModel,
@@ -47,6 +48,8 @@ export class SprintsComponent extends UIComponent {
   funcID = '';
   valuelist = {};
   action = 'edit';
+  listMoreFunc = [];
+
   constructor(
     inject: Injector,
     private notiService: NotificationsService,
@@ -58,11 +61,14 @@ export class SprintsComponent extends UIComponent {
     this.user = this.authStore.get();
     this.dataValue = this.user.userID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.tmSv.functionParent = this.funcID ;
+    this.tmSv.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
         this.tmSv.urlback = f.url;
       }
+    });
+    this.cache.moreFunction("Sprints","grvSprints").subscribe((res) => {
+      if (res) this.listMoreFunc = res;
     });
   }
 
@@ -237,7 +243,7 @@ export class SprintsComponent extends UIComponent {
 
   viewBoard(e, data) {
     this.urlView = e?.url;
-   // this.urlView = 'tm/sprintdetails/TMT03011'; ///gán cứng chứ thương chưa đổi
+    // this.urlView = 'tm/sprintdetails/TMT03011'; ///gán cứng chứ thương chưa đổi
     this.codxService.navigate('', this.urlView, {
       iterationID: data.iterationID,
     });
@@ -279,4 +285,17 @@ export class SprintsComponent extends UIComponent {
       });
     }
   }
+
+  //#region doubeclick carrd
+  doubkeClick(data) {
+    if(this.listMoreFunc.length>0){
+      this.listMoreFunc.forEach((obj) => {
+        if (obj.functionID == 'TMT03012') this.urlView = obj.url;
+      });
+      this.codxService.navigate('', this.urlView, {
+        iterationID: data.iterationID,
+      });
+    }  
+  }
+  //#end
 }
