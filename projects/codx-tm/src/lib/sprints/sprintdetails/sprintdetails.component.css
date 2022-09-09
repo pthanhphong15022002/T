@@ -57,3 +57,7 @@ codx-view-list-detail .e-static-pane+.e-pane {
     padding: 2px;
     display: inline-block;
 }
+
+.e-control.e-listview .e-content {
+    min-height: calc(100vh - 200px) !important;
+}
