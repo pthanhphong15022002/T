@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ViewModel, ViewType, ApiHttpService } from 'codx-core';
@@ -30,6 +31,10 @@ export class TaskDailyComponent implements OnInit {
   isCollapsed = true;
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
+  predicates : any = [];
+  dataValues : any = [];
+  predicate = '';
+  dataValue = '';
   constructor(
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
@@ -132,17 +137,32 @@ export class TaskDailyComponent implements OnInit {
   }
   paramChange(evt: any) {
     debugger
-    if (!evt.data.data.data) {
-      this.param = {};
-    } else {
-      this.param[evt.data.controlName] = evt.data.data.data;
-
-      this.param = {...this.param};
+    console.log(evt);
+    let pre = '';
+    let data ='';
+    if(evt.data.controlName=='DueDate'){
+      this.predicates.push(evt.data.controlName +'>=@0' +'&&' + evt.data.controlName+'<=@1');
+      this.dataValues.push(evt.data.data.fromDate.toJSON() + ';' + evt.data.data.toDate.toJSON());
     }
-    // else {
-    //   this.param = { name: '1' };
-    //   setTimeout(() => { this.param = {} }, 2000)
-    // }
+    if(evt.data.controlName=='Owner'){
+      this.predicates.push(evt.data.controlName +'=@'+ (this.predicates.length + 1));
+      this.dataValues.push(evt.data.data.data);
+    }
+
+    this.predicates.forEach(e => {
+      if(!this.predicate.split('&&').includes(e)){
+        pre += e + '&&';
+      }
+    });
+    this.dataValues.forEach(e => {
+      if(!this.dataValue.split(';').includes(e)){
+        data += e + ';';
+      }
+    });
+    if(pre != '' && data != ''){
+      this.predicate = pre.substring(0,pre.length - 2);
+      this.dataValue = data.substring(0,data.length - 1);
+    }
   }
   printReport() {
     this.print = true;

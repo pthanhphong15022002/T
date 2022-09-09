@@ -47,11 +47,26 @@ export class PopupAddCardsComponent implements OnInit {
   giftCount:number;
   typeCheck:string = "";
   permissions:any[] = [];
-  shareControl:string = "";
+  shareControl:string = "9";
   MEMBERTYPE = {
     CREATED: "1",
     SHARE: "2",
     TAGS: "3"
+  }
+  SHARECONTROLS = {
+    OWNER: "1",
+    MYGROUP: "2",
+    MYTEAM: "3",
+    MYDEPARMENTS: "4",
+    MYDIVISION: "5",
+    MYCOMPANY: "6",
+    EVERYONE: "9",
+    OGRHIERACHY: "O",
+    DEPARMENTS: "D",
+    POSITIONS: "P",
+    ROLES: "R",
+    GROUPS: "G",
+    USER: "U",
   }
   @ViewChild("codxViews") codxViews: ViewsComponent;
   constructor(
@@ -309,17 +324,37 @@ export class PopupAddCardsComponent implements OnInit {
     if (!event) {
       return;
     }
+    this.lstCard = [];
     let data = event;
     this.shareControl = data[0].objectType;
     this.objectType = data[0].objectType;
-    data.forEach((x: any) => {
-      let p = new FD_Permissions();
-      p.objectType = x.objectType;
-      p.objectID = x.id;
-      p.objectName = x.text;
-      p.memberType = this.MEMBERTYPE.SHARE;
-      this.lstShare.push(p);
-    });
+    switch(this.shareControl){
+      case this.SHARECONTROLS.OWNER:
+      case this.SHARECONTROLS.EVERYONE:
+      case this.SHARECONTROLS.MYCOMPANY:
+      case this.SHARECONTROLS.MYDEPARMENTS:
+      case this.SHARECONTROLS.MYDIVISION:
+      case this.SHARECONTROLS.MYGROUP:
+      case this.SHARECONTROLS.MYTEAM:
+        break;
+      case this.SHARECONTROLS.DEPARMENTS:
+      case this.SHARECONTROLS.GROUPS:
+      case this.SHARECONTROLS.ROLES:
+      case this.SHARECONTROLS.OGRHIERACHY:
+      case this.SHARECONTROLS.POSITIONS:
+      case this.SHARECONTROLS.USER:
+        data.forEach((x: any) => {
+          let p = new FD_Permissions();
+          p.objectType = x.objectType;
+          p.objectID = x.id;
+          p.objectName = x.text;
+          p.memberType = this.MEMBERTYPE.SHARE;
+          this.lstShare.push(p);
+        });
+        break;
+      default:
+        break;
+    }
     this.dt.detectChanges();
   }
 
@@ -339,7 +374,6 @@ export class PopupAddCardsComponent implements OnInit {
       .subscribe((res:any) => {
         if (res && res.length > 0) {
           this.lstCard = res;
-          console.log(this.lstCard)
           if(this.lstCard.length > this.totalRecorItem){
             this.showNavigationArrows = true;
           }

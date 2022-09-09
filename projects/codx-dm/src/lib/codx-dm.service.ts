@@ -126,6 +126,7 @@ export class CodxDMService {
   appName = 'hps-file-test'; // Tam thoi de hard
   page = 1;
   totalPage = 1;
+  pageSize = 20;
   revision: boolean;
   moveable = false;
   itemRight: ItemRight;

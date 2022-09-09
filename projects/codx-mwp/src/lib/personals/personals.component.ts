@@ -39,6 +39,7 @@ export class PersonalsComponent implements OnInit {
   ) {
     var data: any = this.auth.user$;
     this.employeeInfo = data.source._value;
+    debugger;
     this.active = true;
   }
 

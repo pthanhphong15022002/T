@@ -18,11 +18,17 @@
 >
 </codx-views>
 
-<ng-template #statusCol let-data>
+<ng-template #avatar let-data>
+  <div class="w-100px h-50px m-4">
+    <codx-img [objectId]="data?.recID" width="50"></codx-img>
+  </div>
+</ng-template>
+
+<!-- <ng-template #statusCol let-data>
   <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
     data.status | vll: "EP002":"text" | async
   }}</span>
-</ng-template>
+</ng-template> -->
 
 <ng-template #rankingCol let-data>
   <div class="has-action-menu">
