@@ -6,6 +6,7 @@ import {
   OnInit,
   Optional,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
@@ -15,6 +16,8 @@ import {
   RequestOption,
   CacheService,
   DialogRef,
+  ImageViewerComponent,
+  CRUDService,
 } from 'codx-core';
 import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -25,6 +28,7 @@ import { CodxEpService } from '../../../codx-ep.service';
   styleUrls: ['popup-add-rooms.component.scss'],
 })
 export class PopupAddRoomsComponent implements OnInit {
+  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Input() data!: any;
   @Input() editResources: any;
   @Input() isAdd = true;
@@ -42,7 +46,7 @@ export class PopupAddRoomsComponent implements OnInit {
 
   formModel: FormModel;  
   headerText='';
-  subHeaderText = 'Tạo & upload file văn bản';
+  subHeaderText = '';
 
   constructor(
     private cacheSv: CacheService,
@@ -148,9 +152,7 @@ export class PopupAddRoomsComponent implements OnInit {
       resourceType:'1',
       linkType:'0',
       equipments:lstEquipments,
-    });
-    
-    this.dialogAddRoom.patchValue({companyID:'chưa có dữ liệu'});
+    });    
     if(this.dialogAddRoom.value.owner instanceof Object){
       this.dialogAddRoom.patchValue({owner:this.dialogAddRoom.value.owner[0]})
     }
@@ -160,7 +162,19 @@ export class PopupAddRoomsComponent implements OnInit {
 
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe();
+      .subscribe((res) => {
+        if (res) {
+          this.imageUpload
+            .updateFileDirectReload(res.update.recID)
+            .subscribe((result) => {
+              if (result) {
+                //this.loadData.emit();
+              }
+            });
+          this.dialog.close();
+        }
+        return;
+      });
   }
 
   beforeSave(option: RequestOption) {

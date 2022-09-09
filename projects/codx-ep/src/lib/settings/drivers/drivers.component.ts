@@ -36,6 +36,7 @@ export class DriversComponent  implements OnInit, AfterViewInit {
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('categoryCol') categoryCol: TemplateRef<any>;  
   @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
+  @ViewChild('avatar') avatar: TemplateRef<any>;
  
   @Input() data!: any;
 
@@ -99,20 +100,20 @@ export class DriversComponent  implements OnInit, AfterViewInit {
           {
             field: 'resourceID',
             headerText: 'Mã lái xe',//gv['resourceID'].headerText,
+          },          
+          {
+            field: 'icon',
+            headerText: "Ảnh đại diện",
+            template: this.avatar,
           },
-          // {
-          //   field: 'icon',
-          //   headerText: "Ảnh đại diện",
-          //   template: this.icon,
-          // },
           {
             field: 'resourceName',
             headerText: 'Tên lái xe',
           }, 
-          {
-            headerText: 'Tình trạng',
-            template: this.statusCol,
-          },
+          // {
+          //   headerText: 'Tình trạng',
+          //   template: this.statusCol,
+          // },
           {
             headerText: 'Xếp hạng',
             template: this.rankingCol,
