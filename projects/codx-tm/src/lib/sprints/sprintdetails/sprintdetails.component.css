@@ -17,14 +17,12 @@ codx-views {
     position: relative;
 }
 
-codx-view-list-detail {
-    padding-top: 55px;
+/* codx-view-list-detail {
     padding-bottom: 52px;
-}
+    border: 1px aqua solid;
+    overflow: hidden;
+} */
 
-codx-view-list-card {
-    padding-top: 55px;
-}
 
 .header-fixed.toolbar-fixed .toolbar {
     top: 0;

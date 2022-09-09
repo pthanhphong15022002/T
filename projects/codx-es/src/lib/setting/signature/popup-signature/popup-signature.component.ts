@@ -74,25 +74,22 @@ export class PopupSignatureComponent extends UIComponent {
     });
   }
 
-  onSaveForm() {
+  async onSaveForm() {
     if (this.attSignature1.fileUploadList.length == 1) {
-      this.attSignature1
-        .addFileObservable(this.attSignature1.fileUploadList[0])
-        .subscribe((res) => {
-          if (res) {
-            // this.dialogSignature.patchValue({
-            //   signature1: (res as any).data.recID,
-            // });
-            this.data.signature1 = (res as any).data.recID;
-            this.dialog.close();
-          }
-        });
+      (await this.attSignature1.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          // this.dialogSignature.patchValue({
+          //   signature1: (res as any).data.recID,
+          // });
+          this.data.signature1 = (res as any).data.recID;
+          this.dialog.close();
+        }
+      });
     }
 
     if (this.attSignature2.fileUploadList.length == 1) {
-      this.attSignature2
-        .addFileObservable(this.attSignature2.fileUploadList[0])
-        .subscribe((res1) => {
+      (await this.attSignature2.saveFilesObservable()).subscribe(
+        (res1: any) => {
           if (res1) {
             // this.dialogSignature.patchValue({
             //   signature2: (res1 as any).data.recID,
@@ -100,19 +97,18 @@ export class PopupSignatureComponent extends UIComponent {
             this.data.signature2 = (res1 as any).data.recID;
             this.dialog.close();
           }
-        });
+        }
+      );
     }
 
     if (this.attStamp.fileUploadList.length == 1) {
-      this.attStamp
-        .addFileObservable(this.attStamp.fileUploadList[0])
-        .subscribe((res2) => {
-          if (res2) {
-            //this.dialogSignature.patchValue({ stamp: (res2 as any).data.recID });
-            this.data.stamp = (res2 as any).data.recID;
-            this.dialog.close();
-          }
-        });
+      (await this.attStamp.saveFilesObservable()).subscribe((res2) => {
+        if (res2) {
+          //this.dialogSignature.patchValue({ stamp: (res2 as any).data.recID });
+          this.data.stamp = (res2 as any).data.recID;
+          this.dialog.close();
+        }
+      });
     }
   }
 
@@ -120,13 +116,7 @@ export class PopupSignatureComponent extends UIComponent {
 
   fileAdded(event, currentTab) {}
 
-  fileCount(event, currentTab) {
-    if (event.data[0]) {
-      console.log('.data.length > 0data:image');
-
-      return;
-    }
-  }
+  fileCount(event, currentTab) {}
 
   changeTab(tab) {
     this.currentTab = tab;

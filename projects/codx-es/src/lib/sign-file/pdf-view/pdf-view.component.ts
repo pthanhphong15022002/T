@@ -40,6 +40,8 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { qr } from './model/mode';
 import { FormControl, FormGroup } from '@angular/forms';
+import { NgxExtendedPdfViewerService } from 'ngx-extended-pdf-viewer';
+
 @Component({
   selector: 'lib-pdf-view',
   templateUrl: './pdf-view.component.html',
@@ -47,13 +49,14 @@ import { FormControl, FormGroup } from '@angular/forms';
   providers: [
     LinkAnnotationService,
     MagnificationService,
-    ThumbnailViewService,
     ToolbarService,
     NavigationService,
     TextSearchService,
     TextSelectionService,
     PrintService,
     AnnotationService,
+    ThumbnailViewService,
+    NgxExtendedPdfViewerService,
   ],
 })
 export class PdfViewComponent extends UIComponent implements AfterViewInit {
@@ -222,7 +225,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     };
 
     this.esService
-      .getSFByID([this.recID, this.user?.userID, this.isApprover])
+      .getSFByID([
+        this.recID,
+        this.user?.userID,
+        this.isApprover,
+        this.isDisable,
+      ])
       .subscribe((res: any) => {
         console.table('sf', res);
 
@@ -493,7 +501,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.lstSigners = e.itemData.signers;
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
-    this.pdfviewerControl.load(e.itemData.fileID, '');
+    if (!this.isDisable) {
+      this.pdfviewerControl.load(e.itemData.fileID, '');
+    }
     this.cannotAct = false;
 
     let active = this.fileInfo ? true : false;

@@ -15,7 +15,7 @@
 <ng-template #cardCenter let-data>
   <codx-card-center cardCss="border w-250px h-100 px-3 py-3 position-relative" [formModel]="view.formModel"
     [headerTmp]="headerTmp" [title]="getDate(data)" titleCss="fs-5 mb-2 fw-bold" [subTitle]="data.meetingName"
-    [dataItem]="data" [descTmp]="" [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
+    [dataItem]="data" [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
   </codx-card-center>
 </ng-template>
 

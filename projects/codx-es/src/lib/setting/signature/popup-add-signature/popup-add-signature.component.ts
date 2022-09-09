@@ -12,6 +12,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   CallFuncService,
+  CodxFormComponent,
   CodxService,
   CRUDService,
   DialogData,
@@ -33,6 +34,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   @Output() closeSidebar = new EventEmitter();
   @ViewChildren('attachment') attachment: AttachmentComponent;
   @ViewChild('content') content;
+  @ViewChild('form') form: CodxFormComponent;
 
   isAdd = true;
   isSaveSuccess = false;
@@ -141,6 +143,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       if (event?.field == 'userID') {
         this.data[event['field']] = event?.data.value[0];
         this.data.fullName = event?.data.dataSelected[0].text;
+
+        this.form?.formGroup.patchValue({ fullName: this.data.fullName });
         // this.dialogSignature.patchValue({
         //   [event['field']]: event?.data.value[0],
         // });

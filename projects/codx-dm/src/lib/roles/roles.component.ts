@@ -134,7 +134,8 @@ export class RolesComponent implements OnInit {
   dataVll = [];
   currentPermision: string;
   full: boolean;
-  create: boolean
+  isSetFull = false;
+  create: boolean;
   read: boolean;
   update: boolean;
   delete: boolean;
@@ -245,6 +246,11 @@ export class RolesComponent implements OnInit {
     ) {
    //   this.read = true;
       this.data = data.data;
+      if (this.data[0] == "1")
+        this.modePermission = true;
+      else  
+        this.modePermission = false;
+
       this.fileEditing =  JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));   
       this.user = this.auth.get();
       this.dialog = dialog;    
@@ -257,7 +263,7 @@ export class RolesComponent implements OnInit {
   }
 
   onSaveRightChanged($event, ctrl) {
-    var value = $event.data
+    var value = $event.data;
     switch (ctrl) {
       case 'checkFolder':
         this.createSubFolder = value;
@@ -267,53 +273,25 @@ export class RolesComponent implements OnInit {
       case 'checkSecurity':
         this.security = value;
         break;
-      case "full":
-        //fileEditing.permissions[fileEditing.permissions]
-        this.full = value;
-        // if (this.createRight)  
-        this.create = value;
-        // if (this.readRight) 
-        this.read = value;
-        //   if (this.deleteRight) 
-        this.delete = value;
-        //   if (this.updateRight)   
-        this.update = value;
-        //   if (this.uploadRight)   
-        this.upload = value;
-        //   if (this.shareRight)   
-        this.share = value;
-        //  if (this.downloadRight) 
-        this.download = value;
-        this.assign = value;
-        break;
-      case "create":
-        //  if (this.uploadRight) 
-        this.create = value;
-        break;
-      case "read":
-        //  if (this.uploadRight) 
-        this.read = value;
-        break;
-      case "delete":
-        //   if (this.uploadRight)
-        this.delete = value;
-        break;
-      case "update":
-        //  if (this.updateRight)
-        this.update = value;
-        break;
-      case "upload":
-        //    if (this.uploadRight) 
-        this.upload = value;
-        break;
-      case "share":
-        //   if (this.uploadRight)
-        this.share = value;
-        break;
-      case "download":
-        //  if (this.uploadRight) 
-        this.download = value;
-        break;
+      case "full":        
+        this.full = value;        
+        if (this.isSetFull) {
+          this.create = value;
+          // if (this.readRight) 
+          this.read = value;
+          //   if (this.deleteRight) 
+          this.delete = value;
+          //   if (this.updateRight)   
+          this.update = value;
+          //   if (this.uploadRight)   
+          this.upload = value;
+          //   if (this.shareRight)   
+          this.share = value;
+          //  if (this.downloadRight) 
+          this.download = value;
+          this.assign = value;
+        }
+        break;  
       case "approval":
         this.approval = value;
         //    if (!this.approval)
@@ -345,6 +323,10 @@ export class RolesComponent implements OnInit {
         if (value != null)
           this.endDate = value.fromDate;      
         break;
+        default:
+          this.isSetFull = false;
+          this[ctrl]= value;
+          break;
     }
 
     if (ctrl != 'full' && ctrl != 'copyrightsControl' && ctrl != 'revision' && ctrl != 'physical' && ctrl != 'approval' && value == false)
@@ -384,10 +366,8 @@ export class RolesComponent implements OnInit {
     }
   }
 
-  onSaveEditingFile(modal) {
-    if (this.fileEditing.fileName === "") {
-      // $('#fileName').addClass('form-control is-invalid');
-      // $('#fileName').focus();
+  onSaveEditingFile() {
+    if (this.fileEditing.fileName === "") {     
       return;
     }
 
@@ -405,16 +385,11 @@ export class RolesComponent implements OnInit {
             }
             this.dmSV.listFiles = files;
             this.dmSV.ChangeData.next(true);
-            this.changeDetectorRef.detectChanges();
-            if (modal != null)
-              this.modalService.dismissAll();
+            this.changeDetectorRef.detectChanges();         
           }
         }
-        else {
-          // $('#fileName').addClass('form-control is-invalid');
-          // $('#fileName').focus();
-          this.errorshow = true;
-          // $('#fileError').html(item.message);
+        else {      
+          this.errorshow = true;          
           this.changeDetectorRef.detectChanges();
         }
 
@@ -458,11 +433,7 @@ export class RolesComponent implements OnInit {
         this.fileUploadList.push(Object.assign({}, this.fileEditing));
         // this.dmSV.fileUploadList.next(this.fileUploadList);
       }
-
-      if (modal != null)
-        modal.dismiss('Cross click');//modal.close();
     }
-
   }
 
   setClassActive(id: string) {
@@ -508,6 +479,8 @@ export class RolesComponent implements OnInit {
     
     // load new permission  
     if (this.fileEditing.permissions[index] != null) {    
+      this.full = this.fileEditing.permissions[index].create && this.fileEditing.permissions[index].read && this.fileEditing.permissions[index].update && this.fileEditing.permissions[index].delete && this.fileEditing.permissions[index].download && this.fileEditing.permissions[index].share && this.fileEditing.permissions[index].upload && this.fileEditing.permissions[index].assign;
+    //  this.isSetFull = true;
       this.create = this.fileEditing.permissions[index].create;
       this.read = this.fileEditing.permissions[index].read;
       this.update = this.fileEditing.permissions[index].update;
@@ -518,7 +491,6 @@ export class RolesComponent implements OnInit {
       this.assign = this.fileEditing.permissions[index].assign;
       this.startDate = this.fileEditing.permissions[index].startDate;
       this.endDate = this.fileEditing.permissions[index].endDate;
-      this.full = this.create && this.read && this.update && this.delete && this.download && this.share && this.upload && this.assign;
       this.currentPemission = index;
       isSystem = this.fileEditing.permissions[index].isSystem;
       objectType = this.fileEditing.permissions[index].objectType;
@@ -542,7 +514,13 @@ export class RolesComponent implements OnInit {
       this.isSystem = false;
       this.permissonActiveId = index;
     }   
+
     this.changeDetectorRef.detectChanges();
+  }
+
+  controlFocus(isFull){
+    this.isSetFull = isFull;
+    this.changeDetectorRef.detectChanges();    
   }
 
 
@@ -561,14 +539,14 @@ export class RolesComponent implements OnInit {
     }
 
     if (this.type == "file") {
-     // this.onSaveEditingFile(null);
+      this.onSaveEditingFile();
     }
     else {
       this.fileEditing.folderName = this.folderName;
       this.fileEditing.folderId = this.dmSV.getFolderId();
       this.fileEditing.recID = this.id;
-      // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
-      // });
+      this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
+      });
     }
   } 
 
@@ -608,16 +586,23 @@ export class RolesComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     if (this.modePermission) {
       if (this.type == "file") {
-    //    this.onSaveEditingFile(modal);
+        this.fileService.updatePermisson(this.fileEditing).subscribe(async res => {
+          if (res != null) {
+            this.notificationsService.notify(res.message);
+          }
+        });
+        //this.onSaveEditingFile();
       }
       else {
         // this.fileEditing.folderName = this.folderName;
-        this.fileEditing.folderId = this.dmSV.getFolderId();
-        this.fileEditing.recID = this.id;
+        this.fileEditing.folderId = this.dmSV.getFolderId();       
         // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
         // });
-        // this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
-        // });
+        this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
+          if (res != null) {
+            this.notificationsService.notify(res.message);
+          }
+        });
       }
     }
     
