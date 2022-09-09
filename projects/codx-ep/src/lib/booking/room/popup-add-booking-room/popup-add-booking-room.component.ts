@@ -203,7 +203,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       if(!this.isAdd){
         if (this.data.attachments > 0) {
           this.codxEpService
-            .getFiles('EPT1',this.data.recID,this.formModel.entityName)
+            .getFiles(this.formModel.funcID,this.data.recID,this.formModel.entityName)
             .subscribe((res) => {
               console.log('get file', res); 
             });
@@ -374,24 +374,18 @@ export class PopupAddBookingRoomComponent implements OnInit {
       resourceID: tmpResourceID,
     });      
        
+
+    this.tmpAttendeesList=this.attendeesList;    
     this.tmpAttendeesList.push(this.curUser);
-    this.tmpAttendeesList=this.attendeesList;
     console.log("data",this.fGroupAddBookingRoom.value);    
     console.log("attend",this.attendeesList);
+    
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe(async (res) => {
-        if (res) {
+      .subscribe(async res => {
+        if ( true) {
           if (this.attachment.fileUploadList.length > 0) {
-            this.attachment.objectId = res.recID;
-            // this.attachment
-            //   .addFileObservable(this.attachment.fileUploadList[0])
-            //   .subscribe((file) => {
-            //     if (file) {
-            //       this.fileAdded(file);
-            //       console.log(this.attachment.fileUploadList);
-            //     }
-            //   });
+            this.attachment.objectId = this.fGroupAddBookingRoom.value.recID;
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
                 if (item2?.status == 0) {
@@ -698,10 +692,11 @@ export class PopupAddBookingRoomComponent implements OnInit {
   popupUploadFile(evt:any) {
     this.attachment.uploadFile();
   } 
-  fileAdded(evt: any) {
+  fileAdded(event: any) {    
+    this.fGroupAddBookingRoom.patchValue({attachments:event.data.length});    
   }
   fileCount(event: any) {    
-    this.fGroupAddBookingRoom.patchValue({attachments:event.data[0].data});    
+       
   }
 
 }

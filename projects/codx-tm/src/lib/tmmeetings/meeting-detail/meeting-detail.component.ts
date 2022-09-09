@@ -111,8 +111,7 @@ export class MeetingDetailComponent extends UIComponent {
     if (this.meetingID != null) {
       this.tmService.getMeetingID(this.meetingID).subscribe((res) => {
         if (res) {
-          this.data = res;
-          this.meeting = this.data;
+          this.meeting = res;
           this.startDateMeeting = this.meeting.startDate;
           this.endDateMeeting = this.meeting.endDate;
           this.userName = this.meeting.userName;

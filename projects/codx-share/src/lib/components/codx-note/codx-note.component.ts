@@ -172,7 +172,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       input.focus();
       this.currentElement.id = '0';
     }
-    if (this.data.length > 0) {
+    if (this.data?.length > 0) {
       this.contents = this.data;
       this.dt.detectChanges();
       this.setPropertyForView();
@@ -372,9 +372,14 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     if (event?.data) {
       var dt = event?.data;
       var field = event?.field;
+      var dt1;
       this.listNoteTemp.lineType = this.lineType;
       this.listNoteTemp[field] = dt;
-      this.contents[this.id].memo = dt;
+      if (this.id < this.contents.length) {
+        // dt1 = JSON.parse(JSON.stringify(this.contents));
+        // dt1[this.id].memo = dt;
+        this.contents[this.id].memo = dt;
+      }
       if (this.mode == 'edit')
         this.updateContent(this.objectParentID, this.contents).subscribe();
       this.id += 1;
@@ -392,16 +397,28 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     }
   }
 
-  keyUpEnter(event) {
+  keyUpEnter(event, index) {
     if (event?.data) {
-      this.addContent(event?.data);
+      this.addContent(event?.data, index);
     }
-    this.setPropertyAfterAdd();
+    if (this.contents.length > 1) this.setPropertyAfterAdd();
   }
 
-  addContent(data) {
+  addContent(data, index) {
     var checkFirstNote = false;
     if (data) {
+      // if (index !== this.contents.length - 1) {
+      //   this.checkIndex = true;
+      //   return;
+      // }
+      if (index >= this.contents.length) index = this.contents.length - 1;
+      if (
+        this.contents[index]?.status !== null &&
+        this.contents[index]?.format !== null
+      ) {
+        this.listNoteTemp.status = this.contents[index]?.status;
+        this.listNoteTemp.format = this.contents[index]?.format;
+      }
       var obj = {
         memo: data,
         status: this.listNoteTemp.status,
@@ -417,7 +434,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.contents.push(obj);
       // reverse
       if (checkFirstNote == false) this.contents.shift();
-      this.contents.push(this.initListNote);
+      var dtTemp = JSON.parse(JSON.stringify(this.initListNote));
+      dtTemp.lineType = this.lineType;
+      this.contents.push(dtTemp);
       this.id = this.contents.length - 1;
       //reverse
       this.dt.detectChanges();
@@ -504,18 +523,24 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       if (this.mode == 'edit') {
         if (this.objectParentID) {
           this.updateContent(this.objectParentID, this.contents).subscribe();
-          this.api
-            .execSv(
-              'DM',
-              'ERM.Business.DM',
-              'FileBussiness',
-              'DeleteByObjectIDAsync',
-              [this.contents[index].recID, this.objectType, true]
-            )
-            .subscribe();
+          if (this.contents[index]?.recID != undefined)
+            this.api
+              .execSv(
+                'DM',
+                'ERM.Business.DM',
+                'FileBussiness',
+                'DeleteByObjectIDAsync',
+                [this.contents[index].recID, this.objectType, true]
+              )
+              .subscribe();
         }
       }
       this.getContent.emit(this.contents);
+    }
+    if (this.contents?.length == 1) {
+      var item = JSON.parse(JSON.stringify(this.initListNote));
+      item.lineType = 'TEXT';
+      this.contents.push(item);
     }
     this.countFileAdded = 0;
     this.focus(this.contents.length);
