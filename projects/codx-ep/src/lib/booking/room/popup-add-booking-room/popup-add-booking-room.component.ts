@@ -54,6 +54,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
 
   tempAtender:{userId: string, userName:string, roleType:string,status:string,objectType:string,optional:boolean};
   attendeesList=[];
+  tmpAttendeesList=[];
   grvBookingRoom:any;
   peopleAttend =[];
   tempArray=[];
@@ -326,7 +327,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd,this.attendeesList ,null,this.lstStationery];
+    option.data = [itemData, this.isAdd,this.tmpAttendeesList ,null,this.lstStationery];
     return true;
   }
   onSaveForm() { 
@@ -360,21 +361,23 @@ export class PopupAddBookingRoomComponent implements OnInit {
         }
       }
     });
-    if (this.isAdd) {
-      this.fGroupAddBookingRoom.patchValue({
-        category: '1',
-        status: '1',
-        resourceType: '1',
-        attendees:this.fGroupAddBookingRoom.value.attendees,
-        startDate:this.tmpStartDate,
-        endDate:this.tmpEndDate,
-        equipments: availableEquip + '|' + pickedEquip,
-        resourceID: this.fGroupAddBookingRoom.value.resourceID[0]
-      });      
-    }    
-    this.attendeesList.push(this.curUser);
-
-    console.log("data",this.fGroupAddBookingRoom.value);
+    var tmpResourceID=this.fGroupAddBookingRoom.value.resourceID[0];
+    
+    this.fGroupAddBookingRoom.patchValue({
+      category: '1',
+      status: '1',
+      resourceType: '1',
+      attendees:this.fGroupAddBookingRoom.value.attendees,
+      startDate:this.tmpStartDate,
+      endDate:this.tmpEndDate,
+      equipments: availableEquip + '|' + pickedEquip,
+      resourceID: tmpResourceID,
+    });      
+       
+    this.tmpAttendeesList.push(this.curUser);
+    this.tmpAttendeesList=this.attendeesList;
+    console.log("data",this.fGroupAddBookingRoom.value);    
+    console.log("attend",this.attendeesList);
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {

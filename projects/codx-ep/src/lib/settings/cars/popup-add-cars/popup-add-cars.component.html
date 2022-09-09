@@ -11,7 +11,7 @@
 >
   <ng-template #body>
     <div class="row">
-      <div class="col-10 form-group">
+      <div class="form-group">
         <codx-label
           fiedName="ResourceName"
           [formModel]="dialogRef.formModel"
@@ -25,8 +25,7 @@
         >
         </codx-input>
       </div>
-      
-      <div class="col-2 form-group d-flex flex-column justify-content-end">
+      <!-- <div class="col-6 form-group d-flex flex-column justify-content-end">
         <codx-label default="" [formModel]="dialogRef.formModel"> </codx-label>
         <div class="d-flex flex-column justify-content-end">
           <codx-input 
@@ -38,7 +37,7 @@
           (valueChange)="valueChange($event)"
           >
         </codx-input>
-          <!-- <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button>
+           <button type="button" (click)="popupUploadFile()" class="btn btn-primary">Icon</button>
           <codx-attachment
             #attachment
             [objectType]="'ES_SignFiles'"
@@ -57,10 +56,10 @@
             (fileCount)="fileCount($event)"
             (fileAdded)="fileAdded($event)"
           >
-          </codx-attachment>  -->
+          </codx-attachment>
         </div>
         
-      </div>
+      </div> -->
       
     </div>
 
@@ -156,7 +155,6 @@
         </codx-label>          
 
         <codx-input
-          refValue="EP_Drivers"
           ControlName="linkID"
           [formModel]="form.formModel"
           [Group]="fGroupAddCar"
@@ -174,7 +172,6 @@
         >
         </codx-label>
         <codx-input
-          refValue="Users"
           ControlName="owner"
           [formModel]="form.formModel"
           [Group]="fGroupAddCar"
@@ -222,7 +219,7 @@
         </button>
       </span>
     </div>
-    <div class="row">
+    <div class="form-group">
       <div class="col-12 form-group d-flex justify-content-between">
         <div class="d-flex" *ngFor="let item of tmplstDevice">
           <span
@@ -238,6 +235,11 @@
           </span>
         </div>
       </div>
+    </div>
+    <div class="form-group upload-img">
+      <codx-img #imageUpLoad [width]="100" [objectType]="formModel?.entityName" aria-disabled="false"
+          [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="data?.recID">
+      </codx-img>
     </div>
   </ng-template>
 
