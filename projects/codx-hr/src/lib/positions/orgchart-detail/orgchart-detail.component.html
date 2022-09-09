@@ -1,0 +1,53 @@
+<ng-container>
+    <div [ngbPopover]="popContent" autoClose="outside" popoverClass="empPopoverClass" [popoverTitle]="popTitle"
+        #p="ngbPopover" triggers="manual">
+        <ejs-diagram #diagram width="100%" height="500px" [getConnectorDefaults]="connDefaults"
+            [getNodeDefaults]="nodeDefaults" [layout]="layout" [tool]="tool" [snapSettings]="snapSettings"
+            [dataSourceSettings]="datasetting" (click)="orgClick($event)">
+            <ng-template #nodeTemplate let-node>
+                <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
+                    [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
+                </ng-container>
+            </ng-template>
+        </ejs-diagram>
+    </div>
+</ng-container>
+
+<ng-template #popContent>
+
+</ng-template>
+
+<ng-template #template let-data let-node="node">
+    <!-- <div class="d-flex">
+        <div class="user-card reporting-item">
+            <div class="d-flex flex-column flex-center">
+                <div class="reporting-users mb-2">
+                    <div class="symbol-group">
+                        <div class="symbol symbol-50 symbol-circle">
+                            <img alt="Pic" src="../../../assets/demos/user/user4.jpg">
+                        </div>
+                    </div>
+                    <div class="reporting-card-btn">
+                        <span class="icon-more_vert icon-18"></span>
+                    </div>
+                </div>
+                <div class="fw-bold text-dark pt-2">Phạm Lê Hoài Thương</div>
+                <div class="text-gray-700">Giám đốc</div>
+                <div class="text-gray-500 fs-7">Trụ sở Hồ Chí Minh</div>
+            </div>
+        </div>
+    </div> -->
+</ng-template>
+
+<ng-template #popTitle>
+    <div class="text-dark mb-2">Danh sách nhân viên</div>
+    <div>
+      <!-- <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="searchField"
+        placeholder="Tìm kiếm"
+      /> -->
+      <!-- <codx-searchbar (searchEvent)="onSearch($event)"></codx-searchbar> -->
+    </div>
+  </ng-template>
