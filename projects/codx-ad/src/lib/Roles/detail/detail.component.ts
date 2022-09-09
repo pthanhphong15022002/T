@@ -159,11 +159,11 @@ export class RoleDetailComponent
 
   LoadAsside() {
     //$('#kt_aside_menu').empty();
-    this.api
-      .execSv('BI', 'ERM.Business.BI', 'CubeListBusiness', 'SaveRole', [])
-      .subscribe((res: any) => {
-        debugger;
-      });
+    // this.api
+    //   .execSv('BI', 'ERM.Business.BI', 'CubeListBusiness', 'SaveRole', [])
+    //   .subscribe((res: any) => {
+    //     debugger;
+    //   });
     // this.api
     //   .execSv(
     //     'SYS',
