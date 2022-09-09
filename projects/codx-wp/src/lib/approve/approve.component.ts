@@ -2,7 +2,8 @@ import { T, TAB } from '@angular/cdk/keycodes';
 import { ThisReceiver } from '@angular/compiler';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel } from 'codx-core';
+import { Button } from '@syncfusion/ej2-angular-buttons';
+import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel, ButtonModel } from 'codx-core';
 import { AddPostComponent } from '../dashboard/home/list-post/popup-add/addpost/addpost.component';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
 import { ApproveDetailComponent } from './approve-detail/approve-detail.component';
@@ -33,6 +34,7 @@ export class ApproveComponent extends UIComponent {
   formModel: any;
   dataSelected: any;
   itemSelected : any;
+  buttonAdd:ButtonModel;
   @ViewChild('itemTemplate') itemTemplate : TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef : TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef : TemplateRef<any>;
@@ -85,7 +87,7 @@ export class ApproveComponent extends UIComponent {
     private auth:AuthService,
     private callFuc: CallFuncService,
     private route: ActivatedRoute,
-private injector:Injector
+    private injector:Injector
   ) 
   {
     super(injector);
@@ -123,10 +125,14 @@ private injector:Injector
     });
   }
   ngAfterViewInit(): void {
+    this.buttonAdd = {
+      id: 'btnAdd',
+    };
     this.views  = [{
       type: ViewType.listdetail,
       active: true,
       sameData: true,
+      showButton: true,
       model:{
         template : this.itemTemplate,
         panelLeftRef : this.panelLeftRef,
@@ -361,5 +367,9 @@ private injector:Injector
       [data],
       true,
       (opt:any)=>this.beforDeletedPost(opt,data)).subscribe();
+  }
+
+  clickBtnAdd() {
+    
   }
 }

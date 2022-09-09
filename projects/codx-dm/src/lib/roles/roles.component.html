@@ -104,7 +104,7 @@
 
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="full"
                                         field="full" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'full')"></codx-input>
+                                        (valueChange)="onSaveRightChanged($event, 'full')" (focus)="controlFocus(true)"></codx-input>
                                 </td>
                             </tr>
                             <tr>
@@ -113,7 +113,7 @@
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="create"
                                         field="create" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'create')"></codx-input>
+                                        (valueChange)="onSaveRightChanged($event, 'create')" ></codx-input>
                                 </td>
                             </tr>
                             <tr>

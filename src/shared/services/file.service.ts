@@ -52,6 +52,10 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, PageSize]);
     }
 
+    updatePermisson(data: any): Observable<any> {
+        return this.api.exec<DataReturn>("DM", "FileBussiness", "UpdatePermissionAsync", [data]);
+    }
+
     getTotalHdd(): Observable<any> {
         return this.api.exec<DataReturn>("DM", "FileBussiness", "GetTernantHddAsync", [""]);
     }

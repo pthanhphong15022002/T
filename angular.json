@@ -34,8 +34,14 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/",
+                "output": "/assets/"
+              },
               "src/favicon.ico",
               "src/assets",
+              
               {
                 "glob": "**/*",
                 "input": "node_modules/codx-core/assets/media",
@@ -141,6 +147,11 @@
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
             "assets": [
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets/",
+                "output": "/assets/"
+              },
               "src/favicon.ico",
               "src/assets"
             ],
@@ -551,6 +562,37 @@
             "main": "projects/codx-report/src/test.ts",
             "tsConfig": "projects/codx-report/tsconfig.spec.json",
             "karmaConfig": "projects/codx-report/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-bp": {
+      "projectType": "library",
+      "root": "projects/codx-bp",
+      "sourceRoot": "projects/codx-bp/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-bp/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-bp/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-bp/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-bp/src/test.ts",
+            "tsConfig": "projects/codx-bp/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-bp/karma.conf.js"
           }
         }
       }
