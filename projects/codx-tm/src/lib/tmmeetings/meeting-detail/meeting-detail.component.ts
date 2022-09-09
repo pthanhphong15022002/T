@@ -239,9 +239,9 @@ export class MeetingDetailComponent extends UIComponent {
        // if(data.recID !='')
         this.listRecID.push(data.recID);
       });
-      var listRecID =   this.listRecID.length > 0 ? this.listRecID.join(";") : '';
-      this.dataObj = { listRecID: listRecID };
     }
+    var listRecID =   this.listRecID.length > 0 ? this.listRecID.join(";") : 'DON';
+    this.dataObj = { listRecID: listRecID };
   }
   //#region end
 }
