@@ -1,7 +1,5 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit,  SimpleChanges,  ViewEncapsulation, } from '@angular/core';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit,  Output,  SimpleChanges,  ViewEncapsulation, } from '@angular/core';
 import { ApiHttpService, AuthService, CacheService } from 'codx-core';
-import { tmpHistory } from '../../models/tmpComments.model';
 
 @Component({
   selector: 'codx-tree-history',
@@ -19,7 +17,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   @Input() viewIcon:boolean = false;
   @Input() viewVote:boolean = false;
   @Input() totalComment:number = 0;
-
+  @Output() totalCommentChange = new EventEmitter<number>();
   /////////////////////////////
   service = "BG";
   assemply = "ERM.Business.BG";
@@ -71,7 +69,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
       if(res) {
         this.root.listSubComment = res[0];
         this.totalComment = res[1];
-        console.log(this.totalComment)
+        this.totalCommentChange.emit(this.totalComment)
       }
     })
   }
