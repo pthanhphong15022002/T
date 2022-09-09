@@ -18,8 +18,6 @@ import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.compon
   encapsulation: ViewEncapsulation.None
 })
 export class CardsComponent implements OnInit {
-
-
   public ratingVll: string = "";
   CARDTYPE_EMNUM = CardType;
   readonly STATUS_ACTIVE = {
@@ -84,6 +82,8 @@ export class CardsComponent implements OnInit {
   objectID = "";
   objectIDReciver = "";
   userReciverName = "";
+  isWalletReciver = false;
+
   @ViewChild("templateChooseUser") chooseUser;
   @ViewChild("templateGivePrice") tmlgivePrice;
   @ViewChild('sideBarRightRef') sideBarRightRef: TemplateRef<any>;
@@ -178,16 +178,8 @@ export class CardsComponent implements OnInit {
                 }
               });
             }
-            this.checkTabApporval(this.cardType);
             this.getStatusValuelistName();
             this.isShowCard = true;
-            if (this.functionID != this.functionName.Improvement && this.functionID != this.functionName.Share) {
-              this.LoadDataCard();
-            }
-            else {
-              var tabInput = this.tabActive;
-              tabInput = "3";
-            }
           }
         })
       }
@@ -195,10 +187,10 @@ export class CardsComponent implements OnInit {
       this.itemSelected = null;
       this.gift = null;
       this.cardSelected = null;
-      this.initForm();
       this.dt.detectChanges();
       if(this.codxViews){
         this.codxViews.dataService.setPredicate(this.predicate,[this.dataValue]);
+        this.codxViews.load();
       }
     });
   }
@@ -220,25 +212,11 @@ export class CardsComponent implements OnInit {
     ];
 
   }
-  changeModelPage(modelPage: DataRequest) {
-    this.formName = modelPage.formName;
-    this.gridViewName = modelPage.gridViewName;
-    this.entityPer = modelPage.entityName;
-    this.predicate = "CardType = @0 && Deleted == false";
-    this.dataValue = this.cardType;
-    this.dt.detectChanges();
-  }
-
-
-
-
-
   openUser(field) {
     console.log(this.chooseUser);
     this.field = field;
     this.modalService.open(this.chooseUser, { centered: true });
   }
-  isWalletReciver = false;
   checkValidateWallet(receiverID: string) {
     if (receiverID) {
       this.api
@@ -331,7 +309,6 @@ export class CardsComponent implements OnInit {
 
   DeleteCard(item) {}
   selectedItem(data: any) {
-    console.log('selectedItem: ', data);
     return this.api
       .execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardAsync", data.recID)
       .subscribe((res) => {
@@ -556,10 +533,6 @@ export class CardsComponent implements OnInit {
   onEmitWhenEmpty(data) {
     if (data == null) this.itemSelected = null;
   }
-
-  public get functionName(): typeof FunctionName {
-    return FunctionName;
-  }
   getStatusValuelistName() {
     if (this.tabActive == this.STATUS_ACTIVE.APPROVER) {
       this.TypeValuelistStatus = "approveStatus";
@@ -576,77 +549,11 @@ export class CardsComponent implements OnInit {
       return;
     }
   }
-  checkTabApporval(refType) {
-    let module = "FED_Parameters";
-    this.api
-      .execSv<any>(
-        "SYS",
-        "ERM.Business.AD",
-        "UsersBusiness",
-        "CheckTabApproval",
-        [module, refType]
-      )
-      .subscribe((res) => {
-        if (res !== null) {
-          this.tabApproval = true;
-          this.approver = res.userGroup;
-          this.changeOptionStatus(this.tabActive);
-          return;
-        }
-        this.tabApproval = false;
-        if (this.tabActive == this.STATUS_ACTIVE.APPROVER) {
-          this.changeOptionStatus(this.STATUS_ACTIVE.CARD);
-          this.dt.detectChanges();
-        } else {
-        }
-        return;
-      });
-  }
-
-  open(content) {
-    var userReciver = { userID: this.userReciver };
-    var obj = {
-      title: this.title,
-      selectCard: this.cardSelected,
-      user: this.user,
-      userReciver: userReciver,
-      situation: this.situation
-    }
-    this.dt.detectChanges();
-  }
-
   setGridviewSettup(valuelist: string) {
     this.cache.valueList(valuelist).subscribe((res) => {
       if (res) this.vllData = res.datas;
     });
     this.dt.detectChanges();
-  }
-
-  changeOptionStatus(status: string) {
-
-  }
-
-
-  approvalCard(status) {
-    this.api
-      .execSv<any>(
-        "FED",
-        "ERM.Business.FED",
-        "CardsBusiness",
-        "ApprovalAsync",
-        [this.itemSelected.recID, status]
-      )
-      .subscribe((res) => {
-        if (res.error == false) {
-          this.dt.detectChanges();
-          this.itemSelected.approveStatus = status;
-          if (status == "1") this.notificationsService.notify("Đã đồng thuận");
-          else
-            this.notificationsService.notify("Phiếu này không được đồng thuận");
-        } else {
-          this.notificationsService.notify(res.message);
-        }
-      });
   }
   getBehavior(str) {
     return this.api
@@ -682,9 +589,6 @@ export class CardsComponent implements OnInit {
         }
       });
   }
-  getOneCard(recID) {
-
-  }
   handleVllRating(cardType: string): void {
     if (cardType == CardType.Thankyou) {
       this.ratingVll = Valuelist.RatingThankYou;
@@ -715,27 +619,6 @@ export class CardsComponent implements OnInit {
       valueList: this.vll
     };
     this.callcSV.openSide(PopupAddCardsComponent, data, option);
-  }
-  clickCloseAssideRight() {
-    this.clearValueForm();
-  }
-
-  initForm() {
-    this.form = new FormGroup({
-      receiver: new FormControl(""),
-      behavior: new FormControl(null),
-      situation: new FormControl(""),
-      industry: new FormControl(null),
-      pattern: new FormControl(""),
-      rating: new FormControl(""),
-      gift: new FormControl(""),
-      quanlity: new FormControl(0),
-      coins: new FormControl(0)
-    })
-  }
-  clearValueForm() {
-    this.form.reset();
-    this.dt.detectChanges();
   }
 
 }

@@ -25,6 +25,7 @@ import {
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { DocumentRegistryBucketKey } from 'typescript';
 import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
@@ -35,7 +36,7 @@ import { CodxEsService } from '../../../codx-es.service';
 export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('addTemplateName') addTemplateName: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('combobox', { static: false }) itemCombobox: ElementRef;
+  @ViewChild('dataView', { static: false }) dataView: ElementRef;
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
   @ViewChild('richtexteditor', { static: false })
   richtexteditor: CodxInputComponent;
@@ -56,12 +57,15 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   showBCC = false;
 
   vllShare = 'ES014';
+  container: HTMLElement;
 
   sendType = 'to';
   lstFrom = [];
   lstTo = [];
   lstCc = [];
   lstBcc = [];
+
+  width: any = 'auto';
 
   constructor(
     private api: ApiHttpService,
@@ -80,8 +84,28 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.showIsPublish = data.data?.showIsPublish;
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
+
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (
+        this.dataView &&
+        e.target !== this.dataView?.nativeElement &&
+        this.textarea &&
+        this.isFocus == false
+      ) {
+        this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
+        this.cr.detectChanges();
+      }
+      this.isFocus = false;
+    });
   }
-  ngAfterViewInit(): void {}
+
+  staticWidth: number = 0;
+  ngAfterViewInit(): void {
+    if (this.textarea && this.staticWidth != 0)
+      this.staticWidth = (
+        this.textarea.nativeElement as HTMLElement
+      ).offsetWidth;
+  }
 
   initForm() {
     this.formModel = new FormModel();
@@ -106,17 +130,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   new FormControl(res1[0].recID)
                 );
 
-                // this.api
-                //   .execSv(
-                //     'DM',
-                //     'ERM.Business.DM',
-                //     'FileBussiness',
-                //     'GetFilesByObjectIDImageAsync',
-                //     this.dialogETemplate.value.recID
-                //   )
-                //   .subscribe((f: any[]) => {
-                //     console.log(f);
-                //   });
                 let lstUser = res1[1];
                 if (lstUser.length > 0) {
                   lstUser.forEach((element) => {
@@ -204,6 +217,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
+    debugger;
     if (event?.field && event.component) {
       if (event.field == 'sendTime') {
         this.insert(null);
@@ -420,19 +434,33 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   insert(evt: any) {
     this.saveSelection = this.selection.save(this.range, document);
     this.saveSelection.restore();
-    // this.richtexteditor.control.executeCommand('fontColor', 'gray');
-    // this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
+    this.richtexteditor.control.executeCommand('fontColor', 'gray');
+    this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
   }
 
-  focusCombobox(event) {
-    const childTwoElement =
-      this.textarea.nativeElement.getElementsByClassName('message')[0];
-    if (childTwoElement) {
-      let width =
+  isFocus: boolean = false;
+  focusCombobox(event = null) {
+    let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
+    console.log('width', crrWidth);
+
+    if (this.width == crrWidth || this.width == 'auto') {
+      this.width =
         (this.textarea.nativeElement as HTMLElement).offsetWidth -
-        (this.itemCombobox.nativeElement as HTMLElement).offsetWidth;
-      this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
+        (this.dataView.nativeElement as HTMLElement).offsetWidth -
+        5;
     }
+
+    this.isFocus = true;
+    this.cr.detectChanges();
+
+    // const childTwoElement =
+    //   this.textarea.nativeElement.getElementsByClassName('message')[0];
+    // if (childTwoElement) {
+    //   let width =
+    //     (this.textarea.nativeElement as HTMLElement).offsetWidth -
+    //     (this.dataView.nativeElement as HTMLElement).offsetWidth;
+    //   this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
+    // }
   }
 }
 

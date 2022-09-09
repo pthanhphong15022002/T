@@ -170,7 +170,6 @@ export class PopupAddSignFileComponent implements OnInit {
                       file.fileName = nFile.fileName;
                       file.eSign = true;
 
-                      debugger;
                       files.push(file);
 
                       this.dialogSignFile &&
@@ -426,7 +425,7 @@ export class PopupAddSignFileComponent implements OnInit {
           icon: category?.Icon,
           color: category?.Color,
           processID: category?.RecID,
-          categoryName: category?.processID,
+          categoryName: category?.CategoryName,
         });
       }
 
@@ -506,7 +505,7 @@ export class PopupAddSignFileComponent implements OnInit {
     if (!this.isSaved && this.isAddNew) {
       this.esService
         .addNewSignFile(this.dialogSignFile.value)
-        .subscribe((res) => {
+        .subscribe(async (res) => {
           console.log('ADD NEW SIGNFILE: ', res);
           console.log('...', this.dialogSignFile.value);
           if (res != null) {
@@ -514,14 +513,21 @@ export class PopupAddSignFileComponent implements OnInit {
             this.dialogSignFile.patchValue(res);
             if (this.attachment.fileUploadList.length > 0) {
               this.attachment.objectId = res.recID;
-              this.attachment
-                .addFileObservable(this.attachment.fileUploadList[0])
-                .subscribe((file) => {
-                  if (file) {
-                    this.fileAdded(file);
-                    console.log(this.attachment.fileUploadList);
+              // this.attachment
+              //   .addFileObservable(this.attachment.fileUploadList[0])
+              //   .subscribe((file) => {
+              //     if (file) {
+              //       this.fileAdded(file);
+              //       console.log(this.attachment.fileUploadList);
+              //     }
+              //   });
+              (await this.attachment.saveFilesObservable()).subscribe(
+                (item2: any) => {
+                  if (item2?.status == 0) {
+                    this.fileAdded(item2);
                   }
-                });
+                }
+              );
             }
             if (this.currentTab == 1) {
               this.updateNodeStatus(this.oldNode, this.newNode);

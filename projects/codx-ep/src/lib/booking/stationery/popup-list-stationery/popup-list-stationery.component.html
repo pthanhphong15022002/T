@@ -28,11 +28,11 @@
   </ng-template>
 
   <ng-template #TemplateList let-data>
-    <div class="d-flex flex-grow-1 border px-2 pt-4 mb-2">
+    <div class="d-flex flex-grow-1 has-action-menu border px-2 pt-4 mb-2">
       <div class="flex-grow-1">
         <div class="d-flex">
           <span
-            class="me-1 w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 "
+            class="me-1 w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2"
             style="color: white"
             [ngClass]="setIcon(data?.resourceType)"
             [style.background-color]="setIconColor(data?.resourceType)"
@@ -73,6 +73,13 @@
                 objectType="AD_Users"
               ></codx-img>
             </div>
+            <codx-mfunc
+              type="hover"
+              [formModel]="dialog.formModel"
+              (clickMF)="clickMF($event, data)"
+              [dataItem]="data"
+            >
+            </codx-mfunc>
           </div>
         </div>
       </div>
