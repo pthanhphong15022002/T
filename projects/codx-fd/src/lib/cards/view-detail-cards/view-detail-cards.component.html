@@ -59,7 +59,8 @@
                     <div class="d-flex justify-content-between mb-2">
                         <div class="d-flex align-items-center user-card py-3">
                             <codx-img class="symbol symbol-40 symbol-circle"
-                                [objectId]="itemSelected?.sender?.domainUser" objectType="AD_Users"
+                                [objectId]="itemSelected?.sender?.employeeID" 
+                                [objectType]="'AD_Users'"
                                 [width]="35">
                             </codx-img>
                             <div class="d-flex flex-column flex-grow-1 ms-2">
@@ -174,11 +175,12 @@
 
 
 <ng-template #templateShare let-item>
-    <span class="me-2">
+    <div class="my-2">
         <codx-img objectType="AD_Users" [objectId]="item.objectID"
             class="symbol symbol-circle symbol-30 mr-3" [width]="35">
         </codx-img>
-    </span>
+        <span class="ms-2 fw-bolder">{{item.objectName}}</span>
+    </div>
 </ng-template>
 
 

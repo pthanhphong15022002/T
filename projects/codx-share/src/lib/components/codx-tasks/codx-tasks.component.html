@@ -32,8 +32,15 @@
     (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
     [iconCss]="data?.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
     [icoStatusVll2]="'L0186'" [title]="data.userName" [subTitle]="data.positionName" [content]="data.taskName"
-    [status]="data.status" [statusVll]="vllStatus" [date]="data.dueDate" [resources]="data.assignTo" [rootData]="data"
-    [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter" [dataItem]="data">
+    [status]="data.status" [statusVll]="vllStatus" <!-- [showBgColorVll]="true" -->
+    [date]="data.dueDate"
+    [resources]="data.assignTo"
+    [rootData]="data"
+    [formModel]="view.formModel"
+    [setting]="setting"
+    [footer]="cardImgFooter"
+    [dataItem]="data"
+    >
   </codx-card-img>
 </ng-template>
 
@@ -42,9 +49,8 @@
     <div class="d-flex align-items-center mb-2">
       <codx-tag [entityName]="view.formModel.entityName" [disabled]="true" [value]="data.tags"></codx-tag>
     </div>
-    <div class="w-100px min-w-100px" *ngIf="setting?.processBar">
+    <div class="w-100px min-w-100px mb-2" *ngIf="setting?.processBar">
       <div class="d-flex flex-column justify-content-start">
-        <div class="text-gray-500 mb-1">{{ data?.percentage.toFixed(2) }}%</div>
         <div class="progress w-100 h-5px">
           <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="data?.percentage"></div>
         </div>
@@ -115,7 +121,6 @@
         [field]="funcID == 'TMT0402' ? 'ApproveStatus' : 'Status'"
         [value]="funcID == 'TMT0402' ? data?.approveStatus : data?.status" [showText]="true" [showBgColor]="true"
         class="badge badge-light badge-md fs-7 me-2">
-
       </codx-vll>
       <span>
         <span class="fs-7 text-gray-600">{{
@@ -179,24 +184,9 @@
   </div>
 </ng-template>
 
-<codx-views
-  #view
-  [service]="service"
-  [entityName]="entityName"
-  [idField]="idField"
-  [assemblyName]="assemblyName"
-  [className]="className"
-  [method]="method"
-  [views]="views"
-  [button]="showButtonAdd ? button : null"
-  (buttonClick)="click($event)"
-  (viewChanged)="changeView($event)"
-  (requestEnded)="requestEnded($event)"
-  [dataObj]="dataObj"
-  (selectedChange)="selectedChange($event)"
-  (onDragDrop)="onDragDrop($event)"
-  (onActions)="onActions($event)"
-  [selectedFirst]="true"
-  [autoLoad]="true"
->
+<codx-views #view [service]="service" [entityName]="entityName" [idField]="idField" [assemblyName]="assemblyName"
+  [className]="className" [method]="method" [views]="views" [button]="button" (buttonClick)="click($event)"
+  (viewChanged)="changeView($event)" (requestEnded)="requestEnded($event)" [dataObj]="dataObj"
+  (selectedChange)="selectedChange($event)" (onDragDrop)="onDragDrop($event)" (onActions)="onActions($event)"
+  [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
