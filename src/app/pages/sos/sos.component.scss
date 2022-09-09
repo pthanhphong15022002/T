@@ -1,0 +1,31 @@
+.reporting-users {
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.reporting-item {
+    margin: 20px;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+
+.reporting-item.active {
+    background-color: #f4f7ff;
+}
+
+.reporting-card-btn {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    margin-left: -13px;
+    width: 26px;
+    height: 26px;
+    background-color: #f5f6f8;
+    border-radius: 26px;
+    text-align: center;
+    padding-left: 2px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}

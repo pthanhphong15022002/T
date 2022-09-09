@@ -240,7 +240,6 @@ export class MeetingDetailComponent extends UIComponent {
         this.listRecID.push(data.recID);
       });
       var listRecID =   this.listRecID.length > 0 ? this.listRecID.join(";") : '';
-      //  this.listRecID.length > 0 ? JSON.stringify(this.listRecID) : '';
       this.dataObj = { listRecID: listRecID };
     }
   }
