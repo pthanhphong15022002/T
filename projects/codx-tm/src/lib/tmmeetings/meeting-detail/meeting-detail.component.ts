@@ -150,13 +150,12 @@ export class MeetingDetailComponent extends UIComponent {
 
   clickMenu(item) {
     this.name = item.name;
-
+    if (this.name == 'Giao việc') {
+      this.getListRecID(this.meetingID)
+    }
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {
         obj.isActive = false;
-        if (this.name == 'Giao việc') {
-          this.getListRecID(this.meetingID)
-        }
         return;
       }
     });
