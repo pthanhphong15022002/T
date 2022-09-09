@@ -434,8 +434,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   insert(evt: any) {
     this.saveSelection = this.selection.save(this.range, document);
     this.saveSelection.restore();
-    this.richtexteditor.control.executeCommand('fontColor', 'gray');
-    this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
+    // this.richtexteditor.control.executeCommand('fontColor', 'gray');
+    // this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
   }
 
   isFocus: boolean = false;

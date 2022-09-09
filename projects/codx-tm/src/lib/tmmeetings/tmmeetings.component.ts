@@ -160,7 +160,7 @@ export class TMMeetingsComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          // template7: this.template7,
+          template7: this.template7,
         },
       },
       {
