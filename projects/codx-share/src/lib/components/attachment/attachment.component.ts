@@ -78,6 +78,7 @@ export class AttachmentComponent implements OnInit {
   titleUpload = 'Upload';
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
+ 
   urlUpload = '';
   interval: ItemInterval[];
   intervalCount = 0;
@@ -92,6 +93,7 @@ export class AttachmentComponent implements OnInit {
   maxFileSizeUploadMB = 0;
   referType: string;
   ChunkSizeInKB = 1024 * 2;
+  @Input() isDeleteTemp = false;
   @Input() formModel: any;
   @Input() allowExtensions: string;
   @Input() allowMultiFile = '1';
