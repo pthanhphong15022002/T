@@ -96,12 +96,15 @@
         [value]="data.tags"
       ></codx-tag>
     </div>
-    <div class="w-100px min-w-100px mb-2" *ngIf="setting?.processBar">
+    <div class="min-w-100px mb-2" *ngIf="setting?.processBar">
       <div class="d-flex flex-column justify-content-start">
         <div class="progress w-100 h-5px">
           <div
             class="progress-bar progress-bar-done"
             role="progressbar"
+            attr.aria-valuenow="{{ data?.percentage | number }}"
+            aria-valuemin="0"
+            aria-valuemax="100"
             [style.width.%]="data?.percentage"
           ></div>
         </div>

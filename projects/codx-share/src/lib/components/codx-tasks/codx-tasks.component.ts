@@ -79,11 +79,6 @@ export class CodxTasksComponent
 
   button?: ButtonModel = {
     id: 'btnAdd',
-    text: 'Thêm mới',
-    items: [{
-      id: 'btnRefesh',
-      text: 'Làm mới',
-    },]
   };
 
   model?: DataRequest;
@@ -805,7 +800,7 @@ export class CodxTasksComponent
 
   selectedChange(task: any) {
     this.itemSelected = task?.data ? task?.data : task;
-    if(this.itemSelected){
+    if (this.itemSelected) {
       this.loadTreeView();
       this.loadDataReferences();
     }
