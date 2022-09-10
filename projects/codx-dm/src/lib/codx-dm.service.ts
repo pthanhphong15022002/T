@@ -396,9 +396,9 @@ export class CodxDMService {
   }
 
   getThumbnail(data) {
-    if (data.thumbnail != '') {
+    if (data.hasThumbnail) {
       let url = `${this.urlThumbnail}/${data.thumbnail}`;
-      return this.checkUrl(url, data);
+      return url;// this.checkUrl(url, data);
     } else return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
   }
 
@@ -911,13 +911,14 @@ export class CodxDMService {
     if (data.folderName != undefined)
       return '../../../assets/codx/dms/folder.svg';
     else {
-      if (data.thumbnail == null) {
+      if (!data.hasThumbnail) {
         return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
       } else if (data.thumbnail.indexOf('../../../') > -1)
         return data.thumbnail;
       else {
         let url = `${this.urlThumbnail}/${data.thumbnail}`;
-        return this.checkUrl(url, data);
+        return url;
+        //return this.checkUrl(url, data);
       }
     }
   }

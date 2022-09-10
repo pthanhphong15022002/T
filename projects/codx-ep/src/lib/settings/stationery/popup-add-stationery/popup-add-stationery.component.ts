@@ -1,13 +1,22 @@
 import {
   Component,
+  EventEmitter,
   Injector,
   Optional,
+  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
-import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
+import {
+  CRUDService,
+  DialogData,
+  DialogRef,
+  FormModel,
+  ImageViewerComponent,
+  UIComponent,
+} from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService } from '../../../codx-ep.service';
 
@@ -17,8 +26,9 @@ import { CodxEpService } from '../../../codx-ep.service';
   styleUrls: ['./popup-add-stationery.component.scss'],
 })
 export class PopupAddStationeryComponent extends UIComponent {
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('popupColor') popupTemp: TemplateRef<any>;
+  @Output() loadData = new EventEmitter();
   isAfterRender = false;
   dialogAddStationery: FormGroup;
   color: any;
@@ -109,6 +119,23 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
+        if (res.save) {
+          this.imageUpload
+            .updateFileDirectReload(res.save.recID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
+              }
+            });
+        } else {
+          this.imageUpload
+            .updateFileDirectReload(res.update.recID)
+            .subscribe((result) => {
+              if (result) {
+                this.loadData.emit();
+              }
+            });
+        }
         this.dialog.close();
       });
   }
@@ -168,18 +195,12 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  buttonClick(e: any) {
-    //console.log(e);
-  }
+  buttonClick(e: any) {}
 
   splitColor(color: string): any {
     if (color) {
       return color.split(';');
     }
-  }
-
-  popupUploadFile() {
-    this.attachment.uploadFile();
   }
 
   fileCount(event) {}

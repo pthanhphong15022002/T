@@ -26,7 +26,13 @@
                 #thumbnailTab
                 style="padding: 0 20px"
                 id="thumbnailTab"
+                *ngIf="!isDisable"
               ></div>
+              <div id="sidebarContent">
+                <div id="thumbnailView" style="width: 100%; height: 100%"></div>
+                <div id="outlineView" class="d-none"></div>
+                <div id="attachmentsView" class="d-none"></div>
+              </div>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -40,37 +46,114 @@
             </ng-template>
             <ng-template #content>
               <ng-container>
-                <ejs-listview
-                  style="height: 100% !important"
-                  id="groupedListCA"
-                  [dataSource]="lstAreas"
-                  [cssClass]="cssClass"
-                  [showHeader]="true"
+                <div
+                  class="ca-space d-flex m-3"
+                  *ngFor="let ca of lstCA; let idx = index"
                 >
-                  <ng-template #template let-area="">
+                  <div
+                    [ngClass]="{
+                      icon: true,
+                      'icon-report_gmailerrorred btn-warning':
+                        !ca.isVerified && ca.certificate_IsValidNow,
+                      'icon-error btn-danger': !ca.certificate_IsValidNow,
+                      'icon-done btn-success':
+                        ca.isVerified && ca.certificate_IsValidNow
+                    }"
+                    style="height: 20px"
+                  ></div>
+                  <div class="ca-memo">
+                    <codx-label
+                      [name]="'lblCAMemo' + idx"
+                      [formModel]=""
+                      [default]="'Certified by ' + ca.signerName"
+                      class="fw-bold text-primary fs-37"
+                      (click)="goToSelectedCA(ca, idx)"
+                    ></codx-label>
                     <div
-                      class="annotationItem py-3 px-3"
-                      (click)="goToSelectedAnnotation(area)"
-                      *ngIf="area.labelType == '1' && area.fixedWidth == true"
+                      class="ca-more_Info"
+                      *ngIf="lstCACollapseState[idx]?.open"
                     >
-                      <codx-temp-full
-                        [imageId]="area.signer"
-                        [title]="'CA: ' + getAreaOwnerName(area.signer)"
-                        [resourceObjType]="'AD_Users'"
-                        [subTitle]="'Trang ' + (+area.location.pageNumber + 1)"
-                        [subTitleCss]="'page-end'"
-                      >
-                      </codx-temp-full>
+                      <codx-label
+                        [name]="'lblCAMoreInfo' + idx"
+                        [formModel]=""
+                        [default]="'Signing Time: ' + ca.signedDate"
+                        class="fw-bold text-primary fs-37"
+                      ></codx-label>
+                      <div *ngIf="!ca.isVerified">
+                        <ng-container
+                          [ngTemplateOutlet]="failReasons"
+                          [ngTemplateOutletContext]="{ ca: ca }"
+                        ></ng-container>
+                      </div>
+                      <button (click)="openPopUpCAProps(ca)" class="badge">
+                        <codx-label
+                          [name]="'lblCAProps'"
+                          [formModel]=""
+                          [default]="'Signature Properties'"
+                          class="fw-bold text-primary fs-37 fst-italic"
+                        ></codx-label>
+                      </button>
+                      <div class="ca_Details">
+                        <codx-label
+                          [name]="'lblCADetails' + idx"
+                          [formModel]=""
+                          [default]="'Signature Detail'"
+                          class="fw-bold text-primary fs-30 d-block"
+                        ></codx-label>
+
+                        <codx-label
+                          [name]="'lblCADetails_Contact' + idx"
+                          [formModel]=""
+                          [default]="
+                            'Contact Information: ' +
+                            ca.certificate_IssuedBy.commonName
+                          "
+                          class="text-primary fs-30 d-block"
+                        ></codx-label>
+
+                        <codx-label
+                          [name]="'lblCADetails_Location' + idx"
+                          [formModel]=""
+                          [default]="'Location: ' + ca.signedLocation"
+                          class="text-primary fs-30 d-block"
+                        ></codx-label>
+
+                        <codx-label
+                          [name]="'lblCADetails_Reason' + idx"
+                          [formModel]=""
+                          [default]="'Reason: ' + ca.signedComment"
+                          class="text-primary fs-30 d-block"
+                        ></codx-label>
+                      </div>
                     </div>
-                  </ng-template>
-                  <ng-template #groupTemplate let-dataSource="">
-                    <div class="e-list-wrapper">
-                      <span class="e-list-item-content">{{
-                        dataSource.items[0].location.pageNumber + 1
-                      }}</span>
+                  </div>
+                </div>
+                <ng-template #failReasons let-ca="ca">
+                  <codx-label
+                    [name]="'lblFailed'"
+                    [formModel]=""
+                    [default]="'Certificate verification failed'"
+                    class="fw-bold text-primary fs-37"
+                  ></codx-label>
+                  <div
+                    class="fail_Reasons ml-2"
+                    *ngFor="let reason of ca.vertifications"
+                  >
+                    <div
+                      class="reason_Info"
+                      *ngIf="!reason.isVerified && reason.message != ''"
+                    >
+                      <p>{{ reason.message }}</p>
                     </div>
-                  </ng-template>
-                </ejs-listview>
+                  </div>
+                </ng-template>
+                <ng-template #groupTemplate let-dataSource="">
+                  <div class="e-list-wrapper">
+                    <span class="e-list-item-content">{{
+                      dataSource.items[0].location.pageNumber + 1
+                    }}</span>
+                  </div>
+                </ng-template>
               </ng-container>
             </ng-template>
           </e-tabitem>
@@ -84,7 +167,7 @@
         <div
           class="left_Toolbar d-flex justify-content-start align-items-center"
         >
-          <ejs-toolbar (created)="leftTollbarCreated($event)">
+          <ejs-toolbar (created)="leftToolbarCreated($event)">
             <e-items>
               <e-item
                 [prefixIcon]="
@@ -98,11 +181,12 @@
                 [disabled]="cannotAct"
                 prefixIcon="icon-skip_previous icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 (click)="pdfviewerControl?.navigation?.goToFirstPage()"
-                [disabled]="cannotAct"
+                id="firstPage"
               >
               </e-item>
               <e-item
                 prefixIcon="icon-navigate_before icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="previous"
                 (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()"
                 [disabled]="cannotAct"
               >
@@ -110,18 +194,21 @@
               <e-item [template]="pageInput" type="Input"></e-item>
               <e-item
                 prefixIcon="icon-navigate_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="next"
                 (click)="pdfviewerControl?.navigation?.goToNextPage()"
                 [disabled]="cannotAct"
               >
               </e-item>
               <e-item
                 prefixIcon="icon-skip_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="lastPage"
                 (click)="pdfviewerControl?.navigation?.goToLastPage()"
                 [disabled]="cannotAct"
               >
               </e-item>
 
               <!-- <e-item
+                id="viewThumbnail"
                 prefixIcon="icon-article icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 (click)="show($event)"
                 [disabled]="cannotAct"
@@ -133,6 +220,7 @@
 
         <div
           class="chooseSignFile w-100 d-flex justify-content-center align-items-center"
+          #pdfToolbar
         >
           <ejs-dropdownlist
             id="signfilesDropdownList"
@@ -148,6 +236,7 @@
           <ejs-toolbar>
             <e-items>
               <e-item
+                id="zoomOut"
                 prefixIcon="e-zoom-out btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 (click)="clickZoom('out')"
                 [disabled]="cannotAct"
@@ -159,13 +248,16 @@
             style="width: 100%; min-width: 70px"
             id="zoomValuesDropdownList"
             [(dataSource)]="lstZoomValue"
-            [placeholder]="zoomValue"
+            [(placeholder)]="zoomValue"
+            [fields]="zoomFields"
             (change)="clickZoom('to', $event)"
           >
           </ejs-dropdownlist>
+
           <ejs-toolbar>
             <e-items>
               <e-item
+                id="zoomIn"
                 prefixIcon="e-zoom-in btn btn-icon btn-white btn-sm border-0  btn-tool-custom"
                 (click)="clickZoom('in')"
                 [disabled]="cannotAct"
@@ -177,12 +269,14 @@
             <e-items>
               <e-item
                 prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="print"
                 (click)="clickPrint($event)"
                 [disabled]="cannotAct"
               >
               </e-item>
               <e-item
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="download"
                 (click)="clickDownload()"
                 [disabled]="cannotAct"
               >
@@ -243,14 +337,46 @@
 
       <ng-template #viewMode>
         <ngx-extended-pdf-viewer
+          #ngxPdfView
           *ngIf="fileInfo?.fileID ? true : false"
           [(src)]="fileInfo.fileID"
-          [useBrowserLocale]="true"
-          [showOpenFileButton]="true"
+          [height]="'100vh'"
+          [(zoom)]="zoomValue"
+          [zoomLevels]="zoomValue"
+          [(page)]="curPage"
+          [customToolbar]="pdfToolbar"
+          [showHandToolButton]="true"
           [showUnverifiedSignatures]="true"
-          [useBrowserLocale]="true"
+          [sidebarVisible]="!hideThumbnail"
+          [showSidebarButton]="false"
+          (pdfLoadingStarts)="loadingAnnot($event)"
+          (pageRendered)="ngxPageRendered($event)"
+          [showBookmarkButton]="false"
+          [showPropertiesButton]="true"
+          [customSidebar]="withoutSidebar"
+          [customThumbnail]="ngxThumbnail"
         >
         </ngx-extended-pdf-viewer>
+      </ng-template>
+      <ng-template #ngxThumbnail let-PAGE_NUMBER>
+        <a class="pdf-viewer-template">
+          <div
+            class="thumbnail"
+            [classList]="PAGE_NUMBER == curPage ? 'border border-primary' : ''"
+            data-page-number="PAGE_NUMBER"
+            (click)="goToPage(PAGE_NUMBER)"
+          >
+            <div class="image-container d-flex mb-2">
+              <!-- image is automatically inserted here -->
+            </div>
+          </div>
+        </a>
+      </ng-template>
+      <ng-template #withoutSidebar>
+        <div id="sidebarContainer" class="d-flex w-0 h-0 d-none">
+          <pdf-sidebar-content></pdf-sidebar-content>
+          <div id="sidebarResizer" class="d-none"></div>
+        </div>
       </ng-template>
     </div>
     <div
@@ -446,7 +572,7 @@
                           area.recID != curSelectedAnnotID ||
                           area.labelType == '1' ||
                           area.labelType == '2' ||
-                          area.fixedWidth == true
+                          area.isLock == true
                         "
                         [formGroup]="formAnnot"
                       >
@@ -703,3 +829,5 @@
   >
   </codx-input>
 </ng-template>
+
+<ng-template #panelLeft> </ng-template>

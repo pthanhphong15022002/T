@@ -61,6 +61,7 @@ import {
   NgxExtendedPdfViewerModule,
   NgxExtendedPdfViewerService,
 } from 'ngx-extended-pdf-viewer';
+import { PopupCaPropsComponent } from './sign-file/popup-ca-props/popup-ca-props.component';
 
 const routes: Routes = [
   {
@@ -149,6 +150,7 @@ const routes: Routes = [
     ViewApprovalProcessComponent,
     ESApprovelComponent,
     SearchingComponent,
+    PopupCaPropsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

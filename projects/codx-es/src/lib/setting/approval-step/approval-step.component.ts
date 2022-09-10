@@ -240,7 +240,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       if (res) {
         var model = new DialogModel();
         model.FormModel = res;
-        this.dialogApproval = this.cfService.openForm(
+        var dialog = this.cfService.openForm(
           PopupAddApprovalStepComponent,
           '',
           850,
@@ -251,7 +251,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
           model
         );
 
-        this.dialogApproval.closed.subscribe((res) => {
+        dialog.closed.subscribe((res) => {
           if (res?.event) {
             this.isEdited = true;
           }
