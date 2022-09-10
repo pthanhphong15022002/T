@@ -32,7 +32,7 @@
     (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
     [iconCss]="data?.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
     [icoStatusVll2]="'L0186'" [title]="data.userName" [subTitle]="data.positionName" [content]="data.taskName"
-    [status]="data.status" [statusVll]="vllStatus"
+    [status]="data.status" [statusVll]="vllStatus" [showBgColorVll]="true"
     [date]="data.dueDate"
     [resources]="data.assignTo"
     [rootData]="data"
