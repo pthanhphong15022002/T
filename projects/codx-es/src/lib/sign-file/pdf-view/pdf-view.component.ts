@@ -40,7 +40,12 @@ import { QRCodeGenerator } from '@syncfusion/ej2-barcode-generator';
 import { tmpSignArea } from './model/tmpSignArea.model';
 import { qr } from './model/mode';
 import { FormControl, FormGroup } from '@angular/forms';
-import { NgxExtendedPdfViewerService } from 'ngx-extended-pdf-viewer';
+import {
+  NgxExtendedPdfViewerComponent,
+  NgxExtendedPdfViewerService,
+  PdfThumbnailDrawnEvent,
+} from 'ngx-extended-pdf-viewer';
+import { PopupCaPropsComponent } from '../popup-ca-props/popup-ca-props.component';
 
 @Component({
   selector: 'lib-pdf-view',
@@ -50,12 +55,12 @@ import { NgxExtendedPdfViewerService } from 'ngx-extended-pdf-viewer';
     LinkAnnotationService,
     MagnificationService,
     ToolbarService,
+    ThumbnailViewService,
     NavigationService,
     TextSearchService,
     TextSelectionService,
     PrintService,
     AnnotationService,
-    ThumbnailViewService,
     NgxExtendedPdfViewerService,
   ],
 })
@@ -78,6 +83,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   vllActions: any;
 
   funcID;
+  dialog: import('codx-core').DialogRef;
 
   constructor(
     private inject: Injector,
@@ -98,8 +104,9 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
 
   @ViewChild('fileUpload') fileUpload!: ElementRef;
   @ViewChild('pdfviewer') pdfviewerControl: PdfViewerComponent;
-  @ViewChild('inputAuthor') inputAuthor!: ElementRef | any;
-  @ViewChild('thumbnailTab') thumbnailTab!: ElementRef;
+  @ViewChild('inputAuthor') inputAuthor!: ElementRef;
+  @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
+  @ViewChild('ngxPdfView') ngxPdfView: NgxExtendedPdfViewerComponent;
   @ViewChild('qrCode') qrCode!: ElementRef;
   @ViewChild('listview') listview!: CodxListviewComponent;
 
@@ -110,7 +117,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   pageStep;
   curPage = 1;
 
-  zoomValue: number = 100;
+  zoomValue: number | string = 100;
+  zoomFields = { text: 'show', value: 'realValue' };
   holding: number = 0;
   after_X_Second: number = 3000;
 
@@ -121,7 +129,16 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   fileInfo: any;
 
   lstRenderAnnotation: Array<object> = [];
-  lstZoomValue: Array<number> = [25, 30, 50, 75, 90, 100];
+  lstZoomValue = [
+    { realValue: '25', show: 25 },
+    { realValue: '30', show: 30 },
+    { realValue: '50', show: 50 },
+    { realValue: '90', show: 90 },
+    { realValue: '100', show: 100 },
+    { realValue: 'Auto', show: 'Auto' },
+    { realValue: 'Fit to Width', show: 'Fit to Width' },
+    { realValue: 'Fit to page', show: 'Fit to page' },
+  ];
   actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
 
   lstAnnotFontStyle;
@@ -162,6 +179,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   signPerRow;
   direction;
   align;
+  await;
+  AreaControl;
 
   //vung ky
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
@@ -180,10 +199,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   // public fields: Object = { text: 'Name', groupBy: 'location.pageNumber' };
   public cssClass: string = 'e-list-template';
   public lstAreas = [];
+  lstCA;
+  lstCACollapseState: Array<any> = [];
   curSelectedAnnotID;
   curSelectedPageGroup;
 
-  @ViewChild('paneLeft') panelLeft: TemplateRef<any>;
+  @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
   @ViewChild('itemTmpl') itemTmpl: TemplateRef<any>;
 
   public headerRightName = [
@@ -288,8 +309,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
         sameData: true,
         active: true,
         model: {
-          template: this.itemTmpl,
-          panelLeftRef: this.panelLeft,
+          template: this.itemTmpl!,
+          // panelLeftRef: this.panelLeft!,
           contextMenu: '',
         },
       },
@@ -298,10 +319,11 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   onCreated(evt: any) {
-    this.thumbnailEle =
-      this.pdfviewerControl.thumbnailViewModule?.thumbnailView;
+    this.thumbnailEle = this.pdfviewerControl.thumbnailViewModule.thumbnailView;
+    console.log('da them o oncreated');
+
     if (this.thumbnailEle) {
-      this.thumbnailTab.nativeElement.appendChild(this.thumbnailEle);
+      this.thumbnailTab?.nativeElement.appendChild(this.thumbnailEle);
     }
     this.pdfviewerControl.freeTextSettings.enableAutoFit = true;
     this.pdfviewerControl.zoomValue = 100;
@@ -313,7 +335,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
-  leftTollbarCreated(e) {
+  leftToolbarCreated(e) {
     // this.pageInput = new NumericTextBox({
     //   value: 1,
     //   width: 150,
@@ -338,7 +360,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.detectorRef.detectChanges();
       console.log('auto sign format', res);
     });
-
+    this.getListCA();
     this.esService
       .getSignAreas(
         this.recID,
@@ -348,114 +370,122 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       )
       .subscribe((res) => {
         this.lstAreas = res;
-        this.pdfviewerControl.refresh();
-        res?.forEach((item: any) => {
-          let anno = {
-            annotationId: item.recID,
-            annotationSelectorSettings: {
-              selectionBorderColor: '',
-              resizerBorderColor: 'black',
-              resizerFillColor: '#FF4081',
-              selectionBorderThickness: 1,
-            },
-            annotationSettings: {
-              isLock: item.fixedWidth,
-            },
-            bounds: {
-              top: Number(item.location.top),
-              left: Number(item.location.left),
-              width: Number(item.location.width),
-              height: Number(item.location.height),
-            },
-            author: item.signer,
-            comments: [],
-            fillColor: '#ffffff00',
-            font: {
-              isBold: item.fontFormat?.includes('B') ? true : false,
-              isItalic: item.fontFormat?.includes('I') ? true : false,
-              isStrikeout: false,
-              isUnderline: item.fontFormat?.includes('U') ? true : false,
-              version: undefined,
-            },
-            fontColor: '#000',
-            fontFamily: item.fontStyle,
-            fontSize: item.fontSize,
-            isPrint: true,
-            isReadonly: false,
-            modifiedDate: this.datePipe.transform(new Date(), 'M/d/yy, h:mm a'),
-            opacity: 1,
-            note: '',
-            pageNumber: item.location.pageNumber,
-            review: {
-              state: 'Unmarked',
-              stateModel: 'None',
-              version: undefined,
-            },
-            customData: item.signer + ':' + item.labelType,
-            rotateAngle: 0,
-            strokeColor: '#ffffff00',
-            textAlign: 'Left',
-            thickness: 1,
-          } as any;
+        if (this.isDisable) {
+        } else {
+          this.pdfviewerControl.refresh();
+          res?.forEach((item: any) => {
+            let anno = {
+              annotationId: item.recID,
+              annotationSelectorSettings: {
+                selectionBorderColor: '',
+                resizerBorderColor: 'black',
+                resizerFillColor: '#FF4081',
+                selectionBorderThickness: 1,
+              },
+              annotationSettings: {
+                isLock: item.fixedWidth,
+              },
+              bounds: {
+                top: Number(item.location.top),
+                left: Number(item.location.left),
+                width: Number(item.location.width),
+                height: Number(item.location.height),
+              },
+              author: item.signer,
+              comments: [],
+              fillColor: '#ffffff00',
+              font: {
+                isBold: item.fontFormat?.includes('B') ? true : false,
+                isItalic: item.fontFormat?.includes('I') ? true : false,
+                isStrikeout: false,
+                isUnderline: item.fontFormat?.includes('U') ? true : false,
+                version: undefined,
+              },
+              fontColor: '#000',
+              fontFamily: item.fontStyle,
+              fontSize: item.fontSize,
+              isPrint: true,
+              isReadonly: false,
+              modifiedDate: this.datePipe.transform(
+                new Date(),
+                'M/d/yy, h:mm a'
+              ),
+              opacity: 1,
+              note: '',
+              pageNumber: item.location.pageNumber,
+              review: {
+                state: 'Unmarked',
+                stateModel: 'None',
+                version: undefined,
+              },
+              customData: item.signer + ':' + item.labelType,
+              rotateAngle: 0,
+              strokeColor: '#ffffff00',
+              textAlign: 'Left',
+              thickness: 1,
+            } as any;
 
-          if (!['1', '2', '8'].includes(item.labelType)) {
-            anno.shapeAnnotationType = 'FreeText';
-            anno.dynamicText = item.labelValue;
-
-            anno.subject = 'Text Box';
-          } else {
-            let curSignerInfo = this.lstSigners.find(
-              (signer) => signer.authorID == anno.author
-            );
-            switch (item.labelType) {
-              case '1': {
-                anno.stampAnnotationPath =
-                  'data:image/jpeg;base64,' + curSignerInfo?.signature;
-                break;
-              }
-              case '2': {
-                anno.stampAnnotationPath =
-                  'data:image/jpeg;base64,' + curSignerInfo?.stamp;
-                break;
-              }
-              case '8': {
-                switch (this.approveStatus) {
-                  case '1':
-                    anno.stampAnnotationPath = qr;
-                    break;
-                  case '3':
-                  case '5':
-                    anno.stampAnnotationPath = '';
-                    break;
-                }
-                break;
-              }
-            }
-            if (
-              anno.stampAnnotationPath.replace('data:image/jpeg;base64,', '') !=
-              ''
-            ) {
-              anno.shapeAnnotationType = 'stamp';
-              anno.stampAnnotationType = 'image';
-            } else {
+            if (!['1', '2', '8'].includes(item.labelType)) {
               anno.shapeAnnotationType = 'FreeText';
-              anno.dynamicText =
-                // this.vllActions[item.labelType - 1]?.text +
-                // ': ' +
-                curSignerInfo.fullName;
+              anno.dynamicText = item.labelValue;
+
               anno.subject = 'Text Box';
+            } else {
+              let curSignerInfo = this.lstSigners.find(
+                (signer) => signer.authorID == anno.author
+              );
+              switch (item.labelType) {
+                case '1': {
+                  anno.stampAnnotationPath =
+                    'data:image/jpeg;base64,' + curSignerInfo?.signature;
+                  break;
+                }
+                case '2': {
+                  anno.stampAnnotationPath =
+                    'data:image/jpeg;base64,' + curSignerInfo?.stamp;
+                  break;
+                }
+                case '8': {
+                  switch (this.approveStatus) {
+                    case '1':
+                      anno.stampAnnotationPath = qr;
+                      break;
+                    case '3':
+                    case '5':
+                      anno.stampAnnotationPath = '';
+                      break;
+                  }
+                  break;
+                }
+              }
+              if (
+                anno.stampAnnotationPath.replace(
+                  'data:image/jpeg;base64,',
+                  ''
+                ) != ''
+              ) {
+                anno.shapeAnnotationType = 'stamp';
+                anno.stampAnnotationType = 'image';
+              } else {
+                anno.shapeAnnotationType = 'FreeText';
+                anno.dynamicText =
+                  // this.vllActions[item.labelType - 1]?.text +
+                  // ': ' +
+                  curSignerInfo.fullName;
+                anno.subject = 'Text Box';
+              }
             }
-          }
-          // if (this.isApprover) {
-          //   if (item.signer == 'LTTTRUC') {
-          //     anno.annotationSelectorSettings.isLock = false;
-          //   } else {
-          //     anno.annotationSelectorSettings.isLock = true;
-          //   }
-          // }
-          this.pdfviewerControl.freeTextSettings.enableAutoFit = true;
-          this.pdfviewerControl.addAnnotation({ ...anno });
-        });
+            // if (this.isApprover) {
+            //   if (item.signer == 'LTTTRUC') {
+            //     anno.annotationSelectorSettings.isLock = false;
+            //   } else {
+            //     anno.annotationSelectorSettings.isLock = true;
+            //   }
+            // }
+            this.pdfviewerControl.freeTextSettings.enableAutoFit = true;
+            this.pdfviewerControl.addAnnotation({ ...anno });
+          });
+        }
 
         this.detectorRef.detectChanges();
       });
@@ -1417,6 +1447,12 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  ngxPageRendered(e: any) {
+    console.log('page render ngx');
+
+    this.pageMax = e?.pagesCount;
+  }
+
   pageChange(e: any) {
     // let curImg = this.thumbnailEle.childNodes[
     //   e.currentPageNumber - 1
@@ -1430,15 +1466,18 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   goToPage(e) {
+    console.log('change page', e);
+
     this.curPage = e.data;
     if (this.curPage < 1) {
       this.curPage = 1;
-    } else if (this.curPage > this.pdfviewerControl.pageCount) {
-      this.curPage = this.pdfviewerControl.pageCount;
+    } else if (this.curPage > this.pdfviewerControl?.pageCount) {
+      this.curPage = this.pdfviewerControl
+        ? this.pdfviewerControl?.pageCount
+        : this.pageMax;
     }
-
-    this.pdfviewerControl.navigation.goToPage(this.curPage);
-    console.log('page', this.curPage);
+    if (!this.isDisable)
+      this.pdfviewerControl?.navigation?.goToPage(this.curPage);
   }
 
   testFunc(e: any) {}
@@ -1455,19 +1494,39 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   clickZoom(type: string, e?: any) {
     switch (type) {
       case 'in':
-        this.pdfviewerControl.magnificationModule.zoomIn();
+        this.pdfviewerControl?.magnificationModule.zoomIn();
         break;
 
       case 'out':
-        this.pdfviewerControl.magnificationModule.zoomOut();
+        this.pdfviewerControl?.magnificationModule.zoomOut();
         break;
       case 'to':
-        this.pdfviewerControl.magnificationModule.zoomTo(e.itemData.value);
+        if (!isNaN(Number(e.value))) {
+          if (this.isDisable) this.zoomValue = e.value;
+          else this.pdfviewerControl?.magnificationModule.zoomTo(e.value);
+        } else {
+          switch (e.value) {
+            case 'Auto':
+              if (this.isDisable) this.zoomValue = 'auto';
+              else this.pdfviewerControl?.magnificationModule.fitToAuto();
+              return;
+            case 'Fit to Width':
+              if (this.isDisable) this.zoomValue = 'page-width';
+              else this.pdfviewerControl?.magnificationModule.fitToWidth();
+              return;
+            case 'Fit to page':
+              if (this.isDisable) this.zoomValue = 'page-fit';
+              else this.pdfviewerControl?.magnificationModule.fitToPage();
+              return;
+          }
+        }
         break;
       default:
         break;
     }
-    this.zoomValue = this.pdfviewerControl.zoomValue;
+    this.zoomValue = this.pdfviewerControl
+      ? this.pdfviewerControl.zoomValue
+      : this.zoomValue;
   }
 
   clickDownload() {
@@ -1587,7 +1646,14 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   cancelPrint(e: any) {}
-
+  goToSelectedCA(ca, idx) {
+    console.log('ca', ca);
+    this.lstCACollapseState[idx].open = !this.lstCACollapseState[idx].open;
+    if (!ca.isVerified) {
+      this.lstCACollapseState[idx].verifiedFailed =
+        !this.lstCACollapseState[idx].verifiedFailed;
+    }
+  }
   goToSelectedAnnotation(area) {
     if (this.curSelectedAnnotID != area.recID) {
       this.pdfviewerControl.annotationModule.selectAnnotation(area.recID);
@@ -1605,14 +1671,53 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   }
 
   show(e: any) {
-    console.log('collection', this.pdfviewerControl.annotationCollection);
-    console.log('handwrittent', this.pdfviewerControl.formFieldCollections);
-    console.log('page size', this.pdfviewerControl.viewerBase.pageSize);
+    this.esService.getListCA(this.fileInfo.fileID).subscribe((res) => {
+      this.lstCA = res;
+      this.detectorRef.detectChanges();
+      console.log('ca ', res);
+    });
+  }
+
+  openPopUpCAProps(ca) {
+    console.log('ca properties', ca);
+    this.dialog = this.callfc.openForm(
+      PopupCaPropsComponent,
+      'Thuộc tính chữ ký',
+      500,
+      500,
+      this.funcID,
+      {
+        title: 'Thuộc tính chữ ký',
+        //invalid: 1 else and !verified: 2 - verifed: 3
+        status: !ca.certificate_IsValidNow ? '1' : ca.isVerified ? '3' : '2',
+        vertifications: ca.vertifications,
+      }
+    );
+  }
+  getListCA() {
+    this.esService.getListCA(this.fileInfo.fileID).subscribe((res) => {
+      this.lstCA = res;
+      this.lstCA.forEach((ca) => {
+        this.lstCACollapseState.push({
+          open: false,
+          verifiedFailed: false,
+          detail: false,
+        });
+      });
+
+      this.detectorRef.detectChanges();
+    });
   }
 
   closeAddForm(event) {
     //this.dialog && this.dialog.close();
   }
+  // onThumbnailDrawn(thumbnailEvent: PdfThumbnailDrawnEvent) {
+  //   console.log('da them o onThumbnailDrawn');
+
+  //   const thumbnail = thumbnailEvent.thumbnail;
+  //   this.thumbnailTab.nativeElement.appendChild(thumbnail);
+  // }
 }
 
 class Guid {

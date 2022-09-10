@@ -734,6 +734,17 @@ export class CodxEsService {
     );
   }
 
+  getListCA(fileID) {
+    let data = [fileID];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetCAInPDFAsync',
+      data
+    );
+  }
+
   getListSFByID(lstID: string[]): Observable<any> {
     return this.api.execSv(
       'ES',
