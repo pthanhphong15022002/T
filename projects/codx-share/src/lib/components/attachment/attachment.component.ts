@@ -769,17 +769,17 @@ export class AttachmentComponent implements OnInit {
                     )}`;
                     files.push(Object.assign({}, item.data));
                   }
-                  // else {
-                  //   if (item.data.folderName != null && item.data.folderName != "") {
-                  //     var folders = this.dmSV.listFolder;
-                  //     var idx = folders.findIndex(x => x.recID == item.data.recID)
-                  //     if (idx == - 1) {
-                  //       folders.push(Object.assign({}, item.data));
-                  //       this.dmSV.listFolder = folders;
-                  //       // that.changeDetectorRef.detectChanges();
-                  //     }
-                  //   }
-                  // }
+                  else {
+                    if (item.data.folderName != null && item.data.folderName != "") {
+                      var folders = this.dmSV.listFolder;
+                      var idx = folders.findIndex(x => x.recID == item.data.recID)
+                      if (idx == - 1) {
+                        folders.push(Object.assign({}, item.data));
+                        this.dmSV.listFolder = folders;
+                        // that.changeDetectorRef.detectChanges();
+                      }
+                    }
+                  }
                 } else {
                   let index = files.findIndex(
                     (d) => d.recID.toString() === item.data.recID
