@@ -709,21 +709,16 @@ export class HomeComponent extends UIComponent {
   }
 
   async displayThumbnail(id, thumnbail) {
-
-    // lvFileClientAPI.post(
-
-    // )
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(async () => {
-      let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;      
-      try {
-        let blob = await fetch(url).then(r => r.blob());           
-        if (blob.type != '') {       
+      this.fileService.UpdateThumbnail(id).subscribe(item => {
+        if (item == true) {           
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = thumnbail;
+            files[index].thumbnail = thumnbail;//`${this.dmSV.urlUpload}/${thumnbail}`;
+            files[index].hasThumbnail = true;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
@@ -734,10 +729,28 @@ export class HomeComponent extends UIComponent {
             this.interval.splice(indexInterval, 1);
           }
         }
-      }
-      catch {
+      })
+      // let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;      
+      // try {
+      //   let blob = await fetch(url).then(r => r.blob());           
+      //   if (blob.type != '') {       
+      //     let index = files.findIndex((d) => d.recID.toString() === id);
+      //     if (index != -1) {
+      //       files[index].thumbnail = thumnbail;
+      //       that.dmSV.listFiles = files;
+      //       that.dmSV.ChangeData.next(true);
+      //       that.changeDetectorRef.detectChanges();
+      //     }
+      //     let indexInterval = this.interval.findIndex((d) => d.id === id);
+      //     if (indexInterval > -1) {
+      //       clearInterval(this.interval[indexInterval].instant);
+      //       this.interval.splice(indexInterval, 1);
+      //     }
+      //   }
+      // }
+      // catch {
 
-      }     
+      // }     
     }, 3000);
 
     var interval = new ItemInterval();

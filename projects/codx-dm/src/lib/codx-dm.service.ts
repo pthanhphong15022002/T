@@ -396,7 +396,7 @@ export class CodxDMService {
   }
 
   getThumbnail(data) {
-    if (data.hasThumbnail) {
+    if (data.hasThumbnail == true) {
       let url = `${this.urlThumbnail}/${data.thumbnail}`;
       return url;// this.checkUrl(url, data);
     } else return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
@@ -911,7 +911,7 @@ export class CodxDMService {
     if (data.folderName != undefined)
       return '../../../assets/codx/dms/folder.svg';
     else {
-      if (!data.hasThumbnail) {
+      if (data.hasThumbnail == null || data.hasThumbnail == false) {
         return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
       } else if (data.thumbnail.indexOf('../../../') > -1)
         return data.thumbnail;
