@@ -829,6 +829,21 @@ export class HomeComponent extends UIComponent {
    });
     this.fileService.searchFileAdv(this.textSearchAll, this.predicates, this.values, this.dmSV.page, this.dmSV.pageSize, this.searchAdvance).subscribe(item => {           
       if (item != null) {
+        this.view.viewChange( {
+          id: '1',
+          icon: 'icon-appstore',
+          text: 'Search',
+          type:  ViewType.treedetail,      
+          sameData: true,
+        /*  toolbarTemplate: this.templateSearch,*/
+          model: {
+            template: this.templateMain,
+            panelRightRef: this.templateRight,
+            template2: this.templateSearch,
+            resizable: true,
+          },
+        })
+        
         this.dmSV.loadedFile = true;
        // this.dmSV.listFiles = item.data;
         this.totalSearch = item.total;
