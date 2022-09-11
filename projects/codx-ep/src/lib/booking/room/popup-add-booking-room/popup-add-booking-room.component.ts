@@ -54,6 +54,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
 
   tempAtender:{userId: string, userName:string, roleType:string,status:string,objectType:string,optional:boolean};
   attendeesList=[];
+  tmpAttendeesList=[];
   grvBookingRoom:any;
   peopleAttend =[];
   tempArray=[];
@@ -202,7 +203,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       if(!this.isAdd){
         if (this.data.attachments > 0) {
           this.codxEpService
-            .getFiles('EPT1',this.data.recID,this.formModel.entityName)
+            .getFiles(this.formModel.funcID,this.data.recID,this.formModel.entityName)
             .subscribe((res) => {
               console.log('get file', res); 
             });
@@ -326,7 +327,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd,this.attendeesList ,null,this.lstStationery];
+    option.data = [itemData, this.isAdd,this.tmpAttendeesList ,null,this.lstStationery];
     return true;
   }
   onSaveForm() { 
@@ -360,28 +361,42 @@ export class PopupAddBookingRoomComponent implements OnInit {
         }
       }
     });
-    if (this.isAdd) {
-      this.fGroupAddBookingRoom.patchValue({
-        category: '1',
-        status: '1',
-        resourceType: '1',
-        attendees:this.fGroupAddBookingRoom.value.attendees,
-        startDate:this.tmpStartDate,
-        endDate:this.tmpEndDate,
-        equipments: availableEquip + '|' + pickedEquip,
-        resourceID: this.fGroupAddBookingRoom.value.resourceID[0]
-      });      
-    }    
-    this.attendeesList.push(this.curUser);
+    var tmpResourceID=this.fGroupAddBookingRoom.value.resourceID[0];
+    
+    this.fGroupAddBookingRoom.patchValue({
+      category: '1',
+      status: '1',
+      resourceType: '1',
+      attendees:this.fGroupAddBookingRoom.value.attendees,
+      startDate:this.tmpStartDate,
+      endDate:this.tmpEndDate,
+      equipments: availableEquip + '|' + pickedEquip,
+      resourceID: tmpResourceID,
+    });      
+       
 
-    console.log("data",this.fGroupAddBookingRoom.value);
+    this.tmpAttendeesList=this.attendeesList;    
+    this.tmpAttendeesList.push(this.curUser);
+    console.log("data",this.fGroupAddBookingRoom.value);    
+    console.log("attend",this.attendeesList);
+    
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
-        if (res.save || res.update) {
-          this.dialogRef && this.dialogRef.close();
+      .subscribe(async res => {
+        if ( true) {
+          if (this.attachment.fileUploadList.length > 0) {
+            this.attachment.objectId = this.fGroupAddBookingRoom.value.recID;
+            (await this.attachment.saveFilesObservable()).subscribe(
+              (item2: any) => {
+                if (item2?.status == 0) {
+                  this.fileAdded(item2);
+                }
+              }
+            );
+          }
+          this.dialogRef.close();
         } else {
-          //this.notificationsService.notifyCode('E0011');
+          this.notificationsService.notifyCode('E0011');
           return;
         }
       });
@@ -677,10 +692,11 @@ export class PopupAddBookingRoomComponent implements OnInit {
   popupUploadFile(evt:any) {
     this.attachment.uploadFile();
   } 
-  fileAdded(evt: any) {
+  fileAdded(event: any) {    
+    this.fGroupAddBookingRoom.patchValue({attachments:event.data.length});    
   }
   fileCount(event: any) {    
-    this.fGroupAddBookingRoom.patchValue({attachments:event.data[0].data});    
+       
   }
 
 }

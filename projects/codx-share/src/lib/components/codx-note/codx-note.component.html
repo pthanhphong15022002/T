@@ -135,8 +135,8 @@
                 font-style: normal;
                 text-decoration-line: none;
                 color: #000000;
-              " (keyUpEnter)="keyUpEnter($event)" [crrValue]="item.memo" field="memo" id="{{ i }}"
-                                        (valueChange)="valueChange($event)"
+              " (keyUpEnter)="keyUpEnter($event, i)" [crrValue]="item.memo" field="memo" id="{{ i }}"
+                                        (valueChange)="item.memo = $event.data; valueChange($event,item) "
                                         [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                     </codx-input>
                                 </div>
@@ -246,7 +246,7 @@
             </span>
         </div>
         <div *ngIf="data.category == '3'" (mouseenter)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList"
-            popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" autoClose="outside">
+            popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="bottom" autoClose="outside">
             <codx-imgs [width]="25" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="3">
             </codx-imgs>
         </div>
@@ -301,7 +301,7 @@
     <codx-form [dialog]="dialog" [body]="body" [headerText]="headerComment">
         <ng-template #body>
             <codx-tree-history [funcID]="funcID" [objectID]="contents[id].recID" [objectType]="objectType"
-                [actionType]="'C'" addNew="true">
+                [actionType]="'C'" addNew="true" (totalCommentChange)="totalCommentChange($event)">
             </codx-tree-history>
         </ng-template>
     </codx-form>

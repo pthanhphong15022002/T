@@ -41,7 +41,7 @@ export class MeetingDetailComponent extends UIComponent {
   month: any;
   day: any;
   startTime: any;
-  name = 'Thảo luận';
+  name = 'Nội dung họp';
   private all = ['Nội dung họp', 'Thảo luận', 'Giao việc'];
   startDateMeeting: any;
   endDateMeeting: any;
@@ -111,12 +111,10 @@ export class MeetingDetailComponent extends UIComponent {
     if (this.meetingID != null) {
       this.tmService.getMeetingID(this.meetingID).subscribe((res) => {
         if (res) {
-          this.data = res;
-          this.meeting = this.data;
+          this.meeting = res;
           this.startDateMeeting = this.meeting.startDate;
           this.endDateMeeting = this.meeting.endDate;
           this.userName = this.meeting.userName;
-          this.getListRecID(this.meeting);
           if (this.meeting.templateID != null) {
             this.api
               .execSv<any>(
@@ -151,7 +149,9 @@ export class MeetingDetailComponent extends UIComponent {
 
   clickMenu(item) {
     this.name = item.name;
-
+    if (this.name == 'Giao việc') {
+      this.getListRecID(this.meetingID)
+    }
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {
         obj.isActive = false;
@@ -230,19 +230,23 @@ export class MeetingDetailComponent extends UIComponent {
     //   });
   }
 
-  //#region get List recID
-  getListRecID(meeting) {
-    this.listRecID.push(meeting.recID);
-    if (meeting.contents) {
-      var contents = meeting.contents;
-      contents.forEach((data) => {
-       // if(data.recID !='')
-        this.listRecID.push(data.recID);
-      });
-      var listRecID =   this.listRecID.length > 0 ? this.listRecID.join(";") : '';
-      //  this.listRecID.length > 0 ? JSON.stringify(this.listRecID) : '';
-      this.dataObj = { listRecID: listRecID };
-    }
+  //#region get List recID - chaỵ lại vì khi giao việc nó không cap nhật lúc đó
+  getListRecID(meetingID) {
+    this.tmService.getCOMeetingByID(meetingID).subscribe((res) => {
+      if (res) {
+        this.listRecID.push(res.recID);
+        if (res.contents) {
+          var contents = res.contents;
+          contents.forEach((data) => {
+            // if(data.recID !='')
+            this.listRecID.push(data.recID);
+          });
+        }
+        var listRecID =
+          this.listRecID.length > 0 ? this.listRecID.join(';') : '';
+        this.dataObj = { listRecID: listRecID };
+      }
+    });
   }
   //#region end
 }

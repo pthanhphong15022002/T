@@ -106,7 +106,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
       default:
         return;
     }
-    this.dialog = this.callfc.openForm(
+    let dialogADR = this.callfc.openForm(
       PopupADRComponent,
       title,
       500,
@@ -122,19 +122,30 @@ export class PopupSignForApprovalComponent extends UIComponent {
         formGroup: this.dialogSignFile,
       }
     );
-    this.dialog.closed.subscribe((res) => {
+    dialogADR.closed.subscribe((res) => {
       console.log('res.event', res.event);
-
       if (res.event) {
         this.pdfView
           .signPDF(mode, this.dialogSignFile.value.comment)
           .then((value) => {
             console.log('da ki', value);
             if (value) {
+              let result = {
+                result: true,
+                mode: this.mode,
+              };
               this.notify.notifyCode('RS002');
               this.canOpenSubPopup = false;
-              this.pdfView.reload();
-              this.dialog?.close();
+              //this.pdfView.reload();
+              this.dialog && this.dialog.close(result);
+            } else {
+              this.canOpenSubPopup = false;
+              let result = {
+                result: false,
+                mode: this.mode,
+              };
+              this.notify.notifyCode('E04372');
+              this.dialog && this.dialog.close(result);
             }
           });
       }

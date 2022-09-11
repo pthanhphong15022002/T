@@ -44,12 +44,16 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "AllowAddAsync", [fizeSize]);
     }
 
-    searchFile(textSearch: string, pageNo: number, PageSize: number): Observable<any> {
-        return this.api.exec<any>("DM", "FileBussiness", "SearchAsync", [textSearch, pageNo, PageSize]);
+    UpdateThumbnail(id): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "UpdateThumbnailAsync", [id]);
     }
 
-    searchFileAdv(textSearch: string, predicates: string, paras: string, pageNo: number, PageSize: number): Observable<any> {
-        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, PageSize]);
+    searchFile(textSearch: string, pageNo: number, pageSize: number): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "SearchAsync", [textSearch, pageNo, pageSize]);
+    }
+
+    searchFileAdv(textSearch: string, predicates: string, paras: string, pageNo: number, pageSize: number, searchAdvance: boolean): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, pageSize, searchAdvance]);
     }
 
     updatePermisson(data: any): Observable<any> {

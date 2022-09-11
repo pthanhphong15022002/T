@@ -100,6 +100,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     comments: 0,
     tasks: 0,
   };
+  totalComment = 0;
 
   @Input() contents: any = [
     {
@@ -172,7 +173,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       input.focus();
       this.currentElement.id = '0';
     }
-    if (this.data.length > 0) {
+    if (this.data?.length > 0) {
       this.contents = this.data;
       this.dt.detectChanges();
       this.setPropertyForView();
@@ -368,17 +369,24 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  valueChange(event) {
+  valueChange(event, item?) {
+    debugger
     if (event?.data) {
       var dt = event?.data;
       var field = event?.field;
+      var dt1;
       this.listNoteTemp.lineType = this.lineType;
       this.listNoteTemp[field] = dt;
-      this.contents[this.id].memo = dt;
+      //if (this.id < this.contents.length) {
+        // dt1 = JSON.parse(JSON.stringify(this.contents));
+        // dt1[this.id].memo = dt;
+        //this.contents[this.id].memo = dt;
+      //}
       if (this.mode == 'edit')
         this.updateContent(this.objectParentID, this.contents).subscribe();
       this.id += 1;
       this.getContent.emit(this.contents);
+      console.log("check contents", this.contents)
     }
   }
 
@@ -392,16 +400,28 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     }
   }
 
-  keyUpEnter(event) {
+  keyUpEnter(event, index) {
     if (event?.data) {
-      this.addContent(event?.data);
+      this.addContent(event?.data, index);
     }
-    this.setPropertyAfterAdd();
+    if (this.contents.length > 1) this.setPropertyAfterAdd();
   }
 
-  addContent(data) {
+  addContent(data, index) {
     var checkFirstNote = false;
     if (data) {
+      // if (index !== this.contents.length - 1) {
+      //   this.checkIndex = true;
+      //   return;
+      // }
+      if (index >= this.contents.length) index = this.contents.length - 1;
+      if (
+        this.contents[index]?.status !== null &&
+        this.contents[index]?.format !== null
+      ) {
+        this.listNoteTemp.status = this.contents[index]?.status;
+        this.listNoteTemp.format = this.contents[index]?.format;
+      }
       var obj = {
         memo: data,
         status: this.listNoteTemp.status,
@@ -417,7 +437,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.contents.push(obj);
       // reverse
       if (checkFirstNote == false) this.contents.shift();
-      this.contents.push(this.initListNote);
+      var dtTemp = JSON.parse(JSON.stringify(this.initListNote));
+      dtTemp.lineType = this.lineType;
+      this.contents.push(dtTemp);
       this.id = this.contents.length - 1;
       //reverse
       this.dt.detectChanges();
@@ -500,22 +522,28 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   delete(index) {
     if (this.contents) {
       this.contents.splice(index, 1);
-      if (index == this.contents.length) index -= 1;
+      if (index >= this.contents.length) index = this.contents.length - 1;
       if (this.mode == 'edit') {
         if (this.objectParentID) {
           this.updateContent(this.objectParentID, this.contents).subscribe();
-          this.api
-            .execSv(
-              'DM',
-              'ERM.Business.DM',
-              'FileBussiness',
-              'DeleteByObjectIDAsync',
-              [this.contents[index].recID, this.objectType, true]
-            )
-            .subscribe();
+          if (this.contents[index]?.recID != undefined)
+            this.api
+              .execSv(
+                'DM',
+                'ERM.Business.DM',
+                'FileBussiness',
+                'DeleteByObjectIDAsync',
+                [this.contents[index].recID, this.objectType, true]
+              )
+              .subscribe();
         }
       }
       this.getContent.emit(this.contents);
+    }
+    if (this.contents?.length == 1) {
+      var item = JSON.parse(JSON.stringify(this.initListNote));
+      item.lineType = 'TEXT';
+      this.contents.push(item);
     }
     this.countFileAdded = 0;
     this.focus(this.contents.length);
@@ -524,7 +552,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   getElement(ele: any, index = null) {
     var element = document.querySelectorAll('codx-input[type="text"]');
-    if (element.length == index) index -= 1;
+    if (index >= element.length) index = element.length - 1;
     let htmlE = element[index] as HTMLElement;
     // this.currentElement = ele.elRef.nativeElement as HTMLElement;
     this.currentElement = htmlE;
@@ -583,6 +611,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   focus(index) {
     var ele = document.querySelectorAll('codx-input[type="text"]');
     if (ele) {
+      if (index >= ele.length) index = ele.length - 1;
       let htmlE = ele[index] as HTMLElement;
       this.currentElement = htmlE;
       var input = this.currentElement.querySelector(
@@ -639,6 +668,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   comment(index) {
     this.id = index;
     this.callfunc.openSide(this.popupComment);
+    console.log("check ")
+  }
+
+  totalCommentChange(e) {
+    debugger;
   }
 
   assign(index) {
@@ -807,6 +841,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         JSON.stringify(this.mongoObjectId)
       );
     }
+    console.log('check file', e.data);
     let item = JSON.parse(JSON.stringify(initListNote));
     item.lineType = 'TEXT';
     item.attachments = 0;

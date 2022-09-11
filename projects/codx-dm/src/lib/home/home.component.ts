@@ -85,15 +85,21 @@ export class HomeComponent extends UIComponent {
   sortColumn: string;
   sortDirection: string;
   textSearch: string;
-  totalSearch: number;
+  textSearchAll: string;
+  totalSearch: number;  
+  predicates: any;
+  values: any;
+  searchAdvance: boolean;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
   //totalPage = 1;
-  isSearch: boolean;
+  isSearch = false;
   user: any;
   dialog!: DialogRef;
   interval: ItemInterval[];
+  viewsActive: Array<ViewModel> = [];
+
   // @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
     inject: Injector,
@@ -116,28 +122,38 @@ export class HomeComponent extends UIComponent {
     ) {
       return;
     }
+    
     if (this.dmSV.page < this.dmSV.totalPage) {
       this.dmSV.page++;
-      this.folderService.options.srtColumns = this.sortColumn;
-      this.folderService.options.srtDirections = this.sortDirection;
-      this.fileService.options.funcID = this.view.funcID;
-      this.fileService.options.page = this.dmSV.page;
-      this.fileService
-        .GetFiles(this.dmSV.folderID)
-        .subscribe(async (res) => {
-          if (res != null) {
-            this.dmSV.listFiles =  [...this.dmSV.listFiles, ...res[0]];   
-            
-            this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles]; 
-            this.dmSV.totalPage = parseInt(res[1]);    
-          }
-          this.dmSV.loadedFile = true;           
-          this.changeDetectorRef.detectChanges();
-        });    
-    }    
-    //console.log(event);
-    // this.dataService.currentComponent = this.listView;
-    // this.dataService.scrolling();
+      if (!this.isSearch) { 
+        this.folderService.options.srtColumns = this.sortColumn;
+        this.folderService.options.srtDirections = this.sortDirection;
+        this.fileService.options.funcID = this.view.funcID;
+        this.fileService.options.page = this.dmSV.page;
+        this.fileService
+          .GetFiles(this.dmSV.folderID)
+          .subscribe(async (res) => {
+            if (res != null) {
+              this.dmSV.listFiles =  [...this.dmSV.listFiles, ...res[0]];   
+              if (this.sortDirection == null || this.sortDirection == "asc") 
+              {
+                if (res[0] != null)
+                  this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
+                else 
+                  this.data = this.dmSV.listFolder;
+              }        
+              else 
+                this.data = [...this.dmSV.listFiles,  ...this.dmSV.listFolder];
+              //this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles]; 
+              this.dmSV.totalPage = parseInt(res[1]);    
+            }
+            this.dmSV.loadedFile = true;           
+            this.changeDetectorRef.detectChanges();
+          });      
+      }
+      else 
+        this.search();
+    }      
   }
 
   openItem(data: any) {
@@ -145,45 +161,45 @@ export class HomeComponent extends UIComponent {
   }
 
   onLoading($event): void {  
-    this.views.forEach(item => {
-      if (this.view.funcID === 'DMT02' || this.view.funcID === 'DMT03') {
-        if (item.id === "1") {
-          item.hide = false;
-          if (item.text === "Card")
-            item.active = true;
-          else 
-            item.active = false;
-        }          
-        else 
-          item.hide = true;          
-      }      
-      else {
-        //"DMT06"  "DMT07"
-        if (item.id === "2") {
-          if (this.view.funcID === 'DMT06' || this.view.funcID === 'DMT06')
-          {
-            if (item.text === "List") {
-              item.active = true;
-              item.hide = false;
-            }              
-            else  {
-              item.active = false;
-              item.hide = true;
-            }              
-          }
-          else {
-            item.hide = false;
-            if (item.text === "Card")
-              item.active = true;
-            else 
-              item.active = false;
-          }            
-        }          
-        else 
-          item.hide = true;  
-      }
-    });
-    this.changeDetectorRef.detectChanges();
+    // this.views.forEach(item => {
+    //   if (this.view.funcID === 'DMT02' || this.view.funcID === 'DMT03') {
+    //     if (item.id === "1") {
+    //       item.hide = false;
+    //       if (item.text === "Card")
+    //         item.active = true;
+    //       else 
+    //         item.active = false;
+    //     }          
+    //     else 
+    //       item.hide = true;          
+    //   }      
+    //   else {
+    //     //"DMT06"  "DMT07"
+    //     if (item.id === "2") {
+    //       if (this.view.funcID === 'DMT06' || this.view.funcID === 'DMT06')
+    //       {
+    //         if (item.text === "List") {
+    //           item.active = true;
+    //           item.hide = false;
+    //         }              
+    //         else  {
+    //           item.active = false;
+    //           item.hide = true;
+    //         }              
+    //       }
+    //       else {
+    //         item.hide = false;
+    //         if (item.text === "Card")
+    //           item.active = true;
+    //         else 
+    //           item.active = false;
+    //       }            
+    //     }          
+    //     else 
+    //       item.hide = true;  
+    //   }
+    // });
+    // this.changeDetectorRef.detectChanges();
   }
 
   onInit(): void {
@@ -560,7 +576,22 @@ export class HomeComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    this.views = [
+    this.views = this.viewsActive = [
+      {
+        id: '1',
+        icon: 'icon-search',
+        text: 'Search',
+        hide: true,
+        type:  ViewType.treedetail,      
+        sameData: true,
+      /*  toolbarTemplate: this.templateSearch,*/
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSearch,
+          resizable: true,
+        },
+      },
       {
         id: '1',
         icon: 'icon-appstore',
@@ -600,50 +631,50 @@ export class HomeComponent extends UIComponent {
           panelRightRef: this.templateRight,
           template2: this.templateList,
           resizable: true,
-        },
-      },{
-        id: '2',
-        icon: 'icon-appstore',
-        text: 'Card',
-        hide:true,
-        type: ViewType.content,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateCard,
-          resizable: true,
-        },
-      },
-      {
-        id: '2',
-        icon: 'icon-apps',
-        text: 'Small Card',
-        type: ViewType.content,
-        sameData: true,
-        hide:true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateSmallCard,
-          resizable: true,
-        },
-      },
-      {
-        id: '2',
-        icon: 'icon-format_list_bulleted',
-        text: 'List',
-        type: ViewType.content,
-        sameData: true,
-        hide:true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateList,
-          resizable: true,
-        },
-      },
+        }
+      // },{
+      //   id: '2',
+      //   icon: 'icon-appstore',
+      //   text: 'Card',
+      //   hide:true,
+      //   type: ViewType.content,
+      //   active: true,
+      //   sameData: true,
+      //   model: {
+      //     template: this.templateMain,
+      //     panelRightRef: this.templateRight,
+      //     template2: this.templateCard,
+      //     resizable: true,
+      //   },
+      // },
+      // {
+      //   id: '2',
+      //   icon: 'icon-apps',
+      //   text: 'Small Card',
+      //   type: ViewType.content,
+      //   sameData: true,
+      //   hide:true,
+      //   model: {
+      //     template: this.templateMain,
+      //     panelRightRef: this.templateRight,
+      //     template2: this.templateSmallCard,
+      //     resizable: true,
+      //   },
+      // },
+      // {
+      //   id: '2',
+      //   icon: 'icon-format_list_bulleted',
+      //   text: 'List',
+      //   type: ViewType.content,
+      //   sameData: true,
+      //   hide:true,
+      //   model: {
+      //     template: this.templateMain,
+      //     panelRightRef: this.templateRight,
+      //     template2: this.templateList,
+      //     resizable: true,
+      //   },
+       },
     ];
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
@@ -678,21 +709,16 @@ export class HomeComponent extends UIComponent {
   }
 
   async displayThumbnail(id, thumnbail) {
-
-    // lvFileClientAPI.post(
-
-    // )
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(async () => {
-      let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;      
-      try {
-        let blob = await fetch(url).then(r => r.blob());           
-        if (blob.type != '') {       
+      this.fileService.UpdateThumbnail(id).subscribe(item => {
+        if (item == true) {           
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = thumnbail;
+            files[index].thumbnail = thumnbail;//`${this.dmSV.urlUpload}/${thumnbail}`;
+            files[index].hasThumbnail = true;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
@@ -703,10 +729,28 @@ export class HomeComponent extends UIComponent {
             this.interval.splice(indexInterval, 1);
           }
         }
-      }
-      catch {
+      })
+      // let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;      
+      // try {
+      //   let blob = await fetch(url).then(r => r.blob());           
+      //   if (blob.type != '') {       
+      //     let index = files.findIndex((d) => d.recID.toString() === id);
+      //     if (index != -1) {
+      //       files[index].thumbnail = thumnbail;
+      //       that.dmSV.listFiles = files;
+      //       that.dmSV.ChangeData.next(true);
+      //       that.changeDetectorRef.detectChanges();
+      //     }
+      //     let indexInterval = this.interval.findIndex((d) => d.id === id);
+      //     if (indexInterval > -1) {
+      //       clearInterval(this.interval[indexInterval].instant);
+      //       this.interval.splice(indexInterval, 1);
+      //     }
+      //   }
+      // }
+      // catch {
 
-      }     
+      // }     
     }, 3000);
 
     var interval = new ItemInterval();
@@ -767,12 +811,63 @@ export class HomeComponent extends UIComponent {
  //  console.log($event);
   }
 
+  getTotalPage(total) {   
+    let pages = total / this.dmSV.pageSize;
+    if (pages*this.dmSV.pageSize < total)
+      pages++;
+    this.dmSV.totalPage = pages;
+  }
+
+  search() {    
+    this.views.forEach(item => {
+     if (item.text != "Search")
+       item.hide = true;
+     else {
+      item.hide = false;
+      // item.active = true;
+     }      
+   });
+    this.fileService.searchFileAdv(this.textSearchAll, this.predicates, this.values, this.dmSV.page, this.dmSV.pageSize, this.searchAdvance).subscribe(item => {           
+      if (item != null) {
+        this.view.viewChange( {
+          id: '1',
+          icon: 'icon-appstore',
+          text: 'Search',
+          type:  ViewType.treedetail,      
+          sameData: true,
+        /*  toolbarTemplate: this.templateSearch,*/
+          model: {
+            template: this.templateMain,
+            panelRightRef: this.templateRight,
+            template2: this.templateSearch,
+            resizable: true,
+          },
+        })
+        
+        this.dmSV.loadedFile = true;
+       // this.dmSV.listFiles = item.data;
+        this.totalSearch = item.total;
+        this.dmSV.listFiles =  [...this.dmSV.listFiles, ...item.data];   
+        this.data = [...this.data, ...this.dmSV.listFiles];
+        this.getTotalPage(item.total);
+        this.changeDetectorRef.detectChanges();
+      }
+      else {
+        this.dmSV.loadedFile = true;
+        this.totalSearch = 0;
+        this.dmSV.totalPage = 0;
+        this.changeDetectorRef.detectChanges();
+      }        
+    });  
+  }
+
   filterChange($event) {
     try {
       this.data = [];
       this.isSearch = true;
-      if (this.codxview.currentView?.currentComponent?.treeView != null)
-        this.codxview.currentView.viewModel.model.panelLeftHide = true;
+      this.dmSV.page = 1;
+      // if (this.codxview.currentView.viewModel.model != null)
+      //   this.codxview.currentView.viewModel.model.panelLeftHide = true;
       this.dmSV.listFiles = [];
       this.dmSV.listFolder = [];
       if ($event != undefined) {
@@ -785,23 +880,28 @@ export class HomeComponent extends UIComponent {
           item = ele as Filters;
           list.push(Object.assign({}, item));        
         });
-        var text = JSON.stringify(list);
-        
-        this.dmSV.page = 1;
-        this.fileService.searchFileAdv(text, predicates, values, 1, 20).subscribe(item => {           
-          if (item != null) {
-            this.dmSV.loadedFile = true;
-            this.dmSV.listFiles = item.data;
-            this.totalSearch = item.total;
-            this.data = [...this.data, ...this.dmSV.listFiles];
-            this.changeDetectorRef.detectChanges();
-          }
-          else {
-            this.dmSV.loadedFile = true;
-            this.totalSearch = 0;
-            this.changeDetectorRef.detectChanges();
-          }        
-        });      
+        var text = JSON.stringify(list);        
+        this.textSearchAll = text;
+        this.predicates = predicates;
+        this.values = values;
+        this.searchAdvance = true;
+        this.search();
+        // this.fileService.searchFileAdv(text, predicates, values, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {           
+        //   if (item != null) {
+        //     this.dmSV.loadedFile = true;
+        //     this.dmSV.listFiles = item.data;
+        //     this.totalSearch = item.total;
+        //     this.data = [...this.data, ...this.dmSV.listFiles];
+        //     this.getTotalPage(item.total);
+        //     this.changeDetectorRef.detectChanges();
+        //   }
+        //   else {
+        //     this.dmSV.loadedFile = true;
+        //     this.totalSearch = 0;
+        //     this.dmSV.totalPage = 0;
+        //     this.changeDetectorRef.detectChanges();
+        //   }        
+        // });      
       }    
     }
     catch(ex) {
@@ -819,27 +919,34 @@ export class HomeComponent extends UIComponent {
       this.dmSV.listFiles = [];
       this.dmSV.listFolder = [];
       this.dmSV.loadedFolder = true;
-      this.dmSV.loadedFile = false;
-      if (this.codxview.currentView?.currentComponent?.treeView != null)
+      this.dmSV.loadedFile = false;      
+      if (this.codxview.currentView.viewModel.model != null)
         this.codxview.currentView.viewModel.model.panelLeftHide = true;
      
       this.isSearch = true;
       this.dmSV.page = 1;
       this.fileService.options.page = this.dmSV.page;
-      this.fileService.searchFile(this.textSearch, this.dmSV.page, 20).subscribe(item => {
-        if (item != null) {
-          this.dmSV.loadedFile = true;
-          this.dmSV.listFiles = item.data;
-          this.totalSearch = item.total;
-          this.data = [...this.data, ...this.dmSV.listFiles];
-          this.changeDetectorRef.detectChanges();
-        }
-        else {
-          this.dmSV.loadedFile = true;
-          this.totalSearch = 0;
-          this.changeDetectorRef.detectChanges();
-        }       
-      });
+      this.textSearchAll = this.textSearch;
+      this.predicates = "FileName.Contains(@0)";
+      this.values = this.textSearch;
+      this.searchAdvance = false;
+      this.search();
+      // this.fileService.searchFile(this.textSearch, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
+      //   if (item != null) {
+      //     this.dmSV.loadedFile = true;
+      //     this.dmSV.listFiles = item.data;
+      //     this.totalSearch = item.total;
+      //     this.getTotalPage(item.total);
+      //     this.data = [...this.data, ...this.dmSV.listFiles];
+      //     this.changeDetectorRef.detectChanges();
+      //   }
+      //   else {
+      //     this.dmSV.loadedFile = true;
+      //     this.totalSearch = 0;
+      //     this.dmSV.totalPage = 0;
+      //     this.changeDetectorRef.detectChanges();
+      //   }       
+      // });
     }
     catch(ex) {
       this.dmSV.loadedFile = true;
@@ -850,8 +957,9 @@ export class HomeComponent extends UIComponent {
   }
 
   requestEnded(e: any) {
+    this.isSearch = false;
     if(e.type === "read"){     
-      this.data = [];    
+      this.data = [];          
       this.clearWaitingThumbnail();
      // this.dmSV.listFolder = []; 
       this.dmSV.listFiles = [];      
@@ -863,7 +971,7 @@ export class HomeComponent extends UIComponent {
       // npm i ngx-infinite-scroll@10.0.0
       this.changeDetectorRef.detectChanges();
       this.dmSV.page = 1;
-      this.isSearch = false;
+      //this.isSearch = false;
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
         if (e.data != null) {
@@ -875,14 +983,24 @@ export class HomeComponent extends UIComponent {
         
         this.dmSV.loadedFolder = true;       
       }
+      this.view.views.forEach(item => {
+         if (item.text != "Search")
+          item.hide = false;
+        else
+          item.hide = true;
+      });
 
       if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
+        if (this.codxview.currentView.viewModel.model != null)
+          this.codxview.currentView.viewModel.model.panelLeftHide = true;
+        
         this.dmSV.deniedRight();
         this.dmSV.disableInput.next(true);
         this.dmSV.disableUpload.next(true);        
       }
       else {
-        this.codxview.currentView.viewModel.model.panelLeftHide = false;
+        if (this.codxview.currentView.viewModel.model != null)
+          this.codxview.currentView.viewModel.model.panelLeftHide = false;
         this.dmSV.parentApproval = false;
         this.dmSV.parentPhysical = false;
         this.dmSV.parentCopyrights = false;

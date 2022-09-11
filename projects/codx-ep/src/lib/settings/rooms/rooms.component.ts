@@ -48,7 +48,8 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
-  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;  
+  @ViewChild('avatar') avatar: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -92,15 +93,24 @@ export class RoomsComponent extends UIComponent {
       {
         field: 'resourceID',
         headerText: 'Mã phòng',
+      },      
+      {
+        field: 'icon',
+        headerText: "Ảnh đại diện",
+        template: this.avatar,
       },
       {
         field: 'resourceName',
         headerText: 'Tên phòng',
       },
       {
-        headerText: 'Tình trạng',
-        template: this.statusCol,
+        field: 'location',
+        headerText: 'Vị trí',
       },
+      // {
+      //   headerText: 'Tình trạng',
+      //   template: this.statusCol,
+      // },
       {
         headerText: 'Xếp hạng',
         template: this.rankingCol,

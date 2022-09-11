@@ -76,7 +76,6 @@ export class TMMeetingsComponent
   resources: CO_Resources[] = [];
   resourceID: any;
   urlView = '';
-  urlDetail = '';
   dataValue = '';
   formName = '';
   gridViewName = '';
@@ -84,6 +83,7 @@ export class TMMeetingsComponent
   @Input() viewPreset: string = 'weekAndDay';
   dayWeek = [];
   request: ResourceModel;
+  listMoreFunc = [];
 
   constructor(
     inject: Injector,
@@ -104,14 +104,9 @@ export class TMMeetingsComponent
     if (this.funcID == 'TMT03011') {
       this.funcID = 'TMT0501';
     }
-
-    // this.tmService.getMoreFunction(['TMT0501', null, null]).subscribe((res) => {
-    //   if (res) {
-    //     this.urlDetail = res[0].url;
-    //   }
-    // });
-
-    this.urlDetail = 'tm/meetingdetails/TMT05011';
+    this.cache.moreFunction('TMMeetings', 'grvTMMeetings').subscribe((res) => {
+      if (res) this.listMoreFunc = res;
+    });
 
     this.dataValue = this.user?.userID;
     this.getParams();
@@ -165,7 +160,8 @@ export class TMMeetingsComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          // template7: this.template7,
+          template7: this.template7,
+          // statusColorRef: 'CO004'
         },
       },
       {
@@ -527,4 +523,18 @@ export class TMMeetingsComponent
     });
   }
   //#region end
+
+  //#region double click  view detail
+
+  doubleClick(data) {
+    if (this.listMoreFunc.length > 0) {
+      this.listMoreFunc.forEach((obj) => {
+        if (obj.functionID == 'TMT05011') this.urlView = obj.url;
+      });
+      this.codxService.navigate('', this.urlView, {
+        meetingID: data.meetingID,
+      });
+    }
+  }
+  //end region
 }

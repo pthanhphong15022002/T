@@ -76,7 +76,11 @@ export class CodxTasksComponent
   @ViewChild('detail') detail: ViewDetailComponent;
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
-  button?: ButtonModel;
+
+  button?: ButtonModel = {
+    id: 'btnAdd',
+  };
+
   model?: DataRequest;
   request: ResourceModel;
   requestTree: ResourceModel;
@@ -171,10 +175,6 @@ export class CodxTasksComponent
     this.requestTree.className = 'TaskBusiness';
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
-
-    this.button = {
-      id: 'btnAdd',
-    };
     this.getParams();
   }
 
@@ -231,6 +231,7 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+          // statusColorRef: 'TM004'
         },
       },
       {
@@ -242,7 +243,7 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          // template7: this.template7,
+          // statusColorRef: 'TM004'
         },
       },
     ];
@@ -801,8 +802,10 @@ export class CodxTasksComponent
 
   selectedChange(task: any) {
     this.itemSelected = task?.data ? task?.data : task;
-    this.loadTreeView();
-    this.loadDataReferences();
+    if (this.itemSelected) {
+      this.loadTreeView();
+      this.loadDataReferences();
+    }
     this.detectorRef.detectChanges();
   }
 

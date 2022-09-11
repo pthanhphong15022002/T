@@ -683,6 +683,15 @@ export class CodxEsService {
     );
   }
 
+  editEmailTemplate(data: any, sendTo: any): Observable<any> {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'EditEmaiTemplateAsync',
+      [data, sendTo]
+    );
+  }
   //#endregion
 
   //#region ES_SignFiles
@@ -721,6 +730,17 @@ export class CodxEsService {
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetByIDAsync',
+      data
+    );
+  }
+
+  getListCA(fileID) {
+    let data = [fileID];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetCAInPDFAsync',
       data
     );
   }
