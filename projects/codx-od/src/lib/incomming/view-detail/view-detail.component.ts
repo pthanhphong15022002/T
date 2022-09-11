@@ -738,26 +738,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Import file
       case 'SYS001': {
-        var gridModel = new DataRequest();
-        gridModel.formName = this.formModel.formName;
-        gridModel.entityName = this.formModel.entityName;
-        gridModel.funcID = this.formModel.funcID;
-        gridModel.gridViewName = this.formModel.gridViewName;
-        gridModel.page = this.view.dataService.request.page;
-        gridModel.pageSize = this.view.dataService.request.pageSize;
-        gridModel.predicate = this.view.dataService.request.predicates;
-        gridModel.dataValue = this.view.dataService.request.dataValues;
-        gridModel.entityPermission = this.formModel.entityPer;
-        //
-        //Chưa có group
-        gridModel.groupFields = 'createdBy';
         this.callfunc.openForm(
           CodxImportComponent,
           null,
           900,
           800,
           '',
-          [gridModel, datas.recID],
+          this.formModel,
           null
         );
         break;
