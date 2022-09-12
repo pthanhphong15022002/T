@@ -52,7 +52,8 @@ import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -147,8 +148,7 @@ export class CodxTasksComponent
       }
     });
     if (!this.funcID)
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-   
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
   //#region Init
@@ -182,7 +182,6 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-   
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else {
@@ -235,7 +234,11 @@ export class CodxTasksComponent
           // statusColorRef: 'TM004'
         },
       },
-      {
+    ];
+
+    if (this.funcID == 'TMT03011') {
+      var calendar = {
+        id: '7',
         type: ViewType.calendar,
         active: false,
         sameData: true,
@@ -244,10 +247,10 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          // statusColorRef: 'TM004'
         },
-      },
-    ];
+      };
+      this.viewsActive.push(calendar)
+    }
 
     var viewDefaultID = '2';
     if (this.viewMode && this.viewMode.trim() != '') {
@@ -678,8 +681,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -783,7 +786,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
