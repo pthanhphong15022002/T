@@ -40,6 +40,8 @@ export class EmployeesComponent implements OnInit {
   @ViewChild('view') codxView!: any;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
   employStatus: any;
+  urlView: string;
+  listMoreFunc= [];
 
   constructor(
     private changedt: ChangeDetectorRef,
@@ -49,6 +51,9 @@ export class EmployeesComponent implements OnInit {
     private cache: CacheService,
     private codxService: CodxService
   ) {
+    this.cache.moreFunction('Employees', 'grvEmployees').subscribe((res) => {
+      if (res) this.listMoreFunc = res;
+    });
   }
 
   ngOnInit(): void {
@@ -142,15 +147,15 @@ export class EmployeesComponent implements OnInit {
           //   [this.view.dataService.dataSelected],
           //   false
           // );
-        if (e?.event && e?.event != null) {
-          this.view.dataService.update(e.event.update.InfoPersonal && e.event.update.Employee).subscribe();
-          // e?.event.update.forEach((obj) => {
-          //   this.view.dataService.update(obj.Employee).subscribe();
-          // });
-          // this.meeting = e?.event;
-          this.changedt.detectChanges();
-        }
-      
+          if (e?.event && e?.event != null) {
+            this.view.dataService.update(e.event.update.InfoPersonal && e.event.update.Employee).subscribe();
+            // e?.event.update.forEach((obj) => {
+            //   this.view.dataService.update(obj.Employee).subscribe();
+            // });
+            // this.meeting = e?.event;
+            this.changedt.detectChanges();
+          }
+
       });
 
 
@@ -318,6 +323,17 @@ export class EmployeesComponent implements OnInit {
       case 'SYS002':
         this.exportFile();
         break;
+    }
+  }
+
+  doubleClick(data) {
+    if (this.listMoreFunc.length > 0) {
+      this.listMoreFunc.forEach((obj) => {
+        if (obj.functionID == 'HR0032') this.urlView = obj.url;
+      });
+      this.codxService.navigate('', this.urlView, {
+        employeeID: data.employeeID,
+      });
     }
   }
 }

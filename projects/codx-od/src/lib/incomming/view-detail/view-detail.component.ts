@@ -430,8 +430,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
               //this.view.dataService.update(x.event).subscribe();
               //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
-
               //this.view.dataService.update(x.event).subscribe();
+              this.view.dataService.setDataSelected(x.event);
               this.odService
                 .getDetailDispatch(x.event.recID)
                 .subscribe((item) => {
@@ -726,9 +726,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 )
                 .subscribe((item) => {
                   if (item.status == 0) {
+                    debugger;
                     this.data.relations = item.data[0].relations;
                     this.data.lstUserID = getListImg(item.data[0].relations);
-                    this.data.listInformationRel = item.data[1];
+                    var index = this.data.listInformationRel.findIndex(x=>x.userID == item.data[1]);
+                    this.data.listInformationRel[index].reCall = true;
+                    this.ref.detectChanges()
+                    //this.data.listInformationRel = item.data[1];
                   }
                   this.notifySvr.notify(item.message);
                 });
@@ -738,26 +742,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Import file
       case 'SYS001': {
-        var gridModel = new DataRequest();
-        gridModel.formName = this.formModel.formName;
-        gridModel.entityName = this.formModel.entityName;
-        gridModel.funcID = this.formModel.funcID;
-        gridModel.gridViewName = this.formModel.gridViewName;
-        gridModel.page = this.view.dataService.request.page;
-        gridModel.pageSize = this.view.dataService.request.pageSize;
-        gridModel.predicate = this.view.dataService.request.predicates;
-        gridModel.dataValue = this.view.dataService.request.dataValues;
-        gridModel.entityPermission = this.formModel.entityPer;
-        //
-        //Chưa có group
-        gridModel.groupFields = 'createdBy';
         this.callfunc.openForm(
           CodxImportComponent,
           null,
           900,
           800,
           '',
-          [gridModel, datas.recID],
+          this.formModel,
           null
         );
         break;
@@ -809,6 +800,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               signFile.refId = this.data?.recID;
               signFile.refDate = this.data?.refDate;
               signFile.refNo = this.data?.refNo;
+              signFile.priority = this.data?.urgency;
               signFile.files = [];
               if (this.data?.files) {
                 for (var i = 0; i < this.data?.files.length; i++) {
@@ -907,6 +899,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
+    debugger
     if (relationType == '1') {
       if (this.formModel.funcID == 'ODT31') {
         return Util.stringFormat(
@@ -923,7 +916,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         ); */
       }
     }
-
+  
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),

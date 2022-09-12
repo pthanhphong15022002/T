@@ -52,13 +52,14 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     'Họp định kì',
   ];
   nameObj: any;
-  projectCategory: any;
+  projectCategory:string = "2";  //set cứng đợi bảng PM_Projects hoàn thiện xong join projectID
   createdByName: any;
   showTabDasboard = true;
   showTabTasks = true;
   showTabHistory = true;
   showTabComments = true;
   showTabMeetings = true;
+  
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -112,7 +113,6 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.createdByName = res.userName;
           this.nameObj = res.meetingName;
           this.projectID = res.refID;  // ở meeting là refID
-          this.resources = res.avataResource;
           var resourceTaskControl = [];
           var arrayResource = res?.resources ;
           if(arrayResource && arrayResource.length > 0){
@@ -120,10 +120,10 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
               if(data.taskControl) resourceTaskControl.push(data.resourceID) ;
             })
           }
-          
+          this.resources = resourceTaskControl.length>0 ? resourceTaskControl.join(";"): '',
           this.dataObj = {
             projectID: this.projectID ? this.projectID : '',
-            resources: resourceTaskControl.length>0 ? resourceTaskControl.join(";"): '',
+            resources: this.resources,
             fromDate : res.fromDate ?moment(new Date(res.fromDate)) :'',
             endDate : res.toDate ? moment(new Date(res.toDate))  :'',
           };

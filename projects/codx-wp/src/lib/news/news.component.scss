@@ -126,3 +126,7 @@ codx-wrapper {
     font-size: 15px;
     color: var(--text-dark);
 }
+
+.news-item .card-icon-nowrap {
+    white-space: normal !important;
+}
