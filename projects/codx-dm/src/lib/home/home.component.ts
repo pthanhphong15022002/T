@@ -161,45 +161,45 @@ export class HomeComponent extends UIComponent {
   }
 
   onLoading($event): void {  
-    this.views.forEach(item => {
-      if (this.view.funcID === 'DMT02' || this.view.funcID === 'DMT03') {
-        if (item.id === "1") {
-          item.hide = false;
-          if (item.text === "Card")
-            item.active = true;
-          else 
-            item.active = false;
-        }          
-        else 
-          item.hide = true;          
-      }      
-      else {
-        //"DMT06"  "DMT07"
-        if (item.id === "2") {
-          if (this.view.funcID === 'DMT06' || this.view.funcID === 'DMT06')
-          {
-            if (item.text === "List") {
-              item.active = true;
-              item.hide = false;
-            }              
-            else  {
-              item.active = false;
-              item.hide = true;
-            }              
-          }
-          else {
-            item.hide = false;
-            if (item.text === "Card")
-              item.active = true;
-            else 
-              item.active = false;
-          }            
-        }          
-        else 
-          item.hide = true;  
-      }
-    });
-    this.changeDetectorRef.detectChanges();
+    // this.views.forEach(item => {
+    //   if (this.view.funcID === 'DMT02' || this.view.funcID === 'DMT03') {
+    //     if (item.id === "1") {
+    //       item.hide = false;
+    //       if (item.text === "Card")
+    //         item.active = true;
+    //       else 
+    //         item.active = false;
+    //     }          
+    //     else 
+    //       item.hide = true;          
+    //   }      
+    //   else {
+    //     //"DMT06"  "DMT07"
+    //     if (item.id === "2") {
+    //       if (this.view.funcID === 'DMT06' || this.view.funcID === 'DMT06')
+    //       {
+    //         if (item.text === "List") {
+    //           item.active = true;
+    //           item.hide = false;
+    //         }              
+    //         else  {
+    //           item.active = false;
+    //           item.hide = true;
+    //         }              
+    //       }
+    //       else {
+    //         item.hide = false;
+    //         if (item.text === "Card")
+    //           item.active = true;
+    //         else 
+    //           item.active = false;
+    //       }            
+    //     }          
+    //     else 
+    //       item.hide = true;  
+    //   }
+    // });
+    // this.changeDetectorRef.detectChanges();
   }
 
   onInit(): void {
@@ -709,21 +709,16 @@ export class HomeComponent extends UIComponent {
   }
 
   async displayThumbnail(id, thumnbail) {
-
-    // lvFileClientAPI.post(
-
-    // )
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(async () => {
-      let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;      
-      try {
-        let blob = await fetch(url).then(r => r.blob());           
-        if (blob.type != '') {       
+      this.fileService.UpdateThumbnail(id).subscribe(item => {
+        if (item == true) {           
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = thumnbail;
+            files[index].thumbnail = thumnbail;//`${this.dmSV.urlUpload}/${thumnbail}`;
+            files[index].hasThumbnail = true;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
@@ -734,10 +729,28 @@ export class HomeComponent extends UIComponent {
             this.interval.splice(indexInterval, 1);
           }
         }
-      }
-      catch {
+      })
+      // let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;      
+      // try {
+      //   let blob = await fetch(url).then(r => r.blob());           
+      //   if (blob.type != '') {       
+      //     let index = files.findIndex((d) => d.recID.toString() === id);
+      //     if (index != -1) {
+      //       files[index].thumbnail = thumnbail;
+      //       that.dmSV.listFiles = files;
+      //       that.dmSV.ChangeData.next(true);
+      //       that.changeDetectorRef.detectChanges();
+      //     }
+      //     let indexInterval = this.interval.findIndex((d) => d.id === id);
+      //     if (indexInterval > -1) {
+      //       clearInterval(this.interval[indexInterval].instant);
+      //       this.interval.splice(indexInterval, 1);
+      //     }
+      //   }
+      // }
+      // catch {
 
-      }     
+      // }     
     }, 3000);
 
     var interval = new ItemInterval();
@@ -806,6 +819,14 @@ export class HomeComponent extends UIComponent {
   }
 
   search() {    
+    this.views.forEach(item => {
+     if (item.text != "Search")
+       item.hide = true;
+     else {
+      item.hide = false;
+      // item.active = true;
+     }      
+   });
     this.fileService.searchFileAdv(this.textSearchAll, this.predicates, this.values, this.dmSV.page, this.dmSV.pageSize, this.searchAdvance).subscribe(item => {           
       if (item != null) {
         this.view.viewChange( {
@@ -822,6 +843,7 @@ export class HomeComponent extends UIComponent {
             resizable: true,
           },
         })
+        
         this.dmSV.loadedFile = true;
        // this.dmSV.listFiles = item.data;
         this.totalSearch = item.total;
@@ -844,8 +866,8 @@ export class HomeComponent extends UIComponent {
       this.data = [];
       this.isSearch = true;
       this.dmSV.page = 1;
-      if (this.codxview.currentView?.currentComponent?.treeView != null)
-        this.codxview.currentView.viewModel.model.panelLeftHide = true;
+      // if (this.codxview.currentView.viewModel.model != null)
+      //   this.codxview.currentView.viewModel.model.panelLeftHide = true;
       this.dmSV.listFiles = [];
       this.dmSV.listFolder = [];
       if ($event != undefined) {
@@ -898,7 +920,7 @@ export class HomeComponent extends UIComponent {
       this.dmSV.listFolder = [];
       this.dmSV.loadedFolder = true;
       this.dmSV.loadedFile = false;      
-      if (this.codxview.currentView?.currentComponent?.treeView != null)
+      if (this.codxview.currentView.viewModel.model != null)
         this.codxview.currentView.viewModel.model.panelLeftHide = true;
      
       this.isSearch = true;
@@ -935,9 +957,9 @@ export class HomeComponent extends UIComponent {
   }
 
   requestEnded(e: any) {
+    this.isSearch = false;
     if(e.type === "read"){     
-      this.data = [];    
-      this.isSearch = false;
+      this.data = [];          
       this.clearWaitingThumbnail();
      // this.dmSV.listFolder = []; 
       this.dmSV.listFiles = [];      
@@ -949,7 +971,7 @@ export class HomeComponent extends UIComponent {
       // npm i ngx-infinite-scroll@10.0.0
       this.changeDetectorRef.detectChanges();
       this.dmSV.page = 1;
-      this.isSearch = false;
+      //this.isSearch = false;
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
         if (e.data != null) {
@@ -961,14 +983,24 @@ export class HomeComponent extends UIComponent {
         
         this.dmSV.loadedFolder = true;       
       }
+      this.view.views.forEach(item => {
+         if (item.text != "Search")
+          item.hide = false;
+        else
+          item.hide = true;
+      });
 
       if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
+        if (this.codxview.currentView.viewModel.model != null)
+          this.codxview.currentView.viewModel.model.panelLeftHide = true;
+        
         this.dmSV.deniedRight();
         this.dmSV.disableInput.next(true);
         this.dmSV.disableUpload.next(true);        
       }
       else {
-        this.codxview.currentView.viewModel.model.panelLeftHide = false;
+        if (this.codxview.currentView.viewModel.model != null)
+          this.codxview.currentView.viewModel.model.panelLeftHide = false;
         this.dmSV.parentApproval = false;
         this.dmSV.parentPhysical = false;
         this.dmSV.parentCopyrights = false;

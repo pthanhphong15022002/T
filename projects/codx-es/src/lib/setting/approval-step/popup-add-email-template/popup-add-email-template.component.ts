@@ -1,3 +1,4 @@
+import { ThisReceiver } from '@angular/compiler';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -26,6 +27,7 @@ import {
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { DocumentRegistryBucketKey } from 'typescript';
+import { EmailSendTo } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
@@ -65,6 +67,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   lstCc = [];
   lstBcc = [];
 
+  methodEdit: boolean = false;
+
   width: any = 'auto';
 
   constructor(
@@ -80,6 +84,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.formGroup = data?.data.formGroup;
+    console.log(this.formGroup);
+
     this.email = data?.data.dialogEmail;
     this.showIsPublish = data.data?.showIsPublish;
     this.showIsTemplate = data.data?.showIsTemplate;
@@ -130,6 +136,10 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   new FormControl(res1[0].recID)
                 );
 
+                // if (res[0].isTemplate) {
+                //   this.methodEdit = true;
+                // }
+
                 let lstUser = res1[1];
                 if (lstUser.length > 0) {
                   lstUser.forEach((element) => {
@@ -154,7 +164,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   const user = this.auth.get();
                   let defaultFrom = new EmailSendTo();
                   defaultFrom.objectType = 'U';
-                  defaultFrom.objetID = user.userID;
+                  defaultFrom.objectID = user.userID;
                   defaultFrom.text = user.userName;
 
                   this.lstFrom.push(defaultFrom);
@@ -188,42 +198,75 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     ];
     console.log(lstSento);
 
-    this.esService
-      .addEmailTemplate(this.dialogETemplate.value, lstSento)
-      .subscribe((res) => {
-        console.log(res);
-        if (res) {
+    if (this.methodEdit) {
+      this.esService
+        .editEmailTemplate(this.dialogETemplate.value, lstSento)
+        .subscribe((res) => {
           console.log(res);
-          let emailTemplates = this.formGroup.value.emailTemplates;
-          this.esService.lstTmpEmail.push(res);
-          let i = emailTemplates.findIndex(
-            (p) => p.emailType == res.templateType
-          );
-          if (i >= 0) {
-            emailTemplates[i].templateID = res.recID;
+          if (res) {
+            console.log(res);
+            let emailTemplates = this.formGroup.value.emailTemplates;
+            this.esService.lstTmpEmail.push(res);
+            let i = emailTemplates.findIndex(
+              (p) => p.emailType == res.templateType
+            );
+            if (i >= 0) {
+              emailTemplates[i].templateID = res.recID;
 
-            if (this.attachment.fileUploadList.length > 0) {
-              this.attachment.objectId = res.recID;
-              console.log(this.dmSV.fileUploadList);
-              this.attachment.saveFiles();
+              if (this.attachment.fileUploadList.length > 0) {
+                this.attachment.objectId = res.recID;
+                console.log(this.dmSV.fileUploadList);
+                this.attachment.saveFiles();
+              }
+
+              this.formGroup.patchValue({ emailTemplates: emailTemplates });
             }
-
-            this.formGroup.patchValue({ emailTemplates: emailTemplates });
+            dialog1 && dialog1.close();
+            this.dialog && this.dialog.close();
           }
-          dialog1 && dialog1.close();
-          this.dialog && this.dialog.close();
-        }
-      });
+        });
+    } else {
+      this.esService
+        .addEmailTemplate(this.dialogETemplate.value, lstSento)
+        .subscribe((res) => {
+          console.log(res);
+          if (res) {
+            console.log(res);
+            let emailTemplates = this.formGroup.value.emailTemplates;
+            this.esService.lstTmpEmail.push(res);
+            let i = emailTemplates.findIndex(
+              (p) => p.emailType == res.templateType
+            );
+            if (i >= 0) {
+              emailTemplates[i].templateID = res.recID;
+
+              if (this.attachment.fileUploadList.length > 0) {
+                this.attachment.objectId = res.recID;
+                console.log(this.dmSV.fileUploadList);
+                this.attachment.saveFiles();
+              }
+
+              this.formGroup.patchValue({ emailTemplates: emailTemplates });
+            }
+            dialog1 && dialog1.close();
+            this.dialog && this.dialog.close();
+          }
+        });
+    }
   }
 
   valueChange(event) {
-    debugger;
     if (event?.field && event.component) {
       if (event.field == 'sendTime') {
-        this.insert(null);
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
         });
+      } else if (event.field == 'dataView') {
+        //setup dataView
+        this.insert(event.data);
+        this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
+        this.cr.detectChanges();
+        this.isFocus = true;
       } else if (event.data instanceof Object) {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data,
@@ -243,7 +286,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
             if (this.lstFrom.length == 0 || index < 0) {
               let item = new EmailSendTo();
-              item.objetID = element.id;
+              item.objectID = element.id;
               item.objectType = element.objectType;
               item.text = element.text;
               item.sendType = sendType;
@@ -258,7 +301,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
             let index = this.lstTo.findIndex((p) => p.objetID == element.id);
             if (this.lstTo.length == 0 || index < 0) {
               let item = new EmailSendTo();
-              item.objetID = element.id;
+              item.objectID = element.id;
               item.objectType = element.objectType;
               item.text = element.text;
               item.sendType = sendType;
@@ -272,7 +315,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
             if (this.lstCc.length == 0 || index < 0) {
               let item = new EmailSendTo();
-              item.objetID = element.id;
+              item.objectID = element.id;
               item.objectType = element.objectType;
               item.text = element.text;
               item.sendType = sendType;
@@ -286,7 +329,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
             if (this.lstCc.length == 0 || index < 0) {
               let item = new EmailSendTo();
-              item.objetID = element.id;
+              item.objectID = element.id;
               item.objectType = element.objectType;
               item.text = element.text;
               item.sendType = sendType;
@@ -358,7 +401,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
               let appr = new EmailSendTo();
               appr.objectType = element.objectType;
               appr.text = lstUserName[i];
-              appr.objetID = lstID[i];
+              appr.objectID = lstID[i];
               appr.sendType = sendType.toString();
               lst.push(appr);
             }
@@ -367,7 +410,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           let isExist = this.isExist(element?.objectType, sendType);
           if (isExist == false) {
             let appr = new EmailSendTo();
-            appr.objetID = element?.objectType;
+            appr.objectID = element?.objectType;
             appr.text = element?.objectName;
             appr.objectType = element?.objectType;
             appr.sendType = sendType.toString();
@@ -431,11 +474,30 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.range = this.selection.getRange(document);
   }
 
-  insert(evt: any) {
-    this.saveSelection = this.selection.save(this.range, document);
-    this.saveSelection.restore();
-    // this.richtexteditor.control.executeCommand('fontColor', 'gray');
-    // this.richtexteditor.control.executeCommand('insertText', ' [TEST] ');
+  insert(data: string = null) {
+    if (data != null && data != '') {
+      this.saveSelection = this.selection.save(this.range, document);
+      this.saveSelection.restore();
+
+      // let html =
+      //   '<span style="color: gray; text-decoration: inherit; display: none"> [' +
+      //   data +
+      //   '] </span>' +
+      //   '<span style="color: gray; text-decoration: inherit; display: block"> [123] </span>';
+      // this.richtexteditor.control.executeCommand('insertHTML', html);
+
+      this.richtexteditor.control.executeCommand('fontColor', 'gray');
+      this.richtexteditor.control.executeCommand(
+        'insertText',
+        ' [' + data + '] '
+      );
+      this.richtexteditor.control.executeCommand('fontColor', 'black');
+
+      this.range = this.selection.getRange(document);
+      this.dialogETemplate.patchValue({
+        message: this.richtexteditor.control.angularValue,
+      });
+    }
   }
 
   isFocus: boolean = false;
@@ -452,27 +514,5 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
     this.isFocus = true;
     this.cr.detectChanges();
-
-    // const childTwoElement =
-    //   this.textarea.nativeElement.getElementsByClassName('message')[0];
-    // if (childTwoElement) {
-    //   let width =
-    //     (this.textarea.nativeElement as HTMLElement).offsetWidth -
-    //     (this.dataView.nativeElement as HTMLElement).offsetWidth;
-    //   this.renderer.setStyle(childTwoElement, 'width', `${width - 5}px`);
-    // }
   }
-}
-
-export class EmailSendTo {
-  transID: string;
-  sendType: string;
-  objectType: string;
-  objetID: string;
-  createdOn: Date;
-  createdBy: string;
-  modifiedOn: Date;
-  modifiedBy: string;
-  text: string;
-  icon: string = null;
 }

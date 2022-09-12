@@ -7,7 +7,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
+  FormGroup,
   Validators,
 } from '@angular/forms';
 import { DropDownList } from '@syncfusion/ej2-angular-dropdowns';
@@ -33,6 +35,8 @@ import {
 export class CodxImportAddMappingTemplateComponent implements OnInit, OnChanges {
   dialog:any;
   formModel: any;
+  importAddMapTmp: FormGroup;
+  submitted = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -44,11 +48,22 @@ export class CodxImportAddMappingTemplateComponent implements OnInit, OnChanges 
     this.dialog = dialog;
     this.formModel = dt.data?.[0];
   }
+  get f(): { [key: string]: AbstractControl } {
+    return this.importAddMapTmp.controls;
+  }
   ngOnChanges(changes: SimpleChanges): void {
     throw new Error('Method not implemented.');
   }
 
   ngOnInit(): void {
-   
+    this.importAddMapTmp = this.formBuilder.group({
+      nameTmp: ['', Validators.required],
+    });
+  }
+  onSave()
+  {
+    this.submitted = true;
+    if(this.importAddMapTmp.invalid) return;
+    this.dialog.close(this.importAddMapTmp.value.nameTmp);
   }
 }

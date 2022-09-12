@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   OnChanges,
   OnInit,
@@ -53,6 +54,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   dataService: any = { data: null };
   fieldImport = [];
   dataImport = [];
+  currdataImport:any;
   dataImport2 = [];
   mappingTemplate: any;
   dataIEConnection: any = {};
@@ -70,6 +72,8 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   selectionOptions: SelectionSettingsModel;
   customerIDRules: object;
   sourceField: any;
+  hasTemp= false;
+  hasOld = false;
   public contextMenuItems: any;
   public rowIndex: number;
   public cellIndex: number;
@@ -81,6 +85,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
+    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -132,7 +137,8 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       importRule: [''],
       isSummary: [false],
     });
-    if (this.type == 'new') {
+    if (this.type == 'new') 
+    {
       this.createData();
       this.getGridViewSetup();
     } else if (this.type == 'edit') this.getDataEdit();
@@ -153,26 +159,78 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   getDataEdit()
   {
-   
-    this.api.execSv<any>(this.service,"AD","IEFieldMappingBusiness","GetItemByIETableAsync",this.dataIETable?.recID).subscribe(item=>{
+    this.mappingTemplate = this.dataIETable.mappingTemplate;
+    debugger;
+    // if(this.dataIETable.mappingTemplate && this.dataIETable.mappingTemplate != "00000000-0000-0000-0000-000000000000")
+    // {
+    //   this.getDataFieldMapping(this.dataIETable.mappingTemplate,true);
+    // }
+    // else
+    // {
+    //   if(this.dataImport && this.dataImport.length>0)
+    //   {
+    //     this.loadDataEdit();
+    //   }
+    //   else if(this.dataIETable?.recID)
+    //   {
+    //     this.api.execSv<any>(this.service,"AD","IEFieldMappingBusiness","GetItemByIETableAsync",[this.dataIETable?.recID,"table"]).subscribe(item=>{
+    //       if(item && item.length >0) 
+    //       {
+    //         this.mappingTemplate = this.dataIETable?.mappingTemplate;
+    //         this.dataImport = item.sort((a,b)=>a.destinationField.localeCompare(b.destinationField));
+    //         this.loadDataEdit();
+    //         //this.getGridViewSetup();
+    //         //this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
+    //       }
+    //       else if(this.dataImport && this.dataImport.length>0)
+    //       {
+    //         this.loadDataEdit();
+    //       }
+    //       else
+    //       {
+    //         this.editNew = true;
+    //         this.getGridViewSetup();
+    //       }
+    //     })
+    //   }
+    // }
+    if(this.dataImport && this.dataImport.length>0)
+    {
+      
+      this.loadDataEdit();
+    }
+    else if(this.dataIETable?.recID)
+    {
+      this.api.execSv<any>(this.service,"AD","IEFieldMappingBusiness","GetItemByIETableAsync",[this.dataIETable?.recID,"table"]).subscribe(item=>{
+        if(item && item.length >0) 
+        {
+          this.hasOld = true;
+          this.mappingTemplate = this.dataIETable?.mappingTemplate;
+          this.dataImport = item.sort((a,b)=>a.destinationField.localeCompare(b.destinationField));
+          this.loadDataEdit();
+          //this.getGridViewSetup();
+          //this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
+        }
+        else if(this.dataImport && this.dataImport.length>0)
+        {
+          this.loadDataEdit();
+        }
+        else
+        {
+          this.editNew = true;
+          this.getGridViewSetup();
+        }
+      })
+    }
+    if(this.dataIETable.mappingTemplate && this.dataIETable.mappingTemplate != "00000000-0000-0000-0000-000000000000")
+    {
+       this.api.execSv<any>(this.service,"AD","IEFieldMappingBusiness","GetItemByIETableAsync",[this.dataIETable.mappingTemplate,"mapping"]).subscribe(item=>{
       if(item && item.length >0) 
       {
-        this.dataImport = item.sort((a,b)=>a.destinationField.localeCompare(b.destinationField));
-        this.loadDataEdit();
-        //this.getGridViewSetup();
-        //this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
-      }
-      else if(this.dataImport && this.dataImport.length>0)
-      {
-        this.loadDataEdit();
-      }
-      else
-      {
-        this.editNew = true;
-        this.getGridViewSetup();
-      }
-    })
-    
+        this.hasTemp= true;
+        this.dataIEFieldMapping = item;
+      }})
+    }
     // Pass value IETable
     this.addMappingForm.controls['mappingName'].setValue(
       this.dataIETable.mappingTemplate
@@ -194,18 +252,51 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     );
     /////////////////////
   }
+  getDataFieldMapping(id:any,isLoad = false)
+  {
+    this.api.execSv<any>(this.service,"AD","IEFieldMappingBusiness","GetItemByIETableAsync",[id,"mapping"]).subscribe(item=>{
+      if(item && item.length >0) 
+      {
+        this.hasTemp= true;
+        if(this.type == "new" || this.editNew==true)
+        {
+          for(var i =0;i< item.length ;i++)
+          {
+            var key = Object.keys(item[i]);
+            for(var x = 0 ; x<key.length ; x++)
+            {
+              var text = key[x].charAt(0).toUpperCase() + key[x].slice(1);
+              item[i][text] = item[i][key[x]]
+              delete item[i][key[x]]
+            }
+          }
+        }
+       
+        if(isLoad)
+        {
+          if(this.type == "new") this.dataImport = item.sort((a,b)=>a.DestinationField.localeCompare(b.DestinationField));
+          else this.dataImport = item.sort((a,b)=>a.destinationField.localeCompare(b.destinationField));
+          this.dataIEFieldMapping =  this.dataImport2;
+          this.loadDataEdit();
+        }
+        else
+        {
+          if(this.type == "new" || this.editNew==true) this.dataImport2 = item.sort((a,b)=>a.DestinationField.localeCompare(b.DestinationField));
+          else this.dataImport2 = item.sort((a,b)=>a.destinationField.localeCompare(b.destinationField));
+          this.dataIEFieldMapping =  this.dataImport2;
+          this.grid.refresh();
+        }
+          
+        //this.getGridViewSetup();
+        //this.importAddTmpGroup.controls['sheetImport'].setValue(this.gridView.dataService.data[0]?.sourceTable);
+      }
+    })
+  }
   createData() {
     if (this.type == 'new') {
-      //IETable
       this.dataIETable = new IETables();
       this.dataIETable.recID = crypto.randomUUID();
       this.dataIETable.sessionID = this.dataIEConnection.recID;
-      this.dataIETable.mappingTemplate = this.dataIEConnection.mappingTemplate;
-      //IEMapping
-      this.dataIEMapping.recID = crypto.randomUUID();
-      this.dataIEMapping.mappingName = '';
-      this.dataIEMapping.tableName = '';
-      this.dataIEMapping.importRule = '';
     }
   }
   loadDataEdit()
@@ -287,10 +378,10 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
           }
         }
       }
-      debugger;
       var findIndex =  this.fieldImport.findIndex(x=>x.text.toLowerCase() === ("DestinationField").toLowerCase());
       this.arraymove(this.fieldImport,findIndex,0);
-      this.dataImport2 = this.dataImport;
+      this.dataImport2 =this.dataImport;
+      //this.ref.detectChanges();
       this.grid.refresh();
     });
   }
@@ -339,67 +430,172 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
   onSave() {
     this.grid.endEdit();
-    var result = this.grid.dataSource;
-    if(this.addMappingForm.value?.parentEntity[0])
-        this.addMappingForm.value.parentEntity = this.addMappingForm.value?.parentEntity[0];
-    this.dataIETable.mappingName = this.dataIEMapping.mappingName = this.addMappingForm.value?.mappingName;
+    var result : any = this.grid.dataSource;
+    if(this.addMappingForm.value?.parentEntity[0]) this.addMappingForm.value.parentEntity = this.addMappingForm.value?.parentEntity[0];
+    this.dataIETable.mappingTemplate  = this.mappingTemplate?this.mappingTemplate:'00000000-0000-0000-0000-000000000000';
     this.dataIETable.processIndex = this.addMappingForm.value?.processIndex;
-    this.dataIETable.destinationTable = this.dataIEMapping.tableName =
-      this.addMappingForm.value?.destinationTable;
-    this.dataIETable.parentEntity =
-      this.addMappingForm.value?.parentEntity.length == 0
-        ? ''
-        : this.addMappingForm.value?.parentEntity;
-    this.dataIETable.importRule = this.dataIEMapping.importRule =
-      this.addMappingForm.value?.importRule;
+    this.dataIETable.destinationTable = this.addMappingForm.value?.destinationTable;
+    this.dataIETable.parentEntity = this.addMappingForm.value?.parentEntity.length == 0 ? '': this.addMappingForm.value?.parentEntity;
+    this.dataIETable.importRule = this.addMappingForm.value?.importRule;
     this.dataIETable.isSummary = this.addMappingForm.value?.isSummary;
-    for (var i = 0; i < (result as any).length; i++) {
-      result[i].sessionID = this.dataIETable.recID;
-      result[i].mappingTemplate = '00000000-0000-0000-0000-000000000000';
+    //Thêm mới 
+    if(this.type=="new")
+    {
+      
+      // for (var i = 0; i < (result as any).length; i++) 
+      // {
+      //   result[i].sessionID = this.dataIETable.recID
+      //   if(this.mappingTemplate && this.hasTemp) 
+      //   {
+      //     result[i].mappingTemplate = this.mappingTemplate
+      //     delete  result[i].sessionID
+      //   }
+      //   else result[i].mappingTemplate = '00000000-0000-0000-0000-000000000000';
+      // }
+      //Có template
+      if(this.hasTemp)
+      {
+        var arrResult = []
+        if(this.currdataImport && this.currdataImport.length>0)
+        {
+          for(var i = 0 ; i<this.currdataImport.length ; i++)
+          {
+            var dt2 = JSON.stringify(result[i]);
+            var dt = JSON.parse(dt2);
+            delete dt.RecID;
+            delete dt.recID;
+            dt.sessionID = this.dataIETable.recID;
+            result[i].mappingTemplate = '00000000-0000-0000-0000-000000000000'
+            if(this.mappingTemplate)
+            {
+              dt.mappingTemplate = this.mappingTemplate;
+            }
+            arrResult.push(dt);
+          }
+        }
+        debugger;
+        this.api
+        .execSv('SYS', 'AD', 'IEFieldMappingBusiness', 'UpdateItemAsync', JSON.stringify(result)).subscribe(item2=>{
+          if(item2)
+          {
+            debugger;
+           this.notifySvr.notifyCode("SYS007");
+           this.dialog.close([this.dataIETable, this.dataIEMapping, arrResult]);
+          }
+          else  this.notifySvr.notifyCode("SYS021");
+        })
+      }
+      //Không có template
+      else
+      {
+        for (var i = 0; i < (result as any).length; i++) 
+        {
+          result[i].sessionID = this.dataIETable.recID
+          result[i].mappingTemplate = '00000000-0000-0000-0000-000000000000'
+        }
+        this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
+      }
     }
-    if(this.type == "new")
+    //Chỉnh sửa
+    else if(this.type=="edit")
     {
       debugger;
-      this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
-    }
-    else
-    {
-      //this.compare(this.dataEdit,result)
-      this.api
-      .execSv('SYS', 'AD', 'IETablesBusiness', 'UpdateItemAsync', this.dataIETable).subscribe(item=>{
-        if(item)
+      //Cũ
+      if(this.hasOld)
+      {
+        this.api
+          .execSv('SYS', 'AD', 'IETablesBusiness', 'UpdateItemAsync', this.dataIETable).subscribe(item2=>{
+            if(item2)
+            {
+              debugger
+              if(this.hasTemp)
+              {
+                var arrResult = []
+                if(this.currdataImport && this.currdataImport.length>0)
+                {
+                  for(var i = 0 ; i<result.length ; i++)
+                  {
+                    var dt2 = JSON.stringify(result[i]);
+                    var dt = JSON.parse(dt2);
+                    dt.recID = this.currdataImport[i].recID;
+                    dt.sessionID = this.currdataImport[i].sessionID;
+                    dt.mappingTemplate = this.currdataImport[i].mappingTemplate;
+                    arrResult.push(dt);
+                  }
+                  result = result.concat(arrResult);
+                }
+                else if(this.dataIEFieldMapping && this.dataIEFieldMapping.length>0)
+                {
+                  for(var i = 0 ; i<result.length ; i++)
+                  {
+                    var dt2 = JSON.stringify(result[i]);
+                    var dt = JSON.parse(dt2);
+                    dt.recID = this.dataIEFieldMapping[i].recID;
+                    dt.sessionID = this.dataIEFieldMapping[i].sessionID;
+                    dt.mappingTemplate = this.dataIEFieldMapping[i].mappingTemplate;
+                    arrResult.push(dt);
+                  }
+                  result = result.concat(arrResult);
+                }
+              }
+              debugger;
+              this.api
+                .execSv('SYS', 'AD', 'IEFieldMappingBusiness', 'UpdateItemAsync', JSON.stringify(result)).subscribe(item2=>{
+                  if(item2)
+                  {
+                    debugger;
+                    this.notifySvr.notifyCode("SYS007");
+                    this.dialog.close();
+                  }
+                  else  this.notifySvr.notifyCode("SYS021");
+                })
+              
+            }
+            else  this.notifySvr.notifyCode("SYS021");
+          })
+      }
+      //Mới
+      else
+      {
+        if(this.hasTemp)
         {
-          if(this.editNew)
+          var arrResult = []
+          if(this.currdataImport && this.currdataImport.length>0)
           {
-            this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",JSON.stringify(result)).subscribe(item2=>{
-              if(item2)
-              {
-               this.notifySvr.notifyCode("SYS007");
-               this.dialog.close();
-              }
-              else  this.notifySvr.notifyCode("SYS021");
-            })
+            for(var i = 0 ; i<this.currdataImport.length ; i++)
+            {
+              var dt2 = JSON.stringify(result[i]);
+              var dt = JSON.parse(dt2);
+              delete dt.recID ;
+              delete dt.RecID ;
+              dt.sessionID = this.dataIETable.recID;
+              dt.mappingTemplate = this.mappingTemplate
+              arrResult.push(dt);
+            }
           }
-          else
-          {
-            this.api
-            .execSv('SYS', 'AD', 'IEFieldMappingBusiness', 'UpdateItemAsync', JSON.stringify(result)).subscribe(item2=>{
-              if(item2)
-              {
-               this.notifySvr.notifyCode("SYS007");
-               this.dialog.close();
-              }
-              else  this.notifySvr.notifyCode("SYS021");
-            })
-          }
-          
+          this.api
+          .execSv('SYS', 'AD', 'IEFieldMappingBusiness', 'UpdateItemAsync', JSON.stringify(result)).subscribe(item2=>{
+            if(item2)
+            {
+              debugger;
+              this.notifySvr.notifyCode("SYS007");
+              this.dialog.close([this.dataIETable, this.dataIEMapping, arrResult]);
+            }
+            else  this.notifySvr.notifyCode("SYS021");
+          })
         }
-        else  this.notifySvr.notifyCode("SYS021");
-      })
-     
+        else 
+        {
+          for (var i = 0; i < (result as any).length; i++) 
+          {
+            delete result.recID;
+            result[i].sessionID = this.dataIETable.recID
+            result[i].mappingTemplate = '00000000-0000-0000-0000-000000000000'
+          }
+          this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
+        }
+      }
     }
-   
-   
   }
   onSaveTemplate()
   {
@@ -407,8 +603,8 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     .openForm(
       CodxImportAddMappingTemplateComponent,
       null,
-      1000,
-      800,
+      600,
+      400,
       '',
       [
         this.formModel,
@@ -417,6 +613,32 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     )
     .closed.subscribe((item) => {
       if (item?.event) {
+        var obj =
+        [{
+          mappingName : item?.event,
+          tableName : this.dataIETable?.destinationTable,
+          importRule: this.addMappingForm.value?.importRule,
+          addBatchLink: false
+        }]
+        this.api
+        .execSv('SYS', 'AD', 'IEMappingsBusiness', 'AddItemAsync', obj).subscribe((item2:any)=>{
+          if(item2)
+          {
+            //this.mappingTemplate = item2?.recID;
+            this.grid.endEdit();
+            var result = this.grid.dataSource;
+            for (var i = 0; i < (result as any).length; i++) {
+              delete result[i].recID;
+              result[i].sessionID =  this.mappingTemplate;
+              result[i].mappingTemplate = '00000000-0000-0000-0000-000000000000';
+            }
+            this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",JSON.stringify(result)).subscribe(item2=>{
+              if(item2) this.notifySvr.notifyCode("SYS007");
+              else this.notifySvr.notifyCode("SYS021");
+            })
+          }
+          else  this.notifySvr.notifyCode("SYS021");
+        })
       }
     });
   }
@@ -437,7 +659,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     const onlyInB = onlyInLeft(oldD, newD, isSameUser);
 
     const result = [...onlyInB];
-    debugger;
   }
   getGridViewSetup() {
     this.cache
@@ -572,8 +793,16 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
         }
       }
       this.addMappingForm.get(data?.field).setValue(result);
+      if(data?.data)
+      {
+        this.currdataImport= this.dataImport2
+        this.mappingTemplate = data?.data;
+        this.getDataFieldMapping(data?.data)
+      }
     }
+    
   }
+
   clicktest() {
     var a = this.dataImport;
   }
@@ -636,16 +865,24 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     }
   }
   valueAccess = (field: string, data: object, column: object) => {
+    var text = field.charAt(0).toUpperCase() + field.slice(1); 
     if (
-      (this.gridViewSetup[field].referedType == '2' ||
-        this.gridViewSetup[field].referedType == '3') &&
+      (this.gridViewSetup[text].referedType == '2' ||
+        this.gridViewSetup[text].referedType == '3') &&
       data[field]
     ) {
-      var datas = this.dataCbb[this.gridViewSetup[field].referedValue].filter(
-        (x) => x.value == data[field]
-      );
+     try
+     {
+      var datas = this.dataCbb[this.gridViewSetup[text].referedValue].filter((x) => x.value == data[text]);
       if (datas && datas.length > 0) return datas[0].text;
       return '';
+     }
+     catch(ex)
+     {
+      return data[field];
+     }
+
+      
     }
     return data[field];
   };

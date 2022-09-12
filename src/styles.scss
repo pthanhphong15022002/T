@@ -68,9 +68,7 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   --white: #ffffff;
   --black: #0f0f0f;
 
-
-  //
-
+  --bghover: #f4f8ff;
   --fs-7: 12px;
 }
 
@@ -323,12 +321,14 @@ codx-views>.container-fluid.h-100 {
 hr {
   background-color: var(--gray-500);
 }
-
 .is-invalid .ng-invalid,
 .is-invalid-error {
   border: solid 1.5px red !important;
 }
-
+.is-invalid .ng-invalid+label::before
+{
+  border: solid 1.5px red !important;
+}
 .resize-none {
   resize: none;
 }
@@ -343,4 +343,8 @@ hr {
 
 erm-quick-links-inner .w-250px.dropdown-menu {
   inset: 0px 0px auto auto !important;
+}
+
+.codx-bghover:hover {
+  background-color: var(--bghover);
 }
