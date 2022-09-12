@@ -33,20 +33,20 @@ import { ViewDetailComponent } from './sign-file/view-detail/view-detail.compone
 import { PopupAddSignFileComponent } from './sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
 import { PopupSignatureComponent } from './setting/signature/popup-signature/popup-signature.component';
-import {
-  LinkAnnotationService,
-  BookmarkViewService,
-  MagnificationService,
-  ThumbnailViewService,
-  ToolbarService,
-  NavigationService,
-  TextSearchService,
-  TextSelectionService,
-  PrintService,
-  AnnotationService,
-  FormFieldsService,
-  PdfViewerAllModule,
-} from '@syncfusion/ej2-angular-pdfviewer';
+// import {
+//   LinkAnnotationService,
+//   BookmarkViewService,
+//   MagnificationService,
+//   ThumbnailViewService,
+//   ToolbarService,
+//   NavigationService,
+//   TextSearchService,
+//   TextSelectionService,
+//   PrintService,
+//   AnnotationService,
+//   FormFieldsService,
+//   PdfViewerAllModule,
+// } from '@syncfusion/ej2-angular-pdfviewer';
 import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { SettingComponent } from './setting/setting.component';
 import { PdfViewComponent } from './sign-file/pdf-view/pdf-view.component';
@@ -164,7 +164,7 @@ const routes: Routes = [
     SharedModule,
     TabModule,
     CodxShareModule,
-    PdfViewerAllModule,
+    // PdfViewerAllModule,
     ListViewAllModule,
   ],
   exports: [CodxEsComponent],
@@ -180,17 +180,17 @@ const routes: Routes = [
     LegendService,
     TooltipService,
     //pdfService (NHBuu)
-    LinkAnnotationService,
-    BookmarkViewService,
-    MagnificationService,
-    ThumbnailViewService,
-    ToolbarService,
-    NavigationService,
-    AnnotationService,
-    TextSearchService,
-    TextSelectionService,
-    PrintService,
-    FormFieldsService,
+    // LinkAnnotationService,
+    // BookmarkViewService,
+    // MagnificationService,
+    // ThumbnailViewService,
+    // ToolbarService,
+    // NavigationService,
+    // AnnotationService,
+    // TextSearchService,
+    // TextSelectionService,
+    // PrintService,
+    // FormFieldsService,
   ],
 })
 export class CodxEsModule {
