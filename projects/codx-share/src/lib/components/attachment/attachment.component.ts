@@ -93,7 +93,7 @@ export class AttachmentComponent implements OnInit {
   maxFileSizeUploadMB = 0;
   referType: string;
   ChunkSizeInKB = 1024 * 2;
-  @Input() isDeleteTemp = false;
+  @Input() isDeleteTemp = '0';
   @Input() formModel: any;
   @Input() allowExtensions: string;
   @Input() allowMultiFile = '1';
