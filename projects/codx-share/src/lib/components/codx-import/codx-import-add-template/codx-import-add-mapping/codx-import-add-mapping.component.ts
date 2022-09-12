@@ -258,7 +258,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       if(item && item.length >0) 
       {
         this.hasTemp= true;
-        if(this.type == "new")
+        if(this.type == "new" || this.editNew==true)
         {
           for(var i =0;i< item.length ;i++)
           {
@@ -281,7 +281,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
         }
         else
         {
-          if(this.type == "new") this.dataImport2 = item.sort((a,b)=>a.DestinationField.localeCompare(b.DestinationField));
+          if(this.type == "new" || this.editNew==true) this.dataImport2 = item.sort((a,b)=>a.DestinationField.localeCompare(b.DestinationField));
           else this.dataImport2 = item.sort((a,b)=>a.destinationField.localeCompare(b.destinationField));
           this.dataIEFieldMapping =  this.dataImport2;
           this.grid.refresh();
@@ -499,7 +499,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     //Chỉnh sửa
     else if(this.type=="edit")
     {
-      debugger
+      debugger;
       //Cũ
       if(this.hasOld)
       {
@@ -557,30 +557,29 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       //Mới
       else
       {
-        debugger;
         if(this.hasTemp)
         {
           var arrResult = []
-          if(this.dataIEFieldMapping && this.dataIEFieldMapping.length>0)
+          if(this.currdataImport && this.currdataImport.length>0)
           {
-            for(var i = 0 ; i<this.dataIEFieldMapping.length ; i++)
+            for(var i = 0 ; i<this.currdataImport.length ; i++)
             {
               var dt2 = JSON.stringify(result[i]);
               var dt = JSON.parse(dt2);
-              dt.recID = this.dataIEFieldMapping.recID;
-              dt.sessionID = this.dataIEFieldMapping.sessionID;
-              dt.mappingTemplate = '00000000-0000-0000-0000-000000000000'
+              delete dt.recID ;
+              delete dt.RecID ;
+              dt.sessionID = this.dataIETable.recID;
+              dt.mappingTemplate = this.mappingTemplate
               arrResult.push(dt);
             }
           }
-          debugger;
           this.api
-          .execSv('SYS', 'AD', 'IEFieldMappingBusiness', 'UpdateItemAsync', JSON.stringify(arrResult)).subscribe(item2=>{
+          .execSv('SYS', 'AD', 'IEFieldMappingBusiness', 'UpdateItemAsync', JSON.stringify(result)).subscribe(item2=>{
             if(item2)
             {
               debugger;
               this.notifySvr.notifyCode("SYS007");
-              this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
+              this.dialog.close([this.dataIETable, this.dataIEMapping, arrResult]);
             }
             else  this.notifySvr.notifyCode("SYS021");
           })
@@ -625,7 +624,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
         .execSv('SYS', 'AD', 'IEMappingsBusiness', 'AddItemAsync', obj).subscribe((item2:any)=>{
           if(item2)
           {
-            this.mappingTemplate = item2?.recID;
+            //this.mappingTemplate = item2?.recID;
             this.grid.endEdit();
             var result = this.grid.dataSource;
             for (var i = 0; i < (result as any).length; i++) {
@@ -796,7 +795,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       this.addMappingForm.get(data?.field).setValue(result);
       if(data?.data)
       {
-        debugger;
         this.currdataImport= this.dataImport2
         this.mappingTemplate = data?.data;
         this.getDataFieldMapping(data?.data)
