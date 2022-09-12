@@ -146,6 +146,9 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
+    if (!this.funcID)
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+   
   }
 
   //#region Init
@@ -179,9 +182,7 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-
+   
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else {

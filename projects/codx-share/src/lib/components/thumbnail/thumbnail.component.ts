@@ -17,7 +17,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() formModel: any;
   @Input() displayThumb: any;
   @Input() hideDelete = '1';
-  @Input() isDeleteTemp = false;
+  @Input() isDeleteTemp = '0';
   @Output() fileCount = new EventEmitter<any>();
   titleEditFileDialog = "Cập nhật file";
   titleUpdateFile = "Cập nhật file";
@@ -102,7 +102,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
 
     this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x => {
       if (x.event.status == "Y") {
-        if (!this.isDeleteTemp) {
+        if (this.isDeleteTemp == '0') {
           this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
             if (item) {
               let list = this.files;
