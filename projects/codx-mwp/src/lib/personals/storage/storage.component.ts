@@ -16,6 +16,7 @@ import {
   CRUDService,
   CacheService,
   ScrollComponent,
+  NotificationsService,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -74,7 +75,8 @@ export class StorageComponent
     inject: Injector,
     private authStore: AuthStore,
     private route: ActivatedRoute,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private notification: NotificationsService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -146,6 +148,9 @@ export class StorageComponent
           [this.listView.dataService.data, 'add'],
           option
         );
+        this.dialog.closed.subscribe((res) => {
+          if (res.event) this.dialog.dataService.add(res.event).subscribe();
+        });
       });
   }
 
@@ -179,28 +184,36 @@ export class StorageComponent
   }
 
   delete(data) {
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'StoragesBusiness',
-        'DeleteStorageAsync',
-        data.recID
-      )
-      .subscribe((res) => {
-        if (res) {
-          (this.listView.dataService as CRUDService).remove(data).subscribe();
-          this.api
-            .execSv(
-              'DM',
-              'ERM.Business.DM',
-              'FileBussiness',
-              'DeleteByObjectIDAsync',
-              [res.recID, 'WP_Storages', true]
-            )
-            .subscribe();
-          this.detectorRef.detectChanges();
-        }
-      });
+    this.notification.alertCode('SYS027').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.api
+          .exec<any>(
+            'ERM.Business.WP',
+            'StoragesBusiness',
+            'DeleteStorageAsync',
+            data.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              (this.listView.dataService as CRUDService)
+                .remove(data)
+                .subscribe();
+              this.api
+                .execSv(
+                  'DM',
+                  'ERM.Business.DM',
+                  'FileBussiness',
+                  'DeleteByObjectIDAsync',
+                  [res.recID, 'WP_Storages', true]
+                )
+                .subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+      } else {
+        return;
+      }
+    });
   }
 
   openStorageDetail(e) {

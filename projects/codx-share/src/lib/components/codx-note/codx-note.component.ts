@@ -175,6 +175,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     }
     if (this.data?.length > 0) {
       this.contents = this.data;
+      this.id = this.contents.length - 1;
       this.dt.detectChanges();
       this.setPropertyForView();
     }
@@ -222,6 +223,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       if (input) input.focus();
     }
     this.lineType = type;
+    if (this.id >= this.contents.length) this.id = this.contents.length - 1;
     this.contents[this.id].lineType = this.lineType;
     this.listNoteTemp.lineType = this.lineType;
     if (this.lineType != 'TITLE') {
@@ -294,6 +296,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       else style.textDecorationLine = 'none';
       this.listNoteTemp.format = this.listNoteTemp.format + 'underline;';
     }
+    if (this.id >= this.contents.length) this.id = this.contents.length - 1;
     this.contents[this.id].format = this.listNoteTemp.format;
     if (this.objectParentID)
       this.updateContent(this.objectParentID, this.contents).subscribe();
@@ -323,6 +326,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         ) as HTMLElement;
         if (this.currentElement) this.currentElement.focus();
         this.listNoteTemp[event?.field] = event?.data;
+        if (this.id >= this.contents.length) this.id = this.contents.length - 1;
         /*Set lại color cho memo khi edit color*/
         this.contents[this.id].textColor = event?.data;
         /*Set lại color cho memo khi edit color*/
@@ -355,6 +359,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   popupImg() {}
 
   addEmoji(event) {
+    if (this.id >= this.contents.length) this.id = this.contents.length - 1;
     this.listNoteTemp.memo = '';
     if (
       this.contents[this.id].memo == null ||
@@ -370,23 +375,21 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event, item?) {
-    debugger
     if (event?.data) {
       var dt = event?.data;
       var field = event?.field;
-      var dt1;
       this.listNoteTemp.lineType = this.lineType;
       this.listNoteTemp[field] = dt;
       //if (this.id < this.contents.length) {
-        // dt1 = JSON.parse(JSON.stringify(this.contents));
-        // dt1[this.id].memo = dt;
-        //this.contents[this.id].memo = dt;
+      // dt1 = JSON.parse(JSON.stringify(this.contents));
+      // dt1[this.id].memo = dt;
+      //this.contents[this.id].memo = dt;
       //}
       if (this.mode == 'edit')
         this.updateContent(this.objectParentID, this.contents).subscribe();
-      this.id += 1;
+      // this.id += 1;
       this.getContent.emit(this.contents);
-      console.log("check contents", this.contents)
+      console.log('check contents', this.contents);
     }
   }
 
@@ -416,7 +419,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       // }
       if (index >= this.contents.length) index = this.contents.length - 1;
       if (
-        this.contents[index]?.status !== null &&
+        this.contents[index]?.status !== null ||
         this.contents[index]?.format !== null
       ) {
         this.listNoteTemp.status = this.contents[index]?.status;
@@ -520,31 +523,33 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   delete(index) {
-    if (this.contents) {
-      this.contents.splice(index, 1);
-      if (index >= this.contents.length) index = this.contents.length - 1;
-      if (this.mode == 'edit') {
-        if (this.objectParentID) {
-          this.updateContent(this.objectParentID, this.contents).subscribe();
-          if (this.contents[index]?.recID != undefined)
-            this.api
-              .execSv(
-                'DM',
-                'ERM.Business.DM',
-                'FileBussiness',
-                'DeleteByObjectIDAsync',
-                [this.contents[index].recID, this.objectType, true]
-              )
-              .subscribe();
+    if (this.contents?.length > 1) {
+      if (this.contents) {
+        this.contents.splice(index, 1);
+        if (index >= this.contents.length) index = this.contents.length - 1;
+        if (this.mode == 'edit') {
+          if (this.objectParentID) {
+            this.updateContent(this.objectParentID, this.contents).subscribe();
+            if (this.contents[index]?.recID != undefined)
+              this.api
+                .execSv(
+                  'DM',
+                  'ERM.Business.DM',
+                  'FileBussiness',
+                  'DeleteByObjectIDAsync',
+                  [this.contents[index].recID, this.objectType, true]
+                )
+                .subscribe();
+          }
         }
       }
-      this.getContent.emit(this.contents);
     }
-    if (this.contents?.length == 1) {
-      var item = JSON.parse(JSON.stringify(this.initListNote));
-      item.lineType = 'TEXT';
-      this.contents.push(item);
-    }
+    // if (this.contents?.length == 1) {
+    //   var item = JSON.parse(JSON.stringify(this.initListNote));
+    //   item.lineType = 'TEXT';
+    //   this.contents.push(item);
+    // }
+    this.getContent.emit(this.contents);
     this.countFileAdded = 0;
     this.focus(this.contents.length);
     this.dt.detectChanges();
@@ -573,6 +578,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         else this.font.UNDERLINE = false;
         this.setColorForCodxColor(colorOfInputEle);
       }
+      if (this.id >= this.contents.length) this.id = this.contents.length - 1;
       this.lineType = this.contents[this.id].lineType;
       if (this.contents[this.id].lineType == 'TEXT') this.setFormat();
       else if (this.contents[this.id].lineType == 'LIST')
@@ -650,7 +656,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         break;
       case 'attachment':
         if (menu == false) this.openPopupAttachment(index);
-        else this.popup();
+        else this.popup(this.id);
     }
     this.getContent.emit(this.contents);
   }
@@ -668,7 +674,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   comment(index) {
     this.id = index;
     this.callfunc.openSide(this.popupComment);
-    console.log("check ")
+    console.log('check ');
   }
 
   totalCommentChange(e) {
@@ -796,20 +802,23 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  popup() {
-    if (this.id < this.contents.length)
-      this.contents[this.id].lineType = 'FILE';
+  IDTemp = 0;
+  popup(index) {
+    if (index < this.contents.length)
+      this.contents[index].lineType = 'FILE';
     this.updateContent(this.objectParentID, this.contents).subscribe();
     this.dt.detectChanges();
     if (this.attachment) {
       this.attachment.uploadFile();
       this.checkFile = true;
     }
+    this.IDTemp = index;
+    debugger;
   }
 
   countFileAdded = 0;
-  fileCount(e, index) {
-    this.countFileAdded++;
+  fileCount(e) {
+    // this.countFileAdded++;
     let initListNote = {
       memo: '',
       status: null,
@@ -821,9 +830,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       tasks: 0,
       recID: '',
     };
-    if (this.countFileAdded > 1) index++;
+    // if (this.countFileAdded > 1) index++;
     if (e.data.length > 1) {
-      this.contents.splice(index, 1);
+      this.contents.splice(this.IDTemp, 1);
       e.data.forEach((dt) => {
         this.getMongoObjectId();
         let item = JSON.parse(JSON.stringify(initListNote));
@@ -835,9 +844,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       });
     } else {
       this.getMongoObjectId();
-      this.contents[index].lineType = 'FILE';
-      this.contents[index].attachments += 1;
-      this.contents[index].recID = JSON.parse(
+      this.contents[this.IDTemp].lineType = 'FILE';
+      this.contents[this.IDTemp].attachments += 1;
+      this.contents[this.IDTemp].recID = JSON.parse(
         JSON.stringify(this.mongoObjectId)
       );
     }
@@ -852,17 +861,14 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.updateContent(this.objectParentID, this.contents).subscribe(
       async (res: any) => {
         if (res) {
-          this.attachment.objectId = res.contents[index].recID;
+          this.attachment.fileUploadList = e.data;
           this.attachment.saveFiles();
-          // this.attachment.fileUploadList = e.data;
-          // (await this.attachment.saveFilesObservable()).subscribe(
-          //   (item: any) => {}
-          // );
           this.focus(this.contents.length - 1);
         }
       }
     );
-    this.id = index;
+    this.id += 2;
+    console.log('check id', this.id);
     this.dt.detectChanges();
   }
 

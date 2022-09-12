@@ -40,9 +40,6 @@
 
     <ng-template #footer>
         <div class="d-flex justify-content-between">
-            <button class="btn btn-light-primary" (click)="dialog.close()">
-                <codx-label name="Close" [formName]="formModel.formName" default="Đóng"></codx-label>
-            </button>
             <button type="button" class="btn btn-primary ms-1" (click)="saveStorage()" *ngIf="!readOnly">
                 <codx-label name="Save" [formName]="formModel.formName" default="Lưu"></codx-label>
             </button>
