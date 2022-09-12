@@ -4,8 +4,14 @@
       <div class="text-dark fw-bolder fs-3 me-6">
         {{ nameObj }}
       </div>
-      <div class="d-status me-6">
-        <div class="badge badge-danger label-status">Nội bộ</div>
+      <div class="d-status me-6">    
+        <codx-vll
+          [name]="'PM001'"
+          [value]="projectCategory"
+          [showText]="true"
+          [showBgColor]="true"
+         class="badge badge-light badge-md fs-7 ms-2"
+        ></codx-vll>
       </div>
       <div class="me-3">
         <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
@@ -21,7 +27,10 @@
 
     <div class="d-flex mt-4" *ngIf="data?.fromDate && data?.toDate">
       <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
-       <codx-label name = "lblTimeReview"  [default]="'Thời gian review dữ liệu:'"></codx-label>
+        <codx-label
+          name="lblTimeReview"
+          [default]="'Thời gian review dữ liệu:'"
+        ></codx-label>
       </div>
       <div class="d-flex align-items-center me-2">
         {{ data.fromDate | date: "dd/MM/yyyy" }} -
@@ -51,7 +60,7 @@
       </div>
     </div>
   </div>
-  <div class="col-4">
+  <div class="col-4" *ngIf="resources != ''">
     <codx-imgs
       style="float: right"
       [objectId]="resources"

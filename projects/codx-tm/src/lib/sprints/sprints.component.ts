@@ -134,12 +134,12 @@ export class SprintsComponent extends UIComponent {
   }
 
   copy(data) {
+     if(data)this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '550px';
-      this.view.dataService.dataSelected = data;
+      option.Width = '550px';   
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
         [this.view.dataService.dataSelected, 'copy'],

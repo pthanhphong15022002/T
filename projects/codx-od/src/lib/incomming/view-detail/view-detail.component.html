@@ -68,7 +68,7 @@
       <div class="d-flex flex-column justify-content-start w-100px pt-2">
         <div class="d-flex justify-content-end">
           <codx-vll [showText]="true" [showBgColor]="true" [formModel]="formModel" [field]="'Status'"
-            [value]="data?.status" class="badge badge-light badge-square badge-md fs-7">
+            [value]="data?.status" class="badge badge-light badge-square badge-md fs-7 p-2">
           </codx-vll>
         </div>
         <div class="d-flex justify-content-end mt-2">
@@ -102,9 +102,13 @@
                         item.createdOn) | date : "dd/MM/yyyy"}}</div>
                     </div>
                     <div class="d-flex align-items-center">
-                      <codx-temp-full [imageId]="item?.userID" [imageObjType]="'AD_Users'" [title]="item?.employeeName"
+                      <codx-temp-full 
+                        [imageId]="item?.userID" 
+                        [imageObjType]="'AD_Users'" 
+                        [title]="item?.employeeName"
                         [subTitle]="item?.positionName"
-                        [desc]="getSubTitle(item.relationType,data?.agencyName,item?.shareBy)" [descLine]="1"
+                        [desc]="getSubTitle(item.relationType,data?.agencyName,item?.shareBy)" 
+                        [descLine]="1"
                         [dataItem]="item" [baseHeaderRightTmp]="baseTmpRight"
                         [cardCss]="'justify-content-center align-items-center'">
                       </codx-temp-full>
@@ -221,14 +225,22 @@
   </div>
 </ng-template>
 <ng-template #baseTmpRight let-data>
-  <ng-container *ngIf="data?.relationType!='1'">
-    <codx-vll [showText]="true" [showBgColor]="true" [name]="'OD009'" [value]="data?.status"
+  <ng-container *ngIf="data?.relationType!='1' && !data?.reCall">
+    <codx-vll 
+      [showText]="true" 
+      [showBgColor]="true" 
+      [name]="'OD009'" 
+      [value]="data?.view"
       class="badge badge-light badge-md fs-7">
     </codx-vll>
   </ng-container>
 
   <ng-container *ngIf="data?.reCall">
-    <codx-vll [showText]="true" [showBgColor]="true" [name]="'OD010'" [value]="data?.reCall"
+    <codx-vll 
+      [showText]="true" 
+      [showBgColor]="true" 
+      [name]="'OD010'" 
+      [value]="data?.reCall"
       class="badge badge-light badge-md fs-7 ">
     </codx-vll>
   </ng-container>

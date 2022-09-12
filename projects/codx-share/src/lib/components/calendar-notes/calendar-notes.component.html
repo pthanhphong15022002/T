@@ -119,14 +119,14 @@
                         <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
                             <div *ngFor="let itemList of item.checkList">
                                 <div *ngIf="itemList.status == null">
-                                    <div class="my-1 note-list">
+                                    <div class="my-2 note-list">
                                         <ul>
                                             <li>{{itemList.listNote}}</li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div *ngIf="itemList.status != null">
-                                    <div class="my-1 note-list">
+                                    <div class="my-2 note-list">
                                         <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
                                             label="{{itemList.listNote}}" [disabled]="false"
                                             [checked]="itemList?.status == 'true' || itemList?.status == '1'"
@@ -140,8 +140,7 @@
                 </div>
             </div>
         </div>
-        <div
-            *ngIf="(checkTM_TasksParam == true || checkTM_TasksParam == '1') && item?.type == 'TM_Tasks'">
+        <div *ngIf="(checkTM_TasksParam == true || checkTM_TasksParam == '1') && item?.type == 'TM_Tasks'">
             <div class="task-content">
                 <div class="checkbox-list">
                     <div class="d-flex flex-column note-option">
@@ -172,8 +171,8 @@
             </div>
             <div class="show-event-check">
                 <codx-input type="checkbox" field="WP_Notes_ShowEvent"
-                    [checked]="checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'"
-                    labelPosition="Before" [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
+                    [checked]="checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'" labelPosition="Before"
+                    [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
         </div>
@@ -190,8 +189,8 @@
             </div>
             <div class="show-event-check">
                 <codx-input type="checkbox" field="TM_Tasks_ShowEvent"
-                    [checked]="checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'"
-                    labelPosition="Before" [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
+                    [checked]="checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'" labelPosition="Before"
+                    [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
         </div>
