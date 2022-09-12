@@ -151,7 +151,8 @@ export class BookingCarComponent extends UIComponent {
           template4: this.resourceHeader,
           template5: this.resourceTootip,
           template6: this.footerTemplate,
-          template7: this.footerButton
+          template7: this.footerButton,
+          //statusColorRef: "vl003"
         },
       },
       {
