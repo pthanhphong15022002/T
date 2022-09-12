@@ -80,10 +80,10 @@ export class CodxTasksComponent
   button?: ButtonModel = {
     id: 'btnAdd',
     text: 'Thêm mới',
-    items: [{
-      id: 'btnRefesh',
-      text: 'Làm mới',
-    },]
+    // items: [{
+    //   id: 'btnRefesh',
+    //   text: 'Làm mới',
+    // },]
   };
 
   model?: DataRequest;
