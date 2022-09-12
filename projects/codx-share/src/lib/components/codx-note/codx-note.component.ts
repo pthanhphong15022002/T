@@ -100,6 +100,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     comments: 0,
     tasks: 0,
   };
+  totalComment = 0;
 
   @Input() contents: any = [
     {
@@ -368,22 +369,24 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  valueChange(event) {
+  valueChange(event, item?) {
+    debugger
     if (event?.data) {
       var dt = event?.data;
       var field = event?.field;
       var dt1;
       this.listNoteTemp.lineType = this.lineType;
       this.listNoteTemp[field] = dt;
-      if (this.id < this.contents.length) {
+      //if (this.id < this.contents.length) {
         // dt1 = JSON.parse(JSON.stringify(this.contents));
         // dt1[this.id].memo = dt;
-        this.contents[this.id].memo = dt;
-      }
+        //this.contents[this.id].memo = dt;
+      //}
       if (this.mode == 'edit')
         this.updateContent(this.objectParentID, this.contents).subscribe();
       this.id += 1;
       this.getContent.emit(this.contents);
+      console.log("check contents", this.contents)
     }
   }
 
@@ -665,6 +668,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   comment(index) {
     this.id = index;
     this.callfunc.openSide(this.popupComment);
+    console.log("check ")
+  }
+
+  totalCommentChange(e) {
+    debugger;
   }
 
   assign(index) {

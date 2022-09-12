@@ -136,7 +136,7 @@
                 text-decoration-line: none;
                 color: #000000;
               " (keyUpEnter)="keyUpEnter($event, i)" [crrValue]="item.memo" field="memo" id="{{ i }}"
-                                        (valueChange)="valueChange($event)"
+                                        (valueChange)="item.memo = $event.data; valueChange($event,item) "
                                         [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                     </codx-input>
                                 </div>
@@ -301,7 +301,7 @@
     <codx-form [dialog]="dialog" [body]="body" [headerText]="headerComment">
         <ng-template #body>
             <codx-tree-history [funcID]="funcID" [objectID]="contents[id].recID" [objectType]="objectType"
-                [actionType]="'C'" addNew="true">
+                [actionType]="'C'" addNew="true" (totalCommentChange)="totalCommentChange($event)">
             </codx-tree-history>
         </ng-template>
     </codx-form>

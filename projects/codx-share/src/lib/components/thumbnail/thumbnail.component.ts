@@ -17,6 +17,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() formModel: any;
   @Input() displayThumb: any;
   @Input() hideDelete = '1';
+  @Input() isDeleteTemp = '0';
   @Output() fileCount = new EventEmitter<any>();
   titleEditFileDialog = "Cập nhật file";
   titleUpdateFile = "Cập nhật file";
@@ -101,26 +102,46 @@ export class ThumbnailComponent implements OnInit, OnChanges {
 
     this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x => {
       if (x.event.status == "Y") {
-        this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
-          if (item) {
-            let list = this.files;
-            var index = -1;
-            if (list.length > 0) {
-              if (list[0].data != null) {
-                index = list.findIndex(d => d.data.recID.toString() === id);
-              }
-              else {
-                index = list.findIndex(d => d.recID.toString() === id);
-              }
-              if (index > -1) {
-                list.splice(index, 1);//remove element from array
-                this.files = list;
-                this.fileCount.emit(this.files);
-                this.changeDetectorRef.detectChanges();
+        if (this.isDeleteTemp == '0') {
+          this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
+            if (item) {
+              let list = this.files;
+              var index = -1;
+              if (list.length > 0) {
+                if (list[0].data != null) {
+                  index = list.findIndex(d => d.data.recID.toString() === id);
+                }
+                else {
+                  index = list.findIndex(d => d.recID.toString() === id);
+                }
+                if (index > -1) {
+                  list.splice(index, 1);//remove element from array
+                  this.files = list;
+                  this.fileCount.emit(this.files);
+                  this.changeDetectorRef.detectChanges();
+                }
               }
             }
+          })
+        }
+        else {
+          let list = this.files;
+          var index = -1;
+          if (list.length > 0) {
+            if (list[0].data != null) {
+              index = list.findIndex(d => d.data.recID.toString() === id);
+            }
+            else {
+              index = list.findIndex(d => d.recID.toString() === id);
+            }
+            if (index > -1) {
+              list.splice(index, 1);//remove element from array
+              this.files = list;
+              this.fileCount.emit(this.files);
+              this.changeDetectorRef.detectChanges();
+            }
           }
-        })
+        }       
       }
     })
   }

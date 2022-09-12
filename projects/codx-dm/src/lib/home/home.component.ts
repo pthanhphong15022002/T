@@ -286,6 +286,8 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isEmptyTrashData.subscribe((item) => {
       if (item) {
         this.data = [];
+        this.dmSV.listFiles = [];
+        this.dmSV.listFolder = [];
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -741,21 +743,16 @@ export class HomeComponent extends UIComponent {
   }
 
   async displayThumbnail(id, thumnbail) {
-
-    // lvFileClientAPI.post(
-
-    // )
     var that = this;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(async () => {
-      let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;
-      try {
-        let blob = await fetch(url).then(r => r.blob());
-        if (blob.type != '') {
+      this.fileService.UpdateThumbnail(id).subscribe(item => {
+        if (item == true) {
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = thumnbail;
+            files[index].thumbnail = thumnbail;//`${this.dmSV.urlUpload}/${thumnbail}`;
+            files[index].hasThumbnail = true;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);
             that.changeDetectorRef.detectChanges();
@@ -766,10 +763,28 @@ export class HomeComponent extends UIComponent {
             this.interval.splice(indexInterval, 1);
           }
         }
-      }
-      catch {
+      })
+      // let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;
+      // try {
+      //   let blob = await fetch(url).then(r => r.blob());
+      //   if (blob.type != '') {
+      //     let index = files.findIndex((d) => d.recID.toString() === id);
+      //     if (index != -1) {
+      //       files[index].thumbnail = thumnbail;
+      //       that.dmSV.listFiles = files;
+      //       that.dmSV.ChangeData.next(true);
+      //       that.changeDetectorRef.detectChanges();
+      //     }
+      //     let indexInterval = this.interval.findIndex((d) => d.id === id);
+      //     if (indexInterval > -1) {
+      //       clearInterval(this.interval[indexInterval].instant);
+      //       this.interval.splice(indexInterval, 1);
+      //     }
+      //   }
+      // }
+      // catch {
 
-      }
+      // }
     }, 3000);
 
     var interval = new ItemInterval();
@@ -848,6 +863,21 @@ export class HomeComponent extends UIComponent {
     console.log(this.orgViews[1]);
     this.fileService.searchFileAdv(this.textSearchAll, this.predicates, this.values, this.dmSV.page, this.dmSV.pageSize, this.searchAdvance).subscribe(item => {
       if (item != null) {
+        this.view.viewChange({
+          id: '1',
+          icon: 'icon-appstore',
+          text: 'Search',
+          type: ViewType.treedetail,
+          sameData: true,
+          /*  toolbarTemplate: this.templateSearch,*/
+          model: {
+            template: this.templateMain,
+            panelRightRef: this.templateRight,
+            template2: this.templateSearch,
+            resizable: true,
+          },
+        })
+
         this.dmSV.loadedFile = true;
         // this.dmSV.listFiles = item.data;
         this.totalSearch = item.total;
