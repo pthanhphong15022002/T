@@ -312,6 +312,8 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isEmptyTrashData.subscribe((item) => {
       if (item) {
         this.data = [];
+        this.dmSV.listFiles = [];
+        this.dmSV.listFolder = [];
         this.changeDetectorRef.detectChanges();
       }
     });
