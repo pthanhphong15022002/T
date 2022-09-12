@@ -73,6 +73,8 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
+        console.log(res);
+
         if (res) {
           this.dialogAutoNum = res;
           this.esService.getAutoNumber(this.autoNoCode).subscribe((res) => {
@@ -128,6 +130,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
   onSaveForm() {
     if (this.dialogAutoNum.invalid == true) {
+      this.esService.notifyInvalid(this.dialogAutoNum, this.formModel);
       return;
     }
 

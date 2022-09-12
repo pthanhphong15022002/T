@@ -13,7 +13,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DialogModule } from '@syncfusion/ej2-angular-popups';
+import * as XLSX from 'xlsx';
 import { AlertConfirmInputConfig, ApiHttpService, CallFuncService, DataRequest, DataService, DialogData, DialogModel, DialogRef, NotificationsService } from 'codx-core';
 import { Observable, finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../attachment/attachment.component';
@@ -42,6 +42,8 @@ export class CodxImportComponent implements OnInit, OnChanges {
   dt_AD_IEConnections: any;
   request = new DataRequest();
   importGroup: FormGroup;
+  binaryString : any;
+  fileName:any;
   moreFunction = 
   [
     {
@@ -67,23 +69,14 @@ export class CodxImportComponent implements OnInit, OnChanges {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.gridModel = dt.data?.[0];
-    this.recID = dt.data?.[1];
+    this.formModel = dt.data;
+    //this.recID = dt.data?.[1];
   }
   ngOnInit(): void {
     //Tạo formGroup
     this.importGroup = this.formBuilder.group({
       dataImport: ['', Validators.required],
     });
-    //Tạo formModel
-    this.formModel =
-    {
-      entityName: this.gridModel?.entityName,
-      entityPer: this.gridModel?.entityPermission,
-      formName: this.gridModel?.formName,
-      funcID: this.gridModel?.funcID,
-      gridViewName: this.gridModel?.gridViewName
-    }
     this.request.page = 0;
     this.request.pageSize = 10;
     this.request.formName = 'PurchaseInvoices';
@@ -105,12 +98,18 @@ export class CodxImportComponent implements OnInit, OnChanges {
   }
   onSave()
   {
-    
+    if(this.fileCount<=0) return this.notifySvr.notifyCode("OD022");
+    this.submitted = true;
+    if (this.importGroup.invalid) return;
+    this.api.execSv(this.service,"CM","CMBusiness","ImportAsync",[this.binaryString,this.fileName,this.importGroup.value.dataImport]).subscribe(item=>{
+      debugger;
+    })
   }
   getData()
   {
     this.fetch().subscribe(item=>{
       this.dt_AD_IEConnections = item;
+      this.importGroup.get("dataImport").setValue(this.dt_AD_IEConnections[0].recID);
     })
   }
   private fetch(): Observable<any[]> {
@@ -150,6 +149,19 @@ export class CodxImportComponent implements OnInit, OnChanges {
        
         break;
       }
+    }
+  }
+  getfilePrimitive(e: any) {
+    let that = this;
+    var dt = e[0]?.rawFile;
+    that.fileName = dt?.name;
+    if (dt) {
+      const reader: FileReader = new FileReader();
+      reader.readAsDataURL(dt);
+      reader.onload = function() {
+        that.binaryString = reader.result;
+      };
+      
     }
   }
 }

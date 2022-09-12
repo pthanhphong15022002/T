@@ -25,10 +25,10 @@
                         <codx-label  default="Tải template mẫu"></codx-label>
                     </a>
                 </div>
-                <div class="d-flex align-items-center justify-content-between py-1">
+                <div class="d-flex align-items-center justify-content-between py-1 pt-5">
                   <div class="hideAttachment w-100 me-2">
                     <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                      hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
+                      hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (filePrimitive)="getfilePrimitive($event)"
                       [objectId]="null" [allowMultiFile]="0" [idBrowse]="'addImport'">
                     </codx-attachment>
                   </div>
@@ -46,7 +46,7 @@
                           [Group]="importGroup"
                           ControlName="dataImport"
                           [crrValue]="item.recID"
-                          [ngClass]="{ 'is-invalid': submitted && f.format.errors }"
+                          [ngClass]="{ 'is-invalid': submitted && f.dataImport.errors }"
                           style="margin-top:-15px;width:30px"
                         >
                         </codx-input>
