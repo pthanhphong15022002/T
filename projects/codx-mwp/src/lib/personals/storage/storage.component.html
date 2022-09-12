@@ -24,11 +24,11 @@
         </div>
       </div>
     </div>
-    <div class="d-flex flex-column-fluid home hover-scroll-overlay-y" data-kt-scroll="true"
+    <div class="d-flex flex-column-fluid home hover-scroll-overlay-y w-100" data-kt-scroll="true"
       data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
       data-kt-scroll-dependencies=".pw-profile,.pw-menu, .pw-header"
       data-kt-scroll-wrappers=".codx-wrapper, .wrapper,.pw-storgae, .pw-content" data-kt-scroll-offset="0px">
-      <codx-listview #listView entityName="WP_Storages" gridViewName="grvStorages" [predicate]="predicate"
+      <codx-listview class="w-100" #listView entityName="WP_Storages" gridViewName="grvStorages" [predicate]="predicate"
         [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="Storages" funcId="MWP0095"
         service="WP">
       </codx-listview>
@@ -54,9 +54,9 @@
 
 <ng-template #templateListCard let-item>
   <div (click)="openStorageDetail(item)">
-    <codx-card-img cardCss="border rounded-4 w-230px  h-100" [imageId]="item.recID" imgCss="w-228px h-140px "
+    <codx-card-img cardCss="border rounded-4 w-228px h-225px" [imageId]="item.recID" imgCss="w-228px h-140px mb-2"
       icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo" [imgOn]="item?.modifiedOn"
-      [imageObjType]="'WP_Storages'" imageWidth="230" [formModel]="listView.formModel" (clickMF)="clickMF($event, item)"
+      [imageObjType]="'WP_Storages'" imageWidth="228" [formModel]="listView.formModel" (clickMF)="clickMF($event, item)"
       [dataItem]="item">
     </codx-card-img>
   </div>
