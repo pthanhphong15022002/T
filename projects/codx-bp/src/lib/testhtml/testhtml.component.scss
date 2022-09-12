@@ -35,4 +35,38 @@
     .m-n3.mt-0{
         margin-top: 0!important;       
     }
+  
+    .card-steplist{      
+          .steplist-hearder{
+            background: #F0F3F6;
+            border: 1px solid #E2E3EE;
+            border-radius: 3px;
+            border-left-color:#3699FF!important;
+            border-left-width: 4px!important;
+          }
+       
+        .steplist-item {
+            background-color: #fff;
+            border: 1px solid #E2E3EE;
+            border-left-width: 4px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 0px 3px 3px 0px;
+            box-shadow: none;
+        }
+        .step-primary{
+            border-left-color:#3699FF;
+        }
+        .step-danger{
+            border-left-color:#F64E60;
+        }
+        .step-succes{
+            border-left-color:#1BC5BD;
+        }
+        .step-warning{
+            border-left-color:#FFA800;
+        }
+        
+    }
+   
 
