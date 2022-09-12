@@ -223,12 +223,12 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
                 {
                   if(this.dataSave.dataIEFieldMapping)
                   {
-                    debugger;
                     var result = [];
                     for(var i =0;i<this.dataSave.dataIEFieldMapping.length ; i++)
                     {
                       result = result.concat(this.dataSave.dataIEFieldMapping[i].data);
                     }
+                    result.forEach(function(v){ delete v.RecID ; delete v.recID });
                     this.api.execSv<any>("SYS","AD","IEFieldMappingBusiness","AddItemAsync",JSON.stringify(result)).subscribe(item3=>{
                       if(item3)
                       {
@@ -459,7 +459,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           this.dataSave.dataIEFieldMapping.push(obj);
         }
         this.dataSave.dataIETable.push(item?.event[0]);
-        this.gridView.dataService.data.push(item?.event[0])
+        this.gridView.dataService.data.unshift(item?.event[0])
         this.gridView.dataService.data = [...this.gridView.dataService.data]
       }
     });
