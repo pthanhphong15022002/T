@@ -122,6 +122,7 @@ export class AttachmentComponent implements OnInit {
   @Output() fileGet = new EventEmitter<any>();
   //tbchung thêm vào để xử lý bên import template
   @Output() filePrimitive = new EventEmitter<any>();
+  @Output() viewFile = new EventEmitter<any>();
   /////////////////////////////////////////////
   @ViewChild('templateupload') public uploadObj: UploaderComponent;
   // @Input('openFolder') openFolder: ViewsComponent;
@@ -649,7 +650,7 @@ export class AttachmentComponent implements OnInit {
                 var config = new AlertConfirmInputConfig();
                 config.type = 'checkBox';
                 return this.notificationsService
-                  .alert(this.titlemessage, item.message, config)
+                  .alert(this.titlemessage, item?.message, config)
                   .closed.pipe(
                     map((x) => {
                       if (x.event.status == 'Y') {
@@ -831,7 +832,7 @@ export class AttachmentComponent implements OnInit {
                 config.type = 'checkBox';
 
                 this.notificationsService
-                  .alert(this.titlemessage, item.message, config)
+                  .alert(this.titlemessage, item?.message, config)
                   .closed.subscribe((x) => {
                     if (x.event.status == 'Y') {
                       // save all
@@ -916,9 +917,9 @@ export class AttachmentComponent implements OnInit {
         }
       );
       fileItem.fileSize = uploadFile.size;
-      fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
-      fileItem.uploadId = retUpload.Data.UploadId; //"";
-      fileItem.urlPath = retUpload.Data.RelUrlOfServerPath; //"";
+      fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
+      fileItem.uploadId = retUpload.Data?.UploadId; //"";
+      fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
     } catch (ex) {
       console.log(ex);
     }
@@ -937,13 +938,13 @@ export class AttachmentComponent implements OnInit {
     fileItem.objectId = this.objectId;
     var appName = this.dmSV.appName;
     var ChunkSizeInKB = this.ChunkSizeInKB;
-    var uploadFile = fileItem.item.rawFile;
+    var uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
     var obj = from(
       lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
         Data: {
-          FileName: uploadFile.name,
+          FileName: uploadFile?.name,
           ChunkSizeInKB: ChunkSizeInKB,
-          FileSize: uploadFile.size,
+          FileSize: uploadFile?.size,
           thumbSize: {
             width: 200, //Kích thước của file ảnh Thum bề ngang
             height: 200, //Kích thước của file ảnh Thum bề dọc
@@ -958,9 +959,9 @@ export class AttachmentComponent implements OnInit {
     return obj.pipe(
       mergeMap((retUpload, i) => {
         // update len server urs và thumbnail
-        fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
-        fileItem.uploadId = retUpload.Data.UploadId; //"";
-        fileItem.urlPath = retUpload.Data.RelUrlOfServerPath; //"";
+        fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
+        fileItem.uploadId = retUpload.Data?.UploadId; //"";
+        fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
 
         //this.displayThumbnail(res.recID, res.pathDisk);
         var sizeInBytes = uploadFile.size;
@@ -981,7 +982,7 @@ export class AttachmentComponent implements OnInit {
             `api/${appName}/files/upload`,
             {
               FilePart: fileChunk,
-              UploadId: retUpload.Data.UploadId,
+              UploadId: retUpload.Data?.UploadId,
               Index: i,
             }
           );
@@ -2843,5 +2844,9 @@ export class AttachmentComponent implements OnInit {
   }
   handleDeleteCount(e: any) {
     this.fileCount.emit(e);
+  }
+  handleView(e:any)
+  {
+    this.viewFile.emit(e);
   }
 }

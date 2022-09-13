@@ -10,6 +10,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    //height: calc(100vh - 216px);
+    //border: 1px aqua solid;
 }
 
 .personal-container .pw-menu {
@@ -102,4 +104,16 @@
 
 .avatar {
     margin-top: 1% !important;
+}
+
+.w-228px {
+    width: 228px !important;
+}
+
+.h-140px {
+    height: 140px !important;
+}
+
+codx-card-img .card-icon-nowrap {
+    white-space: normal !important;
 }

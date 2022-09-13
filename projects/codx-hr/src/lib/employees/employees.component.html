@@ -1,7 +1,6 @@
 <codx-views #view funcID="HRT03" service="HR" entityName="HR_Employees" [views]="views" [button]="button"
     (buttonClick)="click($event)" idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
-    method="GetModelFormEmployAsync" [formModel]="view.formModel"
-    [selectedFirst]="true" [itemSelected]="itemSelected">
+    method="GetModelFormEmployAsync" [formModel]="view.formModel" [selectedFirst]="true" [itemSelected]="itemSelected">
 </codx-views>
 
 <ng-template #panelLeftRef>
@@ -21,11 +20,15 @@
 </ng-template>
 
 <ng-template #cardTemp let-data>
-    <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
-        [imageObjType]="view.formModel.entityName" [imgOn]="data?.modifiedOn" [title]="data.employeeName"
-        [subTitle]="data.positionName" [dataItem]="data" [desc]="(data.birthday | date: 'dd/MM/yyyy')" [footer]="footer"
-        [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
-    </codx-card-center>
+    <ng-container>
+        <div (dblclick)="doubleClick(data)">
+            <codx-card-center cardCss="border w-250px h-200px" [formModel]="view.formModel" [imageId]="data.employeeID"
+                [imageObjType]="view.formModel.entityName" [imgOn]="data?.modifiedOn" [title]="data.employeeName"
+                [subTitle]="data.positionName" [dataItem]="data" [desc]="(data.birthday | date: 'dd/MM/yyyy')"
+                [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
+            </codx-card-center>
+        </div>
+    </ng-container>
 </ng-template>
 
 <ng-template #footer let-data>

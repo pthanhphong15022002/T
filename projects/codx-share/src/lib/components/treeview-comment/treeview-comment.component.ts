@@ -26,6 +26,7 @@ import { ImageGridComponent } from '../image-grid/image-grid.component';
 })
 export class TreeviewCommentComponent implements OnInit {
   @Input() funcID:string;
+  @Input() objectID:string;
   @Input() objectType:string;
   @Input() fromModel:any;
   @Input() rootData: any;
@@ -34,6 +35,8 @@ export class TreeviewCommentComponent implements OnInit {
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   @ViewChild('codxFile') codxFile : ImageGridComponent;
 
+  data:any = null;
+  pageIndex:number = 0 ;
   crrId = '';
   checkValueInput = false;
   lstData: any;
@@ -53,6 +56,7 @@ export class TreeviewCommentComponent implements OnInit {
   votes: any;
   lstUserVote: any;
   dataSelected: any[];
+  vllL1480:string = "L1480";
   constructor(
     private dt: ChangeDetectorRef,
     private signalRApi: WPService,
@@ -67,11 +71,30 @@ export class TreeviewCommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    this.cache.valueList('L1480').subscribe((res) => {
+    this.getValueIcon(this.vllL1480);
+  }
+
+  getValueIcon(vll:string){
+    this.cache.valueList(vll).subscribe((res) => {
       if (res) {
         this.lstData = res.datas;
       }
     });
+  }
+  
+  GetDataComment(){ 
+    this.api.execSv
+    ("WP",
+    "ERM.Business.WP",
+    "CommentsBusiness",
+    "GetCommentsByOjectIDAsync",[this.objectID, this.pageIndex])
+    .subscribe((res:any) => {
+      if(res){
+        this.data.rootData = res[0];
+        this.data.totalComment = res[1];
+        this.dt.detectChanges();
+      }
+    })
   }
 
   showVotes(data: any) {

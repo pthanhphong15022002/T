@@ -402,6 +402,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       });
       datas = this.view.dataService.data[index];
     }
+    this.view.dataService.onAction.next({ type: 'update', data: datas });
     delete datas._uuid;
     delete datas.__loading;
     delete datas.isNew;
@@ -430,8 +431,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
               //this.view.dataService.update(x.event).subscribe();
               //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
-
               //this.view.dataService.update(x.event).subscribe();
+            
               this.odService
                 .getDetailDispatch(x.event.recID)
                 .subscribe((item) => {
@@ -726,9 +727,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 )
                 .subscribe((item) => {
                   if (item.status == 0) {
+                    debugger;
                     this.data.relations = item.data[0].relations;
                     this.data.lstUserID = getListImg(item.data[0].relations);
-                    this.data.listInformationRel = item.data[1];
+                    var index = this.data.listInformationRel.findIndex(x=>x.userID == item.data[1]);
+                    this.data.listInformationRel[index].reCall = true;
+                    this.ref.detectChanges()
+                    //this.data.listInformationRel = item.data[1];
                   }
                   this.notifySvr.notify(item.message);
                 });
@@ -796,6 +801,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               signFile.refId = this.data?.recID;
               signFile.refDate = this.data?.refDate;
               signFile.refNo = this.data?.refNo;
+              signFile.priority = this.data?.urgency;
               signFile.files = [];
               if (this.data?.files) {
                 for (var i = 0; i < this.data?.files.length; i++) {
@@ -885,7 +891,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       if (item.status == 0) {
         //this.data = item.data[0];
         this.data.lstUserID = getListImg(item.data[0].relations);
-        this.data.listInformationRel = item.data[1];
+        for(var i = 0 ; i< this.data.listInformationRel.length ; i++)
+        {
+          if(this.data.listInformationRel[i].userID != this.data?.owner && this.data.listInformationRel[i].relationType != "1")
+            this.data.listInformationRel[i].reCall = true;
+        }
+        //this.data.listInformationRel = item.data[1];
       }
       this.notifySvr.notify(item.message);
     });
@@ -910,7 +921,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         ); */
       }
     }
-
+  
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
@@ -998,5 +1009,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         }
         //this.notifySvr.notify(res2?.msgCodeError)
       });
+  }
+  handleViewFile(e:any)
+  {
+    if(e==true)
+    {
+      var index = this.data.listInformationRel.findIndex(x=>x.userID == this.userID);
+      this.data.listInformationRel[index].view = "3";
+    }
   }
 }

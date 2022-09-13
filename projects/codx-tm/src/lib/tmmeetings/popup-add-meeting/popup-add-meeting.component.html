@@ -3,8 +3,8 @@
   (setTitle)="setTitle($event)" #form [data]="data"></codx-layout-add>
 
 <ng-template #subHeader>
-  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="meeting?.tags || ''"
-    (valueChange)="valueChangeTags($event)"></codx-tag>
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"
+    [value]="meeting?.tags || ''" (valueChange)="valueChangeTags($event)"></codx-tag>
 </ng-template>
 
 <ng-template #tabDescip>
@@ -74,7 +74,7 @@
       </div>
     </div>
     <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150" [crrValue]="meeting?.memo"
-      (valueChange)="valueChange($event)">
+      (valueChange)="changeMemo($event)">
     </codx-input>
     <div class="d-flex justify-content-end" *ngIf="meeting.templateID">
       <div class="font-italic">
@@ -224,6 +224,8 @@
     <div class="form-group">
       <div class="d-flex py-2 border-bottom justify-content-between list-title">
         <div class="d-flex me-2">
+          <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung họp">
+          </codx-label>
           <!-- <codx-label fiedName="Repeated" formName="TMMeetings" default="Lặp lại">
           </codx-label> -->
         </div>
@@ -237,7 +239,9 @@
           </div>
         </div>
       </div>
-      <codx-input field="repeated" type="textarea"> </codx-input>
+      <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="550" [crrValue]="meeting?.memo"
+      (valueChange)="changeMemo($event)">
+    </codx-input>
     </div>
   </ng-container>
 </ng-template>
@@ -308,33 +312,6 @@
 </ng-template>
 
 <ng-template #addLink let-dialog>
-  <!-- <div class="card-header">
-    <h4 class="card-title" id="card-basic-title">
-      <codx-label name="lblLink" default="Link cuộc họp" [formModel]="dialog.formModel"></codx-label>
-    </h4>
-    <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
-      (click)="dialog.close()">
-      <span class="icon-close icon-20"></span>
-    </button>
-  </div>
-  <div class="card-body">
-    <div class="form-group row">
-      <div class="col-4">
-        <label>
-          <codx-label name="lblPath" default="Đường dẫn" [formModel]="dialog.formModel"></codx-label>
-        </label>
-      </div>
-    </div>
-    <div class="form-group row">
-      <codx-input type="text" class="form-control" placeholder="https://home.suremeet.vn/" [crrValue]="linkURL"
-        (valueChange)="changeLink($event)"></codx-input>
-    </div>
-  </div>
-  <div class="card-footer" (click)="dialog.close()">
-    <button type="button" class="btn btn-primary">
-      <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
-    </button>
-  </div> -->
   <codx-form headerText="{{ titleLink }}" subHeaderText="" [body]="bodyFormLink" [footer]="footerFormLink"
     [dialog]="dialog">
   </codx-form>

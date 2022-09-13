@@ -134,25 +134,23 @@
         </ng-template>
       </ngb-carousel>
     </div>
-    <div class="row">
+    <div class="news-group">
       <ng-container *ngIf="category == CATEGORY.HOME;else grCategory">
         <ng-container *ngIf="lstGroup">
           <ng-container *ngFor="let grItem of lstGroup | keyvalue">
-            <div class="row">
-              <div class="mt-6">
-                <span class="fw-bolder fs-5">{{grItem.key | vll:'WP002':'text' | async}}</span>
+            <div class="mt-6">
+              <span class="fw-bolder fs-5">{{grItem.key | vll:'WP002':'text' | async}}</span>
+            </div>
+            <div *ngFor="let item of grItem.value" (click)="clickViewDetail(item)" class="news-item row my-5">
+              <div class="col-2">
+                <codx-img [width]="180" [cssClass]="'image-125 w-100 cursor-pointer'" imageType="square"
+                  [objectId]="item.recID" objectType="WP_News"></codx-img>
               </div>
-              <div *ngFor="let item of grItem.value" (click)="clickViewDetail(item)" class="news-item row my-4">
-                <div class="col-2 cursor-pointer">
-                  <codx-img [width]="180" [cssClass]="'image-125 w-100'" imageType="square" [objectId]="item.recID"
-                    objectType="WP_News"></codx-img>
-                </div>
-                <div class="col-10">
-                  <codx-temp-full [resourceObjType]="entityName" cardCss="" [title]="item.subject"
-                    [titleCss]="'cursor-pointer news-title'" [desc]="item.subContent" [date]="item.createdOn"
-                    [bookmark]="false">
-                  </codx-temp-full>
-                </div>
+              <div class="col-10">
+                <codx-temp-full [resourceObjType]="entityName" cardCss="" [title]="item.subject"
+                  [titleCss]="'cursor-pointer news-title'" [desc]="item.subContent" [date]="item.createdOn"
+                  [bookmark]="false">
+                </codx-temp-full>
               </div>
             </div>
           </ng-container>

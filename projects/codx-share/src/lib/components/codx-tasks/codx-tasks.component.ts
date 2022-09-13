@@ -52,7 +52,8 @@ import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -131,6 +132,7 @@ export class CodxTasksComponent
   projectID?: any;
   listViewModel = [];
   dataReferences = [];
+  titleAction ='' ;
 
   constructor(
     inject: Injector,
@@ -146,6 +148,8 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
   //#region Init
@@ -179,9 +183,6 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else {
@@ -234,7 +235,11 @@ export class CodxTasksComponent
           // statusColorRef: 'TM004'
         },
       },
-      {
+    ];
+
+    if (this.funcID == 'TMT03011') {
+      var calendar = {
+        id: '7',
         type: ViewType.calendar,
         active: false,
         sameData: true,
@@ -243,10 +248,10 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          // statusColorRef: 'TM004'
         },
-      },
-    ];
+      };
+      this.viewsActive.push(calendar)
+    }
 
     var viewDefaultID = '2';
     if (this.viewMode && this.viewMode.trim() != '') {
@@ -278,7 +283,7 @@ export class CodxTasksComponent
         this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'add', this.isAssignTask],
+        [this.view.dataService.dataSelected, 'add', this.isAssignTask,this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -343,7 +348,7 @@ export class CodxTasksComponent
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask,this.titleAction, data],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -470,7 +475,7 @@ export class CodxTasksComponent
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
+          [this.view.dataService.dataSelected, 'edit', this.isAssignTask,this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -677,8 +682,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -782,7 +787,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1046,17 +1051,17 @@ export class CodxTasksComponent
       return;
     }
     if (data.status < '10') {
-      // this.notiService.notifyCode('cần mess code Hảo ơi !!');
-      this.notiService.notify(
-        'Công việc chưa được xác nhận thực hiện ! Vui lòng xác nhận trước khi cập nhật tiến độ !'
-      );
+     this.notiService.notifyCode('TM061');
+      // this.notiService.notify(
+      //   'Công việc chưa được xác nhận thực hiện ! Vui lòng xác nhận trước khi cập nhật tiến độ !'
+      // );
       return;
     }
     if (data.status == '50' || data.status == '80') {
-      // this.notiService.notifyCode('cần mess code Hảo ơi !!');
-      this.notiService.notify(
-        'Công việc đang bị "Hoãn" hoặc bị "Hủy" ! Vui lòng chuyển trạng thái trước khi cập nhật tiến độ !'
-      );
+      this.notiService.notifyCode('TM062');
+      // this.notiService.notify(
+      //   'Công việc đang bị "Hoãn" hoặc bị "Hủy" ! Vui lòng chuyển trạng thái trước khi cập nhật tiến độ !'
+      // );
       return;
     }
 
@@ -1220,6 +1225,7 @@ export class CodxTasksComponent
   }
 
   clickMFAfterParameter(e, data) {
+    this.titleAction= e.text ;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -1319,6 +1325,7 @@ export class CodxTasksComponent
   }
 
   click(evt: ButtonModel) {
+    this.titleAction = evt.text ;
     switch (evt.id) {
       case 'btnAdd':
         this.add();

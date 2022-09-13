@@ -240,12 +240,12 @@ export class ViewDetailComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(
+      let dialogAdd = this.callfunc.openSide(
         AssignInfoComponent,
         [task, vllControlShare, vllRose, title],
         option
       );
-      this.dialog.closed.subscribe((e) => {});
+      dialogAdd.closed.subscribe((e) => {});
     }
   }
 
@@ -257,7 +257,7 @@ export class ViewDetailComponent implements OnInit {
 
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
-      this.dialog = this.callfunc.openForm(
+      let dialogAdd = this.callfunc.openForm(
         PopupAddSignFileComponent,
         'Chỉnh sửa',
         700,
@@ -272,6 +272,12 @@ export class ViewDetailComponent implements OnInit {
         '',
         dialogModel
       );
+
+      dialogAdd.closed.subscribe((res) => {
+        if (res.event) {
+          this.view.dataService.update(res.event).subscribe();
+        }
+      });
     });
   }
 

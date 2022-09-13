@@ -19,15 +19,22 @@
                                         <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
                                             id='dropArea'>
                                             <div class="d-none">
-                                                <span id='drop' class="droparea">Drop files here or <a href=""
-                                                        [id]='idBrowse'><u>Browse</u></a> </span>
+                                                <span id='drop' class="droparea">
+                                                    <codx-label name="lblupload1" [formModel]="formModel" default="Drop files here or" class="fw-bold"></codx-label>
+                                                    <a href="" [id]='idBrowse'>
+                                                        <u>
+                                                            <codx-label name="lblupload2" [formModel]="formModel" default="Browse" class="fw-bold"></codx-label>
+                                                        </u>
+                                                    </a>
+                                                </span>
                                             </div>
                                             <div class="dropzone-msg dz-message needsclick">
-                                                <div class="dropzone-msg-title mb-2">Chọn một hay nhiều file từ máy của
-                                                    bạn.</div>
-                                                <span class="dropzone-msg-desc">Kéo thả file tài liệu (.doc, .xlx,
-                                                    .pdf...) vào đây,
-                                                    hoặc</span>
+                                                <div class="dropzone-msg-title mb-2">
+                                                    <codx-label name="lblupload3" [formModel]="formModel" default="Chọn một hay nhiều file từ máy của bạn." class="fw-bold"></codx-label>
+                                                    </div>
+                                                <span class="dropzone-msg-desc">
+                                                    <codx-label name="lblupload4" [formModel]="formModel" default="Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây, hoặc" class="fw-bold"></codx-label>
+                                                    </span>
                                             </div>
                                             <div class="dropzone-panel mt-6">
                                                 <ejs-uploader #templateupload id='templatefileupload'
@@ -121,15 +128,37 @@
                         <div class="col-lg-12">                            
                             <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column "
                                 id='dropArea'>
+
                                 <div class="d-none">
+                                    <span id='drop' class="droparea">
+                                        <codx-label name="lblupload1" [formModel]="formModel" default="Drop files here or" class="fw-bold"></codx-label>
+                                        <a href="" [id]='idBrowse'>
+                                            <u>
+                                                <codx-label name="lblupload2" [formModel]="formModel" default="Browse" class="fw-bold"></codx-label>
+                                            </u>
+                                        </a>
+                                    </span>
+                                </div>
+                                <div class="dropzone-msg dz-message needsclick">
+                                    <div class="dropzone-msg-title mb-2">
+                                        <codx-label name="lblupload3" [formModel]="formModel" default="Chọn một hay nhiều file từ máy của bạn." class="fw-bold"></codx-label>
+                                        </div>
+                                    <span class="dropzone-msg-desc">
+                                        <codx-label name="lblupload3" [formModel]="formModel" default="Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây, hoặc" class="fw-bold"></codx-label>
+                                        </span>
+                                </div>
+
+                                <!-- <div class="d-none">
                                     <span id='drop' class="droparea">Drop files here or <a href=""
                                             [id]='idBrowse'><u>Browse</u></a> </span>
                                 </div>
                                 <div class="dropzone-msg dz-message needsclick">
-                                    <div class="dropzone-msg-title mb-2">Chọn một hay nhiều file từ máy của bạn.</div>
+                                    <div class="dropzone-msg-title mb-2">
+                                        Chọn một hay nhiều file từ máy của bạn.
+                                    </div>
                                     <span class="dropzone-msg-desc">Kéo thả file tài liệu (.doc, .xlx, .pdf...) vào đây,
                                         hoặc</span>
-                                </div>
+                                </div> -->
                                 <!--begin::Controls-->
                                 <div class="dropzone-panel mt-3">
                                     <ejs-uploader #templateupload id='templatefileupload'
@@ -162,7 +191,7 @@
                                 </ng-template>
                             </ng-template>
                             <ng-template #full>
-                                <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-25px me-3 cursor-pointer"
+                                <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
                                     title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
                                     [subTitleTmp]="cardImgFooter" [descLine]="1">
                                 </codx-temp-full>
@@ -201,6 +230,6 @@
         </div>
     </div>
     <div *ngIf="hideImageThumb == '0'">
-        <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" (fileCount)="handleDeleteCount($event)" [hideDelete]="hideDelete"></codx-thumbnail>
+        <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp"  [hideDelete]="hideDelete" (viewFile)="handleView($event)"></codx-thumbnail>
     </div>
 </ng-template>

@@ -53,6 +53,8 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   justView = false;
   isAddNew: boolean = true;
 
+  data: any = {};
+
   model: any;
 
   constructor(
@@ -68,6 +70,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       this.type = dialogData?.data.type;
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
+      this.data = dialogData?.data.data;
       this.dialogApproval = dialog;
       this.justView = dialogData?.data.justView ?? false;
       this.isAddNew = dialogData?.data?.isAddNew ?? true;
@@ -147,6 +150,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   onSaveForm() {
     this.esService.setApprovalStep(this.lstStep);
     this.esService.setLstDeleteStep(this.lstDeleteStep);
+    this.data.countStep = this.lstStep.length;
     this.model.patchValue({ countStep: this.lstStep.length });
     this.updateApprovalStep(this.isAddNew);
     this.dialogApproval && this.dialogApproval.close();

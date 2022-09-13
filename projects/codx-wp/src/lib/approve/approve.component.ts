@@ -38,7 +38,7 @@ export class ApproveComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate : TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef : TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef : TemplateRef<any>;
-  @ViewChild('view') codxViews : ViewsComponent;
+  @ViewChild('codxView') codxViews : ViewsComponent;
   @ViewChild('viewdetail') viewdetail : ApproveDetailComponent;
 
 
@@ -117,9 +117,9 @@ export class ApproveComponent extends UIComponent {
       }
       this.getGridViewSetUp();
       this.loadTabAsside(this.predicate,this.dataValue,this.entityName);
-      if(this.view){
-        this.view.dataService.request.entityName = this.entityName;
-        this.view.dataService.setPredicates([this.tabAsside[0].predicate],[this.tabAsside[0].value]).subscribe();
+      if(this.codxViews){
+        this.codxViews.dataService.request.entityName = this.entityName;
+        this.codxViews.dataService.setPredicates([this.tabAsside[0].predicate],[this.tabAsside[0].value]).subscribe();
       } 
       this.dt.detectChanges();
     });
@@ -183,13 +183,13 @@ export class ApproveComponent extends UIComponent {
     );
   }
   loadData(predicate:string,dataValue:string){
-    this.view.dataService.request.entityName = this.entityName;
+    this.codxViews.dataService.request.entityName = this.entityName;
     if(predicate && dataValue){
-      this.view.dataService.setPredicates([predicate],[dataValue]).subscribe();
+      this.codxViews.dataService.setPredicates([predicate],[dataValue]).subscribe();
     }
     else
     {
-      this.view.dataService.setPredicates([],[]).subscribe();
+      this.codxViews.dataService.setPredicates([],[]).subscribe();
     }
   }
   clickViewDetail(data:any,entityName:string){
@@ -247,7 +247,7 @@ export class ApproveComponent extends UIComponent {
             }
           });
           this.tabAsside[1].total++;
-          this.view.dataService.remove(data).subscribe();
+          this.codxViews.dataService.remove(data).subscribe();
           this.notifySvr.notifyCode("WP005");
           this.dt.detectChanges();
         }
@@ -267,7 +267,7 @@ export class ApproveComponent extends UIComponent {
               if(t.value == data.approveStatus) t.total--;
             })
             this.tabAsside[2].total++;
-            this.view.dataService.remove(data).subscribe();
+            this.codxViews.dataService.remove(data).subscribe();
             this.notifySvr.notifyCode("WP007");
             this.dt.detectChanges();
           }
@@ -314,8 +314,8 @@ export class ApproveComponent extends UIComponent {
         break;
       case 'SYS03':
         let option = new DialogModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
+        option.DataService = this.codxViews.dataService;
+        option.FormModel = this.codxViews.formModel;
         if(this.entityName == "WP_News"){
           option.IsFull = true;
           this.callFuc.openForm(PopupEditComponent,'Cập nhật bài viết',0,0,this.funcID,data,'',option);
@@ -331,8 +331,8 @@ export class ApproveComponent extends UIComponent {
                 headerText: 'Chỉnh sửa bài viết',
               };
               let option = new DialogModel();
-              option.DataService = this.view.dataService;
-              option.FormModel = this.view.formModel;
+              option.DataService = this.codxViews.dataService;
+              option.FormModel = this.codxViews.formModel;
               this.callfc.openForm(AddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
                 if(data.result){
                   console.log(data);
@@ -363,7 +363,7 @@ export class ApproveComponent extends UIComponent {
 
   deletedPost(data:any){
     if(!data)return;
-    this.view.dataService.delete(
+    this.codxViews.dataService.delete(
       [data],
       true,
       (opt:any)=>this.beforDeletedPost(opt,data)).subscribe();

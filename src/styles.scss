@@ -70,6 +70,7 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 
   --bghover: #f4f8ff;
   --fs-7: 12px;
+  --title-color: #f5f9fa;
 }
 
 .text-primary {
@@ -138,10 +139,6 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 .rounded-start {
   border-bottom-left-radius: var(--bs-border-radius) !important;
   border-top-left-radius: var(--bs-border-radius) !important;
-}
-
-.fs-5 {
-  // font-size: 14px !important;
 }
 
 .icon-56 {
@@ -321,14 +318,16 @@ codx-views>.container-fluid.h-100 {
 hr {
   background-color: var(--gray-500);
 }
+
 .is-invalid .ng-invalid,
 .is-invalid-error {
   border: solid 1.5px red !important;
 }
-.is-invalid .ng-invalid+label::before
-{
+
+.is-invalid .ng-invalid+label::before {
   border: solid 1.5px red !important;
 }
+
 .resize-none {
   resize: none;
 }
@@ -347,4 +346,21 @@ erm-quick-links-inner .w-250px.dropdown-menu {
 
 .codx-bghover:hover {
   background-color: var(--bghover);
+}
+
+.w-12px {
+  width: 12px;
+  height: auto;
+}
+
+.dropdown-menu .dropdown-item {
+  margin-bottom: 2px;
+}
+
+.e-listview .e-content {
+  padding-bottom: 10px;
+}
+
+.aside .aside-footer .menu-title {
+  color: var(--title-color);
 }

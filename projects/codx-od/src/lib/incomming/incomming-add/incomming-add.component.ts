@@ -259,6 +259,7 @@ export class IncommingAddComponent implements OnInit {
         });
     } else if (this.type == 'edit') {
       this.odService.updateDispatch(this.dispatch, false).subscribe(async (item) => {
+        debugger;
         if (item.status == 0) {
           if (this.dltDis) {
             this.attachment.objectId = item.data.recID;
