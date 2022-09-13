@@ -1,0 +1,318 @@
+<codx-detail-tmp
+  #itemDetailTemplate
+  [formModel]="formModel"
+  [dataItem]="itemDetail"
+  [header]="header"
+  [body]="body"
+  [footer]="!hideFooter ? footer : null"
+  [hideMF]="hideMF"
+  (clickMF)="openFormFuncID($event)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
+>
+  <ng-template #header>
+    <div class="d-flex flex-column flex-grow-1 mb-2">
+      <codx-temp-full
+        [title]="itemDetail?.userName"
+        [subTitle]="'Thư ký trung tâm - NDX'"
+        [imageId]="'ADMIN'"
+        imageObjType="AD_Users"
+        [imageWidth]="40"
+      >
+      </codx-temp-full>
+    </div>
+
+    <div class="d-flex flex-grow-1 mb-2">
+      <div class="me-4 icon-apartment"></div>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6">
+          <codx-label
+            field="OrgUnitID"
+            [formModel]="formModel"
+            default="Đơn vị/ bộ phận "
+            class="fw-bold me-1"
+            style="font-weight: bold"
+          ></codx-label>
+          : {{ itemDetail?.ownerOrgUnit }}
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex mt-1 flex-grow-1 mb-2">
+      <div class="d-flex me-6">
+        <codx-label
+          field="CreatedOn"
+          [formModel]="formModel"
+          default="Ngày gởi"
+          class="fw-bold me-1"
+        >
+        </codx-label>
+        <span class="text-gray-600">
+          :
+          {{
+            itemDetail
+              ? (itemDetail?.createdOn | date: "dd/MM/yyyy")
+              : "dd/MM/yyyy"
+          }}
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <codx-label
+          field="ExpiredOn"
+          [formModel]="formModel"
+          default="Ngày yêu cầu"
+          class="fw-bold me-1"
+        ></codx-label>
+        <span class="text-gray-600">
+          :
+          {{
+            itemDetail?.bookingOn
+              ? (itemDetail?.bookingOn | date: "dd/MM/yyyy")
+              : "dd/MM/yyyy"
+          }}
+        </span>
+      </div>
+    </div>
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label
+          fiedName="ReasonID"
+          [formModel]="formModel"
+          default="Lý do"
+          class="fw-bold me-1"
+        >
+        </codx-label>
+        <span class="text-gray-600">
+          :
+          {{ itemDetail?.reasonID }}
+        </span>
+      </div>
+    </div>
+
+    <ng-container *ngIf="data && data?.files">
+      <codx-thumbnail
+        [files]="data?.files"
+        displayThumb="simple"
+        [hideDelete]="'0'"
+      >
+      </codx-thumbnail>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #body>
+    <div class="tab-horizone h-od-tab h-100">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center">
+              <i
+                class="icon-info me-2"
+                [ngClass]="{ 'text-primary': active === 1 }"
+              ></i
+              ><span>Chi tiết</span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container *ngTemplateOutlet="defaulEmpt"></ng-container>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center">
+              <i
+                class="icon-format_list_numbered me-2"
+                [ngClass]="{ 'text-primary': active === 2 }"
+              ></i
+              ><span>Công việc</span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container
+              *ngIf="
+                data?.tasks && data?.tasks[0] && data?.tasks[0].length > 0;
+                else defaulEmpt
+              "
+            >
+              <codx-treeview
+                #treeAdd
+                id="treeAdd"
+                [data]="data?.tasks[0]"
+                [showSearch]="false"
+                [itemTemplate]="templateorg"
+                [autoLoad]="false"
+                [isOutput]="true"
+                [isLoadChild]="false"
+              ></codx-treeview>
+            </ng-container>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center">
+              <i
+                class="fa-solid fa-user-tag me-2 mt-1"
+                [ngClass]="{ 'text-primary': active === 3 }"
+              ></i
+              ><span>Nơi nhận</span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container *ngIf="data?.listInformationRel; else defaulEmpt">
+              <ng-container *ngFor="let item of data?.listInformationRel">
+                <div class="list-item has-action-menu-1 mb-6">
+                  <div class="d-flex align-items-start">
+                    <div class="w-120px me-6">
+                      <div
+                        class="text-primary d-flex justify-content-center fw-bold fs-4"
+                      >
+                        {{
+                          (item.date ? item.date : item.createdOn)
+                            | date: "shortTime"
+                        }}
+                      </div>
+                      <div
+                        class="text-dark d-flex justify-content-center text-gray-400 fs-6"
+                      >
+                        {{
+                          (item.date ? item.date : item.createdOn)
+                            | date: "dd/MM/yyyy"
+                        }}
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <codx-temp-full
+                        [imageId]="item?.userID"
+                        [imageObjType]="'AD_Users'"
+                        [title]="item?.employeeName"
+                        [subTitle]="item?.positionName"
+                        [desc]=""
+                        [descLine]="1"
+                        [dataItem]="item"
+                        [baseHeaderRightTmp]="baseTmpRight"
+                        [cardCss]="'justify-content-center align-items-center'"
+                      >
+                      </codx-temp-full>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="pt-5"></div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <approval-tabs></approval-tabs>
+  </ng-template>
+</codx-detail-tmp>
+
+<ng-template #defaulEmpt>
+  <div class="container">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+        <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #baseTmpRight let-data>
+  <ng-container *ngIf="data?.relationType != '1' && !data?.reCall">
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true"
+      [name]="'OD009'"
+      [value]="data?.view"
+      class="badge badge-light badge-md fs-7"
+    >
+    </codx-vll>
+  </ng-container>
+
+  <ng-container *ngIf="data?.reCall">
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true"
+      [name]="'OD010'"
+      [value]="data?.reCall"
+      class="badge badge-light badge-md fs-7"
+    >
+    </codx-vll>
+  </ng-container>
+</ng-template>
+
+<ng-template #templateorg let-data>
+  <div class="container-fluid justify-content-between d-flex">
+    <div class="d-flex align-items-top mt-5">
+      <codx-temp-full
+        [imageId]="data?.userID"
+        [imageObjType]="'AD_Users'"
+        [title]="data?.userName"
+        [titleLine]="2"
+        [subTitle]="data?.positionNameCreate"
+        [desc]="data?.taskName"
+        [dataItem]="data"
+        [footer]="footerTask"
+      >
+      </codx-temp-full>
+    </div>
+    <div
+      class="mt-5 ms-5 justify-content-end w-120px text-center"
+      *ngIf="data?.items.length == 0"
+    >
+      <codx-vll
+        [name]="'L0614'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="false"
+      ></codx-vll>
+      <div class="progress h-6px w-100 mt-2">
+        <div
+          class="progress-bar bg-primary"
+          role="progressbar"
+          [style.width.%]="data?.percentage"
+          aria-valuenow="50"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+      <div class="d-flex mt-2">
+        <span class="icon-schedule icon-16 text-gray-600"></span>
+        <span class="ms-2 text-dark">{{
+          data?.dueDate | date: "dd/MM/yyyy"
+        }}</span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footerTask let-data>
+  <div class="d-flex align-items-center mt-2" [style.marginLeft.px]="50">
+    <div class="d-flex align-items-center">
+      <span
+        class="icon-person me-1"
+        [class.text-muted]="data?.items.length == 0"
+        [class.text-primary]="data?.items.length > 0"
+      ></span>
+      <span class="text-dark" *ngIf="data?.items.length > 0">{{
+        data?.items.length
+      }}</span>
+    </div>
+    <div class="d-flex align-items-center ms-6">
+      <span class="icon-chat_bubble_outline me-1 text-muted"></span>
+      <span class="text-dark"></span>
+    </div>
+    <div class="d-flex align-items-center ms-6">
+      <span class="icon-attach_file me-1 text-muted"></span>
+      <span class="text-dark"></span>
+    </div>
+  </div>
+</ng-template>
