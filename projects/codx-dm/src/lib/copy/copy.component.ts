@@ -46,7 +46,7 @@ export class CopyComponent implements OnInit {
   setting: any;  
   title = 'Thông báo';
   titleFullName = 'Tên';
-  titleSave = "Save";
+  titleSave = "Lưu";
   titleMessage = "Tên bắt buộc.";
   titleRequired = "Tên bắt buộc.";
   titleDialog = 'Sao chép';

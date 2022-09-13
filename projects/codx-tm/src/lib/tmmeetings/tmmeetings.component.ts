@@ -84,6 +84,7 @@ export class TMMeetingsComponent
   dayWeek = [];
   request: ResourceModel;
   listMoreFunc = [];
+  titleAction ='' ;
 
   constructor(
     inject: Injector,
@@ -376,6 +377,7 @@ export class TMMeetingsComponent
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
+    this.titleAction = e.text ;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -399,6 +401,7 @@ export class TMMeetingsComponent
   }
 
   click(evt: ButtonModel) {
+    this.titleAction = evt.text ;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -414,7 +417,7 @@ export class TMMeetingsComponent
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        'add',
+        ['add',this.titleAction],
         option
       );
       // this.dialog.closed.subscribe((e) => {
@@ -452,7 +455,7 @@ export class TMMeetingsComponent
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
-          'edit',
+          ['edit',this.titleAction],
           option
         );
         // this.dialog.closed.subscribe((e) => {
@@ -491,7 +494,7 @@ export class TMMeetingsComponent
       option.Width = 'Auto';   
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        'copy',
+        ['copy',this.titleAction],
         option
       );
     });
