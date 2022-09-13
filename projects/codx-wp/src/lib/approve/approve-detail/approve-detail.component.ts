@@ -13,6 +13,8 @@ import { ApproveComponent } from '../approve.component';
 export class ApproveDetailComponent implements OnInit {
 
   @Input() data: any;
+  @Input() objectType: any;
+  @Input() entityName: any;
   @Input() option: string;
   @Input() formModel : any;
   @Output() evtApproval = new EventEmitter();
@@ -73,7 +75,15 @@ export class ApproveDetailComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  getPostInfor(){
+    this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetPostInfoAsync",[this.objectType,this.entityName])
+    .subscribe((res) => {
+      if(res){
+        this.data = res;
+        this.dt.detectChanges();
+      }
+    })
+  }
   clickApprovePost(data:any,approveStatus:any){
     this.evtApproval.emit({data:data,approveStatus:approveStatus})
   }
@@ -95,7 +105,6 @@ export class ApproveDetailComponent implements OnInit {
       );
     }
   }
-
 
   cancelPost(e:any,data:any,approveStatus:any){
     if(e.event.status == "Y"){
@@ -130,6 +139,10 @@ export class ApproveDetailComponent implements OnInit {
         }
       );
     } 
+  }
+
+  valueChange(event:any){
+
   }
 
 }

@@ -480,7 +480,7 @@ export class TMMeetingsComponent
       option.Width = '800px';   
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        [this.view.dataService.dataSelected, 'copy'],
+        'copy',
         option
       );
       this.dialog.closed.subscribe((e) => {

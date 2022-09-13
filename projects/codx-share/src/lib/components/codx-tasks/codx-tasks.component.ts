@@ -132,6 +132,7 @@ export class CodxTasksComponent
   projectID?: any;
   listViewModel = [];
   dataReferences = [];
+  titleAction ='' ;
 
   constructor(
     inject: Injector,
@@ -282,7 +283,7 @@ export class CodxTasksComponent
         this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'add', this.isAssignTask],
+        [this.view.dataService.dataSelected, 'add', this.isAssignTask,this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -347,7 +348,7 @@ export class CodxTasksComponent
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask,this.titleAction, data],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -474,7 +475,7 @@ export class CodxTasksComponent
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
+          [this.view.dataService.dataSelected, 'edit', this.isAssignTask,this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -1224,6 +1225,7 @@ export class CodxTasksComponent
   }
 
   clickMFAfterParameter(e, data) {
+    this.titleAction= e.text ;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -1323,6 +1325,7 @@ export class CodxTasksComponent
   }
 
   click(evt: ButtonModel) {
+    this.titleAction = evt.text ;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
