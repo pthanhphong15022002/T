@@ -40,18 +40,12 @@
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex align-items-center mb-2">
           <span class="text-dark fw-bolder">{{ item.createdName }}</span>
-          <ng-container *ngIf="item.tag > 1; else tagName">
-            <div  class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
-              [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item)">
-              <div class="tag me-2">
-                <img class="tag-img" src="/assets/img/fed/user-tag.png" />
-              </div>
-              <span class="tag-count">{{ item.tag }}</span>
-            </div>
-          </ng-container>
-          <ng-template #tagName>
-            <span class="ms-2" [innerHTML]="item.tagName"></span>
-          </ng-template>
+          <span class="ms-2 d-flex align-items-center" [innerHTML]="item.tagName" 
+            [autoClose]="'outside'"
+            [popoverTitle]="popTitle" 
+            [ngbPopover]="popContent" 
+            (click)="getTagUser(item)">
+          </span>
         </div>
         <div class="text-info-date d-flex">
           <div>
@@ -87,7 +81,7 @@
                       <input type="text" class="form-control" [(ngModel)]="searchField" placeholder="Tìm kiếm" />
                     </div>
                     <div class="mh-300px" style="overflow: auto;">
-                      <div class="d-flex align-items-center mb-2" *ngFor="let share of item.userShares">
+                      <div class="d-flex align-items-center mb-2" *ngFor="let share of lstUserShare">
                         <codx-img class="me-2" [width]="25" [imageType]="'circle'" [objectId]="share.objectID"
                           objectType="AD_Users">
                         </codx-img>

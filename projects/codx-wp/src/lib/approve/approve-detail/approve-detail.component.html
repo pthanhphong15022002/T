@@ -132,7 +132,16 @@
                         </div>
                         <ng-container *ngIf="data.newsType =='1';else video">
                             <div class="row mt-2 px-5 p-2">
-                                <div class="border border-3 border-light ms- py-5" [innerHTML]="data.contents"></div>
+                                <!-- <div class="border border-3 border-light ms- py-5" [innerHTML]="data.contents"></div> -->
+                                <div class="border border-3 border-light ms- py-5">
+                                    <codx-input 
+                                        format="ed3" 
+                                        [class]="'border-none'" 
+                                        type="textarea" [crrValue]="data.contents"
+                                        (valueChange)="valueChange($event)">
+                                    </codx-input>
+                                </div>
+
                             </div>
                         </ng-container>
                         
