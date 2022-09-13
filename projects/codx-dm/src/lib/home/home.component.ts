@@ -750,7 +750,7 @@ export class HomeComponent extends UIComponent {
         if (item == true) {
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
-            files[index].thumbnail = thumnbail;//`${this.dmSV.urlUpload}/${thumnbail}`;
+            // files[index].thumbnail = thumnbail;//`${this.dmSV.urlUpload}/${thumnbail}`;
             files[index].hasThumbnail = true;
             that.dmSV.listFiles = files;
             that.dmSV.ChangeData.next(true);

@@ -52,13 +52,14 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     'Họp định kì',
   ];
   nameObj: any;
-  projectCategory: any;
+  projectCategory:string = "2";  //set cứng đợi bảng PM_Projects hoàn thiện xong join projectID
   createdByName: any;
   showTabDasboard = true;
   showTabTasks = true;
   showTabHistory = true;
   showTabComments = true;
   showTabMeetings = true;
+  
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
