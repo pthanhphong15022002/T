@@ -13,7 +13,7 @@
         <div class="d-flex align-items-center note-btn">
             <div class="pw-save ms-2" (click)="formType == 'edit' ? openFormNoteBooks() : ''"
                 [ngbPopover]="'Lưu ghi chú vào sổ tay'" triggers="mouseenter:mouseleave" placement="bottom"
-                [autoClose]="'outside'" container="body" *ngIf="formType == 'edit'">
+                [autoClose]="'outside'" container="body" *ngIf="formType == 'edit'" [class.active]="!note?.isNote">
                 <span class="icon-assignment_returned icon-20 btn btn-icon btn-active-light-primary position-relative"
                     type="button">
                 </span>

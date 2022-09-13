@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { async } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
@@ -531,15 +532,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
           if (this.objectParentID) {
             this.updateContent(this.objectParentID, this.contents).subscribe();
             if (this.contents[index]?.recID != undefined)
-              this.api
-                .execSv(
-                  'DM',
-                  'ERM.Business.DM',
-                  'FileBussiness',
-                  'DeleteByObjectIDAsync',
-                  [this.contents[index].recID, this.objectType, true]
-                )
-                .subscribe();
+              this.deleteFileByObjectID(this.contents[index]?.recID, true);
           }
         }
       }
@@ -553,6 +546,20 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.countFileAdded = 0;
     this.focus(this.contents.length);
     this.dt.detectChanges();
+  }
+
+  deleteFileByObjectID(fileID: string, deleted: boolean) {
+    if (fileID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'DeleteByObjectIDAsync',
+          [fileID, this.objectType, deleted]
+        )
+        .subscribe();
+    }
   }
 
   getElement(ele: any, index = null) {
@@ -633,7 +640,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     ele = null,
     item = null,
     index = null,
-    menu = null
+    menu = null,
+    attachmentEle = null
   ) {
     switch (type) {
       case 'format':
@@ -656,7 +664,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         break;
       case 'attachment':
         if (menu == false) this.openPopupAttachment(index);
-        else this.popup(this.id);
+        else this.popup(this.id, attachmentEle);
     }
     this.getContent.emit(this.contents);
   }
@@ -803,22 +811,85 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   IDTemp = 0;
-  popup(index) {
-    if (index < this.contents.length)
-      this.contents[index].lineType = 'FILE';
-    this.updateContent(this.objectParentID, this.contents).subscribe();
-    this.dt.detectChanges();
+  popup(index, attachmentEle) {
+    // if (index < this.contents.length) this.contents[index].lineType = 'FILE';
+    // this.updateContent(this.objectParentID, this.contents).subscribe();
+    // this.dt.detectChanges();
+    console.log('check attachmentEle popup', attachmentEle);
+    if (attachmentEle) this.attachment = attachmentEle;
     if (this.attachment) {
       this.attachment.uploadFile();
       this.checkFile = true;
     }
     this.IDTemp = index;
-    debugger;
+  }
+
+  fileCounts(e: any) {
+    let obj = JSON.parse(JSON.stringify(this.contents));
+    let initListNote = {
+      memo: '',
+      status: null,
+      textColor: null,
+      format: null,
+      lineType: this.lineType,
+      attachments: 0,
+      comments: 0,
+      tasks: 0,
+      recID: '',
+    };
+    // if (this.countFileAdded > 1) index++;
+    if (e.data.length > 1) {
+      obj.splice(this.IDTemp, 1);
+      e.data.forEach((dt) => {
+        this.getMongoObjectId();
+        let item = JSON.parse(JSON.stringify(initListNote));
+        item.lineType = 'FILE';
+        item.attachments += 1;
+        let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+        item.recID = recID;
+        dt.objectID = item.recID;
+        obj.push(item);
+      });
+    } else {
+      this.getMongoObjectId();
+      obj[this.IDTemp].lineType = 'FILE';
+      obj[this.IDTemp].attachments += 1;
+      let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+      obj[this.IDTemp].recID = recID;
+      e.data[0].objectID = recID;
+    }
+    console.log('check file', e.data);
+    let item = JSON.parse(JSON.stringify(initListNote));
+    item.lineType = 'TEXT';
+    item.attachments = 0;
+
+    console.log('check contents', this.contents);
+    this.dt.detectChanges();
+    this.updateContent(this.objectParentID, obj).subscribe(async (res: any) => {
+      if (res) {
+        this.focus(obj.length - 1);
+
+        // up file
+        this.attachment.objectId == res.recID;
+        this.attachment.fileUploadList = e.data;
+        (await this.attachment.saveFilesObservable()).subscribe((result) => {
+          if (result) {
+            this.contents = obj;
+            this.contents.push(item);
+          }
+        });
+      }
+    });
+    this.id += 2;
+    console.log('check id', this.id);
+    this.dt.detectChanges();
   }
 
   countFileAdded = 0;
-  fileCount(e) {
+  fileCount(e, attachmentEle) {
     // this.countFileAdded++;
+    console.log('check attachmentEle fileCount', attachmentEle);
+    this.attachment = attachmentEle;
     let initListNote = {
       memo: '',
       status: null,
@@ -838,7 +909,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         let item = JSON.parse(JSON.stringify(initListNote));
         item.lineType = 'FILE';
         item.attachments += 1;
-        item.recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+        let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+        item.recID = recID;
         dt.objectID = item.recID;
         this.contents.push(item);
       });
@@ -846,14 +918,15 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.getMongoObjectId();
       this.contents[this.IDTemp].lineType = 'FILE';
       this.contents[this.IDTemp].attachments += 1;
-      this.contents[this.IDTemp].recID = JSON.parse(
-        JSON.stringify(this.mongoObjectId)
-      );
+      let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+      this.contents[this.IDTemp].recID = recID;
+      e.data[0].objectID = recID;
     }
     console.log('check file', e.data);
     let item = JSON.parse(JSON.stringify(initListNote));
     item.lineType = 'TEXT';
     item.attachments = 0;
+    this.attachment.fileUploadList = e.data;
     this.contents.push(item);
 
     console.log('check contents', this.contents);
@@ -861,8 +934,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.updateContent(this.objectParentID, this.contents).subscribe(
       async (res: any) => {
         if (res) {
-          this.attachment.fileUploadList = e.data;
-          this.attachment.saveFiles();
           this.focus(this.contents.length - 1);
         }
       }
