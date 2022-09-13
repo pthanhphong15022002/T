@@ -172,7 +172,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     evrPermission.createdBy = this.user.userID;
     evrPermission.createdOn = new Date();
     this.cache.message('WP011').subscribe((mssg: any) => {
-      this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
+      this.title = Util.stringFormat(mssg.defaultName, this.user.userName);
       this.dt.detectChanges();
     });
     if (this.dialogData.status == this.STATUS.EDIT) {
@@ -218,8 +218,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   valueChange(e: any) {
     if (e.data) {
       this.message = e.data;
-    }else
-    {
+    } else {
       this.message = "";
     }
     this.dt.detectChanges();
@@ -385,19 +384,20 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
-            this.listFileUpload.map((e:any) => {
+            this.listFileUpload.map((e: any) => {
               e.objectId = this.atmCreate.objectId;
             })
             this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
-            (await this.atmCreate.saveFilesObservable()).subscribe((res:any)=>{
-              if(res){
+            (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
+              if (res) {
                 (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
                 this.notifySvr.notifyCode('SYS006');
                 this.dialogRef.close();
-              }});
+              }
+            });
           }
-          else{
+          else {
             (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
             this.notifySvr.notifyCode('SYS006');
             this.dialogRef.close();
@@ -420,8 +420,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     if (this.listFileUpload.length > 0) {
       this.atmEdit.objectId = this.dataEdit.recID;
       this.dmSV.fileUploadList = this.listFileUpload;
-      (await this.atmEdit.saveFilesObservable()).subscribe((res:any) => {
-        if(res){
+      (await this.atmEdit.saveFilesObservable()).subscribe((res: any) => {
+        if (res) {
           console.log(res);
         }
       });
@@ -472,14 +472,15 @@ export class AddPostComponent implements OnInit, AfterViewInit {
             this.atmCreate.objectId = result.recID;
             this.dmSV.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
-            (await this.atmCreate.saveFilesObservable()).subscribe((res:any)=>{
-              if(res){
+            (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
+              if (res) {
                 (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
                 this.notifySvr.notifyCode('SYS006');
                 this.dialogRef.close();
-              }});
+              }
+            });
           }
-          else{
+          else {
             (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
             this.notifySvr.notifyCode('SYS006');
             this.dialogRef.close();
@@ -487,7 +488,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  width = 420;
+  width = 720;
   height = window.innerHeight;
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
@@ -574,13 +575,13 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  showCBB=false;
-  tagWith:string ='';
-  tags:any[] = [];
-  saveAddUser(value:any){
+  showCBB = false;
+  tagWith: string = '';
+  tags: any[] = [];
+  saveAddUser(value: any) {
     this.tags = [];
     let data = value.dataSelected;
-    if(data && data.length > 0){
+    if (data && data.length > 0) {
       this.lstTagUser = data;
       data.forEach((x: any) => {
         let p = new Permission();
@@ -609,12 +610,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  tagUser(){
+  tagUser() {
     this.showCBB = !this.showCBB;
   }
-  lstTagUser:any[] = [];
-  searchTagUser:string ="";
-  clickShowTag(){
+  lstTagUser: any[] = [];
+  searchTagUser: string = "";
+  clickShowTag() {
 
   }
   getTagUser() {
