@@ -60,7 +60,7 @@
                             <span class=" ">5</span>
                         </div>
                     </div>
-                    <codx-imgs [width]="30" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users"
+                    <codx-imgs [width]="25" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users"
                         [numberImages]="2">
                     </codx-imgs>
                 </div>
@@ -610,8 +610,8 @@
                 <div class="mb-5">
                     <div class="card card-steplist">
 
-                        <div class="steplist-hearder  border border-gray-200 rounded p-5">
-                            <codx-temp-full [title]="'Công đoạn 2: Sơ vấn'" [titleCss]="'fs-4'"
+                        <div class="steplist-hearder  border border-gray-200 rounded px-6 py-4">
+                            <codx-temp-full [title]="'Công đoạn 2: Sơ vấn'" [titleCss]="'fs-3 mb-2'"
                                 [baseHeaderRightTmp]="tmp"
                                 [desc]="'Nhân viên TA chuẩn bị câu hỏi khảo sát, gọi điện thoại sơ vấn những ứng viên có hồ sơ qua vòng sàng lọc'">
                             </codx-temp-full>
@@ -621,16 +621,17 @@
                         </ng-template>
 
                         <div id="kt_docs_card_collapsible" class="collapse show">
-                            <div class="card-body">
-                                <div class="steplist">
-                                    <div class="steplist-item  step-primary ">
-                                        <codx-temp-full [title]="'Công đoạn 2: Sơ vấn'" [titleCss]="'fs-5'"
+                            <div class="card-body p-0">
+                                <div class="steplist ps-6 pt-4">
+                                    <div class="steplist-item  step-primary rounded p-4">
+                                        <codx-temp-full [title]="'Công đoạn 2: Sơ vấn'" [titleCss]="'fs-5 mb-1'"
                                             [baseHeaderRightTmp]="tmp"
                                             [desc]="'Nhân viên TA chuẩn bị câu hỏi khảo sát, gọi điện thoại sơ vấn những ứng viên có hồ sơ qua vòng sàng lọc'">
                                         </codx-temp-full>
                                     </div>
-                                    <div class="steplist-item  step-danger ">
+                                    <div class="steplist-item  step-danger rounded p-4">
                                         <div>Theo dõi quá trình tuyển dụng từ khi yêu cầu</div>
+                                        <div class="fs-3 text-danger">Dùng control Note chỗ Nguyên</div>
                                     </div>
                                 </div>
                                 <div
@@ -643,23 +644,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex flex-column">
-                                    <li class="d-flex align-items-center py-2">
-                                        <span class="bullet bullet-vertical h-100  me-5"></span> Item 1
-                                    </li>
-                                    <li class="d-flex align-items-center py-2">
-                                        <span class="bullet bullet-vertical bg-danger h-100 me-5"></span> Item 2
-                                    </li>
-                                    <li class="d-flex align-items-center py-2">
-                                        <span class="bullet bullet-vertical bg-success h-100  me-5"></span> Item 3
-                                    </li>
-                                    <li class="d-flex align-items-center py-2">
-                                        <span class="bullet bullet-vertical bg-info  h-100  me-5"></span> Item 4
-                                    </li>
-                                    <li class="d-flex align-items-center py-2">
-                                        <span class="bullet bullet-vertical bg-primary h-100  me-5"></span> Item 5
-                                    </li>
-                                </div>
                             </div>
 
                         </div>
@@ -668,4 +652,51 @@
 
             </div>
         </div>
+    </div>
+    <div class="p-5">
+        <h2 class="text-danger  py-4 uppercase "> 42_BP_Process_Kaban</h2>
+        <h4>Bước quy trình </h4>
+        <div class="kanban-board w-300px me-1">
+            <div class="kanban-board-header bg-danger">
+                <div class="d-flex align-items-center">
+                    <codx-temp-full [icoTitleCss]="'icon-photo_library'" [title]="'Sơ vấn'"
+                        [baseHeaderRightTmp]="'tmp'"></codx-temp-full>
+                </div>
+
+            </div>
+            <div class="kanban-board-body">
+                <codx-card-img cardCss="border border-warning rounded-0 w-275px card-no-body mb-2"
+                    imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                    [footer]="footerBoard">
+                </codx-card-img>
+                <codx-card-img cardCss="border border-warning rounded-0 w-275px card-no-body"
+                    imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                    [footer]="footerBoard">
+                </codx-card-img>
+            </div>
+            <ng-template #footerBoard>
+                <div class="d-flex bg-footer  m-n3 mt-0">
+                    <div class="d-flex flex-column w-100 p-3">
+                        <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center card-icon-nowrap me-1 ">
+                                <span class="me-1 icon-16 icon-access_alarm"></span><span class="fw-bolb">Thời
+                                    gian:</span>
+                            </div>
+                            <div class="badge  badge-white my-1 me-3">30’/hồ sơ</div>
+                        </div>
+                        <div class="d-flex align-items-center card-icon-nowrap me-1 ">
+                            <span class="me-1 icon-person_pin_circle"></span><span class="fw-bolb ">Nhân viên
+                                tuyển
+                                dụng</span>
+                        </div>
+                        <div class="d-flex align-items-center mt-2">
+                            <codx-imgs [width]="25" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users"
+                                [numberImages]="2">
+                            </codx-imgs>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+
     </div>
