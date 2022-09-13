@@ -629,14 +629,17 @@ export class CodxEsService {
     this.lstDelete.subscribe((res) => {
       lstData = res;
     });
-
-    return this.api.execSv(
-      'ES',
-      'ES',
-      'ApprovalStepsBusiness',
-      'DeleteListApprovalStepAsync',
-      [lstData]
-    );
+    if (lstData == null) {
+      return EMPTY;
+    } else {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'DeleteListApprovalStepAsync',
+        [lstData]
+      );
+    }
   }
 
   getNewDefaultEmail() {

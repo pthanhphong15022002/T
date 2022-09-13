@@ -1,24 +1,52 @@
-<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" idField="employeeID" [views]="views"
-  [formModel]="view.formModel">
+<codx-views
+  #view
+  funcID="MWP002"
+  service="HR"
+  entityName="HR_Employees"
+  idField="employeeID"
+  [views]="views"
+  [formModel]="view.formModel"
+>
 </codx-views>
 
 <ng-template #panelRightRef>
   <div class="page-pw h-100">
-    <div class="pw-profile" style="
+    <div
+      class="pw-profile"
+      style="
         background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
-      ">
+      "
+    >
       <div class="d-flex align-items-center avatar">
-        <codx-img class="me-4 pic-emloyee" #imageAvatar [width]="100" [objectId]="employeeInfo?.employeeID"
-          objectType="HR_Employees" [funcId]="view.formModel.funcID" isAllowEdit="true" updateDirect="true">
+        <codx-img
+          class="me-4 pic-emloyee"
+          #imageAvatar
+          [width]="100"
+          [objectId]="employeeInfo?.employeeID"
+          objectType="HR_Employees"
+          [funcId]="view.formModel.funcID"
+          isAllowEdit="true"
+          updateDirect="true"
+        >
         </codx-img>
         <div class="d-flex flex-column">
           <div class="fw-bold text-dark fs-5 mb-1">
             {{ employeeInfo?.employeeName }}
           </div>
-          <div class="text-dark" #positionName>{{ employeeInfo?.positionName | formatvalue:
-            view.formModel:"positionID":positionName | async }}</div>
-          <div class="text-gray-700" #organizationName>{{ employeeInfo?.organizationName | formatvalue:
-            view.formModel:"orgUnitID":organizationName | async }}</div>
+          <div class="text-dark" #positionName>
+            {{
+              employeeInfo?.positionName
+                | formatvalue: view.formModel:"positionID":positionName
+                | async
+            }}
+          </div>
+          <div class="text-gray-700" #organizationName>
+            {{
+              employeeInfo?.organizationName
+                | formatvalue: view.formModel:"orgUnitID":organizationName
+                | async
+            }}
+          </div>
         </div>
       </div>
     </div>
@@ -30,38 +58,65 @@
       <div class="employee-container w-100 ms-3 ps-9 pe-3 pb-6">
         <div class="pw-menu d-flex">
           <div ngbDropdown class="d-inline-block">
-            <codx-button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
-              {{ defautFunc.defaultName }}</codx-button>
+            <codx-button
+              class="btn btn-outline-primary"
+              id="dropdownBasic1"
+              ngbDropdownToggle
+            >
+              {{ defautFunc.defaultName }}</codx-button
+            >
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
               <ng-container *ngFor="let item of moreFunc">
                 <codx-button ngbDropdownItem>
                   <a href="{{ '#' + item.functionID }}">{{
                     item.defaultName
-                    }}</a>
+                  }}</a>
                 </codx-button>
               </ng-container>
             </div>
           </div>
         </div>
 
-        <div class="pw-content w-100 pw-lg hover-scroll-y" data-kt-scroll="true"
-          data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
-          data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
-          data-kt-scroll-offset="0px">
-          <div class="user-content flex-row-fluid" (sectionChange)="onSectionChange($event)">
+        <div
+          class="pw-content w-100 pw-lg hover-scroll-y"
+          data-kt-scroll="true"
+          data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-max-height="auto"
+          data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+          data-kt-scroll-wrappers=".employee-container"
+          data-kt-scroll-offset="0px"
+        >
+          <div
+            class="user-content flex-row-fluid"
+            (sectionChange)="onSectionChange($event)"
+          >
             <ng-container>
               <!-- thong tin chung -->
               <div class="user-profile overview d-block mb-3" id="MWP00201">
                 <div class="d-flex justify-content-between mb-2 mt-6">
                   <div class="fw-bold fs-4 text-primary">
-                    <codx-label name="lblInfoPersonal" formName="Employees" default="Thông tin nhân viên">
+                    <codx-label
+                      name="lblInfoPersonal"
+                      formName="Employees"
+                      default="Thông tin nhân viên"
+                    >
                     </codx-label>
                   </div>
-                  <a *ngIf="editMode" class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span (click)="editInfo(employeeInfo)" class="icon-edit icon-18"></span>
+                  <a
+                    *ngIf="editMode"
+                    class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                  >
+                    <span
+                      (click)="editInfo(employeeInfo)"
+                      class="icon-edit icon-18"
+                    ></span>
                   </a>
                 </div>
-                <ngx-skeleton-loader *ngIf="!employeeInfo" count="5" animation="progress"></ngx-skeleton-loader>
+                <ngx-skeleton-loader
+                  *ngIf="!employeeInfo"
+                  count="5"
+                  animation="progress"
+                ></ngx-skeleton-loader>
 
                 <div class="border rounded-2 p-6" *ngIf="employeeInfo">
                   <div class="d-flex align-items-center">
@@ -72,54 +127,74 @@
                       <span class="icon-check text-primary icon-18 me-1"></span>
                       <span>{{
                         employeeInfo?.status | vll: "L0225":"text" | async
-                        }}</span>
+                      }}</span>
                     </div>
                   </div>
 
                   <div class="d-flex align-items-center mt-2">
                     <span class="fw-bold text-dark">{{
                       employeeInfo?.positionName
-                      }}</span>
-                    <span class="text-gray-500 mx-3" *ngIf="employeeInfo?.organizationName">|</span>
+                    }}</span>
+                    <span
+                      class="text-gray-500 mx-3"
+                      *ngIf="employeeInfo?.organizationName"
+                      >|</span
+                    >
                     <span class="text-dark">{{
                       employeeInfo?.organizationName
-                      }}</span>
-                    <span class="text-gray-500 mx-3" *ngIf="employeeInfo?.divisionName">|</span>
+                    }}</span>
+                    <span
+                      class="text-gray-500 mx-3"
+                      *ngIf="employeeInfo?.divisionName"
+                      >|</span
+                    >
                     <span class="text-dark">{{
                       employeeInfo?.divisionName != ""
-                      ? employeeInfo?.divisionName
-                      : null
-                      }}</span>
+                        ? employeeInfo?.divisionName
+                        : null
+                    }}</span>
                   </div>
                   <div class="text-dark fw-bold text-uppercase mt-6 mb-3">
-                    <codx-label name="lblEmployeeInfo" formName="Employees" default="Thông tin nhân viên">
+                    <codx-label
+                      name="lblEmployeeInfo"
+                      formName="Employees"
+                      default="Thông tin nhân viên"
+                    >
                     </codx-label>
                   </div>
                   <div class="row mb-2">
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="joinedOn" formName="Employees"
-                          default="Ngày vào làm:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="joinedOn"
+                          formName="Employees"
+                          default="Ngày vào làm:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.joinedOn | date : "dd/MM/yyyy"}}</span> -->
                         <span #joinedOn>{{
                           employeeInfo.joinedOn
-                          | formatvalue: formModel:"joinedOn":joinedOn
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"joinedOn":joinedOn
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="PayGroupID" formName="Employees"
-                          default="Nhóm tính lương:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="PayGroupID"
+                          formName="Employees"
+                          default="Nhóm tính lương:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.payGroupID}}</span> -->
                         <span #payGroupID>{{
                           employeeInfo.payGroupID
-                          | formatvalue: formModel:"payGroupID":payGroupID
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"payGroupID":payGroupID
+                            | async
+                        }}</span>
                       </div>
                     </div>
                   </div>
@@ -127,31 +202,39 @@
                   <div class="row mb-2">
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="hiredOn" formName="Employees"
-                          default="Ngày ký hợp đồng chính thức:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="hiredOn"
+                          formName="Employees"
+                          default="Ngày ký hợp đồng chính thức:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.hiredOn | date : "dd/MM/yyyy"}}</span> -->
                         <span #hiredOn>{{
                           employeeInfo.hiredOn
-                          | formatvalue: formModel:"hiredOn":hiredOn
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"hiredOn":hiredOn
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="senioritydate" formName="Employees"
-                          default="Thâm niên:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="senioritydate"
+                          formName="Employees"
+                          default="Thâm niên:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.senioritydate}}</span> -->
                         <span #senioritydate>{{
                           employeeInfo.senioritydate
-                          | formatvalue
-                          : formModel
-                          : "senioritydate"
-                          : senioritydate
-                          | async
-                          }}</span>
+                            | formatvalue
+                              : formModel
+                              : "senioritydate"
+                              : senioritydate
+                            | async
+                        }}</span>
                       </div>
                     </div>
                   </div>
@@ -159,21 +242,29 @@
                   <div class="row mb-2">
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="recruitedOn" formName="Employees"
-                          default="Ngày tuyển dụng:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="recruitedOn"
+                          formName="Employees"
+                          default="Ngày tuyển dụng:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.recritedOn}}</span> -->
                         <span #recritedOn>{{
                           employeeInfo.recritedOn
-                          | formatvalue: formModel:"recritedOn":recritedOn
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"recritedOn":recritedOn
+                            | async
+                        }}</span>
                       </div>
                     </div>
                   </div>
 
                   <div class="text-dark fw-bold text-uppercase mt-6 mb-3">
-                    <codx-label name="lblContact" formName="Employees" default="Liên hệ">
+                    <codx-label
+                      name="lblContact"
+                      formName="Employees"
+                      default="Liên hệ"
+                    >
                     </codx-label>
                   </div>
                   <div class="d-flex align-items-center">
@@ -181,27 +272,27 @@
 
                     <span #phone>{{
                       employeeInfo?.phone
-                      | formatvalue: view.formModel:"phone":phone
-                      | async
-                      }}</span>
+                        | formatvalue: view.formModel:"phone":phone
+                        | async
+                    }}</span>
                     <span class="text-gray-500 mx-3">|</span>
 
                     <span #personalEmail>{{
                       employeeInfo.personalEmail
-                      | formatvalue
-                      : view.formModel
-                      : "personalEmail"
-                      : personalEmail
-                      | async
-                      }}</span>
+                        | formatvalue
+                          : view.formModel
+                          : "personalEmail"
+                          : personalEmail
+                        | async
+                    }}</span>
                     <span class="text-gray-500 mx-3">|</span>
                     <!-- <span class="text-dark" *ngIf="employeeInfo?.street!='---'">{{employeeInfo?.street}}</span>
                     <span class="text-muted" *ngIf="employeeInfo?.street=='---'"> -->
                     <span #street>{{
                       employeeInfo.street
-                      | formatvalue: formModel:"street":street
-                      | async
-                      }}</span>
+                        | formatvalue: formModel:"street":street
+                        | async
+                    }}</span>
                     <!-- <codx-label fiedName="street" formName="Employees" default="Địa chỉ thường trú">
                       </codx-label>
                     </span> -->
@@ -209,166 +300,211 @@
 
                   <div class="text-dark fw-bold text-uppercase mt-6 mb-1">
                     {{
-                    "Thông tin cá nhân"
-                    | lang: "ProfileOverview":"txtInfoPersonal"
-                    | async
+                      "Thông tin cá nhân"
+                        | lang: "ProfileOverview":"txtInfoPersonal"
+                        | async
                     }}
                   </div>
                   <div class="row">
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="gender" formName="Employees"
-                          default="Giới tính:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="gender"
+                          formName="Employees"
+                          default="Giới tính:"
+                        >
                         </codx-label>
                         <span class="text-dark">{{
                           employeeInfo?.gender | vll: "L0068":"text" | async
-                          }}</span>
+                        }}</span>
                         <!-- <span #gender>{{ employeeInfo.gender | formatvalue: formModel:"gender":gender | async
                         }}</span> -->
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="birthday" formName="Employees"
-                          default="Sinh ngày:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="birthday"
+                          formName="Employees"
+                          default="Sinh ngày:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
                         <span #birthday>{{
                           employeeInfo.birthday
-                          | formatvalue: formModel:"birthday":birthday
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"birthday":birthday
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="birthPlaceName" formName="Employees"
-                          default="Tại:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="birthPlaceName"
+                          formName="Employees"
+                          default="Tại:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo?.birthPlaceName !=""? employeeInfo?.birthPlaceName :
                           null}}</span> -->
                         <span #birthPlaceName>{{
                           employeeInfo.birthPlaceName
-                          | formatvalue
-                          : formModel
-                          : "birthPlaceName"
-                          : birthPlaceName
-                          | async
-                          }}</span>
+                            | formatvalue
+                              : formModel
+                              : "birthPlaceName"
+                              : birthPlaceName
+                            | async
+                        }}</span>
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="idCardNo" formName="Employees"
-                          default="CMND/CCCD:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="idCardNo"
+                          formName="Employees"
+                          default="CMND/CCCD:"
+                        >
                         </codx-label>
 
                         <!-- <span class="text-dark">{{employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
                           null}}</span> -->
                         <span #idCardNo>{{
                           employeeInfo.idCardNo
-                          | formatvalue: formModel:"idCardNo":idCardNo
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"idCardNo":idCardNo
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="issuedOn" formName="Employees"
-                          default="Cấp ngày:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="issuedOn"
+                          formName="Employees"
+                          default="Cấp ngày:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark me-15">{{employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
 
                         <span #issuedOn>{{
                           employeeInfo.issuedOn
-                          | formatvalue: formModel:"issuedOn":issuedOn
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"issuedOn":issuedOn
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="issuedBy" formName="Employees" default="Tại:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="issuedBy"
+                          formName="Employees"
+                          default="Tại:"
+                        >
                         </codx-label>
 
                         <!-- <span class="text-dark me-15">{{employeeInfo?.issuedBy != "" ? employeeInfo?.issuedBy :
                           null}}</span> -->
                         <span #issuedBy>{{
                           employeeInfo.issuedBy
-                          | formatvalue: formModel:"issuedBy":issuedBy
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"issuedBy":issuedBy
+                            | async
+                        }}</span>
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="religion" formName="Employees"
-                          default="Tôn giáo:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="religion"
+                          formName="Employees"
+                          default="Tôn giáo:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.religion}}</span> -->
                         <span #religion>{{
                           employeeInfo.religion
-                          | formatvalue: formModel:"religion":religion
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"religion":religion
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="ethnicGroup" formName="Employees"
-                          default="Dân tộc:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="ethnicGroup"
+                          formName="Employees"
+                          default="Dân tộc:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.ethnicGroup}}</span> -->
                         <span #ethnicGroup>{{
                           employeeInfo.ethnicGroup
-                          | formatvalue: formModel:"ethnicGroup":ethnicGroup
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"ethnicGroup":ethnicGroup
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="nationality" formName="Employees"
-                          default="Quốc tịch:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="nationality"
+                          formName="Employees"
+                          default="Quốc tịch:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.nationality}}</span> -->
                         <span #nationality>{{
                           employeeInfo.nationality
-                          | formatvalue: formModel:"nationality":nationality
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"nationality":nationality
+                            | async
+                        }}</span>
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-4">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="education" formName="Employees"
-                          default="Trình độ văn hóa:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="education"
+                          formName="Employees"
+                          default="Trình độ văn hóa:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.education}}</span> -->
                         <span #education>{{
                           employeeInfo.education
-                          | formatvalue: formModel:"education":education
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"education":education
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col-8">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="degree" formName="Employees"
-                          default="Trình độ chuyên môn:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="degree"
+                          formName="Employees"
+                          default="Trình độ chuyên môn:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.certificateName}}</span> -->
                         <span #degree>{{
                           employeeInfo.degree
-                          | formatvalue: formModel:"degree":degree
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"degree":degree
+                            | async
+                        }}</span>
                       </div>
                     </div>
                   </div>
@@ -379,25 +515,33 @@
                   <div class="row">
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="pITNumber" formName="Employees"
-                          default="Thuế TNCN số:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="pITNumber"
+                          formName="Employees"
+                          default="Thuế TNCN số:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.pitNumber}}</span> -->
                         <span #pitNumber>{{
                           employeeInfo.pitNumber
-                          | formatvalue: formModel:"pitNumber":pitNumber
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"pitNumber":pitNumber
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="pitIssuedOn" formName="Employees"
-                          default="Cấp ngày:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="pitIssuedOn"
+                          formName="Employees"
+                          default="Cấp ngày:"
+                        >
                         </codx-label>
                         <span class="text-dark">{{
                           employeeInfo.pitIssuedOn | date: "dd/MM/yyyy"
-                          }}</span>
+                        }}</span>
                         <!-- <span #pitIssuedOn>{{ employeeInfo.pitIssuedOn | formatvalue: formModel:"pitIssuedOn":pitIssuedOn | async
                         }}</span> -->
                       </div>
@@ -413,25 +557,33 @@
                   <div class="row">
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="sIRegisterNo" formName="Employees"
-                          default="BHXH số:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="sIRegisterNo"
+                          formName="Employees"
+                          default="BHXH số:"
+                        >
                         </codx-label>
                         <!-- <span class="text-dark">{{employeeInfo.siRegisterNo}}</span> -->
                         <span #siRegisterNo>{{
                           employeeInfo.siRegisterNo
-                          | formatvalue: formModel:"siRegisterNo":siRegisterNo
-                          | async
-                          }}</span>
+                            | formatvalue: formModel:"siRegisterNo":siRegisterNo
+                            | async
+                        }}</span>
                       </div>
                     </div>
                     <div class="col">
                       <div class="d-flex">
-                        <codx-label class="text-gray-600 me-2" fiedName="siRegisterOn" formName="Employees"
-                          default="Cấp ngày:">
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="siRegisterOn"
+                          formName="Employees"
+                          default="Cấp ngày:"
+                        >
                         </codx-label>
                         <span class="text-dark">{{
                           employeeInfo.siRegisterOn | date: "dd/MM/yyyy"
-                          }}</span>
+                        }}</span>
                         <!-- <span #siRegisterOn>{{ employeeInfo.siRegisterOn | formatvalue: formModel:"siRegisterOn":siRegisterOn | async
                         }}</span> -->
                       </div>
@@ -447,11 +599,22 @@
             <div id="MWP00202" class="d-block mt-6">
               <div class="user-profile overview">
                 <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-                  <codx-label name="lblExperencies" formName="Employees" default="Kinh nghiệm trước đây">
+                  <codx-label
+                    name="lblExperencies"
+                    formName="Employees"
+                    default="Kinh nghiệm trước đây"
+                  >
                   </codx-label>
                 </div>
-                <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader>
-                <div class="border rounded-2 p-6 pb-0" *ngIf="ExperencesCurrent">
+                <ngx-skeleton-loader
+                  *ngIf="!ExperencesCurrent"
+                  count="5"
+                  animation="progress"
+                ></ngx-skeleton-loader>
+                <div
+                  class="border rounded-2 p-6 pb-0"
+                  *ngIf="ExperencesCurrent"
+                >
                   <div class="user-process process-h">
                     <ng-container *ngFor="let experences of ExperencesWorked">
                       <div class="process-item d-flex mb-4">
@@ -464,9 +627,14 @@
                         </div>
                         <div class="d-flex flex-column py-3 px-4 process-r">
                           <div class="d-flex flex-column">
-                            <codx-temp-full [formModel]="view.formModel" [content]="experences.companyName"
-                              [dataItem]="experences" [desc]="experences.roleName" [typeMF]="'hover'"
-                              (clickMF)="clickMF($event, experences)">
+                            <codx-temp-full
+                              [formModel]="view.formModel"
+                              [content]="experences.companyName"
+                              [dataItem]="experences"
+                              [desc]="experences.roleName"
+                              [typeMF]="'hover'"
+                              (clickMF)="clickMF($event, experences)"
+                            >
                             </codx-temp-full>
                           </div>
                         </div>
@@ -476,12 +644,20 @@
                       <div class="process-item d-flex mb-4">
                         <div class="yeartoyear mt-3"></div>
                         <div class="mx-3 mt-3 process-line">
-                          <span class="icon-add_circle_outline icon-16 text-success"></span>
+                          <span
+                            class="icon-add_circle_outline icon-16 text-success"
+                          ></span>
                         </div>
-                        <div class="d-flex align-items-center user-item add-process">
+                        <div
+                          class="d-flex align-items-center user-item add-process"
+                        >
                           <span class="icon-add icon-18"></span>
                           <a class="text-primary" (click)="addExperences()">
-                            <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
+                            <codx-label
+                              name="lblAdd"
+                              formName="Employees"
+                              default="Thêm mới"
+                            >
                             </codx-label>
                           </a>
                         </div>
@@ -497,14 +673,26 @@
               <div class="user-profile overview">
                 <div class="d-flex justify-content-between mb-2 mt-6">
                   <div class="fw-bold fs-4 text-primary">
-                    <codx-label name="lblSkill" formName="Employees" default="Kỹ năng ">
+                    <codx-label
+                      name="lblSkill"
+                      formName="Employees"
+                      default="Kỹ năng "
+                    >
                     </codx-label>
                   </div>
-                  <a *ngIf="editMode" class="btn btn-sm btn-icon btn-light" (click)="editSkill(skillEmployee)">
+                  <a
+                    *ngIf="editMode"
+                    class="btn btn-sm btn-icon btn-light"
+                    (click)="editSkill(skillEmployee)"
+                  >
                     <span class="icon-edit icon-16"></span>
                   </a>
                 </div>
-                <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader>
+                <ngx-skeleton-loader
+                  *ngIf="!skillEmployee"
+                  count="5"
+                  animation="progress"
+                ></ngx-skeleton-loader>
                 <div class="border rounded-2 p-6" *ngIf="skillEmployee">
                   <div class="row">
                     <div class="col-6 pe-6">
@@ -518,8 +706,14 @@
                               <div id="container">
                                 <div class="wrap">
                                   <div class="sliderwrap">
-                                    <ejs-slider id="minrange" [type]="minType" [min]="0" [max]="10"
-                                      [value]="data.valueX" [readonly]="true">
+                                    <ejs-slider
+                                      id="minrange"
+                                      [type]="minType"
+                                      [min]="0"
+                                      [max]="10"
+                                      [value]="data.valueX"
+                                      [readonly]="true"
+                                    >
                                     </ejs-slider>
                                   </div>
                                 </div>
@@ -530,11 +724,21 @@
                       </div>
                     </div>
                     <div class="col-6">
-                      <ejs-chart id="chartcontainer" [title]="" [primaryXAxis]="primaryXAxis"
-                        [primaryYAxis]="primaryYAxis">
+                      <ejs-chart
+                        id="chartcontainer"
+                        [title]=""
+                        [primaryXAxis]="primaryXAxis"
+                        [primaryYAxis]="primaryYAxis"
+                      >
                         <e-series-collection>
-                          <e-series *ngIf="skillEmployee" [dataSource]="skillEmployee" name="Employee" type="Radar"
-                            xName="competenceName" yName="valueX">
+                          <e-series
+                            *ngIf="skillEmployee"
+                            [dataSource]="skillEmployee"
+                            name="Employee"
+                            type="Radar"
+                            xName="competenceName"
+                            yName="valueX"
+                          >
                           </e-series>
                         </e-series-collection>
                       </ejs-chart>
@@ -548,63 +752,103 @@
             <div id="MWP00204" class="d-block mb-3">
               <div class="user-profile overview">
                 <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-                  <codx-label name="lblTraining" formName="Employees" default="Đào tạo cá nhân">
+                  <codx-label
+                    name="lblTraining"
+                    formName="Employees"
+                    default="Đào tạo cá nhân"
+                  >
                   </codx-label>
                 </div>
-                <ngx-skeleton-loader *ngIf="
+                <ngx-skeleton-loader
+                  *ngIf="
                     !trainingInterObl &&
                     !trainingInterUnObl &&
                     !trainingPersonal
-                  " count="5" animation="progress"></ngx-skeleton-loader>
-                <div class="border rounded-2 p-6" *ngIf="
+                  "
+                  count="5"
+                  animation="progress"
+                ></ngx-skeleton-loader>
+                <div
+                  class="border rounded-2 p-6"
+                  *ngIf="
                     trainingInterObl || trainingInterUnObl || trainingPersonal
-                  ">
-                  <div *ngIf="trainingPersonal && trainingPersonal.length > 0"
-                    class="text-dark fw-bold text-uppercase mt-8 mb-4">
-                    <codx-label formName="Employees" default="Bên ngoài công ty">
+                  "
+                >
+                  <div
+                    *ngIf="trainingPersonal && trainingPersonal.length > 0"
+                    class="text-dark fw-bold text-uppercase mt-8 mb-4"
+                  >
+                    <codx-label
+                      formName="Employees"
+                      default="Bên ngoài công ty"
+                    >
                     </codx-label>
                   </div>
                   <div class="user-process process-v swiper-wrapper">
                     <ng-template swiperSlide *ngIf="editMode">
                       <ng-container>
-                        <div class="process-item swiper-slide" (click)="editDataEdu(null)">
+                        <div
+                          class="process-item swiper-slide"
+                          (click)="editDataEdu(null)"
+                        >
                           <div class="line"></div>
                           <span class="yeartoyear btn btn-sm add-process">
-                            <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
+                            <codx-label
+                              name="lblAdd"
+                              formName="Employees"
+                              default="Thêm mới"
+                            >
                             </codx-label>
                           </span>
                         </div>
                       </ng-container>
                     </ng-template>
 
-                    <ng-template swiperSlide *ngFor="let item of trainingPersonal">
+                    <ng-template
+                      swiperSlide
+                      *ngFor="let item of trainingPersonal"
+                    >
                       <ng-container>
                         <div class="process-item swiper-slide">
                           <div class="line"></div>
                           <span class="yeartoyear btn btn-sm">{{
                             item.completeOn
-                            }}</span>
+                          }}</span>
                           <div class="d-flex flex-column mt-4">
                             <div class="text-dark mb-1">
                               {{ item.organizationName }}
                             </div>
-                            <div class="text-dark mt-1 d-flex align-items-start">
-                              <span class="text-dark-50 icon-check_circle icon-16 me-2"></span>
+                            <div
+                              class="text-dark mt-1 d-flex align-items-start"
+                            >
+                              <span
+                                class="text-dark-50 icon-check_circle icon-16 me-2"
+                              ></span>
                               <span class="text-dark-50">{{
                                 item.certificateName
-                                }}</span>
+                              }}</span>
                             </div>
-                            <div class="text-dark mt-1 d-flex align-items-start">
-                              <span class="text-dark-50 icon-class icon-16 me-2"></span>
+                            <div
+                              class="text-dark mt-1 d-flex align-items-start"
+                            >
+                              <span
+                                class="text-dark-50 icon-class icon-16 me-2"
+                              ></span>
                               <span class="text-dark-50">{{ item.memo }}</span>
                             </div>
                             <div class="d-flex mt-4">
-                              <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-2" *ngIf="editMode"
-                                (click)="editDataEdu(item)">
+                              <a
+                                class="btn btn-xs btn-icon btn-light btn-hover-primary me-2"
+                                *ngIf="editMode"
+                                (click)="editDataEdu(item)"
+                              >
                                 <span class="icon-edit icon-18"></span>
                               </a>
-                              <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editMode"
-                                (click)="deleteEducation(item)">
+                              <a
+                                class="btn btn-xs btn-icon btn-light btn-hover-danger"
+                                *ngIf="editMode"
+                                (click)="deleteEducation(item)"
+                              >
                                 <span class="icon-close icon-18"></span>
                               </a>
                             </div>
@@ -621,29 +865,57 @@
             <div id="MWP00205" class="d-block mb-3">
               <div class="user-profile overview">
                 <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-                  <codx-label name="lblRelationShip" formName="Employees" default="Quan hệ gia đình">
+                  <codx-label
+                    name="lblRelationShip"
+                    formName="Employees"
+                    default="Quan hệ gia đình"
+                  >
                   </codx-label>
-                  <ngx-skeleton-loader *ngIf="!employeeRelationship" count="5" animation="progress">
+                  <ngx-skeleton-loader
+                    *ngIf="!employeeRelationship"
+                    count="5"
+                    animation="progress"
+                  >
                   </ngx-skeleton-loader>
                 </div>
                 <div class="border rounded-2 p-6" *ngIf="employeeRelationship">
                   <div class="row">
-                    <ng-container *ngFor="let relationship of employeeRelationship">
+                    <ng-container
+                      *ngFor="let relationship of employeeRelationship"
+                    >
                       <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                        <codx-card-center cardCss="border h-100" [imageId]="relationship.recID"
-                          [formModel]="view.formModel" [title]="relationship.relationName" [formModel]="view.formModel"
-                          (clickMF)="clickMFS($event, data)" [dataItem]="relationship" [typeMF]="'hover'" [desc]="
-                            relationship.relationType + ' | ' + 'Năm sinh: ' + (relationship.birthday | date: 'yyyy')">
+                        <codx-card-center
+                          cardCss="border h-100"
+                          [imageId]="relationship.recID"
+                          [formModel]="view.formModel"
+                          [title]="relationship.relationName"
+                          [formModel]="view.formModel"
+                          (clickMF)="clickMFS($event, data)"
+                          [dataItem]="relationship"
+                          [typeMF]="'hover'"
+                          [desc]="
+                            relationship.relationType +
+                            ' | ' +
+                            'Năm sinh: ' +
+                            (relationship.birthday | date: 'yyyy')
+                          "
+                        >
                         </codx-card-center>
                       </div>
                     </ng-container>
                     <ng-container *ngIf="editMode">
                       <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
                         <div class="d-flex">
-                          <div class="d-flex align-items-center user-item add-process">
+                          <div
+                            class="d-flex align-items-center user-item add-process"
+                          >
                             <span class="icon-add icon-18"></span>
                             <a class="text-primary" (click)="addRelation()">
-                              <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
+                              <codx-label
+                                name="lblAdd"
+                                formName="Employees"
+                                default="Thêm mới"
+                              >
                               </codx-label>
                             </a>
                           </div>
@@ -659,26 +931,51 @@
             <div id="MWP00206" class="d-block mb-5">
               <div class="user-profile overview">
                 <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-                  <codx-label name="lblHobbie" formName="Employees" default="Sở thích">
+                  <codx-label
+                    name="lblHobbie"
+                    formName="Employees"
+                    default="Sở thích"
+                  >
                   </codx-label>
                 </div>
               </div>
-              <ngx-skeleton-loader *ngIf="!employeeHobbie" count="5" animation="progress"></ngx-skeleton-loader>
+              <ngx-skeleton-loader
+                *ngIf="!employeeHobbie"
+                count="5"
+                animation="progress"
+              ></ngx-skeleton-loader>
               <div class="border rounded-2 p-6" *ngIf="employeeHobbie">
                 <div class="list-hoppy">
-                  <div *ngFor="let item of employeeHobbie" class="d-flex align-items-center user-item tagitem"
-                    [style.background]="item.color">
+                  <div
+                    *ngFor="let item of employeeHobbie"
+                    class="d-flex align-items-center user-item tagitem"
+                    [style.background]="item.color"
+                  >
                     <div [style.color]="getContrastYIQ(item)">
                       {{ item.hobbyName }}
                     </div>
-                    <a class="text-dark text-hover-danger mt-1 ms-1" *ngIf="editMode" (click)="deleteHobby(item)">
+                    <a
+                      class="text-dark text-hover-danger mt-1 ms-1"
+                      *ngIf="editMode"
+                      (click)="deleteHobby(item)"
+                    >
                       <span class="icon-close icon-14"></span>
                     </a>
                   </div>
-                  <div *ngIf="editMode" class="user-item d-flex align-items-center tagitem add-process">
+                  <div
+                    *ngIf="editMode"
+                    class="user-item d-flex align-items-center tagitem add-process"
+                  >
                     <span class="icon-add icon-16"></span>
-                    <a (click)="popupAddHobbi(employeeHobbie)" class="text-primary">
-                      <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
+                    <a
+                      (click)="popupAddHobbi(employeeHobbie)"
+                      class="text-primary"
+                    >
+                      <codx-label
+                        name="lblAdd"
+                        formName="Employees"
+                        default="Thêm mới"
+                      >
                       </codx-label>
                     </a>
                   </div>

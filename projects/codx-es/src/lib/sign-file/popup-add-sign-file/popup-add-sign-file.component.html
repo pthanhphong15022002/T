@@ -17,7 +17,9 @@
         <div class="stepper-nav flex-center flex-wrap" #status>
           <div
             [ngClass]="
-              isAddNew ? 'stepper-item active' : 'stepper-item approve'
+              isAddNew || (!isAddNew && oSignFile)
+                ? 'stepper-item active'
+                : 'stepper-item approve'
             "
             data-kt-stepper-element="nav"
             data-kt-stepper-action="step"
@@ -58,7 +60,9 @@
 
           <div
             [ngClass]="
-              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
+              isAddNew || (!isAddNew && oSignFile)
+                ? 'stepper-item'
+                : 'stepper-item approve-disabled'
             "
             data-kt-stepper-element="nav"
             data-kt-stepper-action="step"
@@ -99,7 +103,9 @@
 
           <div
             [ngClass]="
-              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
+              isAddNew || (!isAddNew && oSignFile)
+                ? 'stepper-item'
+                : 'stepper-item approve-disabled'
             "
             data-kt-stepper-element="nav"
             data-kt-stepper-action="step"
@@ -139,7 +145,9 @@
           </div>
           <div
             [ngClass]="
-              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
+              isAddNew || (!isAddNew && oSignFile)
+                ? 'stepper-item'
+                : 'stepper-item approve-disabled'
             "
             data-kt-stepper-element="nav"
             data-kt-stepper-action="step"
@@ -352,11 +360,7 @@
             >
               <div class="w-100 form-content mw-500px mx-auto">
                 <div class="form-group">
-                  <codx-label
-                    fiedName="Title"
-                    default="Tên tài liệu"
-                    [formModel]="formModel"
-                  >
+                  <codx-label fiedName="Title" [formModel]="formModel">
                   </codx-label>
                   <codx-input
                     type="text"
@@ -370,11 +374,7 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <codx-label
-                        fiedName="CategoryID"
-                        [formModel]="formModel"
-                        default="Phân loại"
-                      >
+                      <codx-label fiedName="CategoryID" [formModel]="formModel">
                       </codx-label>
                       <codx-input
                         type="combobox"
@@ -389,11 +389,7 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <codx-label
-                        default="Mức độ ưu tiên"
-                        fiedName="Priority"
-                        [formModel]="formModel"
-                      >
+                      <codx-label fiedName="Priority" [formModel]="formModel">
                       </codx-label>
                       <codx-input
                         type="valuelist"
@@ -409,11 +405,7 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <codx-label
-                        fiedName="RefNo"
-                        [formModel]="formModel"
-                        default="Số văn bản"
-                      >
+                      <codx-label fiedName="RefNo" [formModel]="formModel">
                       </codx-label>
                       <codx-input
                         type="text"
@@ -427,11 +419,7 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <codx-label
-                        fiedName="RefDate"
-                        [formModel]="formModel"
-                        default="Ngày văn bản"
-                      >
+                      <codx-label fiedName="RefDate" [formModel]="formModel">
                       </codx-label>
                       <codx-input
                         type="datetime"
@@ -446,11 +434,7 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <codx-label
-                    fiedName="EmployeeID"
-                    [formModel]="formModel"
-                    default="Người yêu cầu"
-                  >
+                  <codx-label fiedName="EmployeeID" [formModel]="formModel">
                   </codx-label>
                   <codx-input
                     type="combobox"
@@ -464,11 +448,7 @@
                   </codx-input>
                 </div>
                 <div class="form-group">
-                  <codx-label
-                    fiedName="OrgUnitID"
-                    [formModel]="formModel"
-                    default="Phòng ban"
-                  >
+                  <codx-label fiedName="OrgUnitID" [formModel]="formModel">
                   </codx-label>
                   <codx-input
                     type="combobox"
@@ -766,6 +746,7 @@
         [recID]="dialogSignFile.value.recID"
         [isApprover]="false"
         [isDisable]="data?.approveStatus == '1' ? false : true"
+        (isAreaControl)="setValueAreaControl($event)"
       >
       </lib-pdf-view>
     </div>

@@ -62,16 +62,16 @@ import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_
 import { TasksComponent } from './tasks/tasks.component';
 
 export const routes: Routes = [
-  {
-    path: '',
-    component: LayoutOnlyHeaderComponent,
-    children: [
-      {
-        path: 'employeeinfomation/:funcID',
-        component: EmployeeInfomationComponent,
-      },
-    ],
-  },
+  // {
+  //   path: '',
+  //   component: LayoutOnlyHeaderComponent,
+  //   children: [
+  //     {
+  //       path: 'employeeinfomation/:funcID',
+  //       component: EmployeeInfomationComponent,
+  //     },
+  //   ],
+  // },
   {
     path: '',
     component: LayoutComponent,
@@ -84,10 +84,10 @@ export const routes: Routes = [
         path: 'tasks/:funcID',
         component: TasksComponent,
       },
-      // {
-      //   path: 'employeeinfomation/:funcID',
-      //   component: EmployeeInfomationComponent,
-      // },
+      {
+        path: 'employeeinfomation/:funcID',
+        component: EmployeeInfomationComponent,
+      },
       // {
       //   path:'',
       //   redirectTo:'personals/:funcID',
