@@ -83,9 +83,10 @@ export class PopupAddMeetingComponent implements OnInit {
     // this.getParam() ;
     this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.meeting = this.data;
+    
     this.dialog = dialog;
     this.user = this.authStore.get();
-
+    if (this.action == 'add') this.meeting.startDate = moment(new Date()).toDate() ;
     this.action = dt.data[1];
     if (this.action == 'add' || this.action == 'copy' ) {
       this.getListUser(this.user.userID);
@@ -105,7 +106,7 @@ export class PopupAddMeetingComponent implements OnInit {
     if (this.action == 'add') {
       this.title = 'Thêm họp định kì';
       this.meeting.meetingType = '1';
-      this.meeting.startDate = new Date(Date.now());
+    
       this.resources = [];
     } else if (this.action == 'edit') {
       this.title = 'Chỉnh sửa họp định kì';
