@@ -135,7 +135,6 @@ export class PopupAddRoomsComponent implements OnInit {
   }
   onSaveForm() {
     if (this.dialogAddRoom.invalid == true) {
-      console.log(this.dialogAddRoom);
       return;
     }
     let lstEquipments = '';
