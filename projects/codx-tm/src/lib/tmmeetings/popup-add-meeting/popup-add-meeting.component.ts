@@ -43,7 +43,7 @@ export class PopupAddMeetingComponent implements OnInit {
   param: any;
   functionID: string;
   title = '';
-  titleLink ="Link cuộc họp"
+  titleLink = 'Link cuộc họp';
   showPlan = true;
   data: any;
   readOnly = false;
@@ -81,13 +81,13 @@ export class PopupAddMeetingComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     // this.getParam() ;
-    this.data = dialog.dataService!.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.meeting = this.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
-
+    if (this.action == 'add') this.meeting.startDate = moment(new Date()).toDate() ;
     this.action = dt.data;
-    if (this.action === 'add') {
+    if (this.action == 'add' || this.action == 'copy' ) {
       this.getListUser(this.user.userID);
     }
     this.functionID = this.dialog.formModel.funcID;
@@ -105,13 +105,13 @@ export class PopupAddMeetingComponent implements OnInit {
     if (this.action == 'add') {
       this.title = 'Thêm họp định kì';
       this.meeting.meetingType = '1';
-      this.meeting.startDate = new Date(Date.now());
+    
       this.resources = [];
     } else if (this.action == 'edit') {
       this.title = 'Chỉnh sửa họp định kì';
       this.setTimeEdit();
       this.resources = this.meeting.resources;
-    }
+    } else if (this.action == 'copy') this.resources = [];
     if (this.meeting.templateID) {
       this.api
         .execSv<any>(
@@ -171,7 +171,7 @@ export class PopupAddMeetingComponent implements OnInit {
 
   beforeSave(op) {
     var data = [];
-    if (this.action == 'add') {
+    if (this.action == 'add' || this.action == 'copy' ) {
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       this.meeting.meetingType = '1';
@@ -214,12 +214,12 @@ export class PopupAddMeetingComponent implements OnInit {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.meeting.attachments = Array.isArray(res) ? res.length : 1;
-          if (this.action === 'add') this.onAdd();
+          if (this.action === 'add' || this.action === 'copy') this.onAdd();
           else this.onUpdate();
         }
       });
     else {
-      if (this.action === 'add') this.onAdd();
+      if (this.action === 'add' || this.action === 'copy' ) this.onAdd();
       else this.onUpdate();
     }
   }

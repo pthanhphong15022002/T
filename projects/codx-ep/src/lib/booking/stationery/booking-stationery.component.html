@@ -30,14 +30,11 @@
   <codx-card-img
     cardCss="border w-250px h-100"
     [imageSrc]="
-      data.icon
-        ? data.icon
-        : '../assets/media/img/codx/default/card-default.svg'
+      data.icon ? data.icon : '../assets/media/svg/files/blank-image.svg'
     "
-    [content]="'content'"
-    [subTitle]="data.resourceName"
     [title]="data.resourceName"
-    [desc]="data.costPrice | currency: 'VND':'symbol':'3.0'"
+    [subTitle]="data.resourceName"
+    [content]="data.costPrice | currency: 'VND':'symbol':'3.0'"
     [rootData]="data"
     [footer]="cardItemFooter"
   >

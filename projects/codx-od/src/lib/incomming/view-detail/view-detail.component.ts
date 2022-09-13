@@ -801,6 +801,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               signFile.refId = this.data?.recID;
               signFile.refDate = this.data?.refDate;
               signFile.refNo = this.data?.refNo;
+              signFile.priority = this.data?.urgency;
               signFile.files = [];
               if (this.data?.files) {
                 for (var i = 0; i < this.data?.files.length; i++) {

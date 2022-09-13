@@ -361,8 +361,15 @@ export class PopupAddBookingRoomComponent implements OnInit {
         }
       }
     });
-    var tmpResourceID=this.fGroupAddBookingRoom.value.resourceID[0];
-    
+    if(this.fGroupAddBookingRoom.value.resourceID instanceof Object){
+      this.fGroupAddBookingRoom.patchValue({resourceID:this.fGroupAddBookingRoom.value.resourceID[0]})
+    }
+    if (this.fGroupAddBookingRoom.value.companyID instanceof Object){
+      this.fGroupAddBookingRoom.patchValue({companyID:this.fGroupAddBookingRoom.value.companyID[0]})
+    }
+    if (this.fGroupAddBookingRoom.value.reasonID instanceof Object){
+      this.fGroupAddBookingRoom.patchValue({reasonID:this.fGroupAddBookingRoom.value.reasonID[0]})
+    }
     this.fGroupAddBookingRoom.patchValue({
       category: '1',
       status: '1',
@@ -371,11 +378,11 @@ export class PopupAddBookingRoomComponent implements OnInit {
       startDate:this.tmpStartDate,
       endDate:this.tmpEndDate,
       equipments: availableEquip + '|' + pickedEquip,
-      resourceID: tmpResourceID,
     });      
        
-
-    this.tmpAttendeesList=this.attendeesList;    
+    this.attendeesList.forEach(item=>{
+      this.tmpAttendeesList.push(item);
+    });    
     this.tmpAttendeesList.push(this.curUser);
     console.log("data",this.fGroupAddBookingRoom.value);    
     console.log("attend",this.attendeesList);
@@ -407,23 +414,34 @@ export class PopupAddBookingRoomComponent implements OnInit {
     this.fGroupAddBookingRoom.patchValue({ [data['field']]: data.data.fromDate });
   }
   UpdateAttendeesList(){
+    this.attendeesList=[];
     if(this.lstUser.length>0 && this.lstUserOptional.length>0)
     {
-      this.attendeesList=[].concat(this.lstUser,this.lstUserOptional);
+      this.lstUser.forEach(item=>{
+        this.attendeesList.push(item);
+      });
+      this.lstUserOptional.forEach(item=>{
+        this.attendeesList.push(item);
+      });
     }
     else if(this.lstUser.length>0 && this.lstUserOptional.length==0)
     {
-      this.attendeesList=this.lstUser;
+      this.lstUser.forEach(item=>{
+        this.attendeesList.push(item);
+      });
     }
     else if(this.lstUserOptional.length>0 && this.lstUser.length==0)
-    {
-      this.attendeesList=this.lstUserOptional;
+    {      
+      this.lstUserOptional.forEach(item=>{
+        this.attendeesList.push(item);
+      });
     }
-    for (let i = 0; i < this.attendeesList.length - 1; ++i) {
-      if(this.attendeesList[i].userId==this.curUser.userId){
-        this.attendeesList.splice(i,1);
+    this.attendeesList.forEach(item=>{
+      if(item.userId==this.curUser.userId){
+        this.attendeesList.splice(this.attendeesList.indexOf(item),1);
       }
-    };    
+    })
+        
     this.fGroupAddBookingRoom.patchValue({attendees:this.attendeesList.length+1})
   }
   valueCbxUserChange(event?) {
@@ -440,16 +458,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
       };
       
       this.lstUser.push(this.tempAtender);
-      // if(this.lstUserOptional.length>0){
-      //   this.lstUser?.forEach(people=>{
-      //     this.attendeesList.push(people);
-      //   })
-      // };
-      // if(this.lstUserOptional.length>0){
-      //   this.lstUserOptional.forEach(people=>{
-      //     this.attendeesList.push(people);
-      //   })  
-      // };    
     });
     
     if(this.lstUser.length>0 && this.lstUserOptional.length>0)
@@ -462,9 +470,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
         }
       }
     }
-    this.UpdateAttendeesList();
-
-    
+    this.UpdateAttendeesList();    
     this.changeDetectorRef.detectChanges();
   }
   valueCbxUserOptionalChange(event?) {
