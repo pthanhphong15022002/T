@@ -70,6 +70,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   selectedDate = new Date();
   isHaveFile = false;
   showLabelAttachment = false;
+  titleAction = '';
 
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -86,9 +87,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.meeting = this.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
+    this.action = dt.data[0];
+    this.titleAction = dt.data[1];
     if (this.action == 'add')
-      this.meeting.startDate = moment(new Date()).toDate();
-    this.action = dt.data;
+      this.meeting.startDate = moment(new Date())
+        .set({ hour: 0, minute: 0, second: 0 })
+        .toDate();
     if (this.action == 'add' || this.action == 'copy') {
       this.getListUser(this.user.userID);
     }
@@ -105,15 +109,19 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
   ngAfterViewInit(): void {
     if (this.action == 'add') {
-      this.title = 'Thêm họp định kì';
+      // this.title = 'Thêm họp định kì';
       this.meeting.meetingType = '1';
 
       this.resources = [];
     } else if (this.action == 'edit') {
-      this.title = 'Chỉnh sửa họp định kì';
+      // this.title = 'Chỉnh sửa họp định kì';
       this.setTimeEdit();
       this.resources = this.meeting.resources;
-    } else if (this.action == 'copy') this.resources = [];
+    } else if (this.action == 'copy') {
+      this.meeting.meetingType = '1';
+      this.resources = [];
+      this.setTimeEdit();
+    }
     if (this.meeting.templateID) {
       this.api
         .execSv<any>(
@@ -148,6 +156,10 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     if (this.startTime == '00:00' && this.endTime == '23:59') {
       this.isFullDay = true;
     }
+    if (this.meeting.fromDate)
+      this.meeting.fromDate = moment(new Date(this.meeting.fromDate)).toDate();
+    if (this.meeting.toDate)
+      this.meeting.toDate = moment(new Date(this.meeting.toDate)).toDate();
   }
 
   padTo2Digits(num) {
@@ -194,8 +206,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
-        // this.dialog.dataService.addDatas.clear();
-        // this.dialog.close(res.save[0]);
         this.attachment.clearData();
         if (res) {
           this.dialog.close([res.save]);
@@ -207,67 +217,49 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        // this.dialog.dataService.addDatas.clear();
-        //if (res.update) {
-        // this.meeting == res.update;
-        //  this.dialog.close(this.meeting);
-        //   this.attachment.clearData();
-        //  }
         this.attachment.clearData();
         this.dialog.close();
       });
   }
 
   async onSave() {
-    if (this.meeting.meetingName == null || this.meeting.meetingName.trim() == '') {
-      // this.notiService.notify(
-      //   'Vui lòng nhập tên cuộc họp',"1"
-      // );
-      this.notiService.notifyCode("CO001");
+    if (
+      this.meeting.meetingName == null ||
+      this.meeting.meetingName.trim() == ''
+    ) {
+      this.notiService.notifyCode('CO001');
       return;
     }
     if (this.meeting.startDate <= new Date()) {
-      // this.notiService.notify(
-      //   'Vui lòng chọn thời gian diễn ra cuộc họp lớn hơn hoặc bằng ngày hiện tại !',"1"
-      // );
-      this.notiService.notifyCode("CO002");
+      this.notiService.notifyCode('CO002');
       return;
     }
     if (this.meeting.endDate <= new Date()) {
-      // this.notiService.notify(
-      //   'Vui lòng chọn thời gian kết thúc cuộc họp lớn hơn hoặc bằng thời gian diễn ra cuộc họp',"1"
-      // );
-      this.notiService.notifyCode("CO003");
+      this.notiService.notifyCode('CO003');
       return;
     }
-    if (!this.meeting.fromDate || !this.meeting.toDate) {
-      // this.notiService.notify(
-      //   'Vui lòng chọn "Ngày bắt đầu" và "Ngày kết thúc" không được để trống',"1"
-      // ); 
-      this.notiService.notifyCode("CO004"); 
-      return;
-    }
-    if (this.meeting.fromDate && this.meeting.fromDate <= new Date()) {
-      // this.notiService.notify(
-      //   'Vui lòng chọn "Ngày bắt đầu" lớn hơn hoặc bằng ngày hiện tại',"1"
-      // ); 
-      this.notiService.notifyCode("CO005");
-      return;
-    }
+    if (this.meeting.meetingType == '1') {
+      if (!this.meeting.fromDate || !this.meeting.toDate) {
+        this.notiService.notifyCode('CO004');
+        return;
+      }
+      if (this.meeting.fromDate && this.meeting.fromDate <= new Date()) {
+        this.notiService.notifyCode('CO005');
+        return;
+      }
 
-    if (this.meeting.toDate && this.meeting.toDate <= new Date()) {
-      // this.notiService.notify(
-      //   'Vui lòng chọn "Ngày kết thúc" lớn hơn hoặc bằng ngày hiện tại',"1"
-      // ); 
-      this.notiService.notifyCode("CO006");
-      return;
-    }
-    if (this.meeting.toDate && this.meeting.fromDate  && this.meeting.toDate <=this.meeting.fromDate ) {
-      // this.notiService.notify(
-      //   'Vui lòng chọn "Ngày kết thúc cuộc họp" lớn hơn "Ngày bắt đầu cuộc họp"',"1"
-      // ); 
-      this.notiService.notifyCode("CO007");
-      return;
+      if (this.meeting.toDate && this.meeting.toDate <= new Date()) {
+        this.notiService.notifyCode('CO006');
+        return;
+      }
+      if (
+        this.meeting.toDate &&
+        this.meeting.fromDate &&
+        this.meeting.toDate <= this.meeting.fromDate
+      ) {
+        this.notiService.notifyCode('CO007');
+        return;
+      }
     }
     if (this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
@@ -295,11 +287,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ];
 
   setTitle(e: any) {
-    if (this.action == 'add') {
-      this.title = 'Thêm ' + e;
-    } else if (this.action == 'edit') {
-      this.title = 'Sửa ' + e;
-    }
+    // if (this.action == 'add') {
+    //   this.title = 'Thêm ' + e;
+    // } else if (this.action == 'edit') {
+    //   this.title = 'Sửa ' + e;
+    // }
+    this.title =
+      this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     this.changDetec.detectChanges();
   }
 
@@ -330,6 +324,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           this.meeting[event.field] = event.data;
         }
       }
+    }
+    this.changDetec.detectChanges();
+  }
+
+  changeMemo(event: any) {
+    if (event.field) {
+      this.meeting[event.field] = event?.data ? event?.data : '';
     }
     this.changDetec.detectChanges();
   }
