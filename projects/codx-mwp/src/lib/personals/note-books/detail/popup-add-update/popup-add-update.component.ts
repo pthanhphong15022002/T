@@ -199,7 +199,7 @@ export class PopupAddUpdate implements OnInit {
 
   addNoteBookDetails() {
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 1)
       .subscribe((res) => {
         if (res.save) {
           var dt = res.save;

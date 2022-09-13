@@ -11,7 +11,7 @@
           type="button"
           class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
           [disabled]="!canOpenSubPopup"
-          (click)="openTempPopup(1)"
+          (click)="clickOpenPopupADR(1)"
         >
           <codx-vll
             *ngIf="data?.stepType != 'S1' && data?.stepType != 'S2'"
@@ -31,7 +31,7 @@
           type="button"
           class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
           [disabled]="!canOpenSubPopup"
-          (click)="openTempPopup(2)"
+          (click)="clickOpenPopupADR(2)"
         >
           <codx-label
             name="lblDeny"
@@ -43,7 +43,7 @@
           type="button"
           class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
           [disabled]="!canOpenSubPopup"
-          (click)="openTempPopup(3)"
+          (click)="clickOpenPopupADR(3)"
         >
           <codx-label
             name="lblRedo"

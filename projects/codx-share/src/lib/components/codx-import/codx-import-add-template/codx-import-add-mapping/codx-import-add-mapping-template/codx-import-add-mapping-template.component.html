@@ -7,10 +7,18 @@
   [formModel]="formModel"
 ></codx-form>
 <ng-template popup adde #body>
- <codx-input type="text" [placeholder]="'Nhập tên template'"></codx-input>
+ <codx-input 
+  type="text" 
+  [placeholder]="'Nhập tên template'"
+  [Group]="importAddMapTmp"
+  ControlName = "nameTmp"
+  [ngClass]="{ 'is-invalid': submitted && f.nameTmp.errors }">
+ ></codx-input>
 </ng-template>
 <ng-template #footer>
-   
+  <button class="btn btn-primary" (click)="onSave()">
+    <codx-label [formModel]="formModel" [fiedName]="'save'" [default]="'Lưu'"></codx-label>
+  </button>
 </ng-template>
 
 

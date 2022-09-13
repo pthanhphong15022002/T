@@ -45,6 +45,7 @@ export class FileInfo {
     owner: string;
     content: string;
     parentId: string;
+    hasThumbnail: any;
     rating: any;
     version: any;
     counting: any;

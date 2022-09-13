@@ -78,6 +78,7 @@ export class AttachmentComponent implements OnInit {
   titleUpload = 'Upload';
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
+ 
   urlUpload = '';
   interval: ItemInterval[];
   intervalCount = 0;
@@ -92,6 +93,7 @@ export class AttachmentComponent implements OnInit {
   maxFileSizeUploadMB = 0;
   referType: string;
   ChunkSizeInKB = 1024 * 2;
+  @Input() isDeleteTemp = '0';
   @Input() formModel: any;
   @Input() allowExtensions: string;
   @Input() allowMultiFile = '1';
@@ -647,7 +649,7 @@ export class AttachmentComponent implements OnInit {
                 var config = new AlertConfirmInputConfig();
                 config.type = 'checkBox';
                 return this.notificationsService
-                  .alert(this.titlemessage, item.message, config)
+                  .alert(this.titlemessage, item?.message, config)
                   .closed.pipe(
                     map((x) => {
                       if (x.event.status == 'Y') {
@@ -769,17 +771,17 @@ export class AttachmentComponent implements OnInit {
                     )}`;
                     files.push(Object.assign({}, item.data));
                   }
-                  // else {
-                  //   if (item.data.folderName != null && item.data.folderName != "") {
-                  //     var folders = this.dmSV.listFolder;
-                  //     var idx = folders.findIndex(x => x.recID == item.data.recID)
-                  //     if (idx == - 1) {
-                  //       folders.push(Object.assign({}, item.data));
-                  //       this.dmSV.listFolder = folders;
-                  //       // that.changeDetectorRef.detectChanges();
-                  //     }
-                  //   }
-                  // }
+                  else {
+                    if (item.data.folderName != null && item.data.folderName != "") {
+                      var folders = this.dmSV.listFolder;
+                      var idx = folders.findIndex(x => x.recID == item.data.recID)
+                      if (idx == - 1) {
+                        folders.push(Object.assign({}, item.data));
+                        this.dmSV.listFolder = folders;
+                        // that.changeDetectorRef.detectChanges();
+                      }
+                    }
+                  }
                 } else {
                   let index = files.findIndex(
                     (d) => d.recID.toString() === item.data.recID
@@ -829,7 +831,7 @@ export class AttachmentComponent implements OnInit {
                 config.type = 'checkBox';
 
                 this.notificationsService
-                  .alert(this.titlemessage, item.message, config)
+                  .alert(this.titlemessage, item?.message, config)
                   .closed.subscribe((x) => {
                     if (x.event.status == 'Y') {
                       // save all
@@ -914,9 +916,9 @@ export class AttachmentComponent implements OnInit {
         }
       );
       fileItem.fileSize = uploadFile.size;
-      fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
-      fileItem.uploadId = retUpload.Data.UploadId; //"";
-      fileItem.urlPath = retUpload.Data.RelUrlOfServerPath; //"";
+      fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
+      fileItem.uploadId = retUpload.Data?.UploadId; //"";
+      fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
     } catch (ex) {
       console.log(ex);
     }
@@ -935,13 +937,13 @@ export class AttachmentComponent implements OnInit {
     fileItem.objectId = this.objectId;
     var appName = this.dmSV.appName;
     var ChunkSizeInKB = this.ChunkSizeInKB;
-    var uploadFile = fileItem.item.rawFile;
+    var uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
     var obj = from(
       lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
         Data: {
-          FileName: uploadFile.name,
+          FileName: uploadFile?.name,
           ChunkSizeInKB: ChunkSizeInKB,
-          FileSize: uploadFile.size,
+          FileSize: uploadFile?.size,
           thumbSize: {
             width: 200, //Kích thước của file ảnh Thum bề ngang
             height: 200, //Kích thước của file ảnh Thum bề dọc
@@ -956,9 +958,9 @@ export class AttachmentComponent implements OnInit {
     return obj.pipe(
       mergeMap((retUpload, i) => {
         // update len server urs và thumbnail
-        fileItem.thumbnail = retUpload.Data.RelUrlThumb; //"";
-        fileItem.uploadId = retUpload.Data.UploadId; //"";
-        fileItem.urlPath = retUpload.Data.RelUrlOfServerPath; //"";
+        fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
+        fileItem.uploadId = retUpload.Data?.UploadId; //"";
+        fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
 
         //this.displayThumbnail(res.recID, res.pathDisk);
         var sizeInBytes = uploadFile.size;
@@ -979,7 +981,7 @@ export class AttachmentComponent implements OnInit {
             `api/${appName}/files/upload`,
             {
               FilePart: fileChunk,
-              UploadId: retUpload.Data.UploadId,
+              UploadId: retUpload.Data?.UploadId,
               Index: i,
             }
           );

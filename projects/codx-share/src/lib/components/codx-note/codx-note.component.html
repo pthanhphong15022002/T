@@ -130,22 +130,18 @@
                             <div class="w-100 text-after-check-box" (click)="getElement(input, i)">
                                 <div *ngIf="(item.lineType !== 'FILE' && item.lineType !== 'IMAGE')">
                                     <codx-input #input type="text" [class]="'border-0'"
-                                        class="test-textbox input-note memo" style="
-                font-weight: normal;
-                font-style: normal;
-                text-decoration-line: none;
-                color: #000000;
+                                        class="test-textbox input-note memo" style="font-weight: normal;font-style: normal;text-decoration-line: none;color: #000000;
               " (keyUpEnter)="keyUpEnter($event, i)" [crrValue]="item.memo" field="memo" id="{{ i }}"
-                                        (valueChange)="valueChange($event)"
+                                        (valueChange)="item.memo = $event.data; valueChange($event,item) "
                                         [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                     </codx-input>
                                 </div>
-                                <div class="" *ngIf=" (item.lineType == 'FILE' || item.lineType == 'IMAGE' )">
+                                <div *ngIf="(item.lineType == 'FILE' || item.lineType == 'IMAGE' )">
                                     <codx-attachment #attachment [objectType]="objectType" hideBtnSave="1"
                                         hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0"
                                         hideImageThumb="0" [functionID]="funcID" [objectId]="item.recID"
-                                        [allowMultiFile]="1" [idBrowse]="'add'" (fileCount)="fileCount($event, i)"
-                                        displayThumb="full">
+                                        [allowMultiFile]="1" [idBrowse]="'add'" (fileCount)="fileCount($event)"
+                                        displayThumb="full" [id]="i">
                                     </codx-attachment>
                                 </div>
                             </div>
@@ -301,7 +297,7 @@
     <codx-form [dialog]="dialog" [body]="body" [headerText]="headerComment">
         <ng-template #body>
             <codx-tree-history [funcID]="funcID" [objectID]="contents[id].recID" [objectType]="objectType"
-                [actionType]="'C'" addNew="true">
+                [actionType]="'C'" addNew="true" (totalCommentChange)="totalCommentChange($event)">
             </codx-tree-history>
         </ng-template>
     </codx-form>

@@ -40,6 +40,14 @@
           (valueChange)="valueCbxCarChange($event)"
         >
         </codx-input>        
+
+        <!-- <codx-input
+          ControlName="resourceID"
+          [formModel]="form.formModel" 
+          [Group]="fGroupAddBookingCar"       
+          (valueChange)="valueCbxCarChange($event)"
+        >
+        </codx-input>-->
     </div>
     <div class="row">
       <div class="d-flex flex-row justify-content-between">
@@ -131,14 +139,9 @@
       >
       </codx-label>
       <codx-input
-        type="combobox"
-        refValue="EP_BookingCars"
-        placeholder="Chọn mục đích"
-        [multiple]="false"
         field="reasonID"
-        [crrValue]="fGroupAddBookingCar.value.reasonID"
-        (valueChange)="valueChange($event)"
-        
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingCar"        
       >
       </codx-input>
     </div>
@@ -151,7 +154,6 @@
       >
       </codx-label>
       <codx-input
-        type="text"
         ControlName="title"
         [formModel]="form.formModel"
         [Group]="fGroupAddBookingCar"
@@ -166,12 +168,9 @@
       >
       </codx-label>
       <codx-input
-        type="combobox"
-        refValue="AgencyNames"
         ControlName="agencyName"
         [formModel]="form.formModel"
         [Group]="fGroupAddBookingCar"
-        (valueChange)="valueChange($event)"
       >
       </codx-input>
     </div>
@@ -201,7 +200,6 @@
         >
         </codx-label>
         <codx-input
-          type="text"
           ControlName="contactName"
           [formModel]="form.formModel"
           [Group]="fGroupAddBookingCar"
@@ -215,7 +213,6 @@
         >
         </codx-label>
         <codx-input
-          type="text"
           ControlName="phone"
           [formModel]="form.formModel"
           [Group]="fGroupAddBookingCar"
@@ -230,7 +227,7 @@
         <codx-label default="Lái xe & người đi cùng" fiedName="Note">
         </codx-label>
         <div class="d-flex flex-row text-end align-items-end">
-          <!-- <span class="mx-2">
+          <span class="mx-2">
               <codx-input 
                 type="combobox" 
                 name="combobox"
@@ -239,9 +236,8 @@
                 [showInput]="false" 
                 refType="P" 
                 field="popup" 
-                (valueChange)="valueCbxDriverChange($event)">
-              </codx-input>
-            </span>-->
+                ></codx-input>
+            </span>
           <span class="mx-2">
             <codx-input
               type="Combobox"
@@ -434,11 +430,9 @@
     <div class="form-group">
       <codx-label default="Ghi chú" fiedName="Note"> </codx-label>
       <codx-input
-        type="textarea" format="ed2" rows="3"
         field="note"
-        placeholder="Ghi chú"
-        [crrValue]="fGroupAddBookingCar.value.note"
-        (valueChange)="valueChange($event)"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingCar"
       >
       </codx-input>
     </div>

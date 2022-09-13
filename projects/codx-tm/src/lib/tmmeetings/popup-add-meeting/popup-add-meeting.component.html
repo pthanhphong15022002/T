@@ -3,7 +3,7 @@
   (setTitle)="setTitle($event)" #form [data]="data"></codx-layout-add>
 
 <ng-template #subHeader>
-  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="meeting?.tags || ''"
+  <codx-tag [entityName]="'CO_Meetings'" [isEdit]="true" [value]="meeting?.tags || ''"
     (valueChange)="valueChangeTags($event)"></codx-tag>
 </ng-template>
 
@@ -308,33 +308,6 @@
 </ng-template>
 
 <ng-template #addLink let-dialog>
-  <!-- <div class="card-header">
-    <h4 class="card-title" id="card-basic-title">
-      <codx-label name="lblLink" default="Link cuộc họp" [formModel]="dialog.formModel"></codx-label>
-    </h4>
-    <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
-      (click)="dialog.close()">
-      <span class="icon-close icon-20"></span>
-    </button>
-  </div>
-  <div class="card-body">
-    <div class="form-group row">
-      <div class="col-4">
-        <label>
-          <codx-label name="lblPath" default="Đường dẫn" [formModel]="dialog.formModel"></codx-label>
-        </label>
-      </div>
-    </div>
-    <div class="form-group row">
-      <codx-input type="text" class="form-control" placeholder="https://home.suremeet.vn/" [crrValue]="linkURL"
-        (valueChange)="changeLink($event)"></codx-input>
-    </div>
-  </div>
-  <div class="card-footer" (click)="dialog.close()">
-    <button type="button" class="btn btn-primary">
-      <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
-    </button>
-  </div> -->
   <codx-form headerText="{{ titleLink }}" subHeaderText="" [body]="bodyFormLink" [footer]="footerFormLink"
     [dialog]="dialog">
   </codx-form>

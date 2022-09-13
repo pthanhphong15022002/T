@@ -161,6 +161,7 @@ export class TMMeetingsComponent
           template: this.eventTemplate,
           template3: this.cellTemplate,
           template7: this.template7,
+          // statusColorRef: 'CO004'
         },
       },
       {
@@ -410,7 +411,7 @@ export class TMMeetingsComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
         'add',
@@ -448,7 +449,7 @@ export class TMMeetingsComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '800px';
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
           'edit',
@@ -470,7 +471,42 @@ export class TMMeetingsComponent
         });
       });
   }
-  copy(data) {}
+  copy(data) {
+    if(data)this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';   
+      this.dialog = this.callfc.openSide(
+        PopupAddMeetingComponent,
+        [this.view.dataService.dataSelected, 'copy'],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+        if (e?.event && e?.event != null) {
+          var objectData = this.view.dataService.data;
+          var object = {};
+          for (var i = 0; i < objectData.length; i++) {
+            if (objectData[i][i] !== undefined) {
+              object[i] = objectData[i][i];
+              objectData[i] = object[i];
+            }
+          }
+          this.view.dataService.data = e?.event.concat(objectData);
+          this.meeting = objectData[0];
+          this.detectorRef.detectChanges();
+        }
+      });
+    });
+  }
+
+
   delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService

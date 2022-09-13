@@ -327,6 +327,10 @@ hr {
   border: solid 1.5px red !important;
 }
 
+.is-invalid .ng-invalid+label::before {
+  border: solid 1.5px red !important;
+}
+
 .resize-none {
   resize: none;
 }
@@ -345,4 +349,17 @@ erm-quick-links-inner .w-250px.dropdown-menu {
 
 .codx-bghover:hover {
   background-color: var(--bghover);
+}
+
+.w-12px {
+  width: 12px;
+  height: auto;
+}
+
+.dropdown-menu .dropdown-item {
+  margin-bottom: 2px;
+}
+
+.e-listview .e-content {
+  padding-bottom: 10px;
 }

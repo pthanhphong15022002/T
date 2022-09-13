@@ -62,6 +62,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   formModel: FormModel;
   lstApproval: any = null;
+  grvSetup: any;
 
   constructor(
     private esService: CodxEsService,
@@ -77,6 +78,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.data = dialog?.dataService?.dataSelected;
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
+
+    console.log('formModel Cate', this.formModel);
+    console.log('category', this.data);
   }
 
   ngAfterViewInit(): void {
@@ -117,13 +121,71 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.initForm();
+    //this.initForm();
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((grv) => {
+        if (grv) this.grvSetup = grv;
 
+        console.log(this.grvSetup);
+      });
+
+    if (this.isAdd) {
+      this.data.countStep = 0;
+      this.data.signatureType = '1';
+      this.data.icon = 'icon-text_snippet';
+      this.data.color = '#0078FF';
+    }
+    this.form?.formGroup?.addControl(
+      'countStep',
+      new FormControl(this.data.countStep ?? 0)
+    );
+
+    this.esService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((res) => {
+        if (res) {
+          this.dialogCategory = res;
+        }
+      });
     this.esService
       .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) this.cbxName = res;
       });
+
+    if (!this.isAdd) {
+      this.esService.getFormModel('EST04').then((res) => {
+        if (res && this.data.countStep > 0) {
+          let fmApprovalStep = res;
+          let gridModels = new GridModels();
+          gridModels.dataValue = this.data.recID;
+          gridModels.predicate = 'TransID=@0';
+          gridModels.funcID = fmApprovalStep.funcID;
+          gridModels.entityName = fmApprovalStep.entityName;
+          gridModels.gridViewName = fmApprovalStep.gridViewName;
+          gridModels.pageSize = 20;
+
+          this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+            if (res && res?.length >= 0) {
+              this.lstStep = res;
+            }
+          });
+        }
+      });
+
+      //get Autonumber
+      this.esService.getAutoNumber(this.data.categoryID).subscribe((res) => {
+        if (res != null) {
+          this.autoNumber = res;
+          if (res.autoNoCode != null) {
+            this.setViewAutoNumber(this.autoNumber);
+            this.isAddAutoNumber = false;
+          }
+        }
+      });
+      this.isAfterRender = true;
+    }
   }
 
   initForm() {
@@ -131,6 +193,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((res) => {
         if (res) {
+          if (this.isAdd) {
+            this.data.countStep = 0;
+            this.data.signatureType = '1';
+            this.data.icon = 'icon-text_snippet';
+            this.data.color = '0078FF';
+          }
+
           this.dialogCategory = res;
           this.dialogCategory.addControl(
             'countStep',
@@ -207,15 +276,36 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   valueChange(event) {
     if (event?.field && event?.component) {
-      if (event?.data === Object(event?.data))
+      if (event?.data === Object(event?.data)) {
         this.dialogCategory.patchValue({ [event['field']]: event.data.value });
-      else this.dialogCategory.patchValue({ [event['field']]: event.data });
+        this.data[event['field']] = event.data;
+      } else {
+        this.data[event['field']] = event.data;
+        this.form?.formGroup?.patchValue({ [event['field']]: event.data });
+      }
     }
     this.cr.detectChanges();
   }
 
+  // valueChange(event) {
+  //   if (event?.field && event?.component) {
+  //     if (event?.data === Object(event?.data))
+  //       this.dialogCategory.patchValue({ [event['field']]: event.data.value });
+  //     else {
+  //       this.dialogCategory.patchValue({
+  //         [event['field']]: event.data.value,
+  //       });
+
+  //       this.dialogCategory.patchValue({ [event['field']]: event.data });
+  //     }
+  //   }
+  //   this.cr.detectChanges();
+  // }
+
   beforeSave(option: RequestOption) {
-    let itemData = this.dialogCategory.value;
+    let itemData = this.data;
+    // let itemData = this.dialogCategory.value;
+
     let countStep = this.lstStep?.length ?? 0;
     if (this.isAdd) {
       option.methodName = 'AddNewAsync';
@@ -226,14 +316,19 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  onSaveForm() {
+  onSaveForm(isClose: boolean) {
+    this.dialogCategory.patchValue(this.data);
+    console.log('result data:', this.data);
+    console.log('result formGroup: ', this.form.formGroup);
     if (this.dialogCategory.invalid == true) {
-      this.esService.notifyInvalid(this.dialogCategory, this.formModel);
+      this.esService.notifyInvalid(this.form.formGroup, this.formModel);
       return;
     }
-    this.dialog.dataService.dataSelected = this.dialogCategory.value;
+
+    // this.dialog.dataService.dataSelected = this.dialogCategory.value;
+    this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.update || res.save) {
           this.isSaved = true;
@@ -246,7 +341,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               .subscribe();
             this.updateApprovalStep(false);
           }
-          this.dialog && this.dialog.close();
+          if (isClose) {
+            this.dialog && this.dialog.close();
+          }
         } else this.notify.notifyCode('E0011');
       });
   }
@@ -285,25 +382,29 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       '',
       {
         formModel: this.dialog.formModel,
-        autoNoCode: this.dialogCategory.value.categoryID,
+        // autoNoCode: this.dialogCategory.value.categoryID,
+        autoNoCode: this.data.categoryID,
       }
     );
   }
 
   openPopupApproval() {
     if (this.isAdd) {
-      this.onSaveForm();
+      this.onSaveForm(false);
     }
+    this.dialogCategory.patchValue(this.data);
     if (this.dialogCategory.invalid == true) {
       return;
     }
-    let transID = this.dialogCategory.value.recID;
+    let transID = this.data.recID;
+    // let transID = this.dialogCategory.value.recID;
     let data = {
       type: '0',
       transID: transID,
       model: this.dialogCategory,
-      isAddNew: false,
-      //isAddNew: !this.isSaved,
+      data: this.data,
+      //isAddNew: false,
+      isAddNew: !this.isSaved,
     };
 
     let dialogModel = new DialogModel();

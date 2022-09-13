@@ -39,6 +39,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { DatePipe } from '@angular/common';
 import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
 import { NoteServices } from '../../../services/note.services';
+import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',
@@ -81,10 +82,15 @@ export class AddNoteComponent implements OnInit {
   countUpdateTodo = 0;
   defaultShowCalendar = true;
   checkSwitch = false;
+  functionList: any;
+  listFileUpload: any[] = [];
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachmentAdd') attachmentAdd: AttachmentComponent;
+  @ViewChild('attachmentEdit') attachmentEdit: AttachmentComponent;
+  @ViewChild('codxFileAdd') codxFileAdd: ImageGridComponent;
+  @ViewChild('codxFileEdit') codxFileEdit: ImageGridComponent;
   @ViewChild('form', { static: true }) form: CodxFormComponent;
   @Output() loadData = new EventEmitter();
   @Output() closePopup = new EventEmitter();
@@ -108,6 +114,9 @@ export class AddNoteComponent implements OnInit {
     this.currentDate = dt.data?.currentDate;
     this.maxPinNotes = dt.data?.maxPinNotes;
     this.component = dt.data?.component;
+    this.cache.functionList('WPT08').subscribe((res) => {
+      if (res) this.functionList = res;
+    });
     if (this.component == 'note-drawer') {
       if (this.formType == 'add') this.currentDate = new Date(Date.now());
       else
@@ -124,11 +133,9 @@ export class AddNoteComponent implements OnInit {
         listNote: '',
       };
       if (this.note.noteType != 'text') this.note.checkList.push(dtt);
-      this.listFileUploadEdit = this.note.images;
     }
     this.getNumberNotePin();
     this.noteType.text = true;
-    this.cache.gridViewSetup('Notes', 'grvNotes').subscribe((res) => {});
   }
 
   getNumberNotePin() {
@@ -289,9 +296,9 @@ export class AddNoteComponent implements OnInit {
           htmlEle.focus();
         }
       }
-      if (field == 'showCalendar') {
-        this.checkSwitch == true;
-      }
+      // if (field == 'showCalendar') {
+      //   this.checkSwitch == true;
+      // }
     }
   }
 
@@ -299,7 +306,8 @@ export class AddNoteComponent implements OnInit {
     this.note.createdOn = this.currentDate;
     this.note.noteType = this.type;
     this.note.isPin = this.pin;
-    if (this.checkSwitch == false) this.note.showCalendar = true;
+    // if (this.checkSwitch == false) this.note.showCalendar = true;
+    // else this.note.showCalendar = false;
     if (this.type == 'check' || this.type == 'list') {
       this.listNote.pop();
       this.note.checkList = this.listNote;
@@ -312,6 +320,7 @@ export class AddNoteComponent implements OnInit {
       else this.checkNull = false;
     }
     this.note.checkList;
+    this.note.fileCount = this.listFileUpload?.length;
     if (this.checkNull == false) {
       this.api
         .exec<any>(
@@ -320,13 +329,23 @@ export class AddNoteComponent implements OnInit {
           'CreateNoteAsync',
           this.note
         )
-        .subscribe((res) => {
+        .subscribe(async (res) => {
           if (res) {
             var dtNew = res;
             dtNew.type = 'WP_Notes';
-            if (this.checkFile == true) {
-              this.attachment.objectId = dtNew.recID;
-              this.attachment.saveFiles();
+            if (this.listFileUpload.length > 0) {
+              this.listFileUpload.forEach((dt) => {
+                dt.objectID = dtNew.recID;
+              });
+              this.attachmentAdd.fileUploadList = [...this.listFileUpload];
+              (await this.attachmentAdd.saveFilesObservable()).subscribe(
+                (res: any) => {
+                  if (res) {
+                    this.notificationsService.notifyCode('SYS006');
+                    this.dialog.close();
+                  }
+                }
+              );
             }
             var object = [];
             if (this.component == 'note-drawer')
@@ -409,18 +428,34 @@ export class AddNoteComponent implements OnInit {
     if (this.checkPin == true) this.note.isPin = this.pin;
     if (this.listNote.length != 0) this.note.checkList = this.listNote;
     if (this.note.checkList != null) this.note.checkList.pop();
+    this.note.fileCount = this.listFileUpload?.length;
 
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
         this.note?.recID,
         this.note,
       ])
-      .subscribe((res) => {
+      .subscribe(async (res) => {
         if (res) {
           var dtNew = res;
           dtNew.type = 'WP_Notes';
           this.checkUpdate = true;
-          if (this.checkFile == true) this.attachment.saveFiles();
+          if (this.listFileUpload.length > 0) {
+            this.deleteFile(dtNew.recID, true);
+            this.listFileUpload.forEach((dt) => {
+              dt.objectID = this.note.recID;
+              dt.objectId = this.note.recID;
+            });
+            this.attachmentEdit.fileUploadList = this.listFileUpload;
+            (await this.attachmentEdit.saveFilesObservable()).subscribe(
+              (res: any) => {
+                if (res) {
+                  this.notificationsService.notifyCode('SYS006');
+                  this.dialog.close();
+                }
+              }
+            );
+          }
           var object = [];
           if (this.component == 'note-drawer')
             object = [{ data: dtNew, type: 'edit-note-drawer' }];
@@ -487,46 +522,8 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
-  popupFile() {
-    this.attachment.uploadFile();
-    this.checkFile = true;
-  }
-
   close() {
     this.dialog.close();
-  }
-
-  listFileUpload: any[] = [];
-  listFileUploadEdit: any[] = [];
-  isUploadImg = false;
-  isUploadFile = false;
-  getfileCount(event: any) {
-    if (!event || event.data.length <= 0) {
-      this.isUploadFile = false;
-      this.listFileUpload = [];
-      this.dmSV.fileUploadList = [];
-      return;
-    } else {
-      this.isUploadImg = true;
-      this.isUploadFile = true;
-      this.listFileUpload = event.data;
-    }
-    this.changeDetectorRef.detectChanges();
-  }
-
-  getfile(event: any) {
-    if (!event || event.data.length <= 0) {
-      this.isUploadFile = false;
-      this.listFileUploadEdit = [];
-      this.dmSV.fileUploadList = [];
-      return;
-    } else {
-      this.isUploadImg = true;
-      this.isUploadFile = true;
-      var lstFile = event.data;
-      this.listFileUploadEdit.push(lstFile);
-    }
-    this.changeDetectorRef.detectChanges();
   }
 
   getFileByObjectId() {
@@ -538,5 +535,73 @@ export class AddNoteComponent implements OnInit {
         this.note.recID
       )
       .subscribe((res) => {});
+  }
+
+  popupFile() {
+    // this.attachment.uploadFile();
+    // this.checkFile = true;
+    this.dmSV.fileUploadList = [];
+    if (this.formType == 'edit') {
+      this.attachmentEdit.uploadFile();
+    } else {
+      this.attachmentAdd.uploadFile();
+    }
+  }
+
+  getFileCount(event: any) {
+    if (event && event.data.length > 0) {
+      if (this.formType == 'edit') {
+        this.codxFileEdit.addFiles(event.data);
+      } else {
+        this.codxFileAdd.addFiles(event.data);
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  removeFile(file: any) {
+    switch (this.formType) {
+      case 'edit':
+        let fileEdit = this.listFileUpload.filter((f: any) => {
+          return f.fileName != file.fileName;
+        });
+        this.listFileUpload = fileEdit;
+        break;
+      default:
+        let fileAdd = this.listFileUpload.filter((f: any) => {
+          return f.fileName != file.fileName;
+        });
+        this.listFileUpload = fileAdd;
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  addFile(files: any) {
+    if (this.listFileUpload.length == 0) {
+      this.listFileUpload = files;
+    } else {
+      files.forEach(dt => {
+        this.listFileUpload.push(dt);
+      })
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  deleteFile(fileID: string, deleted: boolean) {
+    if (fileID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'DeleteByObjectIDAsync',
+          [fileID, this.functionList.entityName, deleted]
+        )
+        .subscribe();
+    }
+  }
+
+  evtGetFiles(e) {
+    if (e) this.listFileUpload = e;
   }
 }

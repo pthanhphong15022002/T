@@ -396,10 +396,11 @@ export class CodxDMService {
   }
 
   getThumbnail(data) {
-    if (data.thumbnail != '') {
-      let url = `${this.urlThumbnail}/${data.thumbnail}`;
-      return this.checkUrl(url, data);
-    } else return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+    return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+    // if (data.hasThumbnail == true) {
+    //   let url = `${this.urlThumbnail}/${data.thumbnail}`;
+    //   return url;// this.checkUrl(url, data);
+    // } else return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
   }
 
   deniedRight() {
@@ -882,19 +883,19 @@ export class CodxDMService {
        */
     //return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
     var ret = `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //'../../../assets/img/loader.gif';
-    try {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, false);
-      xhr.onload = () => {
-        ret = xhr.responseURL; // http://example.com/test
-      };
-      xhr.send(null);
-      return ret;
-    } catch {
-      //  if (ret == '../../../assets/img/loader.gif')
-      //    this.setThumbnailWait.next(data);
-      return ret;
-    }
+    // try {
+    //   const xhr = new XMLHttpRequest();
+    //   xhr.open('GET', url, false);
+    //   xhr.onload = () => {
+    //     ret = xhr.responseURL; // http://example.com/test
+    //   };
+    //   xhr.send(null);
+    //   return ret;
+    // } catch {
+    //   //  if (ret == '../../../assets/img/loader.gif')
+    //   //    this.setThumbnailWait.next(data);
+    //   return ret;
+    // }
     // var http = new XMLHttpRequest();
     // http.open('HEAD', url, false);
     // http.send();
@@ -911,14 +912,16 @@ export class CodxDMService {
     if (data.folderName != undefined)
       return '../../../assets/codx/dms/folder.svg';
     else {
-      if (data.thumbnail == null) {
-        return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
-      } else if (data.thumbnail.indexOf('../../../') > -1)
-        return data.thumbnail;
-      else {
-        let url = `${this.urlThumbnail}/${data.thumbnail}`;
-        return this.checkUrl(url, data);
-      }
+      return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+      // if (data.hasThumbnail == null || data.hasThumbnail == false) {
+      //   return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+      // } else if (data.thumbnail.indexOf('../../../') > -1)
+      //   return data.thumbnail;
+      // else {
+      //   let url = `${this.urlThumbnail}/${data.thumbnail}`;
+      //   return url;
+      //   //return this.checkUrl(url, data);
+      // }
     }
   }
 
