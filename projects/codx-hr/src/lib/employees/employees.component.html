@@ -22,7 +22,7 @@
 <ng-template #cardTemp let-data>
     <ng-container>
         <div (dblclick)="doubleClick(data)">
-            <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
+            <codx-card-center cardCss="border w-250px h-200px" [formModel]="view.formModel" [imageId]="data.employeeID"
                 [imageObjType]="view.formModel.entityName" [imgOn]="data?.modifiedOn" [title]="data.employeeName"
                 [subTitle]="data.positionName" [dataItem]="data" [desc]="(data.birthday | date: 'dd/MM/yyyy')"
                 [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)">

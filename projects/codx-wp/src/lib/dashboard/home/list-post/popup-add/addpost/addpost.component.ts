@@ -130,7 +130,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.cache.message('WP011').subscribe((mssg: any) => {
-      this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
+      this.title = Util.stringFormat(mssg.defaultName, this.user.userName);
       this.dt.detectChanges();
     });
     if (this.dialogData.status == this.STATUS.EDIT) {
@@ -151,7 +151,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  getValueShare(shareControl:string, data:any[] = null){
+  getValueShare(shareControl: string, data: any[] = null) {
     this.permissions = [];
     let listPermission = data;
     this.cache.valueList('L1901').subscribe((vll: any) => {
@@ -159,7 +159,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.shareControl = shareControl;
       this.shareIcon = modShare.icon;
       this.shareText = modShare.text;
-      if(listPermission){
+      if (listPermission) {
         switch (this.shareControl) {
           case this.SHARECONTROLS.OWNER:
           case this.SHARECONTROLS.EVERYONE:
@@ -184,10 +184,10 @@ export class AddPostComponent implements OnInit, AfterViewInit {
               p.memberType = this.MEMBERTYPE.SHARE;
               this.permissions.push(p);
             });
-            if (listPermission.length  > 1) {
+            if (listPermission.length > 1) {
               this.cache.message('WP002').subscribe((mssg: any) => {
                 if (mssg)
-                  this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + listPermission[0].text + '</b>', listPermission.length  - 1, this.shareText);
+                  this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + listPermission[0].text + '</b>', listPermission.length - 1, this.shareText);
               });
             }
             else {
@@ -218,8 +218,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   valueChange(e: any) {
     if (e.data) {
       this.message = e.data;
-    }else
-    {
+    } else {
       this.message = "";
     }
     this.dt.detectChanges();
@@ -231,7 +230,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
     this.shareControl = event[0].objectType;
     this.objectType = event[0].objectType;
-    this.getValueShare(this.shareControl,event);
+    this.getValueShare(this.shareControl, event);
   }
 
   publishPost() {
@@ -253,19 +252,20 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
-            this.listFileUpload.map((e:any) => {
+            this.listFileUpload.map((e: any) => {
               e.objectId = this.atmCreate.objectId;
             })
             this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
-            (await this.atmCreate.saveFilesObservable()).subscribe((res:any)=>{
-              if(res){
+            (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
+              if (res) {
                 (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
                 this.notifySvr.notifyCode('SYS006');
                 this.dialogRef.close();
-              }});
+              }
+            });
           }
-          else{
+          else {
             (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
             this.notifySvr.notifyCode('SYS006');
             this.dialogRef.close();
@@ -338,14 +338,15 @@ export class AddPostComponent implements OnInit, AfterViewInit {
             this.atmCreate.objectId = result.recID;
             this.dmSV.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
-            (await this.atmCreate.saveFilesObservable()).subscribe((res:any)=>{
-              if(res){
+            (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
+              if (res) {
                 (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
                 this.notifySvr.notifyCode('SYS006');
                 this.dialogRef.close();
-              }});
+              }
+            });
           }
-          else{
+          else {
             (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
             this.notifySvr.notifyCode('SYS006');
             this.dialogRef.close();
@@ -353,7 +354,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  width = 420;
+  width = 720;
   height = window.innerHeight;
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
@@ -440,13 +441,13 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  showCBB=false;
-  tagWith:string ='';
-  tags:any[] = [];
-  saveAddUser(value:any){
+  showCBB = false;
+  tagWith: string = '';
+  tags: any[] = [];
+  saveAddUser(value: any) {
     this.tags = [];
     let data = value.dataSelected;
-    if(data && data.length > 0){
+    if (data && data.length > 0) {
       this.lstTagUser = data;
       data.forEach((x: any) => {
         let p = new Permission();
@@ -475,12 +476,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  tagUser(){
+  tagUser() {
     this.showCBB = !this.showCBB;
   }
-  lstTagUser:any[] = [];
-  searchTagUser:string ="";
-  clickShowTag(){
+  lstTagUser: any[] = [];
+  searchTagUser: string = "";
+  clickShowTag() {
 
   }
   getTagUser() {
