@@ -39,6 +39,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
   @ViewChild('avatar') avatar: TemplateRef<any>;
   @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
+  @ViewChild('owner') owner: TemplateRef<any>;
 
   @Input() data!: any;
 
@@ -60,7 +61,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   dialog!: DialogRef;
   isAdd = true;
   funcID: string;
-  columnsGrid;
+  columnsGrid:any;
   grView:any;
   formModel: FormModel;
   // fGroupAddDriver: FormGroup;
@@ -70,7 +71,7 @@ export class CarsComponent implements OnInit, AfterViewInit {
   dataSelected: any;
   devices: any;
   tmplstDevice = [];
-
+  temp:string;
   constructor(
     private callFuncService: CallFuncService,
     private activedRouter: ActivatedRoute,
@@ -83,7 +84,11 @@ export class CarsComponent implements OnInit, AfterViewInit {
       if (res) {
         this.formModel = res;
         this.isAfterRender = true;
+        this.cacheService.gridViewSetup(res.formName,res.gridViewName).subscribe(gv=>{
+          this.grView=gv;
+        })
       }
+      
     });
     
   }
@@ -96,60 +101,55 @@ export class CarsComponent implements OnInit, AfterViewInit {
     this.buttons = {
       id: 'btnAdd',
     }; 
-    this.codxEpService.getFormModel(this.funcID).then((fModel) => {
-      this.cacheService
-        .gridViewSetup(fModel.formName, fModel.gridViewName)
-        .subscribe((gv) => {
-          this.grView=gv;          
-          });
-          this.columnsGrid = [
-            {
-              field: 'resourceID',
-              headerText: 'Mã xe',
-            },
-            {
-              field: 'icon',
-              headerText: "Ảnh đại diện",
-              template: this.avatar,
-            },
-            {
-              field: 'resourceName',
-              headerText: 'Tên xe',
-            },
-            {
-              field: 'capacity',
-              headerText: 'Số chỗ',
-            },        
-            {
-              field: 'code',
-              headerText: 'Biển số',
-            },
-            // {
-            //   headerText: 'Trạng thái',
-            //   template: this.statusCol,
-            // },
-            {
-              headerText: 'Xếp hạng',
-              template: this.rankingCol,
-            },
-            {
-              headerText: 'Nguồn',
-              template: this.categoryCol,
-            },
-          ];
+    
+    this.columnsGrid = [
+      {
+        field: 'resourceID',
+        headerText: "Mã xe",
+      },
+      {
+        field: 'icon',
+        headerText: "Ảnh đại diện",
+        template: this.avatar,
+      },
+      {
+        field: 'resourceName',
+        headerText: "Tên nguồn lực",
+      },
+      {
+        field: 'capacity',
+        headerText: "Số chỗ",
+      },  
+      {
+        headerText: 'Nguồn',
+        template: this.categoryCol,
+      },
+      {
+        headerText: "Người điều phối",
+        width: '20%',
+        template: this.owner,
+      },
+      // {
+      //   headerText: 'Xếp hạng',
+      //   template: this.rankingCol,
+      // },
       
-          this.views = [
-            {
-              sameData: true,
-              type: ViewType.grid,
-              active: true,
-              model: {
-                resources: this.columnsGrid,
-              },
-            },        
-          ];
-          this.changeDetectorRef.detectChanges();
-      });  
+    ];  
+    this.views = [
+      {
+        sameData: true,
+        type: ViewType.grid,
+        active: true,
+        model: {
+          resources: this.columnsGrid,
+        },
+      },        
+    ];   
+            
+    
+    
+    this.changeDetectorRef.detectChanges();
+      
       
    }
 

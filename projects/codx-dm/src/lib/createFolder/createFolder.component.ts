@@ -206,7 +206,7 @@ export class CreateFolderComponent implements OnInit {
   postblog: boolean;
   historyFileNameExt: string;
   clipboard: any;
-  titleOK = 'OK';
+  titleOK = 'Lưu';
   titleDialogPHysical = 'Physical Control';
   titleRolesDialog = 'Cập nhật quyền';
   titleShare = 'Chia sẻ';

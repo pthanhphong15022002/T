@@ -181,7 +181,8 @@ export class HomeComponent extends UIComponent {
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
-      id: 'btnUpload',
+      id: 'btnUpload',            
+      text: 'Tải lên'
     };
 
     this.route.queryParams
@@ -559,7 +560,6 @@ export class HomeComponent extends UIComponent {
         hide: true,
         type: ViewType.treedetail,
         sameData: true,
-        /*  toolbarTemplate: this.templateSearch,*/
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,

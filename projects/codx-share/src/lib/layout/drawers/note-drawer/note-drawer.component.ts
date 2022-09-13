@@ -211,8 +211,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.callfc.openForm(
       AddNoteComponent,
       'Cập nhật ghi chú',
+      700,
       600,
-      450,
       '',
       obj
     );
@@ -271,8 +271,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.callfc.openForm(
       AddNoteComponent,
       'Thêm mới ghi chú',
+      700,
       600,
-      450,
       '',
       obj,
       '',

@@ -78,7 +78,7 @@
 
     </div>
     <ng-container *ngIf="data && data?.files">
-      <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'0'">
+      <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'0'" (viewFile)="handleViewFile($event)">
       </codx-thumbnail>
     </ng-container>
   </ng-template>

@@ -257,9 +257,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       item.shareControl=='O')
       {
         item.isShowShare = !item.isShowShare;
-        this.lstUserShare = item.permissions.filter((p:any) => {
-          return p.memberType == "2";
-        });
+        this.lstUserShare = item.listShare;
         this.dt.detectChanges();
     }
   }
