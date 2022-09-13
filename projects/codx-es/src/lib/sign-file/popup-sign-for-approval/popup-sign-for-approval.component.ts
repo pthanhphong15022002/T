@@ -132,7 +132,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
             if (value) {
               let result = {
                 result: true,
-                mode: this.mode,
+                mode: mode,
               };
               this.notify.notifyCode('RS002');
               this.canOpenSubPopup = false;
@@ -142,7 +142,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
               this.canOpenSubPopup = false;
               let result = {
                 result: false,
-                mode: this.mode,
+                mode: mode,
               };
               this.notify.notifyCode('E04372');
               this.dialog && this.dialog.close(result);

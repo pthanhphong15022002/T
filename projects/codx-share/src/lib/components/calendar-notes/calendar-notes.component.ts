@@ -15,6 +15,7 @@ import {
   CodxListviewComponent,
   RequestOption,
   DataService,
+  NotificationsService,
 } from 'codx-core';
 import {
   Component,
@@ -78,7 +79,8 @@ export class CalendarNotesComponent
     private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private auth: AuthStore,
-    private noteService: NoteServices
+    private noteService: NoteServices,
+    private notification: NotificationsService
   ) {
     super(injector);
     this.userID = this.auth.get().userID;
@@ -124,9 +126,14 @@ export class CalendarNotesComponent
             }
           } else if (type == 'edit-currentDate') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
+            for (let i = 0; i < this.WP_Notes.length; i++) {
+              if (this.WP_Notes[i].recID == data?.recID) {
+                this.WP_Notes[i].createdOn = null;
+              }
+            }
           } else if (type == 'edit') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
-          }  else if (type == 'add-note-drawer') {
+          } else if (type == 'add-note-drawer') {
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'edit-note-drawer') {
@@ -318,7 +325,6 @@ export class CalendarNotesComponent
         }
       }
     }
-
     var span: HTMLElement = document.createElement('span');
     var span2: HTMLElement = document.createElement('span');
     var flex: HTMLElement = document.createElement('span');
@@ -378,6 +384,11 @@ export class CalendarNotesComponent
       flex.append(span);
       flex.append(span2);
     }
+
+    // if(calendarWP == 0) {
+      // var spanT = document.querySelector("span.note-point") as HTMLElement;
+      // spanT.parentNode.removeChild(spanT);
+    // }
   }
 
   openFormUpdateNote(data) {
@@ -395,8 +406,8 @@ export class CalendarNotesComponent
     this.callfc.openForm(
       AddNoteComponent,
       'Cập nhật ghi chú',
+      700,
       600,
-      450,
       '',
       obj,
       '',
@@ -457,8 +468,8 @@ export class CalendarNotesComponent
     this.callfc.openForm(
       AddNoteComponent,
       'Thêm mới ghi chú',
+      700,
       600,
-      500,
       '',
       obj,
       '',
@@ -529,19 +540,41 @@ export class CalendarNotesComponent
   }
 
   onDeleteNote(item) {
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NotesBusiness',
-        'DeleteNoteAsync',
-        item?.recID
-      )
-      .subscribe((res) => {
-        if (res) {
-          var object = [{ data: res, type: 'delete' }];
-          this.noteService.data.next(object);
-        }
-      });
+    this.notification.alertCode('SYS027').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.api
+          .exec<any>(
+            'ERM.Business.WP',
+            'NotesBusiness',
+            'DeleteNoteAsync',
+            item?.recID
+          )
+          .subscribe((res) => {
+            if (res) {
+              if(res.fileCount > 0)
+                this.deleteFile(res.recID, true);
+              var object = [{ data: res, type: 'delete' }];
+              this.noteService.data.next(object);
+            }
+          });
+      } else {
+        return;
+      }
+    });
+  }
+
+  deleteFile(fileID: string, deleted: boolean) {
+    if (fileID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'DeleteByObjectIDAsync',
+          [fileID, 'WP_PersonalNotes', deleted]
+        )
+        .subscribe();
+    }
   }
 
   openFormNoteBooks(item) {

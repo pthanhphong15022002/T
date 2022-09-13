@@ -100,7 +100,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    if (this.type == 'edit') this.headerText = 'Chỉnh sửa';
     this.formModels = {
       formName: 'ImportFieldMapping',
       gridViewName: 'grvFieldMapping',
@@ -141,7 +140,11 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     {
       this.createData();
       this.getGridViewSetup();
-    } else if (this.type == 'edit') this.getDataEdit();
+    } else if (this.type == 'edit') 
+    {
+      this.headerText = 'Chỉnh sửa';
+      this.getDataEdit();
+    }
     this.formatSourceField();
   }
   formatSourceField() {
@@ -196,7 +199,6 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     // }
     if(this.dataImport && this.dataImport.length>0)
     {
-      
       this.loadDataEdit();
     }
     else if(this.dataIETable?.recID)
@@ -466,6 +468,10 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
             delete dt.recID;
             dt.sessionID = this.dataIETable.recID;
             result[i].mappingTemplate = '00000000-0000-0000-0000-000000000000'
+            if(this.editNew)
+            {
+              result[i].sessionID = this.dataIETable.recID
+            }
             if(this.mappingTemplate)
             {
               dt.mappingTemplate = this.mappingTemplate;
@@ -473,14 +479,14 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
             arrResult.push(dt);
           }
         }
-        debugger;
+        var method = this.editNew == true ? "AddItemAsync":"UpdateItemAsync";
         this.api
-        .execSv('SYS', 'AD', 'IEFieldMappingBusiness', 'UpdateItemAsync', JSON.stringify(result)).subscribe(item2=>{
+        .execSv('SYS', 'AD', 'IEFieldMappingBusiness', method, JSON.stringify(result)).subscribe(item2=>{
           if(item2)
           {
-            debugger;
            this.notifySvr.notifyCode("SYS007");
-           this.dialog.close([this.dataIETable, this.dataIEMapping, arrResult]);
+           if(this.editNew)this.dialog.close();
+           else this.dialog.close([this.dataIETable, this.dataIEMapping, arrResult]);
           }
           else  this.notifySvr.notifyCode("SYS021");
         })
@@ -493,15 +499,36 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
           result[i].sessionID = this.dataIETable.recID
           result[i].mappingTemplate = '00000000-0000-0000-0000-000000000000'
         }
-        this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
+        if(this.editNew)
+        {
+          this.api
+          .execSv('SYS', 'AD', 'IEFieldMappingBusiness', 'AddItemAsync', JSON.stringify(result)).subscribe(item2=>{
+            if(item2)
+            {
+             this.notifySvr.notifyCode("SYS007");
+             this.dialog.close();
+            }
+            else  this.notifySvr.notifyCode("SYS021");
+          })
+        }
+        else
+        {
+          this.dialog.close([this.dataIETable, this.dataIEMapping, result]);
+        }
+       
       }
     }
     //Chỉnh sửa
     else if(this.type=="edit")
     {
       debugger;
+      if(this.editNew)
+      {
+        this.type = "new";
+        this.onSave();
+      }
       //Cũ
-      if(this.hasOld)
+      else if(this.hasOld)
       {
         this.api
           .execSv('SYS', 'AD', 'IETablesBusiness', 'UpdateItemAsync', this.dataIETable).subscribe(item2=>{

@@ -14,7 +14,6 @@
         <codx-label
           fiedName="ResourceName"
           [formModel]="dialogRef.formModel"
-          default="Tên xe"
         >
         </codx-label>
         <codx-input
@@ -30,12 +29,10 @@
         <codx-label
           fiedName="Code"
           [formModel]="dialogRef.formModel"
-          default="Biển số"
         >
         </codx-label>
         <codx-input
           ControlName="code"
-          placeholder="Biển số"
           [formModel]="form.formModel"
           [Group]="fGroupAddCar"
         >
@@ -46,7 +43,6 @@
         <codx-label
           fiedName="Capacity"
           [formModel]="dialogRef.formModel"
-          default="Số chỗ"
         >
         </codx-label>
         <codx-input
@@ -62,7 +58,6 @@
         <codx-label
           fiedName="Ranking"
           [formModel]="dialogRef.formModel"
-          default="Phân loại"
         >
         </codx-label>        
         <codx-input
@@ -79,7 +74,6 @@
         <codx-label
           fiedName="Category"
           [formModel]="dialogRef.formModel"
-          default="Nguồn"
         >
         </codx-label>
         <codx-input
@@ -93,7 +87,6 @@
         <codx-label
           fiedName="CompanyID"
           [formModel]="dialogRef.formModel"
-          default="Đơn vị"
         >
         </codx-label>
         <codx-input        
@@ -111,11 +104,10 @@
         <codx-label
           fiedName="LinkID"
           [formModel]="dialogRef.formModel"
-          default="Tài xế"
         >
         </codx-label>          
 
-        <codx-input
+        <codx-input          
           ControlName="linkID"
           [formModel]="form.formModel"
           [Group]="fGroupAddCar"
@@ -127,9 +119,8 @@
     <div class="row">
       <div class="form-group">
         <codx-label
-          fiedName="Users"
+          fiedName="Owner"
           [formModel]="dialogRef.formModel"
-          default="Người điều phối"
         >
         </codx-label>
         <codx-input
@@ -146,29 +137,28 @@
         <codx-label
           fiedName="Note"
           [formModel]="dialogRef.formModel"
-          default="Mô tả"
         ></codx-label>
-        <codx-input
+        <!-- <codx-input
           ControlName="note"
           [formModel]="form.formModel"
           [Group]="fGroupAddCar"
         >
-        </codx-input>   
-        <!-- <codx-input
+        </codx-input>    -->
+        <codx-input
           type="textarea" format="ed2" rows="3"
           ControlName="note"
           placeholder="Ghi chú"
           [crrValue]="fGroupAddCar.value.note"
           (valueChange)="valueChange($event)"
         >
-        </codx-input> -->
+        </codx-input>
       </div>
     </div>
     <div
-      class="d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2"
+      class="form-group d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2"
     >
       <codx-label
-        name="lblEqiupment"
+        name="lblEquipment"
         default="Thiết bị"
         [formModel]="dialogRef.formModel"
       ></codx-label>
@@ -229,7 +219,7 @@
           <h2 id="modal-basic-title">
             <codx-label
               name="lblEquipment"
-              default="Thiết bị"
+              default="Chọn thiết bị"
               [formModel]="dialogRef.formModel"
             ></codx-label>
           </h2>

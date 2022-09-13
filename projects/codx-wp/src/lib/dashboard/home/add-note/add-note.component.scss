@@ -79,3 +79,13 @@ app-add-note {
 textarea.codx-textarea {
     resize: none;
 }
+
+.addpost-scroll {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 56px;
+    bottom: 50px;
+    overflow: hidden;
+    overflow-y: auto;
+}

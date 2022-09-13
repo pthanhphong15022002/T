@@ -16,9 +16,8 @@
   <ng-template #tabGeneralInfo>    
       <div class="form-group mb-2">
         <div class="d-flex justify-content-between align-items-center">
-          <codx-label
-            default="Xe"
-            fieldName="ResourceID"
+          <codx-label            
+            fiedName="ResourceID"
             [formModel]="form.formModel"
           >
           </codx-label>
@@ -47,7 +46,7 @@
           [Group]="fGroupAddBookingCar"       
           (valueChange)="valueCbxCarChange($event)"
         >
-        </codx-input>         -->
+        </codx-input>-->
     </div>
     <div class="row">
       <div class="d-flex flex-row justify-content-between">
@@ -98,7 +97,6 @@
     <div class="row">
       <div class="col-6 form-group">
         <codx-label
-          default="Từ ngày"
           fiedName="StartDate"
           [formModel]="dialogRef.formModel"
         >
@@ -115,7 +113,6 @@
       </div>
       <div class="col-6 form-group">
         <codx-label
-          default="Đến ngày"
           fiedName="EndDate"
           [formModel]="dialogRef.formModel"
         >
@@ -133,7 +130,6 @@
     </div>
     <div class="form-group">
       <codx-label
-        default="Mục đích sử dụng"
         fiedName="ReasonID"
         [formModel]="dialogRef.formModel"
       >
@@ -148,7 +144,6 @@
 
     <div class="form-group">
       <codx-label
-        default="Tiêu đề"
         fiedName="Title"
         [formModel]="dialogRef.formModel"
       >
@@ -162,7 +157,6 @@
 
     <div class="form-group">
       <codx-label
-        default="Khách hàng"
         fiedName="AgencyName"
         [formModel]="dialogRef.formModel"
       >
@@ -177,7 +171,6 @@
 
     <div class="form-group">
       <codx-label
-        default="Địa chỉ"
         fiedName="Address"
         [formModel]="dialogRef.formModel"
       >
@@ -194,7 +187,6 @@
     <div class="row">
       <div class="col-7 form-group">
         <codx-label
-          default="Người liên hệ"
           fiedName="ContactName"
           [formModel]="dialogRef.formModel"
         >
@@ -207,7 +199,6 @@
       </div>
       <div class="col-5 form-group">
         <codx-label
-          default="Số điện thoại"
           fiedName="Phone"
           [formModel]="dialogRef.formModel"
         >
@@ -226,21 +217,10 @@
       >
         <codx-label default="Lái xe & người đi cùng" fiedName="Note">
         </codx-label>
-        <div class="d-flex flex-row text-end align-items-end">
-          <!-- <span class="mx-2">
-              <codx-input 
-                type="combobox" 
-                name="combobox"
-                [refValue]="'EP_Drivers'"           
-                [multiple]="false"
-                [showInput]="false" 
-                refType="P" 
-                field="popup" 
-                (valueChange)="valueCbxDriverChange($event)">
-              </codx-input>
-            </span>-->
-          <span class="mx-2">
-            <codx-input
+        <div class="d-flex flex-row text-end align-items-end">          
+          <span class="mx-2">            
+          </span>
+          <codx-input
               type="Combobox"
               name="combobox"
               [refValue]="'MultiUsers'"
@@ -251,7 +231,6 @@
               (valueChange)="valueCbxUserChange($event)"
             >
             </codx-input>
-          </span>
         </div>
       </div>
 
@@ -357,12 +336,8 @@
         <span class="text-muted fw-bold">Lái xe</span>
       </div>
 
-      <div class="d-flex flex-column justify-content-end">
-        <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >{{
-            '1' | vll: "EP011":"text" | async
-          }}</span
-        >
+      <div class="d-flex flex-column justify-content-end align-items-end">    
+        <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
     </div>
@@ -386,10 +361,8 @@
         <span class="text-muted fw-bold">Người đăng kí</span>
       </div>
 
-      <div class="d-flex flex-column justify-content-end">
-        <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >Bắt buộc</span
-        >
+      <div class="d-flex flex-column justify-content-end align-items-end">         
+          <span class="badge badge-light-success fw-bold mb-1">Bắt buộc</span>        
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
     </div>
@@ -413,7 +386,7 @@
         <span class="text-muted fw-bold">Thành viên</span>
       </div>
 
-      <div class="d-flex flex-column justify-content-end" >
+      <div class="d-flex flex-column justify-content-end align-items-end" >
         <span class="badge badge-light-success fs-7 fw-bold mb-1"
           >Không bắt buộc</span
         >
@@ -425,11 +398,11 @@
   <ng-template #tabMoreInfo>
     <div id="MoreInfo">
       <div class="mb-3 fs-5 fw-bold">
-        <codx-label name="lblMoreInfo" default="Thông tin khác"> </codx-label>
+        <codx-label default="Thông tin khác" name="lblMoreInfo" > </codx-label>
       </div>
     </div>
     <div class="form-group">
-      <codx-label default="Ghi chú" fiedName="Note"> </codx-label>
+      <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
       <codx-input
         field="note"
         [formModel]="form.formModel"
@@ -452,8 +425,8 @@
       <div class="d-flex justify-content-between align-items-center">
         <h2 id="modal-basic-title">
           <codx-label
+            default="Chọn thiết bị"
             name="lblEquipment"
-            default="Thiết bị"
             [formModel]="dialog.formModel"
           ></codx-label>
         </h2>
@@ -468,8 +441,8 @@
       </div>
       <div class="text-dark-50">
         <codx-label
-          name="lblChooseEquipments"
           default="Chọn các thiết bị đã tích hợp sẵn trong xe"
+          name="lblChooseEquipments"
           [formModel]="dialog.formModel"
         ></codx-label>
       </div>
@@ -516,9 +489,9 @@
   </div>
   <div class="modal-footer" (click)="dialog.close()">
     <button type="button" class="btn btn-primary">
-      <codx-label
-        name="lblSave"
+      <codx-label      
         default="Lưu"
+        name="lblSave"
         [formModel]="dialog.formModel"
       ></codx-label>
     </button>

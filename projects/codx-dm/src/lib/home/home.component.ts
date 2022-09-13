@@ -560,7 +560,6 @@ export class HomeComponent extends UIComponent {
         hide: true,
         type: ViewType.treedetail,
         sameData: true,
-        /*  toolbarTemplate: this.templateSearch,*/
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
