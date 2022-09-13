@@ -3,8 +3,8 @@
   (setTitle)="setTitle($event)" #form [data]="data"></codx-layout-add>
 
 <ng-template #subHeader>
-  <codx-tag [entityName]="'CO_Meetings'" [isEdit]="true" [value]="meeting?.tags || ''"
-    (valueChange)="valueChangeTags($event)"></codx-tag>
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"
+    [value]="meeting?.tags || ''" (valueChange)="valueChangeTags($event)"></codx-tag>
 </ng-template>
 
 <ng-template #tabDescip>
