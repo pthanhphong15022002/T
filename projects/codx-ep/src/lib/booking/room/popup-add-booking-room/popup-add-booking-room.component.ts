@@ -332,6 +332,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
   }
   onSaveForm() { 
     if (this.fGroupAddBookingRoom.invalid == true) {
+      this.codxEpService.notifyInvalid(this.fGroupAddBookingRoom, this.formModel);
       return;
     }
     if (this.tmpEndDate - this.tmpStartDate <= 0 ) {
