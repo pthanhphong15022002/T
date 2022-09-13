@@ -153,7 +153,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
     this.data.countStep = this.lstStep.length;
     this.model.patchValue({ countStep: this.lstStep.length });
     this.updateApprovalStep(this.isAddNew);
-    this.dialogApproval && this.dialogApproval.close();
+    this.dialogApproval && this.dialogApproval.close(true);
   }
 
   saveStep() {
@@ -265,19 +265,27 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   updateApprovalStep(isAddNew) {
-    if (!isAddNew) {
-      this.esService.editApprovalStep().subscribe((res) => {
-        console.log('result edit appp', res);
-      });
+    // if (!isAddNew) {
+    //   this.esService.editApprovalStep().subscribe((res) => {
+    //     console.log('result edit appp', res);
+    //   });
 
-      this.esService.deleteApprovalStep().subscribe((res) => {
-        console.log('result delete aaappppp', res);
-      });
-    } else {
-      //Them moi
-      this.esService.addNewApprovalStep().subscribe((res) => {
-        console.log('result add new appp', res);
-      });
-    }
+    //   this.esService.deleteApprovalStep().subscribe((res) => {
+    //     console.log('result delete aaappppp', res);
+    //   });
+    // } else {
+    //   //Them moi
+    //   this.esService.addNewApprovalStep().subscribe((res) => {
+    //     console.log('result add new appp', res);
+    //   });
+    // }
+
+    this.esService.editApprovalStep().subscribe((res) => {
+      console.log('result edit appp', res);
+    });
+
+    this.esService.deleteApprovalStep().subscribe((res) => {
+      console.log('result delete aaappppp', res);
+    });
   }
 }

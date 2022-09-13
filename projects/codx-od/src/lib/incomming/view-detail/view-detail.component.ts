@@ -729,9 +729,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                     debugger;
                     this.data.relations = item.data[0].relations;
                     this.data.lstUserID = getListImg(item.data[0].relations);
-                    var index = this.data.listInformationRel.findIndex(x=>x.userID == item.data[1]);
+                    var index = this.data.listInformationRel.findIndex(
+                      (x) => x.userID == item.data[1]
+                    );
                     this.data.listInformationRel[index].reCall = true;
-                    this.ref.detectChanges()
+                    this.ref.detectChanges();
                     //this.data.listInformationRel = item.data[1];
                   }
                   this.notifySvr.notify(item.message);
@@ -825,7 +827,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 dialogModel
               );
               dialogApprove.closed.subscribe((res) => {
-                if (res.event == true) {
+                if (res.event && res.event?.approved == true) {
                   datas.status = '3';
                   datas.approveStatus = '3';
                   this.odService
@@ -899,7 +901,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
-    debugger
+    debugger;
     if (relationType == '1') {
       if (this.formModel.funcID == 'ODT31') {
         return Util.stringFormat(
@@ -916,7 +918,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         ); */
       }
     }
-  
+
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
