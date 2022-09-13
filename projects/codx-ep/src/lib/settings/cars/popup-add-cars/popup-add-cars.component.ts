@@ -43,7 +43,7 @@ export class PopupAddCarsComponent implements OnInit {
 
   CbxName: any;
   isAfterRender = false;  
-
+  gviewCar:any;
   vllDevices = [];
   lstDeviceCar = [];
   tmplstDevice = [];
@@ -56,7 +56,7 @@ export class PopupAddCarsComponent implements OnInit {
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
-    this.data = dialogData?.data[0];
+    this.data = dialogRef?.dataService?.dataSelected;
     this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;    
@@ -100,6 +100,7 @@ export class PopupAddCarsComponent implements OnInit {
   initForm() {
     if(this.isAdd){      
       this.headerText = "Thêm mới xe"
+      //this.fGroupAddCar.value.resourceName=null;
     }
     else{
       this.headerText = "Sửa thông tin xe"
@@ -111,13 +112,15 @@ export class PopupAddCarsComponent implements OnInit {
         this.fGroupAddCar = item;
         if (this.data) {
           this.fGroupAddCar.patchValue(this.data);
-        }
-        this.fGroupAddCar.addControl(
-          'code',
-          new FormControl(this.data.code)
-        );
+        }        
         this.isAfterRender = true;
       });
+    this.cacheService
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((res) => {
+          this.gviewCar = res;
+          console.log('grvEPT', this.gviewCar);
+        });
   }
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
@@ -159,10 +162,19 @@ export class PopupAddCarsComponent implements OnInit {
   }
 
   onSaveForm() {
+    const invalid = [];
+    const controls = this.gviewCar;
+    for (const name in controls) {
+      if (this.gviewCar[name].isRequire) {
+        invalid.push(name);
+      }
+    }
+    return;
     if (this.fGroupAddCar.invalid == true) {
-      console.log(this.fGroupAddCar);
+      this.codxEpService.notifyInvalid(this.fGroupAddCar, this.formModel);
       return;
     }
+   
     let equipments = '';
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
@@ -176,17 +188,18 @@ export class PopupAddCarsComponent implements OnInit {
     if(this.fGroupAddCar.value.category!=1){
       this.fGroupAddCar.value.companyID=null;
     }else{      
-      this.fGroupAddCar.value.companyID = this.fGroupAddCar.value.companyID[0];
+      if(this.fGroupAddCar.value.companyID instanceof Object){
+        this.fGroupAddCar.patchValue({companyID:this.fGroupAddCar.value.companyID[0]})
+      }
     }
-    //this.fGroupAddCar.value.owner = this.fGroupAddCar.value.owner[0];
-    
-
+    if(this.fGroupAddCar.value.owner instanceof Object){
+      this.fGroupAddCar.patchValue({owner:this.fGroupAddCar.value.owner[0]})
+    }if(this.fGroupAddCar.value.linkID instanceof Object){
+      this.fGroupAddCar.patchValue({linkID:this.fGroupAddCar.value.linkID[0]})
+    }
     this.fGroupAddCar.patchValue({
       resourceType : '2',
       linkType : '3',
-      owner:this.fGroupAddCar.value.owner[0],
-      linkID:this.fGroupAddCar.value.linkID[0],
-      companyID:'Chưa có dữ liệu',
       equipments:equipments,
     });
 
@@ -205,7 +218,6 @@ export class PopupAddCarsComponent implements OnInit {
         }        
         return;
       });
-    //this.attachment.saveFilesObservable().subscribe(res=>{})
     
   }
 

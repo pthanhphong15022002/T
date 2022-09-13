@@ -1,0 +1,91 @@
+
+   .card-hover-shadow:hover,.codx_cardimg:hover,.codx_cardcenter:hover,
+    .card-hover-shadow:focus,.codx_cardimg:focus,.codx_cardcenter:focus {
+        -webkit-box-shadow: 0 0 35px rgba(0,0,0,0.07);
+        box-shadow: 0 0 35px rgba(0,0,0,0.07);
+        cursor: pointer;               
+    }
+    .card-no-body .card-body{
+        display: none;
+    }
+    .icon-attach_file{
+        transform: rotate(40deg);
+    }
+    .card .bg-footer {
+      
+    }
+    .card.border-primary .bg-footer {       
+        background-color: #3699FF;
+    }
+    .card.border-secondary .bg-footer {      
+        background: rgba(39, 59, 74, 0.31);
+    }
+    .card.border-info .bg-footer {         
+        background: rgba(76, 6, 217, 0.28);
+    }
+    .card.border-danger .bg-footer {         
+        background: rgba(253, 62, 83, 0.32);
+    }
+    .card.border-warning .bg-footer {         
+        background: rgba(255, 168, 0, 0.28);
+    }
+    .card.border-success .bg-footer {         
+        background:rgba(7, 153, 39, 0.31);
+    }
+    .m-n3.mt-0{
+        margin-top: 0!important;       
+    }
+  
+    .card-steplist{      
+          .steplist-hearder{
+            background: #F0F3F6;
+            border: 1px solid #E2E3EE;
+            border-radius: 3px;
+            border-left-color:#3699FF!important;
+            border-left-width: 4px!important;
+          }
+       
+        .steplist-item {
+            background-color: #fff;
+            border: 1px solid #E2E3EE;
+            border-left-width: 4px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 0px 3px 3px 0px;
+            box-shadow: none;
+        }
+        .step-primary{
+            border-left-color:#3699FF;
+        }
+        .step-danger{
+            border-left-color:#F64E60;
+        }
+        .step-succes{
+            border-left-color:#1BC5BD;
+        }
+        .step-warning{
+            border-left-color:#FFA800;
+        }
+        
+    }
+    .kanban-board {
+        -ms-flex-negative: 0;
+        flex-shrink: 0;
+        margin-bottom: 1.25rem;
+        margin-right: 1.25rem !important;
+        background-color: #F3F6F9;
+        border-radius: 0.42rem;
+        .kanban-board-header {
+            font-size: 16px;
+            padding: 15px;
+            color: white;
+        }
+        .kanban-board-body{
+            min-height: 200px;
+            padding: 18px 6px 18px 12px;    
+            background: #F0F2F5;    
+        }
+    }
+
+   
+

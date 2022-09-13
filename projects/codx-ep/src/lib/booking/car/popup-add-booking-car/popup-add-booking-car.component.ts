@@ -289,7 +289,7 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.fGroupAddBookingCar.patchValue({ hours: hours });
       }
     }    
-
+    
     this.attendeesList.push(this.curUser);
     this.lstPeople.forEach(people=>{
       this.attendeesList.push(people);

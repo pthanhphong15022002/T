@@ -24,27 +24,38 @@
   </div>
 </ng-template>
 
-<!-- <ng-template #statusCol let-data>
-  <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-    data.status | vll: "EP002":"text" | async
-  }}</span>
-</ng-template> -->
-
+<!-- 
 <ng-template #rankingCol let-data>
   <div class="has-action-menu">
-    {{ data.ranking | vll: "EP005":"text" | async }}    
+    {{ data.ranking | vll: "EP005":"text" | async }}
+    
+  </div>  
+</ng-template> -->
+
+<ng-template #categoryCol let-data>
+  
+  <div class="has-action-menu">    
+    {{ data.category | vll: "VL005":"text" | async }}   
   </div>  
 </ng-template>
 
-<ng-template #categoryCol let-data>
-  <div class="has-action-menu">
-    {{ data.category | vll: "VL005":"text" | async }} 
-      <codx-mfunc [formModel]="viewBase.formModel" 
-      (clickMF)="clickMF($event,data)" 
-      type="hover" [dataItem]="data">
-      </codx-mfunc>
+
+<ng-template #owner let-data>
+  <div class="d-flex has-action-menu">
+    <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
+    <div class="ms-4">
+      <div class="fw-bold">{{ data.ownerName }}</div>
+      <div class="text-black-50">{{ data.position }}</div>
+    </div>
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
   </div>
-  
 </ng-template>
+
+
 
 
