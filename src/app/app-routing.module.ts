@@ -12,6 +12,12 @@ export const routes: Routes = [
     path: ':tenant',
     children: [
       {
+        path: 'test',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/test/src/lib/test.module').then((m) => m.TestModule),
+      },
+      {
         path: 'auth',
         loadChildren: () =>
           import('./modules/auth/auth.module').then((m) => m.AuthModule),
@@ -61,12 +67,6 @@ export const routes: Routes = [
             (m) => m.CodxDmModule
           ),
       },
-      // {
-      //   path: 'mwp',
-      //   canActivate: [AuthGuard],
-      //   loadChildren: () =>
-      //     import('/modules/tm/mwp/_layout/layout.modules').then((m) => m.LayoutModule),
-      // },
       {
         path: 'ep',
         canActivate: [AuthGuard],
@@ -126,10 +126,6 @@ export const routes: Routes = [
       {
         path: 'shared',
         canActivate: [AuthGuard],
-        // loadChildren: () =>
-        //   import('projects/codx-share/src/lib/codx-share.module').then(
-        //     (m) => m.CodxShareModule
-        //   ),
         component: LayoutOnlyHeaderComponent,
         children: [
           {
@@ -148,10 +144,6 @@ export const routes: Routes = [
       {
         path: 'shared',
         canActivate: [AuthGuard],
-        // loadChildren: () =>
-        //   import('projects/codx-share/src/lib/codx-share.module').then(
-        //     (m) => m.CodxShareModule
-        //   ),
         component: LayoutNoAsideComponent,
         children: [
           {
