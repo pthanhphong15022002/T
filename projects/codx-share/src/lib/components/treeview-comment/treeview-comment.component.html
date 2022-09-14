@@ -22,13 +22,8 @@
     </div>
     <div class="d-flex align-items-center text-hover-underline text-gray-800 me-1" (click)="showComments(dataComment)">
         <span>{{dataComment.totalComment}}</span>
-<<<<<<< HEAD
         <span class="ms-1">
             <codx-label formName="WP_Comments" name="lblComments" default="bình luận"></codx-label>
-=======
-        <span class="text-gray-800 ms-2">
-            <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
->>>>>>> 0bb84679fbb67de6a35fdfe0e9ee1416420e18a0
         </span>
     </div>
 </div>
@@ -75,14 +70,8 @@
     </div>
 </div>
 <div class="isHiden border-top" [class.isShow]="dataComment.isShowComment">
-    <codx-comments 
-        [funcID]="funcID" 
-        [objectType]="objectType" 
-        [new]="true" 
-        [formModel]="formModel"
-        (evtSendComment)="sendComment($event)" 
-        [parentID]="dataComment.recID" 
-        [refID]="dataComment.recID">
+    <codx-comments [funcID]="funcID" [objectType]="objectType" [new]="true" [formModel]="formModel"
+        (evtSendComment)="sendComment($event)" [parentID]="dataComment.recID" [refID]="dataComment.recID">
     </codx-comments>
     <ng-container *ngFor="let cm of lstComment">
         <ng-container *ngTemplateOutlet="cmt; context: { $implicit: cm }"></ng-container>
@@ -90,28 +79,16 @@
 </div>
 <ng-template #cmt let-data>
     <div class="c1" [attr.dt]="setDicData(data)" id="{{data.recID}}">
-        <codx-comments 
-            [funcID]="funcID" 
-            [objectType]="objectType" 
-            [data]="data" 
-            [parentID]="data.parentID"
-            [refID]="data.recID" 
-            [new]="false"
-            [formModel]="formModel" 
-            (evtDeleteComment)="deleteComment($event)"
+        <codx-comments [funcID]="funcID" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
+            [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)">
         </codx-comments>
         <div class="ms-10" *ngFor="let item of data.listComment">
             <ng-container *ngTemplateOutlet="subCmt context: { $implicit: item }"></ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
-            <codx-comments 
-                [funcID]="funcID" 
-                [objectType]="objectType" 
-                (evtDeleteComment)="deleteComment($event)"
-                (evtSendComment)="sendComment($event,data)" 
-                [new]="true" [parentID]="data.parentID" 
-                [refID]="data.recID"
+            <codx-comments [funcID]="funcID" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
+                (evtSendComment)="sendComment($event,data)" [new]="true" [parentID]="data.parentID" [refID]="data.recID"
                 [formModel]="formModel">
             </codx-comments>
         </ng-container>
@@ -120,17 +97,10 @@
 <ng-template #subCmt let-data>
     <div class="c2" [attr.dt]="setDicData(data)" id="{{data.recID}}">
         <div>
-            <codx-comments 
-            [funcID]="funcID" 
-            [objectType]="objectType" 
-            [data]="data" 
-            [parentID]="data.parentID"
-            [refID]="data.recID" 
-            [new]="false"
-            [formModel]="formModel" 
-            (evtDeleteComment)="deleteComment($event)"
-            (evtReplyTo)="replyTo($event)">
-        </codx-comments>
+            <codx-comments [funcID]="funcID" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
+                [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
+                (evtReplyTo)="replyTo($event)">
+            </codx-comments>
         </div>
         <ng-container *ngIf="data.totalSubComment > 0">
             <div class="ms-14">
@@ -143,13 +113,8 @@
             <ng-container *ngTemplateOutlet="cmt context: { $implicit: item }"></ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
-            <codx-comments 
-                [funcID]="funcID" 
-                [objectType]="objectType" 
-                (evtDeleteComment)="deleteComment($event)"
-                (evtSendComment)="sendComment($event,data)" 
-                [new]="true" [parentID]="data.parentID" 
-                [refID]="data.recID"
+            <codx-comments [funcID]="funcID" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
+                (evtSendComment)="sendComment($event,data)" [new]="true" [parentID]="data.parentID" [refID]="data.recID"
                 [formModel]="formModel">
             </codx-comments>
         </ng-container>
