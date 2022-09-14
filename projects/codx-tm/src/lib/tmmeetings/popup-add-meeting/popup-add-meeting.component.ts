@@ -25,6 +25,7 @@ import {
 import moment from 'moment';
 import { TemplateComponent } from '../template/template.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CheckBox, CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
 
 @Component({
   selector: 'lib-popup-add-meeting',
@@ -48,7 +49,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   showPlan = true;
   data: any;
   readOnly = false;
-  isFullDay: boolean;
+  isFullDay: boolean = false;
   beginHour = 0;
   beginMinute = 0;
   endHour = 0;
@@ -75,7 +76,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   startTimeWork: any;
   endTimeWork: any;
   dayOnWeeks = [];
-  selectedDate : Date;
+  selectedDate: Date;
 
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -95,33 +96,20 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.titleAction = dt.data[1];
     this.functionID = this.dialog.formModel.funcID;
 
-    if (this.action == 'add') {
-      this.meeting.meetingType = '1';
+    if (this.action == 'add')
       this.meeting.startDate = moment(new Date())
         .set({ hour: 0, minute: 0, second: 0 })
         .toDate();
 
-      this.resources = [];
-    } else if (this.action == 'edit') {
-      this.setTimeEdit();
-      this.resources = this.meeting.resources;
-    } else if (this.action == 'copy') {
-      this.meeting.meetingType = '1';
-      this.resources = [];
-      this.setTimeEdit();
-    }
-    this.getTimeParameter();
-    
-
-   
-    if (this.action == 'add' || this.action == 'copy') {
-      this.getListUser(this.user.userID);
-    }
     this.selectedDate = moment(new Date(this.meeting.startDate))
       .set({ hour: 0, minute: 0, second: 0 })
       .toDate();
-    this.getTimeWork(this.selectedDate);
+    this.getTimeParameter();
+    // this.getTimeWork(this.selectedDate);
 
+    if (this.action == 'add' || this.action == 'copy') {
+      this.getListUser(this.user.userID);
+    }
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
@@ -132,6 +120,17 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {}
   ngAfterViewInit(): void {
+    if (this.action == 'add') {
+      this.meeting.meetingType = '1';
+      this.resources = [];
+    } else if (this.action == 'edit') {
+      // this.setTimeEdit();
+      this.resources = this.meeting.resources;
+    } else if (this.action == 'copy') {
+      this.meeting.meetingType = '1';
+      this.resources = [];
+      // this.setTimeEdit();
+    }
     if (this.meeting.templateID) {
       this.api
         .execSv<any>(
@@ -173,6 +172,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.meeting.fromDate = moment(new Date(this.meeting.fromDate)).toDate();
     if (this.meeting.toDate)
       this.meeting.toDate = moment(new Date(this.meeting.toDate)).toDate();
+      this.changDetec.detectChanges() ;
   }
 
   padTo2Digits(num) {
@@ -360,7 +360,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.selectedDate = moment(new Date(this.meeting.startDate))
         .set({ hour: 0, minute: 0, second: 0 })
         .toDate();
-      this.getTimeWork( this.selectedDate);
+      this.getTimeWork(this.selectedDate);
       this.setDate();
     }
     // var now = Date.now();
@@ -639,7 +639,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res) {
           var param = JSON.parse(res.dataValue);
           this.calendarID = param.CalendarID;
-          this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
+          // this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
           this.getTimeWork(
             moment(new Date(this.meeting.startDate))
               .set({ hour: 0, minute: 0, second: 0 })
@@ -697,9 +697,15 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               this.endTimeWork = day.endTime.substring(0, 5);
               starrShiftType2 = day.startTime.substring(0, 5);
             }
-          } 
-          this.startTimeWork = this.startTimeWork ? this.startTimeWork: starrShiftType2;
-          this.endTimeWork = this.endTimeWork ? this.endTimeWork : endShiftType1;
+          }
+          this.startTimeWork = this.startTimeWork
+            ? this.startTimeWork
+            : starrShiftType2;
+          this.endTimeWork = this.endTimeWork
+            ? this.endTimeWork
+            : endShiftType1;
+
+          if (this.action != 'add') this.setTimeEdit();
         }
       });
   }
