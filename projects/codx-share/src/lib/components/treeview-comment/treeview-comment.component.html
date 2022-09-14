@@ -4,7 +4,7 @@
             <div class="flex align-items-center">
                 <span>
                     <img src="assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
-                        style="width: 18px; height: 18x;">
+                        style="width: 15px; height: 15x;">
                 </span>
             </div>
         </ng-container>
@@ -13,17 +13,17 @@
                 <div *ngFor="let votedType of dataComment.listVoteType">
                     <a (click)="showVotes(dataComment)">
                         <img src="/assets/themes/wp/default/img/{{(votedType | vll:'L1480':'icon' | async)}}"
-                            alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
+                            alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
                     </a>
                 </div>
             </div>
         </ng-template>
-        <span class="ms-2">{{dataComment.totalVote}}</span>
+        <span class="ms-2 fs-6">{{dataComment.totalVote}}</span>
     </div>
-    <div class="d-flex align-items-center text-hover-underline me-1" (click)="showComments(dataComment)">
+    <div class="d-flex align-items-center text-hover-underline text-gray-800 me-1" (click)="showComments(dataComment)">
         <span>{{dataComment.totalComment}}</span>
-        <span class="text-gray-800 ms-2">
-            <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+        <span class="ms-1">
+            <codx-label formName="WP_Comments" name="lblComments" default="bình luận"></codx-label>
         </span>
     </div>
 </div>
@@ -60,7 +60,7 @@
     </div>
     <div class="col-6 p-0">
         <div class="btn-com" (click)="showComments(dataComment)">
-            <div class="d-flex align-items-center justify-content-center text-hover-primary">
+            <div class="d-flex align-items-center justify-content-center">
                 <span class="icon-chat_bubble_outline icon-18"></span>
                 <span class="text-dark fw-bold ms-2">
                     <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
