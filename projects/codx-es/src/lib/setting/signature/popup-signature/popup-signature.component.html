@@ -188,27 +188,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 3 ? 'active show' : 'd-none'">
-          <codx-attachment #attSignature1 idBrowse="attSignature1" [objectType]="dialog.formModel.entityName"
-            [objectId]="dialogSignature.value.recID + '1'" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
-            [functionID]="dialog.formModel.funcID" (fileAdded)="fileAdded($event, 3)" type="inline" hideImageUpload="0"
-            (fileCount)="fileCount($event, 3)" allowMultiFile="0">
-          </codx-attachment>
-        </div>
-        <div class="tab-pane fade" id="pane_4" [ngClass]="currentTab == 4 ? 'active show' : 'd-none'">
-          <codx-attachment #attSignature2 idBrowse="attSignature2" [objectType]="dialog.formModel.entityName"
-            [objectId]="dialogSignature.value.recID+'2'" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
-            [functionID]="dialog.formModel.funcID" (fileAdded)="fileAdded($event, 4)" type="inline" hideImageUpload="0"
-            (fileCount)="fileCount($event, 4)" allowMultiFile="0">
-          </codx-attachment>
-        </div>
-        <div class="tab-pane fade" id="pane_5" [ngClass]="currentTab == 5 ? 'active show' : 'd-none'">
-          <codx-attachment #attStamp idBrowse="attStamp" [objectType]="dialog.formModel.entityName"
-            [objectId]="dialogSignature.value.recID+'s'" hideBtnSave="1" hideFolder="1" hideUploadBtn="0"
-            [functionID]="dialog.formModel.funcID" (fileAdded)="fileAdded($event, 5)" type="inline" hideImageUpload="0"
-            (fileCount)="fileCount($event, 5)" allowMultiFile="0">
-          </codx-attachment>
-        </div> -->
         <div
           class="tab-pane fade"
           id="pane_3"
@@ -226,7 +205,7 @@
             (fileAdded)="fileAdded($event, 3)"
             type="inline"
             hideImageUpload="0"
-            (fileCount)="fileCount($event, 3)"
+            (fileCount)="fileCount($event, attSignature1, 3)"
             allowMultiFile="0"
           >
           </codx-attachment>
@@ -248,7 +227,7 @@
             (fileAdded)="fileAdded($event, 4)"
             type="inline"
             hideImageUpload="0"
-            (fileCount)="fileCount($event, 4)"
+            (fileCount)="fileCount($event, attSignature2, 4)"
             allowMultiFile="0"
           >
           </codx-attachment>
@@ -270,7 +249,7 @@
             (fileAdded)="fileAdded($event, 5)"
             type="inline"
             hideImageUpload="0"
-            (fileCount)="fileCount($event, 5)"
+            (fileCount)="fileCount($event, attStamp, 5)"
             allowMultiFile="0"
           >
           </codx-attachment>
