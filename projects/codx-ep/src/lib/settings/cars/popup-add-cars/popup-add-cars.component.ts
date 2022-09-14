@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -24,7 +25,7 @@ import { CodxEpService } from '../../../codx-ep.service';
   templateUrl: 'popup-add-cars.component.html',
   styleUrls: ['popup-add-cars.component.scss'],
 })
-export class PopupAddCarsComponent implements OnInit {
+export class PopupAddCarsComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment : AttachmentComponent; 
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Input() editResources: any;
@@ -48,6 +49,7 @@ export class PopupAddCarsComponent implements OnInit {
   lstDeviceCar = [];
   tmplstDevice = [];
   avatarID:any=null;
+  notificationsService: any;
   constructor(    
     private callFuncService: CallFuncService,
     private cacheService: CacheService,
@@ -112,7 +114,11 @@ export class PopupAddCarsComponent implements OnInit {
         this.fGroupAddCar = item;
         if (this.data) {
           this.fGroupAddCar.patchValue(this.data);
-        }        
+        }    
+        this.fGroupAddCar.patchValue({
+          resourceType : '2',
+          linkType : '3',
+        });    
         this.isAfterRender = true;
       });
     this.cacheService
@@ -162,14 +168,13 @@ export class PopupAddCarsComponent implements OnInit {
   }
 
   onSaveForm() {
-    const invalid = [];
-    const controls = this.gviewCar;
-    for (const name in controls) {
-      if (this.gviewCar[name].isRequire) {
-        invalid.push(name);
-      }
-    }
-    return;
+    // const invalid = [];
+    // const controls = this.gviewCar;
+    // for (const name in controls) {
+    //   if (this.gviewCar[name].isRequire) {
+    //     invalid.push(name);
+    //   }
+    // }
     if (this.fGroupAddCar.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddCar, this.formModel);
       return;
@@ -233,5 +238,28 @@ export class PopupAddCarsComponent implements OnInit {
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);
+  }
+  dataValid() {
+    var data = this.fGroupAddCar.value;   
+    var result= true; 
+    var requiredControlName = [
+      'resourceName',
+      'owner',
+      'capacity',
+      'category',
+    ];
+    requiredControlName.forEach((item) => {
+      var x = data[item];
+      if (!data[item]) {
+        let fieldName = item.charAt(0).toUpperCase() + item.slice(1);
+        this.notificationsService.notifyCode(
+          'E0001',
+          0,
+          '"' + this.gviewCar[fieldName].headerText + '"'
+        );
+        result = false;
+      }
+    });
+    return result;
   }
 }
