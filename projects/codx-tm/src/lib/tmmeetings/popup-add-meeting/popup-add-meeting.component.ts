@@ -100,7 +100,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.getListUser(this.user.userID);
     }
     this.functionID = this.dialog.formModel.funcID;
-
+    this.getTimeParameter() ;
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
@@ -601,19 +601,20 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
   //region time work
-  getParams() {
+  getTimeParameter() {
     this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
-        'GetOneField',
-        ['TMParameters', null, 'CalendarID']
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = res.fieldValue;
-          this.api
+    .execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['TMParameters', '1']
+    )
+    .subscribe((res) => {
+      if (res) {
+        var param = JSON.parse(res.dataValue);
+        this.calendarID = param.CalendarID
+        this.api
             .execSv<any>(
               'BS',
               'ERM.Business.BS',
@@ -621,12 +622,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               'GetDayWeekAsync',
               [this.calendarID]
             )
-            .subscribe((res) => {
-              if (res) {
+            .subscribe((data) => {
+              if (data) {
+                
               }
             });
-        }
-      });
+        } 
+      })
   }
 
   //end

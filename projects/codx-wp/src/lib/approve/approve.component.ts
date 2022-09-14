@@ -115,7 +115,6 @@ export class ApproveComponent extends UIComponent {
       }
       this.getGridViewSetUp().subscribe();
       this.loadTabAsside(this.predicate,this.dataValue,this.entityName);
-      
       this.dt.detectChanges();
     });
   }

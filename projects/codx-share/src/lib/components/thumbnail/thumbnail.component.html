@@ -30,7 +30,7 @@
           <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download(item.data.recID)">
             <i class="icon-cloud_download text-primary icon-16"></i>
           </div>
-          <div ngbDropdown container="body" class="btn btn-sm btn-icon btn-white cursor-pointer"
+          <div *ngIf="hideMoreF=='1'" ngbDropdown container="body" class="btn btn-sm btn-icon btn-white cursor-pointer"
             (mouseout)="hideMore()">
             <i class="icon-more_vert  icon-16" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false"></i>
@@ -110,7 +110,7 @@
           <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="download(item.recID)">
             <i class="icon-cloud_download text-primary icon-16"></i>
           </div>
-          <div ngbDropdown container="body" class="btn btn-sm btn-icon btn-white cursor-pointer"
+          <div *ngIf="hideMoreF=='1'" ngbDropdown container="body" class="btn btn-sm btn-icon btn-white cursor-pointer"
             (mouseout)="hideMore()">
             <i class="icon-more_vert icon-16" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false"></i>

@@ -78,7 +78,7 @@
 
     </div>
     <ng-container *ngIf="data && data?.files">
-      <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'0'" (viewFile)="handleViewFile($event)">
+      <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'0'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)">
       </codx-thumbnail>
     </ng-container>
   </ng-template>
@@ -93,7 +93,7 @@
           <ng-template ngbNavContent>
             <ng-container *ngIf="data?.listInformationRel, else defaulEmpt">
               <ng-container *ngFor="let item of data?.listInformationRel">
-                <div class="list-item has-action-menu-1 mb-6">
+                <div class="list-item has-action-menu-od mb-6">
                   <div class="d-flex align-items-start">
                     <div class="w-120px me-6">
                       <div class="text-primary d-flex justify-content-center fw-bold fs-4">{{(item.date ? item.date :
@@ -114,12 +114,15 @@
                       </codx-temp-full>
                     </div>
                     <ng-container
-                      *ngIf="item.relationType != '1' && !item.reCall && item.userID != data?.owner && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
-                      <div class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer"
+                      *ngIf="item.relationType != '1' && !item.reCall  && formModel.userPermission?.refer != 0 && (checkUserPer?.created || checkUserPer?.owner)">
+                      <ng-container *ngIf="item.userID != data?.owner || item.relationType != '2'">
+                        <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
                         (click)="openFormFuncID({functionID:'recallUser',relID: item.recID})">
                         <!--  -->
                         <i class="icon-redo text-primary icon-18"></i>
                       </div>
+                      </ng-container>
+                     
                     </ng-container>
                   </div>
   
