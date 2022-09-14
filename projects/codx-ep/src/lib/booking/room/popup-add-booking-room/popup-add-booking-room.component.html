@@ -54,10 +54,10 @@
         </codx-label>
         <codx-input ControlName="bookingOn" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom"
           (valueChange)="valueDateChange($event)">
-        </codx-input> -->
-        <codx-input type="datetime" class="form-control test-datetime" format="d" field="bookingOn"
-          [crrValue]="fGroupAddBookingRoom.value.bookingOn" (valueChange)="valueDateChange($event)">
         </codx-input>
+        <!-- <codx-input type="datetime" class="form-control test-datetime" format="d" field="bookingOn"
+          [crrValue]="fGroupAddBookingRoom.value.bookingOn" (valueChange)="valueDateChange($event)">
+        </codx-input> -->
       </div>
       <div class="col-3 form-group">
         <codx-label fiedName="StartDate" aria-disabled="false" [formModel]="dialogRef.formModel">

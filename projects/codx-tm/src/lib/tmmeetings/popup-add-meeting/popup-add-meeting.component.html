@@ -48,8 +48,8 @@
     </div>
     <div class="col-2 mt-6">
       <codx-label class="fs-6 fw-bold mb-2" default> </codx-label>
-      <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
-        (valueChange)="valueChange($event)" [crrValue]="isFullDay">
+      <codx-input #checkbox type="checkbox" name="checkbox" label="Cả ngày"  labelPosition="After" 
+        (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay">
       </codx-input>
     </div>
   </div>

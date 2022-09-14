@@ -200,9 +200,9 @@
 
   <div class="mb-3 d-flex align-items-center">
     <span class="icon-location_on icon-16 me-2"></span>
-    <span #address>{{
-      dataEmployee.employeeInfo?.address
-        | formatvalue: formModel:"address":address
+    <span #street>{{
+      dataEmployee.employeeInfo?.street
+        | formatvalue: formModel:"street":street
         | async
     }}</span>
   </div>

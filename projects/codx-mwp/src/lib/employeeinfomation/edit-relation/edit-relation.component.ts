@@ -29,7 +29,7 @@ export class EditRelationComponent implements OnInit {
   ) {
     // this.data = dialog.dataService!.dataSelected;
     if (dt && dt.data) {
-      this.dataBind = dt.data.dataSelected;
+      this.dataBind = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
       this.isAdd = dt.data.isAdd;
     }
 
@@ -38,7 +38,7 @@ export class EditRelationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.action === 'edit') {
+    if (this.isAdd === false) {
       this.title = 'Cập nhật thông tin';
     }
   }
@@ -68,18 +68,17 @@ export class EditRelationComponent implements OnInit {
           this.imageAvatar.updateFileDirectReload(this.dataBind.recID);
           this.api.execSv<any>("DM", "DM", "FileBussiness", "UploadAvatarAsync", this.avatar).subscribe(res => {
             this.codxMwp.EmployeeInfomation.updateRelation({ Relationship: objRes });
-            this.dialog.close(this.dataBind);
+            this.dialog.close(res);
           });
         }
         else {
           this.codxMwp.EmployeeInfomation.updateRelation({ Relationship: res });
-          this.dialog.close(this.dataBind);
+          this.dialog.close(res);
         }
       }
       else {
         this.notiService.notify("Error");
       }
     });
-    this.dialog.close();
   }
 }
