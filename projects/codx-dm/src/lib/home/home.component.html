@@ -209,7 +209,14 @@
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
           <tr class="border-top dms-list" *ngFor="let item of data" [title]="
+=======
+          <tr (dblclick)="dmSV.openItem(item)" 
+            class="border-top dms-list"
+            *ngFor="let item of data"
+            [title]="
+>>>>>>> 0bb84679fbb67de6a35fdfe0e9ee1416420e18a0
               item.folderName != undefined ? item.folderName : item.fileName
             ">
             <td class="w-25px text-center px-0">

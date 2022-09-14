@@ -203,8 +203,12 @@
       <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>
     </ng-template>
     <!-- commemt -->
-    <treeview-comment [funcID]="codxViews.formModel.funcID" [fromModel]="codxViews.formModel"
-      [objectType]="'WP_Comments'" [dataComment]="item">
+    <treeview-comment 
+      [funcID]="codxViews.formModel.funcID" 
+      [fromModel]="codxViews.formModel"
+      [objectType]="'WP_Comments'"
+      [dataComment]="item"
+      [objectID]="item.recID">
     </treeview-comment>
     <!-- end comment -->
   </div>

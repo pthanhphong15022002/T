@@ -72,6 +72,7 @@ export class ViewDetailComponent implements OnInit {
       (res) => {
         if (res) {
           this.dataItem = res[0];
+          console.log(this.dataItem)
           this.dataItem.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.dataItem.contents);
           this.listViews = res[1];
           this.listNews = res[2];

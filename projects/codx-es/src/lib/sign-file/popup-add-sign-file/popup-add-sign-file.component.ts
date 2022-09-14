@@ -641,8 +641,9 @@ export class PopupAddSignFileComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
+            this.notify.alertCode('RS002');
             dialogTemplateName && dialogTemplateName.close();
-            this.dialog && this.dialog.close(res);
+            //this.dialog && this.dialog.close(res);
           }
         });
     } else {

@@ -71,6 +71,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   isHaveFile = false;
   showLabelAttachment = false;
   titleAction = '';
+  calendarID: string;
+  startTimeWork: any;
+  endTimeWork: any;
 
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -153,7 +156,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       ':' +
       this.padTo2Digits(getEndTime.getMinutes());
     this.endTime = current1;
-    if (this.startTime == '00:00' && this.endTime == '23:59') {
+    if (this.startTime == '08:00' && this.endTime == '18:00') {
       this.isFullDay = true;
     }
     if (this.meeting.fromDate)
@@ -308,8 +311,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     if (event?.field == 'day') {
       this.isFullDay = event.data;
       if (this.isFullDay) {
-        this.startTime = '00:00';
-        this.endTime = '23:59';
+        this.startTime = '08:00';
+        this.endTime = '18:00';
       } else {
         this.endTime = null;
         this.startTime = null;
@@ -597,4 +600,34 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     else this.isHaveFile = false;
     if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
+  //region time work
+  getParams() {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        ['TMParameters', null, 'CalendarID']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = res.fieldValue;
+          this.api
+            .execSv<any>(
+              'BS',
+              'ERM.Business.BS',
+              'CalendarsBusiness',
+              'GetDayWeekAsync',
+              [this.calendarID]
+            )
+            .subscribe((res) => {
+              if (res) {
+              }
+            });
+        }
+      });
+  }
+
+  //end
 }

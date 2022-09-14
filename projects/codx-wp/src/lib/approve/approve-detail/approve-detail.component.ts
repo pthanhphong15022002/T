@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, AuthService, DataRequest, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, DataRequest, FormModel, NotificationsService } from 'codx-core';
 import { WP_News } from '../../models/WP_News.model';
 import { ApproveComponent } from '../approve.component';
 
@@ -10,12 +11,10 @@ import { ApproveComponent } from '../approve.component';
   templateUrl: './approve-detail.component.html',
   styleUrls: ['./approve-detail.component.css']
 })
-export class ApproveDetailComponent implements OnInit {
+export class ApproveDetailComponent implements OnInit,OnChanges {
 
-  @Input() data: any;
-  @Input() objectType: any;
+  @Input() objectID: any;
   @Input() entityName: any;
-  @Input() option: string;
   @Input() formModel : any;
   @Output() evtApproval = new EventEmitter();
   tabAsside = [
@@ -64,23 +63,43 @@ export class ApproveDetailComponent implements OnInit {
     POST:"1",
     VIDEO:"2"
   }
+  data: any;
   acceptApprove = "5";
   cancelApprove  = "4";
   remakeApprove = "2";
   model = new DataRequest();
   constructor(private api:ApiHttpService,
     private dt:ChangeDetectorRef,
-    private notifySvr: NotificationsService
+    private cache:CacheService,
+    private notifySvr: NotificationsService,
+    private sanitizer: DomSanitizer
+
     ) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes.objectID?.currentValue && (changes.objectID?.currentValue != changes.objectID?.previousValue)){
+      this.getPostInfor();
+    }
+  }
 
   ngOnInit(): void {
+    if(this.objectID){
+       this.getPostInfor();
+    }
   }
   getPostInfor(){
-    this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetPostInfoAsync",[this.objectType,this.entityName])
+    this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetPostInfoAsync",[this.objectID,this.entityName])
     .subscribe((res) => {
       if(res){
         this.data = res;
+        this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
         this.dt.detectChanges();
+      }
+    })
+  }
+  getEntityName(){
+    this.cache.functionList(this.formModel.funcID).subscribe((res:any) => {
+      if(res){
+        this.entityName
       }
     })
   }
