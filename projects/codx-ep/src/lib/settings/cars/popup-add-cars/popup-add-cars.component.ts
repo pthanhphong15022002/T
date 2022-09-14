@@ -5,6 +5,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 
 import {
+  AuthService,
   CacheService,
   CallFuncService,
   CRUDService,
@@ -19,6 +20,7 @@ import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-boo
 
 
 import { CodxEpService } from '../../../codx-ep.service';
+import { Equipments } from '../../../models/equipments.model';
 
 @Component({
   selector: 'popup-add-cars',
@@ -34,14 +36,14 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();  
   @Output() loadData = new EventEmitter();
-
+  
   headerText='';
   subHeaderText = '';
 
   fGroupAddCar: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
-
+  lstEquipment=[];
   CbxName: any;
   isAfterRender = false;  
   gviewCar:any;
@@ -51,6 +53,7 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
   avatarID:any=null;
   notificationsService: any;
   constructor(    
+    private authService: AuthService,
     private callFuncService: CallFuncService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -69,6 +72,7 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {    
     this.initForm();
+    debugger;
     this.cacheService.valueList('EP012').subscribe((res) => {      
       this.vllDevices = res.datas;      
       this.vllDevices.forEach((item) => {
@@ -77,8 +81,8 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
         device.text = item.text;
         if(!this.isAdd)
         {          
-          this.data.equipments.split(";").forEach((item)=>{
-            if(item == device.id){
+          this.data.equipments.forEach((item)=>{
+            if(item.equipmentID == device.id){
               device.isSelected = true;
             }
           }); 
@@ -182,12 +186,12 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
    
     let equipments = '';
     this.tmplstDevice.forEach((element) => {
-      if (element.isSelected) {
-        if (equipments == '') {
-          equipments += element.id;
-        } else {
-          equipments += ';' + element.id;
-        }
+      if (element.isSelected) {  
+        let tempEquip = new Equipments();
+        tempEquip.equipmentID=element.id;
+        tempEquip.createBy=this.authService.userValue.userID;
+        this.lstEquipment.push(tempEquip);
+        
       }
     });
     if(this.fGroupAddCar.value.category!=1){
@@ -205,7 +209,7 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
     this.fGroupAddCar.patchValue({
       resourceType : '2',
       linkType : '3',
-      equipments:equipments,
+      equipments:this.lstEquipment,
     });
 
     this.dialogRef.dataService
