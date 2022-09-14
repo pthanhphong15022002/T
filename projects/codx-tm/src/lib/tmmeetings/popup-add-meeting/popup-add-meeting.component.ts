@@ -678,6 +678,10 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               this.endTimeWork = day.endTime.substring(0, 5);
             }
           }
+
+          //du lieu test 
+          this.startTimeWork =   this.startTimeWork ?   this.startTimeWork : "08:00" ;
+          this.endTimeWork =   this.endTimeWork ?   this.endTimeWork : "17:00" ;
         }
       });
   }
