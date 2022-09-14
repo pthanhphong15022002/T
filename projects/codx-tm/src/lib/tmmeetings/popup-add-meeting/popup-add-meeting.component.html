@@ -303,17 +303,11 @@
       <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
     </button>
   </div>
-
-  <!-- <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary ms-1">
-      <codx-label name="Save" default="Lưu" (click)="onSave()"></codx-label>
-    </button>
-  </div> -->
 </ng-template>
 
-<ng-template #addLink let-dialog>
+<ng-template #addLink let-dialog="dialogPopupLink">
   <codx-form headerText="{{ titleLink }}" subHeaderText="" [body]="bodyFormLink" [footer]="footerFormLink"
-    [dialog]="dialog">
+    [dialog]="dialogPopupLink">
   </codx-form>
 </ng-template>
 <ng-template #bodyFormLink>
@@ -328,7 +322,7 @@
   </div>
 </ng-template>
 <ng-template #footerFormLink>
-  <button type="button" class="btn btn-primary">
+  <button type="button" class="btn btn-primary" (click)="dialogPopupLink.close()">
     <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
   </button>
 </ng-template>
