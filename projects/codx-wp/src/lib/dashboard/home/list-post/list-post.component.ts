@@ -35,6 +35,7 @@ import {
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { SaveNoteComponent } from '../add-note/save-note/save-note.component';
 import { AddPostComponent } from './popup-add/addpost/addpost.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 
@@ -222,7 +223,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       status: 'share',
       headerText: 'Chia sẻ bài viết',
     };
-    this.dt.detectChanges();
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
@@ -236,6 +236,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       '',
       option
     );
+  }
+  openModalDownload(data: any){
+    this.callfc.openForm(SaveNoteComponent, '', 650, 550, '', data, '');
   }
   pushComment(data: any) {
     this.listview.dataService.data.map((p) => {
