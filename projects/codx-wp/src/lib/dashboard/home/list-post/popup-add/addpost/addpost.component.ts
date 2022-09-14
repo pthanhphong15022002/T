@@ -308,7 +308,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         this.dataEdit = res;
         this.dataEdit.files = this.codxFileEdit.files;
         (this.dialogRef.dataService as CRUDService).update(this.dataEdit).subscribe();
-        this.notifySvr.notifyCode('SYS007');
+        this.notifySvr.notifyCode('WP021');
         this.dialogRef.close(this.dataEdit);
       }
     });
@@ -341,14 +341,14 @@ export class AddPostComponent implements OnInit, AfterViewInit {
             (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
               if (res) {
                 (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
-                this.notifySvr.notifyCode('SYS006');
+                this.notifySvr.notifyCode('WP020');
                 this.dialogRef.close();
               }
             });
           }
           else {
             (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
-            this.notifySvr.notifyCode('SYS006');
+            this.notifySvr.notifyCode('WP020');
             this.dialogRef.close();
           }
         }

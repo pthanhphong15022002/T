@@ -31,7 +31,7 @@
 </ng-template>
 
 <ng-template #tmpPortal let-item>
-  <div class="p-5">
+  <div class="p-5 pb-0">
     <div class="d-flex align-items-top">
       <div class="me-3">
         <codx-img [objectId]="item.createdBy" objectType="AD_Users" [width]="40">
@@ -203,8 +203,12 @@
       <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>
     </ng-template>
     <!-- commemt -->
-    <treeview-comment [funcID]="codxViews.formModel.funcID" [fromModel]="codxViews.formModel"
-      [objectType]="'WP_Comments'" [dataComment]="item">
+    <treeview-comment 
+      [funcID]="codxViews.formModel.funcID" 
+      [fromModel]="codxViews.formModel"
+      [objectType]="'WP_Comments'"
+      [dataComment]="item"
+      [objectID]="item.recID">
     </treeview-comment>
     <!-- end comment -->
   </div>

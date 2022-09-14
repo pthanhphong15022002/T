@@ -48,7 +48,9 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-emoji">
-                        <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Icon"
+                        <button (click)="toggleEmojiPicker()" type="button"
+                            data-toggle="tooltip" 
+                            title="Cảm xúc"
                             class="btn btn-icon btn-md ms-2 btn-emoji">
                             <i class="icon-tag_faces icon-24 text-warning"></i>
                         </button>
@@ -60,13 +62,19 @@
                         </ng-container>
                     </div>
                     <div>
-                        <button (click)="tagUser()" type="button" data-toggle="tooltip"
+                        <button (click)="tagUser()" 
+                            type="button"
+                            data-toggle="tooltip"
+                            title="Gắn thẻ"
                             class="btn btn-icon btn-md ms-2">
                             <i class="icon-local_offer icon-24 text-primary"></i>
                         </button>
                     </div>
                     <div class="btn-upload">
-                        <button (click)="uploadFile()" type="button" data-toggle="tooltip"
+                        <button (click)="uploadFile()" 
+                        type="button" 
+                        data-toggle="tooltip"
+                        title="Hình ảnh"
                             class="btn btn-icon btn-md ms-2 ng-star-inserted">
                             <i class="icon-photo icon-24 text-success"></i>
                         </button>

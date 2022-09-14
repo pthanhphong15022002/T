@@ -78,7 +78,7 @@
                                     <i class="fas fa-ellipsis-h"></i>
                                 </a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                    <li *ngIf="data.write">
+                                    <li>
                                         <a ngbDropdownItem href="javascript:void(0)" (click)="editComment()">
                                             <span class="icon-edit icon-16 me-2"></span>
                                             <codx-label [formModel]="formModel" name="lblEdit_comments"
@@ -86,7 +86,7 @@
                                             </codx-label>
                                         </a>
                                     </li>
-                                    <li *ngIf="data.delete">
+                                    <li>
                                         <a ngbDropdownItem href="javascript:void(0)" (click)="deleteComment()">
                                             <span class="icon-delete icon-16 me-2"></span>
                                             <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa">
@@ -178,6 +178,7 @@
                 </div>
 
             </div>
+            
         </div>
     </div>
 

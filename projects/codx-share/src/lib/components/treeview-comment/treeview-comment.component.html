@@ -23,7 +23,7 @@
     <div class="d-flex align-items-center text-hover-underline me-1" (click)="showComments(dataComment)">
         <span>{{dataComment.totalComment}}</span>
         <span class="text-gray-800 ms-2">
-            <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+            <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
         </span>
     </div>
 </div>
@@ -33,12 +33,12 @@
             <div *ngIf="!dataComment.myVotedType;else myVoted">
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
                     <span class="fw-bold ms-2" style="color: gray;">
-                        <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
+                        <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
                     </span>
                 </div>
             </div>
             <div class="d-flex mod icon-like">
-                <ng-container *ngFor="let item of lstData">
+                <ng-container *ngFor="let item of vllL1480">
                     <a class="mod-icon" (click)="votePost(dataComment, item.value)">
                         <img src="/assets/themes/wp/default/img/{{item.icon}}" alt="Kiwi standing on oval"></a>
                 </ng-container>
@@ -63,35 +63,89 @@
             <div class="d-flex align-items-center justify-content-center text-hover-primary">
                 <span class="icon-chat_bubble_outline icon-18"></span>
                 <span class="text-dark fw-bold ms-2">
-                    <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+                    <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
                 </span>
             </div>
         </div>
     </div>
 </div>
 <div class="isHiden border-top" [class.isShow]="dataComment.isShowComment">
-    <codx-comments [funcID]="funcID" [objectType]="objectType" [new]="true" [formModel]="fromModel"
-        (evtSendComment)="sendComment($event)" [parentID]="dataComment.recID" [refID]="dataComment.recID">
+    <codx-comments 
+        [funcID]="funcID" 
+        [objectType]="objectType" 
+        [new]="true" 
+        [formModel]="formModel"
+        (evtSendComment)="sendComment($event)" 
+        [parentID]="dataComment.recID" 
+        [refID]="dataComment.recID">
     </codx-comments>
-    <ng-container *ngFor="let cm of dataComment.listComment">
-        <ng-container *ngTemplateOutlet="cmt; context: { $implicit: cm }">
-        </ng-container>
+    <ng-container *ngFor="let cm of lstComment">
+        <ng-container *ngTemplateOutlet="cmt; context: { $implicit: cm }"></ng-container>
     </ng-container>
 </div>
 <ng-template #cmt let-data>
     <div class="c1" [attr.dt]="setDicData(data)" id="{{data.recID}}">
-        <codx-comments [funcID]="funcID" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
-            [refID]="data.recID" [new]="false" [formModel]="fromModel" (evtDeleteComment)="deleteComment($event)"
+        <codx-comments 
+            [funcID]="funcID" 
+            [objectType]="objectType" 
+            [data]="data" 
+            [parentID]="data.parentID"
+            [refID]="data.recID" 
+            [new]="false"
+            [formModel]="formModel" 
+            (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)">
         </codx-comments>
-        <div class="c2 ms-10" *ngFor="let item of data.listComment">
-            <ng-container *ngTemplateOutlet="cmt context: { $implicit: item }">
-            </ng-container>
+        <div class="ms-10" *ngFor="let item of data.listComment">
+            <ng-container *ngTemplateOutlet="subCmt context: { $implicit: item }"></ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
-            <codx-comments [funcID]="funcID" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
-                (evtSendComment)="sendComment($event,data)" [new]="true" [parentID]="data.parentID" [refID]="data.recID"
-                [formModel]="fromModel">
+            <codx-comments 
+                [funcID]="funcID" 
+                [objectType]="objectType" 
+                (evtDeleteComment)="deleteComment($event)"
+                (evtSendComment)="sendComment($event,data)" 
+                [new]="true" [parentID]="data.parentID" 
+                [refID]="data.recID"
+                [formModel]="formModel">
+            </codx-comments>
+        </ng-container>
+    </div>
+</ng-template>
+<ng-template #subCmt let-data>
+    <div class="c2" [attr.dt]="setDicData(data)" id="{{data.recID}}">
+        <div>
+            <codx-comments 
+            [funcID]="funcID" 
+            [objectType]="objectType" 
+            [data]="data" 
+            [parentID]="data.parentID"
+            [refID]="data.recID" 
+            [new]="false"
+            [formModel]="formModel" 
+            (evtDeleteComment)="deleteComment($event)"
+            (evtReplyTo)="replyTo($event)">
+        </codx-comments>
+        </div>
+        <ng-container *ngIf="data.totalSubComment > 0">
+            <div class="ms-14">
+                <span class="text-dark fw-bold ms-2" (click)="loadSubComment(data)">
+                    <codx-label [formModel]="formModel" name="lblSeemore" default="Xem thêm"></codx-label>
+                </span>
+            </div>
+        </ng-container>
+        <div class="ms-10" *ngFor="let item of data.listComment">
+            <ng-container *ngTemplateOutlet="cmt context: { $implicit: item }"></ng-container>
+        </div>
+        <ng-container *ngIf="data.showReply">
+            <codx-comments 
+                [funcID]="funcID" 
+                [objectType]="objectType" 
+                (evtDeleteComment)="deleteComment($event)"
+                (evtSendComment)="sendComment($event,data)" 
+                [new]="true" [parentID]="data.parentID" 
+                [refID]="data.recID"
+                [formModel]="formModel">
             </codx-comments>
         </ng-container>
     </div>

@@ -136,11 +136,11 @@
                                         [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
                                     </codx-input>
                                 </div>
-                                <div *ngIf="(item.lineType == 'FILE' || item.lineType == 'IMAGE' )">
-                                    <codx-attachment #attachment [objectType]="objectType" hideBtnSave="1"
+                                <div [class]="(item.lineType == 'FILE' || item.lineType == 'IMAGE') ? '' : 'disable-element'">
+                                    <codx-attachment  [objectType]="objectType" hideBtnSave="1"
                                         hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0"
                                         hideImageThumb="0" [functionID]="funcID" [objectId]="item.recID"
-                                        [allowMultiFile]="1" [idBrowse]="'add'" (fileCount)="fileCount($event)"
+                                        [allowMultiFile]="1" [idBrowse]="'add'" (fileCount)="fileCount($event, attachment)"
                                         displayThumb="full" [id]="i">
                                     </codx-attachment>
                                 </div>
@@ -199,8 +199,17 @@
             <span class="icon-image icon-18 btn btn-icon btn-active-light-primary position-relative"
                 (click)="clickFunction('img', '', input)">
             </span>
-            <span class="icon-attach_file icon-18 btn btn-icon btn-active-light-primary position-relative"
-                (click)="clickFunction('attachment', '', input, '', '', true)">
+            <span  class="icon-attach_file icon-18 btn btn-icon btn-active-light-primary position-relative"
+                (click)="clickFunction('attachment', '', input, '', '', true, attachment)">
+                <div class="d-none">
+                    <codx-attachment #attachment
+                     [objectType]="objectType" hideBtnSave="1"
+                    hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0"
+                    hideImageThumb="0" [functionID]="funcID" 
+                    [allowMultiFile]="1" [idBrowse]="'add'" (fileCount)="fileCounts($event)"
+                     >
+                </codx-attachment>
+                </div>
             </span>
             <span class="border-right border-gray-200 mx-1"></span>
             <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative"

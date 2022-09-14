@@ -14,10 +14,11 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { ApprovalCarComponent } from './approval/car/approval-car.component';
-import { ApprovalRoomComponent } from './approval/room/approval-room.component';
+import { ApprovalCarsComponent } from './approval/car/approval-car.component';
+import { ApprovalRoomsComponent } from './approval/room/approval-room.component';
 import { ApprovalStationeryComponent } from './approval/stationery/approval-stationery.component';
-import { ViewDetailComponent } from './approval/stationery/view-detail/view-detail.component';
+import { TabsComponent } from './approval/tabs/tabs.component';
+import { ViewDetailComponent } from './approval/view-detail/view-detail.component';
 import { BookingCarComponent } from './booking/car/booking-car.component';
 import { CarDashboardComponent } from './booking/car/dashboard/dashboard.component';
 import { PopupAddBookingCarComponent } from './booking/car/popup-add-booking-car/popup-add-booking-car.component';
@@ -46,16 +47,24 @@ const routes: Route[] = [
     component: LayoutComponent,
     children: [
       {
-        path: 'bookingcars/:funcID',
-        component: BookingCarComponent,
-      },
-      {
         path: 'bookingrooms/:funcID',
         component: BookingRoomComponent,
       },
       {
+        path: 'bookingcars/:funcID',
+        component: BookingCarComponent,
+      },
+      {
         path: 'bookingstationery/:funcID',
         component: BookingStationeryComponent,
+      },
+      {
+        path: 'approvalrooms/:funcID',
+        component: ApprovalRoomsComponent,
+      },
+      {
+        path: 'approvalcars/:funcID',
+        component: ApprovalCarsComponent,
       },
       {
         path: 'approvalstationery/:funcID',
@@ -109,9 +118,9 @@ const Components: Type<any>[] = [
   BookingRoomComponent,
   BookingCarComponent,
   BookingStationeryComponent,
-  ApprovalRoomComponent,
-  ApprovalCarComponent,
   ApprovalStationeryComponent,
+  ApprovalCarsComponent,
+  ApprovalRoomsComponent,
   PopupAddBookingRoomComponent,
   PopupAddBookingCarComponent,
   PopupRequestStationeryComponent,
@@ -130,6 +139,7 @@ const Components: Type<any>[] = [
   CarDashboardComponent,
   StationeryDashboardComponent,
   ViewDetailComponent,
+  TabsComponent,
   DynamicFormComponent,
 ];
 
