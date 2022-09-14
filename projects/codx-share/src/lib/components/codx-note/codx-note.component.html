@@ -178,19 +178,21 @@
                                         <div *ngIf="item.lineType == 'IMAGE'">
                                             <div class="row mt-2 justify-content-between" *ngIf="lstEditIV">
                                                 <ng-container *ngFor="let data of lstEditIV">
-                                                    <div class="w-150 position-relative">
-                                                        <ng-container *ngIf="data.referType == REFER_TYPE.IMAGE">
-                                                            <ng-container *ngIf="data.recID;else imageSrc">
-                                                                <codx-img [recId]="data.recID"
-                                                                    [objectId]="data.objectID" [width]="150"
-                                                                    cssClass="pic" imageType="square">
-                                                                </codx-img>
+                                                    <div class="col-5 my-2" *ngIf="data.objectID == item.recID">
+                                                        <div class="w-150 position-relative">
+                                                            <ng-container *ngIf="data.referType == REFER_TYPE.IMAGE">
+                                                                <ng-container *ngIf="data.recID;else imageSrc">
+                                                                    <codx-img [recId]="data.recID"
+                                                                        [objectId]="data.objectID" [width]="150"
+                                                                        cssClass="pic" imageType="square">
+                                                                    </codx-img>
+                                                                </ng-container>
+                                                                <ng-template #imageSrc>
+                                                                    <img [src]="data.data || data.avatar" alt=""
+                                                                        class="image">
+                                                                </ng-template>
                                                             </ng-container>
-                                                            <ng-template #imageSrc>
-                                                                <img [src]="data.data || data.avatar" alt=""
-                                                                    class="image">
-                                                            </ng-template>
-                                                        </ng-container>
+                                                        </div>
                                                     </div>
                                                 </ng-container>
                                             </div>

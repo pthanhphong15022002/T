@@ -58,7 +58,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   headerComment = '';
   checkFile = false;
   totalComment = 0;
-  lstEditIV: any[] = [];
+  lstEditIV: any = new Array();
   user: any = null;
   MODE_IMAGE_VIDEO = 'VIEW';
   listNoteTemp: any = {
@@ -748,6 +748,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     item.attachments = 0;
     obj.push(item);
 
+    let listFileTemp;
     this.updateContent(this.objectParentID, obj).subscribe(async (res: any) => {
       if (res) {
         // up file
@@ -762,14 +763,16 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
               e['referType'] = this.REFER_TYPE.APPLICATION;
             }
           });
+          listFileTemp = files[0];
+          // let lstIVTemp = JSON.parse(JSON.stringify(this.lstEditIV));
           if (this.lstViewIV.length > 0) {
             if (this.MODE_IMAGE_VIDEO == 'VIEW')
               this.lstEditIV = this.lstViewIV;
             this.lstEditIV.push(files[0]);
-          } else this.lstEditIV = files;
-          console.log('check lstEditIV', this.lstEditIV);
+          } else this.lstEditIV.push(files[0]);
         }
-        this.ATM_IV.fileUploadList = this.lstEditIV;
+        if (listFileTemp.length > 0) this.ATM_IV.fileUploadList = listFileTemp;
+        console.log('check this.ATM_IV.fileUpload', this.ATM_IV.fileUploadList);
         (await this.ATM_IV.saveFilesObservable()).subscribe((result: any) => {
           if (result) {
             this.contents = obj;
