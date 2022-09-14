@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, CacheService, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 
 @Component({
   selector: 'lib-popup-save',
@@ -17,7 +17,7 @@ export class PopupSavePostComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
-    private cache: CacheService,
+    private notifiSV: NotificationsService,
     private auth:AuthService,
     @Optional() dd?: DialogData,
     @Optional() dialog?: DialogRef
@@ -45,14 +45,18 @@ export class PopupSavePostComponent implements OnInit {
 
 
   saveObjectToStorage(){
-    this.api.execSv("WP","ERM.Business.WP","StoragesBusiness","GetListStorageByUserIDAsync")
+    this.api.execSv("WP","ERM.Business.WP","StoragesBusiness","InsertIntoStorageAsync",[this.storageIDSelected])
     .subscribe((res:any) => {
       if(res){
-
+        this.notifiSV.notifyCode("SYS006");
+      }
+      else{
+        this.notifiSV.notifyCode("SYS023");
       }
     });
   }
 
+  storageIDSelected:any = null;
   selectStorage(item){
     this.listStorage.map((x:any) =>{
       if(x.recID != item.recID){
@@ -60,6 +64,7 @@ export class PopupSavePostComponent implements OnInit {
       }
       else
       {
+        this.storageIDSelected = x.recID;
         x.isActive = true;
       }
     });
