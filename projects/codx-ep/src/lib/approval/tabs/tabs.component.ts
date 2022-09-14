@@ -5,7 +5,8 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { TabModel } from './model/tabControl.model';
+import { TabModel } from '../../models/tabControl.model';
+
 
 @Component({
   selector: 'approval-tabs',
