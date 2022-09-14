@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthService, CacheService, DataRequest, FormModel, NotificationsService } from 'codx-core';
@@ -70,7 +71,9 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   constructor(private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private cache:CacheService,
-    private notifySvr: NotificationsService
+    private notifySvr: NotificationsService,
+    private sanitizer: DomSanitizer
+
     ) { }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.objectID?.currentValue && (changes.objectID?.currentValue != changes.objectID?.previousValue)){
@@ -88,6 +91,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     .subscribe((res) => {
       if(res){
         this.data = res;
+        this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
         this.dt.detectChanges();
       }
     })
