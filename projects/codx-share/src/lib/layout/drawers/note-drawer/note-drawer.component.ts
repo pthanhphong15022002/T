@@ -189,7 +189,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'GetParamAsync')
       .subscribe((res) => {
-        this.maxPinNotes = res[0].msgBodyData[0].fieldValue;
+        if (res) this.maxPinNotes = res[0].msgBodyData[0].fieldValue;
       });
   }
 
@@ -295,9 +295,11 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         // this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
-        var object = [{ data: res, type: 'edit' }];
-        this.noteService.data.next(object);
-        this.changeDetectorRef.detectChanges();
+        if (res) {
+          var object = [{ data: res, type: 'edit' }];
+          this.noteService.data.next(object);
+          this.changeDetectorRef.detectChanges();
+        }
       });
   }
 
