@@ -355,21 +355,21 @@ export class PopupAddBookingCarComponent implements OnInit {
 
   valueCbxCarChange(event?) {
     if (event?.data != null && event?.data != '') {
-      this.tmplstDevice = [];
-      var cbxCar = event.component.dataService.data;
-      cbxCar.forEach((element) => {
-        if (element.ResourceID == event.data) {
-          var carEquipments = element.Equipments.split(';');
-          carEquipments.forEach((item) => {
-            this.lstDeviceCar.forEach((device) => {
-              if (item == device.id) {
-                device.isSelected = false;
-                this.tmplstDevice.push(device);
-              }
-            });
-          });
-        }
-      });
+      // this.tmplstDevice = [];
+      // var cbxCar = event.component.dataService.data;
+      // cbxCar.forEach((element) => {
+      //   if (element.ResourceID == event.data) {
+      //     var carEquipments = element.Equipments.split(';');
+      //     carEquipments.forEach((item) => {
+      //       this.lstDeviceCar.forEach((device) => {
+      //         if (item == device.id) {
+      //           device.isSelected = false;
+      //           this.tmplstDevice.push(device);
+      //         }
+      //       });
+      //     });
+      //   }
+      // });
       this.driverChangeWithCar(event.data);
     }
   }
@@ -403,6 +403,7 @@ export class PopupAddBookingCarComponent implements OnInit {
       });
   }
   valueCbxUserChange(event?) {
+    this.lstPeople=[];
     event.data.dataSelected.forEach((people) => {
       this.tempAtender = {
         userId: people.id,
