@@ -101,7 +101,7 @@ export class CodxImportComponent implements OnInit, OnChanges {
     if(this.fileCount<=0) return this.notifySvr.notifyCode("OD022");
     this.submitted = true;
     if (this.importGroup.invalid) return;
-    this.api.execSv(this.service,"CM","CMBusiness","ImportAsync",[this.binaryString,this.fileName,this.importGroup.value.dataImport]).subscribe(item=>{
+    this.api.execSv(this.service,"CM","CMBusiness","ImportAsync",[this.binaryString,this.fileName,this.importGroup.value.dataImport,this.formModel?.entityName,"",""]).subscribe(item=>{
       debugger;
     })
   }

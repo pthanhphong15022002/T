@@ -60,7 +60,7 @@
                             <span class=" ">5</span>
                         </div>
                     </div>
-                    <codx-imgs [width]="30" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users"
+                    <codx-imgs [width]="25" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users"
                         [numberImages]="2">
                     </codx-imgs>
                 </div>
@@ -236,7 +236,7 @@
                         <!--end::Svg Icon-->
                     </a>
                 </li>
-            </ul>
+            </ul>.
         </div>
     </div>
 </div>
@@ -310,8 +310,44 @@
         <h4>Qui trình tuyển dụng </h4>
         <div class="card" style="width:550px">
             <div class="card-body">
-                <div class="mb-0">
-                    <h4 class="fw-bold text-gray-900 mb-10">Đánh giá</h4>
+                <div class="mb-5">
+                    <h4 class="fw-bold text-gray-900 mb-104">Thông tin</h4>
+                    <div class="d-flex flex-wrap mb-2">
+                        <div class="d-flex align-items-center me-4">
+                            <span class="fw-bolb w-100px">
+                                <codx-label name="" default="Người tạo:">
+                                </codx-label>
+                            </span>
+                            <span class="text-dark">Lê Phạm Hoài Thương</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-1 icon-16 icon-access_alarm"></span><span>07/12/2021 10:53 AM</span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap mb-2">
+                        <div class="d-flex align-items-center me-4">
+                            <span class="fw-bolb w-100px">
+                                <codx-label name="" default="Phiên bản:">
+                                </codx-label>
+                            </span>
+                            <span class="text-dark">V1.0</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-1 icon-16 icon-access_alarm"></span><span>07/12/2021 10:53 AM</span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap mb-2">
+                        <div class="d-flex align-items-center me-4">
+                            <span class="fw-bolb w-100px">
+                                <codx-label name="" default="Chủ qui trình:">
+                                </codx-label>
+                            </span>
+                            <span class="text-dark">Phạm Hữu Thời</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <h4 class="fw-bold text-gray-900 mb-4">Đánh giá</h4>
                     <div class="d-flex flex-stack w-100 me-2">
                         <!--begin::Section-->
                         <div class="d-flex flex-column flex-center">
@@ -450,54 +486,217 @@
                         </codx-input>
                     </div>
                 </div>
-                <div class="border rounded p-2 p-lg-6 mb-10">
-                    <!--begin::Wrapper-->
-                    <div class="mb-0">
-                        <!--begin::Foot-->
-                        <div class="d-flex flex-stack flex-wrap mb-5">
-                            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
-                                [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'" [desc2]="'Comment...'">
-                            </codx-temp-full>
-                            <div class="d-flex align-items-center text-center">
-                                <div class="d-flex flex-column">
 
-                                    <div class="text-gray-600 fs-7">1 tháng trước</div>
-                                    <div class="rating  px-4 me-2">
-                                        <div class="rating-label">
-                                            <i class="icon-star_outline "></i>
-                                        </div>
-                                        <div class="rating-label">
-                                            <i class="icon-star_outline "></i>
-                                        </div>
-                                        <div class="rating-label ">
-                                            <i class="icon-star_outline "></i>
-                                        </div>
-                                        <div class="rating-label ">
-                                            <i class="icon-star_outline "></i>
-                                        </div>
-                                        <div class="rating-label ">
-                                            <i class="icon-star_outline "></i>
-                                        </div>
+                <!--begin::Wrapper-->
+                <div class="mb-4">
+                    <!--begin::Foot-->
+                    <div class="d-flex flex-stack flex-wrap mb-5">
+                        <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+                            [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+                        </codx-temp-full>
+                        <div class="d-flex align-items-center text-center">
+                            <div class="d-flex flex-column">
+
+                                <div class="text-gray-600 fs-7">1 tháng trước</div>
+                                <div class="rating">
+                                    <div class="rating-label checked">
+                                        <i class="icon-star "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star_half "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star_border "></i>
                                     </div>
                                 </div>
-
                             </div>
 
                         </div>
-                        <!--end::Foot-->
-                        <!--begin::Message-->
-                        <div class="fs-5 fw-normal text-gray-800">I’ve been doing some ajax request, to populate a
-                            inside drawer, the
-                            content of that drawer has a sub menu, that you are using in list and all card toolbar.
-                        </div>
-                        <!--end::Message-->
+
                     </div>
-                    <!--end::Wrapper-->
-                    <!--begin::Replies-->
-                    <div class="ps-10 mb-0"></div>
-                    <!--end::Replies-->
+                    <!--end::Foot-->
+                    <!--begin::Message-->
+                    <div class="fs-5 fw-normal text-gray-800">I’ve been doing some ajax request, to populate a
+                        inside drawer, the
+                        content of that drawer has a sub menu, that you are using in list and all card toolbar.
+                    </div>
+                    <!--end::Message-->
+                </div>
+                <!--end::Wrapper-->
+
+                <div class="separator my-2"></div>
+                <!--begin::Wrapper-->
+                <div class="mb-4">
+                    <!--begin::Foot-->
+                    <div class="d-flex flex-stack flex-wrap mb-5">
+                        <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+                            [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+                        </codx-temp-full>
+                        <div class="d-flex align-items-center text-center">
+                            <div class="d-flex flex-column">
+
+                                <div class="text-gray-600 fs-7">2 tháng trước</div>
+                                <div class="rating">
+                                    <div class="rating-label checked">
+                                        <i class="icon-star "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star_half "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star_border "></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!--end::Foot-->
+                    <!--begin::Message-->
+                    <div class="fs-5 fw-normal text-gray-800">I’ve been doing some ajax request, to populate a
+                        inside drawer, the
+                        content of that drawer has a sub menu, that you are using in list and all card toolbar.
+                    </div>
+                    <!--end::Message-->
+                </div>
+                <!--end::Wrapper-->
+
+            </div>
+        </div>
+    </div>
+    <div class="p-5">
+        <h2 class="text-danger  py-4 uppercase "> 41_BP_Process_Detail</h2>
+        <h4>Qui trình tuyển dụng - Vị trí Manager </h4>
+        <div class="card" style="width:936px">
+            <div class="card-body">
+                <div class="mb-5">
+                    <h4 class="fw-bold text-gray-900 mb-104">Qui trình tuyển dụng - Vị trí Manager</h4>
+                    <div class="d-flex flex-wrap mb-2">
+                        <div class="d-flex align-items-center me-4">
+                            <span class="fw-bolb">
+                                <codx-label name="" default="Phiên bản:">
+                                </codx-label>
+                            </span>
+                            <span class="text-dark">v1.01</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="fw-bolb">
+                                <codx-label name="" default="Ngày hiệu lực:">
+                                </codx-label>
+                            </span>
+                            <span class="text-dark">01/01/2021</span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap mb-2">
+                        <div class="d-flex align-items-center me-4">
+                            <span>Theo dõi quá trình tuyển dụng từ khi yêu cầu > đăng tuyển > sàn lọc hồ sơ > phỏng vấn
+                                > tuyển chọn > offer > ký HĐLĐ</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <div class="card card-steplist">
+
+                        <div class="steplist-hearder  border border-gray-200 rounded px-6 py-4">
+                            <codx-temp-full [title]="'Công đoạn 2: Sơ vấn'" [titleCss]="'fs-3 mb-2'"
+                                [baseHeaderRightTmp]="tmp"
+                                [desc]="'Nhân viên TA chuẩn bị câu hỏi khảo sát, gọi điện thoại sơ vấn những ứng viên có hồ sơ qua vòng sàng lọc'">
+                            </codx-temp-full>
+                        </div>
+                        <ng-template #tmp>
+                            <div><span class="text-danger">1.5h/UV</span></div>
+                        </ng-template>
+
+                        <div id="kt_docs_card_collapsible" class="collapse show">
+                            <div class="card-body p-0">
+                                <div class="steplist ps-6 pt-4">
+                                    <div class="steplist-item  step-primary rounded p-4">
+                                        <codx-temp-full [title]="'Công đoạn 2: Sơ vấn'" [titleCss]="'fs-5 mb-1'"
+                                            [baseHeaderRightTmp]="tmp"
+                                            [desc]="'Nhân viên TA chuẩn bị câu hỏi khảo sát, gọi điện thoại sơ vấn những ứng viên có hồ sơ qua vòng sàng lọc'">
+                                        </codx-temp-full>
+                                    </div>
+                                    <div class="steplist-item  step-danger rounded p-4">
+                                        <div>Theo dõi quá trình tuyển dụng từ khi yêu cầu</div>
+                                        <div class="fs-3 text-danger">Dùng control Note chỗ Nguyên</div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="d-flex align-items-center border border-left-4 border-color-primary  card-rounded p-5 p-lg-10 mb-14">
+                                    <div class="d-flex flex-wrap mb-2">
+                                        <div class="d-flex align-items-center me-4">
+                                            <span>Theo dõi quá trình tuyển dụng từ khi yêu cầu > đăng tuyển > sàn lọc hồ
+                                                sơ > phỏng vấn
+                                                > tuyển chọn > offer > ký HĐLĐ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
+    </div>
+    <div class="p-5">
+        <h2 class="text-danger  py-4 uppercase "> 42_BP_Process_Kaban</h2>
+        <h4>Bước quy trình </h4>
+        <div class="kanban-board w-300px me-1">
+            <div class="kanban-board-header bg-danger">
+                <div class="d-flex align-items-center">
+                    <codx-temp-full [icoTitleCss]="'icon-photo_library'" [title]="'Sơ vấn'"
+                        [baseHeaderRightTmp]="'tmp'"></codx-temp-full>
+                </div>
+
+            </div>
+            <div class="kanban-board-body">
+                <codx-card-img cardCss="border border-warning rounded-0 w-275px card-no-body mb-2"
+                    imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                    [footer]="footerBoard">
+                </codx-card-img>
+                <codx-card-img cardCss="border border-warning rounded-0 w-275px card-no-body"
+                    imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1"
+                    [footer]="footerBoard">
+                </codx-card-img>
+            </div>
+            <ng-template #footerBoard>
+                <div class="d-flex bg-footer  m-n3 mt-0">
+                    <div class="d-flex flex-column w-100 p-3">
+                        <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center card-icon-nowrap me-1 ">
+                                <span class="me-1 icon-16 icon-access_alarm"></span><span class="fw-bolb">Thời
+                                    gian:</span>
+                            </div>
+                            <div class="badge  badge-white my-1 me-3">30’/hồ sơ</div>
+                        </div>
+                        <div class="d-flex align-items-center card-icon-nowrap me-1 ">
+                            <span class="me-1 icon-person_pin_circle"></span><span class="fw-bolb ">Nhân viên
+                                tuyển
+                                dụng</span>
+                        </div>
+                        <div class="d-flex align-items-center mt-2">
+                            <codx-imgs [width]="25" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users"
+                                [numberImages]="2">
+                            </codx-imgs>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+
     </div>

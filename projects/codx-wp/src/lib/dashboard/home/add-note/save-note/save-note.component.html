@@ -6,14 +6,12 @@
                     <codx-card-img cardCss="border rounded-4 w-230px  h-100" [imageId]="item.recID"
                         imgCss="w-228px h-140px" icoTitleCss="icon-assignment icon-16" [title]="item.title"
                         cssTitle="line-clamp line-clamp-1" [imgOn]="item?.modifiedOn" [desc2]="item.memo"
-                        cssDes2="line-clamp line-clamp-2" imageWidth="230" [imageObjType]="'WP_NoteBooks'"
-                        [formModel]="view.formModel">
+                        cssDes2="line-clamp line-clamp-2" imageWidth="230" [imageObjType]="'WP_NoteBooks'">
                     </codx-card-img>
                 </div>
             </div>
         </div>
     </ng-template>
-
 </codx-form>
 
 <codx-views #view [funcID]="'MWP0094'" service="WP" entityName="WP_NoteBooks" [predicate]="predicate"

@@ -30,13 +30,14 @@ import { PopupAddDriversComponent } from './popup-add-drivers/popup-add-drivers.
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss']
 })
-export class DriversComponent  implements OnInit, AfterViewInit { 
+export class DriversComponent implements OnInit, AfterViewInit { 
   @ViewChild('view') viewBase: ViewsComponent;  
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('categoryCol') categoryCol: TemplateRef<any>;  
   @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
   @ViewChild('avatar') avatar: TemplateRef<any>;
+  @ViewChild('owner') owner: TemplateRef<any>;
  
   @Input() data!: any;
 
@@ -82,9 +83,6 @@ export class DriversComponent  implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
-    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
-
     this.buttons = {
       id: 'btnAdd',
     };
@@ -113,14 +111,19 @@ export class DriversComponent  implements OnInit, AfterViewInit {
           // {
           //   headerText: 'Tình trạng',
           //   template: this.statusCol,
+          // // },
+          // {
+          //   headerText: 'Xếp hạng',
+          //   template: this.rankingCol,
           // },
-          {
-            headerText: 'Xếp hạng',
-            template: this.rankingCol,
-          },
           {
             headerText: 'Nguồn',
             template: this.categoryCol,
+          },
+          {
+            headerText: "Người điều phối",
+            width: '20%',
+            template: this.owner,
           },
         ];
 

@@ -40,16 +40,11 @@ export class DetailNoteBooksComponent extends UIComponent {
     gridViewName: '',
     entityName: '',
   };
-  gridViewSetup = {
-    entityName: '',
-    service: '',
-    assemblyName: '',
-    className: '',
-  };
   editMF: any;
   deleteMF: any;
   pinMF: any;
   saveMF: any;
+  gridViewSetup: any;
 
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
@@ -86,6 +81,11 @@ export class DetailNoteBooksComponent extends UIComponent {
           this.saveMF = res[1];
         }
       });
+    this.cache.gridViewSetup('Notes', 'grvNotes').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
   onInit(): void {
