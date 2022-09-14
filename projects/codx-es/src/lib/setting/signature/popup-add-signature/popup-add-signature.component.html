@@ -251,12 +251,27 @@
           >
             <div class="m-auto">
               <div class="m-auto">
-                <codx-img
+                <!-- <codx-img
                   [objectId]="data.signature1 == null ? '' : data.recID + '1'"
                   imageType="square"
                   [width]="50"
                   [recId]="data.signature1"
-                ></codx-img>
+                ></codx-img> -->
+
+                <codx-img
+                  #imageUpload
+                  class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                  [width]="80"
+                  [recId]="data.signature1"
+                  [objectId]="data.signature1 == null ? '' : data.recID + '1'"
+                  [objectType]="'ES_Signatures'"
+                  data-kt-menu-trigger="click"
+                  data-kt-menu-attach="parent"
+                  data-kt-menu-placement="bottom-end"
+                  data-kt-menu-flip="bottom"
+                  [isAllowEdit]="false"
+                >
+                </codx-img>
               </div>
             </div>
           </div>
@@ -270,12 +285,26 @@
             class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
           >
             <div class="m-auto">
-              <codx-img
+              <!-- <codx-img
                 [objectId]="data.signature2 == null ? '' : data.recID + '2'"
                 imageType="square"
                 [width]="50"
                 [recId]="data.signature2"
-              ></codx-img>
+              ></codx-img> -->
+              <codx-img
+                #imageUpload
+                class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                [width]="80"
+                [recId]="data.signature2"
+                [objectId]="data.signature2 == null ? '' : data.recID + '2'"
+                [objectType]="'ES_Signatures'"
+                data-kt-menu-trigger="click"
+                data-kt-menu-attach="parent"
+                data-kt-menu-placement="bottom-end"
+                data-kt-menu-flip="bottom"
+                [isAllowEdit]="false"
+              >
+              </codx-img>
             </div>
           </div>
           <codx-label fiedName="Signature2" [formModel]="dialog.formModel">
@@ -286,12 +315,26 @@
             class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
           >
             <div class="m-auto">
-              <codx-img
+              <!-- <codx-img
                 [objectId]="data.stamp == null ? '' : data.recID + 's'"
                 imageType="square"
                 [width]="50"
                 [recId]="data.stamp"
-              ></codx-img>
+              ></codx-img> -->
+              <codx-img
+                #imageUpload
+                class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                [width]="80"
+                [recId]="data.stamp"
+                [objectId]="data.stamp == null ? '' : data.recID + 's'"
+                [objectType]="'ES_Signatures'"
+                data-kt-menu-trigger="click"
+                data-kt-menu-attach="parent"
+                data-kt-menu-placement="bottom-end"
+                data-kt-menu-flip="bottom"
+                [isAllowEdit]="false"
+              >
+              </codx-img>
             </div>
           </div>
           <codx-label fiedName="Stamp" [formModel]="dialog.formModel">

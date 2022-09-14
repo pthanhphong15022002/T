@@ -70,7 +70,9 @@ export class SignFileComponent extends UIComponent {
   method = 'GetAsync';
   idField = 'recID';
 
-  dataSelected;
+  predicate = '';
+  datavalue = '';
+  dataSelected = '';
   SidebarModel;
 
   dialog: DialogRef;

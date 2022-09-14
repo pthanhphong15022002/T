@@ -2,6 +2,7 @@
 [header]="header" 
 [body]="body" 
 [footer]="footer" 
+[hideMF]="true"
 [formModel]="formModel">
 </codx-detail-tmp>
 <ng-template #header>
@@ -135,7 +136,7 @@
                 </div>
                 <ng-container *ngIf="data.newsType =='1';else video">
                     <div class="row mt-2 px-5 p-2">
-                        <div class="border border-3 border-light ms- py-5" [innerHTML]="data.contents"></div>
+                        <div class="border border-3 border-light ms- py-5" [innerHTML]="data.contentHtml"></div>
                     </div>
                 </ng-container>
 

@@ -312,7 +312,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
+          <tr (dblclick)="dmSV.openItem(item)" 
             class="border-top dms-list"
             *ngFor="let item of data"
             [title]="

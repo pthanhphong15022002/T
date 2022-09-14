@@ -7,7 +7,7 @@
       <div class="codx-approval-header d-flex align-items-center">
         <div class="step-number">{{ item.stepNo }}</div>
         <div class="step-title text-gray-800 fw-bold fs-5">
-          {{ item.stepName }}
+          {{ item.stepType | vll: "ES002":"text" | async }}
         </div>
       </div>
       <div class="codx-approval-content ms-17">
