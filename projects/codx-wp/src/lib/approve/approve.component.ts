@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Button } from '@syncfusion/ej2-angular-buttons';
 import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel, ButtonModel } from 'codx-core';
 import { map } from 'rxjs';
-import { AddPostComponent } from '../dashboard/home/list-post/popup-add/addpost/addpost.component';
+import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
 import { ApproveDetailComponent } from './approve-detail/approve-detail.component';
 
@@ -115,7 +115,6 @@ export class ApproveComponent extends UIComponent {
       }
       this.getGridViewSetUp().subscribe();
       this.loadTabAsside(this.predicate,this.dataValue,this.entityName);
-      
       this.dt.detectChanges();
     });
   }
@@ -317,7 +316,7 @@ export class ApproveComponent extends UIComponent {
               let option = new DialogModel();
               option.DataService = this.codxViews.dataService;
               option.FormModel = this.codxViews.formModel;
-              this.callfc.openForm(AddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
+              this.callfc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
                 if(data.result){
                   console.log(data);
                 }

@@ -253,6 +253,12 @@ export class RolesComponent implements OnInit {
 
       this.fileEditing =  JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));   
       this.id = this.fileEditing.recID;
+      if (this.fileEditing.folderName != null) {
+        this.type = 'folder';
+      }
+      else 
+        this.type = 'file';
+
       this.user = this.auth.get();
       this.dialog = dialog;    
       this.startDate = null;
@@ -588,7 +594,7 @@ export class RolesComponent implements OnInit {
     if (this.modePermission) {
       if (this.type == "file") {
         this.fileService.updatePermisson(this.fileEditing).subscribe(async res => {
-          if (res != null) {
+          if (res != null) {            
             this.notificationsService.notify(res.message);
           }
         });

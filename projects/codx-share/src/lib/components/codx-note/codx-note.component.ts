@@ -800,9 +800,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     console.log('check ');
   }
 
-  totalCommentChange(e) {
-    debugger;
-  }
+  totalCommentChange(e) {}
 
   assign(index) {
     var task = new TM_Tasks();

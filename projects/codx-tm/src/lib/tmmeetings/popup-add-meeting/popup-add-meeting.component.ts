@@ -71,6 +71,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   isHaveFile = false;
   showLabelAttachment = false;
   titleAction = '';
+  calendarID: string;
+  startTimeWork: any;
+  endTimeWork: any;
 
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -97,7 +100,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.getListUser(this.user.userID);
     }
     this.functionID = this.dialog.formModel.funcID;
-
+    this.getTimeParameter() ;
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
@@ -597,4 +600,36 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     else this.isHaveFile = false;
     if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
+  //region time work
+  getTimeParameter() {
+    this.api
+    .execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['TMParameters', '1']
+    )
+    .subscribe((res) => {
+      if (res) {
+        var param = JSON.parse(res.dataValue);
+        this.calendarID = param.CalendarID
+        this.api
+            .execSv<any>(
+              'BS',
+              'ERM.Business.BS',
+              'CalendarWeekdaysBusiness',
+              'GetDayShiftAsync',
+              [this.calendarID]
+            )
+            .subscribe((data) => {
+              if (data) {
+                
+              }
+            });
+        } 
+      })
+  }
+
+  //end
 }

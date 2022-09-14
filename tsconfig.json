@@ -96,6 +96,10 @@
       ],
       "@shared/*": [
         "src/shared/*"
+      ],
+      "test": [
+        "dist/test/test",
+        "dist/test"
       ]
     }
   },
