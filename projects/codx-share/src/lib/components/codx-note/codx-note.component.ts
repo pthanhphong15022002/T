@@ -750,7 +750,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
           this.lstIV = files;
         }
         this.ATM_IV.fileUploadList = this.lstIV;
-        debugger;
+
         (await this.ATM_IV.saveFilesObservable()).subscribe((result: any) => {
           if (result) {
             this.contents = obj;
@@ -781,9 +781,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     console.log('check ');
   }
 
-  totalCommentChange(e) {
-    debugger;
-  }
+  totalCommentChange(e) {}
 
   assign(index) {
     var task = new TM_Tasks();
