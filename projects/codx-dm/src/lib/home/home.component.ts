@@ -181,7 +181,8 @@ export class HomeComponent extends UIComponent {
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
-      id: 'btnUpload',
+      id: 'btnUpload',            
+      text: 'Tải lên'
     };
 
     this.route.queryParams

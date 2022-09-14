@@ -70,7 +70,9 @@ export class SignFileComponent extends UIComponent {
   method = 'GetAsync';
   idField = 'recID';
 
-  dataSelected;
+  predicate = '';
+  datavalue = '';
+  dataSelected = '';
   SidebarModel;
 
   dialog: DialogRef;
@@ -162,7 +164,7 @@ export class SignFileComponent extends UIComponent {
 
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
-      this.dialog = this.callfunc.openForm(
+      let dialogAdd = this.callfunc.openForm(
         PopupAddSignFileComponent,
         'Thêm mới',
         700,
@@ -176,11 +178,15 @@ export class SignFileComponent extends UIComponent {
         '',
         dialogModel
       );
-      this.dialog.closed.subscribe((x) => {
+      dialogAdd.closed.subscribe((x) => {
         if (x.event) {
-          delete x.event._uuid;
-          this.view.dataService.add(x.event, 0).subscribe();
-          //this.getDtDis(x.event?.recID)
+          if (x.event?.approved) {
+            this.view.dataService.add(x.event.data, 0).subscribe();
+          } else {
+            delete x.event._uuid;
+            this.view.dataService.add(x.event, 0).subscribe();
+            //this.getDtDis(x.event?.recID)
+          }
         }
       });
     });

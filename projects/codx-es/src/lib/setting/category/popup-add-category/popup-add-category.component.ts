@@ -307,7 +307,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     // let itemData = this.dialogCategory.value;
 
     let countStep = this.lstStep?.length ?? 0;
-    if (this.isAdd) {
+    if (this.isAdd && this.isSaved == false) {
       option.methodName = 'AddNewAsync';
     } else {
       option.methodName = 'EditCategoryAsync';
@@ -321,7 +321,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     console.log('result data:', this.data);
     console.log('result formGroup: ', this.form.formGroup);
     if (this.dialogCategory.invalid == true) {
-      this.esService.notifyInvalid(this.form.formGroup, this.formModel);
+      this.esService.notifyInvalid(this.dialogCategory, this.formModel);
       return;
     }
 
@@ -333,13 +333,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res.update || res.save) {
           this.isSaved = true;
           this.updateAutonumber();
-          if (res.save) {
-            this.updateApprovalStep(true);
-          } else {
+          // if (res.save) {
+          //   this.updateApprovalStep(true);
+          // } else
+          if (res.update) {
             (this.dialog.dataService as CRUDService)
               .update(res.update)
               .subscribe();
-            this.updateApprovalStep(false);
+            //this.updateApprovalStep(false);
           }
           if (isClose) {
             this.dialog && this.dialog.close();
@@ -389,12 +390,17 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   openPopupApproval() {
-    if (this.isAdd) {
-      this.onSaveForm(false);
-    }
     this.dialogCategory.patchValue(this.data);
     if (this.dialogCategory.invalid == true) {
+      this.esService.notifyInvalid(this.dialogCategory, this.formModel);
       return;
+    }
+    if (this.isAdd) {
+      this.esService.addNewCategory(this.data).subscribe((res) => {
+        if (res) {
+          this.isSaved = true;
+        }
+      });
     }
     let transID = this.data.recID;
     // let transID = this.dialogCategory.value.recID;
@@ -410,7 +416,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
 
-    this.cfService.openForm(
+    let popupeStep = this.cfService.openForm(
       ApprovalStepComponent,
       '',
       screen.width,
@@ -420,6 +426,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       '',
       dialogModel
     );
+
+    popupeStep.closed.subscribe((res) => {
+      if (res.event) {
+      }
+    });
   }
 
   closePopup() {

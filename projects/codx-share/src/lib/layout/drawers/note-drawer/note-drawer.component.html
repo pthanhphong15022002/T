@@ -11,7 +11,7 @@
         </div>
         <div class="d-flex flex-column">
             <div class="notes">
-                <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"
+                <codx-listview [itemTemplate]="template" #listview [funcId]="functionList?.functionID" entityName="WP_Notes"
                     gridViewName="'grvNotes'" service="WP" type="listView" [predicate]="predicate"
                     [dataValue]="dataValue" [dataService]="dtService">
                 </codx-listview>

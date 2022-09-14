@@ -433,7 +433,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               //this.view.dataService.update(x.event).subscribe();
               //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
               //this.view.dataService.update(x.event).subscribe();
-            
+
               this.odService
                 .getDetailDispatch(x.event.recID)
                 .subscribe((item) => {
@@ -731,9 +731,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                     debugger;
                     this.data.relations = item.data[0].relations;
                     this.data.lstUserID = getListImg(item.data[0].relations);
-                    var index = this.data.listInformationRel.findIndex(x=>x.userID == item.data[1]);
+                    var index = this.data.listInformationRel.findIndex(
+                      (x) => x.userID == item.data[1]
+                    );
                     this.data.listInformationRel[index].reCall = true;
-                    this.ref.detectChanges()
+                    this.ref.detectChanges();
                     //this.data.listInformationRel = item.data[1];
                   }
                   this.notifySvr.notify(item.message);
@@ -828,7 +830,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 dialogModel
               );
               dialogApprove.closed.subscribe((res) => {
-                if (res.event == true) {
+                if (res.event && res.event?.approved == true) {
                   datas.status = '3';
                   datas.approveStatus = '3';
                   this.odService
@@ -893,9 +895,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       if (item.status == 0) {
         //this.data = item.data[0];
         this.data.lstUserID = getListImg(item.data[0].relations);
-        for(var i = 0 ; i< this.data.listInformationRel.length ; i++)
-        {
-          if(this.data.listInformationRel[i].userID != this.data?.owner && this.data.listInformationRel[i].relationType != "1")
+        for (var i = 0; i < this.data.listInformationRel.length; i++) {
+          if (
+            this.data.listInformationRel[i].userID != this.data?.owner &&
+            this.data.listInformationRel[i].relationType != '1'
+          )
             this.data.listInformationRel[i].reCall = true;
         }
         //this.data.listInformationRel = item.data[1];
@@ -923,7 +927,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         ); */
       }
     }
-  
+
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
@@ -1014,12 +1018,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         //this.notifySvr.notify(res2?.msgCodeError)
       });
   }
-  handleViewFile(e:any)
-  {
-    if(e==true)
-    {
-      var index = this.data.listInformationRel.findIndex(x=>x.userID == this.userID);
-      this.data.listInformationRel[index].view = "3";
+  handleViewFile(e: any) {
+    if (e == true) {
+      var index = this.data.listInformationRel.findIndex(
+        (x) => x.userID == this.userID
+      );
+      this.data.listInformationRel[index].view = '3';
     }
   }
 }

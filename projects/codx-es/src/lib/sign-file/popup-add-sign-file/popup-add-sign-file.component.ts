@@ -52,17 +52,17 @@ export class PopupAddSignFileComponent implements OnInit {
   cbxName: any = {};
   dialogSignFile: FormGroup;
   lstDataFile = [];
-  isAddNew: boolean = true;
+  isAddNew: boolean = true; // flag thêm mới signfile
   processID: String = '';
   transID: String = '';
   gvSetup: any;
 
-  isSaved: boolean = false;
-  isEdit: boolean = false;
+  isSaved: boolean = false; // flag đã gọi hàm lưu signfile
+  isEdit: boolean = false; // flag kiểm tra đã chỉnh sửa thông tin signfile
 
   lstFile: any = [];
 
-  templateName: string = '';
+  templateName: string = ''; // tên template khi chọn lưu thành template
 
   dialog: DialogRef;
   data: any = {};
@@ -97,6 +97,8 @@ export class PopupAddSignFileComponent implements OnInit {
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
 
+    console.log(this.oSignFile);
+
     this.user = this.auth.get();
     if (!this.user.employee || this.user.employee == null) {
       this.user.employee = null;
@@ -113,16 +115,16 @@ export class PopupAddSignFileComponent implements OnInit {
       this.currentTab = 1;
       this.processTab = 1;
       this.lstFile = data?.data?.files;
-    } else if (!this.isAddNew) {
-      this.data = data?.data.dataSelected;
-      this.processTab = 4;
+    } else {
+      if (!this.isAddNew) {
+        this.data = data?.data.dataSelected;
+        this.processTab = 4;
+      }
+      if (this.data?.approveStatus != 1) {
+        this.currentTab = 3;
+        this.processTab = 4;
+      }
     }
-
-    if (this.data?.approveStatus != 1) {
-      this.currentTab = 3;
-      this.processTab = 4;
-    }
-    console.log(this.data);
   }
 
   ngOnInit(): void {
@@ -158,6 +160,7 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.data.refId = this.oSignFile.refId;
                     this.data.refDate = this.oSignFile.refDate;
                     this.data.refNo = this.oSignFile.refNo;
+                    this.data.priority = this.oSignFile.priority;
                     this.initForm();
                   }
                 });
@@ -226,7 +229,6 @@ export class PopupAddSignFileComponent implements OnInit {
           if (this.oSignFile) {
             this.dialogSignFile.patchValue(this.data);
             this.dialogSignFile.patchValue({
-              priority: '1',
               approveStatus: '1',
               approveControl: '3',
               employeeID: this.user.employee?.employeeID,
@@ -639,8 +641,9 @@ export class PopupAddSignFileComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
+            this.notify.alertCode('RS002');
             dialogTemplateName && dialogTemplateName.close();
-            this.dialog && this.dialog.close(res);
+            //this.dialog && this.dialog.close(res);
           }
         });
     } else {
@@ -798,7 +801,7 @@ export class PopupAddSignFileComponent implements OnInit {
       }
 
       dialogClose && dialogClose.close();
-      this.dialog && this.dialog.close(this.dialogSignFile.value);
+      this.dialog && this.dialog.close();
     } else {
       this.esService
         .editSignFile(this.dialogSignFile.value)
@@ -812,6 +815,7 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   clickNotSave(dialogClose: DialogRef) {
+    // click thoát
     dialogClose && dialogClose.close();
     this.dialog && this.dialog.close();
   }
@@ -819,7 +823,8 @@ export class PopupAddSignFileComponent implements OnInit {
   close(dialogClose) {
     if (
       this.processTab == 0 ||
-      (this.isAddNew == false && this.isEdit == false)
+      (this.isAddNew == false && this.isEdit == false) ||
+      (this.isAddNew == true && this.dialogSignFile.invalid)
     ) {
       this.dialog && this.dialog.close();
     } else if (this.processTab > 0) {
@@ -833,13 +838,19 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   closeDialogTmp(dialogTmp: DialogRef) {
+    //close dialog ng-template
     if (this.templateName != '') this.templateName = '';
     dialogTmp && dialogTmp.close();
   }
 
   //#endregion
 
+  setValueAreaControl(event) {
+    console.log(event);
+  }
+
   approve() {
+    //Gửi duyệt
     this.esService
       .release(
         this.dialogSignFile.value,
@@ -854,7 +865,11 @@ export class PopupAddSignFileComponent implements OnInit {
             .subscribe((result) => {
               if (res) {
                 this.notify.notifyCode('Gửi duyệt thành công!');
-                this.dialog && this.dialog.close(this.dialogSignFile.value);
+                this.dialog &&
+                  this.dialog.close({
+                    data: this.dialogSignFile.value,
+                    approved: true,
+                  });
               }
             });
         } else {

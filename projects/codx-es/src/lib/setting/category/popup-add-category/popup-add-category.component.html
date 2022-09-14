@@ -12,7 +12,8 @@
 <codx-form
   #form
   [headerText]="headerText"
-  [subHeaderText]=""
+  [subHeaderText]="subHeaderText"
+  [subHeader]="subHeader"
   [body]="body"
   [footer]="footer"
   [data]="data"
@@ -36,7 +37,7 @@
           type="vllicon"
           refValue="L1470"
           field="icon"
-          [crrValue]="form.formGroup.value.icon"
+          [crrValue]="data.icon"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -58,7 +59,7 @@
           type="colorpicker"
           [showText]="false"
           [modeSwitcher]="false"
-          [crrValue]="form.formGroup.value.color"
+          [crrValue]="data.color"
           field="color"
           (valueChange)="valueChange($event)"
         >
@@ -70,11 +71,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <codx-label
-            default="Tên phân loại"
-            fiedName="CategoryName"
-            [formModel]="formModel"
-          >
+          <codx-label fiedName="CategoryName" [formModel]="formModel">
           </codx-label>
           <!-- <codx-input
             type="text"
@@ -94,11 +91,7 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <codx-label
-            default="Mã phân loại"
-            fiedName="CategoryID"
-            [formModel]="formModel"
-          >
+          <codx-label fiedName="CategoryID" [formModel]="formModel">
           </codx-label>
           <!-- <codx-input
             type="text"
@@ -141,21 +134,13 @@
       >
       </codx-input>
       <label class="ms-2">
-        <codx-label
-          fiedName="ESign"
-          default="Chữ ký số"
-          [formModel]="formModel"
-        ></codx-label>
+        <codx-label fiedName="ESign" [formModel]="formModel"></codx-label>
       </label>
     </div>
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
-          <codx-label
-            default="Loại chữ kí"
-            fiedName="SignatureType"
-            [formModel]="formModel"
-          >
+          <codx-label fiedName="SignatureType" [formModel]="formModel">
           </codx-label>
           <!-- <codx-input
             type="valuelist"
@@ -178,8 +163,7 @@
       </div>
     </div>
     <div class="form-group">
-      <codx-label default="Ghi chú" fiedName="Memo" [formModel]="formModel">
-      </codx-label>
+      <codx-label fiedName="Memo" [formModel]="formModel"> </codx-label>
       <!-- <codx-input
         type="textarea"
         format="ed2"
@@ -207,7 +191,6 @@
       <div class="d-flex flex-stack mb-4">
         <codx-label
           class="text-primary fw-bold fs-5"
-          default="Đánh số văn bản"
           fiedName="AutoNumber"
           [formModel]="formModel"
         >
@@ -223,11 +206,7 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <codx-label
-            default="Định dạng"
-            fiedName="AutoNumber"
-            [formModel]="formModel"
-          >
+          <codx-label fiedName="AutoNumber" [formModel]="formModel">
           </codx-label>
           <codx-input
             type="text"
@@ -242,7 +221,6 @@
     <div class="d-flex flex-stack mb-4">
       <codx-label
         class="text-primary fw-bold fs-5"
-        default="Qui trình duyệt"
         fiedName="ProcessID"
         [formModel]="formModel"
       >

@@ -50,6 +50,7 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;  
   @ViewChild('avatar') avatar: TemplateRef<any>;
+  @ViewChild('owner') owner: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -80,7 +81,6 @@ export class RoomsComponent extends UIComponent {
     this.funcID = this.router.snapshot.params['funcID'];
   }
 
-
   onInit(): void {
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
@@ -104,16 +104,17 @@ export class RoomsComponent extends UIComponent {
         headerText: 'Tên phòng',
       },
       {
-        field: 'location',
-        headerText: 'Vị trí',
+        field: 'area',
+        headerText: 'Diện tích',
       },
-      // {
-      //   headerText: 'Tình trạng',
-      //   template: this.statusCol,
-      // },
       {
-        headerText: 'Xếp hạng',
-        template: this.rankingCol,
+        field: 'capacity',
+        headerText: 'Sức chứa',
+      },
+      {
+        headerText: "Người điều phối",
+        width: '20%',
+        template: this.owner,
       },
     ];
     this.views = [

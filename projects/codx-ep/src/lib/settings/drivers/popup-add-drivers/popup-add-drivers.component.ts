@@ -89,11 +89,11 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
         this.fGroupAddDriver = item;
         if (this.data) {
           this.fGroupAddDriver.patchValue(this.data);
+          this.fGroupAddDriver.patchValue({
+            resourceType : '3',
+            linkType : '2',
+          });  
         }
-        this.fGroupAddDriver.addControl(
-          'code',
-          new FormControl(this.data.code)
-        );
         this.isAfterRender = true;
       });
   }
@@ -142,24 +142,29 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  onSaveForm() {
+  onSaveForm() {    
     if (this.fGroupAddDriver.invalid == true) {
-      console.log(this.fGroupAddDriver);
+      this.codxEpService.notifyInvalid(this.fGroupAddDriver, this.formModel);
       return;
     }
     if(this.fGroupAddDriver.value.category!=1){
       this.fGroupAddDriver.value.companyID=null;
     }else{      
-      this.fGroupAddDriver.value.companyID = this.fGroupAddDriver.value.companyID[0];
+      if(this.fGroupAddDriver.value.companyID instanceof Object){
+        this.fGroupAddDriver.patchValue({companyID:this.fGroupAddDriver.value.companyID[0]})
+      }
     }
-    this.fGroupAddDriver.value.owner = this.fGroupAddDriver.value.owner[0];
-    
-    this.fGroupAddDriver.value.linkID = this.fGroupAddDriver.value.linkID[0];
-    this.fGroupAddDriver.value.resourceType = '3';
+    if(this.fGroupAddDriver.value.owner instanceof Object){
+      this.fGroupAddDriver.patchValue({owner:this.fGroupAddDriver.value.owner[0]})
+    }
+    if(this.fGroupAddDriver.value.linkID instanceof Object){
+      this.fGroupAddDriver.patchValue({linkID:this.fGroupAddDriver.value.linkID[0]})
+    }
+    this.fGroupAddDriver.patchValue({
+      resourceType : '3',
+      linkType:'2'
+    });
 
-    if (!this.fGroupAddDriver.value.linkType) {
-      this.fGroupAddDriver.value.linkType = '2';
-    }
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {

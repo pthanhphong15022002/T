@@ -18,9 +18,8 @@
     <div class="form-group mb-2">
       <div class="d-flex justify-content-between align-items-center">
         <codx-label
-          default="Phòng"
-          fieldName="ResourceID"
-          [formModel]="form.formModel"
+          fiedName="ResourceID"
+          [formModel]="form.formModel"    
         >
         </codx-label>
         <span class="label-status text-primary">{{
@@ -86,19 +85,18 @@
     <div class="row">
       <div class="col-4 form-group">
         <codx-label
-          default="Ngày"
-          fiedName="ResourceID"
+          fiedName="bookingOn"
           [formModel]="form.formModel"
         >
         </codx-label>
-        <!-- <codx-input
+        <codx-input
           ControlName="bookingOn"
           [formModel]="form.formModel" 
           [Group]="fGroupAddBookingRoom"      
           (valueChange)="valueDateChange($event)"
         >
-        </codx-input> -->
-        <codx-input
+        </codx-input>
+        <!-- <codx-input
           type="datetime"
           class="form-control test-datetime"
           format="d"
@@ -106,11 +104,10 @@
           [crrValue]="fGroupAddBookingRoom.value.bookingOn"
           (valueChange)="valueDateChange($event)"
         >
-        </codx-input>
+        </codx-input> -->
       </div>
       <div class="col-3 form-group">
         <codx-label
-          default="Từ giờ"
           fiedName="StartDate"
           aria-disabled="false"
           [formModel]="dialogRef.formModel"
@@ -135,7 +132,6 @@
       </div>
       <div class="col-3 form-group">
         <codx-label
-          default="Đến giờ"
           fiedName="EndDate"
           [formModel]="dialogRef.formModel"
         >
@@ -149,7 +145,7 @@
           (valueChange)="valueEndTimeChange($event)"
         >
         </codx-input>
-       
+        
 
       </div>
 
@@ -170,7 +166,6 @@
 
     <div class="form-group">
       <codx-label
-        default="Mục đích sử dụng"
         fiedName="ReasonID"
         [formModel]="dialogRef.formModel"
       >
@@ -192,7 +187,6 @@
 
     <div class="form-group">
       <codx-label
-        default="Tiêu đề"
         fiedName="Title"
         [formModel]="dialogRef.formModel"
       >
@@ -204,9 +198,8 @@
       ></codx-input>
     </div>
 
-    <div class="d-flex flex-column mb-4">
+    <div class="form-group">
       <codx-label
-        default="Nội dung buổi họp"
         fiedName="Memo"
         [formModel]="form.formModel"
       >
@@ -239,7 +232,6 @@
             ><label for="switchOnl">
                 <codx-label
                   fiedName="Online"
-                  default="Họp online"
                   [formModel]="form.formModel"
                 >
                 </codx-label> 
@@ -450,36 +442,6 @@
         
       </div>
     </div>
-
-    <!-- <div class="d-flex align-items-center mb-4" *ngIf="hostUser!=null">
-      <div class="symbol symbol-35px symbol-circle me-4">
-        <codx-img
-          [objectId]="hostUser.userId"
-          objectType="AD_Users"
-        ></codx-img>
-        <span
-          class="symbol-badge badge badge-circle bg-danger top-100 start-100 text-white fs-8"
-          >A</span
-        >
-      </div>
-
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fs-6 fw-bolder">
-          {{ hostUser.userName }}
-        </div>
-        <span class="text-muted fw-bold">Người chủ trì</span>
-      </div>
-
-      <div class="d-flex flex-column justify-content-end">
-        <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >{{
-            hostUser.status | vll: "EP011":"text" | async
-          }}</span
-        >
-        <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
-      </div>
-    </div>-->
-
     <div class="d-flex align-items-center mb-4" *ngIf="curUser!=null">
       <div class="symbol symbol-35px symbol-circle me-4">
         <codx-img
@@ -502,10 +464,8 @@
         </div>
       </div>
 
-      <div class="d-flex flex-column justify-content-end">
-        <div >          
-          <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
-        </div>
+      <div class="d-flex flex-column justify-content-end align-items-end">
+        <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>        
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
     </div> 
@@ -534,7 +494,7 @@
         </div>
       </div>
 
-      <div class="d-flex flex-column justify-content-end">
+      <div class="d-flex flex-column justify-content-end align-items-end">
         <div *ngIf="!item.optional">          
           <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
         </div>
@@ -544,62 +504,6 @@
         <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
       </div>
     </div>
-<!--     
-    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstUser">
-      <div class="symbol symbol-35px symbol-circle me-4">
-        <codx-img
-          [objectId]="item.userId"
-          objectType="AD_Users"
-        ></codx-img>
-        <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>        
-      </div>
-
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fs-6 fw-bolder">
-          {{ item.userName }}
-        </div>
-        <div *ngIf="item.roleType=='1'">          
-          <span class="text-muted fw-bold">Người chủ trì</span>
-        </div>
-        <div *ngIf="item.roleType=='2'">          
-          <span class="text-muted fw-bold">Thư kí</span>
-        </div>
-        <div *ngIf="item.roleType=='3'">          
-          <span class="text-muted fw-bold">Người tham dự</span>
-        </div>
-      </div>
-
-      <div class="d-flex flex-column justify-content-end">
-        
-        <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
-        <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
-      </div>
-    </div>
-
-    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstUserOptional">
-      <div class="symbol symbol-35px symbol-circle me-4">
-        <codx-img
-          [objectId]="item.userId"
-          objectType="AD_Users"
-        ></codx-img>
-        <span class="symbol-badge badge badge-circle bg-primary top-100 start-100 text-white fs-8" >P</span
-        >
-      </div>
-
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fs-6 fw-bolder">
-          {{ item.userName }}
-        </div>
-        <span class="text-muted fw-bold">Người tham dự</span>
-      </div>
-
-      <div class="d-flex flex-column justify-content-end">
-        <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >Không bắt buộc</span>
-        <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
-      </div>
-    </div> -->
-
     <div class="form-group d-flex flex-row justify-content-center ">
       <div class="note-bar d-flex flex-row justify-content-center align-items-center rounded-right rounded-left shadow p-3 mb-5">
         <div class="mx-2">          
@@ -640,7 +544,6 @@
     <div class="form-group row d-flex flex-row justify-content-start align-items-center"> 
       <div class="col-4">
         <codx-label
-          default="Số người tham dự"
           fiedName="Attendees"          
           [formModel]="form.formModel"
         >
@@ -717,7 +620,7 @@
     </div>    
 
     <div class="form-group">
-      <codx-label default="Phân loại" fiedName="Category"></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Category"></codx-label>
       <codx-input         
         ControlName="category"
         [formModel]="form.formModel"
@@ -726,7 +629,7 @@
     </div>
 
     <div class="form-group">
-      <codx-label default="Ghi chú" fiedName="Note"> </codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
       <codx-input
         ControlName="note"        
         [formModel]="form.formModel"
@@ -747,10 +650,9 @@
           >
         </codx-input>
       </div>
-      <div class="col-2">          
+      <div class="col-3">          
         <codx-label
           fiedName="Repeat"
-          default="Lặp lại"
           [formModel]="dialogRef.formModel"
         ></codx-label>  
       </div> 
@@ -871,8 +773,7 @@
   <div class="card-header d-flex flex-row justify-content-between">
     <h4 class="card-title" id="card-basic-title">
       <codx-label
-        fiedName="Link"
-        default="Link cuộc họp"
+        name="lblLink"
         [formModel]="dialog.formModel"
       ></codx-label>
     </h4>    
@@ -890,8 +791,7 @@
     <div class="form-group"></div>
     <div class="form-group">
       <codx-label
-        fiedName="Path"
-        default="Đường dẫn"
+        fiedName="OnlineUrl"
         [formModel]="dialog.formModel"
       ></codx-label>
     </div>

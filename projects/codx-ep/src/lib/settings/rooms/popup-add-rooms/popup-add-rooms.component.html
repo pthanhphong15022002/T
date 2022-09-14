@@ -14,7 +14,6 @@
       <codx-label
         fiedName="ResourceName"
         [formModel]="dialog.formModel"
-        default="Tên phòng"
       >
       </codx-label>
       <codx-input
@@ -26,11 +25,10 @@
     </div>
 
     <div class="row">
-      <div class="form-group col-6">
+      <div class="form-group col-5">
         <codx-label
           fiedName="Ranking"
           [formModel]="dialog.formModel"
-          default="Phân loại"
         >
         </codx-label>
         <codx-input
@@ -45,7 +43,6 @@
         <codx-label
           fiedName="Area"
           [formModel]="dialog.formModel"
-          default="Diện tích(m2)"
         >
         </codx-label>
         <codx-input
@@ -58,11 +55,10 @@
         </codx-input>
       </div>
 
-      <div class="form-group col-3">
+      <div class="form-group col-4">
         <codx-label
           fiedName="Capacity"
           [formModel]="dialog.formModel"
-          default="Sức chứa(người)"
         >
         </codx-label>
         <codx-input
@@ -81,7 +77,6 @@
         <codx-label
           fiedName="Location"
           [formModel]="dialog.formModel"
-          default="Vị trí"
         >
         </codx-label>
         <codx-input
@@ -96,7 +91,6 @@
         <codx-label
           fiedName="CompanyID"
           [formModel]="dialog.formModel"
-          default="Đơn vị"
         >
         </codx-label>
         <codx-input
@@ -113,7 +107,6 @@
         <codx-label
           fiedName="Owner"
           [formModel]="dialog.formModel"
-          default="Người quản lí"
         >
         </codx-label>
           <codx-input
@@ -128,25 +121,20 @@
     <div class="row">
       <div class="form-group">
         <codx-label
-          default="Mô tả"
           fiedName="Note"
           [formModel]="dialog.formModel"
         ></codx-label>
         <codx-input
-          type="textarea"
-          rows="3"
           ControlName="note"
-          [crrValue]="dialogAddRoom.value.note"
           [formModel]="form.formModel"
           [Group]="dialogAddRoom"
         >
         </codx-input>
       </div>
     </div>
-    <div class="d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2">
+    <div class=" form-group d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2">
       <codx-label
-        fiedName="Equipment"
-        default="Thiết bị"
+        fiedName="Equipments"
         [formModel]="dialog.formModel"
       ></codx-label>
 

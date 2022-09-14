@@ -65,6 +65,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   changTimeCount = 2;
   loadingAll = false;
   gridViewSetup: any;
+  formModel :any
 
   constructor(
     private authStore: AuthStore,
@@ -93,7 +94,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.title = dt?.data[3] ? dt?.data[3] : this.title;
     this.dialog = dialog;
     this.user = this.authStore.get();
-    // this.functionID = this.dialog.formModel.funcID;
+    this.formModel = this.dialog.formModel;
 
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
@@ -198,10 +199,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.taskName = e.data;
   }
 
-  // changeTime(data) {
-  //   if (!data.field) return;
-  //   this.task[data.field] = data.data.fromDate;
-  // }
   changeTime(data) {
     if (!data.field || !data.data) return;
     this.task[data.field] = data.data?.fromDate;
@@ -343,10 +340,26 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         if (res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
-          if (!isContinue) {
-            this.closePanel();
-          }
-          this.resetForm();
+          //lưu his giao việc
+          var objectType = this.formModel.entityName 
+          var objectID = this.task.refID
+          var objectName = "TM_Tasks" 
+          var dataObj = { objectType: objectType, objectID: objectID, objectName: objectName }
+          
+           var tmpHistorry = {
+            objectType :objectType ,
+            objectID : objectID ,
+            actionType : "T" ,
+            functionID : this.formModel.funcID ,
+            sendToObjects : JSON.stringify(dataObj)
+           }
+
+           this.api.execSv<any>("BG", "ERM.Business.BG", "TrackLogsBusiness", "InsertAsync", tmpHistorry).subscribe() ;
+
+          // if (!isContinue) {
+          //   this.closePanel();
+          // }
+          // this.resetForm();
         } else {
           this.notiService.notifyCode('TM038');
           return;
@@ -354,35 +367,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       });
   }
 
-  //Form Old
-  // onDeleteUser(userID) {
-  //   var listUser = [];
-  //   var listUserDetail = [];
-  //   var listTaskResources = [];
-  //   for (var i = 0; i < this.listTaskResources.length; i++) {
-  //     if (this.listUser[i] != userID) {
-  //       listUser.push(this.listUser[i]);
-  //     }
-  //     // if (this.listUserDetail[i].userID != userID) {
-  //     //   listUserDetail.push(this.listUserDetail[i]);
-  //     // }
-  //     if (this.listTaskResources[i]?.resourceID != userID) {
-  //       listTaskResources.push(this.listTaskResources[i]);
-  //     }
-  //   }
-  //   this.listUser = listUser;
-  //   // this.listUserDetail = listUserDetail;
-  //   this.listTaskResources = listTaskResources;
-
-  //   var assignTo = '';
-  //   if (listUser.length > 0) {
-  //     listUser.forEach((idUser) => {
-  //       assignTo += idUser + ';';
-  //     });
-  //     assignTo = assignTo.slice(0, -1);
-  //     this.task.assignTo = assignTo;
-  //   } else this.task.assignTo = '';
-  // }
   onDeleteUser(item) {
     var userID = item.resourceID;
     var listUser = [];

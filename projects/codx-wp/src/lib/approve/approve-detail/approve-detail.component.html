@@ -1,204 +1,205 @@
-<codx-detail-tmp [header]="header" [body]="body" [footer]="footer" [formModel]="formModel">
-    <ng-template #header>
-        <ng-container *ngIf="option != 'mypost' && data">
-            <div class="row">
-                <div class="d-flex flex-row-reverse">
-                    <div class="navbar">
-                        <div class="nav-item">
-                            <a class="nav-link text-body d-flex align-items-center" href="javascript:;"
-                                (click)="clickApprovePost(data,cancelApprove)">
-                                <span><i class="icon-close me-1 text-danger fs-1 fw-bold"></i></span>
-                                <codx-label formName="" name="lblCancel" default="TỪ CHỐI"></codx-label>
-                            </a>
-                        </div>
-                        <div class="nav-item">
-                            <a class="nav-link text-body d-flex align-items-center" href="javascript:;"
-                                (click)="clickApprovePost(data,remakeApprove)">
-                                <span><i class="icon-keyboard_return me-1 text-warning fs-1 fw-bold"></i></span>
-                                <codx-label formName="" name="lbl" default="LÀM LẠI"></codx-label>
-                            </a>
-                        </div>
-                        <div class="nav-item">
-                            <a class="nav-link text-body d-flex align-items-center" href="javascript:;"
-                                (click)="clickApprovePost(data,acceptApprove)">
-                                <span><i class="icon-check me-1 text-success fs-1 fw-bold"></i></span>
-                                <codx-label formName="" name="lblApprove" default="DUYỆT"></codx-label>
-                            </a>
-                        </div>
-                        <div class="nav-item">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </div>
+<codx-detail-tmp 
+[header]="header" 
+[body]="body" 
+[footer]="footer" 
+[hideMF]="true"
+[formModel]="formModel">
+</codx-detail-tmp>
+<ng-template #header>
+    <ng-container>
+        <div class="row">
+            <div class="d-flex flex-row-reverse">
+                <div class="navbar">
+                    <div class="nav-item">
+                        <a class="nav-link text-body d-flex align-items-center" href="javascript:;"
+                            (click)="clickApprovePost(data,cancelApprove)">
+                            <span><i class="icon-close me-1 text-danger fs-1 fw-bold"></i></span>
+                            <codx-label formName="" name="lblCancel" default="TỪ CHỐI"></codx-label>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a class="nav-link text-body d-flex align-items-center" href="javascript:;"
+                            (click)="clickApprovePost(data,remakeApprove)">
+                            <span><i class="icon-keyboard_return me-1 text-warning fs-1 fw-bold"></i></span>
+                            <codx-label formName="" name="lbl" default="LÀM LẠI"></codx-label>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a class="nav-link text-body d-flex align-items-center" href="javascript:;"
+                            (click)="clickApprovePost(data,acceptApprove)">
+                            <span><i class="icon-check me-1 text-success fs-1 fw-bold"></i></span>
+                            <codx-label formName="" name="lblApprove" default="DUYỆT"></codx-label>
+                        </a>
                     </div>
                 </div>
             </div>
-        </ng-container>
-    </ng-template>
-    <ng-template #body>
-        <ng-container *ngIf="data;else empty">
-            <div class="news-detail w-100">
-                <div class="d-flex align-items-top w-100">
-                    <codx-img class="me-4" [width]="50" [objectId]="data.createdBy" objectType="AD_Users">
-                    </codx-img>
-                    <div class="d-flex flex-column w-100">
-                        <div class="d-flex justify-content-between">
-                            <div class="fw-bold fs-4">{{data.createdByName}}</div>
-                            <div class="text-gray-600 badge bagde-sm bg-gray-200">
-                                {{data.approveStatus | vll:"CO003":"text" | async}}</div>
+        </div>
+    </ng-container>
+</ng-template>
+<ng-template #body>
+    <ng-container *ngIf="data;else empty">
+        <div class="news-detail w-100">
+            <div class="d-flex align-items-top w-100">
+                <codx-img class="me-4" [width]="50" [objectId]="data.createdBy" objectType="AD_Users">
+                </codx-img>
+                <div class="d-flex flex-column w-100">
+                    <div class="d-flex justify-content-between">
+                        <div class="fw-bold fs-4">{{data.createdByName}}</div>
+                        <div class="text-gray-600 badge bagde-sm bg-gray-200">
+                            {{data.approveStatus | vll:"CO003":"text" | async}}</div>
+                    </div>
+                    <div class="nav">
+                        <div *ngIf="data.deparmentName" class="nav-item d-flex align-items-center nav-link text-dark p-0 me-5">
+                            {{data.deparmentName}}</div>
+                        <div *ngIf="data.email" class="nav-item d-flex align-items-center nav-link text-dark p-0 me-5"><i
+                                class="icon-email me-2"></i> {{data.email}}</div>
+                        <div *ngIf="data.phone" class="nav-item d-flex align-items-center nav-link text-dark p-0 me-5"><i
+                                class="icon-phone_android me-2"></i> {{data.phone}}</div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="data.entityName == ENTITYNAME.WP_News;else comment">
+                <div class="row mt-6">
+                    <div class="col-2 fw-bold">
+                        <codx-label formName="News" name="lblSubject" default="Tiêu đề:"></codx-label>
+                    </div>
+                    <ng-container *ngIf="data.subject">
+                        <div class="col-10 fs-3 fw-bold" [innerHTML]="data.subject"></div>
+                    </ng-container>
+                </div>
+                <ng-container *ngIf="data.tags">
+                    <div class="row mt-2 ">
+                        <div class="col-2"></div>
+                        <div class="col-10">
+                            <codx-tag [isEdit]="false" [disabled]="true" [value]="data.tags"
+                                [entityName]="'WP_News'">
+                            </codx-tag>
                         </div>
-                        <div class="nav">
-                            <div class="nav-item d-flex align-items-center nav-link text-dark p-0 me-5">
-                                {{data.deparmentName}}</div>
-                            <div class="nav-item d-flex align-items-center nav-link text-dark p-0 me-5"><i
-                                    class="icon-email me-2"></i> {{data.email}}</div>
-                            <div class="nav-item d-flex align-items-center nav-link text-dark p-0 me-5"><i
-                                    class="icon-phone_android me-2"></i> {{data.phone}}</div>
+                    </div>
+                </ng-container>
+                <div class="row mt-2">
+                    <div class="col-2 fw-bold">
+                        <codx-label formName="News" name="lblCategory" default="Phân loại:"></codx-label>
+                    </div>
+                    <div class="col-10">
+                        <span class="fw-bold">{{data.category | vll:"L1494":"text" | async}}</span>
+                        <span class="ms-5 me-5">|</span>
+                        <span>
+                            <codx-label class="fw-bold me-2" formName="News" name="lblTime" default="Thời gian: ">
+                            </codx-label>
+                            <span *ngIf="data.startDate" class="text-muted">{{data.startDate | fmDT}} </span>
+                            <span *ngIf="data.endDate" class="text-muted">- {{data.endDate | fmDT}}</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-2 fw-bold">
+                        <codx-label formName="News" name="lblSubcontent" default="Mô tả ngắn:"></codx-label>
+                    </div>
+                    <ng-container *ngIf="data.subContent">
+                        <div class="col-10 text-start">
+                            {{data.subContent}}
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2 fw-bold">
+                        <codx-label formName="News" name="lblImage" default="Hình hiển thị:"></codx-label>
+                    </div>
+                    <div class="col-10">
+                        <div class="w-50 h-50">
+                            <codx-img [imageType]="'square'" [objectId]="data.recID" [objectType]="data.entityName"
+                                [width]="200"></codx-img>
                         </div>
                     </div>
                 </div>
-                <ng-container *ngIf="data.entityName == ENTITYNAME.WP_News;else comment">
-                    <div class="row mt-6">
-                        <div class="col-2 fw-bold">
-                            <codx-label formName="News" name="lblSubject" default="Tiêu đề:"></codx-label>
-                        </div>
-                        <ng-container *ngIf="data.subject">
-                            <div class="col-10 fs-3 fw-bold" [innerHTML]="data.subject"></div>
-                        </ng-container>
+                <div class="row mt-4">
+                    <div class="col-2 fw-bold">
+                        <codx-label formName="News" name="lblShare" default="Chia sẻ đến:"></codx-label>
                     </div>
-                    <ng-container *ngIf="data.tags">
-                        <div class="row mt-2 ">
-                            <div class="col-2"></div>
-                            <div class="col-10">
-                                <codx-tag [isEdit]="false" [disabled]="true" [value]="data.tags"
-                                    [entityName]="'WP_News'">
-                                </codx-tag>
-                            </div>
-                        </div>
-                    </ng-container>
-                    <div class="row mt-2">
-                        <div class="col-2 fw-bold">
-                            <codx-label formName="News" name="lblCategory" default="Phân loại:"></codx-label>
-                        </div>
-                        <div class="col-10">
-                            <span class="fw-bold">{{data.category | vll:"L1494":"text" | async}}</span>
-                            <span class="ms-5 me-5">|</span>
-                            <span>
-                                <codx-label class="fw-bold me-2" formName="News" name="lblTime" default="Thời gian: ">
-                                </codx-label>
-                                <span *ngIf="data.startDate" class="text-muted">{{data.startDate | fmDT}} </span>
-                                <span *ngIf="data.endDate" class="text-muted">- {{data.endDate | fmDT}}</span>
+                    <div class="col-10">
+                        <span class="badge bagde-sm bg-gray-200">
+                            <img src="assets/themes/sys/default/img/{{(data.shareControl | vll:'L1901' : 'icon' | async)}}"
+                                class="me-1 w-12px">
+                            <span class="text-gray-700">
+                                {{data.shareControl | vll:'L1901':'text' | async}}
                             </span>
-                        </div>
+                        </span>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-2 fw-bold">
-                            <codx-label formName="News" name="lblSubcontent" default="Mô tả ngắn:"></codx-label>
-                        </div>
-                        <ng-container *ngIf="data.subContent">
-                            <div class="col-10 text-start">
-                                {{data.subContent}}
-                            </div>
-                        </ng-container>
+                </div>
+                <div class="row mt-3 text-primary fw-bold">
+                    <codx-label formName="News" name="lblInfor" default="Thông tin chung"></codx-label>
+                </div>
+                <div class="row mt-5 text-primary fw-bold">
+                    <codx-label formName="News" name="lblInfor" default="Nội dung tin tức - sự kiện">
+                    </codx-label>
+                </div>
+                <ng-container *ngIf="data.newsType =='1';else video">
+                    <div class="row mt-2 px-5 p-2">
+                        <div class="border border-3 border-light ms- py-5" [innerHTML]="data.contentHtml"></div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-2 fw-bold">
-                            <codx-label formName="News" name="lblImage" default="Hình hiển thị:"></codx-label>
-                        </div>
-                        <div class="col-10">
-                            <div class="w-50 h-50">
-                                <codx-img [imageType]="'square'" [objectId]="data.recID" [objectType]="data.entityName"
-                                    [width]="200"></codx-img>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-2 fw-bold">
-                            <codx-label formName="News" name="lblShare" default="Chia sẻ đến:"></codx-label>
-                        </div>
-                        <div class="col-10">
-                            <span class="badge bagde-sm bg-gray-200">
-                                <img src="assets/themes/sys/default/img/{{(data.shareControl | vll:'L1901' : 'icon' | async)}}"
-                                    class="me-1 w-12px">
-                                <span class="text-gray-700">
-                                    {{data.shareControl | vll:'L1901':'text' | async}}
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row mt-3 text-primary fw-bold">
-                        <codx-label formName="News" name="lblInfor" default="Thông tin chung"></codx-label>
-                    </div>
-                    <div class="row mt-5 text-primary fw-bold">
-                        <codx-label formName="News" name="lblInfor" default="Nội dung tin tức - sự kiện">
-                        </codx-label>
-                    </div>
-                    <ng-container *ngIf="data.newsType =='1';else video">
-                        <div class="row mt-2 px-5 p-2">
-                            <div class="border border-3 border-light ms- py-5" [innerHTML]="data.contents"></div>
-                        </div>
-                    </ng-container>
-
-                    <ng-template #video>
-                        <div class="row mt-2 px-5 p-2">
-                            <div class="border border-3 border-light ms- py-5">
-                                <app-view-file [category]="'video'" [ObjectID]="data.recID" [ObjectType]="'WP_News'">
-                                </app-view-file>
-                            </div>
-                        </div>
-                    </ng-template>
                 </ng-container>
 
-
-                <ng-template #comment>
-                    <div class="row mt-2">
-                        <div class="col-2 fw-bold">
-                            <codx-label formName="News" name="lblCategory" default="Phân loại:"></codx-label>
-                        </div>
-                        <div class="col-10">
-                            <span class="fw-bold">{{data.category}}</span>
-                            <span class="ms-5 me-5">|</span>
-                            <span>
-                                <codx-label class="fw-bold me-2" formName="News" name="lblTime" default="Thời gian: ">
-                                </codx-label>
-                                <span *ngIf="data.startDate" class="text-muted">{{data.createdOn | fmDT}} </span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-2 fw-bold">
-                            <codx-label formName="News" name="lblShare" default="Chia sẻ đến:"></codx-label>
-                        </div>
-                        <div class="col-10">
-                            <span class="bg-secondary bg-gradient rounded-2 p-2">
-                                <img src="assets/themes/sys/default/img/{{(data.shareControl | vll:'L1901' : 'icon' | async)}}"
-                                    class="me-2">
-                                <span>
-                                    {{data.shareControl | vll:'L1901':'text' | async}}
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row mt-3 text-primary fw-bold">
-                        <codx-label formName="News" name="lblInfor" default="Thông tin chung"></codx-label>
-                    </div>
-                    <div class="row mt-5 text-primary fw-bold">
-                        <codx-label formName="News" name="lblInfor" default="Nội dung bài viết"></codx-label>
-                    </div>
+                <ng-template #video>
                     <div class="row mt-2 px-5 p-2">
                         <div class="border border-3 border-light ms- py-5">
-                            <div [innerHTML]="data.contents"></div>
-                            <div class="mt-4 p-4">
-                                <codx-file [objectID]="data.recID" [objectType]="data.entityName" [width]="200">
-                                </codx-file>
-                            </div>
+                            <app-view-file [category]="'video'" [ObjectID]="data.recID" [ObjectType]="'WP_News'">
+                            </app-view-file>
                         </div>
                     </div>
                 </ng-template>
-            </div>
-        </ng-container>
-    </ng-template>
-    <ng-template #footer></ng-template>
-</codx-detail-tmp>
+            </ng-container>
 
+
+            <ng-template #comment>
+                <div class="row mt-2">
+                    <div class="col-2 fw-bold">
+                        <codx-label formName="News" name="lblCategory" default="Phân loại:"></codx-label>
+                    </div>
+                    <div class="col-10">
+                        <span class="fw-bold">{{data.category}}</span>
+                        <span class="ms-5 me-5">|</span>
+                        <span>
+                            <codx-label class="fw-bold me-2" formName="News" name="lblTime" default="Thời gian: ">
+                            </codx-label>
+                            <span *ngIf="data.startDate" class="text-muted">{{data.createdOn | fmDT}} </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-2 fw-bold">
+                        <codx-label formName="News" name="lblShare" default="Chia sẻ đến:"></codx-label>
+                    </div>
+                    <div class="col-10">
+                        <span class="bg-secondary bg-gradient rounded-2 p-2">
+                            <img src="assets/themes/sys/default/img/{{(data.shareControl | vll:'L1901' : 'icon' | async)}}"
+                                class="me-2">
+                            <span>
+                                {{data.shareControl | vll:'L1901':'text' | async}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="row mt-3 text-primary fw-bold">
+                    <codx-label formName="News" name="lblInfor" default="Thông tin chung"></codx-label>
+                </div>
+                <div class="row mt-5 text-primary fw-bold">
+                    <codx-label formName="News" name="lblInfor" default="Nội dung bài viết"></codx-label>
+                </div>
+                <div class="row mt-2 px-5 p-2">
+                    <div class="border border-3 border-light ms- py-5">
+                        <div [innerHTML]="data.contents"></div>
+                        <div class="mt-4 p-4">
+                            <codx-file [objectID]="data.recID" [objectType]="data.entityName" [width]="200">
+                            </codx-file>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </ng-container>
+</ng-template>
+<ng-template #footer></ng-template>
 
 
 <ng-template #empty>
