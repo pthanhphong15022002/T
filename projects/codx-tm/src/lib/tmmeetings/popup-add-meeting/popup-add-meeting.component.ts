@@ -153,7 +153,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       ':' +
       this.padTo2Digits(getEndTime.getMinutes());
     this.endTime = current1;
-    if (this.startTime == '00:00' && this.endTime == '23:59') {
+    if (this.startTime == '08:00' && this.endTime == '18:00') {
       this.isFullDay = true;
     }
     if (this.meeting.fromDate)
@@ -308,8 +308,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     if (event?.field == 'day') {
       this.isFullDay = event.data;
       if (this.isFullDay) {
-        this.startTime = '00:00';
-        this.endTime = '23:59';
+        this.startTime = '08:00';
+        this.endTime = '18:00';
       } else {
         this.endTime = null;
         this.startTime = null;

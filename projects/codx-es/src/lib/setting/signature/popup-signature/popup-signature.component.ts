@@ -116,7 +116,17 @@ export class PopupSignatureComponent extends UIComponent {
 
   fileAdded(event, currentTab) {}
 
-  fileCount(event, currentTab) {}
+  fileCount(event, control: AttachmentComponent, currentTab) {
+    debugger;
+
+    if (control.fileUploadList && control.fileUploadList.length > 1) {
+      debugger;
+    }
+    control.fileUploadList = event.data;
+    console.log(event);
+    console.log(control);
+    console.log(currentTab);
+  }
 
   changeTab(tab) {
     this.currentTab = tab;

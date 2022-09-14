@@ -55,6 +55,7 @@ export class CodxDMService {
   public restoreFilemessage = '{0} đã có bạn có muốn ghi đè lên không ?';
   public restoreFoldermessage = '{0} đã có bạn có muốn ghi đè lên không ?';
   public titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
+  public titleFileAccessDenied = 'Bạn không có quyền truy cập file này';
   public titleMessage = 'Thông báo';
   public titleCopymessage = 'Bạn có muốn lưu lên không ?';
   public titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
@@ -498,6 +499,10 @@ export class CodxDMService {
       });
     } else {
       // open file
+      if (!data.read) {
+        this.notificationsService.notify(this.titleFileAccessDenied);
+        return;
+      }
       var dialogModel = new DialogModel();
       dialogModel.IsFull = true;
 
