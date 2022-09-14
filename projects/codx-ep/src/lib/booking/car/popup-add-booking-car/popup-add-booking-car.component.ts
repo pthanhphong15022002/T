@@ -318,7 +318,7 @@ export class PopupAddBookingCarComponent implements OnInit {
       this.fGroupAddBookingCar.patchValue({reasonID:this.fGroupAddBookingCar.value.reasonID[0]})
     }
     this.fGroupAddBookingCar.patchValue({
-      equipments: availableEquip + '|' + pickedEquip,
+      //equipments: availableEquip + '|' + pickedEquip,
       stopOn:this.fGroupAddBookingCar.value.endDate,
       bookingOn: this.fGroupAddBookingCar.value.startDate,
       category: '2',
@@ -449,45 +449,45 @@ export class PopupAddBookingCarComponent implements OnInit {
     this.closeEdit.emit(data);
   }
 
-  dataValid() {
-    this.fGroupAddBookingCar.value.agencyName =
-      this.fGroupAddBookingCar.value.agencyName[0];
-    this.fGroupAddBookingCar.value.resourceID =
-      this.fGroupAddBookingCar.value.resourceID[0];
+  // dataValid() {
+  //   this.fGroupAddBookingCar.value.agencyName =
+  //     this.fGroupAddBookingCar.value.agencyName[0];
+  //   this.fGroupAddBookingCar.value.resourceID =
+  //     this.fGroupAddBookingCar.value.resourceID[0];
 
-    var data = this.fGroupAddBookingCar.value;
-    var result = true;
-    if (this.lstPeople.length < 1) {
-      this.notificationsService.notifyCode(
-        'E0001',
-        0,
-        '"' + 'Người đi cùng' + '"'
-      );
-      return false;
-    }
-    var requiredControlName = [
-      'resourceID',
-      'startDate',
-      'endDate',
-      'reasonID',
-      'title',
-      'agencyName',
-      'address',
-      'contactName',
-      'phone',
-    ];
-    requiredControlName.forEach((item) => {
-      var x = data[item];
-      if (!data[item]) {
-        let fieldName = item.charAt(0).toUpperCase() + item.slice(1);
-        this.notificationsService.notifyCode(
-          'E0001',
-          0,
-          '"' + this.grvBookingCar[fieldName].headerText + '"'
-        );
-        result = false;
-      }
-    });
-    return result;
-  }
+  //   var data = this.fGroupAddBookingCar.value;
+  //   var result = true;
+  //   if (this.lstPeople.length < 1) {
+  //     this.notificationsService.notifyCode(
+  //       'E0001',
+  //       0,
+  //       '"' + 'Người đi cùng' + '"'
+  //     );
+  //     return false;
+  //   }
+  //   var requiredControlName = [
+  //     'resourceID',
+  //     'startDate',
+  //     'endDate',
+  //     'reasonID',
+  //     'title',
+  //     'agencyName',
+  //     'address',
+  //     'contactName',
+  //     'phone',
+  //   ];
+  //   requiredControlName.forEach((item) => {
+  //     var x = data[item];
+  //     if (!data[item]) {
+  //       let fieldName = item.charAt(0).toUpperCase() + item.slice(1);
+  //       this.notificationsService.notifyCode(
+  //         'E0001',
+  //         0,
+  //         '"' + this.grvBookingCar[fieldName].headerText + '"'
+  //       );
+  //       result = false;
+  //     }
+  //   });
+  //   return result;
+  //}
 }
