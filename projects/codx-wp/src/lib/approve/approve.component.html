@@ -1,14 +1,21 @@
-<codx-views #view [service]="service" [entityName]="entityName" idField="recID" [views]="views" [button]="buttonAdd"
-    (buttonClick)="clickBtnAdd()">
+<codx-views #codxView 
+[funcID]="funcID"
+[entityName]="entityName" 
+[predicates]="predicates"
+[dataValues]="dataValues"
+idField="recID" 
+[views]="views" 
+[button]="buttonAdd"
+(buttonClick)="clickBtnAdd()">
 </codx-views>
 
 <ng-template #panelLeftRef>
-    <div class="p-3">
+    <div class="">
         <ul class="nav nav-news">
             <li class="nav-item" *ngFor="let item of tabAsside">
                 <a [class.text-primary]="item.active" class="nav-link fw-bold" href="javascript:;"
                     (click)="clickTabApprove(item,item.predicate,item.datavalue)">
-                    <codx-label formName="" [name]="'lbl'+item.text" [default]="item.text"></codx-label>
+                    <codx-label [formName]="codxView.formModel" [name]="'lbl'+item.text" [default]="item.text"></codx-label>
                     <span>({{item.total}})</span>
                 </a>
             </li>
@@ -17,36 +24,52 @@
 </ng-template>
 <ng-template #panelRightRef>
     <div class="py-3">
-        <app-view-detail #viewdetail [data]="dataSelected" [option]="option" (evtApproval)="clickApprovePost($event)"
-            [formModel]="view.formModel"></app-view-detail>
+        <app-view-detail #viewdetail 
+            [objectID]="selectedID" 
+            [entityName]="entityName" 
+            (evtApproval)="clickApprovePost($event)"
+            [formModel]="codxView.formModel">
+        </app-view-detail>
     </div>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
     <ng-container *ngIf="funcID == 'WPT0213';else wp_news">
-        <codx-temp-full [dataItem]="data" [typeMF]="'hover'" (clickMF)="clickMF($event,data)"
-            (click)="clickViewDetail(data,entityName)" [formModel]="view.formModel" [resourceObjType]="entityName"
-            imgCss="me-2" cardCss="card-template border-bottom px-2 py-3" [icoTitleFld]="data.category"
+        <codx-temp-full 
+            [dataItem]="data" 
+            [typeMF]="'hover'" 
+            (clickMF)="clickMF($event,data)"
+            (click)="clickViewDetail(data.recID)" 
+            [formModel]="codxView.formModel" 
+            [resourceObjType]="entityName"
+            imgCss="me-2" cardCss="card-template border-bottom px-2 py-3" 
+            [icoTitleFld]="data.category"
             [icoTitleVll]="'WP004'"
             title="<span class='fw-bolder ms-2'>{{data.category | vll:'WP004':'text'|async}}</span>"
-            [desc]="data.comments" [date]="data.createdOn" [status]="data.approveStatus"
-            [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" [dataItem]="data" [bookmark]="false">
+            [desc]="data.comments" [date]="data.createdOn" 
+            [status]="data.approveStatus"
+            [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" 
+            [bookmark]="false">
         </codx-temp-full>
     </ng-container>
     <ng-template #wp_news>
-        <codx-temp-full [dataItem]="data" [typeMF]="'hover'" (clickMF)="clickMF($event,data)"
-            (click)="clickViewDetail(data,entityName)" [formModel]="view.formModel" [resourceObjType]="'AD_Users'"
-            [resources]="data.createdBy" [icoTitleFld]="data.category" [icoTitleVll]="'WP004'" imgCss="me-2"
+        <codx-temp-full 
+            [dataItem]="data" 
+            [typeMF]="'hover'" 
+            (clickMF)="clickMF($event,data)"
+            (click)="clickViewDetail(data.recID)" 
+            [formModel]="codxView.formModel" 
+            [resourceObjType]="'AD_Users'"
+            [resources]="data.createdBy" 
+            [icoTitleFld]="data.category" 
+            [icoTitleVll]="'WP004'" imgCss="me-2"
             cardCss="card-template border-bottom px-2 py-3"
             title="<span class='fw-bolder ms-2'>{{data.category | vll:'WP004':'text'|async}}</span>"
-            [desc]="data.category == 'companyinfo'? data.content : data.subject" [date]="data.createdOn"
-            [status]="data.approveStatus" [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" [dataItem]="data"
+            [desc]="data.category == 'companyinfo'? data.content : data.subject" 
+            [date]="data.createdOn"
+            [status]="data.approveStatus" 
+            [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" 
             [bookmark]="false">
         </codx-temp-full>
     </ng-template>
 </ng-template>
-<!-- <ng-template #footer>
-    <div class="d-flex align-items-end me-2">
-        <codx-img [objectId]=""></codx-img>
-    </div>
-</ng-template> -->

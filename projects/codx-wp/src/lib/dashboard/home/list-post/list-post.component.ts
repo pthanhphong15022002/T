@@ -67,6 +67,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   headerText = '';
   views: Array<ViewModel> | any = [];
 
+  @Input() objectID:string = "";
   @Input() predicates = '';
   @Input() dataValues = '';
   @ViewChild('codxViews') codxViews: ViewsComponent;
