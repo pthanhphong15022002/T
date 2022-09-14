@@ -97,6 +97,12 @@
       <div>
         <span>{{ data.title }}</span>
       </div>
+      <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
       <!-- <div>
         <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
       </div> -->
