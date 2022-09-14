@@ -27,8 +27,7 @@ export class CodxCommentsComponent implements OnInit {
   @Output() evtReplyTo = new EventEmitter;
   @Output() evtSendComment = new EventEmitter;
   @Output() evtDeleteComment = new EventEmitter;
-
-
+  @Output() evtLoadSubComment = new EventEmitter;
 
   //
   @ViewChild('codxATM') codxATM :AttachmentComponent;
@@ -202,6 +201,11 @@ export class CodxCommentsComponent implements OnInit {
            }});
       }
     });
+  }
+
+  loadSubComment(){
+    this.data.totalSubComment  = 0 ;
+    this.evtLoadSubComment.emit(this.data);
   }
   uploadFile(){
     this.codxATM.uploadFile();

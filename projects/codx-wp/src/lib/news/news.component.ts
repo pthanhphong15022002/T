@@ -60,7 +60,6 @@ export class NewsComponent implements OnInit {
     private route: ActivatedRoute,
     private changedt: ChangeDetectorRef,
     private callfc: CallFuncService,
-    private cache: CacheService
   ) { }
 
   ngAfterViewInit(): void {
