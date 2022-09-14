@@ -1,0 +1,45 @@
+<codx-form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef"></codx-form>
+<ng-template #body>
+    <div class="container">
+        <ng-container *ngIf="listStorage.length > 0">
+            <div class="row">
+                <ng-container *ngFor="let item of listStorage">
+                    <div class="d-flex justify-content-between align-items-center" (click)="selectStorage(item)">
+                        <span class="fw-bolder">{{item.title}}</span>
+                        <span>
+                            <i class="icon-adjust" [style.color]="item.isActive?'#3578E5':'#c2c8ca'"></i>
+                        </span>    
+                    </div>
+                        
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <div class="row">
+            <div class="d-flex w-100 cursor-pointer">
+                <span class="">
+                    <i class="con-add_box"></i>
+                </span>
+                <span class="fw-bolder">
+                    <codx-label 
+                        [formModel]="dialogRef.formModel"
+                        name="lblStorage"
+                        default="Kho lưu trữ mới">
+                    </codx-label>
+                </span>
+            </div> 
+        </div>
+    </div>
+   
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary btn-post" (click)="saveObjectToStorage()">
+            <codx-label 
+                [formModel]="dialogRef.formModel"
+                name="lblSave"
+                default="Lưu">
+            </codx-label>
+        </button>
+    </div>
+</ng-template>
