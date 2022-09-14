@@ -343,7 +343,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           //lưu his giao việc
           var objectType = this.formModel.entityName 
           var objectID = this.task.refID
-          var objectName = this.formModel.entityName 
+          var objectName = "TM_Tasks" 
           var dataObj = { objectType: objectType, objectID: objectID, objectName: objectName }
           
            var tmpHistorry = {
