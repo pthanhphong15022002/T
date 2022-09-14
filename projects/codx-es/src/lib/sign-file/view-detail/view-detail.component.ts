@@ -275,7 +275,11 @@ export class ViewDetailComponent implements OnInit {
 
       dialogAdd.closed.subscribe((res) => {
         if (res.event) {
-          this.view.dataService.update(res.event).subscribe();
+          if (res.event?.approved) {
+            this.view.dataService.update(res.event.data).subscribe();
+          } else {
+            this.view.dataService.update(res.event).subscribe();
+          }
         }
       });
     });

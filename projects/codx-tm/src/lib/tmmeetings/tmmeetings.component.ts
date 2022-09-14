@@ -84,6 +84,7 @@ export class TMMeetingsComponent
   dayWeek = [];
   request: ResourceModel;
   listMoreFunc = [];
+  titleAction ='' ;
 
   constructor(
     inject: Injector,
@@ -249,17 +250,17 @@ export class TMMeetingsComponent
 
   getParams() {
     this.api
-      .execSv<any>(
-        APICONSTANT.SERVICES.SYS,
-        APICONSTANT.ASSEMBLY.CM,
-        APICONSTANT.BUSINESS.CM.Parameters,
-        'GetOneField',
-        ['TMParameters', null, 'CalendarID']
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.param = res;
-          this.calendarID = res.fieldValue;
+    .execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['TMParameters', '1']
+    )
+    .subscribe((res) => {
+      if (res) {
+        var param = JSON.parse(res.dataValue);
+        this.calendarID = param.CalendarID
           this.getDayWeek(this.calendarID);
           this.getDayOff(this.calendarID);
           this.detectorRef.detectChanges();
@@ -376,6 +377,7 @@ export class TMMeetingsComponent
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
+    this.titleAction = e.text ;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -399,6 +401,7 @@ export class TMMeetingsComponent
   }
 
   click(evt: ButtonModel) {
+    this.titleAction = evt.text ;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -411,32 +414,32 @@ export class TMMeetingsComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '800px';
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        'add',
+        ['add',this.titleAction],
         option
       );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
-        if (e?.event && e?.event != null) {
-          var objectData = this.view.dataService.data;
-          var object = {};
-          for (var i = 0; i < objectData.length; i++) {
-            if (objectData[i][i] !== undefined) {
-              object[i] = objectData[i][i];
-              objectData[i] = object[i];
-            }
-          }
-          this.view.dataService.data = e?.event.concat(objectData);
-          this.meeting = objectData[0];
-          this.detectorRef.detectChanges();
-        }
-      });
+      // this.dialog.closed.subscribe((e) => {
+      //   if (e?.event == null)
+      //     this.view.dataService.delete(
+      //       [this.view.dataService.dataSelected],
+      //       false
+      //     );
+      //   if (e?.event && e?.event != null) {
+      //     var objectData = this.view.dataService.data;
+      //     var object = {};
+      //     for (var i = 0; i < objectData.length; i++) {
+      //       if (objectData[i][i] !== undefined) {
+      //         object[i] = objectData[i][i];
+      //         objectData[i] = object[i];
+      //       }
+      //     }
+      //     this.view.dataService.data = e?.event.concat(objectData);
+      //     this.meeting = objectData[0];
+      //     this.detectorRef.detectChanges();
+      //   }
+      // });
     });
   }
   edit(data) {
@@ -449,26 +452,37 @@ export class TMMeetingsComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '800px';
+        option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
-          'edit',
+          ['edit',this.titleAction],
           option
         );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.meeting = e?.event;
-          }
-          this.detectorRef.detectChanges();
-        });
+        // this.dialog.closed.subscribe((e) => {
+        //     if (e?.event == null)
+        //       this.view.dataService.delete(
+        //         [this.view.dataService.dataSelected],
+        //         false
+        //       );
+        //     if (e?.event && e?.event != null) {
+        //         this.view.dataService.update( e?.event).subscribe();
+        //     }
+        //     this.detectorRef.detectChanges();
+        //   });
+        // this.dialog.closed.subscribe((e) => {
+        //   if (e?.event == null)
+        //     this.view.dataService.delete(
+        //       [this.view.dataService.dataSelected],
+        //       false
+        //     );
+        //   if (e?.event && e?.event != null) {
+        //     e?.event.forEach((obj) => {
+        //       this.view.dataService.update(obj).subscribe();
+        //     });
+        //     this.meeting = e?.event;
+        //   }
+        //   this.detectorRef.detectChanges();
+         //});
       });
   }
   copy(data) {
@@ -477,32 +491,12 @@ export class TMMeetingsComponent
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';   
+      option.Width = 'Auto';   
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        [this.view.dataService.dataSelected, 'copy'],
+        ['copy',this.titleAction],
         option
       );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
-        if (e?.event && e?.event != null) {
-          var objectData = this.view.dataService.data;
-          var object = {};
-          for (var i = 0; i < objectData.length; i++) {
-            if (objectData[i][i] !== undefined) {
-              object[i] = objectData[i][i];
-              objectData[i] = object[i];
-            }
-          }
-          this.view.dataService.data = e?.event.concat(objectData);
-          this.meeting = objectData[0];
-          this.detectorRef.detectChanges();
-        }
-      });
     });
   }
 
@@ -572,4 +566,20 @@ export class TMMeetingsComponent
     }
   }
   //end region
+
+  onScroll(event) {
+    const dcScroll = event.srcElement;
+    if (
+      dcScroll.scrollTop + dcScroll.clientHeight <
+      dcScroll.scrollHeight - 150
+    ) {
+      return;
+    }
+
+    if (this.view.dataService.page < this.view.dataService.pageCount) {
+     // this.tmService.page ++ ;
+      this.view.dataService.scrolling() ;
+      //this.tmService.totalPage =  this.view.dataService.pageCount ;
+    }
+  }
 }

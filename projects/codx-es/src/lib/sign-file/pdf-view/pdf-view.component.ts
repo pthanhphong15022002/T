@@ -70,6 +70,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   @Input() isApprover;
   @Input() isDisable = false;
   @Output() isActiveToSign = new EventEmitter();
+  @Output() isAreaControl = new EventEmitter();
 
   user?: any;
   url: string = '';
@@ -180,7 +181,7 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
   direction;
   align;
   await;
-  AreaControl;
+  areaControl;
 
   //vung ky
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
@@ -357,6 +358,8 @@ export class PdfViewComponent extends UIComponent implements AfterViewInit {
       this.signPerRow = res.signPerRow;
       this.align = res.align;
       this.direction = res.direction;
+      this.areaControl = res.areaControl;
+      this.isAreaControl.emit(this.areaControl);
       this.detectorRef.detectChanges();
       console.log('auto sign format', res);
     });

@@ -1,4 +1,4 @@
-import { Optional, TemplateRef } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -13,20 +13,16 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   CacheService,
-  CodxInputComponent,
   SidebarModel,
   DialogRef,
   CallFuncService,
-  DialogModel,
+  AuthService,
 } from 'codx-core';
-import { iif } from 'rxjs';
-import { createTrue } from 'typescript';
+import { environment } from 'src/environments/environment';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { TM_Tasks } from '../codx-tasks/model/task.model';
-import { CodxTreeHistoryComponent } from '../codx-tree-history/codx-tree-history.component';
 import { FileComponent } from './file/file.component';
-import { CO_Contents } from './model/CO_Contents.model';
 
 @Component({
   selector: 'codx-note',
@@ -34,45 +30,16 @@ import { CO_Contents } from './model/CO_Contents.model';
   styleUrls: ['./codx-note.component.scss'],
 })
 export class CodxNoteComponent implements OnInit, AfterViewInit {
+  currentElement: HTMLElement;
+  currentElementColor: HTMLElement;
   icon = '';
   showEmojiPicker = false;
   gridViewSetup: any;
   gridViewSetupComment: any;
-  sets = [
-    'native',
-    'google',
-    'twitter',
-    'facebook',
-    'emojione',
-    'apple',
-    'messenger',
-  ];
   set = 'apple';
   lineType = 'TEXT';
   empty = '';
-  listNoteTemp: any = {
-    memo: '',
-    status: null,
-    textColor: null,
-    format: '',
-    lineType: 'TEXT',
-  };
-  currentElement: HTMLElement;
-  currentElementColor: HTMLElement;
   elementColor: any;
-  font = {
-    BOLD: false,
-    ITALIC: false,
-    UNDERLINE: false,
-    COLOR: '#000000',
-  };
-  format = {
-    TEXT: true,
-    TITLE: false,
-    LIST: false,
-    CHECKBOX: false,
-  };
-  co_content: CO_Contents = new CO_Contents();
   test: any;
   fontTemp: any;
   id = 0;
@@ -90,6 +57,28 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   vllRole = 'TM002';
   headerComment = '';
   checkFile = false;
+  totalComment = 0;
+  lstIV: any[] = [];
+  user: any = null;
+  listNoteTemp: any = {
+    memo: '',
+    status: null,
+    textColor: null,
+    format: '',
+    lineType: 'TEXT',
+  };
+  font = {
+    BOLD: false,
+    ITALIC: false,
+    UNDERLINE: false,
+    COLOR: '#000000',
+  };
+  format = {
+    TEXT: true,
+    TITLE: false,
+    LIST: false,
+    CHECKBOX: false,
+  };
   initListNote = {
     memo: '',
     status: null,
@@ -100,7 +89,19 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     comments: 0,
     tasks: 0,
   };
-  totalComment = 0;
+  REFER_TYPE = {
+    IMAGE: 'image',
+    VIDEO: 'video',
+    APPLICATION: 'application',
+  };
+  LINE_TYPE = {
+    TEXT: 'TEXT',
+    TITLE: 'TITLE',
+    CHECKBOX: 'CHECKBOX',
+    LIST: 'LIST',
+    IMAGE: 'IMAGE',
+    FILE: 'FILE',
+  };
 
   @Input() contents: any = [
     {
@@ -134,13 +135,15 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   @ViewChild('popupAttachment') popupAttachment: TemplateRef<any>;
   @ViewChild('colorPicker') colorPicker: any;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('ATM_IV') ATM_IV: AttachmentComponent;
 
   constructor(
     private dt: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
     private route: ActivatedRoute,
-    private callfunc: CallFuncService
+    private callfunc: CallFuncService,
+    private auth: AuthService
   ) {
     this.cache.gridViewSetup('Contents', 'grvContents').subscribe((res) => {
       if (res) this.gridViewSetup = res;
@@ -162,6 +165,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.listRoles = res.datas;
       }
     });
+    this.user = this.auth.userValue;
   }
 
   ngAfterViewInit(): void {
@@ -179,6 +183,31 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.dt.detectChanges();
       this.setPropertyForView();
     }
+  }
+
+  getFileByObjectID(recID) {
+    this.api
+      .execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'GetFilesByIbjectIDAsync',
+        recID
+      )
+      .subscribe((res: any[]) => {
+        if (res.length > 0) {
+          let files = res;
+          files.map((e: any) => {
+            if (e && e.referType == this.REFER_TYPE.VIDEO) {
+              e[
+                'srcVideo'
+              ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
+            }
+          });
+          this.lstIV = res;
+        }
+      });
+    this.dt.detectChanges();
   }
 
   setPropertyForView() {
@@ -531,15 +560,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
           if (this.objectParentID) {
             this.updateContent(this.objectParentID, this.contents).subscribe();
             if (this.contents[index]?.recID != undefined)
-              this.api
-                .execSv(
-                  'DM',
-                  'ERM.Business.DM',
-                  'FileBussiness',
-                  'DeleteByObjectIDAsync',
-                  [this.contents[index].recID, this.objectType, true]
-                )
-                .subscribe();
+              this.deleteFileByObjectID(this.contents[index]?.recID, true);
           }
         }
       }
@@ -553,6 +574,20 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.countFileAdded = 0;
     this.focus(this.contents.length);
     this.dt.detectChanges();
+  }
+
+  deleteFileByObjectID(fileID: string, deleted: boolean) {
+    if (fileID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'DeleteByObjectIDAsync',
+          [fileID, this.objectType, deleted]
+        )
+        .subscribe();
+    }
   }
 
   getElement(ele: any, index = null) {
@@ -633,7 +668,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     ele = null,
     item = null,
     index = null,
-    menu = null
+    menu = null,
+    attachmentEle = null
   ) {
     switch (type) {
       case 'format':
@@ -656,9 +692,77 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         break;
       case 'attachment':
         if (menu == false) this.openPopupAttachment(index);
-        else this.popup(this.id);
+        else this.popup(this.id, attachmentEle);
+        break;
+      case 'image':
+        this.uploadIV(this.id);
+        break;
     }
     this.getContent.emit(this.contents);
+  }
+
+  IDTempIV = 0;
+  uploadIV(index) {
+    if (this.ATM_IV) this.ATM_IV.uploadFile();
+    this.IDTempIV = index;
+  }
+
+  selectedIV(e: any) {
+    let obj = JSON.parse(JSON.stringify(this.contents));
+    let initListNote = {
+      memo: '',
+      status: null,
+      textColor: null,
+      format: null,
+      lineType: this.lineType,
+      attachments: 0,
+      comments: 0,
+      tasks: 0,
+      recID: '',
+    };
+    this.getMongoObjectId();
+    obj[this.IDTempIV].lineType = this.LINE_TYPE.IMAGE;
+    obj[this.IDTempIV].attachments += 1;
+    let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+    obj[this.IDTempIV].recID = recID;
+    e.data[0].objectID = recID;
+
+    console.log('check image', e.data);
+    let item = JSON.parse(JSON.stringify(initListNote));
+    item.lineType = this.LINE_TYPE.TEXT;
+    item.attachments = 0;
+    obj.push(item);
+
+    this.updateContent(this.objectParentID, obj).subscribe(async (res: any) => {
+      if (res) {
+        // up file
+        if (e.data.length > 0) {
+          let files = e.data;
+          files.map((e: any) => {
+            if (e.mimeType.indexOf('image') >= 0) {
+              e['referType'] = this.REFER_TYPE.IMAGE;
+            } else if (e.mimeType.indexOf('video') >= 0) {
+              e['referType'] = this.REFER_TYPE.VIDEO;
+            } else {
+              e['referType'] = this.REFER_TYPE.APPLICATION;
+            }
+          });
+          this.lstIV = files;
+        }
+        this.ATM_IV.fileUploadList = this.lstIV;
+        debugger;
+        (await this.ATM_IV.saveFilesObservable()).subscribe((result: any) => {
+          if (result) {
+            this.contents = obj;
+            this.dt.detectChanges();
+            this.focus(this.contents.length - 1);
+          }
+        });
+      }
+    });
+    this.id += 1;
+    console.log('check id', this.id);
+    this.dt.detectChanges();
   }
 
   updateContent(objectParentID, listContent) {
@@ -803,22 +907,21 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   IDTemp = 0;
-  popup(index) {
-    if (index < this.contents.length)
-      this.contents[index].lineType = 'FILE';
-    this.updateContent(this.objectParentID, this.contents).subscribe();
-    this.dt.detectChanges();
+  popup(index, attachmentEle) {
+    // if (index < this.contents.length) this.contents[index].lineType = 'FILE';
+    // this.updateContent(this.objectParentID, this.contents).subscribe();
+    // this.dt.detectChanges();
+    // console.log('check attachmentEle popup', attachmentEle);
+    if (attachmentEle) this.attachment = attachmentEle;
     if (this.attachment) {
       this.attachment.uploadFile();
       this.checkFile = true;
     }
     this.IDTemp = index;
-    debugger;
   }
 
-  countFileAdded = 0;
-  fileCount(e) {
-    // this.countFileAdded++;
+  fileCounts(e: any) {
+    let obj = JSON.parse(JSON.stringify(this.contents));
     let initListNote = {
       memo: '',
       status: null,
@@ -832,45 +935,105 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     };
     // if (this.countFileAdded > 1) index++;
     if (e.data.length > 1) {
-      this.contents.splice(this.IDTemp, 1);
+      obj.splice(this.IDTemp, 1);
       e.data.forEach((dt) => {
         this.getMongoObjectId();
         let item = JSON.parse(JSON.stringify(initListNote));
         item.lineType = 'FILE';
         item.attachments += 1;
-        item.recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+        let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+        item.recID = recID;
         dt.objectID = item.recID;
-        this.contents.push(item);
+        obj.push(item);
       });
     } else {
       this.getMongoObjectId();
-      this.contents[this.IDTemp].lineType = 'FILE';
-      this.contents[this.IDTemp].attachments += 1;
-      this.contents[this.IDTemp].recID = JSON.parse(
-        JSON.stringify(this.mongoObjectId)
-      );
+      obj[this.IDTemp].lineType = 'FILE';
+      obj[this.IDTemp].attachments += 1;
+      let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+      obj[this.IDTemp].recID = recID;
+      e.data[0].objectID = recID;
     }
     console.log('check file', e.data);
     let item = JSON.parse(JSON.stringify(initListNote));
     item.lineType = 'TEXT';
     item.attachments = 0;
-    this.contents.push(item);
+    obj.push(item);
 
     console.log('check contents', this.contents);
-    this.dt.detectChanges();
-    this.updateContent(this.objectParentID, this.contents).subscribe(
-      async (res: any) => {
-        if (res) {
-          this.attachment.fileUploadList = e.data;
-          this.attachment.saveFiles();
-          this.focus(this.contents.length - 1);
-        }
+    this.updateContent(this.objectParentID, obj).subscribe(async (res: any) => {
+      if (res) {
+        // up file
+        this.attachment.fileUploadList = e.data;
+        (await this.attachment.saveFilesObservable()).subscribe(
+          (result: any) => {
+            if (result) {
+              this.contents = obj;
+              this.dt.detectChanges();
+              this.focus(this.contents.length - 1);
+            }
+          }
+        );
       }
-    );
-    this.id += 2;
+    });
+    this.id += 1;
     console.log('check id', this.id);
     this.dt.detectChanges();
   }
+
+  countFileAdded = 0;
+  // fileCount(e, attachmentEle) {
+  //   this.attachment = attachmentEle;
+  //   let initListNote = {
+  //     memo: '',
+  //     status: null,
+  //     textColor: null,
+  //     format: null,
+  //     lineType: this.lineType,
+  //     attachments: 0,
+  //     comments: 0,
+  //     tasks: 0,
+  //     recID: '',
+  //   };
+  //   if (e.data.length > 1) {
+  //     this.contents.splice(this.IDTemp, 1);
+  //     e.data.forEach((dt) => {
+  //       this.getMongoObjectId();
+  //       let item = JSON.parse(JSON.stringify(initListNote));
+  //       item.lineType = 'FILE';
+  //       item.attachments += 1;
+  //       let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+  //       item.recID = recID;
+  //       dt.objectID = item.recID;
+  //       this.contents.push(item);
+  //     });
+  //   } else {
+  //     this.getMongoObjectId();
+  //     this.contents[this.IDTemp].lineType = 'FILE';
+  //     this.contents[this.IDTemp].attachments += 1;
+  //     let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+  //     this.contents[this.IDTemp].recID = recID;
+  //     e.data[0].objectID = recID;
+  //   }
+  //   console.log('check file', e.data);
+  //   let item = JSON.parse(JSON.stringify(initListNote));
+  //   item.lineType = 'TEXT';
+  //   item.attachments = 0;
+  //   this.attachment.fileUploadList = e.data;
+  //   this.contents.push(item);
+  //   console.log('check contents', this.contents);
+  //   this.dt.detectChanges();
+  //   this.updateContent(this.objectParentID, this.contents).subscribe(
+  //     async (res: any) => {
+  //       if (res) {
+  //         this.focus(this.contents.length - 1);
+  //       }
+  //     }
+  //   );
+  //   this.id += 2;
+  //   console.log('check id', this.id);
+  //   this.dt.detectChanges();
+  // }
 
   mongoObjectId: any;
   getMongoObjectId() {

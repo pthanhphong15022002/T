@@ -50,7 +50,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   typeList = 'note-drawer';
   header = 'Ghi chú';
   dialog: DialogRef;
-  predicate = 'CreatedBy=@0 and IsNote=true';
+  predicate = 'CreatedBy=@0';
   dataValue = '';
   editMF: any;
   deleteMF: any;
@@ -61,6 +61,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   user: any;
   daySelected: any;
   checkSortASC = false;
+  functionList: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
 
@@ -86,6 +87,9 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
           this.saveMF = res[1];
         }
       });
+    this.cache.functionList('WPT08').subscribe((res) => {
+      if (res) this.functionList = res;
+    });
     var dataSv = new CRUDService(injector);
     dataSv.request.pageSize = 10;
     this.dtService = dataSv;
@@ -212,7 +216,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       AddNoteComponent,
       'Cập nhật ghi chú',
       700,
-      600,
+      500,
       '',
       obj
     );
@@ -272,7 +276,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       AddNoteComponent,
       'Thêm mới ghi chú',
       700,
-      600,
+      500,
       '',
       obj,
       '',

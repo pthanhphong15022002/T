@@ -42,13 +42,13 @@ export class RolesComponent implements OnInit {
   titleUpdateDescription = 'Cho phép chỉnh sửa thông tin của folder/file';
   titleDelete = 'Xóa';
   titleDeleteDesc = 'Cho phép xóa folder/file';
-  titleShare = 'Share';
+  titleShare = 'Chia sẻ';
   titleShareDesc = 'Cho phép chia sẻ folder/file';
   titleAssign = 'Chia sẻ quyền';
   titleAssignDesc = 'Cho phép chia sẻ và chỉnh sửa quyền';
-  titleUpload = 'Upload';
+  titleUpload = 'Tải lên';
   titleUploadDesc = 'Cho phép upload file';
-  titleDownload = 'Download';
+  titleDownload = 'Tải về';
   titleDownloadDesc = 'Cho phép download file';
   titleFromDate = 'Ngày hiệu lực';
   titleToDate = 'Ngày hết hạn';
@@ -252,6 +252,7 @@ export class RolesComponent implements OnInit {
         this.modePermission = false;
 
       this.fileEditing =  JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));   
+      this.id = this.fileEditing.recID;
       this.user = this.auth.get();
       this.dialog = dialog;    
       this.startDate = null;
@@ -788,7 +789,7 @@ export class RolesComponent implements OnInit {
         perm.endDate = this.endDate;
         perm.isSystem = false;
         perm.isActive = true;
-        perm.objectName = item.text;
+        perm.objectName = item.text != null ? item.text : item.objectName;
         perm.objectID = item.id;
         perm.objectType = item.objectType;
         perm.read = true;

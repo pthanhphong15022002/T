@@ -84,7 +84,7 @@
                         </codx-label>
                         <div class="w-100 px-9 bg-gray-100 rounded-2 py-4 150px" (click)="clickUploadImage()">
                             <div class="d-flex justify-content-center" *ngIf="fileImage;else defaultImage">
-                                <img class="pic-news w-auto h-150px" [src]="fileImage.data || fileImage.thumbnail"
+                                <img class="pic-news w-100 h-150px" [src]="fileImage.avatar || fileImage.thumbnail"
                                     alt="">
                             </div>
                             <ng-template #defaultImage>
@@ -193,7 +193,7 @@
 </ng-template>
 
 <ng-template #defaultVideo>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center align-items-center vh-100">
         <button type="button" class="btn btn-light" (click)="clickUploadVideo()">
             <codx-label [formModel]="dialogRef.formModel" name="lblUpload" default="UploadFile"></codx-label>
         </button>

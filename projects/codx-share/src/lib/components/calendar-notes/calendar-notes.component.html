@@ -21,8 +21,8 @@
     </div>
     <div class="lstView">
         <codx-listview #listview service="SYS" assemblyName="ERM.Business.SYS" className="SettingValuesBusiness"
-            method="GetDataByDateAsync" entityName="WP_Notes" [predicate]="predicate" [dataValue]="dataValue"
-            [itemTemplate]="dataPara" type="listView">
+            method="GetDataByDateAsync" [entityName]="'WP_Notes'" [predicate]="predicate" [dataValue]="dataValue"
+            [itemTemplate]="dataPara" type="listView" [funcId]="functionList?.functionID">
         </codx-listview>
     </div>
     <ng-template #dataPara let-item>

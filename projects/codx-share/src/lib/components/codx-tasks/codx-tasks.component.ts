@@ -132,6 +132,7 @@ export class CodxTasksComponent
   projectID?: any;
   listViewModel = [];
   dataReferences = [];
+  titleAction ='' ;
 
   constructor(
     inject: Injector,
@@ -282,7 +283,7 @@ export class CodxTasksComponent
         this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'add', this.isAssignTask],
+        [this.view.dataService.dataSelected, 'add', this.isAssignTask,this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -347,7 +348,7 @@ export class CodxTasksComponent
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, data],
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask,this.titleAction, data],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -474,7 +475,7 @@ export class CodxTasksComponent
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit', this.isAssignTask],
+          [this.view.dataService.dataSelected, 'edit', this.isAssignTask,this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -1050,17 +1051,17 @@ export class CodxTasksComponent
       return;
     }
     if (data.status < '10') {
-      // this.notiService.notifyCode('cần mess code Hảo ơi !!');
-      this.notiService.notify(
-        'Công việc chưa được xác nhận thực hiện ! Vui lòng xác nhận trước khi cập nhật tiến độ !'
-      );
+     this.notiService.notifyCode('TM061');
+      // this.notiService.notify(
+      //   'Công việc chưa được xác nhận thực hiện ! Vui lòng xác nhận trước khi cập nhật tiến độ !'
+      // );
       return;
     }
     if (data.status == '50' || data.status == '80') {
-      // this.notiService.notifyCode('cần mess code Hảo ơi !!');
-      this.notiService.notify(
-        'Công việc đang bị "Hoãn" hoặc bị "Hủy" ! Vui lòng chuyển trạng thái trước khi cập nhật tiến độ !'
-      );
+      this.notiService.notifyCode('TM062');
+      // this.notiService.notify(
+      //   'Công việc đang bị "Hoãn" hoặc bị "Hủy" ! Vui lòng chuyển trạng thái trước khi cập nhật tiến độ !'
+      // );
       return;
     }
 
@@ -1224,6 +1225,7 @@ export class CodxTasksComponent
   }
 
   clickMFAfterParameter(e, data) {
+    this.titleAction= e.text ;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -1323,6 +1325,7 @@ export class CodxTasksComponent
   }
 
   click(evt: ButtonModel) {
+    this.titleAction = evt.text ;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -1433,16 +1436,17 @@ export class CodxTasksComponent
 
   getParams() {
     this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
-        'GetOneField',
-        ['TMParameters', null, 'CalendarID']
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = res.fieldValue;
+    .execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['TMParameters', '1']
+    )
+    .subscribe((res) => {
+      if (res) {
+        var param = JSON.parse(res.dataValue);
+        this.calendarID = param.CalendarID
           this.getDayOff(this.calendarID);
         }
       });

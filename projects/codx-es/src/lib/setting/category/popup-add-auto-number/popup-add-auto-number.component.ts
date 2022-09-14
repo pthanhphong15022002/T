@@ -37,6 +37,8 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   vllStringFormat;
   vllDateFormat;
 
+  data: any = {};
+
   isAdd: boolean = true;
 
   headerText = 'Thiết lập số tự động';
@@ -45,6 +47,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     private cache: CacheService,
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
+    private auth: AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -72,30 +75,34 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        console.log(res);
+      .then((fg) => {
+        console.log(fg);
 
-        if (res) {
-          this.dialogAutoNum = res;
+        if (fg) {
+          this.dialogAutoNum = fg;
           this.esService.getAutoNumber(this.autoNoCode).subscribe((res) => {
             if (res != null) {
+              this.data = res;
+              this.formModel.currentData = this.data;
               if (res.autoNoCode != null) {
                 this.isAdd = false;
                 this.dialogAutoNum.patchValue(res);
+                this.isAfterRender = true;
                 this.setViewAutoNumber();
               } else {
                 this.isAdd = true;
                 res.autoNoCode = this.autoNoCode;
                 this.dialogAutoNum.patchValue(res);
+                this.isAfterRender = true;
               }
               this.esService.isSetupAutoNumber.subscribe((res) => {
                 if (res != null) {
                   this.dialogAutoNum.patchValue(res.value);
+                  this.isAfterRender = true;
                 }
               });
               this.setViewAutoNumber();
               console.log(this.dialogAutoNum.value);
-              this.isAfterRender = true;
             }
           });
         }

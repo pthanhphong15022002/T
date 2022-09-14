@@ -31,7 +31,7 @@
 </ng-template>
 
 <ng-template #tmpPortal let-item>
-  <div class="p-5">
+  <div class="p-5 pb-0">
     <div class="d-flex align-items-top">
       <div class="me-3">
         <codx-img [objectId]="item.createdBy" objectType="AD_Users" [width]="40">
@@ -41,8 +41,8 @@
         <div class="d-flex align-items-center mb-2">
           <span class="text-dark fw-bolder">{{ item.createdName }}</span>
           <ng-container *ngIf="item.tag > 1; else tagName">
-            <div  class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
-              [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item)">
+            <div class="ms-2 d-flex align-items-center" [autoClose]="'outside'" [popoverTitle]="popTitle"
+              [ngbPopover]="popContent" (click)="getTagUser(item)">
               <div class="tag me-2">
                 <img class="tag-img" src="/assets/img/fed/user-tag.png" />
               </div>
@@ -52,16 +52,18 @@
           <ng-template #tagName>
             <span class="ms-2" [innerHTML]="item.tagName"></span>
           </ng-template>
+          <span class="ms-2 d-flex align-items-center" [innerHTML]="item.tagName" [autoClose]="'outside'"
+            [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="getTagUser(item)">
+          </span>
         </div>
-        <div class="text-info-date d-flex">
-          <div>
+        <div class="text-info-date d-flex algin-items-center">
+          <div class="d-flex algin-items-center">
             <span class="text-gray-600 fs-7 me-2">{{item.createdOn | timefrom}}</span>
-            <span class="rounded-1 py-1 px-2 bg-gray-200">
-              <span class="symbol symbol-circle">
-                <img class="h-13px w-13px" src="assets/themes/sys/default/img/{{
-                    item.shareControl | vll: 'L1901':'icon' | async
-                  }}" />
-              </span>
+            <span class="rounded-1 py-0 px-2 bg-gray-200 d-flex algin-items-center">
+              <span class="me-1">
+                <img class="h-12px w-12px" src="assets/themes/sys/default/img/{{
+                item.shareControl | vll: 'L1901':'icon' | async
+              }}" /></span>
               <span class="fs-7">
                 {{ item.shareControl | vll: "L1901":"text" | async }}
               </span>
@@ -87,7 +89,7 @@
                       <input type="text" class="form-control" [(ngModel)]="searchField" placeholder="Tìm kiếm" />
                     </div>
                     <div class="mh-300px" style="overflow: auto;">
-                      <div class="d-flex align-items-center mb-2" *ngFor="let share of item.userShares">
+                      <div class="d-flex align-items-center mb-2" *ngFor="let share of lstUserShare">
                         <codx-img class="me-2" [width]="25" [imageType]="'circle'" [objectId]="share.objectID"
                           objectType="AD_Users">
                         </codx-img>
@@ -201,8 +203,12 @@
       <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>
     </ng-template>
     <!-- commemt -->
-    <treeview-comment [funcID]="codxViews.formModel.funcID" [fromModel]="codxViews.formModel"
-      [objectType]="'WP_Comments'" [dataComment]="item">
+    <treeview-comment 
+      [funcID]="codxViews.formModel.funcID" 
+      [fromModel]="codxViews.formModel"
+      [objectType]="'WP_Comments'"
+      [dataComment]="item"
+      [objectID]="item.recID">
     </treeview-comment>
     <!-- end comment -->
   </div>
@@ -270,8 +276,8 @@
               </read-more>
             </div>
             <div class="d-flex align-items-center group-hasGift mt-6">
-              <div class="d-flex align-items-center justify-content-center w-100 ion-wrap me-2" 
-              *ngIf="item?.card?.cardType == '2' || item?.card?.cardType == '3'">
+              <div class="d-flex align-items-center justify-content-center w-100 ion-wrap me-2"
+                *ngIf="item?.card?.cardType == '2' || item?.card?.cardType == '3'">
                 <div class="symbol symbol-30 me-2">
                   <img class="w-100" src="/assets/themes/fd/default/img/{{
                       item?.card?.rating

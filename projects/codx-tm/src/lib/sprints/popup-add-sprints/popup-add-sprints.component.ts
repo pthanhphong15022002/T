@@ -122,37 +122,20 @@ export class PopupAddSprintsComponent implements OnInit {
           .save(
             (option: any) => this.beforeSave(option, isAdd),
             isAdd ? 0 : null
-          ) //Hảo code mới
+          )
           .subscribe((res) => {
             if (res) {
-              // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
-              if (isAdd && this.funcID != 'TMT0301') {
+              if (isAdd && res.iterationType == '0') {
                 var dataNew = this.dialog.dataService.data[0];
                 this.dialog.dataService.data[0] =
                   this.dialog.dataService.data[1];
                 this.dialog.dataService.data[1] = dataNew;
               }
+              this.attachment.clearData();
               this.dialog.close();
             }
           });
       });
-
-    // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
-    //   if (res) {
-    //     if(isAdd){
-    //       this.dataOnLoad[0]= res;
-    //       this.dataOnLoad=this.dataDefault.concat(this.dataOnLoad);
-    //       this.dialog.dataService.data =  this.dataOnLoad
-    //      // this.notiService.notifyCode('TM005');
-    //     }else{
-    //       this.dialog.dataService.update(res).subscribe();
-    //       //  var index = this.dialog.dataService.data.findIndex(x=>x.iterationID==res.iterationID)
-    //       //  this.dialog.dataService.data[index] = res;
-    //      // this.notiService.notifyCode('E0528');
-    //     }
-    //     this.dialog.close();
-    //   }
-    // });
   }
 
   //#endregion

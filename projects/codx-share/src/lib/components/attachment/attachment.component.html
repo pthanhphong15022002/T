@@ -230,6 +230,6 @@
         </div>
     </div>
     <div *ngIf="hideImageThumb == '0'">
-        <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp"  [hideDelete]="hideDelete"></codx-thumbnail>
+        <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp"  [hideDelete]="hideDelete" [hideMoreF]="hideMoreF" (viewFile)="handleView($event)"></codx-thumbnail>
     </div>
 </ng-template>

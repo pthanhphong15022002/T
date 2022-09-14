@@ -83,7 +83,8 @@ export class AddNoteComponent implements OnInit {
   defaultShowCalendar = true;
   checkSwitch = false;
   functionList: any;
-  listFileUpload: any[] = [];
+  listFileUpload: any = new Array();
+  listFileEdit: any = new Array();
 
   @ViewChild('txtNoteEdit') txtNoteEdit: ElementRef;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
@@ -128,6 +129,7 @@ export class AddNoteComponent implements OnInit {
       this.header = 'Cập nhật sổ tay';
       this.note = JSON.parse(JSON.stringify(dt.data?.dataUpdate));
       this.type = this.note?.noteType;
+      this.listFileUpload = this.note?.files;
       var dtt = {
         status: this.type == 'check' ? 0 : null,
         listNote: '',
@@ -429,7 +431,6 @@ export class AddNoteComponent implements OnInit {
     if (this.listNote.length != 0) this.note.checkList = this.listNote;
     if (this.note.checkList != null) this.note.checkList.pop();
     this.note.fileCount = this.listFileUpload?.length;
-
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
         this.note?.recID,
@@ -440,18 +441,20 @@ export class AddNoteComponent implements OnInit {
           var dtNew = res;
           dtNew.type = 'WP_Notes';
           this.checkUpdate = true;
+          if (this.listFileEdit?.length > 0) {
+            this.listFileEdit?.forEach((x) => {
+              this.deleteFileByRecID(x.recID, true);
+            });
+          }
           if (this.listFileUpload.length > 0) {
-            this.deleteFile(dtNew.recID, true);
             this.listFileUpload.forEach((dt) => {
               dt.objectID = this.note.recID;
-              dt.objectId = this.note.recID;
             });
             this.attachmentEdit.fileUploadList = this.listFileUpload;
             (await this.attachmentEdit.saveFilesObservable()).subscribe(
               (res: any) => {
                 if (res) {
                   this.notificationsService.notifyCode('SYS006');
-                  this.dialog.close();
                 }
               }
             );
@@ -465,10 +468,10 @@ export class AddNoteComponent implements OnInit {
             else object = [{ data: dtNew, type: 'edit-currentDate' }];
           }
           this.noteService.data.next(object);
-          this.dialog.close();
-          this.changeDetectorRef.detectChanges();
         }
       });
+    this.dialog.close();
+    this.changeDetectorRef.detectChanges();
   }
 
   keyUpEnter(e: any) {
@@ -538,8 +541,6 @@ export class AddNoteComponent implements OnInit {
   }
 
   popupFile() {
-    // this.attachment.uploadFile();
-    // this.checkFile = true;
     this.dmSV.fileUploadList = [];
     if (this.formType == 'edit') {
       this.attachmentEdit.uploadFile();
@@ -562,32 +563,34 @@ export class AddNoteComponent implements OnInit {
   removeFile(file: any) {
     switch (this.formType) {
       case 'edit':
-        let fileEdit = this.listFileUpload.filter((f: any) => {
-          return f.fileName != file.fileName;
+        let lstFileEdit = this.listFileUpload.filter((f: any) => {
+          return f.fileName == file.fileName;
         });
-        this.listFileUpload = fileEdit;
+        this.listFileEdit = lstFileEdit;
         break;
       default:
-        let fileAdd = this.listFileUpload.filter((f: any) => {
+        let lstFileAdd = this.listFileUpload.filter((f: any) => {
           return f.fileName != file.fileName;
         });
-        this.listFileUpload = fileAdd;
+        this.listFileUpload = lstFileAdd;
     }
     this.changeDetectorRef.detectChanges();
   }
 
   addFile(files: any) {
-    if (this.listFileUpload.length == 0) {
+    if (this.listFileUpload?.length == 0) {
       this.listFileUpload = files;
     } else {
-      files.forEach(dt => {
-        this.listFileUpload.push(dt);
-      })
+      if (this.listFileUpload) {
+        files.forEach((dt) => {
+          this.listFileUpload.push(dt);
+        });
+      } else this.listFileUpload = files;
     }
     this.changeDetectorRef.detectChanges();
   }
 
-  deleteFile(fileID: string, deleted: boolean) {
+  deleteFileByObjectID(fileID: string, deleted: boolean) {
     if (fileID) {
       this.api
         .execSv(
@@ -597,6 +600,17 @@ export class AddNoteComponent implements OnInit {
           'DeleteByObjectIDAsync',
           [fileID, this.functionList.entityName, deleted]
         )
+        .subscribe();
+    }
+  }
+
+  deleteFileByRecID(fileID: string, deleted: boolean) {
+    if (fileID) {
+      this.api
+        .execSv('DM', 'ERM.Business.DM', 'FileBussiness', 'DeleteFileAsync', [
+          fileID,
+          deleted,
+        ])
         .subscribe();
     }
   }

@@ -31,7 +31,7 @@
                         </div>
                         <div *ngIf="fileEditing != null" class="mt-4 pic-file max-h-140px">
                             <div *ngIf="fileEditing.thumbnail != null && fileEditing.thumbnail != ''">
-                                <img alt="" class="w-100 me-2"
+                                <img alt="" class="w-100 me-2" style="max-height: 200px"
                                     [src]='this.dmSV.getThumbnail(fileEditing)'>
                             </div>
                             <!-- <img alt="" class="w-100 me-2" src="../../../assets/demos/dms/demo1.png"> -->
@@ -39,7 +39,7 @@
                         <div class="dms-btn d-flex justify-content-between mt-4">
                             <div class="d-flex">
                                 <ng-container *ngIf="fileEditing != null">
-                                    <codx-tag entityName="DM_FileInfo" [isEdit]="false" [value]="fileEditing.tags">
+                                    <codx-tag entityName="DM_FileInfo" [isEdit]="false" [disabled]="true" [value]="fileEditing.tags">
                                     </codx-tag>
                                     <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="listTag"> </tags> -->
                                     <!-- <tags [editMode]='false' [entityName]="'TM_Task'" [(value)]="fileEditing.tags">

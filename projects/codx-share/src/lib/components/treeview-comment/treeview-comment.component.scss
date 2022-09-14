@@ -51,8 +51,16 @@
 
 .btn-like,
 .btn-com {
-    height: 30px;
-    line-height: 30px;
+    height: 34px;
+    line-height: 34px;
+    border-radius: 3px;
+
+}
+
+.btn-like:hover,
+.btn-com:hover {
+    background-color: var(--gray-100);
+
 }
 
 .btn-like {

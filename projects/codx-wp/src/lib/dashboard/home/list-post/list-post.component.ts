@@ -67,6 +67,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   headerText = '';
   views: Array<ViewModel> | any = [];
 
+  @Input() objectID:string = "";
   @Input() predicates = '';
   @Input() dataValues = '';
   @ViewChild('codxViews') codxViews: ViewsComponent;
@@ -257,9 +258,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       item.shareControl=='O')
       {
         item.isShowShare = !item.isShowShare;
-        this.lstUserShare = item.permissions.filter((p:any) => {
-          return p.memberType == "2";
-        });
+        this.lstUserShare = item.listShare;
         this.dt.detectChanges();
     }
   }

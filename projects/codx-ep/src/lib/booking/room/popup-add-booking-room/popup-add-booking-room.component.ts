@@ -332,6 +332,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
   }
   onSaveForm() { 
     if (this.fGroupAddBookingRoom.invalid == true) {
+      this.codxEpService.notifyInvalid(this.fGroupAddBookingRoom, this.formModel);
       return;
     }
     if (this.tmpEndDate - this.tmpStartDate <= 0 ) {
@@ -363,9 +364,6 @@ export class PopupAddBookingRoomComponent implements OnInit {
     });
     if(this.fGroupAddBookingRoom.value.resourceID instanceof Object){
       this.fGroupAddBookingRoom.patchValue({resourceID:this.fGroupAddBookingRoom.value.resourceID[0]})
-    }
-    if (this.fGroupAddBookingRoom.value.companyID instanceof Object){
-      this.fGroupAddBookingRoom.patchValue({companyID:this.fGroupAddBookingRoom.value.companyID[0]})
     }
     if (this.fGroupAddBookingRoom.value.reasonID instanceof Object){
       this.fGroupAddBookingRoom.patchValue({reasonID:this.fGroupAddBookingRoom.value.reasonID[0]})
@@ -440,8 +438,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       if(item.userId==this.curUser.userId){
         this.attendeesList.splice(this.attendeesList.indexOf(item),1);
       }
-    })
-        
+    });       
     this.fGroupAddBookingRoom.patchValue({attendees:this.attendeesList.length+1})
   }
   valueCbxUserChange(event?) {

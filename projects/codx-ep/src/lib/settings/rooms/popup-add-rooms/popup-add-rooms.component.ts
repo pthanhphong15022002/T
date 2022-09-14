@@ -108,6 +108,9 @@ export class PopupAddRoomsComponent implements OnInit {
         this.dialogAddRoom = item;
         if (this.data) {
           this.dialogAddRoom.patchValue(this.data);
+          this.dialogAddRoom.patchValue({
+            resourceType : '1',
+          });  
         }        
         this.isAfterRender = true;
       });
@@ -135,7 +138,7 @@ export class PopupAddRoomsComponent implements OnInit {
   }
   onSaveForm() {
     if (this.dialogAddRoom.invalid == true) {
-      console.log(this.dialogAddRoom);
+      this.codxEpService.notifyInvalid(this.dialogAddRoom, this.formModel);
       return;
     }
     let lstEquipments = '';
@@ -159,7 +162,6 @@ export class PopupAddRoomsComponent implements OnInit {
     if (this.dialogAddRoom.value.companyID instanceof Object){
       this.dialogAddRoom.patchValue({companyID:this.dialogAddRoom.value.companyID[0]})
     }
-
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {

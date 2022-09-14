@@ -22,7 +22,7 @@ export class SubFolderComponent implements OnInit {
   titleRange = 'Dãy';
   titleShelf = 'Kệ';
   titleCompartment = 'Ngăn';
-  titleSave = 'Apply';
+  titleSave = 'Lưu';
   titleLevel = 'Cấp thư mục';
   titleLevelFor = 'Phân cấp theo';
   titleFormat = 'Định dạng';

@@ -50,7 +50,7 @@ export class MoveComponent implements OnInit {
   setting: any;  
   title = 'Thông báo';
   titleFullName = 'Tên';
-  titleSave = "Save";
+  titleSave = "Lưu";
   titleMessage = "Tên bắt buộc.";
   titleRequired = "Tên bắt buộc.";
   titleDialog = 'Di chuyển/Sao chép tới';
