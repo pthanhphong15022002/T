@@ -21,7 +21,7 @@
   <div class="py-2">
     <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
       hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (fileGet)="getfileCount($event)" isDeleteTemp = '1'
-      [objectId]="dispatch?.recID" [allowMultiFile]="0" [idBrowse]="'add'" [hideDelete]="(this.dispatch?.status=='1'||this.dispatch?.status=='2')?'1':'0'" >
+      [objectId]="dispatch?.recID" [allowMultiFile]="0" [idBrowse]="'add'" [hideDelete]="(this.dispatch?.status=='1'||this.dispatch?.status=='2')?'1':'0'" hideMoreF="0">
     </codx-attachment>
   </div>
   <div class="tab-horizone">

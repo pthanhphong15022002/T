@@ -71,6 +71,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   isHaveFile = false;
   showLabelAttachment = false;
   titleAction = '';
+  calendarID: string;
+  startTimeWork: any;
+  endTimeWork: any;
 
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -597,4 +600,34 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     else this.isHaveFile = false;
     if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
+  //region time work
+  getParams() {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        ['TMParameters', null, 'CalendarID']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = res.fieldValue;
+          this.api
+            .execSv<any>(
+              'BS',
+              'ERM.Business.BS',
+              'CalendarsBusiness',
+              'GetDayWeekAsync',
+              [this.calendarID]
+            )
+            .subscribe((res) => {
+              if (res) {
+              }
+            });
+        }
+      });
+  }
+
+  //end
 }
