@@ -35,11 +35,6 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
 
   onInit(): void {
     this.itemDetailStt = 1;
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      this.cache.moreFunction(res.formName, res.gridViewName).subscribe((res) => {
-        console.log(res);
-      });
-    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
