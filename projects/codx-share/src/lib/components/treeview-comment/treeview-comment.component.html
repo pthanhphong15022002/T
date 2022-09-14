@@ -1,6 +1,6 @@
 <div class="d-flex align-items-center justify-content-between mt-3 mb-3">
     <div class="d-flex align-items-center ms-1 text-hover-underline" (click)="showVotes(dataComment)">
-        <ng-container *ngIf="dataComment.totalVote == 0;else Vote">
+        <!-- <ng-container *ngIf="dataComment.totalVote == 0;else Vote">
             <div class="flex align-items-center">
                 <span>
                     <img src="assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
@@ -18,13 +18,30 @@
                 </div>
             </div>
         </ng-template>
+        <span class="ms-2 fs-6">{{dataComment.totalVote}}</span> -->
+        <ng-container *ngIf="dataComment.totalVote > 0">
+            <div class="flex align-items-center">
+                <div *ngFor="let votedType of dataComment.listVoteType">
+                    <a >
+                        <img src="/assets/themes/wp/default/img/{{(votedType | vll:'L1480':'icon' | async)}}"
+                            alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
+                    </a>
+                </div>
+            </div>
         <span class="ms-2 fs-6">{{dataComment.totalVote}}</span>
+        </ng-container>
     </div>
     <div class="d-flex align-items-center text-hover-underline text-gray-800 me-1" (click)="showComments(dataComment)">
-        <span>{{dataComment.totalComment}}</span>
+        <!-- <span>{{dataComment.totalComment}}</span>
         <span class="ms-1">
             <codx-label formName="WP_Comments" name="lblComments" default="bình luận"></codx-label>
-        </span>
+        </span> -->
+        <ng-container *ngIf="dataComment.totalComment > 0">
+            <span>{{dataComment.totalComment}}</span>
+            <span class="ms-1">
+                <codx-label formName="WP_Comments" name="lblComments" default="bình luận"></codx-label>
+            </span>
+        </ng-container>
     </div>
 </div>
 <div class="row m-0 btn-comment py-2 border-top">
