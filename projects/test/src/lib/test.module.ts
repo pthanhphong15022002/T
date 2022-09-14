@@ -1,30 +1,19 @@
 import { InlineSVGModule } from 'ng-inline-svg';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxCoreModule } from 'codx-core';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { TestComponent } from './test.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { TaskComponent } from './task/task.component';
 
 export const routes: Routes = [
   {
-    path: '',                    //<-- để rỗng, khi chạy angular sẽ tự động vào routes này
+    path: '',
     component: LayoutComponent,
-    children: []
+    children: [
+      { path: 'task' }
+    ]
   }
 ]
 
@@ -32,15 +21,16 @@ export const routes: Routes = [
   declarations: [
     TestComponent,
     LayoutComponent,
+    TaskComponent, //<-- Khai báo component vừa tạo
   ],
   imports: [
-    RouterModule.forChild(routes), //<-- import routes vừa tạo ở trên vào RouterModule
+    RouterModule.forChild(routes),
     CodxShareModule,
     CodxCoreModule,
     InlineSVGModule
   ],
   exports: [
-    RouterModule  //<-- export để những nơi khác có thể sử dụng
+    RouterModule
   ]
 })
 export class TestModule { }
