@@ -50,14 +50,10 @@
 
     <div class="row">
       <div class="col-4 form-group">
-        <codx-label fiedName="ResourceID" [formModel]="form.formModel">
+        <codx-label fiedName="bookingOn" [formModel]="form.formModel">
         </codx-label>
-        <!-- <codx-input
-          ControlName="bookingOn"
-          [formModel]="form.formModel" 
-          [Group]="fGroupAddBookingRoom"      
-          (valueChange)="valueDateChange($event)"
-        >
+        <codx-input ControlName="bookingOn" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom"
+          (valueChange)="valueDateChange($event)">
         </codx-input> -->
         <codx-input type="datetime" class="form-control test-datetime" format="d" field="bookingOn"
           [crrValue]="fGroupAddBookingRoom.value.bookingOn" (valueChange)="valueDateChange($event)">

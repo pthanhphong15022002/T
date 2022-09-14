@@ -151,7 +151,7 @@ export class CopyComponent implements OnInit {
                       item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(item.data.extension)}`;//"../../../assets/img/loader.gif";
                       files[index] = item.data;
                       that.displayThumbnail(item.data);
-                      that.dmSV.listFiles = files;
+                      that.dmSV.listFiles = files;                      
                       that.dmSV.ChangeData.next(true);
                     }
 

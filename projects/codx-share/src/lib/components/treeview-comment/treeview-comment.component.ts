@@ -28,7 +28,7 @@ export class TreeviewCommentComponent implements OnInit {
   @Input() funcID:string;
   @Input() objectID:string;
   @Input() objectType:string;
-  @Input() fromModel:any;
+  @Input() formModel:any;
   @Input() rootData: any;
   @Input() dataComment: any;
   @Output() pushComment = new EventEmitter;
@@ -56,7 +56,7 @@ export class TreeviewCommentComponent implements OnInit {
   votes: any;
   lstUserVote: any;
   dataSelected: any[];
-  vllL1480:string = "L1480";
+  vllL1480:any = null;
   constructor(
     private dt: ChangeDetectorRef,
     private signalRApi: WPService,
@@ -71,27 +71,28 @@ export class TreeviewCommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    this.getValueIcon(this.vllL1480);
+    this.getValueIcon();
+    // this.getDataComment();
   }
 
-  getValueIcon(vll:string){
-    this.cache.valueList(vll).subscribe((res) => {
+  getValueIcon(){
+    this.cache.valueList("L1480").subscribe((res) => {
       if (res) {
-        this.lstData = res.datas;
+        this.vllL1480 = res.datas;
       }
     });
   }
-  
-  GetDataComment(){ 
+  lstComment:any[] = [];
+  getDataComment(){ 
     this.api.execSv
     ("WP",
     "ERM.Business.WP",
     "CommentsBusiness",
     "GetCommentsByOjectIDAsync",[this.objectID, this.pageIndex])
-    .subscribe((res:any) => {
+    .subscribe((res:any[]) => {
       if(res){
-        this.data.rootData = res[0];
-        this.data.totalComment = res[1];
+        this.lstComment = res[0];
+        console.log(res);
         this.dt.detectChanges();
       }
     })
@@ -152,7 +153,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
   replyTo(data) {
-    this.crrId = data.cm;
     data.showReply = !data.showReply;
     this.dt.detectChanges();
   }
@@ -205,34 +205,29 @@ export class TreeviewCommentComponent implements OnInit {
       });
   }
 
-  loadSubComment(data) {
+  loadSubComment(data:any) {
     data.isShowComment = !data.isShowComment;
+    data.totalSubComment  = 0 ;
     this.api.execSv(
       'WP',
       'ERM.Business.WP',
       'CommentsBusiness',
       "GetSubCommentAsync",
       [data.recID, 0]
-    ).subscribe((res: any) => {
-      res.map(p => {
-        this.setNodeTree(p);
+    ).subscribe((res: any[]) =>
+      {
+        if(res){
+          res.map((e:any) => {this.setNodeTree(e)});
+        }
       })
-      this.dt.detectChanges();
-    })
   }
 
-
-
-
-
-  showComments(post: any) {
-    if (post.isShowComment) {
-      post.isShowComment = false;
-    }
-    else {
-      post.isShowComment = true;
-    }
+  showComments(data: any) {
+    data.isShowComment = !data.isShowComment;
     this.dt.detectChanges();
+    if(data.isShowComment){
+      this.getDataComment();
+    }
   }
   valueChange(value: any, type) {
     var text = value.data.toString().trim();

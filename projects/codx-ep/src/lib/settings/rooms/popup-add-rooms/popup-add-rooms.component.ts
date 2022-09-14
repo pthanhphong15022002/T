@@ -18,9 +18,11 @@ import {
   DialogRef,
   ImageViewerComponent,
   CRUDService,
+  AuthService,
 } from 'codx-core';
 import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../../codx-ep.service';
+import { Equipments } from '../../../models/equipments.model';
 
 @Component({
   selector: 'popup-add-rooms',
@@ -47,8 +49,10 @@ export class PopupAddRoomsComponent implements OnInit {
   formModel: FormModel;  
   headerText='';
   subHeaderText = '';
+  lstEquipment=[];
 
-  constructor(
+  constructor(    
+    private authService: AuthService,
     private cacheSv: CacheService,
     private codxEpService: CodxEpService,
     private callFuncService: CallFuncService,
@@ -56,7 +60,7 @@ export class PopupAddRoomsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {    
-    this.data = dt?.data[0];
+    this.data = dialog?.dataService?.dataSelected;
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;    
@@ -72,8 +76,8 @@ export class PopupAddRoomsComponent implements OnInit {
         device.text = item.text;
         if(!this.isAdd)
         {      
-          this.data.equipments.split(";").forEach((item)=>{
-            if(item == device.id){
+          this.data.equipments.forEach((item)=>{
+            if(item.equipmentID == device.id){
               device.isSelected = true;
             }
           }); 
@@ -108,6 +112,9 @@ export class PopupAddRoomsComponent implements OnInit {
         this.dialogAddRoom = item;
         if (this.data) {
           this.dialogAddRoom.patchValue(this.data);
+          this.dialogAddRoom.patchValue({
+            resourceType : '1',
+          });  
         }        
         this.isAfterRender = true;
       });
@@ -135,22 +142,22 @@ export class PopupAddRoomsComponent implements OnInit {
   }
   onSaveForm() {
     if (this.dialogAddRoom.invalid == true) {
+      this.codxEpService.notifyInvalid(this.dialogAddRoom, this.formModel);
       return;
     }
-    let lstEquipments = '';
     this.tmplstDevice.forEach((element) => {
-      if (element.isSelected) {
-        if (lstEquipments == '') {
-          lstEquipments += element.id;
-        } else {
-          lstEquipments += ';' + element.id;
-        }
+      if (element.isSelected) {  
+        let tempEquip = new Equipments();
+        tempEquip.equipmentID=element.id;
+        tempEquip.createBy=this.authService.userValue.userID;
+        this.lstEquipment.push(tempEquip);
+        
       }
     });    
     this.dialogAddRoom.patchValue({
       resourceType:'1',
       linkType:'0',
-      equipments:lstEquipments,
+      equipments:this.lstEquipment,
     });    
     if(this.dialogAddRoom.value.owner instanceof Object){
       this.dialogAddRoom.patchValue({owner:this.dialogAddRoom.value.owner[0]})
@@ -158,7 +165,6 @@ export class PopupAddRoomsComponent implements OnInit {
     if (this.dialogAddRoom.value.companyID instanceof Object){
       this.dialogAddRoom.patchValue({companyID:this.dialogAddRoom.value.companyID[0]})
     }
-
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {

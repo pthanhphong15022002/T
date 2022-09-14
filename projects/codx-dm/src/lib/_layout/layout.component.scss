@@ -209,6 +209,13 @@ codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
   margin-right: 4px;
 }
 
+.dms-title {
+  max-width: 200px;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-all;
+}
+
 .dms-list:hover,
 .sm-card:hover,
 .dms-card .card.codx_cardimg:hover {

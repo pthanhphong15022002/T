@@ -89,11 +89,11 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
         this.fGroupAddDriver = item;
         if (this.data) {
           this.fGroupAddDriver.patchValue(this.data);
+          this.fGroupAddDriver.patchValue({
+            resourceType : '3',
+            linkType : '2',
+          });  
         }
-        this.fGroupAddDriver.addControl(
-          'code',
-          new FormControl(this.data.code)
-        );
         this.isAfterRender = true;
       });
   }
@@ -144,6 +144,7 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
 
   onSaveForm() {    
     if (this.fGroupAddDriver.invalid == true) {
+      this.codxEpService.notifyInvalid(this.fGroupAddDriver, this.formModel);
       return;
     }
     if(this.fGroupAddDriver.value.category!=1){
@@ -163,7 +164,7 @@ export class PopupAddDriversComponent implements OnInit, AfterViewInit {
       resourceType : '3',
       linkType:'2'
     });
-    
+
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {

@@ -250,17 +250,17 @@ export class TMMeetingsComponent
 
   getParams() {
     this.api
-      .execSv<any>(
-        APICONSTANT.SERVICES.SYS,
-        APICONSTANT.ASSEMBLY.CM,
-        APICONSTANT.BUSINESS.CM.Parameters,
-        'GetOneField',
-        ['TMParameters', null, 'CalendarID']
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.param = res;
-          this.calendarID = res.fieldValue;
+    .execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['TMParameters', '1']
+    )
+    .subscribe((res) => {
+      if (res) {
+        var param = JSON.parse(res.dataValue);
+        this.calendarID = param.CalendarID
           this.getDayWeek(this.calendarID);
           this.getDayOff(this.calendarID);
           this.detectorRef.detectChanges();
@@ -566,4 +566,20 @@ export class TMMeetingsComponent
     }
   }
   //end region
+
+  onScroll(event) {
+    const dcScroll = event.srcElement;
+    if (
+      dcScroll.scrollTop + dcScroll.clientHeight <
+      dcScroll.scrollHeight - 150
+    ) {
+      return;
+    }
+
+    if (this.view.dataService.page < this.view.dataService.pageCount) {
+     // this.tmService.page ++ ;
+      this.view.dataService.scrolling() ;
+      //this.tmService.totalPage =  this.view.dataService.pageCount ;
+    }
+  }
 }

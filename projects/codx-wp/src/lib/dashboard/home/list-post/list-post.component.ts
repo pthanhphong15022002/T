@@ -7,12 +7,9 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
-  ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
-import { Post } from '@shared/models/post';
-import { FileService } from '@shared/services/file.service';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
+
 import {
   UploadFile,
   CodxListviewComponent,
@@ -32,11 +29,9 @@ import {
   CodxService,
   Util,
 } from 'codx-core';
-import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
-import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { AddPostComponent } from './popup-add/addpost/addpost.component';
+import { PopupAddPostComponent } from './popup-add/popup-add.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
+import { PopupSavePostComponent } from './popup-save/popup-save.component';
 
 @Component({
   selector: 'app-list-post',
@@ -67,6 +62,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   headerText = '';
   views: Array<ViewModel> | any = [];
 
+  @Input() objectID:string = "";
   @Input() predicates = '';
   @Input() dataValues = '';
   @ViewChild('codxViews') codxViews: ViewsComponent;
@@ -182,7 +178,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     this.modal = this.callfc.openForm(
-      AddPostComponent,
+      PopupAddPostComponent,
       '',
       700,
       550,
@@ -204,7 +200,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     this.modal = this.callfc.openForm(
-      AddPostComponent,
+      PopupAddPostComponent,
       '',
       700,
       550,
@@ -221,12 +217,11 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       status: 'share',
       headerText: 'Chia sẻ bài viết',
     };
-    this.dt.detectChanges();
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     this.modal = this.callfc.openForm(
-      AddPostComponent,
+      PopupAddPostComponent,
       '',
       650,
       550,
@@ -235,6 +230,16 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       '',
       option
     );
+  }
+  openModalDownload(data: any){
+    var obj = {
+      post: data,
+      headerText: 'Thêm vào kho lưu trữ',
+    };
+    let option = new DialogModel();
+    option.DataService = this.listview.dataService as CRUDService;
+    option.FormModel = this.listview.formModel;
+    this.callfc.openForm(PopupSavePostComponent, '', 300, 200, '', obj, '');
   }
   pushComment(data: any) {
     this.listview.dataService.data.map((p) => {

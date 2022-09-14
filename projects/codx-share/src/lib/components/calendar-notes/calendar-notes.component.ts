@@ -72,6 +72,7 @@ export class CalendarNotesComponent
   pinMF: any;
   saveMF: any;
   dataUpdate: any;
+  functionList: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   @ViewChild('calendar') calendar: any;
@@ -95,6 +96,9 @@ export class CalendarNotesComponent
           this.saveMF = res[1];
         }
       });
+    this.cache.functionList('WPT08').subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
 
   onInit(): void {
@@ -126,9 +130,11 @@ export class CalendarNotesComponent
             }
           } else if (type == 'edit-currentDate') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
-            for (let i = 0; i < this.WP_Notes.length; i++) {
-              if (this.WP_Notes[i].recID == data?.recID) {
-                this.WP_Notes[i].createdOn = null;
+            if (data?.showCalendar == false) {
+              for (let i = 0; i < this.WP_Notes.length; i++) {
+                if (this.WP_Notes[i].recID == data?.recID) {
+                  this.WP_Notes[i].createdOn = null;
+                }
               }
             }
           } else if (type == 'edit') {
@@ -386,8 +392,8 @@ export class CalendarNotesComponent
     }
 
     // if(calendarWP == 0) {
-      // var spanT = document.querySelector("span.note-point") as HTMLElement;
-      // spanT.parentNode.removeChild(spanT);
+    // var spanT = document.querySelector("span.note-point") as HTMLElement;
+    // spanT.parentNode.removeChild(spanT);
     // }
   }
 
@@ -407,7 +413,7 @@ export class CalendarNotesComponent
       AddNoteComponent,
       'Cập nhật ghi chú',
       700,
-      600,
+      500,
       '',
       obj,
       '',
@@ -469,7 +475,7 @@ export class CalendarNotesComponent
       AddNoteComponent,
       'Thêm mới ghi chú',
       700,
-      600,
+      500,
       '',
       obj,
       '',
@@ -551,8 +557,7 @@ export class CalendarNotesComponent
           )
           .subscribe((res) => {
             if (res) {
-              if(res.fileCount > 0)
-                this.deleteFile(res.recID, true);
+              if (res.fileCount > 0) this.deleteFile(res.recID, true);
               var object = [{ data: res, type: 'delete' }];
               this.noteService.data.next(object);
             }

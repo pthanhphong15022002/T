@@ -235,6 +235,7 @@ export class PopupAddBookingCarComponent implements OnInit {
         if (this.data) {
           console.log('fgroupEPT2', this.data);
           this.fGroupAddBookingCar.patchValue(this.data);
+          
         }
       });
       if(this.isAdd){
@@ -264,14 +265,10 @@ export class PopupAddBookingCarComponent implements OnInit {
   }
 
   onSaveForm() {
-    // if (!this.dataValid()) {
-    //   //return;
-    //   console.log("Invaliddddddddddd")
-    // }
-    // if (this.fGroupAddBookingCar.invalid == true) {
-    //   this.codxEpService.notifyInvalid(this.fGroupAddBookingCar, this.formModel);
-    //   return;
-    // }
+    if (this.fGroupAddBookingCar.invalid == true) {
+      this.codxEpService.notifyInvalid(this.fGroupAddBookingCar, this.formModel);
+      return;
+    }
     if (
       this.fGroupAddBookingCar.value.startDate &&
       this.fGroupAddBookingCar.value.endDate
@@ -451,6 +448,7 @@ export class PopupAddBookingCarComponent implements OnInit {
     this.initForm();
     this.closeEdit.emit(data);
   }
+
   dataValid() {
     this.fGroupAddBookingCar.value.agencyName =
       this.fGroupAddBookingCar.value.agencyName[0];

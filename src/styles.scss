@@ -364,3 +364,38 @@ erm-quick-links-inner .w-250px.dropdown-menu {
 .aside .aside-footer .menu-title {
   color: var(--title-color);
 }
+
+.upload-img .position-absolute.top-100.start-100 {
+  top: 90% !important;
+  left: 90% !important;
+}
+
+.text-hover-underline:hover {
+  text-decoration: underline;
+}
+
+codx-img .top-100.start-100 {
+  width: 26px;
+  height: 26px;
+}
+
+codx-user-inner .top-100.start-100 {
+  top: 90% !important;
+  left: 90% !important;
+}
+
+.role-group ejs-listview .e-ul>li {
+  margin-bottom: 0px;
+  margin-right: 5px;
+}
+
+.role-group ejs-listview .e-ul>li .d-flex.user-card {
+  margin-top: 2px;
+  border-radius: 4px;
+  margin-bottom: 0px;
+  padding: 4px 8px !important;
+}
+
+.role-group ejs-listview .e-ul>li .d-flex.user-card:hover {
+  background-color: var(--gray-100);
+}

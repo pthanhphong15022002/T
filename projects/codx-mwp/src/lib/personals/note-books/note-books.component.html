@@ -35,7 +35,7 @@
 </div>
 
 <ng-template #templateListCard let-item>
-    <div (click)="openDetailPage(item)">
+    <div (dblclick)="openDetailPage(item)">
         <codx-card-img cardCss="border card-img-mwp rounded-4 w-228px h-225px" (clickMF)="clickMF($event, item)"
             [imageId]="item.recID" imgCss="w-228px h-140px" icoTitleCss="icon-assignment icon-16" [title]="item.title"
             cssTitle="line-clamp line-clamp-1" [imgOn]="item?.modifiedOn" [desc2]="item.memo"

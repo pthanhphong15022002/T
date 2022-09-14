@@ -45,7 +45,7 @@ export class EmployeesComponent implements OnInit {
   dataValue = '90';
   predicate = 'Status<@0';
   functionID: string;
-  employee: any;
+  employee: HR_Employees = new HR_Employees;
   itemSelected: any;
   formModel: FormModel;
 
@@ -195,20 +195,19 @@ export class EmployeesComponent implements OnInit {
         );
         dialog.closed.subscribe((e) => {
           if (e?.event == null)
-            if (e?.event && e?.event != null) {
-              // this.view.dataService.delete(
-              //   [this.view.dataService.dataSelected],
-              //   false
-              // );
-              this.view.dataService
-                .update(e.event.update.InfoPersonal && e.event.update.Employee)
-                .subscribe();
-              // e?.event.update.forEach((obj) => {
-              //   this.view.dataService.update(obj.Employee).subscribe();
-              // });
-              // this.meeting = e?.event;
-              this.changedt.detectChanges();
-            }
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+          if (e?.event && e?.event != null) {
+            this.view.dataService.update(e.event.update.InfoPersonal).subscribe();
+            // this.view.dataService.update(e.event.update.Employees).subscribe();
+            // e?.event.update.forEach((obj) => {
+            //   this.view.dataService.update(obj).subscribe();
+            // });
+            this.changedt.detectChanges();
+          }
+  
         });
       });
     // this.changedt.detectChanges();

@@ -81,7 +81,6 @@ export class RoomsComponent extends UIComponent {
     this.funcID = this.router.snapshot.params['funcID'];
   }
 
-
   onInit(): void {
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;

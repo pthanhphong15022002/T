@@ -1,9 +1,11 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import {
+  AuthService,
   CacheService,
   CallFuncService,
   CRUDService,
@@ -18,13 +20,14 @@ import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-boo
 
 
 import { CodxEpService } from '../../../codx-ep.service';
+import { Equipments } from '../../../models/equipments.model';
 
 @Component({
   selector: 'popup-add-cars',
   templateUrl: 'popup-add-cars.component.html',
   styleUrls: ['popup-add-cars.component.scss'],
 })
-export class PopupAddCarsComponent implements OnInit {
+export class PopupAddCarsComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment : AttachmentComponent; 
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Input() editResources: any;
@@ -33,14 +36,14 @@ export class PopupAddCarsComponent implements OnInit {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();  
   @Output() loadData = new EventEmitter();
-
+  
   headerText='';
   subHeaderText = '';
 
   fGroupAddCar: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
-
+  lstEquipment=[];
   CbxName: any;
   isAfterRender = false;  
   gviewCar:any;
@@ -48,7 +51,9 @@ export class PopupAddCarsComponent implements OnInit {
   lstDeviceCar = [];
   tmplstDevice = [];
   avatarID:any=null;
+  notificationsService: any;
   constructor(    
+    private authService: AuthService,
     private callFuncService: CallFuncService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -67,6 +72,7 @@ export class PopupAddCarsComponent implements OnInit {
 
   ngOnInit(): void {    
     this.initForm();
+    debugger;
     this.cacheService.valueList('EP012').subscribe((res) => {      
       this.vllDevices = res.datas;      
       this.vllDevices.forEach((item) => {
@@ -75,8 +81,8 @@ export class PopupAddCarsComponent implements OnInit {
         device.text = item.text;
         if(!this.isAdd)
         {          
-          this.data.equipments.split(";").forEach((item)=>{
-            if(item == device.id){
+          this.data.equipments.forEach((item)=>{
+            if(item.equipmentID == device.id){
               device.isSelected = true;
             }
           }); 
@@ -112,7 +118,11 @@ export class PopupAddCarsComponent implements OnInit {
         this.fGroupAddCar = item;
         if (this.data) {
           this.fGroupAddCar.patchValue(this.data);
-        }        
+        }    
+        this.fGroupAddCar.patchValue({
+          resourceType : '2',
+          linkType : '3',
+        });    
         this.isAfterRender = true;
       });
     this.cacheService
@@ -162,14 +172,13 @@ export class PopupAddCarsComponent implements OnInit {
   }
 
   onSaveForm() {
-    const invalid = [];
-    const controls = this.gviewCar;
-    for (const name in controls) {
-      if (this.gviewCar[name].isRequire) {
-        invalid.push(name);
-      }
-    }
-    return;
+    // const invalid = [];
+    // const controls = this.gviewCar;
+    // for (const name in controls) {
+    //   if (this.gviewCar[name].isRequire) {
+    //     invalid.push(name);
+    //   }
+    // }
     if (this.fGroupAddCar.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddCar, this.formModel);
       return;
@@ -177,12 +186,12 @@ export class PopupAddCarsComponent implements OnInit {
    
     let equipments = '';
     this.tmplstDevice.forEach((element) => {
-      if (element.isSelected) {
-        if (equipments == '') {
-          equipments += element.id;
-        } else {
-          equipments += ';' + element.id;
-        }
+      if (element.isSelected) {  
+        let tempEquip = new Equipments();
+        tempEquip.equipmentID=element.id;
+        tempEquip.createBy=this.authService.userValue.userID;
+        this.lstEquipment.push(tempEquip);
+        
       }
     });
     if(this.fGroupAddCar.value.category!=1){
@@ -200,7 +209,7 @@ export class PopupAddCarsComponent implements OnInit {
     this.fGroupAddCar.patchValue({
       resourceType : '2',
       linkType : '3',
-      equipments:equipments,
+      equipments:this.lstEquipment,
     });
 
     this.dialogRef.dataService
@@ -233,5 +242,28 @@ export class PopupAddCarsComponent implements OnInit {
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);
+  }
+  dataValid() {
+    var data = this.fGroupAddCar.value;   
+    var result= true; 
+    var requiredControlName = [
+      'resourceName',
+      'owner',
+      'capacity',
+      'category',
+    ];
+    requiredControlName.forEach((item) => {
+      var x = data[item];
+      if (!data[item]) {
+        let fieldName = item.charAt(0).toUpperCase() + item.slice(1);
+        this.notificationsService.notifyCode(
+          'E0001',
+          0,
+          '"' + this.gviewCar[fieldName].headerText + '"'
+        );
+        result = false;
+      }
+    });
+    return result;
   }
 }

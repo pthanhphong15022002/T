@@ -4,7 +4,8 @@ import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild 
 import { ActivatedRoute } from '@angular/router';
 import { Button } from '@syncfusion/ej2-angular-buttons';
 import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel, ButtonModel } from 'codx-core';
-import { AddPostComponent } from '../dashboard/home/list-post/popup-add/addpost/addpost.component';
+import { map } from 'rxjs';
+import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
 import { ApproveDetailComponent } from './approve-detail/approve-detail.component';
 
@@ -22,6 +23,8 @@ export class ApproveComponent extends UIComponent {
   entityName = "";
   predicate = "";
   dataValue = "";
+  predicates = 'ApproveStatus=@0';
+  dataValues = '3';
   funcID = "";
   user : any;
   dataDetail:any;
@@ -31,7 +34,6 @@ export class ApproveComponent extends UIComponent {
   remakeApprove = "2";
   views: Array<ViewModel> = [];
   gridViewSetUp: any;
-  formModel: any;
   dataSelected: any;
   itemSelected : any;
   buttonAdd:ButtonModel;
@@ -50,7 +52,7 @@ export class ApproveComponent extends UIComponent {
       total:0,
       predicate:"ApproveStatus=@0",
       datavalue:"3",
-      active:true
+      active:false
     },
     {
       name:"approve",
@@ -102,25 +104,17 @@ export class ApproveComponent extends UIComponent {
       switch (this.funcID){
         case "WPT0211":
           this.predicate = "CreatedBy=@0 && Stop=false";
-          this.option = "mypost";
           break;
         case "WPT0212":
          this.predicate = "Approver=@0 && Stop=false";
-          this.option = "webpost";
           break;
         default:
           this.entityName = 'WP_Comments'
           this.predicate = "Approver=@0 && Stop=false"
-          this.option = "post";
           break;
-          
       }
-      this.getGridViewSetUp();
+      this.getGridViewSetUp().subscribe();
       this.loadTabAsside(this.predicate,this.dataValue,this.entityName);
-      if(this.codxViews){
-        this.codxViews.dataService.request.entityName = this.entityName;
-        this.codxViews.dataService.setPredicates([this.tabAsside[0].predicate],[this.tabAsside[0].value]).subscribe();
-      } 
       this.dt.detectChanges();
     });
   }
@@ -143,15 +137,18 @@ export class ApproveComponent extends UIComponent {
   }
 
   getGridViewSetUp(){
-    this.cache.functionList(this.funcID).subscribe((func) => {
-      this.cache.gridViewSetup(func?.formName, func?.gridViewName).subscribe((grd) => {
-        this.gridViewSetUp = grd;
-        this.dt.detectChanges();
-      });
-      this.cache.moreFunction(func?.formName, func?.gridViewName).subscribe((mfunc) => {
-        console.log('moreFunction',mfunc);
-      })
-    })
+    return this.cache.functionList(this.funcID).pipe(map((func:any) => 
+      {
+        this.cache.gridViewSetup(func.formName, func.gridViewName).
+        subscribe((grd:any) => 
+        {
+          if(grd){
+            this.gridViewSetUp = grd;
+            this.dt.detectChanges();
+          }  
+        });
+      }
+    ));
   }
   loadTabAsside(predicate:string, dataValue:string,entityName:string){
     let model = new DataRequest();
@@ -167,9 +164,7 @@ export class ApproveComponent extends UIComponent {
             if(tab.value == "0"){
               tab.total = res.length;
             }
-            else{
-            tab.total =  res.filter((x:any) => x == tab.value).length;
-            }
+            else tab.total =  res.filter((x:any) => x == tab.value).length;
           })
           this.tabAsside[0].active = true;
           this.dt.detectChanges();
@@ -183,7 +178,7 @@ export class ApproveComponent extends UIComponent {
     );
   }
   loadData(predicate:string,dataValue:string){
-    this.codxViews.dataService.request.entityName = this.entityName;
+    this.codxViews.entityName = this.entityName;
     if(predicate && dataValue){
       this.codxViews.dataService.setPredicates([predicate],[dataValue]).subscribe();
     }
@@ -192,16 +187,10 @@ export class ApproveComponent extends UIComponent {
       this.codxViews.dataService.setPredicates([],[]).subscribe();
     }
   }
-  clickViewDetail(data:any,entityName:string){
-    this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetPostInfoAsync",[data.recID,entityName])
-    .subscribe((res) => {
-      if(res){
-        this.dataSelected = res;
-        this.dataDetail = res;
-        console.log(res);
-        this.dt.detectChanges();
-      }
-    })
+  selectedID:string = "";
+  clickViewDetail(postID:string){
+    this.selectedID = postID;
+    this.dt.detectChanges();
   }
   clickApprovePost(event:any){
     let approveStatus = event.approveStatus;
@@ -301,12 +290,6 @@ export class ApproveComponent extends UIComponent {
     this.loadData(predicate,dataValue);
   }
 
-
-  selectedChange(data: any) {
-    this.itemSelected = data;
-    this.dt.detectChanges();
-  }
-
   clickMF(event:any,data:any){
     switch(event.functionID){
       case 'SYS02':
@@ -333,7 +316,7 @@ export class ApproveComponent extends UIComponent {
               let option = new DialogModel();
               option.DataService = this.codxViews.dataService;
               option.FormModel = this.codxViews.formModel;
-              this.callfc.openForm(AddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
+              this.callfc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
                 if(data.result){
                   console.log(data);
                 }

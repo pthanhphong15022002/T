@@ -30,7 +30,7 @@ import { PopupAddDriversComponent } from './popup-add-drivers/popup-add-drivers.
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss']
 })
-export class DriversComponent  implements OnInit, AfterViewInit { 
+export class DriversComponent implements OnInit, AfterViewInit { 
   @ViewChild('view') viewBase: ViewsComponent;  
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
@@ -83,9 +83,6 @@ export class DriversComponent  implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
-    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
-
     this.buttons = {
       id: 'btnAdd',
     };

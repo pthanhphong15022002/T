@@ -6,9 +6,11 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Input,
+  Injector,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import {
   ButtonModel,
   CacheService,
@@ -17,6 +19,7 @@ import {
   DialogRef,
   FormModel,
   SidebarModel,
+  UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
@@ -29,7 +32,8 @@ import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component
   templateUrl: 'cars.component.html',
   styleUrls: ['cars.component.scss'],
 })
-export class CarsComponent implements OnInit, AfterViewInit {
+export class CarsComponent implements OnInit, AfterViewInit
+{
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
@@ -61,17 +65,18 @@ export class CarsComponent implements OnInit, AfterViewInit {
   dialog!: DialogRef;
   isAdd = true;
   funcID: string;
-  columnsGrid:any;
-  grView:any;
+  columnsGrid: any;
+  grView: any;
   formModel: FormModel;
-  // fGroupAddDriver: FormGroup;
-  // dialogRef: DialogRef;
+  //fGroupAddDriver: FormGroup;
+  dialogRef: DialogRef;
   isAfterRender = false;
-  str:string;
+  str: string;
   dataSelected: any;
   devices: any;
   tmplstDevice = [];
-  temp:string;
+  temp: string;
+  columnGrids: any;
   constructor(
     private callFuncService: CallFuncService,
     private activedRouter: ActivatedRoute,
@@ -80,33 +85,27 @@ export class CarsComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.codxEpService.getFormModel(this.funcID).then((res) => {
-      if (res) {
-        this.formModel = res;
-        this.isAfterRender = true;
-        this.cacheService.gridViewSetup(res.formName,res.gridViewName).subscribe(gv=>{
-          this.grView=gv;
-        })
-      }
-      
-    });
-    
+      this.codxEpService.getFormModel(this.funcID).then((res) => {
+        if (res) {
+          this.formModel = res;
+          this.isAfterRender = true;
+        }
+      });
+  }
+  ngOnInit(): void {
   }
 
-  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-
     this.buttons = {
       id: 'btnAdd',
-    }; 
-    
-    this.columnsGrid = [
+    };
+    this.columnGrids = [
       {
         field: 'resourceID',
-        headerText: "Mã xe",
-      },
+        headerText: 'Mã xe',
+      },      
       {
         field: 'icon',
         headerText: "Ảnh đại diện",
@@ -114,44 +113,32 @@ export class CarsComponent implements OnInit, AfterViewInit {
       },
       {
         field: 'resourceName',
-        headerText: "Tên nguồn lực",
+        headerText: 'Tên xe',
       },
       {
         field: 'capacity',
-        headerText: "Số chỗ",
-      },  
-      {
-        headerText: 'Nguồn',
-        template: this.categoryCol,
+        headerText: 'Số chỗ',
       },
       {
         headerText: "Người điều phối",
         width: '20%',
         template: this.owner,
       },
-      // {
-      //   headerText: 'Xếp hạng',
-      //   template: this.rankingCol,
-      // },
-      
-    ];  
+    ];
     this.views = [
       {
         sameData: true,
+        id: '1',
+        text: 'Danh mục xe',
         type: ViewType.grid,
         active: true,
         model: {
-          resources: this.columnsGrid,
+          resources: this.columnGrids,
         },
-      },        
-    ];   
-            
-    
-    
+      },
+    ];
     this.changeDetectorRef.detectChanges();
-      
-      
-   }
+  }
 
   click(event: ButtonModel) {
     switch (event.id) {
