@@ -254,7 +254,7 @@ export class VersionComponent implements OnInit {
       var item = await isAllowAddFileAsync();      
       this.dmSV.getToken();      
       var appName="hps-file-test";// Tam thoi de hard        
-      var ChunkSizeInKB = 2*1024;
+      var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;//2*1024;
       var uploadFile = this.fileEditing.item.rawFile;
       var retUpload = await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {        
         "Data": {
@@ -431,10 +431,58 @@ export class VersionComponent implements OnInit {
   //   this.interval.push(Object.assign({}, interval));
   // }
 
-  versionFile() {
+  async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
+    try {
+      fileItem.uploadId = '';      
+      var appName = this.dmSV.appName; // Tam thoi de hard
+      var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
+      var uploadFile = fileItem.item.rawFile;
+      var retUpload = await lvFileClientAPI.postAsync(
+        `api/${appName}/files/register`,
+        {
+          Data: {
+            FileName: uploadFile.name,
+            ChunkSizeInKB: ChunkSizeInKB,
+            FileSize: uploadFile.size,
+            thumbSize: {
+              width: 200, //Kích thước của file ảnh Thum bề ngang
+              height: 200, //Kích thước của file ảnh Thum bề dọc
+            },
+            IsPublic: true,
+          },
+        }
+      );
+      fileItem.fileSize = uploadFile.size;
+      fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
+      fileItem.uploadId = retUpload.Data?.UploadId; //"";
+      fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
+    } catch (ex) {
+      console.log(ex);
+    }
+    return fileItem;
+  }
+
+
+  async versionFile() {
     var that = this;
-    if (this.fileEditing.data != '' && this.fileEditing.data != undefined && this.fileEditing.data != null) {
+    if (this.fileEditing.item != '' && this.fileEditing.item != undefined && this.fileEditing.item != null) {
       this.fileEditing.comment = this.comment;
+      await this.dmSV.getToken();
+      var fileItem = this.fileEditing;
+      var fileSize = parseInt(fileItem.fileSize);
+      this.fileEditing = await this.serviceAddFile(fileItem);
+      // function isAllowAddFileAsync() {
+      //   return new Promise((resole, reject) => {
+      //     that.fileService.isAllowAddFile(fileSize).subscribe((item) => {
+      //       if (item == 'ok') {
+      //         resole(item);
+      //       } else {
+      //         reject(item);
+      //       }
+      //     });
+      //   });
+      // }
+
       this.fileService.updateVersionFile(this.fileEditing).subscribe(async res => {
         if (res.status == 0) {
           var files = that.dmSV.listFiles;
@@ -454,6 +502,34 @@ export class VersionComponent implements OnInit {
         }
         that.notificationsService.notify(res.message);
       });
+
+      var appName = this.dmSV.appName; // Tam thoi de hard
+      var uploadFile = fileItem.item.rawFile;
+      var sizeInBytes = fileItem.fileSize; // uploadFile.size;
+      var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;
+      var numOfChunks = Math.floor(fileItem.fileSize / chunSizeInfBytes);
+      if (fileItem.fileSize % chunSizeInfBytes > 0) {
+        numOfChunks++;
+      }
+
+      //api/lv-docs/files/upload
+      for (var i = 0; i < numOfChunks; i++) {
+        var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
+        var end = start + chunSizeInfBytes; //Vị trí cuối
+        if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+        var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
+        var fileChunk = new File([blogPart], uploadFile.name, {
+          type: uploadFile.type,
+        }); //Gói lại thành 1 file chunk để upload
+        var uploadChunk = await lvFileClientAPI.formPostWithToken(
+          `api/${appName}/files/upload`,
+          {
+            FilePart: fileChunk,
+            UploadId: fileItem.uploadId,
+            Index: i,
+          }
+        );
+      }  
     }
     else {
       this.notificationsService.notify(this.titleUploadFile);

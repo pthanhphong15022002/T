@@ -32,7 +32,7 @@
                         <div *ngIf="fileEditing != null" class="mt-4 pic-file max-h-140px">
                             <div *ngIf="fileEditing.thumbnail != null && fileEditing.thumbnail != ''">
                                 <img alt="" class="w-100 me-2" style="max-height: 200px"
-                                    [src]='this.dmSV.getThumbnail(fileEditing)'>
+                                    [src]="getThumbnail(fileEditing)">
                             </div>
                             <!-- <img alt="" class="w-100 me-2" src="../../../assets/demos/dms/demo1.png"> -->
                         </div>
@@ -281,10 +281,9 @@
                                             <div class="d-flex flex-column flex-grow-1">
                                                 <div class="d-flex">
                                                     <div class="text-dark fw-bold">{{his.fileName}}</div>
-                                                    <div class="text-dark-75 ms-3">{{his.createdOn | timefrom}</div>
+                                                    <div class="text-dark-75 ms-3">{{his.createdOn | timefrom}}</div>
                                                 </div>
-                                                <div class="text-primary font-size-md">{{his.userName}}</div>
-                                                <!-- <div class="text-dark-75">{{his.note}}</div> -->
+                                                <div class="text-primary font-size-md">{{his.userName}}</div>                                                
                                                 <div class="text-dark-75">{{his.coment}}</div>
                                             </div>
                                         </div>
