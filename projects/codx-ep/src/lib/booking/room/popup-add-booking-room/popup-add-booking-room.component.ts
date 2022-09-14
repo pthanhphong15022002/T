@@ -19,6 +19,7 @@ import {
   AuthService,
   CacheService,
   CallFuncService,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -375,7 +376,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       attendees:this.fGroupAddBookingRoom.value.attendees,
       startDate:this.tmpStartDate,
       endDate:this.tmpEndDate,
-      equipments: availableEquip + '|' + pickedEquip,
+      //equipments: availableEquip + '|' + pickedEquip,
     });      
        
     this.attendeesList.forEach(item=>{
@@ -388,7 +389,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe(async res => {
-        if ( true) {
+        if (res.save || res.update) {
           if (this.attachment.fileUploadList.length > 0) {
             this.attachment.objectId = this.fGroupAddBookingRoom.value.recID;
             (await this.attachment.saveFilesObservable()).subscribe(
@@ -399,13 +400,17 @@ export class PopupAddBookingRoomComponent implements OnInit {
               }
             );
           }
-          this.dialogRef.close();
-        } else {
-          this.notificationsService.notifyCode('E0011');
-          return;
+          if (res.update) {
+            (this.dialogRef.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+          }
+          this.dialogRef && this.dialogRef.close();
+        } 
+        else {
+          this.notificationsService.notifyCode('E0011');          
         }
       });
-      //this.attachment.saveFiles();
   }
   changeTime(data) {
     if (!data.field || !data.data) return;
@@ -624,7 +629,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
         this.beginMinute = parseInt(this.startTime.split(':')[1]);  
         if (this.fGroupAddBookingRoom.value.bookingOn) {
           if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
-            let tmpDay=this.fGroupAddBookingRoom.value.bookingOn
+            let tmpDay=new Date(this.fGroupAddBookingRoom.value.bookingOn);
             this.tmpStartDate = new Date(tmpDay.getFullYear(),tmpDay.getMonth(),tmpDay.getDate(), this.beginHour, this.beginMinute, 0);   
           }
         }
@@ -649,7 +654,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
         this.endMinute = parseInt(this.endTime.split(':')[1]);
         if (this.fGroupAddBookingRoom.value.bookingOn) {
           if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
-            let tmpDay=this.fGroupAddBookingRoom.value.bookingOn
+            let tmpDay=new Date(this.fGroupAddBookingRoom.value.bookingOn);
             this.tmpEndDate = new Date(tmpDay.getFullYear(),tmpDay.getMonth(),tmpDay.getDate(), this.endHour, this.endMinute, 0);     
           }
         }

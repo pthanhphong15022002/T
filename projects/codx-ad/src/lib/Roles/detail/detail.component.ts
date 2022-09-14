@@ -162,7 +162,7 @@ export class RoleDetailComponent
     // this.api
     //   .execSv('BI', 'ERM.Business.BI', 'CubeListBusiness', 'SaveRole', [])
     //   .subscribe((res: any) => {
-    //     debugger;
+    //
     //   });
     // this.api
     //   .execSv(

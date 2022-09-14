@@ -249,32 +249,37 @@ export class IncommingAddComponent implements OnInit {
           if (item.status == 0) {
             this.data = item;
             this.attachment.objectId = item.data.recID;
-            (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
-              if (item2?.status == 0) {
-                this.dialog.close(item.data);
-                this.notifySvr.notify(item.message);
-              } else this.notifySvr.notify(item2.message);
-            });
+            (await this.attachment.saveFilesObservable()).subscribe(
+              (item2: any) => {
+                if (item2?.status == 0) {
+                  this.dialog.close(item.data);
+                  this.notifySvr.notify(item.message);
+                } else this.notifySvr.notify(item2.message);
+              }
+            );
           } else this.notifySvr.notify(item.message);
         });
     } else if (this.type == 'edit') {
-      this.odService.updateDispatch(this.dispatch, false).subscribe(async (item) => {
-        debugger;
-        if (item.status == 0) {
-          if (this.dltDis) {
-            this.attachment.objectId = item.data.recID;
-            (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
-              if (item2?.status == 0) {
-                this.dialog.close(item.data);
-                this.notifySvr.notify(item.message);
-              } else this.notifySvr.notify(item2.message);
-            });
-          } else {
-            this.dialog.close(item.data);
-            this.notifySvr.notify(item.message);
-          }
-        } else this.notifySvr.notify(item.message);
-      });
+      this.odService
+        .updateDispatch(this.dispatch, false)
+        .subscribe(async (item) => {
+          if (item.status == 0) {
+            if (this.dltDis) {
+              this.attachment.objectId = item.data.recID;
+              (await this.attachment.saveFilesObservable()).subscribe(
+                (item2: any) => {
+                  if (item2?.status == 0) {
+                    this.dialog.close(item.data);
+                    this.notifySvr.notify(item.message);
+                  } else this.notifySvr.notify(item2.message);
+                }
+              );
+            } else {
+              this.dialog.close(item.data);
+              this.notifySvr.notify(item.message);
+            }
+          } else this.notifySvr.notify(item.message);
+        });
     }
   }
   getfileCount(e: any) {

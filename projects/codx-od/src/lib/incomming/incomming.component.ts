@@ -214,8 +214,11 @@ export class IncommingComponent
       this.dialog.closed.subscribe((x) => {
         if (x.event) {
           delete x.event._uuid;
-          this.view.dataService.add(x.event, 0).subscribe(item=>{
-            this.view.dataService.onAction.next({ type: 'update', data: x.event });
+          this.view.dataService.add(x.event, 0).subscribe((item) => {
+            this.view.dataService.onAction.next({
+              type: 'update',
+              data: x.event,
+            });
           });
           //this.getDtDis(x.event?.recID)
         }
@@ -441,7 +444,7 @@ export class IncommingComponent
       recID = dt.recID;
       this.dataItem = dt;
     }
-    debugger;
+
     this.getDtDis(recID);
   }
   fileAdded(event: any) {
