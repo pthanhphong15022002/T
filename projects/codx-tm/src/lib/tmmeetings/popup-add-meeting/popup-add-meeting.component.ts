@@ -618,8 +618,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             .execSv<any>(
               'BS',
               'ERM.Business.BS',
-              'CalendarsBusiness',
-              'GetDayWeekAsync',
+              'CalendarWeekdaysBusiness',
+              'GetDayShiftAsync',
               [this.calendarID]
             )
             .subscribe((data) => {
