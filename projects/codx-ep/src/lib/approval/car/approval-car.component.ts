@@ -94,7 +94,18 @@ export class ApprovalCarsComponent extends UIComponent {
 
   click(event) {}
 
-  clickMF(event, data) {}
+  clickMF(event, data) {
+    console.log(event);
+    switch (event?.functionID) {
+      // case 'SYS03':
+      //   this.edit(data);
+      //   break;
+      // case 'SYS02':
+      //   this.delete(data);
+      //   break;
+    }
+  }
+  
 
   closeAddForm(event) {}
 
