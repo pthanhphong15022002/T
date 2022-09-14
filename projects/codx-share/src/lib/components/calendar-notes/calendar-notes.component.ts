@@ -51,8 +51,8 @@ export class CalendarNotesComponent
   countNotePin = 0;
   maxPinNotes: any;
   checkUpdateNotePin = false;
-  TM_Tasks: any;
-  WP_Notes: any = [];
+  TM_Tasks: any = new Array();
+  WP_Notes: any = new Array();
   TM_TasksParam: any;
   WP_NotesParam: any;
   checkTM_TasksParam: any;
@@ -546,26 +546,22 @@ export class CalendarNotesComponent
   }
 
   onDeleteNote(item) {
-    this.notification.alertCode('SYS027').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.api
-          .exec<any>(
-            'ERM.Business.WP',
-            'NotesBusiness',
-            'DeleteNoteAsync',
-            item?.recID
-          )
-          .subscribe((res) => {
-            if (res) {
-              if (res.fileCount > 0) this.deleteFile(res.recID, true);
-              var object = [{ data: res, type: 'delete' }];
-              this.noteService.data.next(object);
-            }
-          });
-      } else {
-        return;
-      }
-    });
+    (this.lstView.dataService as CRUDService)
+      .delete([item], true, (opt) => {
+        opt.service = 'WP';
+        opt.assemblyName = 'ERM.Business.WP';
+        opt.className = 'NotesBusiness';
+        opt.methodName = 'DeleteNoteAsync';
+        opt.data = item?.recID;
+        return true;
+      })
+      .subscribe((res: any) => {
+        if (res) {
+          if (res.fileCount > 0) this.deleteFile(res.recID, true);
+          var object = [{ data: res, type: 'delete' }];
+          this.noteService.data.next(object);
+        }
+      });
   }
 
   deleteFile(fileID: string, deleted: boolean) {

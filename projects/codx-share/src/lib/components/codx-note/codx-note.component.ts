@@ -58,8 +58,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   headerComment = '';
   checkFile = false;
   totalComment = 0;
-  lstIV: any[] = [];
+  lstEditIV: any[] = [];
   user: any = null;
+  MODE_IMAGE_VIDEO = 'VIEW';
   listNoteTemp: any = {
     memo: '',
     status: null,
@@ -166,6 +167,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       }
     });
     this.user = this.auth.userValue;
+    // this.getFileByObjectID('9260f180-56ce-4b44-afce-49afd10e9930');
   }
 
   ngAfterViewInit(): void {
@@ -183,8 +185,18 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.dt.detectChanges();
       this.setPropertyForView();
     }
+    this.getImageVideo();
   }
 
+  lstViewIV: any = new Array();
+  getImageVideo() {
+    if (this.contents?.length > 0) {
+      this.contents.forEach((res) => {
+        if (res.lineType == this.LINE_TYPE.IMAGE)
+          this.getFileByObjectID(res.recID);
+      });
+    }
+  }
   getFileByObjectID(recID) {
     this.api
       .execSv(
@@ -204,7 +216,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
               ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
             }
           });
-          this.lstIV = res;
+          this.lstEditIV = res;
+          this.lstViewIV.push(this.lstEditIV[0]);
+          console.log('check lstViewIV', this.lstViewIV);
         }
       });
     this.dt.detectChanges();
@@ -460,7 +474,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         textColor: this.font.COLOR,
         format: this.listNoteTemp.format,
         lineType: this.lineType,
-        recID: '',
+        // recID: '',
       };
       if (this.contents.length >= 2) {
         this.contents.pop();
@@ -695,19 +709,22 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         else this.popup(this.id, attachmentEle);
         break;
       case 'image':
-        this.uploadIV(this.id);
+        this.uploadFileIV(this.id, attachmentEle);
         break;
     }
     this.getContent.emit(this.contents);
   }
 
   IDTempIV = 0;
-  uploadIV(index) {
+  uploadFileIV(index, attachmentEle) {
+    if (attachmentEle) this.ATM_IV = attachmentEle;
     if (this.ATM_IV) this.ATM_IV.uploadFile();
     this.IDTempIV = index;
   }
 
   selectedIV(e: any) {
+    if (this.IDTempIV >= this.contents.length)
+      this.IDTempIV = this.contents.length - 1;
     let obj = JSON.parse(JSON.stringify(this.contents));
     let initListNote = {
       memo: '',
@@ -718,18 +735,16 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       attachments: 0,
       comments: 0,
       tasks: 0,
-      recID: '',
+      // recID: '',
     };
-    this.getMongoObjectId();
-    obj[this.IDTempIV].lineType = this.LINE_TYPE.IMAGE;
+    this.generateGuid();
+    obj[this.IDTempIV].lineType = 'IMAGE';
     obj[this.IDTempIV].attachments += 1;
-    let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+    let recID = JSON.parse(JSON.stringify(this.guidID));
     obj[this.IDTempIV].recID = recID;
     e.data[0].objectID = recID;
-
-    console.log('check image', e.data);
     let item = JSON.parse(JSON.stringify(initListNote));
-    item.lineType = this.LINE_TYPE.TEXT;
+    item.lineType = 'TEXT';
     item.attachments = 0;
     obj.push(item);
 
@@ -747,13 +762,18 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
               e['referType'] = this.REFER_TYPE.APPLICATION;
             }
           });
-          this.lstIV = files;
+          if (this.lstViewIV.length > 0) {
+            if (this.MODE_IMAGE_VIDEO == 'VIEW')
+              this.lstEditIV = this.lstViewIV;
+            this.lstEditIV.push(files[0]);
+          } else this.lstEditIV = files;
+          console.log('check lstEditIV', this.lstEditIV);
         }
-        this.ATM_IV.fileUploadList = this.lstIV;
-        debugger;
+        this.ATM_IV.fileUploadList = this.lstEditIV;
         (await this.ATM_IV.saveFilesObservable()).subscribe((result: any) => {
           if (result) {
             this.contents = obj;
+            this.MODE_IMAGE_VIDEO = 'EDIT';
             this.dt.detectChanges();
             this.focus(this.contents.length - 1);
           }
@@ -761,7 +781,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       }
     });
     this.id += 1;
-    console.log('check id', this.id);
     this.dt.detectChanges();
   }
 
@@ -781,9 +800,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     console.log('check ');
   }
 
-  totalCommentChange(e) {
-    debugger;
-  }
+  totalCommentChange(e) {}
 
   assign(index) {
     var task = new TM_Tasks();
@@ -908,10 +925,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   IDTemp = 0;
   popup(index, attachmentEle) {
-    // if (index < this.contents.length) this.contents[index].lineType = 'FILE';
-    // this.updateContent(this.objectParentID, this.contents).subscribe();
-    // this.dt.detectChanges();
-    // console.log('check attachmentEle popup', attachmentEle);
     if (attachmentEle) this.attachment = attachmentEle;
     if (this.attachment) {
       this.attachment.uploadFile();
@@ -921,6 +934,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   fileCounts(e: any) {
+    if (this.IDTemp >= this.contents.length)
+      this.IDTemp = this.contents.length - 1;
     let obj = JSON.parse(JSON.stringify(this.contents));
     let initListNote = {
       memo: '',
@@ -931,26 +946,26 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       attachments: 0,
       comments: 0,
       tasks: 0,
-      recID: '',
+      // recID: '',
     };
     // if (this.countFileAdded > 1) index++;
     if (e.data.length > 1) {
       obj.splice(this.IDTemp, 1);
       e.data.forEach((dt) => {
-        this.getMongoObjectId();
+        this.generateGuid();
         let item = JSON.parse(JSON.stringify(initListNote));
         item.lineType = 'FILE';
         item.attachments += 1;
-        let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+        let recID = JSON.parse(JSON.stringify(this.guidID));
         item.recID = recID;
         dt.objectID = item.recID;
         obj.push(item);
       });
     } else {
-      this.getMongoObjectId();
+      this.generateGuid();
       obj[this.IDTemp].lineType = 'FILE';
       obj[this.IDTemp].attachments += 1;
-      let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+      let recID = JSON.parse(JSON.stringify(this.guidID));
       obj[this.IDTemp].recID = recID;
       e.data[0].objectID = recID;
     }
@@ -1035,15 +1050,41 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   //   this.dt.detectChanges();
   // }
 
-  mongoObjectId: any;
-  getMongoObjectId() {
-    var timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
-    this.mongoObjectId =
-      timestamp +
-      'xxxxxxxxxxxxxxxx'
-        .replace(/[x]/g, function () {
-          return ((Math.random() * 16) | 0).toString(16);
-        })
-        .toLowerCase();
+  // mongoObjectId: any;
+  // getMongoObjectId() {
+  //   var timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
+  //   this.mongoObjectId =
+  //     timestamp +
+  //     'xxxxxxxxxxxxxxxx'
+  //       .replace(/[x]/g, function () {
+  //         return ((Math.random() * 16) | 0).toString(16);
+  //       })
+  //       .toLowerCase();
+  // }
+
+  guidID: any;
+  generateGuid() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    this.guidID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
   }
 }

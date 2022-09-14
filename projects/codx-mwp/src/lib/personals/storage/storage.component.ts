@@ -184,36 +184,30 @@ export class StorageComponent
   }
 
   delete(data) {
-    this.notification.alertCode('SYS027').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.api
-          .exec<any>(
-            'ERM.Business.WP',
-            'StoragesBusiness',
-            'DeleteStorageAsync',
-            data.recID
-          )
-          .subscribe((res) => {
-            if (res) {
-              (this.listView.dataService as CRUDService)
-                .remove(data)
-                .subscribe();
-              this.api
-                .execSv(
-                  'DM',
-                  'ERM.Business.DM',
-                  'FileBussiness',
-                  'DeleteByObjectIDAsync',
-                  [res.recID, 'WP_Storages', true]
-                )
-                .subscribe();
-              this.detectorRef.detectChanges();
-            }
-          });
-      } else {
-        return;
-      }
-    });
+    (this.listView.dataService as CRUDService)
+      .delete([data], true, (opt) => {
+        opt.service = 'WP';
+        opt.assemblyName = 'ERM.Business.WP';
+        opt.className = 'StoragesBusiness';
+        opt.methodName = 'DeleteStorageAsync';
+        opt.data = data?.recID;
+        return true;
+      })
+      .subscribe((res: any) => {
+        if (res) {
+          (this.listView.dataService as CRUDService).remove(data).subscribe();
+          this.api
+            .execSv(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'DeleteByObjectIDAsync',
+              [res.recID, 'WP_Storages', true]
+            )
+            .subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   openStorageDetail(e) {

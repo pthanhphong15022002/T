@@ -22,8 +22,10 @@ import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-t
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
 import { HomeComponent } from './dashboard/home/home.component';
 import { ListPostComponent } from './dashboard/home/list-post/list-post.component';
-import { AddPostComponent } from './dashboard/home/list-post/popup-add/addpost/addpost.component';
+import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add.component';
+
 import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
+import { PopupSavePostComponent } from './dashboard/home/list-post/popup-save/popup-save.component';
 import { MyTeamComponent } from './dashboard/home/my-team/my-team.component';
 import { UpdateNotePinComponent } from './dashboard/home/update-note-pin/update-note-pin.component';
 import { NewsComponent } from './news/news.component';
@@ -134,7 +136,8 @@ const Component: Type<any>[] =
     AddNoteComponent,
     SaveNoteComponent,
     ListPostComponent,
-    AddPostComponent,
+    PopupAddPostComponent,
+    PopupSavePostComponent,
     MyTeamComponent,
     UpdateNotePinComponent,
     ViewVideoComponent,
