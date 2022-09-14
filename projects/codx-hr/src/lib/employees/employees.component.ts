@@ -1,6 +1,28 @@
-import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiHttpService, ButtonModel, CallFuncService, CodxService, DataRequest, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType, CacheService } from 'codx-core';
+import {
+  ApiHttpService,
+  ButtonModel,
+  CallFuncService,
+  CodxService,
+  DataRequest,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  RequestOption,
+  SidebarModel,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+  CacheService,
+} from 'codx-core';
 import moment from 'moment';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
@@ -12,7 +34,7 @@ import { UpdateStatusComponent } from './update-status/update-status.component';
 @Component({
   selector: 'lib-employees',
   templateUrl: './employees.component.html',
-  styleUrls: ['./employees.component.css']
+  styleUrls: ['./employees.component.css'],
 })
 export class EmployeesComponent implements OnInit {
   views: Array<ViewModel> = [];
@@ -20,10 +42,10 @@ export class EmployeesComponent implements OnInit {
   columnsGrid = [];
   dialog!: DialogRef;
   currentEmployee: boolean = true;
-  dataValue = "90";
-  predicate = "Status<@0";
+  dataValue = '90';
+  predicate = 'Status<@0';
   functionID: string;
-  employee: any;
+  employee: HR_Employees = new HR_Employees;
   itemSelected: any;
   formModel: FormModel;
 
@@ -31,17 +53,19 @@ export class EmployeesComponent implements OnInit {
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
-  @ViewChild('itemInfoPersonal', { static: true }) itemInfoPersonal: TemplateRef<any>;
-  @ViewChild('itemStatusName', { static: true }) itemStatusName: TemplateRef<any>;
+  @ViewChild('itemInfoPersonal', { static: true })
+  itemInfoPersonal: TemplateRef<any>;
+  @ViewChild('itemStatusName', { static: true })
+  itemStatusName: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
-  @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
+  @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
   employStatus: any;
   urlView: string;
-  listMoreFunc= [];
+  listMoreFunc = [];
 
   constructor(
     private changedt: ChangeDetectorRef,
@@ -62,10 +86,30 @@ export class EmployeesComponent implements OnInit {
     };
     this.columnsGrid = [
       { field: '', headerText: '', width: 20, template: this.itemAction },
-      { field: 'employeeID', headerText: 'Nhân viên', width: 300, template: this.itemEmployee },
-      { field: 'email', headerText: 'Liên hệ', width: 300, template: this.itemContact },
-      { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
-      { field: 'statusName', headerText: 'Tình trạng', width: 200, template: this.itemStatusName },
+      {
+        field: 'employeeID',
+        headerText: 'Nhân viên',
+        width: 300,
+        template: this.itemEmployee,
+      },
+      {
+        field: 'email',
+        headerText: 'Liên hệ',
+        width: 300,
+        template: this.itemContact,
+      },
+      {
+        field: 'birthday',
+        headerText: 'Thông tin cá nhân',
+        width: 200,
+        template: this.itemInfoPersonal,
+      },
+      {
+        field: 'statusName',
+        headerText: 'Tình trạng',
+        width: 200,
+        template: this.itemStatusName,
+      },
     ];
   }
 
@@ -80,7 +124,7 @@ export class EmployeesComponent implements OnInit {
           panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,
           // template: this.grid,
-        }
+        },
       },
       {
         id: '2',
@@ -93,9 +137,8 @@ export class EmployeesComponent implements OnInit {
           // panelRightRef: this.cardTemp
           panelLeftRef: this.panelLeftRef,
           template: this.cardTemp,
-        }
+        },
       },
-
     ];
     this.view.dataService.methodUpdate = 'UpdateAsync';
     this.changedt.detectChanges();
@@ -115,13 +158,16 @@ export class EmployeesComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, this.view.dataService.dataSelected, option);
-      this.dialog.closed.subscribe(e => {
+      this.dialog = this.callfunc.openSide(
+        PopupAddEmployeesComponent,
+        this.view.dataService.dataSelected,
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
         console.log(e);
         this.changedt.detectChanges();
-      })
+      });
     });
-
   }
 
   senioritydate(value: string) {
@@ -135,31 +181,35 @@ export class EmployeesComponent implements OnInit {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '800px';
-      var dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'edit', option);
-      dialog.closed.subscribe((e) => {
-        if (e?.event == null)
-          // this.view.dataService.delete(
-          //   [this.view.dataService.dataSelected],
-          //   false
-          // );
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        var dialog = this.callfunc.openSide(
+          PopupAddEmployeesComponent,
+          'edit',
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
           if (e?.event && e?.event != null) {
-            this.view.dataService.update(e.event.update.InfoPersonal && e.event.update.Employee).subscribe();
+            this.view.dataService.update(e.event.update.InfoPersonal).subscribe();
+            // this.view.dataService.update(e.event.update.Employees).subscribe();
             // e?.event.update.forEach((obj) => {
-            //   this.view.dataService.update(obj.Employee).subscribe();
+            //   this.view.dataService.update(obj).subscribe();
             // });
-            // this.meeting = e?.event;
             this.changedt.detectChanges();
           }
-
+  
+        });
       });
-
-
-    });
     // this.changedt.detectChanges();
   }
 
@@ -167,24 +217,36 @@ export class EmployeesComponent implements OnInit {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.copy(this.view.dataService.dataSelected).subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(PopupAddEmployeesComponent, 'copy', option);
-    });
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        this.dialog = this.callfunc.openSide(
+          PopupAddEmployeesComponent,
+          'copy',
+          option
+        );
+      });
     this.changedt.detectChanges();
   }
 
   delete(data: any) {
-    if (data.status != "10") {
-      this.notiService.notifyCode("E0760");
+    if (data.status != '10') {
+      this.notiService.notifyCode('E0760');
       return;
     }
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-      this.beforeDel(opt), 'Thông báo').subscribe((res) => {
+    this.view.dataService
+      .delete(
+        [this.view.dataService.dataSelected],
+        true,
+        (opt) => this.beforeDel(opt),
+        'Thông báo'
+      )
+      .subscribe((res) => {
         if (res[0]) {
           this.itemSelected = this.view.dataService.data[0];
         }
@@ -199,8 +261,7 @@ export class EmployeesComponent implements OnInit {
 
   setEmployeePredicate(orgUnitID): Promise<any> {
     return new Promise((resolve, reject) => {
-      this
-        .loadEOrgChartListChild(orgUnitID)
+      this.loadEOrgChartListChild(orgUnitID)
         .pipe()
         .subscribe((response) => {
           if (response) {
@@ -249,7 +310,6 @@ export class EmployeesComponent implements OnInit {
     return true;
   }
 
-
   selectedChange(val: any) {
     this.itemSelected = val.data;
     this.changedt.detectChanges();
@@ -270,8 +330,7 @@ export class EmployeesComponent implements OnInit {
         var emp = e?.event;
         if (emp.status == '90') {
           this.view.dataService.remove(e?.event).subscribe();
-        } else
-          this.view.dataService.update(e?.event).subscribe();
+        } else this.view.dataService.update(e?.event).subscribe();
         // });
         // this.itemSelected = e?.event;
       }
@@ -295,8 +354,16 @@ export class EmployeesComponent implements OnInit {
     gridModel.predicate = this.view.dataService.request.predicates;
     gridModel.dataValue = this.view.dataService.request.dataValues;
     gridModel.entityPermission = this.view.formModel.entityPer;
-    gridModel.groupFields = "createdBy";
-    this.callfunc.openForm(CodxExportComponent, null, null, 800, "", [gridModel, this.itemSelected.employeeID], null);
+    gridModel.groupFields = 'createdBy';
+    this.callfunc.openForm(
+      CodxExportComponent,
+      null,
+      null,
+      800,
+      '',
+      [gridModel, this.itemSelected.employeeID],
+      null
+    );
   }
 
   clickMF(e: any, data?: any) {
@@ -314,7 +381,7 @@ export class EmployeesComponent implements OnInit {
       case 'SYS04':
         this.copy(data);
         break;
-      case 'HR0031':   /// cần biến cố định để truyền vào đây !!!!
+      case 'HR0031': /// cần biến cố định để truyền vào đây !!!!
         this.updateStatus(data);
         break;
       case 'HR0032':
@@ -334,6 +401,34 @@ export class EmployeesComponent implements OnInit {
       this.codxService.navigate('', this.urlView, {
         employeeID: data.employeeID,
       });
+    }
+  }
+
+  placeholder(
+    value: string,
+    formModel: FormModel,
+    field: string
+  ): Observable<string> {
+    if (value) {
+      return of(`<span>${value}</span>`);
+    } else {
+      return this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .pipe(
+          map((datas) => {
+            if (datas && datas[field]) {
+              var gvSetup = datas[field];
+              if (gvSetup) {
+                if (!value) {
+                  var headerText = gvSetup.headerText as string;
+                  return `<span class="opacity-50">${headerText}</span>`;
+                }
+              }
+            }
+
+            return `<span class="opacity-50">${field}</span>`;
+          })
+        );
     }
   }
 }

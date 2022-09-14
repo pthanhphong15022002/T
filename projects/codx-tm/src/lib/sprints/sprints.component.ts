@@ -298,4 +298,18 @@ export class SprintsComponent extends UIComponent {
     }  
   }
   //#end
+
+  onScroll(event) {
+    const dcScroll = event.srcElement;
+    if (
+      dcScroll.scrollTop + dcScroll.clientHeight <
+      dcScroll.scrollHeight - 150
+    ) {
+      return;
+    }
+
+    if (this.view.dataService.page < this.view.dataService.pageCount) {
+      this.view.dataService.scrolling() ;
+    }
+  }
 }

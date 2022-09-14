@@ -3,8 +3,8 @@
   (setTitle)="setTitle($event)" #form [data]="data"></codx-layout-add>
 
 <ng-template #subHeader>
-  <codx-tag [entityName]="'CO_Meetings'" [isEdit]="true" [value]="meeting?.tags || ''"
-    (valueChange)="valueChangeTags($event)"></codx-tag>
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"
+    [value]="meeting?.tags || ''" (valueChange)="valueChangeTags($event)"></codx-tag>
 </ng-template>
 
 <ng-template #tabDescip>
@@ -74,7 +74,7 @@
       </div>
     </div>
     <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150" [crrValue]="meeting?.memo"
-      (valueChange)="valueChange($event)">
+      (valueChange)="changeMemo($event)">
     </codx-input>
     <div class="d-flex justify-content-end" *ngIf="meeting.templateID">
       <div class="font-italic">
@@ -224,6 +224,8 @@
     <div class="form-group">
       <div class="d-flex py-2 border-bottom justify-content-between list-title">
         <div class="d-flex me-2">
+          <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung họp">
+          </codx-label>
           <!-- <codx-label fiedName="Repeated" formName="TMMeetings" default="Lặp lại">
           </codx-label> -->
         </div>
@@ -237,7 +239,9 @@
           </div>
         </div>
       </div>
-      <codx-input field="repeated" type="textarea"> </codx-input>
+      <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="550" [crrValue]="meeting?.memo"
+      (valueChange)="changeMemo($event)">
+    </codx-input>
     </div>
   </ng-container>
 </ng-template>

@@ -158,7 +158,7 @@
       <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung công việc">
       </codx-label>
     </div>
-    <codx-input type="textarea" headerposition="none" field="memo" [crrValue]="task?.memo" format="ed"
+    <codx-input type="textarea" headerposition="none" field="memo" [crrValue]="task?.memo" format="ed" height="550"
       (valueChange)="changeMemo($event)" [disabled]="readOnly"></codx-input>
   </div>
 </ng-template>
