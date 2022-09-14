@@ -1436,16 +1436,17 @@ export class CodxTasksComponent
 
   getParams() {
     this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
-        'GetOneField',
-        ['TMParameters', null, 'CalendarID']
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = res.fieldValue;
+    .execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['TMParameters', '1']
+    )
+    .subscribe((res) => {
+      if (res) {
+        var param = JSON.parse(res.dataValue);
+        this.calendarID = param.CalendarID
           this.getDayOff(this.calendarID);
         }
       });

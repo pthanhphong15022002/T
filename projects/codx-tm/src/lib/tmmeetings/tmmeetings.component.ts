@@ -250,17 +250,17 @@ export class TMMeetingsComponent
 
   getParams() {
     this.api
-      .execSv<any>(
-        APICONSTANT.SERVICES.SYS,
-        APICONSTANT.ASSEMBLY.CM,
-        APICONSTANT.BUSINESS.CM.Parameters,
-        'GetOneField',
-        ['TMParameters', null, 'CalendarID']
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.param = res;
-          this.calendarID = res.fieldValue;
+    .execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleWithCategoryAsync',
+      ['TMParameters', '1']
+    )
+    .subscribe((res) => {
+      if (res) {
+        var param = JSON.parse(res.dataValue);
+        this.calendarID = param.CalendarID
           this.getDayWeek(this.calendarID);
           this.getDayOff(this.calendarID);
           this.detectorRef.detectChanges();
