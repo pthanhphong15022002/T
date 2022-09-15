@@ -89,3 +89,11 @@ textarea.codx-textarea {
     overflow: hidden;
     overflow-y: auto;
 }
+
+.border-left {
+    border-left: 1px var(--gray-200) solid;
+}
+
+.e-datepicker.e-popup-open {
+    width: 300px !important;
+}

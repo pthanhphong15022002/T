@@ -328,12 +328,14 @@ export class PopupAddBookingRoomComponent implements OnInit {
   //     return hour+" giờ trước"       
   //   }
   // }
+
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd,this.tmpAttendeesList ,null,this.lstStationery];
     return true;
   }
+  
   onSaveForm() { 
     if (this.fGroupAddBookingRoom.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddBookingRoom, this.formModel);
