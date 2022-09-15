@@ -12,68 +12,58 @@
     [predicate]="predicate" 
     [dataValue]="dataValue" 
     [entityName]="entityName"
+    [selectedFirst]="true"
+    (selectedChange)="selectedItem($event)"
     (buttonClick)="clickShowAssideRight()">
 </codx-views>
+<ng-template #itemTemplate let-data>
+    <codx-temp-full 
+        [dataItem]="data"
+        [typeMF]="'hover'" 
+        [formModel]="codxViews.formModel"
+        imgCss="me-2"
+        [typeMF]="'hover'" 
+        (clickMF)="clickMF($event,data)"
+        [imageId]="data.createdBy"
+        imageObjType="AD_Users"
+        cardCss="card-template border-bottom px-2 py-3" 
+        [title]="data.senderName"
+        [date]="data.createdOn"
+        [status]="data.status"
+        [statusVll]="'L1420'"
+        [bookmark]="false">
+    </codx-temp-full>
+</ng-template>
 
-<ng-template #templateItem let-item>
-    <div id="listItemOfGifts" (click)="clickItem(item.recID)">
-        <div class="list-item d-flex master-item" #row [attr.data-_id]="item.recID">
-            <div *ngIf="cardType != CARDTYPE_EMNUM.SuggestionImprovement && cardType != CARDTYPE_EMNUM.Share">
-                <codx-img class="symbol symbol-40 symbol-circle mr-3" [objectId]="item.sender"
-                    objectType="AD_Users" [width]="60">
-                </codx-img>
-                
-            </div>
-            <div *ngIf="cardType == CARDTYPE_EMNUM.SuggestionImprovement">
-                <codx-img class="symbol symbol-40 symbol-circle mr-3" *ngIf="tabActive == STATUS_ACTIVE.CARD"
-                    [objectId]="item.sender" objectType="AD_Users" [width]="60">
-                </codx-img>
-                
-            </div>
-            <div *ngIf="cardType == CARDTYPE_EMNUM.Share && tabActive == STATUS_ACTIVE.CARD">
-                <ng-container *ngIf="item.countComments > 1; else elsImg">
-                    <img class="symbol symbol-40 symbol-circle mr-3 w-40px h-40px" src="../../../../assets/img/AvatarGroup.png">
-                </ng-container>
-                <ng-template #elsImg>
-                    <codx-img class="symbol symbol-40 symbol-circle mr-3" 
-                        [objectId]="item.receiver" 
-                        objectType="AD_Users">
-                    </codx-img>
-                </ng-template>
-            </div>
-            <div class="d-flex flex-column flex-grow-1 ms-4">
-                <div class="d-flex justify-content-between">
-                    <ng-container *ngIf="cardType !== CARDTYPE_EMNUM.Share">
-                        <div class="text-dark fw-bolder">
-                            {{item.senderName}}
-                        </div>
-                    </ng-container>
-                    <ng-container *ngIf="cardType == CARDTYPE_EMNUM.Share">
-                        <div class="text-dark fw-bolder" *ngIf="tabActive == STATUS_ACTIVE.CARD">
-                            {{ item.tagType | displayname:item.receiverName:item.countComments }}
-                        </div>
-                        
-                    </ng-container>
+<ng-template #panelLeftRef>
+</ng-template>
 
-                </div>
-                <div class="d-flex justify-content-between">
-                    <div class="text-dark font-weight-italic">{{item.postionName}}</div>
-                </div>
-                <div class="fed-des text-dark" [innerHTML]="item?.situation"></div>
-                <div class="d-flex align-items-center">
-                    <div *ngIf="cardType != CARD_TYPE.SHARE"
-                        class="px-2 b rounded-pill"
-                        [style.border-color]="(item[TypeValuelistStatus]|vll:NameValuelistStatus:'color'|async)+'30'"
-                        [style.background-color]="(item[TypeValuelistStatus]|vll:NameValuelistStatus:'color'|async)+'30'"
-                        [style.color]="item[TypeValuelistStatus]|vll:NameValuelistStatus:'color'|async">
-                        {{item[TypeValuelistStatus]|vll:NameValuelistStatus:"text"|async}}
-                    </div>
-                    <div class="text-muted ms-4">
-                        {{item.createdOn | fmDT:'dmy'}}
-                    </div>
-                </div>
-            </div>
+<ng-template #panelRightRef>
+    <lib-view-detail-cards [cardID]="selectedID"></lib-view-detail-cards>
+</ng-template>
+
+<ng-template #cardDisplay>
+</ng-template>
+
+
+<ng-template #templateFile let-item>
+    <div class="d-flex">
+        <div class="mr-3">
+            <img class="max-h-40px" src="../../../../assets/demos/dms/" />
         </div>
+        <div class="d-flex flex-column flex-grow-1">
+            <div class="text-dark">{{item.fileName}}</div>
+            <div class="text-dark-50 font-size-sm">{{item.createdOn | fmDT:'dmy'}}</div>
+        </div>
+        <div class="icon-download text-hover-primary icon-20 ml-2"></div>
+    </div>
+</ng-template>
+<ng-template #templateShare let-item>
+    <div class="d-flex align-items-center">
+        <codx-img objectType="AD_Users" [objectId]="item.objectID"
+            class="symbol symbol-circle symbol-30 mr-3" [width]="40">
+        </codx-img>
+        <div class="text-dark font-weight-bold">{{item.objectName}}</div>
     </div>
 </ng-template>
 <ng-template #templateGift let-item>
@@ -116,86 +106,4 @@
         </div>
     </div>
 </ng-template>
-<ng-template #templateFile let-item>
-    <div class="d-flex">
-        <div class="mr-3">
-            <img class="max-h-40px" src="../../../../assets/demos/dms/" />
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-            <div class="text-dark">{{item.fileName}}</div>
-            <div class="text-dark-50 font-size-sm">{{item.createdOn | fmDT:'dmy'}}</div>
-        </div>
-        <div class="icon-download text-hover-primary icon-20 ml-2"></div>
-    </div>
-</ng-template>
-<ng-template #templateShare let-item>
-    <div class="d-flex align-items-center">
-        <codx-img objectType="AD_Users" [objectId]="item.objectID"
-            class="symbol symbol-circle symbol-30 mr-3" [width]="40">
-        </codx-img>
-        <div class="text-dark font-weight-bold">{{item.objectName}}</div>
-    </div>
-</ng-template>
-<ng-template #panelLeftRef>
-    <div class="page-home page-master">
-        <div class="d-flex flex-row">
-            <div id="erm_tree" class="min-w-350px w-350px">
-                <div class="tab-horizone">
-                    <ul class="nav nav-tabs nav-tabs-line row">
-                        <li class="nav-item col">
-                            <a class="nav-link " *ngIf="tabApproval" [class.active]="tabActive == STATUS_ACTIVE.CARD"
-                                data-toggle="tab" href="#gift_1" >
-                                <span class="nav-text"></span>
-                            </a>
-                        </li>
-                        <li class="nav-item col" *ngIf="tabApproval">
-                            <a class="nav-link" [class.active]="tabActive == STATUS_ACTIVE.APPROVER" data-toggle="tab"
-                                href="#gift_3" >
-                                <span class="nav-text">
-                                    <codx-label formName="" name="lblApprove" default="Xét duyệt"></codx-label>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="gift_1" role="tabpanel">
-                        </div>
-                        <div class="tab-pane fade" id="gift_2" role="tabpanel">
-                        </div>
-                        <div class="tab-pane fade" id="gift_3" role="tabpanel">
-                        </div>
-    
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="offcanvas-overlay"></div>
-</ng-template>
-<ng-template #itemTemplate let-data>
-    <div (click)="selectedItem(data)">
-        <codx-temp-full 
-            [dataItem]="data"
-            [typeMF]="'hover'" 
-            [formModel]="codxViews.formModel"
-            imgCss="me-2"
-            [typeMF]="'hover'" 
-            (clickMF)="clickMF($event,data)"
-            [imageId]="data.createdBy"
-            imageObjType="AD_Users"
-            cardCss="card-template border-bottom px-2 py-3" 
-            [title]="data.senderName"
-            [date]="data.createdOn"
-            [status]="data.status"
-            [statusVll]="'L1420'"
-            [bookmark]="false">
-        </codx-temp-full>
-    </div>
-</ng-template>
-<ng-template #panelRightRef>
-    <ng-container *ngIf="itemSelected">
-        <lib-view-detail-cards [itemSelected]="itemSelected" [cardType]="itemSelected.cardType"></lib-view-detail-cards>
-    </ng-container>
-</ng-template>
-<ng-template #cardDisplay>
-</ng-template>
+

@@ -15,6 +15,10 @@ export class PopupSavePostComponent implements OnInit {
   data:any;
   user:any;
   listStorage:any[] = [];
+  title:string = "";
+  storageType:string = "WP_Comments";
+  storageIDSelected:any = null;
+
   @ViewChild("fromPopupAdd") popupBody:TemplateRef<any>;
   constructor(
     private api: ApiHttpService,
@@ -35,7 +39,6 @@ export class PopupSavePostComponent implements OnInit {
   ngOnInit(): void {
     this.getListStorage();
   }
-
   getListStorage(){
     this.api.execSv("WP","ERM.Business.WP","StoragesBusiness","GetListStorageByUserIDAsync")
     .subscribe((res:any[]) => {
@@ -45,8 +48,6 @@ export class PopupSavePostComponent implements OnInit {
       }
     });
   }
-
-
   saveObjectToStorage(){
     this.api.execSv("WP","ERM.Business.WP","StoragesBusiness","InsertIntoStorageAsync",[this.storageIDSelected,this.data.recID])
     .subscribe((res:any) => {
@@ -59,8 +60,6 @@ export class PopupSavePostComponent implements OnInit {
       }
     });
   }
-
-  storageIDSelected:any = null;
   selectStorage(item){
     this.listStorage.map((x:any) =>{
       if(x.recID != item.recID){
@@ -74,10 +73,10 @@ export class PopupSavePostComponent implements OnInit {
     });
     this.dt.detectChanges();
   }
-
-  title:string = "";
-  storageType:string = "WP_Comments";
   createdStorage(dialogPopup:DialogRef){
+    if(!this.title){
+      return;
+    }
     var object = {
       title: this.title,
       storageType: this.storageType
@@ -104,7 +103,6 @@ export class PopupSavePostComponent implements OnInit {
   openModelAddStorage(){
     this.callFC.openForm(this.popupBody,"",200,200,"",null,"");
   }
-
   valueChange(event:any){
     if(!event) return;
     this.title = event.data;

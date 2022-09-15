@@ -1,6 +1,6 @@
 <ng-template #panelContent>
     <div class="page-home bg-body p-6 rounded-4">
-        <div class="d-flex">
+        <!-- <div class="d-flex">
             <div class="home-center">
                 <codx-listview [itemTemplate]="tmpPortal" #listview funcId="FDT01" [pageSize]="10" service="WP"
                     assemblyName="ERM.Business.WP" className="CommentsBusiness" [predicate]="predicate"
@@ -105,7 +105,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
+        <app-list-post ></app-list-post>
     </div>
 </ng-template>
 <ng-template #tmpPortal let-item>
