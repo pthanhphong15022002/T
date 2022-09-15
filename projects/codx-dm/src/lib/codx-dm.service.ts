@@ -128,6 +128,7 @@ export class CodxDMService {
   page = 1;
   totalPage = 1;
   pageSize = 20;
+  ChunkSizeInKB = 1024 * 2;
   revision: boolean;
   moveable = false;
   itemRight: ItemRight;
@@ -413,6 +414,7 @@ export class CodxDMService {
     this.parentDownload = false;
     this.parentUpload = false;
     this.parentDelete = false;
+    this.parentAssign = false;
     this.setRight.next(true);
   }
 

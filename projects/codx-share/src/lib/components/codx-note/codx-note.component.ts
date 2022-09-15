@@ -58,8 +58,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   headerComment = '';
   checkFile = false;
   totalComment = 0;
-  lstIV: any[] = [];
+  lstEditIV: any = new Array();
+  lstViewIV: any = new Array();
   user: any = null;
+  MODE_IMAGE_VIDEO = 'VIEW';
   listNoteTemp: any = {
     memo: '',
     status: null,
@@ -166,6 +168,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       }
     });
     this.user = this.auth.userValue;
+    // this.getFileByObjectID('9260f180-56ce-4b44-afce-49afd10e9930');
   }
 
   ngAfterViewInit(): void {
@@ -182,9 +185,18 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.id = this.contents.length - 1;
       this.dt.detectChanges();
       this.setPropertyForView();
+      this.getImageVideo();
     }
   }
 
+  getImageVideo() {
+    if (this.contents?.length > 0) {
+      this.contents.forEach((res) => {
+        if (res.lineType == this.LINE_TYPE.IMAGE)
+          this.getFileByObjectID(res.recID);
+      });
+    }
+  }
   getFileByObjectID(recID) {
     this.api
       .execSv(
@@ -204,7 +216,9 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
               ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
             }
           });
-          this.lstIV = res;
+          this.lstEditIV = res;
+          this.lstViewIV.push(this.lstEditIV[0]);
+          console.log('check lstViewIV', this.lstViewIV);
         }
       });
     this.dt.detectChanges();
@@ -242,9 +256,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.focus(this.contents.length);
   }
 
-  chooseType(type: any, ele: any) {
-    if (!this.currentElement && ele)
-      this.currentElement = ele.elRef.nativeElement;
+  chooseType(type: any, ele: any, index = null, menu = null) {
+    if (menu == true) {
+      if (!this.currentElement && ele)
+        this.currentElement = ele.elRef.nativeElement;
+    } else this.currentElement = ele.elRef.nativeElement;
     if (this.currentElement) {
       var input = this.currentElement.querySelector(
         '.codx-text'
@@ -252,8 +268,13 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       if (input) input.focus();
     }
     this.lineType = type;
-    if (this.id >= this.contents.length) this.id = this.contents.length - 1;
-    this.contents[this.id].lineType = this.lineType;
+    if (menu == true) {
+      if (this.id >= this.contents.length) this.id = this.contents.length - 1;
+      this.contents[this.id].lineType = this.lineType;
+    } else {
+      if (index >= this.contents.length) index = this.contents.length - 1;
+      this.contents[index].lineType = this.lineType;
+    }
     this.listNoteTemp.lineType = this.lineType;
     if (this.lineType != 'TITLE') {
       var divElement = this.currentElement.children[0] as HTMLElement;
@@ -293,7 +314,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.font.UNDERLINE = underline;
   }
 
-  chooseFont(font) {
+  chooseFont(font, index = null, menu = null) {
     if (!this.currentElement) return;
     this.currentElement.focus();
     var style = this.currentElement.style;
@@ -325,16 +346,23 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       else style.textDecorationLine = 'none';
       this.listNoteTemp.format = this.listNoteTemp.format + 'underline;';
     }
-    if (this.id >= this.contents.length) this.id = this.contents.length - 1;
-    this.contents[this.id].format = this.listNoteTemp.format;
+    if (menu == true) {
+      if (this.id >= this.contents.length) this.id = this.contents.length - 1;
+      this.contents[this.id].format = this.listNoteTemp.format;
+    } else {
+      if (index >= this.contents.length) index = this.contents.length - 1;
+      this.contents[index].format = this.listNoteTemp.format;
+    }
     if (this.objectParentID)
       this.updateContent(this.objectParentID, this.contents).subscribe();
     this.dt.detectChanges();
   }
 
-  checkFont(font, ele) {
-    if (!this.currentElement && ele)
-      this.currentElement = ele.elRef.nativeElement;
+  checkFont(font, ele, index = null, menu = null) {
+    if (menu == true) {
+      if (!this.currentElement && ele)
+        this.currentElement = ele.elRef.nativeElement;
+    } else this.currentElement = ele.elRef.nativeElement;
     if (this.currentElement) {
       var input = this.currentElement.querySelector(
         'input.codx-text'
@@ -342,7 +370,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       input.focus();
     }
     this.font[font] = !this.font[font];
-    this.chooseFont(font);
+    this.chooseFont(font, index, menu);
   }
 
   valueChangeColor(event, ele, elementColor) {
@@ -460,7 +488,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         textColor: this.font.COLOR,
         format: this.listNoteTemp.format,
         lineType: this.lineType,
-        recID: '',
+        // recID: '',
       };
       if (this.contents.length >= 2) {
         this.contents.pop();
@@ -673,10 +701,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   ) {
     switch (type) {
       case 'format':
-        this.chooseType(format, ele);
+        this.chooseType(format, ele, index, menu);
         break;
       case 'font':
-        this.checkFont(format, ele);
+        this.checkFont(format, ele, index, menu);
         break;
       case 'delete':
         this.delete(index);
@@ -695,19 +723,22 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         else this.popup(this.id, attachmentEle);
         break;
       case 'image':
-        this.uploadIV(this.id);
+        this.uploadFileIV(this.id, attachmentEle);
         break;
     }
     this.getContent.emit(this.contents);
   }
 
   IDTempIV = 0;
-  uploadIV(index) {
+  uploadFileIV(index, attachmentEle) {
+    if (attachmentEle) this.ATM_IV = attachmentEle;
     if (this.ATM_IV) this.ATM_IV.uploadFile();
     this.IDTempIV = index;
   }
 
   selectedIV(e: any) {
+    if (this.IDTempIV >= this.contents.length)
+      this.IDTempIV = this.contents.length - 1;
     let obj = JSON.parse(JSON.stringify(this.contents));
     let initListNote = {
       memo: '',
@@ -718,42 +749,52 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       attachments: 0,
       comments: 0,
       tasks: 0,
-      recID: '',
+      // recID: '',
     };
-    this.getMongoObjectId();
-    obj[this.IDTempIV].lineType = this.LINE_TYPE.IMAGE;
+    this.generateGuid();
+    obj[this.IDTempIV].lineType = 'IMAGE';
     obj[this.IDTempIV].attachments += 1;
-    let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+    let recID = JSON.parse(JSON.stringify(this.guidID));
     obj[this.IDTempIV].recID = recID;
     e.data[0].objectID = recID;
-
-    console.log('check image', e.data);
     let item = JSON.parse(JSON.stringify(initListNote));
-    item.lineType = this.LINE_TYPE.TEXT;
+    item.lineType = 'TEXT';
     item.attachments = 0;
     obj.push(item);
 
+    let listFileTemp;
     this.updateContent(this.objectParentID, obj).subscribe(async (res: any) => {
       if (res) {
         // up file
         if (e.data.length > 0) {
           let files = e.data;
-          files.map((e: any) => {
-            if (e.mimeType.indexOf('image') >= 0) {
-              e['referType'] = this.REFER_TYPE.IMAGE;
-            } else if (e.mimeType.indexOf('video') >= 0) {
-              e['referType'] = this.REFER_TYPE.VIDEO;
+          files.map((dt: any) => {
+            if (dt.mimeType.indexOf('image') >= 0) {
+              dt['referType'] = this.REFER_TYPE.IMAGE;
+            } else if (dt.mimeType.indexOf('video') >= 0) {
+              dt['referType'] = this.REFER_TYPE.VIDEO;
             } else {
-              e['referType'] = this.REFER_TYPE.APPLICATION;
+              dt['referType'] = this.REFER_TYPE.APPLICATION;
             }
           });
-          this.lstIV = files;
+          listFileTemp = files;
+          // let lstIVTemp = JSON.parse(JSON.stringify(this.lstEditIV));
+          if (this.lstViewIV.length > 0) {
+            if (this.MODE_IMAGE_VIDEO == 'VIEW')
+              this.lstEditIV = this.lstViewIV;
+            this.lstEditIV.push(files[0]);
+          } else this.lstEditIV.push(files[0]);
         }
-        this.ATM_IV.fileUploadList = this.lstIV;
-        debugger;
+        if (listFileTemp) {
+          this.ATM_IV.fileUploadList = listFileTemp;
+          // this.ATM_IV.fileUploadList[0]['objectID'] = listFileTemp[0].objectID;
+          this.ATM_IV.fileUploadList[0].objectId = listFileTemp[0].objectID;
+        }
+        console.log('check this.ATM_IV.fileUpload', this.ATM_IV.fileUploadList);
         (await this.ATM_IV.saveFilesObservable()).subscribe((result: any) => {
           if (result) {
             this.contents = obj;
+            this.MODE_IMAGE_VIDEO = 'EDIT';
             this.dt.detectChanges();
             this.focus(this.contents.length - 1);
           }
@@ -761,7 +802,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       }
     });
     this.id += 1;
-    console.log('check id', this.id);
     this.dt.detectChanges();
   }
 
@@ -781,9 +821,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     console.log('check ');
   }
 
-  totalCommentChange(e) {
-    debugger;
-  }
+  totalCommentChange(e) {}
 
   assign(index) {
     var task = new TM_Tasks();
@@ -908,10 +946,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
 
   IDTemp = 0;
   popup(index, attachmentEle) {
-    // if (index < this.contents.length) this.contents[index].lineType = 'FILE';
-    // this.updateContent(this.objectParentID, this.contents).subscribe();
-    // this.dt.detectChanges();
-    // console.log('check attachmentEle popup', attachmentEle);
     if (attachmentEle) this.attachment = attachmentEle;
     if (this.attachment) {
       this.attachment.uploadFile();
@@ -921,6 +955,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   fileCounts(e: any) {
+    if (this.IDTemp >= this.contents.length)
+      this.IDTemp = this.contents.length - 1;
     let obj = JSON.parse(JSON.stringify(this.contents));
     let initListNote = {
       memo: '',
@@ -931,26 +967,25 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       attachments: 0,
       comments: 0,
       tasks: 0,
-      recID: '',
+      // recID: '',
     };
-    // if (this.countFileAdded > 1) index++;
     if (e.data.length > 1) {
       obj.splice(this.IDTemp, 1);
       e.data.forEach((dt) => {
-        this.getMongoObjectId();
+        this.generateGuid();
         let item = JSON.parse(JSON.stringify(initListNote));
         item.lineType = 'FILE';
         item.attachments += 1;
-        let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+        let recID = JSON.parse(JSON.stringify(this.guidID));
         item.recID = recID;
         dt.objectID = item.recID;
         obj.push(item);
       });
     } else {
-      this.getMongoObjectId();
+      this.generateGuid();
       obj[this.IDTemp].lineType = 'FILE';
       obj[this.IDTemp].attachments += 1;
-      let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
+      let recID = JSON.parse(JSON.stringify(this.guidID));
       obj[this.IDTemp].recID = recID;
       e.data[0].objectID = recID;
     }
@@ -959,8 +994,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     item.lineType = 'TEXT';
     item.attachments = 0;
     obj.push(item);
-
-    console.log('check contents', this.contents);
     this.updateContent(this.objectParentID, obj).subscribe(async (res: any) => {
       if (res) {
         // up file
@@ -1035,15 +1068,41 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   //   this.dt.detectChanges();
   // }
 
-  mongoObjectId: any;
-  getMongoObjectId() {
-    var timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
-    this.mongoObjectId =
-      timestamp +
-      'xxxxxxxxxxxxxxxx'
-        .replace(/[x]/g, function () {
-          return ((Math.random() * 16) | 0).toString(16);
-        })
-        .toLowerCase();
+  // mongoObjectId: any;
+  // getMongoObjectId() {
+  //   var timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
+  //   this.mongoObjectId =
+  //     timestamp +
+  //     'xxxxxxxxxxxxxxxx'
+  //       .replace(/[x]/g, function () {
+  //         return ((Math.random() * 16) | 0).toString(16);
+  //       })
+  //       .toLowerCase();
+  // }
+
+  guidID: any;
+  generateGuid() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    this.guidID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
   }
 }

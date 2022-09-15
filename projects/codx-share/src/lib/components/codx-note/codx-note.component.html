@@ -13,7 +13,7 @@
                                 </a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                     <li>
-                                        <button (click)="clickFunction('delete', '', '', item, i)"
+                                        <button (click)="clickFunction('delete', '', '', item, i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-clear icon-20 me-2'" [style.color]="'red'"></span>
                                             <span class="show-customName">{{ "Xóa" }}</span>
@@ -21,50 +21,50 @@
                                     </li>
                                     <hr class="dropdown-divider" />
                                     <li>
-                                        <button (click)="clickFunction('format', 'TITLE', input)"
+                                        <button (click)="clickFunction('format', 'TITLE', input, '', i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-title icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Tiêu đề" }}</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <button (click)="clickFunction('format', 'TEXT', input)"
+                                        <button (click)="clickFunction('format', 'TEXT', input, '', i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-format_size icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Dữ liệu thường" }}</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <button (click)="clickFunction('format', 'CHECKBOX', input)"
+                                        <button (click)="clickFunction('format', 'CHECKBOX', input, '', i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-check_box  icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Check list" }}</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <button (click)="clickFunction('format', 'LIST', input)"
+                                        <button (click)="clickFunction('format', 'LIST', input, '', i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-list_alt  icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Danh sách" }}</span>
                                         </button>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <button class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-format_list_numbered icon-20 me-2'"
                                                 [style.color]=""></span>
                                             <span class="show-customName">{{ "Số thứ tự" }}</span>
                                         </button>
-                                    </li>
+                                    </li> -->
                                     <hr class="dropdown-divider" />
                                     <li>
                                         <div class="d-flex">
-                                            <span (click)="clickFunction('font', 'BOLD', input)" [class]="
+                                            <span (click)="clickFunction('font', 'BOLD', input, '', i, false)" [class]="
                         'icon-format_bold icon-18 btn btn-icon btn-active-light-primary position-relative'
                       " [style.color]=""></span>
-                                            <span (click)="clickFunction('font', 'ITALIC', input)" [class]="
+                                            <span (click)="clickFunction('font', 'ITALIC', input, '', i, false)" [class]="
                         'icon-format_italic icon-18 btn btn-icon btn-active-light-primary position-relative'
                       " [style.color]=""></span>
-                                            <span (click)="clickFunction('font', 'UNDERLINE', input)" [class]="
+                                            <span (click)="clickFunction('font', 'UNDERLINE', input, '', i, false)" [class]="
                         'icon-format_underlined icon-18 btn btn-icon btn-active-light-primary position-relative'
                       " [style.color]=""></span>
                                             <!-- <codx-input #colorPicker type="colorpicker" [showText]="false"
@@ -132,7 +132,7 @@
                                 <div class="w-100 text-after-check-box" (click)="getElement(input, i)">
                                     <ng-container #text>
                                         <div
-                                            [class]="item.lineType !== 'FILE' ? '' : 'disable-element'">
+                                            [class]="(item.lineType !== 'FILE' && item.lineType !== 'IMAGE') ? '' : 'disable-element'">
                                             <codx-input #input type="text" [class]="'border-0'"
                                                 class="test-textbox input-note memo" style="font-weight: normal;font-style: normal;text-decoration-line: none;color: #000000;
               " (keyUpEnter)="keyUpEnter($event, i)" [crrValue]="item.memo" field="memo" id="{{ i }}"
@@ -142,8 +142,7 @@
                                         </div>
                                     </ng-container>
                                     <ng-container #file>
-                                        <div
-                                            [class]="item.lineType == 'FILE' ? '' : 'disable-element'">
+                                        <div [class]="item.lineType == 'FILE' ? '' : 'disable-element'">
                                             <codx-attachment [objectType]="objectType" hideBtnSave="1" hideFolder="1"
                                                 hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0"
                                                 [functionID]="funcID" [objectId]="item.recID" [allowMultiFile]="1"
@@ -151,27 +150,52 @@
                                             </codx-attachment>
                                         </div>
                                     </ng-container>
-                                    <ng-container #image [class]="item.lineType == 'IMAGE' ? '' : 'disable-element'"
-                                        *ngIf="item.lineType == 'IMAGE' ? getFileByObjectID(item.recID) : null">
-                                        <div class="row mt-2 justify-content-between" *ngIf="lstIV">
-                                            <ng-container *ngFor="let item of lstIV">
-                                                <div class="col-5 my-2">
-                                                    <div class="w-100 position-relative">
-                                                        <ng-container *ngIf="item.referType == REFER_TYPE.IMAGE">
-                                                            <ng-container *ngIf="item.recID;else imageSrc">
-                                                                <codx-img [recId]="item.recID"
-                                                                    [objectId]="item.objectID" [width]="100"
-                                                                    cssClass="pic" imageType="square">
-                                                                </codx-img>
+                                    <ng-container #viewImage *ngIf="MODE_IMAGE_VIDEO == 'VIEW'">
+                                        <div *ngIf="item.lineType == 'IMAGE'">
+                                            <div class="row mt-2 justify-content-between" *ngIf="lstViewIV">
+                                                <ng-container *ngFor="let dt of lstViewIV">
+                                                    <div class="col-5 my-2" *ngIf="dt.objectID == item.recID">
+                                                        <div class="w-150 position-relative">
+                                                            <ng-container *ngIf="dt.referType == REFER_TYPE.IMAGE">
+                                                                <ng-container *ngIf="dt.recID;else imageSrc">
+                                                                    <codx-img [recId]="dt.recID"
+                                                                        [objectId]="dt.objectID" [width]="150"
+                                                                        cssClass="pic" imageType="square">
+                                                                    </codx-img>
+                                                                </ng-container>
+                                                                <ng-template #imageSrc>
+                                                                    <img [src]="dt.data || dt.avatar" alt=""
+                                                                        class="image">
+                                                                </ng-template>
                                                             </ng-container>
-                                                            <ng-template #imageSrc>
-                                                                <img [src]="item.data || item.avatar" alt=""
-                                                                    class="image">
-                                                            </ng-template>
-                                                        </ng-container>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </ng-container>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container #editImage *ngIf="MODE_IMAGE_VIDEO == 'EDIT'">
+                                        <div *ngIf="item.lineType == 'IMAGE'">
+                                            <div class="row mt-2 justify-content-between" *ngIf="lstEditIV">
+                                                <ng-container *ngFor="let data of lstEditIV">
+                                                    <div class="col-5 my-2" *ngIf="data.objectID == item.recID">
+                                                        <div class="w-150 position-relative">
+                                                            <ng-container *ngIf="data.referType == REFER_TYPE.IMAGE">
+                                                                <ng-container *ngIf="data.recID;else imageSrc">
+                                                                    <codx-img [recId]="data.recID"
+                                                                        [objectId]="data.objectID" [width]="150"
+                                                                        cssClass="pic" imageType="square">
+                                                                    </codx-img>
+                                                                </ng-container>
+                                                                <ng-template #imageSrc>
+                                                                    <img [src]="data.data || data.avatar" alt=""
+                                                                        class="image">
+                                                                </ng-template>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
                                         </div>
                                     </ng-container>
                                 </div>
@@ -214,28 +238,29 @@
         <div class="d-flex note-action h-45px border align-items-center justify-content-between" #menu *ngIf="showMenu">
             <div class="d-flex">
                 <div [class.active]="format.TITLE ? 'active' : ''">
-                    <span (click)="clickFunction('format', 'TITLE', input)"
+                    <span (click)="clickFunction('format', 'TITLE', input, '', '', true)"
                         class="icon-title icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
                 </div>
                 <div [class.active]="format.TEXT ? 'active' : ''">
-                    <span (click)="clickFunction('format', 'TEXT', input)"
+                    <span (click)="clickFunction('format', 'TEXT', input, '', '', true)"
                         class="icon-format_size icon-18 btn btn btn-icon btn-active-light-primary position-relative"></span>
                 </div>
                 <div [class.active]="format.LIST ? 'active' : ''">
-                    <span (click)="clickFunction('format', 'LIST', input)"
+                    <span (click)="clickFunction('format', 'LIST', input, '', '', true)"
                         class="icon-list_alt icon-18 btn btn btn-icon btn-active-light-primary position-relative"></span>
                 </div>
                 <div [class.active]="format.CHECKBOX ? 'active' : ''">
-                    <span (click)="clickFunction('format', 'CHECKBOX', input)"
+                    <span (click)="clickFunction('format', 'CHECKBOX', input, '', '', true)"
                         class="icon-check_box icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
                 </div>
                 <span class="icon-image icon-18 btn btn-icon btn-active-light-primary position-relative"
-                    (click)="clickFunction('image', '', input)">
+                    (click)="clickFunction('image', '', input, '', '', '', ATM_IV)">
                     <div class="d-none">
                         <codx-attachment #ATM_IV [functionID]="funcID" [objectType]="objectType" [hideFolder]="'1'"
-                            [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" allowExtensions=".jpg,.png"
-                            [allowMultiFile]="'1'" [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'"
-                            [showMessage]="'0'" (fileCount)="selectedIV($event)">
+                            [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'"
+                            allowExtensions=".jpg,.png,.mp3,.mp4" [allowMultiFile]="'0'" [hideImageUpload]="'1'"
+                            [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'"
+                            (fileCount)="selectedIV($event)">
                         </codx-attachment>
                     </div>
                 </span>
@@ -250,12 +275,12 @@
                 </span>
                 <span class="border-right border-gray-200 mx-1"></span>
                 <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative"
-                    (click)="clickFunction('font', 'BOLD', input)" [class.active]="font.BOLD ? 'active' : ''"></span>
+                    (click)="clickFunction('font', 'BOLD', input, '', '', true)" [class.active]="font.BOLD ? 'active' : ''"></span>
                 <span class="icon-format_italic icon-20 btn btn-icon btn-active-light-primary position-relative"
-                    (click)="clickFunction('font', 'ITALIC', input)"
+                    (click)="clickFunction('font', 'ITALIC', input, '', '', true)"
                     [class.active]="font.ITALIC ? 'active' : ''"></span>
                 <span class="icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative"
-                    (click)="clickFunction('font', 'UNDERLINE', input)"
+                    (click)="clickFunction('font', 'UNDERLINE', input, '', '', true)"
                     [class.active]="font.UNDERLINE ? 'active' : ''"></span>
                 <codx-input #colorPicker type="colorpicker" [showText]="false" [modeSwitcher]="true"
                     [crrValue]="font.COLOR" field="textColor"

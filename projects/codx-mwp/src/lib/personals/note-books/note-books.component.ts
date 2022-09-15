@@ -72,7 +72,7 @@ export class NoteBooksComponent
     private authStore: AuthStore,
     private modalService: NgbModal,
     private noteBookService: NoteBookServices,
-    private notification: NotificationsService,
+    private notification: NotificationsService
   ) {
     super(inject);
     this.cache.functionList('MWP00941').subscribe((res) => {
@@ -133,34 +133,30 @@ export class NoteBooksComponent
   }
 
   delete(data: any) {
-    this.notification.alertCode('SYS027').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'NoteBooksBusiness',
-          'DeleteNoteBookAsync',
-          data.recID
-        )
-        .subscribe((res) => {
-          if (res) {
-            (this.listView.dataService as CRUDService).remove(data).subscribe();
-            this.api
-              .execSv(
-                'DM',
-                'ERM.Business.DM',
-                'FileBussiness',
-                'DeleteByObjectIDAsync',
-                [res.recID, 'WP_NoteBooks', true]
-              )
-              .subscribe();
-            this.detectorRef.detectChanges();
-          }
-        });
-      } else {
-        return;
-      }
-    });
+    (this.listView.dataService as CRUDService)
+      .delete([data], true, (opt) => {
+        opt.service = 'WP';
+        opt.assemblyName = 'ERM.Business.WP';
+        opt.className = 'NoteBooksBusiness';
+        opt.methodName = 'DeleteNoteBookAsync';
+        opt.data = data?.recID;
+        return true;
+      })
+      .subscribe((res: any) => {
+        if (res) {
+          (this.listView.dataService as CRUDService).remove(data).subscribe();
+          this.api
+            .execSv(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'DeleteByObjectIDAsync',
+              [res.recID, 'WP_NoteBooks', true]
+            )
+            .subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   edit(data: any) {
@@ -223,7 +219,7 @@ export class NoteBooksComponent
     this.detectorRef.detectChanges();
     this.checkDESC = true;
   }
-  
+
   sortByASC() {
     this.listView.dataService.data = this.listView.dataService.data.sort(
       (a, b) => a.title.localeCompare(b.title)

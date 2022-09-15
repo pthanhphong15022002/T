@@ -253,6 +253,12 @@ export class RolesComponent implements OnInit {
 
       this.fileEditing =  JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));   
       this.id = this.fileEditing.recID;
+      if (this.fileEditing.folderName != null) {
+        this.type = 'folder';
+      }
+      else 
+        this.type = 'file';
+
       this.user = this.auth.get();
       this.dialog = dialog;    
       this.startDate = null;
@@ -340,21 +346,24 @@ export class RolesComponent implements OnInit {
   }
 
   checkCurrentRightUpdate(owner = true) {
-
     if (!this.isSystem) {
-      return !this.assignRight;//this.fileEditing.assign;
+      if (this.user.administrator) 
+        return false;
+      else {                
+        return !this.fileEditing.assign; //!this.assignRight;//this.fileEditing.assign;
+      }      
     }
     else {
+      return true;
       // if (owner) {
       //   if (this.objectType === "7")
       //     return true;
-      //   else // objectType == 1
-      //     return true;
-      //   //return !this.assignRight && !this.userID == this.user.userID
-      //   // return !this.fileEditing.assign && !this.user.administrator;
+      //   else // objectType == 1        
+      //   //  return !this.dmSV.parentAssign && !this.userID == this.user.userID
+      //    return !this.fileEditing.assign && !this.user.administrator;
       // }
-      // else
-      return true;
+      // else       
+      //   return true;
     }
   }
 
@@ -588,7 +597,7 @@ export class RolesComponent implements OnInit {
     if (this.modePermission) {
       if (this.type == "file") {
         this.fileService.updatePermisson(this.fileEditing).subscribe(async res => {
-          if (res != null) {
+          if (res != null) {            
             this.notificationsService.notify(res.message);
           }
         });

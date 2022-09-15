@@ -1,7 +1,7 @@
-<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'FED_Gifts'" [showToolBar]="false"></codx-views>
+<!-- <codx-views #view [funcID]="funcID" [service]="functionList?.module" [entityName]="functionList?.entityName" [views]="views"></codx-views> -->
 
 <div #panelLeft>
-    <div class="page-home page-master p-6 bg-body rounded-4" [style]="'margin-top:60px'">
+    <div class="page-home page-master p-6 bg-body rounded-4">
         <div class="d-flex flex-column">
             <div class="d-flex justify-content-between">
                 <div class="d-flex" #control>
@@ -159,7 +159,6 @@
                                                             number:
                                                             '1.0-0') : 0}}%</span>
                                                     </div>
-                                                    <!-- <div>{{dataCount?.sugKudos}} xu</div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -182,7 +181,6 @@
                                                             ?((dataCount?.improvement/total)* 100 |
                                                             number: '1.0-0') : 0}}%</span>
                                                     </div>
-                                                    <!-- <div>{{dataCount?.impKudos}} xu</div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -207,7 +205,6 @@
                                                             ((dataCount?.thankyou/total)* 100 |
                                                             number: '1.0-0') : 0}}%</span>
                                                     </div>
-                                                    <!-- <div>{{dataCount?.tksKudos}} xu</div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -230,7 +227,6 @@
                                                             ((dataCount?.commendation/total)* 100
                                                             | number: '1.0-0') : 0}}%</span>
                                                     </div>
-                                                    <!-- <div>{{dataCount?.comKudos}} xu</div> -->
                                                 </div>
                                             </div>
                                         </div>

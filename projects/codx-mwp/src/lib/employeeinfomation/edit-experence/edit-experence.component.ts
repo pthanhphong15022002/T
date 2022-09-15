@@ -27,7 +27,7 @@ export class EditExperenceComponent implements OnInit {
   ) {
     // this.data = dialog.dataService!.dataSelected;
     if (dt && dt.data) {
-      this.dataBind = dt.data.dataSelected;
+      this.dataBind = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
       this.isAdd = dt.data.isAdd;
     }
 
@@ -39,7 +39,7 @@ export class EditExperenceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.action === 'edit') {
+    if (this.isAdd === false) {
       this.title = 'Cập nhật thông tin';
     }
     this.codxMwp.experienceChange.subscribe((data: any) => {
@@ -89,14 +89,14 @@ export class EditExperenceComponent implements OnInit {
         if (res) {
           res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
           res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
-          this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
-          this.dialog.close(this.dataBind);
+          // this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
+          this.dialog.close(res);
         }
         else {
           this.notiService.notifyCode("SYS021");
           this.dialog.close();
         }
       });
-      this.dialog.close();
+      // this.dialog.close();
   }
 }

@@ -15,6 +15,7 @@
   [autoLoad]="true"
   [idField]="idField"
   (requestEnded)="closeAddForm($event)"
+  
 >
 </codx-views>
 
@@ -25,9 +26,7 @@
     [typeMF]="'hover'"
     [title]="data?.title"
     [subTitle]="data?.note"
-    [icoCss]="
-      'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
-      setIcon(data?.resourceType)
+    [icoCss]="'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' + setIcon(data?.resourceType)
     "
     [icoStyle]="setStyles(data?.resourceType)"
     [status]="data?.status"
@@ -40,6 +39,7 @@
     (clickMF)="clickMF($event, data)"
     typeMF="hover"
     [dataItem]="data"
+    
   >
   </codx-temp-full>
 </ng-template>
@@ -58,19 +58,17 @@
 <ng-template #resourceHeader let-data>
   <div class="container">
     <div class="row">
-      <div class="col-4">
-        <div>
+        <div class="col-2">
           <codx-img
             objectId="data.resourceData.resourceID"
             [width]="30"
           ></codx-img>
         </div>
-      </div>
       <div class="col-8">
         <div>
-          {{ data.resourceData.resourceName }} ({{ data.resourceData.events }})
+          {{ data.resourceData.resourceName }} - {{ data.resourceData.code }} ({{ data.resourceData.events }})
         </div>
-        <div>{{ data.resourceData.companyID }}</div>
+        <div>{{ data.resourceData.category | vll: "VL005":"text"| async }}</div>
       </div>
     </div>
   </div>
@@ -97,6 +95,12 @@
       <div>
         <span>{{ data.title }}</span>
       </div>
+      <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
       <!-- <div>
         <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
       </div> -->

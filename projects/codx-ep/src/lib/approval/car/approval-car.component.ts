@@ -24,6 +24,7 @@ export class ApprovalCarsComponent extends UIComponent {
   datavalue = '2';
   idField = 'recID';
   modelResource?: ResourceModel;
+  request?: ResourceModel;
   itemDetail;
   resourceField;
   fields;
@@ -35,6 +36,16 @@ export class ApprovalCarsComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.request=new ResourceModel();
+    this.request.assemblyName='EP';
+    this.request.className='BookingsBusiness';
+    this.request.service='EP';
+    this.request.method='GetEventsAsync';
+    this.request.predicate='ResourceType=@0';
+    this.request.dataValue='2';
+    this.request.idField='recID';
+
+
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
     this.modelResource.className = 'BookingsBusiness';
@@ -49,6 +60,7 @@ export class ApprovalCarsComponent extends UIComponent {
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
+      code:{name:'code'},
     };
 
     this.resourceField = {
@@ -72,19 +84,23 @@ export class ApprovalCarsComponent extends UIComponent {
         },
       },
       {
-        id: '2',
-        sameData: true,
-        type: ViewType.schedule,
-        active: false,
-        request2: this.modelResource,
-        model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
+        sameData:false,
+        type:ViewType.schedule,
+        active:true,
+        request2:this.modelResource,
+        request:this.request,
+        toolbarTemplate:this.footerButton,
+        showSearchBar:false,
+        model:{
+          //panelLeftRef:this.panelLeft,
+          eventModel:this.fields,
+          resourceModel:this.resourceField,
+          //template:this.cardTemplate,
           template4: this.resourceHeader,
           template5: this.resourceTootip,
           template6: this.footerTemplate,
           template7: this.footerButton,
-          //statusColorRef: "vl003"
+          //statusColorRef:'vl003'
         },
       },
     ];
@@ -93,7 +109,18 @@ export class ApprovalCarsComponent extends UIComponent {
 
   click(event) {}
 
-  clickMF(event, data) {}
+  clickMF(event, data) {
+    console.log(event);
+    switch (event?.functionID) {
+      // case 'SYS03':
+      //   this.edit(data);
+      //   break;
+      // case 'SYS02':
+      //   this.delete(data);
+      //   break;
+    }
+  }
+  
 
   closeAddForm(event) {}
 

@@ -56,7 +56,8 @@
 // }
 
 .btn-like {
-
+    height: 32px;
+    line-height: 32px;
     position: relative;
 }
 
@@ -70,7 +71,7 @@
 .icon-like {
     visibility: hidden;
     position: absolute;
-    bottom: 30px;
+    bottom: 32px;
     left: 50%;
     margin-left: -50px;
     background-color: #ffffff;
@@ -91,11 +92,10 @@
 
 .feed-box {
     border: 0;
-    height: 36px;
+    height: 35px;
     line-height: 33px;
     background-color: #f5f5f5;
     border-radius: 20px;
-    padding: 2px 20px;
 }
 
 .edit-comment .e-float-input {
@@ -116,9 +116,10 @@
     height: 100px;
 }
 
-.icon-delete{
+.icon-delete {
     color: rgb(246, 78, 96);
 }
-.icon-edit{
+
+.icon-edit {
     color: rgb(0, 93, 199);
 }

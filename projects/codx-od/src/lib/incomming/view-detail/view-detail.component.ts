@@ -402,7 +402,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       });
       datas = this.view.dataService.data[index];
     }
-    if(funcID != "recallUser" && funcID != "ODT201")
+    if (funcID != 'recallUser' && funcID != 'ODT201')
       this.view.dataService.onAction.next({ type: 'update', data: datas });
     delete datas._uuid;
     delete datas.__loading;
@@ -517,9 +517,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         );
         this.dialog.closed.subscribe((x) => {
           if (x.event) {
-            this.data.owner = x.event[0].owner
+            this.data.owner = x.event[0].owner;
             this.data.lstUserID = getListImg(x.event[0].relations);
-            this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1])
+            this.data.listInformationRel = this.data.listInformationRel.concat(
+              x.event[1]
+            );
             this.view.dataService.update(x.event[0]).subscribe();
           }
         });
@@ -728,7 +730,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 )
                 .subscribe((item) => {
                   if (item.status == 0) {
-                    debugger;
                     this.data.relations = item.data[0].relations;
                     this.data.lstUserID = getListImg(item.data[0].relations);
                     var index = this.data.listInformationRel.findIndex(
@@ -795,7 +796,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           .subscribe((res2: any) => {
             let dialogModel = new DialogModel();
             dialogModel.IsFull = true;
-            debugger;
+
             //trình ký
             if (res2?.eSign == true) {
               let signFile = new ES_SignFile();
@@ -810,7 +811,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               if (this.data?.files) {
                 for (var i = 0; i < this.data?.files.length; i++) {
                   var file = new File();
-                  file.fileID =this.data?.files[i].recID;
+                  file.fileID = this.data?.files[i].recID;
                   file.fileName = this.data?.files[i].fileName;
                   signFile.files.push(file);
                 }
@@ -980,11 +981,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
     if (data?.status == '3') {
       var completed = e.filter(
-        (x: { functionID: string }) => x.functionID == 'SYS02' || x.functionID == "ODT101"
+        (x: { functionID: string }) =>
+          x.functionID == 'SYS02' || x.functionID == 'ODT101'
       );
-      completed.forEach(elm=>{
-        elm.disabled = true
-      })
+      completed.forEach((elm) => {
+        elm.disabled = true;
+      });
     }
     //data?.isblur = true
   }

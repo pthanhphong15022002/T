@@ -384,6 +384,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditInfoComponent, 'edit', option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event == null)
@@ -392,11 +393,7 @@ export class EmployeeInfomationComponent implements OnInit {
             false
           );
         if (e?.event && e?.event != null) {
-          this.view.dataService.update(e.event).subscribe();
-          // this.view.dataService.update(e.event.update.Employees).subscribe();
-          // e?.event.update.forEach((obj) => {
-          //   this.view.dataService.update(obj).subscribe();
-          // });
+          this.loadEmployee(e.event)
           this.changedt.detectChanges();
         }
       });
@@ -417,10 +414,15 @@ export class EmployeeInfomationComponent implements OnInit {
       this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
       this.dialog = this.callfunc.openSide(EditExperenceComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
       this.dialog.closed.subscribe(e => {
-        console.log(e);
+        if (e?.event && e?.event != null) {
+          if (e?.event.WorkedCompany)
+            this.ExperencesWorked = e?.event.WorkedCompany;
+          if (e?.event.CurrentCompany)
+            this.ExperencesCurrent = e?.event.CurrentCompany;
+          this.changedt.detectChanges();
+        }
       })
     });
-    this.changedt.detectChanges();
   }
 
   editExperences(data?) {
@@ -435,10 +437,18 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditExperenceComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: false }, option);
+      this.dialog.closed.subscribe(e => {
+        if (e?.event && e?.event != null) {
+          if (e?.event.WorkedCompany)
+            this.ExperencesWorked = e?.event.WorkedCompany;
+          if (e?.event.CurrentCompany)
+            this.ExperencesCurrent = e?.event.CurrentCompany;
+          this.changedt.detectChanges();
+        }
+      })
     });
-    this.changedt.detectChanges();
   }
 
   editDataEdu(data) {
@@ -457,10 +467,15 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
+      this.dialog.closed.subscribe(e => {
+        if (e?.event && e?.event != null) {
+          this.employeeRelationship = e?.event;
+          this.changedt.detectChanges();
+        }
+      })
     });
-    this.changedt.detectChanges();
   }
 
   editRelations(data?) {
@@ -475,10 +490,15 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: false }, option);
+      this.dialog.closed.subscribe(e => {
+        if (e?.event && e?.event != null) {
+          this.employeeRelationship = e?.event;
+          this.changedt.detectChanges();
+        }
+      })
     });
-    this.changedt.detectChanges();
   }
 
   popupAddHobbi(item: any) {
@@ -582,7 +602,7 @@ export class EmployeeInfomationComponent implements OnInit {
           });
         }
       });
-   
+
   }
 
 

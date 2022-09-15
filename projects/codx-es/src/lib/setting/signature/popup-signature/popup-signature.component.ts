@@ -117,10 +117,7 @@ export class PopupSignatureComponent extends UIComponent {
   fileAdded(event, currentTab) {}
 
   fileCount(event, control: AttachmentComponent, currentTab) {
-    debugger;
-
     if (control.fileUploadList && control.fileUploadList.length > 1) {
-      debugger;
     }
     control.fileUploadList = event.data;
     console.log(event);

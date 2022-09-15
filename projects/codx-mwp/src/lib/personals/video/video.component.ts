@@ -6,8 +6,9 @@ import {
   CacheService,
   AuthService,
   ScrollComponent,
+  CRUDService,
 } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, Injector } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -29,10 +30,11 @@ export class VideoComponent implements OnInit {
   predicate = `ObjectType=@0 && IsDelete=@1 && CreatedBy=@2 && ReferType=@3`;
   dataValue: any;
   user: any;
+  dtService: CRUDService;
 
   @ViewChild('listView') listview: CodxListviewComponent;
 
-  constructor(
+  constructor(private injector: Injector,
     private api: ApiHttpService,
     private cache: CacheService,
     private dt: ChangeDetectorRef,
@@ -45,6 +47,12 @@ export class VideoComponent implements OnInit {
     });
     this.user = this.authStore.get();
     this.dataValue = `WP_Comments;false;${this.user?.userID};video`;
+    var dataSv = new CRUDService(injector);
+    dataSv.request.gridViewName = 'grvFileInfo';
+    dataSv.request.entityName = 'DM_FileInfo';
+    dataSv.request.formName = 'FileInfo';
+    //dataSv.request.pageSize = 15;
+    this.dtService = dataSv;
   }
 
   ngOnInit(): void {}
