@@ -56,12 +56,9 @@
 // }
 
 .btn-like {
-
+    height: 32px;
+    line-height: 32px;
     position: relative;
-}
-
-.btn-like:hover {
-    background-color: transparent !important;
 }
 
 .mod-icon img {
@@ -74,7 +71,7 @@
 .icon-like {
     visibility: hidden;
     position: absolute;
-    bottom: 30px;
+    bottom: 32px;
     left: 50%;
     margin-left: -50px;
     background-color: #ffffff;
