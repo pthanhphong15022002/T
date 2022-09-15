@@ -6,7 +6,6 @@
     overflow: hidden;
     margin-right: 10px;
     text-align: center;
+    height: 40px !important;
  }
- .text-center{
- height: 100px !important;
- }
+ 
