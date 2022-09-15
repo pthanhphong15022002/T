@@ -23,12 +23,13 @@ export class Layout2Component extends LayoutBaseComponent {
     inject: Injector
   ) {
     super(inject);
-    this.cache.valueList('WP002').subscribe((value) => {
-      this.valueList = value.datas;
-    });
+    
   }
 
   onInit(): void {
+    this.cache.valueList('WP002').subscribe((value) => {
+      this.valueList = value.datas;
+    });
   }
 
   onAfterViewInit(): void {}
