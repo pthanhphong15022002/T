@@ -37,7 +37,6 @@
         [imageObjType]="view.formModel.entityName"
         [imageWidth]="55"
         [title]="placeholder(data.iterationName,view.formModel, 'IterationName') | async"
-       
         [footer]="cardImgFooter"
         (clickMF)="clickMF($event, data)"
         (changeDataMF)="changeDataMF($event, data)"
@@ -49,7 +48,7 @@
   </ng-container>
 </ng-template>
 <ng-template #cardImgFooter let-data>
- <div class=" footer-bottom" style="height : 30px;">
+ <div class="footer-bottom" style="height : 30px;">
   <div *ngIf="data.resources" class="d-flex flex-center flex-wrap">
     <codx-imgs
       [width]="30"
