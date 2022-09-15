@@ -14,6 +14,7 @@ import {
   UIComponent,
   ViewModel,
   ViewsComponent,
+  ViewType,
 } from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { ChartComponent } from '@syncfusion/ej2-angular-charts';
@@ -236,6 +237,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   dataValue = '';
   options = new DataRequest();
   funcID = '';
+  
   constructor(
     private injector: Injector,
     private changeDf: ChangeDetectorRef,
@@ -268,6 +270,20 @@ export class StatisticalComponent extends UIComponent implements OnInit {
         this.reloadAllChart();
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.panelLeftRef,
+        },
+      },
+    ];
+    this.userPermission = this.view.userPermission;
   }
 
   valueChange(e, f) {

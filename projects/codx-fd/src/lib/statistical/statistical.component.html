@@ -1,6 +1,6 @@
-<!-- <codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'FD_Gifts'"></codx-views> -->
+<codx-views #view [funcID]="funcID" [entityName]="'FD_Gifts'"></codx-views>
 
-<div #panelLeft>
+<ng-template #panelLeft>
     <div class="page-home page-master p-6 bg-body rounded-4">
         <div class="d-flex flex-column">
             <div class="d-flex justify-content-between">
@@ -306,7 +306,7 @@
             </div>
         </div>
     </div>
-</div>
+</ng-template>
 <ng-template #template let-item="item">
     <table class="table mb-0">
         <tbody>
