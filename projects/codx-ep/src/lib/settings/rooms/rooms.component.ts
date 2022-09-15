@@ -51,6 +51,7 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;  
   @ViewChild('avatar') avatar: TemplateRef<any>;
   @ViewChild('owner') owner: TemplateRef<any>;
+  @ViewChild('equipments') equipments: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -93,28 +94,53 @@ export class RoomsComponent extends UIComponent {
       {
         field: 'resourceID',
         headerText: 'Mã phòng',
-      },      
-      {
-        field: 'icon',
-        headerText: "Ảnh đại diện",
-        template: this.avatar,
-      },
+        width:100,
+      },  
       {
         field: 'resourceName',
         headerText: 'Tên phòng',
+        width:200,
+      },    
+      {
+        field: 'icon',
+        headerText: "Hình ảnh",
+        template: this.avatar,
+        width:200,
       },
       {
         field: 'area',
-        headerText: 'Diện tích',
+        headerText: 'Diện tích(m2)',
+        width:150,
       },
       {
         field: 'capacity',
-        headerText: 'Sức chứa',
+        headerText: 'Sức chứa(người)',
+        width:150,
+      },
+      {
+        field: 'location',
+        headerText: "Vị trí",
+        width:100,
+      },
+      {
+        field: 'companyID',
+        headerText: 'Đơn vị',
       },
       {
         headerText: "Người điều phối",
-        width: '20%',
+        width: 200,
         template: this.owner,
+      },
+      {
+        field: 'equipments',
+        headerText: 'Thiết bị',
+        template: this.equipments,
+        width:200,
+      },
+      {
+        field: 'note',
+        headerText: 'Ghi chú',
+        width:200,
       },
     ];
     this.views = [
@@ -129,7 +155,6 @@ export class RoomsComponent extends UIComponent {
         },
       },
     ];
-
     this.buttons = {
       id: 'btnAdd',
     };

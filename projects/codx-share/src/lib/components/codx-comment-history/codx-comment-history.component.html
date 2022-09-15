@@ -29,39 +29,31 @@
 </ng-container>
 <!-- COMMENT -->
 <ng-template #C>
-    <div class="position-relative my-3">
+    <div class="position-relative my-2 send-comt">
         <ng-container *ngIf="type=='create'; else modView">
-            <div class="d-flex align-items-center mt-4">
+            <div class="d-flex align-items-center">
                 <div class="me-3">
                     <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="35"></codx-img>
                 </div>
                 <div class="position-relative cmt feed-box cmt-cmt c3 w-100" (keyup.enter)="sendComments()">
-                    <codx-input type="text" placeholder="Trả lời" [crrValue]="message" (valueChange)="valueChange($event)">
+                    <codx-input type="text" placeholder="Trả lời" [crrValue]="message"
+                        (valueChange)="valueChange($event)">
                     </codx-input>
                     <div class="feed-icon btn-send">
                         <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary " (click)="uploadFile()">
                             <span class="icon-attach_file icon-18"></span>
                         </span>
-                        <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary " (click)="sendComments()">
+                        <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                            (click)="sendComments()">
                             <span class="icon-send icon-18"></span>
                         </span>
                     </div>
                 </div>
             </div>
-            <codx-attachment #codxATM 
-                [functionID]="funcID" 
-                [objectType]="'BG_TrackLogs'" 
-                [hideFolder]="'1'"
-                [hideUploadBtn]="'1'" 
-                [hideDes]="'1'" 
-                [type]="'inline'" 
-                allowExtensions=".jpg,.png" 
-                [allowMultiFile]="'1'"
-                [hideImageUpload]="'1'" 
-                [hideBtnSave]="'1'" 
-                [hideImageThumb]="'1'" 
-                [showMessage]="'0'"
-                (fileCount)="selectedFiles($event)">
+            <codx-attachment #codxATM [functionID]="funcID" [objectType]="'BG_TrackLogs'" [hideFolder]="'1'"
+                [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" allowExtensions=".jpg,.png"
+                [allowMultiFile]="'1'" [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'"
+                [showMessage]="'0'" (fileCount)="selectedFiles($event)">
             </codx-attachment>
             <ng-container *ngIf="lstFile">
                 <div class="row px-4 justify-content-between">
@@ -84,8 +76,8 @@
                                     </video>
                                 </ng-container>
                                 <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
-                                    <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
-                                        title="{{item.fileName}}" [descLine]="1">
+                                    <codx-temp-full imageSrc="{{item.extension | avtFile}}"
+                                        imgCss="w-20px me-3 cursor-pointer" title="{{item.fileName}}" [descLine]="1">
                                     </codx-temp-full>
                                 </ng-container>
                                 <div class="remove-file">
@@ -102,130 +94,134 @@
     </div>
     <ng-template #modView>
         <ng-container *ngIf="data">
-            <div class="row mt-4">
-                <div class="col-1" *ngIf="viewIcon">
+            <div class="d-flex mt-4">
+                <div class="me-2" *ngIf="viewIcon">
                     <img class="iconHistory" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
                 </div>
-                <div class="col-11">
-                    <div class="d-flex w-100">
-                        <div class="me-2">
-                            <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
-                        </div>
-                        <div class="w-100">
-                            <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                <div>
-                                    <span class="fw-bolder">{{data.createdName}}</span>
+                <div class="d-flex w-100">
+                    <div class="me-3">
+                        <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+                    </div>
+                    <div class="w-100 footer-comt">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center">
+                                    <span class="fw-bold">{{data.createdName}}</span>
                                     <span class="text-gray-400 fw-normal flex-grow-1 fs-7 ms-2"
                                         data-toggle="tooltip">{{data.createdOn | timefrom}}
                                     </span>
                                 </div>
-                                <ng-container *ngIf="user.userID == data.createdBy">
-                                    <div class="more">
-                                        <div ngbDropdown class="dropdown">
-                                            <a href="javascript:void(0)"
-                                                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
-                                                id="dropdownMenuButton1" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-h"></i>
-                                            </a>
-                                            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                                <li>
-                                                    <a ngbDropdownItem href="javascript:void(0)" (click)="deleteComment(data)">
-                                                        <span class="icon-delete icon-16 me-2"></span>
-                                                        <codx-label [formModel]="" name="lblDelete_comments" default="Xóa">
-                                                        </codx-label>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                <ng-container *ngIf="data.comment">
+                                    <div class="w-100 text-gray-500" [innerHTML]="data.comment"></div>
                                 </ng-container>
                             </div>
-                            <ng-container *ngIf="data.comment">
-                                <div class="w-100" [innerHTML]="data.comment"></div>
-                            </ng-container>
-                            <ng-container *ngIf="data.totalVote > 0">
-                                <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
-                                    <div *ngFor="let vote of data.votes">
-                                        <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
-                                            alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
-                                    </div>
-                                    <div>
-                                        <span class="ms-2">{{data.totalVote}}</span>
-                                    </div>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngIf="lstFile">
-                                <div class="row px-4 justify-content-between">
-                                    <ng-container *ngFor="let item of lstFile">
-                                        <div class="col-5 my-2">
-                                            <div class="w-100 position-relative">
-                                                <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
-                                                    <ng-container *ngIf="item.recID;else imageSrc">
-                                                        <codx-img [recId]="item.recID" [objectId]="item.objectID" [width]="100"
-                                                            cssClass="pic" imageType="square">
-                                                        </codx-img>
-                                                    </ng-container>
-                                                    <ng-template #imageSrc>
-                                                        <img [src]="item.data || item.avatar" alt="" class="image">
-                                                    </ng-template>
-                                                </ng-container>
-                                                <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
-                                                    <video #video controls class="w-100 rounded min-h-250px">
-                                                        <source [src]="item.srcVideo || item.data" type="video/mp4">
-                                                    </video>
-                                                </ng-container>
-                                                <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
-                                                    <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
-                                                        title="{{item.fileName}}" [descLine]="1">
-                                                    </codx-temp-full>
-                                                </ng-container>
-                                            </div>
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </ng-container>
-                            <ng-container *ngIf="allowVotes">
-                                <div class="mt-2 d-flex justify-content-between align-items-center">
-                                    <div class="d-flex flex-grow-1">
-                                        <span class="text-gray-400 fs-7 text-hover-primary ">
-                                            <div class="btn-like delay-500">
-                                                <div *ngIf="data.myVoted;else noVote">
-                                                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                                        <div>
-                                                            <span class="fw-bold ms-2"
-                                                                [style.color]="data.myVoteType | vll:'L1480':'textColor' | async">
-                                                                {{data.myVoteType | vll:'L1480':'text' | async}}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex mod icon-like">
-                                                    <ng-container *ngFor="let item of lstData">
-                                                        <a class="mod-icon" (click)="votePost(data, item.value)">
-                                                            <img src="/assets/themes/wp/default/img/{{item.icon}}"
-                                                                alt="Kiwi standing on oval"></a>
-                                                    </ng-container>
-                                                </div>
-                                                <ng-template #noVote>
-                                                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                                        <span class="fs-7 text-gray-400 ms-2">
-                                                            <codx-label formName="WP_Comments" name="lblLike" default="Thích">
-                                                            </codx-label>
-                                                        </span>
-                                                    </div>
-                                                </ng-template>
-                                            </div>
-                                        </span>
-                                        <span class="d-flex align-items-center text-gray-400 fs-7 text-hover-primary ms-2"
-                                            (click)="replyTo(data)">
-                                            <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời"></codx-label>
-                                        </span>
+                            <ng-container *ngIf="user.userID == data.createdBy">
+                                <div class="more">
+                                    <div ngbDropdown class="dropdown">
+                                        <a href="javascript:void(0)"
+                                            class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                                            ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </a>
+                                        <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                                            <li>
+                                                <a ngbDropdownItem href="javascript:void(0)"
+                                                    (click)="deleteComment(data)">
+                                                    <span class="icon-delete icon-16 me-2"></span>
+                                                    <codx-label [formModel]="" name="lblDelete_comments" default="Xóa">
+                                                    </codx-label>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </ng-container>
                         </div>
-                        
+                        <ng-container *ngIf="data.totalVote > 0">
+                            <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
+                                <div *ngFor="let vote of data.votes">
+                                    <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                                        alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
+                                </div>
+                                <div>
+                                    <span class="ms-2">{{data.totalVote}}</span>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="lstFile">
+                            <div class="row px-4 justify-content-between">
+                                <ng-container *ngFor="let item of lstFile">
+                                    <div class="col-5 my-2">
+                                        <div class="w-100 position-relative">
+                                            <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
+                                                <ng-container *ngIf="item.recID;else imageSrc">
+                                                    <codx-img [recId]="item.recID" [objectId]="item.objectID"
+                                                        [width]="100" cssClass="pic" imageType="square">
+                                                    </codx-img>
+                                                </ng-container>
+                                                <ng-template #imageSrc>
+                                                    <img [src]="item.data || item.avatar" alt="" class="image">
+                                                </ng-template>
+                                            </ng-container>
+                                            <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
+                                                <video #video controls class="w-100 rounded min-h-250px">
+                                                    <source [src]="item.srcVideo || item.data" type="video/mp4">
+                                                </video>
+                                            </ng-container>
+                                            <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
+                                                <codx-temp-full imageSrc="{{item.extension | avtFile}}"
+                                                    imgCss="w-20px me-3 cursor-pointer" title="{{item.fileName}}"
+                                                    [descLine]="1">
+                                                </codx-temp-full>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="allowVotes">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-grow-1">
+                                    <span class="text-gray-600 fs-7 text-hover-underline me-3">
+                                        <div class="btn-like delay-500">
+                                            <div *ngIf="data.myVoted;else noVote">
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center text-hover-primary">
+                                                    <span class="fw-bold ms-2"
+                                                        [style.color]="data.myVoteType | vll:'L1480':'textColor' | async">
+                                                        {{data.myVoteType | vll:'L1480':'text' | async}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex mod icon-like">
+                                                <ng-container *ngFor="let item of lstData">
+                                                    <a class="mod-icon" (click)="votePost(data, item.value)">
+                                                        <img src="/assets/themes/wp/default/img/{{item.icon}}"
+                                                            alt="Kiwi standing on oval"></a>
+                                                </ng-container>
+                                            </div>
+                                            <ng-template #noVote>
+                                                <div
+                                                    class="d-flex align-items-center justify-content-center text-hover-primary">
+                                                    <span class="fs-7 text-gray-600 ms-2">
+                                                        <codx-label formName="WP_Comments" name="lblLike"
+                                                            default="Thích">
+                                                        </codx-label>
+                                                    </span>
+                                                </div>
+                                            </ng-template>
+                                        </div>
+                                    </span>
+                                    <span class="d-flex align-items-center text-gray-600 fs-7 text-hover-underline"
+                                        (click)="replyTo(data)">
+                                        <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời">
+                                        </codx-label>
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-container>
                     </div>
+
                 </div>
             </div>
         </ng-container>
@@ -242,21 +238,15 @@
             <div class="me-2">
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
-            <div class="">
-                <div >
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <div class="w-100" [innerHTML]="data.description"></div>
-                            <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                                {{data.createdOn | timefrom}}
-                            </div>
-                        </div>
-                    </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="w-100" [innerHTML]="data.description"></div>
+                <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
                 </div>
             </div>
         </div>
     </div>
-    
+
 </ng-template>
 <!-- END NEW -->
 <!-- MAIL -->
@@ -269,36 +259,27 @@
             <div class="me-2">
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
-            <div class="">
-                <div >
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <div class="w-100">
-                                <span [innerHTML]="data.description"></span>
-                                <span class="ms-2">
-                                    <span *ngFor="let item of data.sendToObject">
-                                        <codx-img 
-                                            [objectId]="item.objectID" 
-                                            [objectType]="'AD_Users'" 
-                                            [width]="25">
-                                        </codx-img>
-                                    </span>
-                                </span>
-                            </div>
-                            <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                                {{data.createdOn | timefrom}}
-                            </div>
-                        </div>
-                        <!-- <div>
-                            <button class="btn btn-seen">
-                                <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
-                            </button>
-                        </div> -->
-                    </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="w-100">
+                    <span [innerHTML]="data.description"></span>
+                    <span class="ms-2">
+                        <span *ngFor="let item of data.sendToObject">
+                            <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="25">
+                            </codx-img>
+                        </span>
+                    </span>
                 </div>
+                <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
+                </div>
+                <!-- <div>
+                    <button class="btn btn-seen">
+                        <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
+                    </button>
+                </div> -->
             </div>
         </div>
-    </div> 
+    </div>
 </ng-template>
 <!-- END MAIL -->
 <!-- TASK -->
@@ -312,17 +293,14 @@
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
             <div class="">
-                <div >
+                <div>
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <div>
                             <div class="w-100">
                                 <span [innerHTML]="data.description"></span>
                                 <span class="ms-2">
                                     <span *ngFor="let item of data.sendToObject">
-                                        <codx-img 
-                                            [objectId]="item.objectID" 
-                                            [objectType]="'AD_Users'" 
-                                            [width]="25">
+                                        <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="25">
                                         </codx-img>
                                     </span>
                                 </span>
@@ -354,7 +332,7 @@
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
             <div class="">
-                <div >
+                <div>
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <div>
                             <div class="w-100" [innerHTML]="data.description"></div>
@@ -367,19 +345,23 @@
                         <table class="table w-100">
                             <thead class="border-bottom bg-light">
                                 <th scope="col-4">
-                                    <codx-label formName="System" name="lblFieldName" [default]="'Trường thông tin'"></codx-label>
+                                    <codx-label formName="System" name="lblFieldName" [default]="'Trường thông tin'">
+                                    </codx-label>
                                 </th>
                                 <th scope="col-4">
-                                    <codx-label formName="System" name="lblOldValue" [default]="'Giá trị cũ'"></codx-label>
+                                    <codx-label formName="System" name="lblOldValue" [default]="'Giá trị cũ'">
+                                    </codx-label>
                                 </th>
                                 <th scope="col-4">
-                                    <codx-label formName="System" name="lblNewValue" [default]="'Giá trị mới'"></codx-label>
+                                    <codx-label formName="System" name="lblNewValue" [default]="'Giá trị mới'">
+                                    </codx-label>
                                 </th>
                             </thead>
                             <tbody>
                                 <tr class="my-2" *ngFor="let item of data.datas">
                                     <td scope="col-4">
-                                        <codx-label [formModel]="formModel" [fiedName]="item.fieldName" name="lblFieldName" [default]="item.fieldName"></codx-label>
+                                        <codx-label [formModel]="formModel" [fiedName]="item.fieldName"
+                                            name="lblFieldName" [default]="item.fieldName"></codx-label>
                                     </td>
                                     <td scope="col-4">
                                         {{item.oldValue}}
@@ -438,8 +420,9 @@
                                         </video>
                                     </ng-container>
                                     <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
-                                        <codx-temp-full imageSrc="{{item.extension | avtFile}}" imgCss="w-20px me-3 cursor-pointer"
-                                            title="{{item.fileName}}" [descLine]="1">
+                                        <codx-temp-full imageSrc="{{item.extension | avtFile}}"
+                                            imgCss="w-20px me-3 cursor-pointer" title="{{item.fileName}}"
+                                            [descLine]="1">
                                         </codx-temp-full>
                                     </ng-container>
                                 </div>
@@ -488,22 +471,16 @@
             <div class="me-2">
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
-            <div class="">
-                <div>
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <div class="w-100" [innerHTML]="data.description"></div>
-                            <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                                {{data.createdOn | timefrom}}
-                            </div>
-                        </div>
-                        <!-- <div>
-                            <button class="btn btn-seen">
-                                <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
-                            </button>
-                        </div> -->
-                    </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="w-100" [innerHTML]="data.description"></div>
+                <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
                 </div>
+                <!-- <div>
+                    <button class="btn btn-seen">
+                        <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
+                    </button>
+                </div> -->
             </div>
         </div>
     </div>
@@ -519,23 +496,18 @@
             <div class="me-2">
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
-            <div class="">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div>
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <div class="w-100" [innerHTML]="data.description"></div>
-                            <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                                {{data.createdOn | timefrom}}
-                            </div>
-                        </div>
+                    <div class="w-100" [innerHTML]="data.description"></div>
+                    <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                        {{data.createdOn | timefrom}}
                     </div>
                 </div>
-                <div class="comment">
-                    <div [innerHTML]="data.comment"></div>
-                </div>
+            </div>
+            <div class="comment">
+                <div [innerHTML]="data.comment"></div>
             </div>
         </div>
     </div>
 </ng-template>
 <!-- END C1 -->
-

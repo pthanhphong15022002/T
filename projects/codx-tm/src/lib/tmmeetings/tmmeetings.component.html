@@ -22,6 +22,7 @@
     [moreFuncs]="moreFuncs"
     [autoLoad]="true"
     idField="meetingID"
+    (onDragDrop)="onDragDrop($event)"
   >
   </codx-views>
 </div>
@@ -151,14 +152,15 @@
 <!-- kanban -->
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
+     cardCss="border h-100"
+    imageObjType="AD_Users"
     (clickMF)="clickMF($event, data)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    cardCss="border h-100"
     [title]="data?.meetingName"
     [status]="data.status"
-    [statusVll]="'CO004'"
+    [statusVll]="statusVll"
     [icoStatus2]="data?.isOnline"
     [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-24'"
     [date]="data.startDate"
@@ -171,7 +173,7 @@
   </codx-card-img>
 </ng-template>
 <ng-template #cardImgFooter let-data let-setting="setting">
-  <div class="d-flex flex-column flex-grow-1 mt-2">
+  <!-- <div class="d-flex flex-column flex-grow-1 mt-2">
     <div class="d-flex align-items-center">
       <codx-imgs
         [objectId]="getResourceID(data)"
@@ -202,7 +204,7 @@
         >
       </div>
     </div>
-  </div>
+  </div> -->
 </ng-template>
 
 <!-- kanban -->

@@ -23,6 +23,7 @@
           #imageAvatar
           [width]="100"
           [objectId]="employeeInfo?.employeeID"
+          [objectName]="employeeInfo?.employeeName"
           objectType="HR_Employees"
           [funcId]="view.formModel.funcID"
           isAllowEdit="true"
@@ -890,7 +891,7 @@
                           [formModel]="view.formModel"
                           [title]="relationship.relationName"
                           [formModel]="view.formModel"
-                          (clickMF)="clickMFS($event, data)"
+                          (clickMF)="clickMFS($event, relationship)"
                           [dataItem]="relationship"
                           [typeMF]="'hover'"
                           [desc]="

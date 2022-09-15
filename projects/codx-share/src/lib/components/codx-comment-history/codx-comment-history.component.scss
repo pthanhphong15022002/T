@@ -19,7 +19,7 @@
     position: relative;
 }
 
-.comment{
+.comment {
     margin-top: 12px;
     background-color: #ecf0f1ea;
     padding: 4px;
@@ -72,6 +72,9 @@
     height: auto;
 }
 
+.c1 .footer-comt .comment-thumb {
+    bottom: 0;
+}
 
 
 .icon-like {
@@ -113,23 +116,28 @@
     border-radius: 30px !important;
     padding-right: 20px;
 }
-.file-view{
-    height: 50x ;
+
+.file-view {
+    height: 50x;
 }
-.image{
+
+.image {
     width: 100%;
     height: 100px;
 }
-.remove-file{
+
+.remove-file {
     position: absolute;
     top: 2px;
     right: 2px;
 }
-.btn-seen{
+
+.btn-seen {
     background-color: #dde7e9;
     border-radius: 4px;
 }
-.iconHistory{
+
+.iconHistory {
     width: 40px;
     height: 30px;
 }
