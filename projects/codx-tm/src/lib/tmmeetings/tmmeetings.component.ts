@@ -85,6 +85,7 @@ export class TMMeetingsComponent
   request: ResourceModel;
   listMoreFunc = [];
   titleAction ='' ;
+  statusVll ='CO004'
 
   constructor(
     inject: Injector,
@@ -580,6 +581,18 @@ export class TMMeetingsComponent
      // this.tmService.page ++ ;
       this.view.dataService.scrolling() ;
       //this.tmService.totalPage =  this.view.dataService.pageCount ;
+    }
+  }
+
+  onDragDrop(e: any) {
+    if (e.type == 'drop') {
+      this.api
+        .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'UpdateMeetingsAsync', e.data)
+        .subscribe((res) => {
+          if (res) {
+            this.view.dataService.update(e.data);
+          }
+        });
     }
   }
 }

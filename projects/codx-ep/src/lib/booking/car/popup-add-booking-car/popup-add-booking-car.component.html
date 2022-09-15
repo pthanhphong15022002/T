@@ -101,14 +101,14 @@
 
     <div class="row">
       <div class="col-7 form-group">
-        <codx-label fiedName="ContactName" [formModel]="dialogRef.formModel">
+        <codx-label fiedName="Requester" [formModel]="dialogRef.formModel">
         </codx-label>
-        <codx-input ControlName="contactName" [formModel]="form.formModel" [Group]="fGroupAddBookingCar"></codx-input>
+        <codx-input ControlName="requester" [formModel]="form.formModel" [Group]="fGroupAddBookingCar"></codx-input>
       </div>
       <div class="col-5 form-group">
         <codx-label fiedName="Phone" [formModel]="dialogRef.formModel">
         </codx-label>
-        <codx-input ControlName="phone" [formModel]="form.formModel" [Group]="fGroupAddBookingCar"></codx-input>
+        <codx-input type="number" ControlName="phone" [formModel]="form.formModel" [Group]="fGroupAddBookingCar"></codx-input>
       </div>
     </div>
 
