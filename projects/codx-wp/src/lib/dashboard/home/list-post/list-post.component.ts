@@ -55,16 +55,18 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
-  predicate ='(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
-  dataValue: any = '0;1;5;2';
-
+  predicateWP:string ='(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
+  dataValueWP:string = '0;1;5;2';
+  predicateFD:string = "Category =@0 && Stop=false";
+  dataValueFD:string = "3";
   modal: DialogRef;
   headerText = '';
   views: Array<ViewModel> | any = [];
 
   @Input() objectID:string = "";
-  @Input() predicates = '';
-  @Input() dataValues = '';
+  @Input() predicates;
+  @Input() dataValues;
+  @Input() module: "WP" | "FD" = "WP";
   @ViewChild('codxViews') codxViews: ViewsComponent;
   @ViewChild('listview') listview: CodxListviewComponent;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;

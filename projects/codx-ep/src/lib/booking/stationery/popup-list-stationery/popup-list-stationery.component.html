@@ -3,7 +3,7 @@
   <ng-template #body let-data>
     <codx-searchbar class="mb-4" (searchEvent)="search($event)"></codx-searchbar>
     <codx-listview #listview service="EP" assemblyName="EP" className="BookingsBusiness"
-      method="GetListBookingStationeryAsync" entityName="EP_Bookings" predicate="ResourceType=@0" dataValue="6"
+      method="GetListBookingAsync" entityName="EP_Bookings" predicate="ResourceType=@0" dataValue="6"
       [itemTemplate]="TemplateList" [height]="200">
     </codx-listview>
   </ng-template>

@@ -3,6 +3,15 @@
   
 
 /****************/
+.codx-approval-step::after{
+  z-index: 1;
+}
+.step-number{
+  z-index: 2;
+}
+codx-view-list-detail .codx-detail-footer{
+  z-index: 10;
+}
 .step-title {
 text-transform: uppercase;
 }

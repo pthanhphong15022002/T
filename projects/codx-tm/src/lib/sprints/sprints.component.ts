@@ -1,4 +1,4 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
@@ -24,6 +24,8 @@ import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sp
   selector: 'lib-sprints',
   templateUrl: './sprints.component.html',
   styleUrls: ['./sprints.component.css'],
+  encapsulation: ViewEncapsulation.None,
+
 })
 export class SprintsComponent extends UIComponent {
   @ViewChild('listCardSprints') listCardSprints: TemplateRef<any>;
@@ -321,7 +323,9 @@ export class SprintsComponent extends UIComponent {
     field: string
   ): Observable<string> {
     if (value) {
-      return of(`<span>${value}</span>`);
+      return of(`<span class="cut-size-long" [ngbTooltip]=${value}>
+       ${value}</span>`);
+     
     } else {
       return this.cache
         .gridViewSetup(formModel.formName, formModel.gridViewName)

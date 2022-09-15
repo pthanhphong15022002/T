@@ -83,7 +83,7 @@ export const routes: Routes = [
   },
   {
     path:'approvals',
-    component: Layout2Component,
+    component: Layout3Component,
     children:[
       {
         path:':funcID',
