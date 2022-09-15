@@ -131,6 +131,7 @@ export class PopupAddBookingCarComponent implements OnInit {
           status:"1",
           objectType: 'AD_Users',
           roleType:'2'
+          
         };
         this.curUser = this.tempAtender;   
         this.changeDetectorRef.detectChanges();
@@ -235,7 +236,7 @@ export class PopupAddBookingCarComponent implements OnInit {
         if (this.data) {
           console.log('fgroupEPT2', this.data);
           this.fGroupAddBookingCar.patchValue(this.data);
-          
+          this.fGroupAddBookingCar.patchValue({requester:this.authService.userValue.userName});
         }
       });
       if(this.isAdd){
@@ -327,7 +328,7 @@ export class PopupAddBookingCarComponent implements OnInit {
     });
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
+      .subscribe((res) => {        
         if (res.save || res.update) {
           this.dialogRef && this.dialogRef.close();
         } else {
