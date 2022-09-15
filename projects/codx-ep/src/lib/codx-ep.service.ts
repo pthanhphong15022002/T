@@ -172,6 +172,17 @@ export class CodxEpService {
       resolve(obj);
     });
   }
+
+  getCompanyName(companyID: string) {
+    return this.api
+      .callSv(
+        'HR',
+        'ERM.Business.HR',
+        'OrganizationUnitsBusiness',
+        'GetOrgUnitNameAsync',
+        companyID
+      )
+  }
   notifyInvalid(
     formGroup: FormGroup,
     formModel: FormModel,

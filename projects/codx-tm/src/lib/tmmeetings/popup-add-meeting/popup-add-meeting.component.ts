@@ -236,7 +236,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.dialog.close();
       });
   }
-
+ ///cần 1 đống mess Code
   async onSave() {
     if (
       this.meeting.meetingName == null ||
@@ -285,7 +285,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.meeting?.isOnline &&
         (!this.meeting.link || this.meeting.link.trim() == '')
       ) {
-        this.notiService.notifyCode('Vui lòng nhập đường link họp online !');
+        this.notiService.notify('Vui lòng nhập đường link họp online !');
         return;
       }
     }

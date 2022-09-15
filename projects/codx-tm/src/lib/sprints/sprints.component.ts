@@ -14,6 +14,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { map, Observable, of } from 'rxjs';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_Sprints } from '../models/TM_Sprints.model';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
@@ -310,6 +311,35 @@ export class SprintsComponent extends UIComponent {
 
     if (this.view.dataService.page < this.view.dataService.pageCount) {
       this.view.dataService.scrolling() ;
+    }
+  }
+
+  //placeholder
+  placeholder(
+    value: string,
+    formModel: FormModel,
+    field: string
+  ): Observable<string> {
+    if (value) {
+      return of(`<span>${value}</span>`);
+    } else {
+      return this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .pipe(
+          map((datas) => {
+            if (datas && datas[field]) {
+              var gvSetup = datas[field];
+              if (gvSetup) {
+                if (!value) {
+                  var headerText = gvSetup.headerText as string;
+                  return `<span class="opacity-50">${headerText}</span>`;
+                }
+              }
+            }
+
+            return `<span class="opacity-50">${field}</span>`;
+          })
+        );
     }
   }
 }
