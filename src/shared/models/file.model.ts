@@ -23,7 +23,7 @@ export class DataReturn {
 
 export class FileInfo {
     recID: string;
-    id: string;
+    id: string;    
     fullName: string;
     create: boolean;
     read: boolean;

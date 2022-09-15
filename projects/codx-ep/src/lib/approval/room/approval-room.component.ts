@@ -1,5 +1,13 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  DialogRef,
+  ResourceModel,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
+import { PopupAddBookingRoomComponent } from '../../booking/room/popup-add-booking-room/popup-add-booking-room.component';
 
 @Component({
   selector: 'approval-room',
@@ -33,6 +41,8 @@ export class ApprovalRoomsComponent extends UIComponent {
   itemSelected: any;
   resourceField;
 
+  dataSelected: any;
+  dialog!: DialogRef;
   constructor(private injector: Injector) {
     super(injector);
 
@@ -103,7 +113,70 @@ export class ApprovalRoomsComponent extends UIComponent {
 
   click(event) {}
 
-  clickMF(event, data) {}
+  edit(evt?) {
+    if (evt) {
+      this.view.dataService.dataSelected = evt;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          debugger;
+          this.dataSelected = this.view.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.view?.formModel;
+          this.dialog = this.callfc.openSide(
+            PopupAddBookingRoomComponent,
+            [this.views.dataService.dataSelected, false],
+            option
+          );
+        });
+    }
+  }
+
+  delete(evt?) {
+    let deleteItem = this.view.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.view.dataService.delete([deleteItem]).subscribe();
+  }
+
+  clickMF(event, data) {
+    switch (event?.functionID) {
+      case 'EPT40101': //duyet
+        this.edit(data);
+        break;
+
+      case 'EPT40102': //ki
+        //this.delete(data);
+        break;
+
+      case 'EPT40103': //dong thuan
+        //this.delete(data);
+        break;
+
+      case 'EPT40104': //dong dau
+        //this.delete(data);
+        break;
+
+      case 'EPT40105': //tu choi
+        //this.delete(data);
+        break;
+
+      case 'EPT40106': //lam lai
+        //this.delete(data);
+        break;
+
+      case 'SYS02': //Xoa
+        this.delete(data);
+        break;
+
+      case 'SYS03': //Sua.
+        this.edit(data);
+        break;
+    }
+  }
 
   closeAddForm(event) {}
 

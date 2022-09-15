@@ -178,6 +178,13 @@ export class PropertiesComponent implements OnInit {
     });
   }
 
+  getThumbnail(data) {
+    if (data.hasThumbnail)
+      return `${this.dmSV.urlUpload}/${data.thumbnail}`;
+    else
+     return `../../../assets/codx/dms/{{getAvatar(data.extension)}}`;
+  }
+
   getAvatar(filename: string) {
     if (filename == "" || filename == null)
       return "";

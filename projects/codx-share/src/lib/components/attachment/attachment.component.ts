@@ -92,7 +92,7 @@ export class AttachmentComponent implements OnInit {
   maxFileSizeUpload = 0;
   maxFileSizeUploadMB = 0;
   referType: string;
-  ChunkSizeInKB = 1024 * 2;
+  //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;
   @Input() allowExtensions: string;
@@ -900,7 +900,7 @@ export class AttachmentComponent implements OnInit {
       fileItem.uploadId = '';
       fileItem.objectId = this.objectId;
       var appName = this.dmSV.appName; // Tam thoi de hard
-      var ChunkSizeInKB = this.ChunkSizeInKB;
+      var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
       var uploadFile = fileItem.item.rawFile;
       var retUpload = await lvFileClientAPI.postAsync(
         `api/${appName}/files/register`,
@@ -938,7 +938,7 @@ export class AttachmentComponent implements OnInit {
     fileItem.uploadId = '';
     fileItem.objectId = this.objectId;
     var appName = this.dmSV.appName;
-    var ChunkSizeInKB = this.ChunkSizeInKB;
+    var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
     var uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
     var obj = from(
       lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
@@ -1094,7 +1094,7 @@ export class AttachmentComponent implements OnInit {
 
       //this.displayThumbnail(res.recID, res.pathDisk);
       var sizeInBytes = fileItem.fileSize; // uploadFile.size;
-      var chunSizeInfBytes = this.ChunkSizeInKB * 1024;
+      var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;
       var numOfChunks = Math.floor(fileItem.fileSize / chunSizeInfBytes);
       if (fileItem.fileSize % chunSizeInfBytes > 0) {
         numOfChunks++;
