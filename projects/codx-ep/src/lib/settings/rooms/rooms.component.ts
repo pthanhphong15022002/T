@@ -52,7 +52,7 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('avatar') avatar: TemplateRef<any>;
   @ViewChild('owner') owner: TemplateRef<any>;
   @ViewChild('equipments') equipments: TemplateRef<any>;
-
+	
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -106,21 +106,26 @@ export class RoomsComponent extends UIComponent {
         headerText: "Hình ảnh",
         template: this.avatar,
         width:200,
+        textAlign:'Center',
       },
       {
         field: 'area',
         headerText: 'Diện tích(m2)',
-        width:150,
+        width:100,
+        textAlign:'Center',
       },
       {
         field: 'capacity',
         headerText: 'Sức chứa(người)',
-        width:150,
+        width:100,
+        textAlign:'Center',
+        
       },
       {
         field: 'location',
         headerText: "Vị trí",
-        width:100,
+        width:200,
+        textAlign:'Center',
       },
       {
         field: 'companyID',
@@ -135,7 +140,7 @@ export class RoomsComponent extends UIComponent {
         field: 'equipments',
         headerText: 'Thiết bị',
         template: this.equipments,
-        width:200,
+        width:300,
       },
       {
         field: 'note',
@@ -160,7 +165,19 @@ export class RoomsComponent extends UIComponent {
     };
   }
 
-  
+	getEquiqments(equipments: any) {
+    var tmp = [];
+    equipments.map((res) => {
+      this.vllDevices.forEach(device=>{
+        if(res.equipmentID==device.value)
+        {
+          tmp.push(device.text);
+        }
+      })
+    });
+    return tmp.join(';');
+  }
+	
   clickMF(event, data) {
     console.log(event);
     switch (event?.functionID) {
