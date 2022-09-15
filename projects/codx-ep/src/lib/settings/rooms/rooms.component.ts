@@ -51,7 +51,8 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;  
   @ViewChild('avatar') avatar: TemplateRef<any>;
   @ViewChild('owner') owner: TemplateRef<any>;
-
+  @ViewChild('equipments') equipments: TemplateRef<any>;
+	
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -93,28 +94,58 @@ export class RoomsComponent extends UIComponent {
       {
         field: 'resourceID',
         headerText: 'Mã phòng',
-      },      
-      {
-        field: 'icon',
-        headerText: "Ảnh đại diện",
-        template: this.avatar,
-      },
+        width:100,
+      },  
       {
         field: 'resourceName',
         headerText: 'Tên phòng',
+        width:200,
+      },    
+      {
+        field: 'icon',
+        headerText: "Hình ảnh",
+        template: this.avatar,
+        width:200,
+        textAlign:'Center',
       },
       {
         field: 'area',
-        headerText: 'Diện tích',
+        headerText: 'Diện tích(m2)',
+        width:100,
+        textAlign:'Center',
       },
       {
         field: 'capacity',
-        headerText: 'Sức chứa',
+        headerText: 'Sức chứa(người)',
+        width:100,
+        textAlign:'Center',
+        
+      },
+      {
+        field: 'location',
+        headerText: "Vị trí",
+        width:200,
+        textAlign:'Center',
+      },
+      {
+        field: 'companyID',
+        headerText: 'Đơn vị',
       },
       {
         headerText: "Người điều phối",
-        width: '20%',
+        width: 200,
         template: this.owner,
+      },
+      {
+        field: 'equipments',
+        headerText: 'Thiết bị',
+        template: this.equipments,
+        width:300,
+      },
+      {
+        field: 'note',
+        headerText: 'Ghi chú',
+        width:200,
       },
     ];
     this.views = [
@@ -129,13 +160,24 @@ export class RoomsComponent extends UIComponent {
         },
       },
     ];
-
     this.buttons = {
       id: 'btnAdd',
     };
   }
 
-  
+	getEquiqments(equipments: any) {
+    var tmp = [];
+    equipments.map((res) => {
+      this.vllDevices.forEach(device=>{
+        if(res.equipmentID==device.value)
+        {
+          tmp.push(device.text);
+        }
+      })
+    });
+    return tmp.join(';');
+  }
+	
   clickMF(event, data) {
     console.log(event);
     switch (event?.functionID) {
