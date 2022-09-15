@@ -46,7 +46,7 @@
 </div>
 <div class="row m-0 btn-comment py-2 border-top">
     <div class="col-6 p-0">
-        <div class="btn-like delay-500">
+        <div class="btn-feed delay-500">
             <div *ngIf="!dataComment.myVotedType;else myVoted">
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
                     <span class="fw-bold ms-2" style="color: gray;">
@@ -73,10 +73,9 @@
                 </div>
             </ng-template>
         </div>
-
     </div>
     <div class="col-6 p-0">
-        <div class="btn-com" (click)="showComments(dataComment)">
+        <div class="btn-feed" (click)="showComments(dataComment)">
             <div class="d-flex align-items-center justify-content-center">
                 <span class="icon-chat_bubble_outline icon-18"></span>
                 <span class="text-dark fw-bold ms-2">
@@ -120,8 +119,8 @@
             </codx-comments>
         </div>
         <ng-container *ngIf="data.totalSubComment > 0">
-            <div class="ms-15">
-                <span class="text-dark fw-bold ms-2 text-hover-underline" (click)="loadSubComment(data)">
+            <div class="ms-16">
+                <span class="text-gray-400 text-hover-underline" (click)="loadSubComment(data)">
                     <codx-label [formModel]="formModel" name="lblSeemore" default="Xem thêm"></codx-label>
                 </span>
             </div>

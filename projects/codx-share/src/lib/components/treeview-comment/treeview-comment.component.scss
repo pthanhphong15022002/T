@@ -49,16 +49,14 @@
     background-color: #f5f5f5;
 }
 
-.btn-like,
-.btn-com {
+.btn-feed {
     height: 34px;
     line-height: 34px;
     border-radius: 3px;
 
 }
 
-.btn-like:hover,
-.btn-com:hover {
+.btn-feed:hover {
     background-color: var(--gray-100);
 
 }
