@@ -1,5 +1,12 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { DialogRef, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  DialogRef,
+  ResourceModel,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopupAddBookingRoomComponent } from '../../booking/room/popup-add-booking-room/popup-add-booking-room.component';
 
 @Component({
@@ -112,6 +119,7 @@ export class ApprovalRoomsComponent extends UIComponent {
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
+          debugger;
           this.dataSelected = this.view.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
@@ -126,41 +134,47 @@ export class ApprovalRoomsComponent extends UIComponent {
     }
   }
 
+  delete(evt?) {
+    let deleteItem = this.view.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.view.dataService.delete([deleteItem]).subscribe();
+  }
+
   clickMF(event, data) {
-    console.log(event);
     switch (event?.functionID) {
-      case 'EPT40101'://duyet
+      case 'EPT40101': //duyet
         this.edit(data);
         break;
 
-      case 'EPT40102'://ki
+      case 'EPT40102': //ki
         //this.delete(data);
         break;
 
-      case 'EPT40103'://dong thuan
-        //this.delete(data);
-        break; 
-
-      case 'EPT40104'://dong dau
-        //this.delete(data);
-        break; 
-
-      case 'EPT40105'://tu choi
-        //this.delete(data);
-        break; 
-
-      case 'EPT40106'://lam lai
+      case 'EPT40103': //dong thuan
         //this.delete(data);
         break;
-        
-      case 'SYS02'://Xoa
-      //this.delete(data);
-      break; 
 
-      case 'SYS03'://Sua
+      case 'EPT40104': //dong dau
         //this.delete(data);
-        break; 
+        break;
 
+      case 'EPT40105': //tu choi
+        //this.delete(data);
+        break;
+
+      case 'EPT40106': //lam lai
+        //this.delete(data);
+        break;
+
+      case 'SYS02': //Xoa
+        this.delete(data);
+        break;
+
+      case 'SYS03': //Sua.
+        this.edit(data);
+        break;
     }
   }
 

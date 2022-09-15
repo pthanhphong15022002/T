@@ -68,11 +68,12 @@ export class EditRelationComponent implements OnInit {
           this.imageAvatar.updateFileDirectReload(this.dataBind.recID);
           this.api.execSv<any>("DM", "DM", "FileBussiness", "UploadAvatarAsync", this.avatar).subscribe(res => {
             this.codxMwp.EmployeeInfomation.updateRelation({ Relationship: objRes });
-            this.dialog.close(res);
+            // this.dialog.close(res);
           });
+          this.dialog.close(res);
         }
         else {
-          this.codxMwp.EmployeeInfomation.updateRelation({ Relationship: res });
+          // this.codxMwp.EmployeeInfomation.updateRelation({ Relationship: res });
           this.dialog.close(res);
         }
       }

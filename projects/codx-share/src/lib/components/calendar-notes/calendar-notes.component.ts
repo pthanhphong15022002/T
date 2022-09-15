@@ -175,13 +175,37 @@ export class CalendarNotesComponent
 
   getMaxPinNote() {
     this.api
-      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'GetParamAsync')
+      .exec<any>(
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetOneField',
+        'WPCalendars'
+      )
       .subscribe((res) => {
-        if (res) {
-          if (res[0]?.msgBodyData)
-            this.maxPinNotes = res[0]?.msgBodyData[0]?.fieldValue;
-        }
+        if (res[2]) this.removeForbiddenCharacters(res[2].dataValue);
       });
+  }
+
+  removeForbiddenCharacters(input) {
+    let forbiddenChars = [
+      '/',
+      '?',
+      '&',
+      '=',
+      '.',
+      '"',
+      `'`,
+      '{',
+      '}',
+      'MaxPinNotes',
+      ':',
+      '""',
+    ];
+
+    for (let char of forbiddenChars) {
+      input = input.split(char).join('');
+    }
+    this.maxPinNotes = input;
   }
 
   onLoad(args): void {

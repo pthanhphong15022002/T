@@ -30,6 +30,7 @@ export class EditSkillComponent implements OnInit {
   showCBB = false;
   dataValue = '';
   parentIdField = '';
+  
 
   constructor(
     private notiService: NotificationsService,
@@ -78,8 +79,14 @@ export class EditSkillComponent implements OnInit {
     // })
   }
 
-  saveAddUser(e: any) {
+  saveAddSkill(e: any) {
     this.showCBB = false;
+    // e.dataSelected.forEach((e:any) => {
+    //   let skill = {
+    //     objectID: e.UserID,
+    //     objectName: e.UserName
+    //   };
+    // });
     console.log(e);
   }
 

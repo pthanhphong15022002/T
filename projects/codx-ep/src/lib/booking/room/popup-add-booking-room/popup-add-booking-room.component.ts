@@ -369,7 +369,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
     if (this.fGroupAddBookingRoom.value.reasonID instanceof Object){
       this.fGroupAddBookingRoom.patchValue({reasonID:this.fGroupAddBookingRoom.value.reasonID[0]})
     }
-    let tmpBookingOn = this.fGroupAddBookingRoom.value.bookingOn;
+    let tmpBookingOn = new Date(this.fGroupAddBookingRoom.value.bookingOn);
+     
     this.fGroupAddBookingRoom.patchValue({
       category: '1',
       status: '1',
@@ -377,6 +378,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       attendees:this.fGroupAddBookingRoom.value.attendees,
       startDate:new Date(tmpBookingOn.getFullYear(),tmpBookingOn.getMonth(),tmpBookingOn.getDate(),this.tmpStartDate.getHours(),this.tmpStartDate.getMinutes(), 0),
       endDate:new Date(tmpBookingOn.getFullYear(),tmpBookingOn.getMonth(),tmpBookingOn.getDate(),this.tmpEndDate.getHours(),this.tmpEndDate.getMinutes(), 0),
+       
       //equipments: availableEquip + '|' + pickedEquip,
     });      
        
