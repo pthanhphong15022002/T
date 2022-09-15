@@ -151,8 +151,8 @@
         </codx-file>
     </div>
     <div class="d-none">
-        <codx-attachment #attachmentAdd [objectType]="functionList?.entityName" hideFolder="1" hideUploadBtn="1" hideDes="1"
-            type="inline" allowExtensions=".jpg,.png" allowMultiFile="1" [showMessage]="0"
+        <codx-attachment #attachmentAdd [objectType]="functionList?.entityName" hideFolder="1" hideUploadBtn="1"
+            hideDes="1" type="inline" allowExtensions=".jpg,.png" allowMultiFile="1" [showMessage]="0"
             (fileCount)="getFileCount($event)" idBrowse="attachmentAdd" [functionID]="functionList?.functionID">
         </codx-attachment>
     </div>
@@ -166,9 +166,10 @@
                     (removeFile)="removeFile($event)" (evtGetFiles)="evtGetFiles($event)"></codx-file>
             </div>
             <div class="d-none">
-                <codx-attachment #attachmentEdit [objectType]="functionList?.entityName" hideFolder="1" hideUploadBtn="1" hideDes="1"
-                    type="inline" [showMessage]="0" allowExtensions=".jpg,.png" allowMultiFile="1"
-                    (fileCount)="getFileCount($event)" idBrowse="attachmentEdit" [functionID]="functionList?.functionID">
+                <codx-attachment #attachmentEdit [objectType]="functionList?.entityName" hideFolder="1"
+                    hideUploadBtn="1" hideDes="1" type="inline" [showMessage]="0" allowExtensions=".jpg,.png"
+                    allowMultiFile="1" (fileCount)="getFileCount($event)" idBrowse="attachmentEdit"
+                    [functionID]="functionList?.functionID">
                 </codx-attachment>
             </div>
         </div>
