@@ -88,6 +88,8 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "LibrOfficeBusiness", "GetFileContentAsync", [id]);
     }
 
+    // dung 1 lan   
+
     getFile(id: string, isHistory: boolean = true): Observable<any> {
         return this.api.exec<FileInfo>("DM", "FileBussiness", "GetFileAsync", [id, isHistory]);
     }
