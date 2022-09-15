@@ -467,10 +467,15 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
+      this.dialog.closed.subscribe(e => {
+        if (e?.event && e?.event != null) {
+          this.employeeRelationship = e?.event;
+          this.changedt.detectChanges();
+        }
+      })
     });
-    this.changedt.detectChanges();
   }
 
   editRelations(data?) {
@@ -485,10 +490,15 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: false }, option);
+      this.dialog.closed.subscribe(e => {
+        if (e?.event && e?.event != null) {
+          this.employeeRelationship = e?.event;
+          this.changedt.detectChanges();
+        }
+      })
     });
-    this.changedt.detectChanges();
   }
 
   popupAddHobbi(item: any) {
