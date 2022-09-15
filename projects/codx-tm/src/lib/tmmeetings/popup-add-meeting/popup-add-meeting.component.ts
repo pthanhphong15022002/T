@@ -26,6 +26,7 @@ import moment from 'moment';
 import { TemplateComponent } from '../template/template.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CheckBox, CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
+import { CodxTMService } from '../../codx-tm.service';
 
 @Component({
   selector: 'lib-popup-add-meeting',
@@ -85,6 +86,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     private notiService: NotificationsService,
     private callFuncService: CallFuncService,
     private cache: CacheService,
+    private tmSv : CodxTMService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -234,7 +236,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.dialog.close();
       });
   }
-
+ ///cần 1 đống mess Code
   async onSave() {
     if (
       this.meeting.meetingName == null ||
@@ -283,7 +285,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.meeting?.isOnline &&
         (!this.meeting.link || this.meeting.link.trim() == '')
       ) {
-        this.notiService.notifyCode('Vui lòng nhập đường link họp online !');
+        this.notiService.notify('Vui lòng nhập đường link họp online !');
         return;
       }
     }
@@ -513,14 +515,40 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   eventApply(e) {
-    var resourceID = '';
-    e?.data?.forEach((element) => {
-      resourceID += element.id + ';';
+    var listUserID = '';
+    var listDepartmentID= '' ;
+    var listUserIDByOrg = '';
+    var type ="U" ;
+    e?.data?.forEach((obj) => {
+      type = obj.objectType ;
+      switch (obj.objectType) {
+        case 'U':
+          listUserID += obj.id + ';';
+          break;
+        case 'O':
+        case 'D':
+          listDepartmentID += obj.id + ';';
+          break;
+      }
     });
-    if (resourceID != '') {
-      resourceID = resourceID.substring(0, resourceID.length - 1);
-    }
-    this.valueUser(resourceID);
+    if (listUserID != '')
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.tmSv.getListUserIDByListOrgIDAsync([listDepartmentID,type]).subscribe((res) => {
+        if (res) {
+          listUserIDByOrg += res;
+          if (listUserID != '') listUserIDByOrg += ';' + listUserID;
+          this.valueUser(listUserIDByOrg);
+        }
+      });
+    } else this.valueUser(listUserID);
+
+    this.valueUser(listUserID);
   }
 
   valueUser(resourceID) {

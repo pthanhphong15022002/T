@@ -13,7 +13,7 @@
                                 </a>
                                 <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                     <li>
-                                        <button (click)="clickFunction('delete', '', '', item, i)"
+                                        <button (click)="clickFunction('delete', '', '', item, i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-clear icon-20 me-2'" [style.color]="'red'"></span>
                                             <span class="show-customName">{{ "Xóa" }}</span>
@@ -21,28 +21,28 @@
                                     </li>
                                     <hr class="dropdown-divider" />
                                     <li>
-                                        <button (click)="clickFunction('format', 'TITLE', input)"
+                                        <button (click)="clickFunction('format', 'TITLE', input, '', i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-title icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Tiêu đề" }}</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <button (click)="clickFunction('format', 'TEXT', input)"
+                                        <button (click)="clickFunction('format', 'TEXT', input, '', i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-format_size icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Dữ liệu thường" }}</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <button (click)="clickFunction('format', 'CHECKBOX', input)"
+                                        <button (click)="clickFunction('format', 'CHECKBOX', input, '', i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-check_box  icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Check list" }}</span>
                                         </button>
                                     </li>
                                     <li>
-                                        <button (click)="clickFunction('format', 'LIST', input)"
+                                        <button (click)="clickFunction('format', 'LIST', input, '', i, false)"
                                             class="dropdown-item text-hover-primary d-flex align-items-center">
                                             <span [class]="'icon-list_alt  icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Danh sách" }}</span>
@@ -58,13 +58,13 @@
                                     <hr class="dropdown-divider" />
                                     <li>
                                         <div class="d-flex">
-                                            <span (click)="clickFunction('font', 'BOLD', input)" [class]="
+                                            <span (click)="clickFunction('font', 'BOLD', input, '', i, false)" [class]="
                         'icon-format_bold icon-18 btn btn-icon btn-active-light-primary position-relative'
                       " [style.color]=""></span>
-                                            <span (click)="clickFunction('font', 'ITALIC', input)" [class]="
+                                            <span (click)="clickFunction('font', 'ITALIC', input, '', i, false)" [class]="
                         'icon-format_italic icon-18 btn btn-icon btn-active-light-primary position-relative'
                       " [style.color]=""></span>
-                                            <span (click)="clickFunction('font', 'UNDERLINE', input)" [class]="
+                                            <span (click)="clickFunction('font', 'UNDERLINE', input, '', i, false)" [class]="
                         'icon-format_underlined icon-18 btn btn-icon btn-active-light-primary position-relative'
                       " [style.color]=""></span>
                                             <!-- <codx-input #colorPicker type="colorpicker" [showText]="false"
@@ -238,19 +238,19 @@
         <div class="d-flex note-action h-45px border align-items-center justify-content-between" #menu *ngIf="showMenu">
             <div class="d-flex">
                 <div [class.active]="format.TITLE ? 'active' : ''">
-                    <span (click)="clickFunction('format', 'TITLE', input)"
+                    <span (click)="clickFunction('format', 'TITLE', input, '', '', true)"
                         class="icon-title icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
                 </div>
                 <div [class.active]="format.TEXT ? 'active' : ''">
-                    <span (click)="clickFunction('format', 'TEXT', input)"
+                    <span (click)="clickFunction('format', 'TEXT', input, '', '', true)"
                         class="icon-format_size icon-18 btn btn btn-icon btn-active-light-primary position-relative"></span>
                 </div>
                 <div [class.active]="format.LIST ? 'active' : ''">
-                    <span (click)="clickFunction('format', 'LIST', input)"
+                    <span (click)="clickFunction('format', 'LIST', input, '', '', true)"
                         class="icon-list_alt icon-18 btn btn btn-icon btn-active-light-primary position-relative"></span>
                 </div>
                 <div [class.active]="format.CHECKBOX ? 'active' : ''">
-                    <span (click)="clickFunction('format', 'CHECKBOX', input)"
+                    <span (click)="clickFunction('format', 'CHECKBOX', input, '', '', true)"
                         class="icon-check_box icon-20 btn btn btn-icon btn-active-light-primary position-relative"></span>
                 </div>
                 <span class="icon-image icon-18 btn btn-icon btn-active-light-primary position-relative"
@@ -275,12 +275,12 @@
                 </span>
                 <span class="border-right border-gray-200 mx-1"></span>
                 <span class="icon-format_bold icon-20 btn btn-icon btn-active-light-primary position-relative"
-                    (click)="clickFunction('font', 'BOLD', input)" [class.active]="font.BOLD ? 'active' : ''"></span>
+                    (click)="clickFunction('font', 'BOLD', input, '', '', true)" [class.active]="font.BOLD ? 'active' : ''"></span>
                 <span class="icon-format_italic icon-20 btn btn-icon btn-active-light-primary position-relative"
-                    (click)="clickFunction('font', 'ITALIC', input)"
+                    (click)="clickFunction('font', 'ITALIC', input, '', '', true)"
                     [class.active]="font.ITALIC ? 'active' : ''"></span>
                 <span class="icon-format_underlined icon-20 btn btn-icon btn-active-light-primary position-relative"
-                    (click)="clickFunction('font', 'UNDERLINE', input)"
+                    (click)="clickFunction('font', 'UNDERLINE', input, '', '', true)"
                     [class.active]="font.UNDERLINE ? 'active' : ''"></span>
                 <codx-input #colorPicker type="colorpicker" [showText]="false" [modeSwitcher]="true"
                     [crrValue]="font.COLOR" field="textColor"

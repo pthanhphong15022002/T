@@ -36,27 +36,29 @@
         [imageId]="data.iterationID"
         [imageObjType]="view.formModel.entityName"
         [imageWidth]="55"
-        [title]="data.iterationName"
-        [icoDescCss]="'icon-assignment'"
-        [desc]="data.projectName"
-        [desc2]="data.memo"
+        [title]="placeholder(data.iterationName,view.formModel, 'IterationName') | async"
+       
         [footer]="cardImgFooter"
         (clickMF)="clickMF($event, data)"
         (changeDataMF)="changeDataMF($event, data)"
         [dataItem]="data"
       >
       </codx-card-center>
+      <!-- [desc2]="placeholder(data.memo,view.formModel, 'Memo') | async"  [icoDescCss]="'icon-assignment ' + (data.projectName? '':'opacity-50' )  [desc]="placeholder(data.projectName,view.formModel, 'ProjectName') | async" "-->
     </div>
   </ng-container>
 </ng-template>
 <ng-template #cardImgFooter let-data>
+ <div class=" footer-bottom" style="height : 30px;">
   <div *ngIf="data.resources" class="d-flex flex-center flex-wrap">
     <codx-imgs
       [width]="30"
-      [objectId]="data.resources"
+      [objectId]="data?.resources"
       objectType="AD_Users"
       [numberImages]="4"
     >
     </codx-imgs>
   </div>
+ </div>
+  
 </ng-template>

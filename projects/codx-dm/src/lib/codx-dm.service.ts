@@ -414,6 +414,7 @@ export class CodxDMService {
     this.parentDownload = false;
     this.parentUpload = false;
     this.parentDelete = false;
+    this.parentAssign = false;
     this.setRight.next(true);
   }
 

@@ -346,21 +346,24 @@ export class RolesComponent implements OnInit {
   }
 
   checkCurrentRightUpdate(owner = true) {
-
     if (!this.isSystem) {
-      return !this.assignRight;//this.fileEditing.assign;
+      if (this.user.administrator) 
+        return false;
+      else {                
+        return !this.fileEditing.assign; //!this.assignRight;//this.fileEditing.assign;
+      }      
     }
     else {
+      return true;
       // if (owner) {
       //   if (this.objectType === "7")
       //     return true;
-      //   else // objectType == 1
-      //     return true;
-      //   //return !this.assignRight && !this.userID == this.user.userID
-      //   // return !this.fileEditing.assign && !this.user.administrator;
+      //   else // objectType == 1        
+      //   //  return !this.dmSV.parentAssign && !this.userID == this.user.userID
+      //    return !this.fileEditing.assign && !this.user.administrator;
       // }
-      // else
-      return true;
+      // else       
+      //   return true;
     }
   }
 
