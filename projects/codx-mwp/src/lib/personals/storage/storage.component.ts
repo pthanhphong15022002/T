@@ -221,8 +221,8 @@ export class StorageComponent
         arr.push(e?.details[i].refID);
       }
       var a = this.detail.createComponent(ListPostComponent);
-      a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
-      a.instance.dataValue = `[${arr.join(';')}]`;
+      a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
+      a.instance.dataValueWP = `[${arr.join(';')}]`;
       a.instance.isShowCreate = false;
       this.detectorRef.detectChanges();
     }
