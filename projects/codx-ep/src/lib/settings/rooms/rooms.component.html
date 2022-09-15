@@ -53,10 +53,8 @@
     </div>
   </ng-template>
 
-  <ng-template #equipments let-data>  
-    <div class="has-action-menu" > 
-      {{ data}},   
-    </div>  
+  <ng-template #equipments let-data>    
+    <div>{{ getEquiqments(data.equipments) }}</div>
   </ng-template>
 
 
