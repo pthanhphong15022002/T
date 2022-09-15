@@ -9,17 +9,25 @@ idField="recID"
 </codx-views>
 
 <ng-template #panelLeftRef>
-    <div class="">
-        <ul class="nav nav-news">
-            <li class="nav-item" *ngFor="let item of tabAsside">
-                <a [class.text-primary]="item.active" class="nav-link fw-bold" href="javascript:;"
-                    (click)="clickTabApprove(item,item.predicate,item.datavalue)">
-                    <codx-label [formName]="codxView.formModel" [name]="'lbl'+item.text" [default]="item.text"></codx-label>
-                    <span>({{item.total}})</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+  <div class="">
+    <ul class="nav nav-news">
+      <li class="nav-item" *ngFor="let item of tabAsside">
+        <a
+          [class.text-primary]="item.active"
+          class="nav-link fw-bold"
+          href="javascript:;"
+          (click)="clickTabApprove(item, item.predicate, item.datavalue)"
+        >
+          <codx-label
+            [formName]="codxView.formModel"
+            [name]="'lbl' + item.text"
+            [default]="item.text"
+          ></codx-label>
+          <span>({{ item.total }})</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 </ng-template>
 <ng-template #panelRightRef>
     <div class="py-3">

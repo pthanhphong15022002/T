@@ -1,4 +1,4 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
@@ -14,6 +14,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { map, Observable, of } from 'rxjs';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_Sprints } from '../models/TM_Sprints.model';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
@@ -23,6 +24,8 @@ import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sp
   selector: 'lib-sprints',
   templateUrl: './sprints.component.html',
   styleUrls: ['./sprints.component.css'],
+  encapsulation: ViewEncapsulation.None,
+
 })
 export class SprintsComponent extends UIComponent {
   @ViewChild('listCardSprints') listCardSprints: TemplateRef<any>;
@@ -310,6 +313,37 @@ export class SprintsComponent extends UIComponent {
 
     if (this.view.dataService.page < this.view.dataService.pageCount) {
       this.view.dataService.scrolling() ;
+    }
+  }
+
+  //placeholder
+  placeholder(
+    value: string,
+    formModel: FormModel,
+    field: string
+  ): Observable<string> {
+    if (value) {
+      return of(`<span class="cut-size-long" [ngbTooltip]=${value}>
+       ${value}</span>`);
+     
+    } else {
+      return this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .pipe(
+          map((datas) => {
+            if (datas && datas[field]) {
+              var gvSetup = datas[field];
+              if (gvSetup) {
+                if (!value) {
+                  var headerText = gvSetup.headerText as string;
+                  return `<span class="opacity-50">${headerText}</span>`;
+                }
+              }
+            }
+
+            return `<span class="opacity-50">${field}</span>`;
+          })
+        );
     }
   }
 }

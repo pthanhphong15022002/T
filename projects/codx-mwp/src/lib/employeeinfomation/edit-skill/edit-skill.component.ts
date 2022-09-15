@@ -30,6 +30,7 @@ export class EditSkillComponent implements OnInit {
   showCBB = false;
   dataValue = '';
   parentIdField = '';
+  skill = [];
 
   constructor(
     private notiService: NotificationsService,
@@ -78,9 +79,30 @@ export class EditSkillComponent implements OnInit {
     // })
   }
 
-  saveAddUser(e: any) {
+  saveAddSkill(e: any) {
+    let data = e.dataSelected;
+    if (data && data.length > 0) {
+      this.skillEmployee = data;
+      this.skillChartEmployee = data;
+      data.forEach((e:any) => {
+        let s = {
+          objectID: e.CompetenceID,
+          objectName: e.CompetenceName,
+          objectType: e.idField
+        }
+        this.skill.push(s);
+      })
+    }
+    // e.dataSelected.forEach((e:any) => {
+      // let s = {
+      //   CompetenceID: e.id,
+      //   CompetenceName: e.text,
+      //   idField: e.type
+      // };
+      // this.skillEmployee.push(s);
+    // });
     this.showCBB = false;
-    console.log(e);
+    this.df.detectChanges();
   }
 
   deleteSkill(data) {

@@ -283,12 +283,15 @@ export class PopupAddBookingRoomComponent implements OnInit {
         if (this.data) {
           console.log('fgroupEPT1', this.data)
           this.fGroupAddBookingRoom.patchValue(this.data);
+          this.fGroupAddBookingRoom.patchValue({requester:this.authService.userValue.userName});
+        
           if(this.data.hours==24){
             this.isFullDay=true;
           }
           else{            
             this.isFullDay=false;
           }
+
           this.fGroupAddBookingRoom.addControl(
             'isFullDay',
             new FormControl(this.isFullDay)
@@ -325,12 +328,14 @@ export class PopupAddBookingRoomComponent implements OnInit {
   //     return hour+" giờ trước"       
   //   }
   // }
+
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd,this.tmpAttendeesList ,null,this.lstStationery];
     return true;
   }
+  
   onSaveForm() { 
     if (this.fGroupAddBookingRoom.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddBookingRoom, this.formModel);
@@ -393,7 +398,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe(async res => {
         if (res.save || res.update) {
-          if (this.attachment.fileUploadList.length > 0) {
+          if (true) {
             this.attachment.objectId = this.fGroupAddBookingRoom.value.recID;
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
