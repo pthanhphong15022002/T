@@ -23,7 +23,7 @@ export class PopupListStationeryComponent extends UIComponent {
   assemblyName = 'EP';
   entity = 'EP_BookingStationery';
   className = 'BookingsBusiness';
-  method = 'GetListBookingStationeryAsync';
+  method = 'GetListStationeryAsync';
   idField = 'recID';
 
   constructor(

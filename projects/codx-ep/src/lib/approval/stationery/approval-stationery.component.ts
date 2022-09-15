@@ -15,7 +15,7 @@ export class ApprovalStationeryComponent extends UIComponent {
   assemblyName = 'EP';
   entity = 'EP_Bookings';
   className = 'BookingsBusiness';
-  method = 'GetListBookingStationeryAsync';
+  method = 'GetListBookingAsync';
   idField = 'recID';
   predicate = 'ResourceType=@0';
   datavalue = '6';
@@ -55,7 +55,38 @@ export class ApprovalStationeryComponent extends UIComponent {
 
   click(event) {}
 
-  clickMF(event, data) {}
+  clickMF(event, data) {
+    switch (event?.functionID) {
+      case 'EPT40101': //duyet
+        break;
+
+      case 'EPT40102': //ki
+        //this.delete(data);
+        break;
+
+      case 'EPT40103': //dong thuan
+        //this.delete(data);
+        break;
+
+      case 'EPT40104': //dong dau
+        //this.delete(data);
+        break;
+
+      case 'EPT40105': //tu choi
+        //this.delete(data);
+        break;
+
+      case 'EPT40106': //lam lai
+        //this.delete(data);
+        break;
+
+      case 'SYS02': //Xoa
+        break;
+
+      case 'SYS03': //Sua.
+        break;
+    }
+  }
 
   closeAddForm(event) {}
 

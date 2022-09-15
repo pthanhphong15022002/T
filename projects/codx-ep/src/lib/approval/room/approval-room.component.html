@@ -23,8 +23,9 @@
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (click)="click(data)"
     [typeMF]="'hover'"
-    [title]="data?.title"
-    [subTitle]="data?.note"
+    [title]="data?.requester"
+    [subTitleTmp]="subTitleTmp"
+    [desc]="data?.title"
     [icoCss]="
       'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       setIcon(data?.resourceType)
@@ -33,10 +34,12 @@
     [status]="data?.status"
     [statusVll]="'VL003'"
     [date]="data.createdOn"
-    [modeImgs]="false"
+    [resources]="'ADMIN;PMNHI;NVHAO;ADMIN;PMNHI;NVHAO'"
+    [resourceObjType]="'AD_Users'"
     [titleLine]="2"
     [dataItem]="data"
     [formModel]="view.formModel"
+    [footer]="footerTmp"
     (clickMF)="clickMF($event, data)"
     typeMF="hover"
     [dataItem]="data"
@@ -84,36 +87,33 @@
   </div>
 </ng-template>
 
-<ng-template #footerButton let-data>
-  <div class="d-flex justify-content-between">
-    <!-- <button class="btn btn-light-primary" (click)="edit(data)">Sửa</button>
-    <button class="btn btn-light-danger" (click)="delete(data)">Xóa</button> -->
-  </div>
-</ng-template>
+<ng-template #footerTmp let-data> </ng-template>
 
-<ng-template #footer let-data>
-  <div class="container my-3 p-3">
-    <div class="row">
-      <div>
-        <span>{{ data.title }}</span>
-      </div>
-      <codx-mfunc
-      [dataItem]="data"
-      [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-    ></codx-mfunc>
-      <!-- <div>
-        <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
-      </div> -->
+<ng-template #subTitleTmp let-data>
+  <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <div class="d-flex me-6">
+      <i class="icon-calendar_today me-1"></i>
+      <span class="text-gray-600">
+        {{
+          data
+            ? (data?.createdOn | date: "dd/MM/yyyy")
+            : "dd/MM/yyyy"
+        }}
+      </span>
     </div>
-    <div class="row mt-3">
-      <div class="col-3 d-flex justify-content-center">
-        <codx-img [objectId]="data.requester" [width]="35"></codx-img>
-      </div>
-      <div class="col-9">
-        <span class="text-muted mt-3">{{ data.requester }}</span>
-      </div>
+    <div class="d-flex me-6">
+      <i class="icon-access_time me-1"></i>
+      <span class="text-gray-600">
+        {{ data?.startDate | date: "shortTime" }}
+      </span>
+      <span
+        *ngIf="data?.startDate && data?.endDate"
+        class="ms-1 me-1"
+        >{{ "-" }}</span
+      >
+      <span class="text-gray-600">
+        {{ data?.endDate | date: "shortTime" }}
+      </span>
     </div>
   </div>
 </ng-template>
