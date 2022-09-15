@@ -50,9 +50,9 @@ export class InfoLeftComponent implements OnInit {
               this.codxMwpService.appendID(params.employeeID);
               this.codxMwpService.empInfo.next(response);
               this.dt.detectChanges();
-              setTimeout(() => {
-                this.imageAvatar.getFormServer();
-              }, 100);
+              // setTimeout(() => {
+              //   this.imageAvatar.getFormServer();
+              // }, 100);
             }
           });
       }

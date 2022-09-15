@@ -22,13 +22,13 @@
         <ng-container *ngIf="dataComment.totalVote > 0">
             <div class="flex align-items-center">
                 <div *ngFor="let votedType of dataComment.listVoteType">
-                    <a >
+                    <a>
                         <img src="/assets/themes/wp/default/img/{{(votedType | vll:'L1480':'icon' | async)}}"
                             alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
                     </a>
                 </div>
             </div>
-        <span class="ms-2 fs-6">{{dataComment.totalVote}}</span>
+            <span class="ms-2 fs-6">{{dataComment.totalVote}}</span>
         </ng-container>
     </div>
     <div class="d-flex align-items-center text-hover-underline text-gray-800 me-1" (click)="showComments(dataComment)">
@@ -46,7 +46,7 @@
 </div>
 <div class="row m-0 btn-comment py-2 border-top">
     <div class="col-6 p-0">
-        <div class="btn-like delay-500">
+        <div class="btn-like btn-feed delay-500">
             <div *ngIf="!dataComment.myVotedType;else myVoted">
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
                     <span class="fw-bold ms-2" style="color: gray;">
@@ -73,10 +73,9 @@
                 </div>
             </ng-template>
         </div>
-
     </div>
     <div class="col-6 p-0">
-        <div class="btn-com" (click)="showComments(dataComment)">
+        <div class="btn-feed" (click)="showComments(dataComment)">
             <div class="d-flex align-items-center justify-content-center">
                 <span class="icon-chat_bubble_outline icon-18"></span>
                 <span class="text-dark fw-bold ms-2">
@@ -100,7 +99,7 @@
             [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)">
         </codx-comments>
-        <div class="ms-10" *ngFor="let item of data.listComment">
+        <div class="ms-15" *ngFor="let item of data.listComment">
             <ng-container *ngTemplateOutlet="subCmt context: { $implicit: item }"></ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
@@ -120,13 +119,13 @@
             </codx-comments>
         </div>
         <ng-container *ngIf="data.totalSubComment > 0">
-            <div class="ms-14">
-                <span class="text-dark fw-bold ms-2" (click)="loadSubComment(data)">
+            <div class="ms-16">
+                <span class="text-gray-400 text-hover-underline" (click)="loadSubComment(data)">
                     <codx-label [formModel]="formModel" name="lblSeemore" default="Xem thêm"></codx-label>
                 </span>
             </div>
         </ng-container>
-        <div class="ms-10" *ngFor="let item of data.listComment">
+        <div class="ms-15" *ngFor="let item of data.listComment">
             <ng-container *ngTemplateOutlet="cmt context: { $implicit: item }"></ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
@@ -187,7 +186,7 @@
                                 </codx-img>
                             </div>
                             <div class="d-flex flex-column flex-grow-1">
-                                <div class="text-dark fw-bolder">{{item.createdName}}</div>
+                                <div class="text-dark fw-bold">{{item.createdName}}</div>
                                 <div class="text-gray-800 fw-bold">{{item.positionName}}</div>
                                 <div class="text-gray-400">{{item.createdOn | date:'dd-MM-yyy HH:mm:ss'}}</div>
                             </div>
