@@ -10,8 +10,8 @@
 }
 
 .popover {
-  width: 320px;
-  max-width: 320px;
+  /* width: 320px;
+  max-width: 320px; */
   z-index: 99999 !important;
 }
 

@@ -92,10 +92,10 @@
                     </div>
                     <div class="w-100" (click)="clickUploadFile()">
                         <ng-container *ngIf="fileImage;else haveImage">
-                            <img class="w-100 h-200px" [src]="fileImage.data || fileImage.thumbnail" alt="">
+                            <img class="w-100 h-200px" [src]="fileImage.data || fileImage.avatar" alt="">
                         </ng-container>
                         <ng-template #haveImage>
-                            <codx-img [objectId]="data.recID" [objectType]="data.refType" [width]="300" [imageType]="'square'"></codx-img>
+                            <codx-img [objectId]="data.recID" [objectType]="data.entityName" [width]="300" [imageType]="'square'"></codx-img>
                         </ng-template>
                     </div>
                     <div class="d-none">

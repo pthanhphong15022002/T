@@ -2,8 +2,9 @@
 [header]="header" 
 [body]="body" 
 [footer]="footer" 
-[hideMF]="true"
-[formModel]="formModel">
+(clickMF)="clickMF($event)"
+[formModel]="formModel"
+[dataItem]="data">
 </codx-detail-tmp>
 <ng-template #header>
     <ng-container>
@@ -108,8 +109,12 @@
                     </div>
                     <div class="col-10">
                         <div class="w-50 h-50">
-                            <codx-img [imageType]="'square'" [objectId]="data.recID" [objectType]="data.entityName"
-                                [width]="200"></codx-img>
+                            <codx-img 
+                                [imageType]="'square'" 
+                                [objectId]="data.recID" 
+                                [objectType]="data.entityName"
+                                [width]="200">
+                            </codx-img>
                         </div>
                     </div>
                 </div>

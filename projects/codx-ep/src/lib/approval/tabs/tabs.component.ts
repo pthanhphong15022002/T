@@ -26,7 +26,7 @@ export class TabsComponent implements OnInit {
   @Input() allowExtensions: string = '.jpg,.png';
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
-  private all = ['Lịch sử', 'Đính kèm', 'Bình luận', 'Tham chiếu'];
+  private all = ['Lịch sử', 'Đính kèm', 'Bình luận', 'Tham chiếu', 'Xét duyệt'];
   constructor(
     injector: Injector,
     private changeDetectorRef: ChangeDetectorRef
