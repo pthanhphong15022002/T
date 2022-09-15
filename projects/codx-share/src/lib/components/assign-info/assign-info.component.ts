@@ -351,7 +351,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
             objectID : objectID ,
             actionType : "T" ,
             functionID : this.formModel.funcID ,
-            sendToObjects : JSON.stringify(dataObj)
+            sendToObjects : [dataObj]
            }
 
            this.api.execSv<any>("BG", "ERM.Business.BG", "TrackLogsBusiness", "InsertAsync", tmpHistorry).subscribe() ;

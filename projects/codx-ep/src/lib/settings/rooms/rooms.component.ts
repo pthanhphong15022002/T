@@ -22,14 +22,10 @@
 //     //   this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
 //   }
 // }
-import {
-  Component,
-  TemplateRef,
-  ViewChild,
-  Injector,
-} from '@angular/core';
+import { Component, TemplateRef, ViewChild, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
+  ApiHttpService,
   ButtonModel,
   DialogRef,
   SidebarModel,
@@ -38,6 +34,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { CodxEpService } from 'projects/codx-ep/src/public-api';
 import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.component';
 @Component({
   selector: 'setting-rooms',
@@ -48,10 +45,11 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
-  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;  
-  @ViewChild('avatar') avatar: TemplateRef<any>;
-  @ViewChild('owner') owner: TemplateRef<any>;
-  @ViewChild('equipments') equipments: TemplateRef<any>;
+  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
+  @ViewChild('avatarCol') avatarCol: TemplateRef<any>;
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
+  @ViewChild('companyIDCol') companyIDCol: TemplateRef<any>;
+  @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -74,9 +72,11 @@ export class RoomsComponent extends UIComponent {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-
+  tempCompanyName = '';
   constructor(
     private injector: Injector,
+    private codxEpService: CodxEpService,
+    private apiHttpService: ApiHttpService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -90,77 +90,191 @@ export class RoomsComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-    this.columnGrids = [
-      {
-        field: 'resourceID',
-        headerText: 'Mã phòng',
-        width:100,
-      },  
-      {
-        field: 'resourceName',
-        headerText: 'Tên phòng',
-        width:200,
-      },    
-      {
-        field: 'icon',
-        headerText: "Hình ảnh",
-        template: this.avatar,
-        width:200,
-      },
-      {
-        field: 'area',
-        headerText: 'Diện tích(m2)',
-        width:150,
-      },
-      {
-        field: 'capacity',
-        headerText: 'Sức chứa(người)',
-        width:150,
-      },
-      {
-        field: 'location',
-        headerText: "Vị trí",
-        width:100,
-      },
-      {
-        field: 'companyID',
-        headerText: 'Đơn vị',
-      },
-      {
-        headerText: "Người điều phối",
-        width: 200,
-        template: this.owner,
-      },
-      {
-        field: 'equipments',
-        headerText: 'Thiết bị',
-        template: this.equipments,
-        width:200,
-      },
-      {
-        field: 'note',
-        headerText: 'Ghi chú',
-        width:200,
-      },
-    ];
-    this.views = [
-      {
-        sameData: true,
-        id: '1',
-        text: 'Danh mục phòng',
-        type: ViewType.grid,
-        active: true,
-        model: {
-          resources: this.columnGrids,
-        },
-      },
-    ];
+    // this.columnGrids = [
+    //   {
+    //     field: 'resourceID',
+    //     headerText: 'Mã phòng',
+    //     width:100,
+    //   },
+    //   {
+    //     field: 'resourceName',
+    //     headerText: 'Tên phòng',
+    //     width:200,
+    //   },
+    //   {
+    //     field: 'icon',
+    //     headerText: "Hình ảnh",
+    //     template: this.avatarCol,
+    //     width:100,
+    //     textAlign:'Center',
+    //     headerTextAlign:'Center',
+    //   },
+    //   {
+    //     field: 'area',
+    //     headerText: 'Diện tích(m2)',
+    //     width:100,
+    //     textAlign:'Center',
+    //   },
+    //   {
+    //     field: 'capacity',
+    //     headerText: 'Sức chứa(người)',
+    //     width:150,
+    //     textAlign:'Center',
+
+    //   },
+    //   {
+    //     field: 'location',
+    //     headerText: "Vị trí",
+    //     width:200,
+    //     textAlign:'Center',
+    //   },
+    //   {
+    //     headerText: "Công ty",
+    //     width: 200,
+    //     template: this.companyIDCol,
+    //     headerTextAlign:'Center',
+    //   },
+    //   {
+    //     headerText: "Người điều phối",
+    //     width: 200,
+    //     template: this.ownerCol,
+    //     headerTextAlign:'Center',
+    //   },
+    //   {
+    //     field: 'equipments',
+    //     headerText: 'Thiết bị',
+    //     template: this.equipmentsCol,
+    //     width:300,
+    //     headerTextAlign:'Center',
+    //   },
+    //   {
+    //     field: 'note',
+    //     headerTextAlign:'Center',
+    //     headerText: 'Ghi chú',
+    //     width:200,
+    //   },
+    // ];
+    // this.views = [
+    //   {
+    //     sameData: true,
+    //     id: '1',
+    //     text: 'Danh mục phòng',
+    //     type: ViewType.grid,
+    //     active: true,
+    //     model: {
+    //       resources: this.columnGrids,
+    //     },
+    //   },
+    // ];
+    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
+      this.cache
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnGrids = [
+            {
+              field: 'resourceID',
+              headerText: gv['ResourceID'].headerText,
+              width: gv['ResourceID'].width,
+            },
+            {
+              field: 'resourceName',
+              headerText: gv['ResourceName'].headerText,
+              width: gv['ResourceName'].width,
+            },
+            {
+              headerText: gv['ResourceName'].headerText,
+              width: gv['ResourceName'].width,
+              field: 'icon',
+              template: this.avatarCol,
+              textAlign: 'Center',
+              headerTextAlign: 'Center',
+            },
+            {
+              headerText: gv['Area'].headerText,
+              width: gv['Area'].width,
+              field: 'area',
+              textAlign: 'Center',
+            },
+            {
+              headerText: gv['Capacity'].headerText,
+              width: gv['Capacity'].width,
+              field: 'capacity',
+              textAlign: 'Center',
+            },
+            {
+              headerText: gv['Location'].headerText,
+              width: gv['Location'].width,
+              field: 'location',
+              textAlign: 'Center',
+            },
+            {
+              headerText: gv['CompanyID'].headerText,
+              width: '300',
+              template: this.companyIDCol,
+              headerTextAlign: 'Center',
+            },
+            {
+              headerText: gv['Owner'].headerText,
+              //width:gv['Owner'].width,
+              width: 200,
+              template: this.ownerCol,
+              headerTextAlign: 'Center',
+            },
+            {
+              headerText: gv['Equipments'].headerText,
+              width: gv['Equipments'].width,
+              field: 'equipments',
+              template: this.equipmentsCol,
+              headerTextAlign: 'Center',
+            },
+            {
+              headerText: gv['Note'].headerText,
+              width: gv['Note'].width,
+              field: 'note',
+              headerTextAlign: 'Center',
+            },
+          ];
+          this.views = [
+            {
+              sameData: true,
+              id: '1',
+              text: 'Danh mục phòng',
+              type: ViewType.grid,
+              active: true,
+              model: {
+                resources: this.columnGrids,
+              },
+            },
+          ];
+          this.detectorRef.detectChanges();
+        });
+    });
+    this.detectorRef.detectChanges();
     this.buttons = {
       id: 'btnAdd',
     };
   }
 
-  
+  getEquiqments(equipments: any) {
+    var tmp = [];
+    equipments.map((res) => {
+      this.vllDevices.forEach((device) => {
+        if (res.equipmentID == device.value) {
+          tmp.push(device.text);
+        }
+      });
+    });
+    return tmp.join(';');
+  }
+  getCompanyName(companyID: string) {
+    this.codxEpService.getCompanyName(companyID).subscribe((res) => {
+      if (res.msgBodyData[0]) {
+        this.tempCompanyName = res.msgBodyData[0];
+      }
+    });
+    return this.tempCompanyName;
+  }
+
   clickMF(event, data) {
     console.log(event);
     switch (event?.functionID) {
@@ -185,7 +299,7 @@ export class RoomsComponent extends UIComponent {
         break;
     }
   }
-  
+
   addNew() {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
@@ -233,4 +347,3 @@ export class RoomsComponent extends UIComponent {
     this.dialog && this.dialog.close();
   }
 }
-
