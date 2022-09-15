@@ -16,9 +16,9 @@
         </ng-container>
 
         <div class="row">
-            <div class="d-flex w-100 cursor-pointer">
+            <div class="d-flex w-100 cursor-pointer" (click)="openModelAddStorage()">
                 <span class="">
-                    <i class="con-add_box"></i>
+                    <i class="icon-add_box"></i>
                 </span>
                 <span class="fw-bolder">
                     <codx-label 
@@ -43,3 +43,28 @@
         </button>
     </div>
 </ng-template>
+
+
+<ng-template #fromPopupAdd let-dialog>
+    <codx-form [body]="popupBody" [footer]="popupFooter" [headerText]="headerTextPopup" [dialog]="dialog"></codx-form>
+    <ng-template #popupBody>
+        <div class="container">
+            <div class="row">
+                <codx-input type="text" [placeholder]="'Tên kho lưu trữ'" [crrValue]="title" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+            
+        </div>
+    </ng-template>
+    <ng-template #popupFooter>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary btn-post" (click)="createdStorage(dialog)">
+                <codx-label 
+                    [formModel]="dialogRef.formModel"
+                    name="lblSaveStorage"
+                    default="Thêm">
+                </codx-label>
+            </button>
+        </div>
+    </ng-template>
+</ng-template>
+

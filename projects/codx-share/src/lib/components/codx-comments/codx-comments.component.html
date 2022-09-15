@@ -142,11 +142,11 @@
             </ng-container>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex flex-grow-1">
-                    <span class="text-gray-400 fs-7 text-hover-primary ">
+                    <span class="text-gray-600 text-hover-primary ">
                         <div class="btn-like delay-500">
                             <div *ngIf="!data.myVotedType;else dataMyVoted">
                                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                    <span class="fs-7 text-gray-400 ms-2">
+                                    <span class="text-gray-600 ms-2">
                                         <codx-label formName="WP_Comments" name="lblLike" default="Thích">
                                         </codx-label>
                                     </span>
@@ -171,14 +171,14 @@
                             </ng-template>
                         </div>
                     </span>
-                    <span class="d-flex align-items-center text-gray-400 fs-7 text-hover-primary ms-2"
+                    <span class="d-flex align-items-center text-gray-600 text-hover-underline ms-3"
                         (click)="replyTo(data)">
                         <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời"></codx-label>
                     </span>
                 </div>
 
             </div>
-            
+
         </div>
     </div>
 
