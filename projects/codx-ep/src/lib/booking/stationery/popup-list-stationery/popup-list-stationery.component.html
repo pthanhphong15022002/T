@@ -1,29 +1,10 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [subHeaderText]="subHeaderText"
-  [body]="body"
-  [dialog]="dialog"
-  [formControl]="dialogListStationery"
-  *ngIf="isAfterRender"
->
+<codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [dialog]="dialog"
+  [formControl]="dialogListStationery" *ngIf="isAfterRender">
   <ng-template #body let-data>
-    <codx-searchbar
-      class="mb-4"
-      (searchEvent)="search($event)"
-    ></codx-searchbar>
-    <codx-listview
-      #listview
-      service="EP"
-      assemblyName="EP"
-      className="BookingsBusiness"
-      method="GetListBookingStationeryAsync"
-      entityName="EP_Bookings"
-      predicate="ResourceType=@0"
-      dataValue="6"
-      [itemTemplate]="TemplateList"
-      [height]="200"
-    >
+    <codx-searchbar class="mb-4" (searchEvent)="search($event)"></codx-searchbar>
+    <codx-listview #listview service="EP" assemblyName="EP" className="BookingsBusiness"
+      method="GetListBookingStationeryAsync" entityName="EP_Bookings" predicate="ResourceType=@0" dataValue="6"
+      [itemTemplate]="TemplateList" [height]="200">
     </codx-listview>
   </ng-template>
 
@@ -31,18 +12,15 @@
     <div class="d-flex flex-grow-1 has-action-menu border px-2 pt-4 mb-2">
       <div class="flex-grow-1">
         <div class="d-flex">
-          <span
-            class="me-1 w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2"
-            style="color: white"
-            [ngClass]="setIcon(data?.resourceType)"
-            [style.background-color]="setIconColor(data?.resourceType)"
-          ></span>
+          <span class="me-1 w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2"
+            style="color: white" [ngClass]="setIcon(data?.resourceType)"
+            [style.background-color]="setIconColor(data?.resourceType)"></span>
           <div class="d-flex flex-column text-content flex-grow-1">
             <div class="d-flex justify-content-between">
               <div class="d-flex align-items-center">
                 <span class="fw-bold line-clamp line-clamp-2">{{
                   data?.title
-                }}</span>
+                  }}</span>
               </div>
             </div>
             <div class="d-flex justify-content-between">
@@ -52,33 +30,20 @@
             </div>
             <div class="d-flex justify-content-between">
               <div class="d-flex align-items-center">
-                <codx-vll
-                  [value]="data?.status"
-                  [name]="'VL003'"
-                  [showText]="true"
-                  [showBgColor]="true"
-                  class="badge border-0 me-2"
-                >
+                <codx-vll [value]="data?.status" [name]="'VL003'" [showText]="true" [showBgColor]="true"
+                  class="badge border-0 me-2">
                 </codx-vll>
                 <div class="d-flex align-items-center">
                   <span class="text-dark-50">{{
                     data?.createdOn | date: "dd/MM/yyyy"
-                  }}</span>
+                    }}</span>
                 </div>
               </div>
               <codx-img
                 class="me-1 w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2"
-                objectId="{{ data?.createdBy }}"
-                objectName=""
-                objectType="AD_Users"
-              ></codx-img>
+                objectId="{{ data?.createdBy }}" objectName="" objectType="AD_Users"></codx-img>
             </div>
-            <codx-mfunc
-              type="hover"
-              [formModel]="dialog.formModel"
-              (clickMF)="clickMF($event, data)"
-              [dataItem]="data"
-            >
+            <codx-mfunc type="hover" [formModel]="dialog.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
             </codx-mfunc>
           </div>
         </div>

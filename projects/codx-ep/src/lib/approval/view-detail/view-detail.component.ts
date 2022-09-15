@@ -35,11 +35,6 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
 
   onInit(): void {
     this.itemDetailStt = 1;
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      this.cache.moreFunction(res.formName, res.gridViewName).subscribe((res) => {
-        console.log(res);
-      });
-    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -49,12 +44,9 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
         changes.itemDetail?.currentValue?.recID
     ) {
       this.api
-        .exec<any>(
-          'EP',
-          'BookingsBusiness',
-          'GetBookingByIDAsync',
-          [changes.itemDetail?.currentValue?.recID]
-        )
+        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
+          changes.itemDetail?.currentValue?.recID,
+        ])
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
@@ -68,7 +60,7 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
   }
 
   openFormFuncID(value, datas: any = null) {
-    console.log('event', value.functionID);
+    console.log('event', value);
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {
@@ -78,28 +70,34 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
     //   datas = this.view.dataService.data[index];
     // }
     switch (funcID) {
-      case 'EPT40301':
+      case 'EPT40101' || 'EPT40201' || 'EPT40301':
         {
+          alert('Duyệt');
         }
         break;
-      case 'EPT40302':
+      case 'EPT40102' || 'EPT40201' || 'EPT40301':
         {
+          alert('Ký');
         }
         break;
-      case 'EPT40303':
+      case 'EPT40103' || 'EPT40203' || 'EPT40303':
         {
+          alert('Đồng thuận');
         }
         break;
-      case 'EPT40304':
+      case 'EPT40104' || 'EPT40204' || 'EPT40304':
         {
+          alert('Đóng dấu');
         }
         break;
-      case 'EPT40305':
+      case 'EPT40105' || 'EPT40205' || 'EPT40305':
         {
+          alert('Từ chối');
         }
         break;
-      case 'EPT40306':
+      case 'EPT40106' || 'EPT40206' || 'EPT40306':
         {
+          alert('Làm lại');
         }
         break;
       default:

@@ -25,6 +25,7 @@ import {
 import moment from 'moment';
 import { TemplateComponent } from '../template/template.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CheckBox, CheckBoxComponent } from '@syncfusion/ej2-angular-buttons';
 
 @Component({
   selector: 'lib-popup-add-meeting',
@@ -48,7 +49,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   showPlan = true;
   data: any;
   readOnly = false;
-  isFullDay: boolean;
+  isFullDay: boolean = false;
   beginHour = 0;
   beginMinute = 0;
   endHour = 0;
@@ -63,17 +64,19 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   idUserSelected: any;
   popover: any;
   dialog1: DialogRef;
+  dialogPopupLink: DialogRef;
   fromDateSeconds: any;
   toDateSeconds: any;
   templateName: any;
   isCheckTask = true;
-  selectedDate = new Date();
   isHaveFile = false;
   showLabelAttachment = false;
   titleAction = '';
   calendarID: string;
   startTimeWork: any;
   endTimeWork: any;
+  dayOnWeeks = [];
+  selectedDate: Date;
 
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -85,22 +88,28 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    // this.getParam() ;
     this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.meeting = this.data;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.action = dt.data[0];
     this.titleAction = dt.data[1];
+    this.functionID = this.dialog.formModel.funcID;
+
     if (this.action == 'add')
       this.meeting.startDate = moment(new Date())
         .set({ hour: 0, minute: 0, second: 0 })
         .toDate();
+
+    this.selectedDate = moment(new Date(this.meeting.startDate))
+      .set({ hour: 0, minute: 0, second: 0 })
+      .toDate();
+    this.getTimeParameter();
+    // this.getTimeWork(this.selectedDate);
+
     if (this.action == 'add' || this.action == 'copy') {
       this.getListUser(this.user.userID);
     }
-    this.functionID = this.dialog.formModel.funcID;
-
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
@@ -112,18 +121,15 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
   ngAfterViewInit(): void {
     if (this.action == 'add') {
-      // this.title = 'Thêm họp định kì';
       this.meeting.meetingType = '1';
-
       this.resources = [];
     } else if (this.action == 'edit') {
-      // this.title = 'Chỉnh sửa họp định kì';
-      this.setTimeEdit();
+      // this.setTimeEdit();
       this.resources = this.meeting.resources;
     } else if (this.action == 'copy') {
       this.meeting.meetingType = '1';
       this.resources = [];
-      this.setTimeEdit();
+      // this.setTimeEdit();
     }
     if (this.meeting.templateID) {
       this.api
@@ -156,13 +162,17 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       ':' +
       this.padTo2Digits(getEndTime.getMinutes());
     this.endTime = current1;
-    if (this.startTime == '08:00' && this.endTime == '18:00') {
+    if (
+      this.startTime == this.startTimeWork &&
+      this.endTime == this.endTimeWork
+    ) {
       this.isFullDay = true;
     }
     if (this.meeting.fromDate)
       this.meeting.fromDate = moment(new Date(this.meeting.fromDate)).toDate();
     if (this.meeting.toDate)
       this.meeting.toDate = moment(new Date(this.meeting.toDate)).toDate();
+      this.changDetec.detectChanges() ;
   }
 
   padTo2Digits(num) {
@@ -230,37 +240,50 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.meeting.meetingName == null ||
       this.meeting.meetingName.trim() == ''
     ) {
-      this.notiService.notifyCode('CO001');
+      this.notiService.notify('Tên cuộc họp không được để trống !');
       return;
     }
     if (this.meeting.startDate <= new Date()) {
-      this.notiService.notifyCode('CO002');
+      this.notiService.notify(
+        'Thời gian diễn ra cuộc họp phải lớn hơn thời gian hiện tại'
+      );
       return;
     }
     if (this.meeting.endDate <= new Date()) {
-      this.notiService.notifyCode('CO003');
+      this.notiService.notify(
+        'Thời gian kết thúc cuộc họp phải lớn hơn thời gian hiện tại !'
+      );
       return;
     }
     if (this.meeting.meetingType == '1') {
       if (!this.meeting.fromDate || !this.meeting.toDate) {
-        this.notiService.notifyCode('CO004');
+        this.notiService.notify('Thời gian review không được để trống !');
         return;
       }
-      if (this.meeting.fromDate && this.meeting.fromDate <= new Date()) {
-        this.notiService.notifyCode('CO005');
+      if (this.meeting.fromDate <= new Date()) {
+        this.notiService.notify(
+          'Vui lòng nhập thời gian bắt đầu review phải lớn hơn ngày hiện tại !'
+        );
         return;
       }
 
-      if (this.meeting.toDate && this.meeting.toDate <= new Date()) {
-        this.notiService.notifyCode('CO006');
+      if (this.meeting.toDate <= new Date()) {
+        this.notiService.notify(
+          'Vui lòng nhập thời gian kết thức review phải lớn hơn ngày hiện tại !'
+        );
+        return;
+      }
+      if (this.meeting.toDate <= this.meeting.fromDate) {
+        this.notiService.notify(
+          'Vui lòng nhập thời gian kết thúc review phải lớn hơn ngày bắt đầu review !'
+        );
         return;
       }
       if (
-        this.meeting.toDate &&
-        this.meeting.fromDate &&
-        this.meeting.toDate <= this.meeting.fromDate
+        this.meeting?.isOnline &&
+        (!this.meeting.link || this.meeting.link.trim() == '')
       ) {
-        this.notiService.notifyCode('CO007');
+        this.notiService.notifyCode('Vui lòng nhập đường link họp online !');
         return;
       }
     }
@@ -290,11 +313,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ];
 
   setTitle(e: any) {
-    // if (this.action == 'add') {
-    //   this.title = 'Thêm ' + e;
-    // } else if (this.action == 'edit') {
-    //   this.title = 'Sửa ' + e;
-    // }
     this.title =
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     this.changDetec.detectChanges();
@@ -306,40 +324,45 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       if (res.resourceID == id) res.taskControl = e.data;
     });
   }
+  valueChangeCheckFullDay(e) {
+    this.isFullDay = e.data;
+    if (this.isFullDay) {
+      this.startTime = this.startTimeWork;
+      this.endTime = this.endTimeWork;
+    } else {
+      this.endTime = null;
+      this.startTime = null;
+    }
+    this.setDate();
+  }
 
   valueChange(event) {
-    if (event?.field == 'day') {
-      this.isFullDay = event.data;
-      if (this.isFullDay) {
-        this.startTime = '08:00';
-        this.endTime = '18:00';
+    if (event?.field === 'resources') {
+      this.meeting.resources = event.data[0];
+    } else {
+      if (event.data instanceof Object) {
+        this.meeting[event.field] = event.data.value;
       } else {
-        this.endTime = null;
-        this.startTime = null;
-      }
-    } else if (event?.field) {
-      if (event?.field === 'resources') {
-        this.meeting.resources = event.data[0];
-      } else {
-        if (event.data instanceof Object) {
-          this.meeting[event.field] = event.data.value;
-        } else {
-          this.meeting[event.field] = event.data;
-        }
+        this.meeting[event.field] = event.data;
       }
     }
-    this.changDetec.detectChanges();
   }
 
   changeMemo(event: any) {
     if (event.field) {
       this.meeting[event.field] = event?.data ? event?.data : '';
     }
-    this.changDetec.detectChanges();
   }
 
   valueDateChange(event: any) {
     this.meeting[event.field] = event.data.fromDate;
+    if (event.field == 'startDate') {
+      this.selectedDate = moment(new Date(this.meeting.startDate))
+        .set({ hour: 0, minute: 0, second: 0 })
+        .toDate();
+      this.getTimeWork(this.selectedDate);
+      this.setDate();
+    }
     // var now = Date.now();
     // if (event.field == 'startDate' || event.field == 'endDate') {
     //   this.selectedDate = event.data.fromDate;
@@ -393,13 +416,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   valueStartTimeChange(event: any) {
     this.startTime = event.data.fromDate;
-    this.isFullDay = false;
+    // this.isFullDay = false;
     this.setDate();
   }
 
   valueEndTimeChange(event: any) {
     this.endTime = event.data.toDate;
-    this.isFullDay = false;
+    // this.isFullDay = false;
     this.setDate();
   }
 
@@ -416,7 +439,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             this.meeting.startDate = this.startDate;
           }
         }
-        console.log(this.startDate);
       }
     }
     if (this.endTime) {
@@ -431,7 +453,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             this.meeting.endDate = this.endDate;
           }
         }
-        console.log(this.endDate);
       }
       if (this.beginHour >= this.endHour) {
         if (this.beginMinute >= this.endMinute)
@@ -441,7 +462,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   openPopupLink() {
-    this.callFuncService.openForm(this.addLink, '', 500, 10);
+    this.dialogPopupLink = this.callFuncService.openForm(
+      this.addLink,
+      '',
+      500,
+      10
+    );
   }
 
   openPopupTemplate(item: any) {
@@ -479,7 +505,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   changeLink(event) {
     this.linkURL = event.data;
-    if (this.linkURL) this.meeting.link = this.linkURL;
+    this.meeting.link = this.linkURL;
   }
 
   valueChangeTags(e) {
@@ -487,7 +513,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   eventApply(e) {
-    console.log(e);
     var resourceID = '';
     e?.data?.forEach((element) => {
       resourceID += element.id + ';';
@@ -601,30 +626,86 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
   //region time work
-  getParams() {
+  getTimeParameter() {
     this.api
       .execSv<any>(
         'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
-        'GetOneField',
-        ['TMParameters', null, 'CalendarID']
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleWithCategoryAsync',
+        ['TMParameters', '1']
       )
       .subscribe((res) => {
         if (res) {
-          this.calendarID = res.fieldValue;
-          this.api
-            .execSv<any>(
-              'BS',
-              'ERM.Business.BS',
-              'CalendarsBusiness',
-              'GetDayWeekAsync',
-              [this.calendarID]
-            )
-            .subscribe((res) => {
-              if (res) {
-              }
-            });
+          var param = JSON.parse(res.dataValue);
+          this.calendarID = param.CalendarID;
+          // this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
+          this.getTimeWork(
+            moment(new Date(this.meeting.startDate))
+              .set({ hour: 0, minute: 0, second: 0 })
+              .toDate()
+          );
+        }
+      });
+  }
+
+  getTimeWork(date) {
+    this.api
+      .execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'CalendarWeekdaysBusiness',
+        'GetDayShiftAsync',
+        [this.calendarID]
+      )
+      .subscribe((data) => {
+        if (data) {
+          this.dayOnWeeks = data;
+          var current_day = date.getDay();
+          // var day_name = '';
+          // switch (current_day) {
+          //   case 0:
+          //     day_name = '1';
+          //     break;
+          //   case 1:
+          //     day_name = '2';
+          //     break;
+          //   case 2:
+          //     day_name = '3';
+          //     break;
+          //   case 3:
+          //     day_name = '4';
+          //     break;
+          //   case 4:
+          //     day_name = '5';
+          //     break;
+          //   case 5:
+          //     day_name = '6';
+          //     break;
+          //   case 6:
+          //     day_name = '7';
+          // }
+          var endShiftType1 = '';
+          var starrShiftType2 = '';
+          for (var i = 0; i < this.dayOnWeeks.length; i++) {
+            var day = this.dayOnWeeks[i];
+            if (current_day == day.weekday && day.shiftType == '1') {
+              this.startTimeWork = day.startTime.substring(0, 5);
+              endShiftType1 = day.endTime.substring(0, 5);
+            }
+            if (current_day == day.weekday && day.shiftType == '2') {
+              this.endTimeWork = day.endTime.substring(0, 5);
+              starrShiftType2 = day.startTime.substring(0, 5);
+            }
+          }
+          this.startTimeWork = this.startTimeWork
+            ? this.startTimeWork
+            : starrShiftType2;
+          this.endTimeWork = this.endTimeWork
+            ? this.endTimeWork
+            : endShiftType1;
+
+          if (this.action != 'add') this.setTimeEdit();
         }
       });
   }

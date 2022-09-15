@@ -38,7 +38,7 @@ export class EditInfoComponent implements OnInit {
   data: any;
   isAfterRender = false;
   gridViewSetup: any;
-  employee: HR_Employees = new HR_Employees();
+  employee: any;
   isDisable = false;
 
   constructor(

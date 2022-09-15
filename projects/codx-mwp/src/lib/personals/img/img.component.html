@@ -10,14 +10,11 @@
   >
     <codx-listview
       #listView
-      entityName="DM_FileInfo"
-      gridViewName="grvFileInfo"
-      [predicate]="predicate"
       [dataService]="dtService"
+      [predicate]="predicate"
       [dataValue]="dataValue"
       [itemTemplate]="templateListCard"
       type="cardView"
-      formName="FileInfo"
       service="DM"
     >
     </codx-listview>
@@ -27,7 +24,7 @@
         cardCss="border rounded-4 w-200px"
         (click)="openImg(item)"
         [imageRecId]="item.recID"
-        [imgOn]="item?.modifiedOn" 
+        [imgOn]="item?.modifiedOn"
         [imageObjType]="item.objectType"
         imageWidth="200"
         imgCss="h-150px"

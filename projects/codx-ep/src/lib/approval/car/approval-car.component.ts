@@ -49,6 +49,7 @@ export class ApprovalCarsComponent extends UIComponent {
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
+      code:{name:'code'},
     };
 
     this.resourceField = {
@@ -81,7 +82,7 @@ export class ApprovalCarsComponent extends UIComponent {
           eventModel: this.fields,
           resourceModel: this.resourceField,
           template4: this.resourceHeader,
-          template5: this.resourceTootip,
+          template5: this.resourceTootip,// tooltip of ResourceHeader
           template6: this.footerTemplate,
           template7: this.footerButton,
           //statusColorRef: "vl003"
@@ -93,7 +94,18 @@ export class ApprovalCarsComponent extends UIComponent {
 
   click(event) {}
 
-  clickMF(event, data) {}
+  clickMF(event, data) {
+    console.log(event);
+    switch (event?.functionID) {
+      // case 'SYS03':
+      //   this.edit(data);
+      //   break;
+      // case 'SYS02':
+      //   this.delete(data);
+      //   break;
+    }
+  }
+  
 
   closeAddForm(event) {}
 

@@ -24,11 +24,11 @@ import { Observable, of, Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-addpost',
-  templateUrl: './addpost.component.html',
-  styleUrls: ['./addpost.component.scss'],
+  templateUrl: './popup-add.component.html',
+  styleUrls: ['./popup-add.component.scss'],
 
 })
-export class AddPostComponent implements OnInit, AfterViewInit {
+export class PopupAddPostComponent implements OnInit, AfterViewInit {
 
   data: any;
   message: string = '';
