@@ -19,8 +19,8 @@
   (requestEnded)="closeDialog($event)"
 >
 </codx-views>
-  <ng-template #avatar let-data>
-    <div class="w-100px h-50px m-4">
+  <ng-template #avatarCol let-data>
+    <div class="h-50px m-4">
       <codx-img [objectId]="data?.recID" imageType="square" width="50"></codx-img>
     </div>
   </ng-template>
@@ -32,13 +32,13 @@
   </ng-template>
   
   
-  <!-- <ng-template #company let-data>  
-    <div class="has-action-menu">    
-      {{ data.companyID | vll: "HRCompany":"text" | async }}   
+  <ng-template #companyIDCol let-data>  
+    <div>    
+      {{ getCompanyName(data.companyID) }}   
     </div>  
-  </ng-template> -->
+  </ng-template>
   
-  <ng-template #owner let-data>
+  <ng-template #ownerCol let-data>
     <div class="d-flex has-action-menu">
       <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
       <div class="ms-4">
@@ -53,7 +53,7 @@
     </div>
   </ng-template>
 
-  <ng-template #equipments let-data>    
+  <ng-template #equipmentsCol let-data>    
     <div>{{ getEquiqments(data.equipments) }}</div>
   </ng-template>
 
