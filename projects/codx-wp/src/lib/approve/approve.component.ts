@@ -36,7 +36,6 @@ export class ApproveComponent extends UIComponent {
   gridViewSetUp: any;
   dataSelected: any;
   itemSelected : any;
-  buttonAdd:ButtonModel;
   @ViewChild('itemTemplate') itemTemplate : TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef : TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef : TemplateRef<any>;
@@ -119,14 +118,10 @@ export class ApproveComponent extends UIComponent {
     });
   }
   ngAfterViewInit(): void {
-    this.buttonAdd = {
-      id: 'btnAdd',
-    };
     this.views  = [{
       type: ViewType.listdetail,
       active: true,
       sameData: true,
-      showButton: true,
       model:{
         template : this.itemTemplate,
         panelLeftRef : this.panelLeftRef,
@@ -163,10 +158,10 @@ export class ApproveComponent extends UIComponent {
           this.tabAsside.map((tab:any) => {
             if(tab.value == "0"){
               tab.total = res.length;
+              tab.active = true;
             }
             else tab.total =  res.filter((x:any) => x == tab.value).length;
           })
-          this.tabAsside[0].active = true;
           this.dt.detectChanges();
         }
         else
@@ -190,6 +185,11 @@ export class ApproveComponent extends UIComponent {
   selectedID:string = "";
   clickViewDetail(postID:string){
     this.selectedID = postID;
+    this.dt.detectChanges();
+  }
+  selectedChange(event:any){
+    if(!event.data) return;
+    this.selectedID = event.data.recID;
     this.dt.detectChanges();
   }
   clickApprovePost(event:any){

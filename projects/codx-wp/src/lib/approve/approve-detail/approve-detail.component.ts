@@ -2,8 +2,10 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, O
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, AuthService, CacheService, DataRequest, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption } from 'codx-core';
+import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { WP_News } from '../../models/WP_News.model';
+import { PopupEditComponent } from '../../news/popup/popup-edit/popup-edit.component';
 import { ApproveComponent } from '../approve.component';
 
 @Component({
@@ -14,8 +16,10 @@ import { ApproveComponent } from '../approve.component';
 export class ApproveDetailComponent implements OnInit,OnChanges {
 
   @Input() objectID: any;
+  @Input() funcID: any;
   @Input() entityName: any;
   @Input() formModel : any;
+  @Input() dataService:CRUDService;
   @Output() evtApproval = new EventEmitter();
   tabAsside = [
     {
@@ -68,8 +72,12 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   cancelApprove  = "4";
   remakeApprove = "2";
   model = new DataRequest();
+  service = "WP";
+  assemblyName = "ERM.Business.WP";
+  className = "NewsBusiness";
   constructor(private api:ApiHttpService,
     private dt:ChangeDetectorRef,
+    private callFuc:CallFuncService,
     private cache:CacheService,
     private notifySvr: NotificationsService,
     private sanitizer: DomSanitizer
@@ -87,6 +95,10 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     }
   }
   getPostInfor(){
+    if(!this.objectID){
+      this.data = null;
+      return;
+    }
     this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetPostInfoAsync",[this.objectID,this.entityName])
     .subscribe((res) => {
       if(res){
@@ -162,6 +174,68 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
 
   valueChange(event:any){
 
+  }
+
+  clickMF(event:any){
+    switch(event.functionID){
+      case 'SYS02':
+        this.deletedPost(this.data);
+        break;
+      case 'SYS03':
+        let option = new DialogModel();
+        option.DataService = this.dataService;
+        option.FormModel = this.formModel;
+        if(this.entityName == "WP_News"){
+          option.IsFull = true;
+          this.callFuc.openForm(PopupEditComponent,'Cập nhật bài viết',0,0,this.funcID,this.data,'',option);
+        }
+        else 
+        {
+          this.api.execSv(this.service,this.assemblyName,"CommentsBusiness","GetPostByIDAsync", this.data.recID)
+          .subscribe((res:any) => {
+            if(res) {
+              let obj = {
+                post: res,
+                status: 'edit',
+                headerText: 'Chỉnh sửa bài viết',
+              };
+              let option = new DialogModel();
+              option.DataService = this.dataService;
+              option.FormModel = this.formModel;
+              this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
+                if(data.result){
+                  console.log(data);
+                }
+              })
+            }});
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  deletedPost(data:any){
+    if(!data)return;
+    this.dataService.delete(
+      [data],
+      true,
+      (opt:any)=>this.beforDeletedPost(opt,data)).subscribe();
+  }
+
+  beforDeletedPost(option:RequestOption,data:any){
+    option.service = "WP";
+    option.assemblyName = "ERM.Business.WP";
+    option.className = "NewsBusiness";
+    if(this.entityName == "WP_News"){
+      option.methodName = "DeleteNewsAsync";
+    }
+    else 
+    {
+      option.methodName = "DeletePostAsync";
+    }
+    option.data = data;
+    return true;
   }
 
 }

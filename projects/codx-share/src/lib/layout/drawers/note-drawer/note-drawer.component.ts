@@ -187,10 +187,37 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
 
   getMaxPinNote() {
     this.api
-      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'GetParamAsync')
+      .exec<any>(
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetOneField',
+        'WPCalendars'
+      )
       .subscribe((res) => {
-        if (res) this.maxPinNotes = res[0].msgBodyData[0].fieldValue;
+        if (res[2]) this.removeForbiddenCharacters(res[2].dataValue);
       });
+  }
+
+  removeForbiddenCharacters(input) {
+    let forbiddenChars = [
+      '/',
+      '?',
+      '&',
+      '=',
+      '.',
+      '"',
+      `'`,
+      '{',
+      '}',
+      'MaxPinNotes',
+      ':',
+      '""',
+    ];
+
+    for (let char of forbiddenChars) {
+      input = input.split(char).join('');
+    }
+    this.maxPinNotes = input;
   }
 
   valueChange(e, recID = null, item = null) {

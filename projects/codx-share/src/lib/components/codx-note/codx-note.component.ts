@@ -58,7 +58,8 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   headerComment = '';
   checkFile = false;
   totalComment = 0;
-  lstEditIV: any[] = [];
+  lstEditIV: any = new Array();
+  lstViewIV: any = new Array();
   user: any = null;
   MODE_IMAGE_VIDEO = 'VIEW';
   listNoteTemp: any = {
@@ -184,11 +185,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       this.id = this.contents.length - 1;
       this.dt.detectChanges();
       this.setPropertyForView();
+      this.getImageVideo();
     }
-    this.getImageVideo();
   }
 
-  lstViewIV: any = new Array();
   getImageVideo() {
     if (this.contents?.length > 0) {
       this.contents.forEach((res) => {
@@ -256,9 +256,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.focus(this.contents.length);
   }
 
-  chooseType(type: any, ele: any) {
-    if (!this.currentElement && ele)
-      this.currentElement = ele.elRef.nativeElement;
+  chooseType(type: any, ele: any, index = null, menu = null) {
+    if (menu == true) {
+      if (!this.currentElement && ele)
+        this.currentElement = ele.elRef.nativeElement;
+    } else this.currentElement = ele.elRef.nativeElement;
     if (this.currentElement) {
       var input = this.currentElement.querySelector(
         '.codx-text'
@@ -266,8 +268,13 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       if (input) input.focus();
     }
     this.lineType = type;
-    if (this.id >= this.contents.length) this.id = this.contents.length - 1;
-    this.contents[this.id].lineType = this.lineType;
+    if (menu == true) {
+      if (this.id >= this.contents.length) this.id = this.contents.length - 1;
+      this.contents[this.id].lineType = this.lineType;
+    } else {
+      if (index >= this.contents.length) index = this.contents.length - 1;
+      this.contents[index].lineType = this.lineType;
+    }
     this.listNoteTemp.lineType = this.lineType;
     if (this.lineType != 'TITLE') {
       var divElement = this.currentElement.children[0] as HTMLElement;
@@ -307,7 +314,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     this.font.UNDERLINE = underline;
   }
 
-  chooseFont(font) {
+  chooseFont(font, index = null, menu = null) {
     if (!this.currentElement) return;
     this.currentElement.focus();
     var style = this.currentElement.style;
@@ -339,16 +346,23 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       else style.textDecorationLine = 'none';
       this.listNoteTemp.format = this.listNoteTemp.format + 'underline;';
     }
-    if (this.id >= this.contents.length) this.id = this.contents.length - 1;
-    this.contents[this.id].format = this.listNoteTemp.format;
+    if (menu == true) {
+      if (this.id >= this.contents.length) this.id = this.contents.length - 1;
+      this.contents[this.id].format = this.listNoteTemp.format;
+    } else {
+      if (index >= this.contents.length) index = this.contents.length - 1;
+      this.contents[index].format = this.listNoteTemp.format;
+    }
     if (this.objectParentID)
       this.updateContent(this.objectParentID, this.contents).subscribe();
     this.dt.detectChanges();
   }
 
-  checkFont(font, ele) {
-    if (!this.currentElement && ele)
-      this.currentElement = ele.elRef.nativeElement;
+  checkFont(font, ele, index = null, menu = null) {
+    if (menu == true) {
+      if (!this.currentElement && ele)
+        this.currentElement = ele.elRef.nativeElement;
+    } else this.currentElement = ele.elRef.nativeElement;
     if (this.currentElement) {
       var input = this.currentElement.querySelector(
         'input.codx-text'
@@ -356,7 +370,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       input.focus();
     }
     this.font[font] = !this.font[font];
-    this.chooseFont(font);
+    this.chooseFont(font, index, menu);
   }
 
   valueChangeColor(event, ele, elementColor) {
@@ -687,10 +701,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   ) {
     switch (type) {
       case 'format':
-        this.chooseType(format, ele);
+        this.chooseType(format, ele, index, menu);
         break;
       case 'font':
-        this.checkFont(format, ele);
+        this.checkFont(format, ele, index, menu);
         break;
       case 'delete':
         this.delete(index);
@@ -748,28 +762,35 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     item.attachments = 0;
     obj.push(item);
 
+    let listFileTemp;
     this.updateContent(this.objectParentID, obj).subscribe(async (res: any) => {
       if (res) {
         // up file
         if (e.data.length > 0) {
           let files = e.data;
-          files.map((e: any) => {
-            if (e.mimeType.indexOf('image') >= 0) {
-              e['referType'] = this.REFER_TYPE.IMAGE;
-            } else if (e.mimeType.indexOf('video') >= 0) {
-              e['referType'] = this.REFER_TYPE.VIDEO;
+          files.map((dt: any) => {
+            if (dt.mimeType.indexOf('image') >= 0) {
+              dt['referType'] = this.REFER_TYPE.IMAGE;
+            } else if (dt.mimeType.indexOf('video') >= 0) {
+              dt['referType'] = this.REFER_TYPE.VIDEO;
             } else {
-              e['referType'] = this.REFER_TYPE.APPLICATION;
+              dt['referType'] = this.REFER_TYPE.APPLICATION;
             }
           });
+          listFileTemp = files;
+          // let lstIVTemp = JSON.parse(JSON.stringify(this.lstEditIV));
           if (this.lstViewIV.length > 0) {
             if (this.MODE_IMAGE_VIDEO == 'VIEW')
               this.lstEditIV = this.lstViewIV;
             this.lstEditIV.push(files[0]);
-          } else this.lstEditIV = files;
-          console.log('check lstEditIV', this.lstEditIV);
+          } else this.lstEditIV.push(files[0]);
         }
-        this.ATM_IV.fileUploadList = this.lstEditIV;
+        if (listFileTemp) {
+          this.ATM_IV.fileUploadList = listFileTemp;
+          // this.ATM_IV.fileUploadList[0]['objectID'] = listFileTemp[0].objectID;
+          this.ATM_IV.fileUploadList[0].objectId = listFileTemp[0].objectID;
+        }
+        console.log('check this.ATM_IV.fileUpload', this.ATM_IV.fileUploadList);
         (await this.ATM_IV.saveFilesObservable()).subscribe((result: any) => {
           if (result) {
             this.contents = obj;
@@ -948,7 +969,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       tasks: 0,
       // recID: '',
     };
-    // if (this.countFileAdded > 1) index++;
     if (e.data.length > 1) {
       obj.splice(this.IDTemp, 1);
       e.data.forEach((dt) => {
@@ -974,8 +994,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
     item.lineType = 'TEXT';
     item.attachments = 0;
     obj.push(item);
-
-    console.log('check contents', this.contents);
     this.updateContent(this.objectParentID, obj).subscribe(async (res: any) => {
       if (res) {
         // up file

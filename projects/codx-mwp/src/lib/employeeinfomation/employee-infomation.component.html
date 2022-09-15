@@ -23,6 +23,7 @@
           #imageAvatar
           [width]="100"
           [objectId]="employeeInfo?.employeeID"
+          [objectName]="employeeInfo?.employeeName"
           objectType="HR_Employees"
           [funcId]="view.formModel.funcID"
           isAllowEdit="true"
@@ -629,13 +630,13 @@
                           <div class="d-flex flex-column">
                             <codx-temp-full
                               [formModel]="view.formModel"
-                              [content]="experences.companyName"
+                              [title]="experences.companyName"
                               [dataItem]="experences"
                               [desc]="experences.roleName"
                               [typeMF]="'hover'"
                               (clickMF)="clickMF($event, experences)"
                             >
-                            </codx-temp-full>
+                          </codx-temp-full>
                           </div>
                         </div>
                       </div>
@@ -890,7 +891,7 @@
                           [formModel]="view.formModel"
                           [title]="relationship.relationName"
                           [formModel]="view.formModel"
-                          (clickMF)="clickMFS($event, data)"
+                          (clickMF)="clickMFS($event, relationship)"
                           [dataItem]="relationship"
                           [typeMF]="'hover'"
                           [desc]="

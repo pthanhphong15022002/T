@@ -1,36 +1,63 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template #body>
-        <div *ngIf="skillEmployee">
-            <ng-container *ngFor="let data of skillEmployee">
-                <div class="fw-bold text-dark mb-1">{{data.category}}</div>
-                <div class="d-flex align-items-center">
-                    <ejs-slider id='minrange' [type]='minType' [min]="0" [max]="10" width="250" [value]="data.valueX"
-                        (valueChange)="sliderChange($event,data)">
-                    </ejs-slider>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-danger" (click)="deleteSkill(data)">
-                        <span class="icon-close icon-18"></span>
-                    </a>
-                </div>
-            </ng-container>
+<codx-form
+  headerText="{{ title }}"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div *ngIf="skillEmployee">
+      <ng-container *ngFor="let data of skillEmployee">
+        <div class="fw-bold text-dark mb-1">{{ data.category }}</div>
+        <div class="d-flex align-items-center">
+          <ejs-slider
+            id="minrange"
+            [type]="minType"
+            [min]="0"
+            [max]="10"
+            width="250"
+            [value]="data.valueX"
+            (valueChange)="sliderChange($event, data)"
+          >
+          </ejs-slider>
+          <a
+            class="btn btn-xs btn-icon btn-light btn-hover-danger"
+            (click)="deleteSkill(data)"
+          >
+            <span class="icon-close icon-18"></span>
+          </a>
         </div>
-    </ng-template>
-    <ng-template #footer>
-        <div class="process-item d-flex mb-4 mt-6">
-            <div class="d-flex align-items-center py-3 pl-4 pr-6 process-r add-process">
-                <span class="icon-add icon-18"></span>
-                <a (click)="popupAddSkill()" class="text-primary">
-                    <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
-                    </codx-label>
-                </a>
-                <ng-container *ngIf="showCBB">
-                    <codx-combobox-popup comboboxName="'Skills'" field="'skill'" [multiple]="true" [width]="width"
-                        [height]="height" (clickSave)="saveAddUser($event)" title="Kỹ năng">
-                    </codx-combobox-popup>
-                </ng-container>
-            </div>
-        </div>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
-        </div>
-    </ng-template>
+      </ng-container>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="process-item d-flex mb-4 mt-6">
+      <div
+        class="d-flex align-items-center user-item add-process"
+      >
+        <span class="icon-add icon-18"></span>
+        <a class="text-primary" (click)="popupAddSkill()">
+          <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
+          </codx-label>
+        </a>
+        <ng-container *ngIf="showCBB">
+          <codx-combobox-popup
+            comboboxName="Skills"
+            field="skill"
+            [multiple]="true"
+            [width]="width"
+            [height]="height"
+            (clickSave)="saveAddSkill($event)"
+            title="Kỹ năng"
+          >
+          </codx-combobox-popup>
+        </ng-container>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
+        Lưu
+      </button>
+    </div>
+  </ng-template>
 </codx-form>

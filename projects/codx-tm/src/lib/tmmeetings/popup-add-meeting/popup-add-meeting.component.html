@@ -1,6 +1,6 @@
 <codx-layout-add [title]="title" [tabInfo]="tabInfo" [formModel]="dialog.formModel" [subHeader]="subHeader"
   [footer]="footer" [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescip, tabResources, tabOpen, tabJob]"
-  (setTitle)="setTitle($event)" #form [data]="data"></codx-layout-add>
+  (setTitle)="setTitle($event)" #form [data]="meeting"></codx-layout-add>
 
 <ng-template #subHeader>
     <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"
@@ -47,10 +47,10 @@
       </codx-input>
     </div>
     <div class="col-2 mt-6">
-      <codx-label class="fs-6 fw-bold mb-2" default> </codx-label>
-      <codx-input #checkbox type="checkbox" name="checkbox" label="Cả ngày"  labelPosition="After" 
+      <codx-input #checkbox type="checkbox" name="checkbox"  label="Cả ngày"  labelPosition="After" [formModel]="form.formModel"
         (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay">
       </codx-input>
+      <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
   </div>
   <div class="form-group">
@@ -58,7 +58,9 @@
       <codx-label fiedName="Location" formName="TMMeetings" gridViewName="grvTMMeetings" default="Địa điểm">
       </codx-label>
     </div>
-    <codx-input field="location" type="text" [crrValue]="meeting?.location" (valueChange)="valueChange($event)">
+    <codx-input field="location"  
+    [formModel]="form.formModel"
+    [Group]="form.formGroup" (valueChange)="valueChange($event)" >
     </codx-input>
   </div>
   <div class="form-group">
@@ -303,17 +305,11 @@
       <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
     </button>
   </div>
-
-  <!-- <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary ms-1">
-      <codx-label name="Save" default="Lưu" (click)="onSave()"></codx-label>
-    </button>
-  </div> -->
 </ng-template>
 
-<ng-template #addLink let-dialog>
+<ng-template #addLink let-dialog="dialogPopupLink">
   <codx-form headerText="{{ titleLink }}" subHeaderText="" [body]="bodyFormLink" [footer]="footerFormLink"
-    [dialog]="dialog">
+    [dialog]="dialogPopupLink">
   </codx-form>
 </ng-template>
 <ng-template #bodyFormLink>
@@ -328,7 +324,7 @@
   </div>
 </ng-template>
 <ng-template #footerFormLink>
-  <button type="button" class="btn btn-primary">
+  <button type="button" class="btn btn-primary" (click)="dialogPopupLink.close()">
     <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
   </button>
 </ng-template>

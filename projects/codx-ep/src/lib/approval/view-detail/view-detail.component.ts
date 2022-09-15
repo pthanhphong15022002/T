@@ -6,7 +6,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { UIComponent, Util, ViewsComponent } from 'codx-core';
+import { DataRequest, UIComponent, Util, ViewsComponent } from 'codx-core';
+import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
   selector: 'view-detail',
@@ -28,13 +29,53 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
   itemDetailDataStt: any;
   itemDetailStt: any;
   active = 1;
+  files = [
+    {
+      id: '6322a7433821591f25a3ff77',
+      recID: '41894ed5-34ad-11ed-945f-00155d035517',
+      fileID: '6322a7436e021f501d602bf6',
+      fileName: 'Tuyên dương học sinh giỏi.pdf',
+      eSign: true,
+      comment: '.pdf',
+      createdOn: '2022-09-14T21:17:07.028-07:00',
+      areas: [],
+      createdBy: 'ADMIN',
+      modifiedOn: null,
+      modifiedBy: null,
+      write: true,
+      delete: true,
+      share: true,
+      assign: true,
+      includeTables: null,
+      updateColumns: '',
+      unbounds: null,
+    },
+  ];
+  model: DataRequest;
 
-  constructor(private injector: Injector) {
+  constructor(
+    private injector: Injector,
+    private codxEpService: CodxEpService
+  ) {
     super(injector);
   }
 
   onInit(): void {
     this.itemDetailStt = 1;
+
+    this.model = new DataRequest();
+    this.model.funcID = 'EPT1';
+    this.model.formName = 'BookingRooms';
+    this.model.gridViewName = 'grvBookingRooms';
+    this.model.entityName = 'EP_Bookings';
+    this.model.entityPermission = 'EP_BookingRooms';
+    this.model.pageLoading = true;
+    this.model.comboboxName = 'EP_BookingRooms';
+    (this.model.page = 1), (this.model.pageSize = 20);
+
+    this.codxEpService.getDataCombobox(this.model).subscribe((res) => {
+      console.log('SSASA', res);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -44,12 +85,9 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
         changes.itemDetail?.currentValue?.recID
     ) {
       this.api
-        .exec<any>(
-          'EP',
-          'BookingsBusiness',
-          'GetBookingByIDAsync',
-          [changes.itemDetail?.currentValue?.recID]
-        )
+        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
+          changes.itemDetail?.currentValue?.recID,
+        ])
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
@@ -63,7 +101,7 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
   }
 
   openFormFuncID(value, datas: any = null) {
-    console.log('event', value.functionID);
+    debugger;
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {
@@ -73,28 +111,46 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
     //   datas = this.view.dataService.data[index];
     // }
     switch (funcID) {
+      case 'EPT40101':
+      case 'EPT40201':
       case 'EPT40301':
         {
+          alert('Duyệt');
         }
         break;
-      case 'EPT40302':
+      case 'EPT40102':
+      case 'EPT40201':
+      case 'EPT40301':
         {
+          alert('Ký');
         }
         break;
+      case 'EPT40103':
+      case 'EPT40203':
       case 'EPT40303':
         {
+          alert('Đồng thuận');
         }
         break;
+      case 'EPT40104':
+      case 'EPT40204':
       case 'EPT40304':
         {
+          alert('Đóng dấu');
         }
         break;
+      case 'EPT40105':
+      case 'EPT40205':
       case 'EPT40305':
         {
+          alert('Từ chối');
         }
         break;
+      case 'EPT40106':
+      case 'EPT40206':
       case 'EPT40306':
         {
+          alert('Làm lại');
         }
         break;
       default:
