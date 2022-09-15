@@ -164,30 +164,30 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.initForm();
                   }
                 });
-              if (this.lstFile.length > 0) {
-                this.fileService
-                  .copyFile(
-                    this.oSignFile.files[0].fileID,
-                    this.oSignFile.files[0].fileName,
-                    this.oSignFile.recID,
-                    1
-                  )
-                  .subscribe((newFile) => {
-                    if (newFile && newFile?.data) {
-                      let nFile = newFile?.data;
-                      let files = [];
-                      let file = new File();
-                      file.fileID = nFile.recID;
-                      file.fileName = nFile.fileName;
-                      file.eSign = true;
+              // if (this.lstFile.length > 0) {
+              //   this.fileService
+              //     .copyFile(
+              //       this.oSignFile.files[0].fileID,
+              //       this.oSignFile.files[0].fileName,
+              //       this.oSignFile.recID,
+              //       1
+              //     )
+              //     .subscribe((newFile) => {
+              //       if (newFile && newFile?.data) {
+              //         let nFile = newFile?.data;
+              //         let files = [];
+              //         let file = new File();
+              //         file.fileID = nFile.recID;
+              //         file.fileName = nFile.fileName;
+              //         file.eSign = true;
 
-                      files.push(file);
+              //         files.push(file);
 
-                      this.dialogSignFile &&
-                        this.dialogSignFile.patchValue({ files: files });
-                    }
-                  });
-              }
+              //         this.dialogSignFile &&
+              //           this.dialogSignFile.patchValue({ files: files });
+              //       }
+              //     });
+              // }
             }
           });
 
@@ -441,9 +441,11 @@ export class PopupAddSignFileComponent implements OnInit {
         });
       }
 
-      if (event.field == 'employeeID') {
+      if (event.field == 'owner') {
+        debugger;
         let employee = event.component?.itemsSelected[0];
         this.dialogSignFile.patchValue({
+          employeeID: employee?.employeeID,
           deptID: employee?.departmentID,
           divisionID: employee?.divisionID,
           companyID: employee?.companyID,

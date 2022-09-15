@@ -434,16 +434,16 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <codx-label fiedName="EmployeeID" [formModel]="formModel">
+                  <codx-label fiedName="Owner" [formModel]="formModel">
                   </codx-label>
                   <codx-input
                     type="combobox"
                     name="combobox"
                     ngDefaultControl
-                    [refValue]="cbxName['EmployeeID']"
-                    field="employeeID"
+                    [refValue]="cbxName['Owner']"
+                    field="owner"
                     (valueChange)="valueChange($event)"
-                    [crrValue]="dialogSignFile.value?.employeeID"
+                    [crrValue]="dialogSignFile.value?.owner"
                   >
                   </codx-input>
                 </div>

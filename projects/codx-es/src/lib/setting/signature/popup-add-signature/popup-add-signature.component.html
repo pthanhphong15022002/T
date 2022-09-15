@@ -259,7 +259,7 @@
                 ></codx-img> -->
 
                 <codx-img
-                  #imageUpload
+                  #imgSignature1
                   class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                   [width]="80"
                   [recId]="data.signature1"
@@ -269,7 +269,7 @@
                   data-kt-menu-attach="parent"
                   data-kt-menu-placement="bottom-end"
                   data-kt-menu-flip="bottom"
-                  [isAllowEdit]="false"
+                  [isAllowEdit]="true"
                 >
                 </codx-img>
               </div>
@@ -292,7 +292,7 @@
                 [recId]="data.signature2"
               ></codx-img> -->
               <codx-img
-                #imageUpload
+                #imgSignature2
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
                 [recId]="data.signature2"
@@ -302,7 +302,7 @@
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
-                [isAllowEdit]="false"
+                [isAllowEdit]="true"
               >
               </codx-img>
             </div>
@@ -322,7 +322,7 @@
                 [recId]="data.stamp"
               ></codx-img> -->
               <codx-img
-                #imageUpload
+                #imgStamp
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
                 [recId]="data.stamp"
@@ -332,7 +332,7 @@
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
-                [isAllowEdit]="false"
+                [isAllowEdit]="true"
               >
               </codx-img>
             </div>
@@ -344,18 +344,28 @@
     </div>
 
     <div class="form-group row mt-3">
-      <div class="col-6">
+      <div class="col-4">
         <codx-label fiedName="OTPControl" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input
-          type="valuelist"
           field="oTPControl"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
         >
         </codx-input>
       </div>
-      <div class="col-6">
+      <div class="col-4">
+        <codx-label fiedName="OTPPin" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input
+          field="oTPPin"
+          [Group]="form.formGroup"
+          [formModel]="dialog.formModel"
+          [disabled]="data.otpControl == 3 ? false : true"
+        >
+        </codx-input>
+      </div>
+      <div class="col-4">
         <codx-label fiedName="SpanTime" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input
@@ -366,6 +376,72 @@
           [showSpinButton]="false"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="d-flex flex-stack fs-6 py-2">
+      <div class="fw-bolder text-primary">
+        <codx-label
+          [name]="'lblTitleCA'"
+          default="Thông tin CA"
+          [formModel]="dialog.formModel"
+        >
+        </codx-label>
+      </div>
+      <span class="text-end align-items-end">
+        <a
+          class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+          [style.visibility]="data.signatureType == '1' ? 'visible' : 'hidden'"
+        >
+          <span
+            class="icon-upload btn-text-primary me-2"
+            (click)="popupUploadFile($event)"
+          ></span>
+          <codx-label
+            name="lblUploadCA"
+            default="Upload CA"
+            [formModel]="dialog.formModel"
+          ></codx-label>
+        </a>
+      </span>
+    </div>
+    <div class="form-group row mt-3">
+      <div class="col-4">
+        <codx-label fiedName="StartedOn" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input
+          type="datetime"
+          field="startedOn"
+          format="d"
+          [formModel]="dialog.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        >
+        </codx-input>
+      </div>
+      <div class="col-4">
+        <codx-label fiedName="ExpiredOn" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input
+          type="datetime"
+          field="expiredOn"
+          format="d"
+          [formModel]="dialog.formModel"
+          [Group]="form.formGroup"
+          [disabled]="data.signatureType == '1' ? true : false"
+        >
+        </codx-input>
+      </div>
+      <div class="col-4">
+        <codx-label fiedName="Password" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input
+          type="password"
+          field="password"
+          [Group]="form.formGroup"
+          [formModel]="dialog.formModel"
+          [disabled]="data.signatureType == '1' ? true : false"
         >
         </codx-input>
       </div>

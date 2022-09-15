@@ -18,6 +18,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  ImageViewerComponent,
   NotificationsService,
   RequestOption,
 } from 'codx-core';
@@ -33,6 +34,10 @@ import { PopupSignatureComponent } from '../popup-signature/popup-signature.comp
 export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   @Output() closeSidebar = new EventEmitter();
   @ViewChildren('attachment') attachment: AttachmentComponent;
+  @ViewChild('imgSignature1') imgSignature1: ImageViewerComponent;
+  @ViewChild('imgSignature2') imgSignature2: ImageViewerComponent;
+  @ViewChild('imgStamp') imgStamp: ImageViewerComponent;
+
   @ViewChild('content') content;
   @ViewChild('form') form: CodxFormComponent;
 
@@ -83,58 +88,10 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // this.esService
-    //   .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((res) => {
-    //     this.cbxName = res;
-    //   });
-    //this.initForm();
-    // this.codxService
-    //   .getAutoNumber(
-    //     this.formModel.funcID,
-    //     this.formModel.entityName,
-    //     'CategoryID'
-    //   )
-    //   .subscribe((dt: any) => {
-    //     this.objectIDFile = dt;
-    //   });
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogSignature = item;
-      });
-  }
-
-  initForm() {
-    this.esService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.dialogSignature = item;
-        this.dialogSignature.addControl('id', new FormControl(this.data?.id));
-        this.dialogSignature.addControl(
-          'recID',
-          new FormControl(this.data?.recID)
-        );
-        this.dialogSignature.patchValue(this.data);
-
-        if (!this.isAdd) {
-          this.dialogSignature.patchValue({
-            signatureType: '1',
-            supplier: '1',
-            oTPControl: '0',
-            spanTime: 0,
-            stop: false,
-          });
-        } else {
-          this.dialogSignature.addControl(
-            'recID',
-            new FormControl(this.data?.recID)
-          );
-        }
-        this.isAfterRender = true;
-        this.Signature1 = null;
-        this.Signature2 = null;
-        this.Stamp = null;
       });
   }
 
@@ -145,12 +102,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         this.data.fullName = event?.data.dataSelected[0].text;
 
         this.form?.formGroup.patchValue({ fullName: this.data.fullName });
-        // this.dialogSignature.patchValue({
-        //   [event['field']]: event?.data.value[0],
-        // });
-        // this.dialogSignature.patchValue({
-        //   fullName: event?.data.dataSelected[0].text,
-        // });
       } else if (event?.field == 'signatureType') {
         if (event?.data == '2') {
           this.data.supplier = '0';
@@ -163,7 +114,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   beforeSave(option: RequestOption) {
-    //let itemData = this.dialogSignature.value;
     let itemData = this.data;
     if (this.isAdd) {
       option.methodName = 'AddNewAsync';
@@ -183,12 +133,32 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    //this.dialog.dataService.dataSelected = this.dialogSignature.value;
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.update || res.save) {
+          this.imgSignature1
+            .updateFileDirectReload(this.data.recID + '1')
+            .subscribe((result) => {
+              if (result) {
+                console.log(result);
+              }
+            });
+          this.imgSignature2
+            .updateFileDirectReload(this.data.recID + '2')
+            .subscribe((result) => {
+              console.log(result);
+              if (result) {
+              }
+            });
+          this.imgStamp
+            .updateFileDirectReload(this.data.recID + 's')
+            .subscribe((result) => {
+              if (result) {
+                console.log(result);
+              }
+            });
           this.isSaveSuccess = true;
           console.log(res);
           if (res.update) {
@@ -280,7 +250,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.currentTab = tab;
   }
 
-  getLinkImg(data) {
-    // return `${environment.apiUrl}/api/dm/files/GetImage?id=${data[0]?.recID}&access_token=${this.auth.userValue.token}`;
+  popupUploadFile(evt: any) {
+    this.attachment.uploadFile();
   }
 }
