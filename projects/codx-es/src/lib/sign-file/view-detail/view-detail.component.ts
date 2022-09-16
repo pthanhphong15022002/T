@@ -245,7 +245,7 @@ export class ViewDetailComponent implements OnInit {
         [task, vllControlShare, vllRose, title],
         option
       );
-      dialogAdd.closed.subscribe((e) => {});
+      dialogAdd.closed.subscribe((e) => { });
     }
   }
 
@@ -330,6 +330,6 @@ export class ViewDetailComponent implements OnInit {
     return styles;
   }
 
-  fileAdded($event) {}
-  getfileCount($event) {}
+  fileAdded($event) { }
+  getfileCount($event) { }
 }
