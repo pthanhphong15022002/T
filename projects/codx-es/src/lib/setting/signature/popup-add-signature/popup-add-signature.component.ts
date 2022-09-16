@@ -33,7 +33,7 @@ import { PopupSignatureComponent } from '../popup-signature/popup-signature.comp
 })
 export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   @Output() closeSidebar = new EventEmitter();
-  @ViewChildren('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('imgSignature1') imgSignature1: ImageViewerComponent;
   @ViewChild('imgSignature2') imgSignature2: ImageViewerComponent;
   @ViewChild('imgStamp') imgStamp: ImageViewerComponent;
@@ -125,7 +125,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  onSaveForm() {
+  async onSaveForm() {
     this.dialogSignature.patchValue(this.data);
 
     if (this.dialogSignature.invalid == true) {
@@ -133,6 +133,14 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    if (this.attachment.fileUploadList.length > 0) {
+      this.attachment.objectId = this.data.recID;
+      (await this.attachment.saveFilesObservable()).subscribe((files: any) => {
+        if (files?.status == 0) {
+          console.log(files);
+        }
+      });
+    }
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0)
@@ -203,27 +211,27 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   File: any;
   fileAdd: any;
   files: any;
-  fileAdded(event, currentTab) {
-    switch (currentTab) {
-      case 3:
-        this.Signature1 = event.data;
-        this.dialogSignature.patchValue({
-          signature1: event.data[0].recID ?? null,
-        });
-        break;
-      case 4:
-        this.Signature2 = event.data;
-        this.dialogSignature.patchValue({
-          signature2: event.data[0].recID ?? null,
-        });
-        break;
-      case 5:
-        this.Stamp = event.data;
-        this.dialogSignature.patchValue({ stamp: event.data[0].recID ?? null });
-        break;
-    }
-    this.cr.detectChanges();
-  }
+  // fileAdded(event, currentTab) {
+  //   switch (currentTab) {
+  //     case 3:
+  //       this.Signature1 = event.data;
+  //       this.dialogSignature.patchValue({
+  //         signature1: event.data[0].recID ?? null,
+  //       });
+  //       break;
+  //     case 4:
+  //       this.Signature2 = event.data;
+  //       this.dialogSignature.patchValue({
+  //         signature2: event.data[0].recID ?? null,
+  //       });
+  //       break;
+  //     case 5:
+  //       this.Stamp = event.data;
+  //       this.dialogSignature.patchValue({ stamp: event.data[0].recID ?? null });
+  //       break;
+  //   }
+  //   this.cr.detectChanges();
+  // }
 
   getJSONString(data) {
     if (data) {
@@ -251,6 +259,12 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   popupUploadFile(evt: any) {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa');
+
     this.attachment.uploadFile();
   }
+
+  getfileCount(event) {}
+
+  fileAdded(event) {}
 }

@@ -160,7 +160,7 @@
     <div class="form-group">
       <codx-label fiedName="Email" [formModel]="dialog.formModel"> </codx-label>
       <div class="d-flex">
-        <div class="w-100 me-2">
+        <!-- <div class="w-100 me-2">
           <codx-input
             type="text"
             field="email"
@@ -168,15 +168,17 @@
             [formModel]="dialog.formModel"
           >
           </codx-input>
-        </div>
+        </div> -->
 
         <codx-input
           type="Combobox"
-          name="combobox"
           [refValue]="'Users'"
           refType="P"
           field="userID"
-          [showInput]="false"
+          [ngClass]="'w-100'"
+          [crrValue]="data.userID"
+          [showInput]="true"
+          [multiple]="false"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -361,7 +363,7 @@
           field="oTPPin"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
-          [disabled]="data.otpControl == 3 ? false : true"
+          [disabled]="data.otpControl == '3' ? false : true"
         >
         </codx-input>
       </div>
@@ -376,6 +378,9 @@
           [showSpinButton]="false"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
+          [disabled]="
+            data.otpControl == '1' || data.otpControl == '2' ? false : true
+          "
         >
         </codx-input>
       </div>
@@ -393,11 +398,9 @@
         <a
           class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
           [style.visibility]="data.signatureType == '1' ? 'visible' : 'hidden'"
+          (click)="popupUploadFile($event)"
         >
-          <span
-            class="icon-upload btn-text-primary me-2"
-            (click)="popupUploadFile($event)"
-          ></span>
+          <span class="icon-upload btn-text-primary me-2"></span>
           <codx-label
             name="lblUploadCA"
             default="Upload CA"
@@ -405,6 +408,24 @@
           ></codx-label>
         </a>
       </span>
+    </div>
+    <div>
+      <codx-attachment
+        #attachment
+        [objectType]="form.formModel?.entityName"
+        hideBtnSave="1"
+        hideFolder="1"
+        hideUploadBtn="1"
+        hideDes="1"
+        [functionID]="'ESS21'"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        [objectId]="data.recID"
+        [allowMultiFile]="0"
+        [idBrowse]="'add'"
+        [displayThumb]="true"
+      >
+      </codx-attachment>
     </div>
     <div class="form-group row mt-3">
       <div class="col-4">

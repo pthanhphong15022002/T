@@ -71,3 +71,11 @@ export class EmailSendTo {
   text: string;
   icon: string = null;
 }
+
+export class tmpBG_TrackLogs {
+  objectType: string;
+  objectID: string;
+  actionType: string;
+  functionID: string;
+  sendToObjects: string;
+}

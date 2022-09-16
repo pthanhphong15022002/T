@@ -13,6 +13,7 @@ import {
 } from 'codx-core';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { tmpBG_TrackLogs } from './codx-es.model';
 
 export class GridModels {
   pageSize: number;
@@ -693,6 +694,16 @@ export class CodxEsService {
       'EmailTemplatesBusiness',
       'EditEmaiTemplateAsync',
       [data, sendTo]
+    );
+  }
+
+  saveHistorySendEmail(tmpHistory: tmpBG_TrackLogs): Observable<any> {
+    return this.api.execSv(
+      'BG',
+      'ERM.Business.BG',
+      'TrackLogsBusiness',
+      'InsertAsync',
+      tmpHistory
     );
   }
   //#endregion

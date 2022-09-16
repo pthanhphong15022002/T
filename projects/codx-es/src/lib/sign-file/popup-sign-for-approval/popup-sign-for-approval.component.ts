@@ -144,7 +144,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                 result: false,
                 mode: mode,
               };
-              this.notify.notifyCode('E04372');
+              this.notify.notifyCode('SYS021');
               this.dialog && this.dialog.close(result);
             }
           });
@@ -253,7 +253,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
               result: false,
               mode: this.mode,
             };
-            this.notify.notifyCode('E04372');
+            this.notify.notifyCode('SYS021');
             dialog1 && dialog1.close(result);
             this.dialog && this.dialog.close(result);
           }
