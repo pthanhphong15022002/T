@@ -3,52 +3,48 @@
     <div class="w-100 d-flex flex-column" id="erm_content">
         <div class="container p-6 vh-100">
             <div class="d-flex">
-                <div class="card ">
-                    <div class="modal-card-img card-img-overlay" *ngIf="data.background"
-                        [style.background]="data.background | backgroundImage:data.backgroundColor">
+                <div class="row h-500px min-h-500px me-4 d-flex justify-content-center text-center p-6" 
+                    [style.background]="data.background | backgroundImage:data.backgroundColor">
+                    <div class="card-title fw-bolder display-6"
+                        [style.color]="data.pattern?.headerColor">
+                        {{data?.cardType | vll:'L1422':'text'|async}}
                     </div>
-                    <div class="row h-100 p-4 d-flex align-items-center justify-content-center text-center" [style.background]="data.background | backgroundImage:data.backgroundColor">
-                        <div class="card-title fw-bolder display-6"
-                            [style.color]="data.pattern?.headerColor">
-                            {{data?.cardType | vll:'L1422':'text'|async}}
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <codx-img class="symbol symbol-40 symbol-circle"
-                                [objectId]="data.sender?.userID" objectType="AD_Users"
-                                [width]="35">
-                            </codx-img>
-                            <span class="pic-send mx-3">
-                                <img alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <codx-img class="symbol symbol-40 symbol-circle"
+                            [objectId]="data.sender?.userID" objectType="AD_Users"
+                            [width]="35">
+                        </codx-img>
+                        <span class="pic-send mx-3">
+                            <img alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
+                        </span>
+                        <codx-img class="symbol symbol-40 symbol-circle"
+                            [objectId]="data.receiver?.userID" objectType="AD_Users"
+                            [width]="35">
+                        </codx-img>
+                    </div>
+                    <div class="text-dark modal-card-sms mt-6"
+                        [style.color]="data.pattern?.textColor"
+                        [innerHTML]="data.situation">
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center group-hasGift mt-6">
+                        <div class="d-flex align-items-center mr-3" *ngIf="data.rating">
+                            <img class="w-30px h-30px mr-2" src="/assets/themes/fd/default/img/{{data.rating | vll:ratingVll:'icon' | async}}" />
+                            <span class="label label-xxs label-pill label-inline label-danger">
+                                {{data?.rating | vll:ratingVll:'text'|async}}
                             </span>
-                            <codx-img class="symbol symbol-40 symbol-circle"
-                                [objectId]="data.receiver?.userID" objectType="AD_Users"
-                                [width]="35">
-                            </codx-img>
                         </div>
-                        <div class="text-dark modal-card-sms mt-6"
-                            [style.color]="data.pattern?.textColor"
-                            [innerHTML]="data.situation">
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center group-hasGift mt-6">
-                            <div class="d-flex align-items-center mr-3" *ngIf="data.rating">
-                                <img class="w-30px h-30px mr-2" src="/assets/themes/fd/default/img/{{data.rating | vll:ratingVll:'icon' | async}}" />
-                                <span class="label label-xxs label-pill label-inline label-danger">
-                                    {{data?.rating | vll:ratingVll:'text'|async}}
-                                </span>
-                            </div>
 
-                            <div class="d-flex align-items-start">
-                                <img src="/assets/img/feedback/gift 1.png"
-                                    *ngIf="data.hasGift"
-                                    class="symbol-image icon-surface1 h-30px mr-2" />
-                                <img src="/assets/img/feedback/money-1.png"
-                                    *ngIf="data.hasPoint"
-                                    class="symbol-image icon-money-1 h-30px mr-2" />
-                            </div>
+                        <div class="d-flex align-items-start">
+                            <img src="/assets/img/feedback/gift 1.png"
+                                *ngIf="data.hasGift"
+                                class="symbol-image icon-surface1 h-30px mr-2" />
+                            <img src="/assets/img/feedback/money-1.png"
+                                *ngIf="data.hasPoint"
+                                class="symbol-image icon-money-1 h-30px mr-2" />
                         </div>
                     </div>
                 </div>
-                <div class="flex-grow-1">
+                <div class="flex-grow-1 w-350px min-w-350px">
                     <div>
                         <div class="text-primary fw-bolder">
                             <codx-label formName="" name="lblSender" default="Người gửi"></codx-label>
