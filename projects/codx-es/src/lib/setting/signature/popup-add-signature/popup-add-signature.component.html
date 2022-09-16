@@ -160,7 +160,7 @@
     <div class="form-group">
       <codx-label fiedName="Email" [formModel]="dialog.formModel"> </codx-label>
       <div class="d-flex">
-        <!-- <div class="w-100 me-2">
+        <div class="w-100 me-2">
           <codx-input
             type="text"
             field="email"
@@ -168,14 +168,13 @@
             [formModel]="dialog.formModel"
           >
           </codx-input>
-        </div> -->
+        </div>
 
         <codx-input
           type="Combobox"
           [refValue]="'Users'"
           refType="P"
           field="userID"
-          [ngClass]="'w-100'"
           [crrValue]="data.userID"
           [showInput]="true"
           [multiple]="false"
