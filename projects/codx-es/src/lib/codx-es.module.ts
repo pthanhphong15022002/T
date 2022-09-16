@@ -49,7 +49,6 @@ import { PopupSignatureComponent } from './setting/signature/popup-signature/pop
 // } from '@syncfusion/ej2-angular-pdfviewer';
 import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { SettingComponent } from './setting/setting.component';
-import { PdfViewComponent } from './sign-file/pdf-view/pdf-view.component';
 import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
 import { PopupSignForApprovalComponent } from './sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { ViewApprovalProcessComponent } from './setting/view-approval-process/view-approval-process.component';
@@ -62,6 +61,7 @@ import {
   NgxExtendedPdfViewerService,
 } from 'ngx-extended-pdf-viewer';
 import { PopupCaPropsComponent } from './sign-file/popup-ca-props/popup-ca-props.component';
+import { PdfComponent } from './sign-file/pdf/pdf.component';
 
 const routes: Routes = [
   {
@@ -74,7 +74,7 @@ const routes: Routes = [
       },
       {
         path: 'pdf/:funcID',
-        component: PopupSignForApprovalComponent,
+        component: PdfComponent,
       },
       {
         path: 'home/:funcID',
@@ -144,13 +144,13 @@ const routes: Routes = [
     PopupSignatureComponent,
     SignatureComponent,
     SettingComponent,
-    PdfViewComponent,
     PopupADRComponent,
     PopupSignForApprovalComponent,
     ViewApprovalProcessComponent,
     ESApprovelComponent,
     SearchingComponent,
     PopupCaPropsComponent,
+    PdfComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
