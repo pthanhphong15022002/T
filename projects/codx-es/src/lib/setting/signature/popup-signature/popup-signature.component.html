@@ -193,7 +193,7 @@
           id="pane_3"
           [ngClass]="currentTab == 3 ? 'active show' : 'd-none'"
         >
-          <codx-attachment
+          <!-- <codx-attachment
             #attSignature1
             idBrowse="attSignature1"
             [objectType]="dialog.formModel.entityName"
@@ -208,14 +208,34 @@
             (fileCount)="fileCount($event, attSignature1, 3)"
             allowMultiFile="0"
           >
-          </codx-attachment>
+          </codx-attachment> -->
+          <div class="m-auto text-center">
+            <codx-img
+              #imgSignature1
+              class="border border-gray-300 border-dashed rounded symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+              [width]="100"
+              [recId]="data.signature1"
+              [objectId]="data.signature1 == null ? '' : data.recID + '1'"
+              [objectType]="'ES_Signatures'"
+              data-kt-menu-trigger="click"
+              data-kt-menu-attach="parent"
+              data-kt-menu-placement="bottom-end"
+              data-kt-menu-flip="bottom"
+              [isAllowEdit]="true"
+            >
+            </codx-img>
+            <div class="mt-8">
+              Chọn file hình chữ ký của bạn (Lưu ý: chọn hình chữ ký không có
+              nền)
+            </div>
+          </div>
         </div>
         <div
           class="tab-pane fade"
           id="pane_4"
           [ngClass]="currentTab == 4 ? 'active show' : 'd-none'"
         >
-          <codx-attachment
+          <!-- <codx-attachment
             #attSignature2
             idBrowse="attSignature2"
             [objectType]="dialog.formModel.entityName"
@@ -230,14 +250,34 @@
             (fileCount)="fileCount($event, attSignature2, 4)"
             allowMultiFile="0"
           >
-          </codx-attachment>
+          </codx-attachment> -->
+          <div class="m-auto text-center">
+            <codx-img
+              #imgSignature2
+              class="border border-gray-300 border-dashed rounded symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+              [width]="100"
+              [recId]="data.signature2"
+              [objectId]="data.signature2 == null ? '' : data.recID + '2'"
+              [objectType]="'ES_Signatures'"
+              data-kt-menu-trigger="click"
+              data-kt-menu-attach="parent"
+              data-kt-menu-placement="bottom-end"
+              data-kt-menu-flip="bottom"
+              [isAllowEdit]="true"
+            >
+            </codx-img>
+            <div class="mt-8">
+              Chọn file hình chữ ký của bạn (Lưu ý: chọn hình chữ ký không có
+              nền)
+            </div>
+          </div>
         </div>
         <div
           class="tab-pane fade"
           id="pane_5"
           [ngClass]="currentTab == 5 ? 'active show' : 'd-none'"
         >
-          <codx-attachment
+          <!-- <codx-attachment
             #attStamp
             idBrowse="attStamp"
             [objectType]="dialog.formModel.entityName"
@@ -252,7 +292,27 @@
             (fileCount)="fileCount($event, attStamp, 5)"
             allowMultiFile="0"
           >
-          </codx-attachment>
+          </codx-attachment> -->
+          <div class="m-auto text-center">
+            <codx-img
+              #imgStamp
+              class="border border-gray-300 border-dashed rounded symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+              [width]="100"
+              [recId]="data.stamp"
+              [objectId]="data.stamp == null ? '' : data.recID + 's'"
+              [objectType]="'ES_Signatures'"
+              data-kt-menu-trigger="click"
+              data-kt-menu-attach="parent"
+              data-kt-menu-placement="bottom-end"
+              data-kt-menu-flip="bottom"
+              [isAllowEdit]="true"
+            >
+            </codx-img>
+            <div class="mt-8">
+              Chọn file hình chữ ký của bạn (Lưu ý: chọn hình chữ ký không có
+              nền)
+            </div>
+          </div>
         </div>
       </div>
     </div>
