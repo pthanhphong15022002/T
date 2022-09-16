@@ -101,11 +101,11 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region CRUD
   saveData(id) {
-    if (this.master.projectID == null || this.master.projectID.trim() == '')
+    if (this.master.iterationType='1' && (this.master.projectID == null || this.master.projectID.trim() == ''))
       return this.notiService.notify('Tên dự án không được để trống !');
     if (
       this.master.iterationName == null ||
-      this.master.iterationName.trim() == ''
+      this.master.iterationName.trim() == '' 
     )
       return this.notiService.notifyCode('TM035');
     if (this.master.projectID && Array.isArray(this.master.projectID))
