@@ -62,7 +62,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   //ProgressBar
   public typeProgress: string = 'Linear';
   public widthProgress: string = '100%';
-  public heightProgress: string = '40px';
+  public heightProgress: string = '40';
   public trackThickness: number = 4;
   public progressThickness: number = 4;
   public min: number = 0;
@@ -369,7 +369,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   }
   reloadAllChart() {
     // this.setPredicate();
-    this.getChartA();
+    this.getDataChartA();
     this.getDataChartB();
   }
   open(content) {
@@ -417,10 +417,12 @@ export class StatisticalComponent extends UIComponent implements OnInit {
             i++;
           });
           this.lstBehavior = listBehavior;
+          console.log("check lstTotalCoin", this.lstTotalCoin)
         }
       });
   }
-  caculateTotalRow(columnName) {
+
+  calculateTotalRow(columnName) {
     if (this.lstTotalCoin.length == 0) return 0;
     return this.lstTotalCoin
       .map((o) => o[columnName])
@@ -473,7 +475,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     });
     return oData[0].text;
   }
-  getChartA() {
+  getDataChartA() {
     var arrReceived = [];
     var arrSended = [];
     var dtReceived = [];
