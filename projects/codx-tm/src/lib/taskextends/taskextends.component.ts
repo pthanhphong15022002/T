@@ -74,7 +74,7 @@ export class TaskExtendsComponent
     this.taskExtends = val?.data ? val?.data : val;
     // this.itemSelected = val?.data?.task ;
     // this.taskExtends = val
-    this.loadTreeView();
+  //  this.loadTreeView();
     this.detectorRef.detectChanges();
   }
   requestEnded(e) { }
@@ -165,18 +165,18 @@ export class TaskExtendsComponent
   }
 
   //#region  tree
-  loadTreeView() {
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTasksTreeAsync',
-        this.taskExtends?.taskID
-      )
-      .subscribe((res) => {
-        if (res) this.dataTree = res;
-      });
-  }
+  // loadTreeView() {
+  //   this.api
+  //     .execSv<any>(
+  //       'TM',
+  //       'ERM.Business.TM',
+  //       'TaskBusiness',
+  //       'GetListTasksTreeAsync',
+  //       this.taskExtends?.taskID
+  //     )
+  //     .subscribe((res) => {
+  //       if (res) this.dataTree = res;
+  //     });
+  // }
   //#endregion
 }

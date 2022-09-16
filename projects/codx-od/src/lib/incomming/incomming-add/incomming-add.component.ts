@@ -26,8 +26,10 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { DispatchService } from '../../services/dispatch.service';
 import {
   capitalizeFirstLetter,
+  getDifference,
   getJSONString,
 } from '../../function/default.function';
+import { FileService } from '@shared/services/file.service';
 
 @Component({
   selector: 'app-imcomming-add',
@@ -62,12 +64,14 @@ export class IncommingAddComponent implements OnInit {
   activeDiv: any;
   dataRq = new DataRequest();
   objRequied = [];
+  fileDelete:any
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
+    private fileService: FileService,
     private auth: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -264,7 +268,14 @@ export class IncommingAddComponent implements OnInit {
         .updateDispatch(this.dispatch, false)
         .subscribe(async (item) => {
           if (item.status == 0) {
-            if (this.dltDis) {
+            if(this.fileDelete && this.fileDelete.length > 0)
+            {
+              for(var i =0 ; i<this.fileDelete.length ; i++)
+              {
+                this.fileService.deleteFileToTrash(this.fileDelete[i].recID, "", true).subscribe();
+              }
+            }
+            if (this.attachment.fileUploadList && this.attachment.fileUploadList.length>0) {
               this.attachment.objectId = item.data.recID;
               (await this.attachment.saveFilesObservable()).subscribe(
                 (item2: any) => {
@@ -309,5 +320,9 @@ export class IncommingAddComponent implements OnInit {
     if (!this.fileCount || this.fileCount == 0)
       return this.notifySvr.notifyCode('OD022');
     return true;
+  }
+  handleDelete(e:any)
+  {
+    this.fileDelete = e;
   }
 }

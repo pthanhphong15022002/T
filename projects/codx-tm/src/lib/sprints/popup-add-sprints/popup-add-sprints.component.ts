@@ -101,11 +101,11 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region CRUD
   saveData(id) {
-    if (this.master.projectID == null || this.master.projectID.trim() == '')
+    if (this.master.iterationType=='1' && (this.master.projectID == null || this.master.projectID.trim() == ''))
       return this.notiService.notify('Tên dự án không được để trống !');
     if (
       this.master.iterationName == null ||
-      this.master.iterationName.trim() == ''
+      this.master.iterationName.trim() == '' 
     )
       return this.notiService.notifyCode('TM035');
     if (this.master.projectID && Array.isArray(this.master.projectID))
@@ -125,16 +125,16 @@ export class PopupAddSprintsComponent implements OnInit {
         this.dialog.dataService
           .save(
             (option: any) => this.beforeSave(option, isAdd),
-            isAdd ? 0 : null
+            !isAdd ? null : (this.master.iterationType=="1"? 0:1)
           )
           .subscribe((res) => {
             if (res) {
-              if (isAdd && res.iterationType == '0') {
-                var dataNew = this.dialog.dataService.data[0];
-                this.dialog.dataService.data[0] =
-                  this.dialog.dataService.data[1];
-                this.dialog.dataService.data[1] = dataNew;
-              }
+              // if (isAdd && res.iterationType == '0') {
+              //   var dataNew = this.dialog.dataService.data[0];
+              //   this.dialog.dataService.data[0] =
+              //     this.dialog.dataService.data[1];
+              //   this.dialog.dataService.data[1] = dataNew;
+              // }
               this.attachment.clearData();
               this.dialog.close();
             }

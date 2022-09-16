@@ -118,7 +118,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           template5: this.resourceTootip,
           template6: this.footerTemplate,
           template7: this.footerButton,
-          //statusColorRef:'vl003'
+          statusColorRef:'vl003'
         },
       },
     ];
@@ -212,54 +212,5 @@ export class ApprovalRoomsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
-  }
-
-  setStyles(resourceType) {
-    let styles = {};
-    switch (resourceType) {
-      case '1':
-        styles = {
-          backgroundColor: '#104207',
-          color: 'white',
-        };
-        break;
-      case '2':
-        styles = {
-          backgroundColor: '#29b112',
-          color: 'white',
-        };
-        break;
-      case '6':
-        styles = {
-          backgroundColor: '#053b8b',
-          color: 'white',
-        };
-        break;
-      default:
-        styles = {};
-        break;
-    }
-
-    return styles;
-  }
-
-  setIcon(resourceType) {
-    let icon: string = '';
-    switch (resourceType) {
-      case '1':
-        icon = 'icon-calendar_today';
-        break;
-      case '2':
-        icon = 'icon-directions_car';
-        break;
-      case '6':
-        icon = 'icon-desktop_windows';
-        break;
-      default:
-        icon = '';
-        break;
-    }
-
-    return icon;
   }
 }

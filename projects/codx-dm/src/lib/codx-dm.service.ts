@@ -1293,7 +1293,7 @@ export class CodxDMService {
           break;
 
         case "DMT0202": // chinh sua thu muc  
-        case "DMT0209":          
+        case "DMT0209": // properties folder         
           
           option.DataService = this.dataService;
           option.FormModel = this.formModel;
@@ -1301,6 +1301,7 @@ export class CodxDMService {
           // let data = {} as any;
           data.title = this.titleUpdateFolder;
           data.id =  data.recID;            
+          data.readonly = $event.functionID == 'DMT0209' ? true : false;
           this.callfc.openSide(CreateFolderComponent, data, option);            
           break;
 
@@ -1328,13 +1329,13 @@ export class CodxDMService {
           break;  
 
         case "DMT0214": //"copy": // copy file hay thu muc
-          var title = `${this.titleCopy} ${type}`;
+          var title = `${this.titleCopy}`;
           this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, true], "");   
           break;
   
         case "DMT0203": //"rename": // copy file hay thu muc
         case "DMT0215":
-          var title = `${this.titleRename} ${type}`;
+          var title = `${this.titleRename}`;
           this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, false], "");   
           break;
 

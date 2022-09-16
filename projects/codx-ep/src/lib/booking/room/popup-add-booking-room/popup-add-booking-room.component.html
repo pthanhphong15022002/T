@@ -326,7 +326,7 @@
       >
         <codx-label
           default="Tài liệu tham khảo"
-          fiedName="Attachments"
+          name="lblAttachments"
           [formModel]="dialogRef.formModel"
         >
         </codx-label>
@@ -349,7 +349,8 @@
           [allowMultiFile]="0"
           [idBrowse]="'add'"
           displayThumb="full"
-          
+          (fileAdded)="fileAdded($event)"
+          (fileCount)="fileCount($event)"
         >
         </codx-attachment>       
       </div>
