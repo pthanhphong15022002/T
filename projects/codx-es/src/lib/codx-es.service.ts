@@ -862,7 +862,8 @@ export class CodxEsService {
 
   //#endregion
 
-  addOrEditSignArea(data: any): Observable<any> {
+  addOrEditSignArea(recID, fileID, area, areaID): Observable<any> {
+    let data = [recID, fileID, area, areaID];
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
@@ -960,8 +961,8 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(newcontent, userID, sfID, mode, comment) {
-    let data = [newcontent, userID, sfID, mode, comment];
+  updateSignFileTrans(vcW, vcH, isAwait, userID, sfID, mode, comment) {
+    let data = [vcW, vcH, isAwait, userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
