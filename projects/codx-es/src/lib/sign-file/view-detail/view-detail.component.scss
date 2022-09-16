@@ -24,3 +24,8 @@
 // .e-device .e-dlg-content, .e-device .e-dlg-content * {
 //   font-size: inherit;
 // }
+codx-view-list-detail{
+    .e-splitter.e-splitter-horizontal .e-pane.e-pane-horizontal, .e-splitter.e-splitter-vertical .e-pane.e-pane-horizontal {
+        // overflow: hidden!important;
+    }
+}

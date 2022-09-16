@@ -183,7 +183,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       if (this.taskParent?.taskGroupID)
         this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
-    this.loadDataReferences() ;
+  //  this.loadDataReferences() ; cần thì bật lên luôn
 
     this.changeDetectorRef.detectChanges();
   }
