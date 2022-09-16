@@ -1,6 +1,6 @@
-<codx-views #codxViews [views]="views" entityName="WP_Comments" idField="recID">
-</codx-views>
-<ng-template #panelLeftRef>
+<!-- <codx-views #codxViews [views]="views"  entityName="WP_Comments" idField="recID">
+</codx-views> -->
+<!-- <ng-template #panelLeftRef> -->
   <ng-container *ngIf="isShowCreate">
     <div class="card card-custom post-new" id="postnew">
       <div class="card-body">
@@ -17,14 +17,7 @@
             <span
               class="text-gray-500 feed-box box-new share-input"
               (click)="openCreateModal()"
-            >
-              <codx-label
-                class="fw-normal"
-                [formModel]="codxViews.formModel"
-                name="lblThinks"
-                [default]="title"
-              >
-              </codx-label>
+            > {{title}}
             </span>
           </div>
         </div>
@@ -41,26 +34,45 @@
     data-kt-scroll-offset="0"
   >
     <div id="newfeed">
-      <codx-listview
-        [emptyTemplate]="empty"
-        [predicates]="predicate"
-        [dataValues]="dataValue"
-        [itemTemplate]="tmpPortal"
-        #listview
-        [funcId]="codxViews.formModel.funcID"
-        [service]="service"
-        [assemblyName]="assemblyName"
-        class="h-100"
-        [className]="className"
-        [method]="method"
-        entityName="WP_Comments"
-        [itemTemplateLoading]="templateloading"
-        [formModel]="codxViews.formModel"
-      >
-      </codx-listview>
+      <ng-container *ngIf="module == 'WP' ; else FD">
+          <codx-listview
+            [emptyTemplate]="empty"
+            [predicates]="predicateWP"
+            [dataValues]="dataValueWP"
+            [itemTemplate]="tmpPortal"
+            #listview
+            [funcId]="codxViews.formModel.funcID"
+            [service]="service"
+            [assemblyName]="assemblyName"
+            class="h-100"
+            [className]="className"
+            [method]="method"
+            entityName="WP_Comments"
+            [itemTemplateLoading]="templateloading"
+            [formModel]="codxViews.formModel">
+          </codx-listview>
+      </ng-container>  
+      <ng-template #FD>
+          <codx-listview
+            [emptyTemplate]="empty"
+            [predicates]="predicateFD"
+            [dataValues]="dataValueFD"
+            [itemTemplate]="tmpPortal"
+            #listview
+            [funcId]="codxViews.formModel.funcID"
+            [service]="service"
+            [assemblyName]="assemblyName"
+            class="h-100"
+            [className]="className"
+            [method]="method"
+            entityName="WP_Comments"
+            [itemTemplateLoading]="templateloading"
+            [formModel]="codxViews.formModel">
+          </codx-listview>
+      </ng-template>
     </div>
   </div>
-</ng-template>
+<!-- </ng-template> -->
 
 <ng-template #tmpPortal let-item>
   <div class="p-5 pb-0">
@@ -408,10 +420,6 @@
       </div>
     </ng-container>
     <ng-template #haveBg>
-      <!-- <div class="p-0 m-0">
-        <read-more [content]="item?.content" [maxmimun]="1003" [limit]="1000" [completeWords]="true">
-        </read-more>
-      </div> -->
       <div
         class="d-flex flex-column flex-grow-1 justify-content-center align-items-center pt-5"
       >

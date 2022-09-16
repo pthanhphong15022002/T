@@ -4,6 +4,7 @@ export class TabModel {
     | 'Đính kèm'
     | 'Bình luận'
     | 'Tham chiếu'
+    | 'Xét duyệt'
     | string;
   textDefault: string;
   isActive: boolean;

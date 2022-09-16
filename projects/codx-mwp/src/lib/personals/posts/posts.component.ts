@@ -35,7 +35,7 @@ export class PostsComponent implements OnInit {
 
   private loadListPostComponent() { 
     var a = this.lstComment.createComponent(ListPostComponent);
-    a.instance.predicate = `(CreatedBy="${this.user?.userID}")`;
+    a.instance.predicateWP = `(CreatedBy="${this.user?.userID}")`;
     a.instance.isShowCreate = false;
   }
 

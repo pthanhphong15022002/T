@@ -120,9 +120,11 @@
             <span class="icon-image icon-20 btn btn-icon btn-white" (click)="popupFile()">
             </span>
         </div>
-        <codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="currentDate" format="d"
-            (valueChange)="valueChangeDate($event)">
-        </codx-input>
+        <div class="test-datetime w-175px border-left">
+            <codx-input type="datetime" field="StartDate" [crrValue]="currentDate" format="d"
+                (valueChange)="valueChangeDate($event)">
+            </codx-input>
+        </div>
     </div>
 
 

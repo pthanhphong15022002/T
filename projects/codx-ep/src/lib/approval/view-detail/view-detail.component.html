@@ -12,7 +12,7 @@
   <ng-template #header>
     <div class="d-flex flex-column flex-grow-1 mb-2">
       <codx-temp-full
-        [title]="itemDetail?.userName"
+        [title]="itemDetail?.requester"
         [subTitle]="'Thư ký trung tâm - NDX'"
         [imageId]="'ADMIN'"
         imageObjType="AD_Users"
@@ -21,19 +21,19 @@
       </codx-temp-full>
     </div>
 
-    <div class="d-flex flex-grow-1 mb-2">
-      <div class="me-4 icon-apartment"></div>
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fs-6">
-          <codx-label
-            field="OrgUnitID"
-            [formModel]="formModel"
-            default="Đơn vị/ bộ phận "
-            class="fw-bold me-1"
-            style="font-weight: bold"
-          ></codx-label>
-          : {{ itemDetail?.ownerOrgUnit }}
-        </div>
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <ng-container
+          *ngTemplateOutlet="
+            resourceTypeLabel;
+            context: { $implicit: itemDetail?.resourceType }
+          "
+        >
+        </ng-container>
+        <span class="text-gray-600">
+          :
+          {{ itemDetail?.title }}
+        </span>
       </div>
     </div>
 
@@ -42,7 +42,7 @@
         <codx-label
           field="CreatedOn"
           [formModel]="formModel"
-          default="Ngày gởi"
+          default="Ngày"
           class="fw-bold me-1"
         >
         </codx-label>
@@ -56,22 +56,22 @@
         </span>
       </div>
       <div class="d-flex me-6">
-        <codx-label
-          field="ExpiredOn"
-          [formModel]="formModel"
-          default="Ngày yêu cầu"
-          class="fw-bold me-1"
-        ></codx-label>
+        <codx-label default="Thời gian" class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">
           :
-          {{
-            itemDetail?.bookingOn
-              ? (itemDetail?.bookingOn | date: "dd/MM/yyyy")
-              : "dd/MM/yyyy"
-          }}
+          {{ itemDetail?.startDate | date: "shortTime" }}
+        </span>
+        <span
+          *ngIf="itemDetail?.startDate && itemDetail?.endDate"
+          class="ms-1 me-1"
+          >{{ "-" }}</span
+        >
+        <span class="text-gray-600">
+          {{ itemDetail?.endDate | date: "shortTime" }}
         </span>
       </div>
     </div>
+
     <div class="d-flex mb-2">
       <div class="d-flex text-dark me-6">
         <codx-label
@@ -83,17 +83,28 @@
         </codx-label>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.reasonID }}
+          {{ itemDetail?.reasonName }}
         </span>
       </div>
     </div>
 
-    <ng-container *ngIf="data && data?.files">
-      <codx-thumbnail
-        [files]="data?.files"
-        displayThumb="simple"
-        [hideDelete]="'0'"
-      >
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label default="Người tham gia" class="fw-bold me-4"> </codx-label>
+        <div class="d-flex justify-content-end">
+          <codx-imgs
+            [objectId]="'ADMIN;PMNHI;NVHAO;ADMIN;PMNHI;NVHAO'"
+            objectType="AD_Users"
+            [numberImages]="4"
+            [width]="30"
+          >
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="files">
+      <codx-thumbnail [files]="files" displayThumb="simple" [hideDelete]="'0'">
       </codx-thumbnail>
     </ng-container>
   </ng-template>
@@ -108,7 +119,7 @@
                 class="icon-info me-2"
                 [ngClass]="{ 'text-primary': active === 1 }"
               ></i
-              ><span>Chi tiết</span>
+              ><span>Nội dung</span>
             </div>
           </a>
           <ng-template ngbNavContent>
@@ -119,10 +130,10 @@
           <a ngbNavLink>
             <div class="d-flex align-item-center">
               <i
-                class="icon-format_list_numbered me-2"
+                class="icon-layers me-2"
                 [ngClass]="{ 'text-primary': active === 2 }"
               ></i
-              ><span>Công việc</span>
+              ><span>Văn phòng phẩm</span>
             </div>
           </a>
           <ng-template ngbNavContent>
@@ -142,59 +153,6 @@
                 [isOutput]="true"
                 [isLoadChild]="false"
               ></codx-treeview>
-            </ng-container>
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="3">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center">
-              <i
-                class="fa-solid fa-user-tag me-2 mt-1"
-                [ngClass]="{ 'text-primary': active === 3 }"
-              ></i
-              ><span>Nơi nhận</span>
-            </div>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container *ngIf="data?.listInformationRel; else defaulEmpt">
-              <ng-container *ngFor="let item of data?.listInformationRel">
-                <div class="list-item has-action-menu-1 mb-6">
-                  <div class="d-flex align-items-start">
-                    <div class="w-120px me-6">
-                      <div
-                        class="text-primary d-flex justify-content-center fw-bold fs-4"
-                      >
-                        {{
-                          (item.date ? item.date : item.createdOn)
-                            | date: "shortTime"
-                        }}
-                      </div>
-                      <div
-                        class="text-dark d-flex justify-content-center text-gray-400 fs-6"
-                      >
-                        {{
-                          (item.date ? item.date : item.createdOn)
-                            | date: "dd/MM/yyyy"
-                        }}
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <codx-temp-full
-                        [imageId]="item?.userID"
-                        [imageObjType]="'AD_Users'"
-                        [title]="item?.employeeName"
-                        [subTitle]="item?.positionName"
-                        [desc]=""
-                        [descLine]="1"
-                        [dataItem]="item"
-                        [baseHeaderRightTmp]="baseTmpRight"
-                        [cardCss]="'justify-content-center align-items-center'"
-                      >
-                      </codx-temp-full>
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
             </ng-container>
           </ng-template>
         </li>
@@ -315,4 +273,34 @@
       <span class="text-dark"></span>
     </div>
   </div>
+</ng-template>
+
+<ng-template #resourceTypeLabel let-type>
+  <ng-container *ngIf="type == 1">
+    <codx-label
+      fiedName="ResourceType"
+      default="Phòng họp"
+      [formModel]="formModel"
+      class="fw-bold me-1"
+    >
+    </codx-label>
+  </ng-container>
+  <ng-container *ngIf="type == 2">
+    <codx-label
+      fiedName="ResourceType"
+      default="Xe"
+      [formModel]="formModel"
+      class="fw-bold me-1"
+    >
+    </codx-label>
+  </ng-container>
+  <ng-container *ngIf="type == 6">
+    <codx-label
+      fiedName="ResourceType"
+      default="VPP"
+      [formModel]="formModel"
+      class="fw-bold me-1"
+    >
+    </codx-label>
+  </ng-container>
 </ng-template>

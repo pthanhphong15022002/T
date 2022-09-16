@@ -433,14 +433,16 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       }
       //  }
     });
-    if (listUserID != '')
+    if (listUserID != ''){
       listUserID = listUserID.substring(0, listUserID.length - 1);
-    if (listDepartmentID != '')
+      this.valueSelectUser(listUserID);
+    }
+    
+    if (listDepartmentID != ''){
       listDepartmentID = listDepartmentID.substring(
         0,
         listDepartmentID.length - 1
       );
-    if (listDepartmentID != '') {
       this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
         if (res) {
           assignTo += res;
@@ -448,7 +450,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           this.valueSelectUser(assignTo);
         }
       });
-    } else this.valueSelectUser(listUserID);
+    }
   }
 
   valueSelectUser(assignTo) {
