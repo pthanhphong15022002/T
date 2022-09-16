@@ -322,13 +322,13 @@ export class SprintsComponent extends UIComponent {
   }
 
   //placeholder
-  placeholder(
-    value: string,
-    formModel: FormModel,
-    field: string
-  ): Observable<string> {
-   // if (value) {
-      return of(`<span class="cut-size-long">${value}</span>`);
+  // placeholder(
+  //   value: string,
+  //   formModel: FormModel,
+  //   field: string
+  // ): Observable<string> {
+  //  // if (value) {
+  //     return of(`<span class="cut-size-long">${value}</span>`);
   //  }
     // else {
     //   return this.cache
@@ -349,5 +349,5 @@ export class SprintsComponent extends UIComponent {
     //       })
     //     );
     // }
-  }
+  // }
 }
