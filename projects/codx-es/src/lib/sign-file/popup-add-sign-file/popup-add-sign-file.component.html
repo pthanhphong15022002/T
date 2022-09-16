@@ -742,13 +742,13 @@
       class="stepper-body no-header pt-2 w-100"
       *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0"
     >
-      <lib-pdf-view
+      <lib-pdf
         [recID]="dialogSignFile.value.recID"
         [isApprover]="false"
         [isDisable]="data?.approveStatus == '1' ? false : true"
         (isAreaControl)="setValueAreaControl($event)"
       >
-      </lib-pdf-view>
+      </lib-pdf>
     </div>
   </div>
 </div>
