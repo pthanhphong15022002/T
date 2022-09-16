@@ -27,6 +27,7 @@ import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popu
 import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './dashboard/home/list-post/popup-save/popup-save.component';
 import { MyTeamComponent } from './dashboard/home/my-team/my-team.component';
+import { PostComponent } from './dashboard/home/post/post.component';
 import { UpdateNotePinComponent } from './dashboard/home/update-note-pin/update-note-pin.component';
 import { NewsComponent } from './news/news.component';
 import { PopupAddComponent } from './news/popup/popup-add/popup-add.component';
@@ -135,6 +136,7 @@ const Component: Type<any>[] =
     HomeComponent,
     AddNoteComponent,
     SaveNoteComponent,
+    PostComponent,
     ListPostComponent,
     PopupAddPostComponent,
     PopupSavePostComponent,
@@ -165,7 +167,8 @@ const Component: Type<any>[] =
 
   ],
   exports: [
-    RouterModule
+    RouterModule,
+    ListPostComponent
   ],
   declarations: Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

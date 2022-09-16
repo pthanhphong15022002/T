@@ -807,10 +807,6 @@ export class CodxTasksComponent
 
   selectedChange(task: any) {
     this.itemSelected = task?.data ? task?.data : task;
-    if (this.itemSelected) {
-      this.loadTreeView();
-      this.loadDataReferences();
-    }
     this.detectorRef.detectChanges();
   }
 
@@ -1348,23 +1344,7 @@ export class CodxTasksComponent
   }
   //#endregion
 
-  //#region  tree
-  loadTreeView() {
-    this.dataTree = [];
-    if (!this.itemSelected || !this.itemSelected?.taskID) return;
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetTreeAssignByTaskIDAsync',
-        this.itemSelected?.taskID
-      )
-      .subscribe((res) => {
-        if (res) this.dataTree = res || [];
-      });
-  }
-  //#endregion
+  
   change() {
     this.view.dataService.setPredicates(['Status=@0'], ['10']);
   }
@@ -1471,150 +1451,5 @@ export class CodxTasksComponent
       });
   }
   //#endregion schedule
-  //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
-  loadDataReferences() {
-    if (this.itemSelected.category == '1') {
-      this.dataReferences = [];
-      return;
-    }
-    this.dataReferences = [];
-    if (this.itemSelected.category == '2') {
-      this.api
-        .execSv<any>(
-          'TM',
-          'TM',
-          'TaskBusiness',
-          'GetTaskParentByTaskIDAsync',
-          this.itemSelected.taskID
-        )
-        .subscribe((res) => {
-          if (res) {
-            var ref = new tmpReferences();
-            ref.recIDReferences = res.recID;
-            ref.refType = 'TM_Tasks';
-            ref.createdOn = res.createdOn;
-            ref.memo = res.taskName;
-            ref.createdBy = res.createdBy;
-            this.api
-              .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                res.createdBy,
-              ])
-              .subscribe((user) => {
-                if (user) {
-                  ref.createByName = user.userName;
-                  this.dataReferences.push(ref);
-                }
-              });
-          }
-        });
-    } else {
-      var listUser = [];
-      switch (this.itemSelected.refType) {
-        case 'OD_Dispatches':
-          this.api
-            .exec<any>(
-              'OD',
-              'DispatchesBusiness',
-              'GetListByIDAsync',
-              this.itemSelected.refID
-            )
-            .subscribe((item) => {
-              if (item) {
-                item.forEach((x) => {
-                  var ref = new tmpReferences();
-                  ref.recIDReferences = x.recID;
-                  ref.refType = 'OD_Dispatches';
-                  ref.createdOn = x.createdOn;
-                  ref.memo = x.title;
-                  ref.createdBy = x.createdBy;
-                  this.dataReferences.push(ref);
-                  if (listUser.findIndex((p) => p == ref.createdBy) == -1)
-                    listUser.push(ref.createdBy);
-                  this.getUserByListCreateBy(listUser);
-                });
-              }
-            });
-          break;
-        case 'ES_SignFiles':
-          this.api
-            .execSv<any>(
-              'ES',
-              'ERM.Business.ES',
-              'SignFilesBusiness',
-              'GetLstSignFileByIDAsync',
-              JSON.stringify(this.itemSelected.refID.split(';'))
-            )
-            .subscribe((result) => {
-              if (result) {
-                result.forEach((x) => {
-                  var ref = new tmpReferences();
-                  ref.recIDReferences = x.recID;
-                  ref.refType = 'ES_SignFiles';
-                  ref.createdOn = x.createdOn;
-                  ref.memo = x.title;
-                  ref.createdBy = x.createdBy;
-                  this.dataReferences.push(ref);
-                  if (listUser.findIndex((p) => p == ref.createdBy) == -1)
-                    listUser.push(ref.createdBy);
-                  this.getUserByListCreateBy(listUser);
-                });
-              }
-            });
-          break;
-        case 'TM_Tasks':
-          this.api
-            .execSv<any>(
-              'TM',
-              'TM',
-              'TaskBusiness',
-              'GetTaskByRefIDAsync',
-              this.itemSelected.refID
-            )
-            .subscribe((result) => {
-              if (result) {
-                var ref = new tmpReferences();
-                ref.recIDReferences = result.recID;
-                ref.refType = 'TM_Tasks';
-                ref.createdOn = result.createdOn;
-                ref.memo = result.taskName;
-                ref.createdBy = result.createdBy;
-
-                this.api
-                  .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                    ref.createdBy,
-                  ])
-                  .subscribe((user) => {
-                    if (user) {
-                      ref.createByName = user.userName;
-                      this.dataReferences.push(ref);
-                    }
-                  });
-              }
-            });
-          break;
-      }
-    }
-  }
-
-  getUserByListCreateBy(listUser) {
-    this.api
-      .execSv<any>(
-        'SYS',
-        'AD',
-        'UsersBusiness',
-        'LoadUserListByIDAsync',
-        JSON.stringify(listUser)
-      )
-      .subscribe((users) => {
-        if (users) {
-          this.dataReferences.forEach((ref) => {
-            var index = users.findIndex((user) => user.userID == ref.createdBy);
-            if (index != -1) {
-              ref.createByName = users[index].userName;
-            }
-          });
-        }
-      });
-  }
-  //#endregion
+ 
 }
