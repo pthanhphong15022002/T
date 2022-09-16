@@ -9,40 +9,41 @@
   [data]="master"
 >
   <ng-template popup adde #body>
-    <div class="form-group row">
-      <span class="col-10">
-        <codx-input
-          field="iterationName"
-          [disabled]="readOnly"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="changeData($event)"
-        >
-        </codx-input> </span
-      ><span class="col-2">
-        <div class="form-group">
-          <div class="image-input image-input-outline" id="kt_user_add_avatar">
-            <div>
-              <codx-img
-                #imageAvatar
-                [width]="50"
-                [objectId]="master ? master.iterationID : ''"
-                [objectName]="master ? master.iterationName : ''"
-                objectType="TM_Sprints"
-                [funcId]="funcID"
-                isAllowEdit="true"
-                [updateDirect]="isUploadImg"
-                [width]="50"
-                [disabled]="readOnly"
-                [height]="50"
-              >
-              </codx-img>
-            </div>
-          </div>
+    <div class="form-group">
+      <div class="image-input image-input-outline" id="kt_user_add_avatar">
+        <div>
+          <codx-img
+            #imageAvatar
+            [width]="50"
+            [objectId]="master ? master.iterationID : ''"
+            [objectName]="master ? master.iterationName : ''"
+            objectType="TM_Sprints"
+            [funcId]="funcID"
+            isAllowEdit="true"
+            [updateDirect]="isUploadImg"
+            [width]="70"
+            [disabled]="readOnly"
+            [height]="70"
+          >
+          </codx-img>
         </div>
-      </span>
+      </div>
     </div>
-    <div class="form-group" *ngIf="master.iterationType == '1' && funcID == 'TMT0301'">
+
+    <div class="form-group" *ngIf="master.iterationType == '0'">
+      <codx-input
+        field="iterationName"
+        [disabled]="readOnly"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        (valueChange)="changeData($event)"
+      >
+      </codx-input>
+    </div>
+    <div
+      class="form-group"
+      *ngIf="master.iterationType == '1'"
+    >
       <div class="text-dark fw-bold mb-1">
         <codx-label
           fiedName="ProjectName"
@@ -50,12 +51,11 @@
           default="Dự án"
         ></codx-label>
       </div>
-
       <codx-input
         field="projectID"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
-        (valueChange)="changeData($event)"
+        (valueChange)="changeProject($event)"
       ></codx-input>
     </div>
     <div class="form-group">
@@ -92,101 +92,100 @@
         (valueChange)="changeData($event)"
       ></codx-input>
     </div>
-    <ng-container >
-    <div class="d-flex align-items-center justify-content-between mt-4">
-      <div class="d-flex align-items-center">
-        <span class="icon-person icon-16 me-2 text-primary"></span>
-        <div class="fw-bold fs-6 text-primary">
-          <codx-label
-            fiedName="Resources"
-            [formModel]="form.formModel"
-            default="Phân công cho"
-          >
-          </codx-label>
-        </div>
-      </div>
-      <codx-input
-        type="Combobox"
-        name="combobox"
-        [refValue]="
-          gridViewSetup != null
-            ? gridViewSetup['Resources']['referedValue']
-            : null
-        "
-        multiple="true"
-        [showInput]="false"
-        [refType]="
-          gridViewSetup != null
-            ? gridViewSetup['Resources']['referedType']
-            : 'P'
-        "
-        (valueChange)="changeUser($event)"
-      >
-      </codx-input>
-    </div>
-    <div class="mt-3">
-      <ng-container *ngFor="let item of listUserDetail; index as i">
-        <div
-          class="d-flex justify-content-between user-mini-nav align-items-center"
-          style="background-color: #f4f7ff"
-        >
-          <span>
-            <codx-img
-              [width]="25"
-              class="me-2"
-              [objectId]="item?.userID"
-              objectType="AD_Users"
+    <ng-container>
+      <div class="d-flex align-items-center justify-content-between mt-4">
+        <div class="d-flex align-items-center">
+          <span class="icon-person icon-16 me-2 text-primary"></span>
+          <div class="fw-bold fs-6 text-primary">
+            <codx-label
+              fiedName="Resources"
+              [formModel]="form.formModel"
+              default="Phân công cho"
             >
-            </codx-img> </span
-          ><span class="text-dark fw-bold">
-            {{ item?.userName }} </span
-          ><span class="mt-1" *ngIf="!readOnly"
-            ><a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
-              <span class="icon-close icon-16 text-danger ms-3"></span> </a
-          ></span>
+            </codx-label>
+          </div>
         </div>
-      </ng-container>
-    </div>
-  </ng-container>
-  <ng-container >
-    <div
-    class="d-flex align-items-center justify-content-between mt-4"
-    *ngIf="showLabelAttachment" style="float: left ; clear: left;"
-  >
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-attach_file icon-18 me-2 text-primary"></span>
-      <div class="fw-bold text-primary">
-        <codx-label
-          fiedName="Attachments"
-          [formModel]="form.formModel"
-          default="Tài liệu đính kèm"
+        <codx-input
+          type="Combobox"
+          name="combobox"
+          [refValue]="
+            gridViewSetup != null
+              ? gridViewSetup['Resources']['referedValue']
+              : null
+          "
+          multiple="true"
+          [showInput]="false"
+          [refType]="
+            gridViewSetup != null
+              ? gridViewSetup['Resources']['referedType']
+              : 'P'
+          "
+          (valueChange)="changeUser($event)"
         >
-        </codx-label>
+        </codx-input>
       </div>
-    </div>
-  </div>
-  <div>
-    <codx-attachment
-      #attachment
-      [objectType]="dialog.formModel.entityName"
-      [objectId]="master?.iterationID"
-      hideFolder="1"
-      hideImageUpload="0"
-      hideImageThumb="0"
-      hideUploadBtn="1"
-      hideDes="1"
-      type="inline"
-      allowMultiFile="1"
-      [formModel]="dialog.formModel"
-      [functionID]="funcID"
-      (fileAdded)="fileAdded($event)"
-      (fileCount)="getfileCount($event)"
-      displayThumb="full"
-    >
-    </codx-attachment>
-  </div>
- 
-  </ng-container>
+      <div class="mt-3">
+        <ng-container *ngFor="let item of listUserDetail; index as i">
+          <div
+            class="d-flex justify-content-between user-mini-nav align-items-center"
+            style="background-color: #f4f7ff"
+          >
+            <span>
+              <codx-img
+                [width]="25"
+                class="me-2"
+                [objectId]="item?.userID"
+                objectType="AD_Users"
+              >
+              </codx-img> </span
+            ><span class="text-dark fw-bold"> {{ item?.userName }} </span
+            ><span class="mt-1" *ngIf="!readOnly"
+              ><a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
+                <span class="icon-close icon-16 text-danger ms-3"></span> </a
+            ></span>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-container>
+      <div
+        class="d-flex align-items-center justify-content-between mt-4"
+        *ngIf="showLabelAttachment"
+        style="float: left; clear: left"
+      >
+        <div class="d-flex align-items-center mb-2">
+          <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+          <div class="fw-bold text-primary">
+            <codx-label
+              fiedName="Attachments"
+              [formModel]="form.formModel"
+              default="Tài liệu đính kèm"
+            >
+            </codx-label>
+          </div>
+        </div>
+      </div>
+      <div>
+        <codx-attachment
+          #attachment
+          [objectType]="dialog.formModel.entityName"
+          [objectId]="master?.iterationID"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          [formModel]="dialog.formModel"
+          [functionID]="funcID"
+          (fileAdded)="fileAdded($event)"
+          (fileCount)="getfileCount($event)"
+          displayThumb="full"
+        >
+        </codx-attachment>
+      </div>
+    </ng-container>
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">

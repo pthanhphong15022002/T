@@ -1,4 +1,10 @@
-import { Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
@@ -25,7 +31,6 @@ import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sp
   templateUrl: './sprints.component.html',
   styleUrls: ['./sprints.component.css'],
   encapsulation: ViewEncapsulation.None,
-
 })
 export class SprintsComponent extends UIComponent {
   @ViewChild('listCardSprints') listCardSprints: TemplateRef<any>;
@@ -70,7 +75,7 @@ export class SprintsComponent extends UIComponent {
         this.tmSv.urlback = f.url;
       }
     });
-    this.cache.moreFunction("Sprints","grvSprints").subscribe((res) => {
+    this.cache.moreFunction('Sprints', 'grvSprints').subscribe((res) => {
       if (res) this.listMoreFunc = res;
     });
   }
@@ -137,12 +142,12 @@ export class SprintsComponent extends UIComponent {
   }
 
   copy(data) {
-     if(data)this.view.dataService.dataSelected = data;
+    if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '550px';   
+      option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
         [this.view.dataService.dataSelected, 'copy'],
@@ -291,14 +296,14 @@ export class SprintsComponent extends UIComponent {
 
   //#region doubeclick carrd
   doubleClick(data) {
-    if(this.listMoreFunc.length>0){
+    if (this.listMoreFunc.length > 0) {
       this.listMoreFunc.forEach((obj) => {
         if (obj.functionID == 'TMT03012') this.urlView = obj.url;
       });
       this.codxService.navigate('', this.urlView, {
         iterationID: data.iterationID,
       });
-    }  
+    }
   }
   //#end
 
@@ -312,7 +317,7 @@ export class SprintsComponent extends UIComponent {
     }
 
     if (this.view.dataService.page < this.view.dataService.pageCount) {
-      this.view.dataService.scrolling() ;
+      this.view.dataService.scrolling();
     }
   }
 
@@ -322,28 +327,28 @@ export class SprintsComponent extends UIComponent {
     formModel: FormModel,
     field: string
   ): Observable<string> {
-    if (value) {
-      return of(`<span class="cut-size-long" [ngbTooltip]=${value}>
+   // if (value) {
+      return of(`<span class="cut-size-long">
        ${value}</span>`);
-     
-    } else {
-      return this.cache
-        .gridViewSetup(formModel.formName, formModel.gridViewName)
-        .pipe(
-          map((datas) => {
-            if (datas && datas[field]) {
-              var gvSetup = datas[field];
-              if (gvSetup) {
-                if (!value) {
-                  var headerText = gvSetup.headerText as string;
-                  return `<span class="opacity-50">${headerText}</span>`;
-                }
-              }
-            }
+  //  }
+    // else {
+    //   return this.cache
+    //     .gridViewSetup(formModel.formName, formModel.gridViewName)
+    //     .pipe(
+    //       map((datas) => {
+    //         if (datas && datas[field]) {
+    //           var gvSetup = datas[field];
+    //           if (gvSetup) {
+    //             if (!value) {
+    //               var headerText = gvSetup.headerText as string;
+    //               return `<div style="height : 40px;"><span class="opacity-50">${headerText}</span></div>`;
+    //             }
+    //           }
+    //         }
 
-            return `<span class="opacity-50">${field}</span>`;
-          })
-        );
-    }
+    //         return `<span class="opacity-50">${field}</span>`;
+    //       })
+    //     );
+    // }
   }
 }
