@@ -137,19 +137,15 @@
       </codx-input>
     </div>
     <div class="d-flex flex-wrap">
-<<<<<<< HEAD
-      <ng-container *ngFor="let item of resources">
-        <div class="d-flex justify-content-between align-items-center rounded-pill bg-light p-2 ps-0 h-25px mt-2 me-2">
-=======
       <div class="">
         <ng-container *ngIf="listUserID.length > 0">
-          <codx-imgs class="flex symbol-40px" [objectId]="listUserID.join(';')" objectType="AD_Users" [numberImages]="5">
+          <codx-imgs class="flex symbol-40px" [objectId]="listUserID.join(';')" objectType="AD_Users"
+            [numberImages]="5">
           </codx-imgs>
         </ng-container>
       </div>
       <!-- <ng-container *ngFor="let item of resources">
         <div class="d-flex justify-content-between align-items-center rounded-pill bg-light p-2 ps-0 h-30px mt-2 me-2">
->>>>>>> 54b0de5f13d37e2025a0439a2b6b4575bd133256
           <div class="me-3">
             <codx-img class="me-2" [objectId]="item.resourceID" objectType="AD_Users" [width]="25">
             </codx-img>

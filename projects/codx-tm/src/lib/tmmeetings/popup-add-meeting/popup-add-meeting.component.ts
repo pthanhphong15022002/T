@@ -60,7 +60,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   action: any;
   linkURL = '';
   resources: CO_Resources[] = [];
-  listUserID= []
+  listUserID = []
   template = new CO_MeetingTemplates();
   listRoles: any;
   idUserSelected: any;
@@ -500,11 +500,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     var listUserID = '';
     var listDepartmentID = '';
     var listUserIDByOrg = '';
-<<<<<<< HEAD
-    var type = "U";
-=======
     var type = 'U';
->>>>>>> 54b0de5f13d37e2025a0439a2b6b4575bd133256
     e?.data?.forEach((obj) => {
       type = obj.objectType;
       switch (obj.objectType) {
@@ -528,18 +524,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         listDepartmentID.length - 1
       );
     if (listDepartmentID != '') {
-<<<<<<< HEAD
-      this.tmSv.getListUserIDByListOrgIDAsync([listDepartmentID, type]).subscribe((res) => {
-        if (res) {
-          listUserIDByOrg += res;
-          if (listUserID != '') listUserIDByOrg += ';' + listUserID;
-          this.valueUser(listUserIDByOrg);
-        }
-      });
-    } else this.valueUser(listUserID);
-
-    this.valueUser(listUserID);
-=======
       this.tmSv
         .getListUserIDByListOrgIDAsync([listDepartmentID, type])
         .subscribe((res) => {
@@ -550,7 +534,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           }
         });
     }
->>>>>>> 54b0de5f13d37e2025a0439a2b6b4575bd133256
   }
 
   valueUser(resourceID) {
@@ -588,13 +571,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     var arrUser = resource.split(';');
     this.listUserID = this.listUserID.concat(arrUser);
     this.api
-    .execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EmployeesBusiness',
-      'GetListEmployeesByUserIDAsync',
-      JSON.stringify(resource.split(';'))
-    )
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(resource.split(';'))
+      )
       .subscribe((res) => {
         if (res && res.length > 0) {
           for (var i = 0; i < res.length; i++) {
