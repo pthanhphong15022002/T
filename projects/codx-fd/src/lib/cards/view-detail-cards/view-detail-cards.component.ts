@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ApiHttpService, FormModel } from 'codx-core';
 import { CardType, Valuelist } from '../../models/model';
 
 @Component({
@@ -8,19 +9,28 @@ import { CardType, Valuelist } from '../../models/model';
 })
 export class ViewDetailCardsComponent implements OnInit,OnChanges {
 
-  @Input() itemSelected: any = null;
+  @Input() cardID: string = "";
   @Input() cardType:string ="";
+  @Input() formModel:FormModel;
+  data:any = null;
   isShowCard:boolean = true;
   ratingVll:string ="";
-  constructor() { }
+  constructor
+  (
+    private api:ApiHttpService,
+    private dt:ChangeDetectorRef
+  ) 
+  { 
+
+  }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.cardType.currentValue != changes.cardType.previousValue){
-      this.handleVllRating(this.itemSelected.cardType);
+    if(changes.cardID.currentValue != changes.cardID.previousValue){
+      this.getDataCard();
     }
   }
 
   ngOnInit(): void {
-    this.handleVllRating(this.itemSelected.cardType);
+    this.getDataCard();
   }
 
   handleVllRating(cardType: string): void {
@@ -33,6 +43,25 @@ export class ViewDetailCardsComponent implements OnInit,OnChanges {
     else{
       this.ratingVll = Valuelist.CardType;
     }
+    this.dt.detectChanges();
   }
 
+
+  getDataCard(){
+    if(!this.cardID){
+      this.data = null;
+      this.dt.detectChanges();
+      return;
+    }
+    this.api
+      .execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardAsync", this.cardID)
+      .subscribe((res) => {
+        if (res) {
+          this.isShowCard = true;
+          this.data = res;
+          this.handleVllRating(this.data.cardType);
+          this.dt.detectChanges();
+        } 
+    });
+  }
 }

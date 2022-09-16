@@ -237,17 +237,21 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   dataValue = '';
   options = new DataRequest();
   funcID = '';
-  
+  functionList: any;
+
   constructor(
     private injector: Injector,
     private changeDf: ChangeDetectorRef,
     private cacheService: CacheService,
     private modalService: NgbModal,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     super(injector);
     this.route.params.subscribe((param) => {
       this.funcID = param['funcID'];
+    });
+    this.cacheService.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
     });
     let year = this.today.getFullYear();
     let month = this.today.getMonth();
@@ -263,7 +267,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.options.entityPermission = 'FD_Receivers';
     this.options.gridViewName = 'grvReceivers';
     this.options.formName = 'Receivers';
-    this.options.funcID = this.funcID;
+    // this.options.funcID = this.funcID;
     this.cacheService.valueList('L1422').subscribe((res) => {
       if (res) {
         this.dataStore = res.datas;
@@ -289,7 +293,6 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   valueChange(e, f) {
     switch (e.field) {
       case 'vllOrganize':
-        // this.comboboxName = e.data?.text;
         this.type = e.data?.value;
         break;
       case 'Organize':
@@ -303,7 +306,6 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       this.ID = e[0];
     }
     this.reloadAllChart();
-    //this.comboboxName = e.data?.text;
   }
 
   changeTypeTime(data, f) {
@@ -366,9 +368,9 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.reloadAllChart();
   }
   reloadAllChart() {
-    this.setPredicate();
+    // this.setPredicate();
     this.getChartA();
-    // this.getDataChartB();
+    this.getDataChartB();
   }
   open(content) {
     this.modalService.open(content, {
@@ -480,9 +482,13 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.dataSended = [];
 
     this.api
-      .execSv<any>('FD', 'FD', 'CardsBusiness', 'GetStatistical1Async', [
-        this.options,
-      ])
+      .execSv<any>(
+        'FD',
+        'ERM.Business.FD',
+        'CardsBusiness',
+        'GetStatistical1Async',
+        this.options
+      )
       .subscribe((res) => {
         var result = new Array();
         if (res?.result.length != 0) {

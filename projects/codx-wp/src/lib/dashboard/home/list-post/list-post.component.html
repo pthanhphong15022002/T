@@ -41,23 +41,42 @@
     data-kt-scroll-offset="0"
   >
     <div id="newfeed">
-      <codx-listview
-        [emptyTemplate]="empty"
-        [predicates]="predicate"
-        [dataValues]="dataValue"
-        [itemTemplate]="tmpPortal"
-        #listview
-        [funcId]="codxViews.formModel.funcID"
-        [service]="service"
-        [assemblyName]="assemblyName"
-        class="h-100"
-        [className]="className"
-        [method]="method"
-        entityName="WP_Comments"
-        [itemTemplateLoading]="templateloading"
-        [formModel]="codxViews.formModel"
-      >
-      </codx-listview>
+      <ng-container *ngIf="module == 'WP' ; else FD">
+          <codx-listview
+            [emptyTemplate]="empty"
+            [predicates]="predicateWP"
+            [dataValues]="dataValueWP"
+            [itemTemplate]="tmpPortal"
+            #listview
+            [funcId]="codxViews.formModel.funcID"
+            [service]="service"
+            [assemblyName]="assemblyName"
+            class="h-100"
+            [className]="className"
+            [method]="method"
+            entityName="WP_Comments"
+            [itemTemplateLoading]="templateloading"
+            [formModel]="codxViews.formModel">
+          </codx-listview>
+      </ng-container>  
+      <ng-template #FD>
+          <codx-listview
+            [emptyTemplate]="empty"
+            [predicates]="predicateFD"
+            [dataValues]="dataValueFD"
+            [itemTemplate]="tmpPortal"
+            #listview
+            [funcId]="codxViews.formModel.funcID"
+            [service]="service"
+            [assemblyName]="assemblyName"
+            class="h-100"
+            [className]="className"
+            [method]="method"
+            entityName="WP_Comments"
+            [itemTemplateLoading]="templateloading"
+            [formModel]="codxViews.formModel">
+          </codx-listview>
+      </ng-template>
     </div>
   </div>
 </ng-template>

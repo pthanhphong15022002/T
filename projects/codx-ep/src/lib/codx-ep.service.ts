@@ -1,3 +1,4 @@
+import { DataRequest } from './../../../../src/shared/models/data.request';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { APICONSTANT } from '@shared/constant/api-const';
@@ -79,6 +80,7 @@ export class CodxEpService {
       });
     });
   }
+
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
       this.cache.gridViewSetup(formName, gridView).subscribe((gv) => {
@@ -172,6 +174,17 @@ export class CodxEpService {
       resolve(obj);
     });
   }
+
+  getCompanyName(companyID: string) {
+    return this.api.callSv(
+      'HR',
+      'ERM.Business.HR',
+      'OrganizationUnitsBusiness',
+      'GetOrgUnitNameAsync',
+      companyID
+    );
+  }
+
   notifyInvalid(
     formGroup: FormGroup,
     formModel: FormModel,
@@ -220,6 +233,7 @@ export class CodxEpService {
       data
     );
   }
+
   //#region File
   getFiles(funcID: string, objectId: string, objectType): Observable<any> {
     return this.api.execSv(
@@ -269,16 +283,6 @@ export class CodxEpService {
         funcID,
         '<div>' + oSignFile.title + '</div>',
       ]
-    );
-  }
-
-  getApprovalTrans(recID: string) {
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'GetViewByTransIDAsync',
-      [recID]
     );
   }
 

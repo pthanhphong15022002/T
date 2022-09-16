@@ -844,7 +844,7 @@
               default="Bạn có muốn lưu quy trình đã đã chỉnh sửa"
             ></codx-label>
           </div>
-          <span class="mb-4"
+          <span class="mb-4" *ngIf="!isAddNew"
             >Chương trình sẽ thực hiện ghi đè file trùng tên hiện có trên hệ
             thống. Quá trình này không thể khôi phục lại như trước khi ghi đè,
             bạn có muốn thực hiện không?</span

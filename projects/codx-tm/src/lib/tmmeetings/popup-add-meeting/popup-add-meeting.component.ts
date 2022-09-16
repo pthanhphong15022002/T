@@ -547,8 +547,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         }
       });
     } else this.valueUser(listUserID);
-
-    this.valueUser(listUserID);
   }
 
   valueUser(resourceID) {

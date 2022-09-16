@@ -288,25 +288,15 @@ export class CardsComponent implements OnInit {
       });
   }
 
-
-  selectedItem(data: any) {
-    return this.api
-      .execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardAsync", data.recID)
-      .subscribe((res) => {
-        if (res) {
-          this.isShowCard = true;
-          console.log('getOneCard: ', res);
-          this.itemSelected = res;
-          if (this.itemSelected.temp) {
-            this.getBehavior(this.itemSelected.temp);
-          }
-          if (this.itemSelected.industry) {
-            this.getIndustry(this.itemSelected.industry);
-          }
-          this.dt.detectChanges();
-        } else
-          this.itemSelected = null;
-      });
+  selectedID:string = "";
+  selectedItem(event: any) {
+    if(!event.data){
+      this.selectedID = "";
+    }
+    else {
+      this.selectedID = event.data.recID;
+    }
+    this.dt.detectChanges();
   }
   applyData(e) {
     this.lstUser = e;
@@ -327,120 +317,6 @@ export class CardsComponent implements OnInit {
     }
   }
 
-  removeUserRight(index) {
-    if (this.lstUser.length > 0) {
-      this.lstUser.splice(index, 1);
-      if (this.lstUser && this.lstUser.length > 0) {
-        var arrData = [];
-        this.lstUser.forEach((element) => {
-          var obj = {};
-          obj["id"] = element.objectID;
-          obj["name"] = element.objectName;
-          arrData.push(obj);
-        });
-        this.form.patchValue({
-          comment: JSON.stringify(arrData),
-        });
-      }
-      this.dt.detectChanges();
-    }
-  }
-
-  valueChange(e, element = null) {
-    if (e[0] == "") {
-      return;
-    }
-    let field = e.field ? e.field : element?.field;
-    if (field == "rating") {
-      this.form.patchValue({ rating: e });
-    }
-    else if (field == "giftID") {
-      var giftID = e[0];
-      this.getGiftInfor(giftID)
-    }
-    else if (field == "quantity") {
-      if (!this.gift) {
-        this.form.patchValue({ quanlity: 0 });
-        this.notificationsService.notify("Vui lòng chọn quà tặng trước!");
-        return;
-      }
-
-      let quantity = e.data.value;
-      if (quantity > this.giftCount) {
-        this.quantity = this.quantityOld + 1;
-        this.totalCoint = this.quantity * this.gift.Price;
-        this.form.patchValue({ quanlity: this.quantity });
-        this.notificationsService.notify("Vượt quá số lượng tồn kho!");
-        return;
-      }
-      let priceGiftGive = this.gift.Price * quantity;
-      if (priceGiftGive > this.wallet.coins) {
-        this.quantity = this.quantityOld + 1;
-        this.totalCoint = this.quantity * this.gift.Price;
-        this.form.patchValue({ quanlity: this.quantity });
-        this.notificationsService.notify("Số dư ví của bạn không đủ");
-        return;
-      }
-      this.quantityOld = this.quantity;
-      this.quantity = quantity;
-      this.totalCoint = this.quantity * this.gift.Price;
-      this.form.patchValue({ quanlity: this.quantity });
-    }
-    else if (field == "behavior") {
-      this.behavior = e[0];
-      this.form.patchValue({ behavior: this.behavior });
-    }
-    else if (field == "industry") {
-      this.industry = e[0];
-      var obj = {};
-      obj[field] = this.industry;
-      if (!this.industry) {
-        return;
-      }
-      this.api.execSv("BS", "ERM.Business.BS", "IndustriesBusiness", "GetListByID", this.industry).subscribe(
-        (res: any) => {
-          if (res) {
-            this.userReciver = res[0].description;
-            this.api.callSv("SYS", "ERM.Business.AD", "UsersBusiness", "GetAsync", this.userReciver).subscribe(res2 => {
-              if (res2.msgBodyData.length) {
-                this.userReciverName = res2.msgBodyData[0].userName;
-                this.form.patchValue({ receiver: this.userReciver });
-              }
-            })
-
-          }
-        }
-      )
-      this.form.patchValue(obj);
-
-    }
-    else if (field == "situation") {
-      this.situation = e.data.value;
-      this.form.patchValue({ situation: this.situation });
-    }
-    else if (field == "receiver") {
-      this.userReciver = e[0];
-      this.form.patchValue({ receiver: this.userReciver });
-      this.checkValidateWallet(this.userReciver);
-    }
-    else { return }
-  }
-
-
-  getGiftInfor(giftID: string) {
-    if (this.giftID == giftID) return;
-    this.api
-      .execSv("FD", "ERM.Business.FD", "GiftsBusiness", "GetAsync", [giftID])
-      .subscribe((res) => {
-        if (res) {
-          this.gift = res;
-          this.giftID = this.gift.giftID;
-          this.price = this.gift.Price;
-          this.giftCount = this.gift.availableQty;
-          this.dt.detectChanges();
-        }
-      })
-  }
 
 
 
@@ -604,7 +480,6 @@ export class CardsComponent implements OnInit {
   }
 
   deleteCard(card:any) {
-    
   }
 
 }

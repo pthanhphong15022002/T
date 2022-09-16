@@ -328,12 +328,14 @@ export class PopupAddBookingRoomComponent implements OnInit {
   //     return hour+" giờ trước"       
   //   }
   // }
+
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd,this.tmpAttendeesList ,null,this.lstStationery];
     return true;
   }
+  
   onSaveForm() { 
     if (this.fGroupAddBookingRoom.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddBookingRoom, this.formModel);
@@ -571,16 +573,28 @@ export class PopupAddBookingRoomComponent implements OnInit {
       this.tmplstDevice=[];
       var cbxCar = event.component.dataService.data;
       cbxCar.forEach(element => {
-        if (element.ResourceID == event.data) {          
-          var carEquipments= element.Equipments.split(";");
-          carEquipments.forEach(item=>{
-            this.lstDeviceRoom.forEach(device=>{
-              if(item==device.id){ 
-                device.isSelected=false;
-                this.tmplstDevice.push(device);                
-              }              
-            })
-          })          
+        if (element.ResourceID == event.data) { 
+          element.Equipments.forEach(item => {
+            let tmpDevice= new Device();
+            tmpDevice.id=item.EquipmentID;
+            tmpDevice.isSelected=false;    
+            this.vllDevices.forEach((vlItem) => {
+              if(tmpDevice.id== vlItem.id){
+                tmpDevice.text=vlItem.text;
+              }
+            });       
+            this.tmplstDevice.push(tmpDevice);
+          });          
+          console.log('equipt',this.tmplstDevice);    
+          // var carEquipments = element.Equipments.split(";");
+          // carEquipments.forEach(item=>{
+          //   this.lstDeviceRoom.forEach(device=>{
+          //     if(item==device.id){ 
+          //       device.isSelected=false;
+          //       this.tmplstDevice.push(device);                
+          //     }              
+          //   })
+          // })          
         }
       });
     } 

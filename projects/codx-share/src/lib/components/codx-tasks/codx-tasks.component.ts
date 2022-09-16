@@ -52,8 +52,7 @@ import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -132,7 +131,7 @@ export class CodxTasksComponent
   projectID?: any;
   listViewModel = [];
   dataReferences = [];
-  titleAction ='' ;
+  titleAction = '';
 
   constructor(
     inject: Injector,
@@ -172,6 +171,7 @@ export class CodxTasksComponent
     this.request.className = 'TaskBusiness';
     this.request.method = 'GetTasksAsync';
     this.request.idField = 'taskID';
+    this.request.dataObj = this.dataObj;
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -283,7 +283,7 @@ export class CodxTasksComponent
         this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'add', this.isAssignTask,this.titleAction],
+        [this.view.dataService.dataSelected, 'add', this.isAssignTask, this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -348,7 +348,7 @@ export class CodxTasksComponent
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask,this.titleAction, data],
+        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, this.titleAction, data],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -475,7 +475,7 @@ export class CodxTasksComponent
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit', this.isAssignTask,this.titleAction],
+          [this.view.dataService.dataSelected, 'edit', this.isAssignTask, this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -682,8 +682,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -787,7 +787,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1051,7 +1051,7 @@ export class CodxTasksComponent
       return;
     }
     if (data.status < '10') {
-     this.notiService.notifyCode('TM061');
+      this.notiService.notifyCode('TM061');
       // this.notiService.notify(
       //   'Công việc chưa được xác nhận thực hiện ! Vui lòng xác nhận trước khi cập nhật tiến độ !'
       // );
@@ -1225,7 +1225,7 @@ export class CodxTasksComponent
   }
 
   clickMFAfterParameter(e, data) {
-    this.titleAction= e.text ;
+    this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -1325,7 +1325,7 @@ export class CodxTasksComponent
   }
 
   click(evt: ButtonModel) {
-    this.titleAction = evt.text ;
+    this.titleAction = evt.text;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -1436,17 +1436,17 @@ export class CodxTasksComponent
 
   getParams() {
     this.api
-    .execSv<any>(
-      'SYS',
-      'ERM.Business.SYS',
-      'SettingValuesBusiness',
-      'GetByModuleWithCategoryAsync',
-      ['TMParameters', '1']
-    )
-    .subscribe((res) => {
-      if (res) {
-        var param = JSON.parse(res.dataValue);
-        this.calendarID = param.CalendarID
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleWithCategoryAsync',
+        ['TMParameters', '1']
+      )
+      .subscribe((res) => {
+        if (res) {
+          var param = JSON.parse(res.dataValue);
+          this.calendarID = param.CalendarID
           this.getDayOff(this.calendarID);
         }
       });
