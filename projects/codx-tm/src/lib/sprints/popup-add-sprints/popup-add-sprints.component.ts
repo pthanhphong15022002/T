@@ -125,16 +125,16 @@ export class PopupAddSprintsComponent implements OnInit {
         this.dialog.dataService
           .save(
             (option: any) => this.beforeSave(option, isAdd),
-            isAdd ? 0 : null
+            !isAdd ? null : (this.master.iterationType=="1"? 0:1)
           )
           .subscribe((res) => {
             if (res) {
-              if (isAdd && res.iterationType == '0') {
-                var dataNew = this.dialog.dataService.data[0];
-                this.dialog.dataService.data[0] =
-                  this.dialog.dataService.data[1];
-                this.dialog.dataService.data[1] = dataNew;
-              }
+              // if (isAdd && res.iterationType == '0') {
+              //   var dataNew = this.dialog.dataService.data[0];
+              //   this.dialog.dataService.data[0] =
+              //     this.dialog.dataService.data[1];
+              //   this.dialog.dataService.data[1] = dataNew;
+              // }
               this.attachment.clearData();
               this.dialog.close();
             }
