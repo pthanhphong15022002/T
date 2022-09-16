@@ -40,3 +40,7 @@ codx-view-list-detail .codx-detail-footer {
 codx-view-list-detail ejs-listview .e-ul>li {
   margin-bottom: 0;
 }
+
+.meeting-des .e-rte-content {
+  height: calc(100vh - 235px) !important;
+}

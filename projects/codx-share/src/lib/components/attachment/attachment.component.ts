@@ -124,6 +124,7 @@ export class AttachmentComponent implements OnInit {
   //tbchung thêm vào để xử lý bên import template
   @Output() filePrimitive = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
+  @Output() fileDelete = new EventEmitter<any>();
   /////////////////////////////////////////////
   @ViewChild('templateupload') public uploadObj: UploaderComponent;
   // @Input('openFolder') openFolder: ViewsComponent;
@@ -2849,5 +2850,9 @@ export class AttachmentComponent implements OnInit {
   handleView(e:any)
   {
     this.viewFile.emit(e);
+  }
+  handleDelete(e:any)
+  {
+    this.fileDelete.emit(e);
   }
 }

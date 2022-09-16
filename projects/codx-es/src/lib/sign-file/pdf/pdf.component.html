@@ -167,7 +167,7 @@
         <div
           class="left_Toolbar d-flex justify-content-start align-items-center"
         >
-          <ejs-toolbar (created)="leftToolbarCreated($event)">
+          <ejs-toolbar>
             <e-items>
               <e-item
                 [prefixIcon]="
@@ -178,42 +178,41 @@
                 (click)="changeShowThumbnailState()"
               ></e-item>
               <e-item
-                [disabled]="cannotAct"
+                [disabled]="isDisable"
                 prefixIcon="icon-skip_previous icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                (click)="pdfviewerControl?.navigation?.goToFirstPage()"
                 id="firstPage"
               >
+                <!-- (click)="pdfviewerControl?.navigation?.goToFirstPage()" -->
               </e-item>
               <e-item
                 prefixIcon="icon-navigate_before icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="previous"
-                (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()"
-                [disabled]="cannotAct"
+                [disabled]="isDisable"
               >
+                <!-- (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()" -->
               </e-item>
               <e-item [template]="pageInput" type="Input"></e-item>
               <e-item
                 prefixIcon="icon-navigate_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="next"
-                (click)="pdfviewerControl?.navigation?.goToNextPage()"
-                [disabled]="cannotAct"
+                [disabled]="isDisable"
               >
+                <!-- (click)="pdfviewerControl?.navigation?.goToNextPage()" -->
               </e-item>
               <e-item
                 prefixIcon="icon-skip_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="lastPage"
-                (click)="pdfviewerControl?.navigation?.goToLastPage()"
-                [disabled]="cannotAct"
+                [disabled]="isDisable"
               >
               </e-item>
+              <!-- (click)="pdfviewerControl?.navigation?.goToLastPage()" -->
 
-              <!-- <e-item
+              <e-item
                 id="viewThumbnail"
                 prefixIcon="icon-article icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 (click)="show($event)"
-                [disabled]="cannotAct"
               >
-              </e-item> -->
+              </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
@@ -238,8 +237,6 @@
               <e-item
                 id="zoomOut"
                 prefixIcon="e-zoom-out btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                (click)="clickZoom('out')"
-                [disabled]="cannotAct"
               >
               </e-item>
             </e-items>
@@ -250,7 +247,7 @@
             [(dataSource)]="lstZoomValue"
             [(placeholder)]="zoomValue"
             [fields]="zoomFields"
-            (change)="clickZoom('to', $event)"
+            (change)="changeZoom('to', $event)"
           >
           </ejs-dropdownlist>
 
@@ -259,8 +256,7 @@
               <e-item
                 id="zoomIn"
                 prefixIcon="e-zoom-in btn btn-icon btn-white btn-sm border-0  btn-tool-custom"
-                (click)="clickZoom('in')"
-                [disabled]="cannotAct"
+                (click)="changeZoom('in', $event)"
               >
               </e-item>
             </e-items>
@@ -270,15 +266,11 @@
               <e-item
                 prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="print"
-                (click)="clickPrint($event)"
-                [disabled]="cannotAct"
               >
               </e-item>
               <e-item
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
-                (click)="clickDownload()"
-                [disabled]="cannotAct"
               >
               </e-item>
               <e-item
@@ -294,70 +286,29 @@
         </div>
       </div>
 
-      <div
-        class="h-100 pdfviewer_Space w-100 flex-row-fluid"
-        *ngIf="!isDisable; else viewMode"
+      <ngx-extended-pdf-viewer
+        #ngxPdfView
+        *ngIf="curFileUrl ? true : false"
+        [(src)]="curFileUrl"
+        [height]="'100vh'"
+        [(zoom)]="zoomValue"
+        [zoomLevels]="zoomValue"
+        [(page)]="curPage"
+        [customToolbar]="pdfToolbar"
+        [showHandToolButton]="false"
+        [showUnverifiedSignatures]="true"
+        [sidebarVisible]="!hideThumbnail"
+        [showSidebarButton]="false"
+        (pdfLoadingStarts)="loadingPdf($event)"
+        (pageRendered)="pageRendered($event)"
+        [pageViewMode]="pageViewMode"
+        [showBookmarkButton]="false"
+        [showPropertiesButton]="true"
+        [customSidebar]="withoutSidebar"
+        [customThumbnail]="ngxThumbnail"
+        [enableDragAndDrop]="false"
       >
-        <ejs-pdfviewer
-          #pdfviewer
-          id="pdfViewer"
-          [(serviceUrl)]="service"
-          [enableToolbar]="false"
-          [enableNavigationToolbar]="false"
-          [enableAnnotationToolbar]="false"
-          [enableHandwrittenSignature]="false"
-          [enableFormFields]="false"
-          [enableThumbnail]="true"
-          [enableCommentPanel]="true"
-          (created)="onCreated($event)"
-          [enableAnnotation]="true"
-          (documentUnload)="changeCanActState(true)"
-          (annotationAdd)="addAnnoEvent($event)"
-          (annotationMove)="resetTime($event)"
-          (annotationRemove)="removeAnnot($event)"
-          (annotationResize)="resetTime($event)"
-          (annotationSelect)="selectedAnnotation($event)"
-          (annotationPropertiesChange)="resetTime($event)"
-          (documentLoad)="loadingAnnot($event)"
-          (printEnd)="cancelPrint($event)"
-          [enableCommentPanel]="false"
-          (pageChange)="pageChange($event)"
-          [zoomValue]="zoomValue"
-          (zoomChange)="changeZoomValue($event)"
-          [ajaxRequestSettings]="ajaxSetting"
-          style="
-            height: 100% !important;
-            width: 100% !important;
-            position: relative;
-            display: block;
-          "
-        >
-        </ejs-pdfviewer>
-      </div>
-
-      <ng-template #viewMode>
-        <ngx-extended-pdf-viewer
-          #ngxPdfView
-          *ngIf="fileInfo?.fileID ? true : false"
-          [(src)]="fileInfo.fileID"
-          [height]="'100vh'"
-          [(zoom)]="zoomValue"
-          [zoomLevels]="zoomValue"
-          [(page)]="curPage"
-          [customToolbar]="pdfToolbar"
-          [showHandToolButton]="true"
-          [showUnverifiedSignatures]="true"
-          [sidebarVisible]="!hideThumbnail"
-          [showSidebarButton]="false"
-          (pdfLoadingStarts)="loadingAnnot($event)"
-          (pageRendered)="ngxPageRendered($event)"
-          [showBookmarkButton]="false"
-          [showPropertiesButton]="true"
-          [customSidebar]="withoutSidebar"
-          [customThumbnail]="ngxThumbnail"
-        >
-        </ngx-extended-pdf-viewer>
-      </ng-template>
+      </ngx-extended-pdf-viewer>
       <ng-template #ngxThumbnail let-PAGE_NUMBER>
         <a class="pdf-viewer-template">
           <div
@@ -385,6 +336,7 @@
     >
       <ejs-tab
         #rightToolbar
+        id="rightToolbar"
         [class.d-none]="hideActions"
         heightAdjustMode="Fill"
       >
@@ -439,13 +391,6 @@
                       </codx-temp-full>
                     </ng-template>
                   </ejs-dropdownlist>
-                  <!-- <codx-input
-                    class="form-control me-2"
-                    type="valuelist"
-                    field="vllOrganize"
-                    refValue="ES015"
-                    (valueChange)="changeSigner($event)"
-                  ></codx-input> -->
                 </div>
                 <div class="mt-3 mb-3">
                   <codx-label
@@ -460,6 +405,7 @@
                 <div class="d-flex flex-wrap d-grid align-items-center">
                   <div
                     class="card-item me-6 mb-6"
+                    #actions
                     *ngFor="let action of actionsButton; let index = index"
                     [class.active]="holding == index + 1"
                     (click)="changeAnnotationItem(index + 1)"
@@ -809,16 +755,6 @@
 </ng-template>
 
 <ng-template #pageInput>
-  <!-- <input
-    id="numeric"
-    type="number"
-    min="1"
-    [max]="pageMax"
-    [step]="pageStep"
-    [(value)]="curPage"
-    defaultValue="1"
-    (keyup.enter)="goToPage($event)"
-  /> -->
   <codx-input
     type="number"
     [min]="1"
@@ -831,3 +767,17 @@
 </ng-template>
 
 <ng-template #panelLeft> </ng-template>
+
+<div
+  id="virtualLayer"
+  style="display: flex; position: absolute"
+  [style.top.px]="vcTop"
+  [style.left.px]="vcLeft"
+  [style.width.px]="vcWidth"
+  [style.height.px]="vcHeight"
+  [style.z-index]="'1'"
+  [style.border]="'1px solid red'"
+></div>
+<div id="contextMenu" style="display: none; position: absolute">
+  <div style="z-index: 2"><button id="delete-btn">Delete</button></div>
+</div>
