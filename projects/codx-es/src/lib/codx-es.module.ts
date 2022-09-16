@@ -62,6 +62,7 @@ import {
 } from 'ngx-extended-pdf-viewer';
 import { PopupCaPropsComponent } from './sign-file/popup-ca-props/popup-ca-props.component';
 import { PdfComponent } from './sign-file/pdf/pdf.component';
+import { PopupAddSignatureComponent } from './setting/signature/popup-add-signature/popup-add-signature.component';
 
 const routes: Routes = [
   {
@@ -135,6 +136,7 @@ const routes: Routes = [
     LayoutComponent,
     DashboardComponent,
     CodxEsComponent,
+    PopupAddSignatureComponent,
     PopupAddAutoNumberComponent,
     PopupAddSignFileComponent,
     PopupAddEmailTemplateComponent,
