@@ -175,16 +175,6 @@ export class CodxEpService {
     });
   }
 
-  getDataCombobox(model: any) {
-    return this.api.callSv(
-      'SYS',
-      'ERM.Business.CM',
-      'DataBusiness',
-      'LoadDataCbxAsync',
-      model
-    );
-  }
-
   getCompanyName(companyID: string) {
     return this.api.callSv(
       'HR',
