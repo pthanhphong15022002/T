@@ -150,14 +150,6 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
     this.itemDetailDataStt = stt;
   }
 
-  setStyles(color): any {
-    let styles = {
-      backgroundColor: color,
-      color: 'white',
-    };
-    return styles;
-  }
-
   clickChangeItemViewStatus(stt, recID) {
     this.itemDetailStt = stt;
   }
