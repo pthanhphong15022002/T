@@ -1,0 +1,9 @@
+<codx-views #codxView 
+[views]="views"  
+[entityName]="'WP_Comments'" 
+[idField]="'recID'">
+</codx-views>
+
+<ng-template #content>
+    <app-list-post [module]="'WP'" [codxViews]="codxView"></app-list-post>
+</ng-template>
