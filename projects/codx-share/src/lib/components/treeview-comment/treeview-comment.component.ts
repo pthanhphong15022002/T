@@ -26,14 +26,17 @@ import { ImageGridComponent } from '../image-grid/image-grid.component';
 })
 export class TreeviewCommentComponent implements OnInit {
   @Input() funcID:string;
+  @Input() objectID:string;
   @Input() objectType:string;
-  @Input() fromModel:any;
+  @Input() formModel:any;
   @Input() rootData: any;
   @Input() dataComment: any;
   @Output() pushComment = new EventEmitter;
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   @ViewChild('codxFile') codxFile : ImageGridComponent;
 
+  data:any = null;
+  pageIndex:number = 0 ;
   crrId = '';
   checkValueInput = false;
   lstData: any;
@@ -53,6 +56,7 @@ export class TreeviewCommentComponent implements OnInit {
   votes: any;
   lstUserVote: any;
   dataSelected: any[];
+  vllL1480:any = null;
   constructor(
     private dt: ChangeDetectorRef,
     private signalRApi: WPService,
@@ -67,11 +71,32 @@ export class TreeviewCommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    this.cache.valueList('L1480').subscribe((res) => {
+    this.getValueIcon();
+    // this.getDataComment();
+  }
+
+  getValueIcon(){
+    this.cache.valueList("L1480").subscribe((res) => {
       if (res) {
-        this.lstData = res.datas;
+        this.vllL1480 = res.datas;
       }
     });
+  }
+  lstComment:any[] = [];
+  totalComment:number = 0;
+  getDataComment(){ 
+    this.api.execSv
+    ("WP",
+    "ERM.Business.WP",
+    "CommentsBusiness",
+    "GetCommentsByOjectIDAsync",[this.objectID, this.pageIndex])
+    .subscribe((res:any[]) => {
+      if(res){
+        this.lstComment = res[0];
+        this.totalComment = res[1];
+        this.dt.detectChanges();
+      }
+    })
   }
 
   showVotes(data: any) {
@@ -129,7 +154,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
   replyTo(data) {
-    this.crrId = data.cm;
     data.showReply = !data.showReply;
     this.dt.detectChanges();
   }
@@ -182,34 +206,29 @@ export class TreeviewCommentComponent implements OnInit {
       });
   }
 
-  loadSubComment(data) {
+  loadSubComment(data:any) {
     data.isShowComment = !data.isShowComment;
+    data.totalSubComment  = 0 ;
     this.api.execSv(
       'WP',
       'ERM.Business.WP',
       'CommentsBusiness',
       "GetSubCommentAsync",
       [data.recID, 0]
-    ).subscribe((res: any) => {
-      res.map(p => {
-        this.setNodeTree(p);
+    ).subscribe((res: any[]) =>
+      {
+        if(res){
+          res.map((e:any) => {this.setNodeTree(e)});
+        }
       })
-      this.dt.detectChanges();
-    })
   }
 
-
-
-
-
-  showComments(post: any) {
-    if (post.isShowComment) {
-      post.isShowComment = false;
-    }
-    else {
-      post.isShowComment = true;
-    }
+  showComments(data: any) {
+    data.isShowComment = !data.isShowComment;
     this.dt.detectChanges();
+    if(data.isShowComment){
+      this.getDataComment();
+    }
   }
   valueChange(value: any, type) {
     var text = value.data.toString().trim();
@@ -229,50 +248,46 @@ export class TreeviewCommentComponent implements OnInit {
   }
   setNodeTree(newNode: any) {
     if (!newNode) return;
-    var id = newNode["recID"],
+    let id = newNode["recID"],
       parentId = newNode["refID"];
-
     this.dicDatas[id] = newNode;
-    var t = this;
-    var parent = this.dicDatas[parentId];
+    let parent = this.dicDatas[parentId];
     if (parent) {
       this.addNode(parent, newNode, id);
     } else {
-      this.addNode(this.dataComment, newNode, id);
+      this.addNode(null, newNode, id);
     }
-
     this.dt.detectChanges();
   }
 
   addNode(dataNode: any, newNode: any, id: string) {
-    var t = this;
-    if (!dataNode) {
-      dataNode = [newNode];
-    } else {
-      var idx = -1;
-      if (!dataNode.listComment) {
-        dataNode.listComment = [];
-      }
-      else {
-        dataNode.listComment.forEach(function (element: any, index: any) {
-          if (element["recID"] == id) {
-            idx = index;
-            return;
-          }
-        });
-      }
-      if (idx == -1) {
-        if (dataNode.length == 0)
-          dataNode.push(newNode);
+      let idx = -1;
+      let node = null;
+      if(dataNode)
+      {
+        if(!dataNode.listComment || dataNode.listComment.length == 0){
+          dataNode.listComment = [];
+        }
         else
+        {
+          node =  dataNode.listComment.find((e:any) => {
+            return e["recID"] == id;
+          });
+        }
+        if (node) 
+        {
+          newNode.listComment = node.listComment;
+          dataNode[idx] = newNode;
+        }
+        else 
+        {
           dataNode.listComment.push(newNode);
+        }
       }
       else {
-        var obj = dataNode[idx];
-        newNode.listComment = obj.listComment;
-        dataNode[idx] = newNode;
+        this.lstComment.push(newNode);
       }
-    }
+    this.dt.detectChanges();   
   }
 
   removeNodeTree(id: string) {
@@ -280,7 +295,6 @@ export class TreeviewCommentComponent implements OnInit {
     var data = this.dicDatas[id],
       parentId = data["refID"];
     if (data) {
-      var t = this;
       var parent = this.dicDatas[parentId];
       if (parent) {
         parent.listComment = parent.listComment.filter(function (element: any, index: any) {

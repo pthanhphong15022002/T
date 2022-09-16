@@ -122,6 +122,7 @@ export class MyTeamComponent implements OnInit {
                         }
                       });
                   });
+                  console.log("check employeeMyTeam", this.employeeMyTeam)
                 }
               }
             });

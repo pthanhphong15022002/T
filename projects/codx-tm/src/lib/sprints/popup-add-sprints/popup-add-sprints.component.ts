@@ -70,6 +70,8 @@ export class PopupAddSprintsComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
+    if (this.funcID == 'TMT0301') this.master.iterationType == '1';
+    else if (this.funcID == 'TMT0302') this.master.iterationType == '0';
     this.sprintDefaut = this.dialog.dataService.data[0];
     this.dataDefault.push(this.sprintDefaut);
     this.dataOnLoad = this.dialog.dataService.data;
@@ -99,9 +101,11 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region CRUD
   saveData(id) {
+    if (this.master.iterationType=='1' && (this.master.projectID == null || this.master.projectID.trim() == ''))
+      return this.notiService.notify('Tên dự án không được để trống !');
     if (
       this.master.iterationName == null ||
-      this.master.iterationName.trim() == ''
+      this.master.iterationName.trim() == '' 
     )
       return this.notiService.notifyCode('TM035');
     if (this.master.projectID && Array.isArray(this.master.projectID))
@@ -121,38 +125,21 @@ export class PopupAddSprintsComponent implements OnInit {
         this.dialog.dataService
           .save(
             (option: any) => this.beforeSave(option, isAdd),
-            isAdd ? 0 : null
-          ) //Hảo code mới
+            !isAdd ? null : (this.master.iterationType=="1"? 0:1)
+          )
           .subscribe((res) => {
             if (res) {
-              // this.imageAvatar.updateFileDirectReload(this.master.iterationID).subscribe(res=>{});
-              if (isAdd && this.funcID != 'TMT0301') {
-                var dataNew = this.dialog.dataService.data[0];
-                this.dialog.dataService.data[0] =
-                  this.dialog.dataService.data[1];
-                this.dialog.dataService.data[1] = dataNew;
-              }
+              // if (isAdd && res.iterationType == '0') {
+              //   var dataNew = this.dialog.dataService.data[0];
+              //   this.dialog.dataService.data[0] =
+              //     this.dialog.dataService.data[1];
+              //   this.dialog.dataService.data[1] = dataNew;
+              // }
+              this.attachment.clearData();
               this.dialog.close();
             }
           });
       });
-
-    // this.tmSv.addTaskBoard([this.master, isAdd]).subscribe((res) => {
-    //   if (res) {
-    //     if(isAdd){
-    //       this.dataOnLoad[0]= res;
-    //       this.dataOnLoad=this.dataDefault.concat(this.dataOnLoad);
-    //       this.dialog.dataService.data =  this.dataOnLoad
-    //      // this.notiService.notifyCode('TM005');
-    //     }else{
-    //       this.dialog.dataService.update(res).subscribe();
-    //       //  var index = this.dialog.dataService.data.findIndex(x=>x.iterationID==res.iterationID)
-    //       //  this.dialog.dataService.data[index] = res;
-    //      // this.notiService.notifyCode('E0528');
-    //     }
-    //     this.dialog.close();
-    //   }
-    // });
   }
 
   //#endregion
@@ -266,6 +253,23 @@ export class PopupAddSprintsComponent implements OnInit {
   // }
   changeData(e) {
     if (e?.field) this.master[e.field] = e?.data;
+  }
+  changeProject(e) {
+
+    if (e.field == 'projectID' && e?.data && e?.data.trim() != '') {
+      this.master[e.field] = e?.data;
+      this.api
+        .execSv<any>(
+          'TM',
+          'TM',
+          'ProjectsBusiness',
+          'GetProjectByIDAsync',
+          e?.data
+        )
+        .subscribe((res) => {
+          if (res) this.master.iterationName = res.projectName;
+        });
+    }
   }
 
   changeUser(e) {

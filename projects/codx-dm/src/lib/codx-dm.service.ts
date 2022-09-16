@@ -55,6 +55,7 @@ export class CodxDMService {
   public restoreFilemessage = '{0} đã có bạn có muốn ghi đè lên không ?';
   public restoreFoldermessage = '{0} đã có bạn có muốn ghi đè lên không ?';
   public titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
+  public titleFileAccessDenied = 'Bạn không có quyền truy cập file này';
   public titleMessage = 'Thông báo';
   public titleCopymessage = 'Bạn có muốn lưu lên không ?';
   public titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
@@ -127,6 +128,7 @@ export class CodxDMService {
   page = 1;
   totalPage = 1;
   pageSize = 20;
+  ChunkSizeInKB = 1024 * 2;
   revision: boolean;
   moveable = false;
   itemRight: ItemRight;
@@ -412,6 +414,7 @@ export class CodxDMService {
     this.parentDownload = false;
     this.parentUpload = false;
     this.parentDelete = false;
+    this.parentAssign = false;
     this.setRight.next(true);
   }
 
@@ -498,6 +501,10 @@ export class CodxDMService {
       });
     } else {
       // open file
+      if (!data.read) {
+        this.notificationsService.notify(this.titleFileAccessDenied);
+        return;
+      }
       var dialogModel = new DialogModel();
       dialogModel.IsFull = true;
 
@@ -1286,7 +1293,7 @@ export class CodxDMService {
           break;
 
         case "DMT0202": // chinh sua thu muc  
-        case "DMT0209":          
+        case "DMT0209": // properties folder         
           
           option.DataService = this.dataService;
           option.FormModel = this.formModel;
@@ -1294,6 +1301,7 @@ export class CodxDMService {
           // let data = {} as any;
           data.title = this.titleUpdateFolder;
           data.id =  data.recID;            
+          data.readonly = $event.functionID == 'DMT0209' ? true : false;
           this.callfc.openSide(CreateFolderComponent, data, option);            
           break;
 
@@ -1321,13 +1329,13 @@ export class CodxDMService {
           break;  
 
         case "DMT0214": //"copy": // copy file hay thu muc
-          var title = `${this.titleCopy} ${type}`;
+          var title = `${this.titleCopy}`;
           this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, true], "");   
           break;
   
         case "DMT0203": //"rename": // copy file hay thu muc
         case "DMT0215":
-          var title = `${this.titleRename} ${type}`;
+          var title = `${this.titleRename}`;
           this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, false], "");   
           break;
 

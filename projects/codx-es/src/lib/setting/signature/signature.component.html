@@ -1,62 +1,111 @@
-<codx-views #viewBase [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="click($event)"
-  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
-  (requestEnded)="closeEditForm($event)">
+<codx-views
+  #viewBase
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
+  (requestEnded)="closeEditForm($event)"
+>
 </codx-views>
 
 <ng-template #signatureType let-data>
   <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{
     data.signatureType | vll: "ES001":"text" | async
-    }}</span>
+  }}</span>
 </ng-template>
 
 <ng-template #supplier let-data>
   <div class="d-flex justify-content-center has-action-menu">
     <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{
       data.supplier | vll: "ES006":"text" | async
-      }}</span>
+    }}</span>
     <div class="action-menu">
-      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" type="hover" [dataItem]="data">
+      <codx-mfunc
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+        [dataItem]="data"
+      >
       </codx-mfunc>
     </div>
   </div>
 </ng-template>
 
-<ng-template #listItem let-data>
-</ng-template>
+<ng-template #listItem let-data> </ng-template>
 
 <ng-template #imageSignature1 let-data>
-  <div class="text-center" *ngIf="data?.signature1!=null">
-    <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
+  <div class="text-center" *ngIf="data?.signature1 != null">
+    <div
+      class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
+    >
       <div class="m-auto">
-        <codx-img [objectId]="data?.recID+'1'" imageType="square" [width]="50" [recId]="data?.signature1"></codx-img>
+        <codx-img
+          [objectId]="data?.recID + '1'"
+          imageType="square"
+          [width]="50"
+          [recId]="data?.signature1"
+        ></codx-img>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #imageSignature2 let-data>
-  <div class="text-center" *ngIf="data?.signature2!=null">
-    <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
+  <div class="text-center" *ngIf="data?.signature2 != null">
+    <div
+      class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
+    >
       <div class="m-auto">
-        <codx-img [objectId]="data?.recID+'2'" imageType="square" [width]="50" [recId]="data?.signature2"></codx-img>
+        <codx-img
+          [objectId]="data?.recID + '2'"
+          imageType="square"
+          [width]="50"
+          [recId]="data?.signature2"
+        ></codx-img>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #imageStamp let-data>
-  <div class="text-center" *ngIf="data?.stamp!=null">
-    <div class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center">
+  <div class="text-center" *ngIf="data?.stamp != null">
+    <div
+      class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
+    >
       <div class="m-auto">
-        <codx-img [objectId]="data?.recID+'s'" imageType="square" [width]="50" [recId]="data?.stamp"></codx-img>
+        <codx-img
+          [objectId]="data?.recID + 's'"
+          imageType="square"
+          [width]="50"
+          [recId]="data?.stamp"
+        ></codx-img>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #oTPControl let-data>
-  <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{
-    data.otpControl | vll: "ES005":"text" | async
+  <div class="d-flex justify-content-center has-action-menu">
+    <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{
+      data.otpControl | vll: "ES005":"text" | async
     }}</span>
+    <div class="action-menu">
+      <codx-mfunc
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+        [dataItem]="data"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
 </ng-template>

@@ -402,6 +402,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       });
       datas = this.view.dataService.data[index];
     }
+    if (funcID != 'recallUser' && funcID != 'ODT201' && funcID != "SYS02")
+      this.view.dataService.onAction.next({ type: 'update', data: datas });
     delete datas._uuid;
     delete datas.__loading;
     delete datas.isNew;
@@ -431,7 +433,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               //this.view.dataService.update(x.event).subscribe();
               //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
               //this.view.dataService.update(x.event).subscribe();
-              this.view.dataService.setDataSelected(x.event);
+
               this.odService
                 .getDetailDispatch(x.event.recID)
                 .subscribe((item) => {
@@ -515,9 +517,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         );
         this.dialog.closed.subscribe((x) => {
           if (x.event) {
-            //this.data.owner = x.event[0].owner
-            //this.data.lstUserID = getListImg(x.event[0].relations);
-            //this.data.listInformationRel = this.data.listInformationRel.concat(x.event[1])
+            this.data.owner = x.event[0].owner;
+            this.data.lstUserID = getListImg(x.event[0].relations);
+            this.data.listInformationRel = this.data.listInformationRel.concat(
+              x.event[1]
+            );
             this.view.dataService.update(x.event[0]).subscribe();
           }
         });
@@ -726,12 +730,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 )
                 .subscribe((item) => {
                   if (item.status == 0) {
-                    debugger;
                     this.data.relations = item.data[0].relations;
                     this.data.lstUserID = getListImg(item.data[0].relations);
-                    var index = this.data.listInformationRel.findIndex(x=>x.userID == item.data[1]);
+                    var index = this.data.listInformationRel.findIndex(
+                      (x) => x.userID == item.data[1]
+                    );
                     this.data.listInformationRel[index].reCall = true;
-                    this.ref.detectChanges()
+                    this.ref.detectChanges();
                     //this.data.listInformationRel = item.data[1];
                   }
                   this.notifySvr.notify(item.message);
@@ -791,16 +796,17 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           .subscribe((res2: any) => {
             let dialogModel = new DialogModel();
             dialogModel.IsFull = true;
+
             //trình ký
             if (res2?.eSign == true) {
               let signFile = new ES_SignFile();
-              signFile.recID = this.data?.recID;
+              signFile.recID = datas.recID;
               signFile.title = datas.title;
               signFile.categoryID = res2?.categoryID;
-              signFile.refId = this.data?.recID;
-              signFile.refDate = this.data?.refDate;
-              signFile.refNo = this.data?.refNo;
-              signFile.priority = this.data?.urgency;
+              signFile.refId = datas.recID;
+              signFile.refDate = datas.refDate;
+              signFile.refNo = datas.refNo;
+              signFile.priority = datas.urgency;
               signFile.files = [];
               if (this.data?.files) {
                 for (var i = 0; i < this.data?.files.length; i++) {
@@ -825,7 +831,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 dialogModel
               );
               dialogApprove.closed.subscribe((res) => {
-                if (res.event == true) {
+                if (res.event && res.event?.approved == true) {
                   datas.status = '3';
                   datas.approveStatus = '3';
                   this.odService
@@ -890,7 +896,14 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       if (item.status == 0) {
         //this.data = item.data[0];
         this.data.lstUserID = getListImg(item.data[0].relations);
-        this.data.listInformationRel = item.data[1];
+        for (var i = 0; i < this.data.listInformationRel.length; i++) {
+          if (
+            this.data.listInformationRel[i].userID != this.data?.owner &&
+            this.data.listInformationRel[i].relationType != '1'
+          )
+            this.data.listInformationRel[i].reCall = true;
+        }
+        //this.data.listInformationRel = item.data[1];
       }
       this.notifySvr.notify(item.message);
     });
@@ -899,7 +912,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     return JSON.stringify(data);
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
-    debugger
     if (relationType == '1') {
       if (this.formModel.funcID == 'ODT31') {
         return Util.stringFormat(
@@ -916,7 +928,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         ); */
       }
     }
-  
+
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
@@ -969,9 +981,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
     if (data?.status == '3') {
       var completed = e.filter(
-        (x: { functionID: string }) => x.functionID == 'SYS02'
+        (x: { functionID: string }) =>
+          x.functionID == 'SYS02' || x.functionID == 'ODT101'
       );
-      completed[0].disabled = true;
+      completed.forEach((elm) => {
+        elm.disabled = true;
+      });
     }
     //data?.isblur = true
   }
@@ -1004,5 +1019,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         }
         //this.notifySvr.notify(res2?.msgCodeError)
       });
+  }
+  handleViewFile(e: any) {
+    if (e == true) {
+      var index = this.data.listInformationRel.findIndex(
+        (x) => x.userID == this.userID
+      );
+      this.data.listInformationRel[index].view = '3';
+    }
   }
 }

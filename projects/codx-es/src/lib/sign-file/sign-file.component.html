@@ -1,65 +1,27 @@
 <ng-template #itemTemplate let-data>
-  <codx-temp-full
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
-    (click)="click(data)"
-    [typeMF]="'hover'"
-    [title]="data.categoryName"
-    [desc]="data.title"
-    [icoCss]="
-      'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+  <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (click)="click(data)" [typeMF]="'hover'"
+    [title]="data.categoryName" [desc]="data.title" [icoCss]="
+      'w-40px symbol h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       data?.icon
-    "
-    [status]="data?.approveStatus"
-    [icoStyle]="setStyles(data.color)"
-    [statusVll]="'ES003'"
-    [date]="data.createdOn"
-    [resources]="data.createdBy != undefined ? data.createdBy : ''"
-    [resourceObjType]="'AD_Users'"
-    [titleLine]="2"
-    [icoDateCss]="'icon-access_alarm'"
-    [dataItem]="data"
-    [formModel]="true ? view.formModel : null"
-    (clickMF)="clickMF($event, data)"
-    typeMF="hover"
-    [dataItem]="data"
-  >
+    " [status]="data?.approveStatus" [icoStyle]="setStyles(data.color)" [statusVll]="'ES003'" [date]="data.createdOn"
+    [resources]="data.createdBy != undefined ? data.createdBy : ''" [resourceObjType]="'AD_Users'" [titleLine]="2"
+    [icoDateCss]="'icon-access_alarm'" [dataItem]="data" [formModel]="true ? view.formModel : null"
+    (clickMF)="clickMF($event, data)" typeMF="hover" [dataItem]="data">
   </codx-temp-full>
 </ng-template>
 
 <ng-template #paneRight>
-  <lib-view-detail
-    #viewdetail
-    [itemDetail]="itemDetail"
-    [funcID]="funcID"
-    [formModel]="view?.formModel"
-    [view]="view"
-    (uploaded)="getDetailSignFile($event)"
-  >
+  <lib-view-detail #viewdetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel" [view]="view"
+    (uploaded)="getDetailSignFile($event)">
   </lib-view-detail>
 </ng-template>
-<codx-views
-  #view
-  [views]="views"
-  (buttonClick)="click($event)"
-  [button]="button"
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entity"
-  [className]="className"
-  (selectedChange)="changeItemDetail($event)"
-  [selectedFirst]="true"
-  [idField]="idField"
-  (requestEnded)="closeAddForm($event)"
->
+<codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [funcID]="funcID" [service]="service"
+  [assemblyName]="assemblyName" [entityName]="entity" [className]="className" [predicate]="'IsTemplate=@0'"
+  [dataValue]="false" (selectedChange)="changeItemDetail($event)" [selectedFirst]="true" [idField]="idField"
+  (requestEnded)="closeAddForm($event)">
 </codx-views>
 
 <ng-template #baseHeaderRight let-data>
-  <codx-vll
-    class="badge"
-    [name]="'ES003'"
-    [value]="data?.approveStatus"
-    [showText]="true"
-    [showBgColor]="true"
-  ></codx-vll>
+  <codx-vll class="badge" [name]="'ES003'" [value]="data?.approveStatus" [showText]="true" [showBgColor]="true">
+  </codx-vll>
 </ng-template>

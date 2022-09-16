@@ -63,7 +63,10 @@ export class ImgComponent implements OnInit, AfterViewInit {
     this.user = this.auth.get();
     this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
     var dataSv = new CRUDService(injector);
-    dataSv.request.pageSize = 15;
+    dataSv.request.gridViewName = 'grvFileInfo';
+    dataSv.request.entityName = 'DM_FileInfo';
+    dataSv.request.formName = 'FileInfo';
+    //dataSv.request.pageSize = 15;
     this.dtService = dataSv;
   }
 

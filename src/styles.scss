@@ -70,6 +70,7 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 
   --bghover: #f4f8ff;
   --fs-7: 12px;
+  --title-color: #f5f9fa;
 }
 
 .text-primary {
@@ -138,10 +139,6 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 .rounded-start {
   border-bottom-left-radius: var(--bs-border-radius) !important;
   border-top-left-radius: var(--bs-border-radius) !important;
-}
-
-.fs-5 {
-  // font-size: 14px !important;
 }
 
 .icon-56 {
@@ -362,4 +359,52 @@ erm-quick-links-inner .w-250px.dropdown-menu {
 
 .e-listview .e-content {
   padding-bottom: 10px;
+}
+
+.aside .aside-footer .menu-title {
+  color: var(--title-color);
+}
+
+.upload-img .position-absolute.top-100.start-100 {
+  top: 90% !important;
+  left: 90% !important;
+}
+
+.text-hover-underline:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+codx-img .top-100.start-100 {
+  width: 26px;
+  height: 26px;
+}
+
+codx-user-inner .top-100.start-100 {
+  top: 90% !important;
+  left: 90% !important;
+}
+
+.role-group ejs-listview .e-ul>li {
+  margin-bottom: 0px;
+  margin-right: 5px;
+}
+
+.role-group ejs-listview .e-ul>li .d-flex.user-card {
+  margin-top: 2px;
+  border-radius: 4px;
+  margin-bottom: 0px;
+  padding: 4px 8px !important;
+}
+
+.role-group ejs-listview .e-ul>li .d-flex.user-card:hover {
+  background-color: var(--gray-100);
+}
+
+ejs-calendar {
+  width: 320px;
+}
+
+.e-calendar .e-content.e-month td.e-today span.e-day {
+  line-height: 30px;
 }

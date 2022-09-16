@@ -15,6 +15,7 @@ import {
   CodxListviewComponent,
   RequestOption,
   DataService,
+  NotificationsService,
 } from 'codx-core';
 import {
   Component,
@@ -50,8 +51,8 @@ export class CalendarNotesComponent
   countNotePin = 0;
   maxPinNotes: any;
   checkUpdateNotePin = false;
-  TM_Tasks: any;
-  WP_Notes: any = [];
+  TM_Tasks: any = new Array();
+  WP_Notes: any = new Array();
   TM_TasksParam: any;
   WP_NotesParam: any;
   checkTM_TasksParam: any;
@@ -71,6 +72,7 @@ export class CalendarNotesComponent
   pinMF: any;
   saveMF: any;
   dataUpdate: any;
+  functionList: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   @ViewChild('calendar') calendar: any;
@@ -78,7 +80,8 @@ export class CalendarNotesComponent
     private injector: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private auth: AuthStore,
-    private noteService: NoteServices
+    private noteService: NoteServices,
+    private notification: NotificationsService
   ) {
     super(injector);
     this.userID = this.auth.get().userID;
@@ -93,6 +96,9 @@ export class CalendarNotesComponent
           this.saveMF = res[1];
         }
       });
+    this.cache.functionList('WPT08').subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
 
   onInit(): void {
@@ -124,9 +130,16 @@ export class CalendarNotesComponent
             }
           } else if (type == 'edit-currentDate') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
+            if (data?.showCalendar == false) {
+              for (let i = 0; i < this.WP_Notes.length; i++) {
+                if (this.WP_Notes[i].recID == data?.recID) {
+                  this.WP_Notes[i].createdOn = null;
+                }
+              }
+            }
           } else if (type == 'edit') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
-          }  else if (type == 'add-note-drawer') {
+          } else if (type == 'add-note-drawer') {
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'edit-note-drawer') {
@@ -162,13 +175,37 @@ export class CalendarNotesComponent
 
   getMaxPinNote() {
     this.api
-      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'GetParamAsync')
+      .exec<any>(
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetOneField',
+        'WPCalendars'
+      )
       .subscribe((res) => {
-        if (res) {
-          if (res[0]?.msgBodyData)
-            this.maxPinNotes = res[0]?.msgBodyData[0]?.fieldValue;
-        }
+        if (res[2]) this.removeForbiddenCharacters(res[2].dataValue);
       });
+  }
+
+  removeForbiddenCharacters(input) {
+    let forbiddenChars = [
+      '/',
+      '?',
+      '&',
+      '=',
+      '.',
+      '"',
+      `'`,
+      '{',
+      '}',
+      'MaxPinNotes',
+      ':',
+      '""',
+    ];
+
+    for (let char of forbiddenChars) {
+      input = input.split(char).join('');
+    }
+    this.maxPinNotes = input;
   }
 
   onLoad(args): void {
@@ -318,7 +355,6 @@ export class CalendarNotesComponent
         }
       }
     }
-
     var span: HTMLElement = document.createElement('span');
     var span2: HTMLElement = document.createElement('span');
     var flex: HTMLElement = document.createElement('span');
@@ -378,6 +414,11 @@ export class CalendarNotesComponent
       flex.append(span);
       flex.append(span2);
     }
+
+    // if(calendarWP == 0) {
+    // var spanT = document.querySelector("span.note-point") as HTMLElement;
+    // spanT.parentNode.removeChild(spanT);
+    // }
   }
 
   openFormUpdateNote(data) {
@@ -395,8 +436,8 @@ export class CalendarNotesComponent
     this.callfc.openForm(
       AddNoteComponent,
       'Cập nhật ghi chú',
-      600,
-      450,
+      700,
+      500,
       '',
       obj,
       '',
@@ -457,7 +498,7 @@ export class CalendarNotesComponent
     this.callfc.openForm(
       AddNoteComponent,
       'Thêm mới ghi chú',
-      600,
+      700,
       500,
       '',
       obj,
@@ -529,19 +570,36 @@ export class CalendarNotesComponent
   }
 
   onDeleteNote(item) {
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NotesBusiness',
-        'DeleteNoteAsync',
-        item?.recID
-      )
-      .subscribe((res) => {
+    (this.lstView.dataService as CRUDService)
+      .delete([item], true, (opt) => {
+        opt.service = 'WP';
+        opt.assemblyName = 'ERM.Business.WP';
+        opt.className = 'NotesBusiness';
+        opt.methodName = 'DeleteNoteAsync';
+        opt.data = item?.recID;
+        return true;
+      })
+      .subscribe((res: any) => {
         if (res) {
+          if (res.fileCount > 0) this.deleteFile(res.recID, true);
           var object = [{ data: res, type: 'delete' }];
           this.noteService.data.next(object);
         }
       });
+  }
+
+  deleteFile(fileID: string, deleted: boolean) {
+    if (fileID) {
+      this.api
+        .execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'DeleteByObjectIDAsync',
+          [fileID, 'WP_PersonalNotes', deleted]
+        )
+        .subscribe();
+    }
   }
 
   openFormNoteBooks(item) {

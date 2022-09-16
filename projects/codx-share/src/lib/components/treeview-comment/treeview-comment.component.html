@@ -1,44 +1,38 @@
 <div class="d-flex align-items-center justify-content-between mt-3 mb-3">
-    <div class="d-flex align-items-center ms-1">
-        <ng-container *ngIf="dataComment.totalVote == 0;else Vote">
-            <div class="flex align-items-center">
-                <span>
-                    <img src="assets/themes/wp/default/img/L1480_None.svg" alt="Kiwi standing on oval"
-                        style="width: 18px; height: 18x;">
-                </span>
-            </div>
-        </ng-container>
-        <ng-template #Vote>
+    <div class="d-flex align-items-center ms-1 text-hover-underline" (click)="showVotes(dataComment)">
+        <ng-container *ngIf="dataComment.totalVote > 0">
             <div class="flex align-items-center">
                 <div *ngFor="let votedType of dataComment.listVoteType">
-                    <a (click)="showVotes(dataComment)">
+                    <a>
                         <img src="/assets/themes/wp/default/img/{{(votedType | vll:'L1480':'icon' | async)}}"
-                            alt="Kiwi standing on oval" style="width: 18px; height: 18x;">
+                            alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
                     </a>
                 </div>
             </div>
-        </ng-template>
-        <span class="ms-2">{{dataComment.totalVote}}</span>
+            <span class="ms-2 fs-6">{{dataComment.totalVote}}</span>
+        </ng-container>
     </div>
-    <div class="d-flex align-items-center text-hover-underline me-1" (click)="showComments(dataComment)">
-        <span>{{dataComment.totalComment}}</span>
-        <span class="text-gray-800 ms-2">
-            <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
-        </span>
+    <div class="d-flex align-items-center text-hover-underline text-gray-800 me-1" (click)="showComments(dataComment)">
+        <ng-container *ngIf="dataComment.totalComment > 0">
+            <span>{{dataComment.totalComment}}</span>
+            <span class="ms-1">
+                <codx-label formName="WP_Comments" name="lblComments" default="bình luận"></codx-label>
+            </span>
+        </ng-container>
     </div>
 </div>
 <div class="row m-0 btn-comment py-2 border-top">
     <div class="col-6 p-0">
-        <div class="btn-like delay-500">
+        <div class="btn-like btn-feed delay-500">
             <div *ngIf="!dataComment.myVotedType;else myVoted">
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
                     <span class="fw-bold ms-2" style="color: gray;">
-                        <codx-label formName="WP_Comments" name="lblLike" default="Thích"></codx-label>
+                        <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
                     </span>
                 </div>
             </div>
             <div class="d-flex mod icon-like">
-                <ng-container *ngFor="let item of lstData">
+                <ng-container *ngFor="let item of vllL1480">
                     <a class="mod-icon" (click)="votePost(dataComment, item.value)">
                         <img src="/assets/themes/wp/default/img/{{item.icon}}" alt="Kiwi standing on oval"></a>
                 </ng-container>
@@ -56,42 +50,65 @@
                 </div>
             </ng-template>
         </div>
-
     </div>
     <div class="col-6 p-0">
-        <div class="btn-com" (click)="showComments(dataComment)">
-            <div class="d-flex align-items-center justify-content-center text-hover-primary">
+        <div class="btn-feed" (click)="showComments(dataComment)">
+            <div class="d-flex align-items-center justify-content-center">
                 <span class="icon-chat_bubble_outline icon-18"></span>
                 <span class="text-dark fw-bold ms-2">
-                    <codx-label formName="WP_Comments" name="lblComments" default="Bình luận"></codx-label>
+                    <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
                 </span>
             </div>
         </div>
     </div>
 </div>
 <div class="isHiden border-top" [class.isShow]="dataComment.isShowComment">
-    <codx-comments [funcID]="funcID" [objectType]="objectType" [new]="true" [formModel]="fromModel"
+    <codx-comments [funcID]="funcID" [objectType]="objectType" [new]="true" [formModel]="formModel"
         (evtSendComment)="sendComment($event)" [parentID]="dataComment.recID" [refID]="dataComment.recID">
     </codx-comments>
-    <ng-container *ngFor="let cm of dataComment.listComment">
-        <ng-container *ngTemplateOutlet="cmt; context: { $implicit: cm }">
-        </ng-container>
+    <ng-container *ngFor="let cm of lstComment">
+        <ng-container *ngTemplateOutlet="cmt; context: { $implicit: cm }"></ng-container>
     </ng-container>
 </div>
 <ng-template #cmt let-data>
     <div class="c1" [attr.dt]="setDicData(data)" id="{{data.recID}}">
         <codx-comments [funcID]="funcID" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
-            [refID]="data.recID" [new]="false" [formModel]="fromModel" (evtDeleteComment)="deleteComment($event)"
+            [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)">
         </codx-comments>
-        <div class="c2 ms-10" *ngFor="let item of data.listComment">
-            <ng-container *ngTemplateOutlet="cmt context: { $implicit: item }">
-            </ng-container>
+        <div class="ms-15" *ngFor="let item of data.listComment">
+            <ng-container *ngTemplateOutlet="subCmt context: { $implicit: item }"></ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
             <codx-comments [funcID]="funcID" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
                 (evtSendComment)="sendComment($event,data)" [new]="true" [parentID]="data.parentID" [refID]="data.recID"
-                [formModel]="fromModel">
+                [formModel]="formModel">
+            </codx-comments>
+        </ng-container>
+    </div>
+</ng-template>
+<ng-template #subCmt let-data>
+    <div class="c2" [attr.dt]="setDicData(data)" id="{{data.recID}}">
+        <div>
+            <codx-comments [funcID]="funcID" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
+                [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
+                (evtReplyTo)="replyTo($event)">
+            </codx-comments>
+        </div>
+        <ng-container *ngIf="data.totalSubComment > 0">
+            <div class="ms-16">
+                <span class="text-gray-400 text-hover-underline" (click)="loadSubComment(data)">
+                    <codx-label [formModel]="formModel" name="lblSeemore" default="Xem thêm"></codx-label>
+                </span>
+            </div>
+        </ng-container>
+        <div class="ms-15" *ngFor="let item of data.listComment">
+            <ng-container *ngTemplateOutlet="cmt context: { $implicit: item }"></ng-container>
+        </div>
+        <ng-container *ngIf="data.showReply">
+            <codx-comments [funcID]="funcID" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
+                (evtSendComment)="sendComment($event,data)" [new]="true" [parentID]="data.parentID" [refID]="data.recID"
+                [formModel]="formModel">
             </codx-comments>
         </ng-container>
     </div>
@@ -146,7 +163,7 @@
                                 </codx-img>
                             </div>
                             <div class="d-flex flex-column flex-grow-1">
-                                <div class="text-dark fw-bolder">{{item.createdName}}</div>
+                                <div class="text-dark fw-bold">{{item.createdName}}</div>
                                 <div class="text-gray-800 fw-bold">{{item.positionName}}</div>
                                 <div class="text-gray-400">{{item.createdOn | date:'dd-MM-yyy HH:mm:ss'}}</div>
                             </div>

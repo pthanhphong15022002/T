@@ -85,7 +85,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   formModel: any;
   gridViewSetup: any;
   changTimeCount = 2;
-
+ 
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -142,7 +142,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   tabInfo: any[] = [];
   tabContent: any[] = [];
-  titleAction = 'Thêm';
+  titleAction = '';
   disableDueDate = false;
 
   constructor(
@@ -166,7 +166,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
-    this.taskCopy = dt?.data[3];
+    this.titleAction = dt?.data[3]
+    this.taskCopy = dt?.data[4];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
@@ -190,7 +191,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.action == 'add') {
-      this.titleAction = 'Thêm';
       if (this.functionID == 'TMT0203') {
         this.task.category = '3';
       } else {
@@ -198,7 +198,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.openTask();
     } else if (this.action == 'copy') {
-      this.titleAction = 'Sao chép';
       this.task.status = '10';
       if (this.functionID == 'TMT0203') {
         this.task.category = '3';
@@ -207,7 +206,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       }
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
-      this.titleAction = this.action == 'edit' ? 'Chỉnh sửa' : 'Xem chi tiết';
+      this.titleAction = this.action == 'edit' ? this.titleAction : 'Xem chi tiết';
       if (this.action == 'view') {
         this.disableDueDate = true;
         this.readOnly = true;
@@ -601,14 +600,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           break;
       }
     });
-    if (listUserID != '')
+    if (listUserID != ''){
       listUserID = listUserID.substring(0, listUserID.length - 1);
-    if (listDepartmentID != '')
+      this.valueSelectUser(listUserID);
+    }
+    
+    if (listDepartmentID != ''){
       listDepartmentID = listDepartmentID.substring(
         0,
         listDepartmentID.length - 1
       );
-    if (listDepartmentID != '') {
       this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
         if (res) {
           assignTo += res;
@@ -616,7 +617,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.valueSelectUser(assignTo);
         }
       });
-    } else this.valueSelectUser(listUserID);
+    }
   }
 
   valueSelectUser(assignTo) {

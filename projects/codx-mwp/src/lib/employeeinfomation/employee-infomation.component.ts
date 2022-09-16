@@ -4,6 +4,7 @@ import { FileUpload } from '@shared/models/file.model';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddEmployeesComponent } from 'projects/codx-hr/src/lib/employees/popup-add-employees/popup-add-employees.component';
+import { HR_Employees } from 'projects/codx-hr/src/lib/model/HR_Employees.model';
 import { CodxMwpService } from '../codx-mwp.service';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
 import { EditHobbyComponent } from './edit-hobby/edit-hobby.component';
@@ -40,7 +41,7 @@ export class EmployeeInfomationComponent implements OnInit {
   dataPolicy: any = null;
   employeeHobbieCategory: any = null;
   index = 3;
-  employee: any;
+  employee: HR_Employees = new HR_Employees;
   editMode: boolean = false;
   editSkillMode: boolean = false;
   isSaving = false;
@@ -84,7 +85,7 @@ export class EmployeeInfomationComponent implements OnInit {
   //currentSection = 'InfoPersonal';
   constructor(
     private codxMwpService: CodxMwpService,
-    private dt: ChangeDetectorRef,
+    private changedt: ChangeDetectorRef,
     private routeActive: ActivatedRoute,
     private api: ApiHttpService,
     private notiService: NotificationsService,
@@ -103,7 +104,7 @@ export class EmployeeInfomationComponent implements OnInit {
         this.cachesv.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
           if (res)
             this.moreFunc = res;
-          this.dt.detectChanges();
+          this.changedt.detectChanges();
           // setTimeout(() => {
           //   this.imageAvatar.getFormServer();
           // }, 100);
@@ -128,7 +129,7 @@ export class EmployeeInfomationComponent implements OnInit {
     var dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', dt, "", model);
     dialog.closed.subscribe(e => {
       this.skillEmployee = [...e.event, ...[]];
-      this.dt.detectChanges();
+      this.changedt.detectChanges();
       console.log(e);
     })
   }
@@ -164,7 +165,7 @@ export class EmployeeInfomationComponent implements OnInit {
         this.gridViewName = res.gridViewName;
         this.cachesv.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
           console.log(res);
-          this.dt.detectChanges();
+          this.changedt.detectChanges();
         });
       }
     });
@@ -305,7 +306,7 @@ export class EmployeeInfomationComponent implements OnInit {
           const element = this.skillEmployee[index];
           this.skillChartEmployee.push(element);
         }
-        this.dt.detectChanges();
+        this.changedt.detectChanges();
       }
     }
   }
@@ -325,7 +326,7 @@ export class EmployeeInfomationComponent implements OnInit {
       },
     ];
     this.formModel = this.codxView.formModel;
-    this.dt.detectChanges();
+    this.changedt.detectChanges();
   }
 
   ngOnChanges() {
@@ -336,7 +337,7 @@ export class EmployeeInfomationComponent implements OnInit {
     //this.currentSection = sectionId;
     console.log(data);
     this.codxMwpService.currentSection = data.current;
-    this.dt.detectChanges();
+    this.changedt.detectChanges();
   }
 
   isCheck(data) {
@@ -383,9 +384,21 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditInfoComponent, 'edit', option);
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+        if (e?.event && e?.event != null) {
+          this.loadEmployee(e.event)
+          this.changedt.detectChanges();
+        }
+      });
     });
-    this.dt.detectChanges();
+    // this.changedt.detectChanges();
   }
 
   addExperences() {
@@ -401,10 +414,15 @@ export class EmployeeInfomationComponent implements OnInit {
       this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
       this.dialog = this.callfunc.openSide(EditExperenceComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
       this.dialog.closed.subscribe(e => {
-        console.log(e);
+        if (e?.event && e?.event != null) {
+          if (e?.event.WorkedCompany)
+            this.ExperencesWorked = e?.event.WorkedCompany;
+          if (e?.event.CurrentCompany)
+            this.ExperencesCurrent = e?.event.CurrentCompany;
+          this.changedt.detectChanges();
+        }
       })
     });
-    this.dt.detectChanges();
   }
 
   editExperences(data?) {
@@ -419,10 +437,18 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditExperenceComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: false }, option);
+      this.dialog.closed.subscribe(e => {
+        if (e?.event && e?.event != null) {
+          if (e?.event.WorkedCompany)
+            this.ExperencesWorked = e?.event.WorkedCompany;
+          if (e?.event.CurrentCompany)
+            this.ExperencesCurrent = e?.event.CurrentCompany;
+          this.changedt.detectChanges();
+        }
+      })
     });
-    this.dt.detectChanges();
   }
 
   editDataEdu(data) {
@@ -441,10 +467,15 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
+      this.dialog.closed.subscribe(e => {
+        if (e?.event && e?.event != null) {
+          this.employeeRelationship = e?.event;
+          this.changedt.detectChanges();
+        }
+      })
     });
-    this.dt.detectChanges();
   }
 
   editRelations(data?) {
@@ -459,10 +490,15 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: false }, option);
+      this.dialog.closed.subscribe(e => {
+        if (e?.event && e?.event != null) {
+          this.employeeRelationship = e?.event;
+          this.changedt.detectChanges();
+        }
+      })
     });
-    this.dt.detectChanges();
   }
 
   popupAddHobbi(item: any) {
@@ -473,7 +509,7 @@ export class EmployeeInfomationComponent implements OnInit {
     var dialog = this.callfunc.openForm(EditHobbyComponent, '', 500, 350, '', dt, "", model);
     dialog.closed.subscribe(e => {
       this.employeeHobbie = [...e.event, ...[]];
-      this.dt.detectChanges();
+      this.changedt.detectChanges();
       console.log(e);
     })
   }
@@ -491,7 +527,7 @@ export class EmployeeInfomationComponent implements OnInit {
           this.skillEmployee.splice(index, 1);
 
         }
-        this.dt.detectChanges();
+        this.changedt.detectChanges();
       });
   }
 
@@ -521,7 +557,7 @@ export class EmployeeInfomationComponent implements OnInit {
             if (response) {
               this.updateHobby(response);
             }
-            this.dt.detectChanges();
+            this.changedt.detectChanges();
           });
         }
       });
@@ -540,7 +576,7 @@ export class EmployeeInfomationComponent implements OnInit {
     //           this.employeeHobbieCategory.push(element.catagory);
     //         }
     //       }
-    //       this.dt.detectChanges();
+    //       this.changedt.detectChanges();
     //     }
     //   });
   }
@@ -562,11 +598,11 @@ export class EmployeeInfomationComponent implements OnInit {
             if (response) {
               this.updateExperiences(response);
             }
-            this.dt.detectChanges();
+            this.changedt.detectChanges();
           });
         }
       });
-   
+
   }
 
 
@@ -587,7 +623,7 @@ export class EmployeeInfomationComponent implements OnInit {
             if (response) {
               this.updateRelation(response);
             }
-            this.dt.detectChanges();
+            this.changedt.detectChanges();
           });
         }
       });
@@ -610,7 +646,7 @@ export class EmployeeInfomationComponent implements OnInit {
             if (response) {
               this.updateTraining(response);
             }
-            this.dt.detectChanges();
+            this.changedt.detectChanges();
           });
         }
       });

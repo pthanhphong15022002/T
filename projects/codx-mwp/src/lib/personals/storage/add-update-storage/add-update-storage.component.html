@@ -17,7 +17,7 @@
         <div class="form-group">
             <codx-label name="lblStorageImg" [formName]="formModel.formName" default="Hình hiển thị">
             </codx-label>
-            <div class="upload-img mt-3">
+            <div class="upload-img d-flex mode-edit mt-3">
                 <codx-img #imageUpLoad [width]="100" [objectType]="'WP_Storages'" aria-disabled="true" [funcId]="funcID"
                     [isAllowEdit]="true" [objectId]="storage?.recID">
                 </codx-img>
@@ -28,9 +28,6 @@
 
     <ng-template #footer>
         <div class="d-flex justify-content-between">
-            <button class="btn btn-light-primary" (click)="dialog.close()">
-                <codx-label name="Close" [formName]="formModel.formName" default="Đóng"></codx-label>
-            </button>
             <button type="button" class="btn btn-primary ms-1" (click)="saveStorage()" *ngIf="!readOnly">
                 <codx-label name="Save" [formName]="formModel.formName" default="Lưu"></codx-label>
             </button>

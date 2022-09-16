@@ -13,7 +13,7 @@
         <div class="d-flex align-items-center note-btn">
             <div class="pw-save ms-2" (click)="formType == 'edit' ? openFormNoteBooks() : ''"
                 [ngbPopover]="'Lưu ghi chú vào sổ tay'" triggers="mouseenter:mouseleave" placement="bottom"
-                [autoClose]="'outside'" container="body" *ngIf="formType == 'edit'">
+                [autoClose]="'outside'" container="body" *ngIf="formType == 'edit'" [class.active]="!note?.isNote">
                 <span class="icon-assignment_returned icon-20 btn btn-icon btn-active-light-primary position-relative"
                     type="button">
                 </span>
@@ -50,6 +50,7 @@
                     </div>
                 </ng-container>
             </div>
+            <ng-container *ngTemplateOutlet="add"></ng-container>
         </div>
         <div *ngIf="formType == 'edit'">
             <div *ngIf="note?.noteType == 'text'">
@@ -79,9 +80,10 @@
                     </div>
                 </ng-container>
             </div>
+            <ng-container *ngTemplateOutlet="edit"></ng-container>
         </div>
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <div *ngIf="formType == 'edit'">
                 <div class="attachment">
                     <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
@@ -89,11 +91,12 @@
                         allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
                     </codx-attachment>
                 </div>
-                <!-- <codx-file [lstFile]="listFileUploadEdit" [showBtnRemove]='true'></codx-file> -->
+                <codx-file [lstFile]="listFileUploadEdit" [showBtnRemove]='true'></codx-file>
             </div>
             <div *ngIf="formType == 'add'">
                 <div *ngIf="isUploadImg">
-                    <!-- <codx-file [images]="listFileUpload" [showBtnRemove]='true'></codx-file> -->
+                    <codx-file [images]="listFileUpload" [showBtnRemove]='true'></codx-file>
+                    
                 </div>
                 <div class="attachment">
                     <codx-attachment #attachment objectType="WP_Notes" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
@@ -101,7 +104,7 @@
                     </codx-attachment>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <div class="d-flex note-action border align-items-center justify-content-between">
         <div class="d-flex">
@@ -117,9 +120,11 @@
             <span class="icon-image icon-20 btn btn-icon btn-white" (click)="popupFile()">
             </span>
         </div>
-        <codx-input type="datetime" class="test-datetime" field="StartDate" [crrValue]="currentDate" format="d"
-            (valueChange)="valueChangeDate($event)">
-        </codx-input>
+        <div class="test-datetime w-175px border-left">
+            <codx-input type="datetime" field="StartDate" [crrValue]="currentDate" format="d"
+                (valueChange)="valueChangeDate($event)">
+            </codx-input>
+        </div>
     </div>
 
 
@@ -139,5 +144,36 @@
             <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
         </button>
     </div>
-
 </div>
+
+<ng-template #add>
+    <div>
+        <codx-file #codxFileAdd [isNew]="true" [funcID]="functionList?.functionID" (removeFile)="removeFile($event)"
+            (addFile)="addFile($event)" [edit]='true'>
+        </codx-file>
+    </div>
+    <div class="d-none">
+        <codx-attachment #attachmentAdd [objectType]="functionList?.entityName" hideFolder="1" hideUploadBtn="1"
+            hideDes="1" type="inline" allowExtensions=".jpg,.png" allowMultiFile="1" [showMessage]="0"
+            (fileCount)="getFileCount($event)" idBrowse="attachmentAdd" [functionID]="functionList?.functionID">
+        </codx-attachment>
+    </div>
+</ng-template>
+
+<ng-template #edit>
+    <ng-container *ngIf="note">
+        <div class="row my-3">
+            <div>
+                <codx-file #codxFileEdit [objectID]="note.recID" [edit]='true' (addFile)="addFile($event)"
+                    (removeFile)="removeFile($event)" (evtGetFiles)="evtGetFiles($event)"></codx-file>
+            </div>
+            <div class="d-none">
+                <codx-attachment #attachmentEdit [objectType]="functionList?.entityName" hideFolder="1"
+                    hideUploadBtn="1" hideDes="1" type="inline" [showMessage]="0" allowExtensions=".jpg,.png"
+                    allowMultiFile="1" (fileCount)="getFileCount($event)" idBrowse="attachmentEdit"
+                    [functionID]="functionList?.functionID">
+                </codx-attachment>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>

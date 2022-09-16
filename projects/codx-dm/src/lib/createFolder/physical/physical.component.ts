@@ -21,7 +21,7 @@ export class PhysicalComponent implements OnInit {
   titleRange = 'Dãy';
   titleShelf = 'Kệ';
   titleCompartment = 'Ngăn';
-  titleSave = 'Apply';
+  titleSave = 'Lưu';
   viewFolderOnly = false;
   location: string;
   floor: string;

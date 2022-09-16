@@ -95,3 +95,10 @@
 .icon-comment {
   padding-left: 13px;
 }
+
+.disable-element {
+  height: 0px !important;
+  width: 0px !important;
+  // display: none;
+  // outline: none;
+}

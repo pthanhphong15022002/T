@@ -1,50 +1,71 @@
-<codx-views
-  #view
-  service="TM"
-  entityName="TM_Sprints"
-  idField="iterationID"
-  assemblyName="ERM.Business.TM"
-  className="SprintsBusiness"
-  method="GetListSprintAsync"
-  [views]="views"
-  [button]="button"
-  [autoLoad]="true"
-  (buttonClick)="click($event)"
->
-</codx-views>
+<ng-container>
+  <div
+    (scroll)="onScroll($event)"
+    class="w-100 scroll-y"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto"
+    data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
+    data-kt-scroll-offset="0"
+  >
+    <codx-views
+      #view
+      service="TM"
+      entityName="TM_Sprints"
+      idField="iterationID"
+      assemblyName="ERM.Business.TM"
+      className="SprintsBusiness"
+      method="GetListSprintAsync"
+      [views]="views"
+      [button]="button"
+      [autoLoad]="true"
+      (buttonClick)="click($event)"
+    >
+    </codx-views>
+  </div>
+</ng-container>
 
 <ng-template #itemViewBoard let-data>
-  <ng-container >
+  <ng-container>
     <div (dblclick)="doubleClick(data)">
       <codx-card-center
-      cardCss="border h-100 w-225px"
-      [formModel]="view.formModel"
-      [iconCss]="data.sharedByOther ? 'icon-share' : ' '"
-      [iconColorCss]="'blue'"
-      [imageId]="data.iterationID"
-      [imageObjType]="view.formModel.entityName"
-      [imageWidth]="55"
-      [title]="data.iterationName"
-      [icoDescCss]="'icon-assignment'"
-      [desc]="data.projectName"
-      [desc2]="data.memo"
-      [footer]="cardImgFooter"
-      (clickMF)="clickMF($event, data)"
-      (changeDataMF)="changeDataMF($event, data)"
-      [dataItem]="data"
-    >
-    </codx-card-center>
+        cardCss="border h-100 w-225px"
+        [formModel]="view.formModel"
+        [iconCss]="data.sharedByOther ? 'icon-share' : ' '"
+        [iconColorCss]="'blue'"
+        [imageId]="data.iterationID"
+        [imageObjType]="view.formModel.entityName"
+        [imageWidth]="55"
+        [titleTmp]="titleTemp"
+        [footer]="cardImgFooter"
+        (clickMF)="clickMF($event, data)"
+        (changeDataMF)="changeDataMF($event, data)"
+        [dataItem]="data"
+      >
+      </codx-card-center>
+      <!--  [title]="placeholder(data.iterationName,view.formModel, 'IterationName') | async" [desc2]="placeholder(data.memo,view.formModel, 'Memo') | async"  [icoDescCss]="'icon-assignment ' + (data.projectName? '':'opacity-50' )  [desc]="placeholder(data.projectName,view.formModel, 'ProjectName') | async" "-->
     </div>
   </ng-container>
+
 </ng-template>
+
 <ng-template #cardImgFooter let-data>
-  <div *ngIf="data.resources" class="d-flex flex-center flex-wrap">
-    <codx-imgs
-      [width]="30"
-      [objectId]="data.resources"
-      objectType="AD_Users"
-      [numberImages]="4"
-    >
-    </codx-imgs>
+  <div class="footer-bottom" style="height: 30px">
+    <div *ngIf="data.resources" class="d-flex flex-center flex-wrap">
+      <codx-imgs
+        [width]="30"
+        [objectId]="data?.resources"
+        objectType="AD_Users"
+        [numberImages]="4"
+      >
+      </codx-imgs>
+    </div>
   </div>
 </ng-template>
+
+<ng-template #titleTemp let-data>
+  <div class="cut-size-long" [ngbTooltip]="data.iterationName">
+    {{ data?.iterationName }}
+  </div>
+</ng-template>
+

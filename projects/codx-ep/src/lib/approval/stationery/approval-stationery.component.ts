@@ -1,6 +1,5 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { UIComponent, ViewModel, ViewType } from 'codx-core';
-import { CodxEsService } from 'projects/codx-es/src/public-api';
 
 @Component({
   selector: 'approval-stationery',
@@ -14,10 +13,12 @@ export class ApprovalStationeryComponent extends UIComponent {
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
-  entity = 'EP_BookingStationery';
+  entity = 'EP_Bookings';
   className = 'BookingsBusiness';
-  method = 'GetListBookingStationeryAsync';
+  method = 'GetListBookingAsync';
   idField = 'recID';
+  predicate = 'ResourceType=@0';
+  datavalue = '6';
   taskViewStt;
   jobs;
   itemDetail;
@@ -25,7 +26,7 @@ export class ApprovalStationeryComponent extends UIComponent {
   button;
   itemSelected: any;
 
-  constructor(private injector: Injector, private esService: CodxEsService) {
+  constructor(private injector: Injector) {
     super(injector);
 
     this.funcID = this.router.snapshot.params['funcID'];
@@ -54,15 +55,54 @@ export class ApprovalStationeryComponent extends UIComponent {
 
   click(event) {}
 
-  clickMF(event, data) {}
+  clickMF(event, data) {
+    switch (event?.functionID) {
+      case 'EPT40101': //duyet
+        break;
+
+      case 'EPT40102': //ki
+        //this.delete(data);
+        break;
+
+      case 'EPT40103': //dong thuan
+        //this.delete(data);
+        break;
+
+      case 'EPT40104': //dong dau
+        //this.delete(data);
+        break;
+
+      case 'EPT40105': //tu choi
+        //this.delete(data);
+        break;
+
+      case 'EPT40106': //lam lai
+        //this.delete(data);
+        break;
+
+      case 'SYS02': //Xoa
+        break;
+
+      case 'SYS03': //Sua.
+        break;
+    }
+  }
 
   closeAddForm(event) {}
 
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    let recID = '';
+    if (event?.data) {
+      recID = event.data.recID;
+      this.itemDetail = event?.data;
+    } else if (event?.recID) {
+      recID = event.recID;
+      this.itemDetail = event;
+    }
+    this.getDetailBooking(recID);
   }
 
-  getDetailBooking(event) {
+  getDetailBooking(id: any) {
     this.api
       .exec<any>(
         'EP',

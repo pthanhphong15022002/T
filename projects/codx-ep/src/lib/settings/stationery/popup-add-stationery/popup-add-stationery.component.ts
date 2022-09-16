@@ -106,7 +106,6 @@ export class PopupAddStationeryComponent extends UIComponent {
 
   onSaveForm() {
     if (this.dialogAddStationery.invalid == true) {
-      console.log(this.dialogAddStationery);
       return;
     }
     this.dialogAddStationery.patchValue({

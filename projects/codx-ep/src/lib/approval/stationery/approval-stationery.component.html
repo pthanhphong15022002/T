@@ -8,6 +8,8 @@
   [entityName]="entity"
   [className]="className"
   [method]="method"
+  [predicate]="predicate"
+  [dataValue]="datavalue"
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
@@ -21,7 +23,7 @@
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (click)="click(data)"
     [typeMF]="'hover'"
-    [title]="data?.title"
+    [title]="data?.requester"
     [subTitle]="data?.note"
     [icoCss]="
       'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +

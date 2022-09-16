@@ -31,13 +31,13 @@ export class Post {
   totalVote: number = 0;
   totalSubComment: number = 0;
   listComment: any[];
-  listImage: any[];
   totalGift: number = 0;
   totalPoint: number = 0;
   parentID:string ="";
   totalRecord: number = 0;
   tags: string;
   listTag:any[];
+  listShare:any[];
   shares:any;
   shared: number = 0;
   card: any;

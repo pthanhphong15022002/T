@@ -1,10 +1,10 @@
 <codx-layout-add [title]="title" [tabInfo]="tabInfo" [formModel]="dialog.formModel" [subHeader]="subHeader"
   [footer]="footer" [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescip, tabResources, tabOpen, tabJob]"
-  (setTitle)="setTitle($event)" #form [data]="data"></codx-layout-add>
+  (setTitle)="setTitle($event)" #form [data]="meeting"></codx-layout-add>
 
 <ng-template #subHeader>
-  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [value]="meeting?.tags || ''"
-    (valueChange)="valueChangeTags($event)"></codx-tag>
+    <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"
+    [value]="meeting?.tags || ''" (valueChange)="valueChangeTags($event)"></codx-tag>
 </ng-template>
 
 <ng-template #tabDescip>
@@ -47,10 +47,10 @@
       </codx-input>
     </div>
     <div class="col-2 mt-6">
-      <codx-label class="fs-6 fw-bold mb-2" default> </codx-label>
-      <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
-        (valueChange)="valueChange($event)" [crrValue]="isFullDay">
+      <codx-input #checkbox type="checkbox" name="checkbox"  label="Cả ngày"  labelPosition="After" [formModel]="form.formModel"
+        (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay">
       </codx-input>
+      <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
   </div>
   <div class="form-group">
@@ -58,7 +58,9 @@
       <codx-label fiedName="Location" formName="TMMeetings" gridViewName="grvTMMeetings" default="Địa điểm">
       </codx-label>
     </div>
-    <codx-input field="location" type="text" [crrValue]="meeting?.location" (valueChange)="valueChange($event)">
+    <codx-input field="location"  
+    [formModel]="form.formModel"
+    [Group]="form.formGroup" (valueChange)="valueChange($event)" >
     </codx-input>
   </div>
   <div class="form-group">
@@ -74,7 +76,7 @@
       </div>
     </div>
     <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150" [crrValue]="meeting?.memo"
-      (valueChange)="valueChange($event)">
+      (valueChange)="changeMemo($event)">
     </codx-input>
     <div class="d-flex justify-content-end" *ngIf="meeting.templateID">
       <div class="font-italic">
@@ -140,7 +142,13 @@
       </codx-input>
     </div>
     <div class="d-flex flex-wrap">
-      <ng-container *ngFor="let item of resources">
+      <div class="">
+        <ng-container *ngIf="listUserID.length > 0">
+          <codx-imgs class="flex symbol-40px" [objectId]="listUserID.join(';')" objectType="AD_Users" [numberImages]="5">
+          </codx-imgs>
+        </ng-container>
+      </div>
+      <!-- <ng-container *ngFor="let item of resources">
         <div class="d-flex justify-content-between align-items-center rounded-pill bg-light p-2 ps-0 h-30px mt-2 me-2">
           <div class="me-3">
             <codx-img class="me-2" [objectId]="item.resourceID" objectType="AD_Users" [width]="30">
@@ -151,7 +159,7 @@
             <span class="icon-close icon-16"></span>
           </a>
         </div>
-      </ng-container>
+      </ng-container> -->
     </div>
   </ng-container>
   <div>
@@ -224,6 +232,8 @@
     <div class="form-group">
       <div class="d-flex py-2 border-bottom justify-content-between list-title">
         <div class="d-flex me-2">
+          <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung họp">
+          </codx-label>
           <!-- <codx-label fiedName="Repeated" formName="TMMeetings" default="Lặp lại">
           </codx-label> -->
         </div>
@@ -237,7 +247,9 @@
           </div>
         </div>
       </div>
-      <codx-input field="repeated" type="textarea"> </codx-input>
+      <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="550" [crrValue]="meeting?.memo"
+      (valueChange)="changeMemo($event)">
+    </codx-input>
     </div>
   </ng-container>
 </ng-template>
@@ -299,44 +311,11 @@
       <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
     </button>
   </div>
-
-  <!-- <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary ms-1">
-      <codx-label name="Save" default="Lưu" (click)="onSave()"></codx-label>
-    </button>
-  </div> -->
 </ng-template>
 
-<ng-template #addLink let-dialog>
-  <!-- <div class="card-header">
-    <h4 class="card-title" id="card-basic-title">
-      <codx-label name="lblLink" default="Link cuộc họp" [formModel]="dialog.formModel"></codx-label>
-    </h4>
-    <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
-      (click)="dialog.close()">
-      <span class="icon-close icon-20"></span>
-    </button>
-  </div>
-  <div class="card-body">
-    <div class="form-group row">
-      <div class="col-4">
-        <label>
-          <codx-label name="lblPath" default="Đường dẫn" [formModel]="dialog.formModel"></codx-label>
-        </label>
-      </div>
-    </div>
-    <div class="form-group row">
-      <codx-input type="text" class="form-control" placeholder="https://home.suremeet.vn/" [crrValue]="linkURL"
-        (valueChange)="changeLink($event)"></codx-input>
-    </div>
-  </div>
-  <div class="card-footer" (click)="dialog.close()">
-    <button type="button" class="btn btn-primary">
-      <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
-    </button>
-  </div> -->
+<ng-template #addLink let-dialog="dialogPopupLink">
   <codx-form headerText="{{ titleLink }}" subHeaderText="" [body]="bodyFormLink" [footer]="footerFormLink"
-    [dialog]="dialog">
+    [dialog]="dialogPopupLink">
   </codx-form>
 </ng-template>
 <ng-template #bodyFormLink>
@@ -351,7 +330,7 @@
   </div>
 </ng-template>
 <ng-template #footerFormLink>
-  <button type="button" class="btn btn-primary">
+  <button type="button" class="btn btn-primary" (click)="dialogPopupLink.close()">
     <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
   </button>
 </ng-template>

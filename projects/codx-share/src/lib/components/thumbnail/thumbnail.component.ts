@@ -18,7 +18,10 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() displayThumb: any;
   @Input() hideDelete = '1';
   @Input() isDeleteTemp = '0';
+  @Input() hideMoreF = '1';
   @Output() fileCount = new EventEmitter<any>();
+  @Output() fileDelete = new EventEmitter<any>();
+  @Output() viewFile = new EventEmitter<any>();
   titleEditFileDialog = "Cập nhật file";
   titleUpdateFile = "Cập nhật file";
   titleUpdateShare = "Chia sẻ";
@@ -27,6 +30,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   titleUpdateBookmark = "Bookmark";
   titleUpdateUnBookmark = "UnBookmark";
   titlePermission = "Permission";
+  dataDelete = [];
   // files: any;
   title = 'Thông báo';
   titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
@@ -135,9 +139,11 @@ export class ThumbnailComponent implements OnInit, OnChanges {
               index = list.findIndex(d => d.recID.toString() === id);
             }
             if (index > -1) {
+              this.dataDelete.push(list[index]);
               list.splice(index, 1);//remove element from array
               this.files = list;
               this.fileCount.emit(this.files);
+              this.fileDelete.emit(this.dataDelete);
               this.changeDetectorRef.detectChanges();
             }
           }
@@ -177,6 +183,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     //var data = JSON.parse(file);
     this.fileService.getFile(id).subscribe(data => {
       this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+      this.viewFile.emit(true);
     });
 
     //if (this.checkReadRight() ) {

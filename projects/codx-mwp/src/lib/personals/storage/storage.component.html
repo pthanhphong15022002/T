@@ -53,7 +53,7 @@
 </div>
 
 <ng-template #templateListCard let-item>
-  <div (click)="openStorageDetail(item)">
+  <div (dblclick)="openStorageDetail(item)">
     <codx-card-img cardCss="border rounded-4 w-228px h-225px" [imageId]="item.recID" imgCss="w-228px h-140px mb-2"
       icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo" [imgOn]="item?.modifiedOn"
       [imageObjType]="'WP_Storages'" imageWidth="228" [formModel]="listView.formModel" (clickMF)="clickMF($event, item)"

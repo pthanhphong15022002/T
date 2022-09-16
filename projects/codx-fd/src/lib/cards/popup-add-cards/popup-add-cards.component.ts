@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DialogData, DialogRef, NotificationsService, ViewsComponent } from 'codx-core';
 import { FD_Permissions } from '../../models/FD_Permissionn.model';
 import { FED_Card } from '../../models/FED_Card.model';
-import { CardType } from '../../models/model';
+import { CardType, Valuelist } from '../../models/model';
 
 @Component({
   selector: 'lib-popup-add-cards',
@@ -15,22 +15,22 @@ import { CardType } from '../../models/model';
 export class PopupAddCardsComponent implements OnInit {
   funcID:string ="";
   entityPer:string = "";
+  entityName = "FD_Cards"
   dataValue:string ="";
   lstCard:any[] = [];
   parameter: any;
-  itemIDNew = "";
   totalCoint:number = 0;
   givePrice:number = 0;
   quantity:number = 0;
   quantityOld:number = 0;
-  situation = "";
+  situation:string = "";
+  ratting:string = "";
   isWalletReciver = false;
   user:any;
   wallet:any;
   behavior = [];
   industry = "";
   price:number = 0;
-  entityName = "FD_Cards"
   showNavigationArrows:boolean = false;
   dialog: DialogRef;
   title:string ="";
@@ -45,9 +45,11 @@ export class PopupAddCardsComponent implements OnInit {
   lstShare:any[] = [];
   gift:any;
   giftCount:number;
-  typeCheck:string = "";
-  permissions:any[] = [];
   shareControl:string = "9";
+  objectType:string ="";
+  totalRecorItem = 4;
+  cardSelected: any;
+  ratingVll:string ="";
   MEMBERTYPE = {
     CREATED: "1",
     SHARE: "2",
@@ -68,7 +70,7 @@ export class PopupAddCardsComponent implements OnInit {
     GROUPS: "G",
     USER: "U",
   }
-  @ViewChild("codxViews") codxViews: ViewsComponent;
+  @ViewChild("tmpViewCard") tmpViewCard : TemplateRef<any>;
   constructor(
     private api:ApiHttpService,
     private cache:CacheService,
@@ -100,7 +102,6 @@ export class PopupAddCardsComponent implements OnInit {
           var data = res.msgBodyData[0];
           if (data.fieldValue == "2") this.refValue = "Behaviors";
           if (data.fieldValue == "0") this.refValue = "";
-          this.typeCheck = data.fieldValue;
           this.dt.detectChanges();
         }
       });
@@ -119,13 +120,14 @@ export class PopupAddCardsComponent implements OnInit {
           });
         }
         this.LoadDataCard();
-        this.loadParameter("FED_Parameters",this.cardType,"1");
+        this.loadParameter(this.cardType,"1");
       }
     })
     this.initForm();
+    this.handleVllRating(this.cardType);
   }
-  loadParameter(formName = "FED_Parameters",transType = "1",category = "1"){
-    this.api.execSv("FD","ERM.Business.FD","WalletsBusiness","GetParameterByWebAsync",[formName,transType,category])
+  loadParameter(transType = "1",category = "1"){
+    this.api.execSv("FD","ERM.Business.FD","WalletsBusiness","GetParameterByWebAsync",["FD_Parameters",transType,category])
     .subscribe((res:any) => 
     {
       if(res){
@@ -153,6 +155,19 @@ export class PopupAddCardsComponent implements OnInit {
       coins: new FormControl(0)
     })
   }
+
+  handleVllRating(cardType: string): void {
+    if (cardType == CardType.Thankyou) {
+      this.ratingVll = Valuelist.RatingThankYou;
+    }
+    else if (cardType == CardType.CommentForChange) {
+      this.ratingVll = Valuelist.RatingCommentForChange;
+    }
+    else{
+      this.ratingVll = Valuelist.CardType;
+    }
+    this.dt.detectChanges();
+  }
   valueChange(e, element = null)
   {
     if(!e || !e.data){
@@ -162,6 +177,7 @@ export class PopupAddCardsComponent implements OnInit {
     let field = value.field;
     switch(field){
       case "rating":
+        this.ratting = value.data;
         this.form.patchValue({rating : value.data});
         break;
       case "giftID":
@@ -228,6 +244,7 @@ export class PopupAddCardsComponent implements OnInit {
       default:
         break;
     }
+    this.dt.detectChanges();
   }
 
   checkValidateWallet(receiverID:string) {
@@ -249,9 +266,6 @@ export class PopupAddCardsComponent implements OnInit {
       });
   }
 
-  
-  
-  objectType:string ="";
   Save() {
     if (!this.userReciver && this.cardType != "5" && this.cardType != "4") {
       this.notifySV.notify("Vui lòng chọn người nhận trước !");
@@ -285,7 +299,7 @@ export class PopupAddCardsComponent implements OnInit {
       card.listShare = this.lstShare;
       card.objectType = this.objectType;
       card.shareds = card.comment;
-      if(!card.pattern && this.cardType != this.CARDTYPE_EMNUM.Share && this.cardType != this.CARDTYPE_EMNUM.Congratulation){
+      if(this.cardSelected && this.cardSelected.patternID){
         card.pattern = this.cardSelected.patternID;
       }
       this.api
@@ -310,11 +324,6 @@ export class PopupAddCardsComponent implements OnInit {
         }
       })
   }
-  subPoint(){
-
-  }
-  addPoint(){}
-
 
   openFormShare(content: any) {
     this.callfc.openForm(content, '', 420, window.innerHeight);
@@ -324,7 +333,7 @@ export class PopupAddCardsComponent implements OnInit {
     if (!event) {
       return;
     }
-    this.lstCard = [];
+    this.lstShare = [];
     let data = event;
     this.shareControl = data[0].objectType;
     this.objectType = data[0].objectType;
@@ -336,6 +345,10 @@ export class PopupAddCardsComponent implements OnInit {
       case this.SHARECONTROLS.MYDIVISION:
       case this.SHARECONTROLS.MYGROUP:
       case this.SHARECONTROLS.MYTEAM:
+        let p = new FD_Permissions();
+          p.objectType = data[0].objectType;
+          p.memberType = this.MEMBERTYPE.SHARE;
+          this.lstShare.push(p);
         break;
       case this.SHARECONTROLS.DEPARMENTS:
       case this.SHARECONTROLS.GROUPS:
@@ -362,9 +375,6 @@ export class PopupAddCardsComponent implements OnInit {
     this.lstShare = this.lstShare.filter((x:any) => x.objectID != user.objectID);
     this.dt.detectChanges();
   }
-
-  totalRecorItem = 4;
-  cardSelected: any;
 
   LoadDataCard() {
     this.api
@@ -412,4 +422,17 @@ export class PopupAddCardsComponent implements OnInit {
     this.form.patchValue({ pattern: item.patternID });
     this.dt.detectChanges();
   }
+
+  viewCard(){
+    this.callfc.openForm(this.tmpViewCard,"",350,500,"",null,"");
+  }
+
+  closeViewCard(dialogRef:DialogRef){
+    dialogRef.close();
+  }
+
+  subPoint(){
+
+  }
+  addPoint(){}
 }

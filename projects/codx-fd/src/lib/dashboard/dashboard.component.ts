@@ -59,14 +59,14 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
   }
   onInit(): void {
     this.user = this.auth.userValue;
-    this.api.call("ERM.Business.FD", "CardsBusiness", "GetDataForWebAsync", []).subscribe(res => {
-      if (res && res.msgBodyData != null && res.msgBodyData.length > 0) {
-        var data = res.msgBodyData[0] as [];
-        this.reciver = data['fbReceiver'];
-        this.sender = data['fbSender'];
-        this.dt.detectChanges();
-      }
-    });
+    // this.api.call("ERM.Business.FD", "CardsBusiness", "GetDataForWebAsync", []).subscribe(res => {
+    //   if (res && res.msgBodyData != null && res.msgBodyData.length > 0) {
+    //     var data = res.msgBodyData[0] as [];
+    //     this.reciver = data['fbReceiver'];
+    //     this.sender = data['fbSender'];
+    //     this.dt.detectChanges();
+    //   }
+    // });
   }
 
   lstTagUser:any[] = [];

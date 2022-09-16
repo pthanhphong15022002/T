@@ -41,7 +41,7 @@ export class MeetingDetailComponent extends UIComponent {
   month: any;
   day: any;
   startTime: any;
-  name = 'Nội dung họp';
+  name = 'Giao việc';
   private all = ['Nội dung họp', 'Thảo luận', 'Giao việc'];
   startDateMeeting: any;
   endDateMeeting: any;

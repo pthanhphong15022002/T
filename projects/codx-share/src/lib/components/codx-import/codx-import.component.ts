@@ -12,9 +12,25 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import * as XLSX from 'xlsx';
-import { AlertConfirmInputConfig, ApiHttpService, CallFuncService, DataRequest, DataService, DialogData, DialogModel, DialogRef, NotificationsService } from 'codx-core';
+import {
+  AlertConfirmInputConfig,
+  ApiHttpService,
+  CallFuncService,
+  DataRequest,
+  DataService,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  NotificationsService,
+} from 'codx-core';
 import { Observable, finalize, map, of } from 'rxjs';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-import-add-template.component';
@@ -25,16 +41,16 @@ import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-
   styleUrls: ['./codx-import.component.scss'],
 })
 export class CodxImportComponent implements OnInit, OnChanges {
-  active = "1";
+  active = '1';
   dialog: any;
   submitted = false;
   gridModel: any;
   formModel: any;
-  recID: any
-  data = {}
+  recID: any;
+  data = {};
   hideThumb = false;
   fileCount = 0;
-  headerText: string = "Import File";
+  headerText: string = 'Import File';
   service: string = 'SYS';
   assemblyName: string = 'AD';
   className: string = 'IEConnectionsBusiness';
@@ -42,24 +58,23 @@ export class CodxImportComponent implements OnInit, OnChanges {
   dt_AD_IEConnections: any;
   request = new DataRequest();
   importGroup: FormGroup;
-  binaryString : any;
-  fileName:any;
-  moreFunction = 
-  [
+  binaryString: any;
+  fileName: any;
+  moreFunction = [
     {
-      id: "edit",
-      icon: "icon-edit",
-      text: "Chỉnh sửa",
-      textColor : "#307CD2"
+      id: 'edit',
+      icon: 'icon-edit',
+      text: 'Chỉnh sửa',
+      textColor: '#307CD2',
     },
     {
-      id: "delete",
-      icon: "icon-delete",
-      text: "Xóa",
-      textColor: "#F54E60"
-    }
-  ]
-  @ViewChild('attachment') attachment: AttachmentComponent
+      id: 'delete',
+      icon: 'icon-delete',
+      text: 'Xóa',
+      textColor: '#F54E60',
+    },
+  ];
+  @ViewChild('attachment') attachment: AttachmentComponent;
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -83,34 +98,40 @@ export class CodxImportComponent implements OnInit, OnChanges {
     this.request.gridViewName = 'grvPurchaseInvoices';
     this.request.funcID = this.formModel?.funcID;
     this.getData();
-   
   }
   get f(): { [key: string]: AbstractControl } {
     return this.importGroup.controls;
   }
-  ngOnChanges(changes: SimpleChanges) { }
- 
+  ngOnChanges(changes: SimpleChanges) {}
+
   fileAdded(event: any) {
     if (event?.data) this.hideThumb = true;
   }
   getfileCount(e: any) {
     this.fileCount = e.data.length;
   }
-  onSave()
-  {
-    if(this.fileCount<=0) return this.notifySvr.notifyCode("OD022");
+  onSave() {
+    if (this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
     this.submitted = true;
     if (this.importGroup.invalid) return;
-    this.api.execSv(this.service,"CM","CMBusiness","ImportAsync",[this.binaryString,this.fileName,this.importGroup.value.dataImport]).subscribe(item=>{
-      debugger;
-    })
+    this.api
+      .execSv(this.service, 'CM', 'CMBusiness', 'ImportAsync', [
+        this.binaryString,
+        this.fileName,
+        this.importGroup.value.dataImport,
+        this.formModel?.entityName,
+        '',
+        '',
+      ])
+      .subscribe((item) => {});
   }
-  getData()
-  {
-    this.fetch().subscribe(item=>{
+  getData() {
+    this.fetch().subscribe((item) => {
       this.dt_AD_IEConnections = item;
-      this.importGroup.get("dataImport").setValue(this.dt_AD_IEConnections[0].recID);
-    })
+      this.importGroup
+        .get('dataImport')
+        .setValue(this.dt_AD_IEConnections[0].recID);
+    });
   }
   private fetch(): Observable<any[]> {
     return this.api
@@ -134,19 +155,33 @@ export class CodxImportComponent implements OnInit, OnChanges {
   openFormUploadFile() {
     this.attachment.uploadFile();
   }
-  openFormAddTemplate()
-  {
-    this.callfunc.openForm(CodxImportAddTemplateComponent,null,900,800,"",["add",this.formModel],null);
+  openFormAddTemplate() {
+    this.callfunc.openForm(
+      CodxImportAddTemplateComponent,
+      null,
+      900,
+      800,
+      '',
+      ['add', this.formModel],
+      null
+    );
   }
   openForm(val: any, data: any, type: any) {
     switch (val) {
       case 'add':
       case 'edit': {
-        this.callfunc.openForm(CodxImportAddTemplateComponent,null,900,800,"",["edit",this.formModel,data.recID,data],null);
+        this.callfunc.openForm(
+          CodxImportAddTemplateComponent,
+          null,
+          900,
+          800,
+          '',
+          ['edit', this.formModel, data.recID, data],
+          null
+        );
         break;
       }
       case 'delete': {
-       
         break;
       }
     }
@@ -158,10 +193,9 @@ export class CodxImportComponent implements OnInit, OnChanges {
     if (dt) {
       const reader: FileReader = new FileReader();
       reader.readAsDataURL(dt);
-      reader.onload = function() {
+      reader.onload = function () {
         that.binaryString = reader.result;
       };
-      
     }
   }
 }

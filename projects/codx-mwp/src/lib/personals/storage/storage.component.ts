@@ -16,6 +16,7 @@ import {
   CRUDService,
   CacheService,
   ScrollComponent,
+  NotificationsService,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -74,7 +75,8 @@ export class StorageComponent
     inject: Injector,
     private authStore: AuthStore,
     private route: ActivatedRoute,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private notification: NotificationsService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -146,6 +148,9 @@ export class StorageComponent
           [this.listView.dataService.data, 'add'],
           option
         );
+        this.dialog.closed.subscribe((res) => {
+          if (res.event) this.dialog.dataService.add(res.event).subscribe();
+        });
       });
   }
 
@@ -179,14 +184,16 @@ export class StorageComponent
   }
 
   delete(data) {
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'StoragesBusiness',
-        'DeleteStorageAsync',
-        data.recID
-      )
-      .subscribe((res) => {
+    (this.listView.dataService as CRUDService)
+      .delete([data], true, (opt) => {
+        opt.service = 'WP';
+        opt.assemblyName = 'ERM.Business.WP';
+        opt.className = 'StoragesBusiness';
+        opt.methodName = 'DeleteStorageAsync';
+        opt.data = data?.recID;
+        return true;
+      })
+      .subscribe((res: any) => {
         if (res) {
           (this.listView.dataService as CRUDService).remove(data).subscribe();
           this.api
@@ -214,8 +221,8 @@ export class StorageComponent
         arr.push(e?.details[i].refID);
       }
       var a = this.detail.createComponent(ListPostComponent);
-      a.instance.predicate = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
-      a.instance.dataValue = `[${arr.join(';')}]`;
+      a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
+      a.instance.dataValueWP = `[${arr.join(';')}]`;
       a.instance.isShowCreate = false;
       this.detectorRef.detectChanges();
     }

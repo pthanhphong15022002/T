@@ -94,7 +94,7 @@ export class AddUpdateStorageComponent implements OnInit {
             });
         } else
           this.dialog.dataService.add(res).subscribe();
-        this.dialog.close();
+        this.dialog.close(res);
       }
     })
   }

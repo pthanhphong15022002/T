@@ -1,18 +1,15 @@
 <ng-template #panelContent>
     <div class="page-home bg-body p-6 rounded-4">
         <div class="d-flex">
-            <div class="home-center">
-                <codx-listview [itemTemplate]="tmpPortal" #listview funcId="FDT01" [pageSize]="10" service="WP"
-                    assemblyName="ERM.Business.WP" className="CommentsBusiness" [predicate]="predicate"
-                    [dataValue]="dataValue" method="GetListFeedBackAsync" entityName="WP_Comments">
-                </codx-listview>
+            <div class="home-center w-100">
+                <app-list-post [module]="'FD'" [isShowCreate]="false" [codxViews]="codxViews"></app-list-post>
             </div>
             <div class="home-right w-350px min-w-350px ps-9 border-left">
                 <div class="card-box border-bottom mb-6">
                     <div class="box-header d-flex justify-content-between align-items-center mb-4">
                         <h4 class="box-title">
-                            <codx-label [formModel]="codxViews.formModel" 
-                            name="lblFeedbackMessage" default="Thông điệp phản hồi">
+                            <codx-label [formModel]="codxViews.formModel" name="lblFeedbackMessage"
+                                default="Thông điệp phản hồi">
                             </codx-label>
                         </h4>
                     </div>
@@ -20,7 +17,8 @@
                         <div class="thongdiep-group ps-6">
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="codxViews.formModel" name="lblCommendation" default="Tuyên dương"></codx-label>
+                                    <codx-label [formModel]="codxViews.formModel" name="lblCommendation"
+                                        default="Tuyên dương"></codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
                                     <div class="d-flex align-items-center me-6">
@@ -35,7 +33,8 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="codxViews.formModel" name="lblThankYouNot" default="Lời cảm ơn"></codx-label>
+                                    <codx-label [formModel]="codxViews.formModel" name="lblThankYouNot"
+                                        default="Lời cảm ơn"></codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
                                     <div class="d-flex align-items-center me-6">
@@ -66,7 +65,8 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="codxViews.formModel" name="lblImprovement" default="Đề xuất cải tiến">
+                                    <codx-label [formModel]="codxViews.formModel" name="lblImprovement"
+                                        default="Đề xuất cải tiến">
                                     </codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
@@ -86,7 +86,8 @@
                 <div class="card-box mt-6">
                     <div class="box-header d-flex align-items-center justify-content-between mb-5">
                         <h4 class="box-title mb-0">
-                            <codx-label name="lblEmpWalletHistory" default="Giao dịch phát sinh gần nhất" [formModel]="codxViews.formModel">
+                            <codx-label name="lblEmpWalletHistory" default="Giao dịch phát sinh gần nhất"
+                                [formModel]="codxViews.formModel">
                             </codx-label>
                         </h4>
                     </div>
@@ -104,221 +105,10 @@
         </div>
     </div>
 </ng-template>
-<ng-template #tmpPortal let-item>
-    <div class="row p-4">
-        <div class="d-flex align-items-center">
-            <div class="symbol symbol-40 symbol-circle me-3">
-                <codx-img [objectId]="item.createdBy" objectType="AD_Users" [width]="40"
-                    class="symbol symbol-40 symbol-circle">
-                </codx-img>
-            </div>
-            <div class="d-flex flex-column flex-grow-1">
-                <div class="d-flex align-items-center mb-1">
-                    <div class="text-dark-75 font-size-h6 fw-bolder">{{item.createdName}}</div>
-                    <ng-container *ngIf="item.tag > 1; else tagName">
-                        <div  class="ms-2 d-flex align-items-center" [autoClose]="'outside'"
-                          [popoverTitle]="popTitle" [ngbPopover]="popContent" (click)="clickShowTag(item)">
-                          <div class="tag me-2">
-                            <img class="tag-img" src="/assets/img/fed/user-tag.png" />
-                          </div>
-                          <span class="tag-count">{{ item.tag }}</span>
-                        </div>
-                    </ng-container>
-                    <ng-template #tagName>
-                    <span class="ms-2" [innerHTML]="item.tagName"></span>
-                    </ng-template>
-                </div>
-                <div class="text-info-date">
-                    <span class="text-muted font-size-sm">{{item.createdOn | timefrom}}</span>
-                    <!-- <span class="label label-xxs label-inline label-light-primary ms-2">{{item.shareControl |
-                        sharedControl:'wp' | async}}</span>
-                    <span class="me-2 text-primary text-underline" *ngIf="item.tmp">
-                        <ng-container *ngIf="item.shared -1 > 0; else elseDisplay">
-                            <codx-label formName="" name="lblWiths" default="cùng với ">
-                                <span>{{item.tmp}}</span>
-                            </codx-label>
-                            <codx-label formName="" name="lblAnd" default="và">
-                                <span>{{item.shared}}</span>
-                            </codx-label>
-                            <codx-label formName="" name="lblPeople" default="người khác"></codx-label>
-                        </ng-container>
-                        <ng-template #elseDisplay>
-                            <codx-label formName="" name="lblWiths" default="cùng với">
-                                <span>{{item.tmp}}</span>
-                            </codx-label>
-                        </ng-template>
-                    </span> -->
-                    <span class="rounded-1 py-1 px-2 bg-gray-200 ms-2">
-                        <span class="">
-                          <img class="h-13px w-13px" src="assets/themes/sys/default/img/{{
-                              item.shareControl | vll: 'L1901':'icon' | async
-                            }}" />
-                        </span>
-                        <span class="fs-7">
-                          {{ item.shareControl | vll: "L1901":"text" | async }}
-                        </span>
-                    </span>
-                    <ng-container *ngIf="item.shareName">
-                        <span class="position-relative">
-                          <span (mouseleave)="closeListShare(item)" (mouseover)="getShareUser(item)" class="ms-2 me-2"
-                            [innerHTML]="item.shareName">
-                          </span>
-                          <ng-container *ngIf="item.isShowShare">
-                            <ng-container *ngIf="item.shareControl=='U' ||
-                              item.shareControl=='G' || item.shareControl=='R' ||
-                              item.shareControl=='P' || item.shareControl=='D' ||
-                              item.shareControl=='O'">
-                              <div class="position-absolute tmpshare w-200px">
-                                <div class="text-dark fw-bold mb-2">
-                                  <codx-label [formModel]="codxViews.formModel" name="lblShare" default="Danh sách người được chia sẻ">
-                                  </codx-label>
-                                </div>
-                                <div class="mb-3">
-                                  <input type="text" class="form-control" [(ngModel)]="searchField" placeholder="Tìm kiếm" />
-                                </div>
-                                <div class="mh-300px" style="overflow: auto;">
-                                  <div class="d-flex align-items-center mb-2" *ngFor="let share of item.userShares">
-                                    <codx-img class="me-2" [width]="25" [imageType]="'circle'" [objectId]="share.objectID"
-                                      objectType="AD_Users">
-                                    </codx-img>
-                                    <div class="text-dark">
-                                      {{ share.objectName }}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </ng-container>
-                          </ng-container>
-                        </span>
-                    </ng-container>
-                </div>
-            </div>
-            <div class="more">
-                <div ngbDropdown class="dropdown">
-                  <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
-                    id="dropdownMenuButton1" aria-expanded="false">
-                    <i class="fas fa-ellipsis-h"></i>
-                  </a>
-                  <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                    <li *ngIf="item.delete">
-                      <a (click)="removePost(item)" ngbDropdownItem href="javascript:void(0)">
-                        <span class="icon-delete icon-16 me-2 icon-removePost"></span>
-                        <codx-label formName="" name="lblDeletedPost" default="Xóa bài viết">
-                        </codx-label>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-        </div>
-        <div class="row p-4">
-            <div [innerHTML]="item.content"></div>
-        </div>
-        <div class="pt-4 card d-flex justify-content-center align-items-center">
-            <ng-container *ngIf="item.card.cardType == '4' || item.card.cardType=='5';else haveBg">
-                <div class="p-0 m-0">
-                    <read-more [content]="item.content" [textColor]="item.card.pattern.textColor" [maxmimun]="1003"
-                        [limit]="1000" [completeWords]="true">
-                    </read-more>
-                </div>
-            </ng-container>
-            <ng-template #haveBg>
-                <div class="card-img w-300px h-450px"
-                    [style.background]="item.card.background| backgroundImage:item.card?.backgroundColor"
-                    style="background-size: 100% auto;">
-                    <!--begin::Body-->
-                    <div class="card-body text-center">
-                        <div color="bg-transparent" class="text-center">
-                            <h2 class="fw-bolderer mb-6 mt-3" [ngStyle]="{'color':item.card.pattern.headerColor}">
-                                {{item.card?.cardType | vll:'L1422':'text' | async}}
-                            </h2>
-                        </div>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="symbol symbol-40 symbol-circle" *ngIf="item.card">
-                                <codx-img class="symbol symbol-40 symbol-circle" [width]="40"
-                                    [objectId]=" item.card.senderID" objectType="AD_Users">
-                                </codx-img>
-                            </div>
-                            <div style="width: 50px;" class="mar-auto text-center ion-justify-content-between">
-                                <img src="/assets/themes/fd/default/img/img_SendCard.svg"
-                                    class="mt-4 icon-32" />
-                            </div>
-                            <div class="symbol symbol-40 symbol-circle " *ngIf="item.card.receiverID">
-                                <codx-img class="symbol symbol-40 symbol-circle" [width]="40"
-                                    [objectId]=" item.card.receiverID" objectType="AD_Users">
-                                </codx-img>
-                            </div>
-                        </div>
-                        <div class="text-dark text-feed mt-6">
-                            <read-more #readmore2 [content]="item.card.situation"
-                                [textColor]="item.card.pattern.textColor" [limit]="800" [completeWords]="true">
-                            </read-more>
-                        </div>
-                        <div class="d-flex align-items-center group-hasGift mt-6">
-
-                            <div class="d-flex align-items-center justify-content-center ion-wrap me-2  w-100"
-                                *ngIf="item?.card?.cardType=='2' || item.card.cardType =='3'">
-                                <div class=" symbol symbol-30 me-2">
-                                    <img class="w-100"
-                                        src="/assets/themes/fd/default/img/{{ item.card.rating | vll:item.card.cardType=='2' ?'L1419':'L1424':'icon'| async}}" />
-                                </div>
-                            </div>
-                            <ng-container *ngIf="item.card.hasGift || item.card.hasPoint">
-                                <div class="d-flex align-items-center ion-wrap mar-auto">
-                                    <img src="/assets/img/feedback/gift 1.png" *ngIf="item.card.hasGift"
-                                        class="symbol-image icon-surface1 me-1" />
-                                    <img src="/assets/img/feedback/money-1.png" *ngIf="item.card.hasPoint"
-                                        class="symbol-image icon-money-1" />
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                    <!--end::Body-->
-                </div>
-            </ng-template>
-        </div>
-        <div class="row">
-            <treeview-comment 
-                [funcID]="codxViews.formModel.funcID" 
-                [fromModel]="codxViews.formModel"
-                [objectType]="'WP_Comments'" 
-                [dataComment]="item">
-            </treeview-comment>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #empty>
-    <div class="text-center">
-        <img style="max-width:700px" src="/assets/img/EmptyDataPortal.png" />
-    </div>
-</ng-template>
-
-<ng-template #popContent style="width: fit-content; height: fit-content">
-    <div *ngFor="let tagUser of lstTagUser | filter: searchField:'objectName'">
-      <div class="d-flex algin-items-center my-3">
-        <codx-img class="me-3" [width]="30" [objectId]="tagUser.objectID" objectType="AD_Users">
-        </codx-img>
-        <div class="d-flex flex-column">
-          <div class="text-dark fs-6 me-2">{{ tagUser.objectName }}</div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <ng-template #popTitle>
-    <div class="text-dark mb-2 fs-6">
-      <codx-label formName="Comments" name="lblTag" default="Danh sách người được tag"></codx-label>
-    </div>
-    <div>
-      <input type="text" class="form-control" [(ngModel)]="searchField" placeholder="Tìm kiếm" />
-    </div>
-  </ng-template>
-
-  <ng-template #templateItemCoin let-item>
+<ng-template #templateItemCoin let-item>
     <div class="d-flex align-items-start wallet-item me-2">
         <div class="me-3 max-h-40">
-            <img class="w-40px"
-                src="/assets/demos/svg/{{item.transType | avatarCard:item.cardType }}">
+            <img class="w-40px" src="/assets/demos/svg/{{item.transType | avatarCard:item.cardType }}">
         </div>
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark fw-bolder">{{item?.userName}}</div>
@@ -347,8 +137,5 @@
     </div>
 </ng-template>
 
-<codx-views #codxViews 
-[views]="views" 
-entityName="WP_Comments" 
-[idField]="'recID'">
+<codx-views #codxViews [views]="views" [autoLoad]="false" [idField]="'recID'">
 </codx-views>

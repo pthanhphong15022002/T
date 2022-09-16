@@ -38,7 +38,7 @@ export class EditInfoComponent implements OnInit {
   data: any;
   isAfterRender = false;
   gridViewSetup: any;
-  employee: HR_Employees = new HR_Employees();
+  employee: any;
   isDisable = false;
 
   constructor(
@@ -108,7 +108,7 @@ export class EditInfoComponent implements OnInit {
         if (res) {
           // this.codxMwp.EmployeeInfomation.loadEmployee(res);
           this.notiService.notify("Chỉnh sửa thành công");
-          this.dialog.close();
+          this.dialog.close(res);
         }
         else {
           this.notiService.notify("Error");

@@ -144,6 +144,11 @@ ejs-listview .e-ul>li {
     height: 13px;
 }
 
+.h-12px.w-12px {
+    width: 12px;
+    height: 12px;
+}
+
 .e-richtexteditor .e-rte-content .e-content {
     // border: 1px #eee solid;
     margin-bottom: 10px;
@@ -281,9 +286,11 @@ ejs-listview .e-ul>li {
     z-index: 99;
     box-shadow: 2px 2px 6px #444;
 }
-.icon-removePost{
+
+.icon-removePost {
     color: rgb(246, 78, 96);
 }
-.icon-editPost{
+
+.icon-editPost {
     color: rgb(0, 93, 199);
 }

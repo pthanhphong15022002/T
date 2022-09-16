@@ -33,13 +33,13 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
   onInit(): void {
     if(this.funcID)
     {
-      this.getNotifyAsync(this.funcID);
+      this.getNotifyAsync();
     }
   }
   clickCloseFrom(){
     this.dialog.close();
   }
-  getNotifyAsync(funcID:string){
+  getNotifyAsync(){
     this.api.execNonDB<NotificationMessage[]>( 
       'Background',
       'NotificationBusinesss',

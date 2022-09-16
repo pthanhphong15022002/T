@@ -22,9 +22,12 @@ import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-t
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
 import { HomeComponent } from './dashboard/home/home.component';
 import { ListPostComponent } from './dashboard/home/list-post/list-post.component';
-import { AddPostComponent } from './dashboard/home/list-post/popup-add/addpost/addpost.component';
+import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add.component';
+
 import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
+import { PopupSavePostComponent } from './dashboard/home/list-post/popup-save/popup-save.component';
 import { MyTeamComponent } from './dashboard/home/my-team/my-team.component';
+import { PostComponent } from './dashboard/home/post/post.component';
 import { UpdateNotePinComponent } from './dashboard/home/update-note-pin/update-note-pin.component';
 import { NewsComponent } from './news/news.component';
 import { PopupAddComponent } from './news/popup/popup-add/popup-add.component';
@@ -81,7 +84,7 @@ export const routes: Routes = [
   },
   {
     path:'approvals',
-    component: Layout2Component,
+    component: Layout3Component,
     children:[
       {
         path:':funcID',
@@ -133,8 +136,10 @@ const Component: Type<any>[] =
     HomeComponent,
     AddNoteComponent,
     SaveNoteComponent,
+    PostComponent,
     ListPostComponent,
-    AddPostComponent,
+    PopupAddPostComponent,
+    PopupSavePostComponent,
     MyTeamComponent,
     UpdateNotePinComponent,
     ViewVideoComponent,
@@ -162,7 +167,8 @@ const Component: Type<any>[] =
 
   ],
   exports: [
-    RouterModule
+    RouterModule,
+    ListPostComponent
   ],
   declarations: Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

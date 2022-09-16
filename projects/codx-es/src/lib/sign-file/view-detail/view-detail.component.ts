@@ -245,7 +245,7 @@ export class ViewDetailComponent implements OnInit {
         [task, vllControlShare, vllRose, title],
         option
       );
-      dialogAdd.closed.subscribe((e) => {});
+      dialogAdd.closed.subscribe((e) => { });
     }
   }
 
@@ -275,7 +275,11 @@ export class ViewDetailComponent implements OnInit {
 
       dialogAdd.closed.subscribe((res) => {
         if (res.event) {
-          this.view.dataService.update(res.event).subscribe();
+          if (res.event?.approved) {
+            this.view.dataService.update(res.event.data).subscribe();
+          } else {
+            this.view.dataService.update(res.event).subscribe();
+          }
         }
       });
     });
@@ -326,6 +330,6 @@ export class ViewDetailComponent implements OnInit {
     return styles;
   }
 
-  fileAdded($event) {}
-  getfileCount($event) {}
+  fileAdded($event) { }
+  getfileCount($event) { }
 }

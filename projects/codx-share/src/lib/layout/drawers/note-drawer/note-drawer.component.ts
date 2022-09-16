@@ -50,7 +50,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   typeList = 'note-drawer';
   header = 'Ghi chú';
   dialog: DialogRef;
-  predicate = 'CreatedBy=@0 and IsNote=true';
+  predicate = 'CreatedBy=@0';
   dataValue = '';
   editMF: any;
   deleteMF: any;
@@ -61,6 +61,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   user: any;
   daySelected: any;
   checkSortASC = false;
+  functionList: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
 
@@ -86,6 +87,9 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
           this.saveMF = res[1];
         }
       });
+    this.cache.functionList('WPT08').subscribe((res) => {
+      if (res) this.functionList = res;
+    });
     var dataSv = new CRUDService(injector);
     dataSv.request.pageSize = 10;
     this.dtService = dataSv;
@@ -183,10 +187,37 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
 
   getMaxPinNote() {
     this.api
-      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'GetParamAsync')
+      .exec<any>(
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetOneField',
+        'WPCalendars'
+      )
       .subscribe((res) => {
-        this.maxPinNotes = res[0].msgBodyData[0].fieldValue;
+        if (res[2]) this.removeForbiddenCharacters(res[2].dataValue);
       });
+  }
+
+  removeForbiddenCharacters(input) {
+    let forbiddenChars = [
+      '/',
+      '?',
+      '&',
+      '=',
+      '.',
+      '"',
+      `'`,
+      '{',
+      '}',
+      'MaxPinNotes',
+      ':',
+      '""',
+    ];
+
+    for (let char of forbiddenChars) {
+      input = input.split(char).join('');
+    }
+    this.maxPinNotes = input;
   }
 
   valueChange(e, recID = null, item = null) {
@@ -211,8 +242,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.callfc.openForm(
       AddNoteComponent,
       'Cập nhật ghi chú',
-      600,
-      450,
+      700,
+      500,
       '',
       obj
     );
@@ -271,8 +302,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.callfc.openForm(
       AddNoteComponent,
       'Thêm mới ghi chú',
-      600,
-      450,
+      700,
+      500,
       '',
       obj,
       '',
@@ -291,9 +322,11 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         // this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
-        var object = [{ data: res, type: 'edit' }];
-        this.noteService.data.next(object);
-        this.changeDetectorRef.detectChanges();
+        if (res) {
+          var object = [{ data: res, type: 'edit' }];
+          this.noteService.data.next(object);
+          this.changeDetectorRef.detectChanges();
+        }
       });
   }
 

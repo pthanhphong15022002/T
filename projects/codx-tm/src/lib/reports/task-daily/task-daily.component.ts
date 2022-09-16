@@ -140,7 +140,6 @@ export class TaskDailyComponent implements OnInit {
       });
   }
   paramChange(evt: any) {
-    debugger;
     console.log(evt);
 
     if (evt.data.controlName == 'DueDate') {
@@ -154,14 +153,18 @@ export class TaskDailyComponent implements OnInit {
             this.predicates.push(
               evt.data.controlName + '<=@' + this.predicates.length
             );
-          }else{
+          } else {
             const index = e.indexOf(e.includes('DueDate'));
-            if(index !== -1){
-              this.dataValues[index].push(evt.data.data.fromDate.toJSON() + ';' + evt.data.data.toDate.toJSON());
+            if (index !== -1) {
+              this.dataValues[index].push(
+                evt.data.data.fromDate.toJSON() +
+                  ';' +
+                  evt.data.data.toDate.toJSON()
+              );
             }
           }
         });
-      }else{
+      } else {
         this.predicates.push(
           evt.data.controlName + '>=@' + this.predicates.length
         );
@@ -172,7 +175,6 @@ export class TaskDailyComponent implements OnInit {
           evt.data.data.fromDate.toJSON() + ';' + evt.data.data.toDate.toJSON()
         );
       }
-
     }
     if (evt.data.controlName == 'Owner') {
       this.predicates.push(

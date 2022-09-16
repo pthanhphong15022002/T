@@ -16,6 +16,7 @@ import {
   CodxListviewComponent,
   CRUDService,
   ScrollComponent,
+  NotificationsService,
 } from 'codx-core';
 import {
   Component,
@@ -70,7 +71,8 @@ export class NoteBooksComponent
     inject: Injector,
     private authStore: AuthStore,
     private modalService: NgbModal,
-    private noteBookService: NoteBookServices
+    private noteBookService: NoteBookServices,
+    private notification: NotificationsService
   ) {
     super(inject);
     this.cache.functionList('MWP00941').subscribe((res) => {
@@ -131,14 +133,16 @@ export class NoteBooksComponent
   }
 
   delete(data: any) {
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NoteBooksBusiness',
-        'DeleteNoteBookAsync',
-        data.recID
-      )
-      .subscribe((res) => {
+    (this.listView.dataService as CRUDService)
+      .delete([data], true, (opt) => {
+        opt.service = 'WP';
+        opt.assemblyName = 'ERM.Business.WP';
+        opt.className = 'NoteBooksBusiness';
+        opt.methodName = 'DeleteNoteBookAsync';
+        opt.data = data?.recID;
+        return true;
+      })
+      .subscribe((res: any) => {
         if (res) {
           (this.listView.dataService as CRUDService).remove(data).subscribe();
           this.api
@@ -215,7 +219,7 @@ export class NoteBooksComponent
     this.detectorRef.detectChanges();
     this.checkDESC = true;
   }
-  
+
   sortByASC() {
     this.listView.dataService.data = this.listView.dataService.data.sort(
       (a, b) => a.title.localeCompare(b.title)

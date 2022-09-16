@@ -40,7 +40,7 @@ export class PropertiesComponent implements OnInit {
   titleRating = 'Đánh giá';
   titleRatingDesc = 'Đánh giá tài liệu này ?';
   titleRatingDesc2 = 'Cho người khác biết suy nghĩ của bạn!';
-  titleSend = 'Send';
+  titleSend = 'Gởi';
   titleHistory = 'Lịch sử';
   readonly = false;
   currentRate = 1;
@@ -176,6 +176,13 @@ export class PropertiesComponent implements OnInit {
         this.notificationsService.notify(res.message);
       }
     });
+  }
+
+  getThumbnail(data) {
+    if (data.hasThumbnail)
+      return `${this.dmSV.urlUpload}/${data.thumbnail}`;
+    else
+     return `../../../assets/codx/dms/{{getAvatar(data.extension)}}`;
   }
 
   getAvatar(filename: string) {

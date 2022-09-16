@@ -14,11 +14,9 @@
     <codx-label
       fiedName="ResourceName"
       [formModel]="dialogRef.formModel"
-      default="Tên lái xe"
     >
     </codx-label>
     <codx-input
-      type="text"
       ControlName="resourceName"
       [formModel]="form.formModel"
       [Group]="fGroupAddDriver"
@@ -31,7 +29,6 @@
       <codx-label
         fiedName="Category"
         [formModel]="dialogRef.formModel"
-        default="Nguồn"
       >
       </codx-label>      
       <codx-input
@@ -45,7 +42,6 @@
       <codx-label
         fiedName="CompanyID"
         [formModel]="dialogRef.formModel"
-        default="Đơn vị"
         >
       </codx-label>
       <codx-input
@@ -61,7 +57,7 @@
 
   <div class="row">
     <div class="col-9 form-group">
-      <codx-label default="Xe" [formModel]="dialogRef.formModel" ></codx-label>
+      <codx-label fiedName="linkID" [formModel]="dialogRef.formModel" ></codx-label>
       <codx-input
         ControlName="linkID"
         [formModel]="form.formModel"
@@ -71,11 +67,10 @@
       </codx-input>      
     </div>
     <div class="col-3 form-group">
-      <codx-label default="Biển số" fiedName="Code" [formModel]="dialogRef.formModel">
+      <codx-label fiedName="Code" [formModel]="dialogRef.formModel">
       </codx-label>
       <codx-input
         ControlName="code"
-        placeholder="Biển số"
         [formModel]="form.formModel"
         [Group]="fGroupAddDriver" 
       >
@@ -85,7 +80,7 @@
 
   <div class="row">
     <div class="form-group">
-      <codx-label default="Người điều phối" fiedName="" [formModel]="dialogRef.formModel">
+      <codx-label fiedName="Owner" [formModel]="dialogRef.formModel">
       </codx-label>
 
       <codx-input
@@ -100,7 +95,7 @@
 
   <div class="row">
     <div class="form-group">
-      <codx-label default="Mô tả" fiedName="Note" [formModel]="dialogRef.formModel"></codx-label>         
+      <codx-label fiedName="Note" [formModel]="dialogRef.formModel"></codx-label>         
       <codx-input
         ControlName="note"
         [formModel]="form.formModel"
@@ -119,7 +114,7 @@
   </div>
   
   <div class="form-group upload-img">
-    <codx-img #imageUpLoad [width]="100" [objectType]="formModel?.entityName" aria-disabled="false"
+    <codx-img #imageUpLoad [width]="100" imageType="square" [objectType]="formModel?.entityName" aria-disabled="false"
         [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="data?.recID">
     </codx-img>
   </div>

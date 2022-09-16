@@ -14,6 +14,7 @@ import {
   UIComponent,
   ViewModel,
   ViewsComponent,
+  ViewType,
 } from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { ChartComponent } from '@syncfusion/ej2-angular-charts';
@@ -22,6 +23,7 @@ import {
   AnimationModel,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
+import { ActivatedRoute } from '@angular/router';
 declare var _;
 
 @Component({
@@ -33,7 +35,6 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
-  @ViewChild('viewbase') viewbase: ViewsComponent;
 
   //Column Chart
   public primaryXAxis: Object = {
@@ -61,7 +62,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   //ProgressBar
   public typeProgress: string = 'Linear';
   public widthProgress: string = '100%';
-  public heightProgress: string = '40px';
+  public heightProgress: string = '40';
   public trackThickness: number = 4;
   public progressThickness: number = 4;
   public min: number = 0;
@@ -97,7 +98,6 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   lstTotalCoin = [];
   lstBehavior = [];
   totalBehavior = 1;
-  funcID = 'FED202';
   views: Array<ViewModel> = [];
   showHeader: boolean = true;
   userPermission: any;
@@ -236,13 +236,23 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   predicate = '';
   dataValue = '';
   options = new DataRequest();
+  funcID = '';
+  functionList: any;
+
   constructor(
     private injector: Injector,
     private changeDf: ChangeDetectorRef,
     private cacheService: CacheService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private route: ActivatedRoute
   ) {
     super(injector);
+    this.route.params.subscribe((param) => {
+      this.funcID = param['funcID'];
+    });
+    this.cacheService.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
     let year = this.today.getFullYear();
     let month = this.today.getMonth();
     var firstDayInMonth = new Date(year, month, 1);
@@ -253,11 +263,11 @@ export class StatisticalComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.options.pageLoading = false;
-    this.options.entityName = 'FED_TagObjects';
-    this.options.entityPermission = 'FED_TagObjects';
-    this.options.gridViewName = 'grvTagObjects';
-    this.options.formName = 'TagObjects';
-    this.options.funcID = this.funcID;
+    this.options.entityName = 'FD_Receivers';
+    this.options.entityPermission = 'FD_Receivers';
+    this.options.gridViewName = 'grvReceivers';
+    this.options.formName = 'Receivers';
+    // this.options.funcID = this.funcID;
     this.cacheService.valueList('L1422').subscribe((res) => {
       if (res) {
         this.dataStore = res.datas;
@@ -266,10 +276,23 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        sameData: true,
+        model: {
+          panelLeftRef: this.panelLeftRef,
+        },
+      },
+    ];
+    this.userPermission = this.view.userPermission;
+  }
+
   valueChange(e, f) {
     switch (e.field) {
       case 'vllOrganize':
-        // this.comboboxName = e.data?.text;
         this.type = e.data?.value;
         break;
       case 'Organize':
@@ -283,7 +306,6 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       this.ID = e[0];
     }
     this.reloadAllChart();
-    //this.comboboxName = e.data?.text;
   }
 
   changeTypeTime(data, f) {
@@ -346,8 +368,8 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.reloadAllChart();
   }
   reloadAllChart() {
-    this.setPredicate();
-    this.getChartA();
+    // this.setPredicate();
+    this.getDataChartA();
     this.getDataChartB();
   }
   open(content) {
@@ -363,7 +385,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     var dt = [];
     let i = 0;
     this.api
-      .execSv<any>('FED', 'FED', 'CardsBusiness', 'GetStatisticBallot1Async', [
+      .execSv<any>('FD', 'FD', 'CardsBusiness', 'GetStatisticBallot1Async', [
         this.options,
       ])
       .subscribe((res) => {
@@ -395,10 +417,12 @@ export class StatisticalComponent extends UIComponent implements OnInit {
             i++;
           });
           this.lstBehavior = listBehavior;
+          console.log("check lstTotalCoin", this.lstTotalCoin)
         }
       });
   }
-  caculateTotalRow(columnName) {
+
+  calculateTotalRow(columnName) {
     if (this.lstTotalCoin.length == 0) return 0;
     return this.lstTotalCoin
       .map((o) => o[columnName])
@@ -451,7 +475,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     });
     return oData[0].text;
   }
-  getChartA() {
+  getDataChartA() {
     var arrReceived = [];
     var arrSended = [];
     var dtReceived = [];
@@ -460,11 +484,15 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.dataSended = [];
 
     this.api
-      .execSv<any>('FED', 'FED', 'CardsBusiness', 'GetStatistical1Async', [
-        this.options,
-      ])
+      .execSv<any>(
+        'FD',
+        'ERM.Business.FD',
+        'CardsBusiness',
+        'GetStatistical1Async',
+        this.options
+      )
       .subscribe((res) => {
-        var result = [];
+        var result = new Array();
         if (res?.result.length != 0) {
           result = res?.result;
         }
@@ -508,7 +536,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     if (this.cardType && this.cardType != '0')
       arrTemp.push({ field: 'CardType', value: this.cardType });
     if (this.typeBallot)
-      arrTemp.push({ field: 'TagType', value: this.typeBallot });
+      arrTemp.push({ field: 'CardType', value: this.typeBallot });
     var i = 0;
     var t = this;
     arrTemp.forEach(function (element, index) {
@@ -534,7 +562,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
           ')';
         dtValue = t.fromDate + ';' + t.toDate;
         i += 2;
-      } else if (element.field == 'TagType') {
+      } else if (element.field == 'CardType') {
         if (element.value == '0') {
           spre =
             '(' +
