@@ -328,8 +328,7 @@ export class SprintsComponent extends UIComponent {
     field: string
   ): Observable<string> {
    // if (value) {
-      return of(`<span class="cut-size-long">
-       ${value}</span>`);
+      return of(`<span class="cut-size-long">${value}</span>`);
   //  }
     // else {
     //   return this.cache
