@@ -45,7 +45,6 @@ export class BookingRoomComponent extends UIComponent {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
-
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
@@ -55,8 +54,6 @@ export class BookingRoomComponent extends UIComponent {
   idField = 'RecID';
   className = 'BookingsBusiness';
   method = 'GetEventsAsync';
-
-  modelPage: ModelPage;
   modelResource?: ResourceModel;
   request?: ResourceModel;
   model = new DataRequest();
@@ -83,33 +80,17 @@ export class BookingRoomComponent extends UIComponent {
   ) {
     super(injector);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    console.log(this.funcID);
-    this.codxEpService.getModelPage(this.funcID).then((res) => {
-      if (res) {
-        this.modelPage = res;
-        console.log('funcID', res);
-      }
-    });
-
-    // let fu: any;
-    // this.cacheService.functionList("TMT0201").subscribe(res=>{
-    //   if(res){
-    //     fu = res;
-    //   }
-    // });
-    // this.cacheService.gridViewSetup("MyTasks", "grvMyTasks").subscribe(res=> {
-    // });
   }
 
   onInit(): void {
-    this.request=new ResourceModel();
-    this.request.assemblyName='EP';
-    this.request.className='BookingsBusiness';
-    this.request.service='EP';
-    this.request.method='GetEventsAsync';
-    this.request.predicate='ResourceType=@0';
-    this.request.dataValue='1';
-    this.request.idField='recID';
+    this.request = new ResourceModel();
+    this.request.assemblyName = 'EP';
+    this.request.className = 'BookingsBusiness';
+    this.request.service = 'EP';
+    this.request.method = 'GetEventsAsync';
+    this.request.predicate = 'ResourceType=@0';
+    this.request.dataValue = '1';
+    this.request.idField = 'recID';
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -169,23 +150,23 @@ export class BookingRoomComponent extends UIComponent {
     this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
-        sameData:false,
-        type:ViewType.schedule,
-        active:true,
-        request2:this.modelResource,
-        request:this.request,
-        toolbarTemplate:this.footerButton,
-        showSearchBar:false,
-        model:{
+        sameData: false,
+        type: ViewType.schedule,
+        active: true,
+        request2: this.modelResource,
+        request: this.request,
+        toolbarTemplate: this.footerButton,
+        showSearchBar: false,
+        model: {
           //panelLeftRef:this.panelLeft,
-          eventModel:this.fields,
-          resourceModel:this.resourceField,
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           template5: this.resourceTootip,
           template6: this.footerTemplate,
           template7: this.footerButton,
-          //statusColorRef:'vl003'
+          statusColorRef:'vl003'
         },
       },
       {

@@ -273,6 +273,7 @@ export class CreateFolderComponent implements OnInit {
     this.dialog = dialog;
     this.titleDialog = data.data.title;
     this.id = data.data.id;
+    this.propertiesFolder = data.data.readonly;
     this.openForm();
     // if (this.fileEditing  == null) {
     //   this.fileEditing  = new FileUpload;

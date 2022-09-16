@@ -12,6 +12,7 @@ import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import path from 'path';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { CodxWpModule } from 'projects/codx-wp/src/public-api';
 import { AchievementComponent } from './achievement/achievement.component';
 import { CardsComponent } from './cards/cards.component';
 import { PopupAddCardsComponent } from './cards/popup-add-cards/popup-add-cards.component';
@@ -79,6 +80,7 @@ const Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     CodxShareModule,
+    CodxWpModule,
     CoreModule,
     NgbModule,
     AccumulationChartModule,

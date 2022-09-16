@@ -152,7 +152,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   }
 
   getValueShare(shareControl: string, data: any[] = null) {
-    this.permissions = [];
     let listPermission = data;
     this.cache.valueList('L1901').subscribe((vll: any) => {
       let modShare = vll.datas.find((x: any) => x.value == shareControl);
@@ -160,6 +159,8 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
       this.shareIcon = modShare.icon;
       this.shareText = modShare.text;
       if (listPermission) {
+        this.permissions = []
+        this.shareWith = "";
         switch (this.shareControl) {
           case this.SHARECONTROLS.OWNER:
           case this.SHARECONTROLS.EVERYONE:
@@ -168,7 +169,7 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
           case this.SHARECONTROLS.MYDEPARMENTS:
           case this.SHARECONTROLS.MYDIVISION:
           case this.SHARECONTROLS.MYCOMPANY:
-            this.shareWith = "";
+            
             break;
           case this.SHARECONTROLS.OGRHIERACHY:
           case this.SHARECONTROLS.DEPARMENTS:
@@ -445,9 +446,9 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   tagWith: string = '';
   tags: any[] = [];
   saveAddUser(value: any) {
-    this.tags = [];
     let data = value.dataSelected;
     if (data && data.length > 0) {
+      this.tags = [];
       this.lstTagUser = data;
       data.forEach((x: any) => {
         let p = new Permission();
