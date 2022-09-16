@@ -1293,7 +1293,7 @@ export class CodxDMService {
           break;
 
         case "DMT0202": // chinh sua thu muc  
-        case "DMT0209":          
+        case "DMT0209": // properties folder         
           
           option.DataService = this.dataService;
           option.FormModel = this.formModel;
@@ -1301,6 +1301,7 @@ export class CodxDMService {
           // let data = {} as any;
           data.title = this.titleUpdateFolder;
           data.id =  data.recID;            
+          data.readonly = $event.functionID == 'DMT0209' ? true : false;
           this.callfc.openSide(CreateFolderComponent, data, option);            
           break;
 
