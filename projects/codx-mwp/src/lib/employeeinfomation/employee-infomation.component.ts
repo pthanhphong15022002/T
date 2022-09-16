@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild,
 import { ActivatedRoute } from '@angular/router';
 import { FileUpload } from '@shared/models/file.model';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, ImageViewerComponent, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CRUDService, DialogModel, DialogRef, FormModel, ImageViewerComponent, LayoutService, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopupAddEmployeesComponent } from 'projects/codx-hr/src/lib/employees/popup-add-employees/popup-add-employees.component';
 import { HR_Employees } from 'projects/codx-hr/src/lib/model/HR_Employees.model';
 import { CodxMwpService } from '../codx-mwp.service';
@@ -92,10 +92,16 @@ export class EmployeeInfomationComponent implements OnInit {
     private auth: AuthStore,
     private cachesv: CacheService,
     private callfunc: CallFuncService,
+    private cache: CacheService,
+    private layout: LayoutService,
     private inject: Injector
   ) {
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'];
+    this.layout.setUrl(this.codxMwpService.urlback);
+    this.cache.functionList(this.functionID).subscribe(f=>{
+      if(f) this.layout.setLogo(f.smallIcon);
+  })
     this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res => {
       if (res) {
         this.defautFunc = res[0]
@@ -411,7 +417,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
       this.dialog = this.callfunc.openSide(EditExperenceComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
       this.dialog.closed.subscribe(e => {
         if (e?.event && e?.event != null) {
@@ -490,7 +496,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
       this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: false }, option);
       this.dialog.closed.subscribe(e => {
         if (e?.event && e?.event != null) {
