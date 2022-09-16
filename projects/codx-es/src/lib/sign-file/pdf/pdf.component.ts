@@ -242,7 +242,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //go to
   goToSelectedCA(ca, idx) {
-    this.curPage = ca.page;
+    this.lstCACollapseState[idx].open = !this.lstCACollapseState[idx].open;
+    this.curPage = this.lstCA[idx].signedPosPage;
+    if (!ca.isVerified) {
+      this.lstCACollapseState[idx].verifiedFailed =
+        !this.lstCACollapseState[idx].verifiedFailed;
+    }
     console.log('goToSelectedCA chua lam');
   }
   goToPage(e) {
