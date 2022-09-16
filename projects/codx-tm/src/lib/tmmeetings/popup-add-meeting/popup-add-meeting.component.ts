@@ -86,7 +86,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     private notiService: NotificationsService,
     private callFuncService: CallFuncService,
     private cache: CacheService,
-    private tmSv : CodxTMService,
+    private tmSv: CodxTMService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -120,7 +120,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   ngAfterViewInit(): void {
     if (this.action == 'add') {
       this.meeting.meetingType = '1';
@@ -174,7 +174,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.meeting.fromDate = moment(new Date(this.meeting.fromDate)).toDate();
     if (this.meeting.toDate)
       this.meeting.toDate = moment(new Date(this.meeting.toDate)).toDate();
-      this.changDetec.detectChanges() ;
+    this.changDetec.detectChanges();
   }
 
   padTo2Digits(num) {
@@ -236,7 +236,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.dialog.close();
       });
   }
- ///cần 1 đống mess Code
+  ///cần 1 đống mess Code
   async onSave() {
     if (
       this.meeting.meetingName == null ||
@@ -516,11 +516,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   eventApply(e) {
     var listUserID = '';
-    var listDepartmentID= '' ;
+    var listDepartmentID = '';
     var listUserIDByOrg = '';
-    var type ="U" ;
+    var type = "U";
     e?.data?.forEach((obj) => {
-      type = obj.objectType ;
+      type = obj.objectType;
       switch (obj.objectType) {
         case 'U':
           listUserID += obj.id + ';';
@@ -539,7 +539,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         listDepartmentID.length - 1
       );
     if (listDepartmentID != '') {
-      this.tmSv.getListUserIDByListOrgIDAsync([listDepartmentID,type]).subscribe((res) => {
+      this.tmSv.getListUserIDByListOrgIDAsync([listDepartmentID, type]).subscribe((res) => {
         if (res) {
           listUserIDByOrg += res;
           if (listUserID != '') listUserIDByOrg += ';' + listUserID;
