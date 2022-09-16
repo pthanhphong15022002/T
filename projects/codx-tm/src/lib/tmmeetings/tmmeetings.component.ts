@@ -84,7 +84,8 @@ export class TMMeetingsComponent
   dayWeek = [];
   request: ResourceModel;
   listMoreFunc = [];
-  titleAction ='' ;
+  titleAction = '';
+  statusVll = 'CO004';
 
   constructor(
     inject: Injector,
@@ -250,17 +251,17 @@ export class TMMeetingsComponent
 
   getParams() {
     this.api
-    .execSv<any>(
-      'SYS',
-      'ERM.Business.SYS',
-      'SettingValuesBusiness',
-      'GetByModuleWithCategoryAsync',
-      ['TMParameters', '1']
-    )
-    .subscribe((res) => {
-      if (res) {
-        var param = JSON.parse(res.dataValue);
-        this.calendarID = param.CalendarID
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleWithCategoryAsync',
+        ['TMParameters', '1']
+      )
+      .subscribe((res) => {
+        if (res) {
+          var param = JSON.parse(res.dataValue);
+          this.calendarID = param.CalendarID;
           this.getDayWeek(this.calendarID);
           this.getDayOff(this.calendarID);
           this.detectorRef.detectChanges();
@@ -314,14 +315,14 @@ export class TMMeetingsComponent
       let month = date1.getMonth() + 1;
       let myDay = this.addZero(date1.getDate());
       let year = date1.getFullYear();
-      let day1 = date1.getDay() + 1;
+      let day1 = date1.getDay() ==0? "Chủ nhật":  'Thứ ' +date1.getDay() + 1;
+      
       day +=
         '<div class="fs-2hx fw-bold text-gray-800 me-2 lh-1">' +
         myDay +
         '</div>';
       toDay +=
-        '<div class="text-dark fw-bold">' +
-        'Thứ ' +
+        '<div class="text-dark fw-bold">' +      
         day1 +
         '</div>' +
         '<div class="fw-lighter">' +
@@ -377,7 +378,7 @@ export class TMMeetingsComponent
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
-    this.titleAction = e.text ;
+    this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -401,7 +402,7 @@ export class TMMeetingsComponent
   }
 
   click(evt: ButtonModel) {
-    this.titleAction = evt.text ;
+    this.titleAction = evt.text;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -417,9 +418,16 @@ export class TMMeetingsComponent
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        ['add',this.titleAction],
+        ['add', this.titleAction],
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+      });
       // this.dialog.closed.subscribe((e) => {
       //   if (e?.event == null)
       //     this.view.dataService.delete(
@@ -455,9 +463,16 @@ export class TMMeetingsComponent
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
-          ['edit',this.titleAction],
+          ['edit', this.titleAction],
           option
         );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+        });
         // this.dialog.closed.subscribe((e) => {
         //     if (e?.event == null)
         //       this.view.dataService.delete(
@@ -482,24 +497,30 @@ export class TMMeetingsComponent
         //     this.meeting = e?.event;
         //   }
         //   this.detectorRef.detectChanges();
-         //});
+        //});
       });
   }
   copy(data) {
-    if(data)this.view.dataService.dataSelected = data;
+    if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = 'Auto';   
+      option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        ['copy',this.titleAction],
+        ['copy', this.titleAction],
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+      });
     });
   }
-
 
   delete(data) {
     this.view.dataService.dataSelected = data;
@@ -577,9 +598,25 @@ export class TMMeetingsComponent
     }
 
     if (this.view.dataService.page < this.view.dataService.pageCount) {
-     // this.tmService.page ++ ;
-      this.view.dataService.scrolling() ;
-      //this.tmService.totalPage =  this.view.dataService.pageCount ;
+      this.view.dataService.scrolling();
+    }
+  }
+
+  onDragDrop(e: any) {
+    if (e.type == 'drop') {
+      this.api
+        .execSv<any>(
+          'CO',
+          'CO',
+          'MeetingsBusiness',
+          'UpdateMeetingsAsync',
+          e.data
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.view.dataService.update(e.data);
+          }
+        });
     }
   }
 }

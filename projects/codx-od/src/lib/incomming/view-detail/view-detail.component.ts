@@ -402,7 +402,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       });
       datas = this.view.dataService.data[index];
     }
-    if (funcID != 'recallUser' && funcID != 'ODT201')
+    if (funcID != 'recallUser' && funcID != 'ODT201' && funcID != "SYS02")
       this.view.dataService.onAction.next({ type: 'update', data: datas });
     delete datas._uuid;
     delete datas.__loading;

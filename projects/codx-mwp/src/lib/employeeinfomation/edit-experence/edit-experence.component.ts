@@ -87,9 +87,10 @@ export class EditExperenceComponent implements OnInit {
     this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeExperiencesAsync', [this.dataBind, this.isAdd])
       .subscribe((res: any) => {
         if (res) {
-          res.WorkedCompany[0].fromDate = this.dataBind.fromDate.getFullYear();
-          res.WorkedCompany[0].toDate = this.dataBind.toDate.getFullYear();
+          res.WorkedCompany.fromDate = this.dataBind.fromDate.getFullYear();
+          res.WorkedCompany.toDate = this.dataBind.toDate.getFullYear();
           // this.codxMwp.EmployeeInfomation.updateExperiences({ Experences: res });
+          
           this.dialog.close(res);
         }
         else {

@@ -6,7 +6,7 @@
             </codx-comment-history>
         </div>
     </ng-container>
-    <div class="tree-body">
+    <div class="tree-body ms-14">
         <ng-container *ngFor="let node of root.listSubComment">
             <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
         </ng-container>

@@ -336,6 +336,16 @@ export class CodxTMService {
     );
   }
 
+  getListUserIDByListOrgIDAsync(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetListUserIDByListOrgIDAsync',
+      data
+    );
+  }
+
   convertListToObject(
     list: Array<object>,
     fieldName: string,

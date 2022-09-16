@@ -8,11 +8,11 @@ import { CacheService, LayoutBaseComponent } from 'codx-core';
 })
 export class Layout3Component extends LayoutBaseComponent {
   module = 'WP';
-  override toolbar = false;
+  override toolbar = true;
   override aside = false;
   override asideFixed = false;
   valueList: [];
-  category:string = "home";
+  category:string = "approvals";
   funcID:string | null = "";
  
 
@@ -26,7 +26,23 @@ export class Layout3Component extends LayoutBaseComponent {
   }
 
   onInit(): void {
+    this.cache.valueList('WP002').subscribe((value) => {
+      this.valueList = value.datas;
+    });
+  }
 
+  navigate(category, funcID = null) {
+    this.category = category;
+    this.dt.detectChanges;
+    if(funcID){
+      this.codxService.navigate(funcID);
+    }
+    else
+    {
+      this.funcID = this.route.firstChild.snapshot.params["funcID"];
+      this.codxService.navigate('','wp/news/'+this.funcID+'/'+this.category);
+    }
+    this.dt.detectChanges;
   }
 
   onAfterViewInit(): void {}
