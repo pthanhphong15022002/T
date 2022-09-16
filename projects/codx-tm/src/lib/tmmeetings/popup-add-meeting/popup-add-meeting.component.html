@@ -142,7 +142,13 @@
       </codx-input>
     </div>
     <div class="d-flex flex-wrap">
-      <ng-container *ngFor="let item of resources">
+      <div class="">
+        <ng-container *ngIf="listUserID.length > 0">
+          <codx-imgs class="flex symbol-40px" [objectId]="listUserID.join(';')" objectType="AD_Users" [numberImages]="5">
+          </codx-imgs>
+        </ng-container>
+      </div>
+      <!-- <ng-container *ngFor="let item of resources">
         <div class="d-flex justify-content-between align-items-center rounded-pill bg-light p-2 ps-0 h-30px mt-2 me-2">
           <div class="me-3">
             <codx-img class="me-2" [objectId]="item.resourceID" objectType="AD_Users" [width]="30">
@@ -153,7 +159,7 @@
             <span class="icon-close icon-16"></span>
           </a>
         </div>
-      </ng-container>
+      </ng-container> -->
     </div>
   </ng-container>
   <div>

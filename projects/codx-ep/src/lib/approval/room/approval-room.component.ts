@@ -29,7 +29,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   assemblyName = 'EP';
   entity = 'EP_Bookings';
   className = 'BookingsBusiness';
-  method = 'GetListBookingStationeryAsync';
+  method = 'GetListBookingAsync';
   idField = 'recID';
   predicate = 'ResourceType=@0';
   datavalue = '1';
@@ -41,9 +41,9 @@ export class ApprovalRoomsComponent extends UIComponent {
   fields;
   itemSelected: any;
   resourceField;
-
   dataSelected: any;
   dialog!: DialogRef;
+  
   constructor(private injector: Injector) {
     super(injector);
 
@@ -118,7 +118,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           template5: this.resourceTootip,
           template6: this.footerTemplate,
           template7: this.footerButton,
-          //statusColorRef:'vl003'
+          statusColorRef:'vl003'
         },
       },
     ];
