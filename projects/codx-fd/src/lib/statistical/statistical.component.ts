@@ -304,7 +304,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
         break;
     }
 
-    if (e.field != 'vllOrganize') {
+    if (e.field != 'vllOrganize' && e.data) {
       if (e.data) this.reloadAllChart();
     } else {
       if (this.type == '1') this.cbb = 'Company';
@@ -522,14 +522,10 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.dataValue = '';
     if (this.ID) {
       var sField = 'OrgUnitID';
-      if (this.type == '1') sField = 'CompanyID';
-      else if (this.type == '3') sField = 'DivisionID';
-      else if (this.type == '4') sField = 'DepartmentID';
       arrTemp.push({
         field: sField,
         value: this.ID,
         dropdownCalendar: false,
-        type: 'Organize',
       });
     }
     if (
@@ -541,21 +537,18 @@ export class StatisticalComponent extends UIComponent implements OnInit {
         field: 'CreatedOn',
         value: this.fromDate,
         dropdownCalendar: false,
-        type: '',
       });
     if (this.cardType)
       arrTemp.push({
         field: 'CardType',
         value: this.cardType,
         dropdownCalendar: false,
-        type: '',
       });
     if (this.fromDateDropdown || this.toDateDropdown)
       arrTemp.push({
         field: 'CreatedOn',
         value: this.fromDateDropdown,
         dropdownCalendar: true,
-        type: '',
       });
     let i = 0;
     var t = this;
@@ -563,7 +556,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       if (!element) return;
       var spre = '';
       var dtValue = '';
-      if (element.type == 'Organize') {
+      if (element.field == 'OrgUnitID') {
         spre = '(' + element.field + '=@' + i + ')';
         dtValue = element.value;
         i += 1;
