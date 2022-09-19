@@ -60,7 +60,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   action: any;
   linkURL = '';
   resources: CO_Resources[] = [];
-  listUserID = []
+  listUserID = [];
   template = new CO_MeetingTemplates();
   listRoles: any;
   idUserSelected: any;
@@ -121,7 +121,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     if (this.action == 'add') {
       this.meeting.meetingType = '1';
@@ -260,7 +260,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     }
     if (this.meeting.meetingType == '1') {
       if (!this.meeting.fromDate || !this.meeting.toDate) {
-        this.notiService.notify('Thời gian của công việc review không được để trống !');
+        this.notiService.notify(
+          'Thời gian của công việc review không được để trống !'
+        );
         return;
       }
     }
@@ -297,9 +299,10 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ];
 
   setTitle(e: any) {
+    debugger;
     this.title =
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
-    this.changDetec.detectChanges();
+    //this.changDetec.detectChanges();
   }
 
   valueCbx(id, e) {
