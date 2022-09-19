@@ -9,7 +9,7 @@ import { ApiHttpService, FormModel } from 'codx-core';
 })
 export class ViewDetailGiftComponent implements OnInit,OnChanges {
 
-  @Input() giftID:string = "";
+  @Input() objectID:string = "";
   @Input() formModel:FormModel;
   service:string = "FD";
   assemblyName:string = "ERM.Business.FD";
@@ -26,12 +26,12 @@ export class ViewDetailGiftComponent implements OnInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.giftID && (changes.giftID.currentValue !=  changes.giftID.previousValue)){
+    if(changes['objectID'] && (changes['objectID'].currentValue !=  changes['objectID'].previousValue)){
       this.getDataInfor();
     }
   }
   getDataInfor(){
-    this.api.execSv(this.service,this.assemblyName,this.className,"GetGiftTranInforAsync",this.giftID)
+    this.api.execSv(this.service,this.assemblyName,this.className,"GetGiftTranInforAsync",this.objectID)
     .subscribe((res:any) => {
       if(res){
         this.data = res;
