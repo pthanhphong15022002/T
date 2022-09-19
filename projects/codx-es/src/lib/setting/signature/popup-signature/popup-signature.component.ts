@@ -78,9 +78,6 @@ export class PopupSignatureComponent extends UIComponent {
     if (this.attSignature1.fileUploadList.length == 1) {
       (await this.attSignature1.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          // this.dialogSignature.patchValue({
-          //   signature1: (res as any).data.recID,
-          // });
           this.data.signature1 = (res as any).data.recID;
           this.dialog.close();
         }
@@ -91,9 +88,6 @@ export class PopupSignatureComponent extends UIComponent {
       (await this.attSignature2.saveFilesObservable()).subscribe(
         (res1: any) => {
           if (res1) {
-            // this.dialogSignature.patchValue({
-            //   signature2: (res1 as any).data.recID,
-            // });
             this.data.signature2 = (res1 as any).data.recID;
             this.dialog.close();
           }
@@ -104,7 +98,6 @@ export class PopupSignatureComponent extends UIComponent {
     if (this.attStamp.fileUploadList.length == 1) {
       (await this.attStamp.saveFilesObservable()).subscribe((res2) => {
         if (res2) {
-          //this.dialogSignature.patchValue({ stamp: (res2 as any).data.recID });
           this.data.stamp = (res2 as any).data.recID;
           this.dialog.close();
         }
