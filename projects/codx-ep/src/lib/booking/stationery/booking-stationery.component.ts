@@ -1,4 +1,4 @@
-import { UIComponent } from 'codx-core';
+import { DialogModel, UIComponent } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
@@ -11,7 +11,6 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
-import { PopupListStationeryComponent } from './popup-list-stationery/popup-list-stationery.component';
 
 @Component({
   selector: 'stationery',
@@ -23,8 +22,9 @@ export class BookingStationeryComponent extends UIComponent {
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('cardItem') cardItem: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
-  @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
-  @ViewChild('usageRateCol') usageRateCol: TemplateRef<any>;
+
+  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
+  @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   button: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
@@ -37,13 +37,15 @@ export class BookingStationeryComponent extends UIComponent {
   count = 0;
   funcID: string;
   service = 'EP';
+  entity = 'EP_Bookings';
   assemblyName = 'EP';
   entityName = 'EP_Bookings';
   predicate = 'ResourceType=@0';
-  dataValue = '6';
+  datavalue = '6';
   idField = 'recID';
   className = 'BookingsBusiness';
-  method = 'GetResourceAsync';
+  method = 'GetListBookingAsync';
+  itemDetail;
 
   constructor(
     private injector: Injector,
@@ -78,28 +80,8 @@ export class BookingStationeryComponent extends UIComponent {
       },
     ];
 
-    this.columnsGrid = [
-      {
-        headerText: 'Sản phẩm',
-        width: '75%',
-        template: this.resourceNameCol,
-      },
-      {
-        field: 'costPrice',
-        headerText: 'Đơn giá',
-        width: '10%',
-      },
-      {
-        headerText: 'Định mức sử dụng',
-        width: '15%',
-        template: this.usageRateCol,
-      },
-    ];
-
     this.views = [
       {
-        id: '1',
-        text: 'Dashboard',
         type: ViewType.content,
         sameData: true,
         active: false,
@@ -108,26 +90,17 @@ export class BookingStationeryComponent extends UIComponent {
         },
       },
       {
-        id: '2',
-        text: 'Card',
-        type: ViewType.card,
+        type: ViewType.listdetail,
         sameData: true,
         active: true,
         model: {
-          template: this.cardItem,
-        },
-      },
-      {
-        id: '3',
-        text: 'Grid',
-        type: ViewType.grid,
-        sameData: true,
-        active: false,
-        model: {
-          resources: this.columnsGrid,
+          template: this.itemTemplate,
+          panelRightRef: this.panelRight,
         },
       },
     ];
+
+  
     this.detectorRef.detectChanges();
   }
 
@@ -137,38 +110,45 @@ export class BookingStationeryComponent extends UIComponent {
         this.addNewRequest();
         break;
       case 'btnAddNew':
-        this.openRequestList();
+        //this.openRequestList();
         break;
     }
   }
-  openRequestList(evt?) {
-    let dataItem = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      dataItem = evt;
-    }
-    this.viewBase.dataService.addNew().subscribe((res) => {
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfc.openSide(
-        PopupListStationeryComponent,
-        dataItem,
-        option
-      );
-    });
-  }
+
   addNewRequest() {
-    this.viewBase.dataService.addNew().subscribe((res) => {
+    this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfc.openSide(
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      let dialogAdd = this.callfc.openForm(
         PopupRequestStationeryComponent,
-        [this.listData, this.count],
-        option
+        'Thêm mới',
+        700,
+        650,
+        this.funcID,
+        {
+          isAddNew: true,
+          formModel: this.view?.formModel,
+          option: option,
+        },
+        '',
+        dialogModel
       );
+      dialogAdd.closed.subscribe((x) => {
+        if (x.event) {
+          if (x.event?.approved) {
+            this.view.dataService.add(x.event.data, 0).subscribe();
+          } else {
+            delete x.event._uuid;
+            this.view.dataService.add(x.event, 0).subscribe();
+            //this.getDtDis(x.event?.recID)
+          }
+        }
+      });
     });
   }
 
@@ -178,23 +158,35 @@ export class BookingStationeryComponent extends UIComponent {
     }
   }
 
-  addCart(evt, data) {
-    let dataItem = data;
-    if (this.listData.length == 0) {
-      this.count = 1;
-      this.listData.push(dataItem);
-      this.notification.notifyCode('EP001');
-    } else {
-      let check = this.listData.indexOf(dataItem);
-      if (check > -1) {
-        this.notification.notifyCode('EP002');
-      } else {
-        this.listData.push(dataItem);
-        this.count += 1;
-        this.notification.notifyCode('EP001');
-      }
-    }
+  clickMF(evt, data) {}
+
+  getDetailBooking(id: any) {
+    this.api
+      .exec<any>(
+        'EP',
+        'BookingsBusiness',
+        'GetBookingByIDAsync',
+        this.itemDetail?.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.itemDetail = res;
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
-  clickMF(evt, data) {}
+  changeItemDetail(event) {
+    let recID = '';
+    if (event?.data) {
+      recID = event.data.recID;
+      this.itemDetail = event?.data;
+    } else if (event?.recID) {
+      recID = event.recID;
+      this.itemDetail = event;
+    }
+    this.getDetailBooking(recID);
+  }
+
+  closeAddForm(event) {}
 }
