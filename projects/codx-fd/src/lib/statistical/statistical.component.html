@@ -28,7 +28,7 @@
                     </div>
                     <div class="h-38 w-88 left-5">
                         <span class="btn btn-sm btn-outline-secondary me-1 color-black"
-                            [class.active]="typeBallot == TYPE_Ballot.Ballot_SENDED"
+                            [class.active]="ballot_SENDED"
                             (click)="changeTypeCoins(TYPE_Ballot.Ballot_SENDED)">
                             <codx-label name="lblBallotSended" formName="FED_TagObjects" default="Phiếu cho">
                             </codx-label>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="h-38 w-88">
                         <span class="btn btn-sm btn-outline-secondary color-black"
-                            [class.active]="typeBallot == TYPE_Ballot.Ballot_RECEIVED"
+                            [class.active]="ballot_RECEIVED"
                             (click)="changeTypeCoins(TYPE_Ballot.Ballot_RECEIVED)">
                             <codx-label name="lblBallotReceived" formName="FED_TagObjects" default="Phiếu nhận">
                             </codx-label>
@@ -330,7 +330,7 @@
         <div class="d-flex align-items-center">
             <div class="progressBar">
                 <ejs-progressbar [id]="'linear' + item.idProgressBar" [type]="typeProgress" [maximum]="max"
-                    [minimum]="min" [value]="(item.count/totalBehavior)*100" [width]="widthProgress"
+                    [minimum]="min" [value]="(item.count > 0) ? ((item.count/totalBehavior)*100) : 0" [width]="widthProgress"
                     [trackThickness]="trackThickness" [progressThickness]="progressThickness" [height]="heightProgress"
                     [animation]="animation" trackColor="#ADD8E6" progressColor="#1E90FF" cornerRadius="Round">
                 </ejs-progressbar>
@@ -345,7 +345,7 @@
         <div class="d-flex align-items-center">
             <div class="w-100">
                 <ejs-progressbar [id]="'linear' + item.idProgressBar" [type]="typeProgress" [maximum]="max"
-                    [minimum]="min" [value]="(item.count/totalBehavior)*100" [width]="widthProgress"
+                    [minimum]="min" [value]="(item.count > 0) ? ((item.count/totalBehavior)*100) : 0" [width]="widthProgress"
                     [trackThickness]="trackThickness" [progressThickness]="progressThickness" [height]="heightProgress"
                     [animation]="animation" trackColor="#ADD8E6" progressColor="#1E90FF" cornerRadius="Round">
                 </ejs-progressbar>

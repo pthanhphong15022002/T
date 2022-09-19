@@ -98,7 +98,7 @@ export class EmployeeInfomationComponent implements OnInit {
   ) {
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'];
-    this.layout.setUrl(this.codxMwpService.urlback);
+    // this.layout.setUrl(this.codxMwpService.urlback);
     this.cache.functionList(this.functionID).subscribe(f=>{
       if(f) this.layout.setLogo(f.smallIcon);
   })

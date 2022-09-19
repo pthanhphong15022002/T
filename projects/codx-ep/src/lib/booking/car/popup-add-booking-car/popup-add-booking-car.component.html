@@ -1,5 +1,5 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="dialogRef.formModel" [subHeader]=""
-  [footer]="footer" [dialog]="dialogRef" [openMore]="true" (buttonClick)="buttonClick($event)"
+  [subHeaderText]="subHeaderText" [footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd" (buttonClick)="buttonClick($event)"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabMoreInfo]" (setTitle)="setTitle($event)" [data]="data">
   <ng-template #tabGeneralInfo>
     <div class="form-group ">
@@ -16,7 +16,6 @@
         [multiple]="false" [Group]="fGroupAddBookingCar" [crrValue]="fGroupAddBookingCar.value.resourceID"
         (valueChange)="valueCbxCarChange($event)">
       </codx-input>
-
       <!-- <codx-input
           ControlName="resourceID"
           [formModel]="form.formModel" 
@@ -55,6 +54,26 @@
         </span>
       </div>
     </div>
+
+    <div class="row form-group d-flex flex-row justify-content-start align-items-center">
+      <div class="col-1">
+        <codx-input #checkbox class="test-switch" type="switch" field="repeat" [disabled]="false"
+          [checked]="fGroupAddBookingCar.value.repeat" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>      
+      <div class="col-4">
+        <codx-label fiedName="Repeat" default="Đã điều tài xế" [formModel]="dialogRef.formModel"></codx-label>
+      </div>
+      <div class="col-1">
+        <codx-input #checkbox class="test-switch" type="switch" field="repeat" [disabled]="false"
+          [checked]="fGroupAddBookingCar.value.repeat" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>      
+      <div class="col-4">
+        <codx-label fiedName="Repeat" default="Có sử dụng thẻ" [formModel]="dialogRef.formModel"></codx-label>
+      </div>      
+    </div>
+
 
     <div class="row">
       <div class="col-6 form-group">
@@ -229,15 +248,58 @@
   </ng-template>
 
   <ng-template #tabMoreInfo>
-    <div id="MoreInfo">
-      <div class="mb-3 fs-5 fw-bold">
-        <codx-label default="Thông tin khác" name="lblMoreInfo"> </codx-label>
-      </div>
+    <div id="MoreInfo">      
     </div>
     <div class="form-group">
       <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
       <codx-input field="note" [formModel]="form.formModel" [Group]="fGroupAddBookingCar">
       </codx-input>
+    </div>
+    <div class="form-group ">
+      <codx-label name="lblCardInfo" default="Thông tin thẻ" class="text-primary"> </codx-label>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label name="lblCardInfo" default="Mã số thẻ"> </codx-label>
+        <codx-input
+          type="text"
+          
+        >        
+        </codx-input>
+      </div>
+      
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label name="lblCardInfo" default="Người cấp thẻ"> </codx-label>
+        <codx-input
+          type="text"
+          
+          > 
+        </codx-input>
+      </div>
+
+      <div class="col-5">
+        <codx-label name="lblCardInfo" default="Ngày cấp thẻ" > </codx-label>
+        <codx-input type="datetime" format="f" class="test-datetime" >
+        </codx-input>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label name="lblCardInfo" default="Người trả thẻ" > </codx-label>
+        <codx-input
+          type="text"
+          
+          > 
+        </codx-input>
+      </div>
+
+      <div class="col-5">
+        <codx-label name="lblCardInfo" default="Ngày trả thẻ" > </codx-label>
+        <codx-input type="datetime" format="f" class="test-datetime" >
+        </codx-input>
+      </div>
     </div>
   </ng-template>
 

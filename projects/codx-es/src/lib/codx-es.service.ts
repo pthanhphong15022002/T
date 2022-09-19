@@ -508,6 +508,22 @@ export class CodxEsService {
 
   //#endregion
 
+  //#region ES_Signatures
+
+  addNewSignature(data: any): Observable<any> {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'AddNewAsync', [
+      data,
+    ]);
+  }
+
+  editSignature(data: any): Observable<any> {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'EditAsync', [
+      data,
+    ]);
+  }
+
+  //#endregion
+
   //#region ES_Category
   addNewCategory(data: any): Observable<any> {
     return this.api.execSv('ES', 'ES', 'CategoriesBusiness', 'AddNewAsync', [
