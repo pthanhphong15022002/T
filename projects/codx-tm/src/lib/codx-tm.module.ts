@@ -143,11 +143,7 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutNoAsideToolbarFluidComponent,
-    children: [
-      {
-        path: 'sprintdetails/:funcID',
-        component: SprintDetailsComponent,
-      },
+    children: [   
       {
         path: 'meetingdetails/:funcID',
         component: MeetingDetailComponent,
@@ -187,6 +183,10 @@ export const routes: Routes = [
             component: CalendarComponent,
           },
         ],
+      },
+      {
+        path: 'sprintdetails/:funcID',
+        component: SprintDetailsComponent,
       },
     ],
   },
