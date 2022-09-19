@@ -429,7 +429,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
       default:
         break;
     }
-    if (e.field != 'vllOrganize' || f != 'vllOrganize') {
+    if (e.field != 'vllOrganize' || f != 'vllOrganize' && e.data) {
       if (f == 'Employee' || f == 'Organize') {
         if (e?.data) {
           this.setPredicate();
