@@ -13,6 +13,7 @@ export class CodxMwpService {
   EmployeeInfomation: EmployeeInfomationComponent;
   infoLeftComponent: InfoLeftComponent;
   employeeComponent: any;
+  urlback = '';
   currentSection: any = "InfoPersonal";
   private id = new BehaviorSubject<string>(null);
   empInfo = new BehaviorSubject<any>(null);

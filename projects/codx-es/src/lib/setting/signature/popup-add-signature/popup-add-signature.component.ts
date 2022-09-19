@@ -10,6 +10,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-charts';
 import {
   CallFuncService,
   CodxFormComponent,
@@ -18,6 +19,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  ImageViewerComponent,
   NotificationsService,
   RequestOption,
 } from 'codx-core';
@@ -32,7 +34,11 @@ import { PopupSignatureComponent } from '../popup-signature/popup-signature.comp
 })
 export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   @Output() closeSidebar = new EventEmitter();
-  @ViewChildren('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('imgSignature1') imgSignature1: ImageViewerComponent;
+  @ViewChild('imgSignature2') imgSignature2: ImageViewerComponent;
+  @ViewChild('imgStamp') imgStamp: ImageViewerComponent;
+
   @ViewChild('content') content;
   @ViewChild('form') form: CodxFormComponent;
 
@@ -83,58 +89,10 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // this.esService
-    //   .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((res) => {
-    //     this.cbxName = res;
-    //   });
-    //this.initForm();
-    // this.codxService
-    //   .getAutoNumber(
-    //     this.formModel.funcID,
-    //     this.formModel.entityName,
-    //     'CategoryID'
-    //   )
-    //   .subscribe((dt: any) => {
-    //     this.objectIDFile = dt;
-    //   });
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogSignature = item;
-      });
-  }
-
-  initForm() {
-    this.esService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.dialogSignature = item;
-        this.dialogSignature.addControl('id', new FormControl(this.data?.id));
-        this.dialogSignature.addControl(
-          'recID',
-          new FormControl(this.data?.recID)
-        );
-        this.dialogSignature.patchValue(this.data);
-
-        if (!this.isAdd) {
-          this.dialogSignature.patchValue({
-            signatureType: '1',
-            supplier: '1',
-            oTPControl: '0',
-            spanTime: 0,
-            stop: false,
-          });
-        } else {
-          this.dialogSignature.addControl(
-            'recID',
-            new FormControl(this.data?.recID)
-          );
-        }
-        this.isAfterRender = true;
-        this.Signature1 = null;
-        this.Signature2 = null;
-        this.Stamp = null;
       });
   }
 
@@ -145,12 +103,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         this.data.fullName = event?.data.dataSelected[0].text;
 
         this.form?.formGroup.patchValue({ fullName: this.data.fullName });
-        // this.dialogSignature.patchValue({
-        //   [event['field']]: event?.data.value[0],
-        // });
-        // this.dialogSignature.patchValue({
-        //   fullName: event?.data.dataSelected[0].text,
-        // });
       } else if (event?.field == 'signatureType') {
         if (event?.data == '2') {
           this.data.supplier = '0';
@@ -163,7 +115,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   beforeSave(option: RequestOption) {
-    //let itemData = this.dialogSignature.value;
     let itemData = this.data;
     if (this.isAdd) {
       option.methodName = 'AddNewAsync';
@@ -171,7 +122,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       option.methodName = 'EditAsync';
     }
 
-    option.data = [itemData, this.isAdd];
+    option.data = [itemData];
     return true;
   }
 
@@ -183,20 +134,84 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    //this.dialog.dataService.dataSelected = this.dialogSignature.value;
+    // if (this.attachment.fileUploadList.length > 0) {
+    //   this.attachment.objectId = this.data.recID;
+    //   (await this.attachment.saveFilesObservable()).subscribe((files: any) => {
+    //     if (files?.status == 0) {
+    //       console.log(files);
+    //     }
+    //   });
+    // }
+    console.log(this.imgSignature1);
+    console.log(this.imgSignature2);
+
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.update || res.save) {
+          let result = res.save;
+
           this.isSaveSuccess = true;
-          console.log(res);
+
           if (res.update) {
-            (this.dialog.dataService as CRUDService)
-              .update(res.update)
-              .subscribe();
+            result = res.update;
+            // (this.dialog.dataService as CRUDService)
+            //   .update(res.update)
+            //   .subscribe();
           }
-          this.dialog && this.dialog.close();
+          if (
+            this.imgSignature1.imageUpload ||
+            this.imgSignature2.imageUpload ||
+            this.imgStamp.imageUpload
+          ) {
+            this.imgSignature1.imageUpload &&
+              this.imgSignature1
+                .updateFileDirectReload(this.data.recID + '1')
+                .subscribe((img) => {
+                  if (img && this.data.signature1 == null) {
+                    result.signature1 = (img[0] as any).recID;
+                    this.data.signature1 = (img[0] as any).recID;
+                    this.esService
+                      .editSignature(this.data)
+                      .subscribe((res) => {});
+                  }
+                  this.dialog && this.dialog.close(result);
+                });
+            this.imgSignature2.imageUpload &&
+              this.imgSignature2
+                .updateFileDirectReload(this.data.recID + '2')
+                .subscribe((img) => {
+                  this.dialog && this.dialog.close(result);
+
+                  if (img && this.data.signature2 == null) {
+                    result.signature2 = (img[0] as any).recID;
+
+                    this.data.signature2 = (img[0] as any).recID;
+                    this.esService
+                      .editSignature(this.data)
+                      .subscribe((res) => {});
+                  }
+                });
+            this.imgStamp.imageUpload &&
+              this.imgStamp
+                .updateFileDirectReload(this.data.recID + 's')
+                .subscribe((img) => {
+                  if (img && this.data.stamp == null) {
+                    result.stamp = (img[0] as any).recID;
+
+                    this.data.stamp = (img[0] as any).recID;
+                    this.esService
+                      .editSignature(this.data)
+                      .subscribe((res) => {});
+                  }
+                  this.dialog && this.dialog.close(result);
+                });
+
+            // this.dialog && this.dialog.close(result);
+          } else {
+            this.dialog && this.dialog.close(result);
+          }
         }
       });
   }
@@ -233,27 +248,27 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   File: any;
   fileAdd: any;
   files: any;
-  fileAdded(event, currentTab) {
-    switch (currentTab) {
-      case 3:
-        this.Signature1 = event.data;
-        this.dialogSignature.patchValue({
-          signature1: event.data[0].recID ?? null,
-        });
-        break;
-      case 4:
-        this.Signature2 = event.data;
-        this.dialogSignature.patchValue({
-          signature2: event.data[0].recID ?? null,
-        });
-        break;
-      case 5:
-        this.Stamp = event.data;
-        this.dialogSignature.patchValue({ stamp: event.data[0].recID ?? null });
-        break;
-    }
-    this.cr.detectChanges();
-  }
+  // fileAdded(event, currentTab) {
+  //   switch (currentTab) {
+  //     case 3:
+  //       this.Signature1 = event.data;
+  //       this.dialogSignature.patchValue({
+  //         signature1: event.data[0].recID ?? null,
+  //       });
+  //       break;
+  //     case 4:
+  //       this.Signature2 = event.data;
+  //       this.dialogSignature.patchValue({
+  //         signature2: event.data[0].recID ?? null,
+  //       });
+  //       break;
+  //     case 5:
+  //       this.Stamp = event.data;
+  //       this.dialogSignature.patchValue({ stamp: event.data[0].recID ?? null });
+  //       break;
+  //   }
+  //   this.cr.detectChanges();
+  // }
 
   getJSONString(data) {
     if (data) {
@@ -280,7 +295,13 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.currentTab = tab;
   }
 
-  getLinkImg(data) {
-    // return `${environment.apiUrl}/api/dm/files/GetImage?id=${data[0]?.recID}&access_token=${this.auth.userValue.token}`;
+  popupUploadFile(evt: any) {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa');
+
+    this.attachment.uploadFile();
   }
+
+  getfileCount(event) {}
+
+  fileAdded(event) {}
 }

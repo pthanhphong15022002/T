@@ -1,41 +1,34 @@
-<codx-views #view [views]="views"></codx-views>
+<codx-views #view [views]="views" [autoLoad]="false"></codx-views>
 
 <ng-template #panelLeft>
     <div class="page-home page-master p-6 bg-body rounded-4">
         <div class="d-flex flex-column">
             <div class="d-flex justify-content-between">
                 <div class="d-flex" #control>
-                    <div class="w-110 h-38">
+                    <div class="w-170 h-38">
                         <codx-input class="form-control pr-1" type="valuelist" field="vllOrganize" refValue="L1483"
-                            (valueChange)="valueChange($event, 'vllOrganize')">
+                            (valueChange)="valueChange($event)">
                         </codx-input>
                     </div>
-                    <div class="w-110 h-38 left-5">
-                        <codx-input class="form-control pr-1" type="combobox" field="Organize" [refValue]="comboboxName"
-                            (valueChange)="valueChange($event, 'Organize')">
+                    <div class="w-170 h-38 left-5">
+                        <codx-input class="form-control pr-1" type="combobox" field="Organize" [refValue]="cbb"
+                            (valueChange)="valueChange($event)">
                         </codx-input>
                     </div>
-                    <div class="w-110 h-38 left-5">
-                        <codx-input type="valuelist" class="form-control pr-1" placeholder="" ngDefaultControl
-                            refValue="L1436" field="typeTime" [crrValue]="typeTime"
-                            (valueChange)="changeTypeTime($event, 'typeTime')">
-                        </codx-input>
-                    </div>
-                    <div class="w-110 h-38 left-5">
-                        <codx-input type="datetime" class="test-datetime" field="today" [crrValue]="today" format="m"
-                        (valueChange)="changeTime($event, 'today')">
-                    </codx-input>
+                    <div class="w-120 h-38 left-5">
+                        <codx-dropdown-calendar [cssClass]="'w-100'" [cssPopup]="'h-400px w-500px border'"
+                            (change)="dateChange($event)"></codx-dropdown-calendar>
                     </div>
                 </div>
                 <div class="d-flex">
-                    <div class="h-38 w-88">
+                    <div class="h-38 w-120">
                         <codx-input type="valuelist" class="pr-1" placeholder="" ngDefaultControl refValue="L1451"
                             field="edit" [crrValue]="cardType" (valueChange)="changeCardType($event)">
                         </codx-input>
                     </div>
                     <div class="h-38 w-88 left-5">
                         <span class="btn btn-sm btn-outline-secondary me-1 color-black"
-                            [class.active]="typeBallot == TYPE_Ballot.Ballot_SENDED"
+                            [class.active]="ballot_SENDED"
                             (click)="changeTypeCoins(TYPE_Ballot.Ballot_SENDED)">
                             <codx-label name="lblBallotSended" formName="FED_TagObjects" default="Phiếu cho">
                             </codx-label>
@@ -43,7 +36,7 @@
                     </div>
                     <div class="h-38 w-88">
                         <span class="btn btn-sm btn-outline-secondary color-black"
-                            [class.active]="typeBallot == TYPE_Ballot.Ballot_RECEIVED"
+                            [class.active]="ballot_RECEIVED"
                             (click)="changeTypeCoins(TYPE_Ballot.Ballot_RECEIVED)">
                             <codx-label name="lblBallotReceived" formName="FED_TagObjects" default="Phiếu nhận">
                             </codx-label>
@@ -337,7 +330,7 @@
         <div class="d-flex align-items-center">
             <div class="progressBar">
                 <ejs-progressbar [id]="'linear' + item.idProgressBar" [type]="typeProgress" [maximum]="max"
-                    [minimum]="min" [value]="(item.count/totalBehavior)*100" [width]="widthProgress"
+                    [minimum]="min" [value]="(item.count > 0) ? ((item.count/totalBehavior)*100) : 0" [width]="widthProgress"
                     [trackThickness]="trackThickness" [progressThickness]="progressThickness" [height]="heightProgress"
                     [animation]="animation" trackColor="#ADD8E6" progressColor="#1E90FF" cornerRadius="Round">
                 </ejs-progressbar>
@@ -352,7 +345,7 @@
         <div class="d-flex align-items-center">
             <div class="w-100">
                 <ejs-progressbar [id]="'linear' + item.idProgressBar" [type]="typeProgress" [maximum]="max"
-                    [minimum]="min" [value]="(item.count/totalBehavior)*100" [width]="widthProgress"
+                    [minimum]="min" [value]="(item.count > 0) ? ((item.count/totalBehavior)*100) : 0" [width]="widthProgress"
                     [trackThickness]="trackThickness" [progressThickness]="progressThickness" [height]="heightProgress"
                     [animation]="animation" trackColor="#ADD8E6" progressColor="#1E90FF" cornerRadius="Round">
                 </ejs-progressbar>

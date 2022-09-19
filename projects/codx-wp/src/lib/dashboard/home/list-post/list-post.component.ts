@@ -52,7 +52,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   showEmojiPicker = false;
   dataVll = [];
   title: string = '';
-  tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
   predicateWP:string ='(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
@@ -62,6 +61,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   modal: DialogRef;
   headerText = '';
   lstData:any;
+  lstUserShare:any[] = [];
+  lstUserTag: any = [];
   funcID:string ="";
   @Input() objectID:string = "";
   @Input() predicates;
@@ -164,21 +165,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     });
 
   }
-  show() {
-    if (this.searchField == '' || this.searchField == null) return true;
-    for (let index = 0; index < this.tagUsers.length; index++) {
-      const element: any = this.tagUsers[index];
-      if (
-        element.objectName != null &&
-        element.objectName
-          .toLowerCase()
-          .includes(this.searchField.toLowerCase())
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   openCreateModal() {
     var obj = {
@@ -266,14 +252,14 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getTagUser(item:any) {
-    if(!item) return;
-    this.tagUsers = item.listTag;
+  showListTag(item:any) {
+    if(!item || !item.listTag) return;
+    item.isShowTag = true;
+    this.lstUserTag = item.listTag;
     this.dt.detectChanges();
   }
-  lstUserShare:any[] = [];
-  getShareUser(item:any) {
-    if(!item || !item.shareControl) return;
+  showListShare(item:any) {
+    if(!item || !item.listShare) return;
     if(item.shareControl=='U' ||
       item.shareControl=='G' || item.shareControl=='R' ||
       item.shareControl=='P' || item.shareControl=='D' ||
@@ -284,12 +270,17 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         this.dt.detectChanges();
     }
   }
-
-
   closeListShare(item:any){
-    if(!item || !item.isShowShare) return;
+    if(!item) return;
     if(item.isShowShare){
       item.isShowShare = false;
+      this.dt.detectChanges();
+    }
+  }
+  closeListTag(item:any){
+    if(!item) return;
+    if(item.isShowTag){
+      item.isShowTag = false;
       this.dt.detectChanges();
     }
   }

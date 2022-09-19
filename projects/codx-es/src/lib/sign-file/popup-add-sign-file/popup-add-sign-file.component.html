@@ -17,9 +17,7 @@
         <div class="stepper-nav flex-center flex-wrap" #status>
           <div
             [ngClass]="
-              isAddNew || (!isAddNew && oSignFile)
-                ? 'stepper-item active'
-                : 'stepper-item approve'
+              isAddNew ? 'stepper-item active' : 'stepper-item approve'
             "
             data-kt-stepper-element="nav"
             data-kt-stepper-action="step"
@@ -55,14 +53,11 @@
                 ></codx-label>
               </div>
             </div>
-            <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
 
           <div
             [ngClass]="
-              isAddNew || (!isAddNew && oSignFile)
-                ? 'stepper-item'
-                : 'stepper-item approve-disabled'
+              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
             "
             data-kt-stepper-element="nav"
             data-kt-stepper-action="step"
@@ -103,9 +98,7 @@
 
           <div
             [ngClass]="
-              isAddNew || (!isAddNew && oSignFile)
-                ? 'stepper-item'
-                : 'stepper-item approve-disabled'
+              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
             "
             data-kt-stepper-element="nav"
             data-kt-stepper-action="step"
@@ -145,9 +138,7 @@
           </div>
           <div
             [ngClass]="
-              isAddNew || (!isAddNew && oSignFile)
-                ? 'stepper-item'
-                : 'stepper-item approve-disabled'
+              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
             "
             data-kt-stepper-element="nav"
             data-kt-stepper-action="step"
@@ -434,16 +425,16 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <codx-label fiedName="EmployeeID" [formModel]="formModel">
+                  <codx-label fiedName="Owner" [formModel]="formModel">
                   </codx-label>
                   <codx-input
                     type="combobox"
                     name="combobox"
                     ngDefaultControl
-                    [refValue]="cbxName['EmployeeID']"
-                    field="employeeID"
+                    [refValue]="cbxName['Owner']"
+                    field="owner"
                     (valueChange)="valueChange($event)"
-                    [crrValue]="dialogSignFile.value?.employeeID"
+                    [crrValue]="dialogSignFile.value?.owner"
                   >
                   </codx-input>
                 </div>

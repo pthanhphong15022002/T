@@ -13,8 +13,8 @@
     <div class="d-flex flex-column flex-grow-1 mb-2">
       <codx-temp-full
         [title]="itemDetail?.requester"
-        [subTitle]="'Thư ký trung tâm - NDX'"
-        [imageId]="'ADMIN'"
+        [subTitle]="itemDetail?.positionName"
+        [imageId]="itemDetail?.createdBy"
         imageObjType="AD_Users"
         [imageWidth]="40"
       >
@@ -93,9 +93,9 @@
         <codx-label default="Người tham gia" class="fw-bold me-4"> </codx-label>
         <div class="d-flex justify-content-end">
           <codx-imgs
-            [objectId]="'ADMIN;PMNHI;NVHAO;ADMIN;PMNHI;NVHAO'"
+            [objectId]="itemDetail?.bookingAttendees"
             objectType="AD_Users"
-            [numberImages]="4"
+            [numberImages]="6"
             [width]="30"
           >
           </codx-imgs>
