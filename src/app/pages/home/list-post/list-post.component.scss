@@ -19,10 +19,7 @@ app-list-post .e-listview .e-list-item {
     border: 1px solid #f2f3f7 !important;
 }
 
-codx-home .e-listview .e-list-item.e-hover,
-codx-home .e-listview .e-list-item.e-active {
-    background-color: white;
-}
+
 
 .label.label-light-primary {
     color: #3699ff;
@@ -67,9 +64,9 @@ ejs-listview {
 }
 
 ejs-listview .e-ul>li {
-    margin-bottom: 15px;
-    background-color: #fff !important;
-    border-radius: 0.475rem;
+    margin-bottom: 1px;
+    background-color: #fff;
+
 }
 
 .user-selected ejs-listview .e-ul>li {
