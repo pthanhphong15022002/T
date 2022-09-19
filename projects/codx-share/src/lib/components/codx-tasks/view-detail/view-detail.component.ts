@@ -231,6 +231,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
             ref.createdOn = res.createdOn;
             ref.memo = res.taskName;
             ref.createdBy = res.createdBy;
+            var taskParent = res ;
             this.api
               .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
                 res.createdBy,
@@ -239,20 +240,26 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                 if (user) {
                   ref.createByName = user.userName;
                   this.dataReferences.push(ref);
+                  this.getReferencesByCategory3(taskParent) ;
                 }
               });
           }
         });
-    } else {
-      var listUser = [];
-      switch (this.itemSelected.refType) {
+    } else if(this.itemSelected.category == '3') {
+      this.getReferencesByCategory3(this.itemSelected) ;
+    }
+  }
+
+  getReferencesByCategory3(task){
+    var listUser = [];
+      switch (task.refType) {
         case 'OD_Dispatches':
           this.api
             .exec<any>(
               'OD',
               'DispatchesBusiness',
               'GetListByIDAsync',
-              this.itemSelected.refID
+              task.refID
             )
             .subscribe((item) => {
               if (item) {
@@ -278,7 +285,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
               'ERM.Business.ES',
               'SignFilesBusiness',
               'GetLstSignFileByIDAsync',
-              JSON.stringify(this.itemSelected.refID.split(';'))
+              JSON.stringify(task.refID.split(';'))
             )
             .subscribe((result) => {
               if (result) {
@@ -304,7 +311,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
               'TM',
               'TaskBusiness',
               'GetTaskByRefIDAsync',
-              this.itemSelected.refID
+              task.refID
             )
             .subscribe((result) => {
               if (result) {
@@ -329,7 +336,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
             });
           break;
       }
-    }
   }
 
   getUserByListCreateBy(listUser) {

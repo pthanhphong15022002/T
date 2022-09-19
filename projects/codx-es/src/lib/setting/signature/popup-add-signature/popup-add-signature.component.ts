@@ -10,6 +10,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-charts';
 import {
   CallFuncService,
   CodxFormComponent,
@@ -121,11 +122,11 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       option.methodName = 'EditAsync';
     }
 
-    option.data = [itemData, this.isAdd];
+    option.data = [itemData];
     return true;
   }
 
-  async onSaveForm() {
+  onSaveForm() {
     this.dialogSignature.patchValue(this.data);
 
     if (this.dialogSignature.invalid == true) {
@@ -133,48 +134,84 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this.attachment.fileUploadList.length > 0) {
-      this.attachment.objectId = this.data.recID;
-      (await this.attachment.saveFilesObservable()).subscribe((files: any) => {
-        if (files?.status == 0) {
-          console.log(files);
-        }
-      });
-    }
+    // if (this.attachment.fileUploadList.length > 0) {
+    //   this.attachment.objectId = this.data.recID;
+    //   (await this.attachment.saveFilesObservable()).subscribe((files: any) => {
+    //     if (files?.status == 0) {
+    //       console.log(files);
+    //     }
+    //   });
+    // }
+    console.log(this.imgSignature1);
+    console.log(this.imgSignature2);
+
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.update || res.save) {
-          this.imgSignature1
-            .updateFileDirectReload(this.data.recID + '1')
-            .subscribe((result) => {
-              if (result) {
-                console.log(result);
-              }
-            });
-          this.imgSignature2
-            .updateFileDirectReload(this.data.recID + '2')
-            .subscribe((result) => {
-              console.log(result);
-              if (result) {
-              }
-            });
-          this.imgStamp
-            .updateFileDirectReload(this.data.recID + 's')
-            .subscribe((result) => {
-              if (result) {
-                console.log(result);
-              }
-            });
+          let result = res.save;
+
           this.isSaveSuccess = true;
-          console.log(res);
+
           if (res.update) {
-            (this.dialog.dataService as CRUDService)
-              .update(res.update)
-              .subscribe();
+            result = res.update;
+            // (this.dialog.dataService as CRUDService)
+            //   .update(res.update)
+            //   .subscribe();
           }
-          this.dialog && this.dialog.close();
+          if (
+            this.imgSignature1.imageUpload ||
+            this.imgSignature2.imageUpload ||
+            this.imgStamp.imageUpload
+          ) {
+            this.imgSignature1.imageUpload &&
+              this.imgSignature1
+                .updateFileDirectReload(this.data.recID + '1')
+                .subscribe((img) => {
+                  if (img && this.data.signature1 == null) {
+                    result.signature1 = (img[0] as any).recID;
+                    this.data.signature1 = (img[0] as any).recID;
+                    this.esService
+                      .editSignature(this.data)
+                      .subscribe((res) => {});
+                  }
+                  this.dialog && this.dialog.close(result);
+                });
+            this.imgSignature2.imageUpload &&
+              this.imgSignature2
+                .updateFileDirectReload(this.data.recID + '2')
+                .subscribe((img) => {
+                  this.dialog && this.dialog.close(result);
+
+                  if (img && this.data.signature2 == null) {
+                    result.signature2 = (img[0] as any).recID;
+
+                    this.data.signature2 = (img[0] as any).recID;
+                    this.esService
+                      .editSignature(this.data)
+                      .subscribe((res) => {});
+                  }
+                });
+            this.imgStamp.imageUpload &&
+              this.imgStamp
+                .updateFileDirectReload(this.data.recID + 's')
+                .subscribe((img) => {
+                  if (img && this.data.stamp == null) {
+                    result.stamp = (img[0] as any).recID;
+
+                    this.data.stamp = (img[0] as any).recID;
+                    this.esService
+                      .editSignature(this.data)
+                      .subscribe((res) => {});
+                  }
+                  this.dialog && this.dialog.close(result);
+                });
+
+            // this.dialog && this.dialog.close(result);
+          } else {
+            this.dialog && this.dialog.close(result);
+          }
         }
       });
   }

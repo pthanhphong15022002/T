@@ -11,7 +11,6 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
-import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ApprovalCarsComponent } from './approval/car/approval-car.component';
@@ -140,7 +139,6 @@ const Components: Type<any>[] = [
   StationeryDashboardComponent,
   ViewDetailComponent,
   TabsComponent,
-  DynamicFormComponent,
 ];
 
 @NgModule({

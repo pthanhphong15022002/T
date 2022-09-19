@@ -149,7 +149,7 @@ export class PopupAddRoomsComponent implements OnInit {
       if (element.isSelected) {  
         let tempEquip = new Equipments();
         tempEquip.equipmentID=element.id;
-        tempEquip.createBy=this.authService.userValue.userID;
+        tempEquip.createdBy=this.authService.userValue.userID;
         this.lstEquipment.push(tempEquip);
         
       }

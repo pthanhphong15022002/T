@@ -1,6 +1,7 @@
 export class Equipments {
     equipmentID:string;
-    createBy: string;
-    createOn: Date;
+    createdBy: string;
+    createdOn: Date;
+    isPicked:boolean;
   }
   
