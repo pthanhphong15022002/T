@@ -12,10 +12,10 @@ export class LayoutComponent extends LayoutBaseComponent {
   module = 'MWP';
   dialog!: DialogRef;
 
-  // override aside = true;
-  // override asideFixed = true;
-  // // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  // override toolbar = true;
+  override aside = true;
+  override asideFixed = true;
+  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
+  override toolbar = true;
   constructor(inject: Injector,
     private callfc: CallFuncService,
     ) {
