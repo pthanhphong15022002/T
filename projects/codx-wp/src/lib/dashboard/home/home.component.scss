@@ -126,3 +126,10 @@ codx-home .home-left {
 .ms-4.home-right {
     margin-left: 13px !important;
 }
+
+codx-home .e-listview .e-list-item.e-hover,
+codx-home .e-listview .e-list-item.e-active {
+    background-color: white !important;
+    border-radius: 0.475rem;
+    margin-bottom: 15px;
+}
