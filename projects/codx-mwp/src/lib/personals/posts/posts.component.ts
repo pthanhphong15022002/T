@@ -2,7 +2,7 @@ import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Post } from '@shared/models/post';
 import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
-import { ApiHttpService, UploadFile, AuthStore, TenantStore, CacheService, CallFuncService } from 'codx-core';
+import { ApiHttpService, UploadFile, AuthStore, TenantStore, CacheService, CallFuncService, ViewsComponent } from 'codx-core';
 import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 
 @Component({
@@ -16,6 +16,8 @@ export class PostsComponent implements OnInit {
 
   @ViewChild('lstComment', { read: ViewContainerRef }) lstComment!: ViewContainerRef;
 
+  viewComponents: ViewsComponent;
+
   constructor(private authStore: AuthStore,
     private tenantStore: TenantStore,
     private cache: CacheService,
@@ -24,6 +26,9 @@ export class PostsComponent implements OnInit {
     private callfc:CallFuncService,
     ) {
       this.user = this.authStore.get();
+      this.cache.functionList('').subscribe(res => {
+        if(res) {}
+      })
      }
 
   ngOnInit(): void {
@@ -34,9 +39,18 @@ export class PostsComponent implements OnInit {
   }
 
   private loadListPostComponent() { 
+    // var formModel = {
+    //   entityName: 'FD_KudosTrans',
+    //   entityPermission: 'FD_KudosTrans',
+    //   gridViewName: 'grvKudosTrans',
+    //   formName: 'KudosTrans',
+    //   funcID: '',
+    // }
+    // this.viewComponents.formModel = formModel;
     var a = this.lstComment.createComponent(ListPostComponent);
     a.instance.predicateWP = `(CreatedBy="${this.user?.userID}")`;
     a.instance.isShowCreate = false;
+    a.instance.codxViews = this.viewComponents;
   }
 
 }
