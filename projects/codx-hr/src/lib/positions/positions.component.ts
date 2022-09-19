@@ -77,10 +77,9 @@ export class PositionsComponent  extends UIComponent {
       {
         id: '1',
         type: ViewType.treedetail,
-        active: true,
+        active: false,
         sameData: true,
         model: {
-          // panelLeftRef: this.panelLeftRef,
           resizable: true,
           template: this.templateTree,
           panelRightRef: this.templateDetail
@@ -92,7 +91,6 @@ export class PositionsComponent  extends UIComponent {
         active: true,
         sameData: true,
         model: {
-          // template: this.itemTemplate,
           resizable: true,
           template: this.templateTree,
           panelRightRef: this.panelRightRef,

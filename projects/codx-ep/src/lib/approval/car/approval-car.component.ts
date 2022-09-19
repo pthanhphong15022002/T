@@ -46,15 +46,14 @@ export class ApprovalCarsComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.request=new ResourceModel();
-    this.request.assemblyName='EP';
-    this.request.className='BookingsBusiness';
-    this.request.service='EP';
-    this.request.method='GetEventsAsync';
-    this.request.predicate='ResourceType=@0';
-    this.request.dataValue='2';
-    this.request.idField='recID';
-
+    this.request = new ResourceModel();
+    this.request.assemblyName = 'EP';
+    this.request.className = 'BookingsBusiness';
+    this.request.service = 'EP';
+    this.request.method = 'GetEventsAsync';
+    this.request.predicate = 'ResourceType=@0';
+    this.request.dataValue = '2';
+    this.request.idField = 'recID';
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -94,23 +93,23 @@ export class ApprovalCarsComponent extends UIComponent {
         },
       },
       {
-        sameData:false,
-        type:ViewType.schedule,
-        active:true,
-        request2:this.modelResource,
-        request:this.request,
-        toolbarTemplate:this.footerButton,
-        showSearchBar:false,
-        model:{
+        sameData: false,
+        type: ViewType.schedule,
+        active: true,
+        request2: this.modelResource,
+        request: this.request,
+        toolbarTemplate: this.footerButton,
+        showSearchBar: false,
+        model: {
           //panelLeftRef:this.panelLeft,
-          eventModel:this.fields,
-          resourceModel:this.resourceField,
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           template5: this.resourceTootip,
           template6: this.footerTemplate,
           template7: this.footerButton,
-          statusColorRef:'vl003'
+          statusColorRef: 'vl003',
         },
       },
     ];

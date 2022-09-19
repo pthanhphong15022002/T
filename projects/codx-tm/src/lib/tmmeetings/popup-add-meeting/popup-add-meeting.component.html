@@ -316,7 +316,7 @@
 <ng-template #bodyFormLink>
   <div class="form-group mt-3">
     <codx-label name="lblPath" default="Đường dẫn" [formModel]="dialog.formModel"></codx-label>
-    <codx-input type="text" class="form-control" placeholder="https://home.suremeet.vn/" [crrValue]="linkURL"
+    <codx-input type="text" class="form-control" placeholder="https://home.suremeet.vn/" [crrValue]="meeting.link"
       (valueChange)="changeLink($event)"></codx-input>
   </div>
 </ng-template>

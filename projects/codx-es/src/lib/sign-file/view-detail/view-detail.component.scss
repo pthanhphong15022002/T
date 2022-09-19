@@ -1,0 +1,31 @@
+// .send-request {
+//   border: none;
+//   color: orange;
+
+//   codx-label {
+//     color: black;
+//   }
+// }
+
+// .codx-approval-step::after {
+//   content: "";
+//   background-color: #ff0000;
+//   width: 2px;
+//   position: absolute;
+//   top: 0;
+//   left: 17px;
+//   bottom: 0;
+//   z-index: 999;
+// }
+
+// .active {
+//   color: blue !important;
+// }
+// .e-device .e-dlg-content, .e-device .e-dlg-content * {
+//   font-size: inherit;
+// }
+codx-view-list-detail{
+    .e-splitter.e-splitter-horizontal .e-pane.e-pane-horizontal, .e-splitter.e-splitter-vertical .e-pane.e-pane-horizontal {
+        // overflow: hidden!important;
+    }
+}
