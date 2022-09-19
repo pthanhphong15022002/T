@@ -14,9 +14,9 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
 })
 export class LayoutNoToolbarComponent extends LayoutBaseComponent {
   module = 'MWP';
-  override aside = true;
   dialog!: DialogRef;
-  override asideFixed = false; // cần thì bật lên lại nhé !:v
+  override aside = true;
+ // override asideFixed = false; 
   override toolbar = false;
   constructor(
     inject: Injector,
