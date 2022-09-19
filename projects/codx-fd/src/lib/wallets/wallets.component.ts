@@ -21,6 +21,7 @@ import {
   CodxListviewComponent,
   CodxService,
   UIComponent,
+  CRUDService,
 } from 'codx-core';
 import {
   AccumulationChart,
@@ -162,15 +163,17 @@ export class WalletsComponent extends UIComponent implements OnInit {
   options = new DataRequest();
   lstRate = [];
   heightList = '200';
-  toDate = new Date();
-  firstDay: any = new Date(this.toDate.getUTCFullYear().toString());
-  firstDate: any = new Date(this.toDate.getUTCFullYear().toString());
+  fromDate: any = '';
+  toDate = '';
+  today: any = new Date();
+  fromDateDropdown: any;
+  toDateDropdown: any;
   yearCurrent: any;
   orgUnit = '';
   emloyeeID = '';
   predicate = '';
   dataValue = '';
-  comboboxName = '';
+  cbb = '';
   lstDataChart = [];
   ishide = true;
   loadList = false;
@@ -219,6 +222,9 @@ export class WalletsComponent extends UIComponent implements OnInit {
     private changedr: ChangeDetectorRef
   ) {
     super(injector);
+    this.route.params.subscribe((param) => {
+      if (param) this.funcID = param['funcID'];
+    });
     this.tenant = this.tenantStore.get()?.tenant;
 
     this.cache.valueList('L1483').subscribe((res) => {
@@ -227,7 +233,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
       }
     });
 
-    this.cache.functionList('FDR02').subscribe((res) => {
+    this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.functionListWallet.url = res.url;
       }
@@ -238,13 +244,14 @@ export class WalletsComponent extends UIComponent implements OnInit {
         this.functionListHistory.url = res.url;
       }
     });
-  }
 
-  button: Array<ButtonModel> = [
-    {
-      id: '1',
-    },
-  ];
+    let year = this.today.getFullYear();
+    let month = this.today.getMonth();
+    var firstDayInMonth = new Date(year, month, 1);
+    var lastDayInMonth = new Date(year, month + 1, 0);
+    this.fromDate = this.dateTimeToString(firstDayInMonth);
+    this.toDate = this.dateTimeToString(lastDayInMonth);
+  }
 
   setOption(text): any {
     this.options_empty.title.text = text;
@@ -259,10 +266,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
     this.options.formName = 'KudosTrans';
     this.options.funcID = this.funcID;
     this.options.dataObj = 'Coins';
-
-    this.route.params.subscribe((param) => {
-      this.funcID = param['funcID'];
-    });
     this.setPredicate();
   }
 
@@ -279,6 +282,23 @@ export class WalletsComponent extends UIComponent implements OnInit {
     ];
     this.userPermission = this.view.userPermission;
     if (this.listView) this.listView.dataService.dataObj = 'Coins';
+  }
+
+  dateTimeToString(date: Date) {
+    var yyyy = date.getFullYear().toString();
+    var mm = (date.getMonth() + 1).toString();
+    var dd = date.getDate().toString();
+
+    var mmChars = mm.split('');
+    var ddChars = dd.split('');
+
+    return (
+      yyyy +
+      '-' +
+      (mmChars[1] ? mm : '0' + mmChars[0]) +
+      '-' +
+      (ddChars[1] ? dd : '0' + ddChars[0])
+    );
   }
 
   LoadData() {
@@ -391,28 +411,13 @@ export class WalletsComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e, f) {
-    if (f == 'Organize') {
-      this.orgUnit = e?.data[0];
-    } else if (f == 'Employee') {
-      this.emloyeeID = e?.data[0];
-    }
     switch (e.field) {
-      case 'toDate':
-        if (e.data?.toDate != undefined) {
-          var value = new Date(e.data?.toDate);
-          this.toDate = value;
-        }
-        break;
-      case 'firstDay':
-        if (e.data?.fromDate != undefined) {
-          var value = new Date(e.data?.fromDate);
-          value.setDate(value.getDate());
-          this.firstDay = value;
-        }
-        break;
       case 'vllOrganize':
-        this.vllOrganize_value = e.data;
-        this.getComboboxName();
+        var type = e.data;
+        if (type == '1') this.cbb = 'Company';
+        else if (type == '3') this.cbb = 'Divisions';
+        else if (type == '4') this.cbb = 'HRDepartments';
+        else this.cbb = 'HRDepartmentUnits';
         this.dt.detectChanges();
         break;
       case 'Organize':
@@ -424,69 +429,104 @@ export class WalletsComponent extends UIComponent implements OnInit {
       default:
         break;
     }
-    if (e.field != 'vllOrganize' || f != 'vllOrganize') {
+    if (e.field != 'vllOrganize' || f != 'vllOrganize' && e.data) {
       if (f == 'Employee' || f == 'Organize') {
-        if (e?.data.length != 0) {
-          this.setPredicate();
-        }
-      } else if (f == 'toDate' || f == 'firstDay') {
-        if (e?.data?.fromDate != undefined || e?.data?.fromDate != undefined) {
+        if (e?.data) {
           this.setPredicate();
         }
       }
     }
   }
 
-  getComboboxName() {
-    this.comboboxName = '';
-    var a = this.L1483.find((x) => x.value == this.vllOrganize_value);
-    this.comboboxName = a.text;
+  dateChange(evt: any) {
+    if (evt?.fromDate || evt?.toDate) {
+      this.fromDateDropdown = this.dateTimeToString(evt?.fromDate);
+      this.toDateDropdown = this.dateTimeToString(evt?.toDate);
+      this.setPredicate();
+    }
   }
 
   setPredicate() {
     this.options.predicate =
-      '(TransType=@0 or TransType=@1 or TransType=@2 or TransType=@3)';
+      '(TransType=@0 or TransType=@1 or TransType=@2 or TransType=@3) && ';
     this.options.dataValue = '1;2;4;5';
-    var predicate = '',
-      dataValue = '',
-      arrTemp = [];
-    if (this.firstDay)
+    this.predicate = '';
+    this.dataValue = '';
+    var arrTemp = [];
+    if (
+      this.fromDate &&
+      this.toDate &&
+      (!this.fromDateDropdown || !this.toDateDropdown)
+    )
       arrTemp.push({
-        field: 'TransDateFrom',
-        value: this.firstDay.toISOString(),
+        field: 'CreatedOn',
+        value: this.fromDate,
+        dropdownCalendar: false,
       });
-    if (this.toDate)
-      arrTemp.push({ field: 'TransDateTo', value: this.toDate.toISOString() });
+    if (this.fromDateDropdown || this.toDateDropdown)
+      arrTemp.push({
+        field: 'CreatedOn',
+        value: this.fromDateDropdown,
+        dropdownCalendar: true,
+      });
     if (this.orgUnit) arrTemp.push({ field: 'OrgUnitID', value: this.orgUnit });
     if (this.emloyeeID)
       arrTemp.push({ field: 'EmployeeID', value: this.emloyeeID });
-    var opartor = '=@';
-    var opartorDateFrom = '=@';
-    var opartorDateTo = '=@';
-    arrTemp.forEach(function (element, index) {
+    var i = 4;
+    var t = this;
+    arrTemp.forEach(function (element) {
       if (!element) return;
-
-      if (element.field == 'TransDateFrom') opartorDateFrom = '>=@';
-      if (element.field == 'TransDateTo') opartorDateTo = '<=@';
-      // if (predicate) {
-      if (element.field == 'TransDateTo') {
-        predicate += ' && ' + 'TransDate' + opartorDateTo + (index + 4) + ')';
-      } else if (element.field == 'TransDateFrom') {
-        predicate += ' && (' + 'TransDate' + opartorDateFrom + (index + 4);
-      } else predicate += ' && ' + element.field + opartor + (index + 4);
-      // }
-      // else predicate = element.field + opartor + (index + 4);
-      if (dataValue) dataValue += ';' + element.value;
-      else dataValue = element.value;
+      var spre = '';
+      var dtValue = '';
+      if (element.field == 'CreatedOn' && !element?.dropdownCalendar) {
+        spre =
+          '(' +
+          element.field +
+          '>=@' +
+          i +
+          ' && ' +
+          element.field +
+          '<=@' +
+          (i + 1) +
+          ')';
+        dtValue = t.fromDate + ';' + t.toDate;
+        i += 2;
+      } else if (element.field == 'CreatedOn' && element?.dropdownCalendar) {
+        spre =
+          '(' +
+          element.field +
+          '>=@' +
+          i +
+          ' && ' +
+          element.field +
+          '<=@' +
+          (i + 1) +
+          ')';
+        dtValue = t.fromDateDropdown + ';' + t.toDateDropdown;
+        i += 2;
+      } else if (element.field == 'OrgUnitID') {
+        spre = '(' + element.field + '=@' + i + ')';
+        dtValue = element.value;
+        i += 1;
+      } else if (element.field == 'EmployeeID') {
+        spre = '(' + element.field + '=@' + i + ')';
+        dtValue = element.value;
+        i += 1;
+      }
+      if (t.predicate) {
+        if (spre !== '') t.predicate += ' && ' + spre;
+      } else t.predicate = spre;
+      if (t.dataValue) {
+        if (dtValue !== '') t.dataValue += ';' + dtValue;
+      } else t.dataValue = dtValue;
     });
-    this.options.predicate += predicate;
-    this.options.dataValue += ';' + dataValue;
+    this.options.predicate += this.predicate;
+    this.options.dataValue += ';' + this.dataValue;
     this.loadList = true;
     if (this.listview) {
-      this.listview.predicate = this.options.predicate;
-      this.listview.dataValue = this.options.dataValue;
-      this.listview.data = [];
-      this.listview.loadData();
+      this.listView.dataService
+        .setPredicate(this.options.predicate, [this.options.dataValue])
+        .subscribe();
     }
     this.LoadData();
   }
@@ -643,11 +683,6 @@ export class WalletsComponent extends UIComponent implements OnInit {
       if (key == o.value) return o;
     });
     return oData.length > 0 ? oData[0].text : key;
-  }
-
-  LoadByUser(userID) {
-    // this.router.navigate([`${this.tenant}/fed/walletEmployee/${userID}`], { queryParams: { funcID: "FED201" } });
-    //this.codxService.navigate('', this.functionListWallet.url, { recID: item.recID })
   }
 
   setHeightList() {

@@ -176,7 +176,7 @@
           refType="P"
           field="userID"
           [crrValue]="data.userID"
-          [showInput]="true"
+          [showInput]="false"
           [multiple]="false"
           (valueChange)="valueChange($event)"
         >
@@ -263,14 +263,14 @@
                   #imgSignature1
                   class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                   [width]="80"
-                  [recId]="data.signature1"
-                  [objectId]="data.signature1 == null ? '' : data.recID + '1'"
+                  [objectId]="data.recID + '1'"
                   [objectType]="'ES_Signatures'"
                   data-kt-menu-trigger="click"
                   data-kt-menu-attach="parent"
                   data-kt-menu-placement="bottom-end"
                   data-kt-menu-flip="bottom"
                   [isAllowEdit]="true"
+                  [funcId]="'ESS21'"
                 >
                 </codx-img>
               </div>
@@ -296,14 +296,14 @@
                 #imgSignature2
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
-                [recId]="data.signature2"
-                [objectId]="data.signature2 == null ? '' : data.recID + '2'"
+                [objectId]="data.recID + '2'"
                 [objectType]="'ES_Signatures'"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
+                [funcId]="'ESS21'"
               >
               </codx-img>
             </div>
@@ -326,14 +326,14 @@
                 #imgStamp
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
-                [recId]="data.stamp"
-                [objectId]="data.stamp == null ? '' : data.recID + 's'"
+                [objectId]="data.recID + 's'"
                 [objectType]="'ES_Signatures'"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
+                [funcId]="'ESS21'"
               >
               </codx-img>
             </div>

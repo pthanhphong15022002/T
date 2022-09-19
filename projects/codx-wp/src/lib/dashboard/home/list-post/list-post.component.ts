@@ -29,6 +29,8 @@ import {
   RequestOption,
   CodxService,
   Util,
+  FormModel,
+  UIComponent,
 } from 'codx-core';
 import { PopupAddPostComponent } from './popup-add/popup-add.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
@@ -40,7 +42,8 @@ import { PopupSavePostComponent } from './popup-save/popup-save.component';
   styleUrls: ['./list-post.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ListPostComponent implements OnInit, AfterViewInit {
+export class ListPostComponent extends UIComponent implements OnInit,AfterViewInit {
+
   service = "WP";
   assemblyName = "ERM.Business.WP"
   className = "CommentsBusiness"
@@ -52,7 +55,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   showEmojiPicker = false;
   dataVll = [];
   title: string = '';
-  tagUsers: any = [];
   searchField = '';
   checkFormAddPost = false;
   predicateWP:string ='(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
@@ -62,29 +64,33 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   modal: DialogRef;
   headerText = '';
   lstData:any;
-  funcID:string ="";
+  lstUserShare:any[] = [];
+  lstUserTag: any = [];
+  @Input() funcID:string ="";
   @Input() objectID:string = "";
   @Input() predicates;
   @Input() dataValues;
   @Input() isShowCreate = true;
   @Input() module: "WP" | "FD" = "WP";
-  @Input() codxViews:ViewsComponent;
+  @Input() formModel:FormModel = null;
+  @Input() formName:string = "";
+  @Input() gridViewName:string = "";
+
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(
+    private injector:Injector,
     private authStore: AuthStore,
-    private cache: CacheService,
-    private api: ApiHttpService,
     private dt: ChangeDetectorRef,
-    private callfc: CallFuncService,
     private notifySvr: NotificationsService,
     private route:ActivatedRoute,
-    private codxService: CodxService
   ) {
-    
+    super(injector)
+  }
+  ngAfterViewInit(): void {
   }
   
-  ngOnInit() {
+  onInit(): void {
     this.user = this.authStore.get();
     this.route.params.subscribe((param:any) => {
       if(param) {
@@ -93,9 +99,14 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         // this.getGridViewSetUp(this.funcID);
         this.getValueList();
       }
-    })
+    });
+    if(!this.formModel){
+      this.formModel = new FormModel();
+      this.formModel.funcID = this.funcID;
+      this.formModel.gridViewName= this.gridViewName;
+      this.formModel.formName = this.formName;
+    }
   }
-
   getValueList(){
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
@@ -115,8 +126,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         this.dt.detectChanges();
       }
     });
-  }
-  ngAfterViewInit(): void {
   }
 
   getGridViewSetUp(funcID:string) {
@@ -163,21 +172,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
 
-  }
-  show() {
-    if (this.searchField == '' || this.searchField == null) return true;
-    for (let index = 0; index < this.tagUsers.length; index++) {
-      const element: any = this.tagUsers[index];
-      if (
-        element.objectName != null &&
-        element.objectName
-          .toLowerCase()
-          .includes(this.searchField.toLowerCase())
-      ) {
-        return true;
-      }
-    }
-    return false;
   }
 
   openCreateModal() {
@@ -266,14 +260,14 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getTagUser(item:any) {
-    if(!item) return;
-    this.tagUsers = item.listTag;
+  showListTag(item:any) {
+    if(!item || !item.listTag) return;
+    item.isShowTag = true;
+    this.lstUserTag = item.listTag;
     this.dt.detectChanges();
   }
-  lstUserShare:any[] = [];
-  getShareUser(item:any) {
-    if(!item || !item.shareControl) return;
+  showListShare(item:any) {
+    if(!item || !item.listShare) return;
     if(item.shareControl=='U' ||
       item.shareControl=='G' || item.shareControl=='R' ||
       item.shareControl=='P' || item.shareControl=='D' ||
@@ -284,12 +278,17 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         this.dt.detectChanges();
     }
   }
-
-
   closeListShare(item:any){
-    if(!item || !item.isShowShare) return;
+    if(!item) return;
     if(item.isShowShare){
       item.isShowShare = false;
+      this.dt.detectChanges();
+    }
+  }
+  closeListTag(item:any){
+    if(!item) return;
+    if(item.isShowTag){
+      item.isShowTag = false;
       this.dt.detectChanges();
     }
   }

@@ -88,11 +88,11 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   selectTopBehaviors: number;
   modeView = '1';
   typeBallot = '0';
-  cardType = '0';
+  cardType = '';
   typeTime = '1';
   typeTimeName = this.TYPE_TIME.MONTH;
-  fromDate: any = '2021-01-01';
-  toDate = '2021-12-01';
+  fromDate: any = '';
+  toDate = '';
   today: any = new Date();
   infoUser = null;
   lstTotalCoin = [];
@@ -105,7 +105,6 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   chartDatas_empty: any[] = [{ key: 'Không có dữ liệu', value: 100 }];
   fromDateDropdown: any;
   toDateDropdown: any;
-  checkDropdownCalendar = false;
   options_empty = {
     tooltips: {
       enabled: false,
@@ -251,7 +250,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.route.params.subscribe((param) => {
-      this.funcID = param['funcID'];
+      if (param) this.funcID = param['funcID'];
     });
     this.cacheService.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
@@ -305,7 +304,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
         break;
     }
 
-    if (e.field != 'vllOrganize') {
+    if (e.field != 'vllOrganize' && e.data) {
       if (e.data) this.reloadAllChart();
     } else {
       if (this.type == '1') this.cbb = 'Company';
@@ -341,7 +340,17 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.cardType = data.data;
     this.reloadAllChart();
   }
+
+  ballot_SENDED = false;
+  ballot_RECEIVED = false;
   changeTypeCoins(typeBallot) {
+    if (typeBallot == this.TYPE_Ballot.Ballot_SENDED) {
+      this.ballot_SENDED = !this.ballot_SENDED;
+      this.ballot_RECEIVED = false;
+    } else {
+      this.ballot_RECEIVED = !this.ballot_RECEIVED;
+      this.ballot_SENDED = false;
+    }
     this.typeBallot = typeBallot;
     this.reloadAllChart();
   }
@@ -501,7 +510,6 @@ export class StatisticalComponent extends UIComponent implements OnInit {
 
   dateChange(evt: any) {
     if (evt?.fromDate || evt?.toDate) {
-      this.checkDropdownCalendar = true;
       this.fromDateDropdown = this.dateTimeToString(evt?.fromDate);
       this.toDateDropdown = this.dateTimeToString(evt?.toDate);
       this.reloadAllChart();
@@ -514,10 +522,11 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.dataValue = '';
     if (this.ID) {
       var sField = 'OrgUnitID';
-      if (this.type == '1') sField = 'CompanyID';
-      else if (this.type == '3') sField = 'DivisionID';
-      else if (this.type == '4') sField = 'DepartmentID';
-      arrTemp.push({ field: sField, value: this.ID });
+      arrTemp.push({
+        field: sField,
+        value: this.ID,
+        dropdownCalendar: false,
+      });
     }
     if (
       this.fromDate &&
@@ -541,13 +550,17 @@ export class StatisticalComponent extends UIComponent implements OnInit {
         value: this.fromDateDropdown,
         dropdownCalendar: true,
       });
-    var i = 0;
+    let i = 0;
     var t = this;
     arrTemp.forEach(function (element) {
       if (!element) return;
-      var spre = element.field + '=@' + i;
+      var spre = '';
       var dtValue = '';
-      if (element.field == 'CreatedOn' && !element?.dropdownCalendar) {
+      if (element.field == 'OrgUnitID') {
+        spre = '(' + element.field + '=@' + i + ')';
+        dtValue = element.value;
+        i += 1;
+      } else if (element.field == 'CreatedOn' && !element?.dropdownCalendar) {
         spre =
           '(' +
           element.field +
@@ -580,12 +593,13 @@ export class StatisticalComponent extends UIComponent implements OnInit {
         } else {
           spre = '';
         }
+        i += 1;
       }
       if (t.predicate) {
-        if (spre !== "") t.predicate += ' && ' + spre;
+        if (spre !== '') t.predicate += ' && ' + spre;
       } else t.predicate = spre;
       if (t.dataValue) {
-        if (dtValue !== "") t.dataValue += ';' + dtValue;
+        if (dtValue !== '') t.dataValue += ';' + dtValue;
       } else t.dataValue = dtValue;
     });
     this.options.predicate = this.predicate;
