@@ -1,0 +1,54 @@
+<codx-views #codxViews 
+[views]="views" 
+[idField]="'recID'" 
+[button]="buttonAdd" 
+[autoLoad]="true"
+[selectedFirst]="true"
+(selectedChange)="selectedChange($event)"
+[entityName]="entityName"
+(buttonClick)="clickShowAssideRight()">
+</codx-views> 
+
+<ng-template #panelLefRef>
+</ng-template>
+<ng-template #itemTemplate let-data>
+    <ng-container *ngIf="data.transType == '1'; else transType2">
+        <codx-temp-full 
+            [dataItem]="data"
+            [typeMF]="'hover'" 
+            [formModel]="codxViews.formModel"
+            (clickMF)="clickMF($event,data)"
+            [imageId]="data.itemID"
+            imageObjType="AD_Users"
+            imgCss="me-2"
+            [title]="data.userName"
+            [desc]="data.transType | vll:'L1422':'text' | async"
+            [status]="data.status"
+            [statusVll]="'L1428'"
+            [date]="data.createdOn"
+            [bookmark]="false">
+        </codx-temp-full>
+    </ng-container>
+    <ng-template #transType2>
+        <codx-temp-full 
+            [dataItem]="data"
+            [typeMF]="'hover'" 
+            [formModel]="codxViews.formModel"
+            (clickMF)="clickMF($event,data)"
+            [imageId]="data.itemID"
+            imageObjType="AD_Users"
+            imgCss="me-2"
+            [title]="data.userName"
+            [desc]="data.transType | vll:'L1437':'text' | async"
+            [status]="data.status"
+            [statusVll]="'L1428'"
+            [date]="data.createdOn"
+            [bookmark]="false">
+        </codx-temp-full>
+    </ng-template>
+    
+</ng-template>
+
+<ng-template #panelRightRef>
+    <fd-detail-gift [giftID]="selectedGiftID" [formModel]="codxViews.formModel"></fd-detail-gift>  
+</ng-template>
