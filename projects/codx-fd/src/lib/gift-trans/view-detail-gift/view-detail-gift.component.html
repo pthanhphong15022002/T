@@ -1,64 +1,104 @@
-<div class="p-4" *ngIf="data">
-    <div class="d-flex flex-row-reverse">
-        <span class="btn cursor-pointer" [ngClass]="data.status == '1'? 'btn-outline-info' : 'btn-outline-secondary'">
-            <codx-label [formModel]="formModel" name="lblSendGift" default="Giao quà"></codx-label>  
-        </span>
-    </div>
-    <div>
-        <div class="row">
-            <codx-label [ngClass]="'fw-bolder text-primary'" [formModel]="formModel" name="lblSender" default="Người nhận"></codx-label>  
+
+
+<ng-container *ngIf="data">
+    <codx-detail-tmp [formModel]="formModel" [body]="body" [footer]="footer">
+    </codx-detail-tmp>
+</ng-container>
+<ng-template #body>
+    <div class="p-4">
+        <div class="d-flex flex-row-reverse">
+            <span class="btn cursor-pointer" [ngClass]="data.status == '1'? 'btn-outline-success' : 'btn-outline-secondary'">
+                <codx-label [formModel]="formModel" name="lblSendGift" default="Giao quà"></codx-label>  
+            </span>
         </div>
-        <div class="d-flex justify-content-beetwen">
+        <div>
+            <div class="row">
+                <codx-label [ngClass]="'fw-bolder text-primary'" [formModel]="formModel" name="lblSender" default="Người nhận"></codx-label>  
+            </div>
             <div class="d-flex justify-content-beetwen">
-                <ng-container *ngIf="data.reciver">
-                    <div>
-                        <codx-img [objectId]="data.userID" [objectType]="'AD_Users'" [width]="35" imageType="circle"></codx-img>
-                    </div>
-                    <div class="ms-2">
-                        <span class="fw-bolder "></span>
-                        <span>{{data.reciver.positionName}}</span>
-                    </div>
-                </ng-container>
-            </div>
-            <div>
-                 <!-- QRCode -->
-            </div>
-        </div> 
-        <div class="mt-3 d-flex" *ngIf="data.gift">
-            <div>
-                <codx-img [ngClass]="" [objectId]="data.gift.giftID" [objectType]="'FD_Gifts'" imageType="square" [width]="150"></codx-img>
-            </div>
-            <div class="ms-4">
-                <div>
-                    <p class="fw-bolder">{{data.gift.giftName}}</p>
-                    <p>
-                        <span>{{data.gift.giftID}}</span>
-                        <span> | </span>
-                        <span>
-                            <codx-label [formModel]="formModel" name="lblGroup" default="Nhóm"></codx-label>  
-                        </span>
-                        <span>:{{data.gift.groupID}}</span>
-                    </p>
-                    <p>
-                        {{data.gift.memo}}
-                    </p>
+                <div class="d-flex justify-content-beetwen">
+                    <ng-container *ngIf="data.reciver">
+                        <div>
+                            <codx-img [objectId]="data.reciver.domainUser" [objectType]="'AD_Users'" [width]="35" imageType="circle"></codx-img>
+                        </div>
+                        <div class="ms-4">
+                            <p class="fw-bolder mb-0">{{data.reciver.employeeName}}</p>
+                            <p>{{data.reciver.positionName}}</p>
+                        </div>
+                    </ng-container>
                 </div>
                 <div>
-                    <span class="btn"
-                        [style.background-color]="data.status | vll:'L1428' : 'color' | async"
-                        [style.color]="data.status | vll:'L1428' : 'textColor' | async">
-                        {{data.status | vll:'L1428' : 'text' | async}}
-                    </span>
+                     <!-- QRCode -->
                 </div>
-            </div>
-            
-        </div>
-        <div class="mt-3">
-            <div class="px-4">
-                <ng-container *ngIf="data.transType == '1'">
-                    
-                </ng-container>
             </div> 
+            <div class="mt-3 d-flex" *ngIf="data.gift">
+                <div>
+                    <codx-img [ngClass]="" [objectId]="data.gift.giftID" [objectType]="'FD_Gifts'" imageType="square" [width]="150"></codx-img>
+                </div>
+                <div class="ms-4">
+                    <div>
+                        <p class="fw-bolder">{{data.gift.giftName}}</p>
+                        <p>
+                            <span>{{data.gift.giftID}}</span>
+                            <span> | </span>
+                            <span>
+                                <codx-label [formModel]="formModel" name="lblGroup" default="Nhóm"></codx-label>  
+                            </span>
+                            <span>:{{data.gift.groupID}}</span>
+                        </p>
+                        <p>
+                            {{data.gift.memo}}
+                        </p>
+                    </div>
+                    <div>
+                        <span class="btn"
+                            [style.background-color]="data.status | vll:'L1428' : 'color' | async"
+                            [style.color]="data.status | vll:'L1428' : 'textColor' | async">
+                            {{data.status | vll:'L1428' : 'text' | async}}
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="mt-3">
+                <div class="row">
+                    <codx-label [ngClass]="'fw-bolder text-primary'" [formModel]="formModel" name="lblSiutuation" default="Nội dung"></codx-label>  
+                </div>
+                <div class="px-4">
+                    <ng-container *ngIf="data.siutuation">
+                        <div>{{data.siutuation}}</div>
+                    </ng-container>
+                </div> 
+            </div>
+            <div class="mt-3">
+                <div class="row">
+                    <codx-label [ngClass]="'fw-bolder text-primary'" [formModel]="formModel" name="lblReference" default="Thông tin tham chiếu"></codx-label>  
+                </div>
+                <div class="py-4">
+                    <p>
+                        <span>
+                            <codx-label [formModel]="formModel" name="lblCardType" default="Loại phiếu"></codx-label>    
+                        </span>
+                        <span>: {{data.cardType | vll:"L1422":"text" | async}}</span>
+                    </p>
+                    <p>
+                        <span>
+                            <codx-label [formModel]="formModel" name="lblCardNo" default="Số phiếu"></codx-label>    
+                        </span>
+                        <span>: {{data.cardNo}}</span>
+                    </p>
+                    <p>
+                        <span>
+                            <codx-label [formModel]="formModel" name="lblCardCreatedOn" default="Ngày gửi"></codx-label>    
+                        </span>
+                        <span>: {{data.cardCreated | fmDT}}</span>
+                    </p>
+                </div> 
+            </div>
         </div>
     </div>
-</div>
+</ng-template>
+<ng-template #footer>
+    <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel"
+      [objectID]="data.recID" [funcID]="formModel.funcID" ></codx-tabs>
+  </ng-template>

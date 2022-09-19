@@ -129,8 +129,7 @@ export class StorageComponent
   }
 
   onSearch(e) {
-    // this.lstCardNoteBooks.onSearch(e);
-    this.listView.dataService.search(e);
+    this.listView.dataService.search(e).subscribe();
     this.detectorRef.detectChanges();
   }
 
@@ -148,9 +147,9 @@ export class StorageComponent
           [this.listView.dataService.data, 'add'],
           option
         );
-        this.dialog.closed.subscribe((res) => {
-          if (res.event) this.dialog.dataService.add(res.event).subscribe();
-        });
+        // this.dialog.closed.subscribe((res) => {
+        //   if (res.event) this.dialog.dataService.add(res.event).subscribe();
+        // });
       });
   }
 
@@ -195,7 +194,6 @@ export class StorageComponent
       })
       .subscribe((res: any) => {
         if (res) {
-          (this.listView.dataService as CRUDService).remove(data).subscribe();
           this.api
             .execSv(
               'DM',
