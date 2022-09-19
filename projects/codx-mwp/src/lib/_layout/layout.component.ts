@@ -15,7 +15,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   override aside = true;
   override asideFixed = true;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = false;
+  override toolbar = true;
   constructor(inject: Injector,
     private callfc: CallFuncService,
     ) {
