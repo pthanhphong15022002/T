@@ -236,6 +236,7 @@
             <e-items>
               <e-item
                 id="zoomOut"
+                (click)="changeZoom('in', $event)"
                 prefixIcon="e-zoom-out btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
               >
               </e-item>
@@ -363,19 +364,18 @@
                     ></codx-label>
                   </div>
                   <ejs-dropdownlist
-                    #inputAuthor
                     id="signatureDropdownList"
                     [dataSource]="lstSigners"
-                    [fields]="person"
+                    [(fields)]="person"
                     (change)="changeSigner($event)"
                     [itemTemplate]="signer"
                     [valueTemplate]="signer"
-                    [(value)]="curSignerID"
+                    [(value)]="curSignerRecID"
                   >
                     <ng-template #signer let-approver>
                       <codx-temp-full
                         cardCss="card-select px-2 pt-4 pb-2"
-                        [imageId]="approver.authorID"
+                        [(imageId)]="approver.authorID"
                         [imageObjType]="'AD_Users'"
                         [imageWidth]="35"
                         imgCss="me-2"
@@ -491,6 +491,11 @@
                   <ng-template #template let-area="">
                     <div
                       class="annotationItem py-3 px-3"
+                      *ngIf="
+                        this.isApprover &&
+                        (area.signer != this.curSignerID ||
+                          area.stepNo != this.stepNo)
+                      "
                       (click)="goToSelectedAnnotation(area)"
                     >
                       <codx-temp-full
@@ -768,7 +773,7 @@
 
 <ng-template #panelLeft> </ng-template>
 
-<div
+<!-- <div
   id="virtualLayer"
   style="display: flex; position: absolute"
   [style.top.px]="vcTop"
@@ -777,7 +782,8 @@
   [style.height.px]="vcHeight"
   [style.z-index]="'1'"
   [style.border]="'1px solid red'"
-></div>
+></div> -->
+
 <div id="contextMenu" style="display: none; position: absolute">
   <div style="z-index: 2"><button id="delete-btn">Delete</button></div>
 </div>
