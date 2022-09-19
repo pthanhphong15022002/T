@@ -202,7 +202,8 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   async onSave() {
     if (this.type == 'add') {
       this.attachment.objectId = this.dataIEConnections.recID;
-      for (var i = 0; i < this.gridView.dataService.data.length; i++) {
+      for (var i = 0; i < this.gridView.dataService.data.length; i++) 
+      {
         this.gridView.dataService.data[i].sourceTable =
           this.importAddTmpGroup.value.sheetImport;
         delete this.gridView.dataService.data[i].mappingName;
@@ -211,18 +212,37 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       this.dataIEConnections.password = this.importAddTmpGroup.value.password;
       (await this.attachment.saveFilesObservable()).subscribe((item: any) => {
         if (item?.status == 0) {
-          //Lưu IEConnections
-          this.api
-            .execSv<any>(
-              'SYS',
-              'AD',
-              'IEConnectionsBusiness',
-              'AddItemAsync',
-              this.dataIEConnections
-            )
-            .subscribe((item) => {
-              if (item) {
-                this.api
+          if (
+            this.dataSave.dataIEFieldMapping &&
+            this.dataSave.dataIEFieldMapping.length > 0
+          )
+          {
+            var result = [];
+            for (
+              var i = 0;
+              i < this.dataSave.dataIEFieldMapping.length;
+              i++
+            ) {
+              result = result.concat(
+                this.dataSave.dataIEFieldMapping[i].data
+              );
+            }
+            result.forEach(function (v) {
+              delete v.RecID;
+              delete v.recID;
+            });
+            if (result.length > 0) {
+              this.api
+              .execSv<any>(
+                'SYS',
+                'AD',
+                'IEFieldMappingBusiness',
+                'AddItemAsync',
+                JSON.stringify(result)
+              )
+              .subscribe((item) => {
+                if (item) {
+                  this.api
                   .execSv<any>(
                     'SYS',
                     'AD',
@@ -232,64 +252,40 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
                   )
                   .subscribe((item2) => {
                     if (item2) {
-                      if (
-                        this.dataSave.dataIEFieldMapping &&
-                        this.dataSave.dataIEFieldMapping.length > 0
-                      ) {
-                        var result = [];
-                        for (
-                          var i = 0;
-                          i < this.dataSave.dataIEFieldMapping.length;
-                          i++
-                        ) {
-                          result = result.concat(
-                            this.dataSave.dataIEFieldMapping[i].data
-                          );
+                      this.api
+                      .execSv<any>(
+                        'SYS',
+                        'AD',
+                        'IEConnectionsBusiness',
+                        'AddItemAsync',
+                        this.dataIEConnections
+                      )
+                      .subscribe((item3) => {
+                        if(item3)
+                        {
+                          this.dialog.close();
+                          this.notifySvr.notifyCode('OD008');
                         }
-                        result.forEach(function (v) {
-                          delete v.RecID;
-                          delete v.recID;
-                        });
-                        if (result.length > 0) {
-                          this.api
-                            .execSv<any>(
-                              'SYS',
-                              'AD',
-                              'IEFieldMappingBusiness',
-                              'AddItemAsync',
-                              JSON.stringify(result)
-                            )
-                            .subscribe((item3) => {
-                              if (item3) {
-                                this.dialog.close();
-                                this.notifySvr.notifyCode('OD008');
-                              } else this.notifySvr.notifyCode('SYS021');
+                        else this.notifySvr.notifyCode('SYS021');
+                      });
+                    }
+                    else this.notifySvr.notifyCode('SYS021')
+                  })
+                } else this.notifySvr.notifyCode('SYS021');
 
-                              // if(item) this.notifySvr.notifyCode('OD008');
-                              // else this.notifySvr.notifyCode('SYS021');
-                            });
-                        }
-                      } else {
-                        this.dialog.close();
-                        this.notifySvr.notifyCode('OD008');
-                      }
-                    } else this.notifySvr.notifyCode('SYS021');
-                    // if(item) this.notifySvr.notifyCode('OD008');
-                    // else this.notifySvr.notifyCode('SYS021');
-                  });
-              } else this.notifySvr.notifyCode('SYS021');
-              // if(item) this.notifySvr.notifyCode('OD008');
-              // else this.notifySvr.notifyCode('SYS021');
-            });
-
-          // this.api.execSv<any>("SYS","AD","IEMappingsBusiness","AddItemAsync",JSON.stringify(this.dataSave.dataIEMapping)).subscribe(item=>{
-          //
-          //   // if(item) this.notifySvr.notifyCode('OD008');
-          //   // else this.notifySvr.notifyCode('SYS021');
-          // })
-
-          //
-        } else this.notifySvr.notify('Vui lòng đính kèm file');
+                // if(item) this.notifySvr.notifyCode('OD008');
+                // else this.notifySvr.notifyCode('SYS021');
+              });
+            }
+            else
+            {
+              this.dialog.close();
+              this.notifySvr.notifyCode('OD008');
+            }
+          }
+          else this.notifySvr.notifyCode('SYS021');
+        } 
+        else this.notifySvr.notify('Vui lòng đính kèm file');
       });
     } else {
       if (this.dataSave.dataIETable.length > 0) {

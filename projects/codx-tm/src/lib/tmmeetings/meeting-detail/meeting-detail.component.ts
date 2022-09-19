@@ -15,7 +15,13 @@ import {
   Optional,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UIComponent, ViewType, AuthStore, DialogData, LayoutService } from 'codx-core';
+import {
+  UIComponent,
+  ViewType,
+  AuthStore,
+  DialogData,
+  LayoutService,
+} from 'codx-core';
 
 @Component({
   selector: 'lib-meeting-detail',
@@ -51,14 +57,15 @@ export class MeetingDetailComponent extends UIComponent {
   content1: CO_Content[] = [];
   tabControl: TabControl[] = [];
   active = 1;
-  functionParent ='TMT0501';
+  functionParent = 'TMT0501';
   listRecID = [];
-  service = 'TM';
-  entityName = 'TM_Tasks';
-  idField = 'taskID';
-  assemblyName = 'ERM.Business.TM';
-  className = 'TaskBusiness';
-  method = 'GetListTaskAssignByByMeetingAsync';
+  vllMeetingType = 'CO002'
+  // service = 'TM';
+  // entityName = 'TM_Tasks';
+  // idField = 'taskID';
+  // assemblyName = 'ERM.Business.TM';
+  // className = 'TaskBusiness';
+  // method = 'GetListTaskAssignByByMeetingAsync';
   dataObj: any;
 
   constructor(
@@ -74,13 +81,12 @@ export class MeetingDetailComponent extends UIComponent {
     super(injector);
     this.getQueryParams();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.functionParent = this.tmService.functionParent;
-    this.cache.functionList(this.functionParent).subscribe(f=>{
-      if(f) this.layout.setUrl(f.url);
-  })
-    this.cache.functionList(this.funcID).subscribe(f=>{
-        if(f) this.layout.setLogo(f.smallIcon); // xin thương icon TMT05011
-    })
+    this.cache.functionList(this.functionParent).subscribe((f) => {
+      if (f) this.layout.setUrl(f.url);
+    });
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) this.layout.setLogo(f.smallIcon); // xin thương icon TMT05011
+    });
     this.urlDetail = 'tm/sprintdetails/TMT03011';
     this.loadData();
   }
@@ -149,7 +155,7 @@ export class MeetingDetailComponent extends UIComponent {
   clickMenu(item) {
     this.name = item.name;
     if (this.name == 'Giao việc') {
-      this.getListRecID(this.meetingID)
+      this.getListRecID(this.meetingID);
     }
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {

@@ -19,10 +19,10 @@ app-list-post .e-listview .e-list-item {
     border: 1px solid #f2f3f7 !important;
 }
 
-.e-listview .e-list-item.e-hover,
-.e-listview .e-list-item.e-active {
-    background-color: white;
-}
+// .e-listview .e-list-item.e-hover,
+// .e-listview .e-list-item.e-active {
+//     background-color: white;
+// }
 
 .label.label-light-primary {
     color: #3699ff;
@@ -67,9 +67,9 @@ ejs-listview {
 }
 
 ejs-listview .e-ul>li {
-    margin-bottom: 15px;
-    background-color: #fff !important;
-    border-radius: 0.475rem;
+    margin-bottom: 1px;
+    background-color: #fff;
+
 }
 
 .user-selected ejs-listview .e-ul>li {
@@ -280,6 +280,14 @@ ejs-listview .e-ul>li {
 }
 
 .tmpshare {
+    background-color: #fff;
+    right: -10px;
+    padding: 12px;
+    z-index: 99;
+    box-shadow: 2px 2px 6px #444;
+}
+
+.tmpTag {
     background-color: #fff;
     right: -10px;
     padding: 12px;

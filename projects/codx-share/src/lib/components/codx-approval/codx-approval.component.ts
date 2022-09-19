@@ -227,6 +227,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             title: data.htmlView,
             status: data.status,
             stepType: data.stepType,
+            stepNo: data.stepNo,
           },
           '',
           dialogModel
