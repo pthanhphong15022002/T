@@ -49,7 +49,7 @@ export class PostsComponent implements OnInit {
     var a = this.lstComment.createComponent(ListPostComponent);
     a.instance.predicateWP = `(CreatedBy="${this.user?.userID}")`;
     a.instance.isShowCreate = false;
-    a.instance.codxViews = this.viewComponents;
+    // a.instance.codxViews = this.viewComponents;
   }
 
 }

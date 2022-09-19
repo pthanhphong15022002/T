@@ -29,6 +29,8 @@ import {
   RequestOption,
   CodxService,
   Util,
+  FormModel,
+  UIComponent,
 } from 'codx-core';
 import { PopupAddPostComponent } from './popup-add/popup-add.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
@@ -40,7 +42,8 @@ import { PopupSavePostComponent } from './popup-save/popup-save.component';
   styleUrls: ['./list-post.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ListPostComponent implements OnInit, AfterViewInit {
+export class ListPostComponent extends UIComponent implements OnInit,AfterViewInit {
+
   service = "WP";
   assemblyName = "ERM.Business.WP"
   className = "CommentsBusiness"
@@ -63,29 +66,31 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   lstData:any;
   lstUserShare:any[] = [];
   lstUserTag: any = [];
-  funcID:string ="";
+  @Input() funcID:string ="";
   @Input() objectID:string = "";
   @Input() predicates;
   @Input() dataValues;
   @Input() isShowCreate = true;
   @Input() module: "WP" | "FD" = "WP";
-  @Input() codxViews:ViewsComponent;
+  @Input() formModel:FormModel = null;
+  @Input() formName:string = "";
+  @Input() gridViewName:string = "";
+
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(
+    private injector:Injector,
     private authStore: AuthStore,
-    private cache: CacheService,
-    private api: ApiHttpService,
     private dt: ChangeDetectorRef,
-    private callfc: CallFuncService,
     private notifySvr: NotificationsService,
     private route:ActivatedRoute,
-    private codxService: CodxService
   ) {
-    
+    super(injector)
+  }
+  ngAfterViewInit(): void {
   }
   
-  ngOnInit() {
+  onInit(): void {
     this.user = this.authStore.get();
     this.route.params.subscribe((param:any) => {
       if(param) {
@@ -94,9 +99,14 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         // this.getGridViewSetUp(this.funcID);
         this.getValueList();
       }
-    })
+    });
+    if(!this.formModel){
+      this.formModel = new FormModel();
+      this.formModel.funcID = this.funcID;
+      this.formModel.gridViewName= this.gridViewName;
+      this.formModel.formName = this.formName;
+    }
   }
-
   getValueList(){
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
@@ -116,8 +126,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         this.dt.detectChanges();
       }
     });
-  }
-  ngAfterViewInit(): void {
   }
 
   getGridViewSetUp(funcID:string) {
