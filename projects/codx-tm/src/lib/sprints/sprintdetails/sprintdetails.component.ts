@@ -85,7 +85,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
       }
     });
 
-    if (this.iterationID != '') {
+    if (this.iterationID && this.iterationID != '') {
       this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
         if (res) {
           this.data = res;
@@ -133,6 +133,8 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         }
       });
     }
+
+    this.functionParent = this.tmSv.functionParent ;
     if (this.meetingID) {
       //sau mấy cái này sẽ được truyền qua state
       // this.showTabHistory = false;
