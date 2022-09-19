@@ -15,6 +15,7 @@ import {
   ButtonModel,
   DataRequest,
   DialogRef,
+  FormModel,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -27,6 +28,7 @@ import { CO_Meetings, CO_Resources } from '../models/CO_Meetings.model';
 import { MeetingDetailComponent } from './meeting-detail/meeting-detail.component';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { PopupStatusMeetingComponent } from './popup-status-meeting/popup-status-meeting.component';
+import { Observable, of } from 'rxjs';
 @Component({
   selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
@@ -217,7 +219,6 @@ export class TMMeetingsComponent
   };
 
   getCellContent(evt: any) {
-    console.log(evt);
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
         let day = new Date(this.dayoff[i].startDate);
@@ -619,4 +620,12 @@ export class TMMeetingsComponent
         });
     }
   }
+
+  // hoverMeetingName(
+  //   value: string,
+  //   formModel: FormModel,
+  //   field: string
+  //   ): Observable<string> {
+  //       return of(`<span class="cut-size-long">${value}</span>`);
+  //    }
 }
