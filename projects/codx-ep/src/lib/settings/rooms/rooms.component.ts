@@ -28,6 +28,7 @@ import {
   ApiHttpService,
   ButtonModel,
   DialogRef,
+  FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -58,12 +59,14 @@ export class RoomsComponent extends UIComponent {
   dataSelected: any;
   columnGrids: any;
   addEditForm: FormGroup;
+  formModel:FormModel;
   isAdd = false;
   dialog!: DialogRef;
   vllDevices = [];
   lstDevices = [];
   funcID: string;
   showToolBar = 'true';
+
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -80,6 +83,12 @@ export class RoomsComponent extends UIComponent {
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+
+      }
+    });
   }
 
   onInit(): void {
@@ -306,7 +315,7 @@ export class RoomsComponent extends UIComponent {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.viewBase?.formModel;
+      option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
         [this.dataSelected, true],
@@ -325,7 +334,7 @@ export class RoomsComponent extends UIComponent {
           let option = new SidebarModel();
           option.Width = '550px';
           option.DataService = this.viewBase?.dataService;
-          option.FormModel = this.viewBase?.formModel;
+          option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddRoomsComponent,
             [this.viewBase.dataService.dataSelected, false],
