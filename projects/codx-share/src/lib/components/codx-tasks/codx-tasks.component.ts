@@ -232,7 +232,7 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          // statusColorRef: 'TM004'
+          statusColorRef: this.vllStatus
         },
       },
     ];
@@ -248,6 +248,7 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
+          statusColorRef: this.vllStatus
         },
       };
       this.viewsActive.push(calendar)

@@ -6,6 +6,7 @@
     [dialog]="dialog"
     [formModel]="formModel"
     [data]="data"
+    bodyCss="h-100"
 ></codx-form>
 <ng-template popup adde #body>
     <div class="d-flex justify-content-start h-100">
@@ -36,7 +37,7 @@
                     <codx-label [formModel]="formModel" [fiedName]="'selectedFile'" [default]="'Chọn File'"></codx-label>
                   </button>
                 </div>
-                <div class="py-2">
+                <div class="py-2" [style.height]="hScroll">
                   <ng-container *ngIf="dt_AD_IEConnections">
                     <div class="d-flex align-items-center justify-content-between mb-3" *ngFor="let item of dt_AD_IEConnections">
                       <div class="d-flex align-items-center justify-content-start">

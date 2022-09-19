@@ -165,7 +165,7 @@ export class TMMeetingsComponent
           template: this.eventTemplate,
           template3: this.cellTemplate,
           template7: this.template7,
-          // statusColorRef: 'CO004'
+          statusColorRef: 'CO004'
         },
       },
       {

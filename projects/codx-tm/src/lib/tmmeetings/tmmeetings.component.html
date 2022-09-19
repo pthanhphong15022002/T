@@ -138,12 +138,11 @@
 
 <ng-template #eventTemplate let-data>
   <div
-    class="text-start p-2 w-100"
-    [style.background-color]="data.status | vll: statusVll:'color'| async"
+    class="text-start p-2"
     [style.color]="data.status | vll: statusVll:'textColor' | async"
   >
-    <div class="text-dark fw-bold p-2" [innerHtml]="getDate(data)"></div>
-    <div class="text-dark fw-bolder">{{ data.meetingName }}</div>
+    <div class="fw-bold p-2" [innerHtml]="getDate(data)"></div>
+    <div class="fw-bolder">{{ data.meetingName }}</div>
   </div>
 </ng-template>
 <!-- calendar -->

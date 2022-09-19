@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   HostListener,
@@ -40,7 +41,7 @@ import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-
   templateUrl: './codx-import.component.html',
   styleUrls: ['./codx-import.component.scss'],
 })
-export class CodxImportComponent implements OnInit, OnChanges {
+export class CodxImportComponent implements OnInit, OnChanges , AfterViewInit {
   active = '1';
   dialog: any;
   submitted = false;
@@ -50,6 +51,7 @@ export class CodxImportComponent implements OnInit, OnChanges {
   data = {};
   hideThumb = false;
   fileCount = 0;
+  hScroll = 0;
   headerText: string = 'Import File';
   service: string = 'SYS';
   assemblyName: string = 'AD';
@@ -87,6 +89,9 @@ export class CodxImportComponent implements OnInit, OnChanges {
     this.formModel = dt.data;
     //this.recID = dt.data?.[1];
   }
+  ngAfterViewInit(): void {
+    this.getHeight();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+  }
   ngOnInit(): void {
     //Tạo formGroup
     this.importGroup = this.formBuilder.group({
@@ -98,6 +103,7 @@ export class CodxImportComponent implements OnInit, OnChanges {
     this.request.gridViewName = 'grvPurchaseInvoices';
     this.request.funcID = this.formModel?.funcID;
     this.getData();
+   
   }
   get f(): { [key: string]: AbstractControl } {
     return this.importGroup.controls;
@@ -197,5 +203,12 @@ export class CodxImportComponent implements OnInit, OnChanges {
         that.binaryString = reader.result;
       };
     }
+  }
+  getHeight()
+  {
+    debugger;
+    var heightP = (document.getElementsByClassName("tab-content")[0] as HTMLElement).offsetHeight;
+    var height = (document.getElementsByClassName("tab-pane")[0] as HTMLElement).offsetHeight;
+    this.hScroll = heightP-height;
   }
 }
