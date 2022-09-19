@@ -746,7 +746,11 @@ export class CodxTasksComponent
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
+        let kanban = (this.view.currentView as any).kanban;
         e?.event.forEach((obj) => {
+          if (kanban) {
+            kanban.updateCard(obj);
+          }
           this.view.dataService.update(obj).subscribe();
         });
         this.itemSelected = e?.event[0];
