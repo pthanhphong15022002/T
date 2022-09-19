@@ -6,7 +6,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { DataRequest, UIComponent, Util, ViewsComponent } from 'codx-core';
+import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
@@ -51,7 +51,6 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
       unbounds: null,
     },
   ];
-  model: DataRequest;
 
   constructor(
     private injector: Injector,
@@ -62,20 +61,6 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
 
   onInit(): void {
     this.itemDetailStt = 1;
-
-    this.model = new DataRequest();
-    this.model.funcID = 'EPT1';
-    this.model.formName = 'BookingRooms';
-    this.model.gridViewName = 'grvBookingRooms';
-    this.model.entityName = 'EP_Bookings';
-    this.model.entityPermission = 'EP_BookingRooms';
-    this.model.pageLoading = true;
-    this.model.comboboxName = 'EP_BookingRooms';
-    (this.model.page = 1), (this.model.pageSize = 20);
-
-    this.codxEpService.getDataCombobox(this.model).subscribe((res) => {
-      console.log('SSASA', res);
-    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -163,14 +148,6 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
-  }
-
-  setStyles(color): any {
-    let styles = {
-      backgroundColor: color,
-      color: 'white',
-    };
-    return styles;
   }
 
   clickChangeItemViewStatus(stt, recID) {

@@ -40,12 +40,13 @@
 
 /***/
 codx-home {
-    max-width: 1000px;
+    max-width: 980px;
     margin: 0 auto;
+    // border: 1px red solid;
 }
 
 codx-home .home-left {
-    min-width: 620px;
+    min-width: 617px !important;
 }
 
 .overflow-hidden {
@@ -120,4 +121,8 @@ codx-home .home-left {
 [data-kt-aside-minimize=on] .aside:not(:hover) .aside-menu .menu-title {
     opacity: 1;
     margin-left: 10px;
+}
+
+.ms-4.home-right {
+    margin-left: 13px !important;
 }

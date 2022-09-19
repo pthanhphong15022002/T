@@ -57,14 +57,14 @@
       </div>
     </div>
     <div class="stepper-body no-header pt-2 w-100">
-      <lib-pdf-view
+      <lib-pdf
         #pdfView
         [isApprover]="isApprover"
         [recID]="recID"
         [isDisable]="!canOpenSubPopup"
         (isActiveToSign)="changeActiveOpenPopup($event)"
       >
-      </lib-pdf-view>
+      </lib-pdf>
     </div>
   </div>
 </div>

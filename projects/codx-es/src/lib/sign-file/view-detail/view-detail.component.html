@@ -1,35 +1,63 @@
-<codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [footer]="!hideFooter ? footer : null"
-  [body]="body" [hideMF]="hideMF" [formModel]="formModel" (clickMF)="openFormFuncID($event)">
+<codx-detail-tmp
+  #itemDetailTemplate
+  [header]="header"
+  [dataItem]="itemDetail"
+  [footer]="!hideFooter ? footer : null"
+  [body]="body"
+  [hideMF]="hideMF"
+  [formModel]="formModel"
+  (clickMF)="openFormFuncID($event)"
+  class="h-100"
+>
   <ng-template #header>
-    <div class="vmd-detail">
-      <div class="d-flex justify-content-between flex-grow-1 mb-3">
-        <div class="d-flex align-items-center">
-          <codx-temp-full [title]="itemDetail?.title" [icoCss]="
-              'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 ' +
-              itemDetail?.icon
-            " [icoStyle]="setStyles(itemDetail?.color)" [titleCss]="'fs-4'">
-          </codx-temp-full>
-        </div>
-        <div class="d-flex align-self-center">
-          <codx-vll [name]="'ES003'" [showText]="true" [showBgColor]="true" [formModel]="formModel"
-            [field]="'ApproveStatus'" [value]="itemDetail?.approveStatus"
-            class="badge badge-light badge-square badge-md fs-7">
-          </codx-vll>
-        </div>
+    <div class="d-flex justify-content-between flex-grow-1 mb-3">
+      <div class="d-flex align-items-center">
+        <codx-temp-full
+          [title]="itemDetail?.title"
+          [icoCss]="
+            'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 ' +
+            itemDetail?.icon
+          "
+          [icoStyle]="setStyles(itemDetail?.color)"
+          [titleCss]="'fs-4'"
+        >
+        </codx-temp-full>
+      </div>
+      <div class="d-flex align-self-center">
+        <codx-vll
+          [name]="'ES003'"
+          [showText]="true"
+          [showBgColor]="true"
+          [formModel]="formModel"
+          [field]="'ApproveStatus'"
+          [value]="itemDetail?.approveStatus"
+          class="badge badge-light badge-square badge-md fs-7"
+        >
+        </codx-vll>
       </div>
     </div>
 
     <div class="d-flex flex-column flex-grow-1 mb-2">
-      <codx-temp-full [title]="itemDetail?.ownerName" [subTitle]="itemDetail?.ownerPosition ?? 'Vị trí công việc'"
-        [imageId]="itemDetail?.createdBy" imageObjType="AD_Users" [imageWidth]="40">
+      <codx-temp-full
+        [title]="itemDetail?.ownerName"
+        [subTitle]="itemDetail?.ownerPosition ?? 'Vị trí công việc'"
+        [imageId]="itemDetail?.createdBy"
+        imageObjType="AD_Users"
+        [imageWidth]="40"
+      >
       </codx-temp-full>
     </div>
     <div class="d-flex flex-grow-1 mb-2">
       <div class="me-4 icon-apartment"></div>
       <div class="d-flex flex-column flex-grow-1">
         <div class="text-dark fw-bold fs-6">
-          <codx-label field="OrgUnitID" [formModel]="formModel" default="Phòng " class="fw-bold me-1"
-            style="font-weight: bold"></codx-label>
+          <codx-label
+            field="OrgUnitID"
+            [formModel]="formModel"
+            default="Phòng "
+            class="fw-bold me-1"
+            style="font-weight: bold"
+          ></codx-label>
           : {{ itemDetail?.ownerOrgUnit }}
         </div>
       </div>
@@ -37,54 +65,84 @@
 
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6">
-        <codx-label field="CreatedOn" [formModel]="formModel" default="Ngày yêu cầu" class="fw-bold me-1">
+        <codx-label
+          field="CreatedOn"
+          [formModel]="formModel"
+          default="Ngày yêu cầu"
+          class="fw-bold me-1"
+        >
         </codx-label>
         <span class="text-gray-600">
           :
           {{
-          itemDetail
-          ? (itemDetail?.createdOn | date: "dd/MM/yyyy")
-          : "dd/MM/yyyy"
+            itemDetail
+              ? (itemDetail?.createdOn | date: "dd/MM/yyyy")
+              : "dd/MM/yyyy"
           }}
         </span>
       </div>
       <div class="d-flex me-6">
-        <codx-label field="ExpiredOn" [formModel]="formModel" default="Ngày hết hạn" class="fw-bold me-1"></codx-label>
+        <codx-label
+          field="ExpiredOn"
+          [formModel]="formModel"
+          default="Ngày hết hạn"
+          class="fw-bold me-1"
+        ></codx-label>
         <span class="text-gray-600">
           :
           {{
-          itemDetail?.permission
-          ? (itemDetail?.permissions?.expiredOn | date: "dd/MM/yyyy")
-          : "dd/MM/yyyy"
+            itemDetail?.permission
+              ? (itemDetail?.permissions?.expiredOn | date: "dd/MM/yyyy")
+              : "dd/MM/yyyy"
           }}
         </span>
       </div>
       <div class="d-flex text-dark me-6">
-        <codx-label fiedName="Priority" [formModel]="formModel" default="Ưu tiên" class="fw-bold me-1">
+        <codx-label
+          fiedName="Priority"
+          [formModel]="formModel"
+          default="Ưu tiên"
+          class="fw-bold me-1"
+        >
         </codx-label>
         :
-        <codx-vll [formModel]="formModel" [field]="'Priority'" [value]="itemDetail?.priority" [showText]="true"
-          [showIcon]="true" class="text-gray-600 d-flex">
+        <codx-vll
+          [formModel]="formModel"
+          [field]="'Priority'"
+          [value]="itemDetail?.priority"
+          [showText]="true"
+          [showIcon]="true"
+          class="text-gray-600 d-flex"
+        >
         </codx-vll>
       </div>
     </div>
     <div class="d-flex mb-2">
       <div class="d-flex me-6">
-        <codx-label field="RefNo" [formModel]="itemDetailTemplate.formModel" default="Số văn bản" class="fw-bold me-1">
+        <codx-label
+          field="RefNo"
+          [formModel]="itemDetailTemplate.formModel"
+          default="Số văn bản"
+          class="fw-bold me-1"
+        >
         </codx-label>
         <span class="text-gray-600">
           : {{ itemDetail ? itemDetail?.refNo : "" }}
         </span>
       </div>
       <div class="d-flex me-6">
-        <codx-label field="RefDate" [formModel]="itemDetailTemplate.formModel" default="Ngày văn bản"
-          class="fw-bold me-1"></codx-label>
+        <codx-label
+          field="RefDate"
+          [formModel]="itemDetailTemplate.formModel"
+          default="Ngày văn bản"
+          class="fw-bold me-1"
+        ></codx-label>
         <span class="text-gray-600">
           :
           {{
-          itemDetail?.refDate
-          ? (itemDetail?.refDate | date: "dd/MM/yyyy")
-          : "dd/MM/yyyy"
+            itemDetail?.refDate
+              ? (itemDetail?.refDate | date: "dd/MM/yyyy")
+              : "dd/MM/yyyy"
           }}
         </span>
       </div>
@@ -94,213 +152,152 @@
         <codx-thumbnail [files]="files" displayThumb="simple"> </codx-thumbnail>
       </ng-container>
     </div>
-
-    <div class="codx_e-header mb-2" [class.active]="true">
-      <div class="d-flex align-items-center btn-tabs">
-        <button class="btn btn-white text-dark me-1" [class.active]="itemDetailStt == '1'"
-          (click)="clickChangeItemViewStatus('1', itemDetail?.recID)">
-          <i class="icon-info icon-16"></i>
-          <codx-label name="lblAbstract" [formModel]="itemDetailTemplate.formModel" default="Mô tả ngắn gọn"
-            class="ms-1 fw-bold"></codx-label>
-        </button>
-        <button class="btn btn-white text-dark me-1" [class.active]="itemDetailStt == '2'"
-          (click)="clickChangeItemViewStatus('2', itemDetail?.recID)">
-          <i class="icon-format_list_numbered icon-16"></i>
-          <codx-label name="lblBusiness" [formModel]="itemDetailTemplate.formModel" default="Công việc"
-            class="ms-1 fw-bold"></codx-label>
-        </button>
-        <button class="btn btn-white text-dark me-1" [class.active]="itemDetailStt == '3'"
-          (click)="clickChangeItemViewStatus('3', itemDetail?.recID)">
-          <i class="icon-people_alt icon-16"></i>
-          <codx-label name="lblApprovalTrans" [formModel]="itemDetailTemplate.formModel" default="Quy trình duyệt"
-            class="ms-1 fw-bold"></codx-label>
-        </button>
-      </div>
-    </div>
   </ng-template>
 
   <ng-template #body>
-    <!-- <div class="tab-horizone h-od-tab ">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <div class="tab-horizone h-od-tab h-100">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
         <li [ngbNavItem]="1">
           <a ngbNavLink>
-            <div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2 mt-1"
-                [ngClass]="{'text-primary':active===1}"></i><span>
-                <codx-label name="lblAbstract" [formModel]="itemDetailTemplate.formModel" default="Mô tả ngắn gọn"
-                  class="ms-1 fw-bold"></codx-label>
-              </span></div>
-          </a>
-          <ng-template ngbNavContent>
-            <div class="summary mt-2">
-              {{ itemDetail?.abstract }}
+            <div class="d-flex align-item-center">
+              <i
+                class="icon-info icon-16 me-2"
+                [ngClass]="{ 'text-primary': itemDetailStt === 1 }"
+              ></i
+              ><span
+                ><codx-label
+                  name="lblAbstract"
+                  [formModel]="itemDetailTemplate.formModel"
+                  default="Mô tả ngắn gọn"
+                  class="ms-1 fw-bold"
+                ></codx-label
+              ></span>
             </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container *ngIf="itemDetail?.abstract; else defaulEmpt">
+              <div class="summary mt-2" *ngIf="itemDetailStt == '1'">
+                {{ itemDetail?.abstract }}
+              </div>
+            </ng-container>
           </ng-template>
         </li>
         <li [ngbNavItem]="2">
           <a ngbNavLink>
-            <codx-label name="lblBusiness" [formModel]="itemDetailTemplate.formModel" default="Công việc"
-              class="ms-1 fw-bold"></codx-label>
-            <ng-template ngbNavContent>
-              <ng-container *ngIf="taskViews[0].length>0">
-                <codx-treeview #treeAdd id="treeAdd" [data]="taskViews[0]" [showSearch]="false"
-                  [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
-                </codx-treeview>
+            <div class="d-flex align-item-center">
+              <i
+                class="icon-format_list_numbered icon-16 me-2"
+                [ngClass]="{ 'text-primary': itemDetailStt === 2 }"
+              ></i
+              ><span>
+                <codx-label
+                  name="lblBusiness"
+                  [formModel]="itemDetailTemplate.formModel"
+                  default="Công việc"
+                  class="ms-1 fw-bold"
+                ></codx-label
+              ></span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container *ngIf="taskViews != null; else defaulEmpt">
+              <ng-container *ngIf="taskViews != null">
+                <codx-treeview
+                  #treeAdd
+                  id="treeAdd"
+                  [data]="taskViews[0]"
+                  [showSearch]="false"
+                  [itemTemplate]="templateorg"
+                  [autoLoad]="false"
+                  [isOutput]="true"
+                  [isLoadChild]="false"
+                ></codx-treeview>
               </ng-container>
-            </ng-template>
-          </a>
-        </li>
-        <li [ngbNavItem]="3">
-          <a ngbNavLink>
-            <i class="icon-people_alt icon-16"></i>
-            <codx-label name="lblApprovalTrans" [formModel]="itemDetailTemplate.formModel" default="Quy trình duyệt"
-              class="ms-1 fw-bold"></codx-label>
-            <ng-template ngbNavContent>
-              <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
-              </lib-view-approval-process>
-            </ng-template>
-          </a>
-        </li>
-      </ul>
-
-    </div> -->
-
-    <!-- <div class="tab-horizone h-od-tab h-100">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-        <li [ngbNavItem]="1">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center"><i class="fa-solid fa-user-tag me-2 mt-1"
-                [ngClass]="{'text-primary':active===1}"></i><span>Nơi nhận</span></div>
-          </a>
-          <ng-template ngbNavContent>
-            <h1>...</h1>
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="2">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center"><i class="icon-format_list_numbered me-2"
-                [ngClass]="{'text-primary':active===2}"></i><span>Công việc</span></div>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container *ngIf="taskViews[0].length>0">
-              <codx-treeview #treeAdd id="treeAdd" [data]="taskViews[0]" [showSearch]="false"
-                [itemTemplate]="templateorg" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false">
-              </codx-treeview>
             </ng-container>
           </ng-template>
         </li>
         <li [ngbNavItem]="3">
           <a ngbNavLink>
-            <div class="d-flex align-item-center"><i class="icon-info me-2"
-                [ngClass]="{'text-primary':active===3}"></i><span>Chi tiết</span></div>
+            <div class="d-flex align-item-center">
+              <i
+                class="icon-people_alt icon-16 me-2"
+                [ngClass]="{ 'text-primary': itemDetailStt === 3 }"
+              ></i
+              ><span>
+                <codx-label
+                  name="lblApprovalTrans"
+                  [formModel]="itemDetailTemplate.formModel"
+                  default="Quy trình duyệt"
+                  class="ms-1 fw-bold"
+                ></codx-label
+              ></span>
+            </div>
           </a>
           <ng-template ngbNavContent>
-            <lib-view-approval-process [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
-            </lib-view-approval-process>
+            <ng-container *ngIf="itemDetailStt === 3; else defaulEmpt">
+              <codx-approval-step
+                [transID]="transID"
+                [approveStatus]="itemDetail?.approveStatus"
+              >
+              </codx-approval-step>
+            </ng-container>
           </ng-template>
         </li>
       </ul>
       <div [ngbNavOutlet]="nav" class="pt-5"></div>
-    </div> -->
-
-    <div class="container mb-2">
-      <div class="summary mt-2" *ngIf="itemDetailStt == '1'">
-        {{ itemDetail?.abstract }}
-      </div>
-      <div class="list_Of_Jobs mb-2" *ngIf="itemDetailStt == '2'">
-        <ng-container *ngIf="taskViews != null">
-          <codx-treeview #treeAdd id="treeAdd" [data]="taskViews[0]" [showSearch]="false" [itemTemplate]="templateorg"
-            [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"></codx-treeview>
-        </ng-container>
-        <ng-container *ngIf="taskViews == null" [ngTemplateOutlet]="defaulEmpt">
-        </ng-container>
-      </div>
-      <div *ngIf="itemDetailStt == '3'" class="mb-2">
-        <codx-approval-step [transID]="transID" [approveStatus]="itemDetail?.approveStatus">
-        </codx-approval-step>
-      </div>
     </div>
   </ng-template>
 
   <ng-template #footer>
-    <!-- <codx-approval-tabs [transID]="itemDetail?.transID"></codx-approval-tabs> -->
-    <codx-tabs [entityName]="formModel.entityName" [objectID]="itemDetail?.transID" [funcID]="formModel.funcID">
+    <codx-tabs
+      [entityName]="formModel.entityName"
+      [objectID]="itemDetail?.transID"
+      [funcID]="formModel.funcID"
+    >
     </codx-tabs>
   </ng-template>
-
-  <!-- <ng-template #footer class="task-info">
-    <div class="codx_e-header">
-      <div class="d-flex align-items-center btn-tabs">
-        <button
-          class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailDataStt == '1'"
-          (click)="clickChangeItemDetailDataStatus('1')"
-        >
-          <i class="icon-history icon-16"></i>
-          <span class="ms-2 fw-bold">Lịch sử</span>
-        </button>
-        <button
-          class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailDataStt == '2'"
-          (click)="clickChangeItemDetailDataStatus('2')"
-        >
-          <i class="icon-message icon-16"></i>
-          <codx-label
-            name="lblDiscussion"
-            [formModel]="itemDetailTemplate.formModel"
-            default="Thảo luận"
-            class="ms-2 fw-bold"
-          ></codx-label>
-        </button>
-        <button
-          class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailDataStt == '3'"
-          (click)="clickChangeItemDetailDataStatus('3')"
-        >
-          <i class="icon-attach icon-16"></i>
-          <codx-label
-            name="lblAttachment"
-            [formModel]="itemDetailTemplate.formModel"
-            default="Đính kèm"
-            class="ms-2 fw-bold"
-          ></codx-label>
-        </button>
-        <button
-          class="btn btn-white text-dark me-1"
-          [class.active]="itemDetailDataStt == '4'"
-          (click)="clickChangeItemDetailDataStatus('4')"
-        >
-          <i class="icon-insert_link icon-16"></i>
-          <codx-label
-            name="lblLink"
-            [formModel]="itemDetailTemplate.formModel"
-            default="Liên kết"
-            class="ms-2 fw-bold"
-          >
-          </codx-label>
-        </button>
-      </div>
-    </div>
-  </ng-template> -->
 
   <ng-template #templateorg let-data>
     <div class="container-fluid justify-content-between d-flex">
       <div class="d-flex align-items-top mt-5">
-        <codx-temp-full [imageId]="data?.userID" [imageObjType]="'AD_Users'" [title]="data?.userName" [titleLine]="2"
-          [subTitle]="data?.positionNameCreate" [desc]="data?.taskName" [dataItem]="data" [footer]="footerTask">
+        <codx-temp-full
+          [imageId]="data?.userID"
+          [imageObjType]="'AD_Users'"
+          [title]="data?.userName"
+          [titleLine]="2"
+          [subTitle]="data?.positionNameCreate"
+          [desc]="data?.taskName"
+          [dataItem]="data"
+          [footer]="footerTask"
+        >
         </codx-temp-full>
       </div>
-      <div class="mt-5 ms-5 justify-content-end w-120px text-center" *ngIf="data?.items?.length == 0">
-        <codx-vll [name]="'L0614'" [value]="data?.status" [showText]="true" [showBgColor]="true"
-          [formModel]="formModel"></codx-vll>
+      <div
+        class="mt-5 ms-5 justify-content-end w-120px text-center"
+        *ngIf="data?.items?.length == 0"
+      >
+        <codx-vll
+          [name]="'L0614'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          [formModel]="formModel"
+        ></codx-vll>
         <div class="progress h-6px w-100 mt-2">
-          <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="data?.percentage" aria-valuenow="50"
-            aria-valuemin="0" aria-valuemax="100"></div>
+          <div
+            class="progress-bar bg-primary"
+            role="progressbar"
+            [style.width.%]="data?.percentage"
+            aria-valuenow="50"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
         </div>
         <div class="d-flex mt-2">
           <span class="icon-schedule icon-16 text-gray-600"></span>
           <span class="ms-2 text-dark">{{
             data?.dueDate | date: "dd/MM/yyyy"
-            }}</span>
+          }}</span>
         </div>
       </div>
     </div>
@@ -309,11 +306,14 @@
 <ng-template #footerTask let-data>
   <div class="d-flex align-items-center mt-2" [style.marginLeft.px]="50">
     <div class="d-flex align-items-center">
-      <span class="icon-person me-1" [class.text-muted]="data?.items.length == 0"
-        [class.text-primary]="data?.items.length > 0"></span>
+      <span
+        class="icon-person me-1"
+        [class.text-muted]="data?.items.length == 0"
+        [class.text-primary]="data?.items.length > 0"
+      ></span>
       <span class="text-dark" *ngIf="data?.items.length > 0">{{
         data?.items.length
-        }}</span>
+      }}</span>
     </div>
     <div class="d-flex align-items-center ms-6">
       <span class="icon-chat_bubble_outline me-1 text-muted"></span>
@@ -329,7 +329,11 @@
   <div class="user_Info">
     <div class="d-flex">
       <div class="me-4">
-        <codx-img #image [objectId]="user.owner" objectType="AD_Users"></codx-img>
+        <codx-img
+          #image
+          [objectId]="user.owner"
+          objectType="AD_Users"
+        ></codx-img>
       </div>
       <div class="info">
         <h1>
@@ -338,10 +342,12 @@
         <div>
           {{ user.positionName }}
         </div>
-        <div *ngIf="
+        <div
+          *ngIf="
             user.category == '1' || user.category == '3';
             else templatetaskName
-          ">
+          "
+        >
           {{ user.memo }}
         </div>
         <ng-template #templatetaskName>
@@ -369,7 +375,10 @@
   <div class="container">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
         <div class="fw-bold mt-1 text-center">
           {{ "SYS011" | mssg | async }}
         </div>

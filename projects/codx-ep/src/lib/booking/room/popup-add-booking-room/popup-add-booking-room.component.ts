@@ -28,11 +28,13 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
+import { Equipments } from '../../../models/equipments.model';
 
 export class Device {
   id;
   text = '';
   isSelected = false;
+  icon='';
 }
 
 @Component({
@@ -53,7 +55,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
   dialogRef: DialogRef;
   modelPage: ModelPage;
 
-  tempAtender:{userId: string, userName:string, roleType:string,status:string,objectType:string,optional:boolean};
+  tempAtender:{userId: string, userName:string, roleType:string,status:string,objectType:string,optional:boolean,modifiedOn:string};
   attendeesList=[];
   tmpAttendeesList=[];
   grvBookingRoom:any;
@@ -72,6 +74,8 @@ export class PopupAddBookingRoomComponent implements OnInit {
   chosenDate = null;
   CbxName: any;
   link = '';
+  attObjectID:any;
+  attQuantity:any;
   startTime: any = null;
   endTime: any = null;
   tmpStartDate: any;
@@ -82,32 +86,42 @@ export class PopupAddBookingRoomComponent implements OnInit {
   beginMinute = 0;
   endHour = 24;
   endMinute = 59;
-
+  tempDate= new Date();
+  subHeaderText='Đặt phòng họp';
   titleAction = 'Thêm mới';
   title="đặt phòng";
   tabInfo: any[] = [
     {
       icon: 'icon-info',
       text: 'Thông tin chung',
-      name: 'tabGeneralInfo'
+      name: 'tabGeneralInfo',
+      subName: 'Thông tin chung',
+      subText: 'Thông tin chung',
+      
     },
     {
-      icon: 'icon-person_add_alt_1',
+      icon: 'icon-person_outline',
       text: 'Người tham dự',
-      name: 'tabPeopleInfo'
+      name: 'tabPeopleInfo',      
+      subName: 'Thành viên tham gia buổi họp',
+      subText: 'Thành viên tham gia buổi họp',
     },
     {
       icon: 'icon-layers',
       text: 'Văn phòng phẩm',
-      name: 'tabStationery',
+      name: 'tabStationery',   
+      subName: 'VPP của buổi họp',
+      subText: 'VPP của buổi họp',
     },
     {
       icon: 'icon-tune',
       text: 'Thông tin khác',
-      name: 'tabMoreInfo',
+      name: 'tabMoreInfo',   
+      subName: 'Thông tin tham chiếu',
+      subText: 'Thông tin tham chiếu',
     },
   ];
-
+  lstEquipment=[];
   funcID:string;
   isAdd = false;
   range: any;
@@ -160,30 +174,21 @@ export class PopupAddBookingRoomComponent implements OnInit {
           this.lstDeviceRoom.push(device);
         }); 
           
-        if(!this.isAdd && this.fGroupAddBookingRoom.value.equipments!=null){
-          
-            let deviceArray=this.fGroupAddBookingRoom.value.equipments.split("|");
-            let availableDevice= deviceArray[0];
-            let pickedDevice= deviceArray[1];
-            
-            this.lstDeviceRoom.forEach(device =>{
-              availableDevice.split(";").forEach(equip=>{
-                if(device.id==equip){               
-                  this.tempArray.push(device); 
-                }
-              });     
+        if(!this.isAdd && this.fGroupAddBookingRoom.value.equipments!=null){          
+          this.fGroupAddBookingRoom.value.equipments.forEach(equip=>{
+            let tmpDevice = new Device();
+            tmpDevice.id=equip.equipmentID;
+            tmpDevice.isSelected= equip.isPicked;
+            this.lstDeviceRoom.forEach(vlDevice=>{
+              if(tmpDevice.id==vlDevice.id){
+                tmpDevice.text=vlDevice.text;
+                tmpDevice.icon=vlDevice.icon;
+              }
             })
-            this.tempArray.forEach(device=>{
-              pickedDevice.split(";").forEach(equip=>{
-                if(device.id==equip){               
-                  device.isSelected=true;
-                }
-              });  
-            })            
-                  
-          this.tmplstDevice = JSON.parse(JSON.stringify(this.tempArray)); 
+            this.tmplstDevice.push(tmpDevice);
+          })
         } 
-        this.lstDeviceRoom = JSON.parse(JSON.stringify(this.lstDeviceRoom));
+        //this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
       });
 
       if(this.isAdd){
@@ -195,6 +200,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
           objectType:'AD_Users',
           roleType:'1',
           optional:false,
+          modifiedOn: this.setStatusTime(new Date()),
         };
         this.curUser=this.tempAtender;
         this.changeDetectorRef.detectChanges();
@@ -222,6 +228,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
                 objectType:'AD_Users',
                 roleType:people.roleType,
                 optional:people.optional,
+                modifiedOn:this.setStatusTime(people.modifiedOn),
               };
               if(this.tempAtender.userId!=this.authService.userValue.userID){                
                 this.attendeesList.push(this.tempAtender);
@@ -316,18 +323,21 @@ export class PopupAddBookingRoomComponent implements OnInit {
       });     
     this.changeDetectorRef.detectChanges();   
   }
-  // setStatusTime(modifiedOn: any){
-  //   let dateSent = new Date(modifiedOn);
-  //   let currentDate=new Date();
-  //   var day= Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate()) ) /(1000 * 60 * 60 * 24)).toString();
-  //   if(day!='0'){
-  //     return day+" ngày trước"
-  //   }
-  //   else{
-  //     var hour= currentDate.getHours() - dateSent.getHours();
-  //     return hour+" giờ trước"       
-  //   }
-  // }
+  setStatusTime(modifiedOn: any){
+    let dateSent = new Date(modifiedOn);
+    let currentDate=new Date();
+    var day= Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate()) ) /(1000 * 60 * 60 * 24)).toString();
+    if(day!='0'){
+      return day+" ngày trước";
+    }
+    else if(currentDate.getHours() - dateSent.getHours()>1){
+      var hour= currentDate.getHours() - dateSent.getHours();
+      return hour+" giờ trước";   
+    }
+    else{
+      return "Gần đây";
+    }
+  }
 
   beforeSave(option: any) {
     let itemData = this.fGroupAddBookingRoom.value;
@@ -352,22 +362,15 @@ export class PopupAddBookingRoomComponent implements OnInit {
         this.fGroupAddBookingRoom.patchValue({ hours: hours });
       }
     } 
-    let pickedEquip = '';
-    let availableEquip = '';
+    
     this.tmplstDevice.forEach((element) => {
-      if (availableEquip == '') {
-        availableEquip += element.id;
-      } else {
-        availableEquip += ';' + element.id;
-      }
-      if (element.isSelected) {
-        if (pickedEquip == '') {
-          pickedEquip += element.id;
-        } else {
-          pickedEquip += ';' + element.id;
-        }
-      }
+        let tempEquip = new Equipments();
+        tempEquip.equipmentID = element.id;
+        tempEquip.createdBy = this.authService.userValue.userID;
+        tempEquip.isPicked= element.isSelected;
+        this.lstEquipment.push(tempEquip);      
     });
+
     if(this.fGroupAddBookingRoom.value.resourceID instanceof Object){
       this.fGroupAddBookingRoom.patchValue({resourceID:this.fGroupAddBookingRoom.value.resourceID[0]})
     }
@@ -383,8 +386,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
       attendees:this.fGroupAddBookingRoom.value.attendees,
       startDate:new Date(tmpBookingOn.getFullYear(),tmpBookingOn.getMonth(),tmpBookingOn.getDate(),this.tmpStartDate.getHours(),this.tmpStartDate.getMinutes(), 0),
       endDate:new Date(tmpBookingOn.getFullYear(),tmpBookingOn.getMonth(),tmpBookingOn.getDate(),this.tmpEndDate.getHours(),this.tmpEndDate.getMinutes(), 0),
-       
-      //equipments: availableEquip + '|' + pickedEquip,
+      equipments:this.lstEquipment,
     });      
        
     this.attendeesList.forEach(item=>{
@@ -398,7 +400,15 @@ export class PopupAddBookingRoomComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe(async res => {
         if (res.save || res.update) {
-          if (true) {
+          if(res.save){
+            this.attObjectID=res.save.recID;
+            this.attQuantity=res.save.attachments;
+          }
+          else{            
+            this.attObjectID=res.update.recID;
+            this.attQuantity=res.update.attachments;
+          }
+          if (this.attObjectID || this.attQuantity > 0) {
             this.attachment.objectId = this.fGroupAddBookingRoom.value.recID;
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
@@ -408,7 +418,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
               }
             );
           }
-          if (res.update) {
+          if (res.update.attachments > 0) {
             (this.dialogRef.dataService as CRUDService)
               .update(res.update)
               .subscribe();
@@ -465,6 +475,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
         objectType: 'AD_Users',
         roleType:'3',
         optional:false,
+        modifiedOn:this.setStatusTime(new Date())
       };
       
       this.lstUser.push(this.tempAtender);
@@ -493,6 +504,7 @@ export class PopupAddBookingRoomComponent implements OnInit {
         objectType: 'AD_Users',
         roleType:'3',
         optional:true,
+        modifiedOn:this.setStatusTime(new Date())
       };
       
       this.lstUserOptional.push(this.tempAtender);      
@@ -571,18 +583,20 @@ export class PopupAddBookingRoomComponent implements OnInit {
   valueCbxRoomChange(event?) {  
     if(event?.data!=null && event?.data !=""){      
       this.tmplstDevice=[];
-      var cbxCar = event.component.dataService.data;
-      cbxCar.forEach(element => {
-        if (element.ResourceID == event.data) {          
-          var carEquipments= element.Equipments.split(";");
-          carEquipments.forEach(item=>{
-            this.lstDeviceRoom.forEach(device=>{
-              if(item==device.id){ 
-                device.isSelected=false;
-                this.tmplstDevice.push(device);                
-              }              
-            })
-          })          
+      var cbxRoom = event.component.dataService.data;
+      cbxRoom.forEach(element => {
+        if (element.ResourceID == event.data) { 
+          element.Equipments.forEach(item => {
+            let tmpDevice= new Device();
+            tmpDevice.id=item.EquipmentID;
+            tmpDevice.isSelected=false;    
+            this.vllDevices.forEach((vlItem) => {
+              if(tmpDevice.id== vlItem.value){
+                tmpDevice.text=vlItem.text;
+              }
+            });       
+            this.tmplstDevice.push(tmpDevice);
+          });                 
         }
       });
     } 

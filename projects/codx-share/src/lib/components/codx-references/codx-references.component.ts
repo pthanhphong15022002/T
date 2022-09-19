@@ -44,17 +44,6 @@ export class CodxReferencesComponent implements OnInit {
 
   ngOnInit(): void { }
   ngAfterViewInit(): void {
-    //data view test
-    // this.dataReferences = [
-    //   {
-    //     refType : "OD_Dispatches",
-    //     memo: 'Công văn dự án 1000 USD',
-    //     createByName: 'Lê Thi Hoài Thương',
-    //     createdOn: new Date(),
-    //     recID: '00cfeb10-a433-43e3-b6b3-876e25bf20a3',
-    //   },
-    // ];
-    //end data test
   }
 
   uploadFile() {

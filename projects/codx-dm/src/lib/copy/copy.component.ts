@@ -45,7 +45,7 @@ export class CopyComponent implements OnInit {
   loadedFolder: boolean;
   setting: any;  
   title = 'Thông báo';
-  titleFullName = 'Tên';
+  titleFullName = 'Nhập lại tên mới';
   titleSave = "Lưu";
   titleMessage = "Tên bắt buộc.";
   titleRequired = "Tên bắt buộc.";

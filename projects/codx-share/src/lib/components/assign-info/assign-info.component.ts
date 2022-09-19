@@ -25,6 +25,7 @@ import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import * as moment from 'moment';
 import { TM_TaskGroups } from 'projects/codx-tm/src/lib/models/TM_TaskGroups.model';
+import { tmpReferences } from '../codx-tasks/model/task.model';
 @Component({
   selector: 'app-assign-info',
   templateUrl: './assign-info.component.html',
@@ -40,6 +41,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   listUserDetail: any[] = [];
   listTodo: TaskGoal[] = [];
   listTaskResources: tmpTaskResource[] = [];
+  dataReferences = [] ;
+  vllRefType ='TM018'
   todoAddText: any;
   disableAddToDo = true;
   grvSetup: any;
@@ -132,7 +135,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           //   return response[response.taskID] != response['_uuid'];
           // };
           this.task = response;
-
           this.loadingAll = true;
           this.openInfo();
         }
@@ -181,7 +183,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       if (this.taskParent?.taskGroupID)
         this.logicTaskGroup(this.taskParent?.taskGroupID);
     }
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -433,14 +434,16 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       }
       //  }
     });
-    if (listUserID != '')
+    if (listUserID != ''){
       listUserID = listUserID.substring(0, listUserID.length - 1);
-    if (listDepartmentID != '')
+      this.valueSelectUser(listUserID);
+    }
+    
+    if (listDepartmentID != ''){
       listDepartmentID = listDepartmentID.substring(
         0,
         listDepartmentID.length - 1
       );
-    if (listDepartmentID != '') {
       this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
         if (res) {
           assignTo += res;
@@ -448,7 +451,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           this.valueSelectUser(assignTo);
         }
       });
-    } else this.valueSelectUser(listUserID);
+    }
   }
 
   valueSelectUser(assignTo) {
