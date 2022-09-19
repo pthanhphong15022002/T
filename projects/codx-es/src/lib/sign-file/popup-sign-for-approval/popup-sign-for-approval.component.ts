@@ -22,7 +22,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { threadId } from 'worker_threads';
 import { CodxEsService } from '../../codx-es.service';
-import { PdfViewComponent } from '../pdf-view/pdf-view.component';
+import { PdfComponent } from '../pdf/pdf.component';
 import { PopupADRComponent } from '../popup-adr/popup-adr.component';
 
 @Component({
@@ -46,7 +46,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.user = this.authStore.get();
   }
 
-  @ViewChild('pdfView') pdfView: PdfViewComponent;
+  @ViewChild('pdfView') pdfView: PdfComponent;
 
   isAfterRender: boolean = false;
   isApprover = true;
@@ -144,7 +144,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                 result: false,
                 mode: mode,
               };
-              this.notify.notifyCode('E04372');
+              this.notify.notifyCode('SYS021');
               this.dialog && this.dialog.close(result);
             }
           });
@@ -253,7 +253,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
               result: false,
               mode: this.mode,
             };
-            this.notify.notifyCode('E04372');
+            this.notify.notifyCode('SYS021');
             dialog1 && dialog1.close(result);
             this.dialog && this.dialog.close(result);
           }

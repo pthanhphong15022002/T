@@ -187,12 +187,11 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    let equipments = '';
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
         let tempEquip = new Equipments();
         tempEquip.equipmentID = element.id;
-        tempEquip.createBy = this.authService.userValue.userID;
+        tempEquip.createdBy = this.authService.userValue.userID;
         this.lstEquipment.push(tempEquip);
       }
     });
@@ -222,7 +221,11 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res) {
+        if (res.save) {
+          this.imageUpload.onSaveFile(res.save.recID)            
+          this.dialogRef.close();
+        }
+        if (res.update) {
           this.imageUpload
             .updateFileDirectReload(res.update.recID)
             .subscribe((result) => {
@@ -230,7 +233,9 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
                 this.loadData.emit();
               }
             });
-          this.dialogRef.close();
+          (this.dialogRef.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
         }
         return;
       });

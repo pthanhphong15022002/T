@@ -60,7 +60,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   action: any;
   linkURL = '';
   resources: CO_Resources[] = [];
-  listUserID= []
+  listUserID = []
   template = new CO_MeetingTemplates();
   listRoles: any;
   idUserSelected: any;
@@ -121,7 +121,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
   ngAfterViewInit(): void {
     if (this.action == 'add') {
       this.meeting.meetingType = '1';
@@ -571,13 +571,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     var arrUser = resource.split(';');
     this.listUserID = this.listUserID.concat(arrUser);
     this.api
-    .execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EmployeesBusiness',
-      'GetListEmployeesByUserIDAsync',
-      JSON.stringify(resource.split(';'))
-    )
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(resource.split(';'))
+      )
       .subscribe((res) => {
         if (res && res.length > 0) {
           for (var i = 0; i < res.length; i++) {

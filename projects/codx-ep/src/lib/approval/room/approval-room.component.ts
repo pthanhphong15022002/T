@@ -1,6 +1,7 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   DialogRef,
+  FormModel,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -8,6 +9,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddBookingRoomComponent } from '../../booking/room/popup-add-booking-room/popup-add-booking-room.component';
+import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
   selector: 'approval-room',
@@ -20,6 +22,8 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   modelResource?: ResourceModel;
@@ -37,6 +41,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   jobs;
   itemDetail;
   preStepNo;
+  formModel: FormModel;
   button;
   fields;
   itemSelected: any;
@@ -44,10 +49,17 @@ export class ApprovalRoomsComponent extends UIComponent {
   dataSelected: any;
   dialog!: DialogRef;
   
-  constructor(private injector: Injector) {
+  constructor(
+    private injector: Injector,
+    private codxEpService: CodxEpService,
+    ) {
     super(injector);
-
     this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -68,6 +80,8 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '1';
 
+    
+    
     this.fields = {
       id: 'bookingNo',
       subject: { name: 'title' },
@@ -112,12 +126,14 @@ export class ApprovalRoomsComponent extends UIComponent {
         model:{
           //panelLeftRef:this.panelLeft,
           eventModel:this.fields,
-          resourceModel:this.resourceField,
+          resourceModel:this.resourceField,//resource
           //template:this.cardTemplate,
           template4: this.resourceHeader,
-          template5: this.resourceTootip,
-          template6: this.footerTemplate,
-          template7: this.footerButton,
+          template5: this.resourceTootip,//tooltip
+
+          template6: this.footerButton,//header          
+          //template8: this.contentTmp,//content
+          //template7: this.footerButton,//footer
           statusColorRef:'vl003'
         },
       },
@@ -212,54 +228,5 @@ export class ApprovalRoomsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
-  }
-
-  setStyles(resourceType) {
-    let styles = {};
-    switch (resourceType) {
-      case '1':
-        styles = {
-          backgroundColor: '#104207',
-          color: 'white',
-        };
-        break;
-      case '2':
-        styles = {
-          backgroundColor: '#29b112',
-          color: 'white',
-        };
-        break;
-      case '6':
-        styles = {
-          backgroundColor: '#053b8b',
-          color: 'white',
-        };
-        break;
-      default:
-        styles = {};
-        break;
-    }
-
-    return styles;
-  }
-
-  setIcon(resourceType) {
-    let icon: string = '';
-    switch (resourceType) {
-      case '1':
-        icon = 'icon-calendar_today';
-        break;
-      case '2':
-        icon = 'icon-directions_car';
-        break;
-      case '6':
-        icon = 'icon-desktop_windows';
-        break;
-      default:
-        icon = '';
-        break;
-    }
-
-    return icon;
   }
 }

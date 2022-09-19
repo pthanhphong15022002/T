@@ -82,9 +82,17 @@
         }
         .kanban-board-body{
             min-height: 200px;
-            padding: 18px 6px 18px 12px;    
+            padding: 8px 5px 8px 5px;    
             background: #F0F2F5;    
         }
+        .processStep{
+            padding: 12px 8px 0px 12px;
+        }
+        .bg-footer{
+            margin-left:-12px;  margin-right:-8px;
+           
+        }
+      
     }
 
    

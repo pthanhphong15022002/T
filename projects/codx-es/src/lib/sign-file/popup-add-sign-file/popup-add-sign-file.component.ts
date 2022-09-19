@@ -45,8 +45,8 @@ export class PopupAddSignFileComponent implements OnInit {
 
   headerText = 'Thêm mới tài liệu';
 
-  currentTab = 0;
-  processTab = 0;
+  currentTab = 0; // buoc hiện tại
+  processTab = 0; // tổng bước đã đi qua
   formModel: FormModel;
   isAfterRender = false;
   cbxName: any = {};
@@ -164,30 +164,30 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.initForm();
                   }
                 });
-              if (this.lstFile.length > 0) {
-                this.fileService
-                  .copyFile(
-                    this.oSignFile.files[0].fileID,
-                    this.oSignFile.files[0].fileName,
-                    this.oSignFile.recID,
-                    1
-                  )
-                  .subscribe((newFile) => {
-                    if (newFile && newFile?.data) {
-                      let nFile = newFile?.data;
-                      let files = [];
-                      let file = new File();
-                      file.fileID = nFile.recID;
-                      file.fileName = nFile.fileName;
-                      file.eSign = true;
+              // if (this.lstFile.length > 0) {
+              //   this.fileService
+              //     .copyFile(
+              //       this.oSignFile.files[0].fileID,
+              //       this.oSignFile.files[0].fileName,
+              //       this.oSignFile.recID,
+              //       1
+              //     )
+              //     .subscribe((newFile) => {
+              //       if (newFile && newFile?.data) {
+              //         let nFile = newFile?.data;
+              //         let files = [];
+              //         let file = new File();
+              //         file.fileID = nFile.recID;
+              //         file.fileName = nFile.fileName;
+              //         file.eSign = true;
 
-                      files.push(file);
+              //         files.push(file);
 
-                      this.dialogSignFile &&
-                        this.dialogSignFile.patchValue({ files: files });
-                    }
-                  });
-              }
+              //         this.dialogSignFile &&
+              //           this.dialogSignFile.patchValue({ files: files });
+              //       }
+              //     });
+              // }
             }
           });
 
@@ -441,9 +441,11 @@ export class PopupAddSignFileComponent implements OnInit {
         });
       }
 
-      if (event.field == 'employeeID') {
+      if (event.field == 'owner') {
+        debugger;
         let employee = event.component?.itemsSelected[0];
         this.dialogSignFile.patchValue({
+          employeeID: employee?.employeeID,
           deptID: employee?.departmentID,
           divisionID: employee?.divisionID,
           companyID: employee?.companyID,
@@ -499,6 +501,31 @@ export class PopupAddSignFileComponent implements OnInit {
 
     //   this.cr.detectChanges();
     // }
+  }
+
+  getCurrentStepWhenEdit(oSignFile) {
+    if ((oSignFile || oSignFile != null) && this.isAddNew == false) {
+      if (oSignFile.files?.length > 0) {
+        let lstFile = oSignFile.files;
+        lstFile.forEach((element) => {
+          if (element?.areas?.length > 0) {
+            this.processTab = 3;
+            this.currentTab = 3;
+            return;
+          }
+        });
+
+        if (oSignFile.ApproveControl != 1) {
+          this.processTab = 1;
+          this.currentTab = 1;
+          return;
+        } else {
+          this.processTab = 2;
+          this.currentTab = 2;
+          return;
+        }
+      }
+    }
   }
 
   processIDChange(event) {

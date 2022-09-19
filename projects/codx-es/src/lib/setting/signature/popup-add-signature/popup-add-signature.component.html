@@ -172,11 +172,12 @@
 
         <codx-input
           type="Combobox"
-          name="combobox"
           [refValue]="'Users'"
           refType="P"
           field="userID"
+          [crrValue]="data.userID"
           [showInput]="false"
+          [multiple]="false"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -259,17 +260,17 @@
                 ></codx-img> -->
 
                 <codx-img
-                  #imageUpload
+                  #imgSignature1
                   class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                   [width]="80"
-                  [recId]="data.signature1"
-                  [objectId]="data.signature1 == null ? '' : data.recID + '1'"
+                  [objectId]="data.recID + '1'"
                   [objectType]="'ES_Signatures'"
                   data-kt-menu-trigger="click"
                   data-kt-menu-attach="parent"
                   data-kt-menu-placement="bottom-end"
                   data-kt-menu-flip="bottom"
-                  [isAllowEdit]="false"
+                  [isAllowEdit]="true"
+                  [funcId]="'ESS21'"
                 >
                 </codx-img>
               </div>
@@ -292,17 +293,17 @@
                 [recId]="data.signature2"
               ></codx-img> -->
               <codx-img
-                #imageUpload
+                #imgSignature2
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
-                [recId]="data.signature2"
-                [objectId]="data.signature2 == null ? '' : data.recID + '2'"
+                [objectId]="data.recID + '2'"
                 [objectType]="'ES_Signatures'"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
-                [isAllowEdit]="false"
+                [isAllowEdit]="true"
+                [funcId]="'ESS21'"
               >
               </codx-img>
             </div>
@@ -322,17 +323,17 @@
                 [recId]="data.stamp"
               ></codx-img> -->
               <codx-img
-                #imageUpload
+                #imgStamp
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
-                [recId]="data.stamp"
-                [objectId]="data.stamp == null ? '' : data.recID + 's'"
+                [objectId]="data.recID + 's'"
                 [objectType]="'ES_Signatures'"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
-                [isAllowEdit]="false"
+                [isAllowEdit]="true"
+                [funcId]="'ESS21'"
               >
               </codx-img>
             </div>
@@ -344,18 +345,28 @@
     </div>
 
     <div class="form-group row mt-3">
-      <div class="col-6">
+      <div class="col-4">
         <codx-label fiedName="OTPControl" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input
-          type="valuelist"
           field="oTPControl"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
         >
         </codx-input>
       </div>
-      <div class="col-6">
+      <div class="col-4">
+        <codx-label fiedName="OTPPin" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input
+          field="oTPPin"
+          [Group]="form.formGroup"
+          [formModel]="dialog.formModel"
+          [disabled]="data.otpControl == '3' ? false : true"
+        >
+        </codx-input>
+      </div>
+      <div class="col-4">
         <codx-label fiedName="SpanTime" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input
@@ -366,6 +377,91 @@
           [showSpinButton]="false"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
+          [disabled]="
+            data.otpControl == '1' || data.otpControl == '2' ? false : true
+          "
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="d-flex flex-stack fs-6 py-2">
+      <div class="fw-bolder text-primary">
+        <codx-label
+          [name]="'lblTitleCA'"
+          default="Thông tin CA"
+          [formModel]="dialog.formModel"
+        >
+        </codx-label>
+      </div>
+      <span class="text-end align-items-end">
+        <a
+          class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+          [style.visibility]="data.signatureType == '1' ? 'visible' : 'hidden'"
+          (click)="popupUploadFile($event)"
+        >
+          <span class="icon-upload btn-text-primary me-2"></span>
+          <codx-label
+            name="lblUploadCA"
+            default="Upload CA"
+            [formModel]="dialog.formModel"
+          ></codx-label>
+        </a>
+      </span>
+    </div>
+    <div>
+      <codx-attachment
+        #attachment
+        [objectType]="form.formModel?.entityName"
+        hideBtnSave="1"
+        hideFolder="1"
+        hideUploadBtn="1"
+        hideDes="1"
+        [functionID]="'ESS21'"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        [objectId]="data.recID"
+        [allowMultiFile]="0"
+        [idBrowse]="'add'"
+        [displayThumb]="true"
+      >
+      </codx-attachment>
+    </div>
+    <div class="form-group row mt-3">
+      <div class="col-4">
+        <codx-label fiedName="StartedOn" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input
+          type="datetime"
+          field="startedOn"
+          format="d"
+          [formModel]="dialog.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        >
+        </codx-input>
+      </div>
+      <div class="col-4">
+        <codx-label fiedName="ExpiredOn" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input
+          type="datetime"
+          field="expiredOn"
+          format="d"
+          [formModel]="dialog.formModel"
+          [Group]="form.formGroup"
+          [disabled]="data.signatureType == '1' ? true : false"
+        >
+        </codx-input>
+      </div>
+      <div class="col-4">
+        <codx-label fiedName="Password" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input
+          type="password"
+          field="password"
+          [Group]="form.formGroup"
+          [formModel]="dialog.formModel"
+          [disabled]="data.signatureType == '1' ? true : false"
         >
         </codx-input>
       </div>

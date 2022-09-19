@@ -194,18 +194,22 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       option.DataService = this.viewBase.dataService;
       option.FormModel = this.viewBase.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(
+      let dialogAdd = this.callfunc.openSide(
         PopupAddSignatureComponent,
         { isAdd: true },
         option
       );
-      this.dialog.closed.subscribe((x) => {
+      dialogAdd.closed.subscribe((x) => {
         if (x.event == null && this.viewBase.dataService.hasSaved)
           this.viewBase.dataService
             .delete([this.viewBase.dataService.dataSelected])
             .subscribe((x) => {
               this.cr.detectChanges();
             });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.viewBase.dataService.update(x.event).subscribe();
+        }
       });
     });
   }
@@ -223,11 +227,19 @@ export class SignatureComponent implements OnInit, AfterViewInit {
           option.DataService = this.viewBase?.dataService;
           option.FormModel = this.viewBase?.formModel;
 
-          this.dialog = this.callfunc.openSide(
+          let dialogEdit = this.callfunc.openSide(
             PopupAddSignatureComponent,
             [evt, false],
             option
           );
+          dialogEdit.closed.subscribe((x) => {
+            if (x.event) {
+              x.event.modifiedOn = new Date();
+              this.viewBase.dataService.update(x.event).subscribe((res) => {
+                console.log('update', res);
+              });
+            }
+          });
         });
     }
   }
