@@ -5,6 +5,7 @@ import {
   SimpleChanges,
   ChangeDetectorRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -20,10 +21,12 @@ import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 
+
 @Component({
   selector: 'lib-view-detail',
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ViewDetailComponent implements OnInit {
   constructor(

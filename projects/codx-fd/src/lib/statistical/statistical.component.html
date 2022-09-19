@@ -1,41 +1,34 @@
-<!-- <codx-views #view [funcID]="funcID" [service]="functionList?.module" [entityName]="functionList?.entityName" [views]="views"></codx-views> -->
+<codx-views #view [views]="views" [autoLoad]="false"></codx-views>
 
-<div #panelLeft>
+<ng-template #panelLeft>
     <div class="page-home page-master p-6 bg-body rounded-4">
         <div class="d-flex flex-column">
             <div class="d-flex justify-content-between">
                 <div class="d-flex" #control>
-                    <div class="w-110 h-38">
+                    <div class="w-170 h-38">
                         <codx-input class="form-control pr-1" type="valuelist" field="vllOrganize" refValue="L1483"
-                            (valueChange)="valueChange($event, 'vllOrganize')">
+                            (valueChange)="valueChange($event)">
                         </codx-input>
                     </div>
-                    <div class="w-110 h-38 left-5">
-                        <codx-input class="form-control pr-1" type="combobox" field="Organize" [refValue]="comboboxName"
-                            (valueChange)="valueChange($event, 'Organize')">
+                    <div class="w-170 h-38 left-5">
+                        <codx-input class="form-control pr-1" type="combobox" field="Organize" [refValue]="cbb"
+                            (valueChange)="valueChange($event)">
                         </codx-input>
                     </div>
-                    <div class="w-110 h-38 left-5">
-                        <codx-input type="valuelist" class="form-control pr-1" placeholder="" ngDefaultControl
-                            refValue="L1436" field="typeTime" [crrValue]="typeTime"
-                            (valueChange)="changeTypeTime($event, 'typeTime')">
-                        </codx-input>
-                    </div>
-                    <div class="w-110 h-38 left-5">
-                        <codx-input type="datetime" [dataformat]="typeTimeName" class="form-control" [crrValue]="today"
-                            field="today" ngDefaultControl (valueChange)="changeTime($event, 'today')">
-                        </codx-input>
+                    <div class="w-120 h-38 left-5">
+                        <codx-dropdown-calendar [cssClass]="'w-100'" [cssPopup]="'h-400px w-500px border'"
+                            (change)="dateChange($event)"></codx-dropdown-calendar>
                     </div>
                 </div>
                 <div class="d-flex">
-                    <div class="h-38 w-88">
+                    <div class="h-38 w-120">
                         <codx-input type="valuelist" class="pr-1" placeholder="" ngDefaultControl refValue="L1451"
                             field="edit" [crrValue]="cardType" (valueChange)="changeCardType($event)">
                         </codx-input>
                     </div>
                     <div class="h-38 w-88 left-5">
                         <span class="btn btn-sm btn-outline-secondary me-1 color-black"
-                            [class.active]="typeBallot == TYPE_Ballot.Ballot_SENDED"
+                            [class.active]="ballot_SENDED"
                             (click)="changeTypeCoins(TYPE_Ballot.Ballot_SENDED)">
                             <codx-label name="lblBallotSended" formName="FED_TagObjects" default="Phiếu cho">
                             </codx-label>
@@ -43,7 +36,7 @@
                     </div>
                     <div class="h-38 w-88">
                         <span class="btn btn-sm btn-outline-secondary color-black"
-                            [class.active]="typeBallot == TYPE_Ballot.Ballot_RECEIVED"
+                            [class.active]="ballot_RECEIVED"
                             (click)="changeTypeCoins(TYPE_Ballot.Ballot_RECEIVED)">
                             <codx-label name="lblBallotReceived" formName="FED_TagObjects" default="Phiếu nhận">
                             </codx-label>
@@ -53,256 +46,266 @@
             </div>
             <div class="d-flex flex-column" id="erm_content">
                 <div class="container pt-3">
-                    <div class="row up">
-                        <div class="col-5 pr-6">
-                            <div class="chart">
+                    <ng-container #statistical_up>
+                        <div class="row up">
+                            <div class="col-5 pr-6">
+                                <div class="chart">
+                                    <div style="display: block">
+                                        <div class="control-section">
+                                            <div class="col-md-9">
+                                                <div *ngIf="dataReceived.length == 0">
+                                                    <ejs-chart style='display:block;' #chart id='chartcontainer'
+                                                        [primaryXAxis]='primaryXAxis' [tooltip]='tooltip'
+                                                        [height]="height" [primaryYAxis]='primaryYAxis' [title]=''
+                                                        [width]="width">
+                                                        <e-series-collection>
+                                                            <e-series [dataSource]='' fill="#0C51CB" type='Column'
+                                                                xName='cardTypeName' yName='receiveQuanlity'
+                                                                name='Phiếu nhận' width=1> </e-series>
+                                                            <e-series [dataSource]='' fill="#00DCB5" type='Column'
+                                                                xName='cardTypeName' yName='sendQuanlity'
+                                                                name='Phiếu cho' width=1> </e-series>
+                                                        </e-series-collection>
+                                                    </ejs-chart>
+                                                </div>
+                                                <div *ngIf="dataReceived.length !=0">
+                                                    <ejs-chart style='display:block;' #chart id='chartcontainer'
+                                                        [primaryXAxis]='primaryXAxis' [tooltip]='tooltip'
+                                                        [height]="height" [primaryYAxis]='primaryYAxis' [title]=''
+                                                        [width]="width">
+                                                        <e-series-collection>
+                                                            <e-series
+                                                                *ngIf="typeBallot == 'RECEIVED' || typeBallot == '0'"
+                                                                [dataSource]='dataReceived' fill="#0C51CB" type='Column'
+                                                                xName='cardTypeName' yName='receiveQuanlity'
+                                                                name='Phiếu nhận' width=1> </e-series>
+                                                            <e-series
+                                                                *ngIf="typeBallot == 'sender' || typeBallot == '0'"
+                                                                [dataSource]='dataSended' fill="#00DCB5" type='Column'
+                                                                xName='cardTypeName' yName='sendQuanlity'
+                                                                name='Phiếu cho' width=1> </e-series>
+                                                        </e-series-collection>
+                                                    </ejs-chart>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7" style="margin-top: 23px;">
+                                <div class="row">
+                                    <div class="col-5 pr-0" style="margin-top: 10px;">
+                                        <div class="chart pie-chart">
+                                            <div style="display: block">
+                                                <ng-container *ngIf="chartDatas.length != 0">
+                                                    <ejs-accumulationchart background="transparent"
+                                                        id="doughnut-container-received" #pieReceived
+                                                        style="display: block" width="200" height="200"
+                                                        selectionMode="Point" [tooltip]="tooltip"
+                                                        [legendSettings]='legendSettings'>
+                                                        <e-accumulation-series-collection>
+                                                            <e-accumulation-series name="" [palettes]="colorCoins"
+                                                                [dataSource]="chart_Datas" xName="key" yName="value"
+                                                                [startAngle]="startAngle" [endAngle]="endAngle"
+                                                                innerRadius="90%" legendShape='Rectangle'>
+                                                            </e-accumulation-series>
+                                                        </e-accumulation-series-collection>
+                                                    </ejs-accumulationchart>
+                                                    <div class="total-promissory">
+                                                        <span>{{totalCoins}}
+                                                            <codx-label name="lblBallot" formName="FED_TagObjects"
+                                                                default="Phiếu"></codx-label>
+                                                        </span>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="chartDatas.length == 0">
+                                                    <ejs-accumulationchart background="transparent"
+                                                        id="doughnut-container-received" #pieReceived
+                                                        style="display: block" width="200" height="200"
+                                                        selectionMode="Point">
+                                                        <e-accumulation-series-collection>
+                                                            <e-accumulation-series name="" [palettes]="colors_empty"
+                                                                [dataSource]="chartDatas_empty" xName="key"
+                                                                yName="value" [startAngle]="startAngle"
+                                                                [endAngle]="endAngle" innerRadius="90%">
+                                                            </e-accumulation-series>
+                                                        </e-accumulation-series-collection>
+                                                    </ejs-accumulationchart>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-7 pl-0">
+                                        <div class="row">
+                                            <div class="col-6 pl-0">
+                                                <div class="statis-card"
+                                                    [style.border-color]="'#'+('3'|vll:'L1422':'color'|async)">
+                                                    <div>
+                                                        <div class="font-weight-600">
+                                                            <codx-label name="lblChange" formName="FED_TagObjects"
+                                                                default="Góp ý thay đổi"></codx-label>
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="text-dark-75 me-2">{{dataCount?.suggest }}
+                                                                <codx-label name="lblBallot" formName="FED_TagObjects"
+                                                                    default="Phiếu"></codx-label>
+
+                                                            </div>
+                                                            <span class="btn btn-xxs"
+                                                                [style.background-color]="'#'+('3'|vll:'L1422':'color'|async)">
+                                                                {{dataCount?.suggest > 0 ?
+                                                                ((dataCount?.suggest/total)* 100 |
+                                                                number:
+                                                                '1.0-0') : 0}}%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 pl-0">
+                                                <div class="statis-card"
+                                                    [style.border-color]="'#'+('4'|vll:'L1422':'color'|async)">
+                                                    <div>
+                                                        <div class="font-weight-600">
+                                                            <codx-label name="lblMessage" formName="FED_TagObjects"
+                                                                default="Đề xuất cải tiến"></codx-label>
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="text-dark-75 me-2">{{dataCount?.improvement }}
+                                                                <codx-label name="lblBallot" formName="FED_TagObjects"
+                                                                    default="Phiếu"></codx-label>
+                                                            </div>
+                                                            <span class="btn btn-xxs"
+                                                                [style.background-color]="'#'+('4'|vll:'L1422':'color'|async)">
+                                                                {{dataCount?.improvement > 0
+                                                                ?((dataCount?.improvement/total)* 100 |
+                                                                number: '1.0-0') : 0}}%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 pl-0">
+                                                <div class="statis-card"
+                                                    [style.border-color]="'#'+('2'|vll:'L1422':'color'|async)">
+                                                    <div>
+                                                        <div class="font-weight-600">
+                                                            <codx-label name="lblThanks" formName="FED_TagObjects"
+                                                                default="Lời cảm ơn"></codx-label>
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="text-dark-75 me-2">{{dataCount?.thankyou }}
+                                                                <codx-label name="lblBallot" formName="FED_TagObjects"
+                                                                    default="Phiếu"></codx-label>
+                                                            </div>
+                                                            <span class="btn btn-xxs"
+                                                                [style.background-color]="'#'+('2'|vll:'L1422':'color'|async)">
+                                                                {{dataCount?.thankyou > 0 ?
+                                                                ((dataCount?.thankyou/total)* 100 |
+                                                                number: '1.0-0') : 0}}%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 pl-0">
+                                                <div class="statis-card" style="border-left: 5px  solid;"
+                                                    [style.border-color]="'#'+('1'|vll:'L1422':'color'|async)">
+                                                    <div>
+                                                        <div class="font-weight-600">
+                                                            <codx-label name="lblThanks" formName="FED_TagObjects"
+                                                                default="Tuyên dương"></codx-label>
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="text-dark-75 me-2">{{dataCount?.commendation }}
+                                                                <codx-label name="lblBallot" formName="FED_TagObjects"
+                                                                    default="Phiếu"></codx-label>
+                                                            </div>
+                                                            <span class="btn btn-xxs"
+                                                                [style.background-color]="'#'+('1'|vll:'L1422':'color'|async)">
+                                                                {{dataCount?.commendation > 0 ?
+                                                                ((dataCount?.commendation/total)* 100
+                                                                | number: '1.0-0') : 0}}%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container #statistical_down>
+                        <div class="row mt-12 down">
+                            <div class="col-6 pr-9">
                                 <div style="display: block">
-                                    <div class="control-section">
-                                        <div class="col-md-9">
-                                            <div *ngIf="dataReceived.length == 0">
-                                                <ejs-chart style='display:block;' #chart id='chartcontainer'
-                                                    [primaryXAxis]='primaryXAxis' [tooltip]='tooltip' [height]="height"
-                                                    [primaryYAxis]='primaryYAxis' [title]='' [width]="width">
-                                                    <e-series-collection>
-                                                        <e-series [dataSource]='' fill="#0C51CB" type='Column'
-                                                            xName='cardTypeName' yName='receiveQuanlity'
-                                                            name='Phiếu nhận' width=1> </e-series>
-                                                        <e-series [dataSource]='' fill="#00DCB5" type='Column'
-                                                            xName='cardTypeName' yName='sendQuanlity' name='Phiếu cho'
-                                                            width=1> </e-series>
-                                                    </e-series-collection>
-                                                </ejs-chart>
-                                            </div>
-                                            <div *ngIf="dataReceived.length !=0">
-                                                <ejs-chart style='display:block;' #chart id='chartcontainer'
-                                                    [primaryXAxis]='primaryXAxis' [tooltip]='tooltip' [height]="height"
-                                                    [primaryYAxis]='primaryYAxis' [title]='' [width]="width">
-                                                    <e-series-collection>
-                                                        <e-series *ngIf="typeBallot == 'RECEIVED' || typeBallot == '0'"
-                                                            [dataSource]='dataReceived' fill="#0C51CB" type='Column'
-                                                            xName='cardTypeName' yName='receiveQuanlity'
-                                                            name='Phiếu nhận' width=1> </e-series>
-                                                        <e-series *ngIf="typeBallot == 'sender' || typeBallot == '0'"
-                                                            [dataSource]='dataSended' fill="#00DCB5" type='Column'
-                                                            xName='cardTypeName' yName='sendQuanlity' name='Phiếu cho'
-                                                            width=1> </e-series>
-                                                    </e-series-collection>
-                                                </ejs-chart>
-                                            </div>
-                                        </div>
+                                    <table class="table mb-0 w-100">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="w-40"></th>
+                                                <th scope="col" class="w-20 text-right font-weight-600">
+                                                    <codx-label name="lblCoinReceived" formName="FED_TagObjects"
+                                                        default="Xu nhận"></codx-label>
+                                                </th>
+                                                <th scope="col" class="w-20 text-right font-weight-600">
+                                                    <codx-label name="lblCoinSended" formName="FED_TagObjects"
+                                                        default="Xu trừ"></codx-label>
+                                                </th>
+                                                <th scope="col" class="w-20 text-right font-weight-600">
+                                                    <codx-label name="lblTotal" formName="FED_TagObjects"
+                                                        default="Tổng cộng"></codx-label>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <div *ngFor=" let item of lstTotalCoin">
+                                        <hr>
+                                        <ng-container *ngTemplateOutlet="template ;context: {item:item  }">
+                                        </ng-container>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7" style="margin-top: 23px;">
-                            <div class="row">
-                                <div class="col-5 pr-0" style="margin-top: 10px;">
-                                    <div class="chart pie-chart">
-                                        <div style="display: block">
-                                            <ng-container *ngIf="chartDatas.length != 0">
-                                                <ejs-accumulationchart background="transparent"
-                                                    id="doughnut-container-received" #pieReceived style="display: block"
-                                                    width="200" height="200" selectionMode="Point" [tooltip]="tooltip"
-                                                    [legendSettings]='legendSettings'>
-                                                    <e-accumulation-series-collection>
-                                                        <e-accumulation-series name="" [palettes]="colorCoins"
-                                                            [dataSource]="chart_Datas" xName="key" yName="value"
-                                                            [startAngle]="startAngle" [endAngle]="endAngle"
-                                                            innerRadius="90%" legendShape='Rectangle'>
-                                                        </e-accumulation-series>
-                                                    </e-accumulation-series-collection>
-                                                </ejs-accumulationchart>
-                                                <div class="total-promissory">
-                                                    <span>{{totalCoins}}
-                                                        <codx-label name="lblBallot" formName="FED_TagObjects"
-                                                            default="Phiếu"></codx-label>
-                                                    </span>
-                                                </div>
-                                            </ng-container>
-                                            <ng-container *ngIf="chartDatas.length == 0">
-                                                <ejs-accumulationchart background="transparent"
-                                                    id="doughnut-container-received" #pieReceived style="display: block"
-                                                    width="200" height="200" selectionMode="Point">
-                                                    <e-accumulation-series-collection>
-                                                        <e-accumulation-series name="" [palettes]="colors_empty"
-                                                            [dataSource]="chartDatas_empty" xName="key" yName="value"
-                                                            [startAngle]="startAngle" [endAngle]="endAngle"
-                                                            innerRadius="90%">
-                                                        </e-accumulation-series>
-                                                    </e-accumulation-series-collection>
-                                                </ejs-accumulationchart>
-                                            </ng-container>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-7 pl-0">
-                                    <div class="row">
-                                        <div class="col-6 pl-0">
-                                            <div class="statis-card"
-                                                [style.border-color]="'#'+('3'|vll:'L1422':'color'|async)">
-                                                <div>
-                                                    <div class="font-weight-600">
-                                                        <codx-label name="lblChange" formName="FED_TagObjects"
-                                                            default="Góp ý thay đổi"></codx-label>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="text-dark-75 me-2">{{dataCount?.suggest }}
-                                                            <codx-label name="lblBallot" formName="FED_TagObjects"
-                                                                default="Phiếu"></codx-label>
-
-                                                        </div>
-                                                        <span class="btn btn-xxs"
-                                                            [style.background-color]="'#'+('3'|vll:'L1422':'color'|async)">
-                                                            {{dataCount?.suggest > 0 ?
-                                                            ((dataCount?.suggest/total)* 100 |
-                                                            number:
-                                                            '1.0-0') : 0}}%</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 pl-0">
-                                            <div class="statis-card"
-                                                [style.border-color]="'#'+('4'|vll:'L1422':'color'|async)">
-                                                <div>
-                                                    <div class="font-weight-600">
-                                                        <codx-label name="lblMessage" formName="FED_TagObjects"
-                                                            default="Đề xuất cải tiến"></codx-label>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="text-dark-75 me-2">{{dataCount?.improvement }}
-                                                            <codx-label name="lblBallot" formName="FED_TagObjects"
-                                                                default="Phiếu"></codx-label>
-                                                        </div>
-                                                        <span class="btn btn-xxs"
-                                                            [style.background-color]="'#'+('4'|vll:'L1422':'color'|async)">
-                                                            {{dataCount?.improvement > 0
-                                                            ?((dataCount?.improvement/total)* 100 |
-                                                            number: '1.0-0') : 0}}%</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6 pl-0">
-                                            <div class="statis-card"
-                                                [style.border-color]="'#'+('2'|vll:'L1422':'color'|async)">
-                                                <div>
-                                                    <div class="font-weight-600">
-                                                        <codx-label name="lblThanks" formName="FED_TagObjects"
-                                                            default="Lời cảm ơn"></codx-label>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="text-dark-75 me-2">{{dataCount?.thankyou }}
-                                                            <codx-label name="lblBallot" formName="FED_TagObjects"
-                                                                default="Phiếu"></codx-label>
-                                                        </div>
-                                                        <span class="btn btn-xxs"
-                                                            [style.background-color]="'#'+('2'|vll:'L1422':'color'|async)">
-                                                            {{dataCount?.thankyou > 0 ?
-                                                            ((dataCount?.thankyou/total)* 100 |
-                                                            number: '1.0-0') : 0}}%</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 pl-0">
-                                            <div class="statis-card" style="border-left: 5px  solid;"
-                                                [style.border-color]="'#'+('1'|vll:'L1422':'color'|async)">
-                                                <div>
-                                                    <div class="font-weight-600">
-                                                        <codx-label name="lblThanks" formName="FED_TagObjects"
-                                                            default="Tuyên dương"></codx-label>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="text-dark-75 me-2">{{dataCount?.commendation }}
-                                                            <codx-label name="lblBallot" formName="FED_TagObjects"
-                                                                default="Phiếu"></codx-label>
-                                                        </div>
-                                                        <span class="btn btn-xxs"
-                                                            [style.background-color]="'#'+('1'|vll:'L1422':'color'|async)">
-                                                            {{dataCount?.commendation > 0 ?
-                                                            ((dataCount?.commendation/total)* 100
-                                                            | number: '1.0-0') : 0}}%</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-12 down">
-                        <div class="col-6 pr-9">
-                            <div style="display: block">
-                                <table class="table mb-0 w-100">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="w-40"></th>
-                                            <th scope="col" class="w-20 text-right font-weight-600">
-                                                <codx-label name="lblCoinReceived" formName="FED_TagObjects"
-                                                    default="Xu nhận"></codx-label>
-                                            </th>
-                                            <th scope="col" class="w-20 text-right font-weight-600">
-                                                <codx-label name="lblCoinSended" formName="FED_TagObjects"
-                                                    default="Xu trừ"></codx-label>
-                                            </th>
-                                            <th scope="col" class="w-20 text-right font-weight-600">
-                                                <codx-label name="lblTotal" formName="FED_TagObjects"
-                                                    default="Tổng cộng"></codx-label>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                                <div *ngFor=" let item of lstTotalCoin">
                                     <hr>
-                                    <ng-container *ngTemplateOutlet="template ;context: {item:item  }">
-                                    </ng-container>
+                                    <table class="table mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <td class="w-40 fw-bold font-weight-600">
+                                                    <codx-label name="lblTotal" formName="FED_TagObjects"
+                                                        default="Tổng cộng"></codx-label>
+                                                </td>
+                                                <td class="w-20 text-right fw-bold font-weight-600">
+                                                    +{{calculateTotalRow('totalCoinReceiver')}}</td>
+                                                <td class="w-20 text-right fw-bold font-weight-600">
+                                                    -{{calculateTotalRow('totalCoinSend')}}</td>
+                                                <td class="w-20 text-right fw-bold font-weight-600">
+                                                    {{calculateTotalRow('totalCoinReceiver')-calculateTotalRow('totalCoinSend')}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <hr>
-                                <table class="table mb-0">
-                                    <tbody>
-                                        <tr>
-                                            <td class="w-40 fw-bold font-weight-600">
-                                                <codx-label name="lblTotal" formName="FED_TagObjects"
-                                                    default="Tổng cộng"></codx-label>
-                                            </td>
-                                            <td class="w-20 text-right fw-bold font-weight-600">
-                                                +{{caculateTotalRow('totalCoinReceiver')}}</td>
-                                            <td class="w-20 text-right fw-bold font-weight-600">
-                                                -{{caculateTotalRow('totalCoinSend')}}</td>
-                                            <td class="w-20 text-right fw-bold font-weight-600">
-                                                {{caculateTotalRow('totalCoinReceiver')-caculateTotalRow('totalCoinSend')}}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
                             </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="chart-progress">
-                                <div class="d-flex mb-3 mt-3">
-                                    <h6>
-                                        <codx-label name="lblStatistical" formName="FED_TagObjects"
-                                            default="Thống kê danh sách TOP hành vi ứng xử"></codx-label>
-                                    </h6>
-                                    <span class="icon-open_in_new icon-20 ms-2" (click)="open(content)"></span>
-                                </div>
-                                <div *ngFor=" let item of lstBehavior.slice(0,selectTopBehaviors)">
-                                    <ng-container *ngTemplateOutlet="templateProgress ;context: {item:item  }">
-                                    </ng-container>
+                            <div class="col-6">
+                                <div class="chart-progress">
+                                    <div class="d-flex mb-3 mt-3">
+                                        <h6>
+                                            <codx-label name="lblStatistical" formName="FED_TagObjects"
+                                                default="Thống kê danh sách TOP hành vi ứng xử"></codx-label>
+                                        </h6>
+                                        <span class="icon-open_in_new icon-20 ms-2" (click)="open(content)"></span>
+                                    </div>
+                                    <div *ngFor=" let item of lstBehavior.slice(0,selectTopBehaviors)">
+                                        <ng-container *ngTemplateOutlet="templateProgress ;context: {item:item  }">
+                                        </ng-container>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </ng-container>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</ng-template>
 <ng-template #template let-item="item">
     <table class="table mb-0">
         <tbody>
@@ -327,7 +330,7 @@
         <div class="d-flex align-items-center">
             <div class="progressBar">
                 <ejs-progressbar [id]="'linear' + item.idProgressBar" [type]="typeProgress" [maximum]="max"
-                    [minimum]="min" [value]="(item.count/totalBehavior)*100" [width]="widthProgress"
+                    [minimum]="min" [value]="(item.count > 0) ? ((item.count/totalBehavior)*100) : 0" [width]="widthProgress"
                     [trackThickness]="trackThickness" [progressThickness]="progressThickness" [height]="heightProgress"
                     [animation]="animation" trackColor="#ADD8E6" progressColor="#1E90FF" cornerRadius="Round">
                 </ejs-progressbar>
@@ -342,7 +345,7 @@
         <div class="d-flex align-items-center">
             <div class="w-100">
                 <ejs-progressbar [id]="'linear' + item.idProgressBar" [type]="typeProgress" [maximum]="max"
-                    [minimum]="min" [value]="(item.count/totalBehavior)*100" [width]="widthProgress"
+                    [minimum]="min" [value]="(item.count > 0) ? ((item.count/totalBehavior)*100) : 0" [width]="widthProgress"
                     [trackThickness]="trackThickness" [progressThickness]="progressThickness" [height]="heightProgress"
                     [animation]="animation" trackColor="#ADD8E6" progressColor="#1E90FF" cornerRadius="Round">
                 </ejs-progressbar>

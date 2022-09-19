@@ -194,30 +194,12 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         'WPCalendars'
       )
       .subscribe((res) => {
-        if (res[2]) this.removeForbiddenCharacters(res[2].dataValue);
+        if (res[2]) {
+          var dataValue = res[2].dataValue;
+          var json = JSON.parse(dataValue);
+          this.maxPinNotes = parseInt(json.MaxPinNotes, 10);
+        }
       });
-  }
-
-  removeForbiddenCharacters(input) {
-    let forbiddenChars = [
-      '/',
-      '?',
-      '&',
-      '=',
-      '.',
-      '"',
-      `'`,
-      '{',
-      '}',
-      'MaxPinNotes',
-      ':',
-      '""',
-    ];
-
-    for (let char of forbiddenChars) {
-      input = input.split(char).join('');
-    }
-    this.maxPinNotes = input;
   }
 
   valueChange(e, recID = null, item = null) {

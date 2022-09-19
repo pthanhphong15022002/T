@@ -62,7 +62,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   //ProgressBar
   public typeProgress: string = 'Linear';
   public widthProgress: string = '100%';
-  public heightProgress: string = '40px';
+  public heightProgress: string = '40';
   public trackThickness: number = 4;
   public progressThickness: number = 4;
   public min: number = 0;
@@ -76,8 +76,8 @@ export class StatisticalComponent extends UIComponent implements OnInit {
 
   readonly TYPE_Ballot = {
     ALL: '0',
-    Ballot_RECEIVED: 'RECEIVED',
-    Ballot_SENDED: 'sender',
+    Ballot_RECEIVED: '1',
+    Ballot_SENDED: '2',
   };
   TYPE_TIME = {
     TEMP: '',
@@ -87,12 +87,12 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   };
   selectTopBehaviors: number;
   modeView = '1';
-  typeBallot = this.TYPE_Ballot.ALL;
-  cardType = '0';
+  typeBallot = '0';
+  cardType = '';
   typeTime = '1';
   typeTimeName = this.TYPE_TIME.MONTH;
-  fromDate: any = '2021-01-01';
-  toDate = '2021-12-01';
+  fromDate: any = '';
+  toDate = '';
   today: any = new Date();
   infoUser = null;
   lstTotalCoin = [];
@@ -103,6 +103,8 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   userPermission: any;
   labels_empty: string[] = ['Không có dữ liệu'];
   chartDatas_empty: any[] = [{ key: 'Không có dữ liệu', value: 100 }];
+  fromDateDropdown: any;
+  toDateDropdown: any;
   options_empty = {
     tooltips: {
       enabled: false,
@@ -231,7 +233,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   dataStore = [];
   countDate = 0;
   type = '';
-  comboboxName = 'HRDepartments';
+  cbb = 'HRDepartments';
   ID = '';
   predicate = '';
   dataValue = '';
@@ -248,7 +250,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.route.params.subscribe((param) => {
-      this.funcID = param['funcID'];
+      if (param) this.funcID = param['funcID'];
     });
     this.cacheService.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
@@ -290,49 +292,29 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.userPermission = this.view.userPermission;
   }
 
-  valueChange(e, f) {
+  valueChange(e) {
     switch (e.field) {
       case 'vllOrganize':
-        this.type = e.data?.value;
+        this.type = e.data;
         break;
       case 'Organize':
-        this.ID = e[0];
+        this.ID = e.data;
         break;
       default:
         break;
     }
 
-    if (f == 'Organize') {
-      this.ID = e[0];
+    if (e.field != 'vllOrganize') {
+      if (e.data) this.reloadAllChart();
+    } else {
+      if (this.type == '1') this.cbb = 'Company';
+      else if (this.type == '3') this.cbb = 'Divisions';
+      else if (this.type == '4') this.cbb = 'HRDepartments';
+      else this.cbb = 'HRDepartmentUnits';
+      this.detectorRef.detectChanges();
     }
-    this.reloadAllChart();
   }
 
-  changeTypeTime(data, f) {
-    if (data.field == 'typeTime') {
-      let keys = Object.keys(this.TYPE_TIME);
-      this.typeTime = data.data;
-      this.typeTimeName = this.TYPE_TIME[keys[this.typeTime]];
-    }
-    if (data.field == 'modeView') {
-      this.modeView = data.data.value;
-    }
-    this.reloadAllChart();
-  }
-  changeTime(data, f) {
-    if (this.countDate > 0) {
-      var FDate = new Date(data.data.getFullYear(), data.data.getMonth(), 1);
-      var TDate = new Date(
-        data.data.getFullYear(),
-        data.data.getMonth() + 1,
-        0
-      );
-      this.fromDate = this.dateTimeToString(FDate);
-      this.toDate = this.dateTimeToString(TDate);
-      this.reloadAllChart();
-    }
-    this.countDate++;
-  }
   getClassTextCoin(totalCoinReceiver, totalCoinSend) {
     if (totalCoinReceiver > totalCoinSend) return 'text-success';
     if (totalCoinReceiver < totalCoinSend) return 'text-danger';
@@ -353,23 +335,28 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       '-' +
       (ddChars[1] ? dd : '0' + ddChars[0])
     );
-    //return new Date(value).toISOString().slice(0, 10);
   }
   changeCardType(data) {
     this.cardType = data.data;
     this.reloadAllChart();
   }
+
+  ballot_SENDED = false;
+  ballot_RECEIVED = false;
   changeTypeCoins(typeBallot) {
-    if (typeBallot == this.typeBallot) {
-      this.typeBallot = this.TYPE_Ballot.ALL;
+    if (typeBallot == this.TYPE_Ballot.Ballot_SENDED) {
+      this.ballot_SENDED = !this.ballot_SENDED;
+      this.ballot_RECEIVED = false;
     } else {
-      this.typeBallot = typeBallot;
+      this.ballot_RECEIVED = !this.ballot_RECEIVED;
+      this.ballot_SENDED = false;
     }
+    this.typeBallot = typeBallot;
     this.reloadAllChart();
   }
   reloadAllChart() {
-    // this.setPredicate();
-    this.getChartA();
+    this.setPredicate();
+    this.getDataChartA();
     this.getDataChartB();
   }
   open(content) {
@@ -387,6 +374,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.api
       .execSv<any>('FD', 'FD', 'CardsBusiness', 'GetStatisticBallot1Async', [
         this.options,
+        this.typeBallot,
       ])
       .subscribe((res) => {
         if (res) {
@@ -417,10 +405,12 @@ export class StatisticalComponent extends UIComponent implements OnInit {
             i++;
           });
           this.lstBehavior = listBehavior;
+          console.log('check lstTotalCoin', this.lstTotalCoin);
         }
       });
   }
-  caculateTotalRow(columnName) {
+
+  calculateTotalRow(columnName) {
     if (this.lstTotalCoin.length == 0) return 0;
     return this.lstTotalCoin
       .map((o) => o[columnName])
@@ -473,7 +463,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     });
     return oData[0].text;
   }
-  getChartA() {
+  getDataChartA() {
     var arrReceived = [];
     var arrSended = [];
     var dtReceived = [];
@@ -487,7 +477,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
         'ERM.Business.FD',
         'CardsBusiness',
         'GetStatistical1Async',
-        this.options
+        [this.options, this.typeBallot]
       )
       .subscribe((res) => {
         var result = new Array();
@@ -518,6 +508,14 @@ export class StatisticalComponent extends UIComponent implements OnInit {
     this.changeDf.detectChanges();
   }
 
+  dateChange(evt: any) {
+    if (evt?.fromDate || evt?.toDate) {
+      this.fromDateDropdown = this.dateTimeToString(evt?.fromDate);
+      this.toDateDropdown = this.dateTimeToString(evt?.toDate);
+      this.reloadAllChart();
+    }
+  }
+
   setPredicate() {
     var arrTemp = [];
     this.predicate = '';
@@ -527,27 +525,49 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       if (this.type == '1') sField = 'CompanyID';
       else if (this.type == '3') sField = 'DivisionID';
       else if (this.type == '4') sField = 'DepartmentID';
-      arrTemp.push({ field: sField, value: this.ID });
+      arrTemp.push({
+        field: sField,
+        value: this.ID,
+        dropdownCalendar: false,
+        type: 'Organize',
+      });
     }
-    if (this.fromDate && this.toDate)
-      arrTemp.push({ field: 'CreatedOn', value: this.fromDate });
-    if (this.cardType && this.cardType != '0')
-      arrTemp.push({ field: 'CardType', value: this.cardType });
-    if (this.typeBallot)
-      arrTemp.push({ field: 'CardType', value: this.typeBallot });
-    var i = 0;
+    if (
+      this.fromDate &&
+      this.toDate &&
+      (!this.fromDateDropdown || !this.toDateDropdown)
+    )
+      arrTemp.push({
+        field: 'CreatedOn',
+        value: this.fromDate,
+        dropdownCalendar: false,
+        type: '',
+      });
+    if (this.cardType)
+      arrTemp.push({
+        field: 'CardType',
+        value: this.cardType,
+        dropdownCalendar: false,
+        type: '',
+      });
+    if (this.fromDateDropdown || this.toDateDropdown)
+      arrTemp.push({
+        field: 'CreatedOn',
+        value: this.fromDateDropdown,
+        dropdownCalendar: true,
+        type: '',
+      });
+    let i = 0;
     var t = this;
-    arrTemp.forEach(function (element, index) {
+    arrTemp.forEach(function (element) {
       if (!element) return;
-      var spre = element.field + '=@' + i;
-      var dtValue = element.value;
-      dtValue =
-        dtValue == t.TYPE_Ballot.Ballot_SENDED
-          ? '1'
-          : dtValue == t.TYPE_Ballot.Ballot_RECEIVED
-          ? '2'
-          : dtValue;
-      if (element.field == 'CreatedOn') {
+      var spre = '';
+      var dtValue = '';
+      if (element.type == 'Organize') {
+        spre = '(' + element.field + '=@' + i + ')';
+        dtValue = element.value;
+        i += 1;
+      } else if (element.field == 'CreatedOn' && !element?.dropdownCalendar) {
         spre =
           '(' +
           element.field +
@@ -560,26 +580,34 @@ export class StatisticalComponent extends UIComponent implements OnInit {
           ')';
         dtValue = t.fromDate + ';' + t.toDate;
         i += 2;
+      } else if (element.field == 'CreatedOn' && element?.dropdownCalendar) {
+        spre =
+          '(' +
+          element.field +
+          '>=@' +
+          i +
+          ' && ' +
+          element.field +
+          '<=@' +
+          (i + 1) +
+          ')';
+        dtValue = t.fromDateDropdown + ';' + t.toDateDropdown;
+        i += 2;
       } else if (element.field == 'CardType') {
-        if (element.value == '0') {
-          spre =
-            '(' +
-            element.field +
-            '=@' +
-            i +
-            ' || ' +
-            element.field +
-            '=@' +
-            (i + 1) +
-            ')';
-          dtValue = '1;2';
-          i += 2;
+        if (element.value != '0') {
+          spre = '(' + element.field + '=@' + i + ')';
+          dtValue = element.value;
+        } else {
+          spre = '';
         }
-      } else i += 1;
-      if (t.predicate) t.predicate += ' && ' + spre;
-      else t.predicate = spre;
-      if (t.dataValue) t.dataValue += ';' + dtValue;
-      else t.dataValue = dtValue;
+        i += 1;
+      }
+      if (t.predicate) {
+        if (spre !== '') t.predicate += ' && ' + spre;
+      } else t.predicate = spre;
+      if (t.dataValue) {
+        if (dtValue !== '') t.dataValue += ';' + dtValue;
+      } else t.dataValue = dtValue;
     });
     this.options.predicate = this.predicate;
     this.options.dataValue = this.dataValue;

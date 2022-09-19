@@ -16,6 +16,7 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
+import { tmpReferences } from '../model/task.model';
 
 @Component({
   selector: 'share-view-detail',
@@ -33,8 +34,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() vllStatus?: any;
   @Input() vllExtendStatus?: any;
   @Input() vllApproveStatus?: any;
-  @Input() dataTree?: any[];
-  @Input() dataReferences?: any[];
+  dataTree?: any[];
+  dataReferences?: any[];
   @Input() taskID: string;
   popoverDataSelected: any;
   listTaskResousceSearch = [];
@@ -70,14 +71,21 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#region
   //#region Method
+  getChangeData(){
+    
+  }
   getTaskDetail() {
     this.viewTags ='' ;
+    this.dataTree = [] ;
+    this.dataReferences =[] ;
     this.api
       .exec<any>('TM', 'TaskBusiness', 'GetTaskDetailsByTaskIDAsync', this.id)
       .subscribe((res) => {
         if(res){
           this.itemSelected = res;
           this.viewTags  = this.itemSelected?.tags
+          this.loadTreeView();
+          this.loadDataReferences();
         }   
       });
   }
@@ -178,6 +186,177 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       }
     });
     this.listTaskResousceSearch = listTaskResousceSearch;
+  }
+  //#endregion
+
+  //#region  tree
+  loadTreeView() {
+    this.dataTree = [];
+    if (!this.itemSelected || !this.itemSelected?.taskID) return;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetTreeAssignByTaskIDAsync',
+        this.itemSelected?.taskID
+      )
+      .subscribe((res) => {
+        if (res) this.dataTree = res || [];
+      });
+  }
+  //#endregion
+
+   //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
+   loadDataReferences() {
+    if (this.itemSelected.category == '1') {
+      this.dataReferences = [];
+      return;
+    }
+    this.dataReferences = [];
+    if (this.itemSelected.category == '2') {
+      this.api
+        .execSv<any>(
+          'TM',
+          'TM',
+          'TaskBusiness',
+          'GetTaskParentByTaskIDAsync',
+          this.itemSelected.taskID
+        )
+        .subscribe((res) => {
+          if (res) {
+            var ref = new tmpReferences();
+            ref.recIDReferences = res.recID;
+            ref.refType = 'TM_Tasks';
+            ref.createdOn = res.createdOn;
+            ref.memo = res.taskName;
+            ref.createdBy = res.createdBy;
+            var taskParent = res ;
+            this.api
+              .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+                res.createdBy,
+              ])
+              .subscribe((user) => {
+                if (user) {
+                  ref.createByName = user.userName;
+                  this.dataReferences.push(ref);
+                  this.getReferencesByCategory3(taskParent) ;
+                }
+              });
+          }
+        });
+    } else if(this.itemSelected.category == '3') {
+      this.getReferencesByCategory3(this.itemSelected) ;
+    }
+  }
+
+  getReferencesByCategory3(task){
+    var listUser = [];
+      switch (task.refType) {
+        case 'OD_Dispatches':
+          this.api
+            .exec<any>(
+              'OD',
+              'DispatchesBusiness',
+              'GetListByIDAsync',
+              task.refID
+            )
+            .subscribe((item) => {
+              if (item) {
+                item.forEach((x) => {
+                  var ref = new tmpReferences();
+                  ref.recIDReferences = x.recID;
+                  ref.refType = 'OD_Dispatches';
+                  ref.createdOn = x.createdOn;
+                  ref.memo = x.title;
+                  ref.createdBy = x.createdBy;
+                  this.dataReferences.push(ref);
+                  if (listUser.findIndex((p) => p == ref.createdBy) == -1)
+                    listUser.push(ref.createdBy);
+                  this.getUserByListCreateBy(listUser);
+                });
+              }
+            });
+          break;
+        case 'ES_SignFiles':
+          this.api
+            .execSv<any>(
+              'ES',
+              'ERM.Business.ES',
+              'SignFilesBusiness',
+              'GetLstSignFileByIDAsync',
+              JSON.stringify(task.refID.split(';'))
+            )
+            .subscribe((result) => {
+              if (result) {
+                result.forEach((x) => {
+                  var ref = new tmpReferences();
+                  ref.recIDReferences = x.recID;
+                  ref.refType = 'ES_SignFiles';
+                  ref.createdOn = x.createdOn;
+                  ref.memo = x.title;
+                  ref.createdBy = x.createdBy;
+                  this.dataReferences.push(ref);
+                  if (listUser.findIndex((p) => p == ref.createdBy) == -1)
+                    listUser.push(ref.createdBy);
+                  this.getUserByListCreateBy(listUser);
+                });
+              }
+            });
+          break;
+        case 'TM_Tasks':
+          this.api
+            .execSv<any>(
+              'TM',
+              'TM',
+              'TaskBusiness',
+              'GetTaskByRefIDAsync',
+              task.refID
+            )
+            .subscribe((result) => {
+              if (result) {
+                var ref = new tmpReferences();
+                ref.recIDReferences = result.recID;
+                ref.refType = 'TM_Tasks';
+                ref.createdOn = result.createdOn;
+                ref.memo = result.taskName;
+                ref.createdBy = result.createdBy;
+
+                this.api
+                  .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+                    ref.createdBy,
+                  ])
+                  .subscribe((user) => {
+                    if (user) {
+                      ref.createByName = user.userName;
+                      this.dataReferences.push(ref);
+                    }
+                  });
+              }
+            });
+          break;
+      }
+  }
+
+  getUserByListCreateBy(listUser) {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'UsersBusiness',
+        'LoadUserListByIDAsync',
+        JSON.stringify(listUser)
+      )
+      .subscribe((users) => {
+        if (users) {
+          this.dataReferences.forEach((ref) => {
+            var index = users.findIndex((user) => user.userID == ref.createdBy);
+            if (index != -1) {
+              ref.createByName = users[index].userName;
+            }
+          });
+        }
+      });
   }
   //#endregion
 }

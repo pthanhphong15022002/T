@@ -13,6 +13,7 @@ import {
 } from 'codx-core';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { tmpBG_TrackLogs } from './codx-es.model';
 
 export class GridModels {
   pageSize: number;
@@ -507,6 +508,22 @@ export class CodxEsService {
 
   //#endregion
 
+  //#region ES_Signatures
+
+  addNewSignature(data: any): Observable<any> {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'AddNewAsync', [
+      data,
+    ]);
+  }
+
+  editSignature(data: any): Observable<any> {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'EditAsync', [
+      data,
+    ]);
+  }
+
+  //#endregion
+
   //#region ES_Category
   addNewCategory(data: any): Observable<any> {
     return this.api.execSv('ES', 'ES', 'CategoriesBusiness', 'AddNewAsync', [
@@ -695,6 +712,16 @@ export class CodxEsService {
       [data, sendTo]
     );
   }
+
+  saveHistorySendEmail(tmpHistory: tmpBG_TrackLogs): Observable<any> {
+    return this.api.execSv(
+      'BG',
+      'ERM.Business.BG',
+      'TrackLogsBusiness',
+      'InsertAsync',
+      tmpHistory
+    );
+  }
   //#endregion
 
   //#region ES_SignFiles
@@ -851,7 +878,8 @@ export class CodxEsService {
 
   //#endregion
 
-  addOrEditSignArea(data: any): Observable<any> {
+  addOrEditSignArea(recID, fileID, area, areaID): Observable<any> {
+    let data = [recID, fileID, area, areaID];
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
@@ -949,8 +977,8 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(newcontent, userID, sfID, mode, comment) {
-    let data = [newcontent, userID, sfID, mode, comment];
+  updateSignFileTrans(vcW, vcH, isAwait, userID, sfID, mode, comment) {
+    let data = [vcW, vcH, isAwait, userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

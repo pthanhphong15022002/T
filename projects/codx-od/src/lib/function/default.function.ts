@@ -108,6 +108,13 @@ function getIdUser(createdBy: any, owner: any) {
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toLowerCase() + string.slice(1);
 }
+function getDifference(array1:any, array2:any) {
+  return array1.filter(object1 => {
+    return !array2.some(object2 => {
+      return object1.recID === object2.recID;
+    });
+  });
+}
 export{
   extractContent,
   compareDate,
@@ -118,5 +125,6 @@ export{
   getIdUser,
   convertHtmlAgency,
   convertHtmlAgency2,
-  capitalizeFirstLetter
+  capitalizeFirstLetter,
+  getDifference
 }

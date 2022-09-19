@@ -1,5 +1,5 @@
-:host ::ng-deep{
-    codx-page-title .breadcrumb{
-      display: none;
-    }
-    }
+:host ::ng-deep {
+  codx-page-title .breadcrumb {
+    display: none;
+  }
+}
