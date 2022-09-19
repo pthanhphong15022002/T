@@ -39,4 +39,19 @@ export class ViewDetailGiftComponent implements OnInit,OnChanges {
       }
     })
   }
+  clickUpdateGiftTran(){
+    let status = "2";
+    this.api.execSv
+    ( this.service,
+      this.assemblyName,
+      this.className,
+      "UpdateStatusAsync",
+      [this.data.recID,status]).subscribe((res:any) =>
+      {
+        if(res){
+          this.data.status == status;
+          this.dt.detectChanges();
+        }
+      });
+  }
 }

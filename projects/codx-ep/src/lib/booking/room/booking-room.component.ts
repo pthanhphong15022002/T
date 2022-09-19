@@ -2,9 +2,6 @@ import {
   Component,
   TemplateRef,
   ViewChild,
-  Input,
-  Output,
-  EventEmitter,
   Injector,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -12,12 +9,9 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CacheService,
-  CodxGridviewComponent,
-  CodxScheduleComponent,
   DataRequest,
   DialogModel,
   DialogRef,
-  NotificationsService,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -28,7 +22,7 @@ import {
 } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
-import { CodxEpService, ModelPage } from '../../codx-ep.service';
+import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
 
 @Component({

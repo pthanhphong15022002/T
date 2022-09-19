@@ -39,18 +39,17 @@ export class PostsComponent implements OnInit {
   }
 
   private loadListPostComponent() { 
-    // var formModel = {
-    //   entityName: 'FD_KudosTrans',
-    //   entityPermission: 'FD_KudosTrans',
-    //   gridViewName: 'grvKudosTrans',
-    //   formName: 'KudosTrans',
-    //   funcID: '',
-    // }
-    // this.viewComponents.formModel = formModel;
+    var formModel = {
+      entityName: 'WP_Comments',
+      entityPermission: 'WP_Comments',
+      gridViewName: 'grvWPComments',
+      formName: 'WPComments',
+      funcID: 'WP',
+    }
     var a = this.lstComment.createComponent(ListPostComponent);
     a.instance.predicateWP = `(CreatedBy="${this.user?.userID}")`;
     a.instance.isShowCreate = false;
-    a.instance.codxViews = this.viewComponents;
+    // a.instance.codxViews = this.viewComponents;
   }
 
 }
