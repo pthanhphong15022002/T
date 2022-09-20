@@ -24,11 +24,7 @@
       <div class="d-flex me-6">
         <i class="icon-calendar_today me-1"></i>
         <span class="text-gray-600">
-          {{
-            data
-              ? (data?.createdOn | date: "dd/MM/yyyy")
-              : "dd/MM/yyyy"
-          }}
+          {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
         </span>
       </div>
       <div class="d-flex me-6">
@@ -36,21 +32,18 @@
         <span class="text-gray-600">
           {{ data?.startDate | date: "shortTime" }}
         </span>
-        <span
-          *ngIf="data?.startDate && data?.endDate"
-          class="ms-1 me-1"
-          >{{ "-" }}</span
-        >
+        <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+          "-"
+        }}</span>
         <span class="text-gray-600">
           {{ data?.endDate | date: "shortTime" }}
         </span>
       </div>
     </div>
     <div class="row mb-2">
-      <span>{{data.title}}</span>
+      <span>{{ data.title }}</span>
     </div>
   </div>
-  
 </ng-template>
 
 <ng-template #itemTemplate let-data>
@@ -58,14 +51,10 @@
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (click)="click(data)"
     [typeMF]="'hover'"
-    [imageId]="'ADMIN'"
-    [imageObjType]="'AD_Users'"
-    
     [title]="data?.requester"
     [subTitleTmp]="subTitleTmp"
-    [desc]="data?.title"
     [icoCss]="
-      'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+      'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     "
     [status]="data?.status"
     [statusVll]="'VL003'"
@@ -86,7 +75,6 @@
 </ng-template>
 
 <ng-template #panelRightRef>
-  
   <view-detail
     #viewdetail
     [itemDetail]="itemDetail"
@@ -118,9 +106,7 @@
           <span>{{ data.resourceData.location }}</span>
         </div>
       </div>
-
     </div>
-    
   </div>
 </ng-template>
 
@@ -261,11 +247,7 @@
     <div class="d-flex me-6">
       <i class="icon-calendar_today me-1"></i>
       <span class="text-gray-600">
-        {{
-          data
-            ? (data?.createdOn | date: "dd/MM/yyyy")
-            : "dd/MM/yyyy"
-        }}
+        {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
       </span>
     </div>
     <div class="d-flex me-6">
@@ -273,11 +255,9 @@
       <span class="text-gray-600">
         {{ data?.startDate | date: "shortTime" }}
       </span>
-      <span
-        *ngIf="data?.startDate && data?.endDate"
-        class="ms-1 me-1"
-        >{{ "-" }}</span
-      >
+      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+        "-"
+      }}</span>
       <span class="text-gray-600">
         {{ data?.endDate | date: "shortTime" }}
       </span>

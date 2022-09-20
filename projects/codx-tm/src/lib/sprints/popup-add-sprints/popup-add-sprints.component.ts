@@ -45,7 +45,7 @@ export class PopupAddSprintsComponent implements OnInit {
   dataDefault = [];
   dataOnLoad = [];
   vllShare = 'TM003';
-  isUploadImg = false;
+  isUploadImg = true;
   gridViewSetup: any;
   imageUpload: UploadFile = new UploadFile();
   showLabelAttachment = false;
@@ -119,9 +119,10 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   saveMaster(isAdd: boolean) {
-    this.imageAvatar
-      .updateFileDirectReload(this.master.iterationID)
-      .subscribe((up) => {
+    //comnet tạm
+    // this.imageAvatar
+    //   .updateFileDirectReload(this.master.iterationID)
+    //   .subscribe((up) => {
         this.dialog.dataService
           .save(
             (option: any) => this.beforeSave(option, isAdd),
@@ -139,7 +140,7 @@ export class PopupAddSprintsComponent implements OnInit {
               this.dialog.close();
             }
           });
-      });
+      // });
   }
 
   //#endregion
