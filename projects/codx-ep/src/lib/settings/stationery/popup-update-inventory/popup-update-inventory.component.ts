@@ -8,7 +8,9 @@ import { CodxEpService } from '../../../codx-ep.service';
   templateUrl: './popup-update-inventory.component.html',
   styleUrls: ['./popup-update-inventory.component.scss'],
 })
-export class PopupUpdateInventoryComponent extends UIComponent {
+export class PopupUpdateInventoryComponent
+  extends UIComponent
+{
   data: any;
   dialog: DialogRef;
   headerText: string = 'Cập nhật số lượng';

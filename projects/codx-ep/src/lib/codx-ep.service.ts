@@ -185,6 +185,16 @@ export class CodxEpService {
     );
   }
 
+  getReasonName(reasonID: string) {
+    return this.api.callSv(
+      'BS',
+      'ERM.Business.BS',
+      'ReasonCodesBusiness',
+      'GetDescriptionAsync',
+      reasonID
+    );
+  }
+
   notifyInvalid(
     formGroup: FormGroup,
     formModel: FormModel,

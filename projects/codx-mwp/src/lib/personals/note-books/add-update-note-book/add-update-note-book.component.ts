@@ -7,6 +7,7 @@ import {
   CRUDService,
   CacheService,
   CodxFormComponent,
+  RequestOption,
 } from 'codx-core';
 import {
   Component,
@@ -96,13 +97,8 @@ export class AddUpdateNoteBookComponent implements OnInit {
   }
 
   addNoteBooks() {
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NoteBooksBusiness',
-        'CreateNoteBookAsync',
-        this.noteBooks
-      )
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt), -1)
       .subscribe((res) => {
         if (res) {
           this.imageUpload
@@ -110,23 +106,16 @@ export class AddUpdateNoteBookComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
-                (this.dialog.dataService as CRUDService).add(res).subscribe();
               }
             });
-          (this.dialog.dataService as CRUDService).add(res).subscribe();
           this.dialog.close();
         }
       });
   }
 
   updateNoteBook() {
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NoteBooksBusiness',
-        'UpdateNoteBookAsync',
-        this.noteBooks
-      )
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res) {
           if (this.imageUpload) {
@@ -134,13 +123,28 @@ export class AddUpdateNoteBookComponent implements OnInit {
               .updateFileDirectReload(this.data?.recID)
               .subscribe((result) => {
                 this.loadData.emit();
-                this.dialog.dataService.update(res).subscribe();
               });
           } else {
-            this.dialog.dataService.update(res).subscribe();
           }
           this.dialog.close();
         }
       });
+  }
+
+  beforeSave(op: RequestOption) {
+    var data = [];
+    op.service = 'WP';
+    op.assemblyName = 'ERM.Business.WP';
+    op.className = 'NoteBooksBusiness';
+    if (this.formType == 'add') {
+      op.methodName = 'CreateNoteBookAsync';
+      data = [this.noteBooks];
+    }
+    if (this.formType == 'edit') {
+      op.methodName = 'UpdateNoteBookAsync';
+      data = [this.noteBooks];
+    }
+    op.data = data;
+    return true;
   }
 }

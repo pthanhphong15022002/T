@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  CodxListviewComponent,
   DataRequest,
   UIComponent,
   ViewModel,
@@ -58,12 +59,13 @@ export class AchievementComponent extends UIComponent implements OnInit {
   lstRate = [];
   dataProcess = [];
   heightList = '200';
-  toDate = new Date();
+  fromDateDropdown: any;
+  toDateDropdown: any;
   orgUnit = '';
   emloyeeID = '';
   predicate = '';
   dataValue = '';
-  comboboxName = '';
+  cbb = '';
   type = '';
   lstDataChart = [];
   ishide = true;
@@ -75,8 +77,12 @@ export class AchievementComponent extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
   showHeader: boolean = true;
   userPermission: any;
+  fromDate: any = '';
+  toDate = '';
+  today: any = new Date();
 
   @ViewChild('listview') listview;
+  @ViewChild('listview') listView: CodxListviewComponent;
   @ViewChild('subheader') subheader;
   @ViewChild('iTemplateLeft') iTemplateLeft: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
@@ -91,6 +97,12 @@ export class AchievementComponent extends UIComponent implements OnInit {
     this.route.params.subscribe((param) => {
       this.funcID = param['funcID'];
     });
+    let year = this.today.getFullYear();
+    let month = this.today.getMonth();
+    var firstDayInMonth = new Date(year, month, 1);
+    var lastDayInMonth = new Date(year, month + 1, 0);
+    this.fromDate = this.dateTimeToString(firstDayInMonth);
+    this.toDate = this.dateTimeToString(lastDayInMonth);
   }
 
   setOption(text): any {
@@ -106,7 +118,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
     this.options.gridViewName = 'grvKudosTrans';
     this.options.formName = 'KudosTrans';
     this.options.funcID = this.funcID;
-    //this.LoadData();
+    this.setPredicate();
   }
 
   ngAfterViewInit() {
@@ -123,7 +135,32 @@ export class AchievementComponent extends UIComponent implements OnInit {
     this.userPermission = this.view.userPermission;
   }
 
-  LoadData() {
+  dateChange(evt: any) {
+    if (evt?.fromDate || evt?.toDate) {
+      this.fromDateDropdown = this.dateTimeToString(evt?.fromDate);
+      this.toDateDropdown = this.dateTimeToString(evt?.toDate);
+      this.setPredicate();
+    }
+  }
+
+  dateTimeToString(date: Date) {
+    var yyyy = date.getFullYear().toString();
+    var mm = (date.getMonth() + 1).toString();
+    var dd = date.getDate().toString();
+
+    var mmChars = mm.split('');
+    var ddChars = dd.split('');
+
+    return (
+      yyyy +
+      '-' +
+      (mmChars[1] ? mm : '0' + mmChars[0]) +
+      '-' +
+      (ddChars[1] ? dd : '0' + ddChars[0])
+    );
+  }
+
+  loadData() {
     this.api
       .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
         this.options,
@@ -195,86 +232,131 @@ export class AchievementComponent extends UIComponent implements OnInit {
           if (this.lstDataChart.length > 0) this.ishide = false;
           this.setHeightList();
           this.dt.detectChanges();
-          // console.log(res);
         }
       });
   }
 
   valueChange(e) {
     if (e) {
-      if (e.component != undefined) var textVll = e.component.dataSource;
       switch (e.field) {
-        case 'toDate':
-          var value = new Date(e.data?.toDate);
-          this.toDate = value;
-          // this.options.predicate += " && TransDate <= @1";
-          // this.options.dataValue += ";" + value.toISOString();
-          break;
         case 'vllOrganize':
-          textVll.forEach((res) => {
-            if (res.value == e.data) {
-              this.comboboxName = res.text;
-              this.dt.detectChanges();
-            }
-          });
-          this.type = e.data?.value;
+          var type = e.data;
+          if (type == '1') this.cbb = 'Company';
+          else if (type == '3') this.cbb = 'Divisions';
+          else if (type == '4') this.cbb = 'HRDepartments';
+          else this.cbb = 'HRDepartmentUnits';
+          this.dt.detectChanges();
           break;
         case 'Organize':
           var sField = 'OrgUnitID';
           if (this.type == '1') sField = 'CompanyID';
           else if (this.type == '3') sField = 'DivisionID';
           else if (this.type == '4') sField = 'DepartmentID';
-          this.orgUnit = e.data[sField];
+          this.orgUnit = e.data;
           break;
         case 'Employee':
           sField = 'EmployeeID';
-          this.emloyeeID = e.data?.EmployeeID;
+          this.emloyeeID = e.data;
           break;
         default:
           break;
       }
+      if (e.field !== 'vllOrganize' && e.data) this.setPredicate();
     }
-    this.setPredicate();
   }
 
   setPredicate() {
-    this.options.predicate = 'TransType=@0';
+    this.options.predicate = '(TransType=@0) && ';
     this.options.dataValue = '3';
-    var predicate = '',
-      dataValue = '',
-      arrTemp = [];
-    if (this.toDate)
-      arrTemp.push({ field: 'TransDate', value: this.toDate.toISOString() });
+    this.predicate = '';
+    this.dataValue = '';
+    var arrTemp = [];
     if (this.orgUnit) {
       var sField = 'OrgUnitID';
-      if (this.type == '1') sField = 'CompanyID';
-      else if (this.type == '3') sField = 'DivisionID';
-      else if (this.type == '4') sField = 'DepartmentID';
-      arrTemp.push({ field: sField, value: this.orgUnit });
+      arrTemp.push({ field: sField, value: this.orgUnit, dropdownCalendar: false});
     }
+    if (
+      this.fromDate &&
+      this.toDate &&
+      (!this.fromDateDropdown || !this.toDateDropdown)
+    )
+      arrTemp.push({
+        field: 'TransDate',
+        value: this.fromDate,
+        dropdownCalendar: false,
+      });
+    if (this.fromDateDropdown || this.toDateDropdown)
+      arrTemp.push({
+        field: 'CreatedOn',
+        value: this.fromDateDropdown,
+        dropdownCalendar: true,
+      });
     if (this.emloyeeID)
-      arrTemp.push({ field: 'EmployeeID', value: this.emloyeeID });
-    arrTemp.forEach(function (element, index) {
+      arrTemp.push({
+        field: 'EmployeeID',
+        value: this.emloyeeID,
+        dropdownCalendar: false,
+      });
+    let i = 1;
+    var t = this;
+    arrTemp.forEach(function (element) {
       if (!element) return;
-      var opartor = '=@';
-      if (element.field == 'TransDate') opartor = '<=@';
-      if (predicate) predicate += '&&' + element.field + opartor + (index + 1);
-      else predicate = element.field + opartor + (index + 1);
-      if (dataValue) dataValue += ';' + element.value;
-      else dataValue = element.value;
+      var spre = '';
+      var dtValue = '';
+      if (element.field == 'TransDate' && !element?.dropdownCalendar) {
+        spre =
+          '(' +
+          element.field +
+          '>=@' +
+          i +
+          ' && ' +
+          element.field +
+          '<=@' +
+          (i + 1) +
+          ')';
+        dtValue = t.fromDate + ';' + t.toDate;
+        i += 2;
+      } else if (element?.dropdownCalendar) {
+        spre =
+          '(' +
+          element.field +
+          '>=@' +
+          i +
+          ' && ' +
+          element.field +
+          '<=@' +
+          (i + 1) +
+          ')';
+        dtValue = t.fromDateDropdown + ';' + t.toDateDropdown;
+        i += 2;
+      } else if (element.field == 'OrgUnitID') {
+        spre = '(' + element.field + '=@' + i + ')';
+        dtValue = element.value;
+        i += 1;
+      } else if (element.field == 'EmployeeID') {
+        spre = '(' + element.field + '=@' + i + ')';
+        dtValue = element.value;
+        i += 1;
+      }
+      if (t.predicate) {
+        if (spre !== '') t.predicate += ' && ' + spre;
+      } else t.predicate = spre;
+      if (t.dataValue) {
+        if (dtValue !== '') t.dataValue += ';' + dtValue;
+      } else t.dataValue = dtValue;
     });
-    this.options.predicate += '&&' + predicate;
-    this.options.dataValue += ';' + dataValue;
+    this.options.predicate += this.predicate;
+    this.options.dataValue += ';' + this.dataValue;
+    debugger;
     this.loadList = true;
     if (this.listview) {
-      this.listview.predicate = this.options.predicate;
-      this.listview.dataValue = this.options.dataValue;
-      this.listview.data = [];
-      this.listview.loadData();
+      this.listView.dataService
+      .setPredicate(this.options.predicate, [this.options.dataValue])
+      .subscribe();
     }
     this.chartLabels = [];
     this.colors[0].backgroundColor = [];
-    this.LoadData();
+    this.loadData();
   }
 
   ReloadListByRank(current, after) {

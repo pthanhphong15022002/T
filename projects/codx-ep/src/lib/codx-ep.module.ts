@@ -1,3 +1,4 @@
+import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,8 +27,6 @@ import { RoomDashboardComponent } from './booking/room/dashboard/dashboard.compo
 import { PopupAddBookingRoomComponent } from './booking/room/popup-add-booking-room/popup-add-booking-room.component';
 import { BookingStationeryComponent } from './booking/stationery/booking-stationery.component';
 import { StationeryDashboardComponent } from './booking/stationery/dashboard/dashboard.component';
-import { PopupListStationeryComponent } from './booking/stationery/popup-list-stationery/popup-list-stationery.component';
-import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
 import { CarsComponent } from './settings/cars/cars.component';
 import { PopupAddCarsComponent } from './settings/cars/popup-add-cars/popup-add-cars.component';
 import { DriversComponent } from './settings/drivers/drivers.component';
@@ -39,6 +38,8 @@ import { PopupSettingNormsComponent } from './settings/stationery/popup-setting-
 import { PopupUpdateInventoryComponent } from './settings/stationery/popup-update-inventory/popup-update-inventory.component';
 import { StationeryComponent } from './settings/stationery/stationery.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { EpCardsComponent } from './settings/epCards/epCards.component';
+import { PopupAddEpCardsComponent } from './settings/epCards/popup-add-epCards/popup-add-epCards.component';
 
 const routes: Route[] = [
   {
@@ -108,6 +109,10 @@ const routes: Route[] = [
         path: 'stationery/:funcID',
         component: StationeryComponent,
       },
+      {
+        path: 'epCards/:funcID',
+        component: EpCardsComponent,
+      },
     ],
   },
 ];
@@ -129,11 +134,12 @@ const Components: Type<any>[] = [
   PopupAddRoomsComponent,
   PopupAddStationeryComponent,
   PopupAddDriversComponent,
-  PopupListStationeryComponent,
+  PopupAddEpCardsComponent,
   StationeryComponent,
   CarsComponent,
   DriversComponent,
   RoomsComponent,
+  EpCardsComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,
