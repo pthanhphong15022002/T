@@ -11,21 +11,23 @@ idField="recID"
 <ng-template #panelLeftRef>
   <div class="">
     <ul class="nav nav-news">
-      <li class="nav-item" *ngFor="let item of tabAsside">
-        <a
-          [class.text-primary]="item.active"
-          class="nav-link fw-bold"
-          href="javascript:;"
-          (click)="clickTabApprove(item, item.predicate, item.datavalue)"
-        >
-          <codx-label
-            [formName]="codxView.formModel"
-            [name]="'lbl' + item.text"
-            [default]="item.text"
-          ></codx-label>
-          <span>({{ item.total }})</span>
-        </a>
-      </li>
+      <ng-container *ngFor="let item of tabAsside">
+        <li class="nav-item" [class.text-primary]="item.active">
+          <a
+            class="nav-link fw-bold"
+            href="javascript:;"
+            (click)="clickTabApprove(item, item.predicate, item.datavalue)"
+          >
+            <codx-label
+              [formName]="codxView.formModel"
+              [name]="'lbl' + item.text"
+              [default]="item.text"
+            ></codx-label>
+            <span>({{ item.total }})</span>
+          </a>
+        </li>
+      </ng-container>
+      
     </ul>
   </div>
 </ng-template>

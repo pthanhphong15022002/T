@@ -43,51 +43,86 @@
 <ng-template #listItem let-data> </ng-template>
 
 <ng-template #imageSignature1 let-data>
-  <div class="text-center" *ngIf="data?.signature1 != null">
-    <div
-      class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
-    >
-      <div class="m-auto">
-        <codx-img
+  <div class="text-center">
+    <div>
+      <div class="m-auto text-center">
+        <!-- <codx-img
           [objectId]="data?.recID + '1'"
           imageType="square"
-          [width]="50"
+          [width]="80"
           [recId]="data?.signature1"
-        ></codx-img>
+        ></codx-img> -->
+
+        <codx-img
+          class="border border-gray-300 border-dashed rounded symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+          [width]="80"
+          [objectId]="data.recID + '1'"
+          [objectType]="'ES_Signatures'"
+          [funcId]="'ESS21'"
+          data-kt-menu-trigger="click"
+          data-kt-menu-attach="parent"
+          data-kt-menu-placement="bottom-end"
+          data-kt-menu-flip="bottom"
+          [isAllowEdit]="false"
+        >
+        </codx-img>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #imageSignature2 let-data>
-  <div class="text-center" *ngIf="data?.signature2 != null">
-    <div
-      class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
-    >
-      <div class="m-auto">
-        <codx-img
+  <div class="text-center">
+    <div>
+      <div class="m-auto text-center">
+        <!-- <codx-img
           [objectId]="data?.recID + '2'"
           imageType="square"
-          [width]="50"
+          [width]="80"
           [recId]="data?.signature2"
-        ></codx-img>
+        ></codx-img> -->
+        <codx-img
+          class="border border-gray-300 border-dashed rounded symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+          [width]="80"
+          [objectId]="data.recID + '2'"
+          [objectType]="'ES_Signatures'"
+          [funcId]="'ESS21'"
+          data-kt-menu-trigger="click"
+          data-kt-menu-attach="parent"
+          data-kt-menu-placement="bottom-end"
+          data-kt-menu-flip="bottom"
+          [isAllowEdit]="false"
+        >
+        </codx-img>
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #imageStamp let-data>
-  <div class="text-center" *ngIf="data?.stamp != null">
-    <div
-      class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
-    >
+  <div class="text-center">
+    <div>
       <div class="m-auto">
-        <codx-img
+        <!-- <codx-img
           [objectId]="data?.recID + 's'"
           imageType="square"
-          [width]="50"
+          [width]="80"
           [recId]="data?.stamp"
-        ></codx-img>
+        ></codx-img> -->
+        <codx-img
+          class="border border-gray-300 border-dashed rounded symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+          [width]="80"
+          [objectId]="data.recID + 's'"
+          [objectType]="'ES_Signatures'"
+          [funcId]="'ESS21'"
+          data-kt-menu-trigger="click"
+          data-kt-menu-attach="parent"
+          data-kt-menu-placement="bottom-end"
+          data-kt-menu-flip="bottom"
+          [isAllowEdit]="false"
+          [imgOn]="data.modifiedOn"
+        >
+        </codx-img>
       </div>
     </div>
   </div>

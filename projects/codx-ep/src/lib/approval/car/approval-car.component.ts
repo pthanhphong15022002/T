@@ -1,6 +1,7 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   DialogRef,
+  FormModel,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -8,6 +9,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddBookingCarComponent } from '../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
+import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
   selector: 'approval-car',
@@ -19,8 +21,8 @@ export class ApprovalCarsComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
-  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
-  @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   funcID: string;
   service = 'EP';
@@ -38,23 +40,29 @@ export class ApprovalCarsComponent extends UIComponent {
   fields;
   dataSelected: any;
   dialog!: DialogRef;
-
-  constructor(private injector: Injector) {
+  formModel:FormModel;
+  constructor(
+    private injector: Injector,
+    private codxEpService: CodxEpService,) {
     super(injector);
 
     this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
-    this.request=new ResourceModel();
-    this.request.assemblyName='EP';
-    this.request.className='BookingsBusiness';
-    this.request.service='EP';
-    this.request.method='GetEventsAsync';
-    this.request.predicate='ResourceType=@0';
-    this.request.dataValue='2';
-    this.request.idField='recID';
-
+    this.request = new ResourceModel();
+    this.request.assemblyName = 'EP';
+    this.request.className = 'BookingsBusiness';
+    this.request.service = 'EP';
+    this.request.method = 'GetApprovalEventsAsync';
+    this.request.predicate = 'ResourceType=@0';
+    this.request.dataValue = '2';
+    this.request.idField = 'recID';
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -94,23 +102,23 @@ export class ApprovalCarsComponent extends UIComponent {
         },
       },
       {
-        sameData:false,
-        type:ViewType.schedule,
-        active:true,
-        request2:this.modelResource,
-        request:this.request,
-        toolbarTemplate:this.footerButton,
-        showSearchBar:false,
-        model:{
+        sameData: false,
+        type: ViewType.schedule,
+        active: true,
+        request2: this.modelResource,
+        request: this.request,
+        //toolbarTemplate: this.footerButton,
+        showSearchBar: false,
+        model: {
           //panelLeftRef:this.panelLeft,
-          eventModel:this.fields,
-          resourceModel:this.resourceField,
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           template5: this.resourceTootip,
-          template6: this.footerTemplate,
-          template7: this.footerButton,
-          statusColorRef:'vl003'
+          template6: this.mfButton,//header          
+          template8: this.contentTmp,//content
+          statusColorRef: 'vl003',
         },
       },
     ];

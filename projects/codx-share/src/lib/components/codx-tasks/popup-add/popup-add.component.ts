@@ -926,8 +926,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   }
   //#endregion
 
-  //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
-  loadDataReferences() {
+    //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
+   loadDataReferences() {
     if (this.task.category == '1') {
       this.dataReferences = [];
       return;
@@ -950,6 +950,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             ref.createdOn = res.createdOn;
             ref.memo = res.taskName;
             ref.createdBy = res.createdBy;
+            var taskParent = res ;
             this.api
               .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
                 res.createdBy,
@@ -958,20 +959,26 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                 if (user) {
                   ref.createByName = user.userName;
                   this.dataReferences.push(ref);
+                  this.getReferencesByCategory3(taskParent) ;
                 }
               });
           }
         });
-    } else {
-      var listUser = [];
-      switch (this.task.refType) {
+    } else if(this.task.category == '3') {
+      this.getReferencesByCategory3(this.task) ;
+    }
+  }
+
+  getReferencesByCategory3(task){
+    var listUser = [];
+      switch (task.refType) {
         case 'OD_Dispatches':
           this.api
             .exec<any>(
               'OD',
               'DispatchesBusiness',
               'GetListByIDAsync',
-              this.task.refID
+              task.refID
             )
             .subscribe((item) => {
               if (item) {
@@ -997,7 +1004,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               'ERM.Business.ES',
               'SignFilesBusiness',
               'GetLstSignFileByIDAsync',
-              JSON.stringify(this.task.refID.split(';'))
+              JSON.stringify(task.refID.split(';'))
             )
             .subscribe((result) => {
               if (result) {
@@ -1023,7 +1030,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               'TM',
               'TaskBusiness',
               'GetTaskByRefIDAsync',
-              this.task.refID
+              task.refID
             )
             .subscribe((result) => {
               if (result) {
@@ -1048,7 +1055,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             });
           break;
       }
-    }
   }
 
   getUserByListCreateBy(listUser) {

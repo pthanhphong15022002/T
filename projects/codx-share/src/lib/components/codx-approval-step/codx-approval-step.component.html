@@ -82,22 +82,7 @@
               [desc]="approver.approverPosition"
             >
             </codx-temp-full>
-            <!-- <codx-temp-full *ngIf="approver.roleType?.length > 1" [imageSrc]="'./assets/themes/sys/default/img/' +
-            (item.icon ? item.icon : 'share_default.svg')" imgCss="w-30px p-3 me-3 user-mini-icon" [imageWidth]="20"
-              [title]="(approver.approver |vll: 'ES014': 'text'|async)"
-              [desc]="approver.approver |vll: 'ES014': 'text'|async">
-            </codx-temp-full> -->
-
             <div class="d-flex align-items-center text-center">
-              <!-- <div class="d-flex flex-column">
-                <div class="text-dark fw-bold">Hoàn tất</div>
-                <div class="badge badge-primary my-1">5h15 - 4h</div>
-                <div class="text-gray-600 fs-7">14/6/2022 5:09</div>
-              </div>
-              <div class="ms-6 d-flex">
-                <span class="icon-attach_file icon-18 me-1"></span>
-                <span class="text-dark">3</span>
-              </div> -->
               <div class="d-flex flex-column">
                 <div class="text-dark fw-bold">
                   <codx-vll
@@ -109,23 +94,12 @@
                     class="badge"
                   >
                   </codx-vll>
-                  <!-- {{ approver.status | vll: "ES003":"text" | async }} -->
                 </div>
                 <div *ngIf="approver.status == '1' || approver.status == '3'">
                   <div class="badge badge-secondary min-w-90px">
                     {{ approver.leadtime }} giờ
                   </div>
                 </div>
-                <!-- <div *ngIf="approver.status == '3'">
-                  <div class="badge my-1 badge-primary min-w-90px" *ngIf="approver.duration <= approver.leadtime">
-                    {{ approver.activedOn | date: 'HH:mm'}}
-                    -
-                    {{ getHour(approver.activedOn, approver.leadtime)| date: 'HH:mm' }}
-                  </div>
-                  <div class="text-gray-600 fs-7">
-                    {{ approver.activedOn | date: 'dd/MM/yyyy' }}
-                  </div>
-                </div> -->
                 <div *ngIf="approver.status == '5'">
                   <div
                     class="badge my-1 min-w-90px"

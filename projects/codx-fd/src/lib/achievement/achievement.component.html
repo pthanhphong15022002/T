@@ -9,13 +9,8 @@
           <div class="w-100 pr-9 mt-3">
             <div class="d-flex align-items-top">
               <div class="me-3 w-150px">
-                <div class="d-flex flex-column" #ToDate>
-                  <codx-label name="lblToDate" formName="FD_KudosTrans" default="Đến ngày" class="fw-bold">
-                  </codx-label>
-                  <codx-input type="datetime" format="d" class="form-control" [crrValue]="toDate" field="toDate"
-                    ngDefaultControl (valueChange)="valueChange($event)">
-                  </codx-input>
-                </div>
+                <codx-dropdown-calendar [cssClass]="'w-100'" [cssPopup]="'h-400px w-500px border'"
+                (change)="dateChange($event)"></codx-dropdown-calendar>
               </div>
               <div class="me-3 left-5">
                 <div class="d-flex flex-column" #Organize>
@@ -26,7 +21,7 @@
                       (valueChange)="valueChange($event)">
                     </codx-input>
                     <div class="organize left-5">
-                      <codx-input class="form-control" type="combobox" field="Organize" [refValue]="comboboxName"
+                      <codx-input class="form-control" type="combobox" field="Organize" [refValue]="cbb"
                         (valueChange)="valueChange($event)">
                       </codx-input>
                     </div>

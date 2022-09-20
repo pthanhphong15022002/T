@@ -87,6 +87,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
     this.adUser = JSON.parse(JSON.stringify(this.data));
+    debugger;
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(

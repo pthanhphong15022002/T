@@ -59,6 +59,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   showTabHistory = true;
   showTabComments = true;
   showTabMeetings = true;
+  showButtonAdd = true ;
   
 
   constructor(
@@ -85,7 +86,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
       }
     });
 
-    if (this.iterationID != '') {
+    if (this.iterationID && this.iterationID != '') {
       this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
         if (res) {
           this.data = res;
@@ -130,9 +131,12 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           if (this.resources != null) {
             this.getListUserByResource(this.resources);
           }
+          this.showButtonAdd = false ;
         }
       });
     }
+
+    this.functionParent = this.tmSv.functionParent ;
     if (this.meetingID) {
       //sau mấy cái này sẽ được truyền qua state
       // this.showTabHistory = false;

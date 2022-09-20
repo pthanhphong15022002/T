@@ -1,6 +1,7 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   DialogRef,
+  FormModel,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -8,6 +9,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddBookingRoomComponent } from '../../booking/room/popup-add-booking-room/popup-add-booking-room.component';
+import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
   selector: 'approval-room',
@@ -19,7 +21,9 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
-  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   modelResource?: ResourceModel;
@@ -37,17 +41,26 @@ export class ApprovalRoomsComponent extends UIComponent {
   jobs;
   itemDetail;
   preStepNo;
+  formModel: FormModel;
   button;
   fields;
   itemSelected: any;
   resourceField;
   dataSelected: any;
   dialog!: DialogRef;
+  tempReasonName='';
   
-  constructor(private injector: Injector) {
+  constructor(
+    private injector: Injector,
+    private codxEpService: CodxEpService,
+    ) {
     super(injector);
-
     this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -55,7 +68,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.assemblyName='EP';
     this.request.className='BookingsBusiness';
     this.request.service='EP';
-    this.request.method='GetEventsAsync';
+    this.request.method='GetListBookingAsync';
     this.request.predicate='ResourceType=@0';
     this.request.dataValue='1';
     this.request.idField='recID';
@@ -68,6 +81,8 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '1';
 
+    
+    
     this.fields = {
       id: 'bookingNo',
       subject: { name: 'title' },
@@ -107,17 +122,19 @@ export class ApprovalRoomsComponent extends UIComponent {
         active:true,
         request2:this.modelResource,
         request:this.request,
-        toolbarTemplate:this.footerButton,
+        //toolbarTemplate:this.footerButton,
         showSearchBar:false,
         model:{
           //panelLeftRef:this.panelLeft,
           eventModel:this.fields,
-          resourceModel:this.resourceField,
+          resourceModel:this.resourceField,//resource
           //template:this.cardTemplate,
           template4: this.resourceHeader,
-          template5: this.resourceTootip,
-          template6: this.footerTemplate,
-          template7: this.footerButton,
+          template5: this.resourceTootip,//tooltip
+
+          template6: this.mfButton,//header          
+          template8: this.contentTmp,//content
+          //template7: this.footerButton,//footer
           statusColorRef:'vl003'
         },
       },
@@ -191,7 +208,14 @@ export class ApprovalRoomsComponent extends UIComponent {
         break;
     }
   }
-
+  getReasonName(reasonID: string) {
+    this.codxEpService.getReasonName(reasonID).subscribe((res) => {
+      if (res.msgBodyData[0]) {
+        this.tempReasonName = res.msgBodyData[0];
+      }
+    });
+    return this.tempReasonName;
+  }
   closeAddForm(event) {}
 
   changeItemDetail(event) {

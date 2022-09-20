@@ -1,3 +1,4 @@
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -126,6 +127,7 @@ const T_Component: Type<any>[] = [
   CodxApprovalComponent,
   CodxCommentsComponent,
   DynamicSettingComponent,
+  DynamicFormComponent,
   CodxFilesComponent,
   ApprovalTabsComponent,
   CodxApprovalStepComponent,

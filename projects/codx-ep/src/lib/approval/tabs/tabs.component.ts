@@ -1,19 +1,17 @@
+import { UIComponent } from 'codx-core';
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
   Input,
-  OnInit,
 } from '@angular/core';
 import { TabModel } from '../../models/tabControl.model';
-
 
 @Component({
   selector: 'approval-tabs',
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
 })
-export class TabsComponent implements OnInit {
+export class TabsComponent extends UIComponent {
   @Input() active = 1;
   @Input() funcID!: string;
   @Input() entityName!: string;
@@ -27,12 +25,11 @@ export class TabsComponent implements OnInit {
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
   private all = ['Lịch sử', 'Đính kèm', 'Bình luận', 'Tham chiếu', 'Xét duyệt'];
-  constructor(
-    injector: Injector,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  constructor(private injector: Injector) {
+    super(injector);
+  }
 
-  ngOnInit(): void {
+  onInit(): void {
     if (this.TabControl.length == 0) {
       this.all.forEach((res, index) => {
         var tabModel = new TabModel();
@@ -46,7 +43,7 @@ export class TabsComponent implements OnInit {
         (x: TabModel) => x.isActive == true
       );
     }
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   fileAdded(e: any) {

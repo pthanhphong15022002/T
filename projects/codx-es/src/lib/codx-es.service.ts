@@ -508,6 +508,22 @@ export class CodxEsService {
 
   //#endregion
 
+  //#region ES_Signatures
+
+  addNewSignature(data: any): Observable<any> {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'AddNewAsync', [
+      data,
+    ]);
+  }
+
+  editSignature(data: any): Observable<any> {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'EditAsync', [
+      data,
+    ]);
+  }
+
+  //#endregion
+
   //#region ES_Category
   addNewCategory(data: any): Observable<any> {
     return this.api.execSv('ES', 'ES', 'CategoriesBusiness', 'AddNewAsync', [
@@ -961,8 +977,8 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(vcW, vcH, isAwait, userID, sfID, mode, comment) {
-    let data = [vcW, vcH, isAwait, userID, sfID, mode, comment];
+  updateSignFileTrans(vcW, vcH, stepNo, isAwait, userID, sfID, mode, comment) {
+    let data = [vcW, vcH, stepNo, isAwait, userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

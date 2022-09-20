@@ -41,7 +41,7 @@ export class EmployeeInfomationComponent implements OnInit {
   dataPolicy: any = null;
   employeeHobbieCategory: any = null;
   index = 3;
-  employee: HR_Employees = new HR_Employees;
+  employee: any;
   editMode: boolean = false;
   editSkillMode: boolean = false;
   isSaving = false;
@@ -98,7 +98,7 @@ export class EmployeeInfomationComponent implements OnInit {
   ) {
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'];
-    this.layout.setUrl(this.codxMwpService.urlback);
+    // this.layout.setUrl(this.codxMwpService.urlback);
     this.cache.functionList(this.functionID).subscribe(f=>{
       if(f) this.layout.setLogo(f.smallIcon);
   })
@@ -390,7 +390,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
       this.dialog = this.callfunc.openSide(EditInfoComponent, 'edit', option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event == null)
@@ -417,7 +417,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
       this.dialog = this.callfunc.openSide(EditExperenceComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
       this.dialog.closed.subscribe(e => {
         if (e?.event && e?.event != null) {
@@ -443,7 +443,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
       this.dialog = this.callfunc.openSide(EditExperenceComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: false }, option);
       this.dialog.closed.subscribe(e => {
         if (e?.event && e?.event != null) {
@@ -473,7 +473,7 @@ export class EmployeeInfomationComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.view.dataService.dataSelected!.employeeID = this.employeeInfo!.employeeID;
+      this.view.dataService.dataSelected!.employeeID = this.employee!.employeeID;
       this.dialog = this.callfunc.openSide(EditRelationComponent, { dataSelected: this.view.dataService.dataSelected, isAdd: true }, option);
       this.dialog.closed.subscribe(e => {
         if (e?.event && e?.event != null) {

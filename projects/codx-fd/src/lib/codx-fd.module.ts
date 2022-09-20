@@ -18,6 +18,8 @@ import { CardsComponent } from './cards/cards.component';
 import { PopupAddCardsComponent } from './cards/popup-add-cards/popup-add-cards.component';
 import { ViewDetailCardsComponent } from './cards/view-detail-cards/view-detail-cards.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { GiftTransComponent } from './gift-trans/gift-trans.component';
+import { ViewDetailGiftComponent } from './gift-trans/view-detail-gift/view-detail-gift.component';
 import { StatisticalComponent } from './statistical/statistical.component';
 import { ViewDetailCoinsComponent } from './wallets/view-detail-coins/view-detail-coins.component';
 import { WalletsComponent } from './wallets/wallets.component';
@@ -53,6 +55,10 @@ export const routes: Routes = [
         path: 'cards/:funcID',
         component: CardsComponent,
       },
+      {
+        path: 'gifttrans/:funcID',
+        component: GiftTransComponent,
+      },
 
     ],
   },
@@ -68,7 +74,9 @@ const Component: Type<any>[] = [
   DashboardComponent,
   CardsComponent,
   ViewDetailCardsComponent,
-  PopupAddCardsComponent
+  ViewDetailGiftComponent,
+  PopupAddCardsComponent,
+  GiftTransComponent
 ];
 
 @NgModule({

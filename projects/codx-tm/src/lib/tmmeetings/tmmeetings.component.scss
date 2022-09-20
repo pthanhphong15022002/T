@@ -24,3 +24,13 @@ codx-view-list-card{
   padding: 7px 10px!important;
   border-left-width: 4px!important;
 }
+.cut-size-long {
+  display: -webkit-box;
+  max-width: 150px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-right: 10px;
+  text-align: center;
+  height: 60px !important;
+}
