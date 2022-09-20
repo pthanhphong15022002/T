@@ -37,9 +37,9 @@ export class DynamicSettingComponent implements OnInit {
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private codxService: CodxService
-  ) { }
+  ) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.views = [
@@ -83,10 +83,11 @@ export class DynamicSettingComponent implements OnInit {
     this.view = view;
     var module = view.function!.module;
     var formName = view.function!.formName;
+    //this.layout.setLogo(null);
     this.cacheService.functionList(module).subscribe((f) => {
       if (f) {
-        this.layout.setUrl(f.url);
-        this.layout.setLogo(f.smallIcon);
+        // this.layout.setUrl(f.url);
+        // this.layout.setLogo(f.smallIcon);
       }
     });
     this.loadSetting(formName);
