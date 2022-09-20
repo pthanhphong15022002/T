@@ -158,8 +158,6 @@ db.DM_FolderInfo.updateMany(
     if (item != null) {
       this.itemHdd = item;
       this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
-      if (item.unit == 'MB')
-        this.percentUsed = this.percentUsed / 1024;
       this.percentUsed = this.percentUsed.toFixed(0);
       //console.log(this.percentUsed);
       this.titleHddUsed = item.messageHddUsed;
