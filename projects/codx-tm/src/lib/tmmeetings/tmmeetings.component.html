@@ -62,12 +62,11 @@
   <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex align-items-top">
       <div
+        style="width: 5px"
         [style.background-color]="
-          data.status | vll: 'CO004':'textColor' | async
+          data.status | vll: statusVll:'textColor' | async
         "
-      >
-        .
-      </div>
+      ></div>
       <div [innerHtml]="convertHtmlAgency(data)"></div>
     </div>
     <div *ngIf="data?.isOnline">
@@ -97,10 +96,6 @@
         >
         </codx-tag>
       </div>
-      <!-- <div class="badge badge-light" *ngIf="!data.tags">
-        <codx-label name="tag" default="Tag" [disabled]="true">
-        </codx-label>
-      </div> -->
       <div *ngIf="!data.tags"></div>
       <div class="position-relative" *ngIf="data.attachments > 0">
         <span class="icon-attach_file icon-18"> </span>
@@ -142,9 +137,12 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <div class="text-start p-2">
-    <div class="text-dark fw-bold" [innerHtml]="getDate(data)"></div>
-    <div class="text-dark fw-bolder">{{ data.meetingName }}</div>
+  <div
+    class="text-start p-2"
+    [style.color]="data.status | vll: statusVll:'textColor' | async"
+  >
+    <div class="fw-bold p-2" [innerHtml]="getDate(data)"></div>
+    <div class="fw-bolder">{{ data.meetingName }}</div>
   </div>
 </ng-template>
 <!-- calendar -->
@@ -152,7 +150,7 @@
 <!-- kanban -->
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
-     cardCss="border h-100"
+    cardCss="border h-100"
     imageObjType="AD_Users"
     (clickMF)="clickMF($event, data)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
@@ -172,31 +170,32 @@
   >
   </codx-card-img>
 </ng-template>
+
+<!-- tách riêng để dễ fix sau này -->
 <ng-template #cardImgFooter let-data let-setting="setting">
-  <!-- <div class="d-flex flex-column flex-grow-1 mt-2">
-    <div class="d-flex align-items-center">
-      <codx-imgs
-        [objectId]="getResourceID(data)"
-        objectType="AD_Users"
-        [numberImages]="4"
-        [width]="30"
-      >
-      </codx-imgs>
-    </div>
+  <div class="d-flex justify-content-center h-60px">
+    <codx-imgs
+      [objectId]="getResourceID(data)"
+      objectType="AD_Users"
+      [width]="30"
+      [numberImages]="3"
+    >
+    </codx-imgs>
+  </div>
+  <div class="footer-bottom">
     <div class="d-flex align-items-center justify-content-between">
       <div *ngIf="data.tags">
         <codx-tag
           [entityName]="view.formModel.entityName"
           [disabled]="true"
+          [isEdit]="false"
           [value]="data?.tags"
         >
         </codx-tag>
       </div>
-      <div class="badge badge-light" *ngIf="!data.tags">
-        <codx-label name="tag" default="Tag" [disabled]="true"> </codx-label>
-      </div>
+      <div *ngIf="!data.tags"></div>
       <div class="position-relative" *ngIf="data.attachments > 0">
-        <span class="icon-link icon-24"> </span>
+        <span class="icon-attach_file icon-18"> </span>
         <span
           class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
         >
@@ -204,7 +203,7 @@
         >
       </div>
     </div>
-  </div> -->
+  </div>
 </ng-template>
 
 <!-- kanban -->

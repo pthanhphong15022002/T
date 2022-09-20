@@ -43,6 +43,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.data = dt.data;
+
     this.user = this.authStore.get();
   }
 
@@ -50,6 +51,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   isAfterRender: boolean = false;
   isApprover = true;
+  stepNo;
   dialog;
   data;
   user;
@@ -72,10 +74,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.canOpenSubPopup = false;
     this.funcID = this.data ? this.data.funcID : 'EST01';
     this.canOpenSubPopup = this.data?.status == 3 ? true : false;
+    this.stepNo = this.data?.stepNo;
+    console.log('step no', this.stepNo);
 
-    this.recID = this.data
-      ? this.data.recID
-      : '8d52a9dc-24ed-11ed-9451-00155d035517';
+    this.recID = this.data.recID;
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService

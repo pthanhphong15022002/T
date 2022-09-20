@@ -6,7 +6,6 @@ import {
   Injector,
   Input,
   IterableDiffers,
-  OnInit,
   QueryList,
   TemplateRef,
   ViewChild,
@@ -48,7 +47,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   @Input() recID = '12f65ad5-325b-11ed-a524-d89ef34bb550';
   @Input() isDisable = false;
   @Input() isApprover;
-
+  @Input() stepNo = -1;
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -65,6 +64,11 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   //virtual layer for sign areas
   url: string = '';
   virtualCanvas: any;
+  xAt100 = 793;
+  yAt100 = 1122;
+  xScale = 1;
+  yScale = 1;
+
   vcWidth = 0;
   vcHeight = 0;
   vcTop = 0;
@@ -79,8 +83,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //page
   pageMax;
-  pageWidth;
-  pageHeight;
   pageStep;
   pageViewMode = 'single';
   curPage = 1;
@@ -112,13 +114,14 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   renderQRAllPage = false;
 
   //save to db
-  after_X_Second: number = 500;
+  after_X_Second: number = 100;
 
   //signer info
   lstSigners: Array<any> = [];
   curSignerID;
+  curSignerRecID;
   signerInfo: any;
-  person: Object = { text: 'authorName', value: 'authorID' };
+  person: Object = { text: 'authorName', value: 'recID' };
 
   //file info
   lstFiles: Array<Object> = [];
@@ -208,10 +211,13 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
             this.signerInfo = res?.approvers.find(
               (approver) => approver.authorID == this.user.userID
             );
+          } else {
+            this.signerInfo = res.approvers[0];
           }
           this.curFileID = sf?.files[0]?.fileID;
           this.curFileUrl = res.urls[0];
           this.curSignerID = res.approvers[0]?.authorID;
+          this.curSignerRecID = res.approvers[0]?.recID;
         }
         this.detectorRef.detectChanges();
       });
@@ -295,6 +301,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         .updateSignFileTrans(
           this.vcWidth,
           this.vcHeight,
+          this.stepNo,
           this.isAwait,
           this.user.userID,
           this.recID,
@@ -311,7 +318,22 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //render
   lastRender() {
-    console.log('time out id', this.timeOutId);
+    let ngxCanvas = document.getElementsByTagName('canvas').item(0);
+    let ngxCanvasParentEle = ngxCanvas.parentElement;
+    let virtualCanvasEle = document.createElement('div');
+    virtualCanvasEle.id = 'virtualLayer';
+    virtualCanvasEle.style.display = 'display: flex';
+    virtualCanvasEle.style.position = 'absolute';
+    virtualCanvasEle.style.top = '0';
+    virtualCanvasEle.style.left = '0';
+    virtualCanvasEle.style.zIndex = '1';
+    virtualCanvasEle.style.width = this.vcWidth + 'px';
+    virtualCanvasEle.style.width = this.vcWidth + 'px';
+    virtualCanvasEle.style.border = '1px solid blue';
+    ngxCanvasParentEle.appendChild(virtualCanvasEle);
+
+    this.xScale = this.vcWidth / this.xAt100;
+    this.yScale = this.vcHeight / this.yAt100;
 
     this.stage = new Konva.Stage({
       container: 'virtualLayer',
@@ -361,9 +383,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         this.tr.nodes([e.target]);
       }
     });
-    this.tr.on('transformend', (e: any) => {
-      console.log('goi service update');
-    });
 
     this.stage.add(this.layer);
     this.esService
@@ -381,7 +400,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           })
           ?.forEach((area) => {
             let isRender = true;
-            if (this.isApprover && area.signer != this.curSignerID) {
+            if (
+              (this.isApprover || this.isDisable) &&
+              (area.signer != this.curSignerID ||
+                area.stepNo != this.stepNo ||
+                area.isLock)
+            ) {
               isRender = false;
             }
             if (isRender) {
@@ -395,6 +419,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     area.labelType,
                     area.allowEditAreas,
                     false,
+                    area.signer,
+                    area.stepNo,
                     area
                   );
                   break;
@@ -408,6 +434,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     area.labelType,
                     area.allowEditAreas,
                     false,
+                    area.signer,
+                    area.stepNo,
                     area
                   );
                   break;
@@ -419,6 +447,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     area.labelType,
                     area.allowEditAreas,
                     false,
+                    area.signer,
+                    area.stepNo,
                     area
                   );
                   break;
@@ -435,6 +465,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     area.labelType,
                     area.allowEditAreas,
                     false,
+                    area.signer,
+                    area.stepNo,
                     area
                   );
                   break;
@@ -453,7 +485,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   timeOutId;
   pageRendered(e: any) {
-    this.pageWidth = e.view;
     this.pageMax = e?.pagesCount;
 
     //context menu
@@ -476,6 +507,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
     //get canvas bounds in pdf
     let ngxCanvas = document.getElementsByTagName('canvas').item(0);
+
     let bounds = ngxCanvas?.getBoundingClientRect();
     if (bounds) {
       this.vcTop = bounds.top;
@@ -491,6 +523,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       if (this.tr) {
         this.tr.destroy();
       }
+
       clearTimeout(this.timeOutId);
       this.timeOutId = setTimeout(
         this.lastRender.bind(this),
@@ -507,63 +540,173 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     labelType = 1;Chữ ký;2;Con dấu;3;Tên đầy đủ;4;Chức danh;5;Ngày giờ;6;Ghi chú;7;Số văn bản;8;QR Code;9;Nhãn
 
   */
+  saveQueue = new Map();
+  saveAfterX = 3000;
+
+  resetTime(tmpArea: tmpSignArea) {
+    clearTimeout(this.saveQueue?.get(tmpArea.recID));
+    this.saveQueue?.delete(this.saveQueue?.get(tmpArea.recID));
+    this.saveQueue.set(
+      tmpArea.recID,
+      setTimeout(
+        this.saveToDB.bind(this),
+        this.saveAfterX,
+        tmpArea,
+        tmpArea.recID
+      )
+    );
+  }
+
+  saveToDB(tmpArea: tmpSignArea) {
+    this.esService
+      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
+      .subscribe((res) => {
+        console.log('da update area', tmpArea);
+      });
+  }
+
+  addDragResizeEevent(
+    tmpArea: tmpSignArea,
+    event,
+    newPos?: { x: number; y: number },
+    newSize?: { width: number; height: number },
+    newScale?: { x: number; y: number }
+  ) {
+    console.log(event, ' event');
+    switch (event) {
+      case 'dragend': {
+        tmpArea.location.top =
+          (newPos ? newPos.y : tmpArea.location.top) / this.yScale;
+        tmpArea.location.left =
+          (newPos ? newPos.x : tmpArea.location.left) / this.xScale;
+        break;
+      }
+
+      case 'transformend': {
+        tmpArea.location.width =
+          ((newSize ? newSize.width : tmpArea.location.width) / this.xScale) *
+          newScale.x;
+        tmpArea.location.height =
+          ((newSize ? newSize.height : tmpArea.location.height) / this.yScale) *
+          newScale.y;
+        break;
+      }
+    }
+    this.resetTime(tmpArea);
+  }
+
   addArea(
     url,
     type: string,
     labelType,
     draggable: boolean,
     isSaveToDB: boolean,
+    authorID: string,
+    stepNo: number,
     area?: tmpSignArea
   ) {
     let tmpName: tmpAreaName = {
       Signer: this.curSignerID,
       PageNumber: this.curPage - 1,
+      StepNo: stepNo,
+      LabelType: labelType,
     };
+    let recID = Guid.newGuid();
+
     switch (type) {
       case 'text':
-        // create label
-        var textArea = new Konva.Label({
-          x: 100,
-          y: 100,
+        var textArea = new Konva.Text({
+          text: url,
+          fontSize: 23,
+          fontFamily: 'Calibri',
           draggable: draggable,
+          padding: 10,
+          name: JSON.stringify(tmpName),
+          id: recID,
         });
-
-        // add a tag to the label
-        textArea.add(
-          new Konva.Tag({
-            fill: '#bbb',
-            stroke: '#333',
-            shadowColor: 'black',
-            shadowBlur: 10,
-            shadowOffset: { x: 10, y: 10 },
-            shadowOpacity: 0.2,
-            lineJoin: 'round',
-            pointerDirection: 'up',
-            pointerWidth: 20,
-            pointerHeight: 20,
-            cornerRadius: 5,
-            id: 'justAdd',
-            name: JSON.stringify(tmpName),
-          })
-        );
-
-        // add text to the label
-        textArea.add(
-          new Konva.Text({
-            text: url,
-            fontSize: 50,
-            lineHeight: 1.2,
-            padding: 10,
-            fill: 'green',
-          })
-        );
         if (this.layer) {
-          this.layer.add(textArea);
           if (isSaveToDB) {
-            textArea.startDrag();
-            textArea.on('dragend', () => {
-              // this.setAreaID('justAdd', labelType);
+            this.stage.on('mouseover', () => {
+              textArea.position(this.stage.getPointerPosition());
+              textArea.scale({ x: this.xScale, y: this.yScale });
+              this.tr.nodes([textArea]);
+              this.layer.add(textArea);
+              textArea.startDrag();
+              textArea.on('dragend', (e: any) => {
+                this.stage.off('mouseover');
+
+                let txtY = textArea.position().y;
+                let txtX = textArea.position().x;
+                let txtW = textArea.width();
+                let txtH = textArea.height();
+
+                let tmpArea: tmpSignArea = {
+                  signer: authorID,
+                  labelType: labelType,
+                  labelValue: url,
+                  isLock: false,
+                  signDate: false,
+                  dateFormat: '1',
+                  location: {
+                    top: txtY / this.yScale,
+                    left: txtX / this.xScale,
+                    width: txtW,
+                    height: txtH,
+                    pageNumber: this.curPage - 1,
+                  },
+                  stepNo: stepNo,
+                  fontStyle: textArea.fontFamily(),
+                  fontFormat: textArea.fontStyle(),
+                  fontSize: textArea.fontSize(),
+                  signatureType: 2,
+                  comment: '',
+                  createdBy: authorID,
+                  modifiedBy: authorID,
+                  recID: recID,
+                };
+                this.esService
+                  .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
+                  .subscribe((res) => {
+                    if (res) {
+                      textArea.off('dragend');
+                      textArea.on('dragend transformend', (e: any) => {
+                        this.addDragResizeEevent(
+                          tmpArea,
+                          e.type,
+                          textArea.getPosition(),
+                          textArea.getSize(),
+                          textArea.scale()
+                        );
+                      });
+                    }
+                  });
+              });
             });
+          } else {
+            textArea.id(area.recID ? area.recID : textArea.id());
+            textArea.draggable(!area.isLock);
+            textArea.width(Number(area.location.width) * this.xScale);
+            textArea.height(Number(area.location.height) * this.yScale);
+            textArea.scale({ x: this.xScale, y: this.yScale });
+            textArea.fontSize(area.fontSize);
+            textArea.fontStyle(area.fontFormat);
+            textArea.fontFamily(area.fontStyle);
+            let txtX = Number(area.location.left) * this.xScale;
+            let txtY = Number(area.location.top) * this.yScale;
+            textArea.x(txtX);
+            textArea.y(txtY);
+            textArea.on('dragend transformend', (e: any) => {
+              this.addDragResizeEevent(
+                area,
+                e.type,
+                textArea.getPosition(),
+                textArea.getSize(),
+                textArea.scale()
+              );
+            });
+            this.layer.add(textArea);
+            this.layer.draw();
+            this.detectorRef.detectChanges();
           }
         }
         break;
@@ -572,76 +715,89 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         let img = document.createElement('img') as HTMLImageElement;
         img.src = url;
         img.onload = () => {
-          let imgW = 200; //img.width;
-          let imgH = 100; //img.height;
-          let imgID = Guid.newGuid();
+          let imgW = 200;
+          let imgH = 100;
           let imgArea = new Konva.Image({
             image: img,
-            id: imgID,
+            id: recID,
             name: JSON.stringify(tmpName),
-            width: imgW,
-            height: imgH,
             draggable: true,
           });
+
           if (isSaveToDB) {
             this.stage.on('mouseover', () => {
               imgArea.position(this.stage.getPointerPosition());
+              imgArea.width(imgW * this.xScale);
+              imgArea.height(imgH * this.yScale);
+              this.tr.nodes([imgArea]);
               this.layer.add(imgArea);
               imgArea.startDrag();
               imgArea.on('dragend', (e: any) => {
                 this.stage.off('mouseover');
-                console.log('drag end', e);
-
-                let imgPX = imgArea.getPosition().x;
-                let imgPY = imgArea.getPosition().y;
+                console.log('drag 1', e);
+                let imgPX = imgArea.position().x;
+                let imgPY = imgArea.position().y;
 
                 let tmpArea: tmpSignArea = {
-                  signer: this.curSignerID,
+                  signer: authorID,
                   labelType: labelType,
                   labelValue: null,
                   isLock: false,
                   signDate: false,
                   dateFormat: '1',
                   location: {
-                    top: imgPY / this.vcHeight,
-                    // Math.sqrt((this.vcHeight / this.zoomValue) * imgPY) * 10,
-                    // (imgArea.getPosition().y / this.vcHeight) *
-                    // (this.zoomValue / 100),
-                    left: imgPX / this.vcWidth,
-                    // Math.sqrt((this.vcWidth / this.zoomValue) * imgPX) * 10,
-                    // (imgArea.getPosition().x / this.vcHeight) *
-                    // (this.zoomValue / 100),
-                    width: imgW / this.vcWidth,
-                    height: imgH / this.vcHeight,
+                    top: imgPY / this.yScale,
+                    left: imgPX / this.xScale,
+                    width: imgW,
+                    height: imgH,
                     pageNumber: this.curPage - 1,
                   },
+                  stepNo: stepNo,
                   fontStyle: 'Arial',
                   fontFormat: 'BIU',
                   fontSize: 30,
                   signatureType: 2,
                   comment: '',
-                  createdBy: this.curSignerID,
-                  modifiedBy: this.curSignerID,
-                  recID: imgID,
+                  createdBy: authorID,
+                  modifiedBy: authorID,
+                  recID: recID,
                 };
                 this.esService
-                  .addOrEditSignArea(this.recID, this.curFileID, tmpArea, imgID)
+                  .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
                   .subscribe((res) => {
                     if (res) {
-                      console.log('da save area', tmpArea);
+                      imgArea.off('dragend');
+                      imgArea.on('dragend transformend', (e: any) => {
+                        this.addDragResizeEevent(
+                          area,
+                          e.type,
+                          imgArea.getPosition(),
+                          imgArea.getSize(),
+                          imgArea.scale()
+                        );
+                      });
+                      console.log('da save area', imgArea);
                     }
                   });
               });
             });
           } else {
             imgArea.id(area.recID ? area.recID : imgArea.id());
-            imgArea.width(area.location.width * this.vcWidth);
-            imgArea.height(area.location.height * this.vcHeight);
-            let imgX = Number(area.location.left);
-            let imgY = Number(area.location.top);
-            imgArea.setPosition({
-              x: imgX * this.vcWidth,
-              y: imgY * this.vcHeight,
+            imgArea.draggable(!area.isLock);
+            imgArea.width(Number(area.location.width) * this.xScale);
+            imgArea.height(Number(area.location.height) * this.yScale);
+            let imgX = Number(area.location.left) * this.xScale;
+            let imgY = Number(area.location.top) * this.yScale;
+            imgArea.x(imgX);
+            imgArea.y(imgY);
+            imgArea.on('dragend transformend', (e: any) => {
+              this.addDragResizeEevent(
+                area,
+                e.type,
+                imgArea.getPosition(),
+                imgArea.getSize(),
+                imgArea.scale()
+              );
             });
             this.layer.add(imgArea);
             this.layer.draw();
@@ -678,10 +834,14 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
           break;
         case 3:
-          this.url = this.signerInfo?.fullName;
+          this.url = this.signerInfo?.fullName
+            ? this.signerInfo?.fullName
+            : this.vllActions[type - 1].text;
           break;
         case 4:
-          this.url = this.signerInfo?.position;
+          this.url = this.signerInfo?.position
+            ? this.signerInfo?.position
+            : this.vllActions[type - 1].text;
           break;
         case 5:
           this.url = this.datePipe.transform(new Date(), 'M/d/yy, h:mm a');
@@ -699,14 +859,38 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           this.url = '';
           break;
       }
-      if (['1', '2', '8']) {
+      if ([1, 2, 8].includes(type)) {
         if (this.url != '') {
-          this.addArea(this.url, 'img', type, true, true);
+          this.addArea(
+            this.url,
+            'img',
+            type,
+            true,
+            true,
+            this.curSignerID,
+            this.signerInfo.stepNo
+          );
         } else {
-          this.addArea(this.url, 'text', type, true, true);
+          this.addArea(
+            this.signerInfo.fullName,
+            'text',
+            type,
+            true,
+            true,
+            this.curSignerID,
+            this.signerInfo.stepNo
+          );
         }
       } else {
-        this.addArea(this.url, 'text', type, true, true);
+        this.addArea(
+          this.url,
+          'text',
+          type,
+          true,
+          true,
+          this.curSignerID,
+          this.signerInfo.stepNo
+        );
       }
     } else {
       console.log('vui long chon nguoi ki');
@@ -719,10 +903,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   changeShowActionsState() {
     this.hideActions = !this.hideActions;
-  }
-
-  changeZoomValue(e: any) {
-    this.zoomValue = e.zoomValue;
   }
 
   changeFontWeight(type) {
@@ -740,6 +920,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
   changeSignFile(e: any) {
     this.lstSigners = e.itemData.signers;
+    console.log('signers', this.lstSigners);
+
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
     this.curFileUrl = this.fileInfo.fileUrl;
@@ -764,26 +946,29 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   changeZoom(type: string, e?: any) {
     if (!isNaN(Number(e?.value))) {
-      if (this.isDisable) this.zoomValue = e.value;
+      this.zoomValue = e.value;
     } else {
       switch (e.value) {
         case 'Auto':
-          if (this.isDisable) this.zoomValue = 'auto';
+          this.zoomValue = 'auto';
           return;
         case 'Fit to Width':
-          if (this.isDisable) this.zoomValue = 'page-width';
+          this.zoomValue = 'page-width';
           return;
         case 'Fit to page':
-          if (this.isDisable) this.zoomValue = 'page-fit';
+          this.zoomValue = 'page-fit';
           return;
       }
     }
   }
   changeSigner(e: any) {
     this.signerInfo = e.itemData;
+    console.log('change signer', this.signerInfo);
     this.curSignerID = this.signerInfo.authorID;
+    this.curSignerRecID = this.signerInfo.recID;
     this.detectorRef.detectChanges();
   }
+
   changeSuggestState(e: any) {
     this.needSuggest = e.data;
     if (this.needSuggest) {

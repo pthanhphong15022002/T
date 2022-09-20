@@ -1,5 +1,4 @@
 <codx-views
-  style="height: 80vh"
   #base
   [funcID]="funcID"
   [service]="service"
@@ -56,37 +55,89 @@
   </div>
 </ng-template>
 
-<ng-template #footerButton let-data>
-  <div class="d-flex justify-content-between">
-    <button class="btn btn-light-primary" (click)="edit(data)">Sửa</button>
-    <button class="btn btn-light-danger" (click)="delete(data)">Xóa</button>
+<ng-template #mfButton let-data> 
+  <codx-mfunc
+      [dataItem]="data"
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
+</ng-template>
+
+<ng-template #contentTmp let-data> 
+
+  <div>
+    {{data.title}}
+  </div>
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <i class="icon-person me-1"></i>
+    <span>
+      {{data.requester}}
+    </span>
+  </div>   
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <i class="icon-location_on me-1"></i>
+    <span>
+      {{data.resourceName}}
+    </span>
+  </div> 
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <div class="d-flex me-6">
+      <i class="icon-calendar_today me-1"></i>
+      <span class="text-gray-600">
+        {{
+          data
+            ? (data?.createdOn | date: "dd/MM/yyyy")
+            : "dd/MM/yyyy"
+        }}
+      </span>
+    </div>
+    <div class="d-flex me-6">
+      <i class="icon-access_time me-1"></i>
+      <span >
+        {{ data?.startDate | date: "shortTime" }}
+      </span>
+      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{ "-" }}</span >
+      <span>
+        {{ data?.endDate | date: "shortTime" }}
+      </span>
+    </div>
+  </div>
+
+  <hr>
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <span class="text-gray-600">Lí do: </span>
+    <span>
+      {{data.reasonID}}
+    </span>
+  </div> 
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <span class="text-gray-600">Nội dung: </span>
+    <span>
+      {{data.memo}}
+    </span>
+  </div> 
+  
+  <div>    
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label default="Thành viên" class="fw-bold me-4"> </codx-label>
+        <div class="d-flex justify-content-end">
+          <codx-imgs
+            [objectId]="'ADMIN;HPHOA;HPHOA1;PMNHI;HPHOA;HPHOA1;PMNHI'"
+            objectType="AD_Users"
+            [numberImages]="7"
+            [width]="30"
+          >
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 
-<ng-template #footer let-data>
-  <div class="container my-3 p-3">
-    <div class="row">
-      <div style="width: 90%">
-        <span style="font-weight: 600; text-transform: uppercase">{{
-          data.title
-        }}</span>
-      </div>
-      <div style="width: 10%">
-        <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col-3 d-flex justify-content-center">
-        <codx-img [objectId]="data.requester" [width]="35"></codx-img>
-      </div>
-      <div class="col-9">
-        <span class="text-muted mt-3" style="font-weight: 500; float: left">{{
-          data.requester
-        }}</span>
-      </div>
-    </div>
-  </div>
-</ng-template>
 
 <ng-template #resourceTootip let-data>
   <div class="template-wrap">
@@ -96,6 +147,7 @@
   </div>
 </ng-template>
 
+<!-- 
 <ng-template #pined>
   <div class="d-flex justify-content-start w-100">
     <button
@@ -213,4 +265,6 @@
       </button>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
+
+

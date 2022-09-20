@@ -10,14 +10,12 @@ import {
 import { FormGroup, FormControl } from '@angular/forms';
 
 import {
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
   ImageViewerComponent,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -105,6 +103,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   onSaveForm() {
+    debugger;
     if (this.dialogAddStationery.invalid == true) {
       return;
     }

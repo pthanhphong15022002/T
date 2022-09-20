@@ -1,6 +1,7 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   DialogRef,
+  FormModel,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -8,6 +9,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddBookingRoomComponent } from '../../booking/room/popup-add-booking-room/popup-add-booking-room.component';
+import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
   selector: 'approval-room',
@@ -19,8 +21,13 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
-  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  
+  @ViewChild('subTitle') subTitle?: TemplateRef<any>;
+
   views: Array<ViewModel> | any = [];
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -29,7 +36,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   assemblyName = 'EP';
   entity = 'EP_Bookings';
   className = 'BookingsBusiness';
-  method = 'GetListBookingAsync';
+  method = 'GetApprovalEventsAsync';
   idField = 'recID';
   predicate = 'ResourceType=@0';
   datavalue = '1';
@@ -37,17 +44,26 @@ export class ApprovalRoomsComponent extends UIComponent {
   jobs;
   itemDetail;
   preStepNo;
+  formModel: FormModel;
   button;
   fields;
   itemSelected: any;
   resourceField;
   dataSelected: any;
   dialog!: DialogRef;
+  tempReasonName='';
   
-  constructor(private injector: Injector) {
+  constructor(
+    private injector: Injector,
+    private codxEpService: CodxEpService,
+    ) {
     super(injector);
-
     this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -55,7 +71,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.assemblyName='EP';
     this.request.className='BookingsBusiness';
     this.request.service='EP';
-    this.request.method='GetEventsAsync';
+    this.request.method='GetApprovalEventsAsync';
     this.request.predicate='ResourceType=@0';
     this.request.dataValue='1';
     this.request.idField='recID';
@@ -68,6 +84,8 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '1';
 
+    
+    
     this.fields = {
       id: 'bookingNo',
       subject: { name: 'title' },
@@ -107,17 +125,19 @@ export class ApprovalRoomsComponent extends UIComponent {
         active:true,
         request2:this.modelResource,
         request:this.request,
-        toolbarTemplate:this.footerButton,
+        //toolbarTemplate:this.footerButton,
         showSearchBar:false,
         model:{
           //panelLeftRef:this.panelLeft,
           eventModel:this.fields,
-          resourceModel:this.resourceField,
+          resourceModel:this.resourceField,//resource
           //template:this.cardTemplate,
           template4: this.resourceHeader,
-          template5: this.resourceTootip,
-          template6: this.footerTemplate,
-          template7: this.footerButton,
+          template5: this.resourceTootip,//tooltip
+
+          template6: this.mfButton,//header          
+          template8: this.contentTmp,//content
+          //template7: this.footerButton,//footer
           statusColorRef:'vl003'
         },
       },
@@ -191,14 +211,21 @@ export class ApprovalRoomsComponent extends UIComponent {
         break;
     }
   }
-
+  getReasonName(reasonID: string) {
+    this.codxEpService.getReasonName(reasonID).subscribe((res) => {
+      if (res.msgBodyData[0]) {
+        this.tempReasonName = res.msgBodyData[0];
+      }
+    });
+    return this.tempReasonName;
+  }
   closeAddForm(event) {}
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
 
-  getDetailBooking(event) {
+  getDetailBooking(id: any) {
     this.api
       .exec<any>(
         'EP',
@@ -212,5 +239,54 @@ export class ApprovalRoomsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  setStyles(resourceType) {
+    let styles = {};
+    switch (resourceType) {
+      case '1':
+        styles = {
+          backgroundColor: '#104207',
+          color: 'white',
+        };
+        break;
+      case '2':
+        styles = {
+          backgroundColor: '#29b112',
+          color: 'white',
+        };
+        break;
+      case '6':
+        styles = {
+          backgroundColor: '#053b8b',
+          color: 'white',
+        };
+        break;
+      default:
+        styles = {};
+        break;
+    }
+
+    return styles;
+  }
+
+  setIcon(resourceType) {
+    let icon: string = '';
+    switch (resourceType) {
+      case '1':
+        icon = 'icon-calendar_today';
+        break;
+      case '2':
+        icon = 'icon-directions_car';
+        break;
+      case '6':
+        icon = 'icon-desktop_windows';
+        break;
+      default:
+        icon = '';
+        break;
+    }
+
+    return icon;
   }
 }

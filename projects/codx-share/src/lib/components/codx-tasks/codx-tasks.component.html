@@ -180,7 +180,7 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <div>
+  <div  [style.color]="data.status | vll: vllStatus:'textColor' | async">
     <div>{{ data.taskName }}</div>
   </div>
 </ng-template>
@@ -311,7 +311,7 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="button"
+  [button]=" showButtonAdd? button : ''"
   (buttonClick)="click($event)"
   (viewChanged)="changeView($event)"
   (requestEnded)="requestEnded($event)"

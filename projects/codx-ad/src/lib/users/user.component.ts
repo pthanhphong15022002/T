@@ -33,8 +33,7 @@ import { CodxAdService } from '../codx-ad.service';
 @Component({
   selector: 'lib-user',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./user.component.scss'],
 })
 export class UserComponent extends UIComponent {
   // @Input() formModel: any;

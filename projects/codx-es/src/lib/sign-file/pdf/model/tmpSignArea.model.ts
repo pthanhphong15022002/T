@@ -22,10 +22,13 @@ export class tmpSignArea {
   createdBy: string;
   modifiedOn?: Date;
   modifiedBy: string;
+  stepNo: number;
   recID?: string;
 }
 
 export class tmpAreaName {
   Signer: string;
   PageNumber: number;
+  StepNo: number;
+  LabelType: string;
 }

@@ -105,6 +105,7 @@ export class IncommingAddComponent implements OnInit {
       if (this.type == 'add') {
         this.dispatch.dispatchType = this.data?.dispatchType;
         this.dispatch.agencyName = null;
+        if(this.formModel?.funcID == "ODT41") this.dispatch.owner = user?.userID
       }
       this.dispatch.createdOn = new Date();
     } else if (this.type == 'edit') {

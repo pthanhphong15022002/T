@@ -144,7 +144,7 @@ export class NoteBooksComponent
       })
       .subscribe((res: any) => {
         if (res) {
-          (this.listView.dataService as CRUDService).remove(data).subscribe();
+          // (this.listView.dataService as CRUDService).remove(data).subscribe();
           this.api
             .execSv(
               'DM',

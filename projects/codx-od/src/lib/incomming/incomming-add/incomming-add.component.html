@@ -168,7 +168,7 @@
     </div>
   </div>
   <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
+    <codx-label [formModel]="form.formModel" fiedName="Owner" [default]="form.formModel.funcID =='ODT41'?'Người gửi':null" ></codx-label>
     <div class="d-flex">
       <codx-input type="Combobox" name="combobox"
         [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null" [multiple]="false" [crrValue]="this.dispatch.owner"

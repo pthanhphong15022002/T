@@ -1,29 +1,21 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Injector,
   Input,
-  OnInit,
   Optional,
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup } from '@angular/forms';
 import { AuthService } from 'codx-core';
 import {
-  ApiHttpService,
-  CacheService,
-  CallFuncService,
   DialogData,
   DialogRef,
   NotificationsService,
   UIComponent,
   FormModel,
   RequestOption,
-  CRUDService,
 } from 'codx-core';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 
@@ -38,7 +30,7 @@ export class Device {
   templateUrl: 'popup-add-booking-car.component.html',
   styleUrls: ['popup-add-booking-car.component.scss'],
 })
-export class PopupAddBookingCarComponent implements OnInit {
+export class PopupAddBookingCarComponent extends UIComponent {
   @ViewChild('popupDevice', { static: true }) popupDevice;
 
   @Input() editResources: any;
@@ -54,20 +46,26 @@ export class PopupAddBookingCarComponent implements OnInit {
       icon: 'icon-info',
       text: 'Thông tin chung',
       name: 'tabGeneralInfo',
+      subName: 'Thông tin chung',
+      subText: 'Thông tin chung',
     },
     {
-      icon: 'icon-person_add_alt_1',
-      text: 'Người đi cùng',
+      icon: 'icon-person_outline',
+      text: 'Người đi cùng',
       name: 'tabPeopleInfo',
+      subName: 'Thành viên tham gia',
+      subText: 'Thành viên tham gia',
     },
     {
       icon: 'icon-tune',
       text: 'Thông tin khác',
       name: 'tabMoreInfo',
+      subName: 'Thông tin tham chiếu',
+      subText: 'Thông tin tham chiếu',
     },
   ];
   isSaveSuccess = false;
-
+  subHeaderText = 'Đặt xe';
   fGroupBookingAttendees: FormGroup;
   fGroupAddBookingCar: FormGroup;
   formModel: FormModel;
@@ -82,9 +80,14 @@ export class PopupAddBookingCarComponent implements OnInit {
   CbxName: any;
   isAfterRender = false;
 
-
-  tempAtender:{userId: string, userName:string, roleType:string,status:string,objectType:string};
-  attendeesList=[];
+  tempAtender: {
+    userId: string;
+    userName: string;
+    roleType: string;
+    status: string;
+    objectType: string;
+  };
+  attendeesList = [];
 
   grvBookingCar: any;
   strAttendees: string = '';
@@ -97,24 +100,20 @@ export class PopupAddBookingCarComponent implements OnInit {
   editCarDevice = null;
   tempArray = [];
   constructor(
-    private callFuncService: CallFuncService,
-    private cacheService: CacheService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private injector: Injector,
     private codxEpService: CodxEpService,
     private notificationsService: NotificationsService,
-    private apiHttpService: ApiHttpService,
     private authService: AuthService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
+    super(injector);
     this.data = dialogRef.dataService!.dataSelected;
-    //this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
-    console.log('formModel', this.formModel);
   }
-  ngOnInit(): void {
+  onInit(): void {
     if (!this.isAdd) {
       this.titleAction = 'Chỉnh sửa';
     }
@@ -128,15 +127,14 @@ export class PopupAddBookingCarComponent implements OnInit {
         this.tempAtender = {
           userId: people.userID,
           userName: people.userName,
-          status:"1",
+          status: '1',
           objectType: 'AD_Users',
-          roleType:'2'
-          
+          roleType: '2',
         };
-        this.curUser = this.tempAtender;   
-        this.changeDetectorRef.detectChanges();
+        this.curUser = this.tempAtender;
+        this.detectorRef.detectChanges();
       }
-      this.cacheService.valueList('EP012').subscribe((res) => {
+      this.cache.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
           let device = new Device();
@@ -172,7 +170,7 @@ export class PopupAddBookingCarComponent implements OnInit {
       if (!this.isAdd) {
         this.driverChangeWithCar(this.data.resourceID);
 
-        this.changeDetectorRef.detectChanges();
+        this.detectorRef.detectChanges();
       }
       this.codxEpService
         .getComboboxName(
@@ -184,8 +182,8 @@ export class PopupAddBookingCarComponent implements OnInit {
           console.log('cbxEPT', this.CbxName);
         });
 
-      this.cacheService.functionList('EPT2').subscribe((res) => {
-        this.cacheService
+      this.cache.functionList('EPT2').subscribe((res) => {
+        this.cache
           .gridViewSetup(res.formName, res.gridViewName)
           .subscribe((res) => {
             console.log('grvEPT', res);
@@ -193,7 +191,7 @@ export class PopupAddBookingCarComponent implements OnInit {
           });
       });
       if (!this.isAdd) {
-        this.apiHttpService
+        this.api
           .callSv(
             'EP',
             'ERM.Business.EP',
@@ -205,22 +203,23 @@ export class PopupAddBookingCarComponent implements OnInit {
             if (res) {
               this.peopleAttend = res.msgBodyData[0];
               this.peopleAttend.forEach((people) => {
-                this.tempAtender ={                
-                  userId:people.userID,
-                  userName:people.userName,
-                  status:people.status,
-                  objectType:'AD_Users',
-                  roleType:people.roleType,
+                this.tempAtender = {
+                  userId: people.userID,
+                  userName: people.userName,
+                  status: people.status,
+                  objectType: 'AD_Users',
+                  roleType: people.roleType,
                 };
-                if(this.tempAtender.userId==this.authService.userValue.userID){                
-                  this.curUser=this.tempAtender;
-                }
-                else{                  
+                if (
+                  this.tempAtender.userId == this.authService.userValue.userID
+                ) {
+                  this.curUser = this.tempAtender;
+                } else {
                   this.lstPeople.push(this.tempAtender);
                 }
               });
 
-              this.changeDetectorRef.detectChanges();
+              this.detectorRef.detectChanges();
             }
           });
       }
@@ -236,38 +235,43 @@ export class PopupAddBookingCarComponent implements OnInit {
         if (this.data) {
           console.log('fgroupEPT2', this.data);
           this.fGroupAddBookingCar.patchValue(this.data);
-          this.fGroupAddBookingCar.patchValue({requester:this.authService.userValue.userName});
+          this.fGroupAddBookingCar.patchValue({
+            requester: this.authService.userValue.userName,
+          });
         }
       });
-      if(this.isAdd){
-        this.fGroupAddBookingCar.patchValue({
-          attendees:1,
-        });
-  
-        var date = new Date(this.fGroupAddBookingCar.value.startDate);
-        this.fGroupAddBookingCar.value.bookingOn = new Date(
-          date.setHours(0, 0, 0, 0)
-        );
-      }
-      
+    if (this.isAdd) {
+      this.fGroupAddBookingCar.patchValue({
+        attendees: 1,
+      });
+
+      var date = new Date(this.fGroupAddBookingCar.value.startDate);
+      this.fGroupAddBookingCar.value.bookingOn = new Date(
+        date.setHours(0, 0, 0, 0)
+      );
+    }
+
     this.isAfterRender = true;
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
   setTitle(e: any) {
     this.title = this.titleAction + ' ' + e.toString().toLowerCase();
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   beforeSave(option: RequestOption) {
     let itemData = this.fGroupAddBookingCar.value;
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAdd, this.attendeesList,null,null];
+    option.data = [itemData, this.isAdd, this.attendeesList, null, null];
     return true;
   }
 
   onSaveForm() {
     if (this.fGroupAddBookingCar.invalid == true) {
-      this.codxEpService.notifyInvalid(this.fGroupAddBookingCar, this.formModel);
+      this.codxEpService.notifyInvalid(
+        this.fGroupAddBookingCar,
+        this.formModel
+      );
       return;
     }
     if (
@@ -286,12 +290,12 @@ export class PopupAddBookingCarComponent implements OnInit {
       if (!isNaN(hours) && hours > 0) {
         this.fGroupAddBookingCar.patchValue({ hours: hours });
       }
-    }    
-    
+    }
+
     this.attendeesList.push(this.curUser);
-    this.lstPeople.forEach(people=>{
+    this.lstPeople.forEach((people) => {
       this.attendeesList.push(people);
-    });    
+    });
 
     let pickedEquip = '';
     let availableEquip = '';
@@ -309,18 +313,24 @@ export class PopupAddBookingCarComponent implements OnInit {
         }
       }
     });
-    if(this.fGroupAddBookingCar.value.resourceID instanceof Object){
-      this.fGroupAddBookingCar.patchValue({resourceID:this.fGroupAddBookingCar.value.resourceID[0]})
+    if (this.fGroupAddBookingCar.value.resourceID instanceof Object) {
+      this.fGroupAddBookingCar.patchValue({
+        resourceID: this.fGroupAddBookingCar.value.resourceID[0],
+      });
     }
-    if (this.fGroupAddBookingCar.value.agencyName instanceof Object){
-      this.fGroupAddBookingCar.patchValue({agencyName:this.fGroupAddBookingCar.value.agencyName[0]})
+    if (this.fGroupAddBookingCar.value.agencyName instanceof Object) {
+      this.fGroupAddBookingCar.patchValue({
+        agencyName: this.fGroupAddBookingCar.value.agencyName[0],
+      });
     }
-    if (this.fGroupAddBookingCar.value.reasonID instanceof Object){
-      this.fGroupAddBookingCar.patchValue({reasonID:this.fGroupAddBookingCar.value.reasonID[0]})
+    if (this.fGroupAddBookingCar.value.reasonID instanceof Object) {
+      this.fGroupAddBookingCar.patchValue({
+        reasonID: this.fGroupAddBookingCar.value.reasonID[0],
+      });
     }
     this.fGroupAddBookingCar.patchValue({
       //equipments: availableEquip + '|' + pickedEquip,
-      stopOn:this.fGroupAddBookingCar.value.endDate,
+      stopOn: this.fGroupAddBookingCar.value.endDate,
       bookingOn: this.fGroupAddBookingCar.value.startDate,
       category: '2',
       status: '1',
@@ -328,7 +338,7 @@ export class PopupAddBookingCarComponent implements OnInit {
     });
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {        
+      .subscribe((res) => {
         if (res.save || res.update) {
           this.dialogRef && this.dialogRef.close();
         } else {
@@ -336,7 +346,7 @@ export class PopupAddBookingCarComponent implements OnInit {
           return;
         }
       });
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   buttonClick(e: any) {
@@ -376,7 +386,7 @@ export class PopupAddBookingCarComponent implements OnInit {
   }
 
   driverChangeWithCar(carID: string) {
-    this.apiHttpService
+    this.api
       .callSv(
         'EP',
         'ERM.Business.EP',
@@ -389,7 +399,7 @@ export class PopupAddBookingCarComponent implements OnInit {
           var x = res;
           let driverInfo: {
             id: string;
-            text: string;            
+            text: string;
             objectType: string;
             objectName: string;
           } = {
@@ -399,29 +409,30 @@ export class PopupAddBookingCarComponent implements OnInit {
             objectName: undefined,
           };
           this.driver = driverInfo;
-          this.changeDetectorRef.detectChanges();
+          this.detectorRef.detectChanges();
         }
       });
   }
   valueCbxUserChange(event?) {
-    this.lstPeople=[];
+    this.lstPeople = [];
     event.data.dataSelected.forEach((people) => {
       this.tempAtender = {
         userId: people.id,
         userName: people.text,
-        status:"1",
+        status: '1',
         objectType: 'AD_Users',
-        roleType:'3'
+        roleType: '3',
       };
-      if(this.tempAtender.userId!=this.curUser.userId)
-      {
+      if (this.tempAtender.userId != this.curUser.userId) {
         this.lstPeople.push(this.tempAtender);
       }
     });
-    if(this.lstPeople.length>0){
-      this.fGroupAddBookingCar.patchValue({attendees:this.lstPeople.length+1});
+    if (this.lstPeople.length > 0) {
+      this.fGroupAddBookingCar.patchValue({
+        attendees: this.lstPeople.length + 1,
+      });
     }
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   // valueCbxDriverChange(event) {
@@ -436,8 +447,8 @@ export class PopupAddBookingCarComponent implements OnInit {
     });
   }
   openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 550, 430);
-    this.changeDetectorRef.detectChanges();
+    var dialog = this.callfc.openForm(template, '', 550, 430);
+    this.detectorRef.detectChanges();
   }
 
   checkedChange(event: any, device: any) {
