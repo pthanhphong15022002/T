@@ -1,9 +1,14 @@
+import { BehaviorComponent } from './setting/category/behavior/behavior.component';
+import { BehaviorruleComponent } from './setting/category/behaviorrule/behaviorrule.component';
+import { GiftgroupComponent } from './setting/category/giftgroup/giftgroup.component';
+import { GiftsComponent } from './setting/category/gifts/gifts.component';
+import { ProposedfieldComponent } from './setting/category/proposedfield/proposedfield.component';
+import { CategoryComponent } from './setting/category/category.component';
+import { DedicationrankComponent } from './setting/dedicationrank/dedicationrank.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
 import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccumulationChartModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
@@ -19,12 +24,15 @@ import { PopupAddCardsComponent } from './cards/popup-add-cards/popup-add-cards.
 import { ViewDetailCardsComponent } from './cards/view-detail-cards/view-detail-cards.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GiftTransComponent } from './gift-trans/gift-trans.component';
+import { PopupAddGiftComponent } from './gift-trans/popup-add-gift/popup-add-gift.component';
 import { ViewDetailGiftComponent } from './gift-trans/view-detail-gift/view-detail-gift.component';
+import { SettingComponent } from './setting/setting.component';
 import { StatisticalComponent } from './statistical/statistical.component';
 import { ViewDetailCoinsComponent } from './wallets/view-detail-coins/view-detail-coins.component';
 import { WalletsComponent } from './wallets/wallets.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
+import { RouterModule, Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -76,13 +84,21 @@ const Component: Type<any>[] = [
   ViewDetailCardsComponent,
   ViewDetailGiftComponent,
   PopupAddCardsComponent,
-  GiftTransComponent
+  GiftTransComponent,
+  SettingComponent,
+  DedicationrankComponent,
+  CategoryComponent,
+  ProposedfieldComponent,
+  GiftsComponent,
+  GiftgroupComponent,
+  BehaviorruleComponent,
+  BehaviorComponent,
+  PopupAddGiftComponent
 ];
 
 @NgModule({
   imports: [ 
     CommonModule,
-    FormsModule,
     OverlayModule,
     InlineSVGModule.forRoot(),
     HttpClientModule,

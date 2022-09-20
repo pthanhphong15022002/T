@@ -15,7 +15,8 @@ import { CodxEpService } from '../../codx-ep.service';
   styleUrls: ['./view-detail.component.scss'],
 })
 export class ViewDetailComponent extends UIComponent implements OnChanges {
-  @ViewChild('itemDetailTemplate') itemDetailTemplate;
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;  
+  @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;
   @Input() itemDetail: any;
   @Input() funcID;
