@@ -581,13 +581,15 @@ export class CodxEsService {
   }
 
   getApprovalSteps(model: GridModels): Observable<any> {
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalStepsBusiness',
-      'GetListApprovalStepAsync',
-      [model]
-    );
+    if (model.dataValue || model.dataValue != '' || model.dataValue != null) {
+      return this.api.execSv(
+        'es',
+        'ERM.Business.ES',
+        'ApprovalStepsBusiness',
+        'GetListApprovalStepAsync',
+        [model]
+      );
+    } else return EMPTY;
   }
 
   addNewApprovalStep(lstData = null): Observable<any> {
