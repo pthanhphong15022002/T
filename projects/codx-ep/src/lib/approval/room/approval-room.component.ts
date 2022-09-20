@@ -21,7 +21,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
-  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
@@ -48,6 +48,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   resourceField;
   dataSelected: any;
   dialog!: DialogRef;
+  tempReasonName='';
   
   constructor(
     private injector: Injector,
@@ -67,7 +68,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.assemblyName='EP';
     this.request.className='BookingsBusiness';
     this.request.service='EP';
-    this.request.method='GetEventsAsync';
+    this.request.method='GetListBookingAsync';
     this.request.predicate='ResourceType=@0';
     this.request.dataValue='1';
     this.request.idField='recID';
@@ -121,7 +122,7 @@ export class ApprovalRoomsComponent extends UIComponent {
         active:true,
         request2:this.modelResource,
         request:this.request,
-        toolbarTemplate:this.footerButton,
+        //toolbarTemplate:this.footerButton,
         showSearchBar:false,
         model:{
           //panelLeftRef:this.panelLeft,
@@ -131,8 +132,8 @@ export class ApprovalRoomsComponent extends UIComponent {
           template4: this.resourceHeader,
           template5: this.resourceTootip,//tooltip
 
-          template6: this.footerButton,//header          
-          //template8: this.contentTmp,//content
+          template6: this.mfButton,//header          
+          template8: this.contentTmp,//content
           //template7: this.footerButton,//footer
           statusColorRef:'vl003'
         },
@@ -207,7 +208,14 @@ export class ApprovalRoomsComponent extends UIComponent {
         break;
     }
   }
-
+  getReasonName(reasonID: string) {
+    this.codxEpService.getReasonName(reasonID).subscribe((res) => {
+      if (res.msgBodyData[0]) {
+        this.tempReasonName = res.msgBodyData[0];
+      }
+    });
+    return this.tempReasonName;
+  }
   closeAddForm(event) {}
 
   changeItemDetail(event) {

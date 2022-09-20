@@ -191,8 +191,8 @@ export class RoomsComponent extends UIComponent {
               width: gv['ResourceName'].width,
             },
             {
-              headerText: gv['ResourceName'].headerText,
-              width: gv['ResourceName'].width,
+              headerText: gv['Icon'].headerText,
+              width: gv['Icon'].width,
               field: 'icon',
               template: this.avatarCol,
               textAlign: 'Center',
