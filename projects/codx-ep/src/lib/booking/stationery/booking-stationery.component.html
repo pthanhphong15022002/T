@@ -11,8 +11,8 @@
   [predicate]="predicate"
   [dataValue]="datavalue"
   [button]="button"
-  [moreFuncs]="moreFunc"
   (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc"
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
@@ -97,7 +97,6 @@
     [formModel]="view.formModel"
     (clickMF)="clickMF($event, data)"
     typeMF="hover"
-    [dataItem]="data"
   >
   </codx-temp-full>
 </ng-template>
