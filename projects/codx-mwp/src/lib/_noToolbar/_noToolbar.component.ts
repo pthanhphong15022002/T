@@ -1,4 +1,3 @@
-import { CodxShareService } from '../../codx-share.service';
 import { Component, OnInit, Injector } from '@angular/core';
 import {
   CallFuncService,
@@ -7,22 +6,20 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { Observable } from 'rxjs';
-import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawer.component';
+import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 @Component({
   selector: 'lib-layoutNoToolbar',
   templateUrl: './_noToolbar.component.html',
   styleUrls: ['./_noToolbar.component.css'],
 })
 export class LayoutNoToolbarComponent extends LayoutBaseComponent {
-  module = '';
-  override aside = true;
+  module = 'MWP';
   dialog!: DialogRef;
-  override asideFixed = true;
-  // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
+  override aside = true;
+ // override asideFixed = false; 
   override toolbar = false;
   constructor(
     inject: Injector,
-    private codxShareService: CodxShareService,
     private callfc: CallFuncService
   ) {
     super(inject);

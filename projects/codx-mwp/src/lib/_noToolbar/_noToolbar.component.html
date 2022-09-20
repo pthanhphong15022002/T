@@ -1,8 +1,7 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <!-- <codx-aside *ngIf="asideDisplay" [hasSecond]="false">
-      </codx-aside> -->
+      <codx-aside *ngIf="asideDisplay"> </codx-aside>
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
           [class]="headerCSSClasses"
@@ -14,7 +13,7 @@
         </codx-header>
         <!-- <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
         </codx-wrapper> -->
-        <codx-wrapper class="d-flex flex-column flex-column-fluid no-wrapper">
+        <codx-wrapper class="d-flex flex-column flex-column-fluid codx-wrapper">
         </codx-wrapper>
       </div>
     </div>
@@ -72,9 +71,6 @@
           "
           class="svg-icon"
           [ngClass]="codxService.toolbarButtonIconSizeClass"
-        ></span>
-        <span
-          class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"
         ></span>
       </div>
       <!-- end::Menu wrapper -->

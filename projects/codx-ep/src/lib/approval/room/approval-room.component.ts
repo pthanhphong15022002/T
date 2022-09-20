@@ -21,10 +21,13 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
-  @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  
+  @ViewChild('subTitle') subTitle?: TemplateRef<any>;
+
   views: Array<ViewModel> | any = [];
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -33,7 +36,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   assemblyName = 'EP';
   entity = 'EP_Bookings';
   className = 'BookingsBusiness';
-  method = 'GetListBookingAsync';
+  method = 'GetApprovalEventsAsync';
   idField = 'recID';
   predicate = 'ResourceType=@0';
   datavalue = '1';
@@ -48,6 +51,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   resourceField;
   dataSelected: any;
   dialog!: DialogRef;
+  tempReasonName='';
   
   constructor(
     private injector: Injector,
@@ -67,7 +71,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.assemblyName='EP';
     this.request.className='BookingsBusiness';
     this.request.service='EP';
-    this.request.method='GetEventsAsync';
+    this.request.method='GetApprovalEventsAsync';
     this.request.predicate='ResourceType=@0';
     this.request.dataValue='1';
     this.request.idField='recID';
@@ -121,7 +125,7 @@ export class ApprovalRoomsComponent extends UIComponent {
         active:true,
         request2:this.modelResource,
         request:this.request,
-        toolbarTemplate:this.footerButton,
+        //toolbarTemplate:this.footerButton,
         showSearchBar:false,
         model:{
           //panelLeftRef:this.panelLeft,
@@ -131,8 +135,8 @@ export class ApprovalRoomsComponent extends UIComponent {
           template4: this.resourceHeader,
           template5: this.resourceTootip,//tooltip
 
-          template6: this.footerButton,//header          
-          //template8: this.contentTmp,//content
+          template6: this.mfButton,//header          
+          template8: this.contentTmp,//content
           //template7: this.footerButton,//footer
           statusColorRef:'vl003'
         },
@@ -207,14 +211,21 @@ export class ApprovalRoomsComponent extends UIComponent {
         break;
     }
   }
-
+  getReasonName(reasonID: string) {
+    this.codxEpService.getReasonName(reasonID).subscribe((res) => {
+      if (res.msgBodyData[0]) {
+        this.tempReasonName = res.msgBodyData[0];
+      }
+    });
+    return this.tempReasonName;
+  }
   closeAddForm(event) {}
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
 
-  getDetailBooking(event) {
+  getDetailBooking(id: any) {
     this.api
       .exec<any>(
         'EP',
@@ -228,5 +239,54 @@ export class ApprovalRoomsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  setStyles(resourceType) {
+    let styles = {};
+    switch (resourceType) {
+      case '1':
+        styles = {
+          backgroundColor: '#104207',
+          color: 'white',
+        };
+        break;
+      case '2':
+        styles = {
+          backgroundColor: '#29b112',
+          color: 'white',
+        };
+        break;
+      case '6':
+        styles = {
+          backgroundColor: '#053b8b',
+          color: 'white',
+        };
+        break;
+      default:
+        styles = {};
+        break;
+    }
+
+    return styles;
+  }
+
+  setIcon(resourceType) {
+    let icon: string = '';
+    switch (resourceType) {
+      case '1':
+        icon = 'icon-calendar_today';
+        break;
+      case '2':
+        icon = 'icon-directions_car';
+        break;
+      case '6':
+        icon = 'icon-desktop_windows';
+        break;
+      default:
+        icon = '';
+        break;
+    }
+
+    return icon;
   }
 }

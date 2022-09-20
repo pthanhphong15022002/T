@@ -1,10 +1,15 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   ButtonModel,
   DataRequest,
   DialogRef,
   FormModel,
-  NotificationsService,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -22,7 +27,7 @@ import { PopupUpdateInventoryComponent } from './popup-update-inventory/popup-up
   templateUrl: './stationery.component.html',
   styleUrls: ['./stationery.component.scss'],
 })
-export class StationeryComponent extends UIComponent {
+export class StationeryComponent extends UIComponent implements AfterViewInit {
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('productImg') productImg: TemplateRef<any>;
   @ViewChild('product') product: TemplateRef<any>;
@@ -77,11 +82,7 @@ export class StationeryComponent extends UIComponent {
     },
   ];
 
-  constructor(
-    private injector: Injector,
-    private epService: CodxEpService,
-    private notiService: NotificationsService
-  ) {
+  constructor(private injector: Injector, private epService: CodxEpService) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }

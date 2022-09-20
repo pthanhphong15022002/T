@@ -1,56 +1,43 @@
-<div class="d-flex justify-content-between">
-  <h1>
-    <codx-label
-      [name]="'lblHeaderCAProps'"
-      [formModel]=""
-      [default]="title"
-      class="fw-bold text-primary fs-66"
-    >
-    </codx-label>
-  </h1>
-  <button class="" sylte="border:none;" (click)="saveDialog()">x</button>
-</div>
-<div class="bade d-block m-3 p-3">
-  <div
-    class="icon"
-    [ngClass]="{
-      icon: true,
-      'icon-error btn-danger': stt == '1',
-      'icon-report_gmailerrorred btn-warning': stt == '2',
-      'icon-done btn-success': stt == '3'
-    }"
-  >
-    <codx-label
-      [name]="'lblResult'"
-      [formModel]=""
-      [default]="
-        stt == '1'
-          ? 'Chứng nhận chữ ký số không hợp lệ'
-          : stt == '2'
-          ? 'Chứng nhận chữ ký số chưa định danh'
-          : 'Chứng nhận chữ ký số hợp lệ'
-      "
-    >
-    </codx-label>
+<div class="popup-content p-6">
+  <div class="d-flex justify-content-between mb-4">
+    <h1>
+      <codx-label [name]="'lblHeaderCAProps'" [formModel]="" [default]="title" class="fw-bold text-dark fs-3">
+      </codx-label>
+    </h1>
+    <button class="btn btn-sm btn-icon btn-active-color-primary" (click)="saveDialog()"><span
+        class="icon-close icon-18"></span></button>
   </div>
-</div>
+  <div class="notice d-flex rounded border-gray-200 border py-3 px-4 mb-4">
+    <div class="d-flex align-items-center">
+      <div class="me-4 symbol symbol-circle symbol-24px p-2 icon-16 text-white" [ngClass]="{
+        icon: true,
+        'icon-clear bg-danger': stt == '1',
+        'icon-priority_high bg-warning': stt == '2',
+        'icon-check bg-success': stt == '3'
+      }">
 
-<div
-  class="failReasons"
-  [class]="idx != failReasons.lenght - 1 ? 'border-bottom mb-3' : ''"
-  *ngFor="let reason of failReasons; let idx = index"
->
-  <codx-label
-    [name]="'lblReason' + idx"
-    [formModel]=""
-    [default]="reason.typeName + ':'"
-    class="d-block"
-  >
-  </codx-label>
-  <codx-label
-    [name]="'lblReasonDetail' + idx"
-    [formModel]=""
-    [default]="reason.message != '' ? reason.message : 'Hợp lệ'"
-  >
-  </codx-label>
+      </div>
+      <div class="d-flex flex-column">
+        <codx-label class="fw-bold" [name]="'lblResult'" [formModel]="" [default]="
+      stt == '1'
+        ? 'Chứng nhận chữ ký số không hợp lệ'
+        : stt == '2'
+        ? 'Chứng nhận chữ ký số chưa định danh'
+        : 'Chứng nhận chữ ký số hợp lệ'
+    ">
+        </codx-label>
+      </div>
+    </div>
+  </div>
+
+  <div class="failReasons py-3" [class]="idx != failReasons.lenght - 1 ? 'border-bottom ' : ''"
+    *ngFor="let reason of failReasons; let idx = index">
+    <codx-label [name]="'lblReason' + idx" [formModel]="" [default]="reason.typeName + ':'" class="d-block fw-bolder">
+    </codx-label>
+    <div class="mt-2">
+      <codx-label [name]="'lblReasonDetail' + idx" [formModel]=""
+        [default]="reason.message != '' ? reason.message : 'Hợp lệ'">
+      </codx-label>
+    </div>
+  </div>
 </div>

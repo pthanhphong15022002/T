@@ -233,7 +233,7 @@ export class CodxAdService {
       'SYS',
       'ERM.Business.AD',
       'UsersBusiness',
-      'GetListUserTempAsync',
+      'GetListUserTempAsync'
     );
   }
 
@@ -243,7 +243,7 @@ export class CodxAdService {
       'ERM.Business.AD',
       'UsersBusiness',
       'DeleteTempAsync',
-      [userID,employeeID]
+      [userID, employeeID]
     );
   }
 
@@ -274,6 +274,16 @@ export class CodxAdService {
       'CommentsBusiness',
       'PublishPostAsync',
       tmpPost
+    );
+  }
+
+  getUserGroupByID(groupID) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetUserGroupByUserIDAsync',
+      groupID
     );
   }
 }

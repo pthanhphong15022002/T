@@ -82,13 +82,112 @@
   </div>
 </ng-template>
 
-<ng-template #footerButton let-data>
-  <div class="d-flex justify-content-between">
-    <!-- <button class="btn btn-light-primary" (click)="edit(data)">Sửa</button>
-    <button class="btn btn-light-danger" (click)="delete(data)">Xóa</button> -->
+
+<ng-template #mfButton let-data> 
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
   </div>
 </ng-template>
 
+<ng-template #contentTmp let-data>  
+  <div>
+    <h2>{{data.title}}</h2>    
+  </div>
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <i class="icon-person me-1"></i>
+    <codx-label class="text-gray-600" default="Loại xe: " name="lblResource"></codx-label>
+    <span>
+      {{data.requester}}
+    </span>
+  </div>   
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <i class="icon-person me-1"></i>
+    <codx-label class="text-gray-600" default="Tài xế: " name="lblDriver"></codx-label>
+    <span>
+      {{data.resourceName}}
+    </span>
+  </div> 
+
+  <hr>
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <i class="icon-person me-1"></i>
+    <span>
+      {{data.requester}}
+    </span>
+  </div> 
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <div class="d-flex me-6">
+      <i class="icon-calendar_today me-1"></i>
+      <span class="text-gray-600">
+        {{
+          data
+            ? (data?.startDate | date: "dd/MM/yyyy")
+            : "dd/MM/yyyy"
+        }}
+        {{ data?.startDate | date: "shortTime" }}
+      </span>
+    </div>
+    <div class="d-flex me-6">
+      <i class="icon-calendar_today me-1"></i>
+      <span class="text-gray-600">
+        {{
+          data
+            ? (data?.endDate | date: "dd/MM/yyyy HH:mm")
+            : "dd/MM/yyyy HH:mm"
+        }}
+      </span>
+    </div>
+
+
+    <!-- <div class="d-flex me-6">
+      <i class="icon-access_time me-1"></i>
+      <span class="text-gray-600">
+        {{ data?.startDate | date: "shortTime" }}
+      </span>
+      <span
+        *ngIf="data?.startDate && data?.endDate"
+        class="ms-1 me-1"
+        >{{ "-" }}</span
+      >
+      <span class="text-gray-600">
+        {{ data?.endDate | date: "shortTime" }}
+      </span>
+    </div> -->
+  </div>
+  <hr>
+  <div>
+    <codx-label default="Mục tiêu sử dụng: " name="lblReason"></codx-label>
+    <span>{{data.resourceName}} </span>
+  </div>
+  <div>
+    <codx-label default="Tiêu đề: " name="lblTitle"></codx-label>
+    <span>{{data.title}} </span>
+  </div>
+  <div>    
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <!-- <codx-label default="Thành viên" class="fw-bold me-4"> </codx-label> -->
+        <div class="d-flex justify-content-end">
+          <codx-imgs
+            [objectId]="'HPHOA;ADMIN;HPHOA1;PMNHI;HPHOA;HPHOA1;PMNHI'"
+            objectType="AD_Users"
+            [numberImages]="7"
+            [width]="30"
+          >
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-template>
+<!-- 
 <ng-template #footer let-data>
   <div class="container my-3 p-3">
     <div class="row">
@@ -101,9 +200,9 @@
       (clickMF)="clickMF($event, data)"
       type="hover"
     ></codx-mfunc>
-      <!-- <div>
+      <div>
         <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
-      </div> -->
+      </div> 
     </div>
     <div class="row mt-3">
       <div class="col-3 d-flex justify-content-center">
@@ -114,4 +213,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
