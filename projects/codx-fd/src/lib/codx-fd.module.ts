@@ -24,6 +24,7 @@ import { PopupAddCardsComponent } from './cards/popup-add-cards/popup-add-cards.
 import { ViewDetailCardsComponent } from './cards/view-detail-cards/view-detail-cards.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GiftTransComponent } from './gift-trans/gift-trans.component';
+import { PopupAddGiftComponent } from './gift-trans/popup-add-gift/popup-add-gift.component';
 import { ViewDetailGiftComponent } from './gift-trans/view-detail-gift/view-detail-gift.component';
 import { SettingComponent } from './setting/setting.component';
 import { StatisticalComponent } from './statistical/statistical.component';
@@ -92,6 +93,7 @@ const Component: Type<any>[] = [
   GiftgroupComponent,
   BehaviorruleComponent,
   BehaviorComponent,
+  PopupAddGiftComponent
 ];
 
 @NgModule({
