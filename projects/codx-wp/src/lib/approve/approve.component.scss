@@ -1,3 +1,32 @@
-.link:hover{
+.link:hover {
     cursor: pointer;
+}
+
+.nav.nav-news .nav-link {
+    padding: 8px;
+    display: inline-block;
+    border-bottom: 2px transparent solid;
+}
+
+.nav.nav-news .text-primary .nav-link {
+    color: var(--primary-active);
+    border-color: var(--primary-active);
+}
+
+.news-appr-right {
+
+    .codx-detail-header {
+        position: relative;
+        margin-top: 5px;
+    }
+
+    .codx-detail-toolbar {
+        position: absolute;
+        top: 3px;
+        right: 0;
+    }
+
+    .d-flex.flex-row-reverse {
+        padding-right: 36px;
+    }
 }
