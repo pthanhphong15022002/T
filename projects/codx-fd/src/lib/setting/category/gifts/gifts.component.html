@@ -1,0 +1,719 @@
+<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'FD_Gifts'"
+    (buttonClick)="openFormCreate($event, true)" [buttons]="button"></codx-views>
+
+<ng-template #panelLeft>
+    <div class="container-listview category-gift">
+        <div class="list-table" *ngIf="this.searchType == '0' || this.searchType == '1' ">
+            <codx-listview [itemTemplate]="itemGift" #listView funcId="" [pageSize]=20 service="FD"
+                assemblyName="ERM.Business.FD" className="GiftsBusiness" method="LoadDataGiftAsync"
+                [predicate]="predicate" [dataValue]="dataValue" type="listView" entityName="FD_Gifts"></codx-listview>
+            <div class="offcanvas-overlay"></div>
+        </div>
+        <div class="list-table" *ngIf="this.searchType == '2'">
+        </div>
+    </div>
+
+    <ng-template #itemGift let-dataItem>
+        <div (mouseenter)="PopoverEmpEnter(empPopover, dataItem)">
+            <div class="list-item d-flex align-items-start" #empPopover="ngbPopover" [ngbPopover]="moreFunction"
+                placement="top" container="body">
+                <!-- <div class="pic mr-3"> -->
+                <!-- <img alt="" class="" src="../../../assets/demos/svg/pic-quatang.png"> -->
+                <div class="img">
+                    <codx-img funcId="FDS0122" aria-disabled="true" objectType="FD_Gifts" [width]="90"
+                        [objectId]="dataItem.giftID">
+                    </codx-img>
+                </div>
+                <div class="d-flex flex-column flex-grow-1 infor">
+                    <div class="text-dark font-weight-bold font-size-h6">{{dataItem.giftName}}</div>
+                    <div class="d-flex align-items-center font-size-md">
+                        <div class="d-flex text-dark mr-2">{{dataItem.giftID}}</div>
+                        <span class="text-muted font-size-sm">|</span>
+                        <div class="d-flex ml-2">
+                            <span class="text-dark-50 mr-1 left-5">
+                                <codx-label name="lblGroup" formName="FD_Gifts" default="Nhóm:">
+                                </codx-label>
+                            </span>
+                            <span class="text-dark font-weight-bold left-5">{{dataItem.groupName}}</span>
+                        </div>
+                    </div>
+                    <div class="text-dark">
+                        <span class="text-dark-50 mr-1 text-nowrap">
+                            <codx-label name="lblDescription" formName="FD_Gifts" default="Mô tả:">
+                            </codx-label>
+                        </span>
+                        <span [innerHTML]="dataItem.memo"></span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center mr-4">
+                            <span class="text-dark-50 mr-1">
+                                <codx-label name="lblStorage" formName="FD_Gifts" default="Tồn kho:">
+                                </codx-label>
+                            </span>
+                            <span class="text-primary font-size-h4 font-weight-bold left-5">{{dataItem?.onhand}}</span>
+                        </div>
+                        <div class="d-flex align-items-center mr-4">
+                            <span class="text-dark-50 mr-1 left-10">
+                                <codx-label name="lbl" formName="FD_Gifts" default="Đã giành hàng:">
+                                </codx-label>
+                            </span>
+                            <span
+                                class="text-warning font-size-h4 font-weight-bold left-5">{{dataItem?.reservedQty}}</span>
+                        </div>
+                        <div class="d-flex align-items-center mr-4">
+                            <span class="text-dark-50 mr-1 left-10">
+                                <codx-label name="lblExport" formName="FD_Gifts" default="Sẵn sàng xuất:">
+                                </codx-label>
+                            </span>
+                            <span
+                                class="text-success font-size-h4 font-weight-bold left-5">{{dataItem?.availableQty}}</span>
+                        </div>
+                        <div ngbDropdown class="d-inline-block" container="body">
+                            <button type="button" class="btn btn-icon btn-sm" id="dropdownShowDescription"
+                                ngbDropdownToggle ata-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                *ngIf="dataItem?.description != null && dataItem?.description.length > 0 ">
+                                <span class="icon-assignment icon-18 text-dark-75"></span>
+                            </button>
+                            <div ngbDropdownMenu aria-labelledby="dropdownShowDescription">
+                                <div [innerHTML]="dataItem.description" class="w-500px p-6"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-end w-100px">
+                    <div class="font-size-h4 text-dark font-weight-bold">{{dataItem?.price}}</div>
+                    <span class="text-warning ml-2 icon-20 icon-monetization_on"></span>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </ng-template>
+</ng-template>
+
+<ng-template #formChange let-modal>
+    <!-- <form [formGroup]="onHandForm"> -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">
+                <codx-label name="lblUpdateStorage" formName="FD_Gifts" default="Cập nhật số lượng tồn kho">
+                </codx-label>
+            </h4>
+            <button type="button" class="close" aria-label="Close">
+                <i class="icon-close icon-20 text-dark text-hover-primary" (click)="modal.dismiss('Cross click')"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="text-dark-75 mb-3">
+                {{onHandForm.controls['giftName'].value}}
+                <br>
+                <div [innerHTML]="onHandForm.controls['memo'].value"></div>
+            </div>
+            <div class="form-group mt-3">
+                <label #Onhand>{{ 'Tồn kho hiện tại' | lang:
+                    'Gifts':'Onhand':'grvGifts': Onhand| async}}</label>
+                <codx-input type="number" class="form-control" placeholder="" formControlName='onhand'
+                    [crrValue]="onHandForm.controls['onhand'].value" [attr.disabled]="true">
+                </codx-input>
+            </div>
+            <div class="form-group mt-3">
+                <label #NewOnhand>{{ 'Tồn kho mới' | lang:
+                    'Gifts':'NewOnhand':'grvGifts': NewOnhand| async}}</label>
+                <codx-input type="number" min="0" class="form-control" placeholder="" formControlName='newOnhand'
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="changeHand($event)"
+                    [ngClass]="{'is-invalid': onHandForm.controls['newOnhand'].invalid}">
+                </codx-input>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="onChangeOnHandOfGift()">Lưu</button>
+        </div>
+    </div>
+    <!-- </form> -->
+</ng-template>
+
+<ng-template #panelRightRef>
+    <div id="update_infor" class="offcanvas offcanvas-md offcanvas-right">
+        <div class="offcanvas-header" kt-hidden-height="46">
+            <div class="d-flex align-items-center justify-content-between header">
+                <h2 class="m-0">
+                    <codx-label *ngIf="isAddMode" name="lblAddGift" formName="FD_Gifts" default="Thêm mới">
+                    </codx-label>
+                    <codx-label *ngIf="!isAddMode" name="lblUpdateGift" formName="FD_Gifts" default="Chỉnh sửa">
+                    </codx-label>
+                </h2>
+                <!-- Cập nhật thông tin -->
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary" id="dms_properties_close">
+                    <span (click)="clickClosePopup()" class="icon-close icon-18"></span>
+                </a>
+            </div>
+            <div class="btn-extand mt-2 d-flex justify-content-end h-30">
+                <a class="text-dark-75 text-hover-primary d-flex align-items-center" (click)="extendShow2()">
+                    <span class="mr-2 text-dark">
+                        <codx-label name="lblExtent" formName="FD_Gifts" default="Mở rộng">
+                        </codx-label>
+                    </span>
+                    <span class="icon-login icon-20 ml-1"></span>
+                </a>
+            </div>
+        </div>
+        <div class="offcanvas-content offcanvas-extend content">
+            <div class="offcanvas-wrapper">
+                <div class="d-flex">
+                    <div class="flex-grow-1 extend-main border-right">
+                        <div class="form-group">
+                            <div class="font-w500 font-1rem">
+                                <codx-label name="lblGiftName" formName="FD_Gifts" default="Tên quà tặng"></codx-label>
+                                <span class="required"></span>
+                            </div>
+                            <codx-input type="text" class="form-control" placeholder="Tên quà tặng" ngDefaultControl
+                                [crrValue]="addEditForm.controls['giftName'].value" (valueChange)="valueChange($event)"
+                                field="giftName" autocomplete="off"></codx-input>
+                        </div>
+                        <div class="form-group row mt-3">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="font-w500 font-1rem">
+                                    <codx-label name="lblGiftCode" formName="FD_Gifts" default="Mã quà tặng">
+                                    </codx-label>
+                                    <span class="required"></span>
+                                </div>
+                                <codx-input type="text" [disabled]="isAddMode ? false : true" class="form-control"
+                                    ngDefaultControl [crrValue]="addEditForm.controls['giftID'].value"
+                                    placeholder="ITEM20210206001" (valueChange)="valueChange($event)" field="giftID">
+                                </codx-input>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <div class="font-w500 font-1rem">
+                                    <codx-label name="lblGiftGroup" formName="FD_Gifts" default="Nhóm quà tặng">
+                                    </codx-label>
+                                </div>
+                                <codx-input (valueChange)="changeCombobox($event, 'groupID')" id="edit-usergroups"
+                                    ngDefaultControl type="combobox" name="combobox"
+                                    [crrValue]="addEditForm.controls['groupID'].value"
+                                    class=" form-control borderless p-0" style="border: none;" placeholder="{{'Nhóm quà tặng' | lang:
+                        '':'':'' | async}}" refValue="GiftGroup" [predicate]="predicate" loadFull="false"
+                                    field="groupID" service="FD">
+                                </codx-input>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-3">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="font-w500 font-1rem">
+                                    <codx-label name="lblOwner" formName="FD_Gifts" default="Chủ sở hữu"></codx-label>
+                                </div>
+                                <codx-input id="edit-usergroups" type="combobox" name="combobox" ngDefaultControl #owner
+                                    [crrValue]="addEditForm.controls['owner'].value"
+                                    (valueChange)="changeCombobox($event, 'owner')" class=" form-control borderless p-0"
+                                    style="border: none;" refValue="Users" [predicate]="" field="owner" service="AD">
+                                </codx-input>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3" style="width: 490px;">
+                            <div class="font-w500 font-1rem">
+                                <codx-label name="lblMemo" formName="FD_Gifts" default="Mô tả">
+                                </codx-label>
+                                <span class="required"></span>
+                            </div>
+                            <codx-input type="text" class="form-control text" rows="3"
+                                (valueChange)="valueChange($event)" ngDefaultControl
+                                [crrValue]="addEditForm.controls['memo'].value" field="memo">
+                            </codx-input>
+                        </div>
+                        <div class="form-group mt-3" style="width: 490px;">
+                            <div class="font-w500 font-1rem">
+                                <codx-label name="lblDescription" formName="FD_Gifts" default="Mô tả khác">
+                                </codx-label>
+                            </div>
+                            <codx-input dataformat="ed" name="editor" class="w-490px test-textarea" placeholder=""
+                                ngDefaultControl [crrValue]="addEditForm.controls['description'].value"
+                                (valueChange)="valueChange($event)" type="textarea" field="description">
+                            </codx-input>
+                        </div>
+                        <div class="form-group row mt-3">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="font-w500 font-1rem">
+                                    <codx-label name="lblPrice" formName="FD_Gifts" default="Đơn giá (xu)">
+                                    </codx-label>
+                                    <span class="required"></span>
+                                </div>
+                                <codx-input type="number" class="form-control" placeholder="21" type="text"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" field="price"
+                                    (valueChange)="valueChange($event)" ngDefaultControl
+                                    [crrValue]="addEditForm.controls['price'].value"></codx-input>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start pic-grif">
+                            <div class="pic-edit mr-5 upload-img" style="border: none;">
+                                <codx-img funcId="FDS0122" #imageUpLoad aria-disabled="true" objectType="FD_Gifts"
+                                    [isAllowEdit]="true" [width]="90" [objectId]="addEditForm.controls['giftID'].value">
+                                </codx-img>
+                            </div>
+                            <div class="d-flex flex-column mt-4">
+                                <div class="d-flex align-items-center mr-6">
+                                    <span class="text-dark-75 mr-2">
+                                        <codx-label name="lblStorage" formName="FD_Gifts" default="Tồn kho:">
+                                        </codx-label>
+                                    </span>
+                                    <span
+                                        class="text-dark font-weight-bold left-5">{{addEditForm?.controls['onhand'].value}}</span>
+                                </div>
+                                <div class="d-flex align-items-center mr-6">
+                                    <span class="text-dark-75 mr-2">
+                                        <codx-label name="lblPrice" formName="FD_Gifts" default="Đã giành hàng:">
+                                        </codx-label>
+                                    </span>
+                                    <span
+                                        class="text-dark font-weight-bold left-5">{{addEditForm?.controls['reservedQty'].value}}</span>
+                                </div>
+                                <div class="d-flex align-items-center mr-6">
+                                    <span class="text-dark-75 mr-2">
+                                        <codx-label name="lblPrice" formName="FD_Gifts" default="Sẵn sàng xuất:">
+                                        </codx-label>
+                                    </span>
+                                    <span
+                                        class="text-dark font-weight-bold left-5">{{addEditForm?.controls['availableQty'].value}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="extend-more w-360px pl-4">
+                            <div class="card-toolbar">
+                                <ul class="nav nav-tabs nav-tabs-line">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tab_his">
+                                            <span class="nav-text">Lịch sử</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tab_com">
+                                            <span class="nav-text">Comment</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tab_att">
+                                            <span class="nav-text">Attachments</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane pt-3 fade show active" id="tab_his" role="tabpanel">
+                                    <div class="tab_container">
+                                        <div class="his-group primary-group">
+                                            <span class="label label-sm label-primary label-inline mb-5">
+                                                Tạo
+                                                mới </span>
+                                            <div class="d-flex history-item pb-6 line-hor">
+                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                                                    <img alt="Pic" src="../../../assets/demos/user/user5.jpg">
+                                                    <span class="icon-circle">
+                                                        <span class="icon-add icon-12"></span>
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div
+                                                            class="text-dark text-hover-primary font-weight-bold">
+                                                            Lê
+                                                            Thị
+                                                            Mùi</div>
+                                                        <div class="text-dark-75">2021/08/31 4:38</div>
+                                                    </div>
+                                                    <div class="task-name text-dark-75 mt-1">Tạo mới mẫu
+                                                        phiếu
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex history-item pb-6 line-hor">
+                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                                                    <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
+                                                    <span class="icon-circle">
+                                                        <span class="icon-create icon-12"></span>
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div
+                                                            class="text-dark text-hover-primary font-weight-bold">
+                                                            Hoàng
+                                                            Ngọc Châu Bảo</div>
+                                                        <div class="text-dark-75">2 giờ trước</div>
+                                                    </div>
+                                                    <div class="task-name text-dark-75 mt-1">Chỉnh sửa mẫu
+                                                        phiếu
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex history-item pb-6 line-hor">
+                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                                                    <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
+                                                    <span class="icon-circle">
+                                                        <span class="icon-mode_comment icon-12"></span>
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div
+                                                            class="text-dark text-hover-primary font-weight-bold">
+                                                            Bùi
+                                                            Thái
+                                                            Tú</div>
+                                                        <div class="text-dark-75">1 giờ trước</div>
+                                                    </div>
+                                                    <div class="task-name text-dark-75 mt-1">Thank you so
+                                                        much
+                                                        for letting
+                                                        me be
+                                                        a
+                                                        part
+                                                        of
+                                                        your party. The food was delicious, and everything
+                                                        was
+                                                        so perfect.
+                                                        Thank
+                                                        you
+                                                        for
+                                                        inviting me.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="his-group warning-group mt-3">
+                                            <span class="label label-sm label-warning label-inline mb-5">
+                                                Chờ
+                                                xét duyệt
+                                            </span>
+                                            <div class="d-flex history-item pb-6 line-hor">
+                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                                                    <img alt="Pic" src="../../../assets/demos/user/user5.jpg">
+                                                    <span class="icon-circle">
+                                                        <span class="icon-create icon-12"></span>
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div
+                                                            class="text-dark text-hover-primary font-weight-bold">
+                                                            Lê
+                                                            Thị
+                                                            Mùi</div>
+                                                        <div class="text-dark-75">2021/08/31 4:38</div>
+                                                    </div>
+                                                    <div class="task-name text-dark-75 mt-1">Update status
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex history-item pb-6 line-hor">
+                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                                                    <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
+                                                    <span class="icon-circle">
+                                                        <span class="icon-mode_comment icon-12"></span>
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div
+                                                            class="text-dark text-hover-primary font-weight-bold">
+                                                            Hoàng
+                                                            Ngọc Châu Bảo</div>
+                                                        <div class="text-dark-75">2 giờ trước</div>
+                                                    </div>
+                                                    <div class="task-name text-dark-75 mt-1">Hợp đồng chưa
+                                                        đúng,
+                                                        kiểm tra
+                                                        lại
+                                                        phụ
+                                                        lục hợp đồng</div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex history-item pb-6 line-hor">
+                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                                                    <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
+                                                    <span class="icon-circle">
+                                                        <span class="icon-attach_file icon-12"></span>
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div
+                                                            class="text-dark text-hover-primary font-weight-bold">
+                                                            Bùi
+                                                            Thái
+                                                            Tú</div>
+                                                        <div class="text-dark-75">1 giờ trước</div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="task-name text-dark-75 mt-1">
+                                                            Laboco_Contract.xsls</div>
+                                                        <span class="icon-download icon-18 ml-3"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="his-group success-group mt-3">
+                                            <span class="label label-sm label-success label-inline mb-5"> Đã
+                                                duyệt </span>
+                                            <div class="d-flex history-item pb-6 line-hor">
+                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
+                                                    <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
+                                                    <span class="icon-circle">
+                                                        <span class="icon-check icon-12"></span>
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div
+                                                            class="text-dark text-hover-primary font-weight-bold">
+                                                            Hoàng
+                                                            Ngọc Châu Bảo</div>
+                                                        <div class="text-dark-75">2 giờ trước</div>
+                                                    </div>
+                                                    <div class="task-name text-dark-75 mt-1">Ok duyệt nha!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane pt-3 fade" id="tab_com" role="tabpanel">
+                                    <div class="tab_container">
+                                        <div class="tab_body">
+                                            <div class="d-flex flex-column py-3 flex-grow-1">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-40 symbol-circle mr-3">
+                                                        <img alt="Pic"
+                                                            src="../../../assets/demos/user/user9.jpg">
+                                                    </div>
+                                                    <div class="d-flex flex-column flex-grow-1">
+                                                        <div class="text-dark font-weight-bold">
+                                                            Phạm Thị Mỹ
+                                                            Duyên
+                                                        </div>
+                                                        <span class="text-dark-75">Business Analyst</span>
+                                                    </div>
+                                                    <div class="text-dark-75">2 giờ trước</div>
+                                                </div>
+                                                <div class="mt-1 text-dark-75">Nhận xét đánh giá, đánh đánh
+                                                    giá
+                                                    giá,..
+                                                </div>
+                                                <div class="d-flex align-items-center group-action mt-1">
+                                                    <span class="btn-action d-flex align-items-center">
+                                                        <span
+                                                            class="icon-favorite_border icon-18 text-danger mr-1"></span>
+                                                        <span></span>
+                                                    </span>
+                                                    <span class="btn-action d-flex align-items-center ml-4">
+                                                        <span
+                                                            class="icon-chat_bubble_outline icon-18 text-info mr-1"></span>
+                                                        <span></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column py-3 flex-grow-1">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-40 symbol-circle mr-3">
+                                                        <img alt="Pic"
+                                                            src="../../../assets/demos/user/user1.jpg">
+                                                    </div>
+                                                    <div class="d-flex flex-column flex-grow-1">
+                                                        <div class="text-dark font-weight-bold">
+                                                            Nguyễn Thanh
+                                                            Thức
+                                                        </div>
+                                                        <span class="text-dark-75">Business Analyst</span>
+                                                    </div>
+                                                    <div class="text-dark-75">2 giờ trước</div>
+                                                </div>
+                                                <div class="mt-1 text-dark-75">Bài viết rất hay, tuyệt vời!
+                                                </div>
+                                                <div class="d-flex align-items-center group-action mt-1">
+                                                    <span class="btn-action d-flex align-items-center">
+                                                        <span
+                                                            class="icon-favorite_border icon-18 text-danger mr-1"></span>
+                                                        <span>31</span>
+                                                    </span>
+                                                    <span class="btn-action d-flex align-items-center ml-4">
+                                                        <span
+                                                            class="icon-chat_bubble_outline icon-18 text-info mr-1"></span>
+                                                        <span>1</span>
+                                                    </span>
+                                                </div>
+                                                <div class="comment-level-2 ml-5 pl-2 border-left mt-4">
+                                                    <div class="d-flex align-items-start py-3 flex-grow-1">
+                                                        <div class="symbol symbol-30 symbol-circle mr-2">
+                                                            <img alt="Pic"
+                                                                src="../../../assets/demos/user/user2.jpg">
+                                                        </div>
+                                                        <div class="d-flex flex-column flex-grow-1">
+                                                            <div class="text-dark font-weight-bold">Trần
+                                                                Quốc
+                                                                Hoàn
+                                                            </div>
+                                                            <div class="text-dark-75 font-size-sm">You’re
+                                                                welcome!</div>
+                                                            <div class="d-flex align-items-center mt-1">
+                                                                <span
+                                                                    class="text-dark-75 text-hover-primary mr-3">Thích</span>
+                                                                <span
+                                                                    class="text-dark-75 text-hover-primary">Trả
+                                                                    lời</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-dark-75">2 giờ trước</div>
+                                                    </div>
+                                                    <div class="d-flex align-items-start py-3 flex-grow-1">
+                                                        <div class="symbol symbol-30 symbol-circle mr-2">
+                                                            <img alt="Pic"
+                                                                src="../../../assets/demos/user/user3.jpg">
+                                                        </div>
+                                                        <div class="d-flex flex-column flex-grow-1">
+                                                            <div class="text-dark font-weight-bold">Lê Thị
+                                                                Mơ
+                                                            </div>
+                                                            <div class="text-dark-75 font-size-sm">You’re
+                                                                welcome!</div>
+                                                            <div class="d-flex align-items-center mt-1">
+                                                                <span
+                                                                    class="text-dark-75 text-hover-primary mr-3">Thích</span>
+                                                                <span
+                                                                    class="text-dark-75 text-hover-primary">Trả
+                                                                    lời</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-dark-75">2 giờ trước</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab_footer">
+                                            <form class="position-relative feed-box">
+                                                <textarea class="form-control border-0 p-0 pr-26 resize-none"
+                                                    rows="1" placeholder="Bình luận..."></textarea>
+                                                <div class="feed-icon">
+                                                    <span
+                                                        class="btn btn-icon btn-sm px-0 text-dark-75 text-hover-primary">
+                                                        <span class="icon-attach_file icon-18"></span>
+                                                    </span>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane pt-3 fade" id="tab_att" role="tabpanel">
+                                    <div class="tab_container">
+                                        <div class="tab_body">
+                                            <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
+                                                <img alt="" class="max-h-35px mr-2"
+                                                    src="../../../assets/demos/dms/pdf.svg">
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <span
+                                                        class="text-dark font-weight-bold">Taptindinhkem.pdf</span>
+                                                    <span class="text-dark-75">Bảng báo giá quà tặng của nhà
+                                                        cung cấp</span>
+                                                    <div class="d-flex mt-1 justify-content-end">
+                                                        <div class="text-dark-75 text-italic mr-2">LHThuong
+                                                        </div>
+                                                        <div class="text-dark-75">20/07/2021</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
+                                                <img alt="" class="max-h-35px mr-2"
+                                                    src="../../../assets/demos/dms/pdf.svg">
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <span
+                                                        class="text-dark font-weight-bold">Taptindinhkem.pdf</span>
+                                                    <span class="text-dark-75">Bảng báo giá quà tặng của nhà
+                                                        cung cấp</span>
+                                                    <div class="d-flex mt-1 justify-content-end">
+                                                        <div class="text-dark-75 text-italic mr-2">LHThuong
+                                                        </div>
+                                                        <div class="text-dark-75">20/07/2021</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab_footer">
+                                            <button type="button" class="btn btn-sm btn-outline-primary mb-4">
+                                                <i class="icon-cloud_upload icon-16 mr-1"></i>Upload file
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                </div>
+            </div>
+            <div class="card-footer pt-4 footer">
+                <button type="submit" class="btn btn-primary btn-footer" (click)="onSaveGift()">
+                    <codx-label name="lblSave" formName="FD_Gifts" default="Lưu"></codx-label>
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #moreFunction>
+    <div class="flex" (mouseleave)="PopoverEmpLeave(empPopover)" #empPopover="ngbPopover" [ngbPopover]=""
+        autoClose="outside">
+        <a class="action-item d-flex align-items-center" placement="top" [ngbTooltip]="update">
+            <span class="icon-edit icon-18 ml-2 mr-2 active" (click)="openFormCreate(dataItem, false)"></span>
+            <ng-template #update>
+                <span class="tooltip-black">
+                    <codx-label name="lblUpdate" formName="FD_Gifts" default="Cập nhật">
+                    </codx-label>
+                </span>
+            </ng-template>
+        </a>
+        <a class="action-item d-flex align-items-center" (click)="deleteGift(dataItem)" placement="bottom"
+            [ngbTooltip]="delete">
+            <span class="icon-close icon-18 text-danger mx-2"></span>
+            <ng-template #delete>
+                <span class="tooltiptext">
+                    <codx-label name="lblDelete" formName="FD_Gifts" default="Xóa">
+                    </codx-label>
+                </span>
+            </ng-template>
+        </a>
+        <a class="action-item d-flex align-items-center" *ngFor="let item of lstMoreFunction"
+            (click)="clickMoreFuntion(item.functionID,dataItem,formChange)" placement="bottom" [ngbTooltip]="more">
+            <span class=" icon-update icon-18 mx-2 active"></span>
+            <ng-template #more><span class="tooltiptext">{{item.customName}}</span></ng-template>
+        </a>
+    </div>
+    <!-- <div class="action-menu">
+        <div class="action-content d-flex align-items-center">
+            <a class="action-item">
+                <div class="d-flex align-items-center btn-tooltip">
+                    <span class="icon-edit icon-18 text-primary"></span>
+                    <span class="tooltiptext">Edit</span>
+                </div>
+            </a>
+            <a class="action-item">
+                <div class="d-flex align-items-center btn-tooltip">
+                    <span class="icon-content_copy icon-18 text-warning"></span>
+                    <span class="tooltiptext">Copy</span>
+                </div>
+            </a>
+            <a class="action-item">
+                <div class="d-flex align-items-center btn-tooltip">
+                    <span class="icon-close icon-20 text-danger"></span>
+                    <span class="tooltiptext">Delete</span>
+                </div>
+            </a>
+            <div ngbDropdown class="dropdown">
+                <button ngbDropdownToggle class="btn btn-icon btn-white" type="button" id="dropdownMenuButton1"
+                    aria-expanded="false">
+                    <i class="icon-more_vert icon-18"></i>
+                </button>
+                <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                    <li><a ngbDropdownItem href="#">Chỉnh sửa</a></li>
+                    <li><a ngbDropdownItem href="#">Xóa</a></li>
+                    <div class="separator mt-3 opacity-75"></div>
+                    <li><a ngbDropdownItem href="#">Xóa hết</a></li>
+                </ul>
+            </div>
+        </div>
+    </div> -->
+
+</ng-template>

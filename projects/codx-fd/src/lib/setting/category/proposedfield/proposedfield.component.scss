@@ -1,0 +1,156 @@
+.cssAvatar {
+  height: 50px;
+  width: 50px;
+}
+
+
+.imageCreate {
+  width: 10px;
+  height: 10px;
+}
+
+.list-table {
+  padding: 0 3px;
+}
+
+.w-100px {
+  min-width: 100px;
+  width: 100px !important;
+  padding-right: 10px;
+}
+
+.img {
+  width: 90px;
+  height: 90px;
+}
+
+.infor {
+  width: 1202.75px;
+  padding-left: 20px;
+}
+
+.separator {
+  background-color: gray;
+  height: 1.3px;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+.text-muted {
+  margin-left: 5px;
+}
+
+.left-5 {
+  margin-left: 5px;
+}
+
+.left-10 {
+  margin-left: 10px;
+}
+
+.flex {
+  display: flex;
+}
+
+.tooltip-black {
+  background-color: black;
+  color: white;
+  width: fit-content;
+  height: fit-content;
+  border: thin;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.active {
+  color: cornflowerblue;
+}
+
+.upload-img {
+  width: 90px;
+  height: 90px;
+  position: relative;
+}
+
+.extent {
+  padding-left: 20px;
+}
+
+.header {
+  padding: 20px;
+  padding-left: 25px;
+}
+
+.content {
+  margin-top: 40px;
+  padding: 30px;
+}
+
+.h-30 {
+  height: 30px;
+}
+
+.w-30 {
+  width: 30px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.text {
+  width: 80px;
+  height: 620px;
+}
+
+.btn-footer {
+  margin-left: 420px;
+}
+
+.footer {
+  margin-top: 175px;
+  margin-left: 430px;
+}
+
+.popup {
+  transform: translate(1250px, -200px);
+}
+
+.modal-body {
+  padding: 5px 31px 10px 35px;
+  min-height: 30px;
+  max-height: calc(100vh - 142px);
+  overflow: hidden;
+  overflow-y: auto;
+  margin-right: 4px;
+}
+
+.modal-content {
+  min-width: 350px;
+}
+
+.close {
+  background-color: white;
+  border: thin;
+  outline: none;
+}
+
+.required {
+  content: " *";
+  color: red;
+}
+
+.font-1rem {
+  font-size: 1rem;
+}
+
+.font-w550 {
+  font-weight: 550;
+}
+
+.lbl-stop {
+  margin-top: -18px;
+  margin-left: 20px;
+}
