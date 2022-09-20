@@ -1,0 +1,12 @@
+::ng-deep {
+    .status-color span {
+        display: block;
+        white-space: nowrap;
+    }
+
+    .status-color {
+        width: auto !important;
+        padding: 0 12px !important;
+    }
+
+}
