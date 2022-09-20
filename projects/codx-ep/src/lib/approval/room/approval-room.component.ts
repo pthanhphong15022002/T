@@ -25,6 +25,9 @@ export class ApprovalRoomsComponent extends UIComponent {
   
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  
+  @ViewChild('subTitle') subTitle?: TemplateRef<any>;
+
   views: Array<ViewModel> | any = [];
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -33,7 +36,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   assemblyName = 'EP';
   entity = 'EP_Bookings';
   className = 'BookingsBusiness';
-  method = 'GetListBookingAsync';
+  method = 'GetApprovalEventsAsync';
   idField = 'recID';
   predicate = 'ResourceType=@0';
   datavalue = '1';
@@ -68,7 +71,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.assemblyName='EP';
     this.request.className='BookingsBusiness';
     this.request.service='EP';
-    this.request.method='GetListBookingAsync';
+    this.request.method='GetApprovalEventsAsync';
     this.request.predicate='ResourceType=@0';
     this.request.dataValue='1';
     this.request.idField='recID';
@@ -222,7 +225,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
-  getDetailBooking(event) {
+  getDetailBooking(id: any) {
     this.api
       .exec<any>(
         'EP',
@@ -236,5 +239,54 @@ export class ApprovalRoomsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  setStyles(resourceType) {
+    let styles = {};
+    switch (resourceType) {
+      case '1':
+        styles = {
+          backgroundColor: '#104207',
+          color: 'white',
+        };
+        break;
+      case '2':
+        styles = {
+          backgroundColor: '#29b112',
+          color: 'white',
+        };
+        break;
+      case '6':
+        styles = {
+          backgroundColor: '#053b8b',
+          color: 'white',
+        };
+        break;
+      default:
+        styles = {};
+        break;
+    }
+
+    return styles;
+  }
+
+  setIcon(resourceType) {
+    let icon: string = '';
+    switch (resourceType) {
+      case '1':
+        icon = 'icon-calendar_today';
+        break;
+      case '2':
+        icon = 'icon-directions_car';
+        break;
+      case '6':
+        icon = 'icon-desktop_windows';
+        break;
+      default:
+        icon = '';
+        break;
+    }
+
+    return icon;
   }
 }

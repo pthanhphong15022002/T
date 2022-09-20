@@ -18,21 +18,60 @@
 >
 </codx-views>
 
+<ng-template #subTitleTmp let-data>
+  <div class="row">
+    <div class="d-flex mt-1 flex-grow-1 mb-1">
+      <div class="d-flex me-6">
+        <i class="icon-calendar_today me-1"></i>
+        <span class="text-gray-600">
+          {{
+            data
+              ? (data?.createdOn | date: "dd/MM/yyyy")
+              : "dd/MM/yyyy"
+          }}
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <i class="icon-access_time me-1"></i>
+        <span class="text-gray-600">
+          {{ data?.startDate | date: "shortTime" }}
+        </span>
+        <span
+          *ngIf="data?.startDate && data?.endDate"
+          class="ms-1 me-1"
+          >{{ "-" }}</span
+        >
+        <span class="text-gray-600">
+          {{ data?.endDate | date: "shortTime" }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <span>{{data.title}}</span>
+    </div>
+  </div>
+  
+</ng-template>
+
 <ng-template #itemTemplate let-data>
   <codx-temp-full
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (click)="click(data)"
     [typeMF]="'hover'"
+    [imageId]="'ADMIN'"
+    [imageObjType]="'AD_Users'"
+    
     [title]="data?.requester"
     [subTitleTmp]="subTitleTmp"
-    [desc]="data?.title"
-    [icoCss]="'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '"
+    [titleLine]="2"
+    
+    
+    [icoCss]="'d-flex justify-content-center align-items-center rounded-circle'"
     [status]="data?.status"
     [statusVll]="'VL003'"
     [date]="data.createdOn"
     [resources]="'ADMIN;PMNHI;NVHAO;ADMIN;PMNHI;NVHAO'"
-    [resourceObjType]="'AD_Users'"
-    [titleLine]="2"
+        
     [dataItem]="data"
     [formModel]="view.formModel"
     [footer]="footerTmp"
@@ -44,6 +83,7 @@
 </ng-template>
 
 <ng-template #panelRightRef>
+  
   <view-detail
     #viewdetail
     [itemDetail]="itemDetail"
@@ -60,8 +100,9 @@
       <div class="col-4">
         <div>
           <codx-img
-            objectId="data.resourceData.resourceID"
-            [width]="30"
+            [objectId]="data.resourceData.recID"
+            [objectType]="'EP_Rooms'"
+            [width]="50"
           ></codx-img>
         </div>
       </div>
@@ -70,8 +111,13 @@
           {{ data.resourceData.resourceName }} ({{ data.resourceData.events }})
         </div>
         <div>{{ data.resourceData.companyID }}</div>
+        <div class="row">
+          <span>{{ data.resourceData.location }}</span>
+        </div>
       </div>
+
     </div>
+    
   </div>
 </ng-template>
 
@@ -139,16 +185,17 @@
   </div>
 
   <hr>
+
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <codx-label default="Lí do: " name="lblReason"></codx-label>
     <span>
-      {{data.reasonName}}
+      &nbsp;{{data.reasonName}}
     </span>
   </div> 
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-    <codx-label default="Nội dung: " name="lblMemo"></codx-label>
+    <codx-label default="Nội dung:" name="lblMemo"></codx-label>
     <span>
-      {{data.memo}}
+      &nbsp;{{data.memo}}
     </span>
   </div>  
   <div>    
@@ -201,31 +248,8 @@
 
 </ng-template>
 
-<ng-template #subTitleTmp let-data>
-  <!-- <div class="d-flex mt-1 flex-grow-1 mb-2">
-    <div class="d-flex me-6">
-      <i class="icon-calendar_today me-1"></i>
-      <span class="text-gray-600">
-        {{
-          data
-            ? (data?.createdOn | date: "dd/MM/yyyy")
-            : "dd/MM/yyyy"
-        }}
-      </span>
-    </div>
-    <div class="d-flex me-6">
-      <i class="icon-access_time me-1"></i>
-      <span class="text-gray-600">
-        {{ data?.startDate | date: "shortTime" }}
-      </span>
-      <span
-        *ngIf="data?.startDate && data?.endDate"
-        class="ms-1 me-1"
-        >{{ "-" }}</span
-      >
-      <span class="text-gray-600">
-        {{ data?.endDate | date: "shortTime" }}
-      </span>
-    </div>
-  </div> -->
-</ng-template>
+
+
+
+
+

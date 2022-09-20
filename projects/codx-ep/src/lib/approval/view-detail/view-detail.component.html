@@ -10,6 +10,10 @@
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
   <ng-template #header>
+    <div class="d-flex justify-content-between">
+      <h3>{{itemDetail?.title}}</h3>
+      <button class="btn-light btn" [disabled]="true">{{itemDetail.status | vll: "VL003":"text" | async}}</button>
+    </div>
     <div class="d-flex flex-column flex-grow-1 mb-2">
       <codx-temp-full
         [title]="itemDetail?.requester"
@@ -32,7 +36,7 @@
         </ng-container>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.title }}
+          {{ itemDetail?.resourceName }}
         </span>
       </div>
     </div>
