@@ -37,9 +37,9 @@ export class DynamicSettingComponent implements OnInit {
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private codxService: CodxService
-  ) { }
+  ) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.views = [
@@ -128,7 +128,7 @@ export class DynamicSettingComponent implements OnInit {
                 '.aside-menu .menu-item[data-id]'
               );
               var item = items[0] as HTMLElement;
-              item.click();
+              if (item) item.click();
             }
           }
         });

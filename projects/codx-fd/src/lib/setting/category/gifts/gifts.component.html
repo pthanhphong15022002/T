@@ -1,93 +1,99 @@
-<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'FD_Gifts'"
-    (buttonClick)="openFormCreate($event, true)" [buttons]="button"></codx-views>
+<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="functionList?.entityName"
+    (buttonClick)="openFormCreate($event, true)" [buttons]="button" service="FD" assemblyName="ERM.Business.FD"
+    className="GiftsBusiness" method="LoadDataGiftAsync" [predicate]="predicate" [dataValue]="dataValue"></codx-views>
 
-<ng-template #panelLeft>
+<ng-template #template let-data>
     <div class="container-listview category-gift">
         <div class="list-table" *ngIf="this.searchType == '0' || this.searchType == '1' ">
-            <codx-listview [itemTemplate]="itemGift" #listView funcId="" [pageSize]=20 service="FD"
+            <!-- <codx-listview [itemTemplate]="itemGift" #listView funcId="" [pageSize]=20 service="FD"
                 assemblyName="ERM.Business.FD" className="GiftsBusiness" method="LoadDataGiftAsync"
-                [predicate]="predicate" [dataValue]="dataValue" type="listView" entityName="FD_Gifts"></codx-listview>
+                [predicate]="predicate" [dataValue]="dataValue" type="listView" [entityName]="functionList?.entityName">
+            </codx-listview> -->
+            <codx-temp-full [typeMF]="'hover'" [dataItem]="data" [formModel]="view?.formModel"
+                (clickMF)="clickMF($event, data)" typeMF="hover" [titleTmp]="itemGift">
+            </codx-temp-full>
             <div class="offcanvas-overlay"></div>
         </div>
         <div class="list-table" *ngIf="this.searchType == '2'">
         </div>
     </div>
+</ng-template>
 
-    <ng-template #itemGift let-dataItem>
-        <div (mouseenter)="PopoverEmpEnter(empPopover, dataItem)">
-            <div class="list-item d-flex align-items-start" #empPopover="ngbPopover" [ngbPopover]="moreFunction"
-                placement="top" container="body">
-                <!-- <div class="pic mr-3"> -->
-                <!-- <img alt="" class="" src="../../../assets/demos/svg/pic-quatang.png"> -->
-                <div class="img">
-                    <codx-img funcId="FDS0122" aria-disabled="true" objectType="FD_Gifts" [width]="90"
-                        [objectId]="dataItem.giftID">
-                    </codx-img>
-                </div>
-                <div class="d-flex flex-column flex-grow-1 infor">
-                    <div class="text-dark font-weight-bold font-size-h6">{{dataItem.giftName}}</div>
-                    <div class="d-flex align-items-center font-size-md">
-                        <div class="d-flex text-dark mr-2">{{dataItem.giftID}}</div>
-                        <span class="text-muted font-size-sm">|</span>
-                        <div class="d-flex ml-2">
-                            <span class="text-dark-50 mr-1 left-5">
-                                <codx-label name="lblGroup" formName="FD_Gifts" default="Nhóm:">
-                                </codx-label>
-                            </span>
-                            <span class="text-dark font-weight-bold left-5">{{dataItem.groupName}}</span>
-                        </div>
-                    </div>
-                    <div class="text-dark">
-                        <span class="text-dark-50 mr-1 text-nowrap">
-                            <codx-label name="lblDescription" formName="FD_Gifts" default="Mô tả:">
+<ng-template #itemGift let-dataItem>
+    <!-- <div (mouseenter)="PopoverEmpEnter(empPopover, dataItem)"> -->
+        <div class="list-item d-flex align-items-start" #empPopover="ngbPopover" [ngbPopover]="moreFunction"
+            placement="top" container="body">
+            <!-- <div class="pic mr-3"> -->
+            <!-- <img alt="" class="" src="../../../assets/demos/svg/pic-quatang.png"> -->
+            <div class="img">
+                <codx-img [funcId]="funcID" aria-disabled="true" [objectType]="functionList?.formName" [width]="35"
+                    [objectId]="dataItem?.giftID">
+                </codx-img>
+            </div>
+            <div class="d-flex flex-column flex-grow-1 infor">
+                <div class="text-dark font-weight-bold font-size-h6">{{dataItem?.giftName}}</div>
+                <div class="d-flex align-items-center font-size-md">
+                    <div class="d-flex text-dark mr-2">{{dataItem?.giftID}}</div>
+                    <span class="text-muted font-size-sm">|</span>
+                    <div class="d-flex ml-2">
+                        <span class="text-dark-50 mr-1 left-5">
+                            <codx-label name="lblGroup" [formName]="functionList?.formName" default="Nhóm:">
                             </codx-label>
                         </span>
-                        <span [innerHTML]="dataItem.memo"></span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="d-flex align-items-center mr-4">
-                            <span class="text-dark-50 mr-1">
-                                <codx-label name="lblStorage" formName="FD_Gifts" default="Tồn kho:">
-                                </codx-label>
-                            </span>
-                            <span class="text-primary font-size-h4 font-weight-bold left-5">{{dataItem?.onhand}}</span>
-                        </div>
-                        <div class="d-flex align-items-center mr-4">
-                            <span class="text-dark-50 mr-1 left-10">
-                                <codx-label name="lbl" formName="FD_Gifts" default="Đã giành hàng:">
-                                </codx-label>
-                            </span>
-                            <span
-                                class="text-warning font-size-h4 font-weight-bold left-5">{{dataItem?.reservedQty}}</span>
-                        </div>
-                        <div class="d-flex align-items-center mr-4">
-                            <span class="text-dark-50 mr-1 left-10">
-                                <codx-label name="lblExport" formName="FD_Gifts" default="Sẵn sàng xuất:">
-                                </codx-label>
-                            </span>
-                            <span
-                                class="text-success font-size-h4 font-weight-bold left-5">{{dataItem?.availableQty}}</span>
-                        </div>
-                        <div ngbDropdown class="d-inline-block" container="body">
-                            <button type="button" class="btn btn-icon btn-sm" id="dropdownShowDescription"
-                                ngbDropdownToggle ata-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                *ngIf="dataItem?.description != null && dataItem?.description.length > 0 ">
-                                <span class="icon-assignment icon-18 text-dark-75"></span>
-                            </button>
-                            <div ngbDropdownMenu aria-labelledby="dropdownShowDescription">
-                                <div [innerHTML]="dataItem.description" class="w-500px p-6"></div>
-                            </div>
-                        </div>
+                        <span class="text-dark font-weight-bold left-5">{{dataItem?.groupName}}</span>
                     </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-end w-100px">
-                    <div class="font-size-h4 text-dark font-weight-bold">{{dataItem?.price}}</div>
-                    <span class="text-warning ml-2 icon-20 icon-monetization_on"></span>
+                <div class="text-dark">
+                    <span class="text-dark-50 mr-1 text-nowrap">
+                        <codx-label name="lblDescription" [formName]="functionList?.formName" default="Mô tả:">
+                        </codx-label>
+                    </span>
+                    <span [innerHTML]="dataItem?.memo"></span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center mr-4">
+                        <span class="text-dark-50 mr-1">
+                            <codx-label name="lblStorage" [formName]="functionList?.formName" default="Tồn kho:">
+                            </codx-label>
+                        </span>
+                        <span class="text-primary font-size-h4 font-weight-bold left-5">{{dataItem?.onhand}}</span>
+                    </div>
+                    <div class="d-flex align-items-center mr-4">
+                        <span class="text-dark-50 mr-1 left-10">
+                            <codx-label name="lbl" [formName]="functionList?.formName" default="Đã giành hàng:">
+                            </codx-label>
+                        </span>
+                        <span
+                            class="text-warning font-size-h4 font-weight-bold left-5">{{dataItem?.reservedQty}}</span>
+                    </div>
+                    <div class="d-flex align-items-center mr-4">
+                        <span class="text-dark-50 mr-1 left-10">
+                            <codx-label name="lblExport" [formName]="functionList?.formName"
+                                default="Sẵn sàng xuất:">
+                            </codx-label>
+                        </span>
+                        <span
+                            class="text-success font-size-h4 font-weight-bold left-5">{{dataItem?.availableQty}}</span>
+                    </div>
+                    <div ngbDropdown class="d-inline-block" container="body">
+                        <button type="button" class="btn btn-icon btn-sm" id="dropdownShowDescription"
+                            ngbDropdownToggle ata-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            *ngIf="dataItem?.description != null && dataItem?.description.length > 0 ">
+                            <span class="icon-assignment icon-18 text-dark-75"></span>
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownShowDescription">
+                            <div [innerHTML]="dataItem?.description" class="w-500px p-6"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="d-flex align-items-center justify-content-end w-100px">
+                <div class="font-size-h4 text-dark font-weight-bold">{{dataItem?.price}}</div>
+                <span class="text-warning ml-2 icon-20 icon-monetization_on"></span>
+            </div>
         </div>
-        <hr>
-    </ng-template>
+    <!-- </div> -->
+    <hr>
 </ng-template>
 
 <ng-template #formChange let-modal>
@@ -95,7 +101,8 @@
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">
-                <codx-label name="lblUpdateStorage" formName="FD_Gifts" default="Cập nhật số lượng tồn kho">
+                <codx-label name="lblUpdateStorage" [formName]="functionList?.formName"
+                    default="Cập nhật số lượng tồn kho">
                 </codx-label>
             </h4>
             <button type="button" class="close" aria-label="Close">
@@ -126,7 +133,9 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="onChangeOnHandOfGift()">Lưu</button>
+            <button type="button" class="btn btn-primary" (click)="onChangeOnHandOfGift()">
+                <codx-label name="lblSave" [formName]="functionList?.formName" default="Lưu"></codx-label>
+            </button>
         </div>
     </div>
     <!-- </form> -->
@@ -137,9 +146,11 @@
         <div class="offcanvas-header" kt-hidden-height="46">
             <div class="d-flex align-items-center justify-content-between header">
                 <h2 class="m-0">
-                    <codx-label *ngIf="isAddMode" name="lblAddGift" formName="FD_Gifts" default="Thêm mới">
+                    <codx-label *ngIf="isAddMode" name="lblAddGift" [formName]="functionList?.formName"
+                        default="Thêm mới">
                     </codx-label>
-                    <codx-label *ngIf="!isAddMode" name="lblUpdateGift" formName="FD_Gifts" default="Chỉnh sửa">
+                    <codx-label *ngIf="!isAddMode" name="lblUpdateGift" [formName]="functionList?.formName"
+                        default="Chỉnh sửa">
                     </codx-label>
                 </h2>
                 <!-- Cập nhật thông tin -->
@@ -150,7 +161,7 @@
             <div class="btn-extand mt-2 d-flex justify-content-end h-30">
                 <a class="text-dark-75 text-hover-primary d-flex align-items-center" (click)="extendShow2()">
                     <span class="mr-2 text-dark">
-                        <codx-label name="lblExtent" formName="FD_Gifts" default="Mở rộng">
+                        <codx-label name="lblExtent" [formName]="functionList?.formName" default="Mở rộng">
                         </codx-label>
                     </span>
                     <span class="icon-login icon-20 ml-1"></span>
@@ -163,7 +174,8 @@
                     <div class="flex-grow-1 extend-main border-right">
                         <div class="form-group">
                             <div class="font-w500 font-1rem">
-                                <codx-label name="lblGiftName" formName="FD_Gifts" default="Tên quà tặng"></codx-label>
+                                <codx-label name="lblGiftName" [formName]="functionList?.formName"
+                                    default="Tên quà tặng"></codx-label>
                                 <span class="required"></span>
                             </div>
                             <codx-input type="text" class="form-control" placeholder="Tên quà tặng" ngDefaultControl
@@ -173,7 +185,8 @@
                         <div class="form-group row mt-3">
                             <div class="col-lg-6 col-md-6">
                                 <div class="font-w500 font-1rem">
-                                    <codx-label name="lblGiftCode" formName="FD_Gifts" default="Mã quà tặng">
+                                    <codx-label name="lblGiftCode" [formName]="functionList?.formName"
+                                        default="Mã quà tặng">
                                     </codx-label>
                                     <span class="required"></span>
                                 </div>
@@ -184,7 +197,8 @@
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="font-w500 font-1rem">
-                                    <codx-label name="lblGiftGroup" formName="FD_Gifts" default="Nhóm quà tặng">
+                                    <codx-label name="lblGiftGroup" [formName]="functionList?.formName"
+                                        default="Nhóm quà tặng">
                                     </codx-label>
                                 </div>
                                 <codx-input (valueChange)="changeCombobox($event, 'groupID')" id="edit-usergroups"
@@ -199,7 +213,8 @@
                         <div class="form-group row mt-3">
                             <div class="col-lg-6 col-md-6">
                                 <div class="font-w500 font-1rem">
-                                    <codx-label name="lblOwner" formName="FD_Gifts" default="Chủ sở hữu"></codx-label>
+                                    <codx-label name="lblOwner" [formName]="functionList?.formName"
+                                        default="Chủ sở hữu"></codx-label>
                                 </div>
                                 <codx-input id="edit-usergroups" type="combobox" name="combobox" ngDefaultControl #owner
                                     [crrValue]="addEditForm.controls['owner'].value"
@@ -210,7 +225,7 @@
                         </div>
                         <div class="form-group mt-3" style="width: 490px;">
                             <div class="font-w500 font-1rem">
-                                <codx-label name="lblMemo" formName="FD_Gifts" default="Mô tả">
+                                <codx-label name="lblMemo" [formName]="functionList?.formName" default="Mô tả">
                                 </codx-label>
                                 <span class="required"></span>
                             </div>
@@ -221,7 +236,8 @@
                         </div>
                         <div class="form-group mt-3" style="width: 490px;">
                             <div class="font-w500 font-1rem">
-                                <codx-label name="lblDescription" formName="FD_Gifts" default="Mô tả khác">
+                                <codx-label name="lblDescription" [formName]="functionList?.formName"
+                                    default="Mô tả khác">
                                 </codx-label>
                             </div>
                             <codx-input dataformat="ed" name="editor" class="w-490px test-textarea" placeholder=""
@@ -232,7 +248,8 @@
                         <div class="form-group row mt-3">
                             <div class="col-lg-6 col-md-6">
                                 <div class="font-w500 font-1rem">
-                                    <codx-label name="lblPrice" formName="FD_Gifts" default="Đơn giá (xu)">
+                                    <codx-label name="lblPrice" [formName]="functionList?.formName"
+                                        default="Đơn giá (xu)">
                                     </codx-label>
                                     <span class="required"></span>
                                 </div>
@@ -251,7 +268,8 @@
                             <div class="d-flex flex-column mt-4">
                                 <div class="d-flex align-items-center mr-6">
                                     <span class="text-dark-75 mr-2">
-                                        <codx-label name="lblStorage" formName="FD_Gifts" default="Tồn kho:">
+                                        <codx-label name="lblStorage" [formName]="functionList?.formName"
+                                            default="Tồn kho:">
                                         </codx-label>
                                     </span>
                                     <span
@@ -259,7 +277,8 @@
                                 </div>
                                 <div class="d-flex align-items-center mr-6">
                                     <span class="text-dark-75 mr-2">
-                                        <codx-label name="lblPrice" formName="FD_Gifts" default="Đã giành hàng:">
+                                        <codx-label name="lblPrice" [formName]="functionList?.formName"
+                                            default="Đã giành hàng:">
                                         </codx-label>
                                     </span>
                                     <span
@@ -267,7 +286,8 @@
                                 </div>
                                 <div class="d-flex align-items-center mr-6">
                                     <span class="text-dark-75 mr-2">
-                                        <codx-label name="lblPrice" formName="FD_Gifts" default="Sẵn sàng xuất:">
+                                        <codx-label name="lblPrice" [formName]="functionList?.formName"
+                                            default="Sẵn sàng xuất:">
                                         </codx-label>
                                     </span>
                                     <span
@@ -646,7 +666,7 @@
             </div>
             <div class="card-footer pt-4 footer">
                 <button type="submit" class="btn btn-primary btn-footer" (click)="onSaveGift()">
-                    <codx-label name="lblSave" formName="FD_Gifts" default="Lưu"></codx-label>
+                    <codx-label name="lblSave" [formName]="functionList?.formName" default="Lưu"></codx-label>
                 </button>
             </div>
         </div>
@@ -660,7 +680,7 @@
             <span class="icon-edit icon-18 ml-2 mr-2 active" (click)="openFormCreate(dataItem, false)"></span>
             <ng-template #update>
                 <span class="tooltip-black">
-                    <codx-label name="lblUpdate" formName="FD_Gifts" default="Cập nhật">
+                    <codx-label name="lblUpdate" [formName]="functionList?.formName" default="Cập nhật">
                     </codx-label>
                 </span>
             </ng-template>
@@ -670,7 +690,7 @@
             <span class="icon-close icon-18 text-danger mx-2"></span>
             <ng-template #delete>
                 <span class="tooltiptext">
-                    <codx-label name="lblDelete" formName="FD_Gifts" default="Xóa">
+                    <codx-label name="lblDelete" [formName]="functionList?.formName" default="Xóa">
                     </codx-label>
                 </span>
             </ng-template>
