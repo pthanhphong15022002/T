@@ -1,4 +1,10 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
@@ -6,7 +12,10 @@ import { UIComponent, ViewModel, ViewType } from 'codx-core';
   templateUrl: 'approval-stationery.component.html',
   styleUrls: ['approval-stationery.component.scss'],
 })
-export class ApprovalStationeryComponent extends UIComponent {
+export class ApprovalStationeryComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];

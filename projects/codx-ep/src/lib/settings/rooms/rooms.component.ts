@@ -1,31 +1,12 @@
-// dynamic form
-// import { Component, ViewChild, Injector } from '@angular/core';
-// import { UIComponent, ViewsComponent } from 'codx-core';
-// @Component({
-//   selector: 'setting-rooms',
-//   templateUrl: 'rooms.component.html',
-//   styleUrls: ['rooms.component.scss'],
-// })
-// export class RoomsComponent extends UIComponent {
-//   @ViewChild('view') viewBase: ViewsComponent;
-//   funcID: string;
-
-//   constructor(private injector: Injector) {
-//     super(injector);
-//     this.funcID = this.router.snapshot.params['funcID'];
-//   }
-
-//   onInit(): void {}
-
-//   ngAfterViewInit(): void {
-//     // if (this.viewBase)
-//     //   this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-//   }
-// }
-import { Component, TemplateRef, ViewChild, Injector } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  Injector,
+  AfterViewInit,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
-  ApiHttpService,
   ButtonModel,
   DialogRef,
   FormModel,
@@ -42,7 +23,7 @@ import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.compon
   templateUrl: 'rooms.component.html',
   styleUrls: ['rooms.component.scss'],
 })
-export class RoomsComponent extends UIComponent {
+export class RoomsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
@@ -59,7 +40,7 @@ export class RoomsComponent extends UIComponent {
   dataSelected: any;
   columnGrids: any;
   addEditForm: FormGroup;
-  formModel:FormModel;
+  formModel: FormModel;
   isAdd = false;
   dialog!: DialogRef;
   vllDevices = [];
@@ -75,23 +56,25 @@ export class RoomsComponent extends UIComponent {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
+
   tempCompanyName = '';
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService,
-    private apiHttpService: ApiHttpService
+    private codxEpService: CodxEpService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
-
       }
     });
   }
 
   onInit(): void {
+    this.buttons = {
+      id: 'btnAdd',
+    };
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
     });
@@ -99,82 +82,6 @@ export class RoomsComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-    // this.columnGrids = [
-    //   {
-    //     field: 'resourceID',
-    //     headerText: 'Mã phòng',
-    //     width:100,
-    //   },
-    //   {
-    //     field: 'resourceName',
-    //     headerText: 'Tên phòng',
-    //     width:200,
-    //   },
-    //   {
-    //     field: 'icon',
-    //     headerText: "Hình ảnh",
-    //     template: this.avatarCol,
-    //     width:100,
-    //     textAlign:'Center',
-    //     headerTextAlign:'Center',
-    //   },
-    //   {
-    //     field: 'area',
-    //     headerText: 'Diện tích(m2)',
-    //     width:100,
-    //     textAlign:'Center',
-    //   },
-    //   {
-    //     field: 'capacity',
-    //     headerText: 'Sức chứa(người)',
-    //     width:150,
-    //     textAlign:'Center',
-
-    //   },
-    //   {
-    //     field: 'location',
-    //     headerText: "Vị trí",
-    //     width:200,
-    //     textAlign:'Center',
-    //   },
-    //   {
-    //     headerText: "Công ty",
-    //     width: 200,
-    //     template: this.companyIDCol,
-    //     headerTextAlign:'Center',
-    //   },
-    //   {
-    //     headerText: "Người điều phối",
-    //     width: 200,
-    //     template: this.ownerCol,
-    //     headerTextAlign:'Center',
-    //   },
-    //   {
-    //     field: 'equipments',
-    //     headerText: 'Thiết bị',
-    //     template: this.equipmentsCol,
-    //     width:300,
-    //     headerTextAlign:'Center',
-    //   },
-    //   {
-    //     field: 'note',
-    //     headerTextAlign:'Center',
-    //     headerText: 'Ghi chú',
-    //     width:200,
-    //   },
-    // ];
-    // this.views = [
-    //   {
-    //     sameData: true,
-    //     id: '1',
-    //     text: 'Danh mục phòng',
-    //     type: ViewType.grid,
-    //     active: true,
-    //     model: {
-    //       resources: this.columnGrids,
-    //     },
-    //   },
-    // ];
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
@@ -259,9 +166,6 @@ export class RoomsComponent extends UIComponent {
         });
     });
     this.detectorRef.detectChanges();
-    this.buttons = {
-      id: 'btnAdd',
-    };
   }
 
   getEquiqments(equipments: any) {
