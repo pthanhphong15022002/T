@@ -1,5 +1,11 @@
 import { DialogModel, UIComponent } from 'codx-core';
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   ButtonModel,
   DataRequest,
@@ -17,10 +23,11 @@ import { PopupRequestStationeryComponent } from './popup-request-stationery/popu
   templateUrl: './booking-stationery.component.html',
   styleUrls: ['./booking-stationery.component.scss'],
 })
-export class BookingStationeryComponent extends UIComponent {
+export class BookingStationeryComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('listItem') listItem: TemplateRef<any>;
-  @ViewChild('cardItem') cardItem: TemplateRef<any>;
   @ViewChild('chart') chart: TemplateRef<any>;
 
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -37,14 +44,14 @@ export class BookingStationeryComponent extends UIComponent {
   count = 0;
   funcID: string;
   service = 'EP';
-  entity = 'EP_Bookings';
   assemblyName = 'EP';
-  entityName = 'EP_Bookings';
-  predicate = 'ResourceType=@0';
-  datavalue = '6';
-  idField = 'recID';
+  entity = 'EP_Bookings';
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
+  idField = 'recID';
+  predicate = 'ResourceType=@0';
+  datavalue = '6';
+
   itemDetail;
 
   constructor(
@@ -81,14 +88,14 @@ export class BookingStationeryComponent extends UIComponent {
     ];
 
     this.views = [
-      {
-        type: ViewType.content,
-        sameData: true,
-        active: false,
-        model: {
-          panelLeftRef: this.chart,
-        },
-      },
+      // {
+      //   type: ViewType.content,
+      //   sameData: true,
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.chart,
+      //   },
+      // },
       {
         type: ViewType.listdetail,
         sameData: true,
@@ -100,7 +107,6 @@ export class BookingStationeryComponent extends UIComponent {
       },
     ];
 
-  
     this.detectorRef.detectChanges();
   }
 

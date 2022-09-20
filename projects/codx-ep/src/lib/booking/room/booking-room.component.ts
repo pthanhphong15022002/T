@@ -4,6 +4,7 @@ import {
   ViewChild,
   Injector,
   ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -19,6 +20,7 @@ import {
   ViewsComponent,
   CallFuncService,
   ViewType,
+  FormModel,
 } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
@@ -30,7 +32,7 @@ import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add
   templateUrl: './booking-room.component.html',
   styleUrls: ['./booking-room.component.scss'],
 })
-export class BookingRoomComponent extends UIComponent {
+export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
@@ -38,6 +40,8 @@ export class BookingRoomComponent extends UIComponent {
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   showToolBar = 'true';
   service = 'EP';
@@ -64,6 +68,8 @@ export class BookingRoomComponent extends UIComponent {
   lstPined: any = [];
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
+  
+  formModel: FormModel;
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -74,6 +80,11 @@ export class BookingRoomComponent extends UIComponent {
   ) {
     super(injector);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -158,7 +169,7 @@ export class BookingRoomComponent extends UIComponent {
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           template5: this.resourceTootip,
-          template6: this.footerTemplate,
+          template6: this.mfButton,
           template7: this.footerButton,
           statusColorRef:'vl003'
         },
@@ -204,7 +215,41 @@ export class BookingRoomComponent extends UIComponent {
         break;
     }
   }
+  clickMF(event, data) {
+    switch (event?.functionID) {
+      case 'EPT40101': //duyet
+        this.edit(data);
+        break;
 
+      case 'EPT40102': //ki
+        //this.delete(data);
+        break;
+
+      case 'EPT40103': //dong thuan
+        //this.delete(data);
+        break;
+
+      case 'EPT40104': //dong dau
+        //this.delete(data);
+        break;
+
+      case 'EPT40105': //tu choi
+        //this.delete(data);
+        break;
+
+      case 'EPT40106': //lam lai
+        //this.delete(data);
+        break;
+
+      case 'SYS02': //Xoa
+        this.delete(data);
+        break;
+
+      case 'SYS03': //Sua.
+        this.edit(data);
+        break;
+    }
+  }
   addReport() {
     let option = new DialogModel();
     option.DataService = this.viewBase.dataService;

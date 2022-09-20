@@ -70,7 +70,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   countOpenPopRoles = 0;
   formUser: FormGroup;
   checkValueChangeUG = false;
-  dataUG: any = [];
+  dataUG: any = new Array();
   comments: any;
   tmpPost: any;
 
@@ -87,7 +87,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
     this.adUser = JSON.parse(JSON.stringify(this.data));
-    debugger;
     if (this.formType == 'edit') {
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(
@@ -110,6 +109,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.title = 'Cập nhật người dùng';
       this.isAddMode = false;
+      this.adService
+        .getUserGroupByID(this.adUser.userGroup)
+        .subscribe((res) => {
+          if (res) this.dataUG = res;
+        });
     } else this.title = this.form?.title;
     this.formGroupAdd = new FormGroup({
       userName: new FormControl('', Validators.required),
@@ -149,23 +153,32 @@ export class AddUserComponent extends UIComponent implements OnInit {
     } else {
       if (this.checkValueChangeUG == true || this.adUser.userGroup) {
         this.dataUG.forEach((dt) => {
-          if (dt.UserID == this.adUser.userGroup) {
+          var userID = '';
+          var userName = '';
+          if (this.formType == 'edit') {
+            userID = dt.userID;
+            userName = dt.userName;
+          } else {
+            userID = dt.UserID;
+            userName = dt.UserName;
+          }
+          if (userID == this.adUser.userGroup) {
             if (this.formType == 'add') {
               this.notification
-                .alertCode('AD003', null, "'" + dt.UserName + "'")
+                .alertCode('AD003', null, "'" + userName + "'")
                 .subscribe((info) => {
                   if (info.event.status == 'Y') {
-                    this.adUser.customize == true;
+                    this.adUser.customize = true;
                     this.openPopupRoles(item);
                   }
                 });
             } else {
               if (this.adUser.customize == false) {
                 this.notification
-                  .alertCode('AD003', null, "'" + dt.UserName + "'")
+                  .alertCode('AD003', null, "'" + userName + "'")
                   .subscribe((info) => {
                     if (info.event.status == 'Y') {
-                      this.adUser.customize == true;
+                      this.adUser.customize = true;
                       this.openPopupRoles(item);
                     }
                   });
@@ -306,18 +319,21 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.update) {
-          this.imageUpload
-            .updateFileDirectReload(res.update.userID)
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-              }
-              this.dialog.close(res.update);
-            });
+          if (this.imageUpload) {
+            this.imageUpload
+              .updateFileDirectReload(res.update.userID)
+              .subscribe((result) => {
+                if (result) {
+                  this.loadData.emit();
+                }
+                this.dialog.close(res.update);
+              });
+          }
           res.update.chooseRoles = res.update.functions;
-          (this.dialog.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
+          // (this.dialog.dataService as CRUDService)
+          //   .update(res.update)
+          //   .subscribe();
+          this.dialog.close();
           this.changeDetector.detectChanges();
         }
       });
@@ -378,7 +394,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
           </div>
           <div class="d-flex flex-column w-100">
             <div class="text-dark fw-bold fs-5">${data.userName}</div>
-            <div class="text-gray-400">${data.positionName ? data.positionName : ''}</div>
+            <div class="text-gray-400">${
+              data.positionName ? data.positionName : ''
+            }</div>
           </div>
         </div>
         <!--end::user center-->
@@ -518,6 +536,4 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.title = 'Thêm ' + e;
     this.changeDetector.detectChanges();
   }
-
-  buttonClick(e: any) {}
 }
