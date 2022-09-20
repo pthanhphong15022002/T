@@ -49,29 +49,29 @@ export class SettingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.LoadData();
-    this.range$ = this.api.exec('BS', 'RangeLinesBusiness', 'GetByIDAsync', [
-      'KUDOS',
-    ]);
-    this.funcChildFDS02$ = this.api.exec(
-      'SYS',
-      'FunctionListBusiness',
-      'GetFuncByPredicateAsync',
-      ['ParentID=@0', 'FDS02']
-    );
-    this.getParameter();
-    this.at.queryParams.subscribe((params) => {
-      if (params.page) {
-        this.funcID = params.funcID;
-        this.router.navigate(['/' + this.tenant + '/fd/setting'], {
-          queryParams: { funcID: 'FDS' },
-        });
-        this.page = params.page;
-      }
-      if (params.funcID) {
-        this.funcID = params.funcID;
-      }
-    });
+    // this.LoadData();
+    // this.range$ = this.api.exec('BS', 'RangeLinesBusiness', 'GetByIDAsync', [
+    //   'KUDOS',
+    // ]);
+    // this.funcChildFDS02$ = this.api.exec(
+    //   'SYS',
+    //   'FunctionListBusiness',
+    //   'GetFuncByPredicateAsync',
+    //   ['ParentID=@0', 'FDS02']
+    // );
+    // this.getParameter();
+    // this.at.queryParams.subscribe((params) => {
+    //   if (params.page) {
+    //     this.funcID = params.funcID;
+    //     this.router.navigate(['/' + this.tenant + '/fd/setting'], {
+    //       queryParams: { funcID: 'FDS' },
+    //     });
+    //     this.page = params.page;
+    //   }
+    //   if (params.funcID) {
+    //     this.funcID = params.funcID;
+    //   }
+    // });
   }
 
   ngAfterViewInit() {
