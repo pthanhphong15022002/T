@@ -1,0 +1,81 @@
+<codx-form [dialog]="dialogRef" [body]="body" [subHeader]="subheader"></codx-form>
+<ng-template #subheader>
+    <div class="offcanvas-header d-flex align-items-center justify-content-between w-100" kt-hidden-height="46">
+        <h2 class="m-0">
+            <codx-label [formModel]="dialogRef.formModel" name="lblTitleGift" default="Tặng/đổi quà"></codx-label>
+        </h2>
+        <div class="btn-extand mt-2 d-flex justify-content-end me-2">
+            <a class="text-dark-75 text-hover-primary d-flex align-items-center">
+                <span class="text-dark">
+                    <codx-label [formModel]="dialogRef.formModel" name="lblExtend" default="Mở rộng"></codx-label>
+                </span>
+                <span class="icon-login icon-18 ms-2"></span>
+            </a>
+        </div>
+    </div>
+</ng-template>
+<ng-template #body>
+    <div class="px-4">
+        <div class="mt-3">
+            <div class="mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblReciver" default="Người nhận quà"></codx-label>
+            </div>
+            <div>
+                <codx-input type="combobox" 
+                    class=" form-control borderless p-0"
+                    [crrValue]="form.controls['userID'].value" 
+                    [multiple]="false"
+                    [loadFull]="true"
+                    field="userID"
+                    (valueChange)="valueChange($event)" 
+                    refValue="Users">
+                </codx-input>
+            </div>
+        </div>
+        <div class="mt-3">
+            <div class="d-flex">
+                <div>
+                    <codx-input 
+                        class="rounded-circle" 
+                        [crrValue]="form.controls['transType'].value"
+                        [label]="'Quỹ công ty'" 
+                        type="radio" 
+                        field="transType"
+                        name="radio" 
+                        (valueChange)="valueChange($event)"
+                        ngDefaultControl>
+                    </codx-input>
+                </div>
+                <div>
+                    <codx-input 
+                        class="rounded-circle" 
+                        [crrValue]="form.controls['transType'].value"
+                        [label]="'Quỹ cá nhân'" 
+                        type="radio" 
+                        field="transType"
+                        name="radio" 
+                        (valueChange)="valueChange($event)"
+                        ngDefaultControl>
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <div class="mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblGifts" default="Quà tặng"></codx-label>
+            </div>
+            <div>
+                <codx-input 
+                    type="combobox" 
+                    class=" form-control borderless p-0"
+                    [crrValue]="form.controls['userID'].value" 
+                    [multiple]="false"
+                    [loadFull]="true"
+                    field="giftID"
+                    (valueChange)="valueChange($event)" 
+                    refValue="Gifts">
+                </codx-input>
+            </div>
+        </div>
+    </div>
+</ng-template>
