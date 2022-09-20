@@ -1,140 +1,97 @@
 <codx-views
   #view
+  [views]="views"
+  (buttonClick)="click($event)"
+  [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
-  [entityName]="entityName"
+  [entityName]="entity"
+  [className]="className"
+  [method]="method"
   [predicate]="predicate"
-  [dataValue]="dataValue"
-  [views]="views"
+  [dataValue]="datavalue"
   [button]="button"
   (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"
+  (selectedChange)="changeItemDetail($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
   [idField]="idField"
-  [className]="className"
-  [method]="method"
-  (requestEnded)="closeEditForm($event)"
+  (requestEnded)="closeAddForm($event)"
 >
 </codx-views>
-
-<!-- begin::Dashboard -->
 
 <ng-template #chart>
   <codx-stationery-dashboard></codx-stationery-dashboard>
 </ng-template>
 
-<!-- begin::Dashboard -->
-
-<!-- begin::View card -->
-
-<ng-template #cardItem let-data>
-  <codx-card-img
-    cardCss="border w-250px h-100"
-    [imageSrc]="
-      data.icon ? data.icon : '../assets/media/svg/files/blank-image.svg'
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (click)="click(data)"
+    [typeMF]="'hover'"
+    [titleTmp]="titleTmp"
+    [subTitleTmp]="subTitleTmp"
+    [footer]="footerTmp"
+    [icoCss]="
+      'w-40 h-40 fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     "
-    [title]="data.resourceName"
-    [subTitle]="data.resourceName"
-    [content]="data.costPrice | currency: 'VND':'symbol':'3.0'"
-    [rootData]="data"
-    [footer]="cardItemFooter"
+    [imageId]="data?.createdBy"
+    imageObjType="AD_Users"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    typeMF="hover"
   >
-  </codx-card-img>
+  </codx-temp-full>
 </ng-template>
 
-<ng-template #cardItemFooter let-data>
-  <div class="d-flex flex-column flex-grow-1 mt-2">
-    <!--begin::Item-->
-    <div class="d-flex justify-content-between align-items-end mt-2">
-      <div class="d-flex align-items-end me-2 codx-badge mb-3">
-        <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-view_agenda icon-20 text-gray-400"></span>
-          <span>{{ data.currentQty }}</span>
-        </div>
-        <div class="d-flex align-items-center position-relative me-4">
-          <span
-            class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
-          ></span>
-          <span>{{ data.reservedQty }}</span>
-        </div>
-        <div class="d-flex align-items-center position-relative me-4">
-          <span
-            class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
-          ></span>
-          <span>{{ data.availableQty }}</span>
-        </div>
-      </div>
-      <div
-        class="symbol-group symbol-hover justify-content-end cursor-pointer"
-        (click)="addCart($event, data)"
-      >
-        <span class="icon-shopping_cart icon-20 text-gray-400 cart"></span>
-      </div>
-    </div>
-    <!--end::Item-->
+<ng-template #panelRightRef>
+  <booking-stationery-view-detail
+    #viewdetail
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [formModel]="view?.formModel"
+    [view]="view"
+    (uploaded)="getDetailBooking($event)"
+  ></booking-stationery-view-detail>
+</ng-template>
+
+<ng-template #titleTmp let-data>
+  <div class="fw-bold line-clamp line-clamp-2">
+    {{ data?.requester }}
   </div>
 </ng-template>
 
-<ng-template #resourceNameCol let-data>
-  <div class="d-flex">
-    <div class="w-100px h-100px m-4">
-      <codx-img [objectId]="" imageType="square" width="100"></codx-img>
+<ng-template #subTitleTmp let-data>
+  <div class="row">
+    <div class="d-flex mt-1 flex-grow-1 mb-1">
+      <div class="d-flex me-6">
+        <i class="icon-calendar_today me-1"></i>
+        <span class="text-gray-600">
+          {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <i class="icon-access_time me-1"></i>
+        <span class="text-gray-600">
+          {{ data?.startDate | date: "shortTime" }}
+        </span>
+        <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+          "-"
+        }}</span>
+        <span class="text-gray-600">
+          {{ data?.endDate | date: "shortTime" }}
+        </span>
+      </div>
     </div>
-    <div class="">
-      <div class="text-dark fw-bold font-size-h6">
-        {{ data.resourceName }}
-      </div>
-      <div>
-        <codx-label
-          name="lblUnit"
-          default="Đơn vị tính:"
-          [formModel]="viewBase.formModel"
-        ></codx-label>
-      </div>
-      <div>
-        <codx-label
-          name="lblGroup"
-          default="Nhóm: "
-          [formModel]="viewBase.formModel"
-        ></codx-label>
-        <span>{{ data.groupID }}</span>
-      </div>
-      <div class="d-flex justify-content-between align-items-end mt-2">
-        <div class="d-flex align-items-end me-2 codx-badge">
-          <div class="d-flex align-items-center position-relative me-4">
-            <span class="icon-view_agenda icon-20 text-gray-400"></span>
-            <span>{{ data.currentQty }}</span>
-          </div>
-          <div class="d-flex align-items-center position-relative me-4">
-            <span
-              class="icon-shopping_cart icon-20 text-gray-400 reservedQty_grid"
-            ></span>
-            <span>{{ data.reservedQty }}</span>
-          </div>
-          <div class="d-flex align-items-center position-relative me-4">
-            <span
-              class="icon-brightness_auto icon-20 text-gray-400 availableQty_grid"
-            ></span>
-            <span>{{ data.availableQty }}</span>
-          </div>
-        </div>
-      </div>
+    <div class="row mb-2">
+      <span>{{ data.title }}</span>
     </div>
   </div>
 </ng-template>
 
-<ng-template #usageRateCol let-data>
-  <div class="has-action-menu">
-    <codx-label
-      name="lblOnePerson"
-      default="1 Chai / Người / Lần "
-      [formModel]="viewBase.formModel"
-    ></codx-label>
-    <div class="action-menu">
-      <codx-mfunc
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-      ></codx-mfunc>
-    </div>
-  </div>
+
+<ng-template #footerTmp let-data>
+  <div>Footer</div>
 </ng-template>

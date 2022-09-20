@@ -1,15 +1,17 @@
 
 
 <ng-container *ngIf="data">
-    <codx-detail-tmp [formModel]="formModel" [body]="body" [footer]="footer">
+    <codx-detail-tmp [formModel]="formModel" [body]="body" [footer]="footer" [dataItem]="data">
     </codx-detail-tmp>
 </ng-container>
 <ng-template #body>
     <div class="p-4">
         <div class="d-flex flex-row-reverse">
-            <span class="btn cursor-pointer" [ngClass]="data.status == '1'? 'btn-outline-success' : 'btn-outline-secondary'">
+            <button class="btn" 
+                [disabled]="data.status != '1'"
+                [ngClass]="data.status == '1'? 'btn-outline-success' : 'btn-outline-secondary'">
                 <codx-label [formModel]="formModel" name="lblSendGift" default="Giao quà"></codx-label>  
-            </span>
+            </button>
         </div>
         <div>
             <div class="row">

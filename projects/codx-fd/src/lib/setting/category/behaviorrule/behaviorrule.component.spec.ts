@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ControlNoteComponent } from './control-note.component';
+import { BehaviorruleComponent } from './behaviorrule.component';
 
-describe('ControlNoteComponent', () => {
-  let component: ControlNoteComponent;
-  let fixture: ComponentFixture<ControlNoteComponent>;
+describe('BehaviorruleComponent', () => {
+  let component: BehaviorruleComponent;
+  let fixture: ComponentFixture<BehaviorruleComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ControlNoteComponent ]
+      declarations: [ BehaviorruleComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ControlNoteComponent);
+    fixture = TestBed.createComponent(BehaviorruleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

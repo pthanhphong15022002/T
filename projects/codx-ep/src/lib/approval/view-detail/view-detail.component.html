@@ -9,11 +9,41 @@
   (clickMF)="openFormFuncID($event)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
+
+<ng-template #subTitleHeader>
+  <div class="d-flex flex-row">
+    <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+      <span class="fw-bold">
+        {{itemDetail?.positionName}}
+      </span>
+    </div>
+
+    <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+      <i class="icon-email me-1"></i>
+      <span class="fw-bold">        
+        {{itemDetail?.email}}
+      </span>
+    </div>
+
+    <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+      <i class="icon-phone_android me-1"></i>
+      <span class="fw-bold">        
+        {{itemDetail?.phone}}
+      </span>
+    </div>
+  </div>
+</ng-template>
+
   <ng-template #header>
+    <div class="d-flex justify-content-between">
+      <h3>{{itemDetail?.title}}</h3>
+      <span class="btn-light btn disable" >{{itemDetail?.status | vll: "VL003":"text" | async}}</span>
+    </div>
     <div class="d-flex flex-column flex-grow-1 mb-2">
       <codx-temp-full
         [title]="itemDetail?.requester"
-        [subTitle]="itemDetail?.positionName"
+        [subTitleTmp]="subTitleHeader"
+        
         [imageId]="itemDetail?.createdBy"
         imageObjType="AD_Users"
         [imageWidth]="40"
@@ -24,15 +54,12 @@
     <div class="d-flex mb-2">
       <div class="d-flex text-dark me-6">
         <ng-container
-          *ngTemplateOutlet="
-            resourceTypeLabel;
-            context: { $implicit: itemDetail?.resourceType }
-          "
+          *ngTemplateOutlet="resourceTypeLabel; context: { $implicit: itemDetail?.resourceType }"
         >
         </ng-container>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.title }}
+          {{ itemDetail?.resourceName }}
         </span>
       </div>
     </div>
@@ -123,7 +150,9 @@
             </div>
           </a>
           <ng-template ngbNavContent>
-            <ng-container *ngTemplateOutlet="defaulEmpt"></ng-container>
+            <ng-container *ngTemplateOutlet="defaulEmpt">
+              <span>{{itemDetail.memo}}</span>
+            </ng-container>
           </ng-template>
         </li>
         <li [ngbNavItem]="2">

@@ -55,36 +55,13 @@
   </div>
 </ng-template>
 
-<ng-template #footerButton let-data>
-  <div class="d-flex justify-content-between">
-    <button class="btn btn-light-primary" (click)="edit(data)">Sửa</button>
-    <button class="btn btn-light-danger" (click)="delete(data)">Xóa</button>
-  </div>
-</ng-template>
-
-<ng-template #footer let-data>
-  <div class="container my-3 p-3">
-    <div class="row">
-      <div style="width: 90%">
-        <span style="font-weight: 600; text-transform: uppercase">{{
-          data.title
-        }}</span>
-      </div>
-      <div style="width: 10%">
-        <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col-3 d-flex justify-content-center">
-        <codx-img [objectId]="data.requester" [width]="35"></codx-img>
-      </div>
-      <div class="col-9">
-        <span class="text-muted mt-3" style="font-weight: 500; float: left">{{
-          data.requester
-        }}</span>
-      </div>
-    </div>
-  </div>
+<ng-template #mfButton let-data>
+  <codx-mfunc
+    [dataItem]="data"
+    [formModel]="formModel"
+    (clickMF)="clickMF($event, data)"
+    type="hover"
+  ></codx-mfunc>
 </ng-template>
 
 <ng-template #resourceTootip let-data>
@@ -95,121 +72,3 @@
   </div>
 </ng-template>
 
-<ng-template #pined>
-  <div class="d-flex justify-content-start w-100">
-    <button
-      [title]="titleCollapse"
-      type="button"
-      class="btn btn-sm background-color-white my-1 text-hover-primary"
-      style="margin-left: -5px"
-      (click)="collapse($event)"
-    >
-      <i
-        style="font-size: 21px !important; font-weight: 600"
-        class="icon-tune text-muted"
-      ></i>
-    </button>
-    <div class="w-100 d-flex">
-      <div class="d-flex w-275px mx-3" *ngFor="let item of lstPined">
-        <ng-container [ngSwitch]="item?.dataType">
-          <ng-container *ngSwitchCase="'string'">
-            <div class="w-100 mt-3" *ngIf="!item.referedType">
-              <codx-input
-                type="textarea"
-                [field]="item.controlName"
-                placeholder="Có chứa giá trị..."
-                format="ed2"
-                [crrValue]="item.defaultValue"
-                (valueChange)="reportObj.valueChange($event)"
-              ></codx-input>
-            </div>
-            <div class="w-100 mt-3" *ngIf="item.referedType == '3'">
-              <codx-input
-                type="combobox"
-                [field]="item.controlName"
-                [crrValue]="item.defaultValue"
-                [refValue]="item.referedValue"
-                (valueChange)="reportObj.valueChange($event)"
-              >
-              </codx-input>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'bool'">
-            <div class="float-end" *ngIf="item.controlType == 'LVSwitch'">
-              <codx-input
-                class="float-right"
-                type="switch"
-                [field]="item.controlName"
-                [crrValue]="item.defaultValue ? item.defaulValue : false"
-                (valueChange)="reportObj.valueChange($event, false, 'switch')"
-              ></codx-input>
-            </div>
-            <div
-              class="w-100 ms-5 mt-3"
-              *ngIf="item.controlType == 'LVCheckbox'"
-            >
-              <div class="d-flex">
-                <div class="float-start mx-5">
-                  <codx-input
-                    type="checkBox"
-                    [field]="item.controlName"
-                    [crrValue]="item.defaultValue ? item.defaulValue : false"
-                    (valueChange)="valueChange($event)"
-                  ></codx-input>
-                </div>
-                <div class="w-100 float-end">
-                  <span style="font-size: 12px; font-weight: 400"
-                    >{{ item.labelName }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'DateTime'">
-            <div class="my-2 w-100">
-              <codx-dropdown-calendar
-                cssPopup="h-600px w-800px"
-                cssClass="w-100 button-radius"
-                (change)="reportObj.changeValueDate($event)"
-              ></codx-dropdown-calendar>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'int'">
-            <div class="w-100 mt-3">
-              <div class="d-flex">
-                <div class="float-start me-1">
-                  <codx-input
-                    type="number"
-                    field="numberFrom"
-                    [crrValue]="item.defaultValue ? item.defaultValue : 0"
-                    (valueChange)="reportObj.valueChange($event)"
-                    placeholder="Từ"
-                  ></codx-input>
-                </div>
-                <div class="float-end ms-1">
-                  <codx-input
-                    type="number"
-                    field="numberTo"
-                    [crrValue]="item.defaultValue ? item.defaultValue : 0"
-                    (valueChange)="reportObj.valueChange($event)"
-                    placeholder="Đến"
-                  ></codx-input>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
-      </div>
-    </div>
-
-    <div class="d-flex float-right">
-      <button
-        class="btn btn-sm background-color-white my-1 text-hover-primary"
-        style="margin-right: -15px"
-        (click)="reportObj.printReport()"
-      >
-        <i style="font-size: 21px !important" class="icon-print text-muted"></i>
-      </button>
-    </div>
-  </div>
-</ng-template>
