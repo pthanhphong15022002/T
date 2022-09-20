@@ -12,6 +12,7 @@ export class PopupAddGiftComponent implements OnInit {
   user:any = null;
   dialogRef:DialogRef = null;
   form:FormGroup = null;  
+  transType:string = "3";
   constructor(
     private api:ApiHttpService,
     private cache:CacheService,
@@ -34,7 +35,7 @@ export class PopupAddGiftComponent implements OnInit {
     this.form = new FormGroup({
       userID: new FormControl(""),
       userName: new FormControl(""),
-      transType:new FormControl(""),
+      transType:new FormControl("3"),
       giftID: new FormControl(""),
       quantity: new FormControl(0),
       amount: new FormControl(0),
@@ -48,5 +49,7 @@ export class PopupAddGiftComponent implements OnInit {
 
   valueChange(event:any){
     if(!event || !event.data) return;
+    let data = event.data;
+    let field = event.field;
   }
 }

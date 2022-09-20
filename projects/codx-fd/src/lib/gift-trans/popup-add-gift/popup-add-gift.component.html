@@ -1,4 +1,4 @@
-<codx-form [dialog]="dialogRef" [body]="body" [subHeader]="subheader"></codx-form>
+<codx-form [dialog]="dialogRef" [footer]="footer" [body]="body" [subHeader]="subheader"></codx-form>
 <ng-template #subheader>
     <div class="offcanvas-header d-flex align-items-center justify-content-between w-100" kt-hidden-height="46">
         <h2 class="m-0">
@@ -38,21 +38,22 @@
                     <codx-input 
                         class="rounded-circle" 
                         [crrValue]="form.controls['transType'].value"
+                        [checked]="form.controls['transType'].value == '3'"
                         [label]="'Quỹ công ty'" 
                         type="radio" 
-                        field="transType"
+                        field="transType3"
                         name="radio" 
                         (valueChange)="valueChange($event)"
                         ngDefaultControl>
                     </codx-input>
                 </div>
-                <div>
+                <div class="ms-6">
                     <codx-input 
                         class="rounded-circle" 
-                        [crrValue]="form.controls['transType'].value"
+                        [checked]="form.controls['transType'].value == '4'" 
                         [label]="'Quỹ cá nhân'" 
                         type="radio" 
-                        field="transType"
+                        field="transType4"
                         name="radio" 
                         (valueChange)="valueChange($event)"
                         ngDefaultControl>
@@ -67,8 +68,8 @@
             <div>
                 <codx-input 
                     type="combobox" 
-                    class=" form-control borderless p-0"
-                    [crrValue]="form.controls['userID'].value" 
+                    class=""
+                    [crrValue]="form.controls['giftID'].value" 
                     [multiple]="false"
                     [loadFull]="true"
                     field="giftID"
@@ -76,6 +77,98 @@
                     refValue="Gifts">
                 </codx-input>
             </div>
+        </div>
+        <div class="mt-3">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <div class="mb-2">
+                        <codx-label [formModel]="dialogRef.formModel" name="lblAmount" default="Số lượng"></codx-label>
+                    </div>
+                    <div>
+                        <codx-input 
+                            type="number" 
+                            class=""
+                            [crrValue]="form.controls['amount'].value" 
+                            [placeholder]="'0'"
+                            field="amount"
+                            (valueChange)="valueChange($event)" 
+                            >
+                        </codx-input>
+                    </div>
+                </div>
+                <div>
+                    <div class="mb-2">
+                        <codx-label [formModel]="dialogRef.formModel" name="lblTotalCoins" default="Tổng xu"></codx-label>
+                    </div>
+                    <div>
+                        <codx-input 
+                            type="text" 
+                            class="border text-end"
+                            [crrValue]="form.controls['amount'].value" 
+                            [placeholder]="'0'"
+                            [disabled]="true"
+                            field="amount"
+                            (valueChange)="valueChange($event)" >
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <div class="mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblStatus" default="Đã giao quà"></codx-label>
+            </div>
+            <div>
+                <codx-input 
+                    class="rounded-circle" 
+                    [crrValue]="form.controls['status'].value"
+                    type="radio" 
+                    field="status"
+                    name="status" 
+                    (valueChange)="valueChange($event)"
+                    ngDefaultControl>
+                </codx-input>
+            </div>
+        </div>
+        <div class="mt-3">
+            <div class="mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblSiutuation" default="Nội dung"></codx-label>
+            </div>
+            <div>
+                <codx-input 
+                    [crrValue]="form.controls['siutuation'].value"
+                    type="textarea" 
+                    field="siutuation"
+                    name="siutuation" 
+                    (valueChange)="valueChange($event)"
+                    >
+                </codx-input>
+            </div>
+        </div>
+        <div class="mt-3">
+            <div class="mb-2">
+                <codx-label [formModel]="dialogRef.formModel" name="lblSharePortal" default="Chia sẻ trên Portal"></codx-label>
+            </div>
+            <div>
+                <codx-input 
+                    [crrValue]="form.controls['isSharePortal'].value"
+                    type="switch" 
+                    field="isSharePortal"
+                    name="isSharePortal" 
+                    (valueChange)="valueChange($event)"
+                    >
+                </codx-input>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <div>
+            <button class="btn btn-primary">
+                <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
+            </button>
         </div>
     </div>
 </ng-template>
