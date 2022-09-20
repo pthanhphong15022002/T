@@ -716,9 +716,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         break;
       case 'comment':
         this.comment(index);
+        this.contents
         break;
       case 'assign':
         this.assign(index);
+        this.contents
         break;
       case 'attachment':
         if (menu == false) this.openPopupAttachment(index);
