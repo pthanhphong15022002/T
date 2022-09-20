@@ -38,6 +38,8 @@ import { PopupSettingNormsComponent } from './settings/stationery/popup-setting-
 import { PopupUpdateInventoryComponent } from './settings/stationery/popup-update-inventory/popup-update-inventory.component';
 import { StationeryComponent } from './settings/stationery/stationery.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { EpCardsComponent } from './settings/epCards/epCards.component';
+import { PopupAddEpCardsComponent } from './settings/epCards/popup-add-epCards/popup-add-epCards.component';
 
 const routes: Route[] = [
   {
@@ -107,6 +109,10 @@ const routes: Route[] = [
         path: 'stationery/:funcID',
         component: StationeryComponent,
       },
+      {
+        path: 'epCards/:funcID',
+        component: EpCardsComponent,
+      },
     ],
   },
 ];
@@ -128,10 +134,12 @@ const Components: Type<any>[] = [
   PopupAddRoomsComponent,
   PopupAddStationeryComponent,
   PopupAddDriversComponent,
+  PopupAddEpCardsComponent,
   StationeryComponent,
   CarsComponent,
   DriversComponent,
   RoomsComponent,
+  EpCardsComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,

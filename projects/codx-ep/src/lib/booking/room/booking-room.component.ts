@@ -4,6 +4,7 @@ import {
   ViewChild,
   Injector,
   ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -31,7 +32,7 @@ import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add
   templateUrl: './booking-room.component.html',
   styleUrls: ['./booking-room.component.scss'],
 })
-export class BookingRoomComponent extends UIComponent {
+export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
