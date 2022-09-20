@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between main-pane stepper-body tab-custom w-100">
-  <div class="main-content d-flex flex-column-fluid h-100">
-    <div class="flex-column flex-lg-row-auto main-left" [class.hideCol]="hideThumbnail">
+  <div class="main-content d-flex flex-column-fluid  h-100">
+    <div class="flex-column flex-lg-row-auto main-left w-250px w-xxl-275px" [class.hideCol]="hideThumbnail">
       <ejs-tab #leftToolbar [class.d-none]="hideThumbnail" heightAdjustMode="Fill">
         <e-tabitems>
           <e-tabitem>
@@ -50,24 +50,24 @@
                         </ng-container>
                       </div>
                       <button (click)="openPopUpCAProps(ca)"
-                        class="btn btn-link btn-color-gray-500 btn-active-color-primary me-5 mb-2">
+                        class="btn btn-link btn-color-gray-800 btn-active-color-primary mb-2">
                         <codx-label [name]="'lblCAProps'" [formModel]="" [default]="'Signature Properties'"
                           class="fw-bold  mb-2 fst-italic text-decoration-underline"></codx-label>
                       </button>
                       <div class="ca_Details">
                         <codx-label [name]="'lblCADetails' + idx" [formModel]="" [default]="'Signature Detail'"
-                          class="fw-bold text-primary fs-30 d-block"></codx-label>
+                          class="fw-bold text-primary fs-30 "></codx-label>
 
                         <codx-label [name]="'lblCADetails_Contact' + idx" [formModel]="" [default]="
                             'Contact Information: ' +
                             ca.certificate_IssuedBy.commonName
-                          " class="text-primary fs-30 d-block"></codx-label>
+                          " class="text-primary fs-30 "></codx-label>
 
                         <codx-label [name]="'lblCADetails_Location' + idx" [formModel]=""
-                          [default]="'Location: ' + ca.signedLocation" class="text-primary fs-30 d-block"></codx-label>
+                          [default]="'Location: ' + ca.signedLocation" class="text-primary fs-30 "></codx-label>
 
                         <codx-label [name]="'lblCADetails_Reason' + idx" [formModel]=""
-                          [default]="'Reason: ' + ca.signedComment" class="text-primary fs-30 d-block"></codx-label>
+                          [default]="'Reason: ' + ca.signedComment" class="text-primary fs-30 "></codx-label>
                       </div>
                     </div>
                   </div>
@@ -169,30 +169,32 @@
           </ejs-toolbar>
         </div>
       </div>
+      <div class="w-100 d-flex justify-content-center align-items-center test-temp1">
 
-      <ngx-extended-pdf-viewer #ngxPdfView *ngIf="curFileUrl ? true : false" [(src)]="curFileUrl" [height]="'100vh'"
-        [(zoom)]="zoomValue" [zoomLevels]="zoomValue" [(page)]="curPage" [customToolbar]="pdfToolbar"
-        [showHandToolButton]="false" [showUnverifiedSignatures]="true" [sidebarVisible]="!hideThumbnail"
-        [showSidebarButton]="false" (pdfLoadingStarts)="loadingPdf($event)" (pageRendered)="pageRendered($event)"
-        [pageViewMode]="pageViewMode" [showBookmarkButton]="false" [showPropertiesButton]="true"
-        [customSidebar]="withoutSidebar" [customThumbnail]="ngxThumbnail" [enableDragAndDrop]="false">
-      </ngx-extended-pdf-viewer>
-      <ng-template #ngxThumbnail let-PAGE_NUMBER>
-        <a class="pdf-viewer-template">
-          <div class="thumbnail" [classList]="PAGE_NUMBER == curPage ? 'border border-primary' : ''"
-            data-page-number="PAGE_NUMBER" (click)="goToPage(PAGE_NUMBER)">
-            <div class="image-container d-flex mb-2">
-              <!-- image is automatically inserted here -->
+        <ngx-extended-pdf-viewer #ngxPdfView *ngIf="curFileUrl ? true : false" [(src)]="curFileUrl" [height]="'100vh'"
+          [(zoom)]="zoomValue" [zoomLevels]="zoomValue" [(page)]="curPage" [customToolbar]="pdfToolbar"
+          [showHandToolButton]="false" [showUnverifiedSignatures]="true" [sidebarVisible]="!hideThumbnail"
+          [showSidebarButton]="false" (pdfLoadingStarts)="loadingPdf($event)" (pageRendered)="pageRendered($event)"
+          [pageViewMode]="pageViewMode" [showBookmarkButton]="false" [showPropertiesButton]="true"
+          [customSidebar]="withoutSidebar" [customThumbnail]="ngxThumbnail" [enableDragAndDrop]="false">
+        </ngx-extended-pdf-viewer>
+        <ng-template #ngxThumbnail let-PAGE_NUMBER>
+          <a class="pdf-viewer-template test-temp2">
+            <div class="thumbnail" [classList]="PAGE_NUMBER == curPage ? 'border border-primary' : ''"
+              data-page-number="PAGE_NUMBER" (click)="goToPage(PAGE_NUMBER)">
+              <div class="image-container d-flex mb-2">
+                <!-- image is automatically inserted here -->
+              </div>
             </div>
+          </a>
+        </ng-template>
+        <ng-template #withoutSidebar>
+          <div id="sidebarContainer" class="d-flex w-0 h-0 d-none">
+            <pdf-sidebar-content></pdf-sidebar-content>
+            <div id="sidebarResizer" class="d-none"></div>
           </div>
-        </a>
-      </ng-template>
-      <ng-template #withoutSidebar>
-        <div id="sidebarContainer" class="d-flex w-0 h-0 d-none">
-          <pdf-sidebar-content></pdf-sidebar-content>
-          <div id="sidebarResizer" class="d-none"></div>
-        </div>
-      </ng-template>
+        </ng-template>
+      </div>
     </div>
     <div class="actions flex-column flex-lg-row-auto main-right" [class.hideCol]="hideActions">
       <ejs-tab #rightToolbar id="rightToolbar" [class.d-none]="hideActions" heightAdjustMode="Fill">
