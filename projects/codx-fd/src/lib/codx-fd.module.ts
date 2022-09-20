@@ -67,7 +67,34 @@ export const routes: Routes = [
         path: 'gifttrans/:funcID',
         component: GiftTransComponent,
       },
-
+      {
+        path: 'shared/settings/:funcID',
+        component: SettingComponent,
+      },
+      {
+        path: 'setting/gifts/:funcID',
+        component: GiftsComponent,
+      },
+      {
+        path: 'setting/giftgroups/:funcID',
+        component: GiftgroupComponent,
+      },
+      {
+        path: 'setting/behaviorgroups/:funcID',
+        component: BehaviorruleComponent,
+      },
+      {
+        path: 'setting/behaviors/:funcID',
+        component: BehaviorComponent,
+      },
+      {
+        path: 'setting/industries/:funcID',
+        component: ProposedfieldComponent,
+      },
+      {
+        path: 'setting/fedranges/:funcID',
+        component: DedicationrankComponent,
+      },
     ],
   },
 ];
