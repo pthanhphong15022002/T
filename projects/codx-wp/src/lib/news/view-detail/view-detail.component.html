@@ -22,30 +22,32 @@
                 <div class="col-8">
                     <div class="fs-2 fw-bolder text-dark mb-3" [innerHTML]="dataItem.subject"></div>
                     <div class=" justify-content-between border-bottom py-1">
-                        <div class="d-flex flex-center justify-content-between border-bottom py-1">
+                        <div class="d-flex flex-center justify-content-between border-bottom py-3">
                             <div class="d-flex flex-center">
-                                <div class="d-flex flex-center badge badge-light me-6">
-                                    <span class="fs-7 text-gray-600 me-1">
-                                        <img class="h-13px w-13px" src="assets/themes/sys/default/img/{{dataItem.shareIcon}}" />
+                                <div class="d-flex align-items-center badge badge-light me-4">
+                                    <span class="me-2">
+                                        <img class="h-12px w-12px"
+                                            src="assets/themes/sys/default/img/{{dataItem.shareIcon}}" />
                                     </span>
                                     <span class="fs-7 text-gray-600">
                                         {{dataItem.shareText}}
                                     </span>
                                 </div>
-                                <div class="d-flex flex-center me-6">
+                                <div class="d-flex flex-center me-4">
                                     <span class="icon-account_circle me-1 fs-6 text-gray-600"></span>
                                     <span class="fs-7 text-gray-600">{{dataItem.createdByName}}</span>
                                 </div>
-                                <div class="d-flex flex-center me-6">
+                                <div class="d-flex flex-center me-4">
                                     <span class="icon-calendar_customize me-1 fs-6 text-gray-600"></span>
                                     <span class="fs-7 text-gray-600">{{dataItem.createdOn | fmDT}}</span>
                                 </div>
-                                <div class="d-flex flex-center me-6">
+                                <div class="d-flex flex-center me-4">
                                     <span class="icon-visibility me-1 fs-6 text-gray-600"></span>
                                     <span class="fs-7 text-gray-600">{{dataItem.views}}</span>
                                 </div>
                             </div>
-                            <button class="btn btn-icon btn-sm btn-light-primary"><span class="icon-share"></span></button>
+                            <button class="btn btn-icon btn-sm btn-light-primary"><span
+                                    class="icon-share"></span></button>
                         </div>
                         <ng-contianer *ngIf="dataItem?.newsType == NEWSTYPE.VIDEO;else news">
                             <app-view-file [category]="'video'" [ObjectID]="dataItem.recID" [ObjectType]="'WP_News'">
@@ -69,7 +71,7 @@
                                     ngDefaultControl>
                                 </codx-input>
                             </div> -->
-                            <div class="py-3" [innerHTML]="dataItem?.contentHtml"></div>
+                            <div class="py-3 news-detail-content" [innerHTML]="dataItem?.contentHtml"></div>
                             <!-- <codx-input 
                                 type="textarea" 
                                 [class]="'border-none'"
@@ -103,8 +105,8 @@
                                 (click)="clickViewDeital(item)">
                                 <div class="row">
                                     <div class="col-3">
-                                        <codx-img [width]="70" imageType="square" [cssClass]="'img'" [objectId]="item.recID"
-                                            [objectType]="'WP_News'">
+                                        <codx-img [width]="70" imageType="square" [cssClass]="'img'"
+                                            [objectId]="item.recID" [objectType]="'WP_News'">
                                         </codx-img>
                                     </div>
                                     <div class="col-9">
@@ -125,8 +127,8 @@
                         <div class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray">
                             <codx-label formName="News" name="lblTags" default="Tag #"></codx-label>
                             <div class="badge-group">
-                                <span *ngFor="let tag of listTag" class="badge badge-danger" [style.background]="tag.color"
-                                    (click)="clickTag(tag)">
+                                <span *ngFor="let tag of listTag" class="badge badge-danger"
+                                    [style.background]="tag.color" (click)="clickTag(tag)">
                                     {{tag.text}}
                                 </span>
                             </div>
@@ -134,7 +136,7 @@
                     </div>
                 </div>
             </div>
-    
+
         </div>
     </ng-container>
 </ng-template>
