@@ -20,48 +20,50 @@
         <div class="fix-container p-6">
             <div class="row">
                 <div class="col-8">
-                    <div class="fs-2 fw-bolder text-dark mb-3" [innerHTML]="dataItem.subject"></div>
-                    <div class=" justify-content-between border-bottom py-1">
-                        <div class="d-flex flex-center justify-content-between border-bottom py-3">
-                            <div class="d-flex flex-center">
-                                <div class="d-flex align-items-center badge badge-light me-4">
-                                    <span class="me-2">
-                                        <img class="h-12px w-12px"
-                                            src="assets/themes/sys/default/img/{{dataItem.shareIcon}}" />
-                                    </span>
-                                    <span class="fs-7 text-gray-600">
-                                        {{dataItem.shareText}}
-                                    </span>
+                    <div class="d-flex flex-column">
+                        <div class="fs-2 fw-bolder text-dark mb-3" [innerHTML]="dataItem.subject"></div>
+                        <div class=" justify-content-between border-bottom py-1">
+                            <div class="d-flex flex-center justify-content-between border-bottom py-3">
+                                <div class="d-flex flex-center">
+                                    <div class="d-flex align-items-center badge badge-light me-4">
+                                        <span class="me-2">
+                                            <img class="h-12px w-12px"
+                                                src="assets/themes/sys/default/img/{{dataItem.shareIcon}}" />
+                                        </span>
+                                        <span class="fs-7 text-gray-600">
+                                            {{dataItem.shareText}}
+                                        </span>
+                                    </div>
+                                    <div class="d-flex flex-center me-4">
+                                        <span class="icon-account_circle me-1 fs-6 text-gray-600"></span>
+                                        <span class="fs-7 text-gray-600">{{dataItem.createdByName}}</span>
+                                    </div>
+                                    <div class="d-flex flex-center me-4">
+                                        <span class="icon-calendar_customize me-1 fs-6 text-gray-600"></span>
+                                        <span class="fs-7 text-gray-600">{{dataItem.createdOn | fmDT}}</span>
+                                    </div>
+                                    <div class="d-flex flex-center me-4">
+                                        <span class="icon-visibility me-1 fs-6 text-gray-600"></span>
+                                        <span class="fs-7 text-gray-600">{{dataItem.views}}</span>
+                                    </div>
                                 </div>
-                                <div class="d-flex flex-center me-4">
-                                    <span class="icon-account_circle me-1 fs-6 text-gray-600"></span>
-                                    <span class="fs-7 text-gray-600">{{dataItem.createdByName}}</span>
-                                </div>
-                                <div class="d-flex flex-center me-4">
-                                    <span class="icon-calendar_customize me-1 fs-6 text-gray-600"></span>
-                                    <span class="fs-7 text-gray-600">{{dataItem.createdOn | fmDT}}</span>
-                                </div>
-                                <div class="d-flex flex-center me-4">
-                                    <span class="icon-visibility me-1 fs-6 text-gray-600"></span>
-                                    <span class="fs-7 text-gray-600">{{dataItem.views}}</span>
-                                </div>
+                                <button class="btn btn-icon btn-sm btn-light-primary"><span
+                                        class="icon-share"></span></button>
                             </div>
-                            <button class="btn btn-icon btn-sm btn-light-primary"><span
-                                    class="icon-share"></span></button>
-                        </div>
-                        <ng-contianer *ngIf="dataItem?.newsType == NEWSTYPE.VIDEO;else news">
-                            <app-view-file [category]="'video'" [ObjectID]="dataItem.recID" [ObjectType]="'WP_News'">
-                            </app-view-file>
-                        </ng-contianer>
-                        <ng-template #news>
-                            <div class="py-3" [innerHTML]="dataItem?.subContent"></div>
-                            <!-- <codx-input 
+                            <ng-contianer *ngIf="dataItem?.newsType == NEWSTYPE.VIDEO;else news">
+                                <app-view-file [category]="'video'" [ObjectID]="dataItem.recID"
+                                    [ObjectType]="'WP_News'">
+                                </app-view-file>
+                            </ng-contianer>
+                            <ng-template #news>
+                                <div class="py-3" [innerHTML]="dataItem?.subContent"></div>
+                                <!-- <codx-input 
                                 type="textarea" 
                                 [class]="'border-none'"
                                 format="ed3"
                                 [crrValue]="dataItem.subContent">
                             </codx-input> -->
-                            <!-- <div class="row p-4">
+                                <!-- <div class="row p-4">
                                 <codx-input 
                                     type="textarea" 
                                     class="test-textarea" 
@@ -71,18 +73,20 @@
                                     ngDefaultControl>
                                 </codx-input>
                             </div> -->
-                            <div class="py-3 news-detail-content" [innerHTML]="dataItem?.contentHtml"></div>
-                            <!-- <codx-input 
+                                <div class="py-3 news-detail-content" [innerHTML]="dataItem?.contentHtml"></div>
+                                <!-- <codx-input 
                                 type="textarea" 
                                 [class]="'border-none'"
                                 format="ed3"
                                 [crrValue]="dataItem.contentHtml">
                             </codx-input> -->
-                        </ng-template>
+                            </ng-template>
+
+                        </div>
                         <div class="fw-bolder fs-3 erer text-primary mt-6">
                             <codx-label fromName="News" name="lblViewmore" default="Xem thêm"></codx-label>
                         </div>
-                        <div class="">
+                        <div class="w-100">
                             <ul>
                                 <li (click)="clickViewDeital(item)" *ngFor="let item of listNews"
                                     class="fs-5 er mt-2 news-title ">
