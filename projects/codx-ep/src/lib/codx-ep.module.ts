@@ -1,3 +1,4 @@
+import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
@@ -122,6 +123,7 @@ const Components: Type<any>[] = [
   BookingRoomComponent,
   BookingCarComponent,
   BookingStationeryComponent,
+  BookingStationeryViewDetailComponent,
   ApprovalStationeryComponent,
   ApprovalCarsComponent,
   ApprovalRoomsComponent,
