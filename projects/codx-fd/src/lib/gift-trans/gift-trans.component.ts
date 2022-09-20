@@ -1,7 +1,8 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, Inject, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthService, ButtonModel, NotificationsService, RequestModel, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ApiHttpService, AuthService, ButtonModel, CRUDService, NotificationsService, RequestModel, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { mode } from 'crypto-js';
+import { PopupAddGiftComponent } from './popup-add-gift/popup-add-gift.component';
 
 @Component({
   selector: 'lib-gift-trans',
@@ -24,6 +25,8 @@ export class GiftTransComponent extends UIComponent implements OnInit,AfterViewI
     @ViewChild("itemTemplate") itemTemplate:TemplateRef<any>;
     @ViewChild("panelRightRef") panelRightRef:TemplateRef<any>;
     @ViewChild("panelLefRef") panelLefRef:TemplateRef<any>;
+    @ViewChild("codxViews") codxViews:ViewsComponent;
+
     
     constructor(
         private injector:Injector,
@@ -62,6 +65,11 @@ export class GiftTransComponent extends UIComponent implements OnInit,AfterViewI
 
 
     clickShowAssideRight() {
+        if(!this.codxViews) return;
+        let option = new SidebarModel();
+        option.DataService = (this.codxViews.dataService as CRUDService);
+        option.FormModel = this.codxViews.formModel;
+        this.callfc.openSide(PopupAddGiftComponent,null,option,"");
     }
     selectedChange(event:any){
         if(!event || !event.data) return;
