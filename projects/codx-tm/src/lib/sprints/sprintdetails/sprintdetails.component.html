@@ -1,164 +1,102 @@
-<div class="row m-0 bg-body mb-3 p-3 sprints-task-header">
-  <div class="col-8">
-    <div class="d-flex align-items-center">
-      <div class="text-dark fw-bolder fs-3 me-6">
-        {{ nameObj }}
+<div class="sprint-css">
+  <div class="row m-0 bg-body mb-3 p-3 sprints-task-header">
+    <div class="col-8">
+      <div class="d-flex align-items-center">
+        <div class="text-dark fw-bolder fs-3 me-6">
+          {{ nameObj }}
+        </div>
+        <div class="d-status me-6">
+          <codx-vll [name]="'PM001'" [value]="projectCategory" [showText]="true" [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 ms-2"></codx-vll>
+        </div>
+        <div class="me-3">
+          <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
+          <span class="text-gray-600" #createdOn>
+            {{ data?.createdOn | date: "dd/MM/yyyy" }}</span>
+        </div>
+        <div class="me-3">
+          <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
+          <span class="text-gray-600">{{ createdByName }}</span>
+        </div>
       </div>
-      <div class="d-status me-6">    
-        <codx-vll
-          [name]="'PM001'"
-          [value]="projectCategory"
-          [showText]="true"
-          [showBgColor]="true"
-         class="badge badge-light badge-md fs-7 ms-2"
-        ></codx-vll>
-      </div>
-      <div class="me-3">
-        <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
-        <span class="text-gray-600" #createdOn>
-          {{ data?.createdOn | date: "dd/MM/yyyy" }}</span
-        >
-      </div>
-      <div class="me-3">
-        <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
-        <span class="text-gray-600">{{ createdByName }}</span>
-      </div>
-    </div>
 
-    <div class="d-flex mt-4" *ngIf="data?.fromDate && data?.toDate">
-      <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
-        <codx-label
-          name="lblTimeReview"
-          [default]="'Thời gian review dữ liệu:'"
-        ></codx-label>
+      <div class="d-flex mt-4" *ngIf="data?.fromDate && data?.toDate">
+        <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
+          <codx-label name="lblTimeReview" [default]="'Thời gian review dữ liệu:'"></codx-label>
+        </div>
+        <div class="d-flex align-items-center me-2">
+          {{ data.fromDate | date: "dd/MM/yyyy" }} -
+          {{ data.toDate | date: "dd/MM/yyyy" }}
+        </div>
       </div>
-      <div class="d-flex align-items-center me-2">
-        {{ data.fromDate | date: "dd/MM/yyyy" }} -
-        {{ data.toDate | date: "dd/MM/yyyy" }}
-      </div>
-    </div>
 
-    <div>
-      <div class="d-flex mt-5 tab-header">
-        <ng-container *ngFor="let item of tabControl; let i = index">
-          <a
-            [class]="
+      <div>
+        <div class="d-flex mt-5 tab-header">
+          <ng-container *ngFor="let item of tabControl; let i = index">
+            <a [class]="
               'me-5 text-gray-600 text-hover-primary cursor-pointer' +
               ' ' +
               (item.isActive ? 'text-primary tab-active' : '')
-            "
-          >
-            <codx-label
-              [name]="'lbl' + item.name"
-              [formName]="'SYS'"
-              [default]="item.textDefault"
-              (click)="clickMenu(item)"
-            >
-            </codx-label>
-          </a>
+            ">
+              <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
+                (click)="clickMenu(item)">
+              </codx-label>
+            </a>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="col-4" *ngIf="resources && resources!=''">
+      <codx-imgs style="float: right" [objectId]="resources" objectType="AD_Users" [numberImages]="7" [width]="30"
+        (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
+        #popoverList="ngbPopover" placement="bottom left right" container="body" autoClose="outside"></codx-imgs>
+    </div>
+  </div>
+  <div class="page-content d-flex flex-row">
+    <div class="w-100">
+      <div class="m-0 bg-body rounded-2 sprints-task-detail" data-kt-scroll="true"
+        data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
+        data-kt-scroll-dependencies=".page-content, .sprints-task-header"
+        data-kt-scroll-wrappers=".sprints-task-detail, .no-wrapper" data-kt-scroll-offset="0px">
+        <ng-container *ngIf="name == 'Dashboard'">
+          <codx-sprintdetails-dashboard [projectID]="projectID" [resources]="resources"></codx-sprintdetails-dashboard>
+        </ng-container>
+        <ng-container *ngIf="name == 'Công việc'">
+          <codx-tasks-share *ngIf="dataObj" [dataObj]="dataObj" [showButtonAdd]="showButtonAdd" [funcID]="funcID">
+          </codx-tasks-share>
+        </ng-container>
+        <ng-container *ngIf="name == 'Lịch sử'">
+          <ng-container>
+            <ng-container>
+              <codx-tree-history [objectID]="iterationID" [objectType]="'TM_Sprints'" [actionType]="" [viewIcon]="true"
+                [funcID]="functionParent">
+              </codx-tree-history>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="name == 'Bình luận'">
+          <ng-container>
+            <codx-tree-history [objectID]="iterationID" [objectType]="'TM_Sprints'" [actionType]="'C'" [addNew]="true"
+              [viewIcon]="false" [viewVote]="true" [funcID]="functionParent">
+            </codx-tree-history>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="name == 'Họp định kì'">
+          <codx-tmmeetings [dataObj]="dataObj" [showButtonAdd]="false"></codx-tmmeetings>
         </ng-container>
       </div>
     </div>
   </div>
-  <div class="col-4" *ngIf="resources && resources!=''">
-    <codx-imgs
-      style="float: right"
-      [objectId]="resources"
-      objectType="AD_Users"
-      [numberImages]="7"
-      [width]="30"
-      (mouseenter)="popoverEmpList(popoverList)"
-      [ngbPopover]="popEmpList"
-      popoverClass="empPopoverClass"
-      #popoverList="ngbPopover"
-      placement="bottom left right"
-      container="body"
-      autoClose="outside"
-    ></codx-imgs>
-  </div>
 </div>
-<div class="page-content d-flex flex-row">
-  <div class="w-100">
-    <div
-      class="m-0 bg-body rounded-2 sprints-task-detail"
-      data-kt-scroll="true"
-      data-kt-scroll-activate="{default: true}"
-      data-kt-scroll-height="auto"
-      data-kt-scroll-dependencies=".page-content, .sprints-task-header"
-      data-kt-scroll-wrappers=".sprints-task-detail, .no-wrapper"
-      data-kt-scroll-offset="0px"
-    >
-      <ng-container *ngIf="name == 'Dashboard'">
-        <codx-sprintdetails-dashboard
-          [projectID]="projectID"
-          [resources]="resources"
-        ></codx-sprintdetails-dashboard>
-      </ng-container>
-      <ng-container *ngIf="name == 'Công việc'">
-        <codx-tasks-share
-          *ngIf="dataObj"
-          [dataObj]="dataObj"
-          [showButtonAdd]="showButtonAdd"
-          [funcID]="funcID"
-        ></codx-tasks-share>
-      </ng-container>
-      <ng-container *ngIf="name == 'Lịch sử'">
-        <ng-container>
-          <ng-container>
-            <codx-tree-history
-              [objectID]="iterationID"
-              [objectType]="'TM_Sprints'"
-              [actionType]=""
-              [viewIcon]="true"
-              [funcID]="functionParent"
-            >
-            </codx-tree-history>
-          </ng-container>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="name == 'Bình luận'">
-        <ng-container>
-          <codx-tree-history
-            [objectID]="iterationID"
-            [objectType]="'TM_Sprints'"
-            [actionType]="'C'"
-            [addNew]="true"
-            [viewIcon]="false"
-            [viewVote]="true"
-            [funcID]="functionParent"
-          >
-          </codx-tree-history>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="name == 'Họp định kì'">
-        <codx-tmmeetings
-          [dataObj]="dataObj"
-          [showButtonAdd]="false"
-        ></codx-tmmeetings>
-      </ng-container>
-    </div>
-  </div>
-</div>
-
 <ng-template #popEmpList>
   <div class="fw-bold">
-    <codx-label
-      name="Resouces"
-      formName="Sprints"
-      default="Danh sách phân công cho"
-    ></codx-label>
+    <codx-label name="Resouces" formName="Sprints" default="Danh sách phân công cho"></codx-label>
     <span>{{ "(" + countResource + ")" }}</span>
   </div>
   <div>
-    <codx-searchbar
-      *ngIf="countResource > 0"
-      (searchEvent)="searchName($event)"
-    ></codx-searchbar>
+    <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div>
-  <div
-    class="d-flex align-items-start user-card p-3"
-    *ngFor="let item of listTaskResousceSearch"
-  >
+  <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousceSearch">
     <div class="me-3">
       <div>
         <codx-img class="" [objectId]="item?.employeeID" objectType="AD_Users">

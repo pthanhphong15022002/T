@@ -14,8 +14,6 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
   funcID:string = '';
   entityName:string = 'WP_News';
   gridViewName:string = 'grvNews';
-  predicate:string = "NewsType =@0 Category = @1 and (ApproveStatus = @2 or ApproveStatus = @3) and Status = @4";
-  dataValue:string = "1;0;5;null;2";
   fromName:string = "News";
   data :any = null;
   views: Array<ViewModel> = [];

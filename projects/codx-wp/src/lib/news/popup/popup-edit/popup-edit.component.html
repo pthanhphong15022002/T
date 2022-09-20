@@ -7,10 +7,11 @@
                     default="Cập nhật bài viết"></codx-label>
             </div>
             <div class="bg-gray-200 rounded-1 p-2 d-flex align-items-center" (click)="openFormShare(controlShare)">
-                <span>
-                    <img src="assets/themes/sys/default/img/{{data.shareControl | vll:'WP003':'icon' | async }}" />
+                <span class="me-2">
+                    <img class="w-12px h-12px"
+                        src="assets/themes/sys/default/img/{{data.shareControl | vll:'WP003':'icon' | async }}" />
                 </span>
-                <span class="text-gray-700 fs-6 ms-1">{{data.shareControl | vll:'WP003':'text' | async}}</span>
+                <span class="text-gray-700">{{data.shareControl | vll:'WP003':'text' | async}}</span>
                 <i class="icon-arrow_drop_down icon-18 text-dark"></i>
             </div>
             <div class="ms-2">
@@ -84,9 +85,7 @@
 
                 <div class="row">
                     <div class="w-100 my-2">
-                        <codx-label class="fw-bold" 
-                            [formModel]="dialogRef.formModel" 
-                            name="lblImage"
+                        <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblImage"
                             default="Hình hiển thị">
                         </codx-label>
                     </div>
@@ -95,19 +94,14 @@
                             <img class="w-100 h-200px" [src]="fileImage.data || fileImage.avatar" alt="">
                         </ng-container>
                         <ng-template #haveImage>
-                            <codx-img [objectId]="data.recID" [objectType]="data.entityName" [width]="300" [imageType]="'square'"></codx-img>
+                            <codx-img [objectId]="data.recID" [objectType]="data.entityName" [width]="300"
+                                [imageType]="'square'"></codx-img>
                         </ng-template>
                     </div>
                     <div class="d-none">
-                        <codx-attachment #codxAttm 
-                            [functionID]="dialogRef?.formModel.funcID"
-                            [objectId]="data.recID" 
-                            [objectType]="dialogRef?.formModel.entityName" 
-                            [allowMultiFile]="0"
-                            [showMessage]="0"
-                            [hideImageUpload]="'1'"
-                            [hideUploadBtn]="1"
-                            (fileCount)="addImage($event)">
+                        <codx-attachment #codxAttm [functionID]="dialogRef?.formModel.funcID" [objectId]="data.recID"
+                            [objectType]="dialogRef?.formModel.entityName" [allowMultiFile]="0" [showMessage]="0"
+                            [hideImageUpload]="'1'" [hideUploadBtn]="1" (fileCount)="addImage($event)">
                         </codx-attachment>
                     </div>
                 </div>
@@ -175,10 +169,6 @@
 </div>
 <!-- templateshare -->
 <ng-template #controlShare let-dialog>
-    <codx-share 
-        [dialog]="dialog" 
-        [multiple]="false" 
-        listName="WP003"
-        (eventApply)="eventApply($event)">
+    <codx-share [dialog]="dialog" [multiple]="false" listName="WP003" (eventApply)="eventApply($event)">
     </codx-share>
 </ng-template>

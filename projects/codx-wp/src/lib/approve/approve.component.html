@@ -1,89 +1,47 @@
-<codx-views #codxView 
-[funcID]="funcID"
-[entityName]="entityName" 
-idField="recID" 
-[views]="views" 
-[selectedFirst]="true"
-(selectedChange)="selectedChange($event)"
-(buttonClick)="clickBtnAdd()">
+<codx-views #codxView [funcID]="funcID" [entityName]="entityName" idField="recID" [views]="views" [selectedFirst]="true"
+  (selectedChange)="selectedChange($event)" (buttonClick)="clickBtnAdd()">
 </codx-views>
 
 <ng-template #panelLeftRef>
-  <div class="">
-    <ul class="nav nav-news">
-      <ng-container *ngFor="let item of tabAsside">
-        <li class="nav-item" [class.text-primary]="item.active">
-          <a
-            class="nav-link fw-bold"
-            href="javascript:;"
-            (click)="clickTabApprove(item, item.predicate, item.datavalue)"
-          >
-            <codx-label
-              [formName]="codxView.formModel"
-              [name]="'lbl' + item.text"
-              [default]="item.text"
-            ></codx-label>
-            <span>({{ item.total }})</span>
-          </a>
-        </li>
-      </ng-container>
-      
-    </ul>
-  </div>
+  <ul class="nav nav-news">
+    <ng-container *ngFor="let item of tabAsside">
+      <li class="nav-item" [class.text-primary]="item.active">
+        <a class="nav-link fw-bold" href="javascript:;" (click)="clickTabApprove(item, item.predicate, item.datavalue)">
+          <codx-label [formName]="codxView.formModel" [name]="'lbl' + item.text" [default]="item.text"></codx-label>
+          <span>({{ item.total }})</span>
+        </a>
+      </li>
+    </ng-container>
+  </ul>
 </ng-template>
 <ng-template #panelRightRef>
-    <div class="py-3">
-        <app-view-detail #viewdetail 
-            [objectID]="selectedID" 
-            [entityName]="entityName" 
-            [dataService]="codxView.dataService"
-            [funcID]="funcID"
-            (evtApproval)="clickApprovePost($event)"
-            [formModel]="codxView.formModel">
-        </app-view-detail>
-    </div>
+  <div class="py-3 news-appr-right">
+    <app-view-detail #viewdetail [objectID]="selectedID" [entityName]="entityName" [dataService]="codxView.dataService"
+      [funcID]="funcID" (evtApproval)="clickApprovePost($event)" [formModel]="codxView.formModel">
+    </app-view-detail>
+  </div>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-    <div class="p-3">
-        <ng-container *ngIf="funcID == 'WPT0213';else wp_news">
-            <codx-temp-full 
-                [dataItem]="data" 
-                [typeMF]="'hover'" 
-                (clickMF)="clickMF($event,data)"
-                [descLine]="2"
-                [formModel]="codxView.formModel" 
-                [resourceObjType]="entityName"
-                imgCss="me-2" cardCss="card-template border-bottom px-2 py-3" 
-                [icoTitleFld]="data.category"
-                [icoTitleVll]="'WP004'"
-                title="<span class='fw-bolder ms-2'>{{data.category | vll:'WP004':'text'|async}}</span>"
-                [desc]="data.comments" [date]="data.createdOn" 
-                [status]="data.approveStatus"
-                [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" 
-                [bookmark]="false">
-            </codx-temp-full>
-        </ng-container>
-        <ng-template #wp_news>
-            <codx-temp-full 
-                [dataItem]="data" 
-                [typeMF]="'hover'" 
-                (clickMF)="clickMF($event,data)"
-                (click)="clickViewDetail(data.recID)" 
-                [formModel]="codxView.formModel" 
-                [resourceObjType]="'AD_Users'"
-                [resources]="data.createdBy" 
-                [icoTitleFld]="data.category" 
-                [icoTitleVll]="'WP004'" imgCss="me-2"
-                cardCss="card-template border-bottom px-2 py-3"
-                title="<span class='fw-bolder ms-2'>{{data.category | vll:'WP004':'text'|async}}</span>"
-                [desc]="data.category == 'companyinfo'? data.content : data.subject" 
-                [descLine]="2"
-                [date]="data.createdOn"
-                [status]="data.approveStatus" 
-                [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" 
-                [bookmark]="false">
-            </codx-temp-full>
-        </ng-template>
-    </div>  
+  <div class="news-listleft">
+    <ng-container *ngIf="funcID == 'WPT0213';else wp_news">
+      <codx-temp-full [dataItem]="data" [typeMF]="'hover'" (clickMF)="clickMF($event,data)" [descLine]="2"
+        [formModel]="codxView.formModel" [resourceObjType]="entityName" imgCss="me-2"
+        cardCss="card-template border-bottom px-5 py-3" [icoTitleFld]="data.category" [icoTitleVll]="'WP004'"
+        title="<span class='fw-bolder ms-2'>{{data.category | vll:'WP004':'text'|async}}</span>" [desc]="data.comments"
+        [date]="data.createdOn" [status]="data.approveStatus"
+        [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" [bookmark]="false">
+      </codx-temp-full>
+    </ng-container>
+    <ng-template #wp_news>
+      <codx-temp-full [dataItem]="data" [typeMF]="'hover'" (clickMF)="clickMF($event,data)"
+        (click)="clickViewDetail(data.recID)" [formModel]="codxView.formModel" [resourceObjType]="'AD_Users'"
+        [resources]="data.createdBy" [icoTitleFld]="data.category" [icoTitleVll]="'WP004'" imgCss="me-2"
+        cardCss="card-template border-bottom px-5 py-3"
+        title="<span class='fw-bolder ms-2'>{{data.category | vll:'WP004':'text'|async}}</span>"
+        [desc]="data.category == 'companyinfo'? data.content : data.subject" [descLine]="2" [date]="data.createdOn"
+        [status]="data.approveStatus" [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" [bookmark]="false">
+      </codx-temp-full>
+    </ng-template>
+  </div>
 </ng-template>
