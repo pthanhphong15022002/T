@@ -30,8 +30,9 @@
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (click)="click(data)"
     [typeMF]="'hover'"
-    [titleTmp]="titleTmp"
-    [subTitleTmp]="subTitleTmp"
+    [title]="data?.requester"
+    [subTitle]="data?.positionID ? data?.positionID : 'Không có chức vụ'"
+    [content]="data?.note"
     [footer]="footerTmp"
     [icoCss]="
       'w-40 h-40 fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
@@ -57,41 +58,24 @@
   ></booking-stationery-view-detail>
 </ng-template>
 
-<ng-template #titleTmp let-data>
-  <div class="fw-bold line-clamp line-clamp-2">
-    {{ data?.requester }}
-  </div>
-</ng-template>
-
-<ng-template #subTitleTmp let-data>
-  <div class="row">
-    <div class="d-flex mt-1 flex-grow-1 mb-1">
-      <div class="d-flex me-6">
-        <i class="icon-calendar_today me-1"></i>
-        <span class="text-gray-600">
-          {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
-        </span>
-      </div>
-      <div class="d-flex me-6">
-        <i class="icon-access_time me-1"></i>
-        <span class="text-gray-600">
-          {{ data?.startDate | date: "shortTime" }}
-        </span>
-        <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
-          "-"
-        }}</span>
-        <span class="text-gray-600">
-          {{ data?.endDate | date: "shortTime" }}
-        </span>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <span>{{ data.title }}</span>
-    </div>
-  </div>
-</ng-template>
-
-
 <ng-template #footerTmp let-data>
-  <div>Footer</div>
+  <div class="d-flex justify-content-between m-2 p-2">
+    <div class="d-flex align-items-center">
+      <div
+        class="badge border-0 me-2"
+        [style.background-color]="'3' | vll: 'VL003':'color' | async"
+        [style.color]="'3' | vll: 'VL003':'textColor' | async"
+      >
+        {{ "3" | vll: "VL003":"text" | async }}
+      </div>
+      <div
+        class="badge border-0 me-2"
+        [style.background-color]="'4' | vll: 'VL003':'color' | async"
+        [style.color]="'4' | vll: 'VL003':'textColor' | async"
+      >
+        {{ "4" | vll: "VL003":"text" | async }}
+      </div>
+    </div>
+    <div>{{ data?.createdOn | date: "shortDate" }}</div>
+  </div>
 </ng-template>
