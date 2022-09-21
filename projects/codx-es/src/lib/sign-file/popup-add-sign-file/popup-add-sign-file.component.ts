@@ -469,6 +469,48 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
+  fileAdded1(event) {
+    this.isEdit = true;
+    let lstESign = ['.doc', '.pdf', '.xlsx'];
+    let files = [];
+    if (event) {
+      if (event?.length > 0) {
+        event.forEach((element) => {
+          let file = new File();
+          file.fileID = element.data.recID;
+          file.fileName = element.data.fileName;
+          file.createdOn = element.data.createdOn;
+          file.createdBy = element.data.createdBy;
+          file.comment = element.data.extension;
+
+          let index = lstESign.indexOf(file.comment);
+          if (index >= 0) {
+            file.eSign = true;
+          }
+
+          files.push(file);
+        });
+      } else {
+        let file = new File();
+        file.fileID = event.data.recID;
+        file.fileName = event.data.fileName;
+        file.createdOn = event.data.createdOn;
+        file.createdBy = event.data.createdBy;
+        file.comment = event.data.extension;
+        let index = lstESign.indexOf(file.comment);
+        if (index >= 0) {
+          file.eSign = true;
+        }
+
+        files.push(file);
+      }
+
+      this.data.files = files;
+      this.dialogSignFile.patchValue({ files: files });
+      console.log(this.dialogSignFile.value);
+    }
+  }
+
   valueChange(event) {
     // if (event?.field && event?.component && event?.data != '') {
     //   this.isEdit = true;
@@ -532,6 +574,7 @@ export class PopupAddSignFileComponent implements OnInit {
     //   this.cr.detectChanges();
     // }
     if (event?.field && event?.component && event?.data != '') {
+      this.isEdit = true;
       if (event.field == 'categoryID' && this.data.categoryID != event.data) {
         this.esService
           .getAutoNumberByCategory(event.data)
@@ -698,19 +741,6 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   onSaveProcessTemplateID(dialogTmp: DialogRef) {
-    // if (
-    //   this.processID != '' &&
-    //   this.dialogSignFile.value.approveControl != '1'
-    // ) {
-    //   this.dialogSignFile.patchValue({
-    //     processID: this.processID,
-    //     approveControl: '2',
-    //   });
-    //   this.onSaveSignFile();
-
-    //   dialogTmp && dialogTmp.close();
-    // }
-
     if (this.processID != '' && this.data.approveControl != '1') {
       this.dialogSignFile.patchValue({
         processID: this.processID,
@@ -786,7 +816,6 @@ export class PopupAddSignFileComponent implements OnInit {
           if (res) {
             this.notify.alertCode('RS002');
             dialogTemplateName && dialogTemplateName.close();
-            //this.dialog && this.dialog.close(res);
           }
         });
     } else {
@@ -810,13 +839,11 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  continue(currentTab) {
+  async continue(currentTab) {
     if (this.currentTab > 3) return;
 
-    //let oldNode = currentTab * 2;
     let oldNode = currentTab;
     let newNode = oldNode + 1;
-    // let newNode = oldNode + 2;
 
     switch (currentTab) {
       case 0:
@@ -824,6 +851,16 @@ export class PopupAddSignFileComponent implements OnInit {
           this.attachment.fileUploadList.length > 0 ||
           this.dialogSignFile.value.files?.length > 0
         ) {
+          if (this.attachment.fileUploadList.length > 0) {
+            (await this.attachment.saveFilesObservable()).subscribe(
+              (item2: any) => {
+                if (item2?.status == 0) {
+                  this.fileAdded1(item2);
+                }
+              }
+            );
+          }
+
           this.updateNodeStatus(oldNode, newNode);
           this.currentTab++;
           this.processTab == 0 && this.processTab++;
