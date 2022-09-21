@@ -1,8 +1,21 @@
-.symbol-100px {
-  width: 100px;
+// .symbol-100px {
+//   width: 100px;
+//   height: 150px !important;
+// }
+// .pic-150px img {
+//   width: 100px;
+//   height: 150px !important;
+// }
+.symbol.symbol-100px.symbol-3by2 {
   height: 150px !important;
+  width: 100px !important;
 }
-.pic-150px img {
-  width: 100px;
+.symbol.symbol-100px.symbol-3by2 .symbol-label {
   height: 150px !important;
+  width: 100px !important;
+}
+.symbol.symbol-100px.symbol-3by2 > img {
+  height: 150px;
+  width: 100px;
+  max-width: none;
 }
