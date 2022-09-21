@@ -33,7 +33,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   method = 'GetEventsAsync';
   modelPage: ModelPage;
   modelResource?: ResourceModel;
-
   request?: ResourceModel;
   model = new DataRequest();
   dataSelected: any;
@@ -84,11 +83,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
     this.moreFunc = [
       {
-        id: 'EPS22',
-        icon: 'icon-list-chechbox',
-        text: 'Danh mục xe',
-      },
-      {
         id: 'btnEdit',
         icon: 'icon-list-chechbox',
         text: 'Sửa',
@@ -135,10 +129,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         toolbarTemplate: this.footerButton,
         showSearchBar: false,
         model: {
-          //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          //template:this.cardTemplate,
           template4: this.resourceHeader,
           template5: this.resourceTootip,
           template6: this.footerTemplate,
