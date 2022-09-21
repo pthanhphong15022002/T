@@ -1,6 +1,19 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NotificationsService, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  NotificationsService,
+  TenantStore,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { CodxFdService } from '../../codx-fd.service';
 
 @Component({
@@ -90,7 +103,7 @@ export class FeedbackMessageComponent extends UIComponent implements OnInit {
   }
 
   redirectPage(page) {
-    this.codxService.navigate('', 'fd/settings/FDS', {redirectPage: page});
+    this.codxService.navigate('', 'fd/settings/FDS', { redirectPage: page });
   }
 
   onSaveCMParameter(objectUpdate) {

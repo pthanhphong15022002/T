@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
   Injector,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ApiHttpService, NotificationsService, UIComponent } from 'codx-core';
 import _ from 'lodash';
@@ -12,7 +13,8 @@ import { BallotService } from './ballot.service';
 @Component({
   selector: 'app-ballot',
   templateUrl: './ballot.component.html',
-  styleUrls: ['./ballot.component.css'],
+  styleUrls: ['./ballot.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class BallotComponent extends UIComponent implements OnInit {
   @Input() funcID: string;
