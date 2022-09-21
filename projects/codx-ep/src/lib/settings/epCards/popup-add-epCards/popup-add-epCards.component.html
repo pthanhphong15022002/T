@@ -1,0 +1,112 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="formModel"
+  [formControl]="fGroupAddEpCards"
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+    <div class="row">
+      <div class="col-6 form-group">
+        <codx-label
+          fiedName="Code"
+          [formModel]="dialogRef.formModel"
+          default="Mã số thẻ"
+        >
+        </codx-label>
+        <codx-input
+          ControlName="code"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddEpCards"
+        >
+        </codx-input>
+      </div>
+
+      <div class="col-6 form-group">
+        <codx-label fiedName="Status" [formModel]="dialogRef.formModel">
+        </codx-label>
+        <codx-input
+          ControlName="status"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddEpCards"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 form-group">
+        <codx-label
+          fiedName="ResourceName"
+          [formModel]="dialogRef.formModel"
+          default="Tên thẻ xe"
+        >
+        </codx-label>
+        <codx-input
+          ControlName="eesourceName"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddEpCards"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <codx-label fiedName="Owner" [formModel]="dialogRef.formModel">
+        </codx-label>
+        <codx-input
+          ControlName="owner"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddEpCards"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <codx-label
+          fiedName="Note"
+          [formModel]="dialogRef.formModel"
+        ></codx-label>
+        <codx-input
+          ControlName="note"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddEpCards"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="form-group upload-img">
+      <codx-img
+        #imageUpLoad
+        [width]="100"
+        imageType="square"
+        [objectType]="formModel?.entityName"
+        aria-disabled="false"
+        [funcId]="formModel?.funcID"
+        [isAllowEdit]="true"
+        [objectId]="data?.recID"
+      >
+      </codx-img>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light-primary" (click)="onSaveForm()">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="dialogRef.formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

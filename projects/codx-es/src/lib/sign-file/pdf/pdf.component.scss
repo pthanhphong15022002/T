@@ -251,7 +251,6 @@
     .e-toolbar-items .e-toolbar-item .e-tbar-btn.e-btn:hover {
       padding: 0;
       padding-bottom: 0px;
-
       border-radius: 3px !important;
       transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
@@ -264,7 +263,6 @@
     .e-toolbar .e-tbar-btn.e-btn:focus .e-icons {
       //color: $primary-dark;
       padding: 0;
-
       border-radius: 0px !important;
     }
     .chooseSignFile {
@@ -473,7 +471,9 @@
   ngx-extended-pdf-viewer .pdfViewer .page {
     border: 0 !important;
   }
-
+  .reason_Info > p {
+    margin: 0;
+  }
   #thumbnailView {
     .image-container {
       margin: auto;

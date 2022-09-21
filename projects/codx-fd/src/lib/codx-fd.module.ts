@@ -1,3 +1,5 @@
+import { EditBallotComponent } from './setting/feedback-message/ballot/edit-ballot/edit-ballot.component';
+import { BallotComponent } from './setting/feedback-message/ballot/ballot.component';
 import { BehaviorComponent } from './setting/category/behavior/behavior.component';
 import { BehaviorruleComponent } from './setting/category/behaviorrule/behaviorrule.component';
 import { GiftgroupComponent } from './setting/category/giftgroup/giftgroup.component';
@@ -33,6 +35,8 @@ import { WalletsComponent } from './wallets/wallets.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
 import { RouterModule, Routes } from '@angular/router';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { FeedbackMessageComponent } from './setting/feedback-message/feedback-message.component';
 
 export const routes: Routes = [
   {
@@ -67,8 +71,14 @@ export const routes: Routes = [
         path: 'gifttrans/:funcID',
         component: GiftTransComponent,
       },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutOnlyHeaderComponent,
+    children: [
       {
-        path: 'shared/settings/:funcID',
+        path: 'settings/:funcID',
         component: SettingComponent,
       },
       {
@@ -95,6 +105,10 @@ export const routes: Routes = [
         path: 'setting/fedranges/:funcID',
         component: DedicationrankComponent,
       },
+      {
+        path: 'setting/cards/:funcID',
+        component: FeedbackMessageComponent,
+      },
     ],
   },
 ];
@@ -120,7 +134,10 @@ const Component: Type<any>[] = [
   GiftgroupComponent,
   BehaviorruleComponent,
   BehaviorComponent,
-  PopupAddGiftComponent
+  PopupAddGiftComponent,
+  FeedbackMessageComponent,
+  BallotComponent,
+  EditBallotComponent,
 ];
 
 @NgModule({

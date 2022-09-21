@@ -1,6 +1,9 @@
-::ng-deep  {
-  img.symbol.symbol-40px{
+::ng-deep {
+  img.symbol.symbol-40px {
     width: 40px;
     height: 40px;
+  }
+  .text-right {
+    text-align: right !important;
   }
 }

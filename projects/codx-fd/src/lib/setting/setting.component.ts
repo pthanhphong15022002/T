@@ -1,3 +1,4 @@
+import { TemplateRef } from '@angular/core';
 import { CodxFdService } from './../codx-fd.service';
 import {
   ChangeDetectorRef,
@@ -9,7 +10,13 @@ import {
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, TenantStore } from 'codx-core';
+import {
+  ApiHttpService,
+  TenantStore,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -17,7 +24,7 @@ import { Observable } from 'rxjs';
   templateUrl: './setting.component.html',
   styleUrls: ['./setting.component.scss'],
 })
-export class SettingComponent implements OnInit {
+export class SettingComponent extends UIComponent implements OnInit {
   tenant: string;
   func = {};
   funcChildFED2042 = [];
@@ -25,70 +32,88 @@ export class SettingComponent implements OnInit {
   parameter;
   titlePage = 'Thiết lập';
   modelForm = { title: '', fieldName: 0, number: 0 };
+  functionList: any;
   range$: Observable<any>;
   lstChildOfFED2041$: Observable<any>;
+  views: Array<ViewModel> = [];
   funcChildFDS02$: Observable<any>;
+  currentActive = 1;
+  funcID: any;
+
   @ViewChild('notificationFedback') notificationFedback: ElementRef;
   @ViewChild('itemCategory') itemCategory: ElementRef;
   @ViewChild('itemRankDedication') itemRankDedication: ElementRef;
-  public currentActive = 1;
-  private funcID;
-  private page;
+  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
+
   constructor(
-    private location: Location,
-    private api: ApiHttpService,
+    private injector: Injector,
     private changedr: ChangeDetectorRef,
     private tenantStore: TenantStore,
-    private router: Router,
     private at: ActivatedRoute,
-    private modalService: NgbModal,
-    private fdsv: CodxFdService,
-    injector: Injector
+    private fdsv: CodxFdService
   ) {
+    super(injector);
     this.tenant = this.tenantStore.get()?.tenant;
+    this.at.params.subscribe((params) => {
+      if (params.funcID) {
+        this.funcID = params.funcID;
+      }
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
 
-  ngOnInit(): void {
-    // this.LoadData();
-    // this.range$ = this.api.exec('BS', 'RangeLinesBusiness', 'GetByIDAsync', [
-    //   'KUDOS',
-    // ]);
-    // this.funcChildFDS02$ = this.api.exec(
-    //   'SYS',
-    //   'FunctionListBusiness',
-    //   'GetFuncByPredicateAsync',
-    //   ['ParentID=@0', 'FDS02']
-    // );
-    // this.getParameter();
-    // this.at.queryParams.subscribe((params) => {
-    //   if (params.page) {
-    //     this.funcID = params.funcID;
-    //     this.router.navigate(['/' + this.tenant + '/fd/setting'], {
-    //       queryParams: { funcID: 'FDS' },
-    //     });
-    //     this.page = params.page;
-    //   }
-    //   if (params.funcID) {
-    //     this.funcID = params.funcID;
-    //   }
-    // });
+  onInit(): void {
+    this.LoadData();
+    this.range$ = this.api.exec('BS', 'RangeLinesBusiness', 'GetByIDAsync', [
+      'KUDOS',
+    ]);
+    this.funcChildFDS02$ = this.api.exec(
+      'SYS',
+      'FunctionListBusiness',
+      'GetFuncByPredicateAsync',
+      ['ParentID=@0', 'FDS02']
+    );
+    this.getParameter();
   }
 
   ngAfterViewInit() {
-    if (this.page) {
-      this.scrollToID(this.page);
-      return;
-    }
+    this.views = [
+      {
+        active: true,
+        type: ViewType.content,
+        sameData: true,
+        model: {
+          panelLeftRef: this.panelLeftRef,
+        },
+      },
+    ];
+    this.at.queryParamMap.subscribe((params: any) => {
+      if (params) this.scrollToID(params?.params?.redirectPage);
+    });
+    this.detectorRef.detectChanges();
   }
 
   scroll(el: HTMLElement, numberActive) {
-    el.scrollIntoView({ behavior: 'smooth' });
+    if (el)
+      el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
     this.currentActive = numberActive;
   }
 
   scrollToID(id) {
     let el = document.getElementById(id);
-    el.scrollIntoView({ behavior: 'smooth' });
+    var html = el as HTMLElement;
+    if (html)
+      html.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
   }
 
   LoadData() {
@@ -109,39 +134,35 @@ export class SettingComponent implements OnInit {
         ['FormName=@0 && TransType=null', 'FDParameters']
       )
       .subscribe((result) => {
-        if (result?.length > 0) debugger;
-        // this.parameter = this.fdsv.convertListToObject(
-        //   result,
-        //   'fieldName',
-        //   'fieldValue'
-        // );
+        if (result?.length > 0)
+          this.parameter = JSON.parse(result[0].dataValue);
       });
   }
 
   goHomePage(functionID) {
-    this.router.navigate(['/' + this.tenant + '/fd/home'], {
+    this.codxService.navigate('', 'fd/home/', {
       queryParams: { funcID: functionID },
     });
   }
 
-  LoadDeatail(data) {
-    this.router.navigate(['/' + this.tenant + '/fd/detail'], {
-      queryParams: { funcID: data.functionID },
-    });
+  LoadDetail(data) {
+    this.codxService.navigate('', data.url);
   }
 
   LoadCategory(func) {
-    this.router.navigateByUrl(this.tenant + '/' + func.url);
+    this.codxService.navigate('', '/', {
+      queryParams: { funcID: func.url },
+    });
   }
 
   LoadWallet(func) {
-    this.router.navigate(['/' + this.tenant + '/fd/wallet'], {
+    this.codxService.navigate('', '/fd/wallet', {
       queryParams: { funcID: func.functionID },
     });
   }
 
   LoadDedicationRank(func) {
-    this.router.navigate(['/' + this.tenant + '/fd/dedication-rank'], {
+    this.codxService.navigate('', '/fd/dedication-rank', {
       queryParams: { funcID: func },
     });
   }
@@ -179,11 +200,11 @@ export class SettingComponent implements OnInit {
   open(content, typeContent) {
     this.modelForm.number = this.parameter[typeContent];
     this.modelForm.fieldName = typeContent;
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      centered: true,
-      size: 'sm',
-    });
+    // this.modalService.open(content, {
+    //   ariaLabelledBy: 'modal-basic-title',
+    //   centered: true,
+    //   size: 'sm',
+    // });
     this.changedr.detectChanges();
   }
 
@@ -192,7 +213,7 @@ export class SettingComponent implements OnInit {
     item[this.modelForm.fieldName] = this.modelForm.number;
     this.parameter[this.modelForm.fieldName] = this.modelForm.number;
     this.onSaveParameter(item);
-    this.modalService.dismissAll();
+    // this.modalService.dismissAll();
   }
 
   onSectionChange(data: any) {

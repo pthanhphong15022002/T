@@ -1,21 +1,16 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Injector,
   Input,
-  OnInit,
   Optional,
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import {
   AuthService,
-  CacheService,
-  CallFuncService,
   CRUDService,
   DialogData,
   DialogRef,
