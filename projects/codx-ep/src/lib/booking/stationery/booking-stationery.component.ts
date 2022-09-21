@@ -50,7 +50,7 @@ export class BookingStationeryComponent
   method = 'GetListBookingAsync';
   idField = 'recID';
   predicate = 'ResourceType=@0';
-  datavalue = '6';
+  datavalue = '1';
 
   itemDetail;
 

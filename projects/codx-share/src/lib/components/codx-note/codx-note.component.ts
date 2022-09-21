@@ -482,13 +482,15 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.listNoteTemp.status = this.contents[index]?.status;
         this.listNoteTemp.format = this.contents[index]?.format;
       }
+      this.generateGuid();
+      var recID = JSON.parse(JSON.stringify(this.guidID));
       var obj = {
         memo: data,
         status: this.listNoteTemp.status,
         textColor: this.font.COLOR,
         format: this.listNoteTemp.format,
         lineType: this.lineType,
-        // recID: '',
+        recID: recID,
       };
       if (this.contents.length >= 2) {
         this.contents.pop();
@@ -714,9 +716,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         break;
       case 'comment':
         this.comment(index);
+        this.contents
         break;
       case 'assign':
         this.assign(index);
+        this.contents
         break;
       case 'attachment':
         if (menu == false) this.openPopupAttachment(index);

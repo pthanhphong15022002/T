@@ -52,6 +52,7 @@ export class DynamicFormComponent extends UIComponent {
   onInit(): void {
     this.route.params.subscribe((routeParams) => {
       this.layout.setLogo(null);
+      this.layout.setUrl(null);
       var state = history.state;
       if (state) {
         if (state.urlOld) this.layout.setUrl(state.urlOld);

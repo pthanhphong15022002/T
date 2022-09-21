@@ -13,8 +13,8 @@ import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
   selector: 'approval-car',
-  templateUrl: './approval-car.component.html',
-  styleUrls: ['./approval-car.component.scss'],
+  templateUrl: 'approval-car.component.html',
+  styleUrls: ['approval-car.component.scss'],
 })
 export class ApprovalCarsComponent extends UIComponent {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
