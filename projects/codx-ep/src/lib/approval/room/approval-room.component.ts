@@ -71,7 +71,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.assemblyName='EP';
     this.request.className='BookingsBusiness';
     this.request.service='EP';
-    this.request.method='GetApprovalEventsAsync';
+    this.request.method='GetListBookingAsync';
     this.request.predicate='ResourceType=@0';
     this.request.dataValue='1';
     this.request.idField='recID';
@@ -134,7 +134,6 @@ export class ApprovalRoomsComponent extends UIComponent {
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           template5: this.resourceTootip,//tooltip
-
           template6: this.mfButton,//header          
           template8: this.contentTmp,//content
           //template7: this.footerButton,//footer
