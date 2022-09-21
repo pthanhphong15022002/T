@@ -103,4 +103,13 @@ export class CodxTasksService {
       id
     );
   }
+  saveAssign(data) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'AddAssignToTaskAsync',
+      data
+    );
+  }
 }
