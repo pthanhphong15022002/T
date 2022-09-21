@@ -102,22 +102,24 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     let myInterval = setInterval(() => {
-      this.lstView.dataService.requestEnd = (t, data) => {
-        if (t == 'loaded') {
-          this.data = data;
-          if (this.data && this.data.length > 0) {
-            clearInterval(myInterval);
+      if (this.lstView) {
+        this.lstView.dataService.requestEnd = (t, data) => {
+          if (t == 'loaded') {
+            this.data = data;
+            if (this.data && this.data.length > 0) {
+              clearInterval(myInterval);
+            }
+            if (this.data?.length != 0) {
+              this.data.forEach((res) => {
+                if (res?.isPin == true || res?.isPin == '1') {
+                  this.countNotePin += 1;
+                }
+              });
+            }
+            (this.lstView.dataService as CRUDService).page = 5;
           }
-          if (this.data?.length != 0) {
-            this.data.forEach((res) => {
-              if (res?.isPin == true || res?.isPin == '1') {
-                this.countNotePin += 1;
-              }
-            });
-          }
-          (this.lstView.dataService as CRUDService).page = 5;
-        }
-      };
+        };
+      }
     }, 200);
     setTimeout(() => {
       clearInterval(myInterval);
@@ -162,25 +164,27 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   sortDataByDESC() {
-    this.lstView.dataService.data = this.lstView.dataService.data.sort(
-      function (a, b) {
-        var dateA = new Date(a.modifiedOn).getTime();
-        var dateB = new Date(b.modifiedOn).getTime();
-        return Number(b.isPin) - Number(a.isPin) || dateB - dateA;
-      }
-    );
+    if (this.lstView)
+      this.lstView.dataService.data = this.lstView.dataService.data.sort(
+        function (a, b) {
+          var dateA = new Date(a.modifiedOn).getTime();
+          var dateB = new Date(b.modifiedOn).getTime();
+          return Number(b.isPin) - Number(a.isPin) || dateB - dateA;
+        }
+      );
     this.lstView.listView.refresh();
     this.checkSortASC = false;
   }
 
   sortDataByASC() {
-    this.lstView.dataService.data = this.lstView.dataService.data.sort(
-      function (a, b) {
-        var dateA = new Date(a.modifiedOn).getTime();
-        var dateB = new Date(b.modifiedOn).getTime();
-        return Number(b.isPin) - Number(a.isPin) || dateA - dateB;
-      }
-    );
+    if (this.lstView)
+      this.lstView.dataService.data = this.lstView.dataService.data.sort(
+        function (a, b) {
+          var dateA = new Date(a.modifiedOn).getTime();
+          var dateB = new Date(b.modifiedOn).getTime();
+          return Number(b.isPin) - Number(a.isPin) || dateA - dateB;
+        }
+      );
     this.lstView.listView.refresh();
     this.checkSortASC = true;
   }
@@ -343,7 +347,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   }
 
   onSearch(e) {
-    this.lstView.dataService.search(e).subscribe();
+    if (this.lstView) this.lstView.dataService.search(e).subscribe();
     this.detectorRef.detectChanges();
   }
 }

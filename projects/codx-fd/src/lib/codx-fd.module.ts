@@ -33,6 +33,7 @@ import { WalletsComponent } from './wallets/wallets.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
 import { RouterModule, Routes } from '@angular/router';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 
 export const routes: Routes = [
   {
@@ -67,8 +68,14 @@ export const routes: Routes = [
         path: 'gifttrans/:funcID',
         component: GiftTransComponent,
       },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutOnlyHeaderComponent,
+    children: [
       {
-        path: 'shared/settings/:funcID',
+        path: 'settings/:funcID',
         component: SettingComponent,
       },
       {
