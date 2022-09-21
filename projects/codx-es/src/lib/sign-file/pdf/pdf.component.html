@@ -18,16 +18,11 @@
                 name="lblHeaderLeft0"
                 [formModel]=""
                 [default]="headerLeftName[0].text"
-                class="fw-bold text-primary"
+                class="text-header"
               ></codx-label>
             </ng-template>
             <ng-template #content>
-              <div
-                #thumbnailTab
-                style="padding: 0 20px"
-                id="thumbnailTab"
-                *ngIf="!isDisable"
-              ></div>
+              <div #thumbnailTab id="thumbnailTab" *ngIf="!isDisable"></div>
               <div id="sidebarContent">
                 <div id="thumbnailView" style="width: 100%; height: 100%"></div>
                 <div id="outlineView" class="d-none"></div>
@@ -41,7 +36,7 @@
                 name="lblHeaderLeft1"
                 [formModel]=""
                 [default]="headerLeftName[1].text"
-                class="fw-bold text-primary"
+                class="text-header"
               ></codx-label>
             </ng-template>
             <ng-template #content>
@@ -106,7 +101,7 @@
                           [name]="'lblCADetails' + idx"
                           [formModel]=""
                           [default]="'Signature Detail'"
-                          class="fw-bold text-primary fs-30"
+                          class="text-header fs-30"
                         ></codx-label>
 
                         <codx-label
@@ -141,14 +136,14 @@
                     [name]="'lblFailed'"
                     [formModel]=""
                     [default]="'Certificate verification failed'"
-                    class="fw-bold text-primary fs-37"
+                    class="text-header fs-7"
                   ></codx-label>
                   <div
-                    class="fail_Reasons ml-2"
+                    class="fail_Reasons ms-2"
                     *ngFor="let reason of ca.vertifications"
                   >
                     <div
-                      class="reason_Info"
+                      class="reason_Info ms-2"
                       *ngIf="!reason.isVerified && reason.message != ''"
                     >
                       <p>{{ reason.message }}</p>
@@ -294,7 +289,7 @@
           </ejs-toolbar>
         </div>
       </div>
-      <div class="test-temp">
+      <div class="pdfviewer_Space">
         <ngx-extended-pdf-viewer
           #ngxPdfView
           *ngIf="curFileUrl ? true : false"
@@ -359,7 +354,7 @@
                 name="lblHeaderRight0"
                 [formModel]=""
                 [default]="headerRightName[0].text"
-                class="fw-bold text-primary"
+                class="text-header"
               ></codx-label>
             </ng-template>
 
@@ -371,7 +366,7 @@
                       name="lblChooseSigner"
                       [formModel]=""
                       default="Chọn người kí cần thiết lập"
-                      class="fw-bold text-primary"
+                      class="text-header"
                     ></codx-label>
                   </div>
                   <ejs-dropdownlist
@@ -408,7 +403,7 @@
                     name="lblDragAction"
                     [formModel]=""
                     default="Kéo thả"
-                    class="fw-bold text-primary"
+                    class="text-header"
                   >
                   </codx-label>
                 </div>
@@ -488,7 +483,7 @@
                 name="lblHeaderRight1"
                 [formModel]=""
                 [default]="headerRightName[1].text"
-                class="fw-bold text-primary"
+                class="text-header"
               ></codx-label>
             </ng-template>
             <ng-template #content>
@@ -715,7 +710,7 @@
                 name="lblHeaderRight2"
                 [formModel]=""
                 [default]="headerRightName[2].text"
-                class="fw-bold text-primary"
+                class="text-header"
               ></codx-label>
             </ng-template>
             <ng-template #content></ng-template>
@@ -727,7 +722,7 @@
                 name="lblHeaderRight3"
                 [formModel]=""
                 [default]="headerRightName[3].text"
-                class="fw-bold text-primary"
+                class="text-header"
               ></codx-label>
             </ng-template>
             <ng-template #content></ng-template>
@@ -762,7 +757,7 @@
     "
     [resourceObjType]="'AD_Users'"
     [icoCss]="
-      'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+      'w-40px h-40px symbol fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       (data.labelType | vll: 'ES004':'icon' | async)
     "
     [subTitle]="'Trang ' + data.location?.pageNumber + 1"

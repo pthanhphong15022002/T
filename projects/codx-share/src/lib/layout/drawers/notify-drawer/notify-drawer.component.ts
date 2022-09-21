@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, CallFuncService, DialogData, DialogRef, NotificationMessage, SidebarModel, UIComponent } from 'codx-core';
-import { CodxAlertComponent } from '../../../components/codx-alert/codx-alert.component';
+import { DateTime } from '@syncfusion/ej2-charts';
+import {  AuthService, CRUDService, DialogData, DialogRef, ScrollComponent, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'codx-notify-drawer',
@@ -10,50 +10,77 @@ import { CodxAlertComponent } from '../../../components/codx-alert/codx-alert.co
 export class NotifyDrawerComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   lstNotify:any[] = [];
-  lstNewNotify:any[] = [];
-  lstOldNotify:any[] = [];
-  funcID:string ="";
-  entityName:string = "";
-  tableName:string = "";
-  predicate:string = "UserID =@0 && TenantID =@1";
-  dataValue:string = "";
+  pageIndex:number = 0;
+  pageSize:number = 20;
+  dataService:CRUDService = null;
+  user:any = null;
   constructor(
-    private inject: Injector,
+    private injector: Injector,
     private dt:ChangeDetectorRef,
     private auth:AuthService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) {
-    super(inject);
+    super(injector);
     this.dialog = dialog;
-    this.funcID = data?.data;
-    this.dataValue = this.auth.userValue.userID + ";"+this.auth.userValue.tenant;
+    this.user = this.auth.userValue;
+    this.dataService = new CRUDService(injector);
+    this.dataService.service = "Background";
+    this.dataService.assemblyName = "ERM.Business.Background";
+    this.dataService.className = "NotificationBusinesss";
+    this.dataService.method = "GetAsync";
+    this.dataService.idField = "recID";
+    this.dataService.pageSize = 20;
+    this.dataService.request.entityName = "BKD_Notification";
+    this.dataService.request.gridViewName = "grvNotification";
+    this.dataService.request.pageLoading = true;
   }
 
   onInit(): void {
-    if(this.funcID)
-    {
-      this.getNotifyAsync();
-    }
+    this.getNotifyAsync();
+  }
+
+  ngAfterViewInit(){
+    ScrollComponent.reinitialization();
   }
   clickCloseFrom(){
     this.dialog.close();
   }
   getNotifyAsync(){
-    this.api.execNonDB<NotificationMessage[]>( 
-      'Background',
-      'NotificationBusinesss',
-      'GetTop5Async',
-      [this.auth.userValue.userID, this.auth.userValue.tenant]
+    this.api.execSv(
+      'BG',
+      'ERM.Business.BG',
+      'NotificationBusiness',
+      'GetAsync',
+      [this.pageIndex]
     ).subscribe((res:any[]) => {
       if(res.length > 0){
-        this.lstNotify = res;
+        this.lstNotify = res[0];
+        this.dt.detectChanges();
       }
     });
   }
 
-  clickStopAlert(event:any,item:any){
-    item.isRead = event.value;
+  clickNotification(item:any){
+    let object = {
+      UserID: this.user.userID,
+      UserName: this.user.userName,
+      CreatedOn: new DateTime()
+    }
+    this.api.execSv(
+    'BG',
+    'ERM.Business.BG',
+    'NotificationBusiness',
+    'UpdateNotificationAsync', 
+    [item.recID]).subscribe((res:boolean) => {
+      if(res){
+        if(!item.isRead || item.isRead.length == 0){
+          item.isRead = [];
+        }
+        item.isRead.push(object);
+      }
+    })
+    
     this.dt.detectChanges();
   }
 
