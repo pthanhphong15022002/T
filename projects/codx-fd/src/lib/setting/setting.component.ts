@@ -1,3 +1,4 @@
+import { TemplateRef } from '@angular/core';
 import { CodxFdService } from './../codx-fd.service';
 import {
   ChangeDetectorRef,
@@ -9,7 +10,7 @@ import {
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, TenantStore } from 'codx-core';
+import { ApiHttpService, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -17,7 +18,7 @@ import { Observable } from 'rxjs';
   templateUrl: './setting.component.html',
   styleUrls: ['./setting.component.scss'],
 })
-export class SettingComponent implements OnInit {
+export class SettingComponent extends UIComponent implements OnInit {
   tenant: string;
   func = {};
   funcChildFED2042 = [];
@@ -27,25 +28,27 @@ export class SettingComponent implements OnInit {
   modelForm = { title: '', fieldName: 0, number: 0 };
   range$: Observable<any>;
   lstChildOfFED2041$: Observable<any>;
+  views: Array<ViewModel> = [];
   funcChildFDS02$: Observable<any>;
   @ViewChild('notificationFedback') notificationFedback: ElementRef;
   @ViewChild('itemCategory') itemCategory: ElementRef;
   @ViewChild('itemRankDedication') itemRankDedication: ElementRef;
+  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   public currentActive = 1;
   private funcID;
   private page;
   constructor(
-    private api: ApiHttpService,
+    private injector: Injector,
     private changedr: ChangeDetectorRef,
     private tenantStore: TenantStore,
-    private router: Router,
     private at: ActivatedRoute,
     private fdsv: CodxFdService
   ) {
+    super(injector);
     this.tenant = this.tenantStore.get()?.tenant;
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.LoadData();
     this.range$ = this.api.exec('BS', 'RangeLinesBusiness', 'GetByIDAsync', [
       'KUDOS',
@@ -60,7 +63,7 @@ export class SettingComponent implements OnInit {
     this.at.queryParams.subscribe((params) => {
       if (params.page) {
         this.funcID = params.funcID;
-        this.router.navigate(['/' + this.tenant + '/fd/setting'], {
+        this.codxService.navigate('', 'fd/setting/', {
           queryParams: { funcID: 'FDS' },
         });
         this.page = params.page;
@@ -76,16 +79,34 @@ export class SettingComponent implements OnInit {
       this.scrollToID(this.page);
       return;
     }
+
+    this.views = [{
+      active: true,
+      type: ViewType.content,
+      sameData: true,
+      model: {
+        panelLeftRef: this.panelLeftRef,
+      }
+    }];
+    this.detectorRef.detectChanges();
   }
 
   scroll(el: HTMLElement, numberActive) {
-    el.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+    el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
     this.currentActive = numberActive;
   }
 
   scrollToID(id) {
     let el = document.getElementById(id);
-    el.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+    el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
   }
 
   LoadData() {
@@ -117,29 +138,44 @@ export class SettingComponent implements OnInit {
   }
 
   goHomePage(functionID) {
-    this.router.navigate(['/' + this.tenant + '/fd/home'], {
+    // this.router.navigate(['/' + this.tenant + '/fd/home'], {
+    //   queryParams: { funcID: functionID },
+    // });
+    this.codxService.navigate('', 'fd/home/', {
       queryParams: { funcID: functionID },
     });
   }
 
   LoadDeatail(data) {
-    this.router.navigate(['/' + this.tenant + '/fd/detail'], {
+    // this.router.navigate(['/' + this.tenant + '/fd/detail'], {
+    //   queryParams: { funcID: data.functionID },
+    // });
+    this.codxService.navigate('', 'fd/detail/', {
       queryParams: { funcID: data.functionID },
     });
   }
 
   LoadCategory(func) {
-    this.router.navigateByUrl(this.tenant + '/' + func.url);
+    // this.router.navigateByUrl(this.tenant + '/' + func.url);
+    this.codxService.navigate('', '/', {
+      queryParams: { funcID: func.url },
+    });
   }
 
   LoadWallet(func) {
-    this.router.navigate(['/' + this.tenant + '/fd/wallet'], {
+    // this.router.navigate(['/' + this.tenant + '/fd/wallet'], {
+    //   queryParams: { funcID: func.functionID },
+    // });
+    this.codxService.navigate('', '/fd/wallet', {
       queryParams: { funcID: func.functionID },
     });
   }
 
   LoadDedicationRank(func) {
-    this.router.navigate(['/' + this.tenant + '/fd/dedication-rank'], {
+    // this.router.navigate(['/' + this.tenant + '/fd/dedication-rank'], {
+    //   queryParams: { funcID: func },
+    // });
+    this.codxService.navigate('', '/fd/dedication-rank', {
       queryParams: { funcID: func },
     });
   }
