@@ -66,6 +66,13 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     this.buttons = {
       id: 'btnAdd',
     };
+    this.moreFuncs = [
+      {
+        id: 'btnViewHistory',
+        icon: 'icon-list-checkbox',
+        text: 'Lịch sử sử dụng thẻ',
+      },
+    ];
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
@@ -133,6 +140,9 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       case 'btnDelete':
         this.delete();
         break;
+      case 'btnViewHistory':
+        this.viewHistory();
+        break;
     }
   }
 
@@ -178,6 +188,10 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         console.log(res);
       });
     }
+  }
+
+  viewHistory() {
+    
   }
 
   onSelect(obj: any) {
