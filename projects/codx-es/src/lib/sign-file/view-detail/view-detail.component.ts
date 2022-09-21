@@ -21,12 +21,11 @@ import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 
-
 @Component({
   selector: 'lib-view-detail',
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class ViewDetailComponent implements OnInit {
   constructor(
@@ -108,7 +107,7 @@ export class ViewDetailComponent implements OnInit {
         document.getElementsByClassName(
           'codx-detail-body'
         ) as HTMLCollectionOf<HTMLElement>
-      )[0].style.height = main - header - 27 + 'px';
+      )[0].style.height = main - header - 100 + 'px';
     }
   }
 
@@ -183,7 +182,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
     }
-    this.setHeight();
+    // this.setHeight();
   }
 
   changeNavState(state) {
@@ -248,7 +247,7 @@ export class ViewDetailComponent implements OnInit {
         [task, vllControlShare, vllRose, title],
         option
       );
-      dialogAdd.closed.subscribe((e) => { });
+      dialogAdd.closed.subscribe((e) => {});
     }
   }
 
@@ -333,6 +332,6 @@ export class ViewDetailComponent implements OnInit {
     return styles;
   }
 
-  fileAdded($event) { }
-  getfileCount($event) { }
+  fileAdded($event) {}
+  getfileCount($event) {}
 }
