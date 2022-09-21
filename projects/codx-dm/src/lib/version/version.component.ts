@@ -14,6 +14,7 @@ import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
 import { EmitType, detach, isNullOrUndefined, createElement, EventHandler } from '@syncfusion/ej2-base';
 import { UploaderComponent, FileInfo, SelectedEventArgs, RemovingEventArgs } from '@syncfusion/ej2-angular-inputs';
 import { lvFileClientAPI } from '@shared/services/lv.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'version',
@@ -434,7 +435,7 @@ export class VersionComponent implements OnInit {
   async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
     try {
       fileItem.uploadId = '';      
-      var appName = this.dmSV.appName; // Tam thoi de hard
+      var appName = environment.appName; // Tam thoi de hard
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
       var uploadFile = fileItem.item.rawFile;
       var retUpload = await lvFileClientAPI.postAsync(
@@ -503,7 +504,7 @@ export class VersionComponent implements OnInit {
         that.notificationsService.notify(res.message);
       });
 
-      var appName = this.dmSV.appName; // Tam thoi de hard
+      var appName = environment.appName; // Tam thoi de hard
       var uploadFile = fileItem.item.rawFile;
       var sizeInBytes = fileItem.fileSize; // uploadFile.size;
       var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;

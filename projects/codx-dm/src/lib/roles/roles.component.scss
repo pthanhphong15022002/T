@@ -82,3 +82,23 @@ th {
 //     margin-right: -12.5px;
 //     margin-left: -12.5px;
 // }
+.dm-div-disable
+{
+    pointer-events: none;
+    opacity: 0.4;
+}
+.action-menu-od
+{
+    width:50px;
+    height: 27px;
+    margin-left: 10px;
+    opacity: 0;
+    z-index: 99;
+    background-color: #fff;
+    border-radius: 40px;
+    box-shadow: 0px 3px 10px 0px rgb(82 63 105 / 25%);
+}
+.has-action-menu-od:hover .action-menu-od
+{
+    opacity: 1;
+}

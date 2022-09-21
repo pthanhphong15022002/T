@@ -21,7 +21,7 @@
       class="d-flex align-items-center px-3 py-1 home">
       <div [attr.id]="data.recID" class="leaf d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, '')">
       </div>
-      <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data)"
+      <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data , codxview)"
         (changeDataMF)="dmSV.filterMoreFunction($event, data)" [title]="data.folderName" [formModel]="view.formModel"
         [typeMF]="'hover'">
       </codx-temp-full>

@@ -2,8 +2,6 @@
   <div class="d-flex">
     <div
       class="gift-card w-100px card-with-dropdown-item ms-12"
-      (mouseover)="mouseover($event)"
-      (mouseout)="mouseout($event)"
       *ngFor="let item of lstPattent; trackBy: trackByfn; let i = index"
     >
       <div
@@ -12,22 +10,20 @@
         #elm
         *ngIf="i < lstPattent.length - 1; else template"
       >
-        <div class="div-action-menu">
-          <div class="action-menu d-flex">
-            <div class="action-content d-flex align-items-center">
-              <a class="action-item" (click)="openCreate(item.recID, i, elm)">
-                <div class="d-flex align-items-center btn-tooltip">
-                  <span class="icon-edit icon-20 ml-2 mr-2"></span>
-                  <span class="tooltiptext">Edit</span>
-                </div>
-              </a>
-              <a class="action-item" (click)="delete(item.recID, i)">
-                <div class="d-flex align-items-center btn-tooltip">
-                  <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
-                  <span class="tooltiptext">Delete</span>
-                </div>
-              </a>
-            </div>
+        <div class="action-menu d-flex">
+          <div class="d-flex align-items-center">
+            <a class="action-item" (click)="openCreate(item.recID, i, elm)">
+              <div class="d-flex align-items-center btn-tooltip">
+                <span class="icon-edit icon-20 ml-2 mr-2"></span>
+                <span class="tooltiptext">Edit</span>
+              </div>
+            </a>
+            <a class="action-item" (click)="delete(item.recID, i)">
+              <div class="d-flex align-items-center btn-tooltip">
+                <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+                <span class="tooltiptext">Delete</span>
+              </div>
+            </a>
           </div>
         </div>
         <codx-img
@@ -37,7 +33,7 @@
           objectType="FED_Patterns"
           [width]="100"
           (reloadChanged)="reloadChanged($event)"
-          *ngIf="!item.backgroundColor; else otherColor"
+          *ngIf="!item?.backgroundColor"
           cssClass="pic symbol-100px symbol-3by2"
           imageType="square"
         >
@@ -57,13 +53,11 @@
           class="icon-check text-white default"
           *ngIf="item.isDefault"
         ></span>
-        <!-- <img alt="" style="width: 100px;height: 150px;"
-                src="http://172.16.7.34:8031/Resources/Images/card/{{item.fileName}}"> -->
       </div>
       <ng-template #template>
         <div class="card-img create-card">
           <a id="create_card_toggle" (click)="openCreate()">
-            <img alt="" src="../../../assets/demos/card/card-add.png" />
+            <img alt="" src="../assets/demos/card/card-add.png" />
           </a>
         </div>
       </ng-template>
