@@ -75,4 +75,49 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
   }
 
 
+  onScroll(event: any) {
+    const dcScroll = event.srcElement;
+    if (
+      dcScroll.scrollTop + dcScroll.clientHeight <
+      dcScroll.scrollHeight - 150
+    ) {
+      return;
+    }
+    this.pageIndex++;
+    this.api.execSv(
+      'BG',
+      'ERM.Business.BG',
+      'NotificationBusiness',
+      'GetAsync',
+      [this.pageIndex]
+    ).subscribe((res:any[]) => {
+      if(res){
+        let notifys = res[0];
+        let lstNotifyElement = document.getElementById("lstNotify");
+        notifys.forEach((item:any) => {
+          let notiHTML = 
+            `
+              <div class="row p-4 my-2" (click)="clickNotification(${item})">
+                <div class="col-1">
+                  <codx-img [width]="35" [objectId]="${item.userID}" [objectType]="'AD_Users'"></codx-img>
+                </div>
+                <div class="col-10">
+                  <div [innerHTML]="${item.textValue}">        
+                  </div>
+                  <div>
+                    <span class="text-primary ms-1">{{${item.createdDate} | timefrom}}</span>
+                  </div>
+                </div>
+                <div class="col-1" *ngIf="${!item.isRead}">
+                  <span class="dots"></span>
+                </div>
+              </div>
+            `  
+        });
+        this.dt.detectChanges();
+      }
+    });
+    //this.dataService.scrolling();
+  }
+
 }

@@ -1,10 +1,10 @@
-<codx-form [body]="body" [headerText]="'Thông báo'" [dialog]="dialog"></codx-form>
+<codx-form [body]="body" (scroll)="onScroll($event)" [headerText]="'Thông báo'" [dialog]="dialog"></codx-form>
 
 
 <ng-template #body>
   <div class="p-2">
     <ng-container *ngFor="let item of lstNotify;index as i">
-      <div>
+      <div id="lstNotify">
         <ng-container *ngIf="i==0">
           <div class="d-flex justify-content-between">
             <span>
@@ -40,4 +40,7 @@
       </div>
     </ng-container>
   </div>
+</ng-template>
+<ng-template #itemTemplate>
+
 </ng-template>
