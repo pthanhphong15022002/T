@@ -333,7 +333,7 @@ export class ViewFileDialogComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     if (this.ext == ".mp4") {
       this.isVideo = true;
-      this.srcVideo = `${this.dmSV.urlFile}/${this.data.pathDisk}`;
+      this.srcVideo = `${environment.urlFile}/${this.data.pathDisk}`;
       //this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${this.id}?access_token=${this.auth.userValue.token}`;
     } else if (this.ext == ".png"
       || this.ext == ".jpeg"
@@ -341,7 +341,7 @@ export class ViewFileDialogComponent implements OnInit {
       || this.ext == ".bmp"
     ) {
       // this.data.thumbnail;//      
-      this.linkViewImage = `${this.dmSV.urlFile}/${this.data.pathDisk}`; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
+      this.linkViewImage = `${environment.urlFile}/${this.data.pathDisk}`; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
     else if (this.ext == ".pdf111") {
       this.isPdf = true;

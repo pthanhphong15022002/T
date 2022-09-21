@@ -394,7 +394,7 @@ export class HomeComponent extends UIComponent {
     data.type = 'popup';
     // data.objectType = 'WP_Notes';
     // data.objectId = '628c326c590addf224627f42';
-    // data.functionID = 'ODT3';
+    data.functionID = this.codxview?.formModel?.funcID;
 
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
@@ -449,6 +449,7 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
+    debugger
     ScrollComponent.reinitialization();
     if ($data == null || $data.data == null) {
       return;
@@ -1112,6 +1113,7 @@ export class HomeComponent extends UIComponent {
 
           this.dmSV.loadedFile = true;
           this.changeDetectorRef.detectChanges();
+          ScrollComponent.reinitialization();
         });
     }
   }

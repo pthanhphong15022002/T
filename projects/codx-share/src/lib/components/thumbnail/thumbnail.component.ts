@@ -4,6 +4,7 @@ import { AlertConfirmInputConfig, CallFuncService, NotificationsService } from '
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { RolesComponent } from 'projects/codx-dm/src/lib/roles/roles.component';
+import { environment } from 'src/environments/environment';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
@@ -251,7 +252,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
 
   getExtension(thumbnail, ext) {
     if (thumbnail != "" && thumbnail != undefined)
-      return `${this.dmSV.urlThumbnail}/${thumbnail}`;
+      return `${environment.urlThumbnail}/${thumbnail}`;
     else {
       ext = ext.substring(1);
       ext = ext.toLocaleLowerCase();
