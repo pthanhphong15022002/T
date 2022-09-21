@@ -88,7 +88,7 @@
                         <codx-input 
                             type="number" 
                             class=""
-                            [crrValue]="form.controls['amount'].value" 
+                            [crrValue]="form.controls['quantity'].value" 
                             [placeholder]="'0'"
                             field="amount"
                             (valueChange)="valueChange($event)" 
@@ -151,7 +151,7 @@
             </div>
             <div>
                 <codx-input 
-                    [crrValue]="form.controls['isSharePortal'].value"
+                    [crrValue]="isSharePortal"
                     type="switch" 
                     field="isSharePortal"
                     name="isSharePortal" 
@@ -166,7 +166,7 @@
 <ng-template #footer>
     <div class="d-flex justify-content-end">
         <div>
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" (click)="save()">
                 <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
             </button>
         </div>
