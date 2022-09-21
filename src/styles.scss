@@ -424,3 +424,8 @@ a:link {
 codx-view-list-detail .codx-detail-footer {
   overflow: hidden;
 }
+
+.menu-item.menu-item-active .text-dark,
+.menu-item.menu-item-active i {
+  color: var(--text-primary) !important;
+}
