@@ -178,8 +178,21 @@ export class CodxEsService {
           formModel.gridViewName = funcList?.gridViewName;
           formModel.funcID = funcList?.functionID;
           formModel.entityPer = funcList?.entityPer;
+
+          this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+            this.cache.setGridView(formModel.gridViewName, gridView);
+            this.cache
+              .gridViewSetup(formModel.formName, formModel.gridViewName)
+              .subscribe((gridViewSetup) => {
+                this.cache.setGridViewSetup(
+                  formModel.formName,
+                  formModel.gridViewName,
+                  gridViewSetup
+                );
+                resolve(formModel);
+              });
+          });
         }
-        resolve(formModel);
       });
     });
   }

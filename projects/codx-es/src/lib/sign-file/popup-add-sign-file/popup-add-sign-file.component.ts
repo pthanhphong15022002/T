@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
+import { Thickness } from '@syncfusion/ej2-charts';
 import {
   ApiHttpService,
   AuthStore,
@@ -138,15 +139,7 @@ export class PopupAddSignFileComponent implements OnInit {
   ngOnInit(): void {
     if (this.oSignFile) {
       this.esService.getFormModel('EST011').then((formModel) => {
-        // this.formModelCustom.entityName = formModel.entityName;
-        // this.formModelCustom.formName = formModel.formName;
-        // this.formModelCustom.gridViewName = formModel.gridViewName;
-        // this.formModelCustom.entityPer = formModel.entityPer;
-        // this.formModelCustom.funcID = formModel.funcID;
-
         this.formModelCustom = formModel;
-        console.log(this.formModelCustom);
-
         let sf = this.esService
           .getSFByID(this.oSignFile.recID)
           .subscribe((signFile) => {
@@ -160,6 +153,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.refDate = this.oSignFile.refDate;
               this.data.refNo = this.oSignFile.refNo;
               this.data.priority = this.oSignFile.priority;
+
               this.isSaved = true;
               this.isAddNew = false;
 
@@ -335,13 +329,27 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.approveControl = '3';
               this.data.refDate = new Date();
 
-              this.autoNo = this.data.refNo;
+              this.autoNo = JSON.parse(JSON.stringify(this.data.refNo));
 
               this.formModelCustom.currentData = this.data;
               this.dialogSignFile.patchValue(this.data);
               this.isAfterRender = true;
               this.cr.detectChanges();
               if (this.oSignFile) {
+                if (this.data.files.length == 1) {
+                  console.log(this.data.files);
+                  let title = JSON.parse(
+                    JSON.stringify(this.data.files[0].fileName)
+                  );
+                  for (
+                    let i = this.data.files[0].fileName.length;
+                    i >= 0;
+                    i--
+                  ) {
+                    title = title.slice(0, i - 1);
+                    if (this.data.files[0].fileName[i - 1] === '.') break;
+                  }
+                }
                 this.updateNodeStatus(0, 1);
               }
 
@@ -368,6 +376,21 @@ export class PopupAddSignFileComponent implements OnInit {
                 .subscribe((res) => {
                   if (res) {
                     this.data = res;
+                    if (this.data.files.length == 1) {
+                      console.log(this.data.files);
+                      let title = JSON.parse(
+                        JSON.stringify(this.data.files[0].fileName)
+                      );
+                      for (
+                        let i = this.data.files[0].fileName.length;
+                        i >= 0;
+                        i--
+                      ) {
+                        title = title.slice(0, i - 1);
+                        if (this.data.files[0].fileName[i - 1] === '.') break;
+                      }
+                    }
+                    this.autoNo = JSON.parse(JSON.stringify(this.data.refNo));
                     this.formModelCustom.currentData = this.data;
                     this.dialogSignFile.patchValue(this.data);
                     this.isAfterRender = true;
@@ -509,14 +532,14 @@ export class PopupAddSignFileComponent implements OnInit {
     //   this.cr.detectChanges();
     // }
     if (event?.field && event?.component && event?.data != '') {
-      if (event.field == 'categoryID') {
+      if (event.field == 'categoryID' && this.data.categoryID != event.data) {
         this.esService
-          .getAutoNumberByCategory(this.data.categoryID)
+          .getAutoNumberByCategory(event.data)
           .subscribe((autoNum) => {
             debugger;
             if (autoNum != null) {
               this.data.refNo = autoNum;
-            } else {
+            } else if (this.autoNo) {
               this.data.refNo = this.autoNo;
             }
             this.dialogSignFile.patchValue({ refNo: this.data.refNo });
@@ -533,51 +556,51 @@ export class PopupAddSignFileComponent implements OnInit {
             this.data.categoryName = category?.CategoryName;
             this.cr.detectChanges();
           });
-      }
-    } else if (event?.field == 'refDate') {
-      this.dialogSignFile.patchValue({
-        [event['field']]: event.data?.fromDate,
-      });
-      this.data[event['field']] = event.data?.fromDate;
-    } else if (event.field == 'owner') {
-      this.esService.getEmployee(event.data).subscribe((emp) => {
-        console.log('employee', emp);
-
-        let employee = event.component?.itemsSelected[0];
-        if (emp) {
-          employee = emp;
-        }
-        this.data.employeeID = employee?.employeeID;
-        this.data.deptID = employee?.departmentID;
-        this.data.divisionID = employee?.divisionID;
-        this.data.companyID = employee?.companyID;
-
-        if (employee?.orgUnitID != null) {
-          this.data.orgUnitID = employee?.orgUnitID;
-        }
-
-        //this.dialogSignFile.patchValue(this.data);
-
+      } else if (event?.field == 'refDate') {
         this.dialogSignFile.patchValue({
-          employeeID: employee?.employeeID,
-          deptID: employee?.departmentID,
-          divisionID: employee?.divisionID,
-          companyID: employee?.companyID,
+          [event['field']]: event.data?.fromDate,
         });
-        if (employee?.orgUnitID && employee?.orgUnitID != null) {
-          let arr = employee?.orgUnitID.split(';') || [];
+        this.data[event['field']] = event.data?.fromDate;
+      } else if (event.field == 'owner') {
+        this.esService.getEmployee(event.data).subscribe((emp) => {
+          console.log('employee', emp);
+
+          let employee = event.component?.itemsSelected[0];
+          if (emp) {
+            employee = emp;
+          }
+          this.data.employeeID = employee?.employeeID;
+          this.data.deptID = employee?.departmentID;
+          this.data.divisionID = employee?.divisionID;
+          this.data.companyID = employee?.companyID;
+
+          if (employee?.orgUnitID != null) {
+            this.data.orgUnitID = employee?.orgUnitID;
+          }
+
+          //this.dialogSignFile.patchValue(this.data);
 
           this.dialogSignFile.patchValue({
-            orgUnitID: arr,
+            employeeID: employee?.employeeID,
+            deptID: employee?.departmentID,
+            divisionID: employee?.divisionID,
+            companyID: employee?.companyID,
           });
-        }
-        console.log(this.data);
-        console.log(this.dialogSignFile.value);
+          if (employee?.orgUnitID && employee?.orgUnitID != null) {
+            let arr = employee?.orgUnitID.split(';') || [];
+
+            this.dialogSignFile.patchValue({
+              orgUnitID: arr,
+            });
+          }
+          console.log(this.data);
+          console.log(this.dialogSignFile.value);
+
+          this.cr.detectChanges();
+        });
 
         this.cr.detectChanges();
-      });
-
-      this.cr.detectChanges();
+      }
     }
   }
 

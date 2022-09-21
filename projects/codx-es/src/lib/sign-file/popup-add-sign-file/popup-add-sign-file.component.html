@@ -1,4 +1,7 @@
-<div class="card-body p-0 codx-card-custom" *ngIf="isAfterRender">
+<div
+  class="card-body p-0 codx-card-custom"
+  *ngIf="isAfterRender && formModelCustom"
+>
   <div class="codx-stepper stepper stepper-pills">
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
@@ -217,9 +220,9 @@
                   <div class="d-flex flex-column">
                     <span class="text-dark">
                       <codx-label
-                        name="lblSaveTemplate"
+                        name="lblSaveNewTemplate"
                         [formModel]="formModelCustom"
-                        default="Lưu thành mẫu"
+                        default="Lưu thành quy trình mẫu"
                       ></codx-label>
                     </span>
                   </div>
@@ -233,9 +236,9 @@
                 >
                   <div class="d-flex flex-column">
                     <codx-label
-                      name="lblSaveCateTemplate"
+                      name="lblUpdateApproval"
                       [formModel]="formModelCustom"
-                      default="Lưu tài liệu mẫu"
+                      default="Cập nhật vào quy trình mẫu"
                     >
                     </codx-label>
                   </div>
@@ -538,7 +541,10 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <codx-label fiedName="CategoryID" [formModel]="formModelCustom">
+                      <codx-label
+                        fiedName="CategoryID"
+                        [formModel]="formModelCustom"
+                      >
                       </codx-label>
                       <codx-input
                         field="categoryID"
@@ -551,7 +557,10 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <codx-label fiedName="Priority" [formModel]="formModelCustom">
+                      <codx-label
+                        fiedName="Priority"
+                        [formModel]="formModelCustom"
+                      >
                       </codx-label>
                       <codx-input
                         field="priority"
@@ -565,7 +574,10 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <codx-label fiedName="RefNo" [formModel]="formModelCustom">
+                      <codx-label
+                        fiedName="RefNo"
+                        [formModel]="formModelCustom"
+                      >
                       </codx-label>
                       <codx-input
                         field="refNo"
@@ -578,7 +590,10 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <codx-label fiedName="RefDate" [formModel]="formModelCustom">
+                      <codx-label
+                        fiedName="RefDate"
+                        [formModel]="formModelCustom"
+                      >
                       </codx-label>
                       <codx-input
                         type="datetime"
@@ -603,7 +618,10 @@
                   </codx-input>
                 </div>
                 <div class="form-group">
-                  <codx-label fiedName="OrgUnitID" [formModel]="formModelCustom">
+                  <codx-label
+                    fiedName="OrgUnitID"
+                    [formModel]="formModelCustom"
+                  >
                   </codx-label>
                   <codx-input
                     field="orgUnitID"
@@ -765,7 +783,11 @@
           </codx-label>
         </a>
         <a class="btn btn-secondary" (click)="closeDialogTmp(dialogTemplate)">
-          <codx-label name="lblExit" default="Hủy" [formModel]="formModelCustom">
+          <codx-label
+            name="lblExit"
+            default="Hủy"
+            [formModel]="formModelCustom"
+          >
           </codx-label>
         </a>
       </div>
@@ -818,7 +840,11 @@
         class="btn btn-light-primary me-2"
         (click)="clickIsSave(false, dialogClose)"
       >
-        <codx-label name="lblExit" default="Thoát" [formModel]="formModelCustom">
+        <codx-label
+          name="lblExit"
+          default="Thoát"
+          [formModel]="formModelCustom"
+        >
         </codx-label>
       </a>
       <a
@@ -826,7 +852,11 @@
         class="btn btn-light-primary me-2"
         (click)="clickNotSave(dialogClose)"
       >
-        <codx-label name="lblExit" default="Thoát" [formModel]="formModelCustom">
+        <codx-label
+          name="lblExit"
+          default="Thoát"
+          [formModel]="formModelCustom"
+        >
         </codx-label>
       </a>
     </div>
