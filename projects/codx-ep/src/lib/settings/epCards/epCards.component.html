@@ -8,11 +8,23 @@
   [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
-  (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
   [idField]="idField"
   [className]="className"
   [method]="method"
+  (buttonClick)="click($event)"
+  (selectedChange)="onSelect($event)"
   (requestEnded)="closeDialog($event)"
 >
+  <ng-template #avatarCol let-data>
+    <div class="h-50px m-4">
+      <codx-img
+        [funcId]="funcID"
+        [objectType]="'EP_Rooms'"
+        [objectId]="data?.recID"
+        imageType="square"
+        width="50"
+      ></codx-img>
+    </div>
+  </ng-template>
 </codx-views>

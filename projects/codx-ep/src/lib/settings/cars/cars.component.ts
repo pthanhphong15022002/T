@@ -40,7 +40,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('owner') owner: TemplateRef<any>;
 
   @Input() data!: any;
-  
+
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -52,8 +52,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
-  moreFunc: Array<ButtonModel> = [];
-
+  moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
   isAdd = true;
   funcID: string;
@@ -84,10 +83,11 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  onInit(): void {}
+  onInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+  }
 
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.buttons = {
       id: 'btnAdd',
     };

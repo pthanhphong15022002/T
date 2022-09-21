@@ -61,7 +61,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     private injector: Injector,
     private codxEpService: CodxEpService
   ) {
-    super(injector)
+    super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
@@ -71,14 +71,14 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+  }
 
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.buttons = {
       id: 'btnAdd',
     };
-
     this.codxEpService.getFormModel(this.funcID).then((fModel) => {
       this.cache
         .gridViewSetup(fModel.formName, fModel.gridViewName)
