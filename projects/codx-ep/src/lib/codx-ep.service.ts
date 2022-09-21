@@ -248,6 +248,26 @@ export class CodxEpService {
     });
   }
 
+  getGetDriverByCar(carID: string) {
+    return this.api.callSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetDriverByCarAsync',
+      [carID]
+    );
+  }
+
+  getBookingAttendees(recID: string) {
+    return this.api.callSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingAttendeesBusiness',
+      'GetAsync',
+      [recID]
+    );
+  }
+
   getCompanyName(companyID: string) {
     return this.api.callSv(
       'HR',
