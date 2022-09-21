@@ -71,8 +71,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   formModel: FormModel;
   dialogRef: DialogRef;
   modelPage: ModelPage;
-  cbxUser: any;
-  peopleAttend = [];
+  attendees = [];
   curUser: any;
   data: any;
   isNew: boolean = true;
@@ -120,7 +119,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.codxEpService.getModelPage('EPT2').then((res) => {
       if (res) {
         this.modelPage = res;
-        console.log('EPT2', res);
       }
       if (this.isAdd) {
         let people = this.authService.userValue;
@@ -191,18 +189,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
           });
       });
       if (!this.isAdd) {
-        this.api
-          .callSv(
-            'EP',
-            'ERM.Business.EP',
-            'BookingAttendeesBusiness',
-            'GetAsync',
-            [this.data.recID]
-          )
+        this.codxEpService
+          .getBookingAttendees(this.data.recID)
           .subscribe((res) => {
             if (res) {
-              this.peopleAttend = res.msgBodyData[0];
-              this.peopleAttend.forEach((people) => {
+              this.attendees = res.msgBodyData[0];
+              this.attendees.forEach((people) => {
                 this.tempAtender = {
                   userId: people.userID,
                   userName: people.userName,
@@ -233,7 +225,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
       .then((res) => {
         this.fGroupAddBookingCar = res;
         if (this.data) {
-          console.log('fgroupEPT2', this.data);
           this.fGroupAddBookingCar.patchValue(this.data);
           this.fGroupAddBookingCar.patchValue({
             requester: this.authService.userValue.userName,
@@ -386,32 +377,24 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
 
   driverChangeWithCar(carID: string) {
-    this.api
-      .callSv(
-        'EP',
-        'ERM.Business.EP',
-        'ResourcesBusiness',
-        'GetDriverByCarAsync',
-        [carID]
-      )
-      .subscribe((res) => {
-        if (res) {
-          var x = res;
-          let driverInfo: {
-            id: string;
-            text: string;
-            objectType: string;
-            objectName: string;
-          } = {
-            id: res.msgBodyData[0].resourceID,
-            text: res.msgBodyData[0].resourceName,
-            objectType: undefined,
-            objectName: undefined,
-          };
-          this.driver = driverInfo;
-          this.detectorRef.detectChanges();
-        }
-      });
+    this.codxEpService.getGetDriverByCar(carID).subscribe((res) => {
+      if (res) {
+        var x = res;
+        let driverInfo: {
+          id: string;
+          text: string;
+          objectType: string;
+          objectName: string;
+        } = {
+          id: res.msgBodyData[0].resourceID,
+          text: res.msgBodyData[0].resourceName,
+          objectType: undefined,
+          objectName: undefined,
+        };
+        this.driver = driverInfo;
+        this.detectorRef.detectChanges();
+      }
+    });
   }
   valueCbxUserChange(event?) {
     this.lstPeople = [];
