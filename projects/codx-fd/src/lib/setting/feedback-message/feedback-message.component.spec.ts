@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SettingdetailComponent } from './settingdetail.component';
+import { FeedbackMessageComponent } from './feedback-message.component';
 
-describe('SettingdetailComponent', () => {
-  let component: SettingdetailComponent;
-  let fixture: ComponentFixture<SettingdetailComponent>;
+describe('FeedbackMessageComponent', () => {
+  let component: FeedbackMessageComponent;
+  let fixture: ComponentFixture<FeedbackMessageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SettingdetailComponent ]
+      declarations: [ FeedbackMessageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SettingdetailComponent);
+    fixture = TestBed.createComponent(FeedbackMessageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
