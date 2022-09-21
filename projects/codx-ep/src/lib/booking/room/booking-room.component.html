@@ -155,42 +155,48 @@
     </div>
   </div>
 
-  <hr />
-  <div class="d-flex mb-4">
-    <div class="d-flex flex-row">
-      <div class="me-2">
-        <codx-img
-          [objectId]=""
-          imageType="square"
-          width="35"
-          objectType="EP_Stationery"
-        ></codx-img>
-      </div>
+  <hr/>
+  <div *ngIf="data.bookingItems?.length>0">
+    <div *ngFor="let item of data.bookingItems">  
+      <div class="d-flex mb-4 justify-content-between">
+        <div class="d-flex flex-row">
+          <div class="me-2">
+            <codx-img
+              [objectId]="item.recID"
+              imageType="square"
+              width="35"
+              objectType="EP_Stationery"
+            ></codx-img>
+          </div>  
+          <div class=" ">
+            <div class="">
+              <span href="#" class=" fw-bold">{{ item.itemName }}</span>
+            </div>
+            <div class="d-flex flex-row flex-grow-1">
+              <codx-label
+                
+                default="Đơn vị tính:"
+                name="lblQuantity"
+                class="text-gray-600"
+              ></codx-label>
+              <span class="d-block ms-2 fw-bold">{{item.umid}}</span>
+            </div>
+          </div>
+        </div>
 
-      <div class=" ">
-        <div class="">
-          <span href="#" class="text-gray-800">{{ "name" }}</span>
-        </div>
-        <div class="d-flex flex-row" style="width: 180px">
+        <div class="d-flex align-items-center me-3">
           <codx-label
-            style="width: 75px"
-            default="Đơn vị tính:"
+            default="Số lượng:"
             name="lblQuantity"
-            class="text-gray-600 col-3"
+            class="text-gray-600"
           ></codx-label>
-          <span class="text-gray-400 d-block col-2">Chai</span>
+          <span class="ms-2 fw-bold">{{item.quantity}}</span>
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center me-3">
-      <codx-label
-        default="Số lượng: "
-        name="lblQuantity"
-        class="text-gray-600 me-4"
-      ></codx-label>
-      <span>20</span>
-    </div>
+    
   </div>
+  
 </ng-template>
 
 
