@@ -69,7 +69,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   lstPined: any = [];
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
-  
+
   formModel: FormModel;
   constructor(
     private injector: Injector,
@@ -165,15 +165,15 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         showSearchBar: false,
         model: {
           //panelLeftRef:this.panelLeft,
-          eventModel:this.fields,
-          resourceModel:this.resourceField,//resource
+          eventModel: this.fields,
+          resourceModel: this.resourceField, //resource
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           //template5: this.resourceTootip,//tooltip
-          template6: this.mfButton,//header          
-          template8: this.contentTmp,//content
+          template6: this.mfButton, //header
+          // template8: this.contentTmp,//content
           //template7: this.footerButton,//footer
-          statusColorRef:'vl003'
+          statusColorRef: 'vl003',
         },
       },
       {

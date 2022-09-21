@@ -3,13 +3,12 @@
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
                 <div class="user-mini-nav">
-                    <div *ngIf="fileEditing != null && fileEditing.permissions != null">
-                        <ng-container *ngFor="let perm of fileEditing.permissions; index as i;">
+                    <div *ngIf="fileEditing != null && fileEditing?.permissions != null">
+                        <ng-container *ngFor="let perm of fileEditing?.permissions; index as i;">
                             <ng-container
                                 *ngIf="perm.isActive != false && ((modeSharing == null) || (!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
-                                <div (click)="changePermission(i)" [className]="setClassActive(i)"
-                                    class="d-flex justify-content-between user-nav-item mb-1">
-                                    <div class="d-flex align-items-center">
+                                <div (click)="changePermission(i)" [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null" class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
+                                    <div class="d-flex align-items-center w-100">
                                         <div class="symbol symbol-30 symbol-circle me-3">
                                             <div
                                                 *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
@@ -49,31 +48,24 @@
                                         </div>
                                         <!-- <div class="text-dark-75">{{perm.objectName}}</div> -->
                                     </div>
-
-                                    <div *ngIf="!this.checkItemRight(i) && !this.propertiesFolder">
-                                        <a (click)="removeUserRight(i)"
-                                            class="btn btn-icon btn-xs btn-light-danger user-nav-role">
-                                            <span class="icon-close icon-18"></span>
-                                        </a>
-                                    </div>
-
-                                    <!-- <div>
-                                        <a (click)="removeUserRight(i)"
-                                            class="btn btn-icon btn-xs btn-light-danger user-nav-role">
-                                            <span class="icon-close icon-18"></span>
-                                        </a>
-                                    </div> -->
-
+                                    <ng-container *ngIf="!this.checkItemRight(i) && !this.propertiesFolder && hasShare">
+                                        <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer" (click)="removeUserRight(i)">
+                                            <i class="icon-close text-danger icon-16"></i>
+                                        </div>
+                                    </ng-container>
+                                    <div  
+                                    >
+                                   
+                                  </div>
                                 </div>
                             </ng-container>
                         </ng-container>
                     </div>
                 </div>
-                <div *ngIf="allowSetRight()" class="add-user">
-                    <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
+                <div *ngIf="allowSetRight()" class="add-user" [ngClass]="!hasShare?'dm-div-disable':null">
+                    <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false" 
                         (valueChange)="onSaveRole($event)">
                     </codx-input>
-
                     <!-- <a (click)="openRole()" class="btn btn-icon btn-xs btn-light-primary">
                         <span class="icon-person_add_alt_1 icon-18"></span>
                     </a> -->
@@ -216,8 +208,5 @@
     <ng-template #footer>
         <button type="button" [disabled]="checkCurrentRightUpdate()" (click)="onSaveRight()"
             class="btn btn-primary">{{titleSave}}</button>
-        <!-- <button 
-        type="button"        
-        (click)="onSaveRight()" class="btn btn-primary">{{titleSave}}</button> -->
     </ng-template>
 </codx-form>

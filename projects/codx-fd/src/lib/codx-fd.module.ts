@@ -1,3 +1,5 @@
+import { EditBallotComponent } from './setting/feedback-message/ballot/edit-ballot/edit-ballot.component';
+import { BallotComponent } from './setting/feedback-message/ballot/ballot.component';
 import { BehaviorComponent } from './setting/category/behavior/behavior.component';
 import { BehaviorruleComponent } from './setting/category/behaviorrule/behaviorrule.component';
 import { GiftgroupComponent } from './setting/category/giftgroup/giftgroup.component';
@@ -34,7 +36,7 @@ import { LayoutComponent } from './_layout/layout.component';
 import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
-import { SettingdetailComponent } from './settingdetail/settingdetail.component';
+import { FeedbackMessageComponent } from './setting/feedback-message/feedback-message.component';
 
 export const routes: Routes = [
   {
@@ -103,6 +105,10 @@ export const routes: Routes = [
         path: 'setting/fedranges/:funcID',
         component: DedicationrankComponent,
       },
+      {
+        path: 'setting/cards/:funcID',
+        component: FeedbackMessageComponent,
+      },
     ],
   },
 ];
@@ -129,7 +135,9 @@ const Component: Type<any>[] = [
   BehaviorruleComponent,
   BehaviorComponent,
   PopupAddGiftComponent,
-  SettingdetailComponent,
+  FeedbackMessageComponent,
+  BallotComponent,
+  EditBallotComponent,
 ];
 
 @NgModule({

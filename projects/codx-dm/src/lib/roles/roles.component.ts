@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Ho
 import { Subject } from "rxjs";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
@@ -26,6 +26,7 @@ export class RolesComponent implements OnInit {
   @Input() formModel: any;
   @Input('viewBase') viewBase: ViewsComponent;    
   @Output() eventShow = new EventEmitter<boolean>();
+  codxView: any;
   dialog: any;
   titleDialog = 'Chia sẻ quyền'; 
   titleSave = 'Lưu';
@@ -133,7 +134,7 @@ export class RolesComponent implements OnInit {
   options = new DataRequest();
   dataVll = [];
   currentPermision: string;
-  full: boolean;
+  full: boolean = true;
   isSetFull = false;
   create: boolean;
   read: boolean;
@@ -220,6 +221,7 @@ export class RolesComponent implements OnInit {
   fileEditingOld: FileUpload;
   indexEdit: any;
   addnewIndex: any;
+  hasShare = false;
   path: string;
   //treeAdd: TreeviewComponent;
   item: any = {};
@@ -244,15 +246,18 @@ export class RolesComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
     ) {
+    
    //   this.read = true;
       this.data = data.data;
       if (this.data[0] == "1")
         this.modePermission = true;
       else  
         this.modePermission = false;
-
-      this.fileEditing =  JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));   
+      if(this.data[2])
+        this.codxView = this.data[2];
+      this.fileEditing =  JSON.parse(JSON.stringify(this.dmSV.dataFileEditing)); 
       this.id = this.fileEditing.recID;
+      this.folderName = this.fileEditing.folderName
       if (this.fileEditing.folderName != null) {
         this.type = 'folder';
       }
@@ -267,8 +272,24 @@ export class RolesComponent implements OnInit {
 
   ngOnInit(): void {      
     this.changePermission(0);
+    this.getRoleShare();
   }
-
+  getData(recID:any)
+  {
+    this.api
+    .execSv("DM", 'DM', 'FolderBussiness', 'GetFoldersByIDAsync', recID)
+    .subscribe((item) => {
+      
+    });
+  }
+  getRoleShare()
+  {
+    if(this.fileEditing?.permissions && this.fileEditing?.permissions.length>0)
+    {
+      var item = this.fileEditing?.permissions.filter(x=>x.objectID == this.user?.userID);
+      this.hasShare = item[0]?.assign;
+    }
+  }
   onSaveRightChanged($event, ctrl) {
     var value = $event.data;
     switch (ctrl) {
@@ -346,6 +367,7 @@ export class RolesComponent implements OnInit {
   }
 
   checkCurrentRightUpdate(owner = true) {
+    if(!this.hasShare) return true;
     if (!this.isSystem) {
       if (this.user.administrator) 
         return false;
@@ -446,12 +468,7 @@ export class RolesComponent implements OnInit {
     }
   }
 
-  setClassActive(id: string) {
-    if (id == this.currentPemission.toString())
-      return 'cursor-pointer d-flex justify-content-between user-nav-item user-nav-active mb-1 p-2';
-    else
-      return "cursor-pointer d-flex justify-content-between user-nav-item mb-1 p-2";
-  }
+
 
   checkItemRight(i) {
     //isSystem
@@ -466,7 +483,7 @@ export class RolesComponent implements OnInit {
     // save old permission   
     // alert(1);
    // this.currentPemission = index;
-
+    debugger;
     let isSystem = false;
     let objectType = "";
     if (this.currentPemission > -1) {
@@ -524,7 +541,6 @@ export class RolesComponent implements OnInit {
       this.isSystem = false;
       this.permissonActiveId = index;
     }   
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -535,29 +551,39 @@ export class RolesComponent implements OnInit {
 
 
   removeUserRight(index, list: Permission[] = null) {
-    if (list == null) {
-      if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
-        this.fileEditing.permissions.splice(index, 1);//remove element from array  
-        this.changePermission(0);
-      }
-    }
-    else {
-      if (list != null && list.length > 0) {
-        list.splice(index, 1);//remove element from array  
-        this.changeDetectorRef.detectChanges();
-      }
-    }
-
-    if (this.type == "file") {
-      this.onSaveEditingFile();
-    }
-    else {
-      this.fileEditing.folderName = this.folderName;
-      this.fileEditing.folderId = this.dmSV.getFolderId();
-      this.fileEditing.recID = this.id;
-      this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
-      });
-    }
+    var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+    this.notificationsService
+    .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
+    .closed.subscribe((x) => {
+      if (x.event.status == 'Y'){
+        if (list == null) {
+          if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
+            this.fileEditing.permissions.splice(index, 1);//remove element from array  
+            this.changePermission(0);
+          }
+        }
+        else {
+          if (list != null && list.length > 0) {
+            list.splice(index, 1);//remove element from array  
+            this.changeDetectorRef.detectChanges();
+          }
+        }
+    
+        if (this.type == "file") {
+          this.onSaveEditingFile();
+        }
+        else {
+          this.fileEditing.folderName = this.folderName;
+          this.fileEditing.folderId = this.dmSV.getFolderId();
+          this.fileEditing.recID = this.id;
+          this.folderService.updateFolder(this.fileEditing).subscribe(res => {
+            if(res)
+              this.codxView?.dataService.update(this.fileEditing).subscribe();
+          });
+        }
+      };
+    });
   } 
 
   allowSetRight() {
@@ -569,15 +595,13 @@ export class RolesComponent implements OnInit {
   }
 
   onSaveRight() {
-    var that = this;
     if (this.endDate != null && this.endDate < this.startDate) {
     //  $('#endDateRole').addClass('form-control is-invalid');
       this.changeDetectorRef.detectChanges();
       return;
     }
-
     // save current permisssion
-    if (this.currentPemission > -1 && this.fileEditing.permissions[this.currentPemission] != null) {
+    if (this.currentPemission > -1 && this.fileEditing.permissions[this.currentPemission] != null && this.fileEditing.permissions[this.currentPemission].objectType!="7") {
       //  this.fileEditing.permissions[this.currentPemission].isSharing = this.modeSharing;
       this.fileEditing.permissions[this.currentPemission].full = this.full;
       this.fileEditing.permissions[this.currentPemission].create = this.create;
@@ -610,6 +634,7 @@ export class RolesComponent implements OnInit {
         // });
         this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
           if (res != null) {
+            this.dmSV.fileEditing.next(this.fileEditing);
             this.notificationsService.notify(res.message);
           }
         });
@@ -785,7 +810,8 @@ export class RolesComponent implements OnInit {
     return list;
   }
 
-  onSaveRole($event) {    
+  onSaveRole($event) {  
+    debugger;  
     console.log($event);
     if ($event.data != undefined) {
       var data = $event.data;

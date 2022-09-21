@@ -5,12 +5,12 @@
   <div class="d-flex align-items-center">
     <div *ngIf="this.dispatch?.status=='1'||this.dispatch?.status=='2' ; else elseSelected">
       <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
-        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+        <i class="icon-cloud_upload icon-16 me-2"></i><codx-label [default]="'Chọn tập tin'"></codx-label>
       </span>
     </div>
     <ng-template #elseSelected>
       <span class="btn btn-sm btn-light btn-pill">
-        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
+        <i class="icon-cloud_upload icon-16 me-2"></i><codx-label [default]="'Chọn tập tin'"></codx-label>
       </span>
     </ng-template>
   </div>
@@ -48,13 +48,13 @@
         (valueChange)="changeValueAgencyText($event)"
       >
       </codx-input> -->
-      <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')">Add</span>
+      <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')"><codx-label [default]="'Thêm'"></codx-label></span>
     </div>
     <div class="align-items-start" style="display:flex" [hidden]="!showAgency">
       <codx-combobox refValue="AgencyDepts" type="combobox" placeholder="Phòng ban" [value]="dispatch?.agencyID"
         style="width:100%" (valueChange)="changeValueDept($event)" field="agencyName">
       </codx-combobox>
-      <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')">Add</span>
+      <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')"><codx-label [default]="'Thêm'"></codx-label></span>
     </div>
 
   </div>

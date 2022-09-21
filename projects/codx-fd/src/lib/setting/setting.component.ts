@@ -10,7 +10,13 @@ import {
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  ApiHttpService,
+  TenantStore,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -26,17 +32,19 @@ export class SettingComponent extends UIComponent implements OnInit {
   parameter;
   titlePage = 'Thiết lập';
   modelForm = { title: '', fieldName: 0, number: 0 };
+  functionList: any;
   range$: Observable<any>;
   lstChildOfFED2041$: Observable<any>;
   views: Array<ViewModel> = [];
   funcChildFDS02$: Observable<any>;
+  currentActive = 1;
+  funcID: any;
+
   @ViewChild('notificationFedback') notificationFedback: ElementRef;
   @ViewChild('itemCategory') itemCategory: ElementRef;
   @ViewChild('itemRankDedication') itemRankDedication: ElementRef;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  public currentActive = 1;
-  private funcID;
-  private page;
+
   constructor(
     private injector: Injector,
     private changedr: ChangeDetectorRef,
@@ -46,6 +54,14 @@ export class SettingComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.tenant = this.tenantStore.get()?.tenant;
+    this.at.params.subscribe((params) => {
+      if (params.funcID) {
+        this.funcID = params.funcID;
+      }
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
 
   onInit(): void {
@@ -60,53 +76,44 @@ export class SettingComponent extends UIComponent implements OnInit {
       ['ParentID=@0', 'FDS02']
     );
     this.getParameter();
-    this.at.queryParams.subscribe((params) => {
-      if (params.page) {
-        this.funcID = params.funcID;
-        this.codxService.navigate('', 'fd/setting/', {
-          queryParams: { funcID: 'FDS' },
-        });
-        this.page = params.page;
-      }
-      if (params.funcID) {
-        this.funcID = params.funcID;
-      }
-    });
   }
 
   ngAfterViewInit() {
-    if (this.page) {
-      this.scrollToID(this.page);
-      return;
-    }
-
-    this.views = [{
-      active: true,
-      type: ViewType.content,
-      sameData: true,
-      model: {
-        panelLeftRef: this.panelLeftRef,
-      }
-    }];
+    this.views = [
+      {
+        active: true,
+        type: ViewType.content,
+        sameData: true,
+        model: {
+          panelLeftRef: this.panelLeftRef,
+        },
+      },
+    ];
+    this.at.queryParamMap.subscribe((params: any) => {
+      if (params) this.scrollToID(params?.params?.redirectPage);
+    });
     this.detectorRef.detectChanges();
   }
 
   scroll(el: HTMLElement, numberActive) {
-    el.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest',
-    });
+    if (el)
+      el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
     this.currentActive = numberActive;
   }
 
   scrollToID(id) {
     let el = document.getElementById(id);
-    el.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest',
-    });
+    var html = el as HTMLElement;
+    if (html)
+      html.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
   }
 
   LoadData() {
@@ -129,50 +136,32 @@ export class SettingComponent extends UIComponent implements OnInit {
       .subscribe((result) => {
         if (result?.length > 0)
           this.parameter = JSON.parse(result[0].dataValue);
-        // this.parameter = this.fdsv.convertListToObject(
-        //   result,
-        //   'fieldName',
-        //   'fieldValue'
-        // );
       });
   }
 
   goHomePage(functionID) {
-    // this.router.navigate(['/' + this.tenant + '/fd/home'], {
-    //   queryParams: { funcID: functionID },
-    // });
     this.codxService.navigate('', 'fd/home/', {
       queryParams: { funcID: functionID },
     });
   }
 
   LoadDetail(data) {
-    // this.router.navigate(['/' + this.tenant + '/fd/detail'], {
-    //   queryParams: { funcID: data.functionID },
-    // });
     this.codxService.navigate('', data.url);
   }
 
   LoadCategory(func) {
-    // this.router.navigateByUrl(this.tenant + '/' + func.url);
     this.codxService.navigate('', '/', {
       queryParams: { funcID: func.url },
     });
   }
 
   LoadWallet(func) {
-    // this.router.navigate(['/' + this.tenant + '/fd/wallet'], {
-    //   queryParams: { funcID: func.functionID },
-    // });
     this.codxService.navigate('', '/fd/wallet', {
       queryParams: { funcID: func.functionID },
     });
   }
 
   LoadDedicationRank(func) {
-    // this.router.navigate(['/' + this.tenant + '/fd/dedication-rank'], {
-    //   queryParams: { funcID: func },
-    // });
     this.codxService.navigate('', '/fd/dedication-rank', {
       queryParams: { funcID: func },
     });
