@@ -1173,6 +1173,7 @@ export class CodxTasksComponent
           );
           this.dialogExtends.closed.subscribe((e) => {
             if (e?.event && e?.event != null) {
+              this.tmSv.sendAlertMail(data?.recID,'TM_0015',this.funcID)
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });
