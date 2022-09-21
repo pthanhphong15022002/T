@@ -5,8 +5,7 @@
       *ngFor="let item of lstPattent; trackBy: trackByfn; let i = index"
     >
       <div
-        class="card-img"
-        style="cursor: pointer"
+        class="card-img has-action-menu cursor-pointer"
         #elm
         *ngIf="i < lstPattent.length - 1; else template"
       >
