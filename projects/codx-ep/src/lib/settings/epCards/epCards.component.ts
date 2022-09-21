@@ -1,5 +1,11 @@
 import { CodxEpService } from './../../codx-ep.service';
-import { AfterViewInit, Component, Injector, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   ButtonModel,
   DialogRef,
@@ -19,6 +25,7 @@ import { PopupAddEpCardsComponent } from './popup-add-epCards/popup-add-epCards.
 })
 export class EpCardsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('avatarCol') avatarCol: TemplateRef<any>;
   funcID: string;
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -27,6 +34,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   dialog!: DialogRef;
   columnGrids: any;
   dataSelected: any;
+  isAfterRender = false;
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -42,16 +50,60 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+        this.isAfterRender = true;
+      }
+    });
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+  }
 
   ngAfterViewInit(): void {
+    this.buttons = {
+      id: 'btnAdd',
+    };
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
-          this.columnGrids = [];
+          this.columnGrids = [
+            {
+              field: 'code',
+              headerText: gv['Code'].headerText,
+              width: gv['Code'].width,
+            },
+            {
+              field: 'resourceName',
+              headerText: gv['ResourceName'].headerText,
+              width: gv['ResourceName'].width,
+            },
+            {
+              headerText: gv['Icon'].headerText,
+              width: gv['Icon'].width,
+              template: this.avatarCol,
+              textAlign: 'Center',
+              headerTextAlign: 'Center',
+            },
+            {
+              field: 'status',
+              headerText: gv['Status'].headerText,
+              width: gv['Status'].width,
+            },
+            {
+              field: 'note',
+              headerText: gv['Note'].headerText,
+              width: gv['Note'].width,
+            },
+            {
+              field: 'owner',
+              headerText: gv['Owner'].headerText,
+              width: gv['Owner'].width,
+            },
+          ];
           this.views = [
             {
               sameData: true,
@@ -86,6 +138,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
 
   addNew() {
     this.viewBase.dataService.addNew().subscribe((res) => {
+      debugger;
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
@@ -125,6 +178,10 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         console.log(res);
       });
     }
+  }
+
+  onSelect(obj: any) {
+    console.log(obj);
   }
 
   closeDialog(evt?) {
