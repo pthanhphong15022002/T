@@ -41,8 +41,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   listUserDetail: any[] = [];
   listTodo: TaskGoal[] = [];
   listTaskResources: tmpTaskResource[] = [];
-  dataReferences = [] ;
-  vllRefType ='TM018'
+  dataReferences = [];
+  vllRefType = 'TM018'
   todoAddText: any;
   disableAddToDo = true;
   grvSetup: any;
@@ -61,14 +61,14 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   taskParent: any;
   refID = '';
   refType = 'TM_Tasks';
-  taskName = "" ;
+  taskName = "";
   dueDate: Date;
   taskType = '1';
   vllPriority = 'TM005';
   changTimeCount = 2;
   loadingAll = false;
   gridViewSetup: any;
-  formModel :any
+  formModel: any
 
   constructor(
     private authStore: AuthStore,
@@ -89,7 +89,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.refType = this.task?.refType || this.refType;
     this.dueDate = this.task?.dueDate;
     this.dueDate = this.task?.dueDate;
-    this.taskName = this.task?.taskName ;
+    this.taskName = this.task?.taskName;
     if (dt?.data[0]?.taskID) this.taskParent = dt?.data[0];
 
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
@@ -154,12 +154,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         .toDate();
     this.listUser = [];
     this.listTaskResources = [];
-    this.task.estimated =0;
+    this.task.estimated = 0;
     this.task.category = '3';
     this.task.status = '10';
     this.task.refID = this.refID;
     this.task.refType = this.refType;
-    this.task.taskName = this.taskName ;
+    this.task.taskName = this.taskName;
     if (this.taskParent) {
       // this.task.parentID = this.taskParent.recID ;
       this.task.dueDate = this.taskParent.dueDate;
@@ -318,7 +318,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       // }
     }
     var taskIDParent = this.taskParent?.taskID ? this.taskParent?.taskID : null;
-    if (this.isHaveFile)
+    if (this.isHaveFile && this.attachment)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.task.attachments = Array.isArray(res) ? res.length : 1;
@@ -342,20 +342,20 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
           //lưu his giao việc
-          var objectType = this.formModel.entityName 
+          var objectType = this.formModel.entityName
           var objectID = this.task.refID
-          var objectName = this.user.userName ;
+          var objectName = this.user.userName;
           var dataObj = { objectType: objectType, objectID: objectID, objectName: objectName }
-          
-           var tmpHistorry = {
-            objectType :objectType ,
-            objectID : objectID ,
-            actionType : "T" ,
-            functionID : this.formModel.funcID ,
-            sendToObjects : [dataObj]
-           }
 
-           this.api.execSv<any>("BG", "ERM.Business.BG", "TrackLogsBusiness", "InsertAsync", tmpHistorry).subscribe() ;
+          var tmpHistorry = {
+            objectType: objectType,
+            objectID: objectID,
+            actionType: "T",
+            functionID: this.formModel.funcID,
+            sendToObjects: [dataObj]
+          }
+
+          this.api.execSv<any>("BG", "ERM.Business.BG", "TrackLogsBusiness", "InsertAsync", tmpHistorry).subscribe();
 
           // if (!isContinue) {
           //   this.closePanel();
@@ -434,12 +434,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       }
       //  }
     });
-    if (listUserID != ''){
+    if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
       this.valueSelectUser(listUserID);
     }
-    
-    if (listDepartmentID != ''){
+
+    if (listDepartmentID != '') {
       listDepartmentID = listDepartmentID.substring(
         0,
         listDepartmentID.length - 1
