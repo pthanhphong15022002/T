@@ -25,7 +25,6 @@ import {
 } from 'codx-core';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import {
-  tmpReferences,
   TM_Parameter,
   TM_TaskExtends,
   TM_TaskGroups,
@@ -40,14 +39,11 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { X } from '@angular/cdk/keycodes';
-import { create } from 'domain';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
   templateUrl: './codx-tasks.component.html',
-  styleUrls: ['./codx-tasks.component.css'],
+  styleUrls: ['./codx-tasks.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class CodxTasksComponent
@@ -1352,7 +1348,7 @@ export class CodxTasksComponent
   }
   //#endregion
 
-  
+
   change() {
     this.view.dataService.setPredicates(['Status=@0'], ['10']);
   }
@@ -1459,5 +1455,5 @@ export class CodxTasksComponent
       });
   }
   //#endregion schedule
- 
+
 }

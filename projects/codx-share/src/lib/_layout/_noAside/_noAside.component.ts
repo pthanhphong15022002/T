@@ -16,6 +16,7 @@ import { NoteDrawerComponent } from '../../layout/drawers/note-drawer/note-drawe
 export class LayoutNoAsideComponent extends LayoutBaseComponent {
   module = '';
   override aside = false;
+  override toolbarFixed = false;
   dialog!: DialogRef;
   //override asideFixed = true;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
@@ -34,7 +35,7 @@ export class LayoutNoAsideComponent extends LayoutBaseComponent {
     });
   }
 
-  onAfterViewInit(): void {}
+  onAfterViewInit(): void { }
 
   openFormNoteDrawer() {
     let option = new SidebarModel();
