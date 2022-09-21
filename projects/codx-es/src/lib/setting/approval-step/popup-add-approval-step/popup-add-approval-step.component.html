@@ -17,12 +17,7 @@
 </codx-layout-add>
 
 <ng-template #subHeader>
-  <!-- <span class="badge badge-primary me-1">Project</span>
-  <span class="badge badge-light-primary me-1">Customize</span> -->
   <div class="dropdown" id="tag_toggle">
-    <!-- <div class="topbar-item" data-toggle="dropdown">
-      <span class="badge badge-secondary me-1 btn-dropdown">Tag +</span>
-    </div> -->
     <div
       class="dropdown-menu p-0 m-0 dropdown-menu-left dropdown-menu-anim-up dropdown-menu-md"
     >
@@ -49,7 +44,7 @@
 </ng-template>
 <ng-template #tabInfo0>
   <div class="row">
-    <div class="col-4">
+    <div class="col-5">
       <div class="form-group">
         <codx-label fiedName="StepType" [formModel]="formModel"> </codx-label>
         <codx-input
@@ -62,10 +57,11 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="form-group">
         <codx-label fiedName="Leadtime" [formModel]="formModel"> </codx-label>
         <codx-input
+          class="text-right"
           type="number"
           field="leadtime"
           (valueChange)="valueChange($event)"
@@ -433,7 +429,7 @@
   </codx-share>
 </ng-template>
 
-<codx-form
+<!-- <codx-form
   [dialog]="dialog"
   [headerText]="header1"
   [subHeaderText]="subHeaderText"
@@ -628,14 +624,6 @@
       ></span>
     </div>
   </div>
-  <!-- <div class="d-flex align-items-center w-auto extend-title">
-      <span class="text-blue text-hover-primary_darker fw-bold me-1">
-        <codx-label fiedName="Sequential" [formModel]="formModel" default="Thiết lập xử lí quá hạn" class="ms-2">
-        </codx-label>
-      </span>
-      <span *ngIf="showPlan" class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
-      <span *ngIf="!showPlan" class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
-    </div> -->
 
   <div class="d-flex flex-column mb-4" *ngIf="showPlan">
     <div class="row">
@@ -701,59 +689,4 @@
       </div>
     </div>
   </div>
-
-  <!-- <div class="d-flex flex-column mb-4" *ngIf="showPlan">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <codx-label default="Cho ý kiến khi duyệt" fiedName="ApproveControl" [formModel]="formModel">
-          </codx-label>
-          <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="'VL001'" field="approveControl"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <codx-label default="Cho ý kiến khi từ chối" fiedName="RejectControl" [formModel]="formModel">
-          </codx-label>
-          <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="'VL001'" field="rejectControl"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="d-flex flex-column mb-4" *ngIf="showPlan">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <codx-label default="Xử lí động khi quá hạn" fiedName="OverdueControl" [formModel]="formModel">
-          </codx-label>
-          <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="'VL001'" field="overdueControl"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <codx-label default="Thời gian nhắc" fiedName="Reminder" [formModel]="formModel">
-          </codx-label>
-          <codx-input type="valuelist" name="valuelist" ngDefaultControl [refValue]="'VL001'" field="reminder"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <codx-label default="Số lần lặp" fiedName="Loops" [formModel]="formModel">
-          </codx-label>
-          <codx-input type="number" name="number" ngDefaultControl [min]="0" placeholder="0" field="loops"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-  </div> -->
-</ng-template>
+</ng-template> -->

@@ -14,6 +14,7 @@ import { FolderInfo } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { RolesComponent } from '../roles/roles.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'properties',
@@ -180,7 +181,7 @@ export class PropertiesComponent implements OnInit {
 
   getThumbnail(data) {
     if (data.hasThumbnail)
-      return `${this.dmSV.urlUpload}/${data.thumbnail}`;
+      return `${environment.urlUpload}/${data.thumbnail}`;
     else
      return `../../../assets/codx/dms/{{getAvatar(data.extension)}}`;
   }
