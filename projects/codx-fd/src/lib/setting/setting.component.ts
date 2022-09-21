@@ -146,13 +146,11 @@ export class SettingComponent extends UIComponent implements OnInit {
     });
   }
 
-  LoadDeatail(data) {
+  LoadDetail(data) {
     // this.router.navigate(['/' + this.tenant + '/fd/detail'], {
     //   queryParams: { funcID: data.functionID },
     // });
-    this.codxService.navigate('', 'fd/detail/', {
-      queryParams: { funcID: data.functionID },
-    });
+    this.codxService.navigate('', data.url);
   }
 
   LoadCategory(func) {

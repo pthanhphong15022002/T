@@ -34,6 +34,7 @@ import { LayoutComponent } from './_layout/layout.component';
 import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { SettingdetailComponent } from './settingdetail/settingdetail.component';
 
 export const routes: Routes = [
   {
@@ -127,7 +128,8 @@ const Component: Type<any>[] = [
   GiftgroupComponent,
   BehaviorruleComponent,
   BehaviorComponent,
-  PopupAddGiftComponent
+  PopupAddGiftComponent,
+  SettingdetailComponent,
 ];
 
 @NgModule({
