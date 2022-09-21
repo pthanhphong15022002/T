@@ -128,9 +128,9 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
           if (this.task.confirmStatus == '2') {
-            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0006', this.funcID);
+            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0006', this.funcID).subscribe();
           } else if (this.task.confirmStatus == '3') {
-            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0007', this.funcID);
+            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0007', this.funcID).subscribe();
           }
           // this.notiService.notify('Xác nhận công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;
@@ -180,9 +180,9 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
             .subscribe((data) => {
               if (data) {
                 if (this.taskExtends.status == '5') {
-                  this.tmSv.sendAlertMail(data, 'TM_0006', this.funcID);
+                  this.tmSv.sendAlertMail(data, 'TM_0006', this.funcID).subscribe();
                 } else if (this.taskExtends.status == '4') {
-                  this.tmSv.sendAlertMail(data, 'TM_0006', this.funcID);
+                  this.tmSv.sendAlertMail(data, 'TM_0006', this.funcID).subscribe();
                 }
               }
             });
@@ -207,11 +207,11 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
           if (this.task.approveStatus == '5') {
-            this.tmSv.sendAlertMail(this.task.recID, 'TM_0009', this.funcID);
+            this.tmSv.sendAlertMail(this.task.recID, 'TM_0009', this.funcID).subscribe();
           } else if (this.task.approveStatus == '4') {
-            this.tmSv.sendAlertMail(this.task.recID, 'TM_0011', this.funcID);
+            this.tmSv.sendAlertMail(this.task.recID, 'TM_0011', this.funcID).subscribe();
           } else if (this.task.approveStatus == '2') {
-            this.tmSv.sendAlertMail(this.task.recID, 'TM_0010', this.funcID);
+            this.tmSv.sendAlertMail(this.task.recID, 'TM_0010', this.funcID).subscribe();
           }
         } else this.dialog.close();
       });
@@ -239,9 +239,9 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
           if (this.task.verifyStatus == '2') {
-            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0016', this.funcID);
+            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0016', this.funcID).subscribe();
           } else if (this.task.verifyStatus == '3') {
-            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0017', this.funcID);
+            this.tmSv.sendAlertMail(this.task?.recID, 'TM_0017', this.funcID).subscribe();
           }
           //this.notiService.notify('Duyệt công việc thành công !');
           // this.notiService.notifyCode(" 20K của Hảo :))") ;

@@ -40,7 +40,7 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { X } from '@angular/cdk/keycodes';
+import { I, X } from '@angular/cdk/keycodes';
 import { create } from 'domain';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
@@ -294,11 +294,11 @@ export class CodxTasksComponent
         option
       );
       this.dialog.closed.subscribe((e) => {
-        if (e?.event == null)
+        if ( e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
             false
-          );
+        );
       });
     });
   }
@@ -1173,7 +1173,7 @@ export class CodxTasksComponent
           );
           this.dialogExtends.closed.subscribe((e) => {
             if (e?.event && e?.event != null) {
-              this.tmSv.sendAlertMail(data?.recID,'TM_0015',this.funcID)
+              this.tmSv.sendAlertMail(data?.recID,'TM_0015',this.funcID).subscribe();
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });
