@@ -6,17 +6,19 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
-import { CodxEpService } from '../../codx-ep.service';
+import { UIComponent, ViewsComponent } from 'codx-core';
+import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
-  selector: 'view-detail',
+  selector: 'booking-stationery-view-detail',
   templateUrl: './view-detail.component.html',
   styleUrls: ['./view-detail.component.scss'],
 })
-export class ViewDetailComponent extends UIComponent implements OnChanges {
-  @ViewChild('itemDetailTemplate') itemDetailTemplate;  
-  @ViewChild('subTitleHeader') subTitleHeader;
+export class BookingStationeryViewDetailComponent
+  extends UIComponent
+  implements OnChanges
+{
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('attachment') attachment;
   @Input() itemDetail: any;
   @Input() funcID;

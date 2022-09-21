@@ -13,7 +13,7 @@
 <ng-template #subTitleHeader>
   <div class="d-flex flex-row">
     <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-      <span class="fw-bold">
+      <span class="fw-bold">    
         {{itemDetail?.positionName}}
       </span>
     </div>
@@ -51,20 +51,43 @@
       </codx-temp-full>
     </div>
 
-    <div class="d-flex mb-2">
+    <div class="d-flex">
       <div class="d-flex text-dark me-6">
         <ng-container
           *ngTemplateOutlet="resourceTypeLabel; context: { $implicit: itemDetail?.resourceType }"
         >
         </ng-container>
         <span class="text-gray-600">
-          :
-          {{ itemDetail?.resourceName }}
+          :          
+          {{ itemDetail?.code }} - {{ itemDetail?.resourceName }}
+        </span>
+      </div>
+      <div class="d-flex mb-2 text-dark me-6">   
+        <codx-label default="Tài xế" name="lblDriver" class="fw-bold me-1"></codx-label>
+        <span class="text-gray-600">
+          :          
+          Không có tài xế
+        </span>
+    </div>
+    </div>   
+
+
+    <div class="d-flex mb-2 text-dark me-6">   
+      <codx-label default="Thời gian" name="lblBookingOn" class="fw-bold me-1"></codx-label>:
+      <div class="text-gray-600">
+        <span>
+          {{ itemDetail?.startDate | date: "dd/MM/yyyy" }}
+          {{ itemDetail?.startDate | date: "shortTime" }}
+        </span>
+        <span> - </span>
+        <span>
+          {{ itemDetail?.endDate | date: "dd/MM/yyyy" }}
+          {{ itemDetail?.endDate | date: "shortTime" }}
         </span>
       </div>
     </div>
 
-    <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <!-- <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6">
         <codx-label
           field="CreatedOn"
@@ -97,7 +120,7 @@
           {{ itemDetail?.endDate | date: "shortTime" }}
         </span>
       </div>
-    </div>
+    </div> -->
 
     <div class="d-flex mb-2">
       <div class="d-flex text-dark me-6">
@@ -107,14 +130,13 @@
           default="Lý do"
           class="fw-bold me-1"
         >
-        </codx-label>
-        <span class="text-gray-600">
-          :
+        </codx-label>:
+        <span class="text-gray-600">          
           {{ itemDetail?.reasonName }}
         </span>
       </div>
     </div>
-
+    
     <div class="d-flex mb-2">
       <div class="d-flex text-dark me-6">
         <codx-label default="Người tham gia" class="fw-bold me-4"> </codx-label>
@@ -130,14 +152,61 @@
       </div>
     </div>
 
-    <ng-container *ngIf="files">
+
+    
+    <div class="d-flex mb-2 text-dark me-6">   
+      <codx-label default="Sử dụng thẻ" name="lblCard" class="fw-bold me-1"></codx-label>:
+      <span class="badge badge-light-danger">            
+        Không dùng thẻ
+      </span>
+    </div>
+
+    <div class=" mb-2 ">
+      <codx-label default="Nơi công tác" name="lblAddress"class="fw-bold me-4 text-primary"></codx-label>
+    </div>
+
+    <div class="d-flex mb-2 text-dark me-6">   
+      <codx-label default="Đơn vị" name="lbl" class="fw-bold me-1"></codx-label>:
+      <span class="text-gray-600">            
+        {{itemDetail?.agencyName}}
+      </span>
+    </div>
+    <div class="d-flex mb-2 text-dark me-6">   
+      <codx-label default="Địa chỉ" name="lbl" class="fw-bold me-1"></codx-label>:
+      <span class="text-gray-600">            
+        {{itemDetail?.address}}
+      </span>
+    </div>
+    <div class="d-flex mb-2 text-dark me-6">   
+      <codx-label default="Người liên hệ" name="lbl" class="fw-bold me-1"></codx-label>:
+      <span class="text-gray-600">
+        {{itemDetail?.requester}}
+      </span>
+    </div>
+
+    <!-- <div class="d-flex mb-2 flex-column">
+      <codx-label default="Người đi" class="fw-bold me-4 row text-primary"></codx-label>
+      <div class="d-flex text-dark me-6">        
+        <div class="d-flex justify-content-end">
+          <codx-imgs
+            [objectId]="itemDetail?.bookingAttendees"
+            objectType="AD_Users"
+            [numberImages]="6"
+            [width]="30"
+          >
+          </codx-imgs>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- <ng-container *ngIf="files">
       <codx-thumbnail [files]="files" displayThumb="simple" [hideDelete]="'0'">
       </codx-thumbnail>
-    </ng-container>
+    </ng-container> -->
   </ng-template>
 
   <ng-template #body>
-    <div class="tab-horizone h-od-tab h-100">
+    <!-- <div class="tab-horizone h-od-tab h-100">
       <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
         <li [ngbNavItem]="1">
           <a ngbNavLink>
@@ -187,8 +256,8 @@
         </li>
       </ul>
       <div [ngbNavOutlet]="nav" class="pt-5"></div>
-    </div>
-  </ng-template>
+    </div>-->
+  </ng-template> 
 
   <ng-template #footer>
     <approval-tabs></approval-tabs>
