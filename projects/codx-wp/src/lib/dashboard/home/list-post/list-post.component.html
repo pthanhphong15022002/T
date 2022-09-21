@@ -1,6 +1,4 @@
-<!-- <codx-views #codxViews [views]="views"  entityName="WP_Comments" idField="recID">
-</codx-views> -->
-<!-- <ng-template #panelLeftRef> -->
+
   <ng-container *ngIf="isShowCreate">
     <div class="card card-custom post-new" id="postnew">
       <div class="card-body">
@@ -72,7 +70,6 @@
       </ng-template>
     </div>
   </div>
-<!-- </ng-template> -->
 
 <ng-template #tmpPortal let-item>
   <div class="p-5 pb-0">
@@ -150,13 +147,11 @@
               <span class="me-1">
                 <img
                   class="h-12px w-12px"
-                  src="assets/themes/sys/default/img/{{
-                    item.shareControl | vll: 'L1901':'icon' | async
-                  }}"
+                  src="assets/themes/sys/default/img/{{item.shareIcon}}"
                 />
               </span>
               <span class="fs-7">
-                {{ item.shareControl | vll: "L1901":"text" | async }}
+                {{ item.shareText }}
               </span>
             </span>
           </div>
@@ -296,7 +291,6 @@
         </div>
       </div>
     </div>
-    <!--begin::Bottom-->
 
     <ng-container *ngIf="item.category == '4'; else shareTemplate">
       <div class="mt-3" [innerHTML]="item.content"></div>
