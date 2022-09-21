@@ -24,16 +24,6 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.user = this.auth.userValue;
-    this.dataService = new CRUDService(injector);
-    this.dataService.service = "Background";
-    this.dataService.assemblyName = "ERM.Business.Background";
-    this.dataService.className = "NotificationBusinesss";
-    this.dataService.method = "GetAsync";
-    this.dataService.idField = "recID";
-    this.dataService.pageSize = 20;
-    this.dataService.request.entityName = "BKD_Notification";
-    this.dataService.request.gridViewName = "grvNotification";
-    this.dataService.request.pageLoading = true;
   }
 
   onInit(): void {
