@@ -1,15 +1,16 @@
-<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="dialogRef.formModel" [subHeader]="" [subHeaderText]="subHeaderText" 
-  [footer]="footer" [dialog]="dialogRef" [openMore]="false" (buttonClick)="buttonClick($event)" [openMore]="!isAdd"
+<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]="" 
+  [footer]="footer" [dialog]="dialogRef" (buttonClick)="buttonClick($event)" [openMore]="!isAdd"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]" (setTitle)="setTitle($event)"
   [data]="data">
+
   <ng-template #tabGeneralInfo>
     <div class="form-group">
       <div class="d-flex justify-content-between align-items-center">
         <codx-label fiedName="ResourceID" [formModel]="form.formModel">
         </codx-label>
         <span class="label-status text-primary">{{
-          fGroupAddBookingRoom.value.status
-          | vll: CbxName["Status"]:"text"
+          fGroupAddBookingRoom?.value.status
+          | vll: "VL003":"text"
           | async
           }}</span>
       </div>
@@ -85,7 +86,7 @@
 
       <div class="col-2 d-flex flex-column justify-content-center">
         <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
-          (valueChange)="valueAllDayChange($event)" [checked]="fGroupAddBookingRoom.value.isFullDay">
+          (valueChange)="valueAllDayChange($event)" [checked]="">
         </codx-input>
       </div>
     </div>
@@ -119,7 +120,7 @@
     <div class="d-flex flex-column form-group">
       <div class="d-flex justify-content-between align-items-center">
         <div class="form-switch1 d-flex align-items-center">
-          <codx-input #checkbox field="online" type="switch" [checked]="fGroupAddBookingRoom.value.online"
+          <codx-input #checkbox field="online" type="switch" [checked]="fGroupAddBookingRoom?.value.online"
             labelPosition="After" [disabled]="false" class="test-switch" (valueChange)="valueChange($event)">
           </codx-input>
           <span class="fw-bold ms-2"><label for="switchOnl">
@@ -130,14 +131,14 @@
         </div>
         <span class="text-end align-items-end">
           <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupLink()"
-            *ngIf="fGroupAddBookingRoom.value.online">
+            *ngIf="fGroupAddBookingRoom?.value.online">
             <i class="icon-insert_link text-primary text-hover-primary-dark icon-24"></i>
           </button>
         </span>
       </div>
       <div class="d-flex align-items-center fw-bold">
-        <a href="" *ngIf="fGroupAddBookingRoom.value.online">{{
-          fGroupAddBookingRoom.value.onlineUrl
+        <a href="" *ngIf=" fGroupAddBookingRoom?.value.online">{{
+           fGroupAddBookingRoom?.value.onlineUrl
           }}</a>
       </div>
     </div>
@@ -213,7 +214,7 @@
       <div class="AttachmentFile-group flex-nowrap">
         <codx-attachment #attachment [objectType]="dialogRef?.formModel.entityName" hideBtnSave="1" hideFolder="1"
           hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
-          [objectId]="data?.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
+          [objectId]=" fGroupAddBookingRoom?.value.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
           (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)">
         </codx-attachment>
       </div>
@@ -376,7 +377,7 @@
       </div>
       <div class="col-2">
         <codx-input #checkbox class="test-switch" type="switch" field="repeat" [disabled]="false"
-          [checked]="fGroupAddBookingRoom.value.repeat" (valueChange)="valueChange($event)">
+          [checked]=" fGroupAddBookingRoom?.value.repeat" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <!-- <div class="col-5">        
@@ -478,7 +479,7 @@
     </div>
     <div class="form-group">
       <codx-input type="text" class="form-control" field="onlineUrl" placeholder="https://home.suremeet.vn/"
-        [crrValue]="fGroupAddBookingRoom.value.onlineUrl" (valueChange)="valueChange($event)"></codx-input>
+        [crrValue]=" fGroupAddBookingRoom?.value.onlineUrl" (valueChange)="valueChange($event)"></codx-input>
       <!-- <codx-input
         ControlName="onlineUrl"
         [Group]="dialog.fGroupAddBookingRoom"
