@@ -155,7 +155,7 @@
     </div>
   </div>
 
-  <hr/>
+  <hr />
   <div *ngIf="data.bookingItems?.length>0">
     <div *ngFor="let item of data.bookingItems">  
       <div class="d-flex mb-4 justify-content-between">
@@ -168,7 +168,7 @@
               objectType="EP_Stationery"
             ></codx-img>
           </div>  
-          <div class=" ">
+          <div class="">
             <div class="">
               <span href="#" class=" fw-bold">{{ item.itemName }}</span>
             </div>
@@ -196,7 +196,28 @@
     </div>
     
   </div>
-  
 </ng-template>
 
+<ng-template #subTitleTmp let-data>
+  <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <div class="d-flex me-6">
+      <i class="icon-calendar_today me-1"></i>
+      <span class="text-gray-600">
+        {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
+      </span>
+    </div>
+    <div class="d-flex me-6">
+      <i class="icon-access_time me-1"></i>
+      <span class="text-gray-600">
+        {{ data?.startDate | date: "shortTime" }}
+      </span>
+      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+        "-"
+      }}</span>
+      <span class="text-gray-600">
+        {{ data?.endDate | date: "shortTime" }}
+      </span>
+    </div>
+  </div>
+</ng-template>
 
