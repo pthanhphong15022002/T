@@ -126,7 +126,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         active: true,
         request2: this.modelResource,
         request: this.request,
-        toolbarTemplate: this.footerButton,
+        //toolbarTemplate: this.footerButton,
         showSearchBar: false,
         model: {
           eventModel: this.fields,
