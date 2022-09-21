@@ -1,1 +1,101 @@
-<p>edit-ballot works!</p>
+<codx-form #form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"
+    [formModel]="formModel">
+    <ng-template #body>
+        <div class="flex-grow-1">
+            <div class="d-flex align-items-start ph-card mb-6">
+                <div class="pic-edit mr-6">
+                    <codx-img #uploadImage class="img-pat-edit" [objectId]="ballot.patternID"
+                        [funcId]="formModel?.functionID" [objectType]="formModel?.entityName" [width]="164"
+                        [hidden]="ballot.backgroundColor" cssClass="pic symbol-100px symbol-3by2" imageType="square">
+                    </codx-img>
+                    <span class="font-size-h3 font-weight-boldest img-pat-edit noimage symbol-label text-white"
+                        [style.background-color]="ballot.backgroundColor" [hidden]="!ballot.backgroundColor"
+                        style="background-image: none;"></span>
+                    <div class="ph-card-header font-size-h5 font-weight-bold header-ballot"
+                        [style.color]="ballot.headerColor">
+                        Header</div>
+                    <div class="ph-card-content content-ballot" [style.color]="ballot.textColor">Content...
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="d-block align-items-center">
+                        <div class="symbol-list d-flex flex-wrap patternt">
+                            <div class="symbol symbol-50 symbol-circle mr-5 mb-4" *ngFor="let item of vll">
+                                <span class="symbol-label pointer" #colordf (click)="colorClick($event, colordf)"
+                                    [attr.data-color]="item.text" [style.background-color]="item.text"></span>
+                            </div>
+                            <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4" #group3>
+                                <codx-input #elmbg [ele]="group3" datatype="colorpicker"
+                                    [attr.data-color]="'colorpicker'" class="form-control symbol-label w-50"
+                                    field="backgroundColor" (valueChange)="valueChange($event, group3)"
+                                    dataformat="hex">
+                                </codx-input>
+                            </div>
+                            <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4">
+                                <label class="symbol-label pointer mb-0" data-action="change" data-toggle="tooltip"
+                                    title="" data-original-title="Change avatar">
+
+                                    <span class="far fa-image" style="font-size: 18px;"
+                                        [attr.data-color]="'image'"></span>
+                                    <codx-input type="file" id="cardImageInput" name="profile_avatar"
+                                        style="display: none;" (change)="handleFileInput($event)"
+                                        accept=".png, .jpg, .jpeg">
+                                    </codx-input>
+                                    <codx-input type="hidden" style="display: none;" name="profile_avatar_remove">
+                                    </codx-input>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <codx-label name="lblHeaderColor" [formModel]="" default="Màu header"></codx-label>
+                        <div class="input-group" #group1>
+                            <codx-input #elm [ele]="group1" datatype="colorpicker"
+                                class="form-control text-white color-large w-fit" field="headerColor"
+                                (valueChange)="valueChange($event, elm)" [value]="ballot.headerColor" dataformat="hex">
+                            </codx-input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <codx-label name="lblContentColor" [formModel]="" default="Màu content"></codx-label>
+                        <div class="input-group" #group2>
+                            <codx-input #elm2 [ele]="group2" datatype="colorpicker"
+                                class="form-control text-white color-large w-fit"
+                                (valueChange)="valueChange($event, elm2)" field="textColor" [value]="ballot.textColor"
+                                dataformat="hex">
+                            </codx-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" #name>
+                <codx-label name="lblDescription" [formModel]="" default="Mô tả:"></codx-label>
+                <codx-input datatype="string" placeholder="Sunset Flower" [value]="ballot.patternName"
+                    field="patternName" [ele]="name" (valueChange)="valueChange($event, null)">
+                </codx-input>
+            </div>
+        </div>
+        <div class="checkbox-list mt-3">
+            <div #isDefault>
+                <codx-input type="checkbox" name="checkbox" [ele]="isDefault" class="" ngDefaultControl
+                    field="isDefault" (valueChange)="valueChange($event, null)" [checked]="ballot.isDefault"
+                    [value]="ballot.isDefault" label="Mặc định chọn">
+                </codx-input>
+            </div>
+            <div #stop class="mt-2">
+                <codx-input type="checkbox" name="checkbox" [disabled]="checkDisable(ballot)" [ele]="stop" class=""
+                    ngDefaultControl field="stop" (valueChange)="valueChange($event, null)" [value]="ballot.stop"
+                    [checked]="ballot.stop" label="Ngưng sử dụng">
+                </codx-input>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-primary ms-1" (click)="saveBallot()">
+                <codx-label name="Save" [formModel]="formModel" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

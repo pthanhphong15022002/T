@@ -171,7 +171,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           template4: this.resourceHeader,
           //template5: this.resourceTootip,//tooltip
           template6: this.mfButton, //header
-          // template8: this.contentTmp,//content
+          template8: this.contentTmp,//content
           //template7: this.footerButton,//footer
           statusColorRef: 'vl003',
         },
