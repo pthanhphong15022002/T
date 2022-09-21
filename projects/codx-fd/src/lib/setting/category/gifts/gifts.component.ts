@@ -20,7 +20,7 @@ import {
   FormControl,
 } from "@angular/forms";
 import { LayoutService } from "@shared/services/layout.service";
-import { ApiHttpService, NotificationsService, AuthStore, ImageViewerComponent, CodxListviewComponent, ViewsComponent, ButtonModel, ViewModel, ViewType } from "codx-core";
+import { ApiHttpService, NotificationsService, AuthStore, ImageViewerComponent, CodxListviewComponent, ViewsComponent, ButtonModel, ViewModel, ViewType, CacheService, UIComponent } from "codx-core";
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 
@@ -29,13 +29,13 @@ import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
   templateUrl: "./gifts.component.html",
   styleUrls: ["./gifts.component.scss"],
 })
-export class GiftsComponent implements OnInit {
+export class GiftsComponent extends UIComponent implements OnInit {
 
   @Input() functionObject;
   @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild("subheader") subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
-  @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
+  @ViewChild('template') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
@@ -54,39 +54,73 @@ export class GiftsComponent implements OnInit {
   reload = false;
   giftIDCurrentHover: string;
   private filterAdvSubscription: Subscription;
-  funcID = 'FDS0122';
+  funcID = '';
   views: Array<ViewModel> = [];
   showHeader: boolean = true;
   userPermission: any;
   dataItem: any;
   description: any;
+  functionList: any;
+  gridViewSetup: any;
 
   popupFiled = 1;
 
-  constructor(
+  constructor(private injector: Injector,
     private fb: FormBuilder,
-    private api: ApiHttpService,
     private notificationsService: NotificationsService,
     private modalService: NgbModal,
     private changedr: ChangeDetectorRef,
-    private layoutService: LayoutService,
     private auth: AuthStore,
     private dt: ChangeDetectorRef,
-    private mwpService: CodxMwpService,
     private route: ActivatedRoute,
-    injector: Injector
   ) {
+    super(injector);
+      this.route.params.subscribe(param => {
+        if(param) this.funcID = param['funcID'];
+      })
+      this.cache.functionList(this.funcID).subscribe(res => {
+        if(res) this.functionList = res;
+      })
   }
+
   button: Array<ButtonModel> = [{
     id: '1',
   }]
-  ngOnInit(): void {
+
+  onInit(): void {
     this.initForm();
     this.initHandForm();
     this.user = this.auth?.get();
-    this.loadSettingMoreFunction();
+    // this.loadSettingMoreFunction();
     // this.mwpService.layoutcpn.next(new LayoutModel(true, '', false, true));
     this.changedr.detectChanges();
+  }
+
+  ngAfterViewInit() {
+    // this.layoutService.listview = this.listView;
+
+    this.views = [
+      {
+        id: '1',
+        type: ViewType.list,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.panelLeftRef,
+        }
+      }
+    ];
+    this.userPermission = this.viewbase.userPermission;
+    this.changedr.detectChanges();
+
+    // this.mwpService.layoutChange.subscribe(res => {
+    //   if (res) {
+    //     if (res.isChange)
+    //       this.showHeader = res.asideDisplay;
+    //     else
+    //       this.showHeader = true;
+    //   }
+    // })
   }
 
   valueChange(event) {
@@ -120,32 +154,6 @@ export class GiftsComponent implements OnInit {
   PopoverEmpEnter(p: any, dataItem) {
     this.dataItem = dataItem;
     p.open();
-  }
-
-  ngAfterViewInit() {
-    // this.layoutService.listview = this.listView;
-
-    this.views = [
-      {
-        id: '1',
-        type: ViewType.content,
-        active: true,
-        model: {
-          panelLeftRef: this.panelLeftRef,
-        }
-      }
-    ];
-    this.userPermission = this.viewbase.userPermission;
-    this.changedr.detectChanges();
-
-    // this.mwpService.layoutChange.subscribe(res => {
-    //   if (res) {
-    //     if (res.isChange)
-    //       this.showHeader = res.asideDisplay;
-    //     else
-    //       this.showHeader = true;
-    //   }
-    // })
   }
 
   openInfor(): void {
@@ -190,7 +198,7 @@ export class GiftsComponent implements OnInit {
     );
   }
   loadSettingMoreFunction() {
-    this.loadMoreFunction("FED20421").subscribe((res) => {
+    this.loadMoreFunction("FED204211").subscribe((res) => {
       if (res?.length > 0) {
         this.lstMoreFunction = res;
       }
@@ -421,5 +429,9 @@ export class GiftsComponent implements OnInit {
   convertDateTime(date) {
     var datetime = new Date(date);
     return datetime;
+  }
+
+  clickMF(event: any, data: any) {
+
   }
 }

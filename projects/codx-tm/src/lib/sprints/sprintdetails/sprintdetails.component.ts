@@ -21,13 +21,12 @@ import { TabModelSprints } from '../../models/TM_Sprints.model';
 @Component({
   selector: 'codx-sprintdetails',
   templateUrl: './sprintdetails.component.html',
-  styleUrls: ['./sprintdetails.component.css'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./sprintdetails.component.scss'],
 })
 export class SprintDetailsComponent implements OnInit, AfterViewInit {
   active = 1;
   iterationID: any;
-  functionParent:any
+  functionParent: any
   data: any;
   meetingID: any;
   dataObj: any;
@@ -52,15 +51,15 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     'Họp định kì',
   ];
   nameObj: any;
-  projectCategory:string = "2";  //set cứng đợi bảng PM_Projects hoàn thiện xong join projectID
+  projectCategory: string = "2";  //set cứng đợi bảng PM_Projects hoàn thiện xong join projectID
   createdByName: any;
   showTabDasboard = true;
   showTabTasks = true;
   showTabHistory = true;
   showTabComments = true;
   showTabMeetings = true;
-  showButtonAdd = true ;
-  
+  showButtonAdd = true;
+
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -75,9 +74,9 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.layout.setUrl(this.tmSv.urlback);
-    this.functionParent = this.tmSv.functionParent ;
-    this.cache.functionList(this.funcID).subscribe(f=>{
-        if(f) this.layout.setLogo(f.smallIcon);
+    this.functionParent = this.tmSv.functionParent;
+    this.cache.functionList(this.funcID).subscribe(f => {
+      if (f) this.layout.setLogo(f.smallIcon);
     })
     this.activedRouter.queryParams.subscribe((params) => {
       if (params) {
@@ -115,28 +114,28 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
           this.nameObj = res.meetingName;
           this.projectID = res.refID;  // ở meeting là refID
           var resourceTaskControl = [];
-          var arrayResource = res?.resources ;
-          if(arrayResource && arrayResource.length > 0){
-            arrayResource.forEach(data=>{
-              if(data.taskControl) resourceTaskControl.push(data.resourceID) ;
+          var arrayResource = res?.resources;
+          if (arrayResource && arrayResource.length > 0) {
+            arrayResource.forEach(data => {
+              if (data.taskControl) resourceTaskControl.push(data.resourceID);
             })
           }
-          this.resources = resourceTaskControl.length>0 ? resourceTaskControl.join(";"): '',
-          this.dataObj = {
-            projectID: this.projectID ? this.projectID : '',
-            resources: this.resources,
-            fromDate : res.fromDate ?moment(new Date(res.fromDate)) :'',
-            endDate : res.toDate ? moment(new Date(res.toDate))  :'',
-          };
+          this.resources = resourceTaskControl.length > 0 ? resourceTaskControl.join(";") : '',
+            this.dataObj = {
+              projectID: this.projectID ? this.projectID : '',
+              resources: this.resources,
+              fromDate: res.fromDate ? moment(new Date(res.fromDate)) : '',
+              endDate: res.toDate ? moment(new Date(res.toDate)) : '',
+            };
           if (this.resources != null) {
             this.getListUserByResource(this.resources);
           }
-          this.showButtonAdd = false ;
+          this.showButtonAdd = false;
         }
       });
     }
 
-    this.functionParent = this.tmSv.functionParent ;
+    this.functionParent = this.tmSv.functionParent;
     if (this.meetingID) {
       //sau mấy cái này sẽ được truyền qua state
       // this.showTabHistory = false;

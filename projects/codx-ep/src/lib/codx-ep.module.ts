@@ -1,3 +1,4 @@
+import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
@@ -40,6 +41,8 @@ import { StationeryComponent } from './settings/stationery/stationery.component'
 import { LayoutComponent } from './_layout/layout.component';
 import { EpCardsComponent } from './settings/epCards/epCards.component';
 import { PopupAddEpCardsComponent } from './settings/epCards/popup-add-epCards/popup-add-epCards.component';
+import { ApprovalRoomViewDetailComponent } from './approval/room/approval-room-view-detail/approval-room-view-detail.component';
+import { ApprovalCarViewDetailComponent } from './approval/car/approval-car-view-detail/approval-car-view-detail.component';
 
 const routes: Route[] = [
   {
@@ -122,6 +125,7 @@ const Components: Type<any>[] = [
   BookingRoomComponent,
   BookingCarComponent,
   BookingStationeryComponent,
+  BookingStationeryViewDetailComponent,
   ApprovalStationeryComponent,
   ApprovalCarsComponent,
   ApprovalRoomsComponent,
@@ -145,6 +149,8 @@ const Components: Type<any>[] = [
   StationeryDashboardComponent,
   ViewDetailComponent,
   TabsComponent,
+  ApprovalRoomViewDetailComponent,
+  ApprovalCarViewDetailComponent,
 ];
 
 @NgModule({

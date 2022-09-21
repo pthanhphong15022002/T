@@ -577,11 +577,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.dialog.dataService
             .save((option: any) => this.beforeSave(option))
             .subscribe((res) => {
-              this.dialog.dataService.addDatas.clear();
-              if (res.update) {
-                this.dialog.close(res.update);
-                this.attachment.clearData();
+              if(res){
+                this.dialog.dataService.addDatas.clear();
+                if (res.update) {
+                  this.dialog.close(res.update);
+                  this.attachment.clearData();
+                 /// this.tmSv.sendAlertMail(this.task.recID,'TM_0002',this.functionID)   mai test laji vi sao khong vao
+                }
               }
+              this.dialog.close();
+              this.attachment.clearData();
             });
         } else {
           this.dialog.close();
@@ -592,11 +597,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
-          if (res.update) {
-            this.dialog.dataService.addDatas.clear();
-            this.dialog.close(res.update);
+          if(res){
+            if (res.update) {
+              this.dialog.dataService.addDatas.clear();
+              this.dialog.close(res.update);
+              this.attachment.clearData();
+            }
+          }else {
+            this.dialog.close();
             this.attachment.clearData();
           }
+          
         });
     }
   }

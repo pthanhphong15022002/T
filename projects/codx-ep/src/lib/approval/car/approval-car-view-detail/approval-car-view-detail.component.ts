@@ -7,14 +7,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
-import { CodxEpService } from '../../codx-ep.service';
+import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
-  selector: 'view-detail',
-  templateUrl: './view-detail.component.html',
-  styleUrls: ['./view-detail.component.scss'],
+  selector: 'approval-car-view-detail',
+  templateUrl: 'approval-car-view-detail.component.html',
+  styleUrls: ['approval-car-view-detail.component.scss'],
 })
-export class ViewDetailComponent extends UIComponent implements OnChanges {
+export class ApprovalCarViewDetailComponent extends UIComponent implements OnChanges {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;

@@ -3,23 +3,19 @@
 </codx-views>
 
 <ng-template #panelLeftRef>
-  <div class="">
-    <ul class="nav nav-news">
-      <ng-container *ngFor="let item of tabAsside">
-        <li class="nav-item" [class.text-primary]="item.active">
-          <a class="nav-link fw-bold" href="javascript:;"
-            (click)="clickTabApprove(item, item.predicate, item.datavalue)">
-            <codx-label [formName]="codxView.formModel" [name]="'lbl' + item.text" [default]="item.text"></codx-label>
-            <span>({{ item.total }})</span>
-          </a>
-        </li>
-      </ng-container>
-
-    </ul>
-  </div>
+  <ul class="nav nav-news">
+    <ng-container *ngFor="let item of tabAsside">
+      <li class="nav-item" [class.text-primary]="item.active">
+        <a class="nav-link fw-bold" href="javascript:;" (click)="clickTabApprove(item, item.predicate, item.datavalue)">
+          <codx-label [formName]="codxView.formModel" [name]="'lbl' + item.text" [default]="item.text"></codx-label>
+          <span>({{ item.total }})</span>
+        </a>
+      </li>
+    </ng-container>
+  </ul>
 </ng-template>
 <ng-template #panelRightRef>
-  <div class="py-3">
+  <div class="py-3 news-appr-right">
     <app-view-detail #viewdetail [objectID]="selectedID" [entityName]="entityName" [dataService]="codxView.dataService"
       [funcID]="funcID" (evtApproval)="clickApprovePost($event)" [formModel]="codxView.formModel">
     </app-view-detail>
