@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional } from '@angular/core';
 import { DateTime } from '@syncfusion/ej2-charts';
-import {  AuthService, CRUDService, DialogData, DialogRef, ScrollComponent, UIComponent } from 'codx-core';
+import {  ApiHttpService, AuthService, CRUDService, DialogData, DialogRef, ScrollComponent, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'codx-notify-drawer',
   templateUrl: './notify-drawer.component.html',
   styleUrls: ['./notify-drawer.component.scss'],
 })
-export class NotifyDrawerComponent extends UIComponent implements OnInit {
+export class NotifyDrawerComponent implements OnInit {
   dialog: DialogRef;
   lstNotify:any[] = [];
   pageIndex:number = 0;
@@ -15,18 +15,17 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
   dataService:CRUDService = null;
   user:any = null;
   constructor(
+    private api:ApiHttpService,
     private injector: Injector,
     private dt:ChangeDetectorRef,
     private auth:AuthService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
-  ) {
-    super(injector);
-    this.dialog = dialog;
+  ) {    this.dialog = dialog;
     this.user = this.auth.userValue;
   }
 
-  onInit(): void {
+  ngOnInit(): void {
     this.getNotifyAsync();
   }
 
@@ -74,5 +73,50 @@ export class NotifyDrawerComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
 
+
+  onScroll(event: any) {
+    const dcScroll = event.srcElement;
+    if (
+      dcScroll.scrollTop + dcScroll.clientHeight <
+      dcScroll.scrollHeight - 150
+    ) {
+      return;
+    }
+    this.pageIndex++;
+    this.api.execSv(
+      'BG',
+      'ERM.Business.BG',
+      'NotificationBusiness',
+      'GetAsync',
+      [this.pageIndex]
+    ).subscribe((res:any[]) => {
+      if(res){
+        let notifys = res[0];
+        let lstNotifyElement = document.getElementById("lstNotify");
+        notifys.forEach((item:any) => {
+          let notiHTML = 
+            `
+              <div class="row p-4 my-2" (click)="clickNotification(${item})">
+                <div class="col-1">
+                  <codx-img [width]="35" [objectId]="${item.userID}" [objectType]="'AD_Users'"></codx-img>
+                </div>
+                <div class="col-10">
+                  <div [innerHTML]="${item.textValue}">        
+                  </div>
+                  <div>
+                    <span class="text-primary ms-1">{{${item.createdDate} | timefrom}}</span>
+                  </div>
+                </div>
+                <div class="col-1" *ngIf="${!item.isRead}">
+                  <span class="dots"></span>
+                </div>
+              </div>
+            `  
+        });
+        this.dt.detectChanges();
+      }
+    });
+    //this.dataService.scrolling();
+  }
 
 }

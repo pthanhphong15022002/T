@@ -35,43 +35,40 @@ export class SettingComponent implements OnInit {
   private funcID;
   private page;
   constructor(
-    private location: Location,
     private api: ApiHttpService,
     private changedr: ChangeDetectorRef,
     private tenantStore: TenantStore,
     private router: Router,
     private at: ActivatedRoute,
-    private modalService: NgbModal,
-    private fdsv: CodxFdService,
-    injector: Injector
+    private fdsv: CodxFdService
   ) {
     this.tenant = this.tenantStore.get()?.tenant;
   }
 
   ngOnInit(): void {
-    // this.LoadData();
-    // this.range$ = this.api.exec('BS', 'RangeLinesBusiness', 'GetByIDAsync', [
-    //   'KUDOS',
-    // ]);
-    // this.funcChildFDS02$ = this.api.exec(
-    //   'SYS',
-    //   'FunctionListBusiness',
-    //   'GetFuncByPredicateAsync',
-    //   ['ParentID=@0', 'FDS02']
-    // );
-    // this.getParameter();
-    // this.at.queryParams.subscribe((params) => {
-    //   if (params.page) {
-    //     this.funcID = params.funcID;
-    //     this.router.navigate(['/' + this.tenant + '/fd/setting'], {
-    //       queryParams: { funcID: 'FDS' },
-    //     });
-    //     this.page = params.page;
-    //   }
-    //   if (params.funcID) {
-    //     this.funcID = params.funcID;
-    //   }
-    // });
+    this.LoadData();
+    this.range$ = this.api.exec('BS', 'RangeLinesBusiness', 'GetByIDAsync', [
+      'KUDOS',
+    ]);
+    this.funcChildFDS02$ = this.api.exec(
+      'SYS',
+      'FunctionListBusiness',
+      'GetFuncByPredicateAsync',
+      ['ParentID=@0', 'FDS02']
+    );
+    this.getParameter();
+    this.at.queryParams.subscribe((params) => {
+      if (params.page) {
+        this.funcID = params.funcID;
+        this.router.navigate(['/' + this.tenant + '/fd/setting'], {
+          queryParams: { funcID: 'FDS' },
+        });
+        this.page = params.page;
+      }
+      if (params.funcID) {
+        this.funcID = params.funcID;
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -82,13 +79,13 @@ export class SettingComponent implements OnInit {
   }
 
   scroll(el: HTMLElement, numberActive) {
-    el.scrollIntoView({ behavior: 'smooth' });
+    el.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
     this.currentActive = numberActive;
   }
 
   scrollToID(id) {
     let el = document.getElementById(id);
-    el.scrollIntoView({ behavior: 'smooth' });
+    el.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
   }
 
   LoadData() {
@@ -109,7 +106,8 @@ export class SettingComponent implements OnInit {
         ['FormName=@0 && TransType=null', 'FDParameters']
       )
       .subscribe((result) => {
-        if (result?.length > 0) debugger;
+        if (result?.length > 0)
+          this.parameter = JSON.parse(result[0].dataValue);
         // this.parameter = this.fdsv.convertListToObject(
         //   result,
         //   'fieldName',
@@ -179,11 +177,11 @@ export class SettingComponent implements OnInit {
   open(content, typeContent) {
     this.modelForm.number = this.parameter[typeContent];
     this.modelForm.fieldName = typeContent;
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      centered: true,
-      size: 'sm',
-    });
+    // this.modalService.open(content, {
+    //   ariaLabelledBy: 'modal-basic-title',
+    //   centered: true,
+    //   size: 'sm',
+    // });
     this.changedr.detectChanges();
   }
 
@@ -192,7 +190,7 @@ export class SettingComponent implements OnInit {
     item[this.modelForm.fieldName] = this.modelForm.number;
     this.parameter[this.modelForm.fieldName] = this.modelForm.number;
     this.onSaveParameter(item);
-    this.modalService.dismissAll();
+    // this.modalService.dismissAll();
   }
 
   onSectionChange(data: any) {

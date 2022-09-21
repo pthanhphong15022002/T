@@ -38,21 +38,9 @@ export class AlertDrawerComponent extends UIComponent implements OnInit {
 
 
   getAlertAsync(funcID:string){
-    this.api.execNonDB<NotificationMessage[]>( 
-      'Background',
-      'NotificationBusinesss',
-      'GetAsync',
-      [this.auth.userValue.userID, this.auth.userValue.tenant]
-    ).subscribe((res:any) => {
-      if(res){
-        console.log(res);
-        this.lstAlerts = res;
-      }
-    });
+
   }
 
   clickStopAlert(event:any,item:any){
-    item.isRead = event.value;
-    this.dt.detectChanges();
   }
 }
