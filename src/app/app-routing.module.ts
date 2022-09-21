@@ -12,12 +12,6 @@ export const routes: Routes = [
     path: ':tenant',
     children: [
       {
-        path: 'test',
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('projects/test/src/lib/test.module').then((m) => m.TestModule),
-      },
-      {
         path: 'auth',
         loadChildren: () =>
           import('./modules/auth/auth.module').then((m) => m.AuthModule),

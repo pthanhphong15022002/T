@@ -3,7 +3,7 @@
 >
   <div class="main-content d-flex flex-column-fluid h-100">
     <div
-      class="flex-column flex-lg-row-auto main-left"
+      class="flex-column flex-lg-row-auto main-left w-250px w-xxl-275px"
       [class.hideCol]="hideThumbnail"
     >
       <ejs-tab
@@ -18,16 +18,11 @@
                 name="lblHeaderLeft0"
                 [formModel]=""
                 [default]="headerLeftName[0].text"
-                class="fw-bold text-primary"
+                class="text-header d-block"
               ></codx-label>
             </ng-template>
             <ng-template #content>
-              <div
-                #thumbnailTab
-                style="padding: 0 20px"
-                id="thumbnailTab"
-                *ngIf="!isDisable"
-              ></div>
+              <div #thumbnailTab id="thumbnailTab" *ngIf="!isDisable"></div>
               <div id="sidebarContent">
                 <div id="thumbnailView" style="width: 100%; height: 100%"></div>
                 <div id="outlineView" class="d-none"></div>
@@ -41,32 +36,36 @@
                 name="lblHeaderLeft1"
                 [formModel]=""
                 [default]="headerLeftName[1].text"
-                class="fw-bold text-primary"
+                class="text-header d-block"
               ></codx-label>
             </ng-template>
             <ng-template #content>
               <ng-container>
                 <div
-                  class="ca-space d-flex m-3"
+                  class="ca-space d-flex align-items-start cursor-pointer px-2 pb-2"
                   *ngFor="let ca of lstCA; let idx = index"
                 >
-                  <div
-                    [ngClass]="{
-                      icon: true,
-                      'icon-report_gmailerrorred btn-warning':
-                        !ca.isVerified && ca.certificate_IsValidNow,
-                      'icon-error btn-danger': !ca.certificate_IsValidNow,
-                      'icon-done btn-success':
-                        ca.isVerified && ca.certificate_IsValidNow
-                    }"
-                    style="height: 20px"
-                  ></div>
+                  <div class="position-relative symbol me-3">
+                    <span class="icon-24 icon-gesture"></span>
+                    <div
+                      class="symbol-badge badge badge-sm badge-circle top-100 start-100 text-white ms-n1 mt-n2"
+                      [ngClass]="{
+                        icon: true,
+                        'icon-priority_high bg-warning':
+                          !ca.isVerified && ca.certificate_IsValidNow,
+                        'icon-clear bg-danger': !ca.certificate_IsValidNow,
+                        'icon-check bg-success':
+                          ca.isVerified && ca.certificate_IsValidNow
+                      }"
+                    ></div>
+                  </div>
+
                   <div class="ca-memo">
                     <codx-label
                       [name]="'lblCAMemo' + idx"
                       [formModel]=""
                       [default]="'Certified by ' + ca.signerName"
-                      class="fw-bold text-primary fs-37"
+                      class="fw-bold mb-2"
                       (click)="goToSelectedCA(ca, idx)"
                     ></codx-label>
                     <div
@@ -77,20 +76,24 @@
                         [name]="'lblCAMoreInfo' + idx"
                         [formModel]=""
                         [default]="'Signing Time: ' + ca.signedDate"
-                        class="fw-bold text-primary fs-37"
+                        class="fw-bold mb-2"
                       ></codx-label>
                       <div *ngIf="!ca.isVerified">
                         <ng-container
                           [ngTemplateOutlet]="failReasons"
                           [ngTemplateOutletContext]="{ ca: ca }"
-                        ></ng-container>
+                        >
+                        </ng-container>
                       </div>
-                      <button (click)="openPopUpCAProps(ca)" class="badge">
+                      <button
+                        (click)="openPopUpCAProps(ca)"
+                        class="btn btn-link btn-color-gray-800 btn-active-color-primary"
+                      >
                         <codx-label
                           [name]="'lblCAProps'"
                           [formModel]=""
                           [default]="'Signature Properties'"
-                          class="fw-bold text-primary fs-37 fst-italic"
+                          class="fw-bold mb-2 fst-italic text-decoration-underline"
                         ></codx-label>
                       </button>
                       <div class="ca_Details">
@@ -98,7 +101,7 @@
                           [name]="'lblCADetails' + idx"
                           [formModel]=""
                           [default]="'Signature Detail'"
-                          class="fw-bold text-primary fs-30 d-block"
+                          class="text-header d-block fw-bold"
                         ></codx-label>
 
                         <codx-label
@@ -108,21 +111,21 @@
                             'Contact Information: ' +
                             ca.certificate_IssuedBy.commonName
                           "
-                          class="text-primary fs-30 d-block"
+                          class="text-header"
                         ></codx-label>
 
                         <codx-label
                           [name]="'lblCADetails_Location' + idx"
                           [formModel]=""
                           [default]="'Location: ' + ca.signedLocation"
-                          class="text-primary fs-30 d-block"
+                          class="text-header"
                         ></codx-label>
 
                         <codx-label
                           [name]="'lblCADetails_Reason' + idx"
                           [formModel]=""
                           [default]="'Reason: ' + ca.signedComment"
-                          class="text-primary fs-30 d-block"
+                          class="text-header"
                         ></codx-label>
                       </div>
                     </div>
@@ -133,14 +136,14 @@
                     [name]="'lblFailed'"
                     [formModel]=""
                     [default]="'Certificate verification failed'"
-                    class="fw-bold text-primary fs-37"
+                    class="text-header d-block fw-bold"
                   ></codx-label>
                   <div
-                    class="fail_Reasons ml-2"
+                    class="fail_Reasons ms-2"
                     *ngFor="let reason of ca.vertifications"
                   >
                     <div
-                      class="reason_Info"
+                      class="reason_Info ms-2"
                       *ngIf="!reason.isVerified && reason.message != ''"
                     >
                       <p>{{ reason.message }}</p>
@@ -286,50 +289,53 @@
           </ejs-toolbar>
         </div>
       </div>
-
-      <ngx-extended-pdf-viewer
-        #ngxPdfView
-        *ngIf="curFileUrl ? true : false"
-        [(src)]="curFileUrl"
-        [height]="'100vh'"
-        [(zoom)]="zoomValue"
-        [zoomLevels]="zoomValue"
-        [(page)]="curPage"
-        [customToolbar]="pdfToolbar"
-        [showHandToolButton]="false"
-        [showUnverifiedSignatures]="true"
-        [sidebarVisible]="!hideThumbnail"
-        [showSidebarButton]="false"
-        (pdfLoadingStarts)="loadingPdf($event)"
-        (pageRendered)="pageRendered($event)"
-        [pageViewMode]="pageViewMode"
-        [showBookmarkButton]="false"
-        [showPropertiesButton]="true"
-        [customSidebar]="withoutSidebar"
-        [customThumbnail]="ngxThumbnail"
-        [enableDragAndDrop]="false"
-      >
-      </ngx-extended-pdf-viewer>
-      <ng-template #ngxThumbnail let-PAGE_NUMBER>
-        <a class="pdf-viewer-template">
-          <div
-            class="thumbnail"
-            [classList]="PAGE_NUMBER == curPage ? 'border border-primary' : ''"
-            data-page-number="PAGE_NUMBER"
-            (click)="goToPage(PAGE_NUMBER)"
-          >
-            <div class="image-container d-flex mb-2">
-              <!-- image is automatically inserted here -->
+      <div class="pdfviewer_Space">
+        <ngx-extended-pdf-viewer
+          #ngxPdfView
+          *ngIf="curFileUrl ? true : false"
+          [(src)]="curFileUrl"
+          [height]="'100vh'"
+          [(zoom)]="zoomValue"
+          [zoomLevels]="zoomValue"
+          [(page)]="curPage"
+          [customToolbar]="pdfToolbar"
+          [showHandToolButton]="false"
+          [showUnverifiedSignatures]="true"
+          [sidebarVisible]="!hideThumbnail"
+          [showSidebarButton]="false"
+          (pdfLoadingStarts)="loadingPdf($event)"
+          (pageRendered)="pageRendered($event)"
+          [pageViewMode]="pageViewMode"
+          [showBookmarkButton]="false"
+          [showPropertiesButton]="true"
+          [customSidebar]="withoutSidebar"
+          [customThumbnail]="ngxThumbnail"
+          [enableDragAndDrop]="false"
+        >
+        </ngx-extended-pdf-viewer>
+        <ng-template #ngxThumbnail let-PAGE_NUMBER>
+          <a class="pdf-viewer-template test-temp2">
+            <div
+              class="thumbnail"
+              [classList]="
+                PAGE_NUMBER == curPage ? 'border border-primary' : ''
+              "
+              data-page-number="PAGE_NUMBER"
+              (click)="goToPage(PAGE_NUMBER)"
+            >
+              <div class="image-container d-flex mb-2">
+                <!-- image is automatically inserted here -->
+              </div>
             </div>
+          </a>
+        </ng-template>
+        <ng-template #withoutSidebar>
+          <div id="sidebarContainer" class="d-flex w-0 h-0 d-none">
+            <pdf-sidebar-content></pdf-sidebar-content>
+            <div id="sidebarResizer" class="d-none"></div>
           </div>
-        </a>
-      </ng-template>
-      <ng-template #withoutSidebar>
-        <div id="sidebarContainer" class="d-flex w-0 h-0 d-none">
-          <pdf-sidebar-content></pdf-sidebar-content>
-          <div id="sidebarResizer" class="d-none"></div>
-        </div>
-      </ng-template>
+        </ng-template>
+      </div>
     </div>
     <div
       class="actions flex-column flex-lg-row-auto main-right"
@@ -348,7 +354,7 @@
                 name="lblHeaderRight0"
                 [formModel]=""
                 [default]="headerRightName[0].text"
-                class="fw-bold text-primary"
+                class="text-header d-block"
               ></codx-label>
             </ng-template>
 
@@ -360,7 +366,7 @@
                       name="lblChooseSigner"
                       [formModel]=""
                       default="Chọn người kí cần thiết lập"
-                      class="fw-bold text-primary"
+                      class="text-header d-block"
                     ></codx-label>
                   </div>
                   <ejs-dropdownlist
@@ -374,7 +380,7 @@
                   >
                     <ng-template #signer let-approver>
                       <codx-temp-full
-                        cardCss="card-select px-2 pt-4 pb-2"
+                        cardCss="card-select px-2 pb-2"
                         [(imageId)]="approver.authorID"
                         [imageObjType]="'AD_Users'"
                         [imageWidth]="35"
@@ -397,7 +403,7 @@
                     name="lblDragAction"
                     [formModel]=""
                     default="Kéo thả"
-                    class="fw-bold text-primary"
+                    class="text-header d-block"
                   >
                   </codx-label>
                 </div>
@@ -477,7 +483,7 @@
                 name="lblHeaderRight1"
                 [formModel]=""
                 [default]="headerRightName[1].text"
-                class="fw-bold text-primary"
+                class="text-header d-block"
               ></codx-label>
             </ng-template>
             <ng-template #content>
@@ -704,7 +710,7 @@
                 name="lblHeaderRight2"
                 [formModel]=""
                 [default]="headerRightName[2].text"
-                class="fw-bold text-primary"
+                class="text-header d-block"
               ></codx-label>
             </ng-template>
             <ng-template #content></ng-template>
@@ -716,7 +722,7 @@
                 name="lblHeaderRight3"
                 [formModel]=""
                 [default]="headerRightName[3].text"
-                class="fw-bold text-primary"
+                class="text-header d-block"
               ></codx-label>
             </ng-template>
             <ng-template #content></ng-template>
@@ -751,7 +757,7 @@
     "
     [resourceObjType]="'AD_Users'"
     [icoCss]="
-      'w-40px h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+      'w-40px h-40px symbol fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       (data.labelType | vll: 'ES004':'icon' | async)
     "
     [subTitle]="'Trang ' + data.location?.pageNumber + 1"

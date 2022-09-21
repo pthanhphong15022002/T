@@ -72,16 +72,17 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.buttons = {
-      id: 'btnAdd',
-    };
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+   
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
     });
   }
 
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.buttons = {
+      id: 'btnAdd',
+    };
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)

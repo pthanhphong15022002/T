@@ -24,8 +24,26 @@
 // .e-device .e-dlg-content, .e-device .e-dlg-content * {
 //   font-size: inherit;
 // }
-codx-view-list-detail{
-    .e-splitter.e-splitter-horizontal .e-pane.e-pane-horizontal, .e-splitter.e-splitter-vertical .e-pane.e-pane-horizontal {
-        // overflow: hidden!important;
-    }
+
+// .tab-content {
+//   height: calc(100% - 30px) !important;
+//   overflow: auto;
+// }
+// .float-left > div {
+//   float: left;
+// }
+// codx-detail-tmp {
+//   // overflow: hidden !important;
+// }
+// codx-view-list-detail .codx-detail-main {
+//   padding-bottom: 0;
+// }
+// .codx-detail-body {
+// }
+// .e-splitter.e-splitter-horizontal .e-pane.e-pane-horizontal,
+// .e-splitter.e-splitter-vertical .e-pane.e-pane-horizontal {
+//   overflow: hidden !important;
+// }
+.codx-detail-body {
+  height: calc(100% - 240px) !important;
 }
