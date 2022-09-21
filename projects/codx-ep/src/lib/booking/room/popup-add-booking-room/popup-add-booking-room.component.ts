@@ -467,6 +467,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         0
       ),
       equipments: this.lstEquipment,
+      requester: this.curUser.userName,
     });
 
     this.attendeesList.forEach((item) => {
