@@ -471,7 +471,9 @@
   ngx-extended-pdf-viewer .pdfViewer .page {
     border: 0 !important;
   }
-
+  .reason_Info > p {
+    margin: 0;
+  }
   #thumbnailView {
     .image-container {
       margin: auto;

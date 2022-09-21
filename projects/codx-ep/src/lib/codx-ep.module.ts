@@ -35,8 +35,6 @@ import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/p
 import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
 import { RoomsComponent } from './settings/rooms/rooms.component';
 import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
-import { PopupSettingNormsComponent } from './settings/stationery/popup-setting-norms/popup-setting-norms.component';
-import { PopupUpdateInventoryComponent } from './settings/stationery/popup-update-inventory/popup-update-inventory.component';
 import { StationeryComponent } from './settings/stationery/stationery.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { EpCardsComponent } from './settings/epCards/epCards.component';
@@ -132,8 +130,6 @@ const Components: Type<any>[] = [
   PopupAddBookingRoomComponent,
   PopupAddBookingCarComponent,
   PopupRequestStationeryComponent,
-  PopupSettingNormsComponent,
-  PopupUpdateInventoryComponent,
   PopupAddCarsComponent,
   PopupAddRoomsComponent,
   PopupAddStationeryComponent,

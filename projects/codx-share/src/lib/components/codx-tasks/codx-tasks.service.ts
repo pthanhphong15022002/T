@@ -92,4 +92,15 @@ export class CodxTasksService {
       [recID,valueRuleNo,funcID]
     );
   }
+
+  //getRecID 
+  getRecIDTaskByIdAsync(id) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetRecIDTaskByIdAsync',
+      id
+    );
+  }
 }

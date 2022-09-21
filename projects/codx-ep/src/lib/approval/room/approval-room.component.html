@@ -49,28 +49,29 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
-    (click)="click(data)"
-    [typeMF]="'hover'"
-    [title]="data?.requester"
-    [subTitleTmp]="subTitleTmp"
-    [icoCss]="
-      'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
-    "
-    [status]="data?.status"
-    [statusVll]="'VL003'"
-    [date]="data?.createdOn"
-    [imageId]="data?.createdBy"
-    imageObjType="AD_Users"
-    [resources]="data?.bookingAttendees"
-    resourceObjType="AD_Users"
-    [titleLine]="2"
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    [footer]="footerTmp"
-    (clickMF)="clickMF($event, data)"
-    typeMF="hover"
-    [dataItem]="data"
+  cardCss="card-template border-bottom px-2 pt-4 pb-2"
+  (click)="click(data)"
+  [typeMF]="'hover'"
+  [title]="data?.requester"
+  [subTitleTmp]="subTitleTmp"
+  [icoCss]="
+    'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+  "
+  [status]="data?.status"
+  [statusVll]="'VL003'"
+  [date]="data?.createdOn"
+  [imageId]="data?.createdBy"
+  imageObjType="AD_Users"
+  [resources]="data?.bookingAttendees"
+  resourceObjType="AD_Users"
+  [titleLine]="2"
+  [dataItem]="data"
+  [formModel]="view.formModel"
+  [footer]="footerTmp"
+  (clickMF)="clickMF($event, data)"
+  typeMF="hover"
+  [dataItem]="data"
+    
   >
   </codx-temp-full>
 </ng-template>
@@ -132,6 +133,7 @@
   </div>
 </ng-template>
 
+
 <ng-template #contentTmp let-data>
   <div>
     <h2>{{ data.title }}</h2>
@@ -139,13 +141,13 @@
 
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <i class="icon-person me-1"></i>
-    <span>
+    <span class=" ms-1 fw-bold">
       {{ data.requester }}
     </span>
   </div>
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <i class="icon-location_on me-1"></i>
-    <span>
+    <span class=" ms-1 fw-bold">
       {{ data.resourceName }}
     </span>
   </div>
@@ -153,19 +155,19 @@
   <div class="d-flex mt-1 flex-grow-1 mb-2">
     <div class="d-flex me-6">
       <i class="icon-calendar_today me-1"></i>
-      <span class="text-gray-600">
+      <span class=" ms-1 fw-bold">
         {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
       </span>
     </div>
     <div class="d-flex me-6">
       <i class="icon-access_time me-1"></i>
-      <span>
+      <span class=" ms-1 fw-bold">
         {{ data?.startDate | date: "shortTime" }}
       </span>
       <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
         "-"
       }}</span>
-      <span>
+      <span class=" fw-bold">
         {{ data?.endDate | date: "shortTime" }}
       </span>
     </div>
@@ -173,14 +175,14 @@
 
   <hr />
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-    <codx-label default="Lí do: " name="lblReason"></codx-label>
-    <span>
+    <codx-label default="Lí do: " name="lblReason" class="text-gray-600"></codx-label>
+    <span class=" ms-2 fw-bold">
       {{ data.reasonName }}
     </span>
   </div>
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-    <codx-label default="Nội dung:" name="lblMemo"></codx-label>
-    <span>
+    <codx-label default="Nội dung:" name="lblMemo" class="text-gray-600"></codx-label>
+    <span class=" ms-2 fw-bold">
       {{ data.memo }}
     </span>
   </div>
@@ -195,7 +197,7 @@
         ></codx-label>
         <div class="d-flex justify-content-end">
           <codx-imgs
-            [objectId]="'ADMIN;HPHOA;HPHOA1;PMNHI;HPHOA;HPHOA1;PMNHI'"
+            [objectId]="data.bookingAttendees"
             objectType="AD_Users"
             [numberImages]="7"
             [width]="30"
@@ -207,40 +209,45 @@
   </div>
 
   <hr />
-  <div class="d-flex mb-4">
-    <div class="d-flex flex-row">
-      <div class="me-2">
-        <codx-img
-          [objectId]=""
-          imageType="square"
-          width="35"
-          objectType="EP_Stationery"
-        ></codx-img>
-      </div>
+  <div *ngIf="data.bookingItems?.length>0">
+    <div *ngFor="let item of data.bookingItems">  
+      <div class="d-flex mb-4 justify-content-between">
+        <div class="d-flex flex-row">
+          <div class="me-2">
+            <codx-img
+              [objectId]="item.recID"
+              imageType="square"
+              width="35"
+              objectType="EP_Stationery"
+            ></codx-img>
+          </div>  
+          <div class="">
+            <div class="">
+              <span href="#" class=" fw-bold">{{ item.itemName }}</span>
+            </div>
+            <div class="d-flex flex-row flex-grow-1">
+              <codx-label
+                
+                default="Đơn vị tính:"
+                name="lblQuantity"
+                class="text-gray-600"
+              ></codx-label>
+              <span class="d-block ms-2 fw-bold">{{item.umid}}</span>
+            </div>
+          </div>
+        </div>
 
-      <div class=" ">
-        <div class="">
-          <span href="#" class="text-gray-800">{{ "name" }}</span>
-        </div>
-        <div class="d-flex flex-row" style="width: 180px">
+        <div class="d-flex align-items-center me-3">
           <codx-label
-            style="width: 75px"
-            default="Đơn vị tính:"
+            default="Số lượng:"
             name="lblQuantity"
-            class="text-gray-600 col-3"
+            class="text-gray-600"
           ></codx-label>
-          <span class="text-gray-400 d-block col-2">Chai</span>
+          <span class="ms-2 fw-bold">{{item.quantity}}</span>
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center me-3">
-      <codx-label
-        default="Số lượng: "
-        name="lblQuantity"
-        class="text-gray-600 me-4"
-      ></codx-label>
-      <span>20</span>
-    </div>
+    
   </div>
 </ng-template>
 

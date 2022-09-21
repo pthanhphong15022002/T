@@ -186,20 +186,11 @@
     <div class="stepper-body pt-2 w-100">
       <div class="container card shadow-none border-0 rounded-0 mx-auto h-100">
         <div class="mb-10 mt-10 text-center tab-pane-header">
-          <h2 class="h2-title">
-            <codx-label
-              name="lblUploadFile"
-              [formModel]="formModel"
-              default="Upload file"
-            >
-            </codx-label>
-          </h2>
+          <ng-container
+            *ngTemplateOutlet="viewCard; context: { $implicit: 'default' }"
+          >
+          </ng-container>
         </div>
-
-        <ng-container
-          *ngTemplateOutlet="viewCard; context: { $implicit: 'default' }"
-        >
-        </ng-container>
       </div>
     </div>
   </div>
@@ -215,9 +206,15 @@
       <div class="me-2">Trái cây</div>
     </div>
     <div class="d-flex">
-      <span class="btn-cart border me-2">
-        <i class="icon-shopping_cart"></i>
-      </span>
+      <div id="ex4">
+        <span class="p1 fa-stack fa-2x has-badge" data-count="4">
+          <i
+            class="p3 icon-shopping_cart"
+            data-count="4b"
+          ></i>
+        </span>
+      </div>
+
       <button class="btn btn-light font-weight-bold" (click)="test()">
         <i class="icon-double_arrow"></i> Tiếp theo
       </button>

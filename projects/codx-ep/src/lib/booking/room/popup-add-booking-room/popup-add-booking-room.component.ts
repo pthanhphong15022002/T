@@ -1,3 +1,4 @@
+import { Subscriber } from 'rxjs';
 import {
   Component,
   EventEmitter,
@@ -9,7 +10,9 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import {
+  ApiHttpService,
   AuthService,
+  CacheService,
   CRUDService,
   DialogData,
   DialogRef,
@@ -130,6 +133,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     private notificationsService: NotificationsService,
     private codxEpService: CodxEpService,
     private authService: AuthService,
+    private cacheService: CacheService,
+    private apiHttpService: ApiHttpService,
+    
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -141,15 +147,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.funcID = this.formModel.funcID;
   }
 
-  onInit(): void {
+  onInit(): void {    
+    this.initForm();
+    
     if (!this.isAdd) {
       this.titleAction = 'Chỉnh sửa';
-    }
-    this.codxEpService.getModelPage(this.funcID).then((res) => {
-      if (res) {
-        this.modelPage = res;
-      }
-
+    }   
       this.codxEpService
         .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
         .then((res) => {
@@ -157,13 +160,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           console.log('cbxEPT1', this.CbxName);
         });
 
-      this.cache
+      this.cacheService
         .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
         .subscribe((res) => {
           console.log('grvEPT1', res);
           this.grvBookingRoom = res;
         });
-      this.cache.valueList('EP012').subscribe((res) => {
+      this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
           let device = new Device();
@@ -205,18 +208,18 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
 
       if (!this.isAdd) {
-        if (this.data.attachments > 0) {
-          this.codxEpService
-            .getFiles(
-              this.formModel.funcID,
-              this.data.recID,
-              this.formModel.entityName
-            )
-            .subscribe((res) => {
-              console.log('get file', res);
-            });
-        }
-        this.api
+        // if (this.data.attachments > 0) {
+        //   this.codxEpService
+        //     .getFiles(
+        //       this.formModel.funcID,
+        //       this.data.recID,
+        //       this.formModel.entityName
+        //     )
+        //     .subscribe((res) => {
+        //       console.log('get file', res);
+        //     });
+        // }
+        this.apiHttpService
           .callSv(
             'EP',
             'ERM.Business.EP',
@@ -256,7 +259,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             }
           });
 
-        this.api
+        this.apiHttpService
           .callSv('EP', 'ERM.Business.EP', 'BookingItemsBusiness', 'GetAsync', [
             this.data.recID,
           ])
@@ -281,9 +284,62 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               this.detectorRef.detectChanges();
             }
           });
-      }
-      this.initForm();
-    });
+      }  
+      this.codxEpService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {
+        this.fGroupAddBookingRoom = item;
+        if (this.data) {
+          this.fGroupAddBookingRoom.patchValue(this.data);
+          this.fGroupAddBookingRoom.patchValue({
+            resourceType: '1',
+          });
+        }
+        this.isAfterRender = true;
+        if (this.data) {
+          console.log('fgroupEPT1', this.data);
+          this.fGroupAddBookingRoom.patchValue(this.data);
+          this.fGroupAddBookingRoom.patchValue({
+            requester: this.authService.userValue.userName,
+          });
+    
+          if (this.data.hours == 24) {
+            this.isFullDay = true;
+          } else {
+            this.isFullDay = false;
+          }
+    
+          this.fGroupAddBookingRoom.addControl(
+            'isFullDay',
+            new FormControl(this.isFullDay)
+          );          
+        
+          if (this.isAdd) {
+            this.fGroupAddBookingRoom.patchValue({ attendees: 1 });
+            this.link = null;
+            this.fGroupAddBookingRoom.value.bookingOn = new Date();
+            this.endTime = null;
+            this.startTime = null;
+          }
+          if (!this.isAdd) {
+            if (this.fGroupAddBookingRoom.value.hours == 24) {
+              this.isFullDay = true;
+    
+              this.detectorRef.detectChanges();
+            }
+            this.startTime = this.fGroupAddBookingRoom.value.startDate
+              .toString()
+              .slice(16, 21);
+            this.endTime = this.fGroupAddBookingRoom.value.endDate
+              .toString()
+              .slice(16, 21);
+          }
+        }
+        console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingRoom);
+        
+      });   
+      this.detectorRef.detectChanges();
+      
   }
 
   ngAfterViewInit(): void {
@@ -298,51 +354,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   initForm() {
-    this.codxEpService
-      .getFormGroup(this.modelPage.formName, this.modelPage.gridViewName)
-      .then((item) => {
-        this.fGroupAddBookingRoom = item;
-        this.isAfterRender = true;
-        if (this.data) {
-          console.log('fgroupEPT1', this.data);
-          this.fGroupAddBookingRoom.patchValue(this.data);
-          this.fGroupAddBookingRoom.patchValue({
-            requester: this.authService.userValue.userName,
-          });
+    
+    // this.codxEpService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((item) => {
+    //     if(item){
+    //       this.fGroupAddBookingRoom = item;
+    //       console.log('this.fGroupAddBookingRoom',item);
+    //       this.isAfterRender = true;
+          
+    //     }        
+    //   });
 
-          if (this.data.hours == 24) {
-            this.isFullDay = true;
-          } else {
-            this.isFullDay = false;
-          }
-
-          this.fGroupAddBookingRoom.addControl(
-            'isFullDay',
-            new FormControl(this.isFullDay)
-          );
-          if (this.isAdd) {
-            this.fGroupAddBookingRoom.patchValue({ attendees: 1 });
-            this.link = null;
-            this.fGroupAddBookingRoom.value.bookingOn = new Date();
-            this.endTime = null;
-            this.startTime = null;
-          }
-          if (!this.isAdd) {
-            if (this.fGroupAddBookingRoom.value.hours == 24) {
-              this.isFullDay = true;
-
-              this.detectorRef.detectChanges();
-            }
-            this.startTime = this.fGroupAddBookingRoom.value.startDate
-              .toString()
-              .slice(16, 21);
-            this.endTime = this.fGroupAddBookingRoom.value.endDate
-              .toString()
-              .slice(16, 21);
-          }
-        }
-      });
-    this.detectorRef.detectChanges();
+    
   }
   setStatusTime(modifiedOn: any) {
     let dateSent = new Date(modifiedOn);
@@ -445,6 +469,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         0
       ),
       equipments: this.lstEquipment,
+      requester: this.curUser.userName,
     });
 
     this.attendeesList.forEach((item) => {

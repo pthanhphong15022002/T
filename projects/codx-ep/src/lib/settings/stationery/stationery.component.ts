@@ -19,8 +19,6 @@ import {
 } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
-import { PopupSettingNormsComponent } from './popup-setting-norms/popup-setting-norms.component';
-import { PopupUpdateInventoryComponent } from './popup-update-inventory/popup-update-inventory.component';
 
 @Component({
   selector: 'setting-stationery',
@@ -67,7 +65,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   };
   dialog!: DialogRef;
   model: DataRequest;
-  modelResource: ResourceModel;
   formModel: FormModel;
   moreFuncs = [
     {
@@ -88,16 +85,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.buttons = {
-      id: 'btnAdd',
-    };
-    this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'EP';
-    this.modelResource.className = 'ResourcesBusiness';
-    this.modelResource.service = 'EP';
-    this.modelResource.method = 'GetListAsync';
-    this.modelResource.predicate = 'ResourceType=@0';
-    this.modelResource.dataValue = '6';
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
 
     this.epService.getFormModel(this.funcID).then((res) => {
       this.formModel = res;
@@ -105,6 +93,9 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.buttons = {
+      id: 'btnAdd',
+    };
     this.columnsGrid = [
       {
         headerText: '',
@@ -177,10 +168,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         this.delete(data);
         break;
       case 'EPS2301':
-        this.settingNorms(data);
         break;
       case 'EPS2302':
-        this.updateInventory(data);
         break;
       default:
         break;
@@ -228,28 +217,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     this.viewBase.dataService
       .delete([this.viewBase.dataService.dataSelected])
       .subscribe();
-  }
-
-  settingNorms(data?) {
-    this.callfc.openForm(
-      PopupUpdateInventoryComponent,
-      'Cập nhật số lượng',
-      500,
-      200,
-      '',
-      [this.formModel, data]
-    );
-  }
-
-  updateInventory(data?) {
-    this.callfc.openForm(
-      PopupSettingNormsComponent,
-      'Thiết lập định mức VPP',
-      500,
-      300,
-      '',
-      [this.formModel, data]
-    );
   }
 
   closeEditForm(evt?: any) {
