@@ -112,7 +112,7 @@ const routes: Route[] = [
         component: StationeryComponent,
       },
       {
-        path: 'epCards/:funcID',
+        path: 'epcards/:funcID',
         component: EpCardsComponent,
       },
     ],
