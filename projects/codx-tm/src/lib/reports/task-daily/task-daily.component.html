@@ -1,5 +1,6 @@
 <codx-views #view [funcID]="'TMR01'" [views]="views"[pageSize]="100" [selectedFirst]="true"
-  (filterReportChange)="paramChange($event)" (reportPrint)="printReport()" [dataValue]="dataValue" [predicate]="predicate"
+  (filterReportChange)="paramChange1($event)" (reportPrint)="printReport()" [dataValue]="dataValue" [predicate]="predicate"
+  (buttonClick)="click($event)" [moreFuncs]="moreFunc"
   >
 </codx-views>
 
@@ -95,130 +96,12 @@
 </ng-template>
 
 
-<ng-template #pined>
-  <div class="d-flex justify-content-start w-100">
-    <button [title]="titleCollapse"type="button" class="btn btn-sm background-color-white my-1 text-hover-primary " style="margin-left: -5px ;" (click)="collapse($event)">
-      <i style="font-size: 21px !important;font-weight:600" class="icon-tune text-muted"></i>
-    </button>
-    <div class="w-100 d-flex justify-content-start ">
-      <div class=" mx-3" *ngFor="let item of lstPined">
-        <ng-container [ngSwitch]="item?.dataType" >
-          <ng-container *ngSwitchCase="'string'">
-            <div class="w-275px mt-3" *ngIf="!item.referedType">
-              <codx-input
-                type="text"
-                [className]="'border'"
-                [field]="item.controlName"
-                placeholder="Có chứa giá trị..."
-                [crrValue]="item.defaultValue"
-                (valueChange)="reportObj.valueChange($event)"
-              ></codx-input>
-            </div>
-            <div class="w-275px mt-3" *ngIf="item.referedType == '3'">
-              <codx-input
-                type="combobox"
-                [field]="item.controlName"
-                [crrValue]="item.defaultValue"
-                [refValue]="item.referedValue"
-                (valueChange)="reportObj.valueChange($event)"
-              >
-              </codx-input>
-            </div>
-            <div class="w-275px mt-3" *ngIf="item.referedType == '2'">
-              <codx-input
-                type="valuelist"
-                [field]="item.controlName"
-                [crrValue]="item.defaultValue"
-                [refValue]="item.referedValue"
-                (valueChange)="reportObj.valueChange($event)"
-              >
-              </codx-input>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'bool'">
-            <div
-              class="float-end"
-              *ngIf="item.controlType == 'LVSwitch'"
-              [title]="item.controlName"
-            >
-              <codx-input
-                class="float-right"
-                type="switch"
-                [field]="item.controlName"
-                [crrValue]="
-                  item.defaultValue ? item.defaulValue : false
-                "
-                (valueChange)="reportObj.valueChange($event,false,'switch')"
-              ></codx-input>
-            </div>
-            <div
-              class="w-100 ms-5 mt-3"
-              *ngIf="item.controlType == 'LVCheckbox'"
-            >
-            <div class="d-flex">
-              <div class="float-start mx-5">
-                <codx-input
-                type="checkBox"
-                [field]="item.controlName"
-                [crrValue]="
-                  item.defaultValue ? item.defaulValue : false
-                "
-                (valueChange)="valueChange($event)"
-              ></codx-input>
-              </div>
-              <div class="w-100 float-end">
-                <span
-                style="font-size:12px;font-weight: 400;"
-                >{{item.labelName}}
-              </span>
-              </div>
-            </div>
 
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'DateTime'">
-            <div class="my-2 ">
-              <codx-dropdown-calendar
-                cssPopup="h-600px w-800px"
-                cssClass=" button-radius"
-                (change)="reportObj.changeValueDate($event)"
-              ></codx-dropdown-calendar>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'int'">
-            <div class="w-100 mt-3">
-              <div class="d-flex">
-                <div class="float-start me-1">
-                  <codx-input
-                    type="number"
-                    field="numberFrom"
-
-                    [crrValue]="
-                      item.defaultValue ? item.defaultValue : 0
-                    "
-                    (valueChange)="reportObj.valueChange($event)"
-                    placeholder="Từ"
-                  ></codx-input>
-                </div>
-                <div class="float-end ms-1">
-                  <codx-input
-                    type="number"
-                    field="numberTo"
-                    [crrValue]="
-                      item.defaultValue ? item.defaultValue : 0
-                    "
-                    (valueChange)="reportObj.valueChange($event)"
-                    placeholder="Đến"
-                  ></codx-input>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
-      </div>
-    </div>
-  </div>
-</ng-template>
 <ng-template #report>
-  <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report>
+  <report-viewer [reportUUID]="reportUUID"[parameters]="param" [print]="print"></report-viewer>
+  <!-- <iframe style="height: 100%; width: 100%;" #iframe [src]="urlSafe">
+
+  </iframe> -->
+  <!-- <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report> -->
   </ng-template>
+

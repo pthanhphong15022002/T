@@ -67,7 +67,7 @@ export class BookingRoomComponent extends UIComponent {
   lstPined: any = [];
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
-  
+
   formModel: FormModel;
   constructor(
     private injector: Injector,
@@ -188,12 +188,7 @@ export class BookingRoomComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  collapse(evt) {
-    this.reportObj && this.reportObj.collapse();
-    this.titleCollapse = this.reportObj.isCollapsed
-      ? 'Mở hộp tham số'
-      : 'Đóng hộp tham số';
-  }
+
   changeValueDate(evt: any) {}
 
   valueChange(evt: any, a?: any, type?: any) {}
