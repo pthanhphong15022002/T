@@ -181,7 +181,6 @@
                 (click)="changeShowThumbnailState()"
               ></e-item>
               <e-item
-                [disabled]="isDisable"
                 prefixIcon="icon-skip_previous icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="firstPage"
               >
@@ -190,7 +189,6 @@
               <e-item
                 prefixIcon="icon-navigate_before icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="previous"
-                [disabled]="isDisable"
               >
                 <!-- (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()" -->
               </e-item>
@@ -198,14 +196,12 @@
               <e-item
                 prefixIcon="icon-navigate_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="next"
-                [disabled]="isDisable"
               >
                 <!-- (click)="pdfviewerControl?.navigation?.goToNextPage()" -->
               </e-item>
               <e-item
                 prefixIcon="icon-skip_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="lastPage"
-                [disabled]="isDisable"
               >
               </e-item>
               <!-- (click)="pdfviewerControl?.navigation?.goToLastPage()" -->
@@ -289,53 +285,50 @@
           </ejs-toolbar>
         </div>
       </div>
-      <div class="pdfviewer_Space">
-        <ngx-extended-pdf-viewer
-          #ngxPdfView
-          *ngIf="curFileUrl ? true : false"
-          [(src)]="curFileUrl"
-          [height]="'100vh'"
-          [(zoom)]="zoomValue"
-          [zoomLevels]="zoomValue"
-          [(page)]="curPage"
-          [customToolbar]="pdfToolbar"
-          [showHandToolButton]="false"
-          [showUnverifiedSignatures]="true"
-          [sidebarVisible]="!hideThumbnail"
-          [showSidebarButton]="false"
-          (pdfLoadingStarts)="loadingPdf($event)"
-          (pageRendered)="pageRendered($event)"
-          [pageViewMode]="pageViewMode"
-          [showBookmarkButton]="false"
-          [showPropertiesButton]="true"
-          [customSidebar]="withoutSidebar"
-          [customThumbnail]="ngxThumbnail"
-          [enableDragAndDrop]="false"
-        >
-        </ngx-extended-pdf-viewer>
-        <ng-template #ngxThumbnail let-PAGE_NUMBER>
-          <a class="pdf-viewer-template test-temp2">
-            <div
-              class="thumbnail"
-              [classList]="
-                PAGE_NUMBER == curPage ? 'border border-primary' : ''
-              "
-              data-page-number="PAGE_NUMBER"
-              (click)="goToPage(PAGE_NUMBER)"
-            >
-              <div class="image-container d-flex mb-2">
-                <!-- image is automatically inserted here -->
-              </div>
+
+      <ngx-extended-pdf-viewer
+        #ngxPdfView
+        *ngIf="curFileUrl ? true : false"
+        [(src)]="curFileUrl"
+        [(zoom)]="zoomValue"
+        [zoomLevels]="zoomValue"
+        [(page)]="curPage"
+        [customToolbar]="pdfToolbar"
+        [showHandToolButton]="false"
+        [showUnverifiedSignatures]="true"
+        [sidebarVisible]="!hideThumbnail"
+        [showSidebarButton]="false"
+        (pdfLoadingStarts)="loadingPdf($event)"
+        (pdfLoaded)="loadedPdf($event)"
+        (pageRendered)="pageRendered($event)"
+        [showBookmarkButton]="false"
+        [showPropertiesButton]="true"
+        [customSidebar]="withoutSidebar"
+        [customThumbnail]="ngxThumbnail"
+        [enableDragAndDrop]="true"
+        [handTool]="true"
+      >
+      </ngx-extended-pdf-viewer>
+      <ng-template #ngxThumbnail let-PAGE_NUMBER>
+        <a class="pdf-viewer-template">
+          <div
+            class="thumbnail"
+            [classList]="PAGE_NUMBER == curPage ? 'border border-primary' : ''"
+            data-page-number="PAGE_NUMBER"
+            (click)="goToPage(PAGE_NUMBER)"
+          >
+            <div class="image-container d-flex mb-2">
+              <!-- image is automatically inserted here -->
             </div>
-          </a>
-        </ng-template>
-        <ng-template #withoutSidebar>
-          <div id="sidebarContainer" class="d-flex w-0 h-0 d-none">
-            <pdf-sidebar-content></pdf-sidebar-content>
-            <div id="sidebarResizer" class="d-none"></div>
           </div>
-        </ng-template>
-      </div>
+        </a>
+      </ng-template>
+      <ng-template #withoutSidebar>
+        <div id="sidebarContainer" class="d-flex w-0 h-0 d-none">
+          <pdf-sidebar-content></pdf-sidebar-content>
+          <div id="sidebarResizer" class="d-none"></div>
+        </div>
+      </ng-template>
     </div>
     <div
       class="actions flex-column flex-lg-row-auto main-right"
@@ -490,7 +483,7 @@
               <ng-container>
                 <ejs-listview
                   id="groupedList"
-                  [dataSource]="lstAreas"
+                  [(dataSource)]="lstAreas"
                   [cssClass]="cssClass"
                   [showHeader]="true"
                 >
@@ -498,9 +491,10 @@
                     <div
                       class="annotationItem py-3 px-3"
                       *ngIf="
-                        this.isApprover &&
-                        (area.signer != this.curSignerID ||
-                          area.stepNo != this.stepNo)
+                        !this.isApprover ||
+                        (this.isApprover &&
+                          (area.signer != this.curSignerID ||
+                            area.stepNo != this.stepNo))
                       "
                       (click)="goToSelectedAnnotation(area)"
                     >
@@ -533,7 +527,7 @@
                         "
                         [formGroup]="formAnnot"
                       >
-                        <div class="qr-switch" *ngIf="area.labelType == 8">
+                        <!-- <div class="qr-switch" *ngIf="area.labelType == 8">
                           <codx-input
                             class="form-control me-2"
                             type="switch"
@@ -547,9 +541,9 @@
                             >
                             </codx-label>
                           </codx-input>
-                        </div>
+                        </div> -->
                         <div
-                          class="text-content my-2 ms-12"
+                          class="text-content form-control my-2 ms-12"
                           *ngIf="area.labelType == 6"
                         >
                           <input
@@ -569,7 +563,7 @@
                               'fst-italic': isItalic,
                               'text-decoration-underline': isUnd
                             }"
-                            [defaultValue]="area.labelType"
+                            [defaultValue]="'area.labelValue'"
                           />
                         </div>
 
@@ -580,7 +574,7 @@
                           <ejs-dropdownlist
                             class="me-2 min-w-70px"
                             id="dateFormatsDropdownList"
-                            [(dataSource)]="lstAnnotDateFormat"
+                            [dataSource]="lstAnnotDateFormat"
                             [(value)]="curAnnotDateFormat"
                             formControlName="dateFormat"
                           >
@@ -594,7 +588,7 @@
                             <ejs-dropdownlist
                               class="me-2 min-w-70px"
                               id="fontStylesDropdownList"
-                              [(dataSource)]="lstAnnotFontStyle"
+                              [dataSource]="lstAnnotFontStyle"
                               [(value)]="curAnnotFontStyle"
                               formControlName="fontStyle"
                             >
@@ -602,7 +596,7 @@
                             <ejs-dropdownlist
                               class="me-2 w-100px"
                               id="fontSizesDropdownList"
-                              [(dataSource)]="lstAnnotFontSize"
+                              [dataSource]="lstAnnotFontSize"
                               [(value)]="curAnnotFontSize"
                               formControlName="fontSize"
                             >
@@ -653,22 +647,33 @@
                             </button>
                           </div>
                         </div>
-                        <div class="d-flex ms-12">
+                        <div class="d-flex ms-12" *ngIf="area.labelType == 5">
                           <codx-input
-                            class="me-4"
+                            class="me-4 date-Type"
+                            name="date-Type"
                             type="radio"
-                            label="Ngày phát hành"
-                            [checked]="true"
+                            [(checked)]="chooseSignDate"
+                            labelPosition="After"
+                          >
+                          </codx-input
+                          ><codx-label
+                            name="lblReleaseDay"
+                            default="Ngày phát hành"
+                            [formModel]=""
+                          ></codx-label>
+                          <codx-input
+                            class="me-4 date-Type"
+                            type="radio"
+                            name="date-Type"
+                            [(checked)]="!chooseSignDate"
                             labelPosition="After"
                           >
                           </codx-input>
-                          <codx-input
-                            type="radio"
-                            label="Ngày ký"
-                            [checked]="false"
-                            labelPosition="After"
-                          >
-                          </codx-input>
+                          <codx-label
+                            name="lblSignDate"
+                            default="Ngày ký"
+                            [formModel]=""
+                          ></codx-label>
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
                           <button
@@ -731,12 +736,6 @@
       </ejs-tab>
     </div>
   </div>
-  <img
-    class="row position-absolute invisible"
-    style="width: 250px !important; height: 250px !important"
-    #qrCode
-    id="qrCode"
-  />
 </div>
 
 <ng-template #footer let-data>
