@@ -153,9 +153,10 @@ export class PatternComponent extends UIComponent implements OnInit {
     // });
   }
 
-  openFormEdit(recid = '', i = -1, elm = null) {
+  openFormEdit(item = null, i = null, elm = null) {
     var obj = {
       formType: 'edit',
+      dataUpdate: item,
     };
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;

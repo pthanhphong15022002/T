@@ -9,7 +9,7 @@
                     *ngIf="i < lstPattern.length - 1; else template">
                     <div class="action-menu d-flex">
                         <div class="d-flex align-items-center">
-                            <a class="action-item" (click)="openFormEdit(item.recID, i, elm)">
+                            <a class="action-item" (click)="openFormEdit(item, i, elm)">
                                 <div class="d-flex align-items-center btn-tooltip">
                                     <span class="icon-edit icon-20 ml-2 mr-2"></span>
                                     <span class="tooltiptext">
@@ -36,10 +36,10 @@
                     <ng-template #otherColor>
                         <span class="font-size-h3 font-weight-boldest img-pat-edit noimage symbol-label text-white"
                             [style.background-color]="item.backgroundColor" style="
-              background-image: none;
-              width: 100px !important;
-              height: 150px !important;
-            "></span>
+                        background-image: none;
+                        width: 100px !important;
+                        height: 150px !important;
+                        "></span>
                     </ng-template>
                     <span class="icon-check text-white default" *ngIf="item.isDefault"></span>
                 </div>
