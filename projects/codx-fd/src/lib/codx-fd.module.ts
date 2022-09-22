@@ -1,5 +1,3 @@
-import { EditBallotComponent } from './setting/feedback-message/ballot/edit-ballot/edit-ballot.component';
-import { BallotComponent } from './setting/feedback-message/ballot/ballot.component';
 import { BehaviorComponent } from './setting/category/behavior/behavior.component';
 import { BehaviorruleComponent } from './setting/category/behaviorrule/behaviorrule.component';
 import { GiftgroupComponent } from './setting/category/giftgroup/giftgroup.component';
@@ -37,6 +35,11 @@ import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { FeedbackMessageComponent } from './setting/feedback-message/feedback-message.component';
+import { PatternComponent } from './setting/feedback-message/pattern/pattern.component';
+import { EditPatternComponent } from './setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
+import { PolicyCardComponent } from './setting/feedback-message/policy-card/policy-card.component';
+import { PolicyCoinComponent } from './setting/feedback-message/policy-coin/policy-coin.component';
+import { PolicyDedicationComponent } from './setting/feedback-message/policy-dedication/policy-dedication.component';
 
 export const routes: Routes = [
   {
@@ -136,8 +139,11 @@ const Component: Type<any>[] = [
   BehaviorComponent,
   PopupAddGiftComponent,
   FeedbackMessageComponent,
-  BallotComponent,
-  EditBallotComponent,
+  PatternComponent,
+  EditPatternComponent,
+  PolicyCardComponent,
+  PolicyCoinComponent,
+  PolicyDedicationComponent,
 ];
 
 @NgModule({

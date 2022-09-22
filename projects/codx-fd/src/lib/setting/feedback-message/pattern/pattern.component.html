@@ -12,13 +12,19 @@
                             <a class="action-item" (click)="openFormEdit(item.recID, i, elm)">
                                 <div class="d-flex align-items-center btn-tooltip">
                                     <span class="icon-edit icon-20 ml-2 mr-2"></span>
-                                    <span class="tooltiptext">Edit</span>
+                                    <span class="tooltiptext">
+                                        <codx-label name="lblEdit" [formModel]="" default='Edit'>
+                                    </codx-label>
+                                    </span>
                                 </div>
                             </a>
                             <a class="action-item" (click)="delete(item.recID, i)">
                                 <div class="d-flex align-items-center btn-tooltip">
                                     <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
-                                    <span class="tooltiptext">Delete</span>
+                                    <!-- <span class="tooltiptext"> -->
+                                        <codx-label name="lblDelete" [formModel]="" default='Delete'>
+                                            </codx-label>
+                                    <!-- </span> -->
                                 </div>
                             </a>
                         </div>

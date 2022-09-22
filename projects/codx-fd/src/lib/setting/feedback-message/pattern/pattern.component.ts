@@ -18,16 +18,16 @@ import {
   ViewType,
 } from 'codx-core';
 import _ from 'lodash';
-import { BallotService } from './ballot.service';
-import { EditBallotComponent } from './edit-ballot/edit-ballot.component';
+import { EditPatternComponent } from './edit-pattern/edit-pattern.component';
+import { PatternService } from './pattern.service';
 
 @Component({
-  selector: 'app-ballot',
-  templateUrl: './ballot.component.html',
-  styleUrls: ['./ballot.component.scss'],
+  selector: 'app-pattern',
+  templateUrl: './pattern.component.html',
+  styleUrls: ['./pattern.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BallotComponent extends UIComponent implements OnInit {
+export class PatternComponent extends UIComponent implements OnInit {
   @Input() funcID: string;
   @Input() type: string;
 
@@ -40,7 +40,7 @@ export class BallotComponent extends UIComponent implements OnInit {
 
   constructor(
     private changedr: ChangeDetectorRef,
-    private ptsv: BallotService,
+    private ptsv: PatternService,
     private notificationsService: NotificationsService,
     private confirmationDialogService: NotificationsService,
     private injector: Injector,
@@ -72,7 +72,7 @@ export class BallotComponent extends UIComponent implements OnInit {
   LoadData() {
     //this.ngxLoader.start();
     this.api
-      .call('ERM.Business.FED', 'PattentsBusiness', 'GetCardTypeAsync', [
+      .call('ERM.Business.FD', 'PatternsBusiness', 'GetCardTypeAsync', [
         this.type,
       ])
       .subscribe((res) => {
@@ -139,7 +139,7 @@ export class BallotComponent extends UIComponent implements OnInit {
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = 'Auto';
-    this.dialog = this.callfunc.openSide(EditBallotComponent, obj, option);
+    this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
     // this.dialog.closed.subscribe((e) => {
     //   if (e?.event) {
     //     e.event.modifiedOn = new Date();
@@ -156,7 +156,7 @@ export class BallotComponent extends UIComponent implements OnInit {
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = 'Auto';
-    this.dialog = this.callfunc.openSide(EditBallotComponent, obj, option);
+    this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
     // this.dialog.closed.subscribe((e) => {
     //   if (e?.event) {
     //     e.event.modifiedOn = new Date();

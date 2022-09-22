@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class BallotService {
+export class PatternService {
 
   id = "";
   //recID = "";

@@ -12,7 +12,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { AuthStore, ScrollComponent, UIComponent } from 'codx-core';
+import { AuthStore, LangPipe, ScrollComponent, UIComponent } from 'codx-core';
 import Konva from 'konva';
 import { CodxEsService } from '../../codx-es.service';
 import { PopupCaPropsComponent } from '../popup-ca-props/popup-ca-props.component';
@@ -21,6 +21,7 @@ import { tmpAreaName, tmpSignArea } from './model/tmpSignArea.model';
 import {
   NgxExtendedPdfViewerComponent,
   NgxExtendedPdfViewerService,
+  pdfDefaultOptions,
   PdfThumbnailDrawnEvent,
 } from 'ngx-extended-pdf-viewer';
 import { Stage } from 'konva/lib/Stage';
@@ -38,9 +39,17 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     private actionCollectionsChanges: IterableDiffers,
     private datePipe: DatePipe
   ) {
+    pdfDefaultOptions.renderInteractiveForms = false;
+    pdfDefaultOptions.annotationEditorEnabled = true;
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.router.snapshot.params['funcID'];
+    // var pipe = new LangPipe(this.cache);
+    // pipe
+    //   .transform('Ngày phát hành 1', 'lblReleaseDay', 'Sys')
+    //   .subscribe((res) => {
+    //     debugger;
+    //   });
   }
 
   //Input
@@ -73,9 +82,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   vcHeight = 0;
   vcTop = 0;
   vcLeft = 0;
-  stage: any;
-  layer: any;
-  tr: any;
+  stage: Konva.Stage;
+  layer: Konva.Layer;
+  tr: Konva.Transformer;
   contextMenu: any;
 
   //vll
@@ -84,7 +93,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   //page
   pageMax;
   pageStep;
-  pageViewMode = 'single';
+  pageViewMode = 'infinite-scroll';
   curPage = 1;
 
   //zoom
@@ -130,7 +139,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   curFileID;
   curFileUrl;
   //font
-  lstAnnotFontStyle;
+  lstAnnotFontStyle = [];
   curAnnotFontStyle;
 
   //size
@@ -158,6 +167,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   align;
   isAwait;
   areaControl;
+  allowEdit;
 
   //css ???
   public cssClass: string = 'e-list-template';
@@ -182,6 +192,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       this.direction = res.direction;
       this.areaControl = res.areaControl == '1';
       this.isAwait = res.await == '1';
+      this.allowEdit = res.allowEditAreas;
       this.detectorRef.detectChanges();
     });
 
@@ -224,11 +235,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
     this.cache.valueList('ES015').subscribe((res) => {
       this.vllActions = res.datas;
+      console.log('actions', this.vllActions);
     });
 
     this.cache.valueList('ES024').subscribe((res) => {
-      this.lstAnnotFontStyle = res?.datas?.filter((font) => {
-        return font?.text;
+      res?.datas?.forEach((font) => {
+        this.lstAnnotFontStyle.push(font.text);
       });
       this.curAnnotFontStyle = this.lstAnnotFontStyle[0];
       this.detectorRef.detectChanges();
@@ -240,6 +252,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       fontSize: new FormControl(this.curAnnotFontSize),
       dateFormat: new FormControl(this.curAnnotDateFormat),
     });
+    this.detectorRef.detectChanges();
   }
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
@@ -248,17 +261,18 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //go to
   goToSelectedCA(ca, idx) {
+    console.log('ca', ca);
+
     this.lstCACollapseState[idx].open = !this.lstCACollapseState[idx].open;
     this.curPage = this.lstCA[idx].signedPosPage;
     if (!ca.isVerified) {
       this.lstCACollapseState[idx].verifiedFailed =
         !this.lstCACollapseState[idx].verifiedFailed;
     }
-    console.log('goToSelectedCA chua lam');
+    this.curPage = ca.signedPosPage;
   }
   goToPage(e) {
     console.log('change page', e);
-
     this.curPage = e.data;
     if (this.curPage < 1) {
       this.curPage = 1;
@@ -268,9 +282,26 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     //   if (!this.isDisable)
     //     this.pdfviewerControl?.navigation?.goToPage(this.curPage);
   }
-  goToSelectedAnnotation(area) {
-    this.curPage = area.location.pageNumber + 1;
-    console.log('goToSelectedAnnotation chua lam');
+  goToSelectedAnnotation(area: tmpSignArea) {
+    if (this.curPage != area.location.pageNumber + 1) {
+      this.curPage = area.location.pageNumber + 1;
+    }
+    this.curSelectedArea = this.layer.getChildren().find((node) => {
+      return node.attrs.id == area.recID;
+    });
+
+    if (this.curSelectedAnnotID != area.recID) {
+      this.formAnnot.controls['content'].setValue(area.labelValue);
+      this.isBold = area.fontFormat?.includes('bold') ? true : false;
+      this.isItalic = area.fontFormat?.includes('italic') ? true : false;
+      this.isUnd = area.fontFormat?.includes('underline') ? true : false;
+      this.curAnnotFontSize = area.fontSize;
+      this.curAnnotFontStyle = area.fontStyle;
+      this.tr.draggable(!area.isLock);
+      this.tr.nodes([this.curSelectedArea]);
+      this.curSelectedAnnotID = area.recID;
+      this.detectorRef.detectChanges();
+    }
   }
 
   //get
@@ -280,18 +311,20 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     })?.fullName;
   }
   getListCA() {
-    this.esService.getListCA(this.fileInfo.fileID).subscribe((res) => {
-      this.lstCA = res;
-      this.lstCA.forEach((ca) => {
-        this.lstCACollapseState.push({
-          open: false,
-          verifiedFailed: false,
-          detail: false,
+    this.esService
+      .getListCA(this.recID, this.fileInfo.fileID)
+      .subscribe((res) => {
+        this.lstCA = res;
+        this.lstCA?.forEach((ca) => {
+          this.lstCACollapseState.push({
+            open: false,
+            verifiedFailed: false,
+            detail: false,
+          });
         });
-      });
 
-      this.detectorRef.detectChanges();
-    });
+        this.detectorRef.detectChanges();
+      });
   }
 
   //sign pdf
@@ -315,7 +348,10 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
   //before load pdf
   loadingPdf(e: any) {}
-
+  //loaded pdf
+  loadedPdf(e: any) {
+    this.pageMax = e.pagesCount;
+  }
   //render
   lastRender() {
     let ngxCanvas = document.getElementsByTagName('canvas').item(0);
@@ -326,7 +362,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     virtualCanvasEle.style.position = 'absolute';
     virtualCanvasEle.style.top = '0';
     virtualCanvasEle.style.left = '0';
-    virtualCanvasEle.style.zIndex = '1';
+    virtualCanvasEle.style.zIndex = '2';
     virtualCanvasEle.style.width = this.vcWidth + 'px';
     virtualCanvasEle.style.width = this.vcWidth + 'px';
     virtualCanvasEle.style.border = '1px solid blue';
@@ -354,14 +390,10 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         this.contextMenu.style.display = 'none';
         return;
       }
-      console.log('e', e);
-
       this.curSelectedArea = e.target;
       console.log('dang chon', this.curSelectedArea);
 
       if (this.contextMenu) {
-        console.log('hien len');
-
         this.contextMenu.style.display = 'initial';
         this.contextMenu.style.zIndex = '2';
 
@@ -375,8 +407,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       if (e.target == this.stage) {
         this.tr.nodes([]);
         this.contextMenu.style.display = 'none';
-
-        console.log('click out side');
       } else {
         console.log('click on', e.target);
         this.curSelectedArea = e.target;
@@ -394,11 +424,15 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       )
       .subscribe((res) => {
         this.lstAreas = res;
+        this.detectorRef.detectChanges();
+
         this.lstAreas
           ?.filter((loca) => {
             return loca.location.pageNumber + 1 == this.curPage;
           })
           ?.forEach((area) => {
+            console.log('area', area);
+
             let isRender = true;
             if (
               (this.isApprover || this.isDisable) &&
@@ -476,17 +510,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           });
         this.detectorRef.detectChanges();
       });
-    this.esService.getListCA(this.curFileID).subscribe((res) => {
-      this.lstCA = res;
-      this.detectorRef.detectChanges();
-    });
+
     this.detectorRef.detectChanges();
   }
 
   timeOutId;
   pageRendered(e: any) {
-    this.pageMax = e?.pagesCount;
-
     //context menu
     this.contextMenu = document.getElementById('contextMenu');
     document.getElementById('delete-btn')?.addEventListener('click', () => {
@@ -501,6 +530,17 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.curSelectedArea.destroy();
+            this.esService
+              .getSignAreas(
+                this.recID,
+                this.fileInfo.fileID,
+                this.isApprover,
+                this.user.userID
+              )
+              .subscribe((res) => {
+                this.lstAreas = res;
+                this.detectorRef.detectChanges();
+              });
           }
         });
     });
@@ -583,12 +623,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       }
 
       case 'transformend': {
-        tmpArea.location.width =
-          ((newSize ? newSize.width : tmpArea.location.width) / this.xScale) *
-          newScale.x;
-        tmpArea.location.height =
-          ((newSize ? newSize.height : tmpArea.location.height) / this.yScale) *
-          newScale.y;
+        tmpArea.location.width = newScale.x / this.xScale;
+        tmpArea.location.height = newScale.y / this.yScale;
+
         break;
       }
     }
@@ -612,13 +649,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       LabelType: labelType,
     };
     let recID = Guid.newGuid();
-
     switch (type) {
       case 'text':
         var textArea = new Konva.Text({
           text: url,
           fontSize: 23,
-          fontFamily: 'Calibri',
+          fontFamily: 'Arial',
           draggable: draggable,
           padding: 10,
           name: JSON.stringify(tmpName),
@@ -637,26 +673,28 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
                 let txtY = textArea.position().y;
                 let txtX = textArea.position().x;
-                let txtW = textArea.width();
-                let txtH = textArea.height();
+                let txtW = this.xScale;
+                let txtH = this.yScale;
 
                 let tmpArea: tmpSignArea = {
                   signer: authorID,
                   labelType: labelType,
                   labelValue: url,
                   isLock: false,
+                  allowEditAreas: this.allowEdit,
                   signDate: false,
                   dateFormat: '1',
                   location: {
                     top: txtY / this.yScale,
                     left: txtX / this.xScale,
-                    width: txtW,
-                    height: txtH,
+                    width: txtW / this.xScale,
+                    height: txtH / this.yScale,
                     pageNumber: this.curPage - 1,
                   },
                   stepNo: stepNo,
                   fontStyle: textArea.fontFamily(),
-                  fontFormat: textArea.fontStyle(),
+                  fontFormat:
+                    textArea.fontStyle() + ' ' + textArea.textDecoration(),
                   fontSize: textArea.fontSize(),
                   signatureType: 2,
                   comment: '',
@@ -678,18 +716,40 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                           textArea.scale()
                         );
                       });
+                      this.esService
+                        .getSignAreas(
+                          this.recID,
+                          this.fileInfo.fileID,
+                          this.isApprover,
+                          this.user.userID
+                        )
+                        .subscribe((res) => {
+                          this.lstAreas = res;
+                          this.holding = 0;
+                          this.detectorRef.detectChanges();
+                        });
                     }
                   });
               });
             });
           } else {
             textArea.id(area.recID ? area.recID : textArea.id());
-            textArea.draggable(!area.isLock);
-            textArea.width(Number(area.location.width) * this.xScale);
-            textArea.height(Number(area.location.height) * this.yScale);
-            textArea.scale({ x: this.xScale, y: this.yScale });
+            textArea.draggable(!area.allowEditAreas ? false : area.isLock);
+            textArea.scale({
+              x: area.location.width * this.xScale,
+              y: area.location.height * this.yScale,
+            });
             textArea.fontSize(area.fontSize);
-            textArea.fontStyle(area.fontFormat);
+            textArea.fontStyle(
+              area.fontFormat
+                .replace('line-through', '')
+                .replace('underline', '')
+            );
+            let decorate =
+              (area.fontFormat.includes('underline') ? 'underline ' : '') +
+              (area.fontFormat.includes('line-through') ? 'line-through' : '');
+
+            textArea.textDecoration(decorate);
             textArea.fontFamily(area.fontStyle);
             let txtX = Number(area.location.left) * this.xScale;
             let txtY = Number(area.location.top) * this.yScale;
@@ -705,6 +765,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
               );
             });
             this.layer.add(textArea);
+            textArea.draw();
             this.layer.draw();
             this.detectorRef.detectChanges();
           }
@@ -719,6 +780,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           let imgH = 100;
           let imgArea = new Konva.Image({
             image: img,
+            width: 200,
+            height: 100,
             id: recID,
             name: JSON.stringify(tmpName),
             draggable: true,
@@ -727,8 +790,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           if (isSaveToDB) {
             this.stage.on('mouseover', () => {
               imgArea.position(this.stage.getPointerPosition());
-              imgArea.width(imgW * this.xScale);
-              imgArea.height(imgH * this.yScale);
+              // imgArea.width(imgW * this.xScale);
+              // imgArea.height(imgH * this.yScale);
+              imgArea.scale({ x: this.xScale, y: this.yScale });
               this.tr.nodes([imgArea]);
               this.layer.add(imgArea);
               imgArea.startDrag();
@@ -743,18 +807,19 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                   labelType: labelType,
                   labelValue: null,
                   isLock: false,
+                  allowEditAreas: this.allowEdit,
                   signDate: false,
                   dateFormat: '1',
                   location: {
                     top: imgPY / this.yScale,
                     left: imgPX / this.xScale,
-                    width: imgW,
-                    height: imgH,
+                    width: 1,
+                    height: 1,
                     pageNumber: this.curPage - 1,
                   },
                   stepNo: stepNo,
-                  fontStyle: 'Arial',
-                  fontFormat: 'BIU',
+                  fontStyle: '',
+                  fontFormat: '',
                   fontSize: 30,
                   signatureType: 2,
                   comment: '',
@@ -776,16 +841,30 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                           imgArea.scale()
                         );
                       });
+                      this.esService
+                        .getSignAreas(
+                          this.recID,
+                          this.fileInfo.fileID,
+                          this.isApprover,
+                          this.user.userID
+                        )
+                        .subscribe((res) => {
+                          this.lstAreas = res;
+                          this.holding = 0;
+                          this.detectorRef.detectChanges();
+                        });
                       console.log('da save area', imgArea);
                     }
                   });
               });
             });
           } else {
-            imgArea.id(area.recID ? area.recID : imgArea.id());
-            imgArea.draggable(!area.isLock);
-            imgArea.width(Number(area.location.width) * this.xScale);
-            imgArea.height(Number(area.location.height) * this.yScale);
+            imgArea.id(area.recID);
+            imgArea.draggable(!area.allowEditAreas ? false : area.isLock);
+            imgArea.scale({
+              x: this.xScale * area.location.width,
+              y: this.yScale * area.location.height,
+            });
             let imgX = Number(area.location.left) * this.xScale;
             let imgY = Number(area.location.top) * this.yScale;
             imgArea.x(imgX);
@@ -800,6 +879,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
               );
             });
             this.layer.add(imgArea);
+            imgArea.draw();
             this.layer.draw();
             this.detectorRef.detectChanges();
           }
@@ -810,14 +890,11 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       default:
         break;
     }
-    this.holding = 0;
-    this.detectorRef.detectChanges();
   }
 
   //change
-  changeAnnotPro(type, recID, createdOn) {
-    console.log('changeAnnotPro chua lam');
-  }
+  chooseSignDate = true;
+  changeAnnotPro(type, recID, createdOn) {}
   changeQRRenderState(e) {
     this.renderQRAllPage = !this.renderQRAllPage;
   }
@@ -844,10 +921,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
             : this.vllActions[type - 1].text;
           break;
         case 5:
+          let selected = document.getElementsByClassName('date-Type');
+
           this.url = this.datePipe.transform(new Date(), 'M/d/yy, h:mm a');
           break;
         case 6:
-          this.url = this.vllActions[5];
+          this.url = this.vllActions[5].text;
           break;
         case 7:
           this.url = this.fileInfo?.fileRefNum;
@@ -917,6 +996,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         this.isUnd = !this.isUnd;
         break;
     }
+    this.detectorRef.detectChanges();
   }
   changeSignFile(e: any) {
     this.lstSigners = e.itemData.signers;
