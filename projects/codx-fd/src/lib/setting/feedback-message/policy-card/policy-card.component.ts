@@ -1,37 +1,50 @@
-import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Injector,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { data } from '@syncfusion/ej2';
-import { content } from '@syncfusion/ej2-grids';
-import { selected } from '@syncfusion/ej2-pivotview';
-import { ApiHttpService, CacheService, DataRequest, LangPipe, NotificationsService, UIComponent, ViewData } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  DataRequest,
+  LangPipe,
+  NotificationsService,
+  UIComponent,
+  ViewData,
+} from 'codx-core';
 
 @Component({
   selector: 'app-policy-card',
   templateUrl: './policy-card.component.html',
-  styleUrls: ['./policy-card.component.scss']
+  styleUrls: ['./policy-card.component.scss'],
 })
 export class PolicyCardComponent extends UIComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private dt: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    injector: Injector,
+    injector: Injector
   ) {
     super(injector);
   }
   action: any;
   item: any = {};
-  closeResult = "";
-  valueListNameCoin: string = "";
+  closeResult = '';
+  valueListNameCoin: string = '';
   objectUpdate: any = {};
-  fieldUpdate = "";
+  fieldUpdate = '';
   isLockCoin: boolean;
   isLockDedicate: boolean;
   isShowPolicyCard: boolean = true;
   formModel = '';
   @Output() changeLock = new EventEmitter<object>();
   @Input() typeCard: string;
-  
+
   onInit(): void {
     this.LoadData();
     this.LoadDataForChangeVLL();
@@ -40,11 +53,12 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   changeCombobox(data) {
     if (data.data[0].recID || data.data[0].RecID) {
       this.item.Approvers = data.data[0].recID || data.data[0].RecID;
-      this.objectUpdate["Approvers"] = data.data[0].recID || data.data[0].RecID;
+      this.objectUpdate['Approvers'] = data.data[0].recID || data.data[0].RecID;
       if (data.data.length > 1) {
         for (let i = 1; i < data.data.length; i++) {
-          this.objectUpdate["Approvers"] += ";";
-          this.objectUpdate["Approvers"] += data.data[i].recID || data.data[i].RecID;
+          this.objectUpdate['Approvers'] += ';';
+          this.objectUpdate['Approvers'] +=
+            data.data[i].recID || data.data[i].RecID;
         }
       }
       this.handleSaveParameter();
@@ -53,40 +67,44 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   changValuelist(data) {
     this.item[data.field] = data.data.value;
     this.handleLock(data.data.value);
-    let objectUpdate = {}
+    let objectUpdate = {};
     objectUpdate[data.field] = data.data.value;
     this.onSaveCMParameter(objectUpdate);
-
   }
   handleLock(status) {
     if (status == '0') {
       this.isLockCoin = true;
       this.isLockDedicate = true;
-      this.changeLock.emit({ isLockCoin: this.isLockCoin, isLockDedicate: this.isLockDedicate });
+      this.changeLock.emit({
+        isLockCoin: this.isLockCoin,
+        isLockDedicate: this.isLockDedicate,
+      });
       return;
     }
     switch (this.item.PolicyControl) {
-      case "1":
+      case '1':
         this.isLockCoin = false;
         this.isLockDedicate = false;
         break;
-      case "0":
+      case '0':
         this.isLockCoin = true;
         this.isLockDedicate = true;
         break;
-      case "2":
+      case '2':
         this.isLockCoin = false;
         this.isLockDedicate = true;
         break;
-      case "3":
+      case '3':
         this.isLockCoin = true;
         this.isLockDedicate = false;
         break;
     }
-    this.changeLock.emit({ isLockCoin: this.isLockCoin, isLockDedicate: this.isLockDedicate });
+    this.changeLock.emit({
+      isLockCoin: this.isLockCoin,
+      isLockDedicate: this.isLockDedicate,
+    });
   }
-  ViewData() {
-  }
+  ViewData() {}
   changeValueSwitch(nameProperty) {
     this.item[nameProperty] = this.item[nameProperty] === '0' ? '1' : '0';
     this.objectUpdate[nameProperty] = this.item[nameProperty];
@@ -104,11 +122,11 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   onSaveCMParameter(objectUpdate) {
     this.api
       .callSv(
-        "SYS",
-        "ERM.Business.CM",
-        "ParametersBusiness",
-        "SaveParamsOfPolicyAsync",
-        ["FED_Parameters", this.typeCard, JSON.stringify(objectUpdate)]
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'SaveParamsOfPolicyAsync',
+        ['FED_Parameters', this.typeCard, JSON.stringify(objectUpdate)]
       )
       .subscribe((res) => {
         if (res && res.msgBodyData.length > 0) {
@@ -121,49 +139,57 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         }
       });
   }
-  modelForm = { title: "", type: 0, quantity: 0, cycle: "" };
+  modelForm = { title: '', type: 0, quantity: 0, cycle: '' };
   async LoadLabel() {
     // var langPipe = new LangPipe(this.api, this.cache);
   }
 
   options = new DataRequest();
-  conboboxName = ''
+  conboboxName = '';
   openPopupCombobox(content) {
     // this.cbxsv.dataSelcected = [];
-    var split = this.item.Approvers.split(";",);
+    var split = this.item.Approvers.split(';');
     if (split.length > 1) {
-      this.api.call("ERM.Business.AD", "UsersBusiness", "GetListUsersGroupAsync", [this.item.Approvers]).subscribe(res => {
-        if (res && res.msgBodyData[0]) {
-          var data = res.msgBodyData[0];
-          data.forEach(element => {
-            // this.cbxsv.dataSelcected.push({ RecID: element.recID, GroupName: element.groupName, Note: element.note })
-          });
-        }
-      });
+      this.api
+        .call('ERM.Business.AD', 'UsersBusiness', 'GetListUsersGroupAsync', [
+          this.item.Approvers,
+        ])
+        .subscribe((res) => {
+          if (res && res.msgBodyData[0]) {
+            var data = res.msgBodyData[0];
+            data.forEach((element) => {
+              // this.cbxsv.dataSelcected.push({ RecID: element.recID, GroupName: element.groupName, Note: element.note })
+            });
+          }
+        });
     } else {
-      this.api.call("ERM.Business.AD", "UsersBusiness", "GetListUsersGroupAsync", [this.item.Approvers]).subscribe(res => {
-        if (res && res.msgBodyData[0]) {
-          var data = res.msgBodyData[0];
-          data.forEach(element => {
-            // this.cbxsv.dataSelcected.push({ RecID: element.recID, GroupName: element.groupName, Note: element.note })
-          });
-        }
-      });
+      this.api
+        .call('ERM.Business.AD', 'UsersBusiness', 'GetListUsersGroupAsync', [
+          this.item.Approvers,
+        ])
+        .subscribe((res) => {
+          if (res && res.msgBodyData[0]) {
+            var data = res.msgBodyData[0];
+            data.forEach((element) => {
+              // this.cbxsv.dataSelcected.push({ RecID: element.recID, GroupName: element.groupName, Note: element.note })
+            });
+          }
+        });
     }
     // this.cbxsv.appendData();
     this.modalService.open(content, {
-      ariaLabelledBy: "modal-basic-title",
+      ariaLabelledBy: 'modal-basic-title',
       centered: true,
-      size: "md",
+      size: 'md',
     });
     this.dt.detectChanges();
   }
   open(content, typeContent) {
     let arrayTitle = [
-      "Giới hạn phiếu cho",
-      "Giới hạn phiếu nhận",
-      "Giới hạn xu cho",
-      "Giới hạn xu cho/phiếu",
+      'Giới hạn phiếu cho',
+      'Giới hạn phiếu nhận',
+      'Giới hạn xu cho',
+      'Giới hạn xu cho/phiếu',
     ]; // Cần mapping ngôn ngữ
     this.modelForm.title = arrayTitle[typeContent];
     this.modelForm.type = typeContent;
@@ -183,15 +209,15 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       this.modelForm.quantity = this.item.MaxPointPerOnce;
     }
     this.modalService.open(content, {
-      ariaLabelledBy: "modal-basic-title",
+      ariaLabelledBy: 'modal-basic-title',
       centered: true,
-      size: "sm",
+      size: 'sm',
     });
     this.dt.detectChanges();
   }
   changeValueListRuleSelected(selected) {
     this.item.RuleSelected = selected.data.value;
-    this.objectUpdate["RuleSelected"] = selected.data.value;
+    this.objectUpdate['RuleSelected'] = selected.data.value;
     this.handleSaveParameter();
   }
   changValueListPopup(selected, typeContent) {
@@ -210,7 +236,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     let objectUpdate = {};
     if (this.modelForm.quantity == 0 || this.modelForm.quantity == null) {
       this.modelForm.quantity = 1;
-      this.notificationsService.notify("Vui lòng nhập số lượng lớn hơn 0");
+      this.notificationsService.notify('Vui lòng nhập số lượng lớn hơn 0');
       return null;
     }
     if (typeContent == 0) {
@@ -242,29 +268,29 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     }
 
     return this.api
-      .callSv("SYS", "CM", "ParametersBusiness", "SaveParamsOfPolicyAsync", [
-        "FED_Parameters",
+      .callSv('SYS', 'CM', 'ParametersBusiness', 'SaveParamsOfPolicyAsync', [
+        'FED_Parameters',
         this.typeCard,
-        JSON.stringify(objectUpdate)
+        JSON.stringify(objectUpdate),
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           if (res.msgBodyData[0] == true) {
-            this.notificationsService.notify("Hệ thống thực thi thành công!");
+            this.notificationsService.notify('Hệ thống thực thi thành công!');
             this.modalService.dismissAll();
             //this.LoadData();
             return;
           }
-          this.notificationsService.notify("Có lỗi xảy ra!");
+          this.notificationsService.notify('Có lỗi xảy ra!');
         }
       });
   }
   LoadData() {
     this.api
       .call(
-        "ERM.Business.FED",
-        "SettingsBusiness",
-        "GetDataForPolicyCardAsync",
+        'ERM.Business.FED',
+        'SettingsBusiness',
+        'GetDataForPolicyCardAsync',
         [this.typeCard]
       )
       .subscribe((res) => {
@@ -280,14 +306,14 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       });
   }
   LoadDataForChangeVLL() {
-    const PREDICATE = "FieldName = @0 OR FieldName = @1";
-    const DATA_VALUE = "ActiveCoins;ActiveMyKudos";
+    const PREDICATE = 'FieldName = @0 OR FieldName = @1';
+    const DATA_VALUE = 'ActiveCoins;ActiveMyKudos';
     this.api
       .execSv(
-        "SYS",
-        "ERM.Business.CM",
-        "ParametersBusiness",
-        "GetByPredicate",
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetByPredicate',
         [PREDICATE, DATA_VALUE]
       )
       .subscribe((res) => {
