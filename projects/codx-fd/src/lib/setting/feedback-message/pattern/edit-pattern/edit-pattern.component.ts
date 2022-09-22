@@ -54,7 +54,7 @@ export class EditPatternComponent implements OnInit {
     //   this.colorimg = this.patternSV.colorimg;
     //   if (recID) {
     //     this.isEdit = true;
-    //     this.api.execSv<any>("FED", "FED", "patternsBusiness", "GetAsync", [recID]).subscribe(res => {
+    //     this.api.execSv<any>("FD", "ERM.Business.FD", " PatternsBusiness", "GetAsync", [recID]).subscribe(res => {
     //       if (res)
     //         Object.assign(this.pattern, res);
     //       this.changedr.detectChanges();

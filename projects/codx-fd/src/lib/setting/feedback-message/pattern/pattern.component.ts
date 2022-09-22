@@ -28,13 +28,14 @@ import { PatternService } from './pattern.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class PatternComponent extends UIComponent implements OnInit {
-  @Input() funcID: string;
   @Input() type: string;
 
   reload = false;
-  lstPattent = null;
+  lstPattern = null;
   dialog: any;
   views: Array<ViewModel> = [];
+  functionList: any;
+  funcID = 'FDS026';
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
@@ -47,6 +48,9 @@ export class PatternComponent extends UIComponent implements OnInit {
     private callfunc: CallFuncService
   ) {
     super(injector);
+    this.cache.functionList(this.funcID).subscribe(res => {
+      if(res) this.functionList = res;
+    })
   }
 
   onInit(): void {
@@ -78,8 +82,9 @@ export class PatternComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           var data = res.msgBodyData[0] as any[];
-          this.lstPattent = data;
-          this.lstPattent.push({});
+          this.lstPattern = data;
+          this.lstPattern.push({});
+          console.log("check lstPattern", this.lstPattern)
           this.changedr.detectChanges();
         }
       });
@@ -89,24 +94,24 @@ export class PatternComponent extends UIComponent implements OnInit {
     this.reload = true;
     if (data.isDefault) {
       var arr = [];
-      this.lstPattent.filter(function (element, index) {
+      this.lstPattern.filter(function (element, index) {
         if (element['isDefault'] === true) element.isDefault = false;
         arr.push(element);
         return arr;
       });
-      this.lstPattent = [...arr];
+      this.lstPattern = [...arr];
     }
     if (data.cardType != this.type) {
-      _.remove(this.lstPattent, { recID: data.recID });
+      _.remove(this.lstPattern, { recID: data.recID });
     } else {
-      if (this.ptsv.indexEdit > -1) this.lstPattent[this.ptsv.indexEdit] = data;
+      if (this.ptsv.indexEdit > -1) this.lstPattern[this.ptsv.indexEdit] = data;
       else {
-        this.lstPattent[this.lstPattent.length - 1] = data;
-        this.lstPattent.push({});
+        this.lstPattern[this.lstPattern.length - 1] = data;
+        this.lstPattern.push({});
       }
     }
 
-    //this.lstPattent.push({});
+    //this.lstPattern.push({});
     this.changedr.detectChanges();
   }
 
@@ -150,7 +155,7 @@ export class PatternComponent extends UIComponent implements OnInit {
 
   openFormEdit(recid = '', i = -1, elm = null) {
     var obj = {
-      formType: 'add',
+      formType: 'edit',
     };
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
