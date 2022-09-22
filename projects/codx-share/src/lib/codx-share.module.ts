@@ -86,12 +86,12 @@ import { PopupAddComponent } from './components/codx-tasks/popup-add/popup-add.c
 import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component';
 import { TreeViewComponent } from './components/codx-tasks/tree-view/tree-view.component';
 import { CodxCommentHistoryComponent } from './components/codx-comment-history/codx-comment-history.component';
-import { PdfViewerAllModule } from '@syncfusion/ej2-angular-pdfviewer';
 import { CodxTreeHistoryComponent } from './components/codx-tree-history/codx-tree-history.component';
 import { CodxViewAssignComponent } from './components/codx-view-assign/codx-view-assign.component';
 import { FileComponent } from './components/codx-note/file/file.component';
 import { AttachmentComponent } from './components/attachment/attachment.component';
 import { CodxImportAddMappingTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping-template/codx-import-add-mapping-template.component';
+import { NotifyDrawerSliderComponent } from './layout/drawers/notify-drawer/notify-drawer-slider/notify-drawer-slider.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -132,6 +132,7 @@ const T_Component: Type<any>[] = [
   ApprovalTabsComponent,
   CodxApprovalStepComponent,
   NotifyDrawerComponent,
+  NotifyDrawerSliderComponent,
   MessengerDrawerComponent,
   ChatInnerComponent,
   CodxReferencesComponent,
@@ -177,7 +178,6 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     BoldReportsModule,
     BoldReportDesignerModule,
     BoldReportViewerModule,
-    PdfViewerAllModule,
     ReactiveFormsModule
   ],
   exports: [T_Component, T_Pipe],

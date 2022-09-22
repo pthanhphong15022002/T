@@ -1,16 +1,16 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, DialogData, DialogRef, ImageViewerComponent, NotificationsService } from 'codx-core';
-import { BallotService } from '../ballot.service';
-import { Ballot } from '../model/ballot.model';
+import { Pattern } from '../model/pattern.model';
+import { PatternService } from '../pattern.service';
 
 @Component({
-  selector: 'lib-edit-ballot',
-  templateUrl: './edit-ballot.component.html',
-  styleUrls: ['./edit-ballot.component.scss']
+  selector: 'lib-edit-pattern',
+  templateUrl: './edit-pattern.component.html',
+  styleUrls: ['./edit-pattern.component.scss']
 })
-export class EditBallotComponent implements OnInit {
-  ballot = new Ballot();
+export class EditPatternComponent implements OnInit {
+  pattern = new Pattern();
   isEdit = false;
   reload = false;
   colorimg = "";
@@ -23,7 +23,7 @@ export class EditBallotComponent implements OnInit {
   // @Input() cardType: string;
   cardType: string;
   constructor(
-    private ballotSV: BallotService,
+    private patternSV: PatternService,
     private changedr: ChangeDetectorRef,
     private at: ActivatedRoute,
     private notificationsService: NotificationsService,
@@ -36,9 +36,9 @@ export class EditBallotComponent implements OnInit {
     this.formModel = this.dialog?.formModel;
     data
     debugger
-    this.ballot.cardType = this.cardType;
-    this.ballot.headerColor = "#918e8e";
-    this.ballot.textColor = "#918e8e";
+    this.pattern.cardType = this.cardType;
+    this.pattern.headerColor = "#918e8e";
+    this.pattern.textColor = "#918e8e";
 
 
     this.cache.valueList("L1447").subscribe((res) => {
@@ -50,19 +50,19 @@ export class EditBallotComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.ballotSV.recID.subscribe((recID) => {
-    //   this.colorimg = this.ballotSV.colorimg;
+    // this.patternSV.recID.subscribe((recID) => {
+    //   this.colorimg = this.patternSV.colorimg;
     //   if (recID) {
     //     this.isEdit = true;
-    //     this.api.execSv<any>("FED", "FED", "ballotsBusiness", "GetAsync", [recID]).subscribe(res => {
+    //     this.api.execSv<any>("FD", "ERM.Business.FD", " PatternsBusiness", "GetAsync", [recID]).subscribe(res => {
     //       if (res)
-    //         Object.assign(this.ballot, res);
+    //         Object.assign(this.pattern, res);
     //       this.changedr.detectChanges();
     //       this.checkActive();
     //     });
-    //   } else if (!this.ballotSV.load) {
+    //   } else if (!this.patternSV.load) {
     //     this.isEdit = false;
-    //     this.ballot.cardType = this.cardType;
+    //     this.pattern.cardType = this.cardType;
     //     this.changedr.detectChanges();
     //     this.checkActive();
     //   }
@@ -77,18 +77,18 @@ export class EditBallotComponent implements OnInit {
   }
 
   closeCreate(): void {
-    // this.ballot = new Ballot();
-    // this.ballot.cardType = this.cardType;
-    // this.ballot.headerColor = "#918e8e";
-    // this.ballot.textColor = "#918e8e";
+    // this.pattern = new pattern();
+    // this.pattern.cardType = this.cardType;
+    // this.pattern.headerColor = "#918e8e";
+    // this.pattern.textColor = "#918e8e";
     // $('#create_card').removeClass('offcanvas-on');
     // $('#cardImageInput').val('');
   }
 
   valueChange(e, element) {
     // if (e.field === "backgroundColor") {
-    //   this.ballot.backgroundColor = e.data;
-    //   this.ballot.fileName = "";
+    //   this.pattern.backgroundColor = e.data;
+    //   this.pattern.fileName = "";
     //   var $elm = $('.symbol-label[data-color]', $('.patternt'));
     //   $elm.removeClass('color-check');
     //   $('kendo-colorpicker.symbol-label', $(element)).addClass('color-check');
@@ -101,15 +101,15 @@ export class EditBallotComponent implements OnInit {
     //       text.text(e.data);
     //       text.css("background-color", e);
     //       if (e.field == "headerColor")
-    //         $('.header-ballot').css('color', e);
+    //         $('.header-pattern').css('color', e);
     //       else if (e.field == "textColor")
-    //         $('.content-ballot').css('color', e);
+    //         $('.content-pattern').css('color', e);
     //     }
     //   }
     //   if (e.field === "cardType")
-    //     this.ballot[e.field] = e.data.value;
+    //     this.pattern[e.field] = e.data.value;
     //   else
-    //     this.ballot[e.field] = e.data;
+    //     this.pattern[e.field] = e.data;
     // }
   }
 
@@ -117,31 +117,31 @@ export class EditBallotComponent implements OnInit {
     // var $elm = $('.symbol-label[data-color]', $('.patternt'));
     // $elm.removeClass('color-check');
     // $('label.symbol-label').addClass('color-check');
-    // //if (!this.ballot.patternID) return;
-    // this.ballot.backgroundColor = "";
-    // this.ballot.fileName = event.currentTarget.files[0].name;
+    // //if (!this.pattern.patternID) return;
+    // this.pattern.backgroundColor = "";
+    // this.pattern.fileName = event.currentTarget.files[0].name;
     // this.changedr.detectChanges();
     // this.uploadImage.handleFileInput(event);
   }
 
 
-  saveBallot() {
-    // if (this.uploadImage?.imageUpload?.fileName) { this.ballot.fileName = ""; this.ballot.backgroundColor = ""; }
-    // // this.ballot.updateColumn = this.inputsv.updateColumn;
-    // if (!this.ballot.patternName) { this.notificationsService.notify("Vui lòng nhập mô tả"); return }
-    // this.api.execSv<any>("FED", "FED", "ballotsBusiness", "SaveAsync", [this.ballot, this.isEdit]).subscribe(res => {
+  savepattern() {
+    // if (this.uploadImage?.imageUpload?.fileName) { this.pattern.fileName = ""; this.pattern.backgroundColor = ""; }
+    // // this.pattern.updateColumn = this.inputsv.updateColumn;
+    // if (!this.pattern.patternName) { this.notificationsService.notify("Vui lòng nhập mô tả"); return }
+    // this.api.execSv<any>("FED", "FED", "patternsBusiness", "SaveAsync", [this.pattern, this.isEdit]).subscribe(res => {
     //   //console.log(res);
     //   if (res) {
     //     if (this.uploadImage) {
     //       this.uploadImage.updateFileDirectReload(res.patternID).subscribe((result) => {
-    //         this.ballotSV.component.reLoadData(res);
+    //         this.patternSV.component.reLoadData(res);
     //         this.closeCreate();
     //         this.notificationsService.notify("Hệ thống thực thi thành công");
     //         return;
     //       });
     //     }
     //     else {
-    //       this.ballotSV.component.reLoadData(res);
+    //       this.patternSV.component.reLoadData(res);
     //       this.notificationsService.notify("Hệ thống thực thi thành công");
     //       this.closeCreate();
     //     }
@@ -149,8 +149,8 @@ export class EditBallotComponent implements OnInit {
     // });
   }
 
-  checkDisable(ballot) {
-    // if (ballot.isDefault)
+  checkDisable(pattern) {
+    // if (pattern.isDefault)
     //   return true;
     // return false;
   }
@@ -160,20 +160,20 @@ export class EditBallotComponent implements OnInit {
     // $elm.removeClass('color-check');
     // var elecolor = null;
     // var color = "";
-    // if (!this.ballot.backgroundColor && this.isEdit) {
+    // if (!this.pattern.backgroundColor && this.isEdit) {
     //   elecolor = $('span[data-color="image"]').closest(".symbol-label");
-    //   this.ballot.backgroundColor = "";
+    //   this.pattern.backgroundColor = "";
     // }
     // else {
-    //   if (this.ballot.backgroundColor) {
-    //     elecolor = $('.symbol-label[data-color="' + this.ballot.backgroundColor + '"]', $('.patternt'));
+    //   if (this.pattern.backgroundColor) {
+    //     elecolor = $('.symbol-label[data-color="' + this.pattern.backgroundColor + '"]', $('.patternt'));
     //     if (elecolor.length === 0)
     //       elecolor = $('kendo-colorpicker.symbol-label');
     //   } else {
     //     elecolor = $('.symbol-label[data-color]', $('.patternt')).first();
     //     color = elecolor.data('color');
-    //     this.ballot.backgroundColor = color;
-    //     this.ballot.fileName = "";
+    //     this.pattern.backgroundColor = color;
+    //     this.pattern.fileName = "";
     //   }
     // }
     // if (elecolor != null && elecolor.length > 0)
@@ -186,8 +186,8 @@ export class EditBallotComponent implements OnInit {
     // $label.removeClass('color-check');
     // $(ele).addClass('color-check');
     // var color = $(ele).data('color');
-    // this.ballot.backgroundColor = color;
-    // this.ballot.fileName = "";
+    // this.pattern.backgroundColor = color;
+    // this.pattern.fileName = "";
     // this.changedr.detectChanges();
   }
 

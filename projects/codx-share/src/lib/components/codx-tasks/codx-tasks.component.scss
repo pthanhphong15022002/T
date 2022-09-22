@@ -2,17 +2,19 @@
   height: 100%;
 }
 
-// .codx_tempfull {
-//     padding: 6px 12px !important;
-// }
-
-// css trễ hạn công việc
 .unexpired {
   color: #c9c9d4;
 }
 
 .expired {
   color: #f64e60;
+}
+
+.bg-red {
+  codx-view-list-detail .codx-detail-footer .tab-content {
+    background-color: blue;
+    border: 1px solid red;
+  }
 }
 
 textarea.codx-textarea {
@@ -48,24 +50,8 @@ ejs-richtexteditor .e-dialog > .e-dlg-header-content + .e-dlg-content {
   padding: 15px;
 }
 
-codx-view-list-detail .codx-detail-footer .tab-content {
-  height: 370px !important;
-  padding: 10px !important;
-  padding-right: 20px !important;
-}
-
-codx-tabs .tab-comt {
-  position: relative;
-  height: 338px;
-}
-
-codx-tabs .tab-comt .tab_container .tree-body {
-  height: 300px;
+.listuser-box {
+  max-height: 300px;
   overflow: auto;
-  overflow-x: hidden;
   margin-top: 10px;
-}
-
-.bg-red {
-  background-color: red;
 }

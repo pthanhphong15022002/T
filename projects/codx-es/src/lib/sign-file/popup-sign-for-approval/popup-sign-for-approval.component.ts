@@ -8,10 +8,6 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
-  AnnotationDataFormat,
-  PdfViewerComponent,
-} from '@syncfusion/ej2-angular-pdfviewer';
-import {
   UIComponent,
   DialogData,
   DialogRef,

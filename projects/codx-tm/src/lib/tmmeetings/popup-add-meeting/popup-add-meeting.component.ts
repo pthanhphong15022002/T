@@ -79,6 +79,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   endTimeWork: any;
   dayOnWeeks = [];
   selectedDate: Date;
+  // gridViewSetup: any;
 
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -98,6 +99,17 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.action = dt.data[0];
     this.titleAction = dt.data[1];
     this.functionID = this.dialog.formModel.funcID;
+
+    // this.cache
+    //   .gridViewSetup(
+    //     this.dialog.formModel.formName,
+    //     this.dialog.formModel.gridViewName
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.gridViewSetup = res;
+    //     }
+    //   });
 
     if (this.action == 'add')
       this.meeting.startDate = moment(new Date())

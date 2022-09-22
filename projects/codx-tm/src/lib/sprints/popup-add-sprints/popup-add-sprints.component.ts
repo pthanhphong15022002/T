@@ -104,6 +104,7 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.master.iterationType=='1' && (this.master.projectID == null || this.master.projectID.trim() == ''))
       return this.notiService.notify('Tên dự án không được để trống !');
     if (
+      this.master.iterationType=='0' &&
       this.master.iterationName == null ||
       this.master.iterationName.trim() == '' 
     )
@@ -256,7 +257,6 @@ export class PopupAddSprintsComponent implements OnInit {
     if (e?.field) this.master[e.field] = e?.data;
   }
   changeProject(e) {
-
     if (e.field == 'projectID' && e?.data && e?.data.trim() != '') {
       this.master[e.field] = e?.data;
       this.api
