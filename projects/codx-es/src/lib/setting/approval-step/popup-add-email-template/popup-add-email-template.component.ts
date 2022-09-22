@@ -18,6 +18,7 @@ import {
 import {
   ApiHttpService,
   AuthStore,
+  CacheService,
   CallFuncService,
   CodxInputComponent,
   DialogData,
@@ -58,6 +59,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   showCC = false;
   showBCC = false;
 
+  data: any = {};
+
   vllShare = 'ES014';
   container: HTMLElement;
 
@@ -66,6 +69,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   lstTo = [];
   lstCc = [];
   lstBcc = [];
+  sendNow: boolean = false;
 
   methodEdit: boolean = false;
 
@@ -73,6 +77,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
   constructor(
     private api: ApiHttpService,
+    private cache: CacheService,
     private esService: CodxEsService,
     private callFunc: CallFuncService,
     private auth: AuthStore,
@@ -119,62 +124,76 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.formModel.formName = 'EmailTemplates';
     this.formModel.gridViewName = 'grvEmailTemplates';
     this.formModel.funcID = '';
-
-    this.esService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) {
-          this.dialogETemplate = res;
-
+    this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
+      this.cache.setGridView(this.formModel.gridViewName, gridView);
+      this.cache
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((gridViewSetup) => {
+          this.cache.setGridViewSetup(
+            this.formModel.formName,
+            this.formModel.gridViewName,
+            gridViewSetup
+          );
           this.esService
-            .getEmailTemplate(this.email.templateID)
-            .subscribe((res1) => {
-              if (res1 != null) {
-                this.dialogETemplate.patchValue(res1[0]);
-                this.dialogETemplate.addControl(
-                  'recID',
-                  new FormControl(res1[0].recID)
-                );
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .then((res) => {
+              if (res) {
+                this.dialogETemplate = res;
 
-                // if (res[0].isTemplate) {
-                //   this.methodEdit = true;
-                // }
+                this.esService
+                  .getEmailTemplate(this.email.templateID)
+                  .subscribe((res1) => {
+                    if (res1 != null) {
+                      this.data = res1[0];
+                      this.sendNow = res1?.sendLater ?? false;
+                      this.dialogETemplate.patchValue(res1[0]);
+                      this.dialogETemplate.addControl(
+                        'recID',
+                        new FormControl(res1[0].recID)
+                      );
 
-                let lstUser = res1[1];
-                if (lstUser.length > 0) {
-                  lstUser.forEach((element) => {
-                    switch (element.sendType) {
-                      case '1':
-                        this.lstFrom.push(element);
-                        break;
-                      case '2':
-                        this.lstTo.push(element);
-                        break;
-                      case '3':
-                        this.lstCc.push(element);
-                        break;
-                      case '4':
-                        this.lstBcc.push(element);
-                        break;
+                      // if (res[0].isTemplate) {
+                      //   this.methodEdit = true;
+                      // }
+
+                      let lstUser = res1[1];
+                      if (lstUser.length > 0) {
+                        lstUser.forEach((element) => {
+                          switch (element.sendType) {
+                            case '1':
+                              this.lstFrom.push(element);
+                              break;
+                            case '2':
+                              this.lstTo.push(element);
+                              break;
+                            case '3':
+                              this.lstCc.push(element);
+                              break;
+                            case '4':
+                              this.lstBcc.push(element);
+                              break;
+                          }
+                        });
+                      }
+
+                      if (this.lstFrom.length == 0) {
+                        const user = this.auth.get();
+                        let defaultFrom = new EmailSendTo();
+                        defaultFrom.objectType = 'U';
+                        defaultFrom.objectID = user.userID;
+                        defaultFrom.text = user.userName;
+
+                        this.lstFrom.push(defaultFrom);
+                      }
+                      this.formModel.currentData = this.data;
+                      this.isAfterRender = true;
                     }
+                    this.cr.detectChanges();
                   });
-                }
-
-                if (this.lstFrom.length == 0) {
-                  const user = this.auth.get();
-                  let defaultFrom = new EmailSendTo();
-                  defaultFrom.objectType = 'U';
-                  defaultFrom.objectID = user.userID;
-                  defaultFrom.text = user.userName;
-
-                  this.lstFrom.push(defaultFrom);
-                }
-                this.isAfterRender = true;
               }
-              this.cr.detectChanges();
             });
-        }
-      });
+        });
+    });
   }
 
   ngOnInit(): void {
@@ -267,6 +286,11 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
         this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
         this.cr.detectChanges();
         this.isFocus = true;
+      } else if (event.field == 'sendLater') {
+        this.dialogETemplate.patchValue({
+          [event['field']]: !event.data,
+        });
+        this.sendNow = event?.data;
       } else if (event.data instanceof Object) {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data,

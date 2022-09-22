@@ -11,6 +11,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-charts';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
@@ -458,13 +459,13 @@ export class PopupAddSignFileComponent implements OnInit {
       }
 
       this.data.files = files;
-      this.dialogSignFile.patchValue({ files: files });
+      //this.dialogSignFile.patchValue({ files: files });
       console.log(this.dialogSignFile.value);
 
       this.esService.editSignFile(this.data).subscribe((res) => {
         console.log('cập nhật file', res);
         this.data = res;
-        this.dialogSignFile.patchValue(res);
+        //this.dialogSignFile.patchValue(res);
       });
     }
   }
@@ -506,7 +507,7 @@ export class PopupAddSignFileComponent implements OnInit {
       }
 
       this.data.files = files;
-      this.dialogSignFile.patchValue({ files: files });
+      //this.dialogSignFile.patchValue({ files: files });
       console.log(this.dialogSignFile.value);
     }
   }
@@ -579,7 +580,6 @@ export class PopupAddSignFileComponent implements OnInit {
         this.esService
           .getAutoNumberByCategory(event.data)
           .subscribe((autoNum) => {
-            debugger;
             if (autoNum != null) {
               this.data.refNo = autoNum;
             } else if (this.autoNo) {
@@ -694,7 +694,7 @@ export class PopupAddSignFileComponent implements OnInit {
         console.log('...', this.dialogSignFile.value);
         if (res != null) {
           this.isSaved = true;
-          this.dialogSignFile.patchValue(res);
+          //this.dialogSignFile.patchValue(res);
           this.data = res;
           if (this.attachment.fileUploadList.length > 0) {
             this.attachment.objectId = res.recID;
@@ -724,7 +724,7 @@ export class PopupAddSignFileComponent implements OnInit {
     } else {
       this.esService.editSignFile(this.data).subscribe((res) => {
         if (res) {
-          this.dialogSignFile.patchValue(res);
+          //this.dialogSignFile.patchValue(res);
           this.data = res;
           console.log('EDIT SIGNFILE: ', res);
           console.log('...', this.dialogSignFile.value);
@@ -741,14 +741,38 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   onSaveProcessTemplateID(dialogTmp: DialogRef) {
-    if (this.processID != '' && this.data.approveControl != '1') {
-      this.dialogSignFile.patchValue({
-        processID: this.processID,
-        approveControl: '2',
-      });
-      this.data.processID = this.processID;
-      this.data.approveControl = '2';
+    if (this.stepAppr?.isEdited) {
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      this.notify
+        .alert(
+          'Thông báo',
+          'Quy trình của bạn sẽ được cập nhật lại theo quy trình mẫu?',
+          config
+        )
+        .closed.subscribe((x) => {
+          if (x.event.status == 'Y') {
+            if (this.processID != '') {
+              this.dialogSignFile.patchValue({
+                processID: this.processID,
+                approveControl: '2',
+              });
+              this.data.processID = this.processID;
+              this.data.approveControl = '2';
+            }
+          }
+        });
+    } else {
+      if (this.processID != '') {
+        this.dialogSignFile.patchValue({
+          processID: this.processID,
+          approveControl: '2',
+        });
+        this.data.processID = this.processID;
+        this.data.approveControl = '2';
+      }
     }
+
     if (this.processTab >= 2) {
       this.onSaveSignFile();
     }

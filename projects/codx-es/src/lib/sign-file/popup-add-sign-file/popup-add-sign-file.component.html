@@ -553,6 +553,14 @@
                         (valueChange)="valueChange($event)"
                       >
                       </codx-input>
+                      <!-- <codx-input
+                        type="combobox"
+                        [refValue]="'FileCategories'"
+                        field="123"
+                        (valueChange)="valueChange($event)"
+                        [crrValue]="data?.categoryID"
+                      >
+                      </codx-input> -->
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -765,9 +773,9 @@
         </label>
         <codx-input
           type="combobox"
-          class="form-control"
-          field="processID"
+          field="recID"
           refValue="ProcessTemplate"
+          [crrValue]="'002ba6f2-37f0-11ed-97b6-509a4c39550b'"
           (valueChange)="processIDChange($event)"
         >
         </codx-input>
