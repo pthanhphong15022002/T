@@ -127,6 +127,48 @@
           </a>
         </li>
       </ul>
+      <div class="w-100 h-100">
+        <div *ngIf="itemDetail?.bookingItems?.length > 0; else defaulEmpt">
+          <div *ngFor="let item of itemDetail?.bookingItems">
+            <div
+              class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-100"
+            >
+              <div class="d-flex flex-row">
+                <div class="me-2">
+                  <codx-img
+                    [objectId]="item.recID"
+                    imageType="square"
+                    width="35"
+                    objectType="EP_Stationery"
+                  ></codx-img>
+                </div>
+                <div class="ms-2">
+                  <div class="">
+                    <span href="#" class="fw-bold">{{ item.itemName }}</span>
+                  </div>
+                  <div class="d-flex flex-row flex-grow-1">
+                    <codx-label
+                      default="Đơn vị tính:"
+                      name="lblQuantity"
+                      class="text-gray-600"
+                    ></codx-label>
+                    <span class="d-block ms-2 fw-bold">{{ item.umid }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center me-3">
+                <codx-label
+                  default="Số lượng:"
+                  name="lblQuantity"
+                  class="text-gray-600"
+                ></codx-label>
+                <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </ng-template>
 
@@ -136,7 +178,7 @@
 </codx-detail-tmp>
 
 <ng-template #defaulEmpt>
-  <div class="container">
+  <div class="w-100 h-100 container">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
         <img
