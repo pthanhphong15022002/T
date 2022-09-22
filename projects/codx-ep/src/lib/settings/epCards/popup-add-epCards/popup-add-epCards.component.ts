@@ -102,12 +102,16 @@ export class PopupAddEpCardsComponent extends UIComponent {
   }
 
   onSaveForm() {
-    if (this.fGroupAddEpCards.invalid == true) {
-      this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
-      return;
-    }
+    // if (this.fGroupAddEpCards.invalid == true) {
+    //   this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
+    //   return;
+    // }
     //patch thêm value
-
+    if (this.fGroupAddEpCards.value.owner instanceof Object) {
+      this.fGroupAddEpCards.patchValue({
+        owner: this.fGroupAddEpCards.value.owner[0],
+      });
+    }
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -146,22 +150,22 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.initForm();
     this.closeEdit.emit(data);
   }
-  dataValid() {
-    var data = this.fGroupAddEpCards.value;
-    var result = true;
-    var requiredControlName = ['resourceName', 'owner', 'code'];
-    requiredControlName.forEach((item) => {
-      var x = data[item];
-      if (!data[item]) {
-        let fieldName = item.charAt(0).toUpperCase() + item.slice(1);
-        this.notificationsService.notifyCode(
-          'E0001',
-          0,
-          '"' + this.gviewEpCards[fieldName].headerText + '"'
-        );
-        result = false;
-      }
-    });
-    return result;
-  }
+  // dataValid() {
+  //   var data = this.fGroupAddEpCards.value;
+  //   var result = true;
+  //   var requiredControlName = ['resourceName', 'owner', 'code'];
+  //   requiredControlName.forEach((item) => {
+  //     var x = data[item];
+  //     if (!data[item]) {
+  //       let fieldName = item.charAt(0).toUpperCase() + item.slice(1);
+  //       this.notificationsService.notifyCode(
+  //         'E0001',
+  //         0,
+  //         '"' + this.gviewEpCards[fieldName].headerText + '"'
+  //       );
+  //       result = false;
+  //     }
+  //   });
+  //   return result;
+  // }
 }

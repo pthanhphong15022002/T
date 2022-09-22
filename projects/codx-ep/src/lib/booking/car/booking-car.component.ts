@@ -47,7 +47,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   fields: any;
   resourceField: any;
   funcID: string;
-
+  itemDetail;
   columnsGrid: any;
   constructor(
     private injector: Injector,    
@@ -169,6 +169,25 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         this.delete();
         break;
     }
+  }
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
+
+  getDetailBooking(id: any) {
+    this.api
+      .exec<any>(
+        'EP',
+        'BookingsBusiness',
+        'GetBookingByIDAsync',
+        this.itemDetail?.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.itemDetail = res;
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   addNew(evt?: any) {
