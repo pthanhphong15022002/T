@@ -19,7 +19,7 @@ import { CodxFdService } from '../../codx-fd.service';
 @Component({
   selector: 'lib-feedback-message',
   templateUrl: './feedback-message.component.html',
-  styleUrls: ['./feedback-message.component.css'],
+  styleUrls: ['./feedback-message.component.scss'],
 })
 export class FeedbackMessageComponent extends UIComponent implements OnInit {
   datafuntion = null;
