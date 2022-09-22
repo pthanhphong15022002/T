@@ -25,7 +25,6 @@ import {
 } from 'codx-core';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import {
-  tmpReferences,
   TM_Parameter,
   TM_TaskExtends,
   TM_TaskGroups,
@@ -40,20 +39,16 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { X } from '@angular/cdk/keycodes';
-import { create } from 'domain';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
   templateUrl: './codx-tasks.component.html',
-  styleUrls: ['./codx-tasks.component.css'],
+  styleUrls: ['./codx-tasks.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -700,8 +695,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -735,6 +730,11 @@ export class CodxTasksComponent
               this.tmSv
                 .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
                 .subscribe();
+            if (status == '90' && taskAction.approveControl == '1') {
+              this.tmSv
+                .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
+                .subscribe();
+            }
           } else {
             this.notiService.notifyCode('TM008');
           }
@@ -815,7 +815,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1173,6 +1173,9 @@ export class CodxTasksComponent
           );
           this.dialogExtends.closed.subscribe((e) => {
             if (e?.event && e?.event != null) {
+              this.tmSv
+                .sendAlertMail(data?.recID, 'TM_0015', this.funcID)
+                .subscribe();
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });

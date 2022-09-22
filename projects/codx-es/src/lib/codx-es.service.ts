@@ -779,8 +779,8 @@ export class CodxEsService {
     );
   }
 
-  getListCA(fileID) {
-    let data = [fileID];
+  getListCA(signfileID, fileID) {
+    let data = [signfileID, fileID];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

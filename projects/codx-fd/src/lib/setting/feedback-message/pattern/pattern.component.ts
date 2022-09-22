@@ -1,3 +1,4 @@
+import { TemplateRef } from '@angular/core';
 import {
   ChangeDetectorRef,
   Component,
@@ -5,29 +6,45 @@ import {
   OnInit,
   Injector,
   ViewEncapsulation,
+  ViewChild,
 } from '@angular/core';
-import { ApiHttpService, NotificationsService, UIComponent } from 'codx-core';
+import {
+  ApiHttpService,
+  CallFuncService,
+  NotificationsService,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import _ from 'lodash';
-import { BallotService } from './ballot.service';
+import { EditPatternComponent } from './edit-pattern/edit-pattern.component';
+import { PatternService } from './pattern.service';
 
 @Component({
-  selector: 'app-ballot',
-  templateUrl: './ballot.component.html',
-  styleUrls: ['./ballot.component.scss'],
+  selector: 'app-pattern',
+  templateUrl: './pattern.component.html',
+  styleUrls: ['./pattern.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BallotComponent extends UIComponent implements OnInit {
+export class PatternComponent extends UIComponent implements OnInit {
   @Input() funcID: string;
   @Input() type: string;
 
   reload = false;
   lstPattent = null;
+  dialog: any;
+  views: Array<ViewModel> = [];
+
+  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
+
   constructor(
     private changedr: ChangeDetectorRef,
-    private ptsv: BallotService,
+    private ptsv: PatternService,
     private notificationsService: NotificationsService,
     private confirmationDialogService: NotificationsService,
-    private injector: Injector
+    private injector: Injector,
+    private callfunc: CallFuncService
   ) {
     super(injector);
   }
@@ -38,37 +55,34 @@ export class BallotComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.ptsv.component = this;
+
+    this.views = [
+      {
+        active: true,
+        type: ViewType.content,
+        sameData: true,
+        model: {
+          panelLeftRef: this.panelLeftRef,
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
   }
 
   LoadData() {
     //this.ngxLoader.start();
     this.api
-      .call('ERM.Business.FED', 'PattentsBusiness', 'GetCardTypeAsync', [
+      .call('ERM.Business.FD', 'PatternsBusiness', 'GetCardTypeAsync', [
         this.type,
       ])
       .subscribe((res) => {
-        //this.ngxLoader.stop();
         if (res && res.msgBodyData[0]) {
           var data = res.msgBodyData[0] as any[];
-          //data.push({});
           this.lstPattent = data;
           this.lstPattent.push({});
           this.changedr.detectChanges();
         }
       });
-  }
-
-  mouseover($event) {
-    $($event.srcElement)
-      .closest('.card-img')
-      .find('#dropdownMenuButton')
-      .show();
-  }
-  mouseout($event) {
-    $($event.srcElement)
-      .closest('.card-img')
-      .find('#dropdownMenuButton')
-      .hide();
   }
 
   reLoadData(data) {
@@ -102,18 +116,53 @@ export class BallotComponent extends UIComponent implements OnInit {
   trackByfn(index, item) {
     return item.patternID + item.modifiedOn;
   }
-  openCreate(recid = '', i = -1, elm = null): void {
-    //this.ptsv.recID = recid;
-    var $imgpat = $('span.img-pat', $(elm));
-    if ($imgpat.length > 0) {
-      var color = $imgpat.css('background-color');
-      this.ptsv.colorimg = color;
-    } else {
-      this.ptsv.colorimg = '';
-    }
-    this.ptsv.indexEdit = i;
-    this.ptsv.appendRecID(recid);
-    $('#create_card').addClass('offcanvas-on');
+
+  // openCreate(recid = '', i = -1, elm = null): void {
+  //   //this.ptsv.recID = recid;
+  //   var $imgpat = $('span.img-pat', $(elm));
+  //   if ($imgpat.length > 0) {
+  //     var color = $imgpat.css('background-color');
+  //     this.ptsv.colorimg = color;
+  //   } else {
+  //     this.ptsv.colorimg = '';
+  //   }
+  //   this.ptsv.indexEdit = i;
+  //   this.ptsv.appendRecID(recid);
+  //   $('#create_card').addClass('offcanvas-on');
+  // }
+
+  openFormAdd() {
+    var obj = {
+      formType: 'add',
+    };
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = 'Auto';
+    this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
+    // this.dialog.closed.subscribe((e) => {
+    //   if (e?.event) {
+    //     e.event.modifiedOn = new Date();
+    //     this.view.dataService.update(e.event).subscribe();
+    //   }
+    // });
+  }
+
+  openFormEdit(recid = '', i = -1, elm = null) {
+    var obj = {
+      formType: 'add',
+    };
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = 'Auto';
+    this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
+    // this.dialog.closed.subscribe((e) => {
+    //   if (e?.event) {
+    //     e.event.modifiedOn = new Date();
+    //     this.view.dataService.update(e.event).subscribe();
+    //   }
+    // });
   }
 
   delete(recID, i = -1) {

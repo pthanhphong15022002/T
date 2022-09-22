@@ -4,7 +4,7 @@
             <div class="flex align-items-center">
                 <div *ngFor="let votedType of dataComment.listVoteType">
                     <a>
-                        <img src="/assets/themes/wp/default/img/{{(votedType | vll:'L1480':'icon' | async)}}"
+                        <img src="assets/themes/wp/default/img/{{votedType | vll:'L1480':'icon' | async}}"
                             alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
                     </a>
                 </div>
@@ -34,12 +34,12 @@
             <div class="d-flex mod icon-like">
                 <ng-container *ngFor="let item of vllL1480">
                     <a class="mod-icon" (click)="votePost(dataComment, item.value)">
-                        <img src="/assets/themes/wp/default/img/{{item.icon}}" alt="Kiwi standing on oval"></a>
+                        <img src="assets/themes/wp/default/img/{{item.icon}}" alt="Kiwi standing on oval"></a>
                 </ng-container>
             </div>
             <ng-template #myVoted>
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <img src="/assets/themes/wp/default/img/{{(dataComment.myVotedType | vll:'L1480':'icon' | async)}}"
+                    <img src="assets/themes/wp/default/img/{{(dataComment.myVotedType | vll:'L1480':'icon' | async)}}"
                         alt="Kiwi standing on oval" style="width: 18px; height: 18px">
                     <div>
                         <span class="fw-bold ms-2"
@@ -140,7 +140,7 @@
                             <div class="flex">
                                 <div class="">
                                     <img class="h-20px w-20px"
-                                        src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}">
+                                        src="assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}">
                                 </div>
                                 <div class="" style="margin-left: 5px">
                                     <span class="nav-text d-block h-20px">
@@ -168,7 +168,7 @@
                                 <div class="text-gray-400">{{item.createdOn | date:'dd-MM-yyy HH:mm:ss'}}</div>
                             </div>
                             <div class="ms-6" style="margin-right: 45px">
-                                <img src="/assets/themes/wp/default/img/{{(item.voteType|vll:'L1480':'icon'|async)}}"
+                                <img src="assets/themes/wp/default/img/{{(item.voteType|vll:'L1480':'icon'|async)}}"
                                     alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
                             </div>
                         </div>

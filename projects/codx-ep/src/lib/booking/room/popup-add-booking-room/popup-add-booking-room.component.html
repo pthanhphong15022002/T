@@ -1,410 +1,410 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]="" 
   [footer]="footer" [dialog]="dialogRef" (buttonClick)="buttonClick($event)" [openMore]="!isAdd"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]" (setTitle)="setTitle($event)"
-  [data]="data">
+  [data]="data" [formGroup]="fGroupAddBookingRoom">
 
-  <ng-template #tabGeneralInfo>
-    <div class="form-group">
-      <div class="d-flex justify-content-between align-items-center">
-        <codx-label fiedName="ResourceID" [formModel]="form.formModel">
-        </codx-label>
-        <span class="label-status text-primary">{{
-          fGroupAddBookingRoom?.value.status
-          | vll: "VL003":"text"
-          | async
-          }}</span>
-      </div>
-      <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom"
-        (valueChange)="valueCbxRoomChange($event)">
-      </codx-input>
-      <div class="row">
-        <div class="d-flex flex-row justify-content-between">
-          <div class="d-flex justify-content-start">
-            <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
-              <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
-                <span class="me-1 ps-2" [ngClass]="[
-                    item.isSelected ? 'text-primary' : 'text-muted',
-                    item.id == '1'
-                      ? 'icon-wifi'
-                      : item.id == '2'
-                      ? 'icon-personal_video'
-                      : item.id == '3'
-                      ? 'icon-mic_none'
-                      : item.id == '4'
-                      ? 'icon-switch_video'
-                      : ' icon-thermostat'
-                  ]">
-                </span>{{ item.text }}
-                <!-- <i class="icon-panorama_fish_eye"></i> -->
-              </li>
-            </div>
-          </div>
-          <span class="text-end" *ngIf="tmplstDevice.length > 0">
-            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
-              (click)="openPopupDevice(popupDevice)">
-              <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
-            </button>
-          </span>
-        </div>
-      </div>
+  
+</codx-layout-add>
+<ng-template #tabGeneralInfo>
+  <div class="form-group">
+    <div class="d-flex justify-content-between align-items-center">
+      <codx-label fiedName="ResourceID" [formModel]="form.formModel">
+      </codx-label>
+      <span class="label-status text-primary">{{
+        fGroupAddBookingRoom?.value.status
+        | vll: "VL003":"text"
+        | async
+        }}</span>
     </div>
-
-
+    <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom"
+      (valueChange)="valueCbxRoomChange($event)">
+    </codx-input>
     <div class="row">
-      <div class="col-4 form-group">
-        <codx-label fiedName="BookingOn" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input ControlName="bookingOn" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom"
-          (valueChange)="valueDateChange($event)">
-        </codx-input>
-        <!-- <codx-input type="datetime" class="form-control test-datetime" format="d" field="bookingOn"
-          [crrValue]="fGroupAddBookingRoom.value.bookingOn" (valueChange)="valueDateChange($event)">
-        </codx-input> -->
-      </div>
-      <div class="col-3 form-group">
-        <codx-label fiedName="StartDate" aria-disabled="false" [formModel]="dialogRef.formModel">
-        </codx-label>
-        <!-- <codx-input   
-          format="t"       
-          ControlName="startDate"
-          [formModel]="form.formModel" 
-          [Group]="fGroupAddBookingRoom"  
-          (valueChange)="valueStartTimeChange($event)"
-        >
-        </codx-input> -->
-        <codx-input type="datetime" class="test-datetime" field="startTime" [crrValue]="startTime" format="t"
-          (valueChange)="valueStartTimeChange($event)">
-        </codx-input>
-      </div>
-      <div class="col-3 form-group">
-        <codx-label fiedName="EndDate" [formModel]="dialogRef.formModel">
-        </codx-label>
-        <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
-          (valueChange)="valueEndTimeChange($event)">
-        </codx-input>
-      </div>
-
-      <div class="col-2 d-flex flex-column justify-content-center">
-        <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
-          (valueChange)="valueAllDayChange($event)" [checked]="">
-        </codx-input>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <codx-label fiedName="ReasonID" [formModel]="dialogRef.formModel">
-      </codx-label>
-      <!-- <codx-input
-        [refValue]="'EP_BookingRooms'"
-        ControlName="reasonID"  
-        [formModel]="dialogRef.formModel"  
-        [Group]="fGroupAddBookingRoom"          
-      >
-      </codx-input> -->
-      <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom">
-      </codx-input>
-    </div>
-
-    <div class="form-group">
-      <codx-label fiedName="Title" [formModel]="dialogRef.formModel">
-      </codx-label>
-      <codx-input ControlName="title" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom"></codx-input>
-    </div>
-
-    <div class="form-group">
-      <codx-label fiedName="Memo" [formModel]="form.formModel"> </codx-label>
-      <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom">
-      </codx-input>
-    </div>
-
-    <div class="d-flex flex-column form-group">
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="form-switch1 d-flex align-items-center">
-          <codx-input #checkbox field="online" type="switch" [checked]="fGroupAddBookingRoom?.value.online"
-            labelPosition="After" [disabled]="false" class="test-switch" (valueChange)="valueChange($event)">
-          </codx-input>
-          <span class="fw-bold ms-2"><label for="switchOnl">
-              <codx-label fiedName="Online" [formModel]="form.formModel">
-              </codx-label>
-            </label>
-          </span>
+      <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex justify-content-start">
+          <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
+            <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
+              <span class="me-1 ps-2" [ngClass]="[
+                  item.isSelected ? 'text-primary' : 'text-muted',
+                  item.id == '1'
+                    ? 'icon-wifi'
+                    : item.id == '2'
+                    ? 'icon-personal_video'
+                    : item.id == '3'
+                    ? 'icon-mic_none'
+                    : item.id == '4'
+                    ? 'icon-switch_video'
+                    : ' icon-thermostat'
+                ]">
+              </span>{{ item.text }}
+              <!-- <i class="icon-panorama_fish_eye"></i> -->
+            </li>
+          </div>
         </div>
-        <span class="text-end align-items-end">
-          <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupLink()"
-            *ngIf="fGroupAddBookingRoom?.value.online">
-            <i class="icon-insert_link text-primary text-hover-primary-dark icon-24"></i>
+        <span class="text-end" *ngIf="tmplstDevice.length > 0">
+          <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+            (click)="openPopupDevice(popupDevice)">
+            <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
           </button>
         </span>
       </div>
-      <div class="d-flex align-items-center fw-bold">
-        <a href="" *ngIf=" fGroupAddBookingRoom?.value.online">{{
-           fGroupAddBookingRoom?.value.onlineUrl
-          }}</a>
-      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-4 form-group">
+      <codx-label fiedName="BookingOn" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input ControlName="bookingOn" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom"
+        (valueChange)="valueDateChange($event)">
+      </codx-input>
+      <!-- <codx-input type="datetime" class="form-control test-datetime" format="d" field="bookingOn"
+        [crrValue]="fGroupAddBookingRoom.value.bookingOn" (valueChange)="valueDateChange($event)">
+      </codx-input> -->
+    </div>
+    <div class="col-3 form-group">
+      <codx-label fiedName="StartDate" aria-disabled="false" [formModel]="dialogRef.formModel">
+      </codx-label>
+      <!-- <codx-input   
+        format="t"       
+        ControlName="startDate"
+        [formModel]="form.formModel" 
+        [Group]="fGroupAddBookingRoom"  
+        (valueChange)="valueStartTimeChange($event)"
+      >
+      </codx-input> -->
+      <codx-input type="datetime" class="test-datetime" field="startTime" [crrValue]="startTime" format="t"
+        (valueChange)="valueStartTimeChange($event)">
+      </codx-input>
+    </div>
+    <div class="col-3 form-group">
+      <codx-label fiedName="EndDate" [formModel]="dialogRef.formModel">
+      </codx-label>
+      <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
+        (valueChange)="valueEndTimeChange($event)">
+      </codx-input>
     </div>
 
-    <div class="d-flex flex-column mb-8">
-      <div class="d-flex justify-content-between align-items-center mb-2 form-group">
-        <codx-label default="Người tham dự"> </codx-label>
-        <div class="d-flex flex-row text-end align-items-end">
-          <div class="mx-2">
-            <codx-input type="Combobox" [refValue]="'MultiUsers'" [multiple]="false" [showInput]="false" refType="P"
-              [title]="'Không bắt buộc tham dự'" (valueChange)="valueCbxUserOptionalChange($event)">
-            </codx-input>
-          </div>
-          <div class="mx-2">
-            <codx-input type="Combobox" [refValue]="'MultiUsers'" [showInput]="false" refType="P"
-              [title]="'Bắt buộc tham dự'" (valueChange)="valueCbxUserChange($event)">
-            </codx-input>
-          </div>
-        </div>
-      </div>
-
-      <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
-        <!-- <div class="symbol-group"  *ngIf="hostUser!=null" >
-          <div class="symbol symbol-30px symbol-circle">
-            <codx-img
-              [objectId]="hostUser.userId"
-              objectType="AD_Users"
-            ></codx-img>
-            <span class="symbol-badge  badge  badge-sm  badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white" ></span>
-          </div>
-        </div> -->
-
-        <div class="symbol-group-badge" *ngIf="curUser != null">
-          <div class="symbol symbol-30px symbol-circle">
-            <codx-img [width]="30" [objectId]="curUser.userId" objectType="AD_Users"></codx-img>
-            <span
-              class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"></span>
-          </div>
-        </div>
-
-        <div class="symbol-group-badge" *ngIf="attendeesList.length >= 1">
-          <div class="symbol symbol-30px symbol-circle">
-            <codx-img [width]="30" [objectId]="attendeesList[0].userId" objectType="AD_Users"></codx-img>
-            <span
-              class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
-          </div>
-        </div>
-        <div class="symbol-group-badge" *ngIf="attendeesList.length >= 2">
-          <div class="symbol symbol-30px symbol-circle">
-            <codx-img [width]="30" [objectId]="attendeesList[1].userId" objectType="AD_Users"></codx-img>
-            <span
-              class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
-          </div>
-        </div>
-
-        <div class="symbol-group-badge" *ngIf="attendeesList.length > 2">
-          <span class="symbol symbol-30px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
-            <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ lstUser.length +
-              lstUserOptional?.length - 2 }}</span>
-          </span>
-        </div>
-      </div>
+    <div class="col-2 d-flex flex-column justify-content-center">
+      <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
+        (valueChange)="valueAllDayChange($event)" [checked]="">
+      </codx-input>
     </div>
-    <div class="d-flex flex-column mb-4">
-      <div class="d-flex justify-content-between align-items-center mb-2 form-group">
-        <codx-label default="Tài liệu tham khảo" name="lblAttachments" [formModel]="dialogRef.formModel">
-        </codx-label>
-        <!-- <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
-          <span class="icon-cloud_upload btn-text-primary me-2"  (click)="popupUploadFile($event)" ></span>
-          <codx-label fiedName="Upload" default="Upload file" [formModel]="dialogRef.formModel"></codx-label>
-        </a> -->
-      </div>
-      <div class="AttachmentFile-group flex-nowrap">
-        <codx-attachment #attachment [objectType]="dialogRef?.formModel.entityName" hideBtnSave="1" hideFolder="1"
-          hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
-          [objectId]=" fGroupAddBookingRoom?.value.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
-          (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)">
-        </codx-attachment>
-      </div>
-    </div>
-  </ng-template>
+  </div>
 
-  <ng-template #tabPeopleInfo>
-    <div class="d-flex justify-content-between align-items-center mb-4" id="PeopleInfo">
-      <div class="fs-5 fw-bold">
-        <codx-label name="lblPeopleInfo" default="Người tham dự"> </codx-label>
+  <div class="form-group">
+    <codx-label fiedName="ReasonID" [formModel]="dialogRef.formModel">
+    </codx-label>
+    <!-- <codx-input
+      [refValue]="'EP_BookingRooms'"
+      ControlName="reasonID"  
+      [formModel]="dialogRef.formModel"  
+      [Group]="fGroupAddBookingRoom"          
+    >
+    </codx-input> -->
+    <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom">
+    </codx-input>
+  </div>
+
+  <div class="form-group">
+    <codx-label fiedName="Title" [formModel]="dialogRef.formModel">
+    </codx-label>
+    <codx-input ControlName="title" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom"></codx-input>
+  </div>
+
+  <div class="form-group">
+    <codx-label fiedName="Memo" [formModel]="form.formModel"> </codx-label>
+    <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom" class="h-105px">
+    </codx-input>
+  </div>
+
+  <div class="d-flex flex-column form-group">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="form-switch1 d-flex align-items-center">
+        <codx-input #checkbox field="online" type="switch" [checked]="fGroupAddBookingRoom?.value.online"
+          labelPosition="After" [disabled]="false" class="test-switch" (valueChange)="valueChange($event)">
+        </codx-input>
+        <span class="fw-bold ms-2"><label for="switchOnl">
+            <codx-label fiedName="Online" [formModel]="form.formModel">
+            </codx-label>
+          </label>
+        </span>
       </div>
+      <span class="text-end align-items-end">
+        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupLink()"
+          *ngIf="fGroupAddBookingRoom?.value.online">
+          <i class="icon-insert_link text-primary text-hover-primary-dark icon-24"></i>
+        </button>
+      </span>
+    </div>
+    <div class="d-flex align-items-center fw-bold">
+      <a href="" *ngIf=" fGroupAddBookingRoom?.value.online">{{
+         fGroupAddBookingRoom?.value.onlineUrl
+        }}</a>
+    </div>
+  </div>
+
+  <div class="d-flex flex-column mb-8">
+    <div class="d-flex justify-content-between align-items-center mb-2 form-group">
+      <codx-label default="Người tham dự"> </codx-label>
       <div class="d-flex flex-row text-end align-items-end">
         <div class="mx-2">
-          <codx-input type="Combobox"
-          name="combobox"
-          [refValue]="'MultiUsers'"
-          refType="P"
-          [showInput]="false" (valueChange)="valueCbxUserOptionalChange($event)">
+          <codx-input type="Combobox" [refValue]="'MultiUsers'" [multiple]="false" [showInput]="false" refType="P"
+            [title]="'Không bắt buộc tham dự'" (valueChange)="valueCbxUserOptionalChange($event)">
           </codx-input>
         </div>
         <div class="mx-2">
-          <codx-input type="Combobox" [refValue]="'MultiUsers'" [showInput]="false" [refType]="'P'"
+          <codx-input type="Combobox" [refValue]="'MultiUsers'" [showInput]="false" refType="P"
             [title]="'Bắt buộc tham dự'" (valueChange)="valueCbxUserChange($event)">
           </codx-input>
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
-      <div class="symbol symbol-30px symbol-circle me-4">
-        <codx-img [width]="30" [objectId]="curUser.userId" objectType="AD_Users"></codx-img>
-        <span class="symbol-badge badge badge-sm badge-circle bg-danger top-100 start-100 text-white fs-8">A</span>
-      </div>
 
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fs-6 fw-bolder">
-          {{ curUser.userName }}
+    <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
+      <!-- <div class="symbol-group"  *ngIf="hostUser!=null" >
+        <div class="symbol symbol-30px symbol-circle">
+          <codx-img
+            [objectId]="hostUser.userId"
+            objectType="AD_Users"
+          ></codx-img>
+          <span class="symbol-badge  badge  badge-sm  badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white" ></span>
         </div>
-        <div *ngIf="curUser.roleType == '1'">
-          <span class="text-muted">Chủ trì cuộc họp</span>
-        </div>
-        <div *ngIf="curUser.roleType == '2'">
-          <span class="text-muted">Thư kí</span>
-        </div>
-      </div>
-
-      <div class="d-flex flex-column justify-content-center align-items-center">
-        <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
-        <span class="text-muted text-center"> {{curUser.modifiedOn}} </span>
-      </div>
-    </div>
-
-    <div class="d-flex align-items-center mb-4" *ngFor="let item of attendeesList">
-      <div class="symbol symbol-30px symbol-circle me-4">
-        <codx-img [width]="30" [objectId]="item.userId" objectType="AD_Users"></codx-img>
-        <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
-      </div>
-
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fs-6 fw-bolder">
-          {{ item.userName }}
-        </div>
-        <div *ngIf="item.roleType == '1'">
-          <span class="text-muted ">Chủ trì cuộc họp</span>
-        </div>
-        <div *ngIf="item.roleType == '2'">
-          <span class="text-muted ">Thư kí</span>
-        </div>
-        <div *ngIf="item.roleType == '3'">
-          <span class="text-muted ">Thành viên</span>
-        </div>
-      </div>
-
-      <div class="d-flex flex-column justify-content-center align-items-center">
-        <div *ngIf="!item.optional">
-          <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
-        </div>
-        <div *ngIf="item.optional">
-          <span class="badge badge-light-danger badge- fs-7 fw-bold mb-1">Tùy chọn</span>
-        </div>
-        <span class="text-muted text-center"> {{item.modifiedOn}} </span>
-      </div>
-    </div>
-    <div class="form-group d-flex flex-row justify-content-center">
-      <div
-        class="note-bar d-flex flex-row justify-content-center align-items-center rounded-right rounded-left shadow p-2">
-        <div>
-          <span class="symbol-badge badge badge-sm badge-circle bg-danger text-white fs-8">A</span>
-          <span class="mx-2">Chủ trì</span>
-        </div>
-        <div>
-          <span class="symbol-badge badge badge-sm badge-circle bg-success text-white fs-8">S</span>
-          <span class="mx-2">Thư kí</span>
-        </div>
-        <div>
-          <span class="symbol-badge badge badge-sm badge-circle bg-primary text-white fs-8">P</span>
-          <span class="mx-2">Thành viên</span>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-
-  <ng-template #tabStationery>
-
-    <div class="form-group row d-flex flex-row justify-content-start align-items-center">
-      <div class="col-4">
-        <codx-label fiedName="Attendees" [formModel]="form.formModel">
-        </codx-label>
-      </div>
-      <div class="col-4">
-        <codx-input [cusButton]="true" [min]="0" [max]="50" ControlName="attendees" [formModel]="form.formModel"
-          [Group]="fGroupAddBookingRoom">
-        </codx-input>
-      </div>
-    </div>
-
-    <div class="separator my-5"></div>
-    <div class="d-flex flex-stack mb-4" *ngFor="let item of lstStationery">
-      <div class="d-flex align-items-center me-3">
-        <div class="pe-4">
-          <codx-img [objectId]="item.id" objectType="EP_Stationery"></codx-img>
-        </div>
-        <div class="ps-4 flex-grow-2">
-          <a href="#" class="text-gray-800 text-hover-primary fw-bolder lh-0">{{
-            item.text
-            }}</a>
-          <span class="text-gray-400 d-block fs-6">Đơn vị tính : ???</span>
-        </div>
-      </div>
-      <codx-input type="number" class="test-number min-w-50px" [field]="item.id" placeholder="0"
-        [crrValue]="item.quantity" [cusButton]="true" [min]="0" [max]="50" (valueChange)="valueQuantityChange($event)">
-      </codx-input>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center mb-4" id="Stationery">
-      <div class="d-flex flex-row text-end align-items-end">
-        <codx-input type="Combobox" name="combobox" [refValue]="'EP_Stationery'" [multiple]="true" [showInput]="false"
-          refType="P" (valueChange)="valueCbxStationeryChange($event)">
-        </codx-input>
-      </div>
-    </div>
-  </ng-template>
-
-  <ng-template #tabMoreInfo>
-    <div class="form-group">
-      <codx-label [formModel]="form.formModel" fiedName="Category"></codx-label>
-      <codx-input ControlName="category" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom">
-      </codx-input>
-    </div>
-
-    <div class="form-group">
-      <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
-      <codx-input ControlName="note" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom">
-      </codx-input>
-    </div>
-
-
-    <div class="row form-group d-flex flex-row justify-content-start align-items-center">
-      <div class="col-10">
-        <codx-label fiedName="Repeat" [formModel]="dialogRef.formModel"></codx-label>
-      </div>
-      <div class="col-2">
-        <codx-input #checkbox class="test-switch" type="switch" field="repeat" [disabled]="false"
-          [checked]=" fGroupAddBookingRoom?.value.repeat" (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-      <!-- <div class="col-5">        
-        <codx-input
-          type="valuelist"
-          [refValue]="CbxName['Interval']"
-          ControlName="interval"
-          [formModel]="form.formModel"
-          [Group]="fGroupAddBookingRoom"
-          [disabled]="!fGroupAddBookingRoom.value.repeat"
-        >
-        </codx-input>
       </div> -->
-    </div>
-  </ng-template>
 
-  <ng-template #footer>
-    <div class="d-flex justify-content-between">
-      <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
-        <span class="icon-cloud_upload btn-text-primary me-2" (click)="popupUploadFile($event)"></span>
-        <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="dialogRef.formModel"></codx-label>
-      </a>
-      <button class="btn btn-primary" (click)="onSaveForm()">Lưu</button>
-    </div>
-  </ng-template>
-</codx-layout-add>
+      <div class="symbol-group-badge" *ngIf="curUser != null">
+        <div class="symbol symbol-30px symbol-circle">
+          <codx-img [width]="30" [objectId]="curUser.userId" objectType="AD_Users"></codx-img>
+          <span
+            class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"></span>
+        </div>
+      </div>
 
+      <div class="symbol-group-badge" *ngIf="attendeesList.length >= 1">
+        <div class="symbol symbol-30px symbol-circle">
+          <codx-img [width]="30" [objectId]="attendeesList[0].userId" objectType="AD_Users"></codx-img>
+          <span
+            class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
+        </div>
+      </div>
+      <div class="symbol-group-badge" *ngIf="attendeesList.length >= 2">
+        <div class="symbol symbol-30px symbol-circle">
+          <codx-img [width]="30" [objectId]="attendeesList[1].userId" objectType="AD_Users"></codx-img>
+          <span
+            class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
+        </div>
+      </div>
+
+      <div class="symbol-group-badge" *ngIf="attendeesList.length > 2">
+        <span class="symbol symbol-30px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
+          <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ lstUser.length +
+            lstUserOptional?.length - 2 }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex flex-column mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2 form-group">
+      <codx-label default="Tài liệu tham khảo" name="lblAttachments" [formModel]="dialogRef.formModel">
+      </codx-label>
+      <!-- <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+        <span class="icon-cloud_upload btn-text-primary me-2"  (click)="popupUploadFile($event)" ></span>
+        <codx-label fiedName="Upload" default="Upload file" [formModel]="dialogRef.formModel"></codx-label>
+      </a> -->
+    </div>
+    <div class="AttachmentFile-group flex-nowrap">
+      <codx-attachment #attachment [objectType]="dialogRef?.formModel.entityName" hideBtnSave="1" hideFolder="1"
+        hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
+        [objectId]=" fGroupAddBookingRoom?.value.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
+        (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)">
+      </codx-attachment>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #tabPeopleInfo>
+  <div class="d-flex justify-content-between align-items-center mb-4" id="PeopleInfo">
+    <div class="fs-5 fw-bold">
+      <codx-label name="lblPeopleInfo" default="Người tham dự"> </codx-label>
+    </div>
+    <div class="d-flex flex-row text-end align-items-end">
+      <div class="mx-2">
+        <codx-input type="Combobox"
+        name="combobox"
+        [refValue]="'MultiUsers'"
+        refType="P"
+        [showInput]="false" (valueChange)="valueCbxUserOptionalChange($event)">
+        </codx-input>
+      </div>
+      <div class="mx-2">
+        <codx-input type="Combobox" [refValue]="'MultiUsers'" [showInput]="false" [refType]="'P'"
+          [title]="'Bắt buộc tham dự'" (valueChange)="valueCbxUserChange($event)">
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
+    <div class="symbol symbol-30px symbol-circle me-4">
+      <codx-img [width]="30" [objectId]="curUser.userId" objectType="AD_Users"></codx-img>
+      <span class="symbol-badge badge badge-sm badge-circle bg-danger top-100 start-100 text-white fs-8">A</span>
+    </div>
+
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="text-dark fw-bold fs-6 fw-bolder">
+        {{ curUser.userName }}
+      </div>
+      <div *ngIf="curUser.roleType == '1'">
+        <span class="text-muted">Chủ trì cuộc họp</span>
+      </div>
+      <div *ngIf="curUser.roleType == '2'">
+        <span class="text-muted">Thư kí</span>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
+      <span class="text-muted text-center"> {{curUser.modifiedOn}} </span>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center mb-4" *ngFor="let item of attendeesList">
+    <div class="symbol symbol-30px symbol-circle me-4">
+      <codx-img [width]="30" [objectId]="item.userId" objectType="AD_Users"></codx-img>
+      <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
+    </div>
+
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="text-dark fw-bold fs-6 fw-bolder">
+        {{ item.userName }}
+      </div>
+      <div *ngIf="item.roleType == '1'">
+        <span class="text-muted ">Chủ trì cuộc họp</span>
+      </div>
+      <div *ngIf="item.roleType == '2'">
+        <span class="text-muted ">Thư kí</span>
+      </div>
+      <div *ngIf="item.roleType == '3'">
+        <span class="text-muted ">Thành viên</span>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <div *ngIf="!item.optional">
+        <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
+      </div>
+      <div *ngIf="item.optional">
+        <span class="badge badge-light-danger badge- fs-7 fw-bold mb-1">Tùy chọn</span>
+      </div>
+      <span class="text-muted text-center"> {{item.modifiedOn}} </span>
+    </div>
+  </div>
+  <div class="form-group d-flex flex-row justify-content-center">
+    <div
+      class="note-bar d-flex flex-row justify-content-center align-items-center rounded-right rounded-left shadow p-2">
+      <div>
+        <span class="symbol-badge badge badge-sm badge-circle bg-danger text-white fs-8">A</span>
+        <span class="mx-2">Chủ trì</span>
+      </div>
+      <div>
+        <span class="symbol-badge badge badge-sm badge-circle bg-success text-white fs-8">S</span>
+        <span class="mx-2">Thư kí</span>
+      </div>
+      <div>
+        <span class="symbol-badge badge badge-sm badge-circle bg-primary text-white fs-8">P</span>
+        <span class="mx-2">Thành viên</span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #tabStationery>
+
+  <div class="form-group row d-flex flex-row justify-content-start align-items-center">
+    <div class="col-4">
+      <codx-label fiedName="Attendees" [formModel]="form.formModel">
+      </codx-label>
+    </div>
+    <div class="col-4">
+      <codx-input [cusButton]="true" [min]="0" [max]="50" ControlName="attendees" [formModel]="form.formModel"
+        [Group]="fGroupAddBookingRoom">
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="separator my-5"></div>
+  <div class="d-flex flex-stack mb-4" *ngFor="let item of lstStationery">
+    <div class="d-flex align-items-center me-3">
+      <div class="pe-4">
+        <codx-img [objectId]="item.id" objectType="EP_Stationery"></codx-img>
+      </div>
+      <div class="ps-4 flex-grow-2">
+        <a href="#" class="text-gray-800 text-hover-primary fw-bolder lh-0">{{
+          item.text
+          }}</a>
+        <span class="text-gray-400 d-block fs-6">Đơn vị tính : ???</span>
+      </div>
+    </div>
+    <codx-input type="number" class="test-number min-w-50px" [field]="item.id" placeholder="0"
+      [crrValue]="item.quantity" [cusButton]="true" [min]="0" [max]="50" (valueChange)="valueQuantityChange($event)">
+    </codx-input>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-4" id="Stationery">
+    <div class="d-flex flex-row text-end align-items-end">
+      <codx-input type="Combobox" name="combobox" [refValue]="'EP_Stationery'" [multiple]="true" [showInput]="false"
+        refType="P" (valueChange)="valueCbxStationeryChange($event)">
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #tabMoreInfo>
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Category"></codx-label>
+    <codx-input ControlName="category" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom">
+    </codx-input>
+  </div>
+
+  <div class="form-group">
+    <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
+    <codx-input ControlName="note" [formModel]="form.formModel" [Group]="fGroupAddBookingRoom">
+    </codx-input>
+  </div>
+
+
+  <div class="row form-group d-flex flex-row justify-content-start align-items-center">
+    <div class="col-10">
+      <codx-label fiedName="Repeat" [formModel]="dialogRef.formModel"></codx-label>
+    </div>
+    <div class="col-2">
+      <codx-input #checkbox class="test-switch" type="switch" field="repeat" [disabled]="false"
+        [checked]=" fGroupAddBookingRoom?.value.repeat" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <!-- <div class="col-5">        
+      <codx-input
+        type="valuelist"
+        [refValue]="CbxName['Interval']"
+        ControlName="interval"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddBookingRoom"
+        [disabled]="!fGroupAddBookingRoom.value.repeat"
+      >
+      </codx-input>
+    </div> -->
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+      <span class="icon-cloud_upload btn-text-primary me-2" (click)="popupUploadFile($event)"></span>
+      <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="dialogRef.formModel"></codx-label>
+    </a>
+    <button class="btn btn-primary" (click)="onSaveForm()">Lưu</button>
+  </div>
+</ng-template>
 <ng-template #popupDevice let-dialog>
   <div class="modal-header">
     <div class="d-flex flex-column flex-grow-1">
