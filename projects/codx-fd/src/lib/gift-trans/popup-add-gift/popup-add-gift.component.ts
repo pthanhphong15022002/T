@@ -29,6 +29,7 @@ export class PopupAddGiftComponent implements OnInit {
 
   ngOnInit(): void {
     this.innitForm();
+    this.getMyWalletInfor();
   }
   
   innitForm(){
@@ -47,9 +48,120 @@ export class PopupAddGiftComponent implements OnInit {
 
   resetForm(){}
 
+
+  isSharePortal:boolean = true;
   valueChange(event:any){
     if(!event || !event.data) return;
     let data = event.data;
     let field = event.field;
+    switch(field){
+      case 'userID':
+        this.getReciverWallet(data);
+        break;
+      case 'transType':
+        this.form.patchValue({transType: data});
+        break;
+      case 'giftID':
+        this.getGiftInfor(data);
+        break;
+      case 'quantity':
+        this.checkGiftAndWallet(this.myWallet,this.gift,data);
+        break;
+      case 'status':
+        this.form.patchValue({status: data});
+        break;
+      case 'siutuation':
+        this.form.patchValue({siutuation: data});
+        break;
+      case 'isSharePortal':
+        this.isSharePortal = data;
+        break;
+      default:
+        break;
+    }
+    this.dt.detectChanges();
+  }
+  save(){
+    if(!this.form.controls['userID'].value){
+      this.notifySV.notify("Vui lòng chọn người nhận");
+      return;
+    }
+    if(!this.form.controls['giftID'].value){
+      this.notifySV.notify("Vui lòng chọn quà tặng");
+      return;
+    }
+    if(!this.reciverWallet){
+      this.notifySV.notify("Người nhận chưa tích hợp ví");
+      return;
+    }
+    if(!this.gift)
+    var giftTrans = this.form.value;
+    console.log(giftTrans);
+  }
+  myWallet:any = null;
+  reciverWallet:any = null;
+  gift:any = null;
+  getMyWalletInfor(){
+    this.api.execSv("FD","ERM.Business.FD","WalletsBusiness","GetWalletsAsync",this.user.userID)
+    .subscribe((res:any) => {
+      if(res){
+        this.myWallet = res;
+        this.dt.detectChanges();
+      }
+    });
+  }
+  getReciverWallet(pUserID:string){
+    if(!pUserID) return;
+    this.api.execSv("FD","ERM.Business.FD","WalletsBusiness","GetWalletsAsync",pUserID)
+    .subscribe((res:any) => {
+      if(res){
+        this.reciverWallet = res;
+        this.form.patchValue({userID: pUserID});
+      }
+      else
+      {
+        this.notifySV.notify("Người nhận chưa tích hợp ví");
+      }
+      this.dt.detectChanges();
+    });
+  }
+  checkCoinWallet(wallet:any,gift:any,quantity:number):boolean{
+    if(!wallet || !gift || !quantity) return false;
+    let amount = gift.price * quantity
+    if(wallet.coins < amount){
+        return false;
+    }
+    return true;
+  }
+  getGiftInfor(giftID:string){
+    this.api.execSv("FD","ERM.Business.FD","GiftsBusiness","GetGiftAsync",giftID)
+    .subscribe((res:any) => {
+      if(res){
+        this.gift = res;
+        this.form.patchValue({giftID: this.gift.giftID});
+        this.dt.detectChanges();
+      }
+    });
+  }
+  checkGiftAvailableQty(gift:any,quantity:number):boolean{
+    if(!gift) return false;
+    if(quantity > gift.availableQty){
+      return false;
+    }
+    return true;
+  }
+  checkGiftAndWallet(wallet:any,gift:any,quantity:number){
+    if(!wallet || !gift || !quantity) return;
+    let isCheckWallet = this.checkCoinWallet(wallet,gift,quantity);
+    if(isCheckWallet){
+      this.notifySV.notify("Vượt quá số dư ví");
+      return;
+    }
+    let isCheckGift = this.checkGiftAvailableQty(gift,quantity);
+    if(isCheckGift){
+      this.notifySV.notify("Vượt quá số lượng tồn kho");
+      return;
+    }
+    this.form.patchValue({quantity: quantity});
   }
 }

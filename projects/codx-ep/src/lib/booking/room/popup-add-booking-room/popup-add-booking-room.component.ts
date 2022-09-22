@@ -147,11 +147,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.funcID = this.formModel.funcID;
   }
 
-  onInit(): void {
+  onInit(): void {    
+    this.initForm();
+    
     if (!this.isAdd) {
       this.titleAction = 'Chỉnh sửa';
     }   
-
       this.codxEpService
         .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
         .then((res) => {
@@ -283,24 +284,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               this.detectorRef.detectChanges();
             }
           });
-      }     
-    
-      this.initForm();
-  }
-
-  ngAfterViewInit(): void {
-    if (this.dialogRef) {
-      if (!this.isSaveSuccess) {
-        this.dialogRef.closed.subscribe((res: any) => {
-          console.log('Close without saving or save failed', res);
-          this.dialogRef.dataService.saveFailed.next(null);
-        });
-      }
-    }
-  }
-
-  initForm() {
-    this.codxEpService
+      }  
+      this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.fGroupAddBookingRoom = item;
@@ -351,8 +336,25 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         }
         console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingRoom);
-        this.detectorRef.detectChanges();
-      });
+        
+      });   
+      this.detectorRef.detectChanges();
+      
+  }
+
+  ngAfterViewInit(): void {
+    if (this.dialogRef) {
+      if (!this.isSaveSuccess) {
+        this.dialogRef.closed.subscribe((res: any) => {
+          console.log('Close without saving or save failed', res);
+          this.dialogRef.dataService.saveFailed.next(null);
+        });
+      }
+    }
+  }
+
+  initForm() {
+    
     // this.codxEpService
     //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
     //   .then((item) => {

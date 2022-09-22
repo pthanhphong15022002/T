@@ -39,6 +39,12 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
+<<<<<<< HEAD
+=======
+import { I, X } from '@angular/cdk/keycodes';
+import { create } from 'domain';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+>>>>>>> af48d4f8bee8c5181c75f890aef35df4a0c59069
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -48,7 +54,8 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -228,7 +235,7 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          statusColorRef: this.vllStatus
+          statusColorRef: this.vllStatus,
         },
       },
     ];
@@ -244,10 +251,10 @@ export class CodxTasksComponent
           resourceModel: this.resourceField,
           template: this.eventTemplate,
           template3: this.cellTemplate,
-          statusColorRef: this.vllStatus
+          statusColorRef: this.vllStatus,
         },
       };
-      this.viewsActive.push(calendar)
+      this.viewsActive.push(calendar);
     }
 
     var viewDefaultID = '2';
@@ -280,15 +287,20 @@ export class CodxTasksComponent
         this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'add', this.isAssignTask, this.titleAction],
+        [
+          this.view.dataService.dataSelected,
+          'add',
+          this.isAssignTask,
+          this.titleAction,
+        ],
         option
       );
       this.dialog.closed.subscribe((e) => {
-        if (e?.event == null)
+        if ( e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
             false
-          );
+        );
       });
     });
   }
@@ -345,7 +357,13 @@ export class CodxTasksComponent
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
-        [this.view.dataService.dataSelected, 'copy', this.isAssignTask, this.titleAction, data],
+        [
+          this.view.dataService.dataSelected,
+          'copy',
+          this.isAssignTask,
+          this.titleAction,
+          data,
+        ],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -472,7 +490,12 @@ export class CodxTasksComponent
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
-          [this.view.dataService.dataSelected, 'edit', this.isAssignTask, this.titleAction],
+          [
+            this.view.dataService.dataSelected,
+            'edit',
+            this.isAssignTask,
+            this.titleAction,
+          ],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -679,8 +702,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -705,12 +728,15 @@ export class CodxTasksComponent
             let kanban = (this.view.currentView as any).kanban;
             res.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
-              if (kanban)
-                kanban.updateCard(obj);
+              if (kanban) kanban.updateCard(obj);
             });
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
+            if (taskAction.category == '3' && status == '80')
+              this.tmSv
+                .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
+                .subscribe();
           } else {
             this.notiService.notifyCode('TM008');
           }
@@ -791,7 +817,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1149,6 +1175,7 @@ export class CodxTasksComponent
           );
           this.dialogExtends.closed.subscribe((e) => {
             if (e?.event && e?.event != null) {
+              this.tmSv.sendAlertMail(data?.recID,'TM_0015',this.funcID).subscribe();
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });
@@ -1267,7 +1294,7 @@ export class CodxTasksComponent
       case 'TMT02031':
       case 'TMT02032':
       case 'TMT02033':
-      case 'TMT02044':
+      case 'TMT02034':
         this.changeStatusTask(e.data, data);
         break;
       case 'TMT02019':
@@ -1348,7 +1375,10 @@ export class CodxTasksComponent
   }
   //#endregion
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> af48d4f8bee8c5181c75f890aef35df4a0c59069
   change() {
     this.view.dataService.setPredicates(['Status=@0'], ['10']);
   }
@@ -1430,7 +1460,7 @@ export class CodxTasksComponent
       .subscribe((res) => {
         if (res) {
           var param = JSON.parse(res.dataValue);
-          this.calendarID = param.CalendarID
+          this.calendarID = param.CalendarID;
           this.getDayOff(this.calendarID);
         }
       });
@@ -1455,5 +1485,8 @@ export class CodxTasksComponent
       });
   }
   //#endregion schedule
+<<<<<<< HEAD
 
+=======
+>>>>>>> af48d4f8bee8c5181c75f890aef35df4a0c59069
 }

@@ -567,6 +567,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.dialog.close(res);
         this.attachment.clearData();
+        if(res && res.save){
+          var task = res.save ;
+          if(task?.confirmControl=="1") this.tmSv.sendAlertMail(task?.recID,"TM_0008",this.functionID).subscribe();
+        }
       });
   }
 
@@ -582,7 +586,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                 if (res.update) {
                   this.dialog.close(res.update);
                   this.attachment.clearData();
-                  /// this.tmSv.sendAlertMail(this.task.recID,'TM_0002',this.functionID)   mai test laji vi sao khong vao
+                  this.tmSv.sendAlertMail(this.task.recID,'TM_0002',this.functionID).subscribe() ;   //mai test laji vi sao khong vao
+            
                 }
               }
               this.dialog.close();

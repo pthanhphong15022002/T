@@ -47,6 +47,7 @@ import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.co
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { from, map, mergeMap, Observable, Observer } from 'rxjs';
 import { lvFileClientAPI } from '@shared/services/lv.component';
+import { environment } from 'src/environments/environment';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -92,6 +93,7 @@ export class AttachmentComponent implements OnInit {
   maxFileSizeUpload = 0;
   maxFileSizeUploadMB = 0;
   referType: string;
+  folderID: string;
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;
@@ -154,7 +156,7 @@ export class AttachmentComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    var d = data;
+    
     this.user = this.auth.get();
     this.dialog = dialog;
     if (data?.data != null) {
@@ -165,6 +167,7 @@ export class AttachmentComponent implements OnInit {
       this.type = data?.data.type;
       this.popup = data?.data.popup;
       this.hideBtnSave = data?.data.hideBtnSave;
+      this.folderID = data?.data.folderID;
     }
 
     this.fileUploadList = [];
@@ -354,7 +357,7 @@ export class AttachmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getFolderPath();
+    //this.getFolderPath();
     this.fileService.getAllowSizeUpload().subscribe((item) => {
       if (item != null) {
         this.maxFileSizeUploadMB = item.len;
@@ -501,6 +504,7 @@ export class AttachmentComponent implements OnInit {
             this.atSV.folderId.next(id);
 
             this.changeDetectorRef.detectChanges();
+            debugger;
             this.remotePermission = res[0].permissions;
           }
         });
@@ -900,7 +904,7 @@ export class AttachmentComponent implements OnInit {
     try {
       fileItem.uploadId = '';
       fileItem.objectId = this.objectId;
-      var appName = this.dmSV.appName; // Tam thoi de hard
+      var appName = environment.appName; // Tam thoi de hard
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
       var uploadFile = fileItem.item.rawFile;
       var retUpload = await lvFileClientAPI.postAsync(
@@ -938,7 +942,7 @@ export class AttachmentComponent implements OnInit {
     var that = this;
     fileItem.uploadId = '';
     fileItem.objectId = this.objectId;
-    var appName = this.dmSV.appName;
+    var appName = environment.appName;
     var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
     var uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
     var obj = from(
@@ -1089,7 +1093,7 @@ export class AttachmentComponent implements OnInit {
     try {
       //  var item = await isAllowAddFileAsync();
       var uploadFile = fileItem.item.rawFile;
-      var appName = this.dmSV.appName; // Tam thoi de hard
+      var appName = environment.appName ; // Tam thoi de hard
       fileItem = await this.serviceAddFile(fileItem);
       if (isAddFile) this.addFile(fileItem);
 

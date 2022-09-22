@@ -1,10 +1,10 @@
-<codx-form [body]="body" (scroll)="onScroll($event)" [headerText]="'Thông báo'" [dialog]="dialog"></codx-form>
+<codx-form [body]="body" (onScroll)="onScroll($event)" [headerText]="'Thông báo'" [dialog]="dialog"></codx-form>
 
 
 <ng-template #body>
   <div class="p-2">
     <ng-container *ngFor="let item of lstNotify;index as i">
-      <div id="lstNotify">
+      <div>
         <ng-container *ngIf="i==0">
           <div class="d-flex justify-content-between">
             <span>
@@ -30,7 +30,7 @@
             <div [innerHTML]="item.textValue">        
             </div>
             <div>
-              <span class="text-primary ms-1">{{item.createdDate | timefrom}}</span>
+              <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
             </div>
           </div>
           <div class="col-1" *ngIf="!item.isRead">
@@ -41,6 +41,20 @@
     </ng-container>
   </div>
 </ng-template>
-<ng-template #itemTemplate>
-
+<ng-template #itemNoti let-item>
+  <div class="row p-4 my-2" (click)="clickNotification(item)">
+    <div class="col-1">
+      <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+    </div>
+    <div class="col-10">
+      <div [innerHTML]="item.textValue">        
+      </div>
+      <div>
+        <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+      </div>
+    </div>
+    <div class="col-1" *ngIf="!item.isRead">
+      <span class="dots"></span>
+    </div>
+  </div>
 </ng-template>
