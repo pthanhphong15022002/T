@@ -12,8 +12,7 @@
 
 .bg-red {
   codx-view-list-detail .codx-detail-footer .tab-content {
-    background-color: blue;
-    border: 1px solid red;
+    // border: 1px solid red;
   }
 }
 
@@ -43,10 +42,10 @@ codx-view-kanban .e-card .border {
   border: 0 !important;
 }
 
-ejs-richtexteditor .e-dialog > .e-dlg-content,
-ejs-richtexteditor .e-dialog > .e-dlg-header-content,
-ejs-richtexteditor .e-dialog > .e-footer-content,
-ejs-richtexteditor .e-dialog > .e-dlg-header-content + .e-dlg-content {
+ejs-richtexteditor .e-dialog>.e-dlg-content,
+ejs-richtexteditor .e-dialog>.e-dlg-header-content,
+ejs-richtexteditor .e-dialog>.e-footer-content,
+ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
   padding: 15px;
 }
 
