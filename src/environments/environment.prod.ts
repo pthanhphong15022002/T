@@ -11,17 +11,14 @@ export const environment = {
   apiUrl: 'http://172.16.7.34:8011',
   pdfUrl: 'http://172.16.7.34:8015/api/pdf',
   shopping: 'http://172.16.7.34:8111/Shopping',
-<<<<<<< HEAD
-=======
   // librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
-  urlUpload : 'http://172.16.1.210:8011',
+  urlUpload: 'http://172.16.1.210:8011',
   //public urlThumbnail = 'http://192.168.18.36:8011/api/';
-  urlTenant : '',
-  urlThumbnail : 'http://172.16.1.210:8011',
+  urlTenant: '',
+  urlThumbnail: 'http://172.16.1.210:8011',
   //public urlFile = 'http://192.168.18.36:8011/api/';
-  urlFile : 'http://172.16.1.210:8011',
-  appName : 'hps-file-test', // Tam thoi de hard
->>>>>>> af48d4f8bee8c5181c75f890aef35df4a0c59069
+  urlFile: 'http://172.16.1.210:8011',
+  appName: 'hps-file-test', // Tam thoi de hard
   StoreNames: {
     FormLabels: 'FormLabels',
     GridViewSetups: 'GridViewSetups',
