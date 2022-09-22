@@ -178,7 +178,6 @@
                 (click)="changeShowThumbnailState()"
               ></e-item>
               <e-item
-                [disabled]="isDisable"
                 prefixIcon="icon-skip_previous icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="firstPage"
               >
@@ -187,7 +186,6 @@
               <e-item
                 prefixIcon="icon-navigate_before icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="previous"
-                [disabled]="isDisable"
               >
                 <!-- (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()" -->
               </e-item>
@@ -195,14 +193,12 @@
               <e-item
                 prefixIcon="icon-navigate_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="next"
-                [disabled]="isDisable"
               >
                 <!-- (click)="pdfviewerControl?.navigation?.goToNextPage()" -->
               </e-item>
               <e-item
                 prefixIcon="icon-skip_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="lastPage"
-                [disabled]="isDisable"
               >
               </e-item>
               <!-- (click)="pdfviewerControl?.navigation?.goToLastPage()" -->
@@ -291,7 +287,6 @@
         #ngxPdfView
         *ngIf="curFileUrl ? true : false"
         [(src)]="curFileUrl"
-        [height]="'100vh'"
         [(zoom)]="zoomValue"
         [zoomLevels]="zoomValue"
         [(page)]="curPage"
@@ -301,13 +296,14 @@
         [sidebarVisible]="!hideThumbnail"
         [showSidebarButton]="false"
         (pdfLoadingStarts)="loadingPdf($event)"
+        (pdfLoaded)="loadedPdf($event)"
         (pageRendered)="pageRendered($event)"
-        [pageViewMode]="pageViewMode"
         [showBookmarkButton]="false"
         [showPropertiesButton]="true"
         [customSidebar]="withoutSidebar"
         [customThumbnail]="ngxThumbnail"
-        [enableDragAndDrop]="false"
+        [enableDragAndDrop]="true"
+        [handTool]="true"
       >
       </ngx-extended-pdf-viewer>
       <ng-template #ngxThumbnail let-PAGE_NUMBER>
@@ -484,7 +480,7 @@
               <ng-container>
                 <ejs-listview
                   id="groupedList"
-                  [dataSource]="lstAreas"
+                  [(dataSource)]="lstAreas"
                   [cssClass]="cssClass"
                   [showHeader]="true"
                 >
@@ -492,9 +488,10 @@
                     <div
                       class="annotationItem py-3 px-3"
                       *ngIf="
-                        this.isApprover &&
-                        (area.signer != this.curSignerID ||
-                          area.stepNo != this.stepNo)
+                        !this.isApprover ||
+                        (this.isApprover &&
+                          (area.signer != this.curSignerID ||
+                            area.stepNo != this.stepNo))
                       "
                       (click)="goToSelectedAnnotation(area)"
                     >
@@ -527,7 +524,7 @@
                         "
                         [formGroup]="formAnnot"
                       >
-                        <div class="qr-switch" *ngIf="area.labelType == 8">
+                        <!-- <div class="qr-switch" *ngIf="area.labelType == 8">
                           <codx-input
                             class="form-control me-2"
                             type="switch"
@@ -541,9 +538,9 @@
                             >
                             </codx-label>
                           </codx-input>
-                        </div>
+                        </div> -->
                         <div
-                          class="text-content my-2 ms-12"
+                          class="text-content form-control my-2 ms-12"
                           *ngIf="area.labelType == 6"
                         >
                           <input
@@ -563,7 +560,7 @@
                               'fst-italic': isItalic,
                               'text-decoration-underline': isUnd
                             }"
-                            [defaultValue]="area.labelType"
+                            [defaultValue]="'area.labelValue'"
                           />
                         </div>
 
@@ -574,7 +571,7 @@
                           <ejs-dropdownlist
                             class="me-2 min-w-70px"
                             id="dateFormatsDropdownList"
-                            [(dataSource)]="lstAnnotDateFormat"
+                            [dataSource]="lstAnnotDateFormat"
                             [(value)]="curAnnotDateFormat"
                             formControlName="dateFormat"
                           >
@@ -588,7 +585,7 @@
                             <ejs-dropdownlist
                               class="me-2 min-w-70px"
                               id="fontStylesDropdownList"
-                              [(dataSource)]="lstAnnotFontStyle"
+                              [dataSource]="lstAnnotFontStyle"
                               [(value)]="curAnnotFontStyle"
                               formControlName="fontStyle"
                             >
@@ -596,7 +593,7 @@
                             <ejs-dropdownlist
                               class="me-2 w-100px"
                               id="fontSizesDropdownList"
-                              [(dataSource)]="lstAnnotFontSize"
+                              [dataSource]="lstAnnotFontSize"
                               [(value)]="curAnnotFontSize"
                               formControlName="fontSize"
                             >
@@ -647,22 +644,33 @@
                             </button>
                           </div>
                         </div>
-                        <div class="d-flex ms-12">
+                        <div class="d-flex ms-12" *ngIf="area.labelType == 5">
                           <codx-input
-                            class="me-4"
+                            class="me-4 date-Type"
+                            name="date-Type"
                             type="radio"
-                            label="Ngày phát hành"
-                            [checked]="true"
+                            [(checked)]="chooseSignDate"
+                            labelPosition="After"
+                          >
+                          </codx-input
+                          ><codx-label
+                            name="lblReleaseDay"
+                            default="Ngày phát hành"
+                            [formModel]=""
+                          ></codx-label>
+                          <codx-input
+                            class="me-4 date-Type"
+                            type="radio"
+                            name="date-Type"
+                            [(checked)]="!chooseSignDate"
                             labelPosition="After"
                           >
                           </codx-input>
-                          <codx-input
-                            type="radio"
-                            label="Ngày ký"
-                            [checked]="false"
-                            labelPosition="After"
-                          >
-                          </codx-input>
+                          <codx-label
+                            name="lblSignDate"
+                            default="Ngày ký"
+                            [formModel]=""
+                          ></codx-label>
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
                           <button
