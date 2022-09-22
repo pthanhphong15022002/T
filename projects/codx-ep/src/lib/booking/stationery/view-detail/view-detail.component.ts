@@ -91,13 +91,6 @@ export class BookingStationeryViewDetailComponent
   openFormFuncID(value, datas: any = null) {
     debugger;
     let funcID = value?.functionID;
-    // if (!datas) datas = this.data;
-    // else {
-    //   var index = this.view.dataService.data.findIndex((object) => {
-    //     return object.recID === datas.recID;
-    //   });
-    //   datas = this.view.dataService.data[index];
-    // }
     switch (funcID) {
       case 'EPT40101':
       case 'EPT40201':

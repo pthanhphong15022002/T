@@ -117,7 +117,11 @@ export class SprintsComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
-        console.log(e);
+        if (e?.event == null)
+        this.view.dataService.delete(
+          [this.view.dataService.dataSelected],
+          false
+        );
       });
     });
   }
@@ -138,7 +142,14 @@ export class SprintsComponent extends UIComponent {
           [this.view.dataService.dataSelected, 'edit'],
           option
         );
-      });
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+        });
+      });  
   }
 
   copy(data) {
@@ -153,6 +164,13 @@ export class SprintsComponent extends UIComponent {
         [this.view.dataService.dataSelected, 'copy'],
         option
       );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+        this.view.dataService.delete(
+          [this.view.dataService.dataSelected],
+          false
+        );
+      });
     });
   }
 

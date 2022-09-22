@@ -124,7 +124,7 @@
   </nav>
 </div> -->
 
-<div class="container-fluid" id="reportviewerele">
+<!-- <div class="container-fluid" id="reportviewerele">
   <ejs-contextmenu #contextmenu target='#paramEle' [items]='menuItems' (select)="menuSelect($event)" (beforeItemRender)='addDisabled($event)' (created)='onCreated()'></ejs-contextmenu>
   <div class="row">
     <div class="col-3 border border-2 overflow-auto fade-in" #paramEle id="paramEle">
@@ -452,4 +452,7 @@
       <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report>
     </div>
   </div>
-</div>
+</div> -->
+<iframe style="height: 100%; width: 100%;" id="reportViewIframe" #iframe [src]="urlSafe">
+
+</iframe>

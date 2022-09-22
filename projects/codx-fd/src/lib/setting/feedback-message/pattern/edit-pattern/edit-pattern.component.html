@@ -5,8 +5,8 @@
             <div class="d-flex align-items-start ph-card mb-6">
                 <div class="pic-edit mr-6">
                     <codx-img #uploadImage class="img-pat" [objectId]="pattern?.patternID"
-                        [funcId]="formModel?.functionID" [objectType]="formModel?.entityName" [width]="100"
-                        [hidden]="pattern?.backgroundColor" cssClass="pic symbol-100px symbol-3by2" imageType="square">
+                        [funcId]="formModel?.functionID" [objectType]="formModel?.entityName" [width]="164"
+                        [hidden]="pattern?.backgroundColor" cssClass="pic" imageType="square">
                     </codx-img>
                     <span class="font-size-h3 font-weight-boldest img-pat-edit noimage symbol-label text-white"
                         [style.background-color]="pattern?.backgroundColor" [hidden]="!pattern?.backgroundColor"
@@ -20,30 +20,34 @@
                 <div class="d-flex flex-column">
                     <div class="d-block align-items-center">
                         <div class="symbol-list d-flex flex-wrap patternt">
-                            <div class="symbol symbol-50 symbol-circle mr-5 mb-4" *ngFor="let item of vll">
-                                <span class="symbol-label pointer" #colordf (click)="colorClick($event, colordf)"
-                                    [attr.data-color]="item?.text" [style.background-color]="item?.text"></span>
-                            </div>
-                            <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4" #group3>
-                                <codx-input #elmbg [ele]="group3" datatype="colorpicker"
-                                    [attr.data-color]="'colorpicker'" class="form-control symbol-label w-50"
-                                    field="backgroundColor" (valueChange)="valueChange($event, group3)"
-                                    dataformat="hex">
-                                </codx-input>
-                            </div>
-                            <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4">
-                                <label class="symbol-label pointer mb-0" data-action="change" data-toggle="tooltip"
-                                    title="" data-original-title="Change avatar">
-
-                                    <span class="far fa-image" style="font-size: 18px;"
-                                        [attr.data-color]="'image'"></span>
-                                    <codx-input type="file" id="cardImageInput" name="profile_avatar"
-                                        style="display: none;" (change)="handleFileInput($event)"
-                                        accept=".png, .jpg, .jpeg">
+                            <div class="pattern-teams">
+                                <div class="symbol symbol-50 symbol-circle mr-5 mb-4" *ngFor="let item of vll">
+                                    <div class="pattern-item">
+                                        <span class="symbol-label pointer" #colordf
+                                            (click)="colorClick($event, colordf)" [attr.data-color]="item?.text"
+                                            [style.background-color]="item?.text"></span>
+                                    </div>
+                                </div>
+                                <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4" #group3>
+                                    <codx-input #elmbg [ele]="group3" datatype="colorpicker"
+                                        [attr.data-color]="'colorpicker'" class="form-control symbol-label w-50"
+                                        field="backgroundColor" (valueChange)="valueChange($event, group3)"
+                                        dataformat="hex">
                                     </codx-input>
-                                    <codx-input type="hidden" style="display: none;" name="profile_avatar_remove">
-                                    </codx-input>
-                                </label>
+                                </div>
+                                <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4">
+                                    <label class="symbol-label pointer mb-0" data-action="change" data-toggle="tooltip"
+                                        title="" data-original-title="Change avatar">
+                                        <span class="far fa-image" style="font-size: 18px;"
+                                            [attr.data-color]="'image'"></span>
+                                        <codx-input type="file" id="cardImageInput" name="profile_avatar"
+                                            style="display: none;" (change)="handleFileInput($event)"
+                                            accept=".png, .jpg, .jpeg">
+                                        </codx-input>
+                                        <codx-input type="hidden" style="display: none;" name="profile_avatar_remove">
+                                        </codx-input>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
@@ -53,7 +57,8 @@
                         <div class="input-group" #group1>
                             <codx-input #elm [ele]="group1" datatype="colorpicker"
                                 class="form-control text-white color-large w-fit" field="headerColor"
-                                (valueChange)="valueChange($event, elm)" [value]="pattern?.headerColor" dataformat="hex">
+                                (valueChange)="valueChange($event, elm)" [value]="pattern?.headerColor"
+                                dataformat="hex">
                             </codx-input>
                         </div>
                     </div>
@@ -78,14 +83,14 @@
         </div>
         <div class="checkbox-list mt-3">
             <div #isDefault>
-                <codx-input type="checkbox" class="test-check" ngDefaultControl
-                    field="isDefault" (valueChange)="valueChange($event, null)" [checked]="pattern?.isDefault"
+                <codx-input type="checkbox" class="test-check" ngDefaultControl field="isDefault"
+                    (valueChange)="valueChange($event, null)" [checked]="pattern?.isDefault"
                     [value]="pattern?.isDefault" label="Mặc định chọn" labelPosition="After">
                 </codx-input>
             </div>
             <div #stop class="mt-2">
-                <codx-input type="checkbox" [disabled]="checkDisable(pattern)" class="test-check"
-                    ngDefaultControl field="stop" (valueChange)="valueChange($event, null)" [value]="pattern?.stop"
+                <codx-input type="checkbox" [disabled]="checkDisable(pattern)" class="test-check" ngDefaultControl
+                    field="stop" (valueChange)="valueChange($event, null)" [value]="pattern?.stop"
                     [checked]="pattern?.stop" label="Ngưng sử dụng" labelPosition="After">
                 </codx-input>
             </div>

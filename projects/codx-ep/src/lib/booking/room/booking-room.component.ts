@@ -108,11 +108,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '1';
 
-    // this.model.page = 1;
-    // this.model.pageSize = 200;
-    // this.model.predicate = 'ResourceType=@0';
-    // this.model.dataValue = '1';
-
     this.moreFunc = [
       {
         id: 'btnEdit',
@@ -224,12 +219,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   closeAddForm(event) {}
 
-  collapse(evt) {
-    this.reportObj && this.reportObj.collapse();
-    this.titleCollapse = this.reportObj.isCollapsed
-      ? 'Mở hộp tham số'
-      : 'Đóng hộp tham số';
-  }
+
   changeValueDate(evt: any) {}
 
   valueChange(evt: any, a?: any, type?: any) {}
