@@ -476,8 +476,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmpAttendeesList.push(item);
     });
     this.tmpAttendeesList.push(this.curUser);
-    console.log('data', this.fGroupAddBookingRoom.value);
-    console.log('attend', this.attendeesList);
 
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))

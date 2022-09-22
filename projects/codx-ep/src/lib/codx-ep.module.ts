@@ -42,6 +42,7 @@ import { PopupAddEpCardsComponent } from './settings/epCards/popup-add-epCards/p
 import { ApprovalRoomViewDetailComponent } from './approval/room/approval-room-view-detail/approval-room-view-detail.component';
 import { ApprovalCarViewDetailComponent } from './approval/car/approval-car-view-detail/approval-car-view-detail.component';
 import { BookingRoomViewDetailComponent } from './booking/room/view-detail/booking-room-view-detail.component';
+import { BookingCarViewDetailComponent } from './booking/car/view-detail/booking-car-view-detail.component';
 
 const routes: Route[] = [
   {
@@ -149,6 +150,7 @@ const Components: Type<any>[] = [
   ApprovalRoomViewDetailComponent,
   ApprovalCarViewDetailComponent,
   BookingRoomViewDetailComponent,
+  BookingCarViewDetailComponent,
 ];
 
 @NgModule({
