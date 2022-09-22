@@ -6,7 +6,7 @@ import { selected } from '@syncfusion/ej2-pivotview';
 import { ApiHttpService, CacheService, DataRequest, LangPipe, NotificationsService, UIComponent, ViewData } from 'codx-core';
 
 @Component({
-  selector: 'lib-policy-card',
+  selector: 'app-policy-card',
   templateUrl: './policy-card.component.html',
   styleUrls: ['./policy-card.component.scss']
 })

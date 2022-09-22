@@ -73,19 +73,19 @@
                                     </codx-label>
                                 </div>
                                 <ng-container *ngIf="type == '1' || type == '2' || type == '3' || type =='6'">
-                                    <app-ballot [type]="type" funcID=""></app-ballot>
+                                    <app-pattern [type]="type" funcID=""></app-pattern>
                                 </ng-container>
                                 <div class="clear">
                                     <hr />
-                                    <app-policycard [typeCard]="type" (changeLock)="changeLock($event)">
-                                    </app-policycard>
+                                    <app-policy-card [typeCard]="type" (changeLock)="changeLock($event)">
+                                    </app-policy-card>
                                 </div>
                                 <div class="clear">
                                     <app-policy-coin [typeCard]="type" *ngIf="!isLockCoin"></app-policy-coin>
                                 </div>
                                 <div class="clear">
-                                    <app-policydedication [typeCard]="type" *ngIf="!isLockDedicate">
-                                    </app-policydedication>
+                                    <app-policy-dedication [typeCard]="type" *ngIf="!isLockDedicate">
+                                    </app-policy-dedication>
                                 </div>
                             </div>
                         </div>
