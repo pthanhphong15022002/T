@@ -1,5 +1,5 @@
 
-export class Ballot {
+export class Pattern {
     patternID: string;
     patternName: string;
     fileName: string;

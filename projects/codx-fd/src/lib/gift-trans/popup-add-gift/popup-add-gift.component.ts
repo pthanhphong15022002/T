@@ -13,6 +13,10 @@ export class PopupAddGiftComponent implements OnInit {
   dialogRef:DialogRef = null;
   form:FormGroup = null;  
   transType:string = "3";
+  isSharePortal:boolean = true;
+  myWallet:any = null;
+  reciverWallet:any = null;
+  gift:any = null;
   constructor(
     private api:ApiHttpService,
     private cache:CacheService,
@@ -49,7 +53,6 @@ export class PopupAddGiftComponent implements OnInit {
   resetForm(){}
 
 
-  isSharePortal:boolean = true;
   valueChange(event:any){
     if(!event || !event.data) return;
     let data = event.data;
@@ -94,13 +97,21 @@ export class PopupAddGiftComponent implements OnInit {
       this.notifySV.notify("Người nhận chưa tích hợp ví");
       return;
     }
+    if(!this.form.controls['quantity'].value){
+      this.notifySV.notify("Vui lòng chọn số lượng quà tặng");
+      return;
+    }
+    if(!this.form.controls['siutuation'].value){
+      this.notifySV.notify("Nội dung không được bỏ trống");
+      return;
+    }
     if(!this.gift)
     var giftTrans = this.form.value;
+    giftTrans.gift = this.gift;
+    giftTrans.reciverWallet = this.reciverWallet;
     console.log(giftTrans);
   }
-  myWallet:any = null;
-  reciverWallet:any = null;
-  gift:any = null;
+  
   getMyWalletInfor(){
     this.api.execSv("FD","ERM.Business.FD","WalletsBusiness","GetWalletsAsync",this.user.userID)
     .subscribe((res:any) => {
