@@ -218,7 +218,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
           });
           this.lstEditIV = res;
           this.lstViewIV.push(this.lstEditIV[0]);
-          console.log('check lstViewIV', this.lstViewIV);
         }
       });
     this.dt.detectChanges();
@@ -446,7 +445,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         this.updateContent(this.objectParentID, this.contents).subscribe();
       // this.id += 1;
       this.getContent.emit(this.contents);
-      console.log('check contents', this.contents);
     }
   }
 
@@ -582,28 +580,34 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   }
 
   delete(index) {
-    if (this.contents?.length > 1) {
-      if (this.contents) {
-        this.contents.splice(index, 1);
-        if (index >= this.contents.length) index = this.contents.length - 1;
-        if (this.mode == 'edit') {
-          if (this.objectParentID) {
-            this.updateContent(this.objectParentID, this.contents).subscribe();
-            if (this.contents[index]?.recID != undefined)
-              this.deleteFileByObjectID(this.contents[index]?.recID, true);
-          }
+    if (index >= this.contents.length) index = this.contents.length - 1;
+    if (this.contents) {
+      if (this.contents?.length <= 1) {
+        this.generateGuid();
+        var recID = JSON.parse(JSON.stringify(this.guidID));
+        var obj = {
+          memo: '',
+          status: this.listNoteTemp.status,
+          textColor: this.font.COLOR,
+          format: this.listNoteTemp.format,
+          lineType: this.lineType,
+          recID: recID,
+        };
+        this.contents.push(obj);
+      }
+      this.contents.splice(index, 1);
+      if (this.mode == 'edit') {
+        if (this.objectParentID) {
+          this.updateContent(this.objectParentID, this.contents).subscribe();
+          if (this.contents[index]?.recID != undefined)
+            this.deleteFileByObjectID(this.contents[index]?.recID, true);
         }
       }
     }
-    // if (this.contents?.length == 1) {
-    //   var item = JSON.parse(JSON.stringify(this.initListNote));
-    //   item.lineType = 'TEXT';
-    //   this.contents.push(item);
-    // }
     this.getContent.emit(this.contents);
     this.countFileAdded = 0;
-    this.focus(this.contents.length);
     this.dt.detectChanges();
+    this.focus(this.contents.length - 1);
   }
 
   deleteFileByObjectID(fileID: string, deleted: boolean) {
@@ -716,11 +720,11 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         break;
       case 'comment':
         this.comment(index);
-        this.contents
+        this.contents;
         break;
       case 'assign':
         this.assign(index);
-        this.contents
+        this.contents;
         break;
       case 'attachment':
         if (menu == false) this.openPopupAttachment(index);
@@ -794,7 +798,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
           // this.ATM_IV.fileUploadList[0]['objectID'] = listFileTemp[0].objectID;
           this.ATM_IV.fileUploadList[0].objectId = listFileTemp[0].objectID;
         }
-        console.log('check this.ATM_IV.fileUpload', this.ATM_IV.fileUploadList);
         (await this.ATM_IV.saveFilesObservable()).subscribe((result: any) => {
           if (result) {
             this.contents = obj;
@@ -822,7 +825,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
   comment(index) {
     this.id = index;
     this.callfunc.openSide(this.popupComment);
-    console.log('check ');
   }
 
   totalCommentChange(e) {}
@@ -993,7 +995,6 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       obj[this.IDTemp].recID = recID;
       e.data[0].objectID = recID;
     }
-    console.log('check file', e.data);
     let item = JSON.parse(JSON.stringify(initListNote));
     item.lineType = 'TEXT';
     item.attachments = 0;
@@ -1014,75 +1015,10 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
       }
     });
     this.id += 1;
-    console.log('check id', this.id);
     this.dt.detectChanges();
   }
 
   countFileAdded = 0;
-  // fileCount(e, attachmentEle) {
-  //   this.attachment = attachmentEle;
-  //   let initListNote = {
-  //     memo: '',
-  //     status: null,
-  //     textColor: null,
-  //     format: null,
-  //     lineType: this.lineType,
-  //     attachments: 0,
-  //     comments: 0,
-  //     tasks: 0,
-  //     recID: '',
-  //   };
-  //   if (e.data.length > 1) {
-  //     this.contents.splice(this.IDTemp, 1);
-  //     e.data.forEach((dt) => {
-  //       this.getMongoObjectId();
-  //       let item = JSON.parse(JSON.stringify(initListNote));
-  //       item.lineType = 'FILE';
-  //       item.attachments += 1;
-  //       let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
-  //       item.recID = recID;
-  //       dt.objectID = item.recID;
-  //       this.contents.push(item);
-  //     });
-  //   } else {
-  //     this.getMongoObjectId();
-  //     this.contents[this.IDTemp].lineType = 'FILE';
-  //     this.contents[this.IDTemp].attachments += 1;
-  //     let recID = JSON.parse(JSON.stringify(this.mongoObjectId));
-  //     this.contents[this.IDTemp].recID = recID;
-  //     e.data[0].objectID = recID;
-  //   }
-  //   console.log('check file', e.data);
-  //   let item = JSON.parse(JSON.stringify(initListNote));
-  //   item.lineType = 'TEXT';
-  //   item.attachments = 0;
-  //   this.attachment.fileUploadList = e.data;
-  //   this.contents.push(item);
-  //   console.log('check contents', this.contents);
-  //   this.dt.detectChanges();
-  //   this.updateContent(this.objectParentID, this.contents).subscribe(
-  //     async (res: any) => {
-  //       if (res) {
-  //         this.focus(this.contents.length - 1);
-  //       }
-  //     }
-  //   );
-  //   this.id += 2;
-  //   console.log('check id', this.id);
-  //   this.dt.detectChanges();
-  // }
-
-  // mongoObjectId: any;
-  // getMongoObjectId() {
-  //   var timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
-  //   this.mongoObjectId =
-  //     timestamp +
-  //     'xxxxxxxxxxxxxxxx'
-  //       .replace(/[x]/g, function () {
-  //         return ((Math.random() * 16) | 0).toString(16);
-  //       })
-  //       .toLowerCase();
-  // }
 
   guidID: any;
   generateGuid() {
