@@ -730,6 +730,11 @@ export class CodxTasksComponent
               this.tmSv
                 .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
                 .subscribe();
+            if (status == '90' && taskAction.approveControl == '1') {
+              this.tmSv
+                .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
+                .subscribe();
+            }
           } else {
             this.notiService.notifyCode('TM008');
           }
@@ -1168,7 +1173,9 @@ export class CodxTasksComponent
           );
           this.dialogExtends.closed.subscribe((e) => {
             if (e?.event && e?.event != null) {
-              this.tmSv.sendAlertMail(data?.recID, 'TM_0015', this.funcID).subscribe();
+              this.tmSv
+                .sendAlertMail(data?.recID, 'TM_0015', this.funcID)
+                .subscribe();
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });

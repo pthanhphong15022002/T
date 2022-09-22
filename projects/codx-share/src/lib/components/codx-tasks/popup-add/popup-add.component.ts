@@ -570,6 +570,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         if(res && res.save){
           var task = res.save ;
           if(task?.confirmControl=="1") this.tmSv.sendAlertMail(task?.recID,"TM_0008",this.functionID).subscribe();
+          if(task?.category=='1' && task.verifyControl == '1') this.tmSv.sendAlertMail(task?.recID,"TM_0018",this.functionID).subscribe();
         }
       });
   }
