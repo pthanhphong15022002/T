@@ -22,7 +22,54 @@
       </div>
     </div>
   </ng-container>
-
+<div *ngIf="formModel"
+  class="hover-scroll-overlay-y"
+  data-kt-scroll="true"
+  data-kt-scroll-activate="true"
+  data-kt-scroll-height="auto"
+  data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
+  data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content"
+  data-kt-scroll-offset="0"
+>
+  <div id="newfeed">
+    <ng-container *ngIf="module == 'WP' ; else FD">
+        <codx-listview
+          [emptyTemplate]="empty"
+          [predicates]="predicateWP"
+          [dataValues]="dataValueWP"
+          [itemTemplate]="tmpPortal"
+          #listview
+          [funcId]="formModel.funcID"
+          [service]="service"
+          [assemblyName]="assemblyName"
+          class="h-100"
+          [className]="className"
+          [method]="method"
+          entityName="WP_Comments"
+          [itemTemplateLoading]="templateloading"
+          [formModel]="formModel">
+        </codx-listview>
+    </ng-container>  
+    <ng-template #FD>
+        <codx-listview
+          [emptyTemplate]="empty"
+          [predicates]="predicateFD"
+          [dataValues]="dataValueFD"
+          [itemTemplate]="tmpPortal"
+          #listview
+          [funcId]="formModel.funcID"
+          [service]="service"
+          [assemblyName]="assemblyName"
+          class="h-100"
+          [className]="className"
+          [method]="method"
+          entityName="WP_Comments"
+          [itemTemplateLoading]="templateloading"
+          [formModel]="formModel">
+        </codx-listview>
+    </ng-template>
+  </div>
+</div>
 <ng-template #tmpPortal let-item>
   <div class="p-5 pb-0">
     <div class="d-flex align-items-top">

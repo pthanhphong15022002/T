@@ -1,4 +1,4 @@
-<!-- <codx-form [body]="body" (onScroll)="onScroll($event)" [headerText]="'Thông báo'" [dialog]="dialog"></codx-form>
+<codx-form [body]="body" (onScroll)="onScroll($event)" [headerText]="'Thông báo'" [dialog]="dialog"></codx-form>
 
 
 <ng-template #body>
@@ -57,22 +57,4 @@
       <span class="dots"></span>
     </div>
   </div>
-</ng-template> -->
-
-
-<div
-  class="btn btn-icon btn-active-light-primary position-relative"
-  [ngClass]="codxService.toolbarButtonHeightClass"
-  (click)="openFormNotify()"
->
-  <span
-    [inlineSVG]="
-      './assets/themes/sys/default/img/header_notifications.svg'
-    "
-    class="svg-icon"
-    [ngClass]="codxService.toolbarButtonIconSizeClass"
-  ></span>
-  <span
-    class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"
-  ></span>
-</div>
+</ng-template>
