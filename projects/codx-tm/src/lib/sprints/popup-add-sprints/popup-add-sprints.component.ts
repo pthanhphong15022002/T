@@ -105,8 +105,8 @@ export class PopupAddSprintsComponent implements OnInit {
       return this.notiService.notify('Tên dự án không được để trống !');
     if (
       this.master.iterationType=='0' &&
-      this.master.iterationName == null ||
-      this.master.iterationName.trim() == '' 
+      (this.master.iterationName == null ||
+      this.master.iterationName.trim() == '' )
     )
       return this.notiService.notifyCode('TM035');
     if (this.master.projectID && Array.isArray(this.master.projectID))
@@ -258,18 +258,31 @@ export class PopupAddSprintsComponent implements OnInit {
   }
   changeProject(e) {
     if (e.field == 'projectID' && e?.data && e?.data.trim() != '') {
-      this.master[e.field] = e?.data;
+      this.master[e.field] = e?.data; 
+          //cai này dùng cho PM
       this.api
         .execSv<any>(
-          'TM',
-          'TM',
+          'PM',
+          'PM',
           'ProjectsBusiness',
-          'GetProjectByIDAsync',
+          'GetPMProjectByIDAsync',
           e?.data
         )
         .subscribe((res) => {
-          if (res) this.master.iterationName = res.projectName;
+          if (res) this.master.iterationName = res?.projectName;
         });
+      //cai này dùng cho TM
+      // this.api
+      //   .execSv<any>(
+      //     'TM',
+      //     'TM',
+      //     'ProjectsBusiness',
+      //     'GetProjectByIDAsync',
+      //     e?.data
+      //   )
+      //   .subscribe((res) => {
+      //     if (res) this.master.iterationName = res?.projectName;
+      //   });
     }
   }
 
