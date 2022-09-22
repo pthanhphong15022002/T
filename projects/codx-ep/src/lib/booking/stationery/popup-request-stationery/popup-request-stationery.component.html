@@ -84,7 +84,7 @@
                   </span>
                 </div>
 
-                <button (click)="test()">
+                <button (click)="changeTab(2)">
                   <i class="icon-double_arrow"></i>
                   <span>Tiếp theo</span>
                 </button>
@@ -282,7 +282,7 @@
 
     <ng-template #footer>
       <div class="d-flex justify-content-between">
-        <button class="btn btn-outline-primary">
+        <button class="btn btn-outline-primary" (click)="changeTab(1)">
           <codx-label
             name="lblBack"
             default="Quay lại"
