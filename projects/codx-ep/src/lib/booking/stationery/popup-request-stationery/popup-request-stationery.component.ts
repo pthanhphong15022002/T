@@ -112,7 +112,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   changeTab(tabNo) {
-    this.onSaveSignFile();
 
     this.currentTab = tabNo;
 
