@@ -1,0 +1,74 @@
+// .k-i-arrow-s::before {
+//     content: "\ec36" !important;
+// }
+
+.img-pat-edit {
+  object-fit: cover;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.color-check::after {
+  position: fixed;
+  font-size: 35px;
+  content: "\2713" !important;
+  color: #fff !important;
+}
+
+.pointer {
+  cursor: pointer !important;
+}
+
+.symbol-label .k-picker-wrap {
+  border: none;
+  border-radius: 50%;
+  height: 100%;
+}
+
+.symbol-label .k-selected-color {
+  display: none;
+}
+
+.symbol-label.k-colorpicker .k-select {
+  width: 100%;
+  border: none;
+}
+
+.w-fit {
+  width: fit-content !important;
+}
+
+.w-50 {
+  width: 50px !important;
+}
+
+.pic-edit {
+  width: 166px;
+  min-width: 166px;
+  height: 258px;
+  max-height: 258px;
+}
+
+.pic-edit img {
+  width: 166px;
+  height: 258px;
+}
+
+.pic-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+  border: 1px solid #c5cacb;
+}
+
+.pattern-teams {
+  max-width: 320px;
+}
+
+.pattern-item {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  float: left;
+  position: relative;
+}

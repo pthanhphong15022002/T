@@ -41,6 +41,8 @@ import { EpCardsComponent } from './settings/epCards/epCards.component';
 import { PopupAddEpCardsComponent } from './settings/epCards/popup-add-epCards/popup-add-epCards.component';
 import { ApprovalRoomViewDetailComponent } from './approval/room/approval-room-view-detail/approval-room-view-detail.component';
 import { ApprovalCarViewDetailComponent } from './approval/car/approval-car-view-detail/approval-car-view-detail.component';
+import { BookingRoomViewDetailComponent } from './booking/room/view-detail/booking-room-view-detail.component';
+import { BookingCarViewDetailComponent } from './booking/car/view-detail/booking-car-view-detail.component';
 
 const routes: Route[] = [
   {
@@ -111,7 +113,7 @@ const routes: Route[] = [
         component: StationeryComponent,
       },
       {
-        path: 'epCards/:funcID',
+        path: 'epcards/:funcID',
         component: EpCardsComponent,
       },
     ],
@@ -147,6 +149,8 @@ const Components: Type<any>[] = [
   TabsComponent,
   ApprovalRoomViewDetailComponent,
   ApprovalCarViewDetailComponent,
+  BookingRoomViewDetailComponent,
+  BookingCarViewDetailComponent,
 ];
 
 @NgModule({

@@ -80,8 +80,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           this.columnGrids = [
             {
               field: 'code',
-              headerText: gv['Code'].headerText,
-              width: gv['Code'].width,
+              headerText: gv['ResourceID'].headerText,
+              width: gv['ResourceID'].width,
             },
             {
               field: 'resourceName',

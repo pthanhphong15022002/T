@@ -39,9 +39,6 @@ export class BookingStationeryComponent
   columnsGrid: any;
   dialog!: DialogRef;
   model: DataRequest;
-  cart: [];
-  listData = [];
-  count = 0;
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
@@ -51,13 +48,9 @@ export class BookingStationeryComponent
   idField = 'recID';
   predicate = 'ResourceType=@0';
   datavalue = '1';
-
   itemDetail;
 
-  constructor(
-    private injector: Injector,
-    private notification: NotificationsService
-  ) {
+  constructor(private injector: Injector) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }
@@ -88,14 +81,6 @@ export class BookingStationeryComponent
     ];
 
     this.views = [
-      // {
-      //   type: ViewType.content,
-      //   sameData: true,
-      //   active: false,
-      //   model: {
-      //     panelLeftRef: this.chart,
-      //   },
-      // },
       {
         type: ViewType.listdetail,
         sameData: true,
@@ -124,13 +109,12 @@ export class BookingStationeryComponent
   addNewRequest() {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
-      option.Width = '800px';
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
 
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
-      let dialogAdd = this.callfc.openForm(
+      this.callfc.openForm(
         PopupRequestStationeryComponent,
         'Thêm mới',
         700,
@@ -144,17 +128,6 @@ export class BookingStationeryComponent
         '',
         dialogModel
       );
-      dialogAdd.closed.subscribe((x) => {
-        if (x.event) {
-          if (x.event?.approved) {
-            this.view.dataService.add(x.event.data, 0).subscribe();
-          } else {
-            delete x.event._uuid;
-            this.view.dataService.add(x.event, 0).subscribe();
-            //this.getDtDis(x.event?.recID)
-          }
-        }
-      });
     });
   }
 

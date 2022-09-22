@@ -147,11 +147,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.funcID = this.formModel.funcID;
   }
 
-  onInit(): void {
+  onInit(): void {    
+    this.initForm();
+    
     if (!this.isAdd) {
       this.titleAction = 'Chỉnh sửa';
     }   
-
       this.codxEpService
         .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
         .then((res) => {
@@ -283,24 +284,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               this.detectorRef.detectChanges();
             }
           });
-      }     
-    
-      this.initForm();
-  }
-
-  ngAfterViewInit(): void {
-    if (this.dialogRef) {
-      if (!this.isSaveSuccess) {
-        this.dialogRef.closed.subscribe((res: any) => {
-          console.log('Close without saving or save failed', res);
-          this.dialogRef.dataService.saveFailed.next(null);
-        });
-      }
-    }
-  }
-
-  initForm() {
-    this.codxEpService
+      }  
+      this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.fGroupAddBookingRoom = item;
@@ -342,17 +327,34 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     
               this.detectorRef.detectChanges();
             }
-            this.startTime = this.fGroupAddBookingRoom.value.startDate
-              .toString()
-              .slice(16, 21);
-            this.endTime = this.fGroupAddBookingRoom.value.endDate
-              .toString()
-              .slice(16, 21);
+            let tmpStartTime=new Date(this.fGroupAddBookingRoom.value.startDate);
+            let tmpEndTime=new Date(this.fGroupAddBookingRoom.value.endDate);            
+            this.startTime = ('0'+tmpStartTime.getHours()).toString().slice(-2)+':'+('0'+tmpStartTime.getMinutes()).toString().slice(-2);
+            this.endTime = ('0'+tmpEndTime.getHours()).toString().slice(-2)+':'+('0'+tmpEndTime.getMinutes()).toString().slice(-2);
+
+            
           }
         }
         console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingRoom);
-        this.detectorRef.detectChanges();
-      });
+        
+      });   
+      this.detectorRef.detectChanges();
+      
+  }
+
+  ngAfterViewInit(): void {
+    if (this.dialogRef) {
+      if (!this.isSaveSuccess) {
+        this.dialogRef.closed.subscribe((res: any) => {
+          console.log('Close without saving or save failed', res);
+          this.dialogRef.dataService.saveFailed.next(null);
+        });
+      }
+    }
+  }
+
+  initForm() {
+    
     // this.codxEpService
     //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
     //   .then((item) => {
@@ -474,8 +476,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmpAttendeesList.push(item);
     });
     this.tmpAttendeesList.push(this.curUser);
-    console.log('data', this.fGroupAddBookingRoom.value);
-    console.log('attend', this.attendeesList);
 
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
