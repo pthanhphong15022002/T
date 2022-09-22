@@ -36,6 +36,7 @@ import { MoveComponent } from './move/move.component';
 import { VersionComponent } from './version/version.component';
 import { ShareComponent } from './share/share.component';
 import { lvFileClientAPI } from '@shared/services/lv.component';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -118,13 +119,6 @@ export class CodxDMService {
   public dataFileEditing: FileUpload;
   public listFolder = [];
   public listFiles = [];
-  public urlUpload = 'http://192.168.18.36:8011';
-  //public urlThumbnail = 'http://192.168.18.36:8011/api/';
-  public urlTenant = '';
-  public urlThumbnail = 'http://192.168.18.36:8011';
-  //public urlFile = 'http://192.168.18.36:8011/api/';
-  public urlFile = 'http://192.168.18.36:8011';
-  appName = 'hps-file-test'; // Tam thoi de hard
   page = 1;
   totalPage = 1;
   pageSize = 20;
@@ -1161,7 +1155,7 @@ export class CodxDMService {
   }
 
   async getToken() {
-    lvFileClientAPI.setUrl(this.urlUpload); //"http://192.168.18.36:8011");
+    lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
     var retToken = await lvFileClientAPI.formPost('api/accounts/token', {
       username: 'admin/root',
       password: 'root',
@@ -1169,7 +1163,7 @@ export class CodxDMService {
     window.localStorage.setItem('lv-file-api-token', retToken.access_token);
   }
 
-  clickMF($event, data: any) {
+  clickMF($event, data: any , view:any = null) {
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
 
@@ -1312,7 +1306,10 @@ export class CodxDMService {
         case "DMT0207":  // permission
         case "DMT0220":
           this.dataFileEditing = data;            
-          this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1"], "");
+          this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1",data.recID,view], "").closed.subscribe(item=>{
+            if(item?.event)
+              view?.dataService.update(item.event).subscribe();
+          });
           break;
 
         case "DMT0205": // bookmark folder

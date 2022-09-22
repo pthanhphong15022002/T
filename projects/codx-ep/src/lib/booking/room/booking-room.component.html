@@ -33,17 +33,42 @@
   <div class="container">
     <div class="row">
       <div class="col-4">
-        <div style="width: 30px">
-          <codx-img objectId="ADMIN" [width]="30"></codx-img>
+        <div>
+          <codx-img
+            [objectId]="data.resourceData.recID"
+            [objectType]="'EP_Rooms'"
+            [width]="50"
+          ></codx-img>
         </div>
       </div>
       <div class="col-8">
         <div>
           {{ data.resourceData.resourceName }} ({{ data.resourceData.events }})
         </div>
-        <div>{{ data.resourceData.location }}</div>
+        <div>{{ data.resourceData.companyID }}</div>
+        <div class="row">
+          <span>{{ data.resourceData.location }}</span>
+        </div>
       </div>
     </div>
+  </div>
+</ng-template>
+<ng-template #resourceTootip let-data>
+  <div class="template-wrap">
+    <div class="res-text">Code: {{ data.resourceData.recCode }}</div>
+    <div class="res-text">Name: {{ data.resourceData.resourceName }}</div>
+    <div class="res-text">Bookings: {{ data.resourceData.events }}</div>
+  </div>
+</ng-template>
+
+<ng-template #mfButton let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
   </div>
 </ng-template>
 
@@ -55,78 +80,71 @@
   </div>
 </ng-template>
 
-<ng-template #mfButton let-data> 
-  <codx-mfunc
-      [dataItem]="data"
-      [formModel]="formModel"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-    ></codx-mfunc>
-</ng-template>
 
-<ng-template #contentTmp let-data> 
-
+<ng-template #contentTmp let-data>
   <div>
-    {{data.title}}
+    <h2>{{ data.title }}</h2>
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <i class="icon-person me-1"></i>
-    <span>
-      {{data.requester}}
+    <span class=" ms-1 fw-bold">
+      {{ data.requester }}
     </span>
-  </div>   
+  </div>
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <i class="icon-location_on me-1"></i>
-    <span>
-      {{data.resourceName}}
+    <span class=" ms-1 fw-bold">
+      {{ data.resourceName }}
     </span>
-  </div> 
+  </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2">
     <div class="d-flex me-6">
       <i class="icon-calendar_today me-1"></i>
-      <span class="text-gray-600">
-        {{
-          data
-            ? (data?.createdOn | date: "dd/MM/yyyy")
-            : "dd/MM/yyyy"
-        }}
+      <span class=" ms-1 fw-bold">
+        {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
       </span>
     </div>
     <div class="d-flex me-6">
       <i class="icon-access_time me-1"></i>
-      <span >
+      <span class=" ms-1 fw-bold">
         {{ data?.startDate | date: "shortTime" }}
       </span>
-      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{ "-" }}</span >
-      <span>
+      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+        "-"
+      }}</span>
+      <span class=" fw-bold">
         {{ data?.endDate | date: "shortTime" }}
       </span>
     </div>
   </div>
 
-  <hr>
+  <hr />
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-    <span class="text-gray-600">Lí do: </span>
-    <span>
-      {{data.reasonID}}
+    <codx-label default="Lí do: " name="lblReason" class="text-gray-600"></codx-label>
+    <span class=" ms-2 fw-bold">
+      {{ data.reasonName }}
     </span>
-  </div> 
+  </div>
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-    <span class="text-gray-600">Nội dung: </span>
-    <span>
-      {{data.memo}}
+    <codx-label default="Nội dung:" name="lblMemo" class="text-gray-600"></codx-label>
+    <span class=" ms-2 fw-bold">
+      {{ data.memo }}
     </span>
-  </div> 
+  </div>
   
-  <div>    
+  <div>
     <div class="d-flex mb-2">
-      <div class="d-flex text-dark me-6">
-        <codx-label default="Thành viên" class="fw-bold me-4"> </codx-label>
+      <div class="align-items-center d-flex text-dark me-6">
+        <codx-label
+          default="Thành viên: "
+          name="lblAttendees"
+          class="text-gray-600 me-4"
+        ></codx-label>
         <div class="d-flex justify-content-end">
           <codx-imgs
-            [objectId]="'ADMIN;HPHOA;HPHOA1;PMNHI;HPHOA;HPHOA1;PMNHI'"
+            [objectId]="data.bookingAttendees"
             objectType="AD_Users"
             [numberImages]="7"
             [width]="30"
@@ -136,135 +154,70 @@
       </div>
     </div>
   </div>
-</ng-template>
 
+  <hr />
+  <div *ngIf="data.bookingItems?.length>0">
+    <div *ngFor="let item of data.bookingItems">  
+      <div class="d-flex mb-4 justify-content-between">
+        <div class="d-flex flex-row">
+          <div class="me-2">
+            <codx-img
+              [objectId]="item.recID"
+              imageType="square"
+              width="35"
+              objectType="EP_Stationery"
+            ></codx-img>
+          </div>  
+          <div class="">
+            <div class="">
+              <span href="#" class=" fw-bold">{{ item.itemName }}</span>
+            </div>
+            <div class="d-flex flex-row flex-grow-1">
+              <codx-label
+                
+                default="Đơn vị tính:"
+                name="lblQuantity"
+                class="text-gray-600"
+              ></codx-label>
+              <span class="d-block ms-2 fw-bold">{{item.umid}}</span>
+            </div>
+          </div>
+        </div>
 
-<ng-template #resourceTootip let-data>
-  <div class="template-wrap">
-    <div class="res-text">Code: {{ data.resourceData.recCode }}</div>
-    <div class="res-text">Name: {{ data.resourceData.resourceName }}</div>
-    <div class="res-text">Bookings: {{ data.resourceData.events }}</div>
-  </div>
-</ng-template>
-
-<!-- 
-<ng-template #pined>
-  <div class="d-flex justify-content-start w-100">
-    <button
-      [title]="titleCollapse"
-      type="button"
-      class="btn btn-sm background-color-white my-1 text-hover-primary"
-      style="margin-left: -5px"
-      (click)="collapse($event)"
-    >
-      <i
-        style="font-size: 21px !important; font-weight: 600"
-        class="icon-tune text-muted"
-      ></i>
-    </button>
-    <div class="w-100 d-flex">
-      <div class="d-flex w-275px mx-3" *ngFor="let item of lstPined">
-        <ng-container [ngSwitch]="item?.dataType">
-          <ng-container *ngSwitchCase="'string'">
-            <div class="w-100 mt-3" *ngIf="!item.referedType">
-              <codx-input
-                type="textarea"
-                [field]="item.controlName"
-                placeholder="Có chứa giá trị..."
-                format="ed2"
-                [crrValue]="item.defaultValue"
-                (valueChange)="reportObj.valueChange($event)"
-              ></codx-input>
-            </div>
-            <div class="w-100 mt-3" *ngIf="item.referedType == '3'">
-              <codx-input
-                type="combobox"
-                [field]="item.controlName"
-                [crrValue]="item.defaultValue"
-                [refValue]="item.referedValue"
-                (valueChange)="reportObj.valueChange($event)"
-              >
-              </codx-input>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'bool'">
-            <div class="float-end" *ngIf="item.controlType == 'LVSwitch'">
-              <codx-input
-                class="float-right"
-                type="switch"
-                [field]="item.controlName"
-                [crrValue]="item.defaultValue ? item.defaulValue : false"
-                (valueChange)="reportObj.valueChange($event, false, 'switch')"
-              ></codx-input>
-            </div>
-            <div
-              class="w-100 ms-5 mt-3"
-              *ngIf="item.controlType == 'LVCheckbox'"
-            >
-              <div class="d-flex">
-                <div class="float-start mx-5">
-                  <codx-input
-                    type="checkBox"
-                    [field]="item.controlName"
-                    [crrValue]="item.defaultValue ? item.defaulValue : false"
-                    (valueChange)="valueChange($event)"
-                  ></codx-input>
-                </div>
-                <div class="w-100 float-end">
-                  <span style="font-size: 12px; font-weight: 400"
-                    >{{ item.labelName }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'DateTime'">
-            <div class="my-2 w-100">
-              <codx-dropdown-calendar
-                cssPopup="h-600px w-800px"
-                cssClass="w-100 button-radius"
-                (change)="reportObj.changeValueDate($event)"
-              ></codx-dropdown-calendar>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="'int'">
-            <div class="w-100 mt-3">
-              <div class="d-flex">
-                <div class="float-start me-1">
-                  <codx-input
-                    type="number"
-                    field="numberFrom"
-                    [crrValue]="item.defaultValue ? item.defaultValue : 0"
-                    (valueChange)="reportObj.valueChange($event)"
-                    placeholder="Từ"
-                  ></codx-input>
-                </div>
-                <div class="float-end ms-1">
-                  <codx-input
-                    type="number"
-                    field="numberTo"
-                    [crrValue]="item.defaultValue ? item.defaultValue : 0"
-                    (valueChange)="reportObj.valueChange($event)"
-                    placeholder="Đến"
-                  ></codx-input>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
+        <div class="d-flex align-items-center me-3">
+          <codx-label
+            default="Số lượng:"
+            name="lblQuantity"
+            class="text-gray-600"
+          ></codx-label>
+          <span class="ms-2 fw-bold">{{item.quantity}}</span>
+        </div>
       </div>
     </div>
+    
+  </div>
+</ng-template>
 
-    <div class="d-flex float-right">
-      <button
-        class="btn btn-sm background-color-white my-1 text-hover-primary"
-        style="margin-right: -15px"
-        (click)="reportObj.printReport()"
-      >
-        <i style="font-size: 21px !important" class="icon-print text-muted"></i>
-      </button>
+<ng-template #subTitleTmp let-data>
+  <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <div class="d-flex me-6">
+      <i class="icon-calendar_today me-1"></i>
+      <span class="text-gray-600">
+        {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
+      </span>
+    </div>
+    <div class="d-flex me-6">
+      <i class="icon-access_time me-1"></i>
+      <span class="text-gray-600">
+        {{ data?.startDate | date: "shortTime" }}
+      </span>
+      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+        "-"
+      }}</span>
+      <span class="text-gray-600">
+        {{ data?.endDate | date: "shortTime" }}
+      </span>
     </div>
   </div>
-</ng-template> -->
-
+</ng-template>
 

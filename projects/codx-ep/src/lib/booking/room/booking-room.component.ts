@@ -41,6 +41,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
 
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   showToolBar = 'true';
@@ -68,7 +69,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   lstPined: any = [];
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
-  
+
   formModel: FormModel;
   constructor(
     private injector: Injector,
@@ -92,7 +93,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
     this.request.service = 'EP';
-    this.request.method = 'GetEventsAsync';
+    this.request.method = 'GetListBookingAsync';
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '1';
     this.request.idField = 'recID';
@@ -165,13 +166,14 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
-          resourceModel: this.resourceField,
+          resourceModel: this.resourceField, //resource
           //template:this.cardTemplate,
           template4: this.resourceHeader,
-          template5: this.resourceTootip,
-          template6: this.mfButton,
-          template7: this.footerButton,
-          statusColorRef:'vl003'
+          //template5: this.resourceTootip,//tooltip
+          template6: this.mfButton, //header
+          template8: this.contentTmp,//content
+          //template7: this.footerButton,//footer
+          statusColorRef: 'vl003',
         },
       },
       {

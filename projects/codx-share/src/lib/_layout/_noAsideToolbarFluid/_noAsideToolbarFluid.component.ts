@@ -17,9 +17,10 @@ export class LayoutNoAsideToolbarFluidComponent extends LayoutBaseComponent {
   module = '';
   override aside = false;
   dialog!: DialogRef;
-  override asideFixed = true;
+  override asideFixed = false;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
-  override toolbar = false;
+  override toolbar = true;
+  override toolbarFixed = false;
   constructor(
     inject: Injector,
     private codxShareService: CodxShareService,
@@ -34,7 +35,7 @@ export class LayoutNoAsideToolbarFluidComponent extends LayoutBaseComponent {
     });
   }
 
-  onAfterViewInit(): void {}
+  onAfterViewInit(): void { }
 
   openFormNoteDrawer() {
     let option = new SidebarModel();

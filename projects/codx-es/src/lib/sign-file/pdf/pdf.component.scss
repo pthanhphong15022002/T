@@ -11,6 +11,12 @@
   #js-licensing {
     display: none !important;
   }
+  .fst-italic {
+    font-style: italic !important;
+  }
+  .text-decoration-underline {
+    text-decoration: underline !important;
+  }
   codx-vll {
     font-size: 12px;
   }
@@ -34,28 +40,6 @@
     background-color: transparent;
     border-color: transparent;
   }
-  //**thanh scroll
-  // ::-webkit-scrollbar {
-  //   width: 7px;
-  //   border-radius:10px;
-  // }
-
-  // /* Track */
-  // ::-webkit-scrollbar-track {
-  //   background: #C9C9D4;
-  // }
-
-  // /* Handle */
-  // ::-webkit-scrollbar-thumb {
-  //   background: #888;
-  // }
-
-  // /* Handle on hover */
-  // ::-webkit-scrollbar-thumb:hover {
-  //   background: #555;
-  // }
-
-  //end scroll
   .main-content {
     width: 100% !important;
     height: 100% !important;
@@ -67,7 +51,7 @@
     background-color: white;
   }
   .main-left {
-    width: 240px;
+    // width: 240px;
     overflow: hidden;
     height: 100%;
   }
@@ -244,6 +228,7 @@
     }
     .e-toolbar .e-toolbar-items {
       background: transparent !important;
+      min-height: 41px !important;
     }
     .e-toolbar .e-toolbar-item .e-tbar-btn.e-btn .e-icons.e-btn-icon {
       line-height: 26px !important;
@@ -266,7 +251,6 @@
     .e-toolbar-items .e-toolbar-item .e-tbar-btn.e-btn:hover {
       padding: 0;
       padding-bottom: 0px;
-
       border-radius: 3px !important;
       transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
@@ -279,7 +263,6 @@
     .e-toolbar .e-tbar-btn.e-btn:focus .e-icons {
       //color: $primary-dark;
       padding: 0;
-
       border-radius: 0px !important;
     }
     .chooseSignFile {
@@ -469,6 +452,44 @@
   .main-left {
     .e-listview .e-list-header {
       display: none !important;
+    }
+  }
+
+  ngx-extended-pdf-viewer .pdfViewer.singlePageView .page {
+    margin: 0 auto !important;
+  }
+  ngx-extended-pdf-viewer .html .unverified-signature-warning,
+  ngx-extended-pdf-viewer .html .modified-background-warning {
+    display: none !important;
+  }
+  html[dir="ltr"]
+    ngx-extended-pdf-viewer
+    #outerContainer.sidebarOpen
+    #viewerContainer:not(.pdfPresentationMode) {
+    left: 0 !important;
+  }
+  ngx-extended-pdf-viewer .pdfViewer .page {
+    border: 0 !important;
+  }
+  .reason_Info > p {
+    margin: 0;
+  }
+  #thumbnailView {
+    .image-container {
+      margin: auto;
+      text-align: center;
+      border: 1px solid #c9c9d4;
+      border-radius: 3px;
+      width: 180px !important;
+      height: 200px !important;
+      margin-bottom: 8px;
+    }
+    .thumbnailImage {
+      width: 150px !important;
+      height: 175px !important;
+    }
+    .thumbnailSelectionRing {
+      border: 1px solid $primary-dark;
     }
   }
 }

@@ -48,8 +48,8 @@ export class CodxTasksService {
     );
   }
 
-   //update status
-   setStatusTask(
+  //update status
+  setStatusTask(
     funcID: string,
     id: string,
     status: string,
@@ -79,6 +79,37 @@ export class CodxTasksService {
       'TaskBusiness',
       'UpdateProgressTaskAsync',
       [funcID, id, modifiedOn, percentage, comment]
+    );
+  }
+
+  //sendMail
+  sendAlertMail(recID: string, valueRuleNo: string, funcID: string) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'SendAlertMailAsync',
+      [recID,valueRuleNo,funcID]
+    );
+  }
+
+  //getRecID 
+  getRecIDTaskByIdAsync(id) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetRecIDTaskByIdAsync',
+      id
+    );
+  }
+  saveAssign(data) {
+    return this.api.execSv<any>(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'AddAssignToTaskAsync',
+      data
     );
   }
 }

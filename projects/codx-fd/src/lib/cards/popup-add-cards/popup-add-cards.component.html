@@ -13,7 +13,7 @@
     </div>
 </ng-template>
 <ng-template #body>
-    <div id="FormEdit" class="offcanvas offcanvas-md offcanvas-right w-100">
+    <div class="offcanvas offcanvas-md offcanvas-right w-100">
         <div class="offcanvas-content">
             <div class="row">
                 <div class="offcanvas-content">
@@ -31,7 +31,8 @@
                                                 [crrValue]="form.value.receiver" [multiple]="true" [loadFull]="true" ngDefaultControl
                                                 field="receiver" #comboboxUserReciver
                                                 (valueChange)="valueChange($event,comboboxUserReciver)" refValue="Users"
-                                                service="SYS"></codx-input>
+                                                service="SYS">
+                                            </codx-input>
                                         </div>
                                     </ng-container>
                                     <ng-container
