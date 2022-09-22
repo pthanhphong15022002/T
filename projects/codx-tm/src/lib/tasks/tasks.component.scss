@@ -41,10 +41,10 @@ codx-view-kanban .e-card .border {
   border: 0 !important;
 }
 
-ejs-richtexteditor .e-dialog > .e-dlg-content,
-ejs-richtexteditor .e-dialog > .e-dlg-header-content,
-ejs-richtexteditor .e-dialog > .e-footer-content,
-ejs-richtexteditor .e-dialog > .e-dlg-header-content + .e-dlg-content {
+ejs-richtexteditor .e-dialog>.e-dlg-content,
+ejs-richtexteditor .e-dialog>.e-dlg-header-content,
+ejs-richtexteditor .e-dialog>.e-footer-content,
+ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
   padding: 15px;
 }
 
@@ -66,6 +66,6 @@ codx-tabs .tab-comt .tab_container .tree-body {
   margin-top: 10px;
 }
 
-.bg-red {
-  background-color: red;
-}
+// .bg-red {
+//   background-color: red;
+// }
