@@ -8,9 +8,16 @@ export const environment = {
   apiUrl: 'http://localhost:8011',
   //shopping: 'https://localhost:44317/Shopping',
   shopping: 'https://172.16.7.34:8111/Shopping',
-  //apiUrl: 'http://172.16.7.34:8011',
+  // apiUrl: 'http://172.16.7.34:8011',
   pdfUrl: 'http://localhost:8015/api/pdf',
   librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
+  urlUpload: 'http://172.16.1.210:8011',
+  //public urlThumbnail = 'http://192.168.18.36:8011/api/';
+  urlTenant: '',
+  urlThumbnail: 'http://172.16.1.210:8011',
+  //public urlFile = 'http://192.168.18.36:8011/api/';
+  urlFile: 'http://172.16.1.210:8011',
+  appName: 'hps-file-test', // Tam thoi de hard
   StoreNames: {
     FormLabels: 'FormLabels',
     GridViewSetups: 'GridViewSetups',

@@ -1,3 +1,4 @@
+import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
@@ -34,10 +35,13 @@ import { PopupAddDriversComponent } from './settings/drivers/popup-add-drivers/p
 import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
 import { RoomsComponent } from './settings/rooms/rooms.component';
 import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
-import { PopupSettingNormsComponent } from './settings/stationery/popup-setting-norms/popup-setting-norms.component';
-import { PopupUpdateInventoryComponent } from './settings/stationery/popup-update-inventory/popup-update-inventory.component';
 import { StationeryComponent } from './settings/stationery/stationery.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { EpCardsComponent } from './settings/epCards/epCards.component';
+import { PopupAddEpCardsComponent } from './settings/epCards/popup-add-epCards/popup-add-epCards.component';
+import { ApprovalRoomViewDetailComponent } from './approval/room/approval-room-view-detail/approval-room-view-detail.component';
+import { ApprovalCarViewDetailComponent } from './approval/car/approval-car-view-detail/approval-car-view-detail.component';
+import { BookingRoomViewDetailComponent } from './booking/room/view-detail/booking-room-view-detail.component';
 
 const routes: Route[] = [
   {
@@ -107,6 +111,10 @@ const routes: Route[] = [
         path: 'stationery/:funcID',
         component: StationeryComponent,
       },
+      {
+        path: 'epCards/:funcID',
+        component: EpCardsComponent,
+      },
     ],
   },
 ];
@@ -116,27 +124,31 @@ const Components: Type<any>[] = [
   BookingRoomComponent,
   BookingCarComponent,
   BookingStationeryComponent,
+  BookingStationeryViewDetailComponent,
   ApprovalStationeryComponent,
   ApprovalCarsComponent,
   ApprovalRoomsComponent,
   PopupAddBookingRoomComponent,
   PopupAddBookingCarComponent,
   PopupRequestStationeryComponent,
-  PopupSettingNormsComponent,
-  PopupUpdateInventoryComponent,
   PopupAddCarsComponent,
   PopupAddRoomsComponent,
   PopupAddStationeryComponent,
   PopupAddDriversComponent,
+  PopupAddEpCardsComponent,
   StationeryComponent,
   CarsComponent,
   DriversComponent,
   RoomsComponent,
+  EpCardsComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,
   ViewDetailComponent,
   TabsComponent,
+  ApprovalRoomViewDetailComponent,
+  ApprovalCarViewDetailComponent,
+  BookingRoomViewDetailComponent,
 ];
 
 @NgModule({

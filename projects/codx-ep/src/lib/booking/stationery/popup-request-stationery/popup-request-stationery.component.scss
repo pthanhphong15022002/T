@@ -6,3 +6,23 @@
   cursor: pointer;
 }
 
+#ex4 .p1[data-count]:after {
+  position: absolute;
+  right: 10%;
+  top: 8%;
+  content: attr(data-count);
+  font-size: 40%;
+  padding: 0.2em;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  line-height: 1em;
+  color: white;
+  background: rgba(255, 0, 0, 0.85);
+  text-align: center;
+  min-width: 1em;
+  //font-weight:bold;
+}
+
+#ex4 {
+  position: relative;
+}

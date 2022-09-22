@@ -4,6 +4,7 @@ import {
   ViewChild,
   Injector,
   ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -31,7 +32,9 @@ import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add
   templateUrl: './booking-room.component.html',
   styleUrls: ['./booking-room.component.scss'],
 })
-export class BookingRoomComponent extends UIComponent {
+export class BookingRoomComponent extends UIComponent implements AfterViewInit {
+  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
+  @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
@@ -40,17 +43,18 @@ export class BookingRoomComponent extends UIComponent {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
 
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
-  entityName = 'EP_Bookings';
+  entity = 'EP_Bookings';
+  className = 'BookingsBusiness';
+  method = 'GetListBookingAsync';
+  idField = 'recID';
   predicate = 'ResourceType=@0';
   dataValue = '1';
-  idField = 'RecID';
-  className = 'BookingsBusiness';
-  method = 'GetEventsAsync';
   modelResource?: ResourceModel;
   request?: ResourceModel;
   model = new DataRequest();
@@ -67,7 +71,7 @@ export class BookingRoomComponent extends UIComponent {
   lstPined: any = [];
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
-
+  itemDetail;
   formModel: FormModel;
   constructor(
     private injector: Injector,
@@ -91,7 +95,7 @@ export class BookingRoomComponent extends UIComponent {
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
     this.request.service = 'EP';
-    this.request.method = 'GetEventsAsync';
+    this.request.method = 'GetListBookingAsync';
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '1';
     this.request.idField = 'recID';
@@ -104,10 +108,10 @@ export class BookingRoomComponent extends UIComponent {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '1';
 
-    this.model.page = 1;
-    this.model.pageSize = 200;
-    this.model.predicate = 'ResourceType=@0';
-    this.model.dataValue = '1';
+    // this.model.page = 1;
+    // this.model.pageSize = 200;
+    // this.model.predicate = 'ResourceType=@0';
+    // this.model.dataValue = '1';
 
     this.moreFunc = [
       {
@@ -164,13 +168,24 @@ export class BookingRoomComponent extends UIComponent {
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
-          resourceModel: this.resourceField,
+          resourceModel: this.resourceField, //resource
           //template:this.cardTemplate,
           template4: this.resourceHeader,
-          template5: this.resourceTootip,
-          template6: this.mfButton,
-          template7: this.footerButton,
-          statusColorRef:'vl003'
+          //template5: this.resourceTootip,//tooltip
+          template6: this.mfButton, //header
+          template8: this.contentTmp,//content
+          //template7: this.footerButton,//footer
+          statusColorRef: 'vl003',
+        },
+      },
+      {
+        id: '2',
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.panelRight,
         },
       },
       {
@@ -187,6 +202,27 @@ export class BookingRoomComponent extends UIComponent {
     ];
     this.detectorRef.detectChanges();
   }
+
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
+
+  getDetailBooking(id: any) {
+    this.api
+      .exec<any>(
+        'EP',
+        'BookingsBusiness',
+        'GetBookingByIDAsync',
+        this.itemDetail?.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.itemDetail = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  closeAddForm(event) {}
 
 
   changeValueDate(evt: any) {}

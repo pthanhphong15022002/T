@@ -1,0 +1,57 @@
+:host {
+  height: 100%;
+}
+
+.unexpired {
+  color: #c9c9d4;
+}
+
+.expired {
+  color: #f64e60;
+}
+
+.bg-red {
+  codx-view-list-detail .codx-detail-footer .tab-content {
+    background-color: blue;
+    border: 1px solid red;
+  }
+}
+
+textarea.codx-textarea {
+  border-radius: 2px !important;
+  padding: 5px 10px;
+  border-color: #d4d9dd;
+  outline: 0;
+}
+
+codx-mfunc span,
+.dropdown-menu span {
+  line-height: 20px;
+}
+
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:focus,
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:focus {
+  border-color: rgb(194, 202, 202);
+}
+
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:hover,
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:hover {
+  border-color: rgb(212, 216, 221);
+}
+
+codx-view-kanban .e-card .border {
+  border: 0 !important;
+}
+
+ejs-richtexteditor .e-dialog > .e-dlg-content,
+ejs-richtexteditor .e-dialog > .e-dlg-header-content,
+ejs-richtexteditor .e-dialog > .e-footer-content,
+ejs-richtexteditor .e-dialog > .e-dlg-header-content + .e-dlg-content {
+  padding: 15px;
+}
+
+.listuser-box {
+  max-height: 300px;
+  overflow: auto;
+  margin-top: 10px;
+}

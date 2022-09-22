@@ -1,19 +1,13 @@
 import {
   Component,
-  OnInit,
   TemplateRef,
   Injector,
   ViewChild,
-  AfterViewInit,
-  ChangeDetectorRef,
   Input,
+  AfterViewInit,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
-  CacheService,
-  CallFuncService,
   DialogRef,
   FormModel,
   SidebarModel,
@@ -28,17 +22,17 @@ import { PopupAddDriversComponent } from './popup-add-drivers/popup-add-drivers.
 @Component({
   selector: 'setting-drivers',
   templateUrl: './drivers.component.html',
-  styleUrls: ['./drivers.component.scss']
+  styleUrls: ['./drivers.component.scss'],
 })
-export class DriversComponent implements OnInit, AfterViewInit { 
-  @ViewChild('view') viewBase: ViewsComponent;  
+export class DriversComponent extends UIComponent implements AfterViewInit {
+  @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
   @ViewChild('statusCol') statusCol: TemplateRef<any>;
-  @ViewChild('categoryCol') categoryCol: TemplateRef<any>;  
+  @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
   @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
   @ViewChild('avatar') avatar: TemplateRef<any>;
   @ViewChild('owner') owner: TemplateRef<any>;
- 
+
   @Input() data!: any;
 
   service = 'EP';
@@ -62,85 +56,82 @@ export class DriversComponent implements OnInit, AfterViewInit {
   // fGroupAddDriver: FormGroup;
   // dialogRef: DialogRef;
   isAfterRender = false;
-  
-  constructor(  
-    private cacheService: CacheService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private callFuncService: CallFuncService,
-    private activedRouter: ActivatedRoute,
-    private codxEpService: CodxEpService
-    ) {
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-      this.codxEpService.getFormModel(this.funcID).then((res) => {
-        if (res) {
-          this.formModel = res;
-          this.isAfterRender = true;
-        }
-      });
-    }
 
-  ngOnInit(): void { }
+  constructor(
+    private injector: Injector,
+    private codxEpService: CodxEpService
+  ) {
+    super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+        this.isAfterRender = true;
+      }
+    });
+  }
+
+  onInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+  }
 
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.buttons = {
       id: 'btnAdd',
     };
-
     this.codxEpService.getFormModel(this.funcID).then((fModel) => {
-      this.cacheService
+      this.cache
         .gridViewSetup(fModel.formName, fModel.gridViewName)
         .subscribe((gv) => {
-          console.log(gv);                  
-          });
-              
-        this.columnsGrid = [
-          {
-            field: 'resourceID',
-            headerText: 'Mã lái xe',//gv['resourceID'].headerText,
-          },          
-          {
-            field: 'icon',
-            headerText: "Ảnh đại diện",
-            template: this.avatar,
-          },
-          {
-            field: 'resourceName',
-            headerText: 'Tên lái xe',
-          }, 
-          // {
-          //   headerText: 'Tình trạng',
-          //   template: this.statusCol,
-          // // },
-          // {
-          //   headerText: 'Xếp hạng',
-          //   template: this.rankingCol,
-          // },
-          {
-            headerText: 'Nguồn',
-            template: this.categoryCol,
-          },
-          {
-            headerText: "Người điều phối",
-            width: '20%',
-            template: this.owner,
-          },
-        ];
+          console.log(gv);
+        });
 
-        this.views = [            
-          {
-            sameData: true,
-            type: ViewType.grid,
-            active: true,
-            model: {
-              resources: this.columnsGrid,
-            },
+      this.columnsGrid = [
+        {
+          field: 'resourceID',
+          headerText: 'Mã lái xe', //gv['resourceID'].headerText,
+        },
+        {
+          field: 'icon',
+          headerText: 'Ảnh đại diện',
+          template: this.avatar,
+        },
+        {
+          field: 'resourceName',
+          headerText: 'Tên lái xe',
+        },
+        // {
+        //   headerText: 'Tình trạng',
+        //   template: this.statusCol,
+        // // },
+        // {
+        //   headerText: 'Xếp hạng',
+        //   template: this.rankingCol,
+        // },
+        {
+          headerText: 'Nguồn',
+          template: this.categoryCol,
+        },
+        {
+          headerText: 'Người điều phối',
+          width: '20%',
+          template: this.owner,
+        },
+      ];
+
+      this.views = [
+        {
+          sameData: true,
+          type: ViewType.grid,
+          active: true,
+          model: {
+            resources: this.columnsGrid,
           },
-        ];
-        this.changeDetectorRef.detectChanges();
-      });
+        },
+      ];
+      this.detectorRef.detectChanges();
+    });
   }
-
 
   click(event: ButtonModel) {
     switch (event.id) {
@@ -163,7 +154,7 @@ export class DriversComponent implements OnInit, AfterViewInit {
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callFuncService.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddDriversComponent,
         [this.dataSelected, true],
         option
@@ -174,32 +165,33 @@ export class DriversComponent implements OnInit, AfterViewInit {
   edit(obj?) {
     if (obj) {
       this.viewBase.dataService.dataSelected = obj;
-      this.viewBase.dataService.edit(this.viewBase.dataService.dataSelected).subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '550px';
-        option.DataService = this.viewBase?.dataService;
-        option.FormModel = this.viewBase?.formModel;
-        this.dialog = this.callFuncService.openSide(
-          PopupAddDriversComponent,
-          [this.viewBase.dataService.dataSelected, false],
-          option
-        );
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = this.viewBase?.formModel;
+          this.dialog = this.callfc.openSide(
+            PopupAddDriversComponent,
+            [this.viewBase.dataService.dataSelected, false],
+            option
+          );
+        });
+    }
+  }
+
+  delete(obj?) {
+    if (obj) {
+      this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+        console.log(res);
       });
     }
   }
 
-  delete(obj?) {    
-    if (obj) {
-      this.viewBase.dataService.delete([obj], true)
-      .subscribe((res) => {
-        console.log(res);
-      });
-    }    
-  }
-
   clickMF(event, data) {
-    console.log(event)
+    console.log(event);
     switch (event?.functionID) {
       case 'SYS03':
         this.edit(data);

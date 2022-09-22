@@ -11,8 +11,8 @@
   [predicate]="predicate"
   [dataValue]="datavalue"
   [button]="button"
-  [moreFuncs]="moreFunc"
   (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc"
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
@@ -21,61 +21,9 @@
 >
 </codx-views>
 
-<!-- begin::Dashboard -->
-
 <ng-template #chart>
   <codx-stationery-dashboard></codx-stationery-dashboard>
 </ng-template>
-
-<!-- begin::Dashboard -->
-
-<!-- begin::View card -->
-
-<!-- <ng-template #cardItem let-data>
-  <codx-card-img
-    cardCss="border w-250px h-100"
-    [imageSrc]="
-      data.icon ? data.icon : '../assets/media/svg/files/blank-image.svg'
-    "
-    [title]="data.resourceName"
-    [subTitle]="data.resourceName"
-    [content]="data.costPrice | currency: 'VND':'symbol':'3.0'"
-    [rootData]="data"
-    [footer]="cardItemFooter"
-  >
-  </codx-card-img>
-</ng-template>
-
-<ng-template #cardItemFooter let-data>
-  <div class="d-flex flex-column flex-grow-1 mt-2">
-    <div class="d-flex justify-content-between align-items-end mt-2">
-      <div class="d-flex align-items-end me-2 codx-badge mb-3">
-        <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-view_agenda icon-20 text-gray-400"></span>
-          <span>{{ data.currentQty }}</span>
-        </div>
-        <div class="d-flex align-items-center position-relative me-4">
-          <span
-            class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
-          ></span>
-          <span>{{ data.reservedQty }}</span>
-        </div>
-        <div class="d-flex align-items-center position-relative me-4">
-          <span
-            class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
-          ></span>
-          <span>{{ data.availableQty }}</span>
-        </div>
-      </div>
-      <div
-        class="symbol-group symbol-hover justify-content-end cursor-pointer"
-        (click)="addCart($event, data)"
-      >
-        <span class="icon-shopping_cart icon-20 text-gray-400 cart"></span>
-      </div>
-    </div>
-  </div>
-</ng-template> -->
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full
@@ -83,32 +31,51 @@
     (click)="click(data)"
     [typeMF]="'hover'"
     [title]="data?.requester"
-    [desc]="data?.title"
+    [subTitle]="data?.positionID ? data?.positionID : 'Không có chức vụ'"
+    [content]="data?.note"
+    [footer]="footerTmp"
     [icoCss]="
-      'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+      'w-40 h-40 fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     "
-    [status]="data?.status"
-    [statusVll]="'VL003'"
-    [date]="data.createdOn"
-    [resources]="'ADMIN;PMNHI;NVHAO;ADMIN;PMNHI;NVHAO'"
-    [resourceObjType]="'AD_Users'"
-    [titleLine]="2"
+    [imageId]="data?.createdBy"
+    imageObjType="AD_Users"
     [dataItem]="data"
     [formModel]="view.formModel"
     (clickMF)="clickMF($event, data)"
     typeMF="hover"
-    [dataItem]="data"
   >
   </codx-temp-full>
 </ng-template>
 
 <ng-template #panelRightRef>
-  <view-detail
+  <booking-stationery-view-detail
     #viewdetail
     [itemDetail]="itemDetail"
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
     (uploaded)="getDetailBooking($event)"
-  ></view-detail>
+  ></booking-stationery-view-detail>
+</ng-template>
+
+<ng-template #footerTmp let-data>
+  <div class="d-flex justify-content-between m-2 p-2">
+    <div class="d-flex align-items-center">
+      <div
+        class="badge border-0 me-2"
+        [style.background-color]="'3' | vll: 'VL003':'color' | async"
+        [style.color]="'3' | vll: 'VL003':'textColor' | async"
+      >
+        {{ "3" | vll: "VL003":"text" | async }}
+      </div>
+      <div
+        class="badge border-0 me-2"
+        [style.background-color]="'4' | vll: 'VL003':'color' | async"
+        [style.color]="'4' | vll: 'VL003':'textColor' | async"
+      >
+        {{ "4" | vll: "VL003":"text" | async }}
+      </div>
+    </div>
+    <div>{{ data?.createdOn | date: "shortDate" }}</div>
+  </div>
 </ng-template>

@@ -45,7 +45,7 @@ export class PopupAddSprintsComponent implements OnInit {
   dataDefault = [];
   dataOnLoad = [];
   vllShare = 'TM003';
-  isUploadImg = false;
+  isUploadImg = true;
   gridViewSetup: any;
   imageUpload: UploadFile = new UploadFile();
   showLabelAttachment = false;
@@ -104,6 +104,7 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.master.iterationType=='1' && (this.master.projectID == null || this.master.projectID.trim() == ''))
       return this.notiService.notify('Tên dự án không được để trống !');
     if (
+      this.master.iterationType=='0' &&
       this.master.iterationName == null ||
       this.master.iterationName.trim() == '' 
     )
@@ -119,9 +120,10 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   saveMaster(isAdd: boolean) {
-    this.imageAvatar
-      .updateFileDirectReload(this.master.iterationID)
-      .subscribe((up) => {
+    //comnet tạm
+    // this.imageAvatar
+    //   .updateFileDirectReload(this.master.iterationID)
+    //   .subscribe((up) => {
         this.dialog.dataService
           .save(
             (option: any) => this.beforeSave(option, isAdd),
@@ -139,7 +141,7 @@ export class PopupAddSprintsComponent implements OnInit {
               this.dialog.close();
             }
           });
-      });
+      // });
   }
 
   //#endregion
@@ -255,7 +257,6 @@ export class PopupAddSprintsComponent implements OnInit {
     if (e?.field) this.master[e.field] = e?.data;
   }
   changeProject(e) {
-
     if (e.field == 'projectID' && e?.data && e?.data.trim() != '') {
       this.master[e.field] = e?.data;
       this.api

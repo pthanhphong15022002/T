@@ -3,42 +3,27 @@ import {
   TemplateRef,
   ViewChild,
   Injector,
-  ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
-import {
-  NotificationsService,
-  ResourceModel,
-  DialogRef,
-  SidebarModel,
-  UIComponent,
-  CallFuncService,
-  CacheService,
-} from 'codx-core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  ButtonModel,
-  CodxScheduleComponent,
-  ViewModel,
-  ViewsComponent,
-  ViewType,
-} from 'codx-core';
+import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel } from 'codx-core';
+import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
-import { ActivatedRoute } from '@angular/router';
 import { CodxEpService, ModelPage } from '../../codx-ep.service';
 @Component({
   selector: 'booking-car',
   templateUrl: 'booking-car.component.html',
   styleUrls: ['booking-car.component.scss'],
 })
-export class BookingCarComponent extends UIComponent {
+export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
-
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
 
   service = 'EP';
   assemblyName = 'EP';
@@ -47,10 +32,9 @@ export class BookingCarComponent extends UIComponent {
   dataValue = '2';
   idField = 'RecID';
   className = 'BookingsBusiness';
-  method = 'GetEventsAsync';
-  modelPage: ModelPage;
+  method = 'GetListBookingAsync';
+  formModel: FormModel;
   modelResource?: ResourceModel;
-  
   request?: ResourceModel;
   model = new DataRequest();
   dataSelected: any;
@@ -63,36 +47,30 @@ export class BookingCarComponent extends UIComponent {
   fields: any;
   resourceField: any;
   funcID: string;
-
+  itemDetail;
   columnsGrid: any;
   constructor(
-    private injector: Injector,
-    private callFuncService: CallFuncService,
-    private activedRouter: ActivatedRoute,
+    private injector: Injector,    
     private codxEpService: CodxEpService,
-    private cacheService: CacheService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {
+    ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
-    this.modelPage = {
-      entity: 'EP_Bookings',
-      formName: 'BookingCars',
-      gridViewName: 'grvBookingCars',
-      functionID: 'EPT2',
-    };
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
-    this.request=new ResourceModel();
-    this.request.assemblyName='EP';
-    this.request.className='BookingsBusiness';
-    this.request.service='EP';
-    this.request.method='GetEventsAsync';
-    this.request.predicate='ResourceType=@0';
-    this.request.dataValue='2';
-    this.request.idField='recID';
-
+    this.request = new ResourceModel();
+    this.request.assemblyName = 'EP';
+    this.request.className = 'BookingsBusiness';
+    this.request.service = 'EP';
+    this.request.method = 'GetListBookingAsync';
+    this.request.predicate = 'ResourceType=@0';
+    this.request.dataValue = '2';
+    this.request.idField = 'recID';
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -108,11 +86,6 @@ export class BookingCarComponent extends UIComponent {
     this.model.dataValue = '2';
 
     this.moreFunc = [
-      {
-        id: 'EPS22',
-        icon: 'icon-list-chechbox',
-        text: 'Danh mục xe',
-      },
       {
         id: 'btnEdit',
         icon: 'icon-list-chechbox',
@@ -152,23 +125,23 @@ export class BookingCarComponent extends UIComponent {
     this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
-        sameData:false,
-        type:ViewType.schedule,
-        active:true,
-        request2:this.modelResource,
-        request:this.request,
-        toolbarTemplate:this.footerButton,
-        showSearchBar:false,
-        model:{
-          //panelLeftRef:this.panelLeft,
-          eventModel:this.fields,
-          resourceModel:this.resourceField,
-          //template:this.cardTemplate,
-          template4: this.resourceHeader,
-          template5: this.resourceTootip,
-          template6: this.footerTemplate,
-          template7: this.footerButton,
-          statusColorRef:'vl003'
+        sameData: false,
+        type: ViewType.schedule,
+        active: true,
+        request2: this.modelResource,
+        request: this.request,
+        //toolbarTemplate: this.footerButton,
+        showSearchBar: false,
+        model: {
+         //panelLeftRef:this.panelLeft,
+         eventModel: this.fields,
+         resourceModel: this.resourceField,
+         //template:this.cardTemplate,
+         template4: this.resourceHeader,
+         template5: this.resourceTootip,
+         template6: this.mfButton,//header          
+         template8: this.contentTmp,//content
+         statusColorRef: 'vl003',
         },
       },
       {
@@ -181,9 +154,8 @@ export class BookingCarComponent extends UIComponent {
         },
       },
     ];
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
-
 
   click(evt: ButtonModel) {
     switch (evt.id) {
@@ -198,6 +170,25 @@ export class BookingCarComponent extends UIComponent {
         break;
     }
   }
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
+
+  getDetailBooking(id: any) {
+    this.api
+      .exec<any>(
+        'EP',
+        'BookingsBusiness',
+        'GetBookingByIDAsync',
+        this.itemDetail?.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.itemDetail = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
 
   addNew(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
@@ -206,7 +197,7 @@ export class BookingCarComponent extends UIComponent {
       option.Width = '800px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callFuncService.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddBookingCarComponent,
         [this.dataSelected, true],
         option
@@ -216,23 +207,23 @@ export class BookingCarComponent extends UIComponent {
 
   edit(obj?) {
     if (obj) {
-    this.viewBase.dataService.dataSelected = obj;
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
-      .subscribe((res) => {
-        this.dataSelected = this.viewBase.dataService.dataSelected;
-        let option = new SidebarModel();
-        option.Width = '800px';
-        option.DataService = this.viewBase?.dataService;
-        option.FormModel = this.viewBase?.formModel;
-        this.dialog = this.callFuncService.openSide(
-          PopupAddBookingCarComponent,
-          [this.viewBase.dataService.dataSelected, false],
-          option
-        );
-      });
+      this.viewBase.dataService.dataSelected = obj;
+      this.viewBase.dataService
+        .edit(this.viewBase.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = this.viewBase?.formModel;
+          this.dialog = this.callfc.openSide(
+            PopupAddBookingCarComponent,
+            [this.viewBase.dataService.dataSelected, false],
+            option
+          );
+        });
+    }
   }
-}
   delete(evt?) {
     let deleteItem = this.viewBase.dataService.dataSelected;
     if (evt) {
@@ -248,7 +239,7 @@ export class BookingCarComponent extends UIComponent {
       this.dialog && this.dialog.close();
     }
   }
-  
+
   clickMF(event, data) {
     console.log(event);
     switch (event?.functionID) {
@@ -263,7 +254,7 @@ export class BookingCarComponent extends UIComponent {
   closeDialog(evt?) {
     this.dialog && this.dialog.close();
   }
-  
+
   onSelect(obj: any) {
     console.log(obj);
   }

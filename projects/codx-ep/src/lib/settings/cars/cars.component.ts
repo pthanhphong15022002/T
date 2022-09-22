@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   TemplateRef,
   ViewChild,
   AfterViewInit,
@@ -8,13 +7,9 @@ import {
   Input,
   Injector,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import {
   ButtonModel,
   CacheService,
-  CallFuncService,
   CodxGridviewComponent,
   DialogRef,
   FormModel,
@@ -32,8 +27,7 @@ import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component
   templateUrl: 'cars.component.html',
   styleUrls: ['cars.component.scss'],
 })
-export class CarsComponent implements OnInit, AfterViewInit
-{
+export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
@@ -47,8 +41,6 @@ export class CarsComponent implements OnInit, AfterViewInit
 
   @Input() data!: any;
 
-  // d703bd83-2ff5-11ed-a503-8cec4b569fde
-
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -60,8 +52,7 @@ export class CarsComponent implements OnInit, AfterViewInit
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
-  moreFunc: Array<ButtonModel> = [];
-
+  moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
   isAdd = true;
   funcID: string;
@@ -78,26 +69,25 @@ export class CarsComponent implements OnInit, AfterViewInit
   temp: string;
   columnGrids: any;
   constructor(
-    private callFuncService: CallFuncService,
-    private activedRouter: ActivatedRoute,
+    private injector: Injector,
     private codxEpService: CodxEpService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-      this.codxEpService.getFormModel(this.funcID).then((res) => {
-        if (res) {
-          this.formModel = res;
-          this.isAfterRender = true;
-        }
-      });
+    super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+        this.isAfterRender = true;
+      }
+    });
   }
-  ngOnInit(): void {
+  onInit(): void {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
   }
-
 
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.buttons = {
       id: 'btnAdd',
     };
@@ -105,10 +95,10 @@ export class CarsComponent implements OnInit, AfterViewInit
       {
         field: 'resourceID',
         headerText: 'Mã xe',
-      },      
+      },
       {
         field: 'icon',
-        headerText: "Ảnh đại diện",
+        headerText: 'Ảnh đại diện',
         template: this.avatar,
       },
       {
@@ -120,7 +110,7 @@ export class CarsComponent implements OnInit, AfterViewInit
         headerText: 'Số chỗ',
       },
       {
-        headerText: "Người điều phối",
+        headerText: 'Người điều phối',
         width: '20%',
         template: this.owner,
       },
@@ -161,7 +151,7 @@ export class CarsComponent implements OnInit, AfterViewInit
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callFuncService.openSide(
+      this.dialog = this.callfc.openSide(
         PopupAddCarsComponent,
         [this.dataSelected, true],
         option
@@ -180,7 +170,7 @@ export class CarsComponent implements OnInit, AfterViewInit
           option.Width = '550px';
           option.DataService = this.viewBase?.dataService;
           option.FormModel = this.viewBase?.formModel;
-          this.dialog = this.callFuncService.openSide(
+          this.dialog = this.callfc.openSide(
             PopupAddCarsComponent,
             [this.viewBase.dataService.dataSelected, false],
             option

@@ -133,6 +133,13 @@ export class PopupUpdateStatusComponent implements OnInit {
         if (res && res.length > 0) {
           this.dialog.close(res)
           this.notiService.notifyCode('TM009');
+          if(this.task.category=='3'&& this.status=='80'){
+            this.tmSv.sendAlertMail(this.task.recID,'TM_0004',this.funcID).subscribe() ; 
+          } 
+          if(this.status=='90'&& this.task.approveControl=="1"){
+            this.tmSv.sendAlertMail(this.task.recID,'TM_0012',this.funcID).subscribe() ; 
+          } 
+
         } else {
           this.dialog.close()
           this.notiService.notifyCode('TM008');

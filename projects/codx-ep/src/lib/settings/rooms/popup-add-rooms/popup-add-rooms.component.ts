@@ -1,24 +1,21 @@
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
+  Injector,
   Input,
-  OnInit,
   Optional,
   Output,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
-  CallFuncService,
   DialogData,
   FormModel,
   RequestOption,
-  CacheService,
   DialogRef,
   ImageViewerComponent,
-  CRUDService,
   AuthService,
+  UIComponent,
 } from 'codx-core';
 import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -29,7 +26,7 @@ import { Equipments } from '../../../models/equipments.model';
   templateUrl: 'popup-add-rooms.component.html',
   styleUrls: ['popup-add-rooms.component.scss'],
 })
-export class PopupAddRoomsComponent implements OnInit {
+export class PopupAddRoomsComponent extends UIComponent {
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Input() data!: any;
   @Input() editResources: any;
@@ -46,46 +43,44 @@ export class PopupAddRoomsComponent implements OnInit {
   tmplstDevice = [];
   lstDeviceRoom = [];
 
-  formModel: FormModel;  
-  headerText='';
+  formModel: FormModel;
+  headerText = '';
   subHeaderText = '';
-  lstEquipment=[];
+  lstEquipment = [];
 
-  constructor(    
+  constructor(
+    private injector: Injector,
     private authService: AuthService,
-    private cacheSv: CacheService,
     private codxEpService: CodxEpService,
-    private callFuncService: CallFuncService,
-    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {    
+  ) {
+    super(injector);
     this.data = dialog?.dataService?.dataSelected;
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
-    this.formModel = this.dialog.formModel;    
+    this.formModel = this.dialog.formModel;
   }
 
-  ngOnInit(): void {    
+  onInit(): void {
     this.initForm();
-    this.cacheSv.valueList('EP012').subscribe((res) => {      
-      this.vllDevices = res.datas;      
+    this.cache.valueList('EP012').subscribe((res) => {
+      this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
-        if(!this.isAdd)
-        {      
-          this.data.equipments.forEach((item)=>{
-            if(item.equipmentID == device.id){
+        if (!this.isAdd) {
+          this.data.equipments.forEach((item) => {
+            if (item.equipmentID == device.id) {
               device.isSelected = true;
             }
-          }); 
+          });
         }
-        this.lstDeviceRoom.push(device);          
+        this.lstDeviceRoom.push(device);
         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
-      });       
-    }); 
+      });
+    });
 
     this.codxEpService
       .getComboboxName(
@@ -99,23 +94,22 @@ export class PopupAddRoomsComponent implements OnInit {
   }
 
   initForm() {
-    if(this.isAdd){      
-      this.headerText = "Thêm mới phòng"
-    }
-    else{
-      this.headerText = "Sửa thông tin phòng"
+    if (this.isAdd) {
+      this.headerText = 'Thêm mới phòng';
+    } else {
+      this.headerText = 'Sửa thông tin phòng';
     }
 
     this.codxEpService
-    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogAddRoom = item;
         if (this.data) {
           this.dialogAddRoom.patchValue(this.data);
           this.dialogAddRoom.patchValue({
-            resourceType : '1',
-          });  
-        }        
+            resourceType: '1',
+          });
+        }
         this.isAfterRender = true;
       });
   }
@@ -137,8 +131,8 @@ export class PopupAddRoomsComponent implements OnInit {
     }
   }
   openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 550, 430);
-    this.changeDetectorRef.detectChanges();
+    var dialog = this.callfc.openForm(template, '', 550, 430);
+    this.detectorRef.detectChanges();
   }
   onSaveForm() {
     if (this.dialogAddRoom.invalid == true) {
@@ -146,24 +140,27 @@ export class PopupAddRoomsComponent implements OnInit {
       return;
     }
     this.tmplstDevice.forEach((element) => {
-      if (element.isSelected) {  
+      if (element.isSelected) {
         let tempEquip = new Equipments();
-        tempEquip.equipmentID=element.id;
-        tempEquip.createdBy=this.authService.userValue.userID;
+        tempEquip.equipmentID = element.id;
+        tempEquip.createdBy = this.authService.userValue.userID;
         this.lstEquipment.push(tempEquip);
-        
       }
-    });    
+    });
     this.dialogAddRoom.patchValue({
-      resourceType:'1',
-      linkType:'0',
-      equipments:this.lstEquipment,
-    });    
-    if(this.dialogAddRoom.value.owner instanceof Object){
-      this.dialogAddRoom.patchValue({owner:this.dialogAddRoom.value.owner[0]})
+      resourceType: '1',
+      linkType: '0',
+      equipments: this.lstEquipment,
+    });
+    if (this.dialogAddRoom.value.owner instanceof Object) {
+      this.dialogAddRoom.patchValue({
+        owner: this.dialogAddRoom.value.owner[0],
+      });
     }
-    if (this.dialogAddRoom.value.companyID instanceof Object){
-      this.dialogAddRoom.patchValue({companyID:this.dialogAddRoom.value.companyID[0]})
+    if (this.dialogAddRoom.value.companyID instanceof Object) {
+      this.dialogAddRoom.patchValue({
+        companyID: this.dialogAddRoom.value.companyID[0],
+      });
     }
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))

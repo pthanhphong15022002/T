@@ -1,0 +1,60 @@
+<codx-form [body]="body" (onScroll)="onScroll($event)" [headerText]="'Thông báo'" [dialog]="dialog"></codx-form>
+
+
+<ng-template #body>
+  <div class="p-2">
+    <ng-container *ngFor="let item of lstNotify;index as i">
+      <div>
+        <ng-container *ngIf="i==0">
+          <div class="d-flex justify-content-between">
+            <span>
+              <codx-label  class="fw-bolder fs-5" [formModel]="" name="lblNew" default="Mới"></codx-label>
+            </span>
+            <span>
+              <codx-label class="text-primary" [formModel]="" name="lblNew" default="Xem tất cả"></codx-label>
+            </span>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="i==5">
+          <div class="mt-3 row">
+            <span>
+              <codx-label  class="fw-bolder fs-5" [formModel]="" name="lblNew" default="Trước đây"></codx-label>
+            </span>
+          </div>
+        </ng-container>  
+        <div class="row p-4 my-2" (click)="clickNotification(item)">
+          <div class="col-1">
+            <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+          </div>
+          <div class="col-10">
+            <div [innerHTML]="item.textValue">        
+            </div>
+            <div>
+              <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+            </div>
+          </div>
+          <div class="col-1" *ngIf="!item.isRead">
+            <span class="dots"></span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+<ng-template #itemNoti let-item>
+  <div class="row p-4 my-2" (click)="clickNotification(item)">
+    <div class="col-1">
+      <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+    </div>
+    <div class="col-10">
+      <div [innerHTML]="item.textValue">        
+      </div>
+      <div>
+        <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+      </div>
+    </div>
+    <div class="col-1" *ngIf="!item.isRead">
+      <span class="dots"></span>
+    </div>
+  </div>
+</ng-template>

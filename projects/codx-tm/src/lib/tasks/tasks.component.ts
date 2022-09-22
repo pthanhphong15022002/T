@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'codx-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.Emulated,
 })
 export class TasksComponent implements OnInit {
   funcID: any;

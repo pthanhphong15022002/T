@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Opt
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataItem } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
-import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Sorting } from '@syncfusion/ej2-pivotview';
 import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
@@ -20,7 +19,7 @@ import { SystemDialogService } from './systemDialog.service';
 })
 export class ViewFileDialogComponent implements OnInit {
   @ViewChild('contentViewFileDialog') contentViewFileDialog;  
-  @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;  
+  // @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;  
   src: string = "about:blank";
   isVideo: boolean = false;
   isPdf: boolean = false;
@@ -333,7 +332,7 @@ export class ViewFileDialogComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     if (this.ext == ".mp4") {
       this.isVideo = true;
-      this.srcVideo = `${this.dmSV.urlFile}/${this.data.pathDisk}`;
+      this.srcVideo = `${environment.urlFile}/${this.data.pathDisk}`;
       //this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${this.id}?access_token=${this.auth.userValue.token}`;
     } else if (this.ext == ".png"
       || this.ext == ".jpeg"
@@ -341,13 +340,13 @@ export class ViewFileDialogComponent implements OnInit {
       || this.ext == ".bmp"
     ) {
       // this.data.thumbnail;//      
-      this.linkViewImage = `${this.dmSV.urlFile}/${this.data.pathDisk}`; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
+      this.linkViewImage = `${environment.urlFile}/${this.data.pathDisk}`; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
     else if (this.ext == ".pdf111") {
       this.isPdf = true;
       this.document = this.id;
     //  this.service = `${environment.apiUrl}/api/dm/files/${this.id}`;
-      this.pdfviewer.load(this.id, '');
+      // this.pdfviewer.load(this.id, '');
       this.changeDetectorRef.detectChanges();
       // this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
       //   this.document = item;

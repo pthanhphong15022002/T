@@ -10,14 +10,12 @@ import {
 import { FormGroup, FormControl } from '@angular/forms';
 
 import {
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
   ImageViewerComponent,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -105,15 +103,17 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   onSaveForm() {
-    if (this.dialogAddStationery.invalid == true) {
-      return;
-    }
+    // if (this.dialogAddStationery.invalid == true) {
+    //   return;
+    // }
     this.dialogAddStationery.patchValue({
       owner: this.dialogAddStationery.value.owner[0],
     });
-    this.dialogAddStationery.patchValue({ color: this.listColor.join(';') });
     this.dialogAddStationery.patchValue({
       groupID: '1',
+    });
+    this.dialogAddStationery.patchValue({
+      resourceType: '6',
     });
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
@@ -156,12 +156,6 @@ export class PopupAddStationeryComponent extends UIComponent {
     } else {
       this.dialogAddStationery.patchValue(data);
     }
-  }
-
-  openPopupColor(template: any, color) {
-    this.color = color;
-    var dialog = this.callfc.openForm(template, '', 500, 350);
-    this.detectorRef.detectChanges();
   }
 
   valueChange(event) {

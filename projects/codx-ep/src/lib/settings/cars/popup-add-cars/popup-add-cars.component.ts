@@ -1,26 +1,23 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
+  Injector,
   Input,
-  OnInit,
   Optional,
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import {
   AuthService,
-  CacheService,
-  CallFuncService,
   CRUDService,
   DialogData,
   DialogRef,
   FormModel,
   ImageViewerComponent,
   RequestOption,
+  UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
@@ -33,7 +30,7 @@ import { Equipments } from '../../../models/equipments.model';
   templateUrl: 'popup-add-cars.component.html',
   styleUrls: ['popup-add-cars.component.scss'],
 })
-export class PopupAddCarsComponent implements OnInit, AfterViewInit {
+export class PopupAddCarsComponent extends UIComponent {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Input() editResources: any;
@@ -59,14 +56,13 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
   avatarID: any = null;
   notificationsService: any;
   constructor(
+    private injector: Injector,
     private authService: AuthService,
-    private callFuncService: CallFuncService,
-    private cacheService: CacheService,
-    private changeDetectorRef: ChangeDetectorRef,
     private codxEpService: CodxEpService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
+    super(injector);
     this.data = dialogRef?.dataService?.dataSelected;
     this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
@@ -75,10 +71,10 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {}
 
-  ngOnInit(): void {
+  onInit(): void {
     this.initForm();
 
-    this.cacheService.valueList('EP012').subscribe((res) => {
+    this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
         let device = new Device();
@@ -128,7 +124,7 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
         });
         this.isAfterRender = true;
       });
-    this.cacheService
+    this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((res) => {
         this.gviewCar = res;
@@ -143,8 +139,8 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callFuncService.openForm(template, '', 550, 430);
-    this.changeDetectorRef.detectChanges();
+    var dialog = this.callfc.openForm(template, '', 550, 430);
+    this.detectorRef.detectChanges();
   }
 
   valueChange(event: any) {
@@ -222,7 +218,7 @@ export class PopupAddCarsComponent implements OnInit, AfterViewInit {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.save) {
-          this.imageUpload.onSaveFile(res.save.recID)            
+          this.imageUpload.onSaveFile(res.save.recID);
           this.dialogRef.close();
         }
         if (res.update) {

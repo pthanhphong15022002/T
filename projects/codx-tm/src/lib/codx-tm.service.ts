@@ -104,16 +104,6 @@ export class CodxTMService {
     );
   }
 
-  saveAssign(data) {
-    return this.api.execSv<any>(
-      'TM',
-      'TM',
-      'TaskBusiness',
-      'AddAssignToTaskAsync',
-      data
-    );
-  }
-
   addTaskBoard(data) {
     return this.api.execSv<any>(
       'TM',

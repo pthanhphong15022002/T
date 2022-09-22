@@ -13,8 +13,8 @@ import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
   selector: 'approval-car',
-  templateUrl: './approval-car.component.html',
-  styleUrls: ['./approval-car.component.scss'],
+  templateUrl: 'approval-car.component.html',
+  styleUrls: ['approval-car.component.scss'],
 })
 export class ApprovalCarsComponent extends UIComponent {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
@@ -59,7 +59,7 @@ export class ApprovalCarsComponent extends UIComponent {
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
     this.request.service = 'EP';
-    this.request.method = 'GetApprovalEventsAsync';
+    this.request.method = 'GetListBookingAsync';
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '2';
     this.request.idField = 'recID';

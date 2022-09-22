@@ -169,7 +169,7 @@
   </div>
   <!--begin::Label-->
   <div class="d-flex justify-content-between align-items-center mb-2">
-    <div class="form-switch1 d-flex align-items-center">
+    <div class="form-switch1 d-flex align-items-center" style="height: 26px">
       <codx-input
         #checkbox
         field="isOnline"
@@ -491,16 +491,27 @@
         </div>
       </div>
       <div class="form-group mt-3">
-        <codx-label fiedName="refID" default="Dự án"> </codx-label>
+        <codx-label
+          fiedName="refID"
+          [formModel]="form.formModel"
+          default="Dự án"
+        >
+        </codx-label>
+        <!-- <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
+          [crrValue]="meeting.refID" loadFull="true">
+        </codx-input> -->
         <codx-input
-          type="combobox"
           field="refID"
-          refValue="TMProjects"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
-          [crrValue]="meeting.refID"
-          loadFull="true"
         >
         </codx-input>
+        <!-- <codx-input field="refID" [type]="gridViewSetup['RefID']['controlType']"
+      [placeholder]="gridViewSetup['RefID']['headerText']" [refValue]="gridViewSetup['RefID']['referedValue']"
+      [refType]="gridViewSetup['RefID']['referedType']" (valueChange)="valueChange($event)"
+      [crrValue]="meeting?.refID" [showInput]="true" >
+    </codx-input> -->
       </div>
     </ng-container>
   </ng-container>

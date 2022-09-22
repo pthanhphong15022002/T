@@ -4,6 +4,7 @@ export class tmpSignArea {
   labelType: string;
   labelValue: string;
   isLock: boolean;
+  allowEditAreas: boolean;
   signDate: boolean;
   dateFormat: string;
   location: {
@@ -30,4 +31,5 @@ export class tmpAreaName {
   Signer: string;
   PageNumber: number;
   StepNo: number;
+  LabelType: string;
 }

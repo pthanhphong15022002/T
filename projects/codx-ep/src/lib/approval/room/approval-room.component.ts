@@ -25,6 +25,9 @@ export class ApprovalRoomsComponent extends UIComponent {
   
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  
+  @ViewChild('subTitle') subTitle?: TemplateRef<any>;
+
   views: Array<ViewModel> | any = [];
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -131,7 +134,6 @@ export class ApprovalRoomsComponent extends UIComponent {
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           template5: this.resourceTootip,//tooltip
-
           template6: this.mfButton,//header          
           template8: this.contentTmp,//content
           //template7: this.footerButton,//footer
@@ -222,7 +224,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
-  getDetailBooking(event) {
+  getDetailBooking(id: any) {
     this.api
       .exec<any>(
         'EP',
@@ -236,5 +238,54 @@ export class ApprovalRoomsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  setStyles(resourceType) {
+    let styles = {};
+    switch (resourceType) {
+      case '1':
+        styles = {
+          backgroundColor: '#104207',
+          color: 'white',
+        };
+        break;
+      case '2':
+        styles = {
+          backgroundColor: '#29b112',
+          color: 'white',
+        };
+        break;
+      case '6':
+        styles = {
+          backgroundColor: '#053b8b',
+          color: 'white',
+        };
+        break;
+      default:
+        styles = {};
+        break;
+    }
+
+    return styles;
+  }
+
+  setIcon(resourceType) {
+    let icon: string = '';
+    switch (resourceType) {
+      case '1':
+        icon = 'icon-calendar_today';
+        break;
+      case '2':
+        icon = 'icon-directions_car';
+        break;
+      case '6':
+        icon = 'icon-desktop_windows';
+        break;
+      default:
+        icon = '';
+        break;
+    }
+
+    return icon;
   }
 }

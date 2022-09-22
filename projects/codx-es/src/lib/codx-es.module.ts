@@ -33,20 +33,6 @@ import { ViewDetailComponent } from './sign-file/view-detail/view-detail.compone
 import { PopupAddSignFileComponent } from './sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { ApprovalStepComponent } from './setting/approval-step/approval-step.component';
 import { PopupSignatureComponent } from './setting/signature/popup-signature/popup-signature.component';
-// import {
-//   LinkAnnotationService,
-//   BookmarkViewService,
-//   MagnificationService,
-//   ThumbnailViewService,
-//   ToolbarService,
-//   NavigationService,
-//   TextSearchService,
-//   TextSelectionService,
-//   PrintService,
-//   AnnotationService,
-//   FormFieldsService,
-//   PdfViewerAllModule,
-// } from '@syncfusion/ej2-angular-pdfviewer';
 import { PopupAddEmailTemplateComponent } from './setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { SettingComponent } from './setting/setting.component';
 import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
