@@ -111,7 +111,6 @@ export class BookingStationeryComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
       this.callfc.openForm(
