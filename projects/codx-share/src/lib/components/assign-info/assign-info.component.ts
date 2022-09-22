@@ -19,13 +19,14 @@ import {
   tmpTaskResource,
   TM_Tasks,
 } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
-import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
+
 import { TaskGoal } from 'projects/codx-tm/src/lib/models/task.model';
 import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import * as moment from 'moment';
 import { TM_TaskGroups } from 'projects/codx-tm/src/lib/models/TM_TaskGroups.model';
 import { tmpReferences } from '../codx-tasks/model/task.model';
+import { CodxTasksService } from '../codx-tasks/codx-tasks.service';
 @Component({
   selector: 'app-assign-info',
   templateUrl: './assign-info.component.html',
@@ -72,7 +73,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
 
   constructor(
     private authStore: AuthStore,
-    private tmSv: CodxTMService,
+    private tmSv: CodxTasksService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -341,6 +342,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         if (res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
+          var taskParent = res[1][0] ;
+          if(this.taskParent?.confirmControl=="1") this.tmSv.sendAlertMail(taskParent?.recID,"TM_0008",this.functionID).subscribe()
+         
           //lưu his giao việc
           var objectType = this.formModel.entityName
           var objectID = this.task.refID

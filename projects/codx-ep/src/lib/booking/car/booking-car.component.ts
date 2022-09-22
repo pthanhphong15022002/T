@@ -5,11 +5,11 @@ import {
   Injector,
   AfterViewInit,
 } from '@angular/core';
-import { ResourceModel, DialogRef, SidebarModel, UIComponent } from 'codx-core';
+import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
-import { ModelPage } from '../../codx-ep.service';
+import { CodxEpService, ModelPage } from '../../codx-ep.service';
 @Component({
   selector: 'booking-car',
   templateUrl: 'booking-car.component.html',
@@ -22,6 +22,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
 
   service = 'EP';
   assemblyName = 'EP';
@@ -30,8 +32,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   dataValue = '2';
   idField = 'RecID';
   className = 'BookingsBusiness';
-  method = 'GetEventsAsync';
-  modelPage: ModelPage;
+  method = 'GetListBookingAsync';
+  formModel: FormModel;
   modelResource?: ResourceModel;
   request?: ResourceModel;
   model = new DataRequest();
@@ -47,15 +49,17 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   funcID: string;
 
   columnsGrid: any;
-  constructor(private injector: Injector) {
+  constructor(
+    private injector: Injector,    
+    private codxEpService: CodxEpService,
+    ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
-    this.modelPage = {
-      entity: 'EP_Bookings',
-      formName: 'BookingCars',
-      gridViewName: 'grvBookingCars',
-      functionID: 'EPT2',
-    };
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -63,7 +67,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
     this.request.service = 'EP';
-    this.request.method = 'GetEventsAsync';
+    this.request.method = 'GetListBookingAsync';
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '2';
     this.request.idField = 'recID';
@@ -129,13 +133,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         //toolbarTemplate: this.footerButton,
         showSearchBar: false,
         model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
-          template4: this.resourceHeader,
-          template5: this.resourceTootip,
-          template6: this.footerTemplate,
-          template7: this.footerButton,
-          statusColorRef: 'vl003',
+         //panelLeftRef:this.panelLeft,
+         eventModel: this.fields,
+         resourceModel: this.resourceField,
+         //template:this.cardTemplate,
+         template4: this.resourceHeader,
+         template5: this.resourceTootip,
+         template6: this.mfButton,//header          
+         template8: this.contentTmp,//content
+         statusColorRef: 'vl003',
         },
       },
       {

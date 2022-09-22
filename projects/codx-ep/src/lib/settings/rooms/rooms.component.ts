@@ -44,7 +44,7 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
   isAdd = false;
   dialog!: DialogRef;
   vllDevices = [];
-  lstDevices = [];
+  lstDevices = [];  
   funcID: string;
   showToolBar = 'true';
 
@@ -170,15 +170,14 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
   }
 
   getEquiqments(equipments: any) {
-    var tmp = [];
     equipments.map((res) => {
       this.vllDevices.forEach((device) => {
         if (res.equipmentID == device.value) {
-          tmp.push(device.text);
+          this.lstDevices.push(device.text);
         }
       });
     });
-    return tmp.join(';');
+    return this.lstDevices.join(';');
   }
   getCompanyName(companyID: string) {
     this.codxEpService.getCompanyName(companyID).subscribe((res) => {

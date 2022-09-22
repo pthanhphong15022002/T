@@ -53,20 +53,20 @@
             [value]="" [formModel]="formModel" (clickSave)="getDataUserInCbb($event)">
         </codx-combobox-popup>
     </ng-container>
-    <div #listUserCbb *ngIf="dataUserCbb.length > 0">
-        <div *ngFor="let item of dataUserCbb; index as i">
-            <div class="form-group row mt-3">
-                <div class="form-group col-2">
-                    <codx-img #imageUpload class="symbol symbol-35 symbol-circle me-2 image-inpt-wrapper fullImage"
-                        [width]="25" [funcId]="formModel?.funcID" [objectId]="item.userID"
+    <div class="float-left" #listUserCbb *ngIf="dataUserCbb.length > 0">
+        <div class="d-flex" *ngFor="let item of dataUserCbb; index as i">
+            <div
+                class="d-flex justify-content-between user-mini-nav rounded rounded-4 bg-gray-200 align-items-center me-3 mb-2">
+                <div class="me-2">
+                    <codx-img #imageUpload [width]="20" [funcId]="formModel?.funcID" [objectId]="item.userID"
                         [objectType]="formModel?.entityName" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="false">
                     </codx-img>
                 </div>
-                <div class="form-group col-4">
+                <div class="text-dark me-3 text-nowrap">
                     <span>{{item.userName}}</span>
                 </div>
-                <div class="form-group col-4">
+                <div class="text-hover-danger mt-1 me-1">
                     <span class="icon-clear icon-16" (click)="deleteUserCbb(i)">
                     </span>
                 </div>
@@ -82,7 +82,7 @@
     <div class="scroll-y usergroups-main mt-4">
         <div class="py-3" *ngIf="countListViewChooseRoleApp > 0">
             <div class="d-flex flex-column align-items-start mb-5">
-                <span class="fw-bold text-dark fs-6">
+                <span class="fw-bold text-primary fs-6">
                     <codx-label name="titleUserRoles" formName="UserRoles" default="Ứng dụng được phần quyền ">
                     </codx-label>
                     <span class="ms-1 text-primary">({{countListViewChooseRoleApp}})</span>
@@ -114,7 +114,7 @@
         </div>
         <div class="py-3" *ngIf="countListViewChooseRoleService > 0">
             <div class="d-flex flex-column align-items-start mb-5">
-                <span class="fw-bold text-dark fs-6">
+                <span class="fw-bold text-primary fs-6">
                     <codx-label name="titleUserRoles" formName="UserRoles" default="Dịch vụ nhân viên được phân quyền">
                     </codx-label><span class="ms-1 text-primary">({{countListViewChooseRoleService}})</span>
                 </span>
