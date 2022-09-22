@@ -4,17 +4,17 @@
         <div class="flex-grow-1">
             <div class="d-flex align-items-start ph-card mb-6">
                 <div class="pic-edit mr-6">
-                    <codx-img #uploadImage class="img-pat-edit" [objectId]="ballot.patternID"
+                    <codx-img #uploadImage class="img-pat-edit" [objectId]="pattern.patternID"
                         [funcId]="formModel?.functionID" [objectType]="formModel?.entityName" [width]="164"
-                        [hidden]="ballot.backgroundColor" cssClass="pic symbol-100px symbol-3by2" imageType="square">
+                        [hidden]="pattern.backgroundColor" cssClass="pic symbol-100px symbol-3by2" imageType="square">
                     </codx-img>
                     <span class="font-size-h3 font-weight-boldest img-pat-edit noimage symbol-label text-white"
-                        [style.background-color]="ballot.backgroundColor" [hidden]="!ballot.backgroundColor"
+                        [style.background-color]="pattern.backgroundColor" [hidden]="!pattern.backgroundColor"
                         style="background-image: none;"></span>
-                    <div class="ph-card-header font-size-h5 font-weight-bold header-ballot"
-                        [style.color]="ballot.headerColor">
+                    <div class="ph-card-header font-size-h5 font-weight-bold header-pattern"
+                        [style.color]="pattern.headerColor">
                         Header</div>
-                    <div class="ph-card-content content-ballot" [style.color]="ballot.textColor">Content...
+                    <div class="ph-card-content content-pattern" [style.color]="pattern.textColor">Content...
                     </div>
                 </div>
                 <div class="d-flex flex-column">
@@ -53,7 +53,7 @@
                         <div class="input-group" #group1>
                             <codx-input #elm [ele]="group1" datatype="colorpicker"
                                 class="form-control text-white color-large w-fit" field="headerColor"
-                                (valueChange)="valueChange($event, elm)" [value]="ballot.headerColor" dataformat="hex">
+                                (valueChange)="valueChange($event, elm)" [value]="pattern.headerColor" dataformat="hex">
                             </codx-input>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                         <div class="input-group" #group2>
                             <codx-input #elm2 [ele]="group2" datatype="colorpicker"
                                 class="form-control text-white color-large w-fit"
-                                (valueChange)="valueChange($event, elm2)" field="textColor" [value]="ballot.textColor"
+                                (valueChange)="valueChange($event, elm2)" field="textColor" [value]="pattern.textColor"
                                 dataformat="hex">
                             </codx-input>
                         </div>
@@ -71,7 +71,7 @@
             </div>
             <div class="form-group" #name>
                 <codx-label name="lblDescription" [formModel]="" default="Mô tả:"></codx-label>
-                <codx-input datatype="string" placeholder="Sunset Flower" [value]="ballot.patternName"
+                <codx-input datatype="string" placeholder="Sunset Flower" [value]="pattern.patternName"
                     field="patternName" [ele]="name" (valueChange)="valueChange($event, null)">
                 </codx-input>
             </div>
@@ -79,21 +79,21 @@
         <div class="checkbox-list mt-3">
             <div #isDefault>
                 <codx-input type="checkbox" name="checkbox" [ele]="isDefault" class="" ngDefaultControl
-                    field="isDefault" (valueChange)="valueChange($event, null)" [checked]="ballot.isDefault"
-                    [value]="ballot.isDefault" label="Mặc định chọn">
+                    field="isDefault" (valueChange)="valueChange($event, null)" [checked]="pattern.isDefault"
+                    [value]="pattern.isDefault" label="Mặc định chọn">
                 </codx-input>
             </div>
             <div #stop class="mt-2">
-                <codx-input type="checkbox" name="checkbox" [disabled]="checkDisable(ballot)" [ele]="stop" class=""
-                    ngDefaultControl field="stop" (valueChange)="valueChange($event, null)" [value]="ballot.stop"
-                    [checked]="ballot.stop" label="Ngưng sử dụng">
+                <codx-input type="checkbox" name="checkbox" [disabled]="checkDisable(pattern)" [ele]="stop" class=""
+                    ngDefaultControl field="stop" (valueChange)="valueChange($event, null)" [value]="pattern.stop"
+                    [checked]="pattern.stop" label="Ngưng sử dụng">
                 </codx-input>
             </div>
         </div>
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-between">
-            <button type="button" class="btn btn-primary ms-1" (click)="saveBallot()">
+            <button type="button" class="btn btn-primary ms-1" (click)="savepattern()">
                 <codx-label name="Save" [formModel]="formModel" default="Lưu"></codx-label>
             </button>
         </div>
