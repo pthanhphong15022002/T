@@ -1,3 +1,4 @@
+import { ViewEncapsulation } from '@angular/core';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, DialogData, DialogRef, ImageViewerComponent, NotificationsService } from 'codx-core';
@@ -7,7 +8,8 @@ import { PatternService } from '../pattern.service';
 @Component({
   selector: 'lib-edit-pattern',
   templateUrl: './edit-pattern.component.html',
-  styleUrls: ['./edit-pattern.component.scss']
+  styleUrls: ['./edit-pattern.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class EditPatternComponent implements OnInit {
   pattern = new Pattern();
@@ -18,6 +20,7 @@ export class EditPatternComponent implements OnInit {
   dialog!: DialogRef;
   header = '';
   formModel: any;
+  formType = '';
 
   @ViewChild('uploadImage') uploadImage: ImageViewerComponent;
   // @Input() cardType: string;
@@ -34,8 +37,8 @@ export class EditPatternComponent implements OnInit {
   ) {
     this.dialog = dt;
     this.formModel = this.dialog?.formModel;
-    data
-    debugger
+    this.formType = data.data?.formType;
+    debugger;
     this.pattern.cardType = this.cardType;
     this.pattern.headerColor = "#918e8e";
     this.pattern.textColor = "#918e8e";
