@@ -33,6 +33,8 @@ import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add
   styleUrls: ['./booking-room.component.scss'],
 })
 export class BookingRoomComponent extends UIComponent implements AfterViewInit {
+  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
+  @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
@@ -47,12 +49,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
-  entityName = 'EP_Bookings';
+  entity = 'EP_Bookings';
+  className = 'BookingsBusiness';
+  method = 'GetListBookingAsync';
+  idField = 'recID';
   predicate = 'ResourceType=@0';
   dataValue = '1';
-  idField = 'RecID';
-  className = 'BookingsBusiness';
-  method = 'GetEventsAsync';
   modelResource?: ResourceModel;
   request?: ResourceModel;
   model = new DataRequest();
@@ -69,7 +71,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   lstPined: any = [];
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
-
+  itemDetail;
   formModel: FormModel;
   constructor(
     private injector: Injector,
@@ -106,10 +108,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '1';
 
-    this.model.page = 1;
-    this.model.pageSize = 200;
-    this.model.predicate = 'ResourceType=@0';
-    this.model.dataValue = '1';
+    // this.model.page = 1;
+    // this.model.pageSize = 200;
+    // this.model.predicate = 'ResourceType=@0';
+    // this.model.dataValue = '1';
 
     this.moreFunc = [
       {
@@ -177,6 +179,16 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         },
       },
       {
+        id: '2',
+        type: ViewType.listdetail,
+        sameData: true,
+        active: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.panelRight,
+        },
+      },
+      {
         sameData: true,
         id: '3',
         type: ViewType.content,
@@ -190,6 +202,27 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     ];
     this.detectorRef.detectChanges();
   }
+
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
+
+  getDetailBooking(id: any) {
+    this.api
+      .exec<any>(
+        'EP',
+        'BookingsBusiness',
+        'GetBookingByIDAsync',
+        this.itemDetail?.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.itemDetail = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  closeAddForm(event) {}
 
   collapse(evt) {
     this.reportObj && this.reportObj.collapse();
