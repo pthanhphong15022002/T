@@ -6,20 +6,18 @@
         <e-tabitem>
           <ng-template #headerText class="">
             <div class="nav-item">
-              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex px-0">
-                <span class="icon-info icon-24 me-2"></span>
-                <span class="d-flex flex-column align-items-start">
-                  <span class="fw-bolder">
-                    <codx-label name="Apps" formName="UserRoles" default="Ứng dụng">
-                    </codx-label>
-                  </span>
+              <a class="nav-link d-flex px-0">
+                <span class="icon-apps icon-20 me-2"></span>
+                <span class="fw-bold">
+                  <codx-label name="Apps" formName="UserRoles" default="Ứng dụng">
+                  </codx-label>
                 </span>
               </a>
             </div>
           </ng-template>
           <ng-template #content>
             <div class="form-group mt-3">
-              <div class="text-dark fw-bolder d-flex justify-content-end">
+              <div class="text-dark fw-bold d-flex justify-content-end">
                 <codx-label fiedName="lblChoose" formName="UserRoles" gridViewName="grvUserRoles" default="Đã chọn">
                 </codx-label>
                 ({{countApp}})
@@ -62,13 +60,11 @@
         <e-tabitem>
           <ng-template #headerText class="">
             <div class="nav-item">
-              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex px-0">
-                <span class="icon-info icon-24 me-2"></span>
-                <span class="d-flex flex-column align-items-start">
-                  <span class="fw-bolder">
-                    <codx-label name="Employees" formName="UserRoles" default="Dịch vụ nhân viên">
-                    </codx-label>
-                  </span>
+              <a class="nav-link d-flex px-0">
+                <span class="icon-assignment_ind icon-20 me-2"></span>
+                <span class="fw-bold">
+                  <codx-label name="Employees" formName="UserRoles" default="Dịch vụ nhân viên">
+                  </codx-label>
                 </span>
               </a>
             </div>
@@ -76,7 +72,7 @@
           <ng-template #content>
             <div class="form-group">
               <div class="form-group mt-3">
-                <div class="text-dark fw-bolder d-flex justify-content-end">
+                <div class="text-dark fw-bold d-flex justify-content-end">
                   <codx-label fiedName="lblChoose" formName="UserRoles" gridViewName="grvUserRoles" default="Đã chọn">
                   </codx-label>
                   ({{countService}})
