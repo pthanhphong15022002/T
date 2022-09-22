@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Opt
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataItem } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
-import { PdfViewerComponent } from '@syncfusion/ej2-angular-pdfviewer';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Sorting } from '@syncfusion/ej2-pivotview';
 import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
@@ -20,7 +19,7 @@ import { SystemDialogService } from './systemDialog.service';
 })
 export class ViewFileDialogComponent implements OnInit {
   @ViewChild('contentViewFileDialog') contentViewFileDialog;  
-  @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;  
+  // @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;  
   src: string = "about:blank";
   isVideo: boolean = false;
   isPdf: boolean = false;
@@ -347,7 +346,7 @@ export class ViewFileDialogComponent implements OnInit {
       this.isPdf = true;
       this.document = this.id;
     //  this.service = `${environment.apiUrl}/api/dm/files/${this.id}`;
-      this.pdfviewer.load(this.id, '');
+      // this.pdfviewer.load(this.id, '');
       this.changeDetectorRef.detectChanges();
       // this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
       //   this.document = item;
