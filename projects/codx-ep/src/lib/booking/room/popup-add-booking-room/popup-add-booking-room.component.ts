@@ -104,8 +104,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       icon: 'icon-person_outline',
       text: 'Người tham dự',
       name: 'tabPeopleInfo',
-      subName: 'Thành viên tham gia buổi họp',
-      subText: 'Thành viên tham gia buổi họp',
+      subName: 'Thành viên tham gia',
+      subText: 'Thành viên tham gia',
     },
     {
       icon: 'icon-layers',
@@ -149,23 +149,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   onInit(): void {    
     this.initForm();    
-    if (!this.isAdd) {
+    if(!this.isAdd) {
       this.titleAction = 'Chỉnh sửa';
-    }   
-      // this.codxEpService
-      //   .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-      //   .then((res) => {
-      //     this.CbxName = res;
-      //     console.log('cbxEPT1', this.CbxName);
-      //   });
-
-      // this.cacheService
-      //   .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      //   .subscribe((res) => {
-      //     console.log('grvEPT1', res);
-      //     this.grvBookingRoom = res;
-      // });
-
+    }  
       this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
@@ -322,11 +308,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.isAfterRender = true;        
         console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingRoom);        
       });   
-      this.detectorRef.detectChanges();
-    // this.fGroupAddBookingRoom.addControl(
-        //   'isFullDay',
-        //   new FormControl(this.isFullDay)
-        // );   
+      this.detectorRef.detectChanges();       
   }
   ngAfterViewInit(): void {
     if (this.dialogRef) {
