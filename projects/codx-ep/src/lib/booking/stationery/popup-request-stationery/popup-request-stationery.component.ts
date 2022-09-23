@@ -112,13 +112,14 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   changeTab(tabNo) {
-
     this.currentTab = tabNo;
 
     this.detectorRef.detectChanges();
   }
 
-  valueChange(event) {}
+  valueChange(event) {
+    
+  }
 
   processIDChange(event) {
     if (event?.field && event?.component && event?.data != '') {
@@ -191,8 +192,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   clickMF($event, data) {}
 
-  itemByRecID(index, item){
-    return item.recID
+  itemByRecID(index, item) {
+    return item.recID;
   }
 
   test() {

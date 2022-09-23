@@ -236,6 +236,18 @@ export class CodxEpService {
     });
   }
 
+  deleteFile(objectID, objectType, delForever) {
+    return this.api
+      .execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'DeleteByObjectIDAsync',
+        [objectID, objectType, delForever]
+      )
+      .subscribe();
+  }
+
   getGetDriverByCar(carID: string) {
     return this.api.callSv(
       'EP',

@@ -150,7 +150,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.viewBase?.formModel;
+      option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddCarsComponent,
         [this.dataSelected, true],
@@ -169,7 +169,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
           let option = new SidebarModel();
           option.Width = '550px';
           option.DataService = this.viewBase?.dataService;
-          option.FormModel = this.viewBase?.formModel;
+          option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddCarsComponent,
             [this.viewBase.dataService.dataSelected, false],

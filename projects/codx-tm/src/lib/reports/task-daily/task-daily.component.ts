@@ -116,21 +116,25 @@ export class TaskDailyComponent implements OnInit {
     ];
     this.loadData();
   }
-
   ngAfterViewInit(): void {
-    this.src=`http://localhost:4203/r?token=${this._user.token}&reportID=${this.reportUUID}&parameters=${JSON.stringify(this.param)}`;
+     this._user = this.authStore.get();
+    let sk = `${this._user.userID}|${this._user.securityKey}`
+    this.src = `/report?sk=${window.btoa(sk)}`;
     this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
+    debugger
+    //this.src=`http://localhost:4203/r?token=${this._user.token}&reportID=${this.reportUUID}&parameters=${JSON.stringify(this.param)}`;
+
     this.views = [
       {
         type: ViewType.grid,
-        sameData: true,
+        sameData: false,
         active: false,
         model: {
           resources: this.columnsGrid,
         },
       },
       {
-        sameData: true,
+        sameData: false,
         type: ViewType.content,
         active: true,
         text: 'Report',
@@ -233,87 +237,88 @@ export class TaskDailyComponent implements OnInit {
   fields: any = [];
   values: any = [];
   paramChange1(evt){
-    if (evt.isDateTime) {
-      let idxs = 0;
-      for (let i = 0; i < this.fields.length; i++) {
-        if (this.fields[i].includes(`${evt.controlName}.Value<`)) {
-          idxs++;
-          if (this.values[i]) {
-            this.values[i] = evt.data.toDate.addDays(1).toJSON();
-          }
-        }
-        if (this.fields[i].includes(`${evt.controlName}.Value>=`)) {
-          idxs++;
-          if (this.values[i]) {
-            this.values[i] = evt.data.fromDate.toJSON();
-          }
-        }
-      }
-      if (idxs == 0) {
-        this.fields.push(`${evt.controlName}.Value>=@${this.fields.length}`);
-        this.values.push(evt.data.fromDate.toJSON());
+    // debugger
+    // if (evt.isDateTime) {
+    //   let idxs = 0;
+    //   for (let i = 0; i < this.fields.length; i++) {
+    //     if (this.fields[i].includes(`${evt.controlName}.Value<`)) {
+    //       idxs++;
+    //       if (this.values[i]) {
+    //         this.values[i] = evt.data.toDate.addDays(1).toJSON();
+    //       }
+    //     }
+    //     if (this.fields[i].includes(`${evt.controlName}.Value>=`)) {
+    //       idxs++;
+    //       if (this.values[i]) {
+    //         this.values[i] = evt.data.fromDate.toJSON();
+    //       }
+    //     }
+    //   }
+    //   if (idxs == 0) {
+    //     this.fields.push(`${evt.controlName}.Value>=@${this.fields.length}`);
+    //     this.values.push(evt.data.fromDate.toJSON());
 
-        this.fields.push(`${evt.controlName}.Value<@${this.fields.length}`);
-        this.values.push(evt.data.toDate.addDays(1).toJSON());
-      }
-    } else {
-      let idx = -1;
-      for (let i = 0; i < this.fields.length; i++) {
-        if (this.fields[i].includes(evt.controlName)) {
-          idx = i;
-        }
-      }
-      if (evt.data) {
-        switch (typeof evt.data) {
-          case 'string':
-            if (idx == -1) {
-              this.fields.push(
-                `${evt.controlName}.Contains(@${this.fields.length})`
-              );
-            }
+    //     this.fields.push(`${evt.controlName}.Value<@${this.fields.length}`);
+    //     this.values.push(evt.data.toDate.addDays(1).toJSON());
+    //   }
+    // } else {
+    //   let idx = -1;
+    //   for (let i = 0; i < this.fields.length; i++) {
+    //     if (this.fields[i].includes(evt.controlName)) {
+    //       idx = i;
+    //     }
+    //   }
+    //   if (evt.data) {
+    //     switch (typeof evt.data) {
+    //       case 'string':
+    //         if (idx == -1) {
+    //           this.fields.push(
+    //             `${evt.controlName}.Contains(@${this.fields.length})`
+    //           );
+    //         }
 
-            break;
-          default:
-            if (idx == -1) {
-              this.fields.push(`${evt.controlName}=@${this.fields.length}`);
-            }
-            break;
-        }
+    //         break;
+    //       default:
+    //         if (idx == -1) {
+    //           this.fields.push(`${evt.controlName}=@${this.fields.length}`);
+    //         }
+    //         break;
+    //     }
 
-        if (Array.isArray(evt.data)) {
-          if (idx == -1) {
-            this.values.push(`[${evt.data.join(';')}]`);
-          } else {
-            this.values[idx] = `[${evt.data.join(';')}]`;
-          }
-        } else {
-          if (idx == -1) {
-            this.values.push(evt.data);
-          } else {
-            this.values[idx] = evt.data;
-          }
-        }
+    //     if (Array.isArray(evt.data)) {
+    //       if (idx == -1) {
+    //         this.values.push(`[${evt.data.join(';')}]`);
+    //       } else {
+    //         this.values[idx] = `[${evt.data.join(';')}]`;
+    //       }
+    //     } else {
+    //       if (idx == -1) {
+    //         this.values.push(evt.data);
+    //       } else {
+    //         this.values[idx] = evt.data;
+    //       }
+    //     }
 
-      } else {
-        if (idx > -1) {
-          this.fields.splice(idx, 1);
-          this.values.splice(idx, 1);
-          for (let i = 0; i < this.fields.length; i++) {
-            let index = (this.fields[i] as String).indexOf('@');
-            if (index > -1) {
-              this.fields[i] =
-                this.fields[i].substring(0, index + 1) +
-                i +
-                this.fields[i].substring(index + 2);
-            }
-          }
-        }
-      }
-    }
+    //   } else {
+    //     if (idx > -1) {
+    //       this.fields.splice(idx, 1);
+    //       this.values.splice(idx, 1);
+    //       for (let i = 0; i < this.fields.length; i++) {
+    //         let index = (this.fields[i] as String).indexOf('@');
+    //         if (index > -1) {
+    //           this.fields[i] =
+    //             this.fields[i].substring(0, index + 1) +
+    //             i +
+    //             this.fields[i].substring(index + 2);
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
 
-    this.predicate = this.fields.join('&&');
-    this.dataValue = this.values.join(';');
-    this.param = {predicate: this.predicate, dataValue: this.dataValue};
+    // this.predicate = this.fields.join('&&');
+    // this.dataValue = this.values.join(';');
+    this.param = {predicate: evt.predicates, dataValue: evt.dataValues};
   }
 
   printReport() {

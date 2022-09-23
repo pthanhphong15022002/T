@@ -31,7 +31,7 @@
         ControlName="resourceID"
         [formModel]="form.formModel"
         [multiple]="false"
-        [Group]="fGroupAddBookingCar"
+        [Group]="form.formGroup"
         [crrValue]="fGroupAddBookingCar.value.resourceID"
         (valueChange)="valueCbxCarChange($event)"
       >
@@ -160,7 +160,7 @@
       <codx-input
         field="reasonID"
         [formModel]="form.formModel"
-        [Group]="fGroupAddBookingCar"
+        [Group]="form.formGroup"
       >
       </codx-input>
     </div>
@@ -171,7 +171,7 @@
       <codx-input
         ControlName="title"
         [formModel]="form.formModel"
-        [Group]="fGroupAddBookingCar"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
@@ -181,7 +181,7 @@
       <codx-input
         ControlName="agencyName"
         [formModel]="form.formModel"
-        [Group]="fGroupAddBookingCar"
+        [Group]="form.formGroup"
       >
       </codx-input>
     </div>
@@ -193,7 +193,7 @@
         type="text"
         ControlName="address"
         [formModel]="form.formModel"
-        [Group]="fGroupAddBookingCar"
+        [Group]="form.formGroup"
       >
       </codx-input>
     </div>
@@ -205,7 +205,7 @@
         <codx-input
           ControlName="requester"
           [formModel]="form.formModel"
-          [Group]="fGroupAddBookingCar"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-5 form-group">
@@ -215,7 +215,7 @@
           type="number"
           ControlName="phone"
           [formModel]="form.formModel"
-          [Group]="fGroupAddBookingCar"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
@@ -407,7 +407,7 @@
       <codx-input
         field="note"
         [formModel]="form.formModel"
-        [Group]="fGroupAddBookingCar"
+        [Group]="form.formGroup"
       >
       </codx-input>
     </div>
