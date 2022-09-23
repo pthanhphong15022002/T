@@ -8,16 +8,84 @@
   [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
+  (buttonClick)="click($event)"
   [moreFuncs]="moreFunc"
   [idField]="idField"
   [className]="className"
   [method]="method"
-  (buttonClick)="click($event)"
-  (selectedChange)="onSelect($event)"
-  (requestEnded)="closeDialog($event)"
-  [autoLoad]="false"
+  (requestEnded)="closeEditForm($event)"
+  (selectedChange)="changeItemDetail($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+  
 >
 </codx-views>
+
+<ng-template #subTitleTmp let-data>
+  <div class="row">
+    <div class="d-flex mt-1 mb-1">
+      <div class="d-flex me-6">
+        <i class="icon-calendar_today me-1"></i>
+        <span class="text-gray-600">
+          {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
+          {{ data?.startDate | date: "shortTime" }}
+        </span>
+      </div>
+      <div class="d-flex me-6">
+        <i class="icon-calendar_today me-1"></i>
+        <span class="text-gray-600">
+          {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
+          {{ data?.startDate | date: "shortTime" }}
+        </span>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <span>{{ data.title }}</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footerTmp let-data> </ng-template>
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+  cardCss="card-template border-bottom px-2 pt-4 pb-2"
+  (click)="click(data)"
+  [typeMF]="'hover'"
+  [title]="data?.requester"
+  [subTitleTmp]="subTitleTmp"
+  [icoCss]="
+    'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+  "
+  [status]="data?.status"
+  [statusVll]="'VL003'"
+  [date]="data?.createdOn"
+  [imageId]="data?.createdBy"
+  imageObjType="AD_Users"
+  [resources]="data?.bookingAttendees"
+  resourceObjType="AD_Users"
+  [titleLine]="2"
+  [dataItem]="data"
+  [formModel]="formModel"
+  [footer]="footerTmp"
+  (clickMF)="clickMF($event, data)"
+  typeMF="hover"
+  [dataItem]="data"
+    
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #panelRightRef>
+  <booking-car-view-detail
+    #viewdetail
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [formModel]="view?.formModel"
+    [view]="views"
+    (uploaded)="getDetailBooking($event)"
+  ></booking-car-view-detail>
+</ng-template>
 
 <ng-template #chart let-data>
   <div class="w-100">

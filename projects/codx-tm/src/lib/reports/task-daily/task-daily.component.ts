@@ -1,9 +1,12 @@
 import { json } from 'stream/consumers';
 import { formatDate } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, ElementRef, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ViewModel, ViewType, ApiHttpService } from 'codx-core';
+import { AuthStore, ViewModel, ViewType, ApiHttpService, DialogModel, ViewsComponent, CallFuncService, ButtonModel } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
+import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
+import { CodxReportComponent } from 'projects/codx-share/src/lib/components/codx-report/codx-report.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'lib-task-daily',
@@ -23,7 +26,11 @@ export class TaskDailyComponent implements OnInit {
   @ViewChild('report') report: TemplateRef<any>;
   @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
   @ViewChild('pined') pined?: TemplateRef<any>;
-
+  @ViewChild('view') viewBase: ViewsComponent;
+  @ViewChild('iframe', {static: false}) iframe: ElementRef;
+  @ViewChild('contentFrame', { read: ViewContainerRef}) contentFrame: ViewContainerRef;
+  compRef: ComponentRef<CodxReportComponent>;
+  doc:any;
   user: any;
   funcID: any;
   lstPined: any = [];
@@ -34,12 +41,21 @@ export class TaskDailyComponent implements OnInit {
   reportUUID: any = 'TMR01';
   predicates: any = [];
   dataValues: any = [];
+  moreFunc: Array<ButtonModel> = [];
   predicate = '';
   dataValue = '';
+  _user: any;
+  urlSafe: any;
+  src:any;
   constructor(
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private api: ApiHttpService
+    private callFuncService: CallFuncService,
+    private api: ApiHttpService,
+    private resolver: ComponentFactoryResolver,
+    private vcRef: ViewContainerRef,
+    private changeDetectorRef: ChangeDetectorRef,
+    public sanitizer: DomSanitizer
   ) {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -49,6 +65,7 @@ export class TaskDailyComponent implements OnInit {
   views: Array<ViewModel> = [];
 
   ngOnInit(): void {
+    this._user = this.authStore.get();
     this.columnsGrid = [
       {
         field: 'priority',
@@ -99,19 +116,25 @@ export class TaskDailyComponent implements OnInit {
     ];
     this.loadData();
   }
-
   ngAfterViewInit(): void {
+     this._user = this.authStore.get();
+    let sk = `${this._user.userID}|${this._user.securityKey}`
+    this.src = `/report?sk=${window.btoa(sk)}`;
+    this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
+    debugger
+    //this.src=`http://localhost:4203/r?token=${this._user.token}&reportID=${this.reportUUID}&parameters=${JSON.stringify(this.param)}`;
+
     this.views = [
       {
         type: ViewType.grid,
-        sameData: true,
+        sameData: false,
         active: false,
         model: {
           resources: this.columnsGrid,
         },
       },
       {
-        sameData: true,
+        sameData: false,
         type: ViewType.content,
         active: true,
         text: 'Report',
@@ -121,6 +144,14 @@ export class TaskDailyComponent implements OnInit {
         model: {
           panelLeftRef: this.report,
         },
+      },
+    ];
+
+    this.moreFunc = [
+      {
+        id: 'btnAddReport',
+        icon: 'icon-list-chechbox',
+        text: 'Thêm/Sửa report',
       },
     ];
   }
@@ -142,45 +173,46 @@ export class TaskDailyComponent implements OnInit {
   paramChange(evt: any) {
     console.log(evt);
 
-    if (evt.data.controlName == 'DueDate') {
+    if (evt.controlName == 'DueDate') {
       if (this.predicates.length > 0) {
         this.predicates.forEach((e) => {
           console.log(e);
           if (!e.includes('DueDate')) {
             this.predicates.push(
-              evt.data.controlName + '>=@' + this.predicates.length
+              evt.data.controlName + '.Value>=@' + this.predicates.length
             );
             this.predicates.push(
-              evt.data.controlName + '<=@' + this.predicates.length
+              evt.data.controlName + '.Value<=@' + this.predicates.length
             );
           } else {
             const index = e.indexOf(e.includes('DueDate'));
+
             if (index !== -1) {
               this.dataValues[index].push(
-                evt.data.data.fromDate.toJSON() +
+                evt.data.fromDate.toJSON() +
                   ';' +
-                  evt.data.data.toDate.toJSON()
+                  evt.data.toDate.toJSON()
               );
             }
           }
         });
       } else {
         this.predicates.push(
-          evt.data.controlName + '>=@' + this.predicates.length
+          evt.controlName + '.Value>=@' + this.predicates.length
         );
         this.predicates.push(
-          evt.data.controlName + '<=@' + this.predicates.length
+          evt.controlName + '.Value<=@' + this.predicates.length
         );
         this.dataValues.push(
-          evt.data.data.fromDate.toJSON() + ';' + evt.data.data.toDate.toJSON()
+        `${evt.data.fromDate.toJSON()};${evt.data.toDate.toJSON()}`
         );
       }
     }
-    if (evt.data.controlName == 'Owner') {
+    if (evt.controlName == 'Owner') {
       this.predicates.push(
-        evt.data.controlName + '=@' + this.predicates.length
+        evt.controlName + '=@' + this.predicates.length
       );
-      this.dataValues.push(evt.data.data.data);
+      this.dataValues.push(evt.data);
     }
 
     this.predicate = this.predicates.join('&&');
@@ -199,7 +231,96 @@ export class TaskDailyComponent implements OnInit {
     //   this.predicate = pre.substring(0,pre.length - 2);
     //   this.dataValue = data.substring(0,data.length - 1);
     // }
+    this.param = {predicate: this.predicate, dataValue: this.dataValue};
   }
+
+  fields: any = [];
+  values: any = [];
+  paramChange1(evt){
+    // debugger
+    // if (evt.isDateTime) {
+    //   let idxs = 0;
+    //   for (let i = 0; i < this.fields.length; i++) {
+    //     if (this.fields[i].includes(`${evt.controlName}.Value<`)) {
+    //       idxs++;
+    //       if (this.values[i]) {
+    //         this.values[i] = evt.data.toDate.addDays(1).toJSON();
+    //       }
+    //     }
+    //     if (this.fields[i].includes(`${evt.controlName}.Value>=`)) {
+    //       idxs++;
+    //       if (this.values[i]) {
+    //         this.values[i] = evt.data.fromDate.toJSON();
+    //       }
+    //     }
+    //   }
+    //   if (idxs == 0) {
+    //     this.fields.push(`${evt.controlName}.Value>=@${this.fields.length}`);
+    //     this.values.push(evt.data.fromDate.toJSON());
+
+    //     this.fields.push(`${evt.controlName}.Value<@${this.fields.length}`);
+    //     this.values.push(evt.data.toDate.addDays(1).toJSON());
+    //   }
+    // } else {
+    //   let idx = -1;
+    //   for (let i = 0; i < this.fields.length; i++) {
+    //     if (this.fields[i].includes(evt.controlName)) {
+    //       idx = i;
+    //     }
+    //   }
+    //   if (evt.data) {
+    //     switch (typeof evt.data) {
+    //       case 'string':
+    //         if (idx == -1) {
+    //           this.fields.push(
+    //             `${evt.controlName}.Contains(@${this.fields.length})`
+    //           );
+    //         }
+
+    //         break;
+    //       default:
+    //         if (idx == -1) {
+    //           this.fields.push(`${evt.controlName}=@${this.fields.length}`);
+    //         }
+    //         break;
+    //     }
+
+    //     if (Array.isArray(evt.data)) {
+    //       if (idx == -1) {
+    //         this.values.push(`[${evt.data.join(';')}]`);
+    //       } else {
+    //         this.values[idx] = `[${evt.data.join(';')}]`;
+    //       }
+    //     } else {
+    //       if (idx == -1) {
+    //         this.values.push(evt.data);
+    //       } else {
+    //         this.values[idx] = evt.data;
+    //       }
+    //     }
+
+    //   } else {
+    //     if (idx > -1) {
+    //       this.fields.splice(idx, 1);
+    //       this.values.splice(idx, 1);
+    //       for (let i = 0; i < this.fields.length; i++) {
+    //         let index = (this.fields[i] as String).indexOf('@');
+    //         if (index > -1) {
+    //           this.fields[i] =
+    //             this.fields[i].substring(0, index + 1) +
+    //             i +
+    //             this.fields[i].substring(index + 2);
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+
+    // this.predicate = this.fields.join('&&');
+    // this.dataValue = this.values.join(';');
+    this.param = {predicate: evt.predicates, dataValue: evt.dataValues};
+  }
+
   printReport() {
     this.print = true;
     setTimeout(() => {
@@ -216,11 +337,44 @@ export class TaskDailyComponent implements OnInit {
     } else p.close();
   }
 
-  collapse(evt) {
-    this.reportObj && this.reportObj.collapse();
-    this.titleCollapse = this.reportObj.isCollapsed
-      ? 'Mở hộp tham số'
-      : 'Đóng hộp tham số';
-  }
+
   valueChange(evt: any, a?: any, type?: any) {}
+
+  addReport() {
+      let option = new DialogModel();
+      option.DataService = this.viewBase.dataService;
+      option.FormModel = this.viewBase.formModel;
+      this.callFuncService.openForm(
+        PopupAddReportComponent,
+        '',
+        screen.width,
+        screen.height,
+        this.funcID,
+        this.funcID,
+        '',
+        option
+      );
+  }
+  onIframeLoad(iframe:any){
+    this.doc = iframe.contentDocument || iframe.contentWindow;
+
+    this.createComponent();
+  }
+  createComponent() {
+    //const compFactory = this.resolver.resolveComponentFactory(CodxReportComponent);
+    this.compRef = this.vcRef.createComponent(CodxReportComponent);
+    this.compRef.location.nativeElement.id = 'reportComp';
+    (<CodxReportComponent>this.compRef.instance).reportUUID = this.reportUUID;
+    (<CodxReportComponent>this.compRef.instance).parameters = this.param;
+    (<CodxReportComponent>this.compRef.instance).showToolbar = true;
+    (<CodxReportComponent>this.compRef.instance).print = this.print;
+    this.doc.body.appendChild(this.compRef.location.nativeElement);
+    }
+  click(event: any){
+    switch(event.id){
+      case 'btnAddReport':
+        this.addReport();
+        break;
+    }
+  }
 }

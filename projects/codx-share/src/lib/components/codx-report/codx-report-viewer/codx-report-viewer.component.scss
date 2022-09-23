@@ -1,6 +1,8 @@
   @import '@boldreports/javascript-reporting-controls/Content/bootstrap-theme/bold.reports.all.min.css';
   @import '../../../../../../../node_modules/codemirror/lib/codemirror.css';
-  @import '../../../../../../..//node_modules/codemirror/addon/hint/show-hint.css';
+  @import '../../../../../../../node_modules/codemirror/addon/hint/show-hint.css';
+  //@import  './node_modules/codx-core/assets/sass/style.scss',
+  //"src/styles.scss"
  .e-vscroll.e-box {
    padding-left: 0 !important;
    margin: 0 -5px;

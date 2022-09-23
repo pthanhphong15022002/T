@@ -102,10 +102,10 @@ export class PopupAddEpCardsComponent extends UIComponent {
   }
 
   onSaveForm() {
-    // if (this.fGroupAddEpCards.invalid == true) {
-    //   this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
-    //   return;
-    // }
+    if (this.fGroupAddEpCards.invalid == true) {
+      this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
+      return;
+    }
     //patch thêm value
     if (this.fGroupAddEpCards.value.owner instanceof Object) {
       this.fGroupAddEpCards.patchValue({
@@ -138,9 +138,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
   fileCount(event) {
     this.fGroupAddEpCards.value.icon = event.data[0].data;
   }
-  fileAdded(event) {
-    debugger;
-  }
+  fileAdded(event) {}
 
   popupUploadFile() {
     this.attachment.uploadFile();

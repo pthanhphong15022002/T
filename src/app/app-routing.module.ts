@@ -118,6 +118,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'report',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-report/src/lib/codx-report.module').then(
+            (m) => m.CodxReportModule
+          ),
+      },
+      {
         path: 'shared',
         canActivate: [AuthGuard],
         component: LayoutOnlyHeaderComponent,

@@ -1,6 +1,5 @@
 
 <codx-views #codxViews  
-    [entityName]="entityName" 
     [views]="views" 
     [idField]="'recID'"
     [autoLoad]="true"
@@ -9,9 +8,8 @@
     assemblyName="ERM.Business.FD" 
     className="CardsBusiness" 
     method="GetListDataByWebAsync"
-    [predicate]="predicate" 
-    [dataValue]="dataValue" 
-    [entityName]="entityName"
+    [entityName]="entityName" 
+    [predicate]="predicate"
     [selectedFirst]="true"
     (selectedChange)="selectedItem($event)"
     (buttonClick)="clickShowAssideRight()">
@@ -42,68 +40,4 @@
     <lib-view-detail-cards [cardID]="selectedID"></lib-view-detail-cards>
 </ng-template>
 
-<ng-template #cardDisplay>
-</ng-template>
-
-
-<ng-template #templateFile let-item>
-    <div class="d-flex">
-        <div class="mr-3">
-            <img class="max-h-40px" src="../../../../assets/demos/dms/" />
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-            <div class="text-dark">{{item.fileName}}</div>
-            <div class="text-dark-50 font-size-sm">{{item.createdOn | fmDT:'dmy'}}</div>
-        </div>
-        <div class="icon-download text-hover-primary icon-20 ml-2"></div>
-    </div>
-</ng-template>
-<ng-template #templateShare let-item>
-    <div class="d-flex align-items-center">
-        <codx-img objectType="AD_Users" [objectId]="item.objectID"
-            class="symbol symbol-circle symbol-30 mr-3" [width]="40">
-        </codx-img>
-        <div class="text-dark font-weight-bold">{{item.objectName}}</div>
-    </div>
-</ng-template>
-<ng-template #templateGift let-item>
-    <div class="row">
-        <div class="col-3">
-            <codx-img class="max-h-80px w-80px h-80px" [objectId]="item.giftID"
-            objectType="FD_Gifts" [width]="200">
-        </codx-img>
-        </div>
-        <div class="col-9 d-flex flex-column">
-            <div class="text-dark font-weight-bold">{{item.giftName}}</div>
-            <div class="text-dark">
-                <span class="font-weight-normal text-dark-50">
-                    <codx-label formName=""name="lblPrice" default="Giá:"></codx-label>
-                </span>
-                <span class="ms-1">{{item.price}}</span>
-                <span class="ms-1">
-                    <codx-label formName="" name="lblCoin" default="xu"></codx-label>
-                </span> 
-            </div>
-            <div class="text-dark">
-                <span class="font-weight-normal text-dark-50 mr-1">
-                    <codx-label formName="" name="lblNotes" default="Chú thích:"></codx-label>
-                </span>
-                <span [innerHTML]="item.memo"></span>
-            </div>
-            <div class="text-dark">
-                <span class="font-weight-normal text-dark-50 mr-1">
-                    <codx-label formName="" name="lblCount" default="Số lượng:"></codx-label>
-                </span>
-                <span>{{item.quantity}}</span>
-            </div>
-            <div class="d-flex mt-2">
-                <div class="px-2 b rounded-pill"
-                    [style.color]="item.status|vll:'L1428':'color'|async"
-                    [style.background-color]="(item.status|vll:'L1428':'color'|async)+'30'">
-                    {{item.status|vll:"L1428":"text"|async}}
-                </div>
-            </div>
-        </div>
-    </div>
-</ng-template>
 

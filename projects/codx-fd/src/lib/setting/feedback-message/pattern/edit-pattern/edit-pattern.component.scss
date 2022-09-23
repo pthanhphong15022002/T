@@ -42,18 +42,16 @@
   width: 50px !important;
 }
 
-.symbol.symbol-100px.symbol-3by2 {
-  height: 150px !important;
-  width: 100px !important;
+.pic-edit {
+  width: 166px;
+  min-width: 166px;
+  height: 258px;
+  max-height: 258px;
 }
-.symbol.symbol-100px.symbol-3by2 .symbol-label {
-  height: 150px !important;
-  width: 100px !important;
-}
-.symbol.symbol-100px.symbol-3by2 > img {
-  height: 150px;
-  width: 100px;
-  max-width: none;
+
+.pic-edit img {
+  width: 166px;
+  height: 258px;
 }
 
 .pic-color {
@@ -62,4 +60,25 @@
   border-radius: 3px;
   display: inline-block;
   border: 1px solid #c5cacb;
+}
+
+.pattern-teams {
+  max-width: 270px;
+}
+
+.pattern-item {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  float: left;
+  position: relative;
+}
+
+.header-pattern {
+  margin-top: -233px;
+  margin-left: 15%;
+}
+
+.content-pattern {
+  margin-left: 15%;
+  padding-top: 3%;
 }
