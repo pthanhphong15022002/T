@@ -211,14 +211,7 @@ export class ApprovalRoomsComponent extends UIComponent {
         break;
     }
   }
-  getReasonName(reasonID: string) {
-    this.codxEpService.getReasonName(reasonID).subscribe((res) => {
-      if (res.msgBodyData[0]) {
-        this.tempReasonName = res.msgBodyData[0];
-      }
-    });
-    return this.tempReasonName;
-  }
+ 
   closeAddForm(event) {}
 
   changeItemDetail(event) {

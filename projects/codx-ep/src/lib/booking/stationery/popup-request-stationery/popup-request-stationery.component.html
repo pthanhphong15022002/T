@@ -70,13 +70,23 @@
         <div class="mb-10 mt-10 text-center tab-pane-header h-100">
           <ng-container *ngIf="currentTab == 1; else addNewRequest">
             <div class="d-flex justify-content-between container mb-10 mt-10">
-              <div class="d-flex">
-                <div class="me-2">Tất cả</div>
-                <div class="me-2">Văn phòng phẩm</div>
-                <div class="me-2">Trà & nước</div>
-                <div class="me-2">Bánh kẹo</div>
-                <div class="me-2">Trái cây</div>
-              </div>
+              <ul class="nav">
+                <li class="nav-item">
+                  <span class="nav-link fw-bold active">Tất cả</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link fw-bold">Văn phòng phẩm</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link fw-bold">Trà & nước</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link fw-bold">Bánh kẹo</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link fw-bold">Trái cây</span>
+                </li>
+              </ul>
               <div class="d-flex">
                 <div id="ex4">
                   <span class="p1 fa-stack fa-2x has-badge">
@@ -100,7 +110,7 @@
                 [className]="'ResourcesBusiness'"
                 [method]="'GetListAsync'"
                 [predicate]="'ResourceType=@0'"
-                [dataValue]="2"
+                [dataValue]="6"
                 [itemTemplate]="templateListCard"
               >
               </codx-listview>
@@ -114,7 +124,7 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img
-    cardCss="border w-250px h-100"
+    cardCss="border w-200px h-100"
     [imageSrc]="
       data.icon ? data.icon : '../assets/media/svg/files/blank-image.svg'
     "
@@ -159,8 +169,28 @@
 </ng-template>
 
 <ng-template #addNewRequest let-dialogSaveToTemplate>
-  <div class="row h-100">
+  <div class="row" style="height: 99%">
     <div class="left col-6">
+      <div class="d-flex justify-content-between">
+        <div class="d-flex">
+          <codx-img
+            [objectId]="'ADMIN'"
+            [objectName]="'Lê Phạm Hoài Thương'"
+            [objectType]="'AD_Users'"
+          ></codx-img>
+          <div>
+            <div>Lê Phạm Hoài Thương</div>
+            <div>Thư ký trung tâm - NDX</div>
+          </div>
+        </div>
+        <div
+          class="badge border-0 me-2"
+          [style.background-color]="'4' | vll: 'VL003':'color' | async"
+          [style.color]="'4' | vll: 'VL003':'textColor' | async"
+        >
+          {{ "4" | vll: "VL003":"text" | async }}
+        </div>
+      </div>
       <div class="row">
         <div class="form-group col-4">
           <codx-label
@@ -217,7 +247,6 @@
             ControlName="BUID"
             [formModel]="formModel"
             [Group]="dialogAddRoom"
-            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>
@@ -249,8 +278,7 @@
       </div>
       <div class="row">
         <div class="form-group col-12">
-          <codx-label fiedName="Note" [formModel]="formModel">
-          </codx-label>
+          <codx-label fiedName="Note" [formModel]="formModel"> </codx-label>
           <codx-input
             ControlName="note"
             [formModel]="formModel"
@@ -313,14 +341,14 @@
       ></codx-label>
     </button>
     <div class="btn-group">
-      <button class="btn btn-outline-primary">
+      <button class="btn btn-outline-primary me-2">
         <codx-label
           name="lblApprove"
           default="Gửi duyệt"
           [formModel]="formModel"
         ></codx-label>
       </button>
-      <button class="btn btn-primary">
+      <button class="btn btn-primary" (click)="onSaveForm()">
         <codx-label
           name="lblSave"
           default="Lưu"
