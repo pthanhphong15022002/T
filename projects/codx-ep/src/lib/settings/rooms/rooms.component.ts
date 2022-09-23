@@ -96,7 +96,7 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
             },
             {
               headerText: gv['Location'].headerText,
-              width: 250,//gv['Location'].width,
+              width: 200,//gv['Location'].width,
               field: 'location',
               textAlign: 'Center',
               template: this.locationCol,
