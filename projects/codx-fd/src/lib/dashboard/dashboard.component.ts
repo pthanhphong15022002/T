@@ -16,7 +16,7 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
   predicate = `Category =@0 && Stop=false`;
   dataValue = "3";
   memberType = "3";
-  predicateCoins = `Owner=@0`;
+  predicateCoins = `Owner =@0   `;
   dataValueCoins = "";
   arrVll = ["L1422", "L1419"];
   reciver = [];

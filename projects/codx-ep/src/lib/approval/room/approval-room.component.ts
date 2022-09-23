@@ -22,7 +22,8 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
-  
+
+  @ViewChild('titleTmp') titleTmp?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   
@@ -131,7 +132,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           //panelLeftRef:this.panelLeft,
           eventModel:this.fields,
           resourceModel:this.resourceField,//resource
-          //template:this.cardTemplate,
+          //template2:this.titleTmp,
           template4: this.resourceHeader,
           template5: this.resourceTootip,//tooltip
           template6: this.mfButton,//header          
