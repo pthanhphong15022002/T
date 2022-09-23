@@ -59,7 +59,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
 
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService
+    private codxEpService: CodxEpService,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -153,7 +153,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.viewBase?.formModel;
+      option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddDriversComponent,
         [this.dataSelected, true],
@@ -172,7 +172,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
           let option = new SidebarModel();
           option.Width = '550px';
           option.DataService = this.viewBase?.dataService;
-          option.FormModel = this.viewBase?.formModel;
+          option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddDriversComponent,
             [this.viewBase.dataService.dataSelected, false],
@@ -182,12 +182,23 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  delete(obj?) {
-    if (obj) {
-      this.viewBase.dataService.delete([obj], true).subscribe((res) => {
-        console.log(res);
+  // delete(obj?) {
+  //   if (obj) {
+  //     this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+  //       console.log(res);
+  //     });
+  //   }
+  // }
+
+  delete(data?: any) {
+    this.viewBase.dataService.dataSelected = data;
+    this.viewBase.dataService
+      .delete([this.viewBase.dataService.dataSelected], true)
+      .subscribe((res: any) => {
+        if (res.data) {
+          this.codxEpService.deleteFile(res.data.recID, this.formModel.entityName, true);
+        }
       });
-    }
   }
 
   clickMF(event, data) {

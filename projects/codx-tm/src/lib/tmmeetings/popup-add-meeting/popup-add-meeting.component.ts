@@ -311,7 +311,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ];
 
   setTitle(e: any) {
-    debugger;
     this.title =
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     //this.changDetec.detectChanges();

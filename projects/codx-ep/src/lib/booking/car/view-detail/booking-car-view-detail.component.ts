@@ -6,19 +6,17 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { UIComponent, ViewsComponent } from 'codx-core';
+import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
-  selector: 'booking-stationery-view-detail',
-  templateUrl: './view-detail.component.html',
-  styleUrls: ['./view-detail.component.scss'],
+  selector: 'booking-car-view-detail',
+  templateUrl: 'booking-car-view-detail.component.html',
+  styleUrls: ['booking-car-view-detail.component.scss'],
 })
-export class BookingStationeryViewDetailComponent
-  extends UIComponent
-  implements OnChanges
-{
-  @ViewChild('itemDetailTemplate') itemDetailTemplate;
+export class BookingCarViewDetailComponent extends UIComponent implements OnChanges {
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;  
+  @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -91,6 +89,13 @@ export class BookingStationeryViewDetailComponent
   openFormFuncID(value, datas: any = null) {
     debugger;
     let funcID = value?.functionID;
+    // if (!datas) datas = this.data;
+    // else {
+    //   var index = this.view.dataService.data.findIndex((object) => {
+    //     return object.recID === datas.recID;
+    //   });
+    //   datas = this.view.dataService.data[index];
+    // }
     switch (funcID) {
       case 'EPT40101':
       case 'EPT40201':

@@ -1,25 +1,49 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, Optional } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ViewChild,
+  Optional,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService, DialogData, DialogRef, ImageViewerComponent, NotificationsService } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  DialogData,
+  DialogRef,
+  ImageViewerComponent,
+  NotificationsService,
+} from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { Pattern } from '../model/pattern.model';
 import { PatternService } from '../pattern.service';
 
 @Component({
   selector: 'lib-edit-pattern',
   templateUrl: './edit-pattern.component.html',
-  styleUrls: ['./edit-pattern.component.scss']
+  styleUrls: ['./edit-pattern.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class EditPatternComponent implements OnInit {
   pattern = new Pattern();
   isEdit = false;
   reload = false;
-  colorimg = "";
+  colorimg = '';
   vll: any;
   dialog!: DialogRef;
   header = '';
   formModel: any;
+  formType = '';
+  listFile: any;
+  REFER_TYPE = {
+    IMAGE: 'image',
+    VIDEO: 'video',
+    APPLICATION: 'application',
+  };
 
   @ViewChild('uploadImage') uploadImage: ImageViewerComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   // @Input() cardType: string;
   cardType: string;
   constructor(
@@ -30,18 +54,19 @@ export class EditPatternComponent implements OnInit {
     private cache: CacheService,
     private api: ApiHttpService,
     @Optional() dt: DialogRef,
-    @Optional() data: DialogData,
+    @Optional() data: DialogData
   ) {
     this.dialog = dt;
     this.formModel = this.dialog?.formModel;
-    data
-    debugger
-    this.pattern.cardType = this.cardType;
-    this.pattern.headerColor = "#918e8e";
-    this.pattern.textColor = "#918e8e";
-
-
-    this.cache.valueList("L1447").subscribe((res) => {
+    this.formType = data.data?.formType;
+    if (this.formType == 'edit')
+      this.pattern = JSON.parse(JSON.stringify(data.data?.dataUpdate));
+    else {
+      this.pattern.backgroundColor = '#caf7e3';
+      this.pattern.textColor = '';
+      this.pattern.headerColor = '';
+    }
+    this.cache.valueList('L1447').subscribe((res) => {
       if (res) {
         this.vll = res.datas;
         this.changedr.detectChanges();
@@ -50,30 +75,84 @@ export class EditPatternComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.patternSV.recID.subscribe((recID) => {
-    //   this.colorimg = this.patternSV.colorimg;
-    //   if (recID) {
-    //     this.isEdit = true;
-    //     this.api.execSv<any>("FD", "ERM.Business.FD", " PatternsBusiness", "GetAsync", [recID]).subscribe(res => {
-    //       if (res)
-    //         Object.assign(this.pattern, res);
-    //       this.changedr.detectChanges();
-    //       this.checkActive();
-    //     });
-    //   } else if (!this.patternSV.load) {
-    //     this.isEdit = false;
-    //     this.pattern.cardType = this.cardType;
-    //     this.changedr.detectChanges();
-    //     this.checkActive();
-    //   }
-    // })
+    this.patternSV.recID.subscribe((recID) => {
+      this.colorimg = this.patternSV.colorimg;
+      if (recID) {
+        this.isEdit = true;
+        this.api
+          .execSv<any>(
+            'FD',
+            'ERM.Business.FD',
+            ' PatternsBusiness',
+            'GetAsync',
+            [recID]
+          )
+          .subscribe((res) => {
+            if (res) Object.assign(this.pattern, res);
+            this.changedr.detectChanges();
+            this.checkActive();
+          });
+      } else if (!this.patternSV.load) {
+        this.isEdit = false;
+        this.pattern.cardType = this.cardType;
+        this.changedr.detectChanges();
+        this.checkActive();
+      }
+    });
+    this.at.queryParams.subscribe((params) => {
+      if (params.funcID) {
+        let functionID = params.funcID;
+        this.cardType = functionID.substr(-1);
+      }
+    });
+  }
 
-    // this.at.queryParams.subscribe(params => {
-    //   if (params.funcID) {
-    //     let functionID = params.funcID;
-    //     this.cardType = functionID.substr(-1);
-    //   }
-    // })
+  ngAfterViewInit() {
+    this.checkActive();
+  }
+
+  getCardType(funcID) {
+    switch (funcID) {
+      case 'FDS011':
+        this.pattern.cardType = '1';
+        break;
+      case 'FDS012':
+        this.pattern.cardType = '2';
+        break;
+      case 'FDS013':
+        this.pattern.cardType = '3';
+        break;
+      case 'FDS014':
+        this.pattern.cardType = '4';
+        break;
+      case 'FDS015':
+        this.pattern.cardType = '5';
+        break;
+      case 'FDS016':
+        this.pattern.cardType = '6';
+        break;
+      case 'FDS017':
+        this.pattern.cardType = '7';
+        break;
+    }
+  }
+
+  fileCount(e) {
+    if (e.data.length > 0) {
+      this.pattern.backgroundColor = '';
+      let files = e.data;
+      files.map((dt: any) => {
+        if (dt.mimeType.indexOf('image') >= 0) {
+          dt['referType'] = this.REFER_TYPE.IMAGE;
+        } else if (dt.mimeType.indexOf('video') >= 0) {
+          dt['referType'] = this.REFER_TYPE.VIDEO;
+        } else {
+          dt['referType'] = this.REFER_TYPE.APPLICATION;
+        }
+      });
+      this.listFile = files;
+      debugger;
+    }
   }
 
   closeCreate(): void {
@@ -86,31 +165,26 @@ export class EditPatternComponent implements OnInit {
   }
 
   valueChange(e, element) {
-    // if (e.field === "backgroundColor") {
-    //   this.pattern.backgroundColor = e.data;
-    //   this.pattern.fileName = "";
-    //   var $elm = $('.symbol-label[data-color]', $('.patternt'));
-    //   $elm.removeClass('color-check');
-    //   $('kendo-colorpicker.symbol-label', $(element)).addClass('color-check');
-    //   this.changedr.detectChanges();
-    // } else {
-    //   if (element) {
-    //     var $parent = $(element.ele);
-    //     if ($parent && $parent.length > 0) {
-    //       var text = $('.k-selected-color', $parent);
-    //       text.text(e.data);
-    //       text.css("background-color", e);
-    //       if (e.field == "headerColor")
-    //         $('.header-pattern').css('color', e);
-    //       else if (e.field == "textColor")
-    //         $('.content-pattern').css('color', e);
-    //     }
-    //   }
-    //   if (e.field === "cardType")
-    //     this.pattern[e.field] = e.data.value;
-    //   else
-    //     this.pattern[e.field] = e.data;
-    // }
+    if (e) this.pattern[e.field] = e.data;
+  }
+
+  valueChangeColor(e, element = null) {
+    if (e) {
+      if (e.field == 'backgroundColor') this.pattern.backgroundColor = e.data;
+      else if (e.field == 'headerColor') this.pattern.headerColor = e.data;
+      else this.pattern.textColor = e.data;
+      var label = document.querySelectorAll('.symbol-label[data-color]');
+      if (label) {
+        label.forEach((ele) => {
+          if (ele.className == 'symbol-label pointer color-check')
+            ele.classList.remove('color-check');
+        });
+      }
+    }
+  }
+
+  uploadFile() {
+    // this.attachment.uploadFile();
   }
 
   async handleFileInput(event) {
@@ -124,8 +198,9 @@ export class EditPatternComponent implements OnInit {
     // this.uploadImage.handleFileInput(event);
   }
 
-
-  savepattern() {
+  savePattern() {
+    this.pattern;
+    debugger;
     // if (this.uploadImage?.imageUpload?.fileName) { this.pattern.fileName = ""; this.pattern.backgroundColor = ""; }
     // // this.pattern.updateColumn = this.inputsv.updateColumn;
     // if (!this.pattern.patternName) { this.notificationsService.notify("Vui lòng nhập mô tả"); return }
@@ -156,6 +231,11 @@ export class EditPatternComponent implements OnInit {
   }
 
   checkActive() {
+    var label = document.querySelectorAll('.symbol-label[data-color]');
+    if (label) {
+      var htmlE = label[0] as HTMLElement;
+      if (htmlE) htmlE.classList.add('color-check');
+    }
     // var $elm = $('.symbol-label', $('.patternt'));
     // $elm.removeClass('color-check');
     // var elecolor = null;
@@ -181,7 +261,7 @@ export class EditPatternComponent implements OnInit {
     // this.changedr.detectChanges();
   }
 
-  colorClick(e, ele) {
+  colorClick(ele, item, index) {
     // var $label = $('.symbol-label[data-color]', $('.patternt'));
     // $label.removeClass('color-check');
     // $(ele).addClass('color-check');
@@ -189,6 +269,17 @@ export class EditPatternComponent implements OnInit {
     // this.pattern.backgroundColor = color;
     // this.pattern.fileName = "";
     // this.changedr.detectChanges();
+    this.listFile = '';
+    var label = document.querySelectorAll('.symbol-label[data-color]');
+    if (label) {
+      label.forEach((ele) => {
+        if (ele.className == 'symbol-label pointer color-check')
+          ele.classList.remove('color-check');
+      });
+    }
+    var element = ele as HTMLElement;
+    element.classList.add('color-check');
+    this.pattern.backgroundColor = item.default;
+    this.changedr.detectChanges();
   }
-
 }

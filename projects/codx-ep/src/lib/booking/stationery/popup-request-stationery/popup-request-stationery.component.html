@@ -12,14 +12,7 @@
       </div>
       <div class="d-flex align-items-center stepper">
         <div class="stepper-nav flex-center flex-wrap" #status>
-          <div
-            [ngClass]="
-              isAddNew ? 'stepper-item active' : 'stepper-item approve'
-            "
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            (click)="clickTab(0)"
-          >
+          <div class="stepper-item" [ngClass]="{ active: currentTab >= 1 }">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
                 <i
@@ -38,27 +31,10 @@
                 >
                   <span class="icon-check icon-18"></span>
                 </div>
-              </div>
-              <div
-                class="stepper-label"
-                [ngClass]="currentTab == 0 ? 'fw-bold text-primary' : ''"
-              >
-                <codx-label
-                  name="lblUploadFile"
-                  default="Tải tài liệu"
-                  [formModel]="formModel"
-                ></codx-label>
               </div>
             </div>
           </div>
-          <div
-            [ngClass]="
-              isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
-            "
-            data-kt-stepper-element="nav"
-            data-kt-stepper-action="step"
-            (click)="clickTab(1)"
-          >
+          <div class="stepper-item" [ngClass]="{ active: currentTab === 2 }">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
                 <i
@@ -78,117 +54,57 @@
                   <span class="icon-check icon-18"></span>
                 </div>
               </div>
-              <div
-                class="stepper-label"
-                [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : ''"
-              >
-                <codx-label
-                  name="lblFileInfo"
-                  default="Thông tin tài liệu"
-                  [formModel]="formModel"
-                ></codx-label>
-              </div>
             </div>
-            <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
         </div>
       </div>
       <div class="d-flex justify-content-end">
-        <ng-container *ngIf="data?.approveStatus == 1">
-          <div
-            ngbDropdown
-            class="dropdown"
-            [style.visibility]="
-              currentTab == 3 && dialogSignFile.value.files?.length > 0
-                ? 'visible'
-                : 'hidden'
-            "
-          >
-            <button
-              class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4 d-flex align-items-center"
-              type="button"
-              aria-expanded="false"
-            >
-              <span (click)="saveAndClose()">
-                <codx-label
-                  class="me-3"
-                  name="lblSave"
-                  [formModel]="formModel"
-                  default="Lưu"
-                ></codx-label>
-              </span>
-              <span
-                ngbDropdownToggle
-                id="dropdownMenuButton1"
-                class="icon-keyboard_arrow_down icon-16 ms-1"
-              ></span>
-            </button>
-            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-              <li>
-                <a
-                  ngbDropdownItem
-                  (click)="openTemplateName(addTemplateName)"
-                  class="cursor-pointer"
-                >
-                  <div class="d-flex flex-column">
-                    <span class="text-dark">
-                      <codx-label
-                        name="lblSaveTemplate"
-                        [formModel]="formModel"
-                        default="Lưu thành mẫu"
-                      ></codx-label>
-                    </span>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a
-                  ngbDropdownItem
-                  (click)="saveCategoryTemplate()"
-                  class="cursor-pointer"
-                >
-                  <div class="d-flex flex-column">
-                    <codx-label
-                      name="lblSaveCateTemplate"
-                      [formModel]="formModel"
-                      default="Lưu tài liệu mẫu"
-                    >
-                    </codx-label>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <a
-            class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-            (click)="approve()"
-            [style.visibility]="
-              currentTab == 3 &&
-              dialogSignFile.value.files?.length > 0 &&
-              dialogSignFile.value.approveStatus == '1'
-                ? 'visible'
-                : 'hidden'
-            "
-          >
-            <codx-label
-              Name="lblAprrove"
-              [formModel]="dialog.formModel"
-              default="Gửi duyệt"
-            ></codx-label>
-          </a>
-        </ng-container>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
-          <i class="icon-close icon-18" (click)="close(templateClose)"></i>
+          <i class="icon-close icon-18" (click)="close()"></i>
         </div>
       </div>
     </div>
 
     <div class="stepper-body pt-2 w-100">
       <div class="container card shadow-none border-0 rounded-0 mx-auto h-100">
-        <div class="mb-10 mt-10 text-center tab-pane-header">
-          <ng-container
-            *ngTemplateOutlet="viewCard; context: { $implicit: 'default' }"
-          >
+        <div class="mb-10 mt-10 text-center tab-pane-header h-100">
+          <ng-container *ngIf="currentTab == 1; else addNewRequest">
+            <div class="d-flex justify-content-between container mb-10 mt-10">
+              <div class="d-flex">
+                <div class="me-2">Tất cả</div>
+                <div class="me-2">Văn phòng phẩm</div>
+                <div class="me-2">Trà & nước</div>
+                <div class="me-2">Bánh kẹo</div>
+                <div class="me-2">Trái cây</div>
+              </div>
+              <div class="d-flex">
+                <div id="ex4">
+                  <span class="p1 fa-stack fa-2x has-badge">
+                    <i class="p3 icon-shopping_cart">{{ cartQty }}</i>
+                  </span>
+                </div>
+
+                <button (click)="changeTab(2)">
+                  <i class="icon-double_arrow"></i>
+                  <span>Tiếp theo</span>
+                </button>
+              </div>
+            </div>
+            <div class="container h-75">
+              <codx-listview
+                #listView
+                [type]="'cardView'"
+                [service]="'EP'"
+                [assemblyName]="'EP'"
+                [entityName]="'EP_Resources'"
+                [className]="'ResourcesBusiness'"
+                [method]="'GetListAsync'"
+                [predicate]="'ResourceType=@0'"
+                [dataValue]="2"
+                [itemTemplate]="templateListCard"
+              >
+              </codx-listview>
+            </div>
           </ng-container>
         </div>
       </div>
@@ -196,203 +112,221 @@
   </div>
 </div>
 
-<ng-template #viewCard let-data>
-  <div class="d-flex justify-content-between container">
-    <div class="d-flex">
-      <div class="me-2">Tất cả</div>
-      <div class="me-2">Văn phòng phẩm</div>
-      <div class="me-2">Trà & nước</div>
-      <div class="me-2">Bánh kẹo</div>
-      <div class="me-2">Trái cây</div>
-    </div>
-    <div class="d-flex">
-      <div id="ex4">
-        <span class="p1 fa-stack fa-2x has-badge" data-count="4">
-          <i
-            class="p3 icon-shopping_cart"
-            data-count="4b"
-          ></i>
-        </span>
-      </div>
-
-      <button class="btn btn-light font-weight-bold" (click)="test()">
-        <i class="icon-double_arrow"></i> Tiếp theo
-      </button>
-    </div>
-  </div>
-  <!-- <codx-temp-full
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
-    (click)="click(data)"
-    [typeMF]="'hover'"
-    [title]="data?.requester"
-    [desc]="data?.title"
-    [icoCss]="
-      'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+<ng-template #templateListCard let-data>
+  <codx-card-img
+    cardCss="border w-250px h-100"
+    [imageSrc]="
+      data.icon ? data.icon : '../assets/media/svg/files/blank-image.svg'
     "
-    [status]="data?.status"
-    [statusVll]="'VL003'"
-    [date]="data.createdOn"
-    [resources]="'ADMIN;PMNHI;NVHAO;ADMIN;PMNHI;NVHAO'"
-    [resourceObjType]="'AD_Users'"
-    [titleLine]="2"
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    (clickMF)="clickMF($event, data)"
-    typeMF="hover"
-    [dataItem]="data"
+    [title]="data.resourceName"
+    [subTitle]="data.resourceName"
+    [content]="data.costPrice | currency: 'VND':'symbol':'3.0'"
+    [rootData]="data"
+    [footer]="cardItemFooter"
   >
-  </codx-temp-full> -->
+  </codx-card-img>
 </ng-template>
 
-<ng-template #form></ng-template>
-
-<ng-template #processTemplate let-dialogTemplate>
-  <div class="codx-form card w-100 h-100 rounded-0 border-0">
-    <div class="card-header flex-column">
-      <div class="d-flex align-items-center justify-content-between w-100">
-        <div class="card-title">
-          <div class="d-flex flex-column">
-            <codx-label
-              class="dialog-title line-clamp line-clamp-1"
-              name="lblProcessTemplate"
-              default="Quy trình mẫu"
-              [formModel]="formModel"
-            ></codx-label>
-          </div>
+<ng-template #cardItemFooter let-data>
+  <div class="d-flex flex-column flex-grow-1 mt-2">
+    <div class="d-flex justify-content-between align-items-end mt-2">
+      <div class="d-flex align-items-end me-2 codx-badge mb-3">
+        <div class="d-flex align-items-center position-relative me-4">
+          <span class="icon-view_agenda icon-20 text-gray-400"></span>
+          <span>{{ data.currentQty }}</span>
         </div>
-        <div class="card-toolbar">
-          <button
-            type="button"
-            class="btn btn-flex text-dark-75 text-hover-primary px-0"
-            (click)="closeDialogTmp(dialogTemplate)"
-          >
-            <span class="icon-close icon-18"></span>
-          </button>
+        <div class="d-flex align-items-center position-relative me-4">
+          <span
+            class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
+          ></span>
+          <span>{{ data.reservedQty }}</span>
+        </div>
+        <div class="d-flex align-items-center position-relative me-4">
+          <span
+            class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
+          ></span>
+          <span>{{ data.availableQty }}</span>
         </div>
       </div>
+      <div
+        class="symbol-group symbol-hover justify-content-end cursor-pointer"
+        (click)="addCart($event, data)"
+      >
+        <span class="icon-shopping_cart icon-20 text-gray-400 cart"></span>
+      </div>
     </div>
-    <div class="card-body">
-      <div class="form-group">
-        <label class="me-2">
+  </div>
+</ng-template>
+
+<ng-template #addNewRequest let-dialogSaveToTemplate>
+  <div class="row h-100">
+    <div class="left col-6">
+      <div class="row">
+        <div class="form-group col-4">
           <codx-label
-            fiedName=""
+            fiedName="BookingOn"
             [formModel]="formModel"
-            default="Quy trình mẫu"
+            default="Ngày yêu cầu"
+          >
+          </codx-label>
+          <codx-input
+            ControlName="bookingOn"
+            [formModel]="formModel"
+            [Group]="dialogAddRoom"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group d-flex col-4">
+          <codx-input
+            type="radio"
+            [crrValue]="data.recID"
+            name="requestBy"
+            ControlName="recID"
+          >
+          </codx-input>
+          <codx-label
+            name="lblPersonalRequest"
+            default="Yêu cầu theo cá nhân"
+            [formModel]="formModel"
           ></codx-label>
-        </label>
-        <codx-input
-          type="combobox"
-          class="form-control"
-          field="processID"
-          refValue="ProcessTemplate"
-          (valueChange)="processIDChange($event)"
-        >
-        </codx-input>
+        </div>
+        <div class="form-group d-flex col-4">
+          <codx-input
+            type="radio"
+            [crrValue]="data.recID"
+            name="requestBy"
+            ControlName="recID"
+          >
+          </codx-input>
+          <codx-label
+            name="lblDeptRequest"
+            default="Yêu cầu theo phòng"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-6">
+          <codx-label
+            name="lblEmpQty"
+            [formModel]="formModel"
+            default="Đơn vị/Phòng ban"
+          >
+          </codx-label>
+          <codx-input
+            ControlName="BUID"
+            [formModel]="formModel"
+            [Group]="dialogAddRoom"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group col-6">
+          <codx-label
+            fiedName="BUID"
+            [formModel]="formModel"
+            default="Số lượng nhân viên"
+          >
+          </codx-label>
+          <codx-input type="text"> </codx-input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <codx-label
+            fiedName="ReasonID"
+            [formModel]="formModel"
+            default="Lý do đăng ký"
+          >
+          </codx-label>
+          <codx-input
+            ControlName="reasonID"
+            [formModel]="formModel"
+            [Group]="dialogAddRoom"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <codx-label fiedName="Note" [formModel]="formModel">
+          </codx-label>
+          <codx-input
+            ControlName="note"
+            [formModel]="formModel"
+            [Group]="dialogAddRoom"
+          >
+          </codx-input>
+        </div>
       </div>
     </div>
-    <div class="card-footer border-0">
-      <div class="d-flex justify-content-end">
-        <a
-          class="btn btn-primary"
-          (click)="onSaveProcessTemplateID(dialogTemplate)"
-        >
-          <codx-label name="lblOk" default="OK" [formModel]="formModel">
-          </codx-label>
-        </a>
-        <a class="btn btn-secondary" (click)="closeDialogTmp(dialogTemplate)">
-          <codx-label name="lblExit" default="Hủy" [formModel]="formModel">
-          </codx-label>
-        </a>
+    <div class="vr px-0"></div>
+    <div class="right col-5">
+      <codx-label
+        class="fw-bold text-left"
+        name="lblStationeryList"
+        default="Danh sách văn phòng phẩm"
+      ></codx-label>
+      <div *ngFor="let item of cart; trackBy: itemByRecID">
+        <div class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-100">
+          <div class="d-flex flex-row">
+            <div class="me-2">
+              <codx-img
+                [objectId]="item.recID"
+                imageType="square"
+                width="35"
+                objectType="EP_Stationery"
+              ></codx-img>
+            </div>
+            <div class="ms-2">
+              <span class="fw-bold">{{ item.resourceName }}</span>
+
+              <div class="d-flex flex-row flex-grow-1">
+                <codx-label
+                  default="Đơn vị tính:"
+                  name="lblQuantity"
+                  class="text-gray-600"
+                ></codx-label>
+                <span class="d-block ms-2 fw-bold">{{ item.umid }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center me-3">
+            <codx-label
+              default="Số lượng:"
+              name="lblQuantity"
+              class="text-gray-600"
+            ></codx-label>
+            <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</ng-template>
-
-<ng-template #templateClose let-dialogClose>
-  <div class="card-alert alert alert-dismissible d-flex flex-column">
-    <button
-      type="button"
-      class="position-absolute top-0 end-0 m-2 btn btn-icon"
-      (click)="closeDialogTmp(dialogClose)"
-    >
-      <span class="icon-close icon-18"></span>
+  <div class="d-flex justify-content-between">
+    <button class="btn btn-outline-primary" (click)="changeTab(1)">
+      <codx-label
+        name="lblBack"
+        default="Quay lại"
+        [formModel]="formModel"
+      ></codx-label>
     </button>
-    <div class="d-flex flex-stack my-7">
-      <div class="d-flex">
-        <span class="icon-help_outline me-5 icon-56 text-primary"></span>
-        <div class="d-flex flex-column">
-          <div class="text-dark fs-5 fw-bold mb-4">
-            <codx-label
-              *ngIf="isAddNew"
-              name="lblCloseAddNewForm"
-              [formModel]="formModel"
-              default="Bạn có muốn lưu đăng ký mới"
-            ></codx-label>
-            <codx-label
-              *ngIf="!isAddNew"
-              name="lblCloseEditForm"
-              [formModel]="formModel"
-              default="Bạn có muốn lưu đăng ký đã chỉnh sửa"
-            ></codx-label>
-          </div>
-          <span class="mb-4" *ngIf="!isAddNew"
-            >Chương trình sẽ thực hiện ghi đè file trùng tên hiện có trên hệ
-            thống. Quá trình này không thể khôi phục lại như trước khi ghi đè,
-            bạn có muốn thực hiện không?</span
-          >
-        </div>
-      </div>
-    </div>
-    <div class="d-flex justify-content-end">
-      <a class="btn btn-primary me-2" (click)="clickIsSave(true, dialogClose)">
-        <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
-        </codx-label>
-      </a>
-      <a
-        *ngIf="isAddNew"
-        class="btn btn-light-primary me-2"
-        (click)="clickIsSave(false, dialogClose)"
-      >
-        <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
-        </codx-label>
-      </a>
-      <a
-        *ngIf="!isAddNew"
-        class="btn btn-light-primary me-2"
-        (click)="clickNotSave(dialogClose)"
-      >
-        <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
-        </codx-label>
-      </a>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #addTemplateName let-dialogSaveToTemplate>
-  <div class="codx-form card w-100 h-100 rounded-0 border-0">
-    <div class="card-header flex-column">
-      <div class="d-flex align-items-center justify-content-between w-100">
-        <div class="card-title">
-          <div class="d-flex flex-column">
-            <codx-label
-              class="dialog-title line-clamp line-clamp-1"
-              name="lblEquipment"
-              default="Nhập tên"
-              formName="EmailTemplates"
-              gridViewName="grvEmailTemplates"
-            ></codx-label>
-          </div>
-        </div>
-        <div class="card-toolbar">
-          <button
-            type="button"
-            class="btn btn-flex text-dark-75 text-hover-primary px-0"
-            (click)="closeDialogTmp(dialogSaveToTemplate)"
-          >
-            <span class="icon-close icon-18"></span>
-          </button>
-        </div>
-      </div>
+    <div class="btn-group">
+      <button class="btn btn-outline-primary">
+        <codx-label
+          name="lblApprove"
+          default="Gửi duyệt"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+      <button class="btn btn-primary">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
     </div>
   </div>
 </ng-template>

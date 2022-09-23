@@ -1,6 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ApiHttpService, CacheService, CallFuncService, AuthService, NotificationsService, DialogRef, DialogData } from 'codx-core';
+import { ActivatedRoute } from '@angular/router';
+import { Thickness } from '@syncfusion/ej2-charts';
+import { ApiHttpService, CacheService, CallFuncService, AuthService, NotificationsService, DialogRef, DialogData, CRUDService } from 'codx-core';
+import { tmpAddGiftTrans } from '../../models/tmpAddGiftTrans.model';
 
 @Component({
   selector: 'lib-popup-add-gift',
@@ -17,6 +20,11 @@ export class PopupAddGiftComponent implements OnInit {
   myWallet:any = null;
   reciverWallet:any = null;
   gift:any = null;
+  quantity:number = 0;
+  amount:number = 0
+  maxQuantity:number = 0;
+  cardTypeDefault:string = "6";
+  giftTrans = new tmpAddGiftTrans();
   constructor(
     private api:ApiHttpService,
     private cache:CacheService,
@@ -24,6 +32,7 @@ export class PopupAddGiftComponent implements OnInit {
     private callfc:CallFuncService,
     private auth:AuthService,
     private notifySV:NotificationsService,
+    private route:ActivatedRoute,
     @Optional() dialogRef?: DialogRef,
     @Optional() dd?:DialogData) 
     {
@@ -34,19 +43,38 @@ export class PopupAddGiftComponent implements OnInit {
   ngOnInit(): void {
     this.innitForm();
     this.getMyWalletInfor();
+    this.getDataPattern(this.cardTypeDefault);
+    this.route.params.subscribe((param:any) => {
+      if(param){
+        this.giftTrans.EntityName = "FD_GiftTrans";
+        this.giftTrans.EntityPer = "FD_GiftTrans";
+        this.giftTrans.FunctionID = param["funcID"]
+      }
+    })
   }
+
   
+  lstPattern:any[] = [];
+  getDataPattern(cardType:string){
+    if(!cardType) return;
+    this.api.execSv("FD","ERM.Business.FD","PatternsBusiness","GetPatternsAsync",[cardType])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.lstPattern = res;
+        this.dt.detectChanges();
+      }
+    });
+  }
   innitForm(){
     this.form = new FormGroup({
       userID: new FormControl(""),
-      userName: new FormControl(""),
       transType:new FormControl("3"),
       giftID: new FormControl(""),
       quantity: new FormControl(0),
       amount: new FormControl(0),
-      status: new FormControl(""),
+      status: new FormControl("1"),
       siutuation:new FormControl(""),
-      isSharePortal: new FormControl(true)
     });
   }
 
@@ -54,27 +82,38 @@ export class PopupAddGiftComponent implements OnInit {
 
 
   valueChange(event:any){
-    if(!event || !event.data) return;
+    if(!event) return;
     let data = event.data;
     let field = event.field;
     switch(field){
       case 'userID':
-        this.getReciverWallet(data);
+        this.giftTrans.UserID = data;
         break;
-      case 'transType':
-        this.form.patchValue({transType: data});
+      case 'transType3':
+        this.giftTrans.TransType = "3";
         break;
-      case 'giftID':
-        this.getGiftInfor(data);
+      case 'transType4':
+        this.giftTrans.TransType = "4";
+        break;
+      case 'itemID':
+        this.giftTrans.ItemID = data;
         break;
       case 'quantity':
-        this.checkGiftAndWallet(this.myWallet,this.gift,data);
+        if(!this.giftTrans || !this.giftTrans.ItemID)
+        {
+          this.notifySV.notify("Vui lòng chọn quà tặng");
+          return;
+        }
+        this.giftTrans.Quantity = data;
         break;
       case 'status':
-        this.form.patchValue({status: data});
+        if(data){
+          this.giftTrans.Status = "3";
+        }
+        this.giftTrans.Status = "1";
         break;
       case 'siutuation':
-        this.form.patchValue({siutuation: data});
+        this.giftTrans.Situation = data;
         break;
       case 'isSharePortal':
         this.isSharePortal = data;
@@ -85,33 +124,24 @@ export class PopupAddGiftComponent implements OnInit {
     this.dt.detectChanges();
   }
   save(){
-    if(!this.form.controls['userID'].value){
-      this.notifySV.notify("Vui lòng chọn người nhận");
-      return;
-    }
-    if(!this.form.controls['giftID'].value){
-      this.notifySV.notify("Vui lòng chọn quà tặng");
-      return;
-    }
-    if(!this.reciverWallet){
-      this.notifySV.notify("Người nhận chưa tích hợp ví");
-      return;
-    }
-    if(!this.form.controls['quantity'].value){
-      this.notifySV.notify("Vui lòng chọn số lượng quà tặng");
-      return;
-    }
-    if(!this.form.controls['siutuation'].value){
-      this.notifySV.notify("Nội dung không được bỏ trống");
-      return;
-    }
-    if(!this.gift)
-    var giftTrans = this.form.value;
-    giftTrans.gift = this.gift;
-    giftTrans.reciverWallet = this.reciverWallet;
-    console.log(giftTrans);
+    this.api.execSv("FD","ERM.Business.FD","GiftTransBusiness","AddGiftTransAsync",[this.giftTrans,this.isSharePortal])
+    .subscribe((res:any) =>{
+      if(res){
+        let status = res[0];
+        if(status){
+          this.notifySV.notify("Thêm thành công!");
+        }
+        else{
+          let message = res[1];
+          this.notifySV.notify(message);
+        }
+      }
+      else{
+        this.notifySV.notify("Thêm không thành công!")
+      }
+    });
   }
-  
+
   getMyWalletInfor(){
     this.api.execSv("FD","ERM.Business.FD","WalletsBusiness","GetWalletsAsync",this.user.userID)
     .subscribe((res:any) => {
@@ -127,7 +157,7 @@ export class PopupAddGiftComponent implements OnInit {
     .subscribe((res:any) => {
       if(res){
         this.reciverWallet = res;
-        this.form.patchValue({userID: pUserID});
+        this.form.patchValue({reciverID: pUserID});
       }
       else
       {
@@ -136,43 +166,29 @@ export class PopupAddGiftComponent implements OnInit {
       this.dt.detectChanges();
     });
   }
-  checkCoinWallet(wallet:any,gift:any,quantity:number):boolean{
-    if(!wallet || !gift || !quantity) return false;
-    let amount = gift.price * quantity
-    if(wallet.coins < amount){
-        return false;
-    }
-    return true;
-  }
-  getGiftInfor(giftID:string){
-    this.api.execSv("FD","ERM.Business.FD","GiftsBusiness","GetGiftAsync",giftID)
+  getGiftInfor(giftID:string)
+  {
+    this.api.execSv("FD","ERM.Business.FD","GiftsBusiness","GetGiftAsync",[giftID])
     .subscribe((res:any) => {
       if(res){
         this.gift = res;
+        this.maxQuantity = Math.floor(this.myWallet.coins / this.gift.price); 
         this.form.patchValue({giftID: this.gift.giftID});
         this.dt.detectChanges();
       }
-    });
+    }); 
   }
-  checkGiftAvailableQty(gift:any,quantity:number):boolean{
-    if(!gift) return false;
-    if(quantity > gift.availableQty){
-      return false;
+
+
+  patternIDSeleted:string = null;
+  selectedPattern(pattern:any){
+    if(!pattern) return;
+    if(this.patternIDSeleted = pattern.patternID){
+      this.patternIDSeleted = "";
     }
-    return true;
-  }
-  checkGiftAndWallet(wallet:any,gift:any,quantity:number){
-    if(!wallet || !gift || !quantity) return;
-    let isCheckWallet = this.checkCoinWallet(wallet,gift,quantity);
-    if(isCheckWallet){
-      this.notifySV.notify("Vượt quá số dư ví");
-      return;
+    else{
+      this.patternIDSeleted = pattern.patternID;
     }
-    let isCheckGift = this.checkGiftAvailableQty(gift,quantity);
-    if(isCheckGift){
-      this.notifySV.notify("Vượt quá số lượng tồn kho");
-      return;
-    }
-    this.form.patchValue({quantity: quantity});
+    this.dt.detectChanges();
   }
 }
