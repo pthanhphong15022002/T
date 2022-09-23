@@ -327,12 +327,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     
               this.detectorRef.detectChanges();
             }
-            this.startTime = this.fGroupAddBookingRoom.value.startDate
-              .toString()
-              .slice(16, 21);
-            this.endTime = this.fGroupAddBookingRoom.value.endDate
-              .toString()
-              .slice(16, 21);
+            let tmpStartTime=new Date(this.fGroupAddBookingRoom.value.startDate);
+            let tmpEndTime=new Date(this.fGroupAddBookingRoom.value.endDate);            
+            this.startTime = ('0'+tmpStartTime.getHours()).toString().slice(-2)+':'+('0'+tmpStartTime.getMinutes()).toString().slice(-2);
+            this.endTime = ('0'+tmpEndTime.getHours()).toString().slice(-2)+':'+('0'+tmpEndTime.getMinutes()).toString().slice(-2);
+
+            
           }
         }
         console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingRoom);
@@ -476,8 +476,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmpAttendeesList.push(item);
     });
     this.tmpAttendeesList.push(this.curUser);
-    console.log('data', this.fGroupAddBookingRoom.value);
-    console.log('attend', this.attendeesList);
 
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))

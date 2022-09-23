@@ -101,11 +101,15 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region CRUD
   saveData(id) {
-    if (this.master.iterationType=='1' && (this.master.projectID == null || this.master.projectID.trim() == ''))
+    if (
+      this.master.iterationType == '1' &&
+      (this.master.projectID == null || this.master.projectID.trim() == '')
+    )
       return this.notiService.notify('Tên dự án không được để trống !');
     if (
-      this.master.iterationName == null ||
-      this.master.iterationName.trim() == '' 
+      this.master.iterationType == '0' &&
+      (this.master.iterationName == null ||
+        this.master.iterationName.trim() == '')
     )
       return this.notiService.notifyCode('TM035');
     if (this.master.projectID && Array.isArray(this.master.projectID))
@@ -123,24 +127,24 @@ export class PopupAddSprintsComponent implements OnInit {
     // this.imageAvatar
     //   .updateFileDirectReload(this.master.iterationID)
     //   .subscribe((up) => {
-        this.dialog.dataService
-          .save(
-            (option: any) => this.beforeSave(option, isAdd),
-            !isAdd ? null : (this.master.iterationType=="1"? 0:1)
-          )
-          .subscribe((res) => {
-            if (res) {
-              // if (isAdd && res.iterationType == '0') {
-              //   var dataNew = this.dialog.dataService.data[0];
-              //   this.dialog.dataService.data[0] =
-              //     this.dialog.dataService.data[1];
-              //   this.dialog.dataService.data[1] = dataNew;
-              // }
-              this.attachment.clearData();
-              this.dialog.close();
-            }
-          });
-      // });
+    this.dialog.dataService
+      .save(
+        (option: any) => this.beforeSave(option, isAdd),
+        !isAdd ? null : this.master.iterationType == '1' ? 0 : 1
+      )
+      .subscribe((res) => {
+        if (res) {
+          // if (isAdd && res.iterationType == '0') {
+          //   var dataNew = this.dialog.dataService.data[0];
+          //   this.dialog.dataService.data[0] =
+          //     this.dialog.dataService.data[1];
+          //   this.dialog.dataService.data[1] = dataNew;
+          // }
+          this.attachment.clearData();
+          this.dialog.close();
+        }
+      });
+    // });
   }
 
   //#endregion
@@ -256,20 +260,36 @@ export class PopupAddSprintsComponent implements OnInit {
     if (e?.field) this.master[e.field] = e?.data;
   }
   changeProject(e) {
-
     if (e.field == 'projectID' && e?.data && e?.data.trim() != '') {
       this.master[e.field] = e?.data;
-      this.api
-        .execSv<any>(
-          'TM',
-          'TM',
-          'ProjectsBusiness',
-          'GetProjectByIDAsync',
-          e?.data
-        )
-        .subscribe((res) => {
-          if (res) this.master.iterationName = res.projectName;
-        });
+      var service = e.components?.service;
+      //cai này dùng cho PM
+      if (service == 'PM') {
+        this.api
+          .execSv<any>(
+            'PM',
+            'PM',
+            'ProjectsBusiness',
+            'GetPMProjectByIDAsync',
+            e?.data
+          )
+          .subscribe((res) => {
+            if (res) this.master.iterationName = res?.projectName;
+          });
+      } else if (service == 'TM') {
+        //cai này dùng cho TM
+        this.api
+          .execSv<any>(
+            'TM',
+            'TM',
+            'ProjectsBusiness',
+            'GetProjectByIDAsync',
+            e?.data
+          )
+          .subscribe((res) => {
+            if (res) this.master.iterationName = res?.projectName;
+          });
+      }
     }
   }
 

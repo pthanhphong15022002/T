@@ -26,3 +26,153 @@
 #ex4 {
   position: relative;
 }
+
+.reservedQty_card {
+  color: #f4c703 !important;
+}
+
+.availableQty_card {
+  color: #0938fc !important;
+}
+
+.reservedQty_grid {
+  color: #fc1302 !important;
+}
+
+.availableQty_grid {
+  color: #0938fc !important;
+}
+
+.cart {
+  padding: 10px;
+  color: #fc1302 !important;
+
+  &:hover {
+    background-color: rgba($color: #bbf4dc, $alpha: 0.5) !important;
+    border-radius: 50% !important;
+  }
+}
+
+::ng-deep {
+  .codx-card-custom {
+    .codx-stepper {
+      .stepper-item::before {
+        content: "";
+        border-top: 0.5px dashed #d00;
+        height: 1px;
+        position: absolute;
+        top: 15px;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        // display: block;
+      }
+
+      .stepper-item:first-child:before {
+        left: 50%;
+        border: 1px solid black;
+      }
+      .stepper-item:last-child:before {
+        right: 50%;
+        border: 1px solid rgb(18, 64, 190);
+      }
+      .stepper-item:last-child:before:hover {
+        content: none !important;
+      }
+      .stepper-icon {
+        position: relative;
+        z-index: 10;
+      }
+      .stepper-item {
+        padding-left: 20px;
+        padding-right: 20px;
+        position: relative;
+        .stepper-default {
+          display: block;
+        }
+
+        .stepper-active {
+          display: none;
+        }
+
+        .stepper-approve {
+          display: none;
+        }
+
+        .stepper-approve-disabled {
+          display: none;
+        }
+      }
+
+      .stepper-item.active {
+        .stepper-default {
+          display: none;
+        }
+
+        .stepper-active {
+          display: block;
+        }
+
+        .stepper-approve {
+          display: none;
+        }
+
+        .stepper-approve-disabled {
+          display: none;
+        }
+      }
+
+      .stepper-item.approve-disabled {
+        .stepper-default {
+          display: none;
+        }
+
+        .stepper-active {
+          display: none;
+        }
+
+        .stepper-approve {
+          display: none;
+        }
+
+        .stepper-approve-disabled {
+          display: block;
+        }
+      }
+
+      .stepper-item.approve {
+        .stepper-default {
+          display: none;
+        }
+
+        .stepper-active {
+          display: none;
+        }
+
+        .stepper-approve {
+          display: block;
+        }
+
+        .stepper-approve-disabled {
+          display: none;
+        }
+      }
+
+      .stepper-item .stepper-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease, background-color 0.2s ease;
+        margin: 0;
+        border-radius: 0;
+        width: auto;
+        height: auto;
+        background-color: white;
+      }
+
+      .stepper-line {
+        border: 0.5px dashed #ccc;
+      }
+    }
+  }
+}

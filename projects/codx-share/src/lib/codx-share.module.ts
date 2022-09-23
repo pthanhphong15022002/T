@@ -86,7 +86,6 @@ import { PopupAddComponent } from './components/codx-tasks/popup-add/popup-add.c
 import { CodxTasksComponent } from './components/codx-tasks/codx-tasks.component';
 import { TreeViewComponent } from './components/codx-tasks/tree-view/tree-view.component';
 import { CodxCommentHistoryComponent } from './components/codx-comment-history/codx-comment-history.component';
-import { PdfViewerAllModule } from '@syncfusion/ej2-angular-pdfviewer';
 import { CodxTreeHistoryComponent } from './components/codx-tree-history/codx-tree-history.component';
 import { CodxViewAssignComponent } from './components/codx-view-assign/codx-view-assign.component';
 import { FileComponent } from './components/codx-note/file/file.component';
@@ -179,7 +178,6 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     BoldReportsModule,
     BoldReportDesignerModule,
     BoldReportViewerModule,
-    PdfViewerAllModule,
     ReactiveFormsModule
   ],
   exports: [T_Component, T_Pipe],

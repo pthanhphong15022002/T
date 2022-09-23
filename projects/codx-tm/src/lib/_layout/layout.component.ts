@@ -19,9 +19,10 @@ import { SettingNotifyDrawerComponent } from 'projects/codx-share/src/lib/layout
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'TM';
   dialog!: DialogRef;
-  funcID:string = "";
+  funcID: string = "";
+  // override toolbarFixed: boolean = false;
   constructor(inject: Injector,
-    private route:ActivatedRoute,
+    private route: ActivatedRoute,
     private callfc: CallFuncService) {
     super(inject);
   }
@@ -46,6 +47,6 @@ export class LayoutComponent extends LayoutBaseComponent {
   openFormNotifyDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
-    this.callfc.openSide(NotifyDrawerComponent,null, option);
+    this.callfc.openSide(NotifyDrawerComponent, null, option);
   }
 }

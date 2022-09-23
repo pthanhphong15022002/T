@@ -18,35 +18,39 @@ import {
   ViewType,
 } from 'codx-core';
 import _ from 'lodash';
-import { BallotService } from './ballot.service';
-import { EditBallotComponent } from './edit-ballot/edit-ballot.component';
+import { EditPatternComponent } from './edit-pattern/edit-pattern.component';
+import { PatternService } from './pattern.service';
 
 @Component({
-  selector: 'app-ballot',
-  templateUrl: './ballot.component.html',
-  styleUrls: ['./ballot.component.scss'],
+  selector: 'app-pattern',
+  templateUrl: './pattern.component.html',
+  styleUrls: ['./pattern.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BallotComponent extends UIComponent implements OnInit {
-  @Input() funcID: string;
+export class PatternComponent extends UIComponent implements OnInit {
   @Input() type: string;
 
   reload = false;
-  lstPattent = null;
+  lstPattern = null;
   dialog: any;
   views: Array<ViewModel> = [];
+  functionList: any;
+  funcID = 'FDS026';
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
   constructor(
     private changedr: ChangeDetectorRef,
-    private ptsv: BallotService,
+    private ptsv: PatternService,
     private notificationsService: NotificationsService,
     private confirmationDialogService: NotificationsService,
     private injector: Injector,
     private callfunc: CallFuncService
   ) {
     super(injector);
+    this.cache.functionList(this.funcID).subscribe(res => {
+      if(res) this.functionList = res;
+    })
   }
 
   onInit(): void {
@@ -72,14 +76,15 @@ export class BallotComponent extends UIComponent implements OnInit {
   LoadData() {
     //this.ngxLoader.start();
     this.api
-      .call('ERM.Business.FED', 'PattentsBusiness', 'GetCardTypeAsync', [
+      .call('ERM.Business.FD', 'PatternsBusiness', 'GetCardTypeAsync', [
         this.type,
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           var data = res.msgBodyData[0] as any[];
-          this.lstPattent = data;
-          this.lstPattent.push({});
+          this.lstPattern = data;
+          this.lstPattern.push({});
+          console.log("check lstPattern", this.lstPattern)
           this.changedr.detectChanges();
         }
       });
@@ -89,24 +94,24 @@ export class BallotComponent extends UIComponent implements OnInit {
     this.reload = true;
     if (data.isDefault) {
       var arr = [];
-      this.lstPattent.filter(function (element, index) {
+      this.lstPattern.filter(function (element, index) {
         if (element['isDefault'] === true) element.isDefault = false;
         arr.push(element);
         return arr;
       });
-      this.lstPattent = [...arr];
+      this.lstPattern = [...arr];
     }
     if (data.cardType != this.type) {
-      _.remove(this.lstPattent, { recID: data.recID });
+      _.remove(this.lstPattern, { recID: data.recID });
     } else {
-      if (this.ptsv.indexEdit > -1) this.lstPattent[this.ptsv.indexEdit] = data;
+      if (this.ptsv.indexEdit > -1) this.lstPattern[this.ptsv.indexEdit] = data;
       else {
-        this.lstPattent[this.lstPattent.length - 1] = data;
-        this.lstPattent.push({});
+        this.lstPattern[this.lstPattern.length - 1] = data;
+        this.lstPattern.push({});
       }
     }
 
-    //this.lstPattent.push({});
+    //this.lstPattern.push({});
     this.changedr.detectChanges();
   }
 
@@ -139,7 +144,7 @@ export class BallotComponent extends UIComponent implements OnInit {
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = 'Auto';
-    this.dialog = this.callfunc.openSide(EditBallotComponent, obj, option);
+    this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
     // this.dialog.closed.subscribe((e) => {
     //   if (e?.event) {
     //     e.event.modifiedOn = new Date();
@@ -148,15 +153,16 @@ export class BallotComponent extends UIComponent implements OnInit {
     // });
   }
 
-  openFormEdit(recid = '', i = -1, elm = null) {
+  openFormEdit(item = null, i = null, elm = null) {
     var obj = {
-      formType: 'add',
+      formType: 'edit',
+      dataUpdate: item,
     };
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = 'Auto';
-    this.dialog = this.callfunc.openSide(EditBallotComponent, obj, option);
+    this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
     // this.dialog.closed.subscribe((e) => {
     //   if (e?.event) {
     //     e.event.modifiedOn = new Date();

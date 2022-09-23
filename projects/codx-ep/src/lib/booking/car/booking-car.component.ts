@@ -24,6 +24,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
 
   service = 'EP';
   assemblyName = 'EP';
@@ -47,7 +49,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   fields: any;
   resourceField: any;
   funcID: string;
-
+  itemDetail;
   columnsGrid: any;
   constructor(
     private injector: Injector,    
@@ -80,10 +82,10 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '2';
 
-    this.model.page = 1;
-    this.model.pageSize = 200;
-    this.model.predicate = 'ResourceType=@0';
-    this.model.dataValue = '2';
+    // this.model.page = 1;
+    // this.model.pageSize = 200;
+    // this.model.predicate = 'ResourceType=@0';
+    // this.model.dataValue = '2';
 
     this.moreFunc = [
       {
@@ -143,6 +145,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
          template8: this.contentTmp,//content
          statusColorRef: 'vl003',
         },
+      },{
+        id: '2',
+        type: ViewType.listdetail,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.template,
+          panelRightRef: this.panelRight,
+        },
       },
       {
         sameData: true,
@@ -169,6 +180,25 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         this.delete();
         break;
     }
+  }
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
+
+  getDetailBooking(id: any) {
+    this.api
+      .exec<any>(
+        'EP',
+        'BookingsBusiness',
+        'GetBookingByIDAsync',
+        this.itemDetail?.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.itemDetail = res;
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   addNew(evt?: any) {

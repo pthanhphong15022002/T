@@ -84,9 +84,7 @@ export class MeetingDetailComponent extends UIComponent {
     this.cache.functionList(this.functionParent).subscribe((f) => {
       if (f) this.layout.setUrl(f.url);
     });
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f) this.layout.setLogo(f.smallIcon); // xin thương icon TMT05011
-    });
+    this.layout.setLogo(null) ;//null tạo icon back
     this.urlDetail = 'tm/sprintdetails/TMT03011';
     this.loadData();
   }

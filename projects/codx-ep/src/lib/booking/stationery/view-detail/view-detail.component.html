@@ -13,7 +13,7 @@
     <div class="d-flex justify-content-between">
       <h3>{{ itemDetail?.title }}</h3>
       <button class="btn-light btn" [disabled]="true">
-        {{ itemDetail.status | vll: "VL003":"text" | async }}
+        {{ itemDetail?.status | vll: "VL003":"text" | async }}
       </button>
     </div>
     <div class="d-flex flex-column flex-grow-1 mb-2">
@@ -125,29 +125,50 @@
               ><span>Văn phòng phẩm</span>
             </div>
           </a>
-
-          <ng-template ngbNavContent>
-            <ng-container *ngIf="data; else defaulEmpt">
-              <!-- <codx-temp-full
-                cardCss="card-template border-bottom px-2 pt-4 pb-2"
-                [typeMF]="'hover'"
-                [title]="data?.title"
-                [subTitle]="data?.note"
-                [icoCss]="
-                  'w-40 h-40 fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
-                "
-                [imageId]="data?.createdBy"
-                imageObjType="AD_Users"
-                [dataItem]="bookingItems"
-                [formModel]="view.formModel"
-                typeMF="hover"
-              >
-              </codx-temp-full> -->
-            </ng-container>
-          </ng-template>
         </li>
       </ul>
-      <div [ngbNavOutlet]="nav" class="pt-5"></div>
+      <div class="w-100 h-100">
+        <div *ngIf="itemDetail?.bookingItems?.length > 0; else defaulEmpt">
+          <div *ngFor="let item of itemDetail?.bookingItems">
+            <div
+              class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-100"
+            >
+              <div class="d-flex flex-row">
+                <div class="me-2">
+                  <codx-img
+                    [objectId]="item.recID"
+                    imageType="square"
+                    width="35"
+                    objectType="EP_Stationery"
+                  ></codx-img>
+                </div>
+                <div class="ms-2">
+                  <div class="">
+                    <span href="#" class="fw-bold">{{ item.itemName }}</span>
+                  </div>
+                  <div class="d-flex flex-row flex-grow-1">
+                    <codx-label
+                      default="Đơn vị tính:"
+                      name="lblQuantity"
+                      class="text-gray-600"
+                    ></codx-label>
+                    <span class="d-block ms-2 fw-bold">{{ item.umid }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center me-3">
+                <codx-label
+                  default="Số lượng:"
+                  name="lblQuantity"
+                  class="text-gray-600"
+                ></codx-label>
+                <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </ng-template>
 
@@ -157,7 +178,7 @@
 </codx-detail-tmp>
 
 <ng-template #defaulEmpt>
-  <div class="container">
+  <div class="w-100 h-100 container">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
         <img
