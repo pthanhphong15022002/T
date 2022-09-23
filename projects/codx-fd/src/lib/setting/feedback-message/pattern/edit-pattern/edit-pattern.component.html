@@ -1,5 +1,4 @@
-<codx-form #form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"
-    [formModel]="formModel">
+<codx-form #form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel">
     <ng-template #body>
         <div class="flex-grow-1">
             <div class="d-flex align-items-start ph-card">
@@ -10,10 +9,9 @@
                                 <div class="w-150 position-relative">
                                     <ng-container *ngIf="dt.referType == REFER_TYPE.IMAGE">
                                         <ng-container *ngIf="dt.recID;else imageSrc">
-                                            <codx-img #uploadImage class="img-pat" [objectId]="pattern?.patternID"
+                                            <codx-img #uploadImage class="img-pat" [objectId]="pattern?.recID"
                                                 [funcId]="formModel?.functionID" [objectType]="formModel?.entityName"
-                                                [width]="164" [hidden]="pattern?.backgroundColor" cssClass="pic"
-                                                imageType="square">
+                                                [width]="164" cssClass="pic" imageType="square" [imgOn]="pattern?.modifiedOn">
                                             </codx-img>
                                         </ng-container>
                                         <ng-template #imageSrc>
@@ -41,18 +39,18 @@
                                 <div class="symbol symbol-50 symbol-circle mr-5 mb-4"
                                     *ngFor="let item of vll; index as i">
                                     <div class="pattern-item">
-                                        <span class="symbol-label pointer" #colordf
+                                        <span class="symbol-label cursor-pointer" #colordf
                                             (click)="colorClick(colordf, item, i)" [attr.data-color]="item?.text"
                                             [style.background-color]="item?.text"></span>
                                     </div>
                                 </div>
                                 <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4" #group3>
                                     <codx-input datatype="colorpicker" class="form-control symbol-label w-50"
-                                        field="backgroundColor" (valueChange)="valueChangeColor($event, group3)"
-                                        [value]="pattern?.backgroundColor">
+                                        field="backgroundColor" (valueChange)="valueChangeColor($event)"
+                                        [crrValue]="pattern?.backgroundColor">
                                     </codx-input>
                                 </div>
-                                <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4">
+                                <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4 cursor-pointer">
                                     <label class="symbol-label pointer mb-0" data-action="change" data-toggle="tooltip"
                                         title="" data-original-title="Change avatar">
                                         <span class="far fa-image" style="font-size: 18px;" (click)="uploadFile()">
@@ -70,14 +68,13 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="form-group">
                         <codx-label name="lblHeaderColor" [formModel]="" default="Màu header"></codx-label>
                         <div class="input-group">
                             <codx-input datatype="colorpicker" class="form-control text-white color-large w-fit"
-                                field="headerColor" (valueChange)="valueChangeColor($event)"
-                                [value]="pattern?.headerColor">
+                                field="headerColor" (valueChange)="valueChangeColor($event)" [showText]="true"
+                                [modeSwitcher]="true" [crrValue]="pattern?.headerColor">
                             </codx-input>
                         </div>
                     </div>
@@ -85,7 +82,8 @@
                         <codx-label name="lblContentColor" [formModel]="" default="Màu content"></codx-label>
                         <div class="input-group">
                             <codx-input datatype="colorpicker" class="form-control text-white color-large w-fit"
-                                (valueChange)="valueChangeColor($event)" field="textColor" [value]="pattern?.textColor">
+                                [showText]="true" [modeSwitcher]="true" (valueChange)="valueChangeColor($event)"
+                                field="textColor" [crrValue]="pattern?.textColor">
                             </codx-input>
                         </div>
                     </div>
@@ -93,21 +91,21 @@
             </div>
             <div class="form-group" #name>
                 <codx-label name="lblDescription" [formModel]="" default="Mô tả:"></codx-label>
-                <codx-input type="text" placeholder="Sunset Flower" [value]="pattern?.patternName" field="patternName"
-                    [ele]="name" (valueChange)="valueChange($event, null)">
+                <codx-input type="text" placeholder="Sunset Flower" [crrValue]="pattern?.patternName" field="patternName"
+                    [ele]="name" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
         </div>
         <div class="checkbox-list mt-3">
             <div #isDefault>
                 <codx-input type="checkbox" class="test-check" ngDefaultControl field="isDefault"
-                    (valueChange)="valueChange($event, null)" [checked]="pattern?.isDefault"
-                    [value]="pattern?.isDefault" label="Mặc định chọn" labelPosition="After">
+                    (valueChange)="valueChange($event)" [checked]="pattern?.isDefault"
+                    [crrValue]="pattern?.isDefault" label="Mặc định chọn" labelPosition="After">
                 </codx-input>
             </div>
             <div #stop class="mt-2">
                 <codx-input type="checkbox" [disabled]="checkDisable(pattern)" class="test-check" ngDefaultControl
-                    field="stop" (valueChange)="valueChange($event, null)" [value]="pattern?.stop"
+                    field="stop" (valueChange)="valueChange($event)" [crrValue]="pattern?.stop"
                     [checked]="pattern?.stop" label="Ngưng sử dụng" labelPosition="After">
                 </codx-input>
             </div>
