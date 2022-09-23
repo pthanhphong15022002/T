@@ -10,6 +10,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { OrgorganizationComponent } from 'projects/codx-hr/src/lib/organization/organization.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ApproveDetailComponent } from './approve/approve-detail/approve-detail.component';
 import { ApproveComponent } from './approve/approve.component';
@@ -56,6 +58,16 @@ export const routes: Routes = [
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'orgchartportal/:funcID',
+        component: OrgorganizationComponent,
+      },
+    ],
   },
   {
     path: 'news',

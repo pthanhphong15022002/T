@@ -1,17 +1,8 @@
 <codx-layout-add
-  #form
-  [title]="title"
-  [tabInfo]="tabInfo"
-  [formModel]="dialogRef.formModel"
-  [subHeader]=""
-  [subHeaderText]="subHeaderText"
-  [footer]="footer"
-  [dialog]="dialogRef"
-  [openMore]="!isAdd"
-  (buttonClick)="buttonClick($event)"
-  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabMoreInfo]"
-  (setTitle)="setTitle($event)"
-  [data]="data"
+#form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]="" 
+[footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd"
+[tabContent]="[tabGeneralInfo, tabPeopleInfo,tabMoreInfo]" (setTitle)="setTitle($event)"
+[data]="data" 
 >
   <ng-template #tabGeneralInfo>
     <div class="form-group">
@@ -19,20 +10,15 @@
         <codx-label fiedName="ResourceID" [formModel]="form.formModel">
         </codx-label>
         <span class="label-status text-primary">{{
-          fGroupAddBookingCar.value.status
-            | vll: CbxName["Status"]:"text"
+          data?.status
+            | vll: "VL003":"text"
             | async
         }}</span>
       </div>
       <codx-input
-        type="combobox"
-        name="cbxCar"
-        refValue="EP_Cars"
         ControlName="resourceID"
         [formModel]="form.formModel"
-        [multiple]="false"
         [Group]="form.formGroup"
-        [crrValue]="fGroupAddBookingCar.value.resourceID"
         (valueChange)="valueCbxCarChange($event)"
       >
       </codx-input>
@@ -68,7 +54,7 @@
             </span>
           </div>
         </div>
-        <span class="text-end" *ngIf="tmplstDevice.length > 0">
+        <span class="text-end" *ngIf="tmplstDevice?.length > 0">
           <button
             type="button"
             class="btn btn-clean btn-sm btn-icon btn-active-color-primary btn-active-color-primary-md"
@@ -93,7 +79,7 @@
           type="switch"
           field="repeat"
           [disabled]="false"
-          [checked]="fGroupAddBookingCar.value.repeat"
+          [checked]="data?.repeat"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -102,7 +88,7 @@
         <codx-label
           fiedName="Repeat"
           default="Đã điều tài xế"
-          [formModel]="dialogRef.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </div>
       <div class="col-1">
@@ -112,7 +98,7 @@
           type="switch"
           field="repeat"
           [disabled]="false"
-          [checked]="fGroupAddBookingCar.value.repeat"
+          [checked]="data?.repeat"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -121,41 +107,35 @@
         <codx-label
           fiedName="Repeat"
           default="Có sử dụng thẻ"
-          [formModel]="dialogRef.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </div>
     </div>
 
     <div class="row">
       <div class="col-6 form-group">
-        <codx-label fiedName="StartDate" [formModel]="dialogRef.formModel">
+        <codx-label fiedName="StartDate" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          type="datetime"
-          format="f"
-          class="test-datetime"
-          field="startDate"
-          [crrValue]="fGroupAddBookingCar.value.startDate"
-          (valueChange)="changeTime($event)"
+          ControlName="startDate"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
       <div class="col-6 form-group">
-        <codx-label fiedName="EndDate" [formModel]="dialogRef.formModel">
+        <codx-label fiedName="EndDate" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          type="datetime"
-          format="f"
-          class="test-datetime"
-          field="endDate"
-          [crrValue]="fGroupAddBookingCar.value.endDate"
-          (valueChange)="changeTime($event)"
+          ControlName="startDate"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
     </div>
     <div class="form-group">
-      <codx-label fiedName="ReasonID" [formModel]="dialogRef.formModel">
+      <codx-label fiedName="ReasonID" [formModel]="form.formModel">
       </codx-label>
       <codx-input
         field="reasonID"
@@ -166,7 +146,7 @@
     </div>
 
     <div class="form-group">
-      <codx-label fiedName="Title" [formModel]="dialogRef.formModel">
+      <codx-label fiedName="Title" [formModel]="form.formModel">
       </codx-label>
       <codx-input
         ControlName="title"
@@ -176,7 +156,7 @@
     </div>
 
     <div class="form-group">
-      <codx-label fiedName="AgencyName" [formModel]="dialogRef.formModel">
+      <codx-label fiedName="AgencyName" [formModel]="form.formModel">
       </codx-label>
       <codx-input
         ControlName="agencyName"
@@ -187,7 +167,7 @@
     </div>
 
     <div class="form-group">
-      <codx-label fiedName="Address" [formModel]="dialogRef.formModel">
+      <codx-label fiedName="Address" [formModel]="form.formModel">
       </codx-label>
       <codx-input
         type="text"
@@ -200,7 +180,7 @@
 
     <div class="row">
       <div class="col-7 form-group">
-        <codx-label fiedName="Requester" [formModel]="dialogRef.formModel">
+        <codx-label fiedName="Requester" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="requester"
@@ -209,7 +189,7 @@
         ></codx-input>
       </div>
       <div class="col-5 form-group">
-        <codx-label fiedName="Phone" [formModel]="dialogRef.formModel">
+        <codx-label fiedName="Phone" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           type="number"
@@ -265,7 +245,7 @@
             ></span>
           </div>
         </div>
-        <div class="" *ngIf="lstPeople.length >= 1">
+        <div class="" *ngIf="lstPeople?.length >= 1">
           <div class="symbol symbol-30px symbol-circle">
             <codx-img
               [objectId]="lstPeople[0].userId"
@@ -278,7 +258,7 @@
           </div>
         </div>
 
-        <div class="symbol-more-check" *ngIf="lstPeople.length >= 2">
+        <div class="symbol-more-check" *ngIf="lstPeople?.length >= 2">
           <span
             href="#"
             class="symbol symbol-30px symbol-circle"
@@ -371,31 +351,33 @@
       </div>
     </div>
 
-    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">
-      <div class="symbol symbol-30px symbol-circle me-4">
-        <codx-img
-          [objectId]="item.userId"
-          [width]="30"
-          objectType="AD_Users"
-        ></codx-img>
-        <span
-          class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8"
-          >P</span
-        >
-      </div>
-
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fw-bold">
-          {{ item.userName }}
+    <div *ngIf="lstPeople!=null">      
+      <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">
+        <div class="symbol symbol-30px symbol-circle me-4">
+          <codx-img
+            [objectId]="item.userId"
+            [width]="30"
+            objectType="AD_Users"
+          ></codx-img>
+          <span
+            class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8"
+            >P</span
+          >
         </div>
-        <span class="text-muted fw-bold">Thành viên</span>
-      </div>
 
-      <div class="d-flex flex-column justify-content-end align-items-end">
-        <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >Không bắt buộc</span
-        >
-        <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="text-dark fw-bold fw-bold">
+            {{ item.userName }}
+          </div>
+          <span class="text-muted fw-bold">Thành viên</span>
+        </div>
+
+        <div class="d-flex flex-column justify-content-end align-items-end">
+          <span class="badge badge-light-success fs-7 fw-bold mb-1"
+            >Không bắt buộc</span
+          >
+          <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
+        </div>
       </div>
     </div>
   </ng-template>
