@@ -5,7 +5,7 @@ import {
   Injector,
   AfterViewInit,
 } from '@angular/core';
-import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel } from 'codx-core';
+import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel, CallFuncService } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
@@ -54,6 +54,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   constructor(
     private injector: Injector,    
     private codxEpService: CodxEpService,
+    private callFuncService:CallFuncService,
     ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -207,8 +208,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfc.openSide(
+      option.FormModel = this.formModel;
+      this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
         [this.dataSelected, true],
         option
@@ -226,8 +227,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           let option = new SidebarModel();
           option.Width = '800px';
           option.DataService = this.viewBase?.dataService;
-          option.FormModel = this.viewBase?.formModel;
-          this.dialog = this.callfc.openSide(
+          option.FormModel = this.formModel;
+          this.dialog = this.callFuncService.openSide(
             PopupAddBookingCarComponent,
             [this.viewBase.dataService.dataSelected, false],
             option

@@ -99,9 +99,10 @@
 
 <ng-template #report>
   <!-- <report-viewer [reportUUID]="reportUUID"[parameters]="param" [print]="print"></report-viewer> -->
-  <iframe style="height: 100%; width: 100%;" #iframe [src]="urlSafe">
+  <!-- <iframe style="height: 100%; width: 100%;" #iframe [src]="urlSafe">
 
-  </iframe>
+  </iframe> -->
   <!-- <codx-report [showToolbar]="true" [reportUUID]="reportUUID" [parameters]="param" [print]="print"></codx-report> -->
+  <report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print"></report-iframe>
   </ng-template>
 
