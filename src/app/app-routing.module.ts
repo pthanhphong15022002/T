@@ -117,14 +117,14 @@ export const routes: Routes = [
             (m) => m.ADModule
           ),
       },
-      // {
-      //   path: 'report',
-      //   canActivate: [AuthGuard],
-      //   loadChildren: () =>
-      //     import('projects/codx-report/src/lib/codx-report.module').then(
-      //       (m) => m.CodxReportModule
-      //     ),
-      // },
+      {
+        path: 'report',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-report/src/lib/codx-report.module').then(
+            (m) => m.CodxReportModule
+          ),
+      },
       {
         path: 'shared',
         canActivate: [AuthGuard],
