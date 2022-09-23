@@ -60,13 +60,18 @@ export const routes: Routes = [
     ]
   },
   {
-    path: '',
+    path: 'orgchartportal',
     component: LayoutNoAsideComponent,
     children: [
       {
-        path: 'orgchartportal/:funcID',
+        path: ':funcID',
         component: OrgorganizationComponent,
       },
+      {
+        path: '**',
+        redirectTo: 'orgchartportal/WPT04',
+        pathMatch: 'full'
+      }
     ],
   },
   {
