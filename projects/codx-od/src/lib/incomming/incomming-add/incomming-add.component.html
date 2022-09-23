@@ -22,14 +22,12 @@
         class="btn btn-sm btn-primary btn-pill"
         (click)="openFormUploadFile()"
       >
-        <i class="icon-cloud_upload icon-16 me-2"></i
-        ><codx-label [default]="'Chọn tập tin'"></codx-label>
+        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
       </span>
     </div>
     <ng-template #elseSelected>
       <span class="btn btn-sm btn-light btn-pill">
-        <i class="icon-cloud_upload icon-16 me-2"></i
-        ><codx-label [default]="'Chọn tập tin'"></codx-label>
+        <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
       </span>
     </ng-template>
   </div>
@@ -83,9 +81,26 @@
       </ng-container>
     </div>
     <div class="align-items-start" style="display: flex" [hidden]="showAgency">
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="agencyName"
+        style="width: 100%"
+        (valueChange)="changeValueAgency($event)"
+      >
+      </codx-input>
+      <!--  (valueChange)="changeValueAgency($event)" -->
+      <!--   <codx-input
+        placeholder="Nhập đơn vị"
+        style="width:100%"
+        type="text"
+        [crrValue]="this.dispatch?.agencyName"
+        (valueChange)="changeValueAgencyText($event)"
+      >
+      </codx-input> -->
       <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')"
-        ><codx-label [default]="'Thêm'"></codx-label
-      ></span>
+        >Add</span
+      >
     </div>
     <div class="align-items-start" style="display: flex" [hidden]="!showAgency">
       <codx-combobox
@@ -99,11 +114,53 @@
       >
       </codx-combobox>
       <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')"
-        ><codx-label [default]="'Thêm'"></codx-label
-      ></span>
+        >Add</span
+      >
     </div>
   </div>
 
+  <!-- <div class="mt-2">
+    <div class="d-flex align-items-center btn-group">
+      <div class="p-2"><span class="btn-link active" (click)="changeFormAgency(1)">Đơn vị</span></div>
+      <div class="p-2" *ngIf="showAgency"><span class="btn-link" (click)="changeFormAgency(9)">Phòng ban</span></div>
+    </div>
+    <div class="form-group mt-2 d-flex align-items-center">
+      <codx-input
+        refValue="Agencies"
+        type="combobox"
+        placeholder="Chọn đơn vị"
+        ngDefaultControl
+        style="width:100%"
+        >
+      </codx-input>
+        <span class="btn btn-primary ms-3" (click)="openFormAgency()">Add</span>
+        <ejs-combobox *ngIf="!showCbxAgency" id='games' #sample [dataSource]='lstAgency'  [fields]='fieldAgency' [placeholder]="'Chọn đơn vị'" (change)="changeValueAgency($event)" style="width:100%"></ejs-combobox>
+        <ejs-combobox *ngIf="showCbxAgency"  id='games' #sample [dataSource]='lstDept'  [fields]='fieldAgency' [placeholder]="'Chọn phòng ban'" (change)="changeValueDept($event)" style="width:100%"></ejs-combobox>
+        <span class="btn btn-primary ms-3" (click)="openFormAgency()">Add</span>
+      </div>
+
+  </div>
+  <div class="form-group mt-3">
+    <label>Đơn vị | Phòng ban</label>
+    <div class="d-flex flex-stack">
+      <div class="w-100">
+        <codx-combobox
+            service="OD"
+            assemblyName="ERM.Business.OD"
+            className="DispatchesBusiness"
+            method=""
+            name="combobox"
+            placeholder="Default combobox"
+            ngDefaultControl
+            refValue="<ComboboxName>"
+            field="<FieldValue>"
+            [pageSize]="5"
+            [allowFilter]=true>
+        </codx-combobox>
+      </div>
+      <span class="btn btn-primary ms-3">Add</span>
+    </div>
+  </div>  -->
   <div class="row mt-3">
     <div class="col-6">
       <codx-label
