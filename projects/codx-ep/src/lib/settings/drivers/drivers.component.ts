@@ -69,6 +69,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
         this.isAfterRender = true;
       }
     });
+    
   }
 
   onInit(): void {
@@ -191,12 +192,13 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   // }
 
   delete(data?: any) {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.viewBase.dataService.dataSelected = data;
     this.viewBase.dataService
       .delete([this.viewBase.dataService.dataSelected], true)
-      .subscribe((res: any) => {
-        if (res.data) {
-          this.codxEpService.deleteFile(res.data.recID, this.formModel.entityName, true);
+      .subscribe((res) => {
+        if (res) {
+          this.codxEpService.deleteFile(data.recID, this.formModel.entityName, true);
         }
       });
   }

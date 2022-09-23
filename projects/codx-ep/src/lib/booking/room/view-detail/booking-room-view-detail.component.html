@@ -128,11 +128,11 @@
         </div>
       </div>
     </div>
-
-    <ng-container *ngIf="files">
-      <codx-thumbnail [files]="files" displayThumb="simple" [hideDelete]="'0'">
-      </codx-thumbnail>
-    </ng-container>
+    <div class="mb-2">
+      <ng-container *ngIf="files.length > 0">
+        <codx-thumbnail [files]="files" displayThumb="simple"> </codx-thumbnail>
+      </ng-container>
+    </div>    
   </ng-template>
 
   <ng-template #body>

@@ -18,30 +18,43 @@
   [method]="method"
   (requestEnded)="closeDialog($event)"
 >
-</codx-views>
-  <ng-template #avatarCol let-data>
-    <div class="h-50px m-4">
-      <codx-img [funcId]="formModel?.funcID" [objectType]="formModel.entityName" [objectId]="data?.recID" imageType="square" width="50"></codx-img>
+</codx-views> 
+  <ng-template #resourceIDCol let-data>  
+    <div>    
+      {{data.resourceID }}   
+    </div>  
+  </ng-template>
+  <ng-template #locationCol let-data>  
+    <div>
+      <span class="row">{{data.location}}</span> 
+      <span class="row">{{data.companyName}}</span> 
+    </div>
+    
+  </ng-template>
+  <ng-template #equipmentsCol let-data>  
+    <div>    
+      equip   
+    </div>  
+  </ng-template>  
+  <ng-template #ownerCol let-data>
+    <div class="d-flex has-action-menu align-items-center">
+      <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
+      <div class="ms-2">
+        <div class="fw-bold">{{ data.ownerName }}</div>
+      </div>      
+      <codx-mfunc
+        [dataItem]="data"
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+      ></codx-mfunc>
     </div>
   </ng-template>
   
-  <ng-template #categoryCol let-data>  
-    <div class="has-action-menu">    
-      {{ data.category | vll: "VL005":"text" | async }}   
-    </div>  
-  </ng-template>
-  
-  
-  <ng-template #companyIDCol let-data>  
-    <div>    
-      {{data.companyName }}   
-    </div>  
-  </ng-template>
-  
-  <ng-template #ownerCol let-data>
-    <div class="d-flex has-action-menu">
+  <ng-template #preparatorCol let-data>
+    <div class="d-flex has-action-menu align-items-center">
       <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
-      <div class="ms-4">
+      <div class="ms-2">
         <div class="fw-bold">{{ data.ownerName }}</div>
       </div>      
       <codx-mfunc
