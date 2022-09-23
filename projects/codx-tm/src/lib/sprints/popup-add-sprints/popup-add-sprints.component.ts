@@ -263,33 +263,17 @@ export class PopupAddSprintsComponent implements OnInit {
     if (e.field == 'projectID' && e?.data && e?.data.trim() != '') {
       this.master[e.field] = e?.data;
       var service = e.components?.service;
-      //cai này dùng cho PM
-      if (service == 'PM') {
-        this.api
-          .execSv<any>(
-            'PM',
-            'PM',
-            'ProjectsBusiness',
-            'GetPMProjectByIDAsync',
-            e?.data
-          )
-          .subscribe((res) => {
-            if (res) this.master.iterationName = res?.projectName;
-          });
-      } else if (service == 'TM') {
-        //cai này dùng cho TM
-        this.api
-          .execSv<any>(
-            'TM',
-            'TM',
-            'ProjectsBusiness',
-            'GetProjectByIDAsync',
-            e?.data
-          )
-          .subscribe((res) => {
-            if (res) this.master.iterationName = res?.projectName;
-          });
-      }
+
+      this.api
+        .exec<any>(
+          service,
+          'ProjectsBusiness',
+          'GetProjectByIDAsync',
+          e?.data
+        )
+        .subscribe((res) => {
+          if (res) this.master.iterationName = res?.projectName;
+        });
     }
   }
 

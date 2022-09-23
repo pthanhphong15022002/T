@@ -5,7 +5,7 @@ import {
   Injector,
   AfterViewInit,
 } from '@angular/core';
-import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel } from 'codx-core';
+import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel, CallFuncService } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
@@ -54,6 +54,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   constructor(
     private injector: Injector,    
     private codxEpService: CodxEpService,
+    private callFuncService:CallFuncService,
     ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -123,8 +124,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
-    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
-    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
         sameData: false,
@@ -203,14 +202,13 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   addNew(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfc.openSide(
+      option.FormModel = this.formModel;
+      this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
-        [this.dataSelected, true],
+        [this.viewBase?.dataService?.dataSelected, true],
         option
       );
     });
@@ -220,14 +218,14 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     if (obj) {
       this.viewBase.dataService.dataSelected = obj;
       this.viewBase.dataService
-        .edit(this.viewBase.dataService.dataSelected)
+        .edit(this.viewBase?.dataService?.dataSelected)
         .subscribe((res) => {
           this.dataSelected = this.viewBase.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
           option.DataService = this.viewBase?.dataService;
-          option.FormModel = this.viewBase?.formModel;
-          this.dialog = this.callfc.openSide(
+          option.FormModel = this.formModel;
+          this.dialog = this.callFuncService.openSide(
             PopupAddBookingCarComponent,
             [this.viewBase.dataService.dataSelected, false],
             option

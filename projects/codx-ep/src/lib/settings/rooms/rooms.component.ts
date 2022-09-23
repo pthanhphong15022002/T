@@ -26,12 +26,12 @@ import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.compon
 export class RoomsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('statusCol') statusCol: TemplateRef<any>;
-  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
-  @ViewChild('avatarCol') avatarCol: TemplateRef<any>;
-  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
-  @ViewChild('companyIDCol') companyIDCol: TemplateRef<any>;
+
+  @ViewChild('resourceIDCol') resourceIDCol: TemplateRef<any>;
+  @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
+  @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -92,43 +92,29 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
               field: 'resourceID',
               headerText: gv['ResourceID'].headerText,
               width: gv['ResourceID'].width,
-            },
-            {
-              field: 'resourceName',
-              headerText: gv['ResourceName'].headerText,
-              width: gv['ResourceName'].width,
-            },
-            {
-              headerText: gv['Icon'].headerText,
-              width: gv['Icon'].width,
-              field: 'icon',
-              template: this.avatarCol,
-              textAlign: 'Center',
-              headerTextAlign: 'Center',
-            },
-            {
-              headerText: gv['Area'].headerText,
-              width: gv['Area'].width,
-              field: 'area',
-              textAlign: 'Center',
-            },
-            {
-              headerText: gv['Capacity'].headerText,
-              width: gv['Capacity'].width,
-              field: 'capacity',
-              textAlign: 'Center',
+              template: this.resourceIDCol,
             },
             {
               headerText: gv['Location'].headerText,
-              width: gv['Location'].width,
+              width: 200,//gv['Location'].width,
               field: 'location',
               textAlign: 'Center',
+              template: this.locationCol,
             },
             {
-              headerText: gv['CompanyID'].headerText,
-              width: '300',
-              template: this.companyIDCol,
+              headerText: gv['Equipments'].headerText,
+              width: gv['Equipments'].width,
+              field: 'equipments',
+              template: this.equipmentsCol,
               headerTextAlign: 'Center',
+              textAlign: 'Center',
+            },          
+            {
+              headerText: gv['Note'].headerText,
+              width: gv['Note'].width,
+              field: 'note',
+              headerTextAlign: 'Center',  
+              textAlign: 'Center',            
             },
             {
               headerText: gv['Owner'].headerText,
@@ -138,16 +124,10 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
               headerTextAlign: 'Center',
             },
             {
-              headerText: gv['Equipments'].headerText,
-              width: gv['Equipments'].width,
-              field: 'equipments',
-              template: this.equipmentsCol,
-              headerTextAlign: 'Center',
-            },
-            {
-              headerText: gv['Note'].headerText,
-              width: gv['Note'].width,
-              field: 'note',
+              headerText: 'Người chuẩn bị',//gv['Owner'].headerText,
+              //width:gv['Owner'].width,
+              width: 200,
+              template: this.preparatorCol,
               headerTextAlign: 'Center',
             },
           ];
@@ -249,6 +229,7 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
   }
 
   delete(obj?) {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.viewBase.dataService.delete([obj], true).subscribe((res) => {
         console.log(res);
