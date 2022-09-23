@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AuthService } from 'codx-core';
+import { AuthService, CacheService } from 'codx-core';
 import {
   DialogData,
   DialogRef,
@@ -24,6 +24,7 @@ export class Device {
   id;
   text = '';
   isSelected = false;
+  icon='';
 }
 
 @Component({
@@ -52,7 +53,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     },
     {
       icon: 'icon-person_outline',
-      text: 'Người đi cùng',
+      text: 'Người tham dự',
       name: 'tabPeopleInfo',
       subName: 'Thành viên tham gia',
       subText: 'Thành viên tham gia',
@@ -95,6 +96,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   lstDeviceCar = [];
   tmplstDevice = [];
   lstPeople = [];
+  funcID: string;
   driver: any;
   smallListPeople = [];
   editCarDevice = null;
@@ -104,6 +106,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     private codxEpService: CodxEpService,
     private notificationsService: NotificationsService,
     private authService: AuthService,
+    private cacheService: CacheService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -112,121 +115,98 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    this.funcID = this.formModel.funcID;
   }
   onInit(): void {
+    this.initForm();  
     if (!this.isAdd) {
       this.titleAction = 'Chỉnh sửa';
-    }    
-      if (this.isAdd) {
-          this.data.patchValue({
-            attendees: 1,
-          });      
-          this.data.bookingOn = new Date();        
-        let people = this.authService.userValue;
-        this.tempAtender = {
-          userId: people.userID,
-          userName: people.userName,
-          status: '1',
-          objectType: 'AD_Users',
-          roleType: '2',
-        };
-        this.curUser = this.tempAtender;
-        this.detectorRef.detectChanges();
-      }
-      this.cache.valueList('EP012').subscribe((res) => {
-        this.vllDevices = res.datas;
-        this.vllDevices.forEach((item) => {
-          let device = new Device();
-          device.id = item.value;
-          device.text = item.text;
-          this.lstDeviceCar.push(device);
-        });
+    }      
+    if (this.isAdd) {
+      this.data.attendees= 1;
+      this.data.bookingOn = new Date();  
 
-        if (!this.isAdd && this.data.equipments != null) {
-          let deviceArray =
-            this.data.value.equipments.split('|');
-          let availableDevice = deviceArray[0];
-          let pickedDevice = deviceArray[1];
-
-          this.lstDeviceCar.forEach((device) => {
-            availableDevice.split(';').forEach((equip) => {
-              if (device.id == equip) {
-                this.tempArray.push(device);
-              }
-            });
-          });
-          this.tempArray.forEach((device) => {
-            pickedDevice.split(';').forEach((equip) => {
-              if (device.id == equip) {
-                device.isSelected = true;
-              }
-            });
-          });
-          this.tmplstDevice = JSON.parse(JSON.stringify(this.tempArray));
-        }
-        this.lstDeviceCar = JSON.parse(JSON.stringify(this.lstDeviceCar));
+      let people = this.authService.userValue;
+      this.tempAtender = {
+        userId: people.userID,
+        userName: people.userName,
+        status: '1',
+        objectType: 'AD_Users',
+        roleType: '2',
+      };
+      this.curUser = this.tempAtender;
+      
+      this.detectorRef.detectChanges();
+    }
+    this.cacheService.valueList('EP012').subscribe((res) => {
+      this.vllDevices = res.datas;
+      this.vllDevices.forEach((item) => {
+        let device = new Device();
+        device.id = item.value;
+        device.text = item.text;
+        this.lstDeviceCar.push(device);
       });
 
-      if (!this.isAdd) {
-        this.driverChangeWithCar(this.data.resourceID);
-        this.detectorRef.detectChanges();
-      }
-      // this.codxEpService
-      //   .getComboboxName(
-      //     this.formModel.formName,
-      //     this.formModel.gridViewName
-      //   )
-      //   .then((res) => {
-      //     this.CbxName = res;
-      //     console.log('cbxEPT', this.CbxName);
-      //   });
-
-      
-      //   this.cache
-      //     .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      //     .subscribe((res) => {
-      //       console.log('grvEPT', res);
-      //       this.grvBookingCar = res;
-      //     });
-      
-      if (!this.isAdd) {
-        this.codxEpService
-          .getBookingAttendees(this.data.recID)
-          .subscribe((res) => {
-            if (res) {
-              this.attendees = res.msgBodyData[0];
-              this.attendees.forEach((people) => {
-                this.tempAtender = {
-                  userId: people.userID,
-                  userName: people.userName,
-                  status: people.status,
-                  objectType: 'AD_Users',
-                  roleType: people.roleType,
-                };
-                if (
-                  this.tempAtender.userId == this.authService.userValue.userID
-                ) {
-                  this.curUser = this.tempAtender;
-                } else {
-                  this.lstPeople.push(this.tempAtender);
-                }
-              });
-              this.detectorRef.detectChanges();
+      if (!this.isAdd && this.data?.equipments != null) {
+        this.data?.equipments.forEach((equip) => {
+          let tmpDevice = new Device();
+          tmpDevice.id = equip.equipmentID;
+          tmpDevice.isSelected = equip.isPicked;
+          this.lstDeviceCar.forEach((vlDevice) => {
+            if (tmpDevice.id == vlDevice.id) {
+              tmpDevice.text = vlDevice.text;
+              tmpDevice.icon = vlDevice.icon;
             }
           });
+          this.tmplstDevice.push(tmpDevice);
+        });
       }
-      this.initForm();
+      //this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
+    });
+
+    if (!this.isAdd) {
+      this.driverChangeWithCar(this.data?.resourceID);
+      this.detectorRef.detectChanges();
+    }
+    
+    if (!this.isAdd) {
+      this.codxEpService
+        .getBookingAttendees(this.data.recID)
+        .subscribe((res) => {
+          if (res) {
+            this.attendees = res.msgBodyData[0];
+            this.attendees.forEach((people) => {
+              this.tempAtender = {
+                userId: people.userID,
+                userName: people.userName,
+                status: people.status,
+                objectType: 'AD_Users',
+                roleType: people.roleType,
+              };
+              if (
+                this.tempAtender.userId == this.authService.userValue.userID
+              ) {
+                this.curUser = this.tempAtender;
+              } else {
+                this.lstPeople.push(this.tempAtender);
+              }
+            });
+            this.detectorRef.detectChanges();
+          }
+        });
+    }
   
   }
 
   initForm() {
     this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        this.fGroupAddBookingCar = res;
-      });    
-    this.isAfterRender = true;
-    this.detectorRef.detectChanges();
+      .then((item) => {
+        this.fGroupAddBookingCar = item;        
+        this.isAfterRender = true;        
+        console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingCar);        
+      });   
+      this.detectorRef.detectChanges();       
   }
   setTitle(e: any) {
     this.title = this.titleAction + ' ' + e.toString().toLowerCase();

@@ -25,14 +25,14 @@
     </div>
     <div class="row">
       <div class="d-flex flex-row justify-content-between">
-        <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-start" *ngIf="tmplstDevice!=null && tmplstDevice?.length>0">
           <div
             class="d-flex justify-content-start"
             *ngFor="let item of tmplstDevice"
           >
             <span
               class="d-flex align-items-center me-2"
-              [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
+              [ngClass]="item?.isSelected ? 'text-primary' : 'text-muted'"
             >
               <span
                 class="me-1 ps-2"
@@ -50,7 +50,7 @@
                 ]"
               >
               </span
-              >{{ item.text }}
+              >{{ item?.text }}
             </span>
           </div>
         </div>
@@ -118,6 +118,9 @@
         </codx-label>
         <codx-input
           ControlName="startDate"
+          format="f"
+          type="datetime"
+          class="test-datetime"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -127,7 +130,10 @@
         <codx-label fiedName="EndDate" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          ControlName="startDate"
+          ControlName="endDate"
+          format="f"
+          type="datetime"
+          class="test-datetime"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -138,7 +144,7 @@
       <codx-label fiedName="ReasonID" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        field="reasonID"
+        ControlName="reasonID"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       >

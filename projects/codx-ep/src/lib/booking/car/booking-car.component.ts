@@ -124,8 +124,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
-    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
-    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
         sameData: false,
@@ -204,14 +202,13 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   addNew(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
-        [this.dataSelected, true],
+        [this.viewBase?.dataService?.dataSelected, true],
         option
       );
     });
@@ -221,7 +218,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     if (obj) {
       this.viewBase.dataService.dataSelected = obj;
       this.viewBase.dataService
-        .edit(this.viewBase.dataService.dataSelected)
+        .edit(this.viewBase?.dataService?.dataSelected)
         .subscribe((res) => {
           this.dataSelected = this.viewBase.dataService.dataSelected;
           let option = new SidebarModel();
