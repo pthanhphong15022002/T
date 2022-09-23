@@ -180,6 +180,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   }
 
   delete(obj?) {
+    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.viewBase.dataService.delete([obj], true).subscribe((res) => {
         console.log(res);
