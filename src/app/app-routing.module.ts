@@ -30,14 +30,6 @@ export const routes: Routes = [
           import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
       },
       {
-        path: '',
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('projects/codx-wp/src/lib/codx-wp.module').then(
-            (m) => m.CodxWpModule
-          ),
-      },
-      {
         path: 'tm',
         canActivate: [AuthGuard],
         loadChildren: () =>
@@ -157,6 +149,11 @@ export const routes: Routes = [
       {
         path: 'sos',
         component: SosComponent,
+      },
+      {
+        path: '',
+        redirectTo: 'wp',
+        pathMatch: 'full'
       },
       { path: '**', redirectTo: 'error/404' },
     ],
