@@ -20,6 +20,6 @@
 }
 
 .listsrole {
-    max-height: calc(100vh -225px);
+    max-height: calc(100vh - 230px);
     overflow: auto;
 }
