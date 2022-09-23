@@ -91,55 +91,36 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.api
-      .callSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [
-        "FD_Parameters",
-        "1",
-        "RuleSelected",
-      ])
-      .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
-          var data = res.msgBodyData[0];
-          if (data.fieldValue == "2") this.refValue = "Behaviors";
-          if (data.fieldValue == "0") this.refValue = "";
-          this.dt.detectChanges();
-        }
-      });
     this.cache.functionList(this.funcID).subscribe(res => {
       if(res){
         this.cardType = res.dataValue;
         this.dataValue = res.dataValue;
         this.entityPer =  res.entityName;
-        if(this.vll != ""){
+        if(!this.vll){
           this.cache.valueList(this.vll).subscribe((res) => {
             if (res)
             {
               this.vllData = res.datas;
-              console.log(this.vll , this.vllData)
             }
           });
         }
+        this.initForm();
+        this.handleVllRating(this.cardType);
         this.LoadDataCard();
-        this.loadParameter(this.cardType,"1");
+        this.loadParameter(this.cardType);
       }
     })
-    this.initForm();
-    this.handleVllRating(this.cardType);
+    
   }
-  loadParameter(transType = "1",category = "1"){
-    this.api.execSv("FD","ERM.Business.FD","WalletsBusiness","GetParameterByWebAsync",["FD_Parameters",transType,category])
-    .subscribe((res:any) => 
-    {
+  loadParameter(cardType:string){
+    this.api.execSv("SYS","ERM.Business.SYS","SettingsBusiness","GetParameterByFDAsync",["FDParameters",cardType])
+    .subscribe((res:any)=>{
       if(res){
-        console.log('loadParameter: ',res)
-        // this.parameter = JSON.parse(res[0]);
-        // this.totalCointGived = res[1];
+        this.parameter = JSON.parse(res);
+        console.log('loadParameter: ',this.parameter)
+        this.dt.detectChanges();
       }
-      else{
-        this.parameter = null;
-      }
-    });
-    this.dt.detectChanges();
+    })
   }
 
   initForm(){
@@ -378,7 +359,7 @@ export class PopupAddCardsComponent implements OnInit {
 
   LoadDataCard() {
     this.api
-      .execSv("FD","ERM.Business.FD", "PatternsBusiness", "GetCardTypeAsync", [
+      .execSv("FD","ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [
         this.cardType,
       ])
       .subscribe((res:any) => {

@@ -1,0 +1,14 @@
+
+.selected-pattern::after{
+    position: absolute;
+    z-index: 99;
+    display: inline-block;
+    transform: rotate(40deg);
+    top: 4px;
+    height: 24px;
+    width: 14px;
+    right: 14px;
+    border-bottom: 2px solid #78b13f;
+    border-right: 2px solid #78b13f;
+
+}

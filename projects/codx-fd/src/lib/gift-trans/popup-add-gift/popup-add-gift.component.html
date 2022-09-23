@@ -15,7 +15,10 @@
     </div>
 </ng-template>
 <ng-template #body>
-    <div class="px-4">
+    <div class="px-4" *ngIf="giftTrans">
+        <div class="mt-3">
+            <p>{{giftTrans | json}}</p>
+        </div>
         <div class="mt-3">
             <div class="mb-2">
                 <codx-label [formModel]="dialogRef.formModel" name="lblReciver" default="Người nhận quà"></codx-label>
@@ -23,7 +26,7 @@
             <div>
                 <codx-input type="combobox" 
                     class=" form-control borderless p-0"
-                    [crrValue]="form.controls['userID'].value" 
+                    [crrValue]="giftTrans.UserID" 
                     [multiple]="false"
                     [loadFull]="true"
                     field="userID"
@@ -37,8 +40,8 @@
                 <div>
                     <codx-input 
                         class="rounded-circle" 
-                        [crrValue]="form.controls['transType'].value"
-                        [checked]="form.controls['transType'].value == '3'"
+                        [crrValue]="'3'" 
+                        [checked]="true"
                         [label]="'Quỹ công ty'" 
                         type="radio" 
                         field="transType3"
@@ -50,7 +53,7 @@
                 <div class="ms-6">
                     <codx-input 
                         class="rounded-circle" 
-                        [checked]="form.controls['transType'].value == '4'" 
+                        [crrValue]="'4'" 
                         [label]="'Quỹ cá nhân'" 
                         type="radio" 
                         field="transType4"
@@ -69,10 +72,10 @@
                 <codx-input 
                     type="combobox" 
                     class=""
-                    [crrValue]="form.controls['giftID'].value" 
+                    [crrValue]="giftTrans.ItemID" 
                     [multiple]="false"
                     [loadFull]="true"
-                    field="giftID"
+                    field="itemID"
                     (valueChange)="valueChange($event)" 
                     refValue="Gifts">
                 </codx-input>
@@ -88,9 +91,9 @@
                         <codx-input 
                             type="number" 
                             class=""
-                            [crrValue]="form.controls['quantity'].value" 
+                            [crrValue]="giftTrans.Quantity" 
                             [placeholder]="'0'"
-                            field="amount"
+                            field="quantity"
                             (valueChange)="valueChange($event)" 
                             >
                         </codx-input>
@@ -104,11 +107,10 @@
                         <codx-input 
                             type="text" 
                             class="border text-end"
-                            [crrValue]="form.controls['amount'].value" 
+                            [crrValue]="amount" 
                             [placeholder]="'0'"
                             [disabled]="true"
-                            field="amount"
-                            (valueChange)="valueChange($event)" >
+                            field="amount">
                         </codx-input>
                     </div>
                 </div>
@@ -120,9 +122,8 @@
             </div>
             <div>
                 <codx-input 
-                    class="rounded-circle" 
-                    [crrValue]="form.controls['status'].value"
-                    type="radio" 
+                    [checked]="giftTrans.Status == '3'"
+                    type="switch" 
                     field="status"
                     name="status" 
                     (valueChange)="valueChange($event)"
@@ -136,14 +137,24 @@
             </div>
             <div>
                 <codx-input 
-                    [crrValue]="form.controls['siutuation'].value"
+                    [crrValue]="giftTrans.Situation"
                     type="textarea" 
                     field="siutuation"
-                    name="siutuation" 
+                    name="siutuation"
+                    [disabled]="form.controls['transType'].value == '4'"
                     (valueChange)="valueChange($event)"
                     >
                 </codx-input>
             </div>
+        </div>
+        <div class="mt-3">
+            <ng-container *ngIf="form.controls['transType'].value == '4' ">
+                <div class="d-flex">
+                    <ng-container *ngFor="let item of lstPattern">
+                        <ng-container *ngTemplateOutlet="patternItem ; context{ $implicit: item }"></ng-container>
+                    </ng-container>  
+                </div>
+            </ng-container>
         </div>
         <div class="mt-3">
             <div class="mb-2">
@@ -151,6 +162,8 @@
             </div>
             <div>
                 <codx-input 
+                    [disabled]="giftTrans.TransType == '4'"
+                    [checked]="giftTrans.TransType == '3'"
                     [crrValue]="isSharePortal"
                     type="switch" 
                     field="isSharePortal"
@@ -172,3 +185,29 @@
         </div>
     </div>
 </ng-template>
+
+<ng-template #patternItem let-item>
+    <ng-container *ngIf="!item.backgroundColor;else haveBackGround">
+        <div  
+            class=" d-flex justify-content-between align-items-center h-120px w-80px border ">
+            <codx-img
+                class=" h-120px w-80px border-radius-large"
+                [objectId]="item.patternID"
+                objectType="FD_Patterns" [width]="165"
+                (click)="selectedPattern(item)"
+                >
+            </codx-img>
+        </div>
+    </ng-container>
+    <ng-template #haveBackGround>
+        <div [class.selected-pattern]="patternIDSeleted == item.patternID" class="position-relative d-flex justify-content-between align-items-center "
+            [style.background-color]="item.backgroundColor"
+            style="height: 120px; width: 80px;"
+            (click)="selectedPattern(item)">
+        </div>
+        
+    </ng-template>
+</ng-template>
+
+
+    
