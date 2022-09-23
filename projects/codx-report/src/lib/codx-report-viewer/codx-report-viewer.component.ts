@@ -86,37 +86,33 @@ export class CodxReportViewerComponent implements OnInit, AfterViewInit,OnChange
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    let predicate = '';
-    if(this.token){
-      if(changes['parameters']) this.parameters = changes['parameters'].currentValue;
-      if(changes['reportUUID']) this.reportUUID = changes['reportUUID'].currentValue;
-      if(this.parameters.predicate){
-        predicate = this.parameters.predicate.split('&&').join(';');
-      }
-      this.src=`http://localhost:4203/r?token=${this._user.token}&reportID=${this.reportUUID}&predicates=${encodeURI(predicate)}&dataValue=${encodeURI(this.parameters.dataValue)}`;
-      this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
-      this.iframe && this.iframe.nativeElement.contentWindow.reload();
-    }
-
   }
 
 
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+
+  }
 
   ngOnInit(): void {
-    this._user = this.authStore.get();
-    if(this._user) this.token = this._user.token;
-    this.toolbarContainerCssClasses =
-      this.layout.getStringCSSClasses('toolbarContainer');
-    if (this.reportUUID && this.parameters) {
-      let predicate = '';
-      if(this.parameters.predicate){
-        predicate = this.parameters.predicate.split('&&').join(';');
-      }
-      this.src=`http://localhost:4203/r?token=${this._user.token}&reportID=${this.reportUUID}&predicates=${encodeURI(predicate)}&dataValue=${encodeURI(this.parameters.dataValue)}`;
-      this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    this.reportUUID = urlParams.get('reportID')!;
+    let predicate = urlParams.get('predicates');
+    let dataValue = urlParams.get('dataValues');
+    let printReport = urlParams.get('print');
+    if(printReport && printReport =='true'){
+      this.printReport();
     }
+    let param = {};
+    if(predicate != "undefined" && predicate !=undefined){
+     if(dataValue !="undefined" && dataValue!= undefined){
+       const _predicate = predicate.split(';').join("&&");
+       param = { predicate: _predicate, dataValue: dataValue};
+     }
+    }
+    this.param = param;
+    this.parameters = [param];
   }
 
   public printReport() {
