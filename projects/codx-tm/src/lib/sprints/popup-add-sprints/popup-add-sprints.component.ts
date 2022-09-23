@@ -265,11 +265,10 @@ export class PopupAddSprintsComponent implements OnInit {
       var service = e.components?.service;
 
       this.api
-        .execSv<any>(
+        .exec<any>(
           service,
-          'PM',
           'ProjectsBusiness',
-          'GetPMProjectByIDAsync',
+          'GetProjectByIDAsync',
           e?.data
         )
         .subscribe((res) => {
