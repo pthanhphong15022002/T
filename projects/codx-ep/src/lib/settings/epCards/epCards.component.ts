@@ -148,7 +148,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
 
   addNew() {
     this.viewBase.dataService.addNew().subscribe((res) => {
-      debugger;
+      
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';

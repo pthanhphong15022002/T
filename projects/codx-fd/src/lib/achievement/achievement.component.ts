@@ -347,7 +347,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
     });
     this.options.predicate += this.predicate;
     this.options.dataValue += ';' + this.dataValue;
-    debugger;
+    
     this.loadList = true;
     if (this.listview) {
       this.listView.dataService

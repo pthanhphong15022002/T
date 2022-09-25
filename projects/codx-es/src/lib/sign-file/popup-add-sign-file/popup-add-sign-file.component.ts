@@ -442,7 +442,7 @@ export class PopupAddSignFileComponent implements OnInit {
       }
 
       if (event.field == 'owner') {
-        debugger;
+        
         let employee = event.component?.itemsSelected[0];
         this.dialogSignFile.patchValue({
           employeeID: employee?.employeeID,

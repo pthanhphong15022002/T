@@ -38,7 +38,7 @@ export class EditPatternComponent implements OnInit {
     this.dialog = dt;
     this.formModel = this.dialog?.formModel;
     this.formType = data.data?.formType;
-    debugger;
+    
     this.pattern.cardType = this.cardType;
     this.pattern.headerColor = "#918e8e";
     this.pattern.textColor = "#918e8e";

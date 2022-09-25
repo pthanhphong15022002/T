@@ -51,9 +51,9 @@
       <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')"><codx-label [default]="'Thêm'"></codx-label></span>
     </div>
     <div class="align-items-start" style="display:flex" [hidden]="!showAgency">
-      <codx-combobox refValue="AgencyDepts" type="combobox" placeholder="Phòng ban" [value]="dispatch?.agencyID"
-        style="width:100%" (valueChange)="changeValueDept($event)" field="agencyName">
-      </codx-combobox>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="departmentName"  style="width:100%"
+      (valueChange)="changeValueDept($event)">
+    </codx-input>
       <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')"><codx-label [default]="'Thêm'"></codx-label></span>
     </div>
 

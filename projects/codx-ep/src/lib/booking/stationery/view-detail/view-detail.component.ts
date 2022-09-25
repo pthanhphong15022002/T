@@ -89,7 +89,7 @@ export class BookingStationeryViewDetailComponent
   }
 
   openFormFuncID(value, datas: any = null) {
-    debugger;
+    
     let funcID = value?.functionID;
     switch (funcID) {
       case 'EPT40101':

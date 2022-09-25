@@ -562,7 +562,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
           )
           .subscribe((item2) => {
             if (item2) {
-              debugger;
+              
               if (this.hasTemp) {
                 var arrResult = [];
                 if (this.currdataImport && this.currdataImport.length > 0) {
