@@ -233,7 +233,14 @@ db.DM_FolderInfo.updateMany(
     this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
     this.dialog.closed.subscribe()
   }
-
+  onJump() {
+    var data = {} as any;
+    data.recID = "";
+    this.dmSV.refreshTree.next(true)
+    this.dmSV.breadcumb.next([]);
+    //isFolderId
+    this.changeDetectorRef.detectChanges();
+  }
   /* public funcs$: Observable<any> = of([
     {
       functionID: 'OD',

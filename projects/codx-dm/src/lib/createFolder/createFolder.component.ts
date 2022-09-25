@@ -215,7 +215,7 @@ export class CreateFolderComponent implements OnInit {
   titlemessage = 'Thông báo';
   titletitleCreateSubFolder = 'Thêm mới cấp thư mục';
   titleDelete = 'Xóa';
-  titleEdit = 'Edit';
+  titleEdit = 'Sửa';
   titleDesctionSub = 'Diễn giải';
   titleSetting = 'Thiết lập';
   titleLevel = 'Cấp thư mục';
@@ -562,7 +562,6 @@ export class CreateFolderComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    debugger;
     this.folderName = this.folderName.trim();
     this.fileEditing.folderName = this.folderName;
     this.fileEditing.approval = this.approval;
