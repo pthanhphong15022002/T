@@ -18,6 +18,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { Observable } from 'rxjs';
+import { SettingService } from './setting.service';
 
 @Component({
   selector: 'app-setting',
@@ -50,7 +51,8 @@ export class SettingComponent extends UIComponent implements OnInit {
     private changedr: ChangeDetectorRef,
     private tenantStore: TenantStore,
     private at: ActivatedRoute,
-    private fdsv: CodxFdService
+    private fdsv: CodxFdService,
+    private settingSV: SettingService
   ) {
     super(injector);
     this.tenant = this.tenantStore.get()?.tenant;
@@ -125,18 +127,9 @@ export class SettingComponent extends UIComponent implements OnInit {
   }
 
   getParameter() {
-    this.api
-      .execSv<Array<any>>(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByPredicate',
-        ['FormName=@0 && TransType=null', 'FDParameters']
-      )
-      .subscribe((result) => {
-        if (result?.length > 0)
-          this.parameter = JSON.parse(result[0].dataValue);
-      });
+    this.settingSV.getParameter().subscribe((result) => {
+      if (result?.length > 0) this.parameter = JSON.parse(result[0].dataValue);
+    });
   }
 
   goHomePage(functionID) {

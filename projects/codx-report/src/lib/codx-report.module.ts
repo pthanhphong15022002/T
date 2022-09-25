@@ -11,6 +11,7 @@ import { CodxReportViewerComponent } from './codx-report-viewer/codx-report-view
 import { CodxReportComponent } from './codx-report.component';
 import { PopupAddReportComponent } from './popup-add-report/popup-add-report.component';
 import { PopupParametersComponent } from './popup-parameters/popup-parameters.component';
+import { CodxReportIframeComponent } from './report-iframe/report-iframe.component';
 import { LayoutComponent } from './_layout/layout.component';
 
 
@@ -41,7 +42,8 @@ const routes: Routes = [
     LayoutComponent,
     CodxReportViewerComponent,
     PopupParametersComponent,
-    PopupAddReportComponent
+    PopupAddReportComponent,
+    CodxReportIframeComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -54,7 +56,8 @@ const routes: Routes = [
   exports: [
     CodxReportComponent,
     CodxReportViewerComponent,
-    PopupAddReportComponent
+    PopupAddReportComponent,
+    CodxReportIframeComponent
   ]
 })
 export class CodxReportModule {

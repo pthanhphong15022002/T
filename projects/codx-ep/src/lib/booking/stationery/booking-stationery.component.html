@@ -1,7 +1,6 @@
 <codx-views
   #view
   [views]="views"
-  (buttonClick)="click($event)"
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
@@ -59,7 +58,7 @@
 </ng-template>
 
 <ng-template #footerTmp let-data>
-  <div class="d-flex justify-content-between m-2 p-2">
+  <div class="d-flex justify-content-between m-2 py-2 px-12">
     <div class="d-flex align-items-center">
       <div
         class="badge border-0 me-2"

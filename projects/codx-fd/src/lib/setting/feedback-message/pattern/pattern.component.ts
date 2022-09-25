@@ -11,6 +11,7 @@ import {
 import {
   ApiHttpService,
   CallFuncService,
+  CRUDService,
   NotificationsService,
   SidebarModel,
   UIComponent,
@@ -35,22 +36,30 @@ export class PatternComponent extends UIComponent implements OnInit {
   dialog: any;
   views: Array<ViewModel> = [];
   functionList: any;
-  funcID = 'FDS026';
+  funcID: any;
+  lstFile: any = new Array();
+  REFER_TYPE = {
+    IMAGE: 'image',
+    VIDEO: 'video',
+    APPLICATION: 'application',
+  };
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
   constructor(
-    private changedr: ChangeDetectorRef,
-    private ptsv: PatternService,
-    private notificationsService: NotificationsService,
-    private confirmationDialogService: NotificationsService,
+    private change: ChangeDetectorRef,
+    private patternSV: PatternService,
     private injector: Injector,
     private callfunc: CallFuncService
   ) {
     super(injector);
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if(res) this.functionList = res;
-    })
+    this.router.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
+    this.getCardType('FDS026');
   }
 
   onInit(): void {
@@ -58,8 +67,7 @@ export class PatternComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.ptsv.component = this;
-
+    this.patternSV.component = this;
     this.views = [
       {
         active: true,
@@ -74,7 +82,6 @@ export class PatternComponent extends UIComponent implements OnInit {
   }
 
   LoadData() {
-    //this.ngxLoader.start();
     this.api
       .call('ERM.Business.FD', 'PatternsBusiness', 'GetCardTypeAsync', [
         this.type,
@@ -84,8 +91,14 @@ export class PatternComponent extends UIComponent implements OnInit {
           var data = res.msgBodyData[0] as any[];
           this.lstPattern = data;
           this.lstPattern.push({});
-          console.log("check lstPattern", this.lstPattern)
-          this.changedr.detectChanges();
+          this.lstPattern.forEach((dt) => {
+            this.patternSV.getFileByObjectID(dt.recID).subscribe((res: any) => {
+              if (res && res?.length > 0) {
+                this.lstFile.push(res[0]);
+              }
+            });
+          });
+          this.change.detectChanges();
         }
       });
   }
@@ -104,15 +117,14 @@ export class PatternComponent extends UIComponent implements OnInit {
     if (data.cardType != this.type) {
       _.remove(this.lstPattern, { recID: data.recID });
     } else {
-      if (this.ptsv.indexEdit > -1) this.lstPattern[this.ptsv.indexEdit] = data;
+      if (this.patternSV.indexEdit > -1)
+        this.lstPattern[this.patternSV.indexEdit] = data;
       else {
         this.lstPattern[this.lstPattern.length - 1] = data;
         this.lstPattern.push({});
       }
     }
-
-    //this.lstPattern.push({});
-    this.changedr.detectChanges();
+    this.change.detectChanges();
   }
 
   reloadChanged(e) {
@@ -122,73 +134,113 @@ export class PatternComponent extends UIComponent implements OnInit {
     return item.patternID + item.modifiedOn;
   }
 
-  // openCreate(recid = '', i = -1, elm = null): void {
-  //   //this.ptsv.recID = recid;
-  //   var $imgpat = $('span.img-pat', $(elm));
-  //   if ($imgpat.length > 0) {
-  //     var color = $imgpat.css('background-color');
-  //     this.ptsv.colorimg = color;
-  //   } else {
-  //     this.ptsv.colorimg = '';
-  //   }
-  //   this.ptsv.indexEdit = i;
-  //   this.ptsv.appendRecID(recid);
-  //   $('#create_card').addClass('offcanvas-on');
-  // }
+  getCardType(funcID) {
+    switch (funcID) {
+      case 'FDS011':
+        this.type = '1';
+        break;
+      case 'FDS012':
+        this.type = '2';
+        break;
+      case 'FDS013':
+        this.type = '3';
+        break;
+      case 'FDS014':
+        this.type = '4';
+        break;
+      case 'FDS015':
+        this.type = '5';
+        break;
+      case 'FDS016':
+        this.type = '6';
+        break;
+      case 'FDS017':
+        this.type = '7';
+        break;
+    }
+  }
 
   openFormAdd() {
     var obj = {
       formType: 'add',
+      dataUpdate: '',
+      formModel: this.functionList,
     };
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = 'Auto';
-    this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
-    // this.dialog.closed.subscribe((e) => {
-    //   if (e?.event) {
-    //     e.event.modifiedOn = new Date();
-    //     this.view.dataService.update(e.event).subscribe();
-    //   }
-    // });
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = 'Auto';
+      this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event?.save) {
+          this.view.dataService.add(e.event.save).subscribe();
+          this.lstPattern.splice(this.lstPattern.length - 1, 1);
+          this.lstPattern.push(e.event.save);
+          this.lstPattern.push({});
+        }
+      });
+    });
   }
 
-  openFormEdit(recid = '', i = -1, elm = null) {
+  openFormEdit(item = null, i = null, elm = null) {
+    var arr = new Array();
+    if (item) {
+      this.view.dataService.dataSelected = item;
+    }
     var obj = {
       formType: 'edit',
+      dataUpdate: item,
+      formModel: this.functionList,
     };
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = 'Auto';
-    this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
-    // this.dialog.closed.subscribe((e) => {
-    //   if (e?.event) {
-    //     e.event.modifiedOn = new Date();
-    //     this.view.dataService.update(e.event).subscribe();
-    //   }
-    // });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event?.data.update) {
+            this.lstPattern.forEach((dt, index) => {
+              if (dt.recID == e.event.data.update.recID) {
+                this.lstPattern[index] = e.event.data.update;
+              }
+            });
+            if (e.event.listFile) {
+              this.lstFile = new Array();
+              this.lstPattern.forEach((x) => {
+                this.patternSV
+                  .getFileByObjectID(x.recID)
+                  .subscribe((res: any[]) => {
+                    if (res.length > 0) {
+                      arr.push(res[0]);
+                    }
+                  });
+              });
+              this.lstFile = arr;
+            }
+          }
+        });
+      });
+    this.change.detectChanges();
   }
 
-  delete(recID, i = -1) {
-    // this.confirmationDialogService
-    //   .confirmLang('DoYouWantToDelete', 'Bạn có muốn xóa ?')
-    //   .then((confirmed) => {
-    //     if (confirmed) {
-    //       this.api
-    //         .callSv('FED', 'FED', 'PattentsBusiness', 'DeleteAsync', [recID])
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             this.LoadData();
-    //             if (res.error) {
-    //               this.notificationsService.notify(res.error.errorMessage);
-    //             } else if (res.msgBodyData) {
-    //             }
-    //           }
-    //         });
-    //     }
-    //   })
-    //   .catch(() => console.log(''));
+  delete(item, index) {
+    this.view.dataService.dataSelected = item;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe((res: any) => {
+        if (res.data) {
+          this.lstFile.forEach((dt) => {
+            if (dt.objectID == res.data.recID)
+              this.patternSV.deleteFile(res.data.recID);
+          });
+          this.lstPattern.splice(index, index);
+        }
+      });
+    this.change.detectChanges();
   }
   closeCreate(): void {
     $('#create_card').removeClass('offcanvas-on');

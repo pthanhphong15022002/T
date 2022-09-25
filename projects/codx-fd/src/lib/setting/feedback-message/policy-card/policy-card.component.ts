@@ -1,3 +1,4 @@
+import { SettingService } from './../../setting.service';
 import {
   ChangeDetectorRef,
   Component,
@@ -24,14 +25,6 @@ import {
   styleUrls: ['./policy-card.component.scss'],
 })
 export class PolicyCardComponent extends UIComponent implements OnInit {
-  constructor(
-    private modalService: NgbModal,
-    private dt: ChangeDetectorRef,
-    private notificationsService: NotificationsService,
-    injector: Injector
-  ) {
-    super(injector);
-  }
   action: any;
   item: any = {};
   closeResult = '';
@@ -41,9 +34,30 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   isLockCoin: boolean;
   isLockDedicate: boolean;
   isShowPolicyCard: boolean = true;
-  formModel = '';
+  formModel: any;
+  functionList: any;
   @Output() changeLock = new EventEmitter<object>();
   @Input() typeCard: string;
+
+  constructor(
+    private modalService: NgbModal,
+    private change: ChangeDetectorRef,
+    private notificationsService: NotificationsService,
+    private settingSV: SettingService,
+    injector: Injector
+  ) {
+    super(injector);
+    this.cache.functionList('FDS').subscribe((res) => {
+      if (res) {
+        this.functionList = res;
+        this.formModel = {
+          entityName: this.functionList?.entityName,
+          formName: this.functionList?.formName,
+          gridViewName: this.functionList?.gridViewName,
+        };
+      }
+    });
+  }
 
   onInit(): void {
     this.LoadData();
@@ -133,7 +147,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
           if (res.msgBodyData[0] === true) {
             this.item[this.fieldUpdate] = objectUpdate[this.fieldUpdate];
 
-            this.dt.detectChanges();
+            this.change.detectChanges();
             //this.objectUpdate = {};
           }
         }
@@ -182,7 +196,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       centered: true,
       size: 'md',
     });
-    this.dt.detectChanges();
+    this.change.detectChanges();
   }
   open(content, typeContent) {
     let arrayTitle = [
@@ -213,7 +227,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       centered: true,
       size: 'sm',
     });
-    this.dt.detectChanges();
+    this.change.detectChanges();
   }
   changeValueListRuleSelected(selected) {
     this.item.RuleSelected = selected.data.value;
@@ -301,44 +315,36 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
           }
           this.handleLock(this.item.PolicyControl);
           this.setValueListName(this.item);
-          this.dt.detectChanges();
+          this.change.detectChanges();
         }
       });
   }
   LoadDataForChangeVLL() {
-    const PREDICATE = 'FieldName = @0 OR FieldName = @1';
-    const DATA_VALUE = 'ActiveCoins;ActiveMyKudos';
-    this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
-        'GetByPredicate',
-        [PREDICATE, DATA_VALUE]
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.setValueListName(res);
-          this.dt.detectChanges();
-        }
-      });
+    this.settingSV.getParameter().subscribe((res) => {
+      if (res) {
+        this.setValueListName(res[0]);
+        this.change.detectChanges();
+      }
+    });
   }
   setValueListName(list) {
     // let item = this.mainService.convertListToObject(list, "fieldName", "fieldValue");
-    // if (!item) return;
-    // const isActiveCoins = item.hasOwnProperty('ActiveCoins');
-    // const isActiveMyKudos = item.hasOwnProperty('ActiveMyKudos')
-    // if (isActiveCoins && isActiveMyKudos) {
-    //   this.valueListNameCoin = "L1434";
-    //   return;
-    // }
-    // if (isActiveCoins) {
-    //   this.valueListNameCoin = "L1459";
-    //   return;
-    // }
-    // if (isActiveMyKudos) {
-    //   this.valueListNameCoin = "L1460";
-    //   return;
-    // }
+    if (!list) return;
+    var item = JSON.parse(list.dataValue);
+    const isActiveCoins = item.hasOwnProperty('ActiveCoins');
+    const isActiveMyKudos = item.hasOwnProperty('ActiveMyKudos');
+    if (isActiveCoins && isActiveMyKudos) {
+      this.valueListNameCoin = 'L1434';
+      return;
+    }
+    if (isActiveCoins) {
+      this.valueListNameCoin = 'L1459';
+      return;
+    }
+    if (isActiveMyKudos) {
+      this.valueListNameCoin = 'L1460';
+      return;
+    }
+    this.change.detectChanges();
   }
 }

@@ -20,6 +20,7 @@ export class AvatarCardPipe implements PipeTransform {
     }
     if (value && key) {
       return this.cache.valueList(key).subscribe((res) => {
+        debugger
         if (res)
           return res;
         else return value

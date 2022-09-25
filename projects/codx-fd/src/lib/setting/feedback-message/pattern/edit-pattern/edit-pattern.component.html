@@ -1,74 +1,89 @@
-<codx-form #form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"
-    [formModel]="formModel">
+<codx-form #form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel">
     <ng-template #body>
         <div class="flex-grow-1">
-            <div class="d-flex align-items-start ph-card mb-6">
-                <div class="pic-edit mr-6">
-                    <codx-img #uploadImage class="img-pat" [objectId]="pattern?.patternID"
-                        [funcId]="formModel?.functionID" [objectType]="formModel?.entityName" [width]="164"
-                        [hidden]="pattern?.backgroundColor" cssClass="pic" imageType="square">
-                    </codx-img>
-                    <span class="font-size-h3 font-weight-boldest img-pat-edit noimage symbol-label text-white"
+            <div class="d-flex align-items-start ph-card">
+                <div class="pic-edit">
+                    <div class="row mt-2 justify-content-between" *ngIf="listFile">
+                        <ng-container *ngFor="let dt of listFile">
+                            <div class="col-5 my-2">
+                                <div class="w-150 position-relative">
+                                    <ng-container *ngIf="dt.referType == REFER_TYPE.IMAGE">
+                                        <ng-container *ngIf="dt.recID;else imageSrc">
+                                            <codx-img #uploadImage class="img-pat" [objectId]="pattern?.recID"
+                                                [funcId]="formModel?.functionID" [objectType]="formModel?.entityName"
+                                                [width]="164" cssClass="pic" imageType="square" [imgOn]="pattern?.modifiedOn">
+                                            </codx-img>
+                                        </ng-container>
+                                        <ng-template #imageSrc>
+                                            <img [src]="dt.data || dt.avatar" alt="" class="image">
+                                        </ng-template>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <span class="fs-3 font-weight-boldest img-pat-edit noimage symbol-label text-white"
                         [style.background-color]="pattern?.backgroundColor" [hidden]="!pattern?.backgroundColor"
                         style="background-image: none;"></span>
-                    <div class="ph-card-header font-size-h5 font-weight-bold header-pattern"
-                        [style.color]="pattern?.headerColor">
-                        Header</div>
-                    <div class="ph-card-content content-pattern" [style.color]="pattern?.textColor">Content...
+                    <div class="ph-card-header fs-5 fw-bold header-pattern" [style.color]="pattern?.headerColor">
+                        <codx-label name="lblHeader" [formModel]="formModel" default="Header"></codx-label>
+                    </div>
+                    <div class="ph-card-content content-pattern" [style.color]="pattern?.textColor">
+                        <codx-label name="lblHeader" [formModel]="formModel" default="Content..."></codx-label>
                     </div>
                 </div>
-                <div class="d-flex flex-column">
+                <div class="d-flex flex-column ms-6">
                     <div class="d-block align-items-center">
                         <div class="symbol-list d-flex flex-wrap patternt">
                             <div class="pattern-teams">
-                                <div class="symbol symbol-50 symbol-circle mr-5 mb-4" *ngFor="let item of vll">
+                                <div class="symbol symbol-50 symbol-circle mr-5 mb-4"
+                                    *ngFor="let item of vll; index as i">
                                     <div class="pattern-item">
-                                        <span class="symbol-label pointer" #colordf
-                                            (click)="colorClick($event, colordf)" [attr.data-color]="item?.text"
+                                        <span class="symbol-label cursor-pointer" #colordf
+                                            (click)="colorClick(colordf, item, i)" [attr.data-color]="item?.text"
                                             [style.background-color]="item?.text"></span>
                                     </div>
                                 </div>
                                 <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4" #group3>
-                                    <codx-input #elmbg [ele]="group3" datatype="colorpicker"
-                                        [attr.data-color]="'colorpicker'" class="form-control symbol-label w-50"
-                                        field="backgroundColor" (valueChange)="valueChange($event, group3)"
-                                        dataformat="hex">
+                                    <codx-input datatype="colorpicker" class="form-control symbol-label w-50"
+                                        field="backgroundColor" (valueChange)="valueChangeColor($event)"
+                                        [crrValue]="pattern?.backgroundColor">
                                     </codx-input>
                                 </div>
-                                <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4">
+                                <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4 cursor-pointer">
                                     <label class="symbol-label pointer mb-0" data-action="change" data-toggle="tooltip"
                                         title="" data-original-title="Change avatar">
-                                        <span class="far fa-image" style="font-size: 18px;"
-                                            [attr.data-color]="'image'"></span>
-                                        <codx-input type="file" id="cardImageInput" name="profile_avatar"
-                                            style="display: none;" (change)="handleFileInput($event)"
-                                            accept=".png, .jpg, .jpeg">
-                                        </codx-input>
-                                        <codx-input type="hidden" style="display: none;" name="profile_avatar_remove">
-                                        </codx-input>
+                                        <span class="far fa-image" style="font-size: 18px;" (click)="uploadFile()">
+                                            <div class="d-none">
+                                                <codx-attachment #attachment [functionID]="formModel?.funcID"
+                                                    [objectType]="formModel?.entityName" [hideFolder]="'1'"
+                                                    [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'"
+                                                    allowExtensions=".jpg,.png" [allowMultiFile]="'0'"
+                                                    [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'"
+                                                    [showMessage]="'0'" (fileCount)="fileCount($event)">
+                                                </codx-attachment>
+                                            </div>
+                                        </span>
                                     </label>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="form-group">
                         <codx-label name="lblHeaderColor" [formModel]="" default="Màu header"></codx-label>
-                        <div class="input-group" #group1>
-                            <codx-input #elm [ele]="group1" datatype="colorpicker"
-                                class="form-control text-white color-large w-fit" field="headerColor"
-                                (valueChange)="valueChange($event, elm)" [value]="pattern?.headerColor"
-                                dataformat="hex">
+                        <div class="input-group">
+                            <codx-input datatype="colorpicker" class="form-control text-white color-large w-fit"
+                                field="headerColor" (valueChange)="valueChangeColor($event)" [showText]="true"
+                                [modeSwitcher]="true" [crrValue]="pattern?.headerColor">
                             </codx-input>
                         </div>
                     </div>
                     <div class="form-group">
                         <codx-label name="lblContentColor" [formModel]="" default="Màu content"></codx-label>
-                        <div class="input-group" #group2>
-                            <codx-input #elm2 [ele]="group2" datatype="colorpicker"
-                                class="form-control text-white color-large w-fit"
-                                (valueChange)="valueChange($event, elm2)" field="textColor" [value]="pattern?.textColor"
-                                dataformat="hex">
+                        <div class="input-group">
+                            <codx-input datatype="colorpicker" class="form-control text-white color-large w-fit"
+                                [showText]="true" [modeSwitcher]="true" (valueChange)="valueChangeColor($event)"
+                                field="textColor" [crrValue]="pattern?.textColor">
                             </codx-input>
                         </div>
                     </div>
@@ -76,21 +91,21 @@
             </div>
             <div class="form-group" #name>
                 <codx-label name="lblDescription" [formModel]="" default="Mô tả:"></codx-label>
-                <codx-input datatype="string" placeholder="Sunset Flower" [value]="pattern?.patternName"
-                    field="patternName" [ele]="name" (valueChange)="valueChange($event, null)">
+                <codx-input type="text" placeholder="Sunset Flower" [crrValue]="pattern?.patternName" field="patternName"
+                    [ele]="name" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
         </div>
         <div class="checkbox-list mt-3">
             <div #isDefault>
                 <codx-input type="checkbox" class="test-check" ngDefaultControl field="isDefault"
-                    (valueChange)="valueChange($event, null)" [checked]="pattern?.isDefault"
-                    [value]="pattern?.isDefault" label="Mặc định chọn" labelPosition="After">
+                    (valueChange)="valueChange($event)" [checked]="pattern?.isDefault"
+                    [crrValue]="pattern?.isDefault" label="Mặc định chọn" labelPosition="After">
                 </codx-input>
             </div>
             <div #stop class="mt-2">
                 <codx-input type="checkbox" [disabled]="checkDisable(pattern)" class="test-check" ngDefaultControl
-                    field="stop" (valueChange)="valueChange($event, null)" [value]="pattern?.stop"
+                    field="stop" (valueChange)="valueChange($event)" [crrValue]="pattern?.stop"
                     [checked]="pattern?.stop" label="Ngưng sử dụng" labelPosition="After">
                 </codx-input>
             </div>
@@ -98,7 +113,7 @@
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-between">
-            <button type="button" class="btn btn-primary ms-1" (click)="savepattern()">
+            <button type="button" class="btn btn-primary ms-1" (click)="savePattern()">
                 <codx-label name="Save" [formModel]="formModel" default="Lưu"></codx-label>
             </button>
         </div>

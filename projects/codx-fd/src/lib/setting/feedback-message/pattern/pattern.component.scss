@@ -27,3 +27,20 @@
   display: inline-block;
   border: 1px solid #c5cacb;
 }
+
+.card-img {
+  height: 150px !important;
+}
+
+.icon-check {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  background-color: #03a9f4;
+  border-radius: 20px;
+  padding: 3px;
+}
+
+.border-5px {
+  border-radius: 5px
+}

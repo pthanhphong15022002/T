@@ -469,3 +469,26 @@ codx-view-list-detail .codx-detail-footer {
   height: 38px !important;
   padding: 0;
 }
+
+.codx-tab .e-richtexteditor {
+  height: auto !important;
+}
+
+.codx-tab .tab-content .e-rte-content {
+  height: auto !important;
+  max-height: 300px;
+}
+
+.codx-tab .e-richtexteditor .e-rte-content .e-content {
+  padding: 10px !important;
+}
+
+// .offcanvas-content .e-searcher.e-multiselect-box {
+//   width: 100% !important;
+//   width: 300px !important;
+// }
+
+#kt_user_add_avatar .top-100.start-100 {
+  top: 90% !important;
+  left: 90% !important;
+}

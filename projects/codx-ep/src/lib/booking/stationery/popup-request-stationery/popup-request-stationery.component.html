@@ -70,13 +70,23 @@
         <div class="mb-10 mt-10 text-center tab-pane-header h-100">
           <ng-container *ngIf="currentTab == 1; else addNewRequest">
             <div class="d-flex justify-content-between container mb-10 mt-10">
-              <div class="d-flex">
-                <div class="me-2">Tất cả</div>
-                <div class="me-2">Văn phòng phẩm</div>
-                <div class="me-2">Trà & nước</div>
-                <div class="me-2">Bánh kẹo</div>
-                <div class="me-2">Trái cây</div>
-              </div>
+              <ul class="nav">
+                <li class="nav-item">
+                  <span class="nav-link fw-bold active">Tất cả</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link fw-bold">Văn phòng phẩm</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link fw-bold">Trà & nước</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link fw-bold">Bánh kẹo</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link fw-bold">Trái cây</span>
+                </li>
+              </ul>
               <div class="d-flex">
                 <div id="ex4">
                   <span class="p1 fa-stack fa-2x has-badge">
@@ -114,7 +124,7 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img
-    cardCss="border w-250px h-100"
+    cardCss="border w-200px h-100"
     [imageSrc]="
       data.icon ? data.icon : '../assets/media/svg/files/blank-image.svg'
     "
@@ -159,153 +169,192 @@
 </ng-template>
 
 <ng-template #addNewRequest let-dialogSaveToTemplate>
-  <codx-form
-    #form
-    [headerText]="'Thông tin yêu cầu'"
-    [body]="body"
-    [footer]="footer"
-    [dialog]="dialog"
-    [formModel]="formModel"
-    [formControl]="dialogAddRoom"
-    *ngIf="isAfterRender"
-  >
-    <ng-template #body>
-      <div class="d-flex justify-content-between h-100">
-        <div class="left">
-          <div class="row">
-            <div class="form-group col-4">
-              <codx-label
-                fiedName="BookingOn"
-                [formModel]="dialog.formModel"
-                default="Ngày yêu cầu"
-              >
-              </codx-label>
-              <codx-input
-                ControlName="bookingOn"
-                [formModel]="form.formModel"
-                [Group]="dialogAddRoom"
-              >
-              </codx-input>
-            </div>
-            <div class="form-group d-flex col-4">
-              <codx-input
-                type="radio"
-                [crrValue]="data.recID"
-                name="requestBy"
-                ControlName="recID"
-              >
-              </codx-input>
-              <codx-label
-                name="lblPersonalRequest"
-                default="Yêu cầu theo cá nhân"
-                [formModel]="dialog.formModel"
-              ></codx-label>
-            </div>
-            <div class="form-group d-flex col-4">
-              <codx-input
-                type="radio"
-                [crrValue]="data.recID"
-                name="requestBy"
-                ControlName="recID"
-              >
-              </codx-input>
-              <codx-label
-                name="lblDeptRequest"
-                default="Yêu cầu theo phòng"
-                [formModel]="dialog.formModel"
-              ></codx-label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-6">
-              <codx-label
-                name="lblEmpQty"
-                [formModel]="dialog.formModel"
-                default="Đơn vị/Phòng ban"
-              >
-              </codx-label>
-              <codx-input
-                ControlName="BUID"
-                [formModel]="form.formModel"
-                [Group]="dialogAddRoom"
-              >
-              </codx-input>
-            </div>
-            <div class="form-group col-6">
-              <codx-label
-                fiedName="BUID"
-                [formModel]="dialog.formModel"
-                default="Số lượng nhân viên"
-              >
-              </codx-label>
-              <codx-input type="text"> </codx-input>
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-12">
-              <codx-label
-                fiedName="ReasonID"
-                [formModel]="dialog.formModel"
-                default="Lý do đăng ký"
-              >
-              </codx-label>
-              <codx-input
-                ControlName="reasonID"
-                [formModel]="form.formModel"
-                [Group]="dialogAddRoom"
-              >
-              </codx-input>
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-12">
-              <codx-label fiedName="Note" [formModel]="dialog.formModel">
-              </codx-label>
-              <codx-input
-                ControlName="note"
-                [formModel]="form.formModel"
-                [Group]="dialogAddRoom"
-              >
-              </codx-input>
-            </div>
-          </div>
-        </div>
-        <div class="vr"></div>
-        <div class="right">
-          <div *ngFor="let item of cart; trackBy: itemByRecID">
-            <div>{{ item.recID }}</div>
-            <div>{{ item.resourceName }}</div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-
-    <ng-template #footer>
+  <div class="row" style="height: 99%">
+    <div class="left col-6">
       <div class="d-flex justify-content-between">
-        <button class="btn btn-outline-primary" (click)="changeTab(1)">
-          <codx-label
-            name="lblBack"
-            default="Quay lại"
-            [formModel]="dialog.formModel"
-          ></codx-label>
-        </button>
-        <div class="btn-group">
-          <button class="btn btn-outline-primary">
-            <codx-label
-              name="lblApprove"
-              default="Gửi duyệt"
-              [formModel]="dialog.formModel"
-            ></codx-label>
-          </button>
-          <button class="btn btn-primary">
-            <codx-label
-              name="lblSave"
-              default="Lưu"
-              [formModel]="dialog.formModel"
-            ></codx-label>
-          </button>
+        <div class="d-flex">
+          <codx-img
+            [objectId]="'ADMIN'"
+            [objectName]="'Lê Phạm Hoài Thương'"
+            [objectType]="'AD_Users'"
+          ></codx-img>
+          <div>
+            <div>Lê Phạm Hoài Thương</div>
+            <div>Thư ký trung tâm - NDX</div>
+          </div>
+        </div>
+        <div
+          class="badge border-0 me-2"
+          [style.background-color]="'4' | vll: 'VL003':'color' | async"
+          [style.color]="'4' | vll: 'VL003':'textColor' | async"
+        >
+          {{ "4" | vll: "VL003":"text" | async }}
         </div>
       </div>
-    </ng-template>
-  </codx-form>
+      <div class="row">
+        <div class="form-group col-4">
+          <codx-label
+            fiedName="BookingOn"
+            [formModel]="formModel"
+            default="Ngày yêu cầu"
+          >
+          </codx-label>
+          <codx-input
+            ControlName="bookingOn"
+            [formModel]="formModel"
+            [Group]="dialogAddRoom"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group d-flex col-4">
+          <codx-input
+            type="radio"
+            [crrValue]="data.recID"
+            name="requestBy"
+            ControlName="recID"
+          >
+          </codx-input>
+          <codx-label
+            name="lblPersonalRequest"
+            default="Yêu cầu theo cá nhân"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+        <div class="form-group d-flex col-4">
+          <codx-input
+            type="radio"
+            [crrValue]="data.recID"
+            name="requestBy"
+            ControlName="recID"
+          >
+          </codx-input>
+          <codx-label
+            name="lblDeptRequest"
+            default="Yêu cầu theo phòng"
+            [formModel]="formModel"
+          ></codx-label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-6">
+          <codx-label
+            name="lblEmpQty"
+            [formModel]="formModel"
+            default="Đơn vị/Phòng ban"
+          >
+          </codx-label>
+          <codx-input
+            ControlName="BUID"
+            [formModel]="formModel"
+            [Group]="dialogAddRoom"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group col-6">
+          <codx-label
+            fiedName="BUID"
+            [formModel]="formModel"
+            default="Số lượng nhân viên"
+          >
+          </codx-label>
+          <codx-input type="text"> </codx-input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <codx-label
+            fiedName="ReasonID"
+            [formModel]="formModel"
+            default="Lý do đăng ký"
+          >
+          </codx-label>
+          <codx-input
+            ControlName="reasonID"
+            [formModel]="formModel"
+            [Group]="dialogAddRoom"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <codx-label fiedName="Note" [formModel]="formModel"> </codx-label>
+          <codx-input
+            ControlName="note"
+            [formModel]="formModel"
+            [Group]="dialogAddRoom"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="vr px-0"></div>
+    <div class="right col-5">
+      <codx-label
+        class="fw-bold text-left"
+        name="lblStationeryList"
+        default="Danh sách văn phòng phẩm"
+      ></codx-label>
+      <div *ngFor="let item of cart; trackBy: itemByRecID">
+        <div class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-100">
+          <div class="d-flex flex-row">
+            <div class="me-2">
+              <codx-img
+                [objectId]="item.recID"
+                imageType="square"
+                width="35"
+                objectType="EP_Stationery"
+              ></codx-img>
+            </div>
+            <div class="ms-2">
+              <span class="fw-bold">{{ item.resourceName }}</span>
+
+              <div class="d-flex flex-row flex-grow-1">
+                <codx-label
+                  default="Đơn vị tính:"
+                  name="lblQuantity"
+                  class="text-gray-600"
+                ></codx-label>
+                <span class="d-block ms-2 fw-bold">{{ item.umid }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center me-3">
+            <codx-label
+              default="Số lượng:"
+              name="lblQuantity"
+              class="text-gray-600"
+            ></codx-label>
+            <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between">
+    <button class="btn btn-outline-primary" (click)="changeTab(1)">
+      <codx-label
+        name="lblBack"
+        default="Quay lại"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+    <div class="btn-group">
+      <button class="btn btn-outline-primary me-2">
+        <codx-label
+          name="lblApprove"
+          default="Gửi duyệt"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </div>
 </ng-template>

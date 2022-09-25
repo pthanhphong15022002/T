@@ -14,10 +14,11 @@ import { CardType, Valuelist } from '../../models/model';
 })
 export class PopupAddCardsComponent implements OnInit {
   funcID:string ="";
-  entityPer:string = "";
   entityName = "FD_Cards"
-  dataValue:string ="";
-  lstCard:any[] = [];
+  gridViewName:string = "";
+  formName:string = "";
+
+  lstPattern:any[] = [];
   parameter: any;
   totalCoint:number = 0;
   givePrice:number = 0;
@@ -40,8 +41,6 @@ export class PopupAddCardsComponent implements OnInit {
   refValue = "Behaviors_Grp";
   userReciver:string = "";
   userReciverName:string ="";
-  vllData: any;
-  vll:string = "";
   lstShare:any[] = [];
   gift:any;
   giftCount:number;
@@ -50,6 +49,7 @@ export class PopupAddCardsComponent implements OnInit {
   totalRecorItem = 4;
   cardSelected: any;
   ratingVll:string ="";
+  lstRating:any= null;
   MEMBERTYPE = {
     CREATED: "1",
     SHARE: "2",
@@ -82,66 +82,92 @@ export class PopupAddCardsComponent implements OnInit {
     @Optional() dd?:DialogData
   ) 
   {
-    this.funcID = dd.data.funcID;
-    this.cardType = dd.data.cardType;
-    this.title = dd.data.title;
-    this.vll = dd.data.valueList;
+    this.funcID = dd.data;
     this.dialog = dialogRef;
     this.user = this.auth.userValue;
   }
 
   ngOnInit(): void {
+    this.initForm();
+    this.loadDataAsync(this.funcID);
+  }
+  loadDataAsync(funcID:string){
+    if(funcID){
+      this.cache.functionList(funcID)
+      .subscribe((func:any) => {
+        if(func && func?.formName && func?.gridViewName && func?.entityName && func?.description){
+          this.cardType = func.dataValue;
+          this.formName = func.formName;
+          this.gridViewName = func.gridViewName;
+          this.entityName = func.entityName;
+          this.title = func.description
+          this.cache.gridViewSetup(this.formName,this.gridViewName)
+          .subscribe((grdSetUp:any) => {
+            if(grdSetUp && grdSetUp?.Rating?.referedValue){
+              this.ratingVll = grdSetUp.Rating.referedValue;
+              this.cache.valueList(this.ratingVll)
+              .subscribe((vll:any) => {
+                if(vll){
+                  this.lstRating = vll.datas;
+                  console.log(vll);
+                }
+              })
+              this.dt.detectChanges();
+            }
+          })
+          this.loadParameter(this.cardType);
+          this.loadDataPattern(this.cardType);
+        }
+      })
+    }
+  }
+  loadParameter(cardType:string){
+    this.api.execSv("SYS","ERM.Business.SYS","SettingsBusiness","GetParameterByFDAsync",["FDParameters",cardType])
+    .subscribe((res:any)=>{
+      if(res){
+        this.parameter = JSON.parse(res);
+        console.log(this.parameter);
+        this.dt.detectChanges();
+      }
+    })
+  }
+  loadDataPattern(cardType:string) {
     this.api
-      .callSv("SYS", "ERM.Business.CM", "ParametersBusiness", "GetOneField", [
-        "FD_Parameters",
-        "1",
-        "RuleSelected",
+      .execSv("FD","ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [
+        cardType,
       ])
-      .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
-          var data = res.msgBodyData[0];
-          if (data.fieldValue == "2") this.refValue = "Behaviors";
-          if (data.fieldValue == "0") this.refValue = "";
+      .subscribe((res:any) => {
+        if (res && res.length > 0) {
+          this.lstPattern = res;
+          if(this.lstPattern.length > this.totalRecorItem){
+            this.showNavigationArrows = true;
+          }
+          var cardDefault = this.lstPattern.find((item) => item.isDefault == true);
+          var cardFirst = this.lstPattern[0];
+          var cardDefaultIdx;
+          if (cardDefault != null) {
+            cardDefaultIdx = this.lstPattern.findIndex(
+              (item) => item == cardDefault
+            );
+            this.lstPattern.splice(cardDefaultIdx, 1);
+            this.lstPattern.unshift(cardDefault);
+
+            this.cardSelected = cardDefault;
+            this.cardSelected.selected = true;
+          } else {
+            cardDefaultIdx = this.lstPattern.findIndex(
+              (item) => item == cardFirst
+            );
+            this.lstPattern.splice(cardDefaultIdx, 1);
+            this.lstPattern.unshift(cardFirst);
+
+            this.cardSelected = cardFirst;
+            this.cardSelected.selected = true;
+          }
           this.dt.detectChanges();
         }
       });
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if(res){
-        this.cardType = res.dataValue;
-        this.dataValue = res.dataValue;
-        this.entityPer =  res.entityName;
-        if(this.vll != ""){
-          this.cache.valueList(this.vll).subscribe((res) => {
-            if (res)
-            {
-              this.vllData = res.datas;
-              console.log(this.vll , this.vllData)
-            }
-          });
-        }
-        this.LoadDataCard();
-        this.loadParameter(this.cardType,"1");
-      }
-    })
-    this.initForm();
-    this.handleVllRating(this.cardType);
   }
-  loadParameter(transType = "1",category = "1"){
-    this.api.execSv("FD","ERM.Business.FD","WalletsBusiness","GetParameterByWebAsync",["FD_Parameters",transType,category])
-    .subscribe((res:any) => 
-    {
-      if(res){
-        console.log('loadParameter: ',res)
-        // this.parameter = JSON.parse(res[0]);
-        // this.totalCointGived = res[1];
-      }
-      else{
-        this.parameter = null;
-      }
-    });
-    this.dt.detectChanges();
-  }
-
   initForm(){
     this.form = new FormGroup({
       receiver: new FormControl(""),
@@ -155,22 +181,9 @@ export class PopupAddCardsComponent implements OnInit {
       coins: new FormControl(0)
     })
   }
-
-  handleVllRating(cardType: string): void {
-    if (cardType == CardType.Thankyou) {
-      this.ratingVll = Valuelist.RatingThankYou;
-    }
-    else if (cardType == CardType.CommentForChange) {
-      this.ratingVll = Valuelist.RatingCommentForChange;
-    }
-    else{
-      this.ratingVll = Valuelist.CardType;
-    }
-    this.dt.detectChanges();
-  }
   valueChange(e, element = null)
   {
-    if(!e || !e.data){
+    if(!e || !e?.data){
       return;
     }
     let value = e;
@@ -268,12 +281,12 @@ export class PopupAddCardsComponent implements OnInit {
 
   Save() {
     if (!this.userReciver && this.cardType != "5" && this.cardType != "4") {
-      this.notifySV.notify("Vui lòng chọn người nhận trước !");
+      this.notifySV.notify("Vui lòng chọn người nhận !");
       return;
     }
     else if (!this.refValue && this.cardType != "5" && this.cardType != "4") {
       if (!this.form.value["behavior"]) {
-        this.notifySV.notify("Vui lòng chọn hành vi!");
+        this.notifySV.notify("Vui lòng chọn qui tắc ứng xử!");
         return;
       }
     }
@@ -292,7 +305,7 @@ export class PopupAddCardsComponent implements OnInit {
       let card = new FED_Card();
       card = this.form.value;
       card.functionID = this.funcID;
-      card.entityPer = this.entityPer;
+      card.entityPer = this.entityName;
       card.cardType = this.cardType;
       card.coins = this.givePrice;
       card.gifts = lstGift;
@@ -376,43 +389,7 @@ export class PopupAddCardsComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-  LoadDataCard() {
-    this.api
-      .execSv("FD","ERM.Business.FD", "PatternsBusiness", "GetCardTypeAsync", [
-        this.cardType,
-      ])
-      .subscribe((res:any) => {
-        if (res && res.length > 0) {
-          this.lstCard = res;
-          if(this.lstCard.length > this.totalRecorItem){
-            this.showNavigationArrows = true;
-          }
-          var cardDefault = this.lstCard.find((item) => item.isDefault == true);
-          var cardFirst = this.lstCard[0];
-          var cardDefaultIdx;
-          if (cardDefault != null) {
-            cardDefaultIdx = this.lstCard.findIndex(
-              (item) => item == cardDefault
-            );
-            this.lstCard.splice(cardDefaultIdx, 1);
-            this.lstCard.unshift(cardDefault);
 
-            this.cardSelected = cardDefault;
-            this.cardSelected.selected = true;
-          } else {
-            cardDefaultIdx = this.lstCard.findIndex(
-              (item) => item == cardFirst
-            );
-            this.lstCard.splice(cardDefaultIdx, 1);
-            this.lstCard.unshift(cardFirst);
-
-            this.cardSelected = cardFirst;
-            this.cardSelected.selected = true;
-          }
-          this.dt.detectChanges();
-        }
-      });
-  }
   selectCard(item, element) {
     if (this.cardSelected) {
       this.cardSelected.selected = false;

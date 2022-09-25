@@ -669,7 +669,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res) {
           var param = JSON.parse(res.dataValue);
           this.calendarID = param.CalendarID;
-          // this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
+          this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
           this.getTimeWork(
             moment(new Date(this.meeting.startDate))
               .set({ hour: 0, minute: 0, second: 0 })
