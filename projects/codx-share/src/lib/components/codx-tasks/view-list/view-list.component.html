@@ -43,7 +43,7 @@
 
   <div class="w-150px min-w-150px">
     <div *ngIf="data.category == '3'" class="">
-      <codx-imgs [width]="30" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="4"
+      <codx-imgs  [isToolTip]="false" [width]="30" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="4"
         (click)="popoverEmpList(popoverList,data)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
         #popoverList="ngbPopover" placement="right bottom" container="body" autoClose="outside" [openDelay]="500">
       </codx-imgs>
