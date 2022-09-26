@@ -178,8 +178,21 @@ export class CodxEsService {
           formModel.gridViewName = funcList?.gridViewName;
           formModel.funcID = funcList?.functionID;
           formModel.entityPer = funcList?.entityPer;
+
+          this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+            this.cache.setGridView(formModel.gridViewName, gridView);
+            this.cache
+              .gridViewSetup(formModel.formName, formModel.gridViewName)
+              .subscribe((gridViewSetup) => {
+                this.cache.setGridViewSetup(
+                  formModel.formName,
+                  formModel.gridViewName,
+                  gridViewSetup
+                );
+                resolve(formModel);
+              });
+          });
         }
-        resolve(formModel);
       });
     });
   }
@@ -581,13 +594,15 @@ export class CodxEsService {
   }
 
   getApprovalSteps(model: GridModels): Observable<any> {
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalStepsBusiness',
-      'GetListApprovalStepAsync',
-      [model]
-    );
+    if (model.dataValue && (model.dataValue != '' || model.dataValue != null)) {
+      return this.api.execSv(
+        'es',
+        'ERM.Business.ES',
+        'ApprovalStepsBusiness',
+        'GetListApprovalStepAsync',
+        [model]
+      );
+    } else return EMPTY;
   }
 
   addNewApprovalStep(lstData = null): Observable<any> {

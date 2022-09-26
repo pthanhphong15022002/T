@@ -241,7 +241,7 @@ export class PopupAddCarsComponent extends UIComponent {
     this.fGroupAddCar.value.icon = event.data[0].data;
   }
   fileAdded(event) {
-    debugger;
+    
   }
 
   popupUploadFile() {

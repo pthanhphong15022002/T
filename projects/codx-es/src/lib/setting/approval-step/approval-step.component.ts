@@ -282,6 +282,9 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
 
     this.esService.editApprovalStep().subscribe((res) => {
       console.log('result edit appp', res);
+      if (res) {
+        this.notifySvr.notifyCode('RS002');
+      }
     });
 
     this.esService.deleteApprovalStep().subscribe((res) => {

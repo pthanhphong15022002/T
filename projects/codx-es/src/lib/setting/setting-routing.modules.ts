@@ -13,7 +13,6 @@ import { AuthGuard, CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { PopupAddApprovalStepComponent } from './approval-step/popup-add-approval-step/popup-add-approval-step.component';
 import { DocCategoryComponent } from './category/category.component';
-import { PopupAddCategoryComponent } from './category/popup-add-category/popup-add-category.component';
 import { ProcessStepComponent } from './category/process-step/process-step.component';
 import { LayoutComponent } from './_layout/layout.component';
 
@@ -46,7 +45,6 @@ const routes: Routes = [
     DocCategoryComponent,
     ProcessStepComponent,
     PopupAddApprovalStepComponent,
-    PopupAddCategoryComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

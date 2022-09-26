@@ -46,9 +46,8 @@
                                                     [objectId]="perm.objectID" objectType="AD_Users"> </lv-image-viewer>
                                             </ng-template> -->
                                         </div>
-                                        <!-- <div class="text-dark-75">{{perm.objectName}}</div> -->
                                     </div>
-                                    <ng-container *ngIf="!this.checkItemRight(i) && !this.propertiesFolder && hasShare">
+                                    <ng-container *ngIf="!this.checkItemRight(i) && !this.propertiesFolder">
                                         <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer" (click)="removeUserRight(i)">
                                             <i class="icon-close text-danger icon-16"></i>
                                         </div>
@@ -62,13 +61,10 @@
                         </ng-container>
                     </div>
                 </div>
-                <div *ngIf="allowSetRight()" class="add-user" [ngClass]="!hasShare?'dm-div-disable':null">
+                <div *ngIf="allowSetRight()" class="add-user" [ngClass]="!fileEditing?.assign?'dm-div-disable':null">
                     <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false" 
                         (valueChange)="onSaveRole($event)">
                     </codx-input>
-                    <!-- <a (click)="openRole()" class="btn btn-icon btn-xs btn-light-primary">
-                        <span class="icon-person_add_alt_1 icon-18"></span>
-                    </a> -->
                 </div>
             </div>
             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
@@ -86,17 +82,10 @@
                                 <td class="font-size-lg text-dark">{{titleFullControl}}</td>
                                 <td>{{titleRightDescription}}</td>
                                 <td class="text-center">
-                                    <!-- <codx-input
-                                    class="form-check-input w-35px h-20px"
-                                    type="switch"
-                                    id="googleswitch"
-                                    [checked]="item.isSelected"
-                                    (change)="checkedChange($event, item)"
-                                  ></codx-input> -->
-
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="full"
                                         field="full" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'full')" (focus)="controlFocus(true)"></codx-input>
+                                        (valueChange)="onSaveRightChanged($event, 'full')" (focus)="controlFocus(true)">
+                                    </codx-input>
                                 </td>
                             </tr>
                             <tr>

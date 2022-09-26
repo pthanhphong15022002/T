@@ -118,7 +118,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
                 JSON.stringify([this.recID])
               )
               .subscribe((res) => {
-                debugger;
+                
               });
           } else {
             this.setDefaut();
@@ -195,7 +195,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       this.attachment.objectId = this.recID;
 
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
-        debugger;
+        
         if (item2?.status == 0) {
         }
       });

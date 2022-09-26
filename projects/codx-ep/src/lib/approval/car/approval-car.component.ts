@@ -133,7 +133,7 @@ export class ApprovalCarsComponent extends UIComponent {
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          debugger;
+          
           this.dataSelected = this.view.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
