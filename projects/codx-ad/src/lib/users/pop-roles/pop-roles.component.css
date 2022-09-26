@@ -18,3 +18,8 @@
     margin-left: -8%;
     margin-top: -3%;
 }
+
+.listsrole {
+    max-height: calc(100vh - 230px);
+    overflow: auto;
+}

@@ -1,12 +1,4 @@
-<div
-  (scroll)="onScroll($event)"
-  class="w-100 scroll-y home"
-  data-kt-scroll="true"
-  data-kt-scroll-activate="{default: true}"
-  data-kt-scroll-height="auto"
-  data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
-  data-kt-scroll-offset="0"
->
+
   <codx-views
     #view
     [funcID]="funcID"
@@ -25,7 +17,6 @@
     (onDragDrop)="onDragDrop($event)"
   >
   </codx-views>
-</div>
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>

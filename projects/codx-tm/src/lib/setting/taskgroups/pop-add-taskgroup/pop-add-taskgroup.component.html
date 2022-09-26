@@ -315,14 +315,17 @@
     <div class="form-group">
       <div class="checkbox-list">
         <ng-container *ngFor="let item of listTodo; index as i;">
-          <div class="d-flex justify-content-between align-items-center checkbox-item p-2 rounded-1 bg-gray-100 mb-2">
+          <div
+            class="d-flex justify-content-between align-items-center checkbox-item py-2 px-3 rounded-1 bg-gray-100 mb-2">
             <div class="d-flex algin-items-center">
-              <label class="checkbox checkbox-square mb-0">
-                <input #checkShareRight1 type="checkbox" id="checkShareRight1"
-                  (change)="onChangeToDoStatus(checkShareRight1.checked, i)" disabled="disabled">
-                <span></span>
-              </label>
-              <span class="ms-2">{{item.text}}</span>
+              <div class="d-flex justify-content-between pt-1">
+                <label class="checkbox checkbox-square mb-0">
+                  <input #checkShareRight1 type="checkbox" id="checkShareRight1"
+                    (change)="onChangeToDoStatus(checkShareRight1.checked, i)" disabled="disabled">
+                  <span></span>
+                </label>
+              </div>
+              <span class="ms-2 text-dark">{{item.text}}</span>
             </div>
             <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ms-2 text-danger"></span>
           </div>
@@ -334,7 +337,7 @@
             [ngModelOptions]="{standalone: true}" required matInput class="form-control" (keydown.enter)="onAddToDo()"
             placeholder="Add..." />
           <div class="input-group-append">
-            <button (click)="onAddToDo()" class="btn btn-light-primary" type="button">
+            <button (click)="onAddToDo()" class="btn btn-icon btn-light-primary" type="button">
               <span class="icon-add icon-16"></span>
             </button>
           </div>

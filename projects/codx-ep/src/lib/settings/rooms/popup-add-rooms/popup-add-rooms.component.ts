@@ -166,8 +166,9 @@ export class PopupAddRoomsComponent extends UIComponent {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res) {
+          let objectID= res.save.recID !=null? res.save.recID:res.update.recID;
           this.imageUpload
-            .updateFileDirectReload(res.update.recID)
+            .updateFileDirectReload(objectID)
             .subscribe((result) => {
               if (result) {
                 //this.loadData.emit();

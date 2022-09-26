@@ -1,42 +1,79 @@
-<codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="click($event)"
-  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
-  (requestEnded)="closeEditForm($event)">
+<codx-views
+  #base
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
+  (requestEnded)="closeEditForm($event)"
+  (onLoading)="onLoading($event)"
+>
 </codx-views>
 
 <ng-template #process let-data>
   <div class="has-action-menu">
-    <div class="progress-approval mt-3 mb-3" *ngIf="data?.countStep > 0" (click)="viewDetail(data)">
+    <div
+      class="progress-approval mt-3 mb-3"
+      *ngIf="data?.countStep > 0"
+      (click)="viewDetail(data)"
+    >
       <ng-container *ngFor="let item of getCount(data?.countStep)">
         <div class="process-step" placement="top">
-          <div class="step-node" [style.color]="''" [ngStyle]="{'border': '2px solid ' + ''}">{{item}}</div>
+          <div
+            class="step-node"
+            [style.color]="''"
+            [ngStyle]="{ border: '2px solid ' + '' }"
+          >
+            {{ item }}
+          </div>
         </div>
       </ng-container>
-
     </div>
 
     <div class="center w-400 mt-5 mb-3" *ngIf="data?.countStep == 0">
-      <codx-label name="lblNotSetup" default="Chưa thiết lập" [formModel]="viewBase.formModel">
+      <codx-label
+        name="lblNotSetup"
+        default="Chưa thiết lập"
+        [formModel]="viewBase.formModel"
+      >
       </codx-label>
     </div>
     <div class="action-menu">
-      <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" type="hover" [dataItem]="data">
+      <codx-mfunc
+        [formModel]="viewBase.formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+        [dataItem]="data"
+      >
       </codx-mfunc>
     </div>
   </div>
 </ng-template>
 
 <ng-template #memo let-data>
-  <div #memo class="text-dark">{{ data.memo | formatvalue: viewBase.formModel:"memo": memo | async}}</div>
+  <div #memo class="text-dark">
+    {{ data.memo | formatvalue: viewBase.formModel:"memo":memo | async }}
+  </div>
 </ng-template>
 
 <ng-template #icon let-data>
   <div class="">
-    <i [ngClass]="data.icon" [style.background]="data.color" [style.color]="'white'"
-      class="fs-3 align-self-start rounded-circle p-3 m-1"></i>
+    <i
+      [ngClass]="data.icon"
+      [style.background]="data.color"
+      [style.color]="'white'"
+      class="fs-3 align-self-start rounded-circle p-3 m-1"
+    ></i>
   </div>
 </ng-template>
-
 
 <!-- <ng-template #color let-data>
   <div class="d-flex">
@@ -45,38 +82,47 @@
   </div>
 </ng-template> -->
 
-
 <ng-template #parentID let-data>
-  <div #parentID class="text-dark">{{ data.parentID | formatvalue: viewBase.formModel:"parentID": parentID | async}}
+  <div #parentID class="text-dark">
+    {{
+      data.parentID
+        | formatvalue: viewBase.formModel:"parentID":parentID
+        | async
+    }}
   </div>
 </ng-template>
 
 <ng-template #listItem let-data>
-  <div class="task-row py-3 px-6 ">
+  <div class="task-row py-3 px-6">
     <table class="table w-100 table-action-menu">
       <tbody>
         <td class="w-25">
           <div class="d-flex justify-content-center">
-            {{data.categoryID}}
+            {{ data.categoryID }}
           </div>
         </td>
         <td class="w-15">
           <div class="d-flex justify-content-center">
-            {{data.categoryName}}
+            {{ data.categoryName }}
           </div>
         </td>
         <td class="w-15">
           <div class="d-flex justify-content-center">
-            <span
-              class="badge badge-light-success fs-7 fw-bold mb-1">{{data.signatureType|vll:'ES001':'text'|async}}</span>
+            <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
+              data.signatureType | vll: "ES001":"text" | async
+            }}</span>
           </div>
         </td>
         <td class="w-150px">
-          <div id="progress" class="cdx-progress mt-3" *ngIf="data?.countStep > 1">
+          <div
+            id="progress"
+            class="cdx-progress mt-3"
+            *ngIf="data?.countStep > 1"
+          >
             <div id="progress-bar"></div>
             <ul id="progress-num">
               <ng-container *ngFor="let item of getCount(data?.countStep)">
-                <li class="step">{{item}}</li>
+                <li class="step">{{ item }}</li>
               </ng-container>
             </ul>
           </div>
@@ -84,12 +130,20 @@
             <li class="step">1</li>
           </div>
           <div class="center" *ngIf="data?.countStep == 0">
-            <codx-label name="lblNotSetup" default="Chưa thiết lập" [formModel]="viewBase.formModel"></codx-label>
+            <codx-label
+              name="lblNotSetup"
+              default="Chưa thiết lập"
+              [formModel]="viewBase.formModel"
+            ></codx-label>
           </div>
         </td>
       </tbody>
     </table>
   </div>
-  <codx-temp-full [formModel]="viewBase.formModel" (clickMF)="clickMF($event,data)" (click)="click(data)">
+  <codx-temp-full
+    [formModel]="viewBase.formModel"
+    (clickMF)="clickMF($event, data)"
+    (click)="click(data)"
+  >
   </codx-temp-full>
 </ng-template>

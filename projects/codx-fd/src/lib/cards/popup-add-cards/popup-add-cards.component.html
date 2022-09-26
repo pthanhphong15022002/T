@@ -27,11 +27,15 @@
                                             <codx-label fiedName="Receiver" [formModel]="dialog.formModel" name="lblfReciver"
                                                 default="Người nhận quà">
                                             </codx-label>
-                                            <codx-input type="combobox" class=" form-control borderless p-0"
-                                                [crrValue]="form.value.receiver" [multiple]="true" [loadFull]="true" ngDefaultControl
-                                                field="receiver" #comboboxUserReciver
-                                                (valueChange)="valueChange($event,comboboxUserReciver)" refValue="Users"
-                                                service="SYS">
+                                            <codx-input 
+                                                type="combobox" 
+                                                class=" form-control borderless p-0"
+                                                [crrValue]="form.value.receiver" 
+                                                [multiple]="true"
+                                                [loadFull]="true"
+                                                field="receiver" 
+                                                (valueChange)="valueChange($event)" 
+                                                refValue="Users">
                                             </codx-input>
                                         </div>
                                     </ng-container>
@@ -41,11 +45,16 @@
                                             <codx-label fiedName="Behavior" [formModel]="dialog.formModel" name="lblfBehavior"
                                                 default="Qui tắc ứng xử">
                                             </codx-label>
-                                            <codx-input type="combobox" name="combobox"
-                                                class=" form-control borderless p-0" [crrValue]="form.value.behavior"
-                                                field="behavior" #comboboxBehavior ngDefaultControl
+                                            <codx-input 
+                                                type="combobox" 
+                                                name="combobox"
+                                                class=" form-control borderless p-0" 
+                                                [crrValue]="form.value.behavior"
+                                                field="behavior"
+                                                ngDefaultControl
                                                 [refValue]="refValue"
-                                                (valueChange)="valueChange($event,comboboxBehavior)" loadFull="true">
+                                                (valueChange)="valueChange($event)" 
+                                                loadFull="true">
                                             </codx-input>
                                         </div>
                                     </ng-container>
@@ -54,10 +63,17 @@
                                         <div class="form-group">
                                             <codx-label fiedName="Industry" [formModel]="dialog.formModel" name="lblfIndustry"
                                                 default="Lĩnh vực"></codx-label>
-                                            <codx-input type="combobox" name="combobox" [class]="'mt-2'"
-                                                field="industry" #industry [crrValue]="form.value.industry"
-                                                ngDefaultControl [refValue]="'Industries'" service="BS"
-                                                (valueChange)="valueChange($event,industry)" [loadFull]="true">
+                                            <codx-input 
+                                                type="combobox" 
+                                                name="combobox" 
+                                                [class]="'mt-2'"
+                                                field="industry" 
+                                                [crrValue]="form.value.industry"
+                                                ngDefaultControl 
+                                                [refValue]="'Industries'" 
+                                                service="BS"
+                                                (valueChange)="valueChange($event)" 
+                                                [loadFull]="true">
                                             </codx-input>
                                         </div>
                                         <div class="form-group">
@@ -78,20 +94,28 @@
                                         <codx-label fiedName="Situation" [formModel]="dialog.formModel" name="lblfStuation"
                                             default="Nội dung gửi">
                                         </codx-label>
-                                        <codx-input class="form-control p-0" type="textarea"
-                                            [crrValue]="form.value.situation" field="situation" #inputContents
-                                            (valueChange)="valueChange($event,inputContents)" placeholder=""
-                                            ngDefaultControl>
+                                        <codx-input 
+                                            class="form-control p-0" 
+                                            type="textarea"
+                                            [crrValue]="form.value.situation" 
+                                            field="situation"
+                                            (valueChange)="valueChange($event)" 
+                                            placeholder=""
+                                            >
                                         </codx-input>
                                     </div>
                                     <ng-container
                                         *ngIf="cardType == CARDTYPE_EMNUM.Thankyou ||  cardType == CARDTYPE_EMNUM.CommentForChange">
                                         <div class="checkbox-inline mb-3 check-1 d-flex">
-                                            <div class="me-3" *ngFor="let item of vllData">
-                                                <codx-input class="rounded-circle mr-1i" [crrValue]="item.value"
-                                                    [label]="item.text" type="radio" field="rating" #checkboxRating
-                                                    name="radio" (valueChange)="valueChange($event, checkboxRating)"
-                                                    ngDefaultControl>
+                                            <div class="me-3" *ngFor="let item of lstRating">
+                                                <codx-input class="rounded-circle mr-1i" 
+                                                    [crrValue]="item.value"
+                                                    [label]="item.text" 
+                                                    type="radio" 
+                                                    field="rating"
+                                                    name="radio" 
+                                                    (valueChange)="valueChange($event)"
+                                                    >
                                                 </codx-input>
                                             </div>
 
@@ -146,11 +170,11 @@
                                             <ngb-carousel #carousel [wrap]="false" [interval]="0" [keyboard]="false"
                                                 [pauseOnHover]="false" [showNavigationArrows]="showNavigationArrows"
                                                 [showNavigationIndicators]="false">
-                                                <ng-container *ngFor="let item of lstCard; let i = index;">
-                                                    <ng-template ngbSlide *ngIf="i * 4 < lstCard.length">
+                                                <ng-container *ngFor="let item of lstPattern; let i = index;">
+                                                    <ng-template ngbSlide *ngIf="i * 4 < lstPattern.length">
                                                         <div class="d-flex">
                                                             <ng-container
-                                                                *ngFor="let itemChild of lstCard; let idxChild = index;">
+                                                                *ngFor="let itemChild of lstPattern; let idxChild = index;">
                                                                 <ng-container
                                                                     *ngIf="idxChild >= (i * 4) && idxChild < (i + 1 * 4)">
                                                                     <ng-container
@@ -185,24 +209,40 @@
                                         </div>
                                     </ng-container>
                                     <ng-container *ngIf="parameter">
-                                        <ng-container *ngIf="parameter.HasGifts == '1' ">
+                                        <ng-container *ngIf="parameter.HasGifts && parameter.HasGifts == '1'">
                                             <div class="form-group mt-6">
-                                                <codx-label fiedName="ItemID" [formModel]="dialog.formModel" name="lblfGift"
-                                                    default="Quà tặng"></codx-label>
-                                                <codx-combobox service="FD" name="combobox"
-                                                    class=" form-control borderless p-0" placeholder="{{'Tên quà tặng' | lang:
-                                                    'Gift':'tblGiftName' | async}}" ngDefaultControl refValue="FDGifts"
-                                                    loadFull="false" #gift field="giftID"
-                                                    (valueChange)="valueChange($event, gift)">
+                                                <codx-label 
+                                                    fiedName="ItemID" 
+                                                    [formModel]="dialog.formModel" 
+                                                    name="lblfGift"
+                                                    default="Quà tặng">
+                                                </codx-label>
+                                                <codx-combobox 
+                                                    name="cbbGift"
+                                                    class="form-control borderless p-0" 
+                                                    placeholder="{{'Tên quà tặng' | lang:
+                                                    'Gift':'tblGiftName' | async}}" 
+                                                    refValue="Gifts"
+                                                    loadFull="false" 
+                                                    field="giftID"
+                                                    (valueChange)="valueChange($event)">
                                                 </codx-combobox>
                                             </div>
                                             <div class="d-flex form-group row mt-3">
                                                 <div class="col-lg-6 col-md-6">
-                                                    <codx-label name="Quantity" [formModel]="dialog.formModel" name="lblfNumber"
-                                                        default="Số lượng"></codx-label>
-                                                    <codx-input type="number" [min]="0" class="form-control"
-                                                        [crrValue]="form.value.quanlity" field="quantity" #fquantity
-                                                        ngDefaultControl (valueChange)="valueChange($event,fquantity)">
+                                                    <codx-label 
+                                                        name="Quantity" 
+                                                        [formModel]="dialog.formModel" 
+                                                        name="lblfNumber"
+                                                        default="Số lượng">
+                                                    </codx-label>
+                                                    <codx-input 
+                                                        type="number" 
+                                                        [min]="0" 
+                                                        class="form-control"
+                                                        [crrValue]="form.value.quanlity" 
+                                                        field="quantity"
+                                                        (valueChange)="valueChange($event)">
                                                     </codx-input>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6" #TotalPrice>
@@ -216,7 +256,7 @@
                                             </div>
 
                                         </ng-container>
-                                        <ng-container *ngIf="parameter.HasPoints == '1'">
+                                        <ng-container *ngIf="parameter.HasPoints && parameter.HasPoints == '1'">
                                             <div class="row border border-primary rounded ms-1">
                                                 <div
                                                     class="col-6 bg-primary text-white d-flex align-items-center justify-content-center">

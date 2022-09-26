@@ -78,8 +78,6 @@ export class AddUpdateNoteBookComponent implements OnInit {
   ngOnInit(): void {}
 
   ngAfterViewInit() {
-    console.log('check codx-form', this.form);
-    console.log('check formModel', this.formModel);
   }
 
   valueChange(e) {
@@ -97,6 +95,7 @@ export class AddUpdateNoteBookComponent implements OnInit {
   }
 
   addNoteBooks() {
+    console.log("check dialog noteBook", this.dialog);
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), -1)
       .subscribe((res) => {

@@ -1,5 +1,6 @@
 
 export class Pattern {
+    recID: string;
     patternID: string;
     patternName: string;
     fileName: string;
@@ -10,4 +11,5 @@ export class Pattern {
     isDefault: boolean;
     stop: boolean;
     updateColumn: string;
+    modifiedOn: string;
 }

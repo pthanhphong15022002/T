@@ -159,9 +159,6 @@ ngx-skeleton-loader {
     overflow: hidden;
 }
 
-.header-fixed .wrapper {
-    padding-top: 50px !important;
-}
 
 lib-employee-infomation {
     padding: 0;

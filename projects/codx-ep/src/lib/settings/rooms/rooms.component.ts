@@ -1,3 +1,5 @@
+import { Device } from './../../booking/room/popup-add-booking-room/popup-add-booking-room.component';
+import { Equipments } from './../../models/equipments.model';
 import {
   Component,
   TemplateRef,
@@ -23,15 +25,15 @@ import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.compon
   templateUrl: 'rooms.component.html',
   styleUrls: ['rooms.component.scss'],
 })
-export class RoomsComponent extends UIComponent implements AfterViewInit {
+export class RoomsComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('statusCol') statusCol: TemplateRef<any>;
-  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
-  @ViewChild('avatarCol') avatarCol: TemplateRef<any>;
-  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
-  @ViewChild('companyIDCol') companyIDCol: TemplateRef<any>;
+
+  @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
+  @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
+  @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -47,6 +49,7 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
   lstDevices = [];  
   funcID: string;
   showToolBar = 'true';
+  roomEquipments=[];
 
   service = 'EP';
   assemblyName = 'EP';
@@ -72,11 +75,19 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    //this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
    
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
+      this.vllDevices.forEach((item) => {
+        let device = new Device();
+        device.id = item.value;
+        device.text = item.text;       
+        this.roomEquipments.push(device);
+        this.roomEquipments = JSON.parse(JSON.stringify(this.roomEquipments));
+      });
     });
+    
   }
 
   ngAfterViewInit(): void {
@@ -85,50 +96,35 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
     };
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
-        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnGrids = [
             {
-              field: 'resourceID',
-              headerText: gv['ResourceID'].headerText,
-              width: gv['ResourceID'].width,
-            },
-            {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: gv['ResourceName'].width,
-            },
-            {
-              headerText: gv['Icon'].headerText,
-              width: gv['Icon'].width,
-              field: 'icon',
-              template: this.avatarCol,
-              textAlign: 'Center',
-              headerTextAlign: 'Center',
-            },
-            {
-              headerText: gv['Area'].headerText,
-              width: gv['Area'].width,
-              field: 'area',
-              textAlign: 'Center',
-            },
-            {
-              headerText: gv['Capacity'].headerText,
-              width: gv['Capacity'].width,
-              field: 'capacity',
-              textAlign: 'Center',
+              width: '300',//gv['ResourceID'].width,
+              template: this.resourceNameCol,
             },
             {
               headerText: gv['Location'].headerText,
-              width: gv['Location'].width,
+              //width: gv['Location'].width,
               field: 'location',
-              textAlign: 'Center',
+              template: this.locationCol,
             },
             {
-              headerText: gv['CompanyID'].headerText,
-              width: '300',
-              template: this.companyIDCol,
+              headerText: gv['Equipments'].headerText,
+              //width: gv['Equipments'].width,
+              field: 'equipments',
+              template: this.equipmentsCol,
               headerTextAlign: 'Center',
+              textAlign: 'Center',
+            },          
+            {
+              headerText: gv['Note'].headerText,
+              //width: gv['Note'].width,
+              field: 'note',
+              headerTextAlign: 'Center',  
+              textAlign: 'Center',            
             },
             {
               headerText: gv['Owner'].headerText,
@@ -138,16 +134,10 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
               headerTextAlign: 'Center',
             },
             {
-              headerText: gv['Equipments'].headerText,
-              width: gv['Equipments'].width,
-              field: 'equipments',
-              template: this.equipmentsCol,
-              headerTextAlign: 'Center',
-            },
-            {
-              headerText: gv['Note'].headerText,
-              width: gv['Note'].width,
-              field: 'note',
+              headerText: 'Người chuẩn bị',//gv['Owner'].headerText,
+              //width:gv['Owner'].width,
+              width: 200,
+              template: this.preparatorCol,
               headerTextAlign: 'Center',
             },
           ];
@@ -168,25 +158,40 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
     });
     this.detectorRef.detectChanges();
   }
-
-  getEquiqments(equipments: any) {
-    equipments.map((res) => {
-      this.vllDevices.forEach((device) => {
-        if (res.equipmentID == device.value) {
-          this.lstDevices.push(device.text);
+  openPopupDevice(template: any,lstEquipments? ) {    
+    this.roomEquipments.forEach(element => {
+      element.isSelected=false;
+    });
+    this.roomEquipments.forEach(element => {
+      lstEquipments.forEach(item=>{
+        if(element.id==item.equipmentID){
+          element.isSelected=true;
         }
-      });
-    });
-    return this.lstDevices.join(';');
+      })
+    });   
+
+    var dialog = this.callfc.openForm(template, '', 550, 430);
+    this.detectorRef.detectChanges();
   }
-  getCompanyName(companyID: string) {
-    this.codxEpService.getCompanyName(companyID).subscribe((res) => {
-      if (res.msgBodyData[0]) {
-        this.tempCompanyName = res.msgBodyData[0];
-      }
-    });
-    return this.tempCompanyName;
-  }
+
+  // getEquiqments(equipments: any) {
+  //   equipments.map((res) => {
+  //     this.vllDevices.forEach((device) => {
+  //       if (res.equipmentID == device.value) {
+  //         this.lstDevices.push(device.text);
+  //       }
+  //     });
+  //   });
+  //   return this.lstDevices.join(';');
+  // }
+  // getCompanyName(companyID: string) {
+  //   this.codxEpService.getCompanyName(companyID).subscribe((res) => {
+  //     if (res.msgBodyData[0]) {
+  //       this.tempCompanyName = res.msgBodyData[0];
+  //     }
+  //   });
+  //   return this.tempCompanyName;
+  // }
 
   clickMF(event, data) {
     console.log(event);
@@ -252,10 +257,46 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.viewBase.dataService.delete([obj], true).subscribe((res) => {
-        console.log(res);
+        if (res) {          
+          this.api
+          .execSv(
+            'DM',
+            'ERM.Business.DM',
+            'FileBussiness',
+            'DeleteByObjectIDAsync',
+            [obj.recID, 'EP_Rooms', true]
+          )
+          .subscribe();
+        this.detectorRef.detectChanges();
+      }
       });
     }
   }
+
+  // delete(data?) {
+  //   this.viewBase.dataService.delete([data], true, (opt) => {
+  //       opt.service = 'EP';
+  //       opt.assemblyName = 'ERM.Business.EP';
+  //       opt.className = 'ResourcesBusiness';
+  //       opt.methodName = 'DeleteResourceAsync';
+  //       opt.data = data?.recID;
+  //       return true;
+  //     })
+  //     .subscribe((res: any) => {
+  //       if (res) {          
+  //         this.api
+  //           .execSv(
+  //             'DM',
+  //             'ERM.Business.DM',
+  //             'FileBussiness',
+  //             'DeleteByObjectIDAsync',
+  //             [res.recID, 'EP_Rooms', true]
+  //           )
+  //           .subscribe();
+  //         this.detectorRef.detectChanges();
+  //       }
+  //     });
+  // }
 
   closeDialog(evt?) {
     this.dialog && this.dialog.close();

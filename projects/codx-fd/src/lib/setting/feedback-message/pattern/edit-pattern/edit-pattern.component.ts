@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { ViewEncapsulation } from '@angular/core';
 import {
   Component,
@@ -9,11 +10,13 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
+  AuthService,
   CacheService,
   DialogData,
   DialogRef,
   ImageViewerComponent,
   NotificationsService,
+  RequestOption,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { Pattern } from '../model/pattern.model';
@@ -29,10 +32,10 @@ export class EditPatternComponent implements OnInit {
   pattern = new Pattern();
   isEdit = false;
   reload = false;
-  colorimg = '';
+  colorImage = '';
   vll: any;
   dialog!: DialogRef;
-  header = '';
+  header = 'Thêm mới thiệp';
   formModel: any;
   formType = '';
   listFile: any;
@@ -41,6 +44,8 @@ export class EditPatternComponent implements OnInit {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
+  user: any;
+  checkFile = false;
 
   @ViewChild('uploadImage') uploadImage: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -48,63 +53,73 @@ export class EditPatternComponent implements OnInit {
   cardType: string;
   constructor(
     private patternSV: PatternService,
-    private changedr: ChangeDetectorRef,
-    private at: ActivatedRoute,
+    private change: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private cache: CacheService,
-    private api: ApiHttpService,
+    private auth: AuthService,
     @Optional() dt: DialogRef,
     @Optional() data: DialogData
   ) {
+    this.user = this.auth.userValue;
     this.dialog = dt;
-    this.formModel = this.dialog?.formModel;
+    this.formModel = data.data?.formModel;
     this.formType = data.data?.formType;
-    if (this.formType == 'edit')
+    if (this.formType == 'edit') {
+      this.header = 'Cập nhật thiệp';
       this.pattern = JSON.parse(JSON.stringify(data.data?.dataUpdate));
-    else {
+      this.patternSV
+        .getFileByObjectID(this.pattern.recID)
+        .subscribe((res: any[]) => {
+          if (res.length > 0) {
+            this.listFile = res;
+            this.checkFile = true;
+          }
+        });
+    } else {
       this.pattern.backgroundColor = '#caf7e3';
-      this.pattern.textColor = '';
-      this.pattern.headerColor = '';
+      this.pattern.textColor = '#a4aca4';
+      this.pattern.headerColor = '#a4aca4';
     }
     this.cache.valueList('L1447').subscribe((res) => {
       if (res) {
         this.vll = res.datas;
-        this.changedr.detectChanges();
+        this.change.detectChanges();
       }
     });
+    this.getCardType(this.formModel?.functionID);
   }
 
   ngOnInit(): void {
-    this.patternSV.recID.subscribe((recID) => {
-      this.colorimg = this.patternSV.colorimg;
-      if (recID) {
-        this.isEdit = true;
-        this.api
-          .execSv<any>(
-            'FD',
-            'ERM.Business.FD',
-            ' PatternsBusiness',
-            'GetAsync',
-            [recID]
-          )
-          .subscribe((res) => {
-            if (res) Object.assign(this.pattern, res);
-            this.changedr.detectChanges();
-            this.checkActive();
-          });
-      } else if (!this.patternSV.load) {
-        this.isEdit = false;
-        this.pattern.cardType = this.cardType;
-        this.changedr.detectChanges();
-        this.checkActive();
-      }
-    });
-    this.at.queryParams.subscribe((params) => {
-      if (params.funcID) {
-        let functionID = params.funcID;
-        this.cardType = functionID.substr(-1);
-      }
-    });
+    // this.patternSV.recID.subscribe((recID) => {
+    //   this.colorImage = this.patternSV.colorImage;
+    //   if (recID) {
+    //     this.isEdit = true;
+    //     this.api
+    //       .execSv<any>(
+    //         'FD',
+    //         'ERM.Business.FD',
+    //         'PatternsBusiness',
+    //         'GetAsync',
+    //         [recID]
+    //       )
+    //       .subscribe((res) => {
+    //         if (res) Object.assign(this.pattern, res);
+    //         this.change.detectChanges();
+    //         this.checkActive();
+    //       });
+    //   } else if (!this.patternSV.load) {
+    //     this.isEdit = false;
+    //     this.pattern.cardType = this.cardType;
+    //     this.change.detectChanges();
+    //     this.checkActive();
+    //   }
+    // });
+    // this.at.queryParams.subscribe((params) => {
+    //   if (params.funcID) {
+    //     let functionID = params.funcID;
+    //     this.cardType = functionID.substr(-1);
+    //   }
+    // });
   }
 
   ngAfterViewInit() {
@@ -151,7 +166,6 @@ export class EditPatternComponent implements OnInit {
         }
       });
       this.listFile = files;
-      debugger;
     }
   }
 
@@ -164,11 +178,11 @@ export class EditPatternComponent implements OnInit {
     // $('#cardImageInput').val('');
   }
 
-  valueChange(e, element) {
+  valueChange(e) {
     if (e) this.pattern[e.field] = e.data;
   }
 
-  valueChangeColor(e, element = null) {
+  valueChangeColor(e) {
     if (e) {
       if (e.field == 'backgroundColor') this.pattern.backgroundColor = e.data;
       else if (e.field == 'headerColor') this.pattern.headerColor = e.data;
@@ -194,34 +208,56 @@ export class EditPatternComponent implements OnInit {
     // //if (!this.pattern.patternID) return;
     // this.pattern.backgroundColor = "";
     // this.pattern.fileName = event.currentTarget.files[0].name;
-    // this.changedr.detectChanges();
+    // this.change.detectChanges();
     // this.uploadImage.handleFileInput(event);
   }
 
   savePattern() {
-    this.pattern;
-    debugger;
-    // if (this.uploadImage?.imageUpload?.fileName) { this.pattern.fileName = ""; this.pattern.backgroundColor = ""; }
-    // // this.pattern.updateColumn = this.inputsv.updateColumn;
-    // if (!this.pattern.patternName) { this.notificationsService.notify("Vui lòng nhập mô tả"); return }
-    // this.api.execSv<any>("FED", "FED", "patternsBusiness", "SaveAsync", [this.pattern, this.isEdit]).subscribe(res => {
-    //   //console.log(res);
-    //   if (res) {
-    //     if (this.uploadImage) {
-    //       this.uploadImage.updateFileDirectReload(res.patternID).subscribe((result) => {
-    //         this.patternSV.component.reLoadData(res);
-    //         this.closeCreate();
-    //         this.notificationsService.notify("Hệ thống thực thi thành công");
-    //         return;
-    //       });
-    //     }
-    //     else {
-    //       this.patternSV.component.reLoadData(res);
-    //       this.notificationsService.notify("Hệ thống thực thi thành công");
-    //       this.closeCreate();
-    //     }
-    //   }
-    // });
+    if (!this.pattern.patternName) {
+      this.notificationsService.notify('Vui lòng nhập mô tả');
+      return;
+    }
+    if (
+      this.formType == 'edit' &&
+      this.pattern.backgroundColor &&
+      this.checkFile
+    )
+      this.patternSV.deleteFile(this.pattern.recID);
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt), -1)
+      .subscribe(async (res) => {
+        if (res.save || res.update) {
+          var dt = res.save ? res.save : res.update;
+          if (this.listFile && this.listFile?.length > 0) {
+            this.listFile[0].objectID = dt.recID;
+            this.listFile[0].objectId = dt.recID;
+            this.attachment.objectId = dt.recID;
+            this.attachment.fileUploadList = this.listFile;
+            (await this.attachment.saveFilesObservable()).subscribe(
+              (result: any) => {
+                if (result.data) {
+                  this.change.detectChanges();
+                }
+              }
+            );
+            this.attachment.saveFiles();
+          }
+          var obj = { data: res, listFile: this.listFile };
+          this.dialog.close(obj);
+        }
+      });
+  }
+
+  beforeSave(op: RequestOption) {
+    var data = [];
+    op.service = 'FD';
+    op.assemblyName = 'ERM.Business.FD';
+    op.className = 'PatternsBusiness';
+    op.methodName = 'SaveAsync';
+    if (this.formType == 'add') data = [this.pattern, false];
+    else data = [this.pattern, true];
+    op.data = data;
+    return true;
   }
 
   checkDisable(pattern) {
@@ -258,7 +294,7 @@ export class EditPatternComponent implements OnInit {
     // }
     // if (elecolor != null && elecolor.length > 0)
     //   elecolor.addClass('color-check');
-    // this.changedr.detectChanges();
+    // this.change.detectChanges();
   }
 
   colorClick(ele, item, index) {
@@ -268,7 +304,7 @@ export class EditPatternComponent implements OnInit {
     // var color = $(ele).data('color');
     // this.pattern.backgroundColor = color;
     // this.pattern.fileName = "";
-    // this.changedr.detectChanges();
+    // this.change.detectChanges();
     this.listFile = '';
     var label = document.querySelectorAll('.symbol-label[data-color]');
     if (label) {
@@ -280,6 +316,6 @@ export class EditPatternComponent implements OnInit {
     var element = ele as HTMLElement;
     element.classList.add('color-check');
     this.pattern.backgroundColor = item.default;
-    this.changedr.detectChanges();
+    this.change.detectChanges();
   }
 }

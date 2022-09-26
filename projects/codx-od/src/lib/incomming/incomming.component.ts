@@ -343,62 +343,17 @@ export class IncommingComponent
   //Mở form
   openFormUploadFile() {
     this.attachment.openPopup();
-    // this.atSV.openForm.next(true);
-    /* this.callfc.openForm(UploadComponent,"UploadFile",500,700,null,null).subscribe((dialog:any)=>{
-      var that = this;
-      dialog.close = function(e){
-        return that.closeUpload(e, that);
-    }
-    }); */
   }
   openFormRecallSharing(recID: any, relID: any) {
     var recID = recID;
     var relID = relID;
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
-    /* this.notifySvr.alert("Thông báo", "Hệ thống sẽ thu hồi quyền chia sẻ của người này. Bạn có muốn xác nhận không?", config).subscribe((res: Dialog) => {
-      let that = this;
-      res.close = function (e) {
-        return that.closeRecallSharing(e, that, recID, relID);
-      }
-    }) */
   }
   ////////////////Các hàm đóng Form ///////////////////////////
   closeDept(e) {
     var dt = e.event;
     console.log(dt);
-  }
-
-  groupDispatchData(data: any) {
-    /*   var date = new Date();
-    var firstweek = date.getDate() - date.getDay(); // First day is the day of the month - the day of the week
-    var lastweek = firstweek + 6; // last day is the first day + 6
-    var today = date.toDateString();
-    var yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toDateString();
-    var fdayofweek = new Date(date.setDate(firstweek));
-    var ldayofweek = new Date(date.setDate(lastweek));
-    var fdayofweekago = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() - 7);
-    var ldayofweekago = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() - 1);
-    var fdayofmonth = new Date(date.getFullYear(), date.getMonth(), 1);
-    var ldayofmonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    var fdayoflastmonth = new Date(date.getFullYear(), date.getMonth() - 1, 1);
-    var ldayoflastmonth = new Date(date.getFullYear(), date.getMonth(), 0);
-    data.forEach(item => {
-      var createdOn = new Date(item.createdOn);
-      //Today
-      if (createdOn.toDateString() === today) this.lstDispatch[0].data.push(item);
-      //Hôm qua
-      else if (createdOn.toDateString() == yesterday) this.lstDispatch[1].data.push(item);
-      //Tuần này
-      else if (fdayofweek <= new Date(createdOn) && new Date(createdOn) <= ldayofweek) this.lstDispatch[2].data.push(item);
-      //Tuần trước
-      else if (fdayofweekago <= new Date(createdOn) && new Date(createdOn) <= ldayofweekago) this.lstDispatch[3].data.push(item);
-      //Tháng này
-      else if (fdayofmonth <= new Date(createdOn) && new Date(createdOn) <= ldayofmonth) this.lstDispatch[4].data.push(item);
-      //Tháng trước
-      else if (fdayoflastmonth <= new Date(createdOn) && new Date(createdOn) <= ldayoflastmonth) this.lstDispatch[5].data.push(item);
-      else this.lstDispatch[6].data.push(item);
-    }); */
   }
 
   //Hàm lấy thông tin chi tiết của công văn
@@ -473,17 +428,12 @@ export class IncommingComponent
     console.log(evt);
   }
   openFormFuncID(val: any, data: any) {
-    //this.lstDtDis = data;
     this.viewdetail.openFormFuncID(val, data);
   }
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;
     this.getGridViewSetup(funcID);
     this.lstDtDis = null;
-    /*  this.view.dataService.predicates = "Status=@0";
-    this.view.dataService.dataValues = "1"; */
-    //this.view.dataService.setPredicates(['Status=@0'],['1']).subscribe();
-    //this.activeDiv = "1";
   }
   checkDeadLine(time: any) {
     if (new Date(time).getTime() < new Date().getTime() || !time) {
