@@ -276,7 +276,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = "800px";
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
@@ -348,7 +348,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = "800px";
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -481,7 +481,7 @@ export class CodxTasksComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = "800px";
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
@@ -1413,7 +1413,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = "800px";
       this.callfc.openSide(
         PopupAddComponent,
         [e?.data, 'view', this.isAssignTask],
