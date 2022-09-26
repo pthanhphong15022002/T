@@ -1,0 +1,275 @@
+<codx-form [headerText]="headerText" [body]="body" [dialog]="dialog">
+  <ng-template #body>
+    <div class="modal-body">
+      <div class="list-week">
+        <table class="table bg-header">
+          <thead>
+            <tr>
+              <th scope="col" class="w-20 min-w-200px"></th>
+              <th
+                scope="col"
+                class="w-10 text-center"
+                *ngFor="let item of vlls"
+              >
+                {{ item.text }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <span
+                    class="icon-brightness_5 icon-18 me-2 text-warning"
+                  ></span>
+                  <div class="text-dark-75">
+                    {{ stShift?.startTime }} - {{ stShift?.endTime }}
+                  </div>
+                  <div class="dropdown ms-2 dropdown-customv2">
+                    <button
+                      class="btn btn-icon btn-xs"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span class="icon-more_vert icon-18 hoverIcon"></span>
+                    </button>
+                    <div
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-edit icon-16"></span>
+                          <span class="ms-3">Chỉnh sửa</span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="text-center" *ngFor="let item of stShift?.data">
+                <codx-input
+                  class="test-check"
+                  type="checkbox"
+                  field="stweekday"
+                  [checked]="item.checked || true"
+                  (valueChange)="weekdayChange($event, item)"
+                >
+                </codx-input>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <span class="icon-brightness_6 icon-18 me-2 text-info"></span>
+                  <div class="text-dark-75">
+                    {{ ndShift?.startTime }} - {{ ndShift.endTime }}
+                  </div>
+                  <div class="dropdown ms-2 dropdown-customv2">
+                    <button
+                      class="btn btn-icon btn-xs"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span class="icon-more_vert icon-18 hoverIcon"></span>
+                    </button>
+                    <div
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-edit icon-16"></span>
+                          <span class="ms-3">Chỉnh sửa</span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="text-center" *ngFor="let item of ndShift?.data">
+                <codx-input
+                  class="text-check"
+                  type="checkbox"
+                  field="ndweekday"
+                  [checked]="item.checked"
+                  (valueChange)="weekdayChange($event, item)"
+                >
+                </codx-input>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="text-dark">Lễ/Tết/Sự kiện</h5>
+        <a (click)="openDayOffs()" class="btn btn-icon btn-xs btn-primary">
+          <i class="icon-add icon-16"></i>
+        </a>
+      </div>
+      <div class="list-calendar">
+        <table class="table bg-header">
+          <thead>
+            <tr>
+              <th scope="col" class="w-30 min-w-350px">Lễ/Tết/Sự kiện</th>
+              <th scope="col" class="w-10 text-center">Ngày/Tháng</th>
+              <th scope="col" class="w-10 text-center">Dương lịch</th>
+              <th scope="col" class="w-10 text-center">Âm lịch</th>
+              <th scope="col" class="w-10 text-center">Icon</th>
+              <th scope="col" class="w-10 text-center"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of dayOff">
+              <td>
+                <div class="text-dark" [innerHTML]="item.note"></div>
+              </td>
+              <td class="text-center">{{ item.day }}/{{ item.month }}</td>
+              <td class="text-center">
+                <codx-input
+                  class="text-check"
+                  type="checkbox"
+                  name="checkbox"
+                  [disabled]="true"
+                  filed="dayOff"
+                  [checked]="item.calendar == '1'"
+                  [disabled]="true"
+                >
+                </codx-input>
+              </td>
+              <td class="text-center">
+                <codx-input
+                  class="text-check"
+                  type="checkbox"
+                  name="checkbox"
+                  [disabled]="true"
+                  filed="dayOff"
+                  [checked]="item.calendar == '2'"
+                  [disabled]="true"
+                >
+                </codx-input>
+              </td>
+              <td class="text-center">
+                <span
+                  [ngStyle]="{ color: item.color }"
+                  class="{{ item.symbol }}"
+                ></span>
+              </td>
+              <td class="text-center">
+                <div class="d-flex align-items-center">
+                  <div class="dropdown ms-2">
+                    <button
+                      class="btn btn-icon btn-xs"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      (click)="toggleMoreFunc(item.recID)"
+                    >
+                      <span class="icon-more_vert icon-18"></span>
+                    </button>
+                    <div *ngIf="dayOffId == item.recID">
+                      <a class="dropdown-item" (click)="openDayOffs(item)">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-edit icon-16"></span>
+                          <span class="ms-3">Chỉnh sửa</span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item" (click)="removeDayOff(item)">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-delete icon-16"></span>
+                          <span class="ms-3">Xóa</span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="text-dark">Ngày nghỉ trong năm</h5>
+        <a (click)="openCalendarDate()" class="btn btn-icon btn-xs btn-primary">
+          <i class="icon-add icon-16"></i>
+        </a>
+      </div>
+      <div class="list-calendar">
+        <table class="table bg-header">
+          <thead>
+            <tr>
+              <th scope="col" class="w-60 min-w-350px">Diễn giải</th>
+              <th scope="col" class="w-10 text-center">Ngày</th>
+              <th scope="col" class="w-10 text-center">Icon</th>
+              <th scope="col" class="w-10 text-center"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of calendateDate">
+              <td>
+                <div class="text-dark" [innerHTML]="item.note"></div>
+              </td>
+              <td class="text-center">
+                <!-- <div class="text-dark">{{ item.calendarDate | fmDT: "dmy" }}</div> -->
+                <div class="text-dark">
+                  {{ item.calendarDate | date: "dd/MM/yyyy" }}
+                </div>
+              </td>
+              <td class="text-center">
+                <span
+                  [ngStyle]="{
+                    color: item.dayoffColor ? item.dayoffColor : '#0078FF'
+                  }"
+                  class="{{ item.symbol }}"
+                ></span>
+              </td>
+              <td class="text-center">
+                <div class="d-flex align-items-center">
+                  <div class="dropdown ms-2">
+                    <button
+                      class="btn btn-icon btn-xs"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      (click)="toggleMoreFunc(item.recID)"
+                    >
+                      <span class="icon-more_vert icon-18"></span>
+                    </button>
+                    <div *ngIf="dayOffId == item.recID">
+                      <a class="dropdown-item" (click)="openCalendarDate(item)">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-edit icon-16"></span>
+                          <span class="ms-3">Chỉnh sửa</span>
+                        </div>
+                      </a>
+                      <a
+                        class="dropdown-item"
+                        (click)="removeCalendarDate(item)"
+                      >
+                        <div class="d-flex align-items-center">
+                          <span class="icon-delete icon-16"></span>
+                          <span class="ms-3">Xóa</span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>
